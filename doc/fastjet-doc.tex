@@ -1,0 +1,374 @@
+%%
+%% TO DO:
+%%
+%%  . paste in the example program
+%%
+%%  . maybe overload the exclusive routines by allowing access
+%%    interfaces such as exclusive_jets(jet, dcut) to find the
+%%    subjets of jet.
+%% 
+%%  . update documentation to account for template for initialization
+%%    from HepLorentzVectors and other such things.
+
+\documentclass[12pt]{article}
+
+\usepackage{a4wide}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{url}
+
+\newcommand{\fastjet}{\texttt{fastjet}\xspace}
+\newcommand{\ttt}[1]{\texttt{#1}}
+
+\title{FastJet 0.9 user manual}
+\author{Matteo Cacciari and Gavin P. Salam\\
+  LPTHE, Univsersit\'e Pierre et Marie Curie -- Paris 6, \\Univsersit\'e
+  Denis Diderot -- Paris 7, CNRS UMR 7589
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+%----------------------------------------------------------------------
+\section{Introduction}
+
+This note documents the \ttt{FastJet} package which implements
+efficient algorithms \cite{fastjet} for the longitudinally invariant
+$k_t$ jet-finder \cite{ktexcl,ktincl}.
+
+This release is intended to be preliminary and has two aims: (a) to
+enable people with a urgent need for speed in $k_t$ jet-finding to
+have immediate access to fast algorithms and (b) to provide access,
+for those who are interested, to the implementation so that they may
+study it in more detail than was exposed in \cite{fastjet}. We
+anticipate that a definitive release with a more fully thought-through
+interface will be made available in the future as part of the
+multi-purpose \texttt{HepJet} jet-finding package.
+
+There are many variants of the $k_t$ jet-finder. We implement the
+so-called $\Delta R$ distance measure with $E$-scheme recombination,
+as recommended in \cite{RunII-jet-physics}. It has both exclusive
+\cite{ktexcl} and inclusive modes \cite{ktincl}, the latter currently
+being in more widespread use, though the exclusive mode has physical
+advantages in certain cases.  We provide access to both modes.
+
+The inclusive $k_t$ jet finder that we adopt is as follows:
+\begin{itemize}
+\item[1.] For each pair of particles $i$, $j$ work out the $k_t$
+  distance 
+  \begin{equation}
+    \label{eq:dij}
+    d_{ij} = \min(k_{ti}^2,{k_{tj}^2}) \Delta R_{ij}^2 / R^2
+  \end{equation}
+  with $\Delta R_{ij}^2 = (\eta_i-\eta_j)^2 + (\phi_i-\phi_j)^2$,
+  where $k_{ti}$, $\eta_i$ and $\phi_i$ are the transverse momentum,
+  rapidity and azimuth of particle $i$ and $R$ is a jet-radius
+  parameter usually taken of order $1$; for each parton $i$ also work
+  out the beam distance $d_{iB} = k_{ti}^2$.
+\item[2.] Find the minimum $d_{\min}$ of all the $d_{ij},d_{iB}$. If
+  $d_{\min}$ is a $d_{ij}$ merge particles $i$ and $j$ into a single
+  particle, summing their four-momenta (this is $E$-scheme
+  recombination); if it is a $d_{iB}$ then declare particle $i$ to be
+  a final jet and remove it from the list.
+\item[3.] Repeat from step 1 until no particles are left.
+\end{itemize}
+The exclusive jet algorithm is similar except that (a) when a $d_{iB}$
+is the smallest value that particle is considered to become part of
+the beam jet (i.e.\ is discarded) and (b) clustering is stopped when
+all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. Generally in the
+exclusive mode $R$ is set to $1$.
+
+%----------------------------------------------------------------------
+\section{Interface}
+
+The \fastjet code is written in C++. The user is exposed to two main
+classes:
+\begin{verbatim}
+  class FjPseudoJet;
+  class FjClusterSequence;
+\end{verbatim}
+\ttt{FjPseudoJet} provides a jet object with a four-momentum and some
+internal indices to situate it in the context of a jet-clustering
+sequence. \ttt{FjClusterSequence} is the class that carries out
+jet-clustering and provides access to the final jets.
+
+
+%......................................................................
+\subsection{FjPseudoJet}
+\label{sec:FjPseudoJet}
+
+
+The user should start by converting the momenta of all particles in an
+event into corresponding \ttt{FjPseudoJet} objects, using one of the
+following initializers
+\begin{verbatim}
+  FjPseudoJet (double px, double py, double pz, double  E);
+  template<class T> FjPseudoJet (const T & some_lorentz_vector);
+\end{verbatim}
+where the second form allows the initialisation to be obtained from
+any class \ttt{T} that allows subscripting to return the components of
+the momentum (running from $0\ldots3$ in the order $p_x,p_y,p_z,E$),
+for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.
+%
+It has the following member functions for accessing the components
+\begin{verbatim}
+  double E()     const ; // returns the energy component
+  double e()     const ; // returns the energy component
+  double px()    const ; // returns the x momentum component
+  double py()    const ; // returns the y momentum component
+  double pz()    const ; // returns the z momentum component
+  double phi()   const ; // returns the azimuthal angle in the range 0--2pi
+  double rap()   const ; // returns the rapidity
+  double rapidity() const ; // returns the rapidity
+  double kt2()   const ; // returns the squared transverse momentum
+  double perp2() const ; // returns the squared transverse momentum
+  double perp()  const ; // returns the transverse momentum
+  double operator[] (int i) const; // returns component i
+
+  /// return a valarray containing the four-momentum (components 0--2
+  /// are 3-momentum, component 3 is energy).
+  valarray<double> four_mom() const;
+\end{verbatim}
+It also allows the user to set and access an index, in case the user
+wishes to keep track of the identity of a \ttt{FjPseudoJet} object
+\begin{verbatim}
+  /// set the user_index, intended to allow the user to label the object
+  void set_user_index(const int index);
+
+  /// return the user_index
+  int user_index() const ;
+\end{verbatim}
+
+We also provide routines for taking an unsorted vector of
+\ttt{FjPseudoJet}s and returning a sorted vector,
+\begin{verbatim}
+  /// return a vector of jets sorted into decreasing transverse momentum
+  vector<FjPseudoJet> sorted_by_pt(const vector<FjPseudoJet> & jets);
+  
+  /// return a vector of jets sorted into increasing rapidity
+  vector<FjPseudoJet> sorted_by_rapidity(const vector<FjPseudoJet> & jets);
+  
+  /// return a vector of jets sorted into decreasing energy
+  vector<FjPseudoJet> sorted_by_E(const vector<FjPseudoJet> & jets);
+\end{verbatim}
+This will typically be used on the jets returned by
+\ttt{FjClusterSequence}.
+
+%......................................................................
+\subsection{FjClusterSequence}
+\label{sec:FjClusterSequence}
+
+To run the jet clustering, create a \texttt{FjClusterSequence} object,
+through the following initalizer
+\begin{verbatim}
+  template<class T> FjClusterSequence (const vector<T> & input_particles,
+                   const double & R = 1.0,
+                   const FjStrategy & strategy = Best);
+\end{verbatim}
+where \ttt{input\_particles} is the vector of initial particles of any
+type (\ttt{FjPseudoJet}, \ttt{HepLorentzVector}, etc.) that can be
+used to initialise a \ttt{FjPseudoJet}; \texttt{R}, which may be
+omitted (and then takes value $1$) sets the value of $R$ in
+eq.(\ref{eq:dij}), while \texttt{strategy}, which may also be omitted
+selects the algorithmic strategy to use while clustering and is an
+\texttt{enum} of type \texttt{FjStrategy} with the following four
+potentially interesting values:
+\begin{center}
+\begin{tabular}{l|l}\hline
+  \texttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N \lesssim 50$)\\
+  \texttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
+  N \lesssim 10^4$)\\ 
+  \texttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
+  N \gtrsim 10^4$)\\ 
+  \texttt{Best} & automatic selection of the best of these based on $N$\\\hline 
+\end{tabular}
+\end{center}
+If \texttt{strategy} is omitted then the \texttt{Best} option is used.
+
+If the user wishes to access inclusive jets, the following member
+function should be used
+\begin{verbatim}
+  /// return a vector of all jets (in the sense of the inclusive
+  /// algorithm) with pt >= ptmin. 
+  vector<FjPseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
+\end{verbatim}
+where \texttt{ptmin} may be omitted (then implicitly taking value
+$0$).
+
+There are two ways of accessing exclusive jets, one where one
+specifies $d_{cut}$, the other where one specifies that the clustering
+is taken to be stopped once it reaches the specified number of jets. 
+\begin{verbatim}
+  /// return a vector of all jets (in the sense of the exclusive
+  /// algorithm) that would be obtained when running the algorithm
+  /// with the given dcut.
+  vector<FjPseudoJet> exclusive_jets (const double & dcut) const;
+
+  /// return a vector of all jets when the event is clustered (in the
+  /// exclusive sense) to exactly njets.
+  vector<FjPseudoJet> exclusive_jets (const int & njets) const;
+\end{verbatim}
+Note that these two member functions have the same name, and the
+compiler selects the correct one based on the type of the arguments,
+as is standard in C++.
+%
+The \ttt{FjPseudoJet} vectors returned by the above routines can all be
+sorted with the routines described at the end of
+section~\ref{sec:FjPseudoJet}.
+
+The user may also wish just to obtain information about the number of
+jets in the exclusive algorithm:
+\begin{verbatim}
+  /// return the number of jets (in the sense of the exclusive
+  /// algorithm) that would be obtained when running the algorithm
+  /// with the given dcut.
+  int n_exclusive_jets (const double & dcut) const;
+\end{verbatim}
+Another common query is to establish the $d_{\min}$ value associated
+with merging from $n+1$ to $n$ jets. Two member functions are
+available for determining this:
+\begin{verbatim}
+  /// return the dmin corresponding to the recombination that went from
+  /// n+1 to n jets (sometimes known as d_{n n+1}).
+  double exclusive_dmerge (const int & njets) const;
+
+  /// return the maximum of the dmin encountered during all recombinations 
+  /// up to the one that led to an n-jet final state; identical to
+  /// exclusive_dmerge, except in cases where the dmin do not increase
+  /// monotonically.
+  double exclusive_dmerge_max (const int & njets) const;
+\end{verbatim}
+The first returns the $d_{\min}$  in going from $n+1$ to $n$ jets. 
+%
+Occasionally however the $d_{\min}$ value does not increase
+monotonically during successive mergings and using a $d_{cut}$ smaller
+than the return value from \ttt{exclusive\_dmerge} does not guarantee
+an event with more than \ttt{njets} jets.
+%
+For this reason the second function \ttt{exclusive\_dmerge\_max} is
+provided --- using a $d_{cut}$ below its return value is guaranteed to
+provide a final state with more than $n$ jets, while using a larger
+value will return a final state with $n$ or fewer jets.
+
+
+Finally the user may obtain the constituent particles of a given jet,
+via
+\begin{verbatim}
+  /// return a vector of the particles that make up jet
+  vector<FjPseudoJet> constituents (const FjPseudoJet & jet);
+\end{verbatim}
+Note that this is a member function of the \ttt{FjClusterSequence} and
+not of \ttt{FjPseudoJet}, because jets are only meaningful when referred
+to a given \ttt{FjClusterSequence}.\footnote{This is one respect in
+  which the interface differs from that of \ttt{KtJet} \cite{KtJet}.}
+%
+If the user wishes to identify the constituents with the original
+particles provided to \ttt{FjClusterSequence} she or he should have set
+a unique index for each of the original particles with the
+\ttt{FjPseudoJet::set\_user\_index} function.
+
+\paragraph{Subjet analysis.} Currently no dedicated subjet
+analysis is provided. It is however trivial (though non-optimal) to
+obtain a subjet analysis as follows:
+\begin{verbatim}
+  // run clustering on vector<FjPseudoJet> all_particles
+  FjClusterSequence clust_seq(all_particles);
+
+  // get the exclusive jets with the event viewed as two hard jets
+  vector<FjPseudoJet> jets = clust_seq.exclusive_jets(2);
+
+  // get the constituents of the first of these jets
+  vector<FjPseudoJet> jet0_constituents = clust_seq.constituents(jets[0]);
+
+  // now rerun the jet clustering on jet0_constituents
+  FjClusterSequence jet0_seq(jet0_constituents);
+\end{verbatim}
+
+
+
+%======================================================================
+\section{Example program}
+
+
+
+
+%======================================================================
+\section{Compilation notes}
+
+In order to access the \ttt{NlnN} strategy the library needs to be
+compiled with the Computational Geometry Algorithms Library \ttt{CGAL}
+\cite{CGAL}. 
+
+The user should first download \ttt{CGAL} from
+\url{http://www.cgal.org/} and then compile and install it. Under
+linux, she or he will have to ensure that an environment variable
+\ttt{CGAL\_MAKEFILE} points to the Makefile generated by \ttt{CGAL} at
+install time, containing various definitions of locations of include
+files. \ttt{CGAL} will encourage the user to set this variable during
+the install process.
+
+The choice of whether or not CGAL will be used is made in the
+Makefile in the top directory of the distribution, through the value
+of the variable \ttt{USE\_CGAL} which should be either \ttt{yes} or
+\ttt{no}. 
+
+For more details see the \ttt{INSTALL} file in the top directory.
+
+%======================================================================
+\begin{thebibliography}{9}
+
+\bibitem{fastjet}
+  M.~Cacciari and G.~P.~Salam,
+  %``Dispelling the N**3 myth for the k(t) jet-finder,''
+  arXiv:hep-ph/0512210.
+  %%CITATION = HEP-PH 0512210;%%
+  %%Cited 1 time in SPIRES-HEP
+
+\bibitem{ktexcl}
+  S.~Catani, Y.~L.~Dokshitzer, M.~H.~Seymour and B.~R.~Webber,
+  %``Longitudinally invariant K(t) clustering algorithms for hadron hadron
+  %collisions,''
+  Nucl.\ Phys.\ B {\bf 406}  (1993)  187.
+
+\bibitem{ktincl}
+  S.~D.~Ellis and D.~E.~Soper,
+  %``Successive Combination Jet Algorithm For Hadron Collisions,''
+  Phys.\ Rev.\ D {\bf 48} (1993) 3160 
+  %\prd{48}{1993}{3160} 
+  [hep-ph/9305266]. 
+  %%CITATION = HEP-PH 9305266;%%
+
+
+%\cite{Blazey:2000qt}
+\bibitem{RunII-jet-physics}
+G.~C.~Blazey {\it et al.},
+%``Run II jet physics,''
+hep-ex/0005012.
+%%CITATION = HEP-EX 0005012;%%
+
+
+\bibitem{CGAL}
+%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
+A.~Fabri {\it et al.},
+%On the design of CGAL a computational geometry algorithms library
+Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
+%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
+J.-D.~Boissonnat {\it et al.},
+% Triangulations in CGAL
+Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
+
+\bibitem{KtJet}
+  \url{http://hepforge.cedar.ac.uk/ktjet/};
+  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
+  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
+  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
+  [hep-ph/0210022].
+  %%CITATION = HEP-PH 0210022;%%
+
+
+\end{thebibliography}
+
+
+\end{document}
