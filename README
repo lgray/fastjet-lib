@@ -1,27 +1,47 @@
-fastjet package
----------------
+DEBUGGING:
+example/fastjet_timing -verbose 2 -r 0.72  -strategy -3 -write -incl 5.0 < ../data/single-event.dat
 
-This package provides a fast implementation of the 
+This hangs for unknown reason (strategy=-2 case also has problems, but
+not identical). Running with valgrind reveals no problems (but might
+not expect problems to show up?). Just before it hangs (step 373) is
+tries to recombine a particle that's already been recombined. But it
+also misclusters particle 362 immediately after its creation (step
+363).
 
+Another problem is that ktjet_example has wrong behaviour for
+r/=1.0. This too needs to be understood...
+
+----------------------------------------------------------------------
+FastJet
+-------
+
+The FastJet package provides a fast implementation (described in
+hep-ph/0512210) of the longitudinally invariant kt jet finder as
+introduced in
+
+  S.~Catani, Y.~L.~Dokshitzer, M.~H.~Seymour and B.~R.~Webber,
+  Nucl.\ Phys.\ B {\bf 406}  (1993)  187.
+
+and 
+
+  S.~D.~Ellis and D.~E.~Soper,
+  Phys.\ Rev.\ D {\bf 48} (1993) 3160 [hep-ph/9305266]. 
 
 Installation instructions are provided in the INSTALL file.
 
-To benefit from N ln N you will need to download CGAL, from
-http://www.cgal.org/ and compile it before compiling the fastjet
-library.
+Note that to benefit from NlnN implementation of the jet finder you
+will need to download CGAL, from http://www.cgal.org/ and compile it
+before compiling the fastjet library.
 
-Tell user to make sure they have gnu make?
 
-Name changes planned:
----------------------
+Directory structure
+-------------------
 
-ClusterSequence -> FastJetEvent or FastJet FjEvent 
-
-DnnCylinder -> Dnn4piCylinder
-
-PseudoJet  ::: replace with extension of HEPLorentzVector???
-
-numconsts :: integrate elsewhere???
-
+doc/		Documentation
+src/		the .cc files for the FastJet library
+include/	the include (.hh) files for the FastJet library
+lib/            destination for the libfastjet.a library
+example/        contains some example programs
+data/           contains some files with data for events
 
 

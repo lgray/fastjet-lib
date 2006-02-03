@@ -8,14 +8,18 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
-SRCS = fastjet_example.cc fastjet_timing.cc CmdLine.cc
+SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc CmdLine.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
-
-# REMEMBER TO CHANGE THIS **********!!!!!!!!
-#all: fastjet_timing
 
 fastjet_example: fastjet_example.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_example fastjet_example.o  $(LDFLAGS)
+
+# for the following to compile the INCLUDE defined above
+# will need to be supplemented with the ktjet and CLHEP directories
+# and LDFLAGS will also need to be supplemented
+ktjet_example: ktjet_example.o 
+	$(CXX)  -o ktjet_example ktjet_example.o  $(LDFLAGS)
+
 
 fastjet_timing: fastjet_timing.o CmdLine.o ../lib/libfastjet.a
 	$(CXX)  -o fastjet_timing fastjet_timing.o CmdLine.o  $(LDFLAGS)
@@ -24,7 +28,7 @@ clean:
 	rm -f *.o
 
 realclean: clean
-	rm -f fastjet_example fastjet_timing
+	rm -f fastjet_example fastjet_timing ktjet_example
 
 depend:
 	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)

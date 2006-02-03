@@ -30,13 +30,21 @@ which places the fastjet library in lib/.
 
 To run the example program cd to the example directory and do
 
-  make fastjet-example
-  ./fastjet-example < ../data/Pythia-PtMin1000-LHC-10ev.dat
+  make fastjet_example
+  ./fastjet_example < ../data/Pythia-PtMin1000-LHC-10ev.dat
 
 The output should be 
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-Running fastjet on event with 354 particles.
+#--------------------------------------------------------------
+#               FastJet prerelease (v 0.9)
+#        Written by Matteo Cacciari and Gavin Salam
+#        http://www.lpthe.jussieu.fr/~salam/fastjet
+#
+# Fast longitudinally invariant Kt Jet clustering, as described
+# in hep-ph/0512210 (please cite this if you use FastJet).
+#--------------------------------------------------------------
+Strategy adopted by FastJet was N2Tiled
 
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------

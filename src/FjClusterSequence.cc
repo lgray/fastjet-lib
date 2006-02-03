@@ -73,7 +73,7 @@ void FjClusterSequence::_print_banner() {
   cout << "#        http://www.lpthe.jussieu.fr/~salam/fastjet            \n";
   cout << "#                                                              \n";
   cout << "# Fast longitudinally invariant Kt Jet clustering, as described\n";
-  cout << "# in hep-ph/0512210 (please cite this if you use fastjet).     \n";
+  cout << "# in hep-ph/0512210 (please cite this if you use FastJet).     \n";
   cout << "#--------------------------------------------------------------\n";
 }
 

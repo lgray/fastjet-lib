@@ -1,3 +1,12 @@
+//----------------------------------------------------------------------
+// fastjet example program. 
+// Compile it with: make fastjet_example
+// run it with    : ./fastjet_example < ../data/single-event.dat
+//
+// People who are familiar with the ktjet package are encouraged to
+// compare this file to the ktjet_example.cc program which does the
+// same thing in the ktjet framework.
+//----------------------------------------------------------------------
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream> // needed for io
@@ -15,26 +24,19 @@ int main (int argc, char ** argv) {
   vector<FjPseudoJet> input_particles;
   
   // read in input particles
-  string line;
-  while (getline(cin, line)) {
-    if (line == "#END") {break;}             // signal for end of event
-    if (line.substr(0,1) == "#") {continue;} // otherwise skip comments
-    istringstream linestream(line);          // for reading numbers from line
-    double px, py , pz, E;
-    linestream >> px >> py >> pz >> E;       // read the components
-
+  double px, py , pz, E;
+  while (cin >> px >> py >> pz >> E) {
     // create a FjPseudoJet with these components and put it onto
     // back of the input_particles vector
     input_particles.push_back(FjPseudoJet(px,py,pz,E)); 
   }
 
-  // run the jet clustering
-  FjClusterSequence clust_seq(input_particles);
+  // run the jet clustering with option R=1.0 and strategy=Best
+  FjClusterSequence clust_seq(input_particles, 0.5, Best);
 
   // tell the user what was done
-  cout << "FastJet ran on an event with "<< 
-          input_particles.size() << " particles.\n";
-  cout << "Strategy adopted was "<<clust_seq.strategy_string()<<endl<<endl;
+  cout << "Strategy adopted by FastJet was "<<
+       clust_seq.strategy_string()<<endl<<endl;
 
   // extract the inclusive jets with pt > 5 GeV, sorted by pt
   double ptmin = 5.0;
@@ -59,18 +61,14 @@ int main (int argc, char ** argv) {
 }
 
 
+//----------------------------------------------------------------------
 // a function that pretty prints a list of jets
-
 void print_jets (const FjClusterSequence & clust_seq, 
 		 const vector<FjPseudoJet> & jets) {
 
   // sort jets into increasing pt
   vector<FjPseudoJet> sorted_jets = sorted_by_pt(jets);  
 
-  // testing
-  double d2 = clust_seq.exclusive_dmerge(2);
-  cout << "njets at dmerge: " << clust_seq.n_exclusive_jets(d2)<<endl;
-  
   // label the columns
   printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", 
 	 "phi", "pt", "n constituents");

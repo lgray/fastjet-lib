@@ -153,7 +153,7 @@ int FjClusterSequence::_tile_index(const double & eta, const double & phi) const
 //----------------------------------------------------------------------
 // overloaded version which additionally sets up information regarding the
 // tiling
-inline void FjClusterSequence::_bj_set_jetinfo( TiledJet * const jet,
+inline void FjClusterSequence::_tj_set_jetinfo( TiledJet * const jet,
 					      const int _jets_index) {
   // first call the generic setup
   _bj_set_jetinfo<>(jet, _jets_index);
@@ -245,7 +245,7 @@ void FjClusterSequence::_tiled_N2_cluster() {
   
   // initialise the basic jet info 
   for (int i = 0; i< n; i++) {
-    _bj_set_jetinfo(jetA, i);
+    _tj_set_jetinfo(jetA, i);
     //cout << i<<": "<<jetA->tile_index<<"\n";
     jetA++; // move on to next entry of briefjets
   }
@@ -330,7 +330,7 @@ void FjClusterSequence::_tiled_N2_cluster() {
       _bj_remove_from_tiles(jetA);
       oldB = * jetB;  // take a copy because we will need it...
       _bj_remove_from_tiles(jetB);
-      _bj_set_jetinfo(jetB, nn); // also registers the jet in the tiling
+      _tj_set_jetinfo(jetB, nn); // also registers the jet in the tiling
     } else {
       // jet-beam recombination
       // get the hist_index
@@ -482,7 +482,7 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
   
   // initialise the basic jet info 
   for (int i = 0; i< n; i++) {
-    _bj_set_jetinfo(jetA, i);
+    _tj_set_jetinfo(jetA, i);
     //cout << i<<": "<<jetA->tile_index<<"\n";
     jetA++; // move on to next entry of briefjets
   }
@@ -570,7 +570,7 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
       _bj_remove_from_tiles(jetA);
       oldB = * jetB;  // take a copy because we will need it...
       _bj_remove_from_tiles(jetB);
-      _bj_set_jetinfo(jetB, nn); // also registers the jet in the tiling
+      _tj_set_jetinfo(jetB, nn); // also registers the jet in the tiling
     } else {
       // jet-beam recombination
       // get the hist_index

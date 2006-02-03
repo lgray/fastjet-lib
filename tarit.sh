@@ -2,7 +2,7 @@
 # create a tar archive
 
 #version=0.9.0c-20050929-1200
-version=0.9pre-20060203-1815
+version=0.9pre-20060203-2140
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dir=fastjet-$version
@@ -24,7 +24,7 @@ else
                       $dir/(src|include|example|doc)/Makefile \
                       $dir/Makefile \
                       $dir/data/*.dat \
-                      $dir/**/(READM*[A-Z]|INSTALL)\
+                      $dir/**/(READM*[A-Z]|INSTALL|CHANGELOG)\
                       $dir/lib/.dummy 
     rm $dir
   fi

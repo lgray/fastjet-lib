@@ -36,7 +36,7 @@ endif
 # other config stuff
 cppExtension := .cc          # File extension of source files
 CPPFLAGS +=                 # List flags to pass to C/C++ preprocessor
-CXXFLAGS += -O3 -Wall       # List flags to pass to C++ compiler
+CXXFLAGS += -g -O3 -Wall       # List flags to pass to C++ compiler
 LDFLAGS +=                  # List flags to pass to linker
 LDLIBS +=                   # List additional system libraries to link with
 

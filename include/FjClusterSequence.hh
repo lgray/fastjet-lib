@@ -275,7 +275,7 @@ class FjClusterSequence {
   // routines for tiled case, including some overloads of the plain
   // BriefJet cases
   int  _tile_index(const double & eta, const double & phi) const;
-  void _bj_set_jetinfo( TiledJet * const jet, const int _jets_index);
+  void _tj_set_jetinfo ( TiledJet * const jet, const int _jets_index);
   void  _bj_remove_from_tiles(TiledJet * const jet);
   void _initialise_tiles();
   void _print_tiles(TiledJet * briefjets ) const;
