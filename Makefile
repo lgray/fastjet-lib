@@ -6,6 +6,22 @@
 # to the CGAL Makefile (which defines various flags)
 USE_CGAL = yes
 
+#CGAL_MAKEFILE = .../some/path/makefile...
+
+# Things needed when compiling with ktjet -- adjust to correspond
+# to your own setup
+KTJET_INCLUDE =    -DKTDOUBLEPRECISION -I../../ktjet -I../../clhep/include
+KTJET_LIBRARY = -L../../ktjet/lib -lKtEvent -L../../clhep/lib -lCLHEP -lm
+
+#--------------------------------------------------------------------
+# other config stuff
+cppExtension := .cc          # File extension of source files
+CPPFLAGS +=                 # List flags to pass to C/C++ preprocessor
+CXXFLAGS += -g -O3 -Wall       # List flags to pass to C++ compiler
+LDFLAGS +=                  # List flags to pass to linker
+LDLIBS +=                   # List additional system libraries to link with
+
+
 ifeq ($(USE_CGAL),no)
   # this directs the code to drop the parts that depend on CGAL 
   INCLUDE += -DDROP_CGAL
@@ -31,17 +47,9 @@ else
 endif
 
 
-
-#--------------------------------------------------------------------
-# other config stuff
-cppExtension := .cc          # File extension of source files
-CPPFLAGS +=                 # List flags to pass to C/C++ preprocessor
-CXXFLAGS += -g -O3 -Wall       # List flags to pass to C++ compiler
-LDFLAGS +=                  # List flags to pass to linker
-LDLIBS +=                   # List additional system libraries to link with
-
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
+
 
 # will the following work???!!!
 #lib:

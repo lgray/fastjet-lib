@@ -1,23 +1,9 @@
-DEBUGGING:
-example/fastjet_timing -verbose 2 -r 0.72  -strategy -3 -write -incl 5.0 < ../data/single-event.dat
-
-This hangs for unknown reason (strategy=-2 case also has problems, but
-not identical). Running with valgrind reveals no problems (but might
-not expect problems to show up?). Just before it hangs (step 373) is
-tries to recombine a particle that's already been recombined. But it
-also misclusters particle 362 immediately after its creation (step
-363).
-
-Another problem is that ktjet_example has wrong behaviour for
-r/=1.0. This too needs to be understood...
-
 ----------------------------------------------------------------------
 FastJet
 -------
 
-The FastJet package provides a fast implementation (described in
-hep-ph/0512210) of the longitudinally invariant kt jet finder as
-introduced in
+The FastJet package provides a fast implementation of the
+longitudinally invariant kt jet finder as introduced in
 
   S.~Catani, Y.~L.~Dokshitzer, M.~H.~Seymour and B.~R.~Webber,
   Nucl.\ Phys.\ B {\bf 406}  (1993)  187.
@@ -26,6 +12,9 @@ and
 
   S.~D.~Ellis and D.~E.~Soper,
   Phys.\ Rev.\ D {\bf 48} (1993) 3160 [hep-ph/9305266]. 
+
+The implementation is based on the geometrical methods described in
+hep-ph/0512210.
 
 Installation instructions are provided in the INSTALL file.
 
@@ -44,4 +33,25 @@ lib/            destination for the libfastjet.a library
 example/        contains some example programs
 data/           contains some files with data for events
 
+----------------------------------------------------------------------
+Known bugs
+----------
+
+With the NlnN strategies, on events with many particles with identical
+kt values, the clustering hangs. The detailed reason has yet to be
+understood, but it may be connected with the std::map being used.
+
+----------------------------------------------------------------------
+DEBUGGING:
+example/fastjet_timing -verbose 2 -r 0.72  -strategy -3 -write -incl 5.0 < ../data/single-event.dat
+
+This hangs for unknown reason (strategy=-2 case also has problems, but
+not identical). Running with valgrind reveals no problems (but might
+not expect problems to show up?). Just before it hangs (step 373) it
+tries to recombine a particle that's already been recombined. But it
+also misclusters particle 362 immediately after its creation (step
+363).
+
+Another problem is that ktjet_example has wrong behaviour for
+r/=1.0. This too needs to be understood...
 

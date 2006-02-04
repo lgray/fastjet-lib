@@ -28,11 +28,11 @@ void FjClusterSequence::_initialise_and_run (
   if (_strategy == Best) {
     int N = _jets.size();
 #ifndef DROP_CGAL
-    if (N > 9000) {
-      _strategy = NlnN; } 
+    if (N > 9000/_Rparam) { // empirical observation of how it scales with R
+      _strategy = NlnN; }   // see GPS CCN27-57
     else
 #endif  // DROP_CGAL
-    if (N > 55) {
+      if (N > 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
       _strategy = N2Tiled;
     } else {
       _strategy = N2Plain;

@@ -272,6 +272,15 @@ class FjClusterSequence {
   double _tile_size_eta, _tile_size_phi;
   int    _n_tiles_phi,_tiles_ieta_min,_tiles_ieta_max;
 
+  // reasonably robust return of tile index given ieta and iphi, in particular
+  // it works even if iphi is negative
+  inline int _tile_index (int ieta, int iphi) const {
+    // note that (-1)%n = -1 so that we have to add _n_tiles_phi
+    // before performing modulo operation
+    return (ieta-_tiles_ieta_min)*_n_tiles_phi
+                  + (iphi+_n_tiles_phi) % _n_tiles_phi;
+  }
+
   // routines for tiled case, including some overloads of the plain
   // BriefJet cases
   int  _tile_index(const double & eta, const double & phi) const;

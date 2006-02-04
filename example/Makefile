@@ -14,12 +14,14 @@ OBJS = $(patsubst %.cc,%.o,$(SRCS))
 fastjet_example: fastjet_example.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_example fastjet_example.o  $(LDFLAGS)
 
-# for the following to compile the INCLUDE defined above
-# will need to be supplemented with the ktjet and CLHEP directories
-# and LDFLAGS will also need to be supplemented
+# for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
+# variables must be set in ../Makefile
 ktjet_example: ktjet_example.o 
-	$(CXX)  -o ktjet_example ktjet_example.o  $(LDFLAGS)
+	$(CXX)  -o ktjet_example ktjet_example.o $(KTJET_LIBRARY) $(LDFLAGS) 
 
+# explicit compilation so as to add ktjet libaries only for this file
+ktjet_example.o: ktjet_example.cc
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(KTJET_INCLUDE) -c $<
 
 fastjet_timing: fastjet_timing.o CmdLine.o ../lib/libfastjet.a
 	$(CXX)  -o fastjet_timing fastjet_timing.o CmdLine.o  $(LDFLAGS)

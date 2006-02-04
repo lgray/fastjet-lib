@@ -13,12 +13,26 @@
 //                  < data_file
 //
 // where the clustering can be repeated to aid timing and multiple
-// events can be combined to get to larger multiplicities; output of
-// all inclusive jets with pt > ptmin is obtained with the -incl
-// option. By default only the 3-momenta are read in (taken massless),
-// but this behaviour can be changed with the "-massive" option which
-// takes the true energy.
+// events can be combined to get to larger multiplicities. Some options:
 //
+//   -strategy N   indicate stratgey from the enum FjStrategy (see
+//                 FjClusterSequence.hh).
+//
+//   -combine nev  for combining multiple events from the data file in order
+//                 to get to large multiplicities.
+//
+//   -incl ptmin   output of all inclusive jets with pt > ptmin is obtained
+//                 with the -incl option.
+//
+//   -excld dcut   output of all exclusive jets as obtained in a clustering
+//                 with dcut
+//
+//   -massive  By default only the 3-momenta are read in (taken
+//             massless), but this behaviour can be changed with
+//             the "-massive" option which  takes the true energy.
+//
+//   -write    for writing out detailed clustering sequence (valuable
+//             for testing purposes)
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>
@@ -120,6 +134,7 @@ int main (int argc, char ** argv) {
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     FjClusterSequence clust_seq(jets,ktR,strategy,write);
     if (irepeat != 0) {continue;}
+    cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
 
     // now provide some nice output...
     if (inclkt >= 0.0) {
@@ -157,7 +172,6 @@ int main (int argc, char ** argv) {
       }
     }
     
-    cerr << "strategy used =  "<< clust_seq.strategy_used()<< endl;
   } // irepeat
 
   } // iev

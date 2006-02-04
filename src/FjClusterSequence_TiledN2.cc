@@ -83,7 +83,7 @@ void FjClusterSequence::_initialise_tiles() {
   // now set up the cross-referencing between tiles
   for (int ieta = _tiles_ieta_min; ieta <= _tiles_ieta_max; ieta++) {
     for (int iphi = 0; iphi < _n_tiles_phi; iphi++) {
-      Tile * tile = & _tiles[(ieta-_tiles_ieta_min)*_n_tiles_phi+iphi];
+      Tile * tile = & _tiles[_tile_index(ieta,iphi)];
       // no jets in this tile yet
       tile->head = NULL; // first element of tiles points to itself
       tile->begin_tiles[0] =  tile;
@@ -93,28 +93,25 @@ void FjClusterSequence::_initialise_tiles() {
       // set up L's in column to the left of X
       tile->surrounding_tiles = pptile;
       if (ieta > _tiles_ieta_min) {
-	// run idphi from 5 to 7 instead of -1..1 so as to get around
-	// problem that (-1)%n = -1 rather than n-1 as we would like...
-	for (int idphi = 5; idphi <=7; idphi++) {
-	  *pptile = & _tiles[(ieta-1-_tiles_ieta_min)*_n_tiles_phi+
-			     (iphi+idphi) % _n_tiles_phi];
+	// with the itile subroutine, we can safely run tiles from
+	// idphi=-1 to idphi=+1, because it takes care of
+	// negative and positive boundaries
+	for (int idphi = -1; idphi <=+1; idphi++) {
+	  *pptile = & _tiles[_tile_index(ieta-1,iphi+idphi)];
 	  pptile++;
 	}	
       }
       // now set up last L (below X)
-      *pptile = & _tiles[(ieta-_tiles_ieta_min)*_n_tiles_phi+
-			 (iphi+5) % _n_tiles_phi];
+      *pptile = & _tiles[_tile_index(ieta,iphi-1)];
       pptile++;
       // set up first R (above X)
       tile->RH_tiles = pptile;
-      *pptile = & _tiles[(ieta-_tiles_ieta_min)*_n_tiles_phi+
-			 (iphi+1) % _n_tiles_phi];
+      *pptile = & _tiles[_tile_index(ieta,iphi+1)];
       pptile++;
       // set up remaining R's, to the right of X
       if (ieta < _tiles_ieta_max) {
-	for (int idphi = 5; idphi <=7; idphi++) {
-	  *pptile = & _tiles[(ieta+1-_tiles_ieta_min)*_n_tiles_phi+
-			     (iphi+idphi) % _n_tiles_phi];
+	for (int idphi = -1; idphi <= +1; idphi++) {
+	  *pptile = & _tiles[_tile_index(ieta+1,iphi+idphi)];
 	  pptile++;
 	}	
       }
@@ -509,21 +506,27 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
 	}
       }
     }
+    // no need to do it for LH tiles, since they are implicitly done
+    // when we set NN for both jetA and jetB on the RH tiles.
   }
+
   
   // now create the diJ (where J is i's NN) table -- remember that 
   // we differ from standard normalisation here by a factor of R2
+  // (corrected for at the end). 
   struct diJ_plus_link {
-    double diJ;
-    TiledJet * jet;
+    double     diJ; // the distance
+    TiledJet * jet; // the jet (i) for which we've found this distance
+                    // (whose NN will the J).
   };
   diJ_plus_link * diJ = new diJ_plus_link[n];
   jetA = head;
   for (int i = 0; i < n; i++) {
-    diJ[i].diJ = _bj_diJ(jetA);
-    diJ[i].jet = jetA;
-    jetA->diJ_posn = i;
-    jetA++; // have jetA follow i
+    diJ[i].diJ = _bj_diJ(jetA); // kt distance * R^2
+    diJ[i].jet = jetA;  // our compact diJ table will not be in	     
+    jetA->diJ_posn = i; // one-to-one corresp. with non-compact jets,
+                        // so set up bi-directional correspondence here.
+    jetA++; // have jetA follow i 
   }
 
   // now run the recombination loop
@@ -531,9 +534,12 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
   while (n > 0) {
 
     // find the minimum of the diJ on this round
-    double diJ_min = diJ[0].diJ;
     diJ_plus_link * best, *stop; // pointers a bit faster than indices
-    best = diJ;
+    // could use best to keep track of diJ min, but it turns out to be
+    // marginally faster to have a separate variable (avoids n
+    // dereferences at the expense of n/2 assignments).
+    double diJ_min = diJ[0].diJ; // initialise the best one here.
+    best = diJ;                  // and here
     stop = diJ+n;
     for (diJ_plus_link * here = diJ+1; here != stop; here++) {
       if (here->diJ < diJ_min) {best = here; diJ_min  = here->diJ;}
@@ -555,8 +561,8 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
       if (jetA < jetB) {swap(jetA,jetB);}
 
       // get the two history indices
-      int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      int hist_b = _jets[jetB->_jets_index].cluster_hist_index();
+      int ihstry_a = _jets[jetA->_jets_index].cluster_hist_index();
+      int ihstry_b = _jets[jetB->_jets_index].cluster_hist_index();
       // create the recombined jet
       _jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
       int nn = _jets.size() - 1;
@@ -564,19 +570,20 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
       // update history
       //cout <<n-1<<" "<<jetA-head<<" "<<jetB-head<<"; ";
       _add_step_to_history(history_location, 
-			   min(hist_a,hist_b),max(hist_a,hist_b),
+			   min(ihstry_a,ihstry_b),max(ihstry_a,ihstry_b),
 			   nn, diJ_min);
       // what was jetB will now become the new jet
       _bj_remove_from_tiles(jetA);
       oldB = * jetB;  // take a copy because we will need it...
       _bj_remove_from_tiles(jetB);
-      _tj_set_jetinfo(jetB, nn); // also registers the jet in the tiling
+      _tj_set_jetinfo(jetB, nn); // cause jetB to become _jets[nn]
+                                 // (also registers the jet in the tiling)
     } else {
       // jet-beam recombination
       // get the hist_index
-      int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
+      int ihstry_a = _jets[jetA->_jets_index].cluster_hist_index();
       //cout <<n-1<<" "<<jetA-head<<" "<<-1<<"; ";
-      _add_step_to_history(history_location,hist_a,BeamJet,Invalid,diJ_min); 
+      _add_step_to_history(history_location,ihstry_a,BeamJet,Invalid,diJ_min); 
       _bj_remove_from_tiles(jetA);
     }
 
@@ -609,9 +616,11 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
 
     // Initialise jetB's NN distance as well as updating it for 
     // other particles.
+    // Run over all tiles in our union 
     for (int itile = 0; itile < n_near_tiles; itile++) {
       Tile * tile = &_tiles[tile_union[itile]];
-      tile->tagged = false; // reset tag 
+      tile->tagged = false; // reset tag, since we're done with unions
+      // run over all jets in the current tile
       for (TiledJet * jetI = tile->head; jetI != NULL; jetI = jetI->next) {
 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
@@ -629,10 +638,11 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
 	      }
 	    }
 	  }
-	  diJ[jetI->diJ_posn].diJ = _bj_diJ(jetI); // update diJ 
+	  diJ[jetI->diJ_posn].diJ = _bj_diJ(jetI); // update diJ kt-dist
 	}
 	// check whether new jetB is closer than jetI's current NN and
-	// if need to update things
+	// if jetI is closer than jetB's current (evolving) nearest
+	// neighbour. Where relevant update things
 	if (jetB != NULL) {
 	  double dist = _bj_dist(jetI,jetB);
 	  if (dist < jetI->NN_dist) {
@@ -651,6 +661,7 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
       }
     }
 
+    // finally, register the updated kt distance for B
     if (jetB != NULL) {diJ[jetB->diJ_posn].diJ = _bj_diJ(jetB);}
 
   }
