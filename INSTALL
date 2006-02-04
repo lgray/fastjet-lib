@@ -31,19 +31,19 @@ which places the fastjet library in lib/.
 To run the example program cd to the example directory and do
 
   make fastjet_example
-  ./fastjet_example < ../data/Pythia-PtMin1000-LHC-10ev.dat
+  ./fastjet_example < ../data/single-event
 
 The output should be 
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#--------------------------------------------------------------
-#               FastJet prerelease (v 0.9)
-#        Written by Matteo Cacciari and Gavin Salam
-#        http://www.lpthe.jussieu.fr/~salam/fastjet
+#---------------------------------------------------------------------
+#                      FastJet release 1.0
+#            Written by Matteo Cacciari and Gavin Salam
+#            http://www.lpthe.jussieu.fr/~salam/fastjet
 #
-# Fast longitudinally invariant Kt Jet clustering, as described
-# in hep-ph/0512210 (please cite this if you use FastJet).
-#--------------------------------------------------------------
+# Longitudinally invariant Kt Jet clustering, using the fast geometric
+# algorithms of hep-ph/0512210 (please cite this if you use FastJet)
+#---------------------------------------------------------------------
 Strategy adopted by FastJet was N2Tiled
 
 Printing inclusive jets with pt > 5 GeV
@@ -73,3 +73,21 @@ jet #        rapidity             phi              pt  n constituents
     8      3.42713139      5.74362063      5.17254118       13
     9     -4.83615264      2.20502275      5.02711586       12
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+Additionally the example/ directory contains the following other
+programs
+
+ktjet_example		
+	same example program, but written with ktjet, to illustrate
+	similarities and differences with fastjet_example. For
+	compilation to work please set the KTJET_INCLUDE and
+	KTJET_LIBRARY variables in the fastjet main Makefile.
+
+fastjet_timing
+ktjet_timing
+	programs for testing output and timings of the two programs --
+	may be run with a variety of command-line options to control
+	behaviour -- see the beginning of fastjet_timing.cc for
+	further information.
+
+ 

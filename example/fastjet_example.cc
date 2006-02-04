@@ -32,7 +32,8 @@ int main (int argc, char ** argv) {
   }
 
   // run the jet clustering with option R=1.0 and strategy=Best
-  FjClusterSequence clust_seq(input_particles, 0.5, Best);
+  double Rparam = 1.0;
+  FjClusterSequence clust_seq(input_particles, Rparam, Best);
 
   // tell the user what was done
   cout << "Strategy adopted by FastJet was "<<

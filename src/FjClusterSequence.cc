@@ -67,14 +67,18 @@ void FjClusterSequence::_print_banner() {
 
   if (!_first_time) {return;}
   _first_time = false;
-  cout << "#--------------------------------------------------------------\n";
-  cout << "#               FastJet prerelease (v 0.9)                     \n";
-  cout << "#        Written by Matteo Cacciari and Gavin Salam            \n";
-  cout << "#        http://www.lpthe.jussieu.fr/~salam/fastjet            \n";
-  cout << "#                                                              \n";
-  cout << "# Fast longitudinally invariant Kt Jet clustering, as described\n";
-  cout << "# in hep-ph/0512210 (please cite this if you use FastJet).     \n";
-  cout << "#--------------------------------------------------------------\n";
+  
+  cout << "#---------------------------------------------------------------------\n";
+  cout << "#                      FastJet release 1.0   			 \n";
+  cout << "#            Written by Matteo Cacciari and Gavin Salam		 \n"; 
+  cout << "#            http://www.lpthe.jussieu.fr/~salam/fastjet		 \n"; 
+  cout << "#								      	 \n";
+  cout << "# Longitudinally invariant Kt Jet clustering, using the fast geometric\n";
+  cout << "# algorithms of hep-ph/0512210 (please cite this if you use FastJet)  \n";
+#ifndef DROP_CGAL
+  cout << "# This package makes use of the CGAL library: www.cgal.org            \n";
+#endif  // DROP_CGAL
+  cout << "#---------------------------------------------------------------------\n";
 }
 
 //----------------------------------------------------------------------

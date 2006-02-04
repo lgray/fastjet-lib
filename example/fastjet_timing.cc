@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-// fastjet_timing.cc: Program to help time the fastjet package
+// fastjet_timing.cc: Program to help time and test the fastjet package
 // 
 // It reads files containing multiple events in the format 
 // p1x p1y p1z E1
@@ -7,6 +7,9 @@
 // ...
 // #END
 // 
+// An example input file containing 10 events is included as 
+// ../data/Pythia-PtMin1000-LHC-10ev.dat
+//
 // Usage:
 //   fastjet_timing [-strategy NUMBER] [-repeat nrepeats] [-massive] \
 //                  [-combine nevents] [-r Rparameter] [-incl ptmin] [...] \
@@ -33,6 +36,7 @@
 //
 //   -write    for writing out detailed clustering sequence (valuable
 //             for testing purposes)
+//
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>

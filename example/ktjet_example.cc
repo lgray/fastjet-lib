@@ -2,9 +2,8 @@
 // ktjet example program that should do the same thing as the
 // fastjet_example program (as of 3 Feb 2006)
 //
-// NB: the Makefile does not contain references to the ktjet and CLHEP
-//     libraries. These should be added (according to the user's 
-//     local configuration) for compilation to succeed.
+// NB: the ../Makefile may need to be modified to set proper
+//     paths for access to the CLHEP and KtJet libraries.
 //----------------------------------------------------------------------
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
@@ -35,8 +34,8 @@ int main (int argc, char ** argv) {
 
   // run the inclusive jet clustering in PP mode using the covariant
   // E-scheme for recobination (type=4, angle=2, recom=1, rparameter=1.0)
-  double ktR = 1.0;
-  KtEvent clust_seq(input_particles,4,2,1,ktR);
+  double Rparam = 1.0;
+  KtEvent clust_seq(input_particles,4,2,1,Rparam);
 
   // extract the inclusive jets with pt > 5 GeV, sorted by pt
   double ptmin = 5.0;
@@ -54,9 +53,12 @@ int main (int argc, char ** argv) {
   print_jets(inclusive_jets);
   cout << endl;
 
-  // extract the exclusive jets with dcut = 25 GeV^2 
-  double dcut = 25.0;
-  clust_seq.findJetsD(dcut);
+  // Extract the exclusive jets with dcut = 25 GeV^2.
+  double dcut = 25.0; 
+  // Note that KtJet's definition of dij differs from Ellis&Soper (and
+  // fastjet) in the case where Rparam /= 1.0 (though in this case one
+  // should perhaps not be using the exclusive kt algorithm in any case).
+  clust_seq.findJetsD(dcut * Rparam*Rparam);
   vector<KtLorentzVector> exclusive_jets = clust_seq.getJetsPt();
 
   // print them out

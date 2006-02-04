@@ -1,0 +1,125 @@
+//----------------------------------------------------------------------
+// ktjet_timing.cc: Program similar to fastjet_timing.cc, to be used
+//                  for timing and result comparisons. For usage, see
+//                  explanations given at the start of fastjet_timing.cc
+// 
+// Note: - some options present in fastjet_timing are missing
+//       - one or two behave differently, notably -write
+//
+#include<iostream>
+#include<sstream>
+#include<valarray>
+#include<vector>
+#include<cstddef> // for size_t
+#include "CmdLine.hh"
+#include "numconsts.hh"
+
+
+/** Need to include these KtJet Headers */
+#include "KtJet/KtEvent.h"
+#include "KtJet/KtLorentzVector.h"
+using namespace std;
+using namespace KtJet;
+
+inline double pow2(const double x) {return x*x;};
+
+// a program to run the kt algorithm (work in progress)
+int main (int argc, char ** argv) {
+
+  CmdLine cmdline(argc,argv);
+  //bool clever = !cmdline.present("-dumb");
+  int  repeat = cmdline.int_val("-repeat",1);
+  int  combine = cmdline.int_val("-combine",1);
+  bool write   = cmdline.present("-write");
+  double ktR   = cmdline.double_val("-r",1.0);
+  double inclkt = cmdline.double_val("-incl",-1.0);
+  int    excln  = cmdline.int_val   ("-excln",-1);
+  double excld  = cmdline.double_val("-excld",-1.0);
+  int  nev     = cmdline.int_val("-nev",1);
+  bool   massive = cmdline.present("-massive");
+
+  for (int iev = 0; iev < nev; iev++) {
+  vector<KtJet::KtLorentzVector> jets;
+  string line;
+  int  ndone = 0;
+  while (getline(cin, line)) {
+      //cout << line<<endl;
+    istringstream linestream(line);
+    if (line == "#END") {
+      ndone += 1;
+      if (ndone == combine) {break;}
+    }
+    if (line.substr(0,1) == "#") {continue;}
+    valarray<double> fourvec(4);
+    linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
+    if (!massive) {
+      fourvec[3] = sqrt(pow2(fourvec[0])+pow2(fourvec[1])+pow2(fourvec[2]));}
+    KtJet::KtLorentzVector p(fourvec[0],fourvec[1],fourvec[2],fourvec[3]);
+    jets.push_back(p);
+  }
+  
+
+  // set KtEvent flags
+  int type  = 4; // PP
+  int angle = 2; // delta R
+  int recom = 1; // E
+  //double rparameter = 1.0;
+
+  for (int i = 0; i < repeat ; i++) {
+    // Construct the KtEvent object 
+    KtJet::KtEvent ev(jets,type,angle,recom,ktR);
+
+    if (i!=0) {continue;}
+    cerr << "Number of particles = "<< jets.size() << endl;
+
+    // Print out the number of final state jets
+    //std::cout << "Number of final state jets: " << ev.getNJets() << std::endl;
+    if (write) {
+      /** Retrieve the final state jets from KtEvent sorted by Pt*/
+      std::vector<KtJet::KtLorentzVector> jets = ev.getJetsPt();
+      
+      /** Print out jets 4-momentum and Pt */
+      std::vector<KtJet::KtLorentzVector>::const_iterator itr = jets.begin();
+      for( ; itr != jets.end() ; ++itr) {
+	std::cout << "Jets Pt2: " << pow2((*itr).perp()) << std::endl; 
+      }
+    }
+
+    if (inclkt >= 0.0) {
+      // Retrieve the final state jets from KtEvent sorted by Pt
+      std::vector<KtJet::KtLorentzVector> jets = ev.getJetsPt();
+    
+      // Print out index, rap, phi, pt 
+      for (size_t j = 0; j < jets.size(); j++) {
+	if (jets[j].perp() < inclkt) {break;}
+	double phi = jets[j].phi();
+	if (phi < 0.0) {phi += twopi;}
+	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rapidity(),phi,jets[j].perp());
+      }
+    }
+
+    if (excln > 0) {
+      ev.findJetsN(excln);
+      vector<KtJet::KtLorentzVector> jets = ev.getJetsPt();
+      cout << "Printing "<<excln<<" exclusive jets\n";
+      for (size_t j = 0; j < jets.size(); j++) {
+	printf("%5u %15.8f %15.8f %15.8f\n",j,
+	       jets[j].rapidity(),jets[j].phi(),jets[j].perp());
+      }
+    }
+
+    if (excld > 0.0) {
+      ev.findJetsD(excld);
+      vector<KtJet::KtLorentzVector> jets = ev.getJetsPt();
+      cout << "Printing exclusive jets for d = "<<excld<<"\n";
+      for (size_t j = 0; j < jets.size(); j++) {
+	printf("%5u %15.8f %15.8f %15.8f\n",j,
+	       jets[j].rapidity(),jets[j].phi(),jets[j].perp());
+      }
+    }
+
+
+  }
+
+}
+}

@@ -26,11 +26,20 @@ ktjet_example.o: ktjet_example.cc
 fastjet_timing: fastjet_timing.o CmdLine.o ../lib/libfastjet.a
 	$(CXX)  -o fastjet_timing fastjet_timing.o CmdLine.o  $(LDFLAGS)
 
+# for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
+# variables must be set in ../Makefile
+ktjet_timing: ktjet_timing.o CmdLine.o
+	$(CXX)  -o ktjet_timing ktjet_timing.o CmdLine.o $(KTJET_LIBRARY) $(LDFLAGS) 
+
+# explicit compilation so as to add ktjet libaries only for this file
+ktjet_timing.o: ktjet_timing.cc
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(KTJET_INCLUDE) -c $<
+
 clean: 
 	rm -f *.o
 
 realclean: clean
-	rm -f fastjet_example fastjet_timing ktjet_example
+	rm -f  fastjet_example fastjet_timing ktjet_example ktjet_timing
 
 depend:
 	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
