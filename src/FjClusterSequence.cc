@@ -76,7 +76,7 @@ void FjClusterSequence::_print_banner() {
   cout << "# Longitudinally invariant Kt Jet clustering, using the fast geometric\n";
   cout << "# algorithms of hep-ph/0512210 (please cite this if you use FastJet)  \n";
 #ifndef DROP_CGAL
-  cout << "# This package makes use of the CGAL library: www.cgal.org            \n";
+  cout << "# This package makes use of the CGAL library: http://www.cgal.org/    \n";
 #endif  // DROP_CGAL
   cout << "#---------------------------------------------------------------------\n";
 }
