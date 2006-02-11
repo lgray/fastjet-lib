@@ -31,7 +31,7 @@ which places the fastjet library in lib/.
 To run the example program cd to the example directory and do
 
   make fastjet_example
-  ./fastjet_example < ../data/single-event
+  ./fastjet_example < ../data/single-event.dat
 
 The output should be 
 

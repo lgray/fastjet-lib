@@ -9,7 +9,7 @@ USE_CGAL = yes
 #CGAL_MAKEFILE = .../some/path/makefile...
 
 # Things needed when compiling with ktjet -- adjust to correspond
-# to your own setup
+# to your own setup (remember to "make double" the KtJet library)
 KTJET_INCLUDE =    -DKTDOUBLEPRECISION -I../../ktjet -I../../clhep/include
 KTJET_LIBRARY = -L../../ktjet/lib -lKtEvent -L../../clhep/lib -lCLHEP -lm
 

@@ -38,6 +38,8 @@
 
 //using namespace std;
 
+/// Used to protect against parton-level events where pt can be zero
+/// for some partons, giving rapidity=infinity. KtJet fails in those cases.
 const double MaxRap = 1e5;
 
 /// Class to contain pseudojets, including minimal information of use to

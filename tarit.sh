@@ -25,7 +25,7 @@ else
                       $dir/(src|include|example|doc)/Makefile \
                       $dir/Makefile \
                       $dir/data/*.dat \
-                      $dir/**/(READM*[A-Z]|INSTALL|CHANGELOG)\
+                      $dir/**/(READM*[A-Z]|INSTALL|CHANGELOG|Doxyfile)\
                       $dir/lib/.dummy 
     rm $dir
   fi

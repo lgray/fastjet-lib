@@ -164,11 +164,11 @@ int main (int argc, char ** argv) {
     }
   }
   
-  cerr << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
 
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     FjClusterSequence clust_seq(jets,ktR,strategy,write);
     if (irepeat != 0) {continue;}
+    cerr << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
     cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
 
     // now provide some nice output...

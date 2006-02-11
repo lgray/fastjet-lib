@@ -63,8 +63,8 @@ void FjPseudoJet::_finish_init () {
   if (this->E() != abs(this->pz())) {
     _rap = 0.5*log((this->E() + this->pz())/(this->E() - this->pz()));
       } else {
-    // temporary to see if overlapping points are origin of 
-    // problem with voronoi
+    // Overlapping points can give problems. Let's lift the degeneracy
+    // in case of multiple 0-pT points (can be found at parton-level)
     double MaxRapHere = MaxRap + abs(this->pz());
     if (this->pz() >= 0.0) {_rap = MaxRapHere;} else {_rap = -MaxRapHere;}
   }
