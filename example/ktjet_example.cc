@@ -19,7 +19,8 @@ using namespace KtJet;
 // a declaration of a function that pretty prints a list of jets
 void print_jets (const vector<KtLorentzVector> &);
 
-// an example program showing how to use fastjet
+/// an example program showing how the fastjet_example program would
+/// be translated for use with ktjet.
 int main (int argc, char ** argv) {
   
   vector<KtLorentzVector> input_particles;

@@ -49,7 +49,7 @@ using namespace std;
 // a declaration of a function that pretty prints a list of jets
 void print_jets (const FjClusterSequence &, const vector<FjPseudoJet> &);
 
-// an example program showing how to use fastjet
+/// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
   
   vector<FjPseudoJet> input_particles;
@@ -94,7 +94,7 @@ int main (int argc, char ** argv) {
 
 
 //----------------------------------------------------------------------
-// a function that pretty prints a list of jets
+/// a function that pretty prints a list of jets
 void print_jets (const FjClusterSequence & clust_seq, 
 		 const vector<FjPseudoJet> & jets) {
 

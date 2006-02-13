@@ -29,6 +29,17 @@
 //ENDHEADER
 
 
+//----------------------------------------------------------------------
+// here's where we put the main page for fastjet (as explained in the
+// Doxygen faq)
+//......................................................................
+/*! \mainpage FastJet code documentation
+ *
+ * See also the main <a
+ * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
+ */
+//----------------------------------------------------------------------
+
 #ifndef __CLUSTERSEQUENCE_H_
 #define __CLUSTERSEQUENCE_H_
 
@@ -285,18 +296,25 @@ class FjClusterSequence {
   
 
 
+  /// number of neighbours that a tile will have (rectangular geometry
+  /// gives 9 neighbours).
+  static const int n_tile_neighbours = 9;
   //----------------------------------------------------------------------
   /// The fundamental structures to be used for the tiled N^2 algorithm
-  /// Identical to TiledJet except that it also has a link to the next jet;
   /// (see CCN27-44 for some discussion of pattern of tiling)
-  static const int n_tile_neighbours = 9;
   struct Tile {
-    Tile *   begin_tiles[n_tile_neighbours]; // pointers to neighbouring tiles, including self?
-    Tile **  surrounding_tiles; // neighbouring tiles, excluding self?
-    Tile **  RH_tiles;          // half of neighbouring tiles, no self
-    Tile **  end_tiles; /// just beyond end of tiles
-    TiledJet * head;    /// start of list of BriefJets contained in this tile
-    bool     tagged;    /// sometimes useful to be able to tag a tile
+    /// pointers to neighbouring tiles, including self
+    Tile *   begin_tiles[n_tile_neighbours]; 
+    /// neighbouring tiles, excluding self
+    Tile **  surrounding_tiles; 
+    /// half of neighbouring tiles, no self
+    Tile **  RH_tiles;  
+    /// just beyond end of tiles
+    Tile **  end_tiles; 
+    /// start of list of BriefJets contained in this tile
+    TiledJet * head;    
+    /// sometimes useful to be able to tag a tile
+    bool     tagged;    
   };
   std::vector<Tile> _tiles;
   double _tiles_eta_min, _tiles_eta_max;

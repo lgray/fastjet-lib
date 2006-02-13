@@ -81,7 +81,7 @@ using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-// a program to run the kt algorithm (work in progress)
+/// a program to test and time the kt algorithm as implemented in fastjet
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
