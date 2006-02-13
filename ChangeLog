@@ -1,9 +1,12 @@
 2006-02-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	This is release v1.0.0b2
+
 	* added "#include <cassert>" in places where it's needed (thanks
 	to Thomas Kluge for pointing our the need for this).
 
-	This is release v1.0.0b2
+	* Improved error message in case of request for N ln N strategy
+	when CGAL has not been compiled in.
 	
 	
 2006-02-13   v1.0.0b1

@@ -72,9 +72,15 @@ void FjClusterSequence::_delaunay_cluster () {
   } else if (_strategy == NlnN) {
     DNN = new Dnn2piCylinder(points,ignore_nearest_is_mirror,verbose);
   } else 
+#else
+  if (_strategy == NlnN4pi || _strategy == NlnN3pi || _strategy == NlnN) {
+    cerr << "ERROR: Requested strategy "<<strategy_string()<<"but it is not"<<endl;
+    cerr << "       supported because FastJet was compiled without CGAL"<<endl<<endl;
+    assert(false);
+  }
 #endif // DROP_CGAL
   {
-    cerr << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl;
+    cerr << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl<<endl;
     assert(false);
   }
 
