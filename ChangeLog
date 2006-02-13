@@ -1,8 +1,11 @@
 ChangeLog for FastJet
 ---------------------
 
-
-2006-02-04   Prerelease of v1.0
+2006-02-13   v1.0.0b1
+	* arranged for harmonisation of behaviour of the various example
+	programs...
+	
+2006-02-04   v1.0.0b0
 	* added minimal standard files (ChangeLog, LICENSE) and headers
-	for GNU dist and included cvs $Id$ in all code files.
+	for GNU dist and included cvs ID string in all code files.
 

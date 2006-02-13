@@ -36,7 +36,7 @@ int main (int argc, char ** argv) {
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
   int  nev     = cmdline.int_val("-nev",1);
-  bool   massive = cmdline.present("-massive");
+  bool   massless = cmdline.present("-massless");
 
   for (int iev = 0; iev < nev; iev++) {
   vector<KtJet::KtLorentzVector> jets;
@@ -52,8 +52,12 @@ int main (int argc, char ** argv) {
     if (line.substr(0,1) == "#") {continue;}
     valarray<double> fourvec(4);
     linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
-    if (!massive) {
+    if (massless) {
+      linestream >> fourvec[0] >> fourvec[1] >> fourvec[2];
       fourvec[3] = sqrt(pow2(fourvec[0])+pow2(fourvec[1])+pow2(fourvec[2]));}
+    else {
+      linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
+    }
     KtJet::KtLorentzVector p(fourvec[0],fourvec[1],fourvec[2],fourvec[3]);
     jets.push_back(p);
   }

@@ -30,44 +30,43 @@
 
 
 //----------------------------------------------------------------------
-// fastjet_timing.cc: Program to help time and test the fastjet package
-// 
-// It reads files containing multiple events in the format 
-// p1x p1y p1z E1
-// p2x p2y p2z E2
-// ...
-// #END
-// 
-// An example input file containing 10 events is included as 
-// ../data/Pythia-PtMin1000-LHC-10ev.dat
-//
-// Usage:
-//   fastjet_timing [-strategy NUMBER] [-repeat nrepeats] [-massive] \
-//                  [-combine nevents] [-r Rparameter] [-incl ptmin] [...] \
-//                  < data_file
-//
-// where the clustering can be repeated to aid timing and multiple
-// events can be combined to get to larger multiplicities. Some options:
-//
-//   -strategy N   indicate stratgey from the enum FjStrategy (see
-//                 FjClusterSequence.hh).
-//
-//   -combine nev  for combining multiple events from the data file in order
-//                 to get to large multiplicities.
-//
-//   -incl ptmin   output of all inclusive jets with pt > ptmin is obtained
-//                 with the -incl option.
-//
-//   -excld dcut   output of all exclusive jets as obtained in a clustering
-//                 with dcut
-//
-//   -massive  By default only the 3-momenta are read in (taken
-//             massless), but this behaviour can be changed with
-//             the "-massive" option which  takes the true energy.
-//
-//   -write    for writing out detailed clustering sequence (valuable
-//             for testing purposes)
-//
+/// fastjet_timing.cc: Program to help time and test the fastjet package
+/// 
+/// It reads files containing multiple events in the format 
+/// p1x p1y p1z E1
+/// p2x p2y p2z E2
+/// ...
+/// #END
+/// 
+/// An example input file containing 10 events is included as 
+/// ../data/Pythia-PtMin1000-LHC-10ev.dat
+///
+/// Usage:
+///   fastjet_timing [-strategy NUMBER] [-repeat nrepeats] [-massive] \
+///                  [-combine nevents] [-r Rparameter] [-incl ptmin] [...] \
+///                  < data_file
+///
+/// where the clustering can be repeated to aid timing and multiple
+/// events can be combined to get to larger multiplicities. Some options:
+///
+///   -strategy N   indicate stratgey from the enum FjStrategy (see
+///                 FjClusterSequence.hh).
+///
+///   -combine nev  for combining multiple events from the data file in order
+///                 to get to large multiplicities.
+///
+///   -incl ptmin   output of all inclusive jets with pt > ptmin is obtained
+///                 with the -incl option.
+///
+///   -excld dcut   output of all exclusive jets as obtained in a clustering
+///                 with dcut
+///
+///   -massless     read in only the 3-momenta and deduce energies assuming
+///                 that particles are massless
+///
+///   -write        for writing out detailed clustering sequence (valuable
+///                 for testing purposes)
+///
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>
@@ -101,7 +100,7 @@ int main (int argc, char ** argv) {
   double excld  = cmdline.double_val("-excld",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e310);
   bool   show_constituents = cmdline.present("-const");
-  bool   massive = cmdline.present("-massive");
+  bool   massless = cmdline.present("-massless");
   int  nev     = cmdline.int_val("-nev",1);
   bool add_dense_coverage = cmdline.present("-dense");
 
@@ -132,9 +131,12 @@ int main (int argc, char ** argv) {
 			  +pow2(fourvec[2])+pow2(mass));
       }
     } else {
-      linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
-      if (!massive) {
+      if (massless) {
+	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2];
 	fourvec[3] = sqrt(pow2(fourvec[0])+pow2(fourvec[1])+pow2(fourvec[2]));}
+      else {
+	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
+      }
     }
     FjPseudoJet psjet(fourvec);
     if (abs(psjet.rap() < etamax)) {jets.push_back(psjet);}
