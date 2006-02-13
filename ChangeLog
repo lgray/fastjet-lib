@@ -1,6 +1,11 @@
-ChangeLog for FastJet
----------------------
+2006-02-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* added "#include <cassert>" in places where it's needed (thanks
+	to Thomas Kluge for pointing our the need for this).
+
+	This is release v1.0.0b2
+	
+	
 2006-02-13   v1.0.0b1
 	* arranged for harmonisation of behaviour of the various example
 	programs...

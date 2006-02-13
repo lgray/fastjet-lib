@@ -33,6 +33,7 @@
 #define __DYNAMICNEARESTNEIGHBOURS__
 
 #include<vector>
+#include<cassert>
 //using namespace std;
 
 

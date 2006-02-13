@@ -34,6 +34,7 @@
 
 #include<valarray>
 #include<vector>
+#include<cassert>
 #include "numconsts.hh"
 
 //using namespace std;

@@ -47,6 +47,7 @@
 #include<map>
 #include "DynamicNearestNeighbours.hh"
 #include "FjPseudoJet.hh"
+#include<cassert>
 #include<iostream>
 #include<string>
 
