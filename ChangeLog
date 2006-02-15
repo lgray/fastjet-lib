@@ -7,7 +7,10 @@
 
 	* Improved error message in case of request for N ln N strategy
 	when CGAL has not been compiled in.
-	
+
+	* when creating package, main Makefile is automatically modified
+	to have USE_CGAL=no (the original is put back after creating the
+	tarfile).
 	
 2006-02-13   v1.0.0b1
 	* arranged for harmonisation of behaviour of the various example

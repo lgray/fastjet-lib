@@ -9,6 +9,11 @@ echo "Will make an archive of $origdir/"
 dir=fastjet-$version
 tarname=$dir.tgz
 
+# make sure we have Makefile with use CGAL=no
+echo "Moving original Makefile out of way to make a copy with USE_CGAL = no"
+mv Makefile Makefile.orig
+cat Makefile.orig | sed 's/^USE_CGAL *= *yes/USE_CGAL = no/' > Makefile
+
 pushd ..
 
 if [[ -e $tarname ]]
@@ -29,19 +34,12 @@ else
                       $dir/lib/.dummy 
 
     echo ""
-    # make sure that the Makefile does not use CGAL by default, so as
-    # to make it easier for people to compile from the package.
-    if [[ `grep USE_CGAL $dir/Makefile | grep -ci yes` -ne 0 ]]
-    then 
-      echo "WARNING: USE_CGAL is yes..."
-    else
-      # if it's gavin running this then automatically copy the tarfile
-      # to the web-space
-      if [[ $USER = salam ]]
-      then
-        echo "Copying .tgz file to web-site"
-        cp -vp $tarname ~salam/www/repository/software/fastjet/
-      fi
+    # if it's gavin running this then automatically copy the tarfile
+    # to the web-space
+    if [[ $USER = salam ]]
+    then
+      echo "Copying .tgz file to web-site"
+      cp -vp $tarname ~salam/www/repository/software/fastjet/
     fi
 
     rm $dir
@@ -50,5 +48,7 @@ fi
 
 #tar zcf $tarname
 popd
+mv Makefile Makefile.orig
+echo "Putting original Makefile back"
 
 
