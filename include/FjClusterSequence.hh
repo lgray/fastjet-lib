@@ -140,7 +140,7 @@ class FjClusterSequence {
   std::string strategy_string () const;
 
 
- private:
+ protected:
 
   /// this is the routine that will do all the initialisation and
   /// then run the clustering (may be called by various constructors).
@@ -148,6 +148,12 @@ class FjClusterSequence {
 			    const double & R,
 			    const FjStrategy & strategy,
 			    const bool & writeout_combinations);
+  /// This contains the physical FjPseudoJets; for each FjPseudoJet one
+  /// can find the corresponding position in the _history by looking
+  /// at _jets[i].cluster_hist_index().
+  std::vector<FjPseudoJet> _jets;
+
+ private:
 
   enum JetType {Invalid=-3, InexistentParent = -2, BeamJet = -1};
 
@@ -193,10 +199,6 @@ class FjClusterSequence {
   /// vector to get the physical FjPseudoJet.
   std::vector<history_element> _history;
 
-  /// This contains the physical FjPseudoJets; for each FjPseudoJet one
-  /// can find the corresponding position in the _history by looking
-  /// at _jets[i].cluster_hist_index().
-  std::vector<FjPseudoJet> _jets;
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();

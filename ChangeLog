@@ -1,3 +1,12 @@
+2006-02-17  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo Cacciari
+
+	This is release v1.0.0b3
+
+	* fixed huge memory leak in the N ln N CGAL-based strategies.
+
+	* changes to internal structure of FjClusterSequence class to
+	simplify future developments.
+
 2006-02-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	This is release v1.0.0b2

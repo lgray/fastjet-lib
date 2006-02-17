@@ -160,7 +160,7 @@ int main (int argc, char ** argv) {
 	double px = kt*sin(phi);
 	double py = kt*cos(phi);
 	//cout << kt<<" "<<eta<<" "<<phi<<"\n";
-	FjPseudoJet mom(0.5*(pplus+pminus),px,py,0.5*(pplus-pminus));
+	FjPseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
 	jets.push_back(mom);
       }
     }

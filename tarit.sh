@@ -3,7 +3,7 @@
 
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
-version=1.0.0b2
+version=1.0.0b3
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dir=fastjet-$version
@@ -40,6 +40,7 @@ else
     then
       echo "Copying .tgz file to web-site"
       cp -vp $tarname ~salam/www/repository/software/fastjet/
+      echo "Remember to edit web page!!!"
     fi
 
     rm $dir

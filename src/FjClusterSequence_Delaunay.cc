@@ -74,7 +74,7 @@ void FjClusterSequence::_delaunay_cluster () {
   } else 
 #else
   if (_strategy == NlnN4pi || _strategy == NlnN3pi || _strategy == NlnN) {
-    cerr << "ERROR: Requested strategy "<<strategy_string()<<"but it is not"<<endl;
+    cerr << "ERROR: Requested strategy "<<strategy_string()<<" but it is not"<<endl;
     cerr << "       supported because FastJet was compiled without CGAL"<<endl<<endl;
     assert(false);
   }
@@ -180,6 +180,8 @@ void FjClusterSequence::_delaunay_cluster () {
       
   } // end clustering loop 
   
+  // remember to clean up!
+  delete DNN;
 }
 
 
