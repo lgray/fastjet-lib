@@ -11,7 +11,7 @@ tarname=$dir.tgz
 
 # make sure we have Makefile with use CGAL=no
 echo "Moving original Makefile out of way to make a copy with USE_CGAL = no"
-mv Makefile Makefile.orig
+mv -v Makefile Makefile.orig
 cat Makefile.orig | sed 's/^USE_CGAL *= *yes/USE_CGAL = no/' > Makefile
 
 pushd ..
@@ -40,7 +40,7 @@ else
     then
       echo "Copying .tgz file to web-site"
       cp -vp $tarname ~salam/www/repository/software/fastjet/
-      echo "Remember to edit web page!!!"
+      echo "************   Remember to edit web page **********"
     fi
 
     rm $dir
@@ -49,7 +49,7 @@ fi
 
 #tar zcf $tarname
 popd
-mv Makefile Makefile.orig
-echo "Putting original Makefile back"
+mv -v Makefile.orig Makefile
+#echo "Putting original Makefile back"
 
 
