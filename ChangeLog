@@ -1,3 +1,9 @@
+2006-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* adapted timing scripts so as to get reasonable behaviour for
+	very high N (including subtraction of read time and limiting
+	nstat). 
+
 2006-02-17  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo Cacciari
 
 	This is release v1.0.0b3
@@ -12,7 +18,7 @@
 	This is release v1.0.0b2
 
 	* added "#include <cassert>" in places where it's needed (thanks
-	to Thomas Kluge for pointing our the need for this).
+	to Thomas Kluge for pointing out the need for this).
 
 	* Improved error message in case of request for N ln N strategy
 	when CGAL has not been compiled in.

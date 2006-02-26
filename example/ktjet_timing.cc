@@ -74,7 +74,7 @@ int main (int argc, char ** argv) {
     KtJet::KtEvent ev(jets,type,angle,recom,ktR);
 
     if (i!=0) {continue;}
-    cerr << "Number of particles = "<< jets.size() << endl;
+    cout << "Number of particles = "<< jets.size() << endl;
 
     // Print out the number of final state jets
     //std::cout << "Number of final state jets: " << ev.getNJets() << std::endl;
