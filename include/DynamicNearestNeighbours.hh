@@ -34,11 +34,27 @@
 
 #include<vector>
 #include<cassert>
+#include "numconsts.hh"
 //using namespace std;
 
 
 /// Shortcut for dealing with eta-phi coordinates.
-typedef std::pair<double,double> EtaPhi;
+//typedef std::pair<double,double> EtaPhi;
+
+/// use a class instead of a pair so that phi can be sanitized
+/// and put into proper range on initialization.
+class EtaPhi {
+public:
+  double first, second;
+  EtaPhi() {}
+  EtaPhi(double a, double b) {first = a; second = b;}
+  /// put things into the desired range.
+  void sanitize() {    
+    if (second <  0)     second += twopi; 
+    if (second >= twopi) second -= twopi;
+  }
+
+};
 
 /// type to be used when throwing errors in Dynamic Nearest Neighbours code
 struct DNN_Error {

@@ -1,3 +1,13 @@
+2006-02-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* Replaced typedef std::pair<double,double> EtaPhi with a class
+	that allows one to conveniently sanitize phi into the correct range.
+
+	* From FjClusterSequence::_delaunay_cluster, called the
+	sanitization routine when inserting a new point... Should make
+	thing a bit more robust in cases where arithmetic rounding tricks
+	cause confusion bewteen 0 and 2pi.
+	
 2006-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* adapted timing scripts so as to get reasonable behaviour for

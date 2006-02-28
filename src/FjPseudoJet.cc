@@ -60,6 +60,7 @@ void FjPseudoJet::_finish_init () {
     _phi = atan2(this->py(),this->px());
   }
   if (_phi < 0.0) {_phi += twopi;}
+  if (_phi >= twopi) {_phi -= twopi;} // can happen is phi=-|eps<1e-15|?
   if (this->E() != abs(this->pz())) {
     _rap = 0.5*log((this->E() + this->pz())/(this->E() - this->pz()));
       } else {

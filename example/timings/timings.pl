@@ -38,7 +38,8 @@ $runtimelimit=100;
 $datadir="../../../data/";
 
 #$datafile="14TeV-1000ev.dat";
-$datafile="Pythia-Minbias-LowPt-LHC-10kev.dat";
+#$datafile="Pythia-Minbias-LowPt-LHC-10kev.dat";
+$datafile="Pythia-PtMin1000-LHC-10kev.dat";
 #$datafile="Pythia-Minbias-LowPt-LHC-1000ev.dat";
 #$datafile="Pythia-PtMin50-TeV-1000ev.dat";
 #$datafile="Pythia-1PtMin50+nMinBias-LHC-1001ev-semisorted.dat";
@@ -52,7 +53,8 @@ chomp($hostname);
 #$filename="timings-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-".$hostname.".dat";
-$filename="timings-Minbias-LowPt-LHC-highN-".$hostname.".dat";
+#$filename="timings-Minbias-LowPt-LHC-highN-".$hostname.".dat";
+$filename="timings-PtMin1000-LHC-highN-".$hostname.".dat";
 #$filename="timings.dat";
 open(OUT,">>$filename");
 
@@ -91,7 +93,8 @@ print OUT "# strategy = ",$strategy,"\n";
 
 $maxj = 100;
 #if ( $strategy >= 2 )  {$maxcomb = 500;}
-if ( $strategy >= 2 )  {$maxcomb = 9999;}
+#if ( $strategy >= 2 )  {$maxcomb = 9999;}
+if ( $strategy >= 2 )  {$maxcomb = 4000;}
 if ( $strategy <= -1 ) {$maxcomb = 150;}
 if ( $strategy == 0 )  {$maxcomb = 13;}
 if ( $strategy == 10)  {$maxcomb = 13;}

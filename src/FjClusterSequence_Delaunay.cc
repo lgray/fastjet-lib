@@ -58,6 +58,7 @@ void FjClusterSequence::_delaunay_cluster () {
   vector<EtaPhi> points(n); // recall EtaPhi is just a typedef'd pair<double>
   for (int i = 0; i < n; i++) {
     points[i] = EtaPhi(_jets[i].rap(),_jets[i].phi());
+    points[i].sanitize(); // make sure things are in the right range
   }
 
   // initialise our DNN structure with the set of points
@@ -142,7 +143,9 @@ void FjClusterSequence::_delaunay_cluster () {
 			      _jets.size()-1, SmallestDij);
 
       // add new point to points vector
-      points.push_back(EtaPhi(_jets[nn].rap(), _jets[nn].phi()));
+      EtaPhi newpoint(EtaPhi(_jets[nn].rap(), _jets[nn].phi()));
+      newpoint.sanitize(); // make sure it is in correct range
+      points.push_back(newpoint);
     } else {
       // recombine the jet with the beam
       _add_step_to_history(n+i,_jets[jet_i].cluster_hist_index(),BeamJet,

@@ -32,19 +32,19 @@ depend:
 # DO NOT DELETE
 
 DnnPlane.o: ../include/DnnPlane.hh ../include/Triangulation.hh
-DnnPlane.o: ../include/DynamicNearestNeighbours.hh
+DnnPlane.o: ../include/DynamicNearestNeighbours.hh ../include/numconsts.hh
 Dnn4piCylinder.o: ../include/Dnn4piCylinder.hh
 Dnn4piCylinder.o: ../include/DynamicNearestNeighbours.hh
-Dnn4piCylinder.o: ../include/DnnPlane.hh ../include/Triangulation.hh
-Dnn4piCylinder.o: ../include/numconsts.hh
+Dnn4piCylinder.o: ../include/numconsts.hh ../include/DnnPlane.hh
+Dnn4piCylinder.o: ../include/Triangulation.hh
 Dnn3piCylinder.o: ../include/Dnn3piCylinder.hh
 Dnn3piCylinder.o: ../include/DynamicNearestNeighbours.hh
-Dnn3piCylinder.o: ../include/DnnPlane.hh ../include/Triangulation.hh
-Dnn3piCylinder.o: ../include/numconsts.hh
+Dnn3piCylinder.o: ../include/numconsts.hh ../include/DnnPlane.hh
+Dnn3piCylinder.o: ../include/Triangulation.hh
 Dnn2piCylinder.o: ../include/Dnn2piCylinder.hh
 Dnn2piCylinder.o: ../include/DynamicNearestNeighbours.hh
-Dnn2piCylinder.o: ../include/DnnPlane.hh ../include/Triangulation.hh
-Dnn2piCylinder.o: ../include/numconsts.hh
+Dnn2piCylinder.o: ../include/numconsts.hh ../include/DnnPlane.hh
+Dnn2piCylinder.o: ../include/Triangulation.hh
 FjClusterSequence.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 FjClusterSequence.o: ../include/FjClusterSequence.hh
 FjClusterSequence.o: ../include/DynamicNearestNeighbours.hh
