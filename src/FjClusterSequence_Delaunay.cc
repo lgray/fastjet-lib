@@ -143,7 +143,7 @@ void FjClusterSequence::_delaunay_cluster () {
 			      _jets.size()-1, SmallestDij);
 
       // add new point to points vector
-      EtaPhi newpoint(EtaPhi(_jets[nn].rap(), _jets[nn].phi()));
+      EtaPhi newpoint(_jets[nn].rap(), _jets[nn].phi());
       newpoint.sanitize(); // make sure it is in correct range
       points.push_back(newpoint);
     } else {
