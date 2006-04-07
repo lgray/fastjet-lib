@@ -229,7 +229,7 @@ void FjClusterSequence::_add_ktdistance_to_map(
     } else {
       double kt2i = _jets[ii].kt2();
       int jj = DNN->NearestNeighbourIndex(ii);
-      if (kt2i < _jets[jj].kt2()) {
+      if (kt2i <= _jets[jj].kt2()) {
 	double dij = DeltaR2 * kt2i;
 	DijMap.insert(DijEntry(dij, TwoVertices(ii,jj)));
       }

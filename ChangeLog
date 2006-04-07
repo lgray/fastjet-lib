@@ -1,3 +1,15 @@
+2006-04-04  Gavin SALAM  + Matteo Cacciari <salam@lpthe.jussieu.fr>
+
+	* src/FjClusterSequence_Delaunay.cc: in _add_ktdistance_to_map,
+	changed if (kt2i <  _jets[jj].kt2()) to 
+                if (kt2i <= _jets[jj].kt2())
+        so as catch the case when the two are equal.
+	
+2006-03-??  Gavin SALAM  + Matteo Cacciari <salam@lpthe.jussieu.fr>
+
+        * some bug fixes to sanitization routines (appeared with different
+	compiler version).
+	
 2006-02-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* Replaced typedef std::pair<double,double> EtaPhi with a class
