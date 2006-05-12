@@ -1,3 +1,19 @@
+2006-05-12  Gavin SALAM + Matteo Cacciari  <salam@lpthe.jussieu.fr>
+
+	* discovered problem with gcc-3.2.3 and certain events,
+	specifically: 
+
+	./fastjet_timing -combine 10 -incl 0.0 -strategy 2 < ../../Pythia-1PtMin50+nMinBias-mansorted.dat
+
+	The problem manifests itself when erasing things from the tree,
+	but hasn't been identified beyond that; running it with valgrind
+	it miraculously works (and gives no valgrind errors). It works
+	also with gcc-3.3 (Mac) and gcc-3.4.3 (zetes). Some commented code
+	is in FjClusterSequence_Delaunay to try to uncover what's
+	happening, but no conclusion has been reached yet. Non-Delaunay
+	variants work fine (3pi,4pi variants have problems for different
+	event sets, e.g. -combine 12).
+	
 2006-04-04  Gavin SALAM  + Matteo Cacciari <salam@lpthe.jussieu.fr>
 
 	* src/FjClusterSequence_Delaunay.cc: in _add_ktdistance_to_map,

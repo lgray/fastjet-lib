@@ -113,7 +113,11 @@ void FjClusterSequence::_delaunay_cluster () {
       jet_j = SmallestDijPair.second;
       // distance is immediately removed regardless of whether or not
       // it is used.
+      // Some temporary testing code relating to problems with the gcc-3.2 compiler
+      //cout << "got here and size is "<< DijMap.size()<< " and it is "<<SmallestDij <<"\n";
+      //cout <<  jet_i << " "<< jet_j<<"\n";
       DijMap.erase(DijMap.begin());
+      //cout << "got beyond here\n";
 
       // need to "prime" the validity of jet_j in such a way that 
       // if it corresponds to the beam then it is automatically valid.

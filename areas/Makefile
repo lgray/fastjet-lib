@@ -9,7 +9,7 @@ INCLUDE += $(FASTJET_INCLUDE)
 #LDFLAGS += -L../lib -lfastjet
 LDFLAGS += -L../lib -lfastjet 
 # get google malloc for debugging purposes...
-LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
+#LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
 #LDFLAGS += -L$(HOME)/software/local/lib 
 
 PROG_SRCS = areas.cc areas-native.cc
