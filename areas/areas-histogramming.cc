@@ -228,7 +228,7 @@ int main (int argc, char ** argv) {
   printf(" ijet   eta      phi        Pt         area  +-   err   stddev\n");
   for (size_t j = 0; j < jets.size(); j++) {
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f\n",j,jets[j].rap(),
-	   jets[j].phi(),sqrt(jets[j].kt2()), average_area[j], average_area2[j], average_area2[j]*sqrt(repeat));
+	   jets[j].phi(),sqrt(jets[j].kt2()), average_area[j], average_area2[j], average_area2[j]*sqrt(1.0*repeat));
   }
   
   } // iev
