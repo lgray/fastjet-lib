@@ -66,6 +66,15 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
   _add_ghosts(cell_area, etamax_for_area, grid_scatter, kt_scatter);
   _n_particles = _jets.size();
 
+  if (writeout_combinations) {
+    cout << "# Printing particles including ghosts\n";
+    for (size_t j = 0; j < _jets.size(); j++) {
+      printf("%5u %20.13f %20.13f %20.13e\n",
+	       j,_jets[j].rap(),_jets[j].phi(),_jets[j].kt2());
+    }
+    cout << "# Finished printing particles including ghosts\n";
+  }
+
   // this will ensure that we can still point to jets without
   // difficulties arising!
   _jets.reserve(_jets.size()*2);

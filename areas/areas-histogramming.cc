@@ -157,7 +157,7 @@ int main (int argc, char ** argv) {
     if (abs(psjet.rap() < etamax)) {input_particles.push_back(psjet);}
   }
 
-  srand(2);
+  //srand(2); // moved inside loop
   //double average_area = 0.0;
   //double average_area2 = 0.0;
   valarray<double> average_area; 
@@ -165,6 +165,9 @@ int main (int argc, char ** argv) {
 
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
 
+    if (irepeat == 0) {cerr << "\n**** WARNING: setting seed manually at each turn of loop (because we suspect that CGAL plays with it) **** \n\n";}
+    srand(irepeat+2);
+  
     vector<FjPseudoJet> jets = input_particles;
     
     FjClusterSequenceWithArea clust_seq(jets,cell_area,ghost_etamax,

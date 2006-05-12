@@ -1,5 +1,16 @@
 2006-05-12  Gavin SALAM + Matteo Cacciari  <salam@lpthe.jussieu.fr>
 
+	* in areas/areas-histogramming.cc (not part of release) discovered
+	that CGAL (probably) is playing with random numbers messing up our
+	sequence for area studies via creation of ghosts; so currently
+	set explicit new seed at each turn of loop. 
+
+	Also fixed Makefile dependencies in areas/. 
+
+	Also, writeout_combinations with FlClusterSequence_witharea now
+	prints out the full list of particles (including ghosts) before
+	clustering. 
+	
 	* discovered problem with gcc-3.2.3 and certain events,
 	specifically: 
 

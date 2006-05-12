@@ -12,7 +12,7 @@ LDFLAGS += -L../lib -lfastjet
 #LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
 #LDFLAGS += -L$(HOME)/software/local/lib 
 
-PROG_SRCS = areas.cc areas-native.cc
+PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc
 
 SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
@@ -36,7 +36,7 @@ realclean: clean
 	rm -f   areas 
 
 depend:
-	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
+	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS) $(PROG_SRCS)
 # DO NOT DELETE
 
 CmdLine.o: CmdLine.hh
@@ -45,3 +45,14 @@ FjClusterSequenceWithArea.o: ../include/FjPseudoJet.hh
 FjClusterSequenceWithArea.o: ../include/numconsts.hh
 FjClusterSequenceWithArea.o: ../include/FjClusterSequence.hh
 FjClusterSequenceWithArea.o: ../include/DynamicNearestNeighbours.hh
+areas.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas.o: ../include/FjClusterSequence.hh
+areas.o: ../include/DynamicNearestNeighbours.hh CmdLine.hh
+areas-native.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas-native.o: ../include/FjClusterSequence.hh
+areas-native.o: ../include/DynamicNearestNeighbours.hh
+areas-native.o: FjClusterSequenceWithArea.hh CmdLine.hh
+areas-histogramming.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas-histogramming.o: ../include/FjClusterSequence.hh
+areas-histogramming.o: ../include/DynamicNearestNeighbours.hh
+areas-histogramming.o: FjClusterSequenceWithArea.hh CmdLine.hh
