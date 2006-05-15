@@ -41,7 +41,7 @@ private:
 
 //----------------------------------------------------------------------
 // initialise from some generic type... Has to be made available
-// here in order for it the template aspect of it to work...
+// here in order for the template aspect of it to work...
 template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
 			          const std::vector<L> & pseudojets,
                         	  double cell_area, double etamax_for_area,

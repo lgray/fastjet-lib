@@ -56,7 +56,7 @@ class FjPseudoJet {
   // first "const double &" says that result is a reference to the
   // stored value and that we will not change that stored value.
   //
-  // secont "const" says that "this" will not be modified by these
+  // second "const" says that "this" will not be modified by these
   // functions.
   inline const double & E()   const {return _E;};
   inline const double & e()   const {return _E;}; // like CLHEP

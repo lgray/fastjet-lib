@@ -12,7 +12,7 @@ LDFLAGS += -L../lib -lfastjet
 #LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
 #LDFLAGS += -L$(HOME)/software/local/lib 
 
-PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc
+PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc
 
 SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
@@ -26,6 +26,8 @@ areas-native: areas-native.o $(OBJS) ../lib/libfastjet.a
 areas-histogramming: areas-histogramming.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-histogramming areas-histogramming.o $(OBJS)  $(LDFLAGS)
 
+areas-test-mean-class: areas-test-mean-class.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o areas-test-mean-class areas-test-mean-class.o $(OBJS)  $(LDFLAGS)
 areas-empty-event: areas-empty-event.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-empty-event areas-empty-event.o $(OBJS)  $(LDFLAGS)
 
@@ -56,3 +58,8 @@ areas-histogramming.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 areas-histogramming.o: ../include/FjClusterSequence.hh
 areas-histogramming.o: ../include/DynamicNearestNeighbours.hh
 areas-histogramming.o: FjClusterSequenceWithArea.hh CmdLine.hh
+areas-test-mean-class.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas-test-mean-class.o: ../include/FjClusterSequence.hh
+areas-test-mean-class.o: ../include/DynamicNearestNeighbours.hh
+areas-test-mean-class.o: FjClusterSequenceWithMeanArea.hh
+areas-test-mean-class.o: FjClusterSequenceWithArea.hh CmdLine.hh

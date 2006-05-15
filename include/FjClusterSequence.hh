@@ -153,14 +153,7 @@ class FjClusterSequence {
   /// at _jets[i].cluster_hist_index().
   std::vector<FjPseudoJet> _jets;
 
- private:
-
   enum JetType {Invalid=-3, InexistentParent = -2, BeamJet = -1};
-
-  bool _writeout_combinations;
-  int  _initial_n;
-  double _Rparam, _R2, _invR2;
-  FjStrategy    _strategy;
 
   /// a single element in the clustering history (see vector _history
   /// below).
@@ -193,12 +186,21 @@ class FjClusterSequence {
     double max_dij_so_far; /// the largest recombination distance seen
 			   /// so far in the clustering history.
   };
-  
+
   /// this vector will contain the branching history; for each stage,
   /// _history[i].jetp_index indicates where to look in the _jets
   /// vector to get the physical FjPseudoJet.
   std::vector<history_element> _history;
 
+  bool _writeout_combinations;
+  int  _initial_n;
+  double _Rparam, _R2, _invR2;
+  FjStrategy    _strategy;
+
+ private:
+
+
+  
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();

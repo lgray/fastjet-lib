@@ -70,7 +70,7 @@
 ///
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
-#include "FjClusterSequenceWithArea.hh"
+#include "FjClusterSequenceWithMeanArea.hh"
 #include<iostream>
 #include<sstream>
 #include<valarray>
@@ -103,7 +103,7 @@ int main (int argc, char ** argv) {
 				     cmdline.int_val("-clever", Best)));
   int  repeat  = cmdline.int_val("-repeat",1);
   int  combine = cmdline.int_val("-combine",1);
-  bool write   = cmdline.present("-write");
+  bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
   double ktR   = cmdline.double_val("-r",1.0);
   double inclkt = cmdline.double_val("-incl",-1.0);
@@ -163,84 +163,45 @@ int main (int argc, char ** argv) {
   valarray<double> average_area; 
   valarray<double> average_area2;
 
-  for (int irepeat = 0; irepeat < repeat ; irepeat++) {
-
-    if (irepeat == 0) {cerr << "\n**** WARNING: setting seed manually at each turn of loop (because we suspect that CGAL plays with it) **** \n\n";}
-    srand(irepeat+2);
-  
-    vector<FjPseudoJet> jets = input_particles;
     
-    FjClusterSequenceWithArea clust_seq(jets,cell_area,ghost_etamax,
-					grid_scatter, kt_scatter,
-                                        ktR,strategy,write);
-    //if (irepeat != 0) {continue;}
-    cerr << "iev "<<iev<< " (irepeat "<<irepeat<<"): number of particles = "<< jets.size() << endl;
-    cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
-    cerr << "number of particles = " << clust_seq.n_particles() << endl;
+  FjClusterSequenceWithMeanArea clust_seq(input_particles,
+					  cell_area,ghost_etamax,
+					  grid_scatter, kt_scatter, repeat,
+					  ktR,strategy,writeout);
 
-    // now provide some nice output...
-    if (inclkt >= 0.0) {
-      vector<FjPseudoJet> jets = clust_seq.inclusive_jets(inclkt);
-      if (irepeat == 0) {
-	average_area.resize(jets.size());  average_area  = 0.0;
-	average_area2.resize(jets.size()); average_area2 = 0.0;
-      }
-      double area_sum = 0.0;
-      for (size_t j = 0; j < jets.size(); j++) {
-	double area = clust_seq.area(jets[j]);
-	area_sum += area;
-	//printf("%5u %15.8f %15.8f %15.8f %15.8f\n",j,jets[j].rap(),
-	//       jets[j].phi(),sqrt(jets[j].kt2()), area);
-	// some nice output of constituents?
-	if (print_jets) print_jet(clust_seq, jets[j]);
-	// number of ghost jets can vary; therefore check that we only
-	// write up to the number of jets found on the first go (in
-	// any case, jets beyond this will not be hard jets, but pure
-	// ghost jets, and so arbitrary).
-	if (j < average_area.size()) {
-	  average_area[j]  += area;
-	  average_area2[j] += area*area;
-	} else {
-	  //cerr <<j<<": "<< jets[j].perp()<<endl;
-	}
-      }
-      cout << "Total area: "<< area_sum<<endl;
-      cout << "Expected area: "<< clust_seq.total_area()  << endl;
-    }
+  cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
+  //cerr << "number of particles = " << clust_seq.n_particles() << endl;
 
-    if (excln > 0) {
-      vector<FjPseudoJet> jets = sorted_by_E(clust_seq.exclusive_jets(excln));
- 
-      cout << "Printing "<<excln<<" exclusive jets\n";
-      for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8f\n",
-	       //j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
-	       j,jets[j].rap(),jets[j].phi(),jets[j].kt2());
-      }
-    }
-
-    if (excld > 0.0) {
-      vector<FjPseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
-      cout << "Printing exclusive jets for d = "<<excld<<"\n";
-      for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8f %15.8f\n",
-	       j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()),clust_seq.area(jets[j]));
-      }
-    }
     
-  } // irepeat
-
-  average_area  /= repeat;
-  average_area2 /= repeat;
-  average_area2 = sqrt(abs(average_area2 - average_area*average_area)/repeat);
+  vector<FjPseudoJet> jets;
   
-  FjClusterSequence clust_seq(input_particles, ktR,strategy,write);
-  vector<FjPseudoJet> jets = clust_seq.inclusive_jets(inclkt);
-  printf(" ijet   eta      phi        Pt         area  +-   err   stddev\n");
-  for (size_t j = 0; j < jets.size(); j++) {
-    printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f\n",j,jets[j].rap(),
-	   jets[j].phi(),sqrt(jets[j].kt2()), average_area[j], average_area2[j], average_area2[j]*sqrt(1.0*repeat));
+  // now provide some nice output...
+  if (inclkt >= 0.0) {
+    jets = clust_seq.inclusive_jets(inclkt);
   }
+
+  if (excln > 0) {
+    jets = sorted_by_E(clust_seq.exclusive_jets(excln));
+  }
+
+  if (excld > 0.0) {
+    jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
+  }
+
+  double median_pt_per_area = clust_seq.pt_per_unit_area();
+  printf(" ijet   eta      phi        Pt         area  +-   err   stddev  pt_corr\n");
+  for (size_t j = 0; j < jets.size(); j++) {
+    double area = clust_seq.area(jets[j]);
+    
+    printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,jets[j].rap(),
+	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_err(jets[j]), clust_seq.area_err(jets[j])*sqrt(1.0*repeat), jets[j].perp() - area*median_pt_per_area);
+  }
+
+  //cout << "median pt_over_area = " << clust_seq.pt_per_unit_area()<<endl;
+  cout << "median pt_over_area = " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
+  cout << "pt/area: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
+  cout << "pt/area with cut: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
+  cout << "average ratio (with cut): "<< clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
   
   } // iev
 }
