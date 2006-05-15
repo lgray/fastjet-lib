@@ -1,3 +1,9 @@
+2006-05-15  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* in FjClusterSequence.hh -> included cmath and switched abs ->
+	std::abs (following compiler complaints with g++ 4.1.0, where we
+	would have got int abs(int) rather than the double version).
+
 2006-05-12  Gavin SALAM + Matteo Cacciari  <salam@lpthe.jussieu.fr>
 
 	* in areas/areas-histogramming.cc (not part of release) discovered

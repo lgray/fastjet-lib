@@ -50,7 +50,7 @@
 #include<cassert>
 #include<iostream>
 #include<string>
-
+#include<cmath> // needed to get double std::abs(double)
 
 /// the various options for the algorithmic strategy to adopt in
 /// clustering the event.
@@ -410,7 +410,7 @@ template <class J> inline void FjClusterSequence::_bj_set_jetinfo(
 //----------------------------------------------------------------------
 template <class J> inline double FjClusterSequence::_bj_dist(
                 const J * const jetA, const J * const jetB) const {
-  double dphi = abs(jetA->phi - jetB->phi);
+  double dphi = std::abs(jetA->phi - jetB->phi);
   double deta = (jetA->eta - jetB->eta);
   if (dphi > pi) {dphi = twopi - dphi;}
   return dphi*dphi + deta*deta;
