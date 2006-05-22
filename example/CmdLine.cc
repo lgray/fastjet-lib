@@ -79,6 +79,7 @@ void CmdLine::init (){
       // we expect (possibly) a value on next round
       currentopt = arg;
       __options[currentopt] = -1;
+      __options_used[currentopt] = false;
       next_may_be_val = true;}
     else {
       // otherwise throw away the argument for now...
@@ -90,13 +91,15 @@ void CmdLine::init (){
 
 // indicates whether an option is present
 bool CmdLine::present(const string & opt) {
-  return (__options.find(opt) != __options.end());
+  bool result = (__options.find(opt) != __options.end());
+  if (result) __options_used[opt] = true;
+  return result;
 }
 
 // indicates whether an option is present and has a value associated
 bool CmdLine::present_and_set(const string & opt) {
-  return (__options.find(opt) != __options.end() && 
-	  __options[opt] > 0);
+  bool result = present(opt) && __options[opt] > 0;
+  return result;
 }
 
 
@@ -107,7 +110,11 @@ string CmdLine::string_val(const string & opt) {
 	 <<" is needed but is not present_and_set"<<endl;
     exit(-1);
   }
-  return __arguments[__options[opt]];
+  string arg = __arguments[__options[opt]];
+  // this may itself look like an option -- if that is the case
+  // declare the option to have been used
+  if (arg.compare(0,1,"-") == 0) {__options_used[arg] = true;}
+  return arg;
 }
 
 // as above, but if opt is not present_and_set, return default
@@ -163,4 +170,17 @@ double CmdLine::double_val(const string & opt, const double & defval) {
 // return the full command line including the command itself
 string CmdLine::command_line() {
   return __command_line;
+}
+
+
+// return true if all options have been asked for at some point or other
+bool CmdLine::all_options_used() const {
+  bool result = true;
+  for(map<string,bool>::const_iterator opt = __options_used.begin();
+      opt != __options_used.end(); opt++) {
+    bool this_one = opt->second;
+    if (! this_one) {cerr << "Option "<<opt->first<<" unused"<<endl;}
+    result = result && this_one;
+  }
+  return result;
 }

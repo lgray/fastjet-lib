@@ -1,5 +1,8 @@
 2006-05-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+        * modified (areas|examples)/CmdLine.* so as to have the facility
+	  to find out if there are any unused/invalid options.
+	
 	* Added areas/subtraction-tests.cc for examining how subtraction
 	  of underlying events etc works 
 

@@ -118,11 +118,16 @@ int main (int argc, char ** argv) {
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets = cmdline.present("-print_jets");
 
+  if (!cmdline.all_options_used()) {cerr << 
+      "Error: some options unused"<<endl; 
+    exit(-1);}
+
   for (int iev = 0; iev < nev; iev++) {
   vector<FjPseudoJet> full_event;
   vector<FjPseudoJet> hard_event;
   string line;
   int  nsub  = 0;
+  cerr << "Doing event "<< iev<<endl;
   while (getline(cin, line)) {
       //cout << line<<endl;
     istringstream linestream(line);
@@ -192,12 +197,14 @@ int main (int argc, char ** argv) {
     swap(full_jets[0],full_jets[1]);}
 
   double median_pt_per_area = full_clust.pt_per_unit_area();
+  double median_pt_per_area_hard = hard_clust.pt_per_unit_area();
 
   for (int i = 0; i < 2; i++) {
     cout << full_jets[i].perp() - hard_jets[i].perp() <<" "
          << full_jets[i].plain_distance(hard_jets[i]) <<" "
 	 << full_jets[i].perp() - hard_jets[i].perp() 
-            - median_pt_per_area*full_clust.area(full_jets[i]) <<
+            - median_pt_per_area*full_clust.area(full_jets[i]) <<" "
+         << - median_pt_per_area_hard*hard_clust.area(hard_jets[i]) <<
       endl ;
   }
 

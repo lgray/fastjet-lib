@@ -124,7 +124,7 @@ template<class L>
   _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
 			 area_nrepeat);
 
-  //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
+  cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
 
 }
 

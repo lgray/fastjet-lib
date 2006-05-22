@@ -55,6 +55,7 @@ using namespace std;
 class CmdLine {
   map<string,int> __options;
   vector<string> __arguments;
+  map<string,bool> __options_used;
   //string __progname;
   string __command_line;
 
@@ -87,6 +88,9 @@ class CmdLine {
 
   /// return the full command line
   string  command_line();
+
+  /// return true if all options have been asked for at some point or other
+  bool all_options_used() const;
 
  private:
   /// builds the internal structures needed to keep track of arguments and options
