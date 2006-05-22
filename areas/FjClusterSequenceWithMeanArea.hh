@@ -27,14 +27,17 @@ private:
 
   valarray<double> _average_area, _average_area2;
   valarray<int>    _incl_ix_of_clust_ix;
+  double           _non_jet_area, _non_jet_area2;
+
   int _incl_ix_of_jet(const FjPseudoJet & jet) const {
     int ix = _incl_ix_of_clust_ix[jet.cluster_hist_index()];
     if (ix == Invalid) {throw "Asked for area of non-inclusive jet";}
     return ix;
   }
 
-  double _etamax_for_area;
-    
+  double _etamax_for_area; // max eta where we put ghosts
+  double _etalim_for_area; // max eta where we trust jet areas
+
 
 public : 
   double area (const FjPseudoJet & jet) const {
@@ -68,6 +71,7 @@ template<class L>
   
   // for future reference...
   _etamax_for_area = etamax_for_area;
+  _etalim_for_area = _etamax_for_area - _Rparam;
   
   // arrange to have a mapping between the cluster_hist_index and the
   // index of the inclusive jets...
@@ -81,6 +85,7 @@ template<class L>
   // initialize our local area information
   _average_area.resize(incl_jets.size());  _average_area  = 0.0;
   _average_area2.resize(incl_jets.size()); _average_area2 = 0.0;
+  _non_jet_area = 0.0; _non_jet_area2 = 0.0;
      
   // run the clustering multiple times so as to get areas of all the
   // inclusive jets (one day this should be changed so as to get
@@ -96,17 +101,31 @@ template<class L>
 					R,strategy);
        
     vector<FjPseudoJet> incl_jets4area = clust_seq.inclusive_jets();
-    for (unsigned int i=0; i < incl_jets.size(); i++) {
+    for (unsigned int i=0; i < incl_jets4area.size(); i++) {
       double area = clust_seq.area(incl_jets4area[i]);
-      _average_area[i]  += area;
-      _average_area2[i] += area*area;
+      if (i < incl_jets.size()) {
+	_average_area[i]  += area;
+	_average_area2[i] += area*area;
+      } else if (abs(incl_jets4area[i].rap()) < _etalim_for_area) {
+	_non_jet_area  += area;
+	_non_jet_area2 += area*area;
+      }
     }
+    //cerr << "non-jet area sum was " << _non_jet_area << endl;
   }
   
   _average_area  /= area_nrepeat;
   _average_area2 /= area_nrepeat;
   _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/
 			 area_nrepeat);
+
+  _non_jet_area  /= area_nrepeat;
+  _non_jet_area2 /= area_nrepeat;
+  _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
+			 area_nrepeat);
+
+  //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
+
 }
 
 
@@ -119,25 +138,24 @@ double FjClusterSequenceWithMeanArea::pt_per_unit_area(
   vector<FjPseudoJet> incl_jets = inclusive_jets();
   vector<double> pt_over_areas;
 
-  double eta_lim = _etamax_for_area - _Rparam;
-
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < eta_lim) {
+    if (abs(incl_jets[i].rap()) < _etalim_for_area) {
       double this_area = area(incl_jets[i]);
       pt_over_areas.push_back(incl_jets[i].perp()/this_area);
     }
   }
   
+  // get median (pt/area)
   sort(pt_over_areas.begin(), pt_over_areas.end());
   double median_ratio = pt_over_areas[pt_over_areas.size()/2];
 
-  // now play some other games
+  // get various forms of mean (pt/area)
   double pt_sum = 0.0, pt_sum_with_cut = 0.0;
   double area_sum = 0.0, area_sum_with_cut = 0.0;
   double ratio_sum = 0.0; 
   int ratio_n = 0;
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < eta_lim) {
+    if (abs(incl_jets[i].rap()) < _etalim_for_area) {
       double this_area = area(incl_jets[i]);
       pt_sum   += incl_jets[i].perp();
       area_sum += this_area;

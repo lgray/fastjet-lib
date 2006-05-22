@@ -1,3 +1,15 @@
+2006-05-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* Added areas/subtraction-tests.cc for examining how subtraction
+	  of underlying events etc works 
+
+	* Added internal support for getting "non-jet" areas inside
+	areas/FjClusterSequenceWithMeanArea.hh (but no external handles
+	for time being).
+	
+	* modified a couple of comments in FjPseudoJet.hh to better
+	  reflect return values of plain_distance().
+
 2006-05-15  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* Added areas/areas-test-mean-class and

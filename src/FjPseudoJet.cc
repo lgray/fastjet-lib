@@ -123,7 +123,7 @@ double FjPseudoJet::kt_distance(const FjPseudoJet & other) const {
 
 
 //----------------------------------------------------------------------
-// return kt-distance between this jet and another one
+// return squared cylinder (eta-phi) distance between this jet and another one
 double FjPseudoJet::plain_distance(const FjPseudoJet & other) const {
   double dphi = abs(_phi - other._phi);
   if (dphi > pi) {dphi = twopi - dphi;}
