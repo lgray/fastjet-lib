@@ -1,3 +1,17 @@
+2006-05-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo (part)
+
+	* Added FjClusterSequenceWithMeanArea::play option when calling
+	  FjClusterSequenceWithMeanAreapt_per_unit_area, for printing
+	  out all sorts of bits and pieces; median was renamed old_median,
+	  and now median gives a median which takes into account also the
+	  average number of non-jets when calculating the median position.
+          It is this new median that is now used also when determining
+	  cuts for averages.
+	  
+          Mean pt/area ratios and overal pt/area ratios now also take into
+	  account the non-jet number and area (respectively).
+	
+
 2006-05-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
         * modified (areas|examples)/CmdLine.* so as to have the facility

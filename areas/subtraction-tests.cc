@@ -217,11 +217,15 @@ int main (int argc, char ** argv) {
 	   full_jets[j].phi(),full_jets[j].perp(), area, full_clust.area_err(full_jets[j]), full_clust.area_err(full_jets[j])*sqrt(1.0*repeat), full_jets[j].perp() - area*median_pt_per_area);
   }
 
+  //double dummy = full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::play);
   //cout << "median pt_over_area = " << full_clust.pt_per_unit_area()<<endl;
   cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
+  cerr << "old median  = " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::old_median)<<endl;
   cerr << "pt/area: " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
   cerr << "pt/area with cut: " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
   cerr << "average ratio (with cut): "<< full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
+  cerr << "pt/area with cut (range 3): " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut,3.0)<<endl;
+  cerr << "average ratio (range 3,with cut): "<< full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut,3.0)<<endl;
   } // if print_jets
 
   } // iev
