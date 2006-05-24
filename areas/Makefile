@@ -72,4 +72,4 @@ subtraction-tests.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 subtraction-tests.o: ../include/FjClusterSequence.hh
 subtraction-tests.o: ../include/DynamicNearestNeighbours.hh
 subtraction-tests.o: FjClusterSequenceWithMeanArea.hh
-subtraction-tests.o: FjClusterSequenceWithArea.hh CmdLine.hh
+subtraction-tests.o: FjClusterSequenceWithArea.hh CmdLine.hh CSHisto.hh

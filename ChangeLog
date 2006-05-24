@@ -1,5 +1,12 @@
 2006-05-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+        * In areas/, added basic histogramming class (CSHisto), and used
+	  it to look at mass distribution of a reconstructed Z (decayed to
+	  two jets).
+	
+        * In FjPseudoJet.* added m2() member function and one instance of
+	  a multiplication operator.
+	
 	* In DynamicNearestNeighbours.hh and DnnPlane.cc, renamed
 	  DNN_Error -> DnnError, and added a constructor for DnnError that
 	  prints out an error message.

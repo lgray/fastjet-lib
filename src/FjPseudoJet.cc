@@ -112,6 +112,13 @@ FjPseudoJet operator+ (const FjPseudoJet & jet1, const FjPseudoJet & jet2) {
   return FjPseudoJet(jet1.four_mom()+jet2.four_mom());
 } 
 
+
+//----------------------------------------------------------------------
+// return the product, coeff * jet
+FjPseudoJet operator* (double coeff, const FjPseudoJet & jet) {
+  return FjPseudoJet(coeff*jet.four_mom());
+} 
+
 //----------------------------------------------------------------------
 // return kt-distance between this jet and another one
 double FjPseudoJet::kt_distance(const FjPseudoJet & other) const {

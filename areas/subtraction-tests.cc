@@ -78,6 +78,7 @@
 #include <cstdlib>
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
+#include "CSHisto.hh"
 
 using namespace std;
 
@@ -121,6 +122,10 @@ int main (int argc, char ** argv) {
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unused"<<endl; 
     exit(-1);}
+
+  CSHisto inv_mass_hard(00.0, 400.0, 80);
+  CSHisto inv_mass_full(00.0, 400.0, 80);
+  CSHisto inv_mass_corr(00.0, 400.0, 80);
 
   for (int iev = 0; iev < nev; iev++) {
   vector<FjPseudoJet> full_event;
@@ -208,6 +213,25 @@ int main (int argc, char ** argv) {
       endl ;
   }
 
+  vector<FjPseudoJet> corrected_jets(full_jets.size());
+  for (unsigned i = 0; i < full_jets.size(); i++) {
+    double correction_factor = 1 - 
+      median_pt_per_area*full_clust.area(full_jets[i])/full_jets[i].perp(); 
+    corrected_jets[i] =  max(correction_factor,0.0) * full_jets[i];
+  }
+  corrected_jets = sorted_by_pt(corrected_jets);
+
+  double hard_ev_mass = sqrt(abs((hard_jets[0]+hard_jets[1]).m2()));
+  double full_ev_mass = sqrt(abs((full_jets[0]+full_jets[1]).m2()));
+  double corr_ev_mass = sqrt(abs((corrected_jets[0]+corrected_jets[1]).m2()));
+  cout <<"inv mass of two hardest (hard ev) jets = "<< hard_ev_mass << endl;
+  cout <<"inv mass of two hardest (full ev) jets = "<< full_ev_mass << endl;
+  cout <<"inv mass of two hardest (corr ev) jets = "<< corr_ev_mass << endl;
+
+  inv_mass_hard.fill(hard_ev_mass);
+  inv_mass_full.fill(full_ev_mass);
+  inv_mass_corr.fill(corr_ev_mass);
+
   if (print_jets) {
   printf(" ijet   eta      phi        Pt         area  +-   err   stddev  pt_corr\n");
   for (size_t j = 0; j < full_jets.size(); j++) {
@@ -229,4 +253,12 @@ int main (int argc, char ** argv) {
   } // if print_jets
 
   } // iev
+
+  // print out mass histograms (only meaningful for the Z).
+  for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
+    cout << inv_mass_hard.bin_centre(i) <<" "
+	 << inv_mass_hard.bin_weight(i) <<" "
+	 << inv_mass_full.bin_weight(i) <<" "
+	 << inv_mass_corr.bin_weight(i) << endl;
+  }
 }

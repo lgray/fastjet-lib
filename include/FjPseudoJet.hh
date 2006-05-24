@@ -69,6 +69,8 @@ class FjPseudoJet {
   inline const double & kt2() const {return _kt2;};
   inline const double & perp2() const {return _kt2;};  // like CLHEP
   inline double  perp() const {return sqrt(_kt2);};    // like CLHEP
+  /// return the squared invariant mass // like CLHEP
+  inline double  m2() const {return (_E+_pz)*(_E-_pz)-_kt2;};    
   double operator () (int i) const ; // returns vector components
   inline double operator [] (int i) const { return (*this)(i); }; // this too
 
@@ -108,6 +110,7 @@ class FjPseudoJet {
   // maybe not necessary for it to be friend?
   // [but without it does not work...]
   friend FjPseudoJet operator+(const FjPseudoJet &, const FjPseudoJet &);
+  friend FjPseudoJet operator*(double, const FjPseudoJet &);
 
  private: 
   // NB: following order must be kept for things to behave sensibly...
