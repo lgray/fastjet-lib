@@ -29,9 +29,11 @@
 //ENDHEADER
 
 
+#include "FjError.hh"
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>
+#include<sstream>
 #include<cmath>
 #include <cstdlib>
 #include<cassert>
@@ -75,14 +77,18 @@ void FjClusterSequence::_delaunay_cluster () {
   } else 
 #else
   if (_strategy == NlnN4pi || _strategy == NlnN3pi || _strategy == NlnN) {
-    cerr << "ERROR: Requested strategy "<<strategy_string()<<" but it is not"<<endl;
-    cerr << "       supported because FastJet was compiled without CGAL"<<endl<<endl;
-    assert(false);
+    ostringstream err;
+    err << "ERROR: Requested strategy "<<strategy_string()<<" but it is not"<<endl;
+    err << "       supported because FastJet was compiled without CGAL"<<endl;
+    throw FjError(err.str());
+    //assert(false);
   }
 #endif // DROP_CGAL
   {
-    cerr << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl<<endl;
+    ostringstream err;
+    err << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl;
     assert(false);
+    throw FjError(err.str());
   }
 
   // We will find nearest neighbour for each vertex, and include
@@ -171,8 +177,7 @@ void FjClusterSequence::_delaunay_cluster () {
       // to do away with warnings about type mismatch between point3 (int) 
       // and points.size (unsigned int)
       if (static_cast<unsigned int> (point3) != points.size()-1) {
-	cerr << "INTERNAL ERROR: point3 != points.size()-1"<<endl;}
-      
+	throw FjError("INTERNAL ERROR: point3 != points.size()-1");}
     } else {
       // update DNN
       DNN->RemovePoint(jet_i, updated_neighbours);

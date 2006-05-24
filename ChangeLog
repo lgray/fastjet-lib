@@ -1,3 +1,13 @@
+2006-05-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* In DynamicNearestNeighbours.hh and DnnPlane.cc, renamed
+	  DNN_Error -> DnnError, and added a constructor for DnnError that
+	  prints out an error message.
+
+	* Added the file include/FjError.hh which defines a class FjError
+	  that is used for throwing all exceptions (except those related
+	  to DnnError -- maybe need to catch things there?)
+
 2006-05-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo (part)
 
 	* Added FjClusterSequenceWithMeanArea::play option when calling

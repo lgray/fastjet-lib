@@ -29,9 +29,11 @@
 //ENDHEADER
 
 
+#include "FjError.hh"
 #include "FjPseudoJet.hh"
 #include<valarray>
 #include<iostream>
+#include<sstream>
 #include<cmath>
 
 using namespace std;
@@ -97,8 +99,9 @@ double FjPseudoJet::operator () (int i) const {
   case T:
     return e();
   default:
-    std::cerr << "FjPseudoJet subscripting: bad index (" << i << ")"
-		 << std::endl;
+    ostringstream err;
+    err << "FjPseudoJet subscripting: bad index (" << i << ")";
+    throw FjError(err.str());
   }
   return 0.;
 }  

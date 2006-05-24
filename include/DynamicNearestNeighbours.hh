@@ -33,6 +33,9 @@
 #define __DYNAMICNEARESTNEIGHBOURS__
 
 #include<vector>
+#include<string>
+#include<iostream>
+#include<sstream>
 #include<cassert>
 #include "numconsts.hh"
 //using namespace std;
@@ -56,10 +59,21 @@ public:
 
 };
 
-/// type to be used when throwing errors in Dynamic Nearest Neighbours code
-struct DNN_Error {
-  inline DNN_Error () { ;};
+/// class corresponding to errors that will be thrown by Dynamic
+/// Nearest Neighbours code
+class DnnError {
+public:
+  // constructors
+  DnnError() {;};
+  DnnError(const std::string & message) {
+    _message = message; std::cerr << message << std::endl;};
+
+  std::string message() const {return _message;};
+
+private:
+  std::string _message;
 };
+
 
 ///
 /// Abstract base class for quick location of nearest neighbours in a set of

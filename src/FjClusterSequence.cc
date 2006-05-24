@@ -28,12 +28,13 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-
+#include "FjError.hh"
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>
+#include<sstream>
 #include<cmath>
-#include <cstdlib>
+#include<cstdlib>
 #include<cassert>
 #include<string>
 
@@ -84,8 +85,10 @@ void FjClusterSequence::_initialise_and_run (
   } else if (_strategy == N2Plain) {
     this->_simple_N2_cluster();
   } else {
-    cerr << "Unrecognised value for strategy: "<<_strategy<<"\n";
-    assert(false);
+    ostringstream err;
+    err << "Unrecognised value for strategy: "<<_strategy;
+    throw FjError(err.str());
+    //assert(false);
   }
 }
 
@@ -201,8 +204,10 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const 
   // some sanity checking to make sure that e+e- does not give us
   // surprises (should we ever implement e+e-)...
   if (2*_initial_n != static_cast<int>(_history.size())) {
-    cerr << "2*_initial_n != _history.size() -- this endangers internal assumptions!\n";
-    assert(false);
+    ostringstream err;
+    err << "2*_initial_n != _history.size() -- this endangers internal assumptions!\n";
+    throw FjError(err.str());
+    //assert(false);
   }
 
   // now go forwards and reconstitute the jets that we have --
@@ -222,14 +227,17 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const 
     }
     
   }
-  return jets;
 
   // sanity check...
   if (static_cast<int>(jets.size()) != njets) {
-    cerr << "FjClusterSequence::exclusive_jets: size of returned vector ("
+    ostringstream err;
+    err << "FjClusterSequence::exclusive_jets: size of returned vector ("
 	 <<jets.size()<<") does not coincide with requested number of jets ("
-	 <<njets<<")\n";
+	 <<njets<<")";
+    throw FjError(err.str());
   }
+
+  return jets;
 }
 
 //----------------------------------------------------------------------

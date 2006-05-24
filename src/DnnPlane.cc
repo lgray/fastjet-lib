@@ -89,10 +89,11 @@ void DnnPlane::_CrashIfVertexPresent(
   // info().val() it's info().val() will have been updated (in
   // DNN:DNN) to be equal to a vertex "index".
   if (vertex->info().val() != NEW_VERTEX) {
-    cerr << "ERROR in DnnPlane::_CrashIfVertexPresent"
+    ostringstream err;
+    err << "ERROR in DnnPlane::_CrashIfVertexPresent"
 	 <<endl << "Point "<<its_index<<" coincides with point "
 	 <<vertex->info().val() << endl;
-    throw DNN_Error();
+    throw DnnError(err.str());
   } 
 }
 
