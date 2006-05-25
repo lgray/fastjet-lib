@@ -140,6 +140,12 @@ class FjClusterSequence {
   std::string strategy_string () const;
 
 
+  /// returns the scale associated with a jet as required for this
+  /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
+  /// Cambridge algorithm). [May become virtual at some point]
+  double 
+    jet_scale_for_algorithm(const FjPseudoJet & jet) const {return jet.kt2();};
+
  protected:
 
   /// this is the routine that will do all the initialisation and
@@ -196,6 +202,7 @@ class FjClusterSequence {
   int  _initial_n;
   double _Rparam, _R2, _invR2;
   FjStrategy    _strategy;
+
 
  private:
 
@@ -380,26 +387,13 @@ template<class L> FjClusterSequence::FjClusterSequence (
 }
 
 
-//----------------------------------------------------------------------
-// implementation of inline routines for the plain N^2 clustering
-//inline void FjClusterSequence::_bj_set_jetinfo(BriefJet * const jetA, 
-//					     const int _jets_index) const {
-//    jetA->eta  = _jets[_jets_index].rap();
-//    jetA->phi  = _jets[_jets_index].phi();
-//    jetA->kt2  = _jets[_jets_index].kt2();
-//    jetA->_jets_index = _jets_index;
-//    // initialise NN info as well
-//    jetA->NN_dist = _R2;
-//    jetA->NN      = NULL;
-//}
-
 
 //----------------------------------------------------------------------
 template <class J> inline void FjClusterSequence::_bj_set_jetinfo(
                             J * const jetA, const int _jets_index) const {
     jetA->eta  = _jets[_jets_index].rap();
     jetA->phi  = _jets[_jets_index].phi();
-    jetA->kt2  = _jets[_jets_index].kt2();
+    jetA->kt2  = jet_scale_for_algorithm(_jets[_jets_index]);
     jetA->_jets_index = _jets_index;
     // initialise NN info as well
     jetA->NN_dist = _R2;

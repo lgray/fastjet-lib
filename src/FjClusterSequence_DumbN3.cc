@@ -59,18 +59,23 @@ void FjClusterSequence::_really_dumb_cluster () {
 
   for (int n = jetsp.size(); n > 0; n--) {
     int ii, jj;
-    // find smallest beam distance
-    double ymin = jetsp[0]->beam_distance();
+    // find smallest beam distance [remember jet_scale_for_algorithm 
+    // will return kt^2 for the kt-algorithm and 1 for the Cambridge/Aachen]
+    double ymin = jet_scale_for_algorithm(*(jetsp[0]));
     ii = 0; jj = -2;
     for (int i = 0; i < n; i++) {
-      if (jetsp[i]->beam_distance() < ymin) {
-	ymin = jetsp[i]->beam_distance(); ii = i; jj = -2;}
+      double yiB = jet_scale_for_algorithm(*(jetsp[i]));
+      if (yiB < ymin) {
+	ymin = yiB; ii = i; jj = -2;}
     }
 
     // find smallest distance between pair of jetsp
     for (int i = 0; i < n-1; i++) {
       for (int j = i+1; j < n; j++) {
-	double y = jetsp[i]->kt_distance(*jetsp[j])*_invR2;
+	//double y = jetsp[i]->kt_distance(*jetsp[j])*_invR2;
+	double y = min(jet_scale_for_algorithm(*(jetsp[i])), 
+		       jet_scale_for_algorithm(*(jetsp[j])))
+	            * jetsp[i]->plain_distance(*jetsp[j])*_invR2;
 	if (y < ymin) {ymin = y; ii = i; jj = j;}
       }
     }

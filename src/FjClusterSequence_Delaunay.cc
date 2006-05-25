@@ -217,7 +217,7 @@ void FjClusterSequence::_add_ktdistance_to_map(
 			  DistMap & DijMap,
 			  const DynamicNearestNeighbours * DNN) {
   
-  double yiB = _jets[ii].kt2();
+  double yiB = jet_scale_for_algorithm(_jets[ii]);
   if (yiB == 0.0) {
     // in this case convention is that we do not worry about distances
     // but directly state that nearest neighbour is beam
@@ -236,9 +236,9 @@ void FjClusterSequence::_add_ktdistance_to_map(
     if (DeltaR2 > 1.0) {
       DijMap.insert(DijEntry(yiB,  TwoVertices(ii,-1)));
     } else {
-      double kt2i = _jets[ii].kt2();
+      double kt2i = jet_scale_for_algorithm(_jets[ii]);
       int jj = DNN->NearestNeighbourIndex(ii);
-      if (kt2i <= _jets[jj].kt2()) {
+      if (kt2i <= jet_scale_for_algorithm(_jets[jj])) {
 	double dij = DeltaR2 * kt2i;
 	DijMap.insert(DijEntry(dij, TwoVertices(ii,jj)));
       }
