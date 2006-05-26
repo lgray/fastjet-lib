@@ -3,6 +3,10 @@ ChangeLog for fastjet-release directory
 
 2006-05-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+        * in areas/subtraction-tests-mass.cc: changed outnormalisation of
+	  histograms so as to make it easy to compare histograms made with
+	  different bin widths and different numbers of events.
+	
 	* in areas/subtraction-tests-mass.cc introduced -cone and
 	  -searchcone options for running with the plain midpoint cone and
 	  CDF's IR nearly unsafe midpoint searchcone algo.	

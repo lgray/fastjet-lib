@@ -222,10 +222,10 @@ int main (int argc, char ** argv) {
   // print out mass histograms.
   for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
     output <<  inv_mass_hard.bin_centre(i) <<" "
-	    << inv_mass_hard.bin_weight(i) <<" "
-	    << inv_mass_hcor.bin_weight(i) <<" "
-	    << inv_mass_full.bin_weight(i) <<" "
-	    << inv_mass_fcor.bin_weight(i) << endl;
+	    << inv_mass_hard.bin_weight(i)/(nev*bin_width) <<" "
+	    << inv_mass_hcor.bin_weight(i)/(nev*bin_width) <<" "
+	    << inv_mass_full.bin_weight(i)/(nev*bin_width) <<" "
+	    << inv_mass_fcor.bin_weight(i)/(nev*bin_width) << endl;
   }
 }
 
