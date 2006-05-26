@@ -4,10 +4,12 @@
 # needed to get CGAL working
 include ../Makefile
 
-FASTJET_INCLUDE = -I../include
-INCLUDE += $(FASTJET_INCLUDE)
+CDFCONEDIR=../../JetClu+MidPoint-StandAlone/src
+FASTJET_INCLUDE = -I../include 
+# also put in the CDF cone cone
+INCLUDE += $(FASTJET_INCLUDE) -I$(CDFCONEDIR)
 #LDFLAGS += -L../lib -lfastjet
-LDFLAGS += -L../lib -lfastjet 
+LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
 # get google malloc for debugging purposes...
 #LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
 #LDFLAGS += -L$(HOME)/software/local/lib 

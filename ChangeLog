@@ -1,16 +1,25 @@
+ChangeLog for fastjet-release directory
+---------------------------------------
+
 2006-05-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* introduced -in and -out options for subtraction-tests.cc (naming
-	  the files makes it easier to figure out what's going on when we
-	  look at an output file later).
+	* in areas/subtraction-tests-mass.cc introduced -cone and
+	  -searchcone options for running with the plain midpoint cone and
+	  CDF's IR nearly unsafe midpoint searchcone algo.	
+	
+	* added areas/run-mass-test.pl which runs pythia and pipes its
+	  output into subtraction-tests-mass (via a named pipe, splitting
+	  up the options appropriately between the two programs).
 
 	* copied areas/subtraction-tests.cc -> subtraction-tests-mass.cc and
 	  started organizing it a bit better, removing extraneous material
 	  etc.; added new option -bin (sets the bin width).
 
-	* added areas/run-mass-test.pl which runs pythia and pipes its
-	  output into subtraction-tests-mass (via a named pipe, splitting
-	  up the options appropriately between the two programs).
+	* introduced -in and -out options for subtraction-tests.cc (naming
+	  the files makes it easier to figure out what's going on when we
+	  look at an output file later).
+
+
 
 2006-05-25  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo for conception
 

@@ -8,7 +8,7 @@ $jet_exec    = "./subtraction-tests-mass";
 
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
-$pipename="pipe-$hostname-$$";
+$pipename=".pipe-$hostname-$$";
 
 
 $this_prog   = $0." ".join(" ",@ARGV);
@@ -37,7 +37,7 @@ while ($#ARGV >= 0) {
   else  {$jet_opts .= " $opt";}
 }
 $pythia_opts .= " -nev $nev -out $pipename";
-$jet_opts    .= " -nev $nev -in  $pipename -out $outfile";
+$jet_opts    .= " -nev $nev -in  $pipename -out $outfile.tmp";
 
 # make the pipe that will be used for communication between the
 # programs
@@ -47,13 +47,20 @@ system("mknod $pipename p");
 $command = "$pythia_exec $pythia_opts | $jet_exec $jet_opts";
 system($command);
 
+
+# 
+sleep(1);
 unlink($pipename);
 
 # now add some information to beginning of outfile
 $outres  = "# $this_prog\n";
 $outres .= "# $command\n";
-$outres .= `cat $outfile`;
 
-open (OUT, ">$outfile") || die "Failed to open $outfile";
+open (OUT, ">$outfile") || die "Failed to open $outfile for rewriting";
 print OUT $outres;
+
+open(IN, "<$outfile.tmp") || die "Failed to open $outfile.tmp for reading";
+while ($line = <IN>) {print OUT $line}
+close(IN);
 close OUT;
+system("rm $outfile.tmp");

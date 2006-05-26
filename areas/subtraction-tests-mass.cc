@@ -82,6 +82,12 @@
 #include "CSHisto.hh"
 
 
+// for getting cone algorithm from CDF
+#include "MidPointAlgorithm.hh"
+#include "PhysicsTower.hh"
+#include "Cluster.hh"
+
+
 using namespace std;
 
 inline double pow2(const double x) {return x*x;};
@@ -100,6 +106,12 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 			double grid_scatter, double kt_scatter, int repeat,
 			double ktR, FjStrategy strategy,
 			double & mass, double & corrected_mass);
+
+void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
+			  double R, bool searchcone,
+			  double & mass, double & corrected_mass);
+
+double Zmass_from_jets(const vector<FjPseudoJet> & jets);
 
 void read_event(istream &, double, bool, bool,
 		vector<FjPseudoJet> &, vector<FjPseudoJet> & );
@@ -133,9 +145,11 @@ int main (int argc, char ** argv) {
   //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
+  bool   searchcone   = cmdline.present("-searchcone"); 
+  bool   cone         = cmdline.present("-cone") || searchcone;
 
   if (!cmdline.all_options_used()) {cerr << 
-      "Error: some options unused"<<endl; 
+      "Error: some options unsupported"<<endl; 
     exit(-1);}
 
   // input will be from the file named with the "-in" option
@@ -159,19 +173,39 @@ int main (int argc, char ** argv) {
     
     // deduce the masses
     double hard_ev_mass, hcor_ev_mass;
-    determine_Zmass_kt(hard_event,
-		       cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-		       repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass);
+    if (cone) {
+      determine_Zmass_cone(hard_event, ktR, searchcone,
+			   hard_ev_mass, hcor_ev_mass);
+    } else {
+      determine_Zmass_kt(hard_event,
+			   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
+			   repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass);
+    }
+
+
     double full_ev_mass, fcor_ev_mass;
-    determine_Zmass_kt(full_event,
-		       cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-		       repeat, ktR, strategy, full_ev_mass, fcor_ev_mass);
-    
+    if (full_event.size() != hard_event.size()) {
+      // run things again only if the vectors are different...
+      if (cone) {
+	determine_Zmass_cone(full_event, ktR, searchcone,
+			     full_ev_mass, fcor_ev_mass);
+      } else {
+	determine_Zmass_kt(full_event,
+			   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
+			   repeat, ktR, strategy, full_ev_mass, fcor_ev_mass);
+      }
+    } else {
+      full_ev_mass = hard_ev_mass;
+      fcor_ev_mass = hcor_ev_mass ;
+    }
+
+    // provide user with some info (maybe get rid of this at some point?)
     cout <<"inv mass of two hardest (hard) jets = "<< hard_ev_mass << endl;
     cout <<"inv mass of two hardest (hcor) jets = "<< hcor_ev_mass << endl;
     cout <<"inv mass of two hardest (full) jets = "<< full_ev_mass << endl;
     cout <<"inv mass of two hardest (fcor) jets = "<< fcor_ev_mass << endl;
     
+    // fill histograms
     inv_mass_hard.fill(hard_ev_mass);
     inv_mass_hcor.fill(hcor_ev_mass);
     inv_mass_full.fill(full_ev_mass);
@@ -211,7 +245,9 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 				      ktR,strategy);
 
   double median_pt_per_area = clust.pt_per_unit_area();
-  vector<FjPseudoJet> jets = sorted_by_pt(clust.inclusive_jets());
+  
+  vector<FjPseudoJet> jets = clust.inclusive_jets();
+  mass = Zmass_from_jets(jets);
 
   vector<FjPseudoJet> corrected_jets(jets.size());
   for (unsigned i = 0; i < jets.size(); i++) {
@@ -219,13 +255,63 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
       median_pt_per_area*clust.area(jets[i])/jets[i].perp(); 
     corrected_jets[i] =  max(correction_factor,0.0) * jets[i];
   }
-  corrected_jets = sorted_by_pt(corrected_jets);
 
-  mass            = sqrt(abs((jets[0]+jets[1]).m2()));
-  corrected_mass = sqrt(abs((corrected_jets[0]+corrected_jets[1]).m2()));
+  corrected_mass = Zmass_from_jets(corrected_jets);
 
 }
 
+
+//======================================================================
+void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
+			double R, bool searchcone,
+			double & mass, double & corrected_mass) {
+  
+  // Define MidPoint algorithm.
+  double m_seedThreshold    = 1;
+  double m_coneRadius       = R;
+
+  double m_overlapThreshold;
+  double m_coneAreaFraction;
+  if (searchcone) {
+    m_coneAreaFraction = 0.25;
+    m_overlapThreshold = 0.75;
+  } else {
+    m_coneAreaFraction = 1.00;
+    m_overlapThreshold = 0.50;
+  }    
+  int    m_maxPairSize      = 2;
+  int    m_maxIterations    = 100;
+  MidPointAlgorithm m(m_seedThreshold,m_coneRadius,m_coneAreaFraction,m_maxPairSize,m_maxIterations,m_overlapThreshold);
+
+  // convert our event into a the CDF format
+  vector<PhysicsTower> towers;
+  for (unsigned i = 0; i < event.size(); i++) 
+    towers.push_back(PhysicsTower(LorentzVector(
+		  event[i].px(),event[i].py(),event[i].pz(),event[i].E())));
+  
+  // run the jet algorithm
+  vector<Cluster> m_jets;
+  m.run(towers,m_jets);
+
+  // extract the jets
+  vector<FjPseudoJet> jets;
+  for (unsigned i=0; i < m_jets.size(); i++) 
+    jets.push_back(FjPseudoJet(m_jets[i].fourVector.px,
+			       m_jets[i].fourVector.py,
+			       m_jets[i].fourVector.pz,
+			       m_jets[i].fourVector.E));
+ 
+  mass = Zmass_from_jets(jets);
+  corrected_mass = mass;
+}
+
+
+//======================================================================
+double Zmass_from_jets(const vector<FjPseudoJet> & jets) {
+  vector<FjPseudoJet> sorted_jets = sorted_by_pt(jets);
+  double mass = sqrt(abs((sorted_jets[0]+sorted_jets[1]).m2()));
+  return mass;
+}
 
 //======================================================================
 void read_event(istream & input, double etamax, bool hydjet, bool massless,
