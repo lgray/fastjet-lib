@@ -1,3 +1,17 @@
+2006-05-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* introduced -in and -out options for subtraction-tests.cc (naming
+	  the files makes it easier to figure out what's going on when we
+	  look at an output file later).
+
+	* copied areas/subtraction-tests.cc -> subtraction-tests-mass.cc and
+	  started organizing it a bit better, removing extraneous material
+	  etc.; added new option -bin (sets the bin width).
+
+	* added areas/run-mass-test.pl which runs pythia and pipes its
+	  output into subtraction-tests-mass (via a named pipe, splitting
+	  up the options appropriately between the two programs).
+
 2006-05-25  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo for conception
 
 	* added examples/test-correctness.sh for testing that all the

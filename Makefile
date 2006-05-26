@@ -4,8 +4,8 @@
 # to have the N ln N clustering option. In this case you should make 
 # sure that the CGAL_MAKEFILE environment variable is defined and points
 # to the CGAL Makefile (which defines various flags)
-USE_CGAL = yes
-#USE_CGAL = no
+#USE_CGAL = yes
+USE_CGAL = no
 
 #CGAL_MAKEFILE = .../some/path/makefile...
 

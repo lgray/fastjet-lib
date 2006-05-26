@@ -94,6 +94,16 @@ void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
   printf("#END\n");
 };
 
+
+void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
+			double cell_area, double ghost_etamax,
+			double grid_scatter, double kt_scatter, int repeat,
+			double ktR, FjStrategy strategy,
+			double & mass, double & corrected_mass);
+
+void read_event(istream &, double, bool, bool,
+		vector<FjPseudoJet> &, vector<FjPseudoJet> & );
+
 //----------------------------------------------------------------------
 /// a program to test and time the kt algorithm as implemented in fastjet
 int main (int argc, char ** argv) {
@@ -105,7 +115,7 @@ int main (int argc, char ** argv) {
   FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", Best)));
   int  repeat  = cmdline.int_val("-repeat",1);
-  bool writeout   = cmdline.present("-write");
+  //bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
   double ktR   = cmdline.double_val("-r",1.0);
   //double inclkt = cmdline.double_val("-incl",-1.0);
@@ -119,7 +129,8 @@ int main (int argc, char ** argv) {
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
   double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
-  bool   print_jets   = cmdline.present("-print_jets");
+  double bin_width    = cmdline.double_val("-bin",5.0);
+  //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
 
@@ -130,16 +141,98 @@ int main (int argc, char ** argv) {
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
 
-  CSHisto inv_mass_hard(00.0, 400.0, 80);
-  CSHisto inv_mass_full(00.0, 400.0, 80);
-  CSHisto inv_mass_corr(00.0, 400.0, 80);
+  double max_bin = 400.0; int nbins = int(max_bin/bin_width + 0.5);
+  CSHisto inv_mass_hard(00.0, max_bin, nbins);
+  CSHisto inv_mass_hcor(00.0, max_bin, nbins);
+  CSHisto inv_mass_full(00.0, max_bin, nbins);
+  CSHisto inv_mass_fcor(00.0, max_bin, nbins);
 
   for (int iev = 0; iev < nev; iev++) {
-  vector<FjPseudoJet> full_event;
-  vector<FjPseudoJet> hard_event;
+    cerr << "Doing event "<< iev<<endl;
+    vector<FjPseudoJet> hard_event, full_event;
+    
+    // read in the event 
+    read_event(input, etamax, hydjet, massless, hard_event, full_event);
+      
+    // dumb it down if need be...
+    if (nopileup)  full_event = hard_event;
+    
+    // deduce the masses
+    double hard_ev_mass, hcor_ev_mass;
+    determine_Zmass_kt(hard_event,
+		       cell_area,ghost_etamax, grid_scatter, kt_scatter, 
+		       repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass);
+    double full_ev_mass, fcor_ev_mass;
+    determine_Zmass_kt(full_event,
+		       cell_area,ghost_etamax, grid_scatter, kt_scatter, 
+		       repeat, ktR, strategy, full_ev_mass, fcor_ev_mass);
+    
+    cout <<"inv mass of two hardest (hard) jets = "<< hard_ev_mass << endl;
+    cout <<"inv mass of two hardest (hcor) jets = "<< hcor_ev_mass << endl;
+    cout <<"inv mass of two hardest (full) jets = "<< full_ev_mass << endl;
+    cout <<"inv mass of two hardest (fcor) jets = "<< fcor_ev_mass << endl;
+    
+    inv_mass_hard.fill(hard_ev_mass);
+    inv_mass_hcor.fill(hcor_ev_mass);
+    inv_mass_full.fill(full_ev_mass);
+    inv_mass_fcor.fill(fcor_ev_mass);
+    
+  } // iev
+  
+  
+  // sending output to a file...
+  ofstream output(output_file.c_str());
+  output << "# " << cmdline.command_line() << endl;
+  output << "# bin-centre hard hcor full fcor" <<endl;
+
+  // print out mass histograms.
+  for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
+    output <<  inv_mass_hard.bin_centre(i) <<" "
+	    << inv_mass_hard.bin_weight(i) <<" "
+	    << inv_mass_hcor.bin_weight(i) <<" "
+	    << inv_mass_full.bin_weight(i) <<" "
+	    << inv_mass_fcor.bin_weight(i) << endl;
+  }
+}
+
+
+
+
+//======================================================================
+void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
+			double cell_area, double ghost_etamax,
+			double grid_scatter, double kt_scatter, int repeat,
+			double ktR, FjStrategy strategy,
+			double & mass, double & corrected_mass) {
+
+  FjClusterSequenceWithMeanArea clust(event,
+				      cell_area,ghost_etamax,
+				      grid_scatter, kt_scatter, repeat,
+				      ktR,strategy);
+
+  double median_pt_per_area = clust.pt_per_unit_area();
+  vector<FjPseudoJet> jets = sorted_by_pt(clust.inclusive_jets());
+
+  vector<FjPseudoJet> corrected_jets(jets.size());
+  for (unsigned i = 0; i < jets.size(); i++) {
+    double correction_factor = 1 - 
+      median_pt_per_area*clust.area(jets[i])/jets[i].perp(); 
+    corrected_jets[i] =  max(correction_factor,0.0) * jets[i];
+  }
+  corrected_jets = sorted_by_pt(corrected_jets);
+
+  mass            = sqrt(abs((jets[0]+jets[1]).m2()));
+  corrected_mass = sqrt(abs((corrected_jets[0]+corrected_jets[1]).m2()));
+
+}
+
+
+//======================================================================
+void read_event(istream & input, double etamax, bool hydjet, bool massless,
+		vector<FjPseudoJet> & hard_event, 
+		vector<FjPseudoJet> & full_event) {
   string line;
   int  nsub  = 0;
-  cerr << "Doing event "<< iev<<endl;
   while (getline(input, line)) {
       //cout << line<<endl;
     istringstream linestream(line);
@@ -180,97 +273,5 @@ int main (int argc, char ** argv) {
 
   // if we have read in only one event, copy it across here...
   if (nsub == 1) hard_event = full_event;
-  // we needed to make sure we read things in 
-  if (nopileup)  {full_event = hard_event;}
 
-
-  //srand(2); // moved inside loop
-  //double average_area = 0.0;
-  //double average_area2 = 0.0;
-  valarray<double> average_area; 
-  valarray<double> average_area2;
-
-    
-  FjClusterSequenceWithMeanArea full_clust(full_event,
-					  cell_area,ghost_etamax,
-					  grid_scatter, kt_scatter, repeat,
-					  ktR,strategy,writeout);
-
-  FjClusterSequenceWithMeanArea hard_clust(hard_event,
-					  cell_area,ghost_etamax,
-					  grid_scatter, kt_scatter, repeat,
-					  ktR,strategy,writeout);
-
-  vector<FjPseudoJet> hard_jets = sorted_by_pt(hard_clust.inclusive_jets());
-  vector<FjPseudoJet> full_jets = sorted_by_pt(full_clust.inclusive_jets());
-
-  if (hard_jets[0].plain_distance(full_jets[0]) > 
-      hard_jets[0].plain_distance(full_jets[1])) { 
-    swap(full_jets[0],full_jets[1]);}
-
-  double median_pt_per_area = full_clust.pt_per_unit_area();
-  double median_pt_per_area_hard = hard_clust.pt_per_unit_area();
-
-  for (int i = 0; i < 2; i++) {
-    cout << full_jets[i].perp() - hard_jets[i].perp() <<" "
-         << full_jets[i].plain_distance(hard_jets[i]) <<" "
-	 << full_jets[i].perp() - hard_jets[i].perp() 
-            - median_pt_per_area*full_clust.area(full_jets[i]) <<" "
-         << - median_pt_per_area_hard*hard_clust.area(hard_jets[i]) <<
-      endl ;
-  }
-
-  vector<FjPseudoJet> corrected_jets(full_jets.size());
-  for (unsigned i = 0; i < full_jets.size(); i++) {
-    double correction_factor = 1 - 
-      median_pt_per_area*full_clust.area(full_jets[i])/full_jets[i].perp(); 
-    corrected_jets[i] =  max(correction_factor,0.0) * full_jets[i];
-  }
-  corrected_jets = sorted_by_pt(corrected_jets);
-
-  double hard_ev_mass = sqrt(abs((hard_jets[0]+hard_jets[1]).m2()));
-  double full_ev_mass = sqrt(abs((full_jets[0]+full_jets[1]).m2()));
-  double corr_ev_mass = sqrt(abs((corrected_jets[0]+corrected_jets[1]).m2()));
-  cout <<"inv mass of two hardest (hard ev) jets = "<< hard_ev_mass << endl;
-  cout <<"inv mass of two hardest (full ev) jets = "<< full_ev_mass << endl;
-  cout <<"inv mass of two hardest (corr ev) jets = "<< corr_ev_mass << endl;
-
-  inv_mass_hard.fill(hard_ev_mass);
-  inv_mass_full.fill(full_ev_mass);
-  inv_mass_corr.fill(corr_ev_mass);
-
-  if (print_jets) {
-  printf(" ijet   eta      phi        Pt         area  +-   err   stddev  pt_corr\n");
-  for (size_t j = 0; j < full_jets.size(); j++) {
-    double area = full_clust.area(full_jets[j]);
-    
-    printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,full_jets[j].rap(),
-	   full_jets[j].phi(),full_jets[j].perp(), area, full_clust.area_err(full_jets[j]), full_clust.area_err(full_jets[j])*sqrt(1.0*repeat), full_jets[j].perp() - area*median_pt_per_area);
-  }
-
-  //double dummy = full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::play);
-  //cout << "median pt_over_area = " << full_clust.pt_per_unit_area()<<endl;
-  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
-  cerr << "old median  = " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::old_median)<<endl;
-  cerr << "pt/area: " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
-  cerr << "pt/area with cut: " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
-  cerr << "average ratio (with cut): "<< full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
-  cerr << "pt/area with cut (range 3): " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut,3.0)<<endl;
-  cerr << "average ratio (range 3,with cut): "<< full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut,3.0)<<endl;
-  } // if print_jets
-
-  } // iev
-
-
-  // sending output to a file...
-  ofstream output(output_file.c_str());
-  output << "# " << cmdline.command_line() << endl;
-
-  // print out mass histograms (only meaningful for the Z).
-  for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
-    output << inv_mass_hard.bin_centre(i) <<" "
-	    << inv_mass_hard.bin_weight(i) <<" "
-	    << inv_mass_full.bin_weight(i) <<" "
-	    << inv_mass_corr.bin_weight(i) << endl;
-  }
 }
