@@ -135,7 +135,7 @@ int main (int argc, char ** argv) {
   //double excld  = cmdline.double_val("-excld",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e310);
   bool   massless = cmdline.present("-massless");
-  int    nev     = cmdline.int_val("-nev",1);
+  int    nev      = int(cmdline.double_val("-nev",1.0));
   bool   nopileup  = cmdline.present("-nopileup"); 
   double cell_area = cmdline.double_val("-cell_area",0.01);
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
@@ -147,6 +147,8 @@ int main (int argc, char ** argv) {
   string output_file  = cmdline.string_val("-out");
   bool   searchcone   = cmdline.present("-searchcone"); 
   bool   cone         = cmdline.present("-cone") || searchcone;
+  int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
+  cerr <<"writefreq is "<<writefreq<<endl;
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
@@ -211,22 +213,27 @@ int main (int argc, char ** argv) {
     inv_mass_full.fill(full_ev_mass);
     inv_mass_fcor.fill(fcor_ev_mass);
     
+    // write intermediate and final results...
+    if ( iev+1==nev || (iev+1) % writefreq == 0) {
+      // sending output to a file...
+      ofstream output(output_file.c_str());
+      output << "# " << cmdline.command_line() << endl;
+      output << "# nev = " <<iev+1 <<endl;
+      output << "# bin-centre hard hcor full fcor" <<endl;
+      
+      // print out mass histograms.
+      for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
+	output <<  inv_mass_hard.bin_centre(i) <<" "
+	       << inv_mass_hard.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inv_mass_hcor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inv_mass_full.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inv_mass_fcor.bin_weight(i)/((iev+1)*bin_width) << endl;
+      }
+    }
+    
   } // iev
   
   
-  // sending output to a file...
-  ofstream output(output_file.c_str());
-  output << "# " << cmdline.command_line() << endl;
-  output << "# bin-centre hard hcor full fcor" <<endl;
-
-  // print out mass histograms.
-  for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
-    output <<  inv_mass_hard.bin_centre(i) <<" "
-	    << inv_mass_hard.bin_weight(i)/(nev*bin_width) <<" "
-	    << inv_mass_hcor.bin_weight(i)/(nev*bin_width) <<" "
-	    << inv_mass_full.bin_weight(i)/(nev*bin_width) <<" "
-	    << inv_mass_fcor.bin_weight(i)/(nev*bin_width) << endl;
-  }
 }
 
 

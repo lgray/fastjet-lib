@@ -1,6 +1,12 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-05-27  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* added areas/merge-hist.pl for merging histograms and added a
+	  -freq option to subtractes-tests-mass so as to allow output of
+	  intermediate results.
+	
 2006-05-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
         * in areas/subtraction-tests-mass.cc: changed outnormalisation of

@@ -30,9 +30,10 @@ while ($#ARGV >= 0) {
   elsif ($opt eq '-pileup') {$pythia_opts .= " $opt";}
   elsif ($opt eq '-lhc')    {$pythia_opts .= " $opt";}
   elsif ($opt eq '-tev')    {$pythia_opts .= " $opt";}
-  elsif ($opt =~ /-minbias/){$pythia_opts .= " $opt";}
+  elsif ($opt =~ /^-minbias/){$pythia_opts .= " $opt";}
   # pythia opts (others)
   elsif ($opt eq '-ptmin')  {$pythia_opts .= " $opt ".(shift @ARGV);}
+  elsif ($opt eq '-iseq')   {$pythia_opts .= " $opt ".(shift @ARGV);}
   # remaining opts go to jet prog
   else  {$jet_opts .= " $opt";}
 }
