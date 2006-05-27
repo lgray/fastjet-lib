@@ -40,6 +40,9 @@
 
 using namespace std;
 
+// initialised static member has to go in the .cc code
+FjClusterSequence::FjJetFinder FjClusterSequence::_jet_finder = FjClusterSequence::kt_algorithm;
+
 
 void FjClusterSequence::_initialise_and_run (
 				  const double & R,

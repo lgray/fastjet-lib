@@ -51,6 +51,7 @@
 #include<iostream>
 #include<string>
 #include<cmath> // needed to get double std::abs(double)
+#include "FjError.hh"
 
 /// the various options for the algorithmic strategy to adopt in
 /// clustering the event.
@@ -143,8 +144,15 @@ class FjClusterSequence {
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
   /// Cambridge algorithm). [May become virtual at some point]
-  double 
-    jet_scale_for_algorithm(const FjPseudoJet & jet) const {return jet.kt2();};
+  double jet_scale_for_algorithm(const FjPseudoJet & jet) const;
+
+  /// things related to choice of algorithm
+  enum FjJetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
+
+private:
+  static FjJetFinder _jet_finder;
+public:
+  static void set_jet_finder (FjJetFinder jet_finder) {_jet_finder = jet_finder;};
 
  protected:
 
@@ -206,8 +214,6 @@ class FjClusterSequence {
 
  private:
 
-
-  
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();
@@ -386,6 +392,14 @@ template<class L> FjClusterSequence::FjClusterSequence (
   _initialise_and_run(R,strategy,writeout_combinations);
 }
 
+
+
+inline double FjClusterSequence::jet_scale_for_algorithm(
+				  const FjPseudoJet & jet) const {
+  if (_jet_finder == kt_algorithm)             {return jet.kt2();}
+  else if (_jet_finder == cambridge_algorithm) {return 1.0;}
+  else {throw FjError("Unrecognised jet algorithm");}
+}
 
 
 //----------------------------------------------------------------------

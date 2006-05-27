@@ -53,10 +53,12 @@ FjPseudoJet.o: ../include/numconsts.hh
 FjClusterSequence_N2.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 FjClusterSequence_N2.o: ../include/FjClusterSequence.hh
 FjClusterSequence_N2.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequence_N2.o: ../include/FjError.hh
 FjClusterSequence_TiledN2.o: ../include/FjPseudoJet.hh
 FjClusterSequence_TiledN2.o: ../include/numconsts.hh
 FjClusterSequence_TiledN2.o: ../include/FjClusterSequence.hh
 FjClusterSequence_TiledN2.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequence_TiledN2.o: ../include/FjError.hh
 FjClusterSequence_Delaunay.o: ../include/FjError.hh ../include/FjPseudoJet.hh
 FjClusterSequence_Delaunay.o: ../include/numconsts.hh
 FjClusterSequence_Delaunay.o: ../include/FjClusterSequence.hh
@@ -69,3 +71,4 @@ FjClusterSequence_Delaunay.o: ../include/Dnn2piCylinder.hh
 FjClusterSequence_DumbN3.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 FjClusterSequence_DumbN3.o: ../include/FjClusterSequence.hh
 FjClusterSequence_DumbN3.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequence_DumbN3.o: ../include/FjError.hh

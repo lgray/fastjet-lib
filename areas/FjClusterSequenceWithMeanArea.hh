@@ -99,7 +99,8 @@ template<class L>
     FjClusterSequenceWithArea clust_seq(pseudojets,cell_area,etamax_for_area,
 					grid_scatter, kt_scatter,
 					R,strategy);
-       
+
+    // this section needs fixing for the Cambridge algorithm...
     vector<FjPseudoJet> incl_jets4area = clust_seq.inclusive_jets();
     for (unsigned int i=0; i < incl_jets4area.size(); i++) {
       double area = clust_seq.area(incl_jets4area[i]);

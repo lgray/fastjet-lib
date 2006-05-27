@@ -67,6 +67,9 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
+///   -cam          switch to preliminary (inclusive only) implementation of
+///                 Cambridge algorithm
+///
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>
@@ -103,6 +106,16 @@ int main (int argc, char ** argv) {
   bool   massless = cmdline.present("-massless");
   int  nev     = cmdline.int_val("-nev",1);
   bool add_dense_coverage = cmdline.present("-dense");
+
+  // The following option causes the Cambridge algo to be used.
+  // Note that currently the only output that works sensibly here is
+  // "-incl 0"
+  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
+
+  if (!cmdline.all_options_used()) {cerr << 
+      "Error: some options were not recognized"<<endl; 
+    exit(-1);}
+
 
   for (int iev = 0; iev < nev; iev++) {
   vector<FjPseudoJet> jets;
@@ -175,7 +188,7 @@ int main (int argc, char ** argv) {
 
     // now provide some nice output...
     if (inclkt >= 0.0) {
-      vector<FjPseudoJet> jets = clust_seq.inclusive_jets(inclkt);
+      vector<FjPseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
 	if (show_constituents) {

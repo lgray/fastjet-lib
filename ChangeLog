@@ -3,6 +3,16 @@ ChangeLog for fastjet-release directory
 
 2006-05-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* added enum FjClusterSequence::FjJetFinder, which defines the
+   	  kt_algorithm and the cambridge_algorithm; implemented
+	  FjClusterSequence::set_jet_finder which determines which of the
+	  two algorithms to use in the clustering. Added -cam option to
+	  fastjet_timing and subtraction-tests-mass. Note that the
+	  Cambridge impleemntation is extremely crude , that many
+	  functionalities are still missing, and that we will almost
+	  certain want to rethink the interface to it at some later
+	  point...
+	
 	* added areas/merge-hist.pl for merging histograms and added a
 	  -freq option to subtractes-tests-mass so as to allow output of
 	  intermediate results.
