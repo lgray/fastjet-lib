@@ -25,6 +25,7 @@ while ($#ARGV >= 0) {
   if    ($opt eq '-out')    {$outfile = shift @ARGV;}
   # pythia opts (logical)
   elsif ($opt eq '-Z2jets') {$pythia_opts .= " $opt";}
+  elsif ($opt eq '-Zp2jets'){$pythia_opts .= " $opt";}
   elsif ($opt eq '-lolumi') {$pythia_opts .= " $opt";}
   elsif ($opt eq '-noMI')   {$pythia_opts .= " $opt";}
   elsif ($opt eq '-pileup') {$pythia_opts .= " $opt";}
@@ -33,35 +34,41 @@ while ($#ARGV >= 0) {
   elsif ($opt =~ /^-minbias/){$pythia_opts .= " $opt";}
   # pythia opts (others)
   elsif ($opt eq '-ptmin')  {$pythia_opts .= " $opt ".(shift @ARGV);}
+  elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-iseq')   {$pythia_opts .= " $opt ".(shift @ARGV);}
   # remaining opts go to jet prog
   else  {$jet_opts .= " $opt";}
 }
 $pythia_opts .= " -nev $nev -out $pipename";
-$jet_opts    .= " -nev $nev -in  $pipename -out $outfile.tmp";
+$jet_opts    .= " -nev $nev -in  $pipename -out $outfile";
 
 # make the pipe that will be used for communication between the
 # programs
 system("mknod $pipename p");
 
-# 
-$command = "$pythia_exec $pythia_opts | $jet_exec $jet_opts";
-system($command);
+# run pythia and the analysis program separately
+$pythia   = "$pythia_exec $pythia_opts";
+$analysis = "$jet_exec $jet_opts -rerun '$this_prog'";
+print STDERR $pythia."\n";
+print STDERR $analysis."\n";
+system("$pythia &");
+system("$analysis");
 
+#$command = "$pythia_exec $pythia_opts | $jet_exec $jet_opts -rerun '$this_prog'";
+#system($command);
 
 # 
-sleep(1);
 unlink($pipename);
 
-# now add some information to beginning of outfile
-$outres  = "# $this_prog\n";
-$outres .= "# $command\n";
-
-open (OUT, ">$outfile") || die "Failed to open $outfile for rewriting";
-print OUT $outres;
-
-open(IN, "<$outfile.tmp") || die "Failed to open $outfile.tmp for reading";
-while ($line = <IN>) {print OUT $line}
-close(IN);
-close OUT;
-system("rm $outfile.tmp");
+# # now add some information to beginning of outfile
+# $outres  = "# $this_prog\n";
+# $outres .= "# $command\n";
+# 
+# open (OUT, ">$outfile") || die "Failed to open $outfile for rewriting";
+# print OUT $outres;
+# 
+# open(IN, "<$outfile.tmp") || die "Failed to open $outfile.tmp for reading";
+# while ($line = <IN>) {print OUT $line}
+# close(IN);
+# close OUT;
+# system("rm $outfile.tmp");

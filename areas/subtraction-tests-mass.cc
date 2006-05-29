@@ -142,12 +142,14 @@ int main (int argc, char ** argv) {
   double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   double bin_width    = cmdline.double_val("-bin",5.0);
+  double max_bin      = cmdline.double_val("-max",400.0);
   //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
   bool   searchcone   = cmdline.present("-searchcone"); 
   bool   cone         = cmdline.present("-cone") || searchcone;
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
+  string rerun_string = cmdline.string_val("-rerun","");
   cerr <<"writefreq is "<<writefreq<<endl;
   if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
 
@@ -158,7 +160,7 @@ int main (int argc, char ** argv) {
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
 
-  double max_bin = 400.0; int nbins = int(max_bin/bin_width + 0.5);
+  int nbins = int(max_bin/bin_width + 0.5);
   CSHisto inv_mass_hard(00.0, max_bin, nbins);
   CSHisto inv_mass_hcor(00.0, max_bin, nbins);
   CSHisto inv_mass_full(00.0, max_bin, nbins);
@@ -218,6 +220,10 @@ int main (int argc, char ** argv) {
     if ( iev+1==nev || (iev+1) % writefreq == 0) {
       // sending output to a file...
       ofstream output(output_file.c_str());
+      if (rerun_string != "") {
+	output << "# Rerun with:\n";
+	output << rerun_string<<endl;
+      }
       output << "# " << cmdline.command_line() << endl;
       output << "# nev = " <<iev+1 <<endl;
       output << "# bin-centre hard hcor full fcor" <<endl;
