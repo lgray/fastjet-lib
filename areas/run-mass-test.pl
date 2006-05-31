@@ -8,7 +8,7 @@ $jet_exec    = "./subtraction-tests-mass";
 
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
-$pipename=".pipe-$hostname-$$";
+$pipename="/tmp/.pipe-$hostname-$$";
 
 
 $this_prog   = $0." ".join(" ",@ARGV);

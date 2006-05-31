@@ -101,20 +101,24 @@ void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
 };
 
 
+
 void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
 			double cell_area, double ghost_etamax,
 			double grid_scatter, double kt_scatter, int repeat,
 			double ktR, FjStrategy strategy,
 			double & mass, double & corrected_mass);
 
+enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
+
 void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
-			  double R, bool searchcone,
+			  double R, ConeVariant cone_variant,
 			  double & mass, double & corrected_mass);
 
 double Zmass_from_jets(const vector<FjPseudoJet> & jets);
 
 void read_event(istream &, double, bool, bool,
 		vector<FjPseudoJet> &, vector<FjPseudoJet> & );
+
 
 //----------------------------------------------------------------------
 /// a program to test and time the kt algorithm as implemented in fastjet
@@ -146,8 +150,14 @@ int main (int argc, char ** argv) {
   //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
-  bool   searchcone   = cmdline.present("-searchcone"); 
-  bool   cone         = cmdline.present("-cone") || searchcone;
+  ConeVariant cone_variant = not_cone;
+  if (cmdline.present("-searchcone")) {
+    cone_variant = searchcone_075; }
+  else if (cmdline.present("-cone")) {
+    cone_variant = midpoint_050; }
+  else if (cmdline.present("-cone075")) {
+    cone_variant = midpoint_075; }
+  bool   cone         = cone_variant != not_cone;
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
   string rerun_string = cmdline.string_val("-rerun","");
   cerr <<"writefreq is "<<writefreq<<endl;
@@ -179,7 +189,7 @@ int main (int argc, char ** argv) {
     // deduce the masses
     double hard_ev_mass, hcor_ev_mass;
     if (cone) {
-      determine_Zmass_cone(hard_event, ktR, searchcone,
+      determine_Zmass_cone(hard_event, ktR, cone_variant,
 			   hard_ev_mass, hcor_ev_mass);
     } else {
       determine_Zmass_kt(hard_event,
@@ -192,7 +202,7 @@ int main (int argc, char ** argv) {
     if (full_event.size() != hard_event.size()) {
       // run things again only if the vectors are different...
       if (cone) {
-	determine_Zmass_cone(full_event, ktR, searchcone,
+	determine_Zmass_cone(full_event, ktR, cone_variant,
 			     full_ev_mass, fcor_ev_mass);
       } else {
 	determine_Zmass_kt(full_event,
@@ -277,7 +287,7 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 
 //======================================================================
 void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
-			double R, bool searchcone,
+			double R, ConeVariant cone_variant,
 			double & mass, double & corrected_mass) {
   
   // Define MidPoint algorithm.
@@ -286,13 +296,21 @@ void determine_Zmass_cone(const vector<FjPseudoJet> & event,
 
   double m_overlapThreshold;
   double m_coneAreaFraction;
-  if (searchcone) {
-    m_coneAreaFraction = 0.25;
-    m_overlapThreshold = 0.75;
-  } else {
+  switch(cone_variant) {
+  case(midpoint_050): 
     m_coneAreaFraction = 1.00;
-    m_overlapThreshold = 0.50;
-  }    
+    m_overlapThreshold = 0.50; break;
+  case(midpoint_075): 
+    m_coneAreaFraction = 1.00;
+    m_overlapThreshold = 0.75; break;
+  case(searchcone_075):
+    m_coneAreaFraction = 0.25;
+    m_overlapThreshold = 0.75; break;
+  default:
+    cerr << "Unrecognized cone_variant: "<<cone_variant<<endl; 
+    exit(-1);
+  }
+
   int    m_maxPairSize      = 2;
   int    m_maxIterations    = 100;
   MidPointAlgorithm m(m_seedThreshold,m_coneRadius,m_coneAreaFraction,m_maxPairSize,m_maxIterations,m_overlapThreshold);
@@ -374,4 +392,9 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
   // if we have read in only one event, copy it across here...
   if (nsub == 1) hard_event = full_event;
 
+  // if there was nothing in the event 
+  if (nsub == 0) {
+    cerr << "Error: read empty event\n";
+    exit(-1);
+  }
 }

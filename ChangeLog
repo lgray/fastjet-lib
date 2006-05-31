@@ -1,6 +1,17 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-05-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* added -cone075 options for areas/subtraction-tests-mass.cc
+  	  (overlap fraction of 0.75 with standard midpoint cone)
+	
+2006-05-29  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* added a few more options for areas/subtraction-tests-mass.cc
+	  (one of them allowing one to eliminate the temporary
+	  intermediate file in run-mass-tests.sh)
+	
 2006-05-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* added enum FjClusterSequence::FjJetFinder, which defines the
