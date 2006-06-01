@@ -303,6 +303,9 @@ void FjClusterSequence::add_constituents (
 //----------------------------------------------------------------------
 // initialise the history in a standard way
 void FjClusterSequence::_fill_initial_history () {
+
+  if (_jets.size() == 0) {throw FjError("The event contains no momenta");}
+
   for (int i = 0; i < static_cast<int>(_jets.size()) ; i++) {
     history_element element;
     element.parent1 = InexistentParent;

@@ -1,6 +1,13 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+
+2006-06-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* FjClusterSequence.cc: caused it to throw an error if the event
+	  is empty. (Should think about what happens if the event contains
+	  only one parton?)
+
 2006-05-31  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* added -cone075 options for areas/subtraction-tests-mass.cc
