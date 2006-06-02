@@ -1,6 +1,10 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-06-02  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* FjClusterSequence.cc: made _fill_initial_history reserve space
+	  in _jets and _history.
 
 2006-06-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
