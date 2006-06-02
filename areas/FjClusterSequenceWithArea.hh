@@ -1,7 +1,12 @@
+
+#ifndef __FJCLUSTERSEQUENCEWITHAREA__
+#define __FJCLUSTERSEQUENCEWITHAREA__ 
+
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include<iostream>
 #include<vector>
+
 
 
 using namespace std;
@@ -23,19 +28,36 @@ public:
 	  const bool & writeout_combinations = false);
 
   //vector<FjPseudoJet> constituents (const FjPseudoJet & jet) const;
+
+  /// returns the area of a jet
   double area (const FjPseudoJet & jet) const;
+
+  /// true if a jet is made exclusively of ghosts
+  bool is_pure_ghost(const FjPseudoJet & jet) const;
+
+  /// returns the total area under study
   double total_area () const;
-  int n_particles() const {return _n_particles;};
+  
+  /// returns the number of particles used (ghost+orig)
+  int n_particles() const {return _initial_n;};
 
 private:
 
   int    _n_cells;
   double _cell_area;
-  int    _n_particles;
-  /// add the "ghost" momenta, which will be used to estimate the
+  vector<bool> _is_pure_ghost;
+  vector<double> _areas;
+
+  /// adds the "ghost" momenta, which will be used to estimate the
   /// jet area
   void _add_ghosts(double cell_area, double etamax_for_area,
 		   double grid_scatter, double kt_scatter);
+
+  /// routine to be called after the processing is done so as to
+  /// esetablish summary information on all the jets (areas, whether
+  /// pure ghost, etc.)
+  void _post_process();
+
 };
 
 
@@ -61,10 +83,10 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
     FjPseudoJet mom(pseudojets[i]);
     mom.set_user_index(0); // for user's particles (user index now lost...)
     _jets.push_back(mom);
+    _is_pure_ghost.push_back(false);
   }
 
   _add_ghosts(cell_area, etamax_for_area, grid_scatter, kt_scatter);
-  _n_particles = _jets.size();
 
   if (writeout_combinations) {
     cout << "# Printing particles including ghosts\n";
@@ -79,7 +101,12 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
   // difficulties arising!
   _jets.reserve(_jets.size()*2);
 
+  // run the clustering
   _initialise_and_run(R,strategy,writeout_combinations);
+
+  // set up all other information
+  _post_process();
 }
 
 
+#endif // __FJCLUSTERSEQUENCEWITHAREA__ 

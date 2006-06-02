@@ -3,6 +3,14 @@ ChangeLog for fastjet-release directory
 
 2006-06-02  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* FjClusterSequenceWithMeanArea.* -- split this into .cc and .hh
+	  files to make things a bit cleaner in future.
+
+	* FjClusterSequenceWithArea.* added is_pure_ghost() function and
+	  modified calculation of areas so that it occurs in a
+	  post-processing stage; got areas-native to print out whether a
+	  jet is a true one or a ghost one...
+	
 	* FjClusterSequence.cc: made _fill_initial_history reserve space
 	  in _jets and _history.
 

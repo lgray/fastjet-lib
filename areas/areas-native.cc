@@ -178,9 +178,10 @@ int main (int argc, char ** argv) {
       double area_sum = 0.0;
       for (size_t j = 0; j < jets.size(); j++) {
 	double area = clust_seq.area(jets[j]);
+	bool   pure_ghost = clust_seq.is_pure_ghost(jets[j]);
 	area_sum += area;
-	printf("%5u %15.8f %15.8f %15.8f %15.8f\n",j,jets[j].rap(),
-	       jets[j].phi(),sqrt(jets[j].kt2()), area);
+	printf("%5u %15.8f %15.8f %15.8f %15.8f %3u\n",j,jets[j].rap(),
+	       jets[j].phi(),sqrt(jets[j].kt2()), area, pure_ghost);
 	// some nice output of constituents?
 	if (print_jets) print_jet(clust_seq, jets[j]);
 	if (j == 0) {average_area += area; average_area2 += area*area;}

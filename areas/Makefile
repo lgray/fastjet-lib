@@ -16,7 +16,7 @@ LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
 
 PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc
 
-SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc
+SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc FjClusterSequenceWithMeanArea.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
 areas: areas.o $(OBJS) ../lib/libfastjet.a
@@ -57,29 +57,41 @@ FjClusterSequenceWithArea.o: ../include/FjPseudoJet.hh
 FjClusterSequenceWithArea.o: ../include/numconsts.hh
 FjClusterSequenceWithArea.o: ../include/FjClusterSequence.hh
 FjClusterSequenceWithArea.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequenceWithArea.o: ../include/FjError.hh
+FjClusterSequenceWithMeanArea.o: ../include/FjPseudoJet.hh
+FjClusterSequenceWithMeanArea.o: ../include/numconsts.hh
+FjClusterSequenceWithMeanArea.o: ../include/FjClusterSequence.hh
+FjClusterSequenceWithMeanArea.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequenceWithMeanArea.o: ../include/FjError.hh
+FjClusterSequenceWithMeanArea.o: FjClusterSequenceWithMeanArea.hh
+FjClusterSequenceWithMeanArea.o: FjClusterSequenceWithArea.hh
 areas.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 areas.o: ../include/FjClusterSequence.hh
-areas.o: ../include/DynamicNearestNeighbours.hh CmdLine.hh
+areas.o: ../include/DynamicNearestNeighbours.hh ../include/FjError.hh
+areas.o: CmdLine.hh
 areas-native.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 areas-native.o: ../include/FjClusterSequence.hh
-areas-native.o: ../include/DynamicNearestNeighbours.hh
+areas-native.o: ../include/DynamicNearestNeighbours.hh ../include/FjError.hh
 areas-native.o: FjClusterSequenceWithArea.hh CmdLine.hh
 areas-histogramming.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 areas-histogramming.o: ../include/FjClusterSequence.hh
 areas-histogramming.o: ../include/DynamicNearestNeighbours.hh
-areas-histogramming.o: FjClusterSequenceWithArea.hh CmdLine.hh
+areas-histogramming.o: ../include/FjError.hh FjClusterSequenceWithArea.hh
+areas-histogramming.o: CmdLine.hh
 areas-test-mean-class.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 areas-test-mean-class.o: ../include/FjClusterSequence.hh
 areas-test-mean-class.o: ../include/DynamicNearestNeighbours.hh
+areas-test-mean-class.o: ../include/FjError.hh
 areas-test-mean-class.o: FjClusterSequenceWithMeanArea.hh
 areas-test-mean-class.o: FjClusterSequenceWithArea.hh CmdLine.hh
 subtraction-tests.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 subtraction-tests.o: ../include/FjClusterSequence.hh
 subtraction-tests.o: ../include/DynamicNearestNeighbours.hh
-subtraction-tests.o: FjClusterSequenceWithMeanArea.hh
+subtraction-tests.o: ../include/FjError.hh FjClusterSequenceWithMeanArea.hh
 subtraction-tests.o: FjClusterSequenceWithArea.hh CmdLine.hh CSHisto.hh
 subtraction-tests-mass.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 subtraction-tests-mass.o: ../include/FjClusterSequence.hh
 subtraction-tests-mass.o: ../include/DynamicNearestNeighbours.hh
+subtraction-tests-mass.o: ../include/FjError.hh
 subtraction-tests-mass.o: FjClusterSequenceWithMeanArea.hh
 subtraction-tests-mass.o: FjClusterSequenceWithArea.hh CmdLine.hh CSHisto.hh
