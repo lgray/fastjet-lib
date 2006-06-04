@@ -30,24 +30,21 @@ public:
 private:
 
   valarray<double> _average_area, _average_area2;
-  valarray<int>    _incl_ix_of_clust_ix;
   double           _non_jet_area, _non_jet_area2, _non_jet_number;
-
-  int _incl_ix_of_jet(const FjPseudoJet & jet) const {
-    int ix = _incl_ix_of_clust_ix[jet.cluster_hist_index()];
-    if (ix == Invalid) {throw FjError("Asked for area of non-inclusive jet");}
-    return ix;
-  }
 
   double _etamax_for_area; // max eta where we put ghosts
   double _etalim_for_area; // max eta where we trust jet areas
 
+  /// transfer areas from the FjClusterSequenceWithArea object into
+  /// our internal area bookkeeping...
+  void _transfer_areas(const FjClusterSequenceWithArea & );
+
 
 public : 
   double area (const FjPseudoJet & jet) const {
-                             return _average_area[_incl_ix_of_jet(jet)];};
+                             return _average_area[jet.cluster_hist_index()];};
   double area_err (const FjPseudoJet & jet) const {
-                             return _average_area2[_incl_ix_of_jet(jet)];};
+                             return _average_area2[jet.cluster_hist_index()];};
 
   /// return the transverse momentum per unit area excluding 
   /// jets that have pt/area > median(pt/area)*range.
@@ -61,9 +58,9 @@ public :
 
 
 
-/// horrible, really horrible initialiser that throws away all
-/// information on non-inclusive jets (there's bound to be a better
-/// way...)
+/// initialiser that should create information about areas of all
+/// jets; a PseudoJet's area is defined as that just before it gets
+/// clustered with something else (or written off as an inclusive jet).
 template<class L> 
    FjClusterSequenceWithMeanArea::FjClusterSequenceWithMeanArea (
 	        const std::vector<L> & pseudojets,
@@ -79,18 +76,10 @@ template<class L>
   _etamax_for_area = etamax_for_area;
   _etalim_for_area = _etamax_for_area - _Rparam;
   
-  // arrange to have a mapping between the cluster_hist_index and the
-  // index of the inclusive jets...
-  _incl_ix_of_clust_ix.resize(_history.size());
-  _incl_ix_of_clust_ix = Invalid;
-  vector<FjPseudoJet> incl_jets = inclusive_jets();
-  for (unsigned int i=0; i < incl_jets.size(); i++) {
-    _incl_ix_of_clust_ix[incl_jets[i].cluster_hist_index()] = i;
-  }
   
   // initialize our local area information
-  _average_area.resize(incl_jets.size());  _average_area  = 0.0;
-  _average_area2.resize(incl_jets.size()); _average_area2 = 0.0;
+  _average_area.resize(_history.size());  _average_area  = 0.0;
+  _average_area2.resize(_history.size()); _average_area2 = 0.0;
   _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
      
   // run the clustering multiple times so as to get areas of all the
@@ -106,19 +95,8 @@ template<class L>
 					grid_scatter, kt_scatter,
 					R,strategy);
 
-    // this section needs fixing for the Cambridge algorithm...
-    vector<FjPseudoJet> incl_jets4area = clust_seq.inclusive_jets();
-    for (unsigned int i=0; i < incl_jets4area.size(); i++) {
-      double area = clust_seq.area(incl_jets4area[i]);
-      if (i < incl_jets.size()) {
-	_average_area[i]  += area;
-	_average_area2[i] += area*area;
-      } else if (abs(incl_jets4area[i].rap()) < _etalim_for_area) {
-	_non_jet_area  += area;
-	_non_jet_area2 += area*area;
-	_non_jet_number += 1;
-      }
-    }
+    // transfer areas from clust_seq into our object
+    _transfer_areas(clust_seq);
     //cerr << "non-jet area sum was " << _non_jet_area << endl;
   }
   

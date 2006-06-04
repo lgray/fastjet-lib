@@ -1,6 +1,22 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-06-04  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* Added the jets(), history() and n_particles() member functions
+	  to FjClusterSequence so that the user can access this raw
+	  information if they want to (this was a solution to the problem
+	  of accessing things when transferring info between area classes
+	  -- somehow protected information of an object of a related class
+	  is not available to "this"). These functions provide a const ref
+	  (so hopefully the user can't do anything dangerous).
+
+	* reworked transfer of information from the ...WithArea ->
+	  ...WithMeanArea classes, so that now all jets should have a mean
+	  area associated with them, and it might even work for the
+	  Cambridge algorithm [though one has to watch out for possible
+	  degeneracies there at the stage of jets -> inclusive jets].
+	
 2006-06-02  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* FjClusterSequenceWithMeanArea.* -- split this into .cc and .hh

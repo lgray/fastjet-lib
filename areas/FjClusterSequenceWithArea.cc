@@ -44,10 +44,14 @@ double FjClusterSequenceWithArea::total_area () const {
 }
 
 
-// CURRENTLY WILL GIVE WRONG ANSWERS!
 bool FjClusterSequenceWithArea::is_pure_ghost(const FjPseudoJet & jet) const 
 {
   return _is_pure_ghost[jet.cluster_hist_index()];
+}
+
+bool FjClusterSequenceWithArea::is_pure_ghost(int hist_ix) const 
+{
+  return _is_pure_ghost[hist_ix];
 }
 
 

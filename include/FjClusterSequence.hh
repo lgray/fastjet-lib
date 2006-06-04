@@ -151,23 +151,10 @@ class FjClusterSequence {
 
 private:
   static FjJetFinder _jet_finder;
+
 public:
   static void set_jet_finder (FjJetFinder jet_finder) {_jet_finder = jet_finder;};
 
- protected:
-
-  /// this is the routine that will do all the initialisation and
-  /// then run the clustering (may be called by various constructors).
-  void _initialise_and_run (//test// const std::vector<FjPseudoJet> & pseudojets, 
-			    const double & R,
-			    const FjStrategy & strategy,
-			    const bool & writeout_combinations);
-  /// This contains the physical FjPseudoJets; for each FjPseudoJet one
-  /// can find the corresponding position in the _history by looking
-  /// at _jets[i].cluster_hist_index().
-  std::vector<FjPseudoJet> _jets;
-
-  enum JetType {Invalid=-3, InexistentParent = -2, BeamJet = -1};
 
   /// a single element in the clustering history (see vector _history
   /// below).
@@ -200,6 +187,39 @@ public:
     double max_dij_so_far; /// the largest recombination distance seen
 			   /// so far in the clustering history.
   };
+
+  enum JetType {Invalid=-3, InexistentParent = -2, BeamJet = -1};
+
+  /// allow the user to access the jets in this raw manner (needed
+  /// because we don't seem to be able to access protected elements of
+  /// the class for an object that is not "this" (at least in case where
+  /// "this" is of a slightly different kind from the object, both
+  /// derived from FjClusterSequence).
+  const std::vector<FjPseudoJet> & jets()    const;
+
+  /// allow the user to access the history in this raw manner (see
+  /// above for motivation).
+  const std::vector<history_element> & history() const;
+
+  /// returns the number of particles that were provided to the
+  /// clustering algorithm (helps the user finr their way around the
+  /// history and jets objects if they weren't paying attention
+  /// beforehand).
+  unsigned int n_particles() const;
+
+ protected:
+
+  /// this is the routine that will do all the initialisation and
+  /// then run the clustering (may be called by various constructors).
+  void _initialise_and_run (//test// const std::vector<FjPseudoJet> & pseudojets, 
+			    const double & R,
+			    const FjStrategy & strategy,
+			    const bool & writeout_combinations);
+  /// This contains the physical FjPseudoJets; for each FjPseudoJet one
+  /// can find the corresponding position in the _history by looking
+  /// at _jets[i].cluster_hist_index().
+  std::vector<FjPseudoJet> _jets;
+
 
   /// this vector will contain the branching history; for each stage,
   /// _history[i].jetp_index indicates where to look in the _jets
@@ -391,6 +411,17 @@ template<class L> FjClusterSequence::FjClusterSequence (
 
   _initialise_and_run(R,strategy,writeout_combinations);
 }
+
+
+inline const std::vector<FjPseudoJet> & FjClusterSequence::jets () const {
+  return _jets;
+}
+
+inline const std::vector<FjClusterSequence::history_element> & FjClusterSequence::history () const {
+  return _history;
+}
+
+inline unsigned int FjClusterSequence::n_particles() const {return _initial_n;}
 
 
 

@@ -34,13 +34,11 @@ public:
 
   /// true if a jet is made exclusively of ghosts
   bool is_pure_ghost(const FjPseudoJet & jet) const;
+  bool is_pure_ghost(int hist_ix) const;
 
   /// returns the total area under study
   double total_area () const;
   
-  /// returns the number of particles used (ghost+orig)
-  int n_particles() const {return _initial_n;};
-
 private:
 
   int    _n_cells;

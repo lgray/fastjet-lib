@@ -117,6 +117,11 @@ int main (int argc, char ** argv) {
   double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets = cmdline.present("-print_jets");
+  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
+
+  if (!cmdline.all_options_used()) {cerr << 
+      "Error: some options unsupported"<<endl; 
+    exit(-1);}
 
   for (int iev = 0; iev < nev; iev++) {
   vector<FjPseudoJet> input_particles;

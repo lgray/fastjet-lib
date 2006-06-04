@@ -103,3 +103,91 @@ double FjClusterSequenceWithMeanArea::pt_per_unit_area(
   }
 
 }
+
+
+//----------------------------------------------------------------------
+void FjClusterSequenceWithMeanArea::_transfer_areas(
+    	    const FjClusterSequenceWithArea & clust_seq  ) {
+
+  const vector<history_element> & cs_history  = clust_seq.history();
+  const vector<FjPseudoJet>     & cs_jets     = clust_seq.jets();
+
+  int j = _initial_n;
+  valarray<double> our_areas(_history.size());
+  our_areas = 0.0;
+
+  for (unsigned i = clust_seq.n_particles(); i < cs_history.size(); i++) {
+    int parent1 = cs_history[i].parent1;
+    int parent2 = cs_history[i].parent2;
+
+    if (parent2 == BeamJet) {
+      // need to look at parent to get the actual jet
+      const FjPseudoJet & jet = 
+  	  cs_jets[cs_history[parent1].jetp_index];
+      double area = clust_seq.area(jet);
+
+      if (clust_seq.is_pure_ghost(parent1)) {
+	if (abs(jet.rap()) < _etalim_for_area) {
+	  _non_jet_area  += area;
+	  _non_jet_area2 += area*area;
+	  _non_jet_number += 1;
+	}
+      } else {
+	// sanity check 
+	const FjPseudoJet & refjet = 
+	  _jets[_history[_history[j].parent1].jetp_index];
+	if (jet.perp2() != refjet.perp2()) 
+	  throw FjError("Could not match clustering sequence for an inclusive jet when reconstructing areas"); 
+
+	// set the area at this clustering stage
+	our_areas[j]  = area; 
+
+	// update the parent as well -- that way its area is the area
+	// immediately before clustering (i.e. resolve an ambiguity in
+	// the Cambridge case and ensure in the kt case that the original
+	// particles get a correct area)
+	our_areas[_history[j].parent1] = area;
+	
+	// update our local index
+	j++;
+      }
+    }
+    else if (!clust_seq.is_pure_ghost(parent1) && 
+	     !clust_seq.is_pure_ghost(parent2)) {
+      
+      const FjPseudoJet & jet = cs_jets[cs_history[i].jetp_index];
+      const FjPseudoJet & refjet = _jets[_history[j].jetp_index];
+
+      // run sanity check 
+      if (jet.perp2() != refjet.perp2()) FjError("Could not match clustering sequence for an exclusive jet when reconstructing areas"); 
+
+      // update area and our local index (maybe redundant since later
+      // the descendants will reupdate it?)
+      double area  = clust_seq.area(jet);
+      our_areas[j]  += area; 
+
+      // now update areas of parents (so that they becomes areas
+      // immediately before clustering occurred). This is of use
+      // because it allows us to set the areas of the original hard
+      // particles in the kt algorithm; for the Cambridge case it
+      // means a jet's area will be the area just before it clusters
+      // with another hard jet.
+      const FjPseudoJet & jet1 = cs_jets[cs_history[parent1].jetp_index];
+      int our_parent1 = _history[j].parent1;
+      our_areas[our_parent1] = clust_seq.area(jet1);
+
+      const FjPseudoJet & jet2 = cs_jets[cs_history[parent2].jetp_index];
+      int our_parent2 = _history[j].parent2;
+      our_areas[our_parent2] = clust_seq.area(jet2);
+
+      j++;
+    }
+
+  }
+
+
+  _average_area  += our_areas; 
+  _average_area2 += our_areas*our_areas; 
+  
+}
+
