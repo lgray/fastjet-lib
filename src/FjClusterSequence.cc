@@ -365,3 +365,91 @@ void FjClusterSequence::_add_step_to_history (
 
 }
 
+
+
+
+//======================================================================
+// Return an order in which to read the history such that _history[order[i]] 
+// will always correspond to the same set of consituent particles if 
+// two branching histories are equivalent in terms of the particles
+// contained in any given pseudojet.
+vector<int> FjClusterSequence::unique_history_order() const {
+
+  // first construct an array that will tell us the lowest constituent
+  // of a given jet -- this will always be one of the original
+  // particles, whose order is well defined and so will help us to
+  // follow the tree in a unique manner.
+  valarray<int> lowest_constituent(_history.size());
+  int hist_n = _history.size();
+  lowest_constituent = hist_n; // give it a large number
+  for (int i = 0; i < hist_n; i++) {
+    // sets things up for the initial partons
+    lowest_constituent[i] = min(lowest_constituent[i],i); 
+    // propagates them through to the children of this parton
+    if (_history[i].child > 0) lowest_constituent[_history[i].child] 
+      = min(lowest_constituent[_history[i].child],lowest_constituent[i]);
+  }
+
+  // establish an array for what we have and have not extracted so far
+  valarray<bool> extracted(_history.size()); extracted = false;
+  vector<int> unique_tree;
+  unique_tree.reserve(_history.size());
+
+  // now work our way through the tree
+  for (unsigned i = 0; i < n_particles(); i++) {
+    if (!extracted[i]) {
+      unique_tree.push_back(i);
+      extracted[i] = true;
+      _extract_tree_children(i, extracted, lowest_constituent, unique_tree);
+    }
+  }
+
+  return unique_tree;
+}
+
+//======================================================================
+// helper for unique_history_order
+void FjClusterSequence::_extract_tree_children(
+       int position, 
+       valarray<bool> & extracted, 
+       const valarray<int> & lowest_constituent,
+       vector<int> & unique_tree) const {
+  if (!extracted[position]) {
+    // that means we may have unidentified parents around, so go and
+    // collect them (extracted[position]) will then be made true)
+    _extract_tree_parents(position,extracted,lowest_constituent,unique_tree);
+  } 
+  
+  // now look after the children...
+  int child = _history[position].child;
+  if (child  >= 0) _extract_tree_children(child,extracted,lowest_constituent,unique_tree);
+}
+
+//======================================================================
+// helper for unique_history_order
+void FjClusterSequence::_extract_tree_parents(
+       int position, 
+       valarray<bool> & extracted, 
+       const valarray<int> & lowest_constituent,
+       vector<int> & unique_tree) const {
+
+  if (!extracted[position]) {
+    int parent1 = _history[position].parent1;
+    int parent2 = _history[position].parent2;
+    // where relevant order parents so that we will first treat the
+    // one containing the smaller "lowest_constituent"
+    if (parent1 >= 0 && parent2 >= 0) {
+      if (lowest_constituent[parent1] > lowest_constituent[parent2]) 
+	swap(parent1, parent2);
+    }
+    // then actually run through the parents to extract the constituents...
+    if (parent1 >= 0 && !extracted[parent1]) 
+      _extract_tree_parents(parent1,extracted,lowest_constituent,unique_tree);
+    if (parent2 >= 0 && !extracted[parent2]) 
+      _extract_tree_parents(parent2,extracted,lowest_constituent,unique_tree);
+    // finally declare this position to be accounted for and push it
+    // onto our list.
+    unique_tree.push_back(position);
+    extracted[position] = true;
+  }
+}

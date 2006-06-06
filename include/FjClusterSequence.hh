@@ -207,6 +207,25 @@ public:
   /// beforehand).
   unsigned int n_particles() const;
 
+
+  /// routine that returns a an order in which to read the history
+  /// such that clusterings that lead to identical jet compositions
+  /// but different histories (because of degeneracies in the
+  /// clustering order) will have matching constituents for each
+  /// matching entry in the unique_history_order.
+  ///
+  /// The order has the property that an entry's parents will always
+  /// appear prior to that entry itself. 
+  ///
+  /// Roughly speaking the order is such that we first provide all
+  /// steps that lead to the final jet containing particle 1; then we
+  /// have the steps that lead to reconstruction of the jet containing
+  /// the next-lowest-numbered unclustered particle, etc...
+  /// [see GPS CCN28-12 for more info -- of course a full explanation
+  /// here would be better...]
+  std::vector<int> unique_history_order() const;
+
+
  protected:
 
   /// this is the routine that will do all the initialisation and
@@ -245,6 +264,17 @@ public:
   void _add_step_to_history(const int & step_number, const int & parent1, 
 			       const int & parent2, const int & jetp_index,
 			       const double & dij);
+
+  /// internal routine associated with the construction of the unique
+  /// history order (following children in the tree)
+  void _extract_tree_children(int pos, std::valarray<bool> &, 
+		const std::valarray<int> &, std::vector<int> &) const;
+
+  /// internal routine associated with the construction of the unique
+  /// history order (following parents in the tree)
+  void _extract_tree_parents (int pos, std::valarray<bool> &, 
+                const std::valarray<int> &,  std::vector<int> &) const;
+
 
   // these will be useful shorthands in the Voronoi-based code
   typedef std::pair<int,int> TwoVertices;

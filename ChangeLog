@@ -1,6 +1,30 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-06-06  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* Added vector<int> FjClusterSequence::unique_history_order(),
+	  which returns a order in which to read the history such
+	  branchings are then independent of irrelevant degeneracies in
+	  the d_ij. This is basically a corrected version of the
+	  _extract_tree function added yesterday to
+	  FjClusterSequenceWithMeanArea (now removed from that class). 
+
+	* Arranged for FjClusterSequenceWithMeanArea to use the new
+	  unique_history_order to map jets between the plain clustering
+	  and that with the active area measurement. First tests suggests
+	  that it's behaving properly (i.e. giving same results as before
+	  for the kt algorithm, and sensible looking results for the
+	  cambridge algorithm).
+
+	
+2006-06-05  Gavin Salam  <salam@lpthe.jussieu.fr>
+	* Added the _extract_tree private member function to
+	  FjClusterSequenceWithMeanArea, which extracts a tree that should
+	  have a unique ordering independently of degeneracies in the
+	  labelling of the clustering. It comes along with some
+	  helpers... Maybe it should be transferred into the main class?
+	
 2006-06-04  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* Added the jets(), history() and n_particles() member functions

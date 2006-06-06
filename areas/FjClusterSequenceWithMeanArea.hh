@@ -37,7 +37,17 @@ private:
 
   /// transfer areas from the FjClusterSequenceWithArea object into
   /// our internal area bookkeeping...
-  void _transfer_areas(const FjClusterSequenceWithArea & );
+  void _transfer_areas(const vector<int> &, const FjClusterSequenceWithArea & );
+
+  /// routine for extracting the tree in an order that will be independent
+  /// of any degeneracies in the recombination sequence that don't
+  /// affect the composition of the final jets
+  void _extract_tree(vector<int> &) const;
+  /// do the part of the extraction associated with pos, working
+  /// through its children and their parents
+  void _extract_tree_children(int pos, valarray<bool> &, const valarray<int> &, vector<int> &) const;
+  /// do the part of the extraction associated with the parents of pos.
+  void _extract_tree_parents (int pos, valarray<bool> &, const valarray<int> &,  vector<int> &) const;
 
 
 public : 
@@ -72,6 +82,21 @@ template<class L>
      FjClusterSequence(pseudojets, R, strategy, writeout_combinations) 
 {
   
+  // code for testing the unique tree
+  vector<int> unique_tree;
+  unique_tree = unique_history_order();
+
+//  cout << "Printing unique-tree form of history for "<<_initial_n<<" "<<_history.size()<<" particles \n";
+//  for (unsigned i = 0; i < unique_tree.size(); i++) {
+//    const history_element & hist_element = _history[unique_tree[i]];
+//    cout << i <<" "<<unique_tree[i]<<" "<<hist_element.dij<<
+//     " "<<hist_element.parent1<<" "<<hist_element.parent2<<
+//      endl;
+//    //cout << i <<" "<<hist_element.dij<<
+//    //  " "<<hist_element.parent1<<" "<<hist_element.parent2<<
+//    //  endl;
+//  }
+
   // for future reference...
   _etamax_for_area = etamax_for_area;
   _etalim_for_area = _etamax_for_area - _Rparam;
@@ -96,7 +121,7 @@ template<class L>
 					R,strategy);
 
     // transfer areas from clust_seq into our object
-    _transfer_areas(clust_seq);
+    _transfer_areas(unique_tree, clust_seq);
     //cerr << "non-jet area sum was " << _non_jet_area << endl;
   }
   
@@ -112,6 +137,7 @@ template<class L>
   _non_jet_number /= area_nrepeat;
 
   //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
+
 
 }
 

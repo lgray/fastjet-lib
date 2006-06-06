@@ -29,6 +29,10 @@ public:
 
   //vector<FjPseudoJet> constituents (const FjPseudoJet & jet) const;
 
+  /// returns the number of hard particles (i.e. those supplied by the user).
+  unsigned int n_hard_particles() const;
+
+
   /// returns the area of a jet
   double area (const FjPseudoJet & jet) const;
 
@@ -45,6 +49,9 @@ private:
   double _cell_area;
   vector<bool> _is_pure_ghost;
   vector<double> _areas;
+  
+  unsigned int _initial_hard_n;
+
 
   /// adds the "ghost" momenta, which will be used to estimate the
   /// jet area
@@ -84,6 +91,8 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
     _is_pure_ghost.push_back(false);
   }
 
+  _initial_hard_n = _jets.size();
+
   _add_ghosts(cell_area, etamax_for_area, grid_scatter, kt_scatter);
 
   if (writeout_combinations) {
@@ -105,6 +114,8 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
   // set up all other information
   _post_process();
 }
+
+inline unsigned int FjClusterSequenceWithArea::n_hard_particles() const {return _initial_hard_n;}
 
 
 #endif // __FJCLUSTERSEQUENCEWITHAREA__ 

@@ -107,18 +107,28 @@ double FjClusterSequenceWithMeanArea::pt_per_unit_area(
 
 //----------------------------------------------------------------------
 void FjClusterSequenceWithMeanArea::_transfer_areas(
+	    const vector<int> & unique_hist_order,
     	    const FjClusterSequenceWithArea & clust_seq  ) {
 
   const vector<history_element> & cs_history  = clust_seq.history();
   const vector<FjPseudoJet>     & cs_jets     = clust_seq.jets();
+  vector<int>    cs_unique_hist_order = clust_seq.unique_history_order();
 
-  int j = _initial_n;
+  const double tolerance = 1e-13; // to decide when two jets are the same
+
+  int j = -1;
+  int hist_index = -1;
+  
   valarray<double> our_areas(_history.size());
   our_areas = 0.0;
 
-  for (unsigned i = clust_seq.n_particles(); i < cs_history.size(); i++) {
-    int parent1 = cs_history[i].parent1;
-    int parent2 = cs_history[i].parent2;
+  for (unsigned i = 0; i < cs_history.size(); i++) {
+    // only consider composite particles
+    unsigned cs_hist_index = cs_unique_hist_order[i];
+    if (cs_hist_index < clust_seq.n_particles()) continue;
+    const history_element & cs_hist = cs_history[cs_unique_hist_order[i]];
+    int parent1 = cs_hist.parent1;
+    int parent2 = cs_hist.parent2;
 
     if (parent2 == BeamJet) {
       // need to look at parent to get the actual jet
@@ -133,38 +143,55 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
 	  _non_jet_number += 1;
 	}
       } else {
+
+	// get next "combined-particle" index in our own history
+	// making sure we don't go beyond it's bounds (if we do
+	// then we're in big trouble anyway...)
+	while (++j < static_cast<int>(_history.size())) {
+	  hist_index = unique_hist_order[j];
+	  if (hist_index >= _initial_n) break;}
+
 	// sanity check 
 	const FjPseudoJet & refjet = 
-	  _jets[_history[_history[j].parent1].jetp_index];
-	if (jet.perp2() != refjet.perp2()) 
-	  throw FjError("Could not match clustering sequence for an inclusive jet when reconstructing areas"); 
+	  _jets[_history[_history[hist_index].parent1].jetp_index];
+	//if (jet.perp2() != refjet.perp2()) {
+	if (abs(jet.perp2()-refjet.perp2()) > 
+	            tolerance*max(jet.perp2(),refjet.perp2())) {
+	  cerr << jet.perp() << " " << refjet.perp() << " "<< jet.perp() - refjet.perp() << endl;
+	  throw FjError("Could not match clustering sequence for an inclusive jet when reconstructing areas"); }
 
 	// set the area at this clustering stage
-	our_areas[j]  = area; 
+	our_areas[hist_index]  = area; 
 
 	// update the parent as well -- that way its area is the area
 	// immediately before clustering (i.e. resolve an ambiguity in
 	// the Cambridge case and ensure in the kt case that the original
 	// particles get a correct area)
-	our_areas[_history[j].parent1] = area;
+	our_areas[_history[hist_index].parent1] = area;
 	
-	// update our local index
-	j++;
       }
     }
     else if (!clust_seq.is_pure_ghost(parent1) && 
 	     !clust_seq.is_pure_ghost(parent2)) {
+
+      // get next "combined-particle" index in our own history
+      while (++j < static_cast<int>(_history.size())) {
+	hist_index = unique_hist_order[j];
+	if (hist_index >= _initial_n) break;}
       
-      const FjPseudoJet & jet = cs_jets[cs_history[i].jetp_index];
-      const FjPseudoJet & refjet = _jets[_history[j].jetp_index];
+      const FjPseudoJet & jet = cs_jets[cs_hist.jetp_index];
+      const FjPseudoJet & refjet = _jets[_history[hist_index].jetp_index];
 
       // run sanity check 
-      if (jet.perp2() != refjet.perp2()) FjError("Could not match clustering sequence for an exclusive jet when reconstructing areas"); 
+      if (abs(jet.perp2()-refjet.perp2()) > 
+	  tolerance*max(jet.perp2(),refjet.perp2())) {
+	  cerr << jet.perp() << " " << refjet.perp() << " "<< jet.perp() - refjet.perp() << endl;
+	  throw FjError("Could not match clustering sequence for an exclusive jet when reconstructing areas"); }
 
       // update area and our local index (maybe redundant since later
       // the descendants will reupdate it?)
       double area  = clust_seq.area(jet);
-      our_areas[j]  += area; 
+      our_areas[hist_index]  += area; 
 
       // now update areas of parents (so that they becomes areas
       // immediately before clustering occurred). This is of use
@@ -173,14 +200,12 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
       // means a jet's area will be the area just before it clusters
       // with another hard jet.
       const FjPseudoJet & jet1 = cs_jets[cs_history[parent1].jetp_index];
-      int our_parent1 = _history[j].parent1;
+      int our_parent1 = _history[hist_index].parent1;
       our_areas[our_parent1] = clust_seq.area(jet1);
 
       const FjPseudoJet & jet2 = cs_jets[cs_history[parent2].jetp_index];
-      int our_parent2 = _history[j].parent2;
+      int our_parent2 = _history[hist_index].parent2;
       our_areas[our_parent2] = clust_seq.area(jet2);
-
-      j++;
     }
 
   }
@@ -190,4 +215,5 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
   _average_area2 += our_areas*our_areas; 
   
 }
+
 
