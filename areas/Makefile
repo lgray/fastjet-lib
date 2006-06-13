@@ -31,6 +31,9 @@ areas-histogramming: areas-histogramming.o $(OBJS) ../lib/libfastjet.a
 areas-test-mean-class: areas-test-mean-class.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-test-mean-class areas-test-mean-class.o $(OBJS)  $(LDFLAGS)
 
+areas-2point: areas-2point.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o areas-2point areas-2point.o $(OBJS)  $(LDFLAGS)
+
 subtraction-tests: subtraction-tests.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests subtraction-tests.o $(OBJS)  $(LDFLAGS)
 

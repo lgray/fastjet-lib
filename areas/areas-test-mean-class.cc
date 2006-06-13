@@ -148,7 +148,7 @@ int main (int argc, char ** argv) {
       if (istat == 1) {
 	fourvec[3] = sqrt(+pow2(fourvec[0])+pow2(fourvec[1])
 			  +pow2(fourvec[2])+pow2(mass));
-      }
+      } else {continue;}
     } else {
       if (massless) {
 	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2];

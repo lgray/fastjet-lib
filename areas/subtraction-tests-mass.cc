@@ -232,7 +232,7 @@ int main (int argc, char ** argv) {
       ofstream output(output_file.c_str());
       if (rerun_string != "") {
 	output << "# Rerun with:\n";
-	output << rerun_string<<endl;
+	output << "# "<<rerun_string<<endl;
       }
       output << "# " << cmdline.command_line() << endl;
       output << "# nev = " <<iev+1 <<endl;

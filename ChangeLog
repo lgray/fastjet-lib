@@ -1,6 +1,15 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-06-13  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+        * Found bug in reading of hydjet format (didn't skip particles
+	  with istat/=1), but in practice they ended up having
+	  non-sensical rapidities so got thrown out anyway (i.e. results
+	  don't change); 
+
+	  THIS BUG SHOULD BE FIXED EVERYWHERE ELSE TOO...
+	
 2006-06-06  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* Added vector<int> FjClusterSequence::unique_history_order(),

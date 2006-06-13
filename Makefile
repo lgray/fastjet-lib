@@ -7,6 +7,15 @@
 USE_CGAL = yes
 #USE_CGAL = no
 
+# uncomment this to remove all assertions (mainly from CGAL) -- this
+# increaes the speed by about 10% (but leaves out many safety checks
+# that are useful if you plan on doing anything "unusual")
+#CXXFLAGS += -DNDEBUG
+
+# when uncommented, keeps debugging information in object file
+# (negligble impact on speed \sim 1%)
+CXXFLAGS += -g
+
 #CGAL_MAKEFILE = .../some/path/makefile...
 
 # Things needed when compiling with ktjet -- adjust to correspond
@@ -18,7 +27,7 @@ KTJET_LIBRARY = -L../../ktjet/lib -lKtEvent -L../../clhep/lib -lCLHEP -lm
 # other config stuff
 cppExtension := .cc          # File extension of source files
 CPPFLAGS +=                 # List flags to pass to C/C++ preprocessor
-CXXFLAGS += -g -O3 -Wall       # List flags to pass to C++ compiler
+CXXFLAGS += -O3 -Wall       # List flags to pass to C++ compiler
 LDFLAGS +=                  # List flags to pass to linker
 LDLIBS +=                   # List additional system libraries to link with
 
