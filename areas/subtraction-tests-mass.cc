@@ -106,7 +106,8 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 			double cell_area, double ghost_etamax,
 			double grid_scatter, double kt_scatter, int repeat,
 			double ktR, FjStrategy strategy,
-			double & mass, double & corrected_mass);
+			double & mass, double & corrected_mass, 
+			double & ext_corrected_mass);
 
 enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
@@ -176,6 +177,11 @@ int main (int argc, char ** argv) {
   CSHisto inv_mass_full(00.0, max_bin, nbins);
   CSHisto inv_mass_fcor(00.0, max_bin, nbins);
 
+  // histograms using the "extended" area subtraction...
+  CSHisto inv_mass_hecr(00.0, max_bin, nbins);
+  CSHisto inv_mass_fecr(00.0, max_bin, nbins);
+
+
   for (int iev = 0; iev < nev; iev++) {
     cerr << "Doing event "<< iev<<endl;
     vector<FjPseudoJet> hard_event, full_event;
@@ -187,44 +193,54 @@ int main (int argc, char ** argv) {
     if (nopileup)  full_event = hard_event;
     
     // deduce the masses
-    double hard_ev_mass, hcor_ev_mass;
+    double hard_ev_mass, hcor_ev_mass, hecr_ev_mass;
     if (cone) {
       determine_Zmass_cone(hard_event, ktR, cone_variant,
 			   hard_ev_mass, hcor_ev_mass);
+      hecr_ev_mass = hcor_ev_mass;
     } else {
       determine_Zmass_kt(hard_event,
-			   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-			   repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass);
+		  cell_area,ghost_etamax, grid_scatter, kt_scatter, 
+		  repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass,
+		  hecr_ev_mass);
     }
 
 
-    double full_ev_mass, fcor_ev_mass;
+    double full_ev_mass, fcor_ev_mass, fecr_ev_mass;
     if (full_event.size() != hard_event.size()) {
       // run things again only if the vectors are different...
       if (cone) {
 	determine_Zmass_cone(full_event, ktR, cone_variant,
 			     full_ev_mass, fcor_ev_mass);
+	fecr_ev_mass = fcor_ev_mass;
       } else {
 	determine_Zmass_kt(full_event,
 			   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-			   repeat, ktR, strategy, full_ev_mass, fcor_ev_mass);
+			   repeat, ktR, strategy, full_ev_mass, fcor_ev_mass,
+			   fecr_ev_mass);
       }
     } else {
       full_ev_mass = hard_ev_mass;
-      fcor_ev_mass = hcor_ev_mass ;
+      fcor_ev_mass = hcor_ev_mass;
+      fecr_ev_mass = hecr_ev_mass;
     }
 
     // provide user with some info (maybe get rid of this at some point?)
     cout <<"inv mass of two hardest (hard) jets = "<< hard_ev_mass << endl;
     cout <<"inv mass of two hardest (hcor) jets = "<< hcor_ev_mass << endl;
+    cout <<"inv mass of two hardest (hecr) jets = "<< hecr_ev_mass << endl;
     cout <<"inv mass of two hardest (full) jets = "<< full_ev_mass << endl;
     cout <<"inv mass of two hardest (fcor) jets = "<< fcor_ev_mass << endl;
+    cout <<"inv mass of two hardest (fecr) jets = "<< fecr_ev_mass << endl;
     
     // fill histograms
     inv_mass_hard.fill(hard_ev_mass);
     inv_mass_hcor.fill(hcor_ev_mass);
     inv_mass_full.fill(full_ev_mass);
     inv_mass_fcor.fill(fcor_ev_mass);
+
+    inv_mass_hecr.fill(hecr_ev_mass);
+    inv_mass_fecr.fill(fecr_ev_mass);
     
     // write intermediate and final results...
     if ( iev+1==nev || (iev+1) % writefreq == 0) {
@@ -236,7 +252,7 @@ int main (int argc, char ** argv) {
       }
       output << "# " << cmdline.command_line() << endl;
       output << "# nev = " <<iev+1 <<endl;
-      output << "# bin-centre hard hcor full fcor" <<endl;
+      output << "# bin-centre hard hcor full fcor hecr fecr" <<endl;
       
       // print out mass histograms.
       for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
@@ -244,7 +260,9 @@ int main (int argc, char ** argv) {
 	       << inv_mass_hard.bin_weight(i)/((iev+1)*bin_width) <<" "
 	       << inv_mass_hcor.bin_weight(i)/((iev+1)*bin_width) <<" "
 	       << inv_mass_full.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_mass_fcor.bin_weight(i)/((iev+1)*bin_width) << endl;
+	       << inv_mass_fcor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inv_mass_hecr.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inv_mass_fecr.bin_weight(i)/((iev+1)*bin_width) << endl;
       }
     }
     
@@ -261,7 +279,8 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 			double cell_area, double ghost_etamax,
 			double grid_scatter, double kt_scatter, int repeat,
 			double ktR, FjStrategy strategy,
-			double & mass, double & corrected_mass) {
+			double & mass, double & corrected_mass,
+			double & ext_corrected_mass) {
 
   FjClusterSequenceWithMeanArea clust(event,
 				      cell_area,ghost_etamax,
@@ -281,6 +300,26 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
   }
 
   corrected_mass = Zmass_from_jets(corrected_jets);
+
+  // now to the correction with the "extended" area
+  for (unsigned i = 0; i < jets.size(); i++) {
+    FjPseudoJet ext_area = median_pt_per_area*clust.extended_area(jets[i]);
+    if (ext_area.perp2() >= jets[i].perp2() || 
+	ext_area.E()     >= jets[i].E()) {
+      // if the correction is too large, set the jet to zero
+      corrected_jets[i] =  0.0 * jets[i];
+    } else {
+      // otherwise do an E-scheme subtraction
+      double px,py,pz,E;
+      px = jets[i].px() - ext_area.px();
+      py = jets[i].py() - ext_area.py();
+      pz = jets[i].pz() - ext_area.pz();
+      E  = jets[i].E()  - ext_area.E();
+      corrected_jets[i] = FjPseudoJet(px,py,pz,E);
+    }
+  }
+
+  ext_corrected_mass = Zmass_from_jets(corrected_jets);
 
 }
 

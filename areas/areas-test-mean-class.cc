@@ -123,6 +123,8 @@ int main (int argc, char ** argv) {
       "Error: some options unsupported"<<endl; 
     exit(-1);}
 
+  cout << "# "<< cmdline.command_line() << endl;
+
   for (int iev = 0; iev < nev; iev++) {
   vector<FjPseudoJet> input_particles;
   string line;

@@ -29,6 +29,9 @@
 //ENDHEADER
 
 
+// NB: to do at some point
+//     - add += and *= operators
+
 #ifndef __PSEUDOJET_H_
 #define __PSEUDOJET_H_
 

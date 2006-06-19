@@ -1,6 +1,22 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-06-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* to FjClusterSequenceWith[Mean]Area.* added 
+	
+	    FjPseudoJet extended_area(const FjPseudoJet & jet) const;
+ 
+	  member function which returns a four vector corresponding to
+	  E-scheme addition and averaging of the ghost vectors (with
+	  appropriate normalisation for each).
+
+	* adapated areas/subtraction-tests-mass.cc to use the new extended
+	  area (i.e. four-vector subtraction) for an alternative
+	  subtraction scheme ("hecr" "fecr" go into two extra columns at
+	  end, so as not to mess up original file format).
+
+	
 2006-06-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
         * Found bug in reading of hydjet format (didn't skip particles

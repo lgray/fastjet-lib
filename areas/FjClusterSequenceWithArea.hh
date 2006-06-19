@@ -36,6 +36,12 @@ public:
   /// returns the area of a jet
   double area (const FjPseudoJet & jet) const;
 
+  /// returns a four vector corresponding to the sum (E-scheme) of the
+  /// ghost four-vectors composing the jet area, normalised such that
+  /// for a small contiguous area the p_t of the extended_area jet is
+  /// equal to area of the jet.
+  FjPseudoJet extended_area (const FjPseudoJet & jet) const;
+
   /// true if a jet is made exclusively of ghosts
   bool is_pure_ghost(const FjPseudoJet & jet) const;
   bool is_pure_ghost(int hist_ix) const;
@@ -49,6 +55,7 @@ private:
   double _cell_area;
   vector<bool> _is_pure_ghost;
   vector<double> _areas;
+  vector<FjPseudoJet> _extended_areas;
   
   unsigned int _initial_hard_n;
 

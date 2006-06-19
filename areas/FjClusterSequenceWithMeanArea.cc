@@ -122,6 +122,9 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
   valarray<double> our_areas(_history.size());
   our_areas = 0.0;
 
+  valarray<FjPseudoJet> our_ext_areas(_history.size());
+  our_ext_areas = FjPseudoJet(0.0,0.0,0.0,0.0);
+
   for (unsigned i = 0; i < cs_history.size(); i++) {
     // only consider composite particles
     unsigned cs_hist_index = cs_unique_hist_order[i];
@@ -135,6 +138,7 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
       const FjPseudoJet & jet = 
   	  cs_jets[cs_history[parent1].jetp_index];
       double area = clust_seq.area(jet);
+      FjPseudoJet ext_area = clust_seq.extended_area(jet);
 
       if (clust_seq.is_pure_ghost(parent1)) {
 	if (abs(jet.rap()) < _etalim_for_area) {
@@ -162,12 +166,14 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
 
 	// set the area at this clustering stage
 	our_areas[hist_index]  = area; 
+	our_ext_areas[hist_index]  = ext_area; 
 
 	// update the parent as well -- that way its area is the area
 	// immediately before clustering (i.e. resolve an ambiguity in
 	// the Cambridge case and ensure in the kt case that the original
 	// particles get a correct area)
 	our_areas[_history[hist_index].parent1] = area;
+	our_ext_areas[_history[hist_index].parent1] = ext_area;
 	
       }
     }
@@ -193,6 +199,9 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
       double area  = clust_seq.area(jet);
       our_areas[hist_index]  += area; 
 
+      FjPseudoJet ext_area = clust_seq.extended_area(jet);
+      our_ext_areas[hist_index] = our_ext_areas[hist_index] + ext_area; 
+
       // now update areas of parents (so that they becomes areas
       // immediately before clustering occurred). This is of use
       // because it allows us to set the areas of the original hard
@@ -202,17 +211,21 @@ void FjClusterSequenceWithMeanArea::_transfer_areas(
       const FjPseudoJet & jet1 = cs_jets[cs_history[parent1].jetp_index];
       int our_parent1 = _history[hist_index].parent1;
       our_areas[our_parent1] = clust_seq.area(jet1);
+      our_ext_areas[our_parent1] = clust_seq.extended_area(jet1);
 
       const FjPseudoJet & jet2 = cs_jets[cs_history[parent2].jetp_index];
       int our_parent2 = _history[hist_index].parent2;
       our_areas[our_parent2] = clust_seq.area(jet2);
+      our_ext_areas[our_parent2] = clust_seq.extended_area(jet2);
     }
 
   }
 
-
   _average_area  += our_areas; 
   _average_area2 += our_areas*our_areas; 
+
+  // poverty of operators forces us to write things this way...
+  _average_ext_area = _average_ext_area + our_ext_areas;
   
 }
 

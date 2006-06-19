@@ -30,6 +30,7 @@ public:
 private:
 
   valarray<double> _average_area, _average_area2;
+  valarray<FjPseudoJet> _average_ext_area;
   double           _non_jet_area, _non_jet_area2, _non_jet_number;
 
   double _etamax_for_area; // max eta where we put ghosts
@@ -55,6 +56,9 @@ public :
                              return _average_area[jet.cluster_hist_index()];};
   double area_err (const FjPseudoJet & jet) const {
                              return _average_area2[jet.cluster_hist_index()];};
+
+  FjPseudoJet extended_area (const FjPseudoJet & jet) const {
+                    return _average_ext_area[jet.cluster_hist_index()];};
 
   /// return the transverse momentum per unit area excluding 
   /// jets that have pt/area > median(pt/area)*range.
@@ -105,6 +109,8 @@ template<class L>
   // initialize our local area information
   _average_area.resize(_history.size());  _average_area  = 0.0;
   _average_area2.resize(_history.size()); _average_area2 = 0.0;
+  _average_ext_area.resize(_history.size()); 
+  _average_ext_area = FjPseudoJet(0.0,0.0,0.0,0.0);
   _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
      
   // run the clustering multiple times so as to get areas of all the
@@ -136,6 +142,12 @@ template<class L>
 			 area_nrepeat);
   _non_jet_number /= area_nrepeat;
 
+  // following bizarre way of writing things is related to 
+  // poverty of operations on FjPseudoJet objects (as well as some confusion
+  // in one or two places)
+  for (unsigned i = 0; i < _average_ext_area.size(); i++) {
+    _average_ext_area[i] = (1.0/area_nrepeat) * _average_ext_area[i];
+  }
   //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
 
 
