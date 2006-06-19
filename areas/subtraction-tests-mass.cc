@@ -225,14 +225,17 @@ int main (int argc, char ** argv) {
       fecr_ev_mass = hecr_ev_mass;
     }
 
-    // provide user with some info (maybe get rid of this at some point?)
-    cout <<"inv mass of two hardest (hard) jets = "<< hard_ev_mass << endl;
-    cout <<"inv mass of two hardest (hcor) jets = "<< hcor_ev_mass << endl;
-    cout <<"inv mass of two hardest (hecr) jets = "<< hecr_ev_mass << endl;
-    cout <<"inv mass of two hardest (full) jets = "<< full_ev_mass << endl;
-    cout <<"inv mass of two hardest (fcor) jets = "<< fcor_ev_mass << endl;
-    cout <<"inv mass of two hardest (fecr) jets = "<< fecr_ev_mass << endl;
-    
+    // limit the amount of information that is output 
+    if (iev < 100) {
+      // provide user with some info (maybe get rid of this at some point?)
+      cout <<"inv mass of two hardest (hard) jets = "<< hard_ev_mass << endl;
+      cout <<"inv mass of two hardest (hcor) jets = "<< hcor_ev_mass << endl;
+      cout <<"inv mass of two hardest (hecr) jets = "<< hecr_ev_mass << endl;
+      cout <<"inv mass of two hardest (full) jets = "<< full_ev_mass << endl;
+      cout <<"inv mass of two hardest (fcor) jets = "<< fcor_ev_mass << endl;
+      cout <<"inv mass of two hardest (fecr) jets = "<< fecr_ev_mass << endl;
+    }
+
     // fill histograms
     inv_mass_hard.fill(hard_ev_mass);
     inv_mass_hcor.fill(hcor_ev_mass);

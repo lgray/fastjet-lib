@@ -13,20 +13,21 @@ optname=""
 for r in 0.4 0.7 1.0
 #for r in 0.7
 do
-#       # cam jobs (no area correction)
-#       submitjob.pl BEST ./run-mass-test.pl -cell_area 1.0 -nev $nev -freq $freq -r $r -lhc -pileup $opts  -cam -out mass-tests/${optname}cam-highlumi-r$r.res
-#       submitjob.pl BEST ./run-mass-test.pl -cell_area 1.0 -nev $nev -freq $freq -r $r -lhc -noMI $opts  -cam -out mass-tests/${optname}cam-zerolumi-noMI-r$r.res
-#       submitjob.pl BEST ./run-mass-test.pl -cell_area 1.0 -nev $nev -freq $freq -r $r -lhc -pileup -lolumi $opts -cam -out mass-tests/${optname}cam-lowlumi-r$r.res
+      # cam jobs (no area correction)
+      #submitjob.pl BEST ./run-mass-test.pl -cell_area 1.0 -nev $nev -freq $freq -r $r -lhc -pileup $opts  -cam -out mass-tests/${optname}cam-highlumi-r${r}ext.res
+      #submitjob.pl BEST ./run-mass-test.pl -cell_area 1.0 -nev $nev -freq $freq -r $r -lhc -noMI $opts  -cam -out mass-tests/${optname}cam-zerolumi-noMI-r${r}ext.res
+      #submitjob.pl BEST ./run-mass-test.pl -cell_area 1.0 -nev $nev -freq $freq -r $r -lhc -pileup -lolumi $opts -cam -out mass-tests/${optname}cam-lowlumi-r${r}ext.res
 
-#      # kt jobs (with area correction)
-     submitjob.pl BEST ./run-mass-test.pl -cam -nev $nev -freq $freq -r $r -lhc -pileup $opts   -out mass-tests/${optname}camarea-highlumi-r$r.res
-     submitjob.pl BEST ./run-mass-test.pl -cam -nev $nev -freq $freq -r $r -lhc -noMI $opts   -out mass-tests/${optname}camarea-zerolumi-noMI-r$r.res
-     submitjob.pl BEST ./run-mass-test.pl -cam -nev $nev -freq $freq -r $r -lhc -pileup -lolumi $opts -out mass-tests/${optname}camarea-lowlumi-r$r.res
 
-# #      # kt jobs (with area correction)
-#      submitjob.pl BEST ./run-mass-test.pl -nev $nev -freq $freq -r $r -lhc -pileup $opts   -out mass-tests/${optname}highlumi-r$r.res
-#      submitjob.pl BEST ./run-mass-test.pl -nev $nev -freq $freq -r $r -lhc -noMI $opts   -out mass-tests/${optname}zerolumi-noMI-r$r.res
-#      submitjob.pl BEST ./run-mass-test.pl -nev $nev -freq $freq -r $r -lhc -pileup -lolumi $opts -out mass-tests/${optname}lowlumi-r$r.res
+     # cam jobs (with area correction)
+     submitjob.pl BEST ./run-mass-test.pl -cam -nev $nev -freq $freq -r $r -lhc -pileup $opts   -out mass-tests/${optname}camarea-highlumi-r${r}ext.res
+     submitjob.pl BEST ./run-mass-test.pl -cam -nev $nev -freq $freq -r $r -lhc -noMI $opts   -out mass-tests/${optname}camarea-zerolumi-noMI-r${r}ext.res
+     submitjob.pl BEST ./run-mass-test.pl -cam -nev $nev -freq $freq -r $r -lhc -pileup -lolumi $opts -out mass-tests/${optname}camarea-lowlumi-r${r}ext.res
+
+     # kt jobs (with area correction)
+     submitjob.pl BEST ./run-mass-test.pl -nev $nev -freq $freq -r $r -lhc -pileup $opts   -out mass-tests/${optname}highlumi-r${r}ext.res
+     submitjob.pl BEST ./run-mass-test.pl -nev $nev -freq $freq -r $r -lhc -noMI $opts   -out mass-tests/${optname}zerolumi-noMI-r${r}ext.res
+     submitjob.pl BEST ./run-mass-test.pl -nev $nev -freq $freq -r $r -lhc -pileup -lolumi $opts -out mass-tests/${optname}lowlumi-r${r}ext.res
 done
 
 # # some cone runs

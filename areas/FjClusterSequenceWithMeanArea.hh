@@ -50,6 +50,10 @@ private:
   /// do the part of the extraction associated with the parents of pos.
   void _extract_tree_parents (int pos, valarray<bool> &, const valarray<int> &,  vector<int> &) const;
 
+  /// since we are playing nasty games with seeds, we should warn
+  /// the user a few times
+  static int _n_seed_warnings;
+  const static int _max_seed_warnings = 10;
 
 public : 
   double area (const FjPseudoJet & jet) const {
@@ -116,7 +120,12 @@ template<class L>
   // run the clustering multiple times so as to get areas of all the
   // inclusive jets (one day this should be changed so as to get
   // area of ALL jets.
-  cerr << "***** * WATCH OUT ******; I am resetting the random seed\n";
+  if (_n_seed_warnings < _max_seed_warnings) {
+    cerr << "***** * WATCH OUT ******; I am resetting the random seed\n";
+    _n_seed_warnings += 1;
+    if (_n_seed_warnings == _max_seed_warnings) cerr << "[last time this warning is output]\n";
+  }
+
   for (int irepeat = 0; irepeat < area_nrepeat; irepeat++) {
     // WARNING: setting seed manually at each turn of loop (because
     // we suspect that CGAL plays with it)

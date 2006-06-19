@@ -9,7 +9,8 @@
 using namespace std;
 
 
-
+int FjClusterSequenceWithMeanArea::_n_seed_warnings = 0;
+const int _max_seed_warnings = 10;
 
 //----------------------------------------------------------------------
 double FjClusterSequenceWithMeanArea::pt_per_unit_area(
