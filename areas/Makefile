@@ -14,7 +14,7 @@ LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
 #LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
 #LDFLAGS += -L$(HOME)/software/local/lib 
 
-PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc
+PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc
 
 SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc FjClusterSequenceWithMeanArea.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
@@ -39,6 +39,9 @@ subtraction-tests: subtraction-tests.o $(OBJS) ../lib/libfastjet.a
 
 subtraction-tests-mass: subtraction-tests-mass.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-mass subtraction-tests-mass.o $(OBJS)  $(LDFLAGS)
+
+subtraction-tests-inclpt: subtraction-tests-inclpt.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o subtraction-tests-inclpt subtraction-tests-inclpt.o $(OBJS)  $(LDFLAGS)
 
 
 areas-empty-event: areas-empty-event.o $(OBJS) ../lib/libfastjet.a
@@ -98,3 +101,10 @@ subtraction-tests-mass.o: ../include/DynamicNearestNeighbours.hh
 subtraction-tests-mass.o: ../include/FjError.hh
 subtraction-tests-mass.o: FjClusterSequenceWithMeanArea.hh
 subtraction-tests-mass.o: FjClusterSequenceWithArea.hh CmdLine.hh CSHisto.hh
+subtraction-tests-inclpt.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+subtraction-tests-inclpt.o: ../include/FjClusterSequence.hh
+subtraction-tests-inclpt.o: ../include/DynamicNearestNeighbours.hh
+subtraction-tests-inclpt.o: ../include/FjError.hh
+subtraction-tests-inclpt.o: FjClusterSequenceWithMeanArea.hh
+subtraction-tests-inclpt.o: FjClusterSequenceWithArea.hh CmdLine.hh
+subtraction-tests-inclpt.o: CSHisto.hh

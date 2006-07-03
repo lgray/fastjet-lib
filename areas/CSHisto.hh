@@ -15,6 +15,8 @@ public:
   unsigned size() const {return _bins.size();};
   double bin_weight(int n) const {return _bins[n];} ;
   double bin_centre(int n) const {return _min+(n+0.5)*_bin_size;};
+  double bin_lower_edge (int n) const {return _min+(n)*_bin_size;};
+  double bin_upper_edge (int n) const {return _min+(n+1.0)*_bin_size;};
 private:
   double           _min, _max, _bin_size, _outflow, _total_weight;
   valarray<double> _bins;

@@ -71,9 +71,13 @@ public :
   enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, pttot_over_areatot_cut, mean_ratio_cut, play};
 
   double pt_per_unit_area(mean_pt_strategies strat=median, double range=2.0 ) const;
+
+  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
+  /// abs(y)<raprange (for negative raprange, it defaults to
+  /// _etalim_for_area).
+  void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0);
+
 };
-
-
 
 
 /// initialiser that should create information about areas of all

@@ -1,6 +1,36 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-07-03  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
+
+	* Added areas/subtraction-tests-inclpt.cc for looking at inclusive
+	  pt distributions (designed for use with hydjet events, at least
+	  initially).
+	
+	* To FjClusterSequenceWithMeanArea.* added
+	  parabolic_pt_per_unit_area for carrying out a parabolic
+	  (a+b*y^2) fit	to the pt/area.
+
+	* areas/run-mass-test.pl adapted to deal with the hydjet case too
+
+	* areas/area-plots -- all plots updated (for Florence talk and
+	  Matteo's US visit [done some time ago...])
+
+	
+2006-06-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* to areas/FjClusterSequenceWithArea.* placed upper limit on
+	  number of seed warnings messages; on subtraction-tests-mass,
+	  also placed upper limit on output of info (to avoid eccessively
+	  large mails when running jobs)
+
+2006-06-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* to areas/FjClusterSequenceWithArea.* placed upper limit on
+	  number of seed warnings messages; on subtraction-tests-mass,
+	  also placed upper limit on output of info (to avoid eccessively
+	  large mails when running jobs)
+
 2006-06-18  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* to FjClusterSequenceWith[Mean]Area.* added 

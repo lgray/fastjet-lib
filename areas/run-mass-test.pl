@@ -6,6 +6,9 @@
 $pythia_exec = "../../pythia/gen-events";
 $jet_exec    = "./subtraction-tests-mass";
 
+$hydjet_exec = "../../hydjet/test2_hydjet";
+$incljet_exec = "./subtraction-tests-inclpt";
+
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
 $pipename="/tmp/.pipe-$hostname-$$";
@@ -16,6 +19,7 @@ $pythia_opts = "";
 $jet_opts    = "";
 $nev         = 0;
 $outfile     = "";
+$run_hydjet  = 0;
 
 # extract the options that will go to pythia / jet-prof
 while ($#ARGV >= 0) {
@@ -34,8 +38,12 @@ while ($#ARGV >= 0) {
   elsif ($opt =~ /^-minbias/){$pythia_opts .= " $opt";}
   # pythia opts (others)
   elsif ($opt eq '-ptmin')  {$pythia_opts .= " $opt ".(shift @ARGV);}
-  elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}
+  elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}  elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-iseq')   {$pythia_opts .= " $opt ".(shift @ARGV);}
+  # hydjet options...
+  elsif ($opt eq '-nhsel')  {$pythia_opts .= " $opt ".(shift @ARGV); $run_hydjet=1;}
+  elsif ($opt eq '-ptminhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
+  elsif ($opt eq '-ptmaxhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
   # remaining opts go to jet prog
   else  {$jet_opts .= " $opt";}
 }
@@ -45,6 +53,12 @@ $jet_opts    .= " -nev $nev -in  $pipename -out $outfile";
 # make the pipe that will be used for communication between the
 # programs
 system("mknod $pipename p");
+
+# replace executables in this case to look at incl-pt spectrum with hydjet...
+if ($run_hydjet) {
+  $pythia_exec = $hydjet_exec;
+  $jet_exec    = $incljet_exec;
+}
 
 # run pythia and the analysis program separately
 $pythia   = "$pythia_exec $pythia_opts";
