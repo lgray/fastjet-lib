@@ -25,6 +25,7 @@ for($ifile = 0; $ifile < $nfile; $ifile++) {
 }
 
 print "# nev = $nev\n";
+print STDERR "Total number of events is $nev\n";
 
 while () {
   $good = 0;

@@ -116,7 +116,7 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
 
 // double Zmass_from_jets(const vector<FjPseudoJet> & jets);
 
-void read_event(istream &, double, bool, bool,
+void read_event(istream &, double, bool, bool, double,
 		vector<FjPseudoJet> &, vector<FjPseudoJet> & );
 
 
@@ -152,6 +152,9 @@ int main (int argc, char ** argv) {
   //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
+
+  double discard_below_pt = cmdline.double_val("-discard",-1.0);
+
   //ConeVariant cone_variant = not_cone;
   //if (cmdline.present("-searchcone")) {
   //  cone_variant = searchcone_075; }
@@ -187,8 +190,10 @@ int main (int argc, char ** argv) {
     vector<FjPseudoJet> hard_event, full_event;
     
     // read in the event 
-    read_event(input, etamax, hydjet, massless, hard_event, full_event);
+    read_event(input, etamax, hydjet, massless, discard_below_pt, hard_event, full_event); 
       
+    //cout << "Event sizes: "<<hard_event.size()<<" "<<full_event.size()<<endl;
+
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
     
@@ -229,6 +234,7 @@ int main (int argc, char ** argv) {
       }
       output << "# " << cmdline.command_line() << endl;
       output << "# nev = " <<iev+1 <<endl;
+      output << "# discarded particles with pt < "<<discard_below_pt<<endl;
       output << "# bin-lower-edge bin-centre bin-upper-edge hard hcor hcrp full fcor fcrp" <<endl;
       
       // print out inclusive-pt histograms.
@@ -261,6 +267,11 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
 			CSHisto & inclpt_uncorrected, 
 		        CSHisto & inclpt_corrected,
 			CSHisto & inclpt_corrected_withrap) {
+
+  // sometimes (with the -discard flag) it happens that you discard
+  // _all_ particles in the event. In such a case don't even think of
+  // running fastjet...
+  if (event.size() == 0) {return;}
 
   FjClusterSequenceWithMeanArea clust(event,
 				      cell_area,ghost_etamax,
@@ -365,6 +376,7 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
 
 //======================================================================
 void read_event(istream & input, double etamax, bool hydjet, bool massless,
+		double discard_below_pt,
 		vector<FjPseudoJet> & hard_event, 
 		vector<FjPseudoJet> & full_event) {
   string line;
@@ -403,7 +415,8 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
     }
     FjPseudoJet psjet(fourvec);
     psjet.set_user_index(0);
-    if (abs(psjet.rap() < etamax)) {full_event.push_back(psjet);}
+    if (abs(psjet.rap() < etamax) && psjet.perp() >= discard_below_pt) {
+      full_event.push_back(psjet);}
 
   }
 
