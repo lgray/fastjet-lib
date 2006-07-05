@@ -26,6 +26,9 @@ double FjClusterSequenceWithMeanArea::pt_per_unit_area(
     }
   }
   
+  // there is nothing inside our region, so answer will always be zero
+  if (pt_over_areas.size() == 0) {return 0.0;}
+  
   // get median (pt/area) [this is the "old" median definition]
   sort(pt_over_areas.begin(), pt_over_areas.end());
   double old_median_ratio = pt_over_areas[pt_over_areas.size()/2];
@@ -119,7 +122,6 @@ void FjClusterSequenceWithMeanArea::parabolic_pt_per_unit_area(
   int n=0;
   double mean_f=0, mean_x2=0, mean_x4=0, mean_fx2=0; 
 
-
   vector<FjPseudoJet> incl_jets = inclusive_jets();
 
   for (unsigned i = 0; i < incl_jets.size(); i++) {
@@ -135,13 +137,21 @@ void FjClusterSequenceWithMeanArea::parabolic_pt_per_unit_area(
     }
   }
 
-  mean_f   /= n;
-  mean_x2  /= n;
-  mean_x4  /= n;
-  mean_fx2 /= n;
-
-  b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
-  a = mean_f - b*mean_x2;
+  if (n <= 1) {
+    // meaningful results require at least two jets inside the
+    // area -- mind you if there are empty jets we should be in 
+    // any case doing something special...
+    a = 0.0;
+    b = 0.0;
+  } else {
+    mean_f   /= n;
+    mean_x2  /= n;
+    mean_x4  /= n;
+    mean_fx2 /= n;
+    
+    b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
+    a = mean_f - b*mean_x2;
+  }
 }
 
 

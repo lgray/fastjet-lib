@@ -186,7 +186,7 @@ int main (int argc, char ** argv) {
 
 
   for (int iev = 0; iev < nev; iev++) {
-    cerr << "Doing event "<< iev<<endl;
+    if (iev < 100 || iev%100 == 0) cerr << "Doing event "<< iev<<endl;
     vector<FjPseudoJet> hard_event, full_event;
     
     // read in the event 
@@ -282,7 +282,7 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
   
   double a,b;
   clust.parabolic_pt_per_unit_area(a,b);
-  cout << "a,b =" << a <<" " <<b<<endl;
+  //cout << "a,b =" << a <<" " <<b<<endl;
 
   vector<FjPseudoJet> jets = clust.inclusive_jets();
 

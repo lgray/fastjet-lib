@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-07-05  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
+
+        * Minor bug-fixed to FjClusterSequenceWithMeanArea 
+	  + some files added related to heavy-ion studies
+	
 2006-07-03  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
 
 	* Added areas/subtraction-tests-inclpt.cc for looking at inclusive
