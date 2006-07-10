@@ -105,7 +105,7 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
 		       double cell_area, double ghost_etamax,
 		       double grid_scatter, double kt_scatter, int repeat,
 		       double ktR, FjStrategy strategy,
-		       CSHisto & , CSHisto & , CSHisto & 
+		       CSHisto & , CSHisto & , CSHisto &  , CSHisto & 
 		       );
 
 // enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
@@ -179,10 +179,11 @@ int main (int argc, char ** argv) {
   CSHisto inclpt_hard(min_bin, max_bin, nbins);
   CSHisto inclpt_hcor(min_bin, max_bin, nbins);
   CSHisto inclpt_hcrp(min_bin, max_bin, nbins);
+  CSHisto inclpt_hcrp_xcl(min_bin, max_bin, nbins);
   CSHisto inclpt_full(min_bin, max_bin, nbins);
   CSHisto inclpt_fcor(min_bin, max_bin, nbins);
   CSHisto inclpt_fcrp(min_bin, max_bin, nbins);
-
+  CSHisto inclpt_fcrp_xcl(min_bin, max_bin, nbins);
 
 
   for (int iev = 0; iev < nev; iev++) {
@@ -201,7 +202,8 @@ int main (int argc, char ** argv) {
     // just the hard event
     fill_inclpt_ktalg(hard_event,
 	   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-	   repeat, ktR, strategy, inclpt_hard, inclpt_hcor, inclpt_hcrp);
+	   repeat, ktR, strategy, inclpt_hard, inclpt_hcor, 
+		      inclpt_hcrp, inclpt_hcrp_xcl);
 
 
     // fill histograms with inclusive jet cross sections for
@@ -209,7 +211,8 @@ int main (int argc, char ** argv) {
     if (full_event.size() != hard_event.size()) {
       fill_inclpt_ktalg(full_event,
 		cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-		repeat, ktR, strategy, inclpt_full, inclpt_fcor, inclpt_fcrp);
+		repeat, ktR, strategy, inclpt_full, inclpt_fcor, 
+			inclpt_fcrp, inclpt_fcrp_xcl);
     }
 
     // limit the amount of information that is output 
@@ -235,7 +238,7 @@ int main (int argc, char ** argv) {
       output << "# " << cmdline.command_line() << endl;
       output << "# nev = " <<iev+1 <<endl;
       output << "# discarded particles with pt < "<<discard_below_pt<<endl;
-      output << "# bin-lower-edge bin-centre bin-upper-edge hard hcor hcrp full fcor fcrp" <<endl;
+      output << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3) hard(4) hcor(5) hcrp(6) full(7) fcor(8) fcrp(9) hcrp_xcl(10) fcrp_xcl(11)\n";
       
       // print out inclusive-pt histograms.
       for (unsigned i = 0; i < inclpt_hard.size(); i++) {
@@ -247,7 +250,9 @@ int main (int argc, char ** argv) {
 	       << inclpt_hcrp.bin_weight(i)/((iev+1)*bin_width) <<" "
 	       << inclpt_full.bin_weight(i)/((iev+1)*bin_width) <<" "
 	       << inclpt_fcor.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inclpt_fcrp.bin_weight(i)/((iev+1)*bin_width) << endl;
+	       << inclpt_fcrp.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inclpt_hcrp_xcl.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inclpt_fcrp_xcl.bin_weight(i)/((iev+1)*bin_width) <<endl;
       }
     }
     
@@ -266,7 +271,8 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
 			double ktR, FjStrategy strategy,
 			CSHisto & inclpt_uncorrected, 
 		        CSHisto & inclpt_corrected,
-			CSHisto & inclpt_corrected_withrap) {
+		        CSHisto & inclpt_corrected_withrap, 
+			CSHisto & inclpt_corrected_withrap_xcl) {
 
   // sometimes (with the -discard flag) it happens that you discard
   // _all_ particles in the event. In such a case don't even think of
@@ -282,7 +288,15 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
   
   double a,b;
   clust.parabolic_pt_per_unit_area(a,b);
-  //cout << "a,b =" << a <<" " <<b<<endl;
+  cout << "a,b =" << a <<" " <<b<<endl;
+
+  double a_xcl,b_xcl;
+  // -1.0 here signifies default rapidity range and we exclude things
+  // that have pt/area harder than twice the median_pt_per_area.
+  clust.parabolic_pt_per_unit_area(a_xcl,b_xcl, -1.0, 
+				   2.0*median_pt_per_area);
+  cout << "a_xcl,b_xcl =" << a_xcl <<" " <<b_xcl<<endl;
+
 
   vector<FjPseudoJet> jets = clust.inclusive_jets();
 
@@ -302,6 +316,7 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
       double area = clust.area(jets[i]);
       inclpt_corrected.fill(pt- median_pt_per_area*area);
       inclpt_corrected_withrap.fill(pt-area*(a+b*rap*rap));
+      inclpt_corrected_withrap_xcl.fill(pt-area*(a_xcl+b_xcl*rap*rap));
     }
 
   }

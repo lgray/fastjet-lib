@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-07-10  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
+
+        * Added option in FjClusterSequenceWithMeanArea of excluding
+	  particles with pt/area greater than some threshold
+
 2006-07-05  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
 
         * Minor bug-fixed to FjClusterSequenceWithMeanArea 

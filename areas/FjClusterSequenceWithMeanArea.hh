@@ -75,7 +75,9 @@ public :
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
   /// abs(y)<raprange (for negative raprange, it defaults to
   /// _etalim_for_area).
-  void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0);
+  void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
+				  double exclude_above=-1.0);
+
 
 };
 

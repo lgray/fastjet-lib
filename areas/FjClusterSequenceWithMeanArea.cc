@@ -113,13 +113,14 @@ double FjClusterSequenceWithMeanArea::pt_per_unit_area(
 // fit a parabola to pt/area as a function of rapidity, using the
 // formulae of CCN28-36 (which actually fits f = a+b*x^2)
 void FjClusterSequenceWithMeanArea::parabolic_pt_per_unit_area(
-                     double & a, double & b, double raprange) {
+       double & a, double & b, double raprange, double exclude_above) {
   
   double this_raprange;
   if (raprange <= 0) {this_raprange = _etalim_for_area;}
   else {this_raprange = raprange;}
 
   int n=0;
+  int n_excluded = 0;
   double mean_f=0, mean_x2=0, mean_x4=0, mean_fx2=0; 
 
   vector<FjPseudoJet> incl_jets = inclusive_jets();
@@ -128,12 +129,16 @@ void FjClusterSequenceWithMeanArea::parabolic_pt_per_unit_area(
     if (abs(incl_jets[i].rap()) < this_raprange) {
       double this_area = area(incl_jets[i]);
       double f = incl_jets[i].perp()/this_area;
-      double x = incl_jets[i].rap(); double x2 = x*x;
-      mean_f   += f;
-      mean_x2  += x2;
-      mean_x4  += x2*x2;
-      mean_fx2 += f*x2;
-      n++;
+      if (exclude_above <= 0.0 || f < exclude_above) {
+	double x = incl_jets[i].rap(); double x2 = x*x;
+	mean_f   += f;
+	mean_x2  += x2;
+	mean_x4  += x2*x2;
+	mean_fx2 += f*x2;
+	n++;
+      } else {
+	n_excluded++;
+      }
     }
   }
 
@@ -152,7 +157,9 @@ void FjClusterSequenceWithMeanArea::parabolic_pt_per_unit_area(
     b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
     a = mean_f - b*mean_x2;
   }
+  cerr << "n_excluded = "<< n_excluded << endl;
 }
+
 
 
 //----------------------------------------------------------------------
