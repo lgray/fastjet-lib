@@ -288,14 +288,14 @@ void fill_inclpt_ktalg(const vector<FjPseudoJet> & event,
   
   double a,b;
   clust.parabolic_pt_per_unit_area(a,b);
-  cout << "a,b =" << a <<" " <<b<<endl;
+  //cout << "a,b =" << a <<" " <<b<<endl;
 
   double a_xcl,b_xcl;
   // -1.0 here signifies default rapidity range and we exclude things
   // that have pt/area harder than twice the median_pt_per_area.
   clust.parabolic_pt_per_unit_area(a_xcl,b_xcl, -1.0, 
 				   2.0*median_pt_per_area);
-  cout << "a_xcl,b_xcl =" << a_xcl <<" " <<b_xcl<<endl;
+  //cout << "a_xcl,b_xcl =" << a_xcl <<" " <<b_xcl<<endl;
 
 
   vector<FjPseudoJet> jets = clust.inclusive_jets();

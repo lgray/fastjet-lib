@@ -51,6 +51,9 @@ replot 'incplt_nhsel2_r0.4'        u 1:($7)    w st lw 2 lt 2 t 'raw Pb-Pb'
 replot 'incplt_nhsel2_r0.4'        u 1:(justbelow($9,$1,110))    w st lw 2 lt 3  t 'Pb-Pb with subtraction'
 replot 'incplt_ptminhard50_nhsel2_r0.4'        u 1:(justabove($9*rescaleHI,$1,80))    w st lw 2 lt 3 t ''
 
+#replot 'incplt_xcl_ptminhard50_nhsel2_r0.4'        u 1:(justabove($9*rescaleHI,$1,80))    w st lw 2 lt 4 t ''
+#replot 'incplt_xcl_ptminhard50_nhsel2_r0.4'        u 1:(justabove($11*rescaleHI,$1,80))    w st lw 2 lt 5 t ''
+
 #replot 'incplt_ptminhard50_nhsel2_r0.4'        u 1:(justabove($8*rescaleHI,$1,80))    w st lw 2 lt 5 t ''
 
 # assume 120 soft jets, 2 hard,  and effect of hard jets on mean subtraction
@@ -59,5 +62,5 @@ replot 'incplt_ptminhard50_nhsel2_r0.4'        u 1:(justabove($9*rescaleHI,$1,80
 
 
 # # attempt with r=0.7 -- tbc
-# replot 'incplt_justhard_ptminhard50_nhsel4_r0.7'  u 1:(justabove($4*rescalehard,$1,70)) w st lw 2 lt 4 t ''
-# replot 'incplt_ptminhard50_nhsel2_r0.7'  u 1:(justabove($9*rescaleHI,$1,80))    w st lw 2 lt 5 t ''
+#replot 'incplt_justhard_ptminhard50_nhsel4_r0.7'  u 1:(justabove($4*rescalehard,$1,70)) w st lw 2 lt 4 t ''
+#replot 'incplt_ptminhard50_nhsel2_r0.7'  u 1:(justabove($9*rescaleHI,$1,80))    w st lw 2 lt 5 t ''
