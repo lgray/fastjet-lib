@@ -16,7 +16,7 @@ LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
 
 PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc
 
-SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc FjClusterSequenceWithMeanArea.cc
+SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc FjClusterSequenceWithMeanArea.cc FlavourHolder.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
 areas: areas.o $(OBJS) ../lib/libfastjet.a
@@ -39,6 +39,9 @@ subtraction-tests: subtraction-tests.o $(OBJS) ../lib/libfastjet.a
 
 subtraction-tests-mass: subtraction-tests-mass.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-mass subtraction-tests-mass.o $(OBJS)  $(LDFLAGS)
+
+subtraction-tests-ttbar: subtraction-tests-ttbar.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o subtraction-tests-ttbar subtraction-tests-ttbar.o $(OBJS)  $(LDFLAGS)
 
 subtraction-tests-inclpt: subtraction-tests-inclpt.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-inclpt subtraction-tests-inclpt.o $(OBJS)  $(LDFLAGS)
@@ -71,6 +74,7 @@ FjClusterSequenceWithMeanArea.o: ../include/DynamicNearestNeighbours.hh
 FjClusterSequenceWithMeanArea.o: ../include/FjError.hh
 FjClusterSequenceWithMeanArea.o: FjClusterSequenceWithMeanArea.hh
 FjClusterSequenceWithMeanArea.o: FjClusterSequenceWithArea.hh
+FlavourHolder.o: FlavourHolder.hh
 areas.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 areas.o: ../include/FjClusterSequence.hh
 areas.o: ../include/DynamicNearestNeighbours.hh ../include/FjError.hh

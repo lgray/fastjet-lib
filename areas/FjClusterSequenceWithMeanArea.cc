@@ -157,7 +157,7 @@ void FjClusterSequenceWithMeanArea::parabolic_pt_per_unit_area(
     b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
     a = mean_f - b*mean_x2;
   }
-  cerr << "n_excluded = "<< n_excluded << endl;
+  //cerr << "n_excluded = "<< n_excluded << endl;
 }
 
 

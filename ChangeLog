@@ -1,6 +1,15 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-07-13  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
+
+	* Added areas/subtraction-tests-ttbar.cc
+	        areas/FlavourHolder.hh
+	        areas/FlavourHolder.cc
+
+          as part of work towards an analysis of semi-leptonic ttbar
+	  events. 
+	
 2006-07-10  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo Cacciari
 
         * Added option in FjClusterSequenceWithMeanArea of excluding
