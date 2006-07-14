@@ -126,31 +126,22 @@ void read_event(istream &, double, bool, bool,
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
+  // how we treat the event that is read in
+  string input_file = cmdline.string_val("-in");
+  bool   hydjet     = cmdline.present("-hydjet");
+  double etamax     = cmdline.double_val("-etamax",1.0e310);
+  bool   massless   = cmdline.present("-massless");
+  int    nev        = int(cmdline.double_val("-nev",1.0));
+  bool   nopileup   = cmdline.present("-nopileup"); 
+
+  // properties of the jet algorithm
   // allow the use to specify the FjStrategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
   FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", Best)));
-  int  repeat  = cmdline.int_val("-repeat",1);
-  //bool writeout   = cmdline.present("-write");
-  bool hydjet  = cmdline.present("-hydjet");
   double ktR   = cmdline.double_val("-r",1.0);
-  //double inclkt = cmdline.double_val("-incl",-1.0);
-  //int    excln  = cmdline.int_val   ("-excln",-1);
-  //double excld  = cmdline.double_val("-excld",-1.0);
-  double etamax = cmdline.double_val("-etamax",1.0e310);
-  bool   massless = cmdline.present("-massless");
-  int    nev      = int(cmdline.double_val("-nev",1.0));
-  bool   nopileup  = cmdline.present("-nopileup"); 
-  double cell_area = cmdline.double_val("-cell_area",0.01);
-  double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
-  double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
-  double bin_width    = cmdline.double_val("-bin",5.0);
-  double max_bin      = cmdline.double_val("-max",400.0);
-  //bool   print_jets   = cmdline.present("-print_jets");
-  string input_file   = cmdline.string_val("-in");
-  string output_file  = cmdline.string_val("-out");
+  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
   ConeVariant cone_variant = not_cone;
   if (cmdline.present("-searchcone")) {
     cone_variant = searchcone_075; }
@@ -159,11 +150,24 @@ int main (int argc, char ** argv) {
   else if (cmdline.present("-cone075")) {
     cone_variant = midpoint_075; }
   bool   cone         = cone_variant != not_cone;
+
+  // set up things to do with how we measure the area
+  FjActiveAreaSpecifier area_spec;
+  int    area_spec.repeat      = cmdline.int_val("-repeat",1);
+  double area_spec.cell_area   = cmdline.double_val("-cell_area",0.01);
+  double area_spec.ghost_etamax= cmdline.double_val("-ghost_etamax",6.0);
+  double area_spec.grid_scatter= cmdline.double_val("-grid_scatter",1e-5);
+  double area_spec.kt_scatter  = cmdline.double_val("-kt_scatter",0.1);
+
+  // how we process and output things
+  double bin_width    = cmdline.double_val("-bin",5.0);
+  double max_bin      = cmdline.double_val("-max",400.0);
+  string output_file  = cmdline.string_val("-out");
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
   string rerun_string = cmdline.string_val("-rerun","");
   cerr <<"writefreq is "<<writefreq<<endl;
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
 
+  // sanity check on command-line structure
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
     exit(-1);}
@@ -387,14 +391,13 @@ double Zmass_from_jets(const vector<FjPseudoJet> & jets) {
   return mass;
 }
 
+
 //======================================================================
 void read_event(istream & input, double etamax, bool hydjet, bool massless,
 		vector<FjPseudoJet> & hard_event, 
 		vector<FjPseudoJet> & full_event) {
   string line;
   int  nsub  = 0;
-  
-  int n_nu = 0, n_ch_lept = 0, n_abs_b = 0, n_net_b = 0, n_mu=0;
   
   while (getline(input, line)) {
       //cout << line<<endl;
@@ -428,27 +431,13 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
       else {
 	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
 	linestream >> particleID >> particleCharge;
-	FlavourHolder flav(particleID);
-	//cout << flav.idhep() <<  " " << particleCharge << " " <<flav.is_lepton() <<" "<<flav.is_charged_lepton()<<endl;
-	n_abs_b += abs(flav[5]);
-	n_net_b += flav[5];
-	if (flav.is_neutrino()) {n_nu++ ;}
-	if (flav.is_charged_lepton()) n_ch_lept++;
-	if (flav.is_muon()) n_mu++;
       }
     }
     FjPseudoJet psjet(fourvec);
-    psjet.set_user_index(0);
+    psjet.set_user_index(particleID);
     if (abs(psjet.rap() < etamax)) {full_event.push_back(psjet);}
 
   }
-
-  cerr << "Summary: ";
-  cerr << n_abs_b << " ";
-  cerr << n_net_b << " ";
-  cerr << n_nu << " ";
-  cerr << n_mu << " ";
-  cerr << n_ch_lept << endl;
 
   // if we have read in only one event, copy it across here...
   if (nsub == 1) hard_event = full_event;
@@ -458,4 +447,13 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
     cerr << "Error: read empty event\n";
     exit(-1);
   }
+}
+
+
+//-------------------------------------------------------------
+/// routine for ("visually") looking at a ttbar event
+void look_at_event(vector<FjPseudoJet> & event,
+		   const FjActiveAreaSpecifier & area_specifier, 
+		   const double ktR, const int strategy) {
+  
 }

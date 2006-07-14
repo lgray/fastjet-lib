@@ -196,7 +196,7 @@ int main (int argc, char ** argv) {
   }
 
   double median_pt_per_area = clust_seq.pt_per_unit_area();
-  printf(" ijet   eta      phi        Pt         area  +-   err   stddev  pt_corr\n");
+  printf(" ijet   rap      phi        Pt         area  +-   err   stddev  pt_corr\n");
   for (size_t j = 0; j < jets.size(); j++) {
     double area = clust_seq.area(jets[j]);
     

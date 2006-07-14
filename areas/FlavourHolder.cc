@@ -47,11 +47,12 @@ using namespace std;
 /// written for the jet-flavour work with Andrea Banfi and Giulia
 /// Zanderighi.
 ///
-FlavourHolder::FlavourHolder(int idhep) {
+FlavourHolder::FlavourHolder(int idhep): _flav_content(7), _idhep(idhep) {
 
+  // [NB: the following are now done in the member initialiser list]
   // make _flav_content of size 7 to allow easy access to entries 1..6 
-  _flav_content.resize(7);
-  _idhep = idhep;
+  //_flav_content.resize(7);
+  //_idhep = idhep;
 
   int netsign = (idhep >= 0 ? +1 : -1);
   idhep = abs(idhep);

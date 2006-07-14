@@ -17,6 +17,21 @@ using namespace std;
 /// later...)
 class FjClusterSequenceWithMeanArea : public FjClusterSequence {
 public:
+  //template<class L> FjClusterSequenceWithMeanArea
+  //       (const std::vector<L> & pseudojets, 
+  //        const FjActiveAreaSpec & area_spec,
+  //        const double & R = 1.0,
+  //        const FjStrategy & strategy = Best,
+  //	  const bool & writeout_combinations = false);
+
+  // constructor based on the FjActiveAreaSpec
+  template<class L> FjClusterSequenceWithMeanArea
+         (const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
+	  const double & R = 1.0,
+	  const FjStrategy & strategy = Best,
+	  const bool & writeout_combinations = false);
+
+  /// legacy constructor
   template<class L> FjClusterSequenceWithMeanArea
          (const std::vector<L> & pseudojets, 
 	  double cell_area, double etamax_for_area,
@@ -26,8 +41,15 @@ public:
 	  const FjStrategy & strategy = Best,
 	  const bool & writeout_combinations = false);
 
-
 private:
+
+  /// does the actual initialisation work 
+  template<class L> void _initialize
+         (const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
+	  const double & R = 1.0,
+	  const FjStrategy & strategy = Best,
+	  const bool & writeout_combinations = false);
+
 
   valarray<double> _average_area, _average_area2;
   valarray<FjPseudoJet> _average_ext_area;
@@ -82,7 +104,8 @@ public :
 };
 
 
-/// initialiser that should create information about areas of all
+
+/// initializer that should create information about areas of all
 /// jets; a PseudoJet's area is defined as that just before it gets
 /// clustered with something else (or written off as an inclusive jet).
 template<class L> 
@@ -96,6 +119,29 @@ template<class L>
      FjClusterSequence(pseudojets, R, strategy, writeout_combinations) 
 {
   
+  FjActiveAreaSpec area_spec(cell_area,etamax_for_area,grid_scatter,kt_scatter,
+			     area_nrepeat);
+  _initialize(pseudojets, area_spec, R,strategy, writeout_combinations) ;
+}
+
+template<class L> 
+   FjClusterSequenceWithMeanArea::FjClusterSequenceWithMeanArea (
+		const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
+		const double & R,
+		const FjStrategy & strategy,
+		const bool & writeout_combinations) :
+  FjClusterSequence(pseudojets, R, strategy, writeout_combinations) {
+  
+  _initialize(pseudojets, area_spec, R,strategy, writeout_combinations) ;
+}
+
+
+template<class L> 
+   void FjClusterSequenceWithMeanArea::_initialize (
+		const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
+		const double & R, const FjStrategy & strategy,
+		const bool & writeout_combinations) 
+  {
   // code for testing the unique tree
   vector<int> unique_tree;
   unique_tree = unique_history_order();
@@ -112,7 +158,7 @@ template<class L>
 //  }
 
   // for future reference...
-  _etamax_for_area = etamax_for_area;
+  _etamax_for_area = area_spec.ghost_etamax();
   _etalim_for_area = _etamax_for_area - _Rparam;
   
   
@@ -132,36 +178,39 @@ template<class L>
     if (_n_seed_warnings == _max_seed_warnings) cerr << "[last time this warning is output]\n";
   }
 
-  for (int irepeat = 0; irepeat < area_nrepeat; irepeat++) {
+
+  for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
     // WARNING: setting seed manually at each turn of loop (because
     // we suspect that CGAL plays with it)
     srand(irepeat+2);
 
-    FjClusterSequenceWithArea clust_seq(pseudojets,cell_area,etamax_for_area,
-					grid_scatter, kt_scatter,
-					R,strategy);
+
+    //FjClusterSequenceWithArea clust_seq(pseudojets,cell_area,etamax_for_area,
+    //    				grid_scatter, kt_scatter,
+    //					R,strategy);
+    FjClusterSequenceWithArea clust_seq(pseudojets, area_spec, R, strategy);
 
     // transfer areas from clust_seq into our object
     _transfer_areas(unique_tree, clust_seq);
     //cerr << "non-jet area sum was " << _non_jet_area << endl;
   }
   
-  _average_area  /= area_nrepeat;
-  _average_area2 /= area_nrepeat;
+  _average_area  /= area_spec.repeat();
+  _average_area2 /= area_spec.repeat();
   _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/
-			 area_nrepeat);
+			 area_spec.repeat());
 
-  _non_jet_area  /= area_nrepeat;
-  _non_jet_area2 /= area_nrepeat;
+  _non_jet_area  /= area_spec.repeat();
+  _non_jet_area2 /= area_spec.repeat();
   _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
-			 area_nrepeat);
-  _non_jet_number /= area_nrepeat;
+			 area_spec.repeat());
+  _non_jet_number /= area_spec.repeat();
 
   // following bizarre way of writing things is related to 
   // poverty of operations on FjPseudoJet objects (as well as some confusion
   // in one or two places)
   for (unsigned i = 0; i < _average_ext_area.size(); i++) {
-    _average_ext_area[i] = (1.0/area_nrepeat) * _average_ext_area[i];
+    _average_ext_area[i] = (1.0/area_spec.repeat()) * _average_ext_area[i];
   }
   //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
 
