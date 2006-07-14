@@ -92,13 +92,6 @@ using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
-  vector<FjPseudoJet> cnst = cs.constituents(jet);
-  for (size_t i = 0; i < cnst.size(); i++) {
-    printf("%6i %18.5f %18.5f %18.6e\n",i,cnst[i].rap(),cnst[i].phi(),cnst[i].perp());
-  }
-  printf("#END\n");
-};
 
 
 
@@ -115,6 +108,11 @@ enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 //			  double R, ConeVariant cone_variant,
 //			  double & mass, double & corrected_mass);
 //
+
+void look_at_event(vector<FjPseudoJet> & event,
+		   const FjJetDefinition  & jet_def,
+		   const FjActiveAreaSpec & area_spec);
+
 double Zmass_from_jets(const vector<FjPseudoJet> & jets);
 
 void read_event(istream &, double, bool, bool,
@@ -141,7 +139,10 @@ int main (int argc, char ** argv) {
   FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", Best)));
   double ktR   = cmdline.double_val("-r",1.0);
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
+  FjJetFinder jet_fndr= cmdline.present("-cam")? cambridge_algorithm: kt_algorithm;
+  FjJetDefinition jet_def(jet_fndr, ktR, strategy);
+
+  // allow for a cone???
   ConeVariant cone_variant = not_cone;
   if (cmdline.present("-searchcone")) {
     cone_variant = searchcone_075; }
@@ -152,7 +153,7 @@ int main (int argc, char ** argv) {
   bool   cone         = cone_variant != not_cone;
 
   // set up things to do with how we measure the area
-  FjActiveAreaSpecifier area_spec;
+  FjActiveAreaSpec area_spec;
   area_spec.set_repeat      (cmdline.int_val("-repeat",1)            );
   area_spec.set_cell_area   (cmdline.double_val("-cell_area",0.01)   );
   area_spec.set_ghost_etamax(cmdline.double_val("-ghost_etamax",6.0) );
@@ -196,83 +197,7 @@ int main (int argc, char ** argv) {
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
   
-  
-    // deduce the masses
-    double hard_ev_mass, hcor_ev_mass, hecr_ev_mass;
-    if (cone) {
-      determine_Zmass_cone(hard_event, ktR, cone_variant,
-			   hard_ev_mass, hcor_ev_mass);
-      hecr_ev_mass = hcor_ev_mass;
-    } else {
-      determine_Zmass_kt(hard_event,
-		  cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-		  repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass,
-		  hecr_ev_mass);
-    }
-
-
-    double full_ev_mass, fcor_ev_mass, fecr_ev_mass;
-    if (full_event.size() != hard_event.size()) {
-      // run things again only if the vectors are different...
-      if (cone) {
-	determine_Zmass_cone(full_event, ktR, cone_variant,
-			     full_ev_mass, fcor_ev_mass);
-	fecr_ev_mass = fcor_ev_mass;
-      } else {
-	determine_Zmass_kt(full_event,
-			   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-			   repeat, ktR, strategy, full_ev_mass, fcor_ev_mass,
-			   fecr_ev_mass);
-      }
-    } else {
-      full_ev_mass = hard_ev_mass;
-      fcor_ev_mass = hcor_ev_mass;
-      fecr_ev_mass = hecr_ev_mass;
-    }
-
-    // limit the amount of information that is output 
-    if (iev < 100) {
-      // provide user with some info (maybe get rid of this at some point?)
-      cout <<"inv mass of two hardest (hard) jets = "<< hard_ev_mass << endl;
-      cout <<"inv mass of two hardest (hcor) jets = "<< hcor_ev_mass << endl;
-      cout <<"inv mass of two hardest (hecr) jets = "<< hecr_ev_mass << endl;
-      cout <<"inv mass of two hardest (full) jets = "<< full_ev_mass << endl;
-      cout <<"inv mass of two hardest (fcor) jets = "<< fcor_ev_mass << endl;
-      cout <<"inv mass of two hardest (fecr) jets = "<< fecr_ev_mass << endl;
-    }
-
-    // fill histograms
-    inv_mass_hard.fill(hard_ev_mass);
-    inv_mass_hcor.fill(hcor_ev_mass);
-    inv_mass_full.fill(full_ev_mass);
-    inv_mass_fcor.fill(fcor_ev_mass);
-
-    inv_mass_hecr.fill(hecr_ev_mass);
-    inv_mass_fecr.fill(fecr_ev_mass);
-    
-    // write intermediate and final results...
-    if ( iev+1==nev || (iev+1) % writefreq == 0) {
-      // sending output to a file...
-      ofstream output(output_file.c_str());
-      if (rerun_string != "") {
-	output << "# Rerun with:\n";
-	output << "# "<<rerun_string<<endl;
-      }
-      output << "# " << cmdline.command_line() << endl;
-      output << "# nev = " <<iev+1 <<endl;
-      output << "# bin-centre hard hcor full fcor hecr fecr" <<endl;
-      
-      // print out mass histograms.
-      for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
-	output <<  inv_mass_hard.bin_centre(i) <<" "
-	       << inv_mass_hard.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_mass_hcor.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_mass_full.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_mass_fcor.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_mass_hecr.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_mass_fecr.bin_weight(i)/((iev+1)*bin_width) << endl;
-      }
-    }
+    look_at_event(hard_event, jet_def, area_spec);
     
   } // iev
   
@@ -346,11 +271,79 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
   }
 }
 
+// this will often be useful...
+typedef vector<FjPseudoJet>::const_iterator FJPJ_iter;
+
+
+//-------------------------------------------------------------
+/// Return a string that says how many b and b-bar there are in 
+/// the jet (b = b, B = bbar)
+string b_string(const FjClusterSequence & cs, const FjPseudoJet & jet) {
+
+  string res;
+  vector<FjPseudoJet> cnst = cs.constituents(jet);
+  for (FJPJ_iter particle = cnst.begin(); particle != cnst.end(); particle++) {
+    int nb = particle -> user_index();
+    if      (nb > 0) {res += "b";}
+    else if (nb < 0) {res += "B";}
+  }
+  return res;
+}
+
 
 //-------------------------------------------------------------
 /// routine for ("visually") looking at a ttbar event
 void look_at_event(vector<FjPseudoJet> & event,
-		   const FjActiveAreaSpec & area_spec, 
-		   const double ktR, const int strategy) {
+		   const FjJetDefinition  & jet_def,
+		   const FjActiveAreaSpec & area_spec) {
   
+  vector<FjPseudoJet> hadronic_event;
+  vector<FjPseudoJet> leptonic_event;
+
+  // we will separate out the muon and any neutrinos from the other
+  // particles (using the user index which has been set to the particle
+  // idhep value); we'll treat electrons and taus as if they're hadronic
+  // since we are generating semi-leptonic ttbar events where the lepton
+  // is a muon.
+  for (FJPJ_iter particle = event.begin(); particle != event.end(); particle++){
+
+    FlavourHolder flav(particle->user_index());
+
+    if (flav.is_neutrino() || flav.is_muon()) {
+      leptonic_event.push_back(*particle);
+    } else {
+      FjPseudoJet hadron = *particle;
+      hadron.set_user_index(flav[5]); // set hadron user index to number of b-quarks
+      hadronic_event.push_back(hadron);
+    }
+  }
+
+  FjClusterSequenceWithMeanArea clust_seq(hadronic_event, jet_def, area_spec);
+
+  // print general header...
+  printf(" rap      phi        Pt         area  +-   err      pt_corr  flavour\n");
+
+  // print leptonic part of the event 
+  for (FJPJ_iter lepton = leptonic_event.begin(); 
+                                   lepton != leptonic_event.end(); lepton++){
+    printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7d\n",
+	   lepton->rap(), lepton->phi(), lepton->perp(), 0.0,0.0,lepton->perp(),
+	   lepton->user_index());
+  }
+
+  cout << " "<<endl;
+
+  // print jetty part of the event (only jets with pt > 5 GeV)
+  vector<FjPseudoJet> jets = clust_seq.inclusive_jets(5.0);
+  double median_pt_over_area = clust_seq.pt_per_unit_area(
+				  FjClusterSequenceWithMeanArea::median);
+
+  for (FJPJ_iter jet = jets.begin(); jet != jets.end(); jet++){
+    printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7s\n",
+	   jet->rap(), jet->phi(), jet->perp(), 
+	   clust_seq.area(*jet),clust_seq.area_err(*jet),
+	   jet->perp()-median_pt_over_area*clust_seq.area(*jet),
+	   b_string(clust_seq, *jet).c_str()
+	   );
+  }
 }

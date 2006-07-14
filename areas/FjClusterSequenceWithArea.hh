@@ -187,7 +187,7 @@ template<class L> void FjClusterSequenceWithArea::_initialise
   // components, such as CLHEP HepLorentzVector).
   for (unsigned int i = 0; i < pseudojets.size(); i++) {
     FjPseudoJet mom(pseudojets[i]);
-    mom.set_user_index(0); // for user's particles (user index now lost...)
+    //mom.set_user_index(0); // for user's particles (user index now lost...)
     _jets.push_back(mom);
     _is_pure_ghost.push_back(false);
   }

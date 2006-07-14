@@ -57,6 +57,8 @@ void FjClusterSequence::_initialise_and_run (
 				  const FjJetDefinition & jet_def,
 				  const bool & writeout_combinations) {
   _print_banner();
+
+  if (_jets.size() == 0) {throw FjError("Cannot run jet-finder on empty event");}
   
   _writeout_combinations = writeout_combinations;
   _jet_finder = jet_def.jet_finder();
@@ -159,14 +161,30 @@ vector<FjPseudoJet> FjClusterSequence::inclusive_jets (const double & ptmin) con
   double dcut = ptmin*ptmin;
   int i = _history.size() - 1; // last jet
   vector<FjPseudoJet> jets;
-  while (i >= 0) {
-    if (_history[i].max_dij_so_far < dcut) {break;}
-    if (_history[i].parent2 == BeamJet && _history[i].dij >= dcut) {
-      // for beam jets
+  if (_jet_finder == kt_algorithm) {
+    while (i >= 0) {
+      // with our specific definition of dij and diB (i.e. R appears only in 
+      // dij), then dij==diB is the same as the jet.perp2() and we can exploit
+      // this in selecting the jets...
+      if (_history[i].max_dij_so_far < dcut) {break;}
+      if (_history[i].parent2 == BeamJet && _history[i].dij >= dcut) {
+	// for beam jets
+	int parent1 = _history[i].parent1;
+	jets.push_back(_jets[_history[parent1].jetp_index]);}
+      i--;
+    }
+  } else if (_jet_finder == cambridge_algorithm) {
+    while (i >= 0) {
+      // inclusive jets are all at end of clustering sequence in the
+      // Cambridge algorithm -- so if we find a non-exclusive jet, then
+      // we can exit
+      if (_history[i].parent2 != BeamJet) {break;}
       int parent1 = _history[i].parent1;
-      jets.push_back(_jets[_history[parent1].jetp_index]);}
-    i--;
-  }
+      const FjPseudoJet & jet = _jets[_history[parent1].jetp_index];
+      if (jet.perp2() >= dcut) {jets.push_back(jet);}
+      i--;
+    }
+  } else {throw FjError("Unrecognized jet algorithm");}
   return jets;
 }
 

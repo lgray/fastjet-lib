@@ -20,6 +20,12 @@ ChangeLog for fastjet-release directory
 	
 	  In areas/, some minor changes have been made to account for these
 	  changes...
+
+	  Also got the limit on the inclusive pt for the Cambridge jets
+	  working (introduced separate code inside the inclusive_jets
+	  routine).	
+
+	  Started work on the ttbar project...
 	
 	* In areas/FjClusterSequenceWith[Mean]Area.*
 

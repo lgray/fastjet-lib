@@ -85,7 +85,7 @@ void FjClusterSequenceWithArea::_add_ghosts (
 
   // now add labelling...
   for (unsigned i = _initial_hard_n; i < _jets.size(); i++) {
-    _jets[i].set_user_index(1);
+    //_jets[i].set_user_index(1);
     _is_pure_ghost.push_back(true);
   }
 
