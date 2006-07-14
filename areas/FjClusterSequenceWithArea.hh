@@ -135,10 +135,10 @@ private:
   unsigned int _initial_hard_n;
 
 
-  /// adds the "ghost" momenta, which will be used to estimate the
-  /// jet area
-  void _add_ghosts(double cell_area, double etamax_for_area,
-		   double grid_scatter, double kt_scatter);
+  ///// adds the "ghost" momenta, which will be used to estimate the
+  ///// jet area
+  //void _add_ghosts(double cell_area, double etamax_for_area,
+  //		   double grid_scatter, double kt_scatter);
 
   /// also adds the "ghost" momenta, which will be used to estimate
   /// the jet area
