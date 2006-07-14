@@ -3,6 +3,24 @@ ChangeLog for fastjet-release directory
 
 2006-07-14  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+	* *** ADDED include/FjJetDefinition.hh *** 
+	  in which we now define:
+
+                  enum FjStrategy       // unchanged
+	          enum FjJetFinder      // was part of FjClusterSequence
+	          class FjJetDefinition // new
+
+	  The class is designed to hold all info that specifies a jet
+	  algorithm (currently, just R, jet-finder ID and strategy)
+
+	  In FjClusterSequence.* new interfaces have been introduced in
+	  which the FjJetDefinition is used to specify the jet algorithm;
+	  these interfaces are present both for the public constructor and
+	  for the protected _initialise_and_run(...) routines...
+	
+	  In areas, some minor changes have been made to account for these
+	  changes...
+	
 	* In areas/FjClusterSequenceWith[Mean]Area.*
 
 	  Introduced the class FjActiveAreaSpec, which contains the

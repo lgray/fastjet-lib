@@ -102,19 +102,19 @@ void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
 
 
 
-void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
-			double cell_area, double ghost_etamax,
-			double grid_scatter, double kt_scatter, int repeat,
-			double ktR, FjStrategy strategy,
-			double & mass, double & corrected_mass, 
-			double & ext_corrected_mass);
+//void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
+//			double cell_area, double ghost_etamax,
+//			double grid_scatter, double kt_scatter, int repeat,
+//			double ktR, FjStrategy strategy,
+//			double & mass, double & corrected_mass, 
+//			double & ext_corrected_mass);
 
 enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
-void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
-			  double R, ConeVariant cone_variant,
-			  double & mass, double & corrected_mass);
-
+//void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
+//			  double R, ConeVariant cone_variant,
+//			  double & mass, double & corrected_mass);
+//
 double Zmass_from_jets(const vector<FjPseudoJet> & jets);
 
 void read_event(istream &, double, bool, bool,
@@ -141,7 +141,7 @@ int main (int argc, char ** argv) {
   FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", Best)));
   double ktR   = cmdline.double_val("-r",1.0);
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
+  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
   ConeVariant cone_variant = not_cone;
   if (cmdline.present("-searchcone")) {
     cone_variant = searchcone_075; }
@@ -153,11 +153,11 @@ int main (int argc, char ** argv) {
 
   // set up things to do with how we measure the area
   FjActiveAreaSpecifier area_spec;
-  int    area_spec.repeat      = cmdline.int_val("-repeat",1);
-  double area_spec.cell_area   = cmdline.double_val("-cell_area",0.01);
-  double area_spec.ghost_etamax= cmdline.double_val("-ghost_etamax",6.0);
-  double area_spec.grid_scatter= cmdline.double_val("-grid_scatter",1e-5);
-  double area_spec.kt_scatter  = cmdline.double_val("-kt_scatter",0.1);
+  area_spec.set_repeat      (cmdline.int_val("-repeat",1)            );
+  area_spec.set_cell_area   (cmdline.double_val("-cell_area",0.01)   );
+  area_spec.set_ghost_etamax(cmdline.double_val("-ghost_etamax",6.0) );
+  area_spec.set_grid_scatter(cmdline.double_val("-grid_scatter",1e-5));
+  area_spec.set_kt_scatter  (cmdline.double_val("-kt_scatter",0.1)   );
 
   // how we process and output things
   double bin_width    = cmdline.double_val("-bin",5.0);
@@ -175,15 +175,15 @@ int main (int argc, char ** argv) {
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
 
-  int nbins = int(max_bin/bin_width + 0.5);
-  CSHisto inv_mass_hard(00.0, max_bin, nbins);
-  CSHisto inv_mass_hcor(00.0, max_bin, nbins);
-  CSHisto inv_mass_full(00.0, max_bin, nbins);
-  CSHisto inv_mass_fcor(00.0, max_bin, nbins);
-
-  // histograms using the "extended" area subtraction...
-  CSHisto inv_mass_hecr(00.0, max_bin, nbins);
-  CSHisto inv_mass_fecr(00.0, max_bin, nbins);
+  //int nbins = int(max_bin/bin_width + 0.5);
+  //CSHisto inv_mass_hard(00.0, max_bin, nbins);
+  //CSHisto inv_mass_hcor(00.0, max_bin, nbins);
+  //CSHisto inv_mass_full(00.0, max_bin, nbins);
+  //CSHisto inv_mass_fcor(00.0, max_bin, nbins);
+  //
+  //// histograms using the "extended" area subtraction...
+  //CSHisto inv_mass_hecr(00.0, max_bin, nbins);
+  //CSHisto inv_mass_fecr(00.0, max_bin, nbins);
 
 
   for (int iev = 0; iev < nev; iev++) {
@@ -195,7 +195,8 @@ int main (int argc, char ** argv) {
       
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
-    
+  
+  
     // deduce the masses
     double hard_ev_mass, hcor_ev_mass, hecr_ev_mass;
     if (cone) {
@@ -280,110 +281,6 @@ int main (int argc, char ** argv) {
 
 
 
-
-//======================================================================
-void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
-			double cell_area, double ghost_etamax,
-			double grid_scatter, double kt_scatter, int repeat,
-			double ktR, FjStrategy strategy,
-			double & mass, double & corrected_mass,
-			double & ext_corrected_mass) {
-
-  FjClusterSequenceWithMeanArea clust(event,
-				      cell_area,ghost_etamax,
-				      grid_scatter, kt_scatter, repeat,
-				      ktR,strategy);
-
-  double median_pt_per_area = clust.pt_per_unit_area();
-  
-  vector<FjPseudoJet> jets = clust.inclusive_jets();
-  mass = Zmass_from_jets(jets);
-
-  vector<FjPseudoJet> corrected_jets(jets.size());
-  for (unsigned i = 0; i < jets.size(); i++) {
-    double correction_factor = 1 - 
-      median_pt_per_area*clust.area(jets[i])/jets[i].perp(); 
-    corrected_jets[i] =  max(correction_factor,0.0) * jets[i];
-  }
-
-  corrected_mass = Zmass_from_jets(corrected_jets);
-
-  // now to the correction with the "extended" area
-  for (unsigned i = 0; i < jets.size(); i++) {
-    FjPseudoJet ext_area = median_pt_per_area*clust.extended_area(jets[i]);
-    if (ext_area.perp2() >= jets[i].perp2() || 
-	ext_area.E()     >= jets[i].E()) {
-      // if the correction is too large, set the jet to zero
-      corrected_jets[i] =  0.0 * jets[i];
-    } else {
-      // otherwise do an E-scheme subtraction
-      double px,py,pz,E;
-      px = jets[i].px() - ext_area.px();
-      py = jets[i].py() - ext_area.py();
-      pz = jets[i].pz() - ext_area.pz();
-      E  = jets[i].E()  - ext_area.E();
-      corrected_jets[i] = FjPseudoJet(px,py,pz,E);
-    }
-  }
-
-  ext_corrected_mass = Zmass_from_jets(corrected_jets);
-
-}
-
-
-//======================================================================
-void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
-			double R, ConeVariant cone_variant,
-			double & mass, double & corrected_mass) {
-  
-  // Define MidPoint algorithm.
-  double m_seedThreshold    = 1;
-  double m_coneRadius       = R;
-
-  double m_overlapThreshold;
-  double m_coneAreaFraction;
-  switch(cone_variant) {
-  case(midpoint_050): 
-    m_coneAreaFraction = 1.00;
-    m_overlapThreshold = 0.50; break;
-  case(midpoint_075): 
-    m_coneAreaFraction = 1.00;
-    m_overlapThreshold = 0.75; break;
-  case(searchcone_075):
-    m_coneAreaFraction = 0.25;
-    m_overlapThreshold = 0.75; break;
-  default:
-    cerr << "Unrecognized cone_variant: "<<cone_variant<<endl; 
-    exit(-1);
-  }
-
-  int    m_maxPairSize      = 2;
-  int    m_maxIterations    = 100;
-  MidPointAlgorithm m(m_seedThreshold,m_coneRadius,m_coneAreaFraction,m_maxPairSize,m_maxIterations,m_overlapThreshold);
-
-  // convert our event into a the CDF format
-  vector<PhysicsTower> towers;
-  for (unsigned i = 0; i < event.size(); i++) 
-    towers.push_back(PhysicsTower(LorentzVector(
-		  event[i].px(),event[i].py(),event[i].pz(),event[i].E())));
-  
-  // run the jet algorithm
-  vector<Cluster> m_jets;
-  m.run(towers,m_jets);
-
-  // extract the jets
-  vector<FjPseudoJet> jets;
-  for (unsigned i=0; i < m_jets.size(); i++) 
-    jets.push_back(FjPseudoJet(m_jets[i].fourVector.px,
-			       m_jets[i].fourVector.py,
-			       m_jets[i].fourVector.pz,
-			       m_jets[i].fourVector.E));
- 
-  mass = Zmass_from_jets(jets);
-  corrected_mass = mass;
-}
-
-
 //======================================================================
 double Zmass_from_jets(const vector<FjPseudoJet> & jets) {
   vector<FjPseudoJet> sorted_jets = sorted_by_pt(jets);
@@ -453,7 +350,7 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
 //-------------------------------------------------------------
 /// routine for ("visually") looking at a ttbar event
 void look_at_event(vector<FjPseudoJet> & event,
-		   const FjActiveAreaSpecifier & area_specifier, 
+		   const FjActiveAreaSpec & area_spec, 
 		   const double ktR, const int strategy) {
   
 }

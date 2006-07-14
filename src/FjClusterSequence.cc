@@ -40,20 +40,28 @@
 
 using namespace std;
 
-// initialised static member has to go in the .cc code
-FjClusterSequence::FjJetFinder FjClusterSequence::_jet_finder = FjClusterSequence::kt_algorithm;
-
+//// initialised static member has to go in the .cc code
+FjJetFinder FjClusterSequence::_default_jet_finder = kt_algorithm;
+//
 
 void FjClusterSequence::_initialise_and_run (
 				  const double & R,
 				  const FjStrategy & strategy,
 				  const bool & writeout_combinations) {
 
+  FjJetDefinition jet_def(_default_jet_finder, R, strategy);
+  _initialise_and_run(jet_def, writeout_combinations);
+}
+
+void FjClusterSequence::_initialise_and_run (
+				  const FjJetDefinition & jet_def,
+				  const bool & writeout_combinations) {
   _print_banner();
   
   _writeout_combinations = writeout_combinations;
-  _Rparam = R;  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
-  _strategy = strategy;
+  _jet_finder = jet_def.jet_finder();
+  _Rparam = jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
+  _strategy = jet_def.strategy();
 
   // it's not too clear exactly what this does yet..
   _fill_initial_history();

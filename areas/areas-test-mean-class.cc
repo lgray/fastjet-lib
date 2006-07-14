@@ -101,11 +101,15 @@ int main (int argc, char ** argv) {
   // values); the latter will override the former.
   FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", Best)));
+  double ktR   = cmdline.double_val("-r",1.0);
+  FjJetFinder jet_fndr= cmdline.present("-cam")? cambridge_algorithm: kt_algorithm;
+  FjClusterSequence::set_jet_finder(jet_fndr);
+  //FjJetDefinition jet_def(jet_fndr, ktR, strategy);
+
   int  repeat  = cmdline.int_val("-repeat",1);
   int  combine = cmdline.int_val("-combine",1);
   bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
-  double ktR   = cmdline.double_val("-r",1.0);
   double inclkt = cmdline.double_val("-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
@@ -117,7 +121,6 @@ int main (int argc, char ** argv) {
   double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets = cmdline.present("-print_jets");
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 

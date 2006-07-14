@@ -52,27 +52,8 @@
 #include<string>
 #include<cmath> // needed to get double std::abs(double)
 #include "FjError.hh"
+#include "FjJetDefinition.hh"
 
-/// the various options for the algorithmic strategy to adopt in
-/// clustering the event.
-enum FjStrategy {
-  /// fastest from about 50..10^4
-  N2Tiled     = -3, 
-  /// legacy
-  N2PoorTiled = -2, 
-  /// fastest below 50
-  N2Plain     = -1, 
-  /// worse even than the usual N^3 algorithms
-  N3Dumb      =  0, 
-  /// automatic selection of the best
-  Best        =  1, 
-  /// best of the NlnN variants -- best overall for N>10^4
-  NlnN        =  2, 
-  /// legacy N ln N using 3pi coverage of cylinder
-  NlnN3pi     =  3, 
-  /// legacy N ln N using 4pi coverage of cylinder
-  NlnN4pi     =  4 
-};
 
 /// deals with clustering
 class FjClusterSequence {
@@ -80,7 +61,7 @@ class FjClusterSequence {
 
  public: 
 
-  /// empty initializer
+  /// default constructor
   FjClusterSequence () {};
 
   /// create a clustersequence starting from the supplied set
@@ -96,6 +77,16 @@ class FjClusterSequence {
 		   const double & R = 1.0,
 		   const FjStrategy & strategy = Best,
 		   const bool & writeout_combinations = false);
+
+
+  /// create a clustersequence starting from the supplied set
+  /// of pseudojets and clustering them with jet definition specified
+  /// by jet_def (which also specifies the clustering strategy)
+  template<class L> FjClusterSequence (
+			          const std::vector<L> & pseudojets,
+				  const FjJetDefinition & jet_def,
+				  const bool & writeout_combinations = false);
+
 
   // NB: in the routines that follow, for extracting lists of jets, a
   //     list structure might be more efficient, if sometimes a little
@@ -146,14 +137,14 @@ class FjClusterSequence {
   /// Cambridge algorithm). [May become virtual at some point]
   double jet_scale_for_algorithm(const FjPseudoJet & jet) const;
 
-  /// things related to choice of algorithm
-  enum FjJetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
-
+//  /// things related to choice of algorithm
+//  enum FjJetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
+//
 private:
-  static FjJetFinder _jet_finder;
+  static FjJetFinder _default_jet_finder;
 
 public:
-  static void set_jet_finder (FjJetFinder jet_finder) {_jet_finder = jet_finder;};
+  static void set_jet_finder (FjJetFinder jet_finder) {_default_jet_finder = jet_finder;};
 
 
   /// a single element in the clustering history (see vector _history
@@ -228,12 +219,19 @@ public:
 
  protected:
 
-  /// this is the routine that will do all the initialisation and
+  /// This is the routine that will do all the initialisation and
   /// then run the clustering (may be called by various constructors).
-  void _initialise_and_run (//test// const std::vector<FjPseudoJet> & pseudojets, 
-			    const double & R,
+  /// It assumes _jets contains the momenta to be clustered.
+  void _initialise_and_run (const FjJetDefinition & jet_def,
+			    const bool & writeout_combinations);
+
+  /// This is an alternative routine for initialising and running the
+  /// clustering, provided for legacy purposes. The jet finder is that
+  /// specified in the static member _default_jet_finder.
+  void _initialise_and_run (const double & R,
 			    const FjStrategy & strategy,
 			    const bool & writeout_combinations);
+
   /// This contains the physical FjPseudoJets; for each FjPseudoJet one
   /// can find the corresponding position in the _history by looking
   /// at _jets[i].cluster_hist_index().
@@ -249,7 +247,7 @@ public:
   int  _initial_n;
   double _Rparam, _R2, _invR2;
   FjStrategy    _strategy;
-
+  FjJetFinder   _jet_finder;
 
  private:
 
@@ -420,12 +418,38 @@ public:
 //**********************************************************************
 
 
+//----------------------------------------------------------------------
 // initialise from some generic type... Has to be made available
 // here in order for it the template aspect of it to work...
 template<class L> FjClusterSequence::FjClusterSequence (
 			          const std::vector<L> & pseudojets,
 				  const double & R,
 				  const FjStrategy & strategy,
+				  const bool & writeout_combinations) {
+
+  // this will ensure that we can point to jets without difficulties
+  // arising
+  _jets.reserve(pseudojets.size()*2);
+  _jet_finder = _default_jet_finder;
+  std::cout << "jet finder is "<<_jet_finder << std::endl;
+
+  // insert initial jets this way so that any type L that can be
+  // converted to a pseudojet will work fine (basically FjPseudoJet
+  // and any type that has [] subscript access to the momentum
+  // components, such as CLHEP HepLorentzVector).
+  for (unsigned int i = 0; i < pseudojets.size(); i++) {
+    _jets.push_back(pseudojets[i]);}
+
+  _initialise_and_run(R,strategy,writeout_combinations);
+}
+
+
+//----------------------------------------------------------------------
+/// constructor of a jet-clustering sequence from a vector of
+/// four-momenta, with the jet definition specified by jet_def
+template<class L> FjClusterSequence::FjClusterSequence (
+			          const std::vector<L> & pseudojets,
+				  const FjJetDefinition & jet_def,
 				  const bool & writeout_combinations) {
 
   // this will ensure that we can point to jets without difficulties
@@ -439,7 +463,7 @@ template<class L> FjClusterSequence::FjClusterSequence (
   for (unsigned int i = 0; i < pseudojets.size(); i++) {
     _jets.push_back(pseudojets[i]);}
 
-  _initialise_and_run(R,strategy,writeout_combinations);
+  _initialise_and_run(jet_def,writeout_combinations);
 }
 
 
@@ -459,7 +483,7 @@ inline double FjClusterSequence::jet_scale_for_algorithm(
 				  const FjPseudoJet & jet) const {
   if (_jet_finder == kt_algorithm)             {return jet.kt2();}
   else if (_jet_finder == cambridge_algorithm) {return 1.0;}
-  else {throw FjError("Unrecognised jet algorithm");}
+  else {throw FjError("Unrecognised jet finder");}
 }
 
 

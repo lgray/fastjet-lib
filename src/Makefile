@@ -48,21 +48,24 @@ Dnn2piCylinder.o: ../include/Triangulation.hh
 FjClusterSequence.o: ../include/FjError.hh ../include/FjPseudoJet.hh
 FjClusterSequence.o: ../include/numconsts.hh ../include/FjClusterSequence.hh
 FjClusterSequence.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequence.o: ../include/FjJetDefinition.hh
 FjPseudoJet.o: ../include/FjError.hh ../include/FjPseudoJet.hh
 FjPseudoJet.o: ../include/numconsts.hh
 FjClusterSequence_N2.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 FjClusterSequence_N2.o: ../include/FjClusterSequence.hh
 FjClusterSequence_N2.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequence_N2.o: ../include/FjError.hh
+FjClusterSequence_N2.o: ../include/FjError.hh ../include/FjJetDefinition.hh
 FjClusterSequence_TiledN2.o: ../include/FjPseudoJet.hh
 FjClusterSequence_TiledN2.o: ../include/numconsts.hh
 FjClusterSequence_TiledN2.o: ../include/FjClusterSequence.hh
 FjClusterSequence_TiledN2.o: ../include/DynamicNearestNeighbours.hh
 FjClusterSequence_TiledN2.o: ../include/FjError.hh
+FjClusterSequence_TiledN2.o: ../include/FjJetDefinition.hh
 FjClusterSequence_Delaunay.o: ../include/FjError.hh ../include/FjPseudoJet.hh
 FjClusterSequence_Delaunay.o: ../include/numconsts.hh
 FjClusterSequence_Delaunay.o: ../include/FjClusterSequence.hh
 FjClusterSequence_Delaunay.o: ../include/DynamicNearestNeighbours.hh
+FjClusterSequence_Delaunay.o: ../include/FjJetDefinition.hh
 FjClusterSequence_Delaunay.o: ../include/Dnn4piCylinder.hh
 FjClusterSequence_Delaunay.o: ../include/DnnPlane.hh
 FjClusterSequence_Delaunay.o: ../include/Triangulation.hh
@@ -72,3 +75,4 @@ FjClusterSequence_DumbN3.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 FjClusterSequence_DumbN3.o: ../include/FjClusterSequence.hh
 FjClusterSequence_DumbN3.o: ../include/DynamicNearestNeighbours.hh
 FjClusterSequence_DumbN3.o: ../include/FjError.hh
+FjClusterSequence_DumbN3.o: ../include/FjJetDefinition.hh

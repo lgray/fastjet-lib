@@ -166,7 +166,7 @@ int main (int argc, char ** argv) {
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
   string rerun_string = cmdline.string_val("-rerun","");
   cerr <<"writefreq is "<<writefreq<<endl;
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
+  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
