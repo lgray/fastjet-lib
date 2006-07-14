@@ -103,10 +103,23 @@ int main (int argc, char ** argv) {
 				     cmdline.int_val("-clever", Best)));
   double ktR   = cmdline.double_val("-r",1.0);
   FjJetFinder jet_fndr= cmdline.present("-cam")? cambridge_algorithm: kt_algorithm;
-  FjClusterSequence::set_jet_finder(jet_fndr);
-  //FjJetDefinition jet_def(jet_fndr, ktR, strategy);
+  //FjClusterSequence::set_jet_finder(jet_fndr);
+  FjJetDefinition jet_def(jet_fndr, ktR, strategy);
 
-  int  repeat  = cmdline.int_val("-repeat",1);
+  // set up things to do with how we measure the area
+  FjActiveAreaSpec area_spec;
+  area_spec.set_repeat      (cmdline.int_val("-repeat",1)            );
+  area_spec.set_cell_area   (cmdline.double_val("-cell_area",0.01)   );
+  area_spec.set_ghost_etamax(cmdline.double_val("-ghost_etamax",6.0) );
+  area_spec.set_grid_scatter(cmdline.double_val("-grid_scatter",1e-5));
+  area_spec.set_kt_scatter  (cmdline.double_val("-kt_scatter",0.1)   );
+
+  //int  repeat  = cmdline.int_val("-repeat",1);
+  //double cell_area = cmdline.double_val("-cell_area",0.01);
+  //double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
+  //double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
+  //double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
+
   int  combine = cmdline.int_val("-combine",1);
   bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
@@ -116,10 +129,6 @@ int main (int argc, char ** argv) {
   double etamax = cmdline.double_val("-etamax",1.0e310);
   bool   massless = cmdline.present("-massless");
   int    nev     = cmdline.int_val("-nev",1);
-  double cell_area = cmdline.double_val("-cell_area",0.01);
-  double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
-  double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets = cmdline.present("-print_jets");
 
   if (!cmdline.all_options_used()) {cerr << 
@@ -174,10 +183,12 @@ int main (int argc, char ** argv) {
   valarray<double> average_area2;
 
     
-  FjClusterSequenceWithMeanArea clust_seq(input_particles,
-					  cell_area,ghost_etamax,
-					  grid_scatter, kt_scatter, repeat,
-					  ktR,strategy,writeout);
+  //FjClusterSequenceWithMeanArea clust_seq(input_particles,
+  //      				  cell_area,ghost_etamax,
+  //      				  grid_scatter, kt_scatter, repeat,
+  //					  ktR,strategy,writeout);
+
+  FjClusterSequenceWithMeanArea clust_seq(input_particles,jet_def,area_spec,writeout);
 
   cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
   //cerr << "number of particles = " << clust_seq.n_particles() << endl;
@@ -204,7 +215,7 @@ int main (int argc, char ** argv) {
     double area = clust_seq.area(jets[j]);
     
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,jets[j].rap(),
-	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_err(jets[j]), clust_seq.area_err(jets[j])*sqrt(1.0*repeat), jets[j].perp() - area*median_pt_per_area);
+	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_err(jets[j]), clust_seq.area_err(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
   }
 
   //cout << "median pt_over_area = " << clust_seq.pt_per_unit_area()<<endl;

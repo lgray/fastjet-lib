@@ -18,7 +18,7 @@ ChangeLog for fastjet-release directory
 	  these interfaces are present both for the public constructor and
 	  for the protected _initialise_and_run(...) routines...
 	
-	  In areas, some minor changes have been made to account for these
+	  In areas/, some minor changes have been made to account for these
 	  changes...
 	
 	* In areas/FjClusterSequenceWith[Mean]Area.*

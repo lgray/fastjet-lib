@@ -17,19 +17,15 @@ using namespace std;
 /// later...)
 class FjClusterSequenceWithMeanArea : public FjClusterSequence {
 public:
-  //template<class L> FjClusterSequenceWithMeanArea
-  //       (const std::vector<L> & pseudojets, 
-  //        const FjActiveAreaSpec & area_spec,
-  //        const double & R = 1.0,
-  //        const FjStrategy & strategy = Best,
-  //	  const bool & writeout_combinations = false);
 
-  // constructor based on the FjActiveAreaSpec
+  /// constructor based on FjJetDefinition and FjActiveAreaSpec
   template<class L> FjClusterSequenceWithMeanArea
-         (const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
-	  const double & R = 1.0,
-	  const FjStrategy & strategy = Best,
-	  const bool & writeout_combinations = false);
+         (const std::vector<L> & pseudojets, 
+	  const FjJetDefinition & jet_def,
+	  const FjActiveAreaSpec & area_spec,
+	  const bool & writeout_combinations = false) :
+     FjClusterSequence(pseudojets, jet_def, writeout_combinations) {
+	   _initialize(pseudojets, jet_def, area_spec, writeout_combinations);};
 
   /// legacy constructor
   template<class L> FjClusterSequenceWithMeanArea
@@ -45,9 +41,9 @@ private:
 
   /// does the actual initialisation work 
   template<class L> void _initialize
-         (const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
-	  const double & R = 1.0,
-	  const FjStrategy & strategy = Best,
+         (const std::vector<L> & pseudojets, 
+	  const FjJetDefinition & jet_def,
+	  const FjActiveAreaSpec & area_spec,
 	  const bool & writeout_combinations = false);
 
 
@@ -90,7 +86,8 @@ public :
   /// jets that have pt/area > median(pt/area)*range.
   /// NB: this will be wrong for events that are not "dense" because
   ///     of a large number of jets that will have zero pt.
-  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, pttot_over_areatot_cut, mean_ratio_cut, play};
+  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
+			  pttot_over_areatot_cut, mean_ratio_cut, play};
 
   double pt_per_unit_area(mean_pt_strategies strat=median, double range=2.0 ) const;
 
@@ -119,27 +116,19 @@ template<class L>
      FjClusterSequence(pseudojets, R, strategy, writeout_combinations) 
 {
   
+  FjJetDefinition jet_def(_default_jet_finder, R, strategy);
   FjActiveAreaSpec area_spec(cell_area,etamax_for_area,grid_scatter,kt_scatter,
 			     area_nrepeat);
-  _initialize(pseudojets, area_spec, R,strategy, writeout_combinations) ;
+  _initialize(pseudojets, jet_def, area_spec, writeout_combinations) ;
 }
 
-template<class L> 
-   FjClusterSequenceWithMeanArea::FjClusterSequenceWithMeanArea (
-		const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
-		const double & R,
-		const FjStrategy & strategy,
-		const bool & writeout_combinations) :
-  FjClusterSequence(pseudojets, R, strategy, writeout_combinations) {
-  
-  _initialize(pseudojets, area_spec, R,strategy, writeout_combinations) ;
-}
 
 
 template<class L> 
    void FjClusterSequenceWithMeanArea::_initialize (
-		const std::vector<L> & pseudojets, const FjActiveAreaSpec & area_spec,
-		const double & R, const FjStrategy & strategy,
+		const std::vector<L> & pseudojets, 
+		const FjJetDefinition & jet_def,
+		const FjActiveAreaSpec & area_spec,
 		const bool & writeout_combinations) 
   {
   // code for testing the unique tree
@@ -188,7 +177,7 @@ template<class L>
     //FjClusterSequenceWithArea clust_seq(pseudojets,cell_area,etamax_for_area,
     //    				grid_scatter, kt_scatter,
     //					R,strategy);
-    FjClusterSequenceWithArea clust_seq(pseudojets, area_spec, R, strategy);
+    FjClusterSequenceWithArea clust_seq(pseudojets, jet_def, area_spec);
 
     // transfer areas from clust_seq into our object
     _transfer_areas(unique_tree, clust_seq);

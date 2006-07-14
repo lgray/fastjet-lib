@@ -81,10 +81,11 @@ public:
   /// to be measured
   template<class L> FjClusterSequenceWithArea
          (const std::vector<L> & pseudojets, 
+          const FjJetDefinition & jet_def,
 	  const FjActiveAreaSpec & area_spec,
-	  const double & R = 1.0,
-	  const FjStrategy & strategy = Best,
-	  const bool & writeout_combinations = false);
+	  const bool & writeout_combinations = false) 
+	   : FjClusterSequence() {
+	   _initialise(pseudojets,jet_def,area_spec,writeout_combinations); };
 
   /// constructor with a legacy interface
   template<class L> FjClusterSequenceWithArea
@@ -98,9 +99,8 @@ public:
   /// does the actual work of initialisation
   template<class L> void FjClusterSequenceWithArea::_initialise
          (const std::vector<L> & pseudojets, 
+          const FjJetDefinition & jet_def,
 	  const FjActiveAreaSpec & area_spec,
-	  const double & R,
-	  const FjStrategy & strategy,
 	  const bool & writeout_combinations); 
 
   //vector<FjPseudoJet> constituents (const FjPseudoJet & jet) const;
@@ -155,19 +155,6 @@ private:
 //----------------------------------------------------------------------
 // initialise from some generic type... Has to be made available
 // here in order for the template aspect of it to work...
-template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea(
-           const std::vector<L> & pseudojets, 
-           const FjActiveAreaSpec & area_spec,
-           const double & R,
-           const FjStrategy & strategy,
-           const bool & writeout_combinations) : FjClusterSequence() {
-
-  _initialise(pseudojets,area_spec,R,strategy,writeout_combinations);
-}
-
-//----------------------------------------------------------------------
-// initialise from some generic type... Has to be made available
-// here in order for the template aspect of it to work...
 template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
 			          const std::vector<L> & pseudojets,
                         	  double cell_area, double etamax_for_area,
@@ -178,7 +165,9 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
   FjClusterSequence() {
 
   FjActiveAreaSpec area_spec(cell_area,etamax_for_area,grid_scatter,kt_scatter);
-  _initialise(pseudojets,area_spec,R,strategy,writeout_combinations);
+  FjJetDefinition jet_def(_default_jet_finder, R, strategy);
+
+  _initialise(pseudojets,jet_def,area_spec,writeout_combinations);
 
 }
 
@@ -187,9 +176,8 @@ template<class L> FjClusterSequenceWithArea::FjClusterSequenceWithArea (
 // here in order for the template aspect of it to work...
 template<class L> void FjClusterSequenceWithArea::_initialise
          (const std::vector<L> & pseudojets, 
+          const FjJetDefinition & jet_def,
 	  const FjActiveAreaSpec & area_spec,
-	  const double & R,
-	  const FjStrategy & strategy,
 	  const bool & writeout_combinations) {
   // don't reserve space yet -- will be done below
 
@@ -222,7 +210,7 @@ template<class L> void FjClusterSequenceWithArea::_initialise
   _jets.reserve(_jets.size()*2);
 
   // run the clustering
-  _initialise_and_run(R,strategy,writeout_combinations);
+  _initialise_and_run(jet_def,writeout_combinations);
 
   // set up all other information
   _post_process();

@@ -430,8 +430,6 @@ template<class L> FjClusterSequence::FjClusterSequence (
   // this will ensure that we can point to jets without difficulties
   // arising
   _jets.reserve(pseudojets.size()*2);
-  _jet_finder = _default_jet_finder;
-  std::cout << "jet finder is "<<_jet_finder << std::endl;
 
   // insert initial jets this way so that any type L that can be
   // converted to a pseudojet will work fine (basically FjPseudoJet
