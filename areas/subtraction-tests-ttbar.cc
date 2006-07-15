@@ -109,9 +109,12 @@ enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 //			  double & mass, double & corrected_mass);
 //
 
-void look_at_event(vector<FjPseudoJet> & event,
+void look_at_event(const vector<FjPseudoJet> & event,
 		   const FjJetDefinition  & jet_def,
-		   const FjActiveAreaSpec & area_spec);
+		   const FjActiveAreaSpec & area_spec,
+		   const bool verbose, 
+		   double & Wmass, double & tmass
+		   );
 
 double Zmass_from_jets(const vector<FjPseudoJet> & jets);
 
@@ -161,6 +164,7 @@ int main (int argc, char ** argv) {
   area_spec.set_kt_scatter  (cmdline.double_val("-kt_scatter",0.1)   );
 
   // how we process and output things
+  bool   verbose      = cmdline.present("-verbose");
   double bin_width    = cmdline.double_val("-bin",5.0);
   double max_bin      = cmdline.double_val("-max",400.0);
   string output_file  = cmdline.string_val("-out");
@@ -176,8 +180,9 @@ int main (int argc, char ** argv) {
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
 
-  //int nbins = int(max_bin/bin_width + 0.5);
-  //CSHisto inv_mass_hard(00.0, max_bin, nbins);
+  int nbins = int(max_bin/bin_width + 0.5);
+  CSHisto inv_Wmass_hard(00.0, max_bin, nbins);
+  CSHisto inv_tmass_hard(00.0, max_bin, nbins);
   //CSHisto inv_mass_hcor(00.0, max_bin, nbins);
   //CSHisto inv_mass_full(00.0, max_bin, nbins);
   //CSHisto inv_mass_fcor(00.0, max_bin, nbins);
@@ -188,7 +193,7 @@ int main (int argc, char ** argv) {
 
 
   for (int iev = 0; iev < nev; iev++) {
-    cerr << "Doing event "<< iev<<endl;
+    if (iev < 100 || iev%100 == 0) cerr << "Doing event "<< iev<<endl;
     vector<FjPseudoJet> hard_event, full_event;
     
     // read in the event 
@@ -197,11 +202,40 @@ int main (int argc, char ** argv) {
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
   
-    look_at_event(hard_event, jet_def, area_spec);
-    
-  } // iev
+    double Wmass, tmass;
+    look_at_event(hard_event, jet_def, area_spec, verbose, Wmass, tmass);
+
+    inv_Wmass_hard.fill(Wmass);
+    inv_tmass_hard.fill(tmass);
   
   
+    // write intermediate and final results...
+    if ( iev+1==nev || (iev+1) % writefreq == 0) {
+      // sending output to a file...
+      ofstream output(output_file.c_str());
+      if (rerun_string != "") {
+	output << "# Rerun with:\n";
+	output << "# "<<rerun_string<<endl;
+      }
+      output << "# " << cmdline.command_line() << endl;
+      output << "# nev = " <<iev+1 <<endl;
+      output << "# bin-lo bin-mid bin-hi hardW hardt" <<endl;
+      
+      // print out mass histograms.
+      for (unsigned i = 0; i < inv_Wmass_hard.size(); i++) {
+	output << inv_Wmass_hard.bin_lower_edge(i) <<" "
+	       << inv_Wmass_hard.bin_centre(i) <<" "
+	       << inv_Wmass_hard.bin_upper_edge(i) <<" "
+	       << inv_Wmass_hard.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << inv_tmass_hard.bin_weight(i)/((iev+1)*bin_width) <<endl;
+	//<< inv_mass_hcor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	//<< inv_mass_full.bin_weight(i)/((iev+1)*bin_width) <<" "
+	//<< inv_mass_fcor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	//<< inv_mass_hecr.bin_weight(i)/((iev+1)*bin_width) <<" "
+	//<< inv_mass_fecr.bin_weight(i)/((iev+1)*bin_width) << endl;
+      }
+    }
+  }
 }
 
 
@@ -272,7 +306,8 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
 }
 
 // this will often be useful...
-typedef vector<FjPseudoJet>::const_iterator FJPJ_iter;
+typedef vector<FjPseudoJet>::iterator FJPJ_iter;
+typedef vector<FjPseudoJet>::const_iterator FJPJ_citer;
 
 
 //-------------------------------------------------------------
@@ -291,21 +326,47 @@ string b_string(const FjClusterSequence & cs, const FjPseudoJet & jet) {
 }
 
 
+//----------------------------------------------------------------------
+/// Return true if the jet contains one or more b's
+bool b_tag(const FjClusterSequence & cs, const FjPseudoJet & jet) {
+  bool res = false;
+  vector<FjPseudoJet> cnst = cs.constituents(jet);
+  for (FJPJ_iter particle = cnst.begin(); particle != cnst.end(); particle++) {
+    int nb = particle -> user_index();
+    res |= (nb != 0);
+  }
+  return res;
+}
+
+//----------------------------------------------------------------------
+/// Return net count of the number of b's
+int b_count(const FjClusterSequence & cs, const FjPseudoJet & jet) {
+  int res = 0;
+  vector<FjPseudoJet> cnst = cs.constituents(jet);
+  for (FJPJ_iter particle = cnst.begin(); particle != cnst.end(); particle++) {
+    int nb = particle -> user_index();
+    res += nb;
+  }
+  return res;
+}
+
+
+
 //-------------------------------------------------------------
-/// routine for ("visually") looking at a ttbar event
-void look_at_event(vector<FjPseudoJet> & event,
-		   const FjJetDefinition  & jet_def,
-		   const FjActiveAreaSpec & area_spec) {
-  
+void separate_event(const vector<FjPseudoJet> & event, 
+		    vector<FjPseudoJet> & leptonic_event, 
+		    FjClusterSequenceWithMeanArea * & clust_seq,
+		    const FjJetDefinition & jet_def,
+		    const FjActiveAreaSpec & area_spec) {
+
   vector<FjPseudoJet> hadronic_event;
-  vector<FjPseudoJet> leptonic_event;
 
   // we will separate out the muon and any neutrinos from the other
   // particles (using the user index which has been set to the particle
   // idhep value); we'll treat electrons and taus as if they're hadronic
   // since we are generating semi-leptonic ttbar events where the lepton
   // is a muon.
-  for (FJPJ_iter particle = event.begin(); particle != event.end(); particle++){
+  for (FJPJ_citer particle = event.begin(); particle != event.end(); particle++){
 
     FlavourHolder flav(particle->user_index());
 
@@ -318,32 +379,79 @@ void look_at_event(vector<FjPseudoJet> & event,
     }
   }
 
-  FjClusterSequenceWithMeanArea clust_seq(hadronic_event, jet_def, area_spec);
+  clust_seq = new FjClusterSequenceWithMeanArea(hadronic_event, jet_def, area_spec);
 
-  // print general header...
-  printf(" rap      phi        Pt         area  +-   err      pt_corr  flavour\n");
+}
 
-  // print leptonic part of the event 
-  for (FJPJ_iter lepton = leptonic_event.begin(); 
-                                   lepton != leptonic_event.end(); lepton++){
-    printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7d\n",
-	   lepton->rap(), lepton->phi(), lepton->perp(), 0.0,0.0,lepton->perp(),
-	   lepton->user_index());
+//-------------------------------------------------------------
+/// routine for ("visually") looking at a ttbar event
+void look_at_event(const vector<FjPseudoJet> & event,
+		   const FjJetDefinition  & jet_def,
+		   const FjActiveAreaSpec & area_spec,
+		   const bool verbose,
+		   double & Wmass, double & tmass
+		   ) {
+  
+  vector<FjPseudoJet> leptonic_event;
+  
+  FjClusterSequenceWithMeanArea * clust_seq;
+
+  // extract the leptonic and jet parts of the event
+  separate_event(event, leptonic_event, clust_seq, jet_def, area_spec);
+
+  if (verbose) {
+    // print general header...
+    printf(" rap      phi        Pt         area  +-   err      pt_corr  flavour\n");
+    
+    // print leptonic part of the event 
+    for (FJPJ_iter lepton = leptonic_event.begin(); 
+	 lepton != leptonic_event.end(); lepton++){
+      printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7d\n",
+	     lepton->rap(), lepton->phi(), lepton->perp(), 0.0,0.0,lepton->perp(),
+	     lepton->user_index());
+    }
+    
+    cout << " "<<endl;
   }
-
-  cout << " "<<endl;
 
   // print jetty part of the event (only jets with pt > 5 GeV)
-  vector<FjPseudoJet> jets = clust_seq.inclusive_jets(5.0);
-  double median_pt_over_area = clust_seq.pt_per_unit_area(
+  //vector<FjPseudoJet> jets = sorted_by_pt(clust_seq->inclusive_jets(5.0));
+  //vector<FjPseudoJet> jets = sorted_by_pt(clust_seq->exclusive_jets(
+  //					      pow2(40.0/jet_def.R())));
+  vector<FjPseudoJet> jets = sorted_by_pt(clust_seq->exclusive_jets(4));
+  double median_pt_over_area = clust_seq->pt_per_unit_area(
 				  FjClusterSequenceWithMeanArea::median);
 
+  vector<FjPseudoJet> nonb_jets, b_jets;
+
   for (FJPJ_iter jet = jets.begin(); jet != jets.end(); jet++){
-    printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7s\n",
-	   jet->rap(), jet->phi(), jet->perp(), 
-	   clust_seq.area(*jet),clust_seq.area_err(*jet),
-	   jet->perp()-median_pt_over_area*clust_seq.area(*jet),
-	   b_string(clust_seq, *jet).c_str()
-	   );
+    if (verbose) {
+      printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7s ",
+	     jet->rap(), jet->phi(), jet->perp(), 
+	     clust_seq->area(*jet),clust_seq->area_err(*jet),
+	     jet->perp()-median_pt_over_area* clust_seq->area(*jet),
+	     b_string(*clust_seq, *jet).c_str()
+	     );
+      cout << b_tag(*clust_seq, *jet) << " "<< b_count(*clust_seq, *jet)<<endl;
+    }
+    
+    jet->set_user_index(b_count(*clust_seq,*jet));
+    if (jet->user_index() == 0) {nonb_jets.push_back(*jet);}
+    else {b_jets.push_back(*jet);}
   }
+
+  tmass = 0.0;
+  Wmass = 0.0;
+  if (nonb_jets.size() >= 2) {
+    FjPseudoJet W = nonb_jets[0]+nonb_jets[1];
+    Wmass = sqrt(W.m2());
+    for (FJPJ_iter bjet = b_jets.begin(); bjet != b_jets.end(); bjet++){
+      if (bjet->user_index() == -1) {tmass = sqrt((W+(*bjet)).m2()); break;}
+    }
+
+    if (verbose) cout << "W and top masses: "<<Wmass<<" "<<tmass<<endl;
+  } else {
+    if (verbose) cout << "insufficient number of jets to calculate mass"<<endl;}
+  
+  delete clust_seq;
 }

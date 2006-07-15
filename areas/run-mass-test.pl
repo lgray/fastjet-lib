@@ -8,6 +8,7 @@ $jet_exec    = "./subtraction-tests-mass";
 
 $hydjet_exec = "../../hydjet/test2_hydjet";
 $incljet_exec = "./subtraction-tests-inclpt";
+$ttbarjet_exec = "./subtraction-tests-ttbar";
 
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
@@ -30,6 +31,7 @@ while ($#ARGV >= 0) {
   # pythia opts (logical)
   elsif ($opt eq '-Z2jets') {$pythia_opts .= " $opt";}
   elsif ($opt eq '-Zp2jets'){$pythia_opts .= " $opt";}
+  elsif ($opt eq '-ttbar')  {$pythia_opts .= " $opt"; $jet_exec = $ttbarjet_exec;}
   elsif ($opt eq '-lolumi') {$pythia_opts .= " $opt";}
   elsif ($opt eq '-noMI')   {$pythia_opts .= " $opt";}
   elsif ($opt eq '-pileup') {$pythia_opts .= " $opt";}
@@ -37,6 +39,7 @@ while ($#ARGV >= 0) {
   elsif ($opt eq '-tev')    {$pythia_opts .= " $opt";}
   elsif ($opt =~ /^-minbias/){$pythia_opts .= " $opt";}
   # pythia opts (others)
+  elsif ($opt eq '-lumi')   {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-ptmin')  {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}  elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-iseq')   {$pythia_opts .= " $opt ".(shift @ARGV);}
