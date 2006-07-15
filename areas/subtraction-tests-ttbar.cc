@@ -2,7 +2,7 @@
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+// Copyright (c) 2006, Matteo Cacciari and Gavin Salam
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -28,6 +28,12 @@
 //      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //----------------------------------------------------------------------
 //ENDHEADER
+
+// what output do we want?
+//
+// . hard event, full event, with and without subtraction (4)
+// . for the kt in inclusive and exclusive formulations 
+//   [and cam in inclusive, since exclusive not yet functional]
 
 
 //----------------------------------------------------------------------
@@ -113,7 +119,10 @@ void look_at_event(const vector<FjPseudoJet> & event,
 		   const FjJetDefinition  & jet_def,
 		   const FjActiveAreaSpec & area_spec,
 		   const bool verbose, 
-		   double & Wmass, double & tmass
+		   double & Wmass_incl, double & tmass_incl,
+		   double & Wmass_excl, double & tmass_excl,
+		   double & Wmass_incl_ecor, double & tmass_incl_ecor,
+		   double & Wmass_excl_ecor, double & tmass_excl_ecor
 		   );
 
 double Zmass_from_jets(const vector<FjPseudoJet> & jets);
@@ -181,15 +190,23 @@ int main (int argc, char ** argv) {
   ifstream input(input_file.c_str());
 
   int nbins = int(max_bin/bin_width + 0.5);
-  CSHisto inv_Wmass_hard(00.0, max_bin, nbins);
-  CSHisto inv_tmass_hard(00.0, max_bin, nbins);
-  //CSHisto inv_mass_hcor(00.0, max_bin, nbins);
-  //CSHisto inv_mass_full(00.0, max_bin, nbins);
-  //CSHisto inv_mass_fcor(00.0, max_bin, nbins);
-  //
-  //// histograms using the "extended" area subtraction...
-  //CSHisto inv_mass_hecr(00.0, max_bin, nbins);
-  //CSHisto inv_mass_fecr(00.0, max_bin, nbins);
+  CSHisto hard_Wmass_incl     (00.0, max_bin, nbins);
+  CSHisto hard_tmass_incl     (00.0, max_bin, nbins);
+  CSHisto hard_Wmass_excl     (00.0, max_bin, nbins);
+  CSHisto hard_tmass_excl     (00.0, max_bin, nbins);
+  CSHisto hard_Wmass_incl_ecor(00.0, max_bin, nbins);
+  CSHisto hard_tmass_incl_ecor(00.0, max_bin, nbins);
+  CSHisto hard_Wmass_excl_ecor(00.0, max_bin, nbins);
+  CSHisto hard_tmass_excl_ecor(00.0, max_bin, nbins);
+
+  CSHisto full_Wmass_incl     (00.0, max_bin, nbins);
+  CSHisto full_tmass_incl     (00.0, max_bin, nbins);
+  CSHisto full_Wmass_excl     (00.0, max_bin, nbins);
+  CSHisto full_tmass_excl     (00.0, max_bin, nbins);
+  CSHisto full_Wmass_incl_ecor(00.0, max_bin, nbins);
+  CSHisto full_tmass_incl_ecor(00.0, max_bin, nbins);
+  CSHisto full_Wmass_excl_ecor(00.0, max_bin, nbins);
+  CSHisto full_tmass_excl_ecor(00.0, max_bin, nbins);
 
 
   for (int iev = 0; iev < nev; iev++) {
@@ -202,12 +219,48 @@ int main (int argc, char ** argv) {
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
   
-    double Wmass, tmass;
-    look_at_event(hard_event, jet_def, area_spec, verbose, Wmass, tmass);
+    double Wmass_incl, tmass_incl;
+    double Wmass_excl, tmass_excl;
+    double Wmass_incl_ecor, tmass_incl_ecor;
+    double Wmass_excl_ecor, tmass_excl_ecor;
 
-    inv_Wmass_hard.fill(Wmass);
-    inv_tmass_hard.fill(tmass);
-  
+
+    look_at_event(hard_event, jet_def, area_spec, verbose, 
+		  Wmass_incl, tmass_incl,
+		  Wmass_excl, tmass_excl,
+		  Wmass_incl_ecor, tmass_incl_ecor,
+		  Wmass_excl_ecor, tmass_excl_ecor
+		  );
+
+    // fill the histograms
+    hard_Wmass_incl     .fill(Wmass_incl     );
+    hard_tmass_incl     .fill(tmass_incl	 );    
+    hard_Wmass_excl     .fill(Wmass_excl     );    
+    hard_tmass_excl     .fill(tmass_excl	 );    
+    hard_Wmass_incl_ecor.fill(Wmass_incl_ecor); 
+    hard_tmass_incl_ecor.fill(tmass_incl_ecor);
+    hard_Wmass_excl_ecor.fill(Wmass_excl_ecor); 
+    hard_tmass_excl_ecor.fill(tmass_excl_ecor);
+
+    // only run things again if we truly have an event to run on...
+    if (full_event.size() != hard_event.size()) {
+      look_at_event(full_event, jet_def, area_spec, verbose, 
+		    Wmass_incl, tmass_incl,
+		    Wmass_excl, tmass_excl,
+		    Wmass_incl_ecor, tmass_incl_ecor,
+		    Wmass_excl_ecor, tmass_excl_ecor
+		    );
+    }
+
+    // fill the histograms
+    full_Wmass_incl     .fill(Wmass_incl     );
+    full_tmass_incl     .fill(tmass_incl	 );    
+    full_Wmass_excl     .fill(Wmass_excl     );    
+    full_tmass_excl     .fill(tmass_excl	 );    
+    full_Wmass_incl_ecor.fill(Wmass_incl_ecor); 
+    full_tmass_incl_ecor.fill(tmass_incl_ecor);
+    full_Wmass_excl_ecor.fill(Wmass_excl_ecor); 
+    full_tmass_excl_ecor.fill(tmass_excl_ecor);
   
     // write intermediate and final results...
     if ( iev+1==nev || (iev+1) % writefreq == 0) {
@@ -219,20 +272,49 @@ int main (int argc, char ** argv) {
       }
       output << "# " << cmdline.command_line() << endl;
       output << "# nev = " <<iev+1 <<endl;
-      output << "# bin-lo bin-mid bin-hi hardW hardt" <<endl;
-      
+      output << "# bin-lo(1) bin-mid (2) bin-hi(3) ";
+      int jj = 3;
+      output << "hard_Wmass_incl("     <<++jj<<") "; 
+      output << "hard_tmass_incl("     <<++jj<<") ";
+      output << "hard_Wmass_excl("     <<++jj<<") ";
+      output << "hard_tmass_excl("     <<++jj<<") ";
+      output << "hard_Wmass_incl_ecor("<<++jj<<") ";
+      output << "hard_tmass_incl_ecor("<<++jj<<") ";
+      output << "hard_Wmass_excl_ecor("<<++jj<<") ";
+      output << "hard_tmass_excl_ecor("<<++jj<<") "; 
+      output << "full_Wmass_incl("     <<++jj<<") "; 
+      output << "full_tmass_incl("     <<++jj<<") ";
+      output << "full_Wmass_excl("     <<++jj<<") ";
+      output << "full_tmass_excl("     <<++jj<<") ";
+      output << "full_Wmass_incl_ecor("<<++jj<<") ";
+      output << "full_tmass_incl_ecor("<<++jj<<") ";
+      output << "full_Wmass_excl_ecor("<<++jj<<") ";
+      output << "full_tmass_excl_ecor("<<++jj<<") "; 
+      output << endl;
+
+
       // print out mass histograms.
-      for (unsigned i = 0; i < inv_Wmass_hard.size(); i++) {
-	output << inv_Wmass_hard.bin_lower_edge(i) <<" "
-	       << inv_Wmass_hard.bin_centre(i) <<" "
-	       << inv_Wmass_hard.bin_upper_edge(i) <<" "
-	       << inv_Wmass_hard.bin_weight(i)/((iev+1)*bin_width) <<" "
-	       << inv_tmass_hard.bin_weight(i)/((iev+1)*bin_width) <<endl;
-	//<< inv_mass_hcor.bin_weight(i)/((iev+1)*bin_width) <<" "
-	//<< inv_mass_full.bin_weight(i)/((iev+1)*bin_width) <<" "
-	//<< inv_mass_fcor.bin_weight(i)/((iev+1)*bin_width) <<" "
-	//<< inv_mass_hecr.bin_weight(i)/((iev+1)*bin_width) <<" "
-	//<< inv_mass_fecr.bin_weight(i)/((iev+1)*bin_width) << endl;
+      for (unsigned i = 0; i < hard_Wmass_incl.size(); i++) {
+	output << hard_Wmass_incl.bin_lower_edge(i) <<" "
+	       << hard_Wmass_incl.bin_centre(i) <<" "
+	       << hard_Wmass_incl.bin_upper_edge(i) <<" "
+	       << hard_Wmass_incl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_tmass_incl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_Wmass_excl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_tmass_excl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_Wmass_incl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_tmass_incl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_Wmass_excl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << hard_tmass_excl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_Wmass_incl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_tmass_incl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_Wmass_excl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_tmass_excl     .bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_Wmass_incl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_tmass_incl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_Wmass_excl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << full_tmass_excl_ecor.bin_weight(i)/((iev+1)*bin_width) <<" "
+	       << endl;
       }
     }
   }
@@ -383,13 +465,90 @@ void separate_event(const vector<FjPseudoJet> & event,
 
 }
 
+//----------------------------------------------------------------------
+/// takes a cs and an array of jets extracted from it somehow (possibly 
+/// modified by subtraction) and runs an analysis to extract the W
+/// mass and top mass; NB it assumes that it is the bbar that is to be
+/// associated with the hadronically decaying W
+void extract_masses(const FjClusterSequenceWithMeanArea & cs, 
+		    const vector<FjPseudoJet> & jets,
+		    const bool verbose, 
+		    double & Wmass, 
+		    double & tmass) {
+  
+  vector<FjPseudoJet> nonb_jets, b_jets;
+
+  for (FJPJ_citer jet = jets.begin(); jet != jets.end(); jet++){
+    if (verbose) {
+      printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7s ",
+	     jet->rap(), jet->phi(), jet->perp(), 
+	     cs.area(*jet),cs.area_err(*jet),
+	     //jet->perp()-median_pt_over_area* cs.area(*jet),
+	     0.0,
+	     b_string(cs, *jet).c_str()
+	     );
+      cout << b_tag(cs, *jet) << " "<< b_count(cs, *jet)<<endl;}
+    
+    FjPseudoJet jetcopy = *jet;
+    jetcopy.set_user_index(b_count(cs,*jet));
+    if (jetcopy.user_index() == 0) {
+      nonb_jets.push_back(jetcopy);
+    } else {
+      b_jets.push_back(jetcopy);}
+  }
+
+  tmass = 0.0;
+  Wmass = 0.0;
+
+  // we need the jets to be in order for the rest of the analysis to make
+  // sense
+  b_jets = sorted_by_pt(b_jets);
+  nonb_jets = sorted_by_pt(nonb_jets);
+
+  if (nonb_jets.size() >= 2) {
+    FjPseudoJet W = nonb_jets[0]+nonb_jets[1];
+    Wmass = sqrt(W.m2());
+    for (FJPJ_citer bjet = b_jets.begin(); bjet != b_jets.end(); bjet++){
+      if (bjet->user_index() == -1) {tmass = sqrt((W+(*bjet)).m2()); break;}
+    }
+    if (verbose) cout << "W and top masses: "<<Wmass<<" "<<tmass<<endl;
+  } else {
+    if (verbose) cout << "insufficient number of jets to calculate mass"<<endl;}
+
+}
+
+
+//----------------------------------------------------------------------
+/// correct the vector of jets based on their extended area and the 
+/// pt_per_unit_area
+void ext_correct_jets(const FjClusterSequenceWithMeanArea & cs, 
+		      vector<FjPseudoJet> & jets,
+		      const double pt_per_unit_area) {
+
+  for (unsigned i = 0; i < jets.size(); i++) {
+    FjPseudoJet ext_area = pt_per_unit_area * cs.extended_area(jets[i]);
+    if (ext_area.perp2() >= jets[i].perp2() || 
+	ext_area.E()     >= jets[i].E()) {
+      // if the correction is too large, set the jet to zero
+      jets[i] *=  0.0 ;
+    } else {
+      // otherwise do an E-scheme subtraction
+      jets[i] -= ext_area;
+    }
+  }
+}
+
 //-------------------------------------------------------------
-/// routine for ("visually") looking at a ttbar event
+/// routine for ("visually") looking at a ttbar event and also
+/// for extracting information about it...
 void look_at_event(const vector<FjPseudoJet> & event,
 		   const FjJetDefinition  & jet_def,
 		   const FjActiveAreaSpec & area_spec,
 		   const bool verbose,
-		   double & Wmass, double & tmass
+		   double & Wmass_incl, double & tmass_incl,
+		   double & Wmass_excl, double & tmass_excl,
+		   double & Wmass_incl_ecor, double & tmass_incl_ecor,
+		   double & Wmass_excl_ecor, double & tmass_excl_ecor
 		   ) {
   
   vector<FjPseudoJet> leptonic_event;
@@ -401,8 +560,8 @@ void look_at_event(const vector<FjPseudoJet> & event,
 
   if (verbose) {
     // print general header...
-    printf(" rap      phi        Pt         area  +-   err      pt_corr  flavour\n");
-    
+    printf(
+      " rap      phi        Pt         area  +-   err      pt_corr  flavour\n");
     // print leptonic part of the event 
     for (FJPJ_iter lepton = leptonic_event.begin(); 
 	 lepton != leptonic_event.end(); lepton++){
@@ -410,48 +569,35 @@ void look_at_event(const vector<FjPseudoJet> & event,
 	     lepton->rap(), lepton->phi(), lepton->perp(), 0.0,0.0,lepton->perp(),
 	     lepton->user_index());
     }
-    
     cout << " "<<endl;
   }
 
   // print jetty part of the event (only jets with pt > 5 GeV)
-  //vector<FjPseudoJet> jets = sorted_by_pt(clust_seq->inclusive_jets(5.0));
-  //vector<FjPseudoJet> jets = sorted_by_pt(clust_seq->exclusive_jets(
-  //					      pow2(40.0/jet_def.R())));
-  vector<FjPseudoJet> jets = sorted_by_pt(clust_seq->exclusive_jets(4));
+
   double median_pt_over_area = clust_seq->pt_per_unit_area(
-				  FjClusterSequenceWithMeanArea::median);
+  				  FjClusterSequenceWithMeanArea::median);
 
-  vector<FjPseudoJet> nonb_jets, b_jets;
+  vector<FjPseudoJet> jets;
 
-  for (FJPJ_iter jet = jets.begin(); jet != jets.end(); jet++){
-    if (verbose) {
-      printf("%9.5f %8.5f %10.3f %8.3f +- %6.3f %10.3f %7s ",
-	     jet->rap(), jet->phi(), jet->perp(), 
-	     clust_seq->area(*jet),clust_seq->area_err(*jet),
-	     jet->perp()-median_pt_over_area* clust_seq->area(*jet),
-	     b_string(*clust_seq, *jet).c_str()
-	     );
-      cout << b_tag(*clust_seq, *jet) << " "<< b_count(*clust_seq, *jet)<<endl;
-    }
-    
-    jet->set_user_index(b_count(*clust_seq,*jet));
-    if (jet->user_index() == 0) {nonb_jets.push_back(*jet);}
-    else {b_jets.push_back(*jet);}
-  }
+  // get inclusive jets with a 5 GeV threshold
+  jets = clust_seq->inclusive_jets(5.0);
+  if (verbose) cout << "inclusive" << endl;
+  extract_masses(*clust_seq, jets, verbose, Wmass_incl, tmass_incl);
 
-  tmass = 0.0;
-  Wmass = 0.0;
-  if (nonb_jets.size() >= 2) {
-    FjPseudoJet W = nonb_jets[0]+nonb_jets[1];
-    Wmass = sqrt(W.m2());
-    for (FJPJ_iter bjet = b_jets.begin(); bjet != b_jets.end(); bjet++){
-      if (bjet->user_index() == -1) {tmass = sqrt((W+(*bjet)).m2()); break;}
-    }
+  // correct the jets and get new masses
+  ext_correct_jets(*clust_seq, jets, median_pt_over_area);
+  if (verbose) cout << "inclusive corrected" << endl;
+  extract_masses(*clust_seq, jets, verbose, Wmass_incl_ecor, tmass_incl_ecor);
 
-    if (verbose) cout << "W and top masses: "<<Wmass<<" "<<tmass<<endl;
-  } else {
-    if (verbose) cout << "insufficient number of jets to calculate mass"<<endl;}
+  // view the event "exclusively" as consisting of 4 jets
+  jets = clust_seq->exclusive_jets(4);
+  if (verbose) cout << "exclusive" << endl;
+  extract_masses(*clust_seq, jets, verbose, Wmass_excl, tmass_excl);
+
+  // correct the jets and get new masses
+  ext_correct_jets(*clust_seq, jets, median_pt_over_area);
+  if (verbose) cout << "exclusive corrected" << endl;
+  extract_masses(*clust_seq, jets, verbose, Wmass_excl_ecor, tmass_excl_ecor);
   
   delete clust_seq;
 }

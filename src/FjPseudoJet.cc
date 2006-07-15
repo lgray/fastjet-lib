@@ -120,6 +120,46 @@ FjPseudoJet operator* (double coeff, const FjPseudoJet & jet) {
 } 
 
 //----------------------------------------------------------------------
+/// multiply the jet's momentum by the coefficient
+void FjPseudoJet::operator*=(double coeff) {
+  _px *= coeff;
+  _py *= coeff;
+  _pz *= coeff;
+  _E  *= coeff;
+  _kt2*= coeff*coeff;
+  // phi and rap are unchanged
+}
+
+//----------------------------------------------------------------------
+/// divide the jet's momentum by the coefficient
+void FjPseudoJet::operator/=(double coeff) {
+  (*this) *= 1.0/coeff;
+}
+
+
+//----------------------------------------------------------------------
+/// add the other jet's momentum to this jet
+void FjPseudoJet::operator+=(const FjPseudoJet & other_jet) {
+  _px += other_jet._px;
+  _py += other_jet._py;
+  _pz += other_jet._pz;
+  _E  += other_jet._E ;
+  _finish_init(); // we need to recalculate phi,rap,kt2  
+}
+
+
+//----------------------------------------------------------------------
+/// subtract the other jet's momentum from this jet
+void FjPseudoJet::operator-=(const FjPseudoJet & other_jet) {
+  _px -= other_jet._px;
+  _py -= other_jet._py;
+  _pz -= other_jet._pz;
+  _E  -= other_jet._E ;
+  _finish_init(); // we need to recalculate phi,rap,kt2  
+}
+
+
+//----------------------------------------------------------------------
 // return kt-distance between this jet and another one
 double FjPseudoJet::kt_distance(const FjPseudoJet & other) const {
   //double distance = min(this->kt2(), other.kt2());

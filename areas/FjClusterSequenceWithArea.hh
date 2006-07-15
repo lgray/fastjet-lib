@@ -97,7 +97,7 @@ public:
 	  const bool & writeout_combinations = false);
 
   /// does the actual work of initialisation
-  template<class L> void FjClusterSequenceWithArea::_initialise
+  template<class L> void _initialise
          (const std::vector<L> & pseudojets, 
           const FjJetDefinition & jet_def,
 	  const FjActiveAreaSpec & area_spec,

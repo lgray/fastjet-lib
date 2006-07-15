@@ -3,6 +3,22 @@ ChangeLog for fastjet-release directory
 
 2006-07-14  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+        * FjPseudoJet: added operator+=,-=,*=,/=, which leave the
+	  user and cluster_hist indices unchanged. It is natural (in a
+	  sense) insofar as these operators act naturally just on the
+	  momentum -- in practice it is also useful because a user may
+	  want to correct a jet in some way while still have the jet
+	  associated with its "history").	
+
+	* subtraction-tests-ttbar: now gives a full panoply of results in
+	  histograms so that one can get a semi-sensible analysis of
+	  ttbar events.	
+
+	* run-mass-test.pl: adapted it so that it deals nicely with the
+	  ttbar cases too...
+	
+2006-07-14  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
 	* *** ADDED include/FjJetDefinition.hh *** 
 	  in which we now define:
 

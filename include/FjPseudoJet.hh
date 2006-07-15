@@ -115,6 +115,11 @@ class FjPseudoJet {
   friend FjPseudoJet operator+(const FjPseudoJet &, const FjPseudoJet &);
   friend FjPseudoJet operator*(double, const FjPseudoJet &);
 
+  void operator*=(double);
+  void operator/=(double);
+  void operator+=(const FjPseudoJet &);
+  void operator-=(const FjPseudoJet &);
+
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;

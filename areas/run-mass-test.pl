@@ -68,6 +68,10 @@ $pythia   = "$pythia_exec $pythia_opts";
 $analysis = "$jet_exec $jet_opts -rerun '$this_prog'";
 print STDERR $pythia."\n";
 print STDERR $analysis."\n";
+# need to replace the following combination with something like
+# $pid = fork();
+# if ($pid == 0) {system("$pythia"); exit(0);}
+# system($analysis); then some code such as "kill 9,$pid"; [but should check it works...]
 system("$pythia &");
 system("$analysis");
 
