@@ -3,7 +3,7 @@
 
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
-version=1.1.0a0
+version=1.1.0a1
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dir=fastjet-$version
