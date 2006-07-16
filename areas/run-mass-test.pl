@@ -69,27 +69,36 @@ $analysis = "$jet_exec $jet_opts -rerun '$this_prog'";
 print STDERR $pythia."\n";
 print STDERR $analysis."\n";
 # need to replace the following combination with something like
-# $pid = fork();
-# if ($pid == 0) {system("$pythia"); exit(0);}
-# system($analysis); then some code such as "kill 9,$pid"; [but should check it works...]
-system("$pythia &");
-system("$analysis");
+$pid = fork();
+# for the slave...
+print "NEW PID IS $pid\n";
+if ($pid == 0) {system("$pythia"); exit(0);}
+# for the original program
+system($analysis); 
 
-#$command = "$pythia_exec $pythia_opts | $jet_exec $jet_opts -rerun '$this_prog'";
-#system($command);
+# since processes writing to pipes can lead to large temporary files
+# (and since it's not nice to leave dead processes around), do our
+# best to kill the slave and its children, if necessary...
+$slave_alive=(kill 0, $pid);
+if ($slave_alive) {
+  $slave_details=`ps -fp $pid | grep -v PID`;
+  if ($slave_details !~ /defunct/) {
+    print "======== generator ($pid+children) is still running and will be killed:\n";
+    $procs=`ps --ppid $pid | grep -v PID | awk '{print \$1}'`;
+    @procs=split("\n",$procs);
+    push @procs, $pid;
+    foreach $proc (@procs) {
+      system("ps -fp $proc | grep -v PID");
+      system("kill -9 $proc");
+    }
+  }
+}
 
-# 
+
+#system("$pythia &");
+#system("$analysis");
+
+
+# clean up...
 unlink($pipename);
 
-# # now add some information to beginning of outfile
-# $outres  = "# $this_prog\n";
-# $outres .= "# $command\n";
-# 
-# open (OUT, ">$outfile") || die "Failed to open $outfile for rewriting";
-# print OUT $outres;
-# 
-# open(IN, "<$outfile.tmp") || die "Failed to open $outfile.tmp for reading";
-# while ($line = <IN>) {print OUT $line}
-# close(IN);
-# close OUT;
-# system("rm $outfile.tmp");
