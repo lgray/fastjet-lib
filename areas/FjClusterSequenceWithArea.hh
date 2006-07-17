@@ -198,7 +198,7 @@ template<class L> void FjClusterSequenceWithArea::_initialise
 
   if (writeout_combinations) {
     cout << "# Printing particles including ghosts\n";
-    for (size_t j = 0; j < _jets.size(); j++) {
+    for (unsigned j = 0; j < _jets.size(); j++) {
       printf("%5u %20.13f %20.13f %20.13e\n",
 	       j,_jets[j].rap(),_jets[j].phi(),_jets[j].kt2());
     }
