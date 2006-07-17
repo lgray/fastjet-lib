@@ -3,7 +3,11 @@ ChangeLog for fastjet-release directory
 
 2006-07-17  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+	* In FjJetDefinition.hh renamed _R -> _Rparam (single letter
+	  with underscore caused problems under g++3.3)
+	
 	* Added results and associated files for the ttbar analysis.
+
 	
 2006-07-15  Gavin Salam  <salam@lpthe.jussieu.fr> 
 

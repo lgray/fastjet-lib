@@ -71,6 +71,12 @@ enum FjJetFinder {
 /// clusterer
 class FjJetDefinition {
   
+  
+private:
+  FjJetFinder _jet_finder;
+  double      _Rparam    ;
+  FjStrategy  _strategy  ;
+
 public:
 
   /// constructor that to fully specify a jet-definition (together
@@ -80,19 +86,15 @@ public:
   FjJetDefinition(FjJetFinder jet_finder = kt_algorithm, 
 		  double R = 1.0, 
 		  FjStrategy strategy = Best) :
-    _jet_finder(jet_finder), _R(R), _strategy(strategy) {};
+    _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
+};
 
 
   // return information about the definition...
   FjJetFinder jet_finder  () const {return _jet_finder  ;}; 
-  double      R           () const {return _R           ;};
+  double      R           () const {return _Rparam      ;};
   FjStrategy  strategy    () const {return _strategy    ;};
 
-  
-private:
-  FjJetFinder _jet_finder;
-  double      _R         ;
-  FjStrategy  _strategy  ;
 };
 
 #endif // __FJJETDEFINITION_H_
