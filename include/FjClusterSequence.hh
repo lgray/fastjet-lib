@@ -140,7 +140,7 @@ class FjClusterSequence {
 //  /// things related to choice of algorithm
 //  enum FjJetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
 //
-private:
+protected:
   static FjJetFinder _default_jet_finder;
 
 public:
