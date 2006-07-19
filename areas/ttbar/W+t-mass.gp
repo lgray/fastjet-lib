@@ -35,8 +35,8 @@ plot 'highlumi_kt_r0.4' \
     ''  u 1:(above($1,135,$5))    w st lt 2 lw 2 t  '',\
     ''  u 1:(below($1,115,$12))   w st lt 3 lw 2 t  'k_t, pileup',\
     ''  u 1:(above($1,135,$13))   w st lt 3 lw 2 t  '',\
-    ''  u 1:(below($1,115,$16))   w st lt 1 lw 2 t  'k_t, pileup, corrected',\
-    ''  u 1:(above($1,135,$17))   w st lt 1 lw 2 t  ''
+    ''  u 1:(below($1,115,$16))   w st lt -1 lw 3 t  'k_t, pileup, corrected',\
+    ''  u 1:(above($1,135,$17))   w st lt -1 lw 3 t  ''
 `gnupr W+t-mass-kt.eps col`
 
 plot 'highlumi_cam_r0.4' \
@@ -44,6 +44,6 @@ plot 'highlumi_cam_r0.4' \
     ''  u 1:(above($1,135,$5))    w st lt 2 lw 2 t  '',\
     ''  u 1:(below($1,115,$12))   w st lt 3 lw 2 t  'cam, pileup',\
     ''  u 1:(above($1,135,$13))   w st lt 3 lw 2 t  '',\
-    ''  u 1:(below($1,115,$16))   w st lt 1 lw 2 t  'cam, pileup, corrected',\
-    ''  u 1:(above($1,135,$17))   w st lt 1 lw 2 t  ''
+    ''  u 1:(below($1,115,$16))   w st lt -1 lw 3 t  'cam, pileup, corrected',\
+    ''  u 1:(above($1,135,$17))   w st lt -1 lw 3 t  ''
 `gnupr W+t-mass-cam.eps col`
