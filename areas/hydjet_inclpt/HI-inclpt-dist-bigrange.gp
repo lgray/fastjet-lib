@@ -40,16 +40,16 @@ rescalehard=0.157
 rescaleHI=0.135
 
 
-plot 'incplt_justhard_nhsel4_r0.4' u 1:(justbelow($4*90,$1,92)) w st lw 2 t 'scaled pp'
-replot 'incplt_justhard_ptminhard50_nhsel4_r0.4' u 1:(justabove($4*rescalehard,$1,70)) w st lw 2 lt 1 t ''
+plot 'incplt_justhard_nhsel4_r0.4' u 1:(justbelow($4*90,$1,92)) w st lw 2 lt 2 t 'scaled pp'
+replot 'incplt_justhard_ptminhard50_nhsel4_r0.4' u 1:(justabove($4*rescalehard,$1,70)) w st lw 2 lt 2 t ''
 
 #replot 'incplt_justhard_nhsel3_r0.4' u 2:(justbelow($4*90,$1,92))
 #replot 'incplt_justhard_ptminhard50_nhsel3_r0.4' u 2:(justabove($4*rescalehard,$1,70))
 
-replot 'incplt_nhsel2_r0.4'        u 1:($7)    w st lw 2 lt 2 t 'raw Pb-Pb'
-#replot 'incplt_nhsel2_r0.4'        u 1:($9)    w st lw 2 lt 3  t 'Pb-Pb with subtraction'
-replot 'incplt_nhsel2_r0.4'        u 1:(justbelow($9,$1,110))    w st lw 2 lt 3  t 'Pb-Pb with subtraction'
-replot 'incplt_ptminhard50_nhsel2_r0.4'        u 1:(justabove($9*rescaleHI,$1,80))    w st lw 2 lt 3 t ''
+replot 'incplt_nhsel2_r0.4'        u 1:($7)    w st lw 2 lt 3 t 'raw Pb-Pb'
+#replot 'incplt_nhsel2_r0.4'        u 1:($9)    w st lw 2 lt 55 t 'Pb-Pb with subtraction'
+replot 'incplt_nhsel2_r0.4'        u 1:(justbelow($9,$1,110))    w st lw 3 lt -1 t 'Pb-Pb with subtraction'
+replot 'incplt_ptminhard50_nhsel2_r0.4'        u 1:(justabove($9*rescaleHI,$1,80))    w st lw 3 lt -1 t ''
 
 #replot 'incplt_xcl_ptminhard50_nhsel2_r0.4'        u 1:(justabove($9*rescaleHI,$1,80))    w st lw 2 lt 4 t ''
 #replot 'incplt_xcl_ptminhard50_nhsel2_r0.4'        u 1:(justabove($11*rescaleHI,$1,80))    w st lw 2 lt 5 t ''

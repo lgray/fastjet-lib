@@ -29,6 +29,6 @@ set ylabel '1/n_{coll} d n_{jets} / d P_t'
 set format y "10^{%T}"
 
 
-plot 'incplt_justhard_nhsel4_r0.4' u 1:($4*90) w st lw 2 t 'scaled pp'
-replot 'incplt_nhsel2_r0.4'        u 1:($7)    w st lw 2 t 'raw Pb-Pb'
-replot 'incplt_nhsel2_r0.4'        u 1:($9)    w st lw 2 t 'Pb-Pb with subtraction'
+plot 'incplt_justhard_nhsel4_r0.4' u 1:($4*90) w st lt 2 lw 2 t 'scaled pp'
+replot 'incplt_nhsel2_r0.4'        u 1:($7)    w st lt 3 lw 2 t 'raw Pb-Pb'
+replot 'incplt_nhsel2_r0.4'        u 1:($9)    w st lt -1 lw 3 t 'Pb-Pb with subtraction'
