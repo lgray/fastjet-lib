@@ -3,6 +3,11 @@ ChangeLog for fastjet-release directory
 
 2006-07-17  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+	* added area-plots/midpoint-zmass-profile-N1947.eps to see what
+	  cone timings are like...
+	
+2006-07-17  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
 	* In FjJetDefinition.hh renamed _R -> _Rparam (single letter
 	  with underscore caused problems under g++3.3)
 	

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 $iseqlo=0;
-$nseq=10;
+$nseq=20;
 
 $r=0.4;
 
@@ -16,7 +16,14 @@ for ($iseq=$iseqlo; $iseq < $iseqlo+$nseq; $iseq++) {
 
   ### TEMPORARY -- THIS ONE HAS A DIFFERENT NAME BECAUSE WE HAD JUST 
   ### INTRODUCED A NEW OUTPUT FORMAT
-  $command = "submitjob.pl BEST ./run-mass-test.pl -nev 50000 -out hydjet_inclpt/incplt_xcl_ptminhard50_nhsel2_r".$r."_iseq$iseqformat -r $r -nhsel 2 -ptmin 10 -ptminhard 50 -ptmaxhard -1 -freq 100 -iseq $iseq";
+  #$command = "submitjob.pl BEST ./run-mass-test.pl -nev 50000 -out hydjet_inclpt/incplt_xcl_ptminhard50_nhsel2_r".$r."_iseq$iseqformat -r $r -nhsel 2 -ptmin 10 -ptminhard 50 -ptmaxhard -1 -freq 100 -iseq $iseq";
+
+  $command = "submitjob.pl BEST ./run-mass-test.pl -nev 50000 -out hydjet_inclpt/incplt_xcl_nhsel1_r".$r."_iseq$iseqformat -r $r -nhsel 1 -ptmin 10 -ptminhard 10 -ptmaxhard -1 -freq 100 -iseq $iseq";
+
+  #print $command."\n";
+  system("$command");
+
+  $command = "submitjob.pl BEST ./run-mass-test.pl -nev 50000 -out hydjet_inclpt/incplt_xcl_ptminhard50_nhsel1_r".$r."_iseq$iseqformat -r $r -nhsel 1 -ptmin 10 -ptminhard 50 -ptmaxhard -1 -freq 100 -iseq $iseq";
 
   #print $command."\n";
   system("$command");

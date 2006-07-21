@@ -10,6 +10,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE) -I$(CDFCONEDIR)
 #LDFLAGS += -L../lib -lfastjet
 LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
+#LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs -ltcmalloc -lprofiler
 # get google malloc for debugging purposes...
 #LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
 #LDFLAGS += -L$(HOME)/software/local/lib 
