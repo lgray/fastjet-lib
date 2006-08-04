@@ -36,6 +36,8 @@
 /// the various options for the algorithmic strategy to adopt in
 /// clustering events with kt and cambridge style algorithms.
 enum FjStrategy {
+  /// experimental ...
+  N2MinHeapTiled   = -4, 
   /// fastest from about 50..10^4
   N2Tiled     = -3, 
   /// legacy
@@ -51,7 +53,12 @@ enum FjStrategy {
   /// legacy N ln N using 3pi coverage of cylinder
   NlnN3pi     =  3, 
   /// legacy N ln N using 4pi coverage of cylinder
-  NlnN4pi     =  4 
+  NlnN4pi     =  4,
+  /// Chan's closest pair method (in a variant with 4pi coverage),
+  /// for use exclusively with the Cambridge algorithm
+  NlnNCam4pi   = 14,
+  NlnNCam2pi2R = 13,
+  NlnNCam2piMultD = 12
 };
 
 

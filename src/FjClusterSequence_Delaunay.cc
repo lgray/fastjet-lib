@@ -138,19 +138,21 @@ void FjClusterSequence::_delaunay_cluster () {
     // The action on the nearest-neighbour structures takes place
     // later (only if at least 2 jets are around).
     if (! recombine_with_beam) {
-      // merge the two jets, add new jet, remove old ones
-      _jets.push_back(_jets[jet_i] + _jets[jet_j]);
-
-      int nn = _jets.size()-1;
-      _jets[nn].set_cluster_hist_index(n+i);
-      
-      // get corresponding indices in history structure
-      int hist_i = _jets[jet_i].cluster_hist_index();
-      int hist_j = _jets[jet_j].cluster_hist_index();
-
-
-      _add_step_to_history(n+i,min(hist_i,hist_j), max(hist_i,hist_j),
-			      _jets.size()-1, SmallestDij);
+      int nn; // will be index of new jet
+      _do_ij_recombination_step(jet_i, jet_j, SmallestDij, nn);
+      //// merge the two jets, add new jet, remove old ones
+      //_jets.push_back(_jets[jet_i] + _jets[jet_j]);
+      //
+      //int nn = _jets.size()-1;
+      //_jets[nn].set_cluster_hist_index(n+i);
+      //
+      //// get corresponding indices in history structure
+      //int hist_i = _jets[jet_i].cluster_hist_index();
+      //int hist_j = _jets[jet_j].cluster_hist_index();
+      //
+      //
+      //_add_step_to_history(n+i,min(hist_i,hist_j), max(hist_i,hist_j),
+      //		      _jets.size()-1, SmallestDij);
 
       // add new point to points vector
       EtaPhi newpoint(_jets[nn].rap(), _jets[nn].phi());
@@ -158,8 +160,9 @@ void FjClusterSequence::_delaunay_cluster () {
       points.push_back(newpoint);
     } else {
       // recombine the jet with the beam
-      _add_step_to_history(n+i,_jets[jet_i].cluster_hist_index(),BeamJet,
-			   Invalid, SmallestDij);
+      _do_iB_recombination_step(jet_i, SmallestDij);
+      //_add_step_to_history(n+i,_jets[jet_i].cluster_hist_index(),BeamJet,
+      //			   Invalid, SmallestDij);
     }
 
     // exit the loop because we do not want to look for nearest neighbours

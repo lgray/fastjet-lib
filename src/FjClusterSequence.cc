@@ -97,6 +97,16 @@ void FjClusterSequence::_initialise_and_run (
     this->_tiled_N2_cluster();
   } else if (_strategy == N2Plain) {
     this->_simple_N2_cluster();
+#ifdef CP2DCHAN
+  } else if (_strategy == N2MinHeapTiled) {
+    this->_minheap_faster_tiled_N2_cluster();
+  } else if (_strategy == NlnNCam4pi) {
+    this->_CP2DChan_cluster();
+  } else if (_strategy == NlnNCam2pi2R) {
+    this->_CP2DChan_cluster_2pi2R();
+  } else if (_strategy == NlnNCam2piMultD) {
+    this->_CP2DChan_cluster_2piMultD();
+#endif //CP2DCHAN
   } else {
     ostringstream err;
     err << "Unrecognised value for strategy: "<<_strategy;
@@ -116,7 +126,7 @@ void FjClusterSequence::_print_banner() {
   _first_time = false;
   
   cout << "#---------------------------------------------------------------------\n";
-  cout << "#                      FastJet release 1.0   			 \n";
+  cout << "#                      FastJet release 1.1   			 \n";
   cout << "#            Written by Matteo Cacciari and Gavin Salam		 \n"; 
   cout << "#            http://www.lpthe.jussieu.fr/~salam/fastjet		 \n"; 
   cout << "#								      	 \n";
@@ -125,6 +135,10 @@ void FjClusterSequence::_print_banner() {
 #ifndef DROP_CGAL
   cout << "# This package makes use of the CGAL library: http://www.cgal.org/    \n";
 #endif  // DROP_CGAL
+#ifdef CP2DCHAN
+  cout << "# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th     \n";
+  cout << "# ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002\n";
+#endif // CP2DCHAN
   cout << "#---------------------------------------------------------------------\n";
 }
 
@@ -144,10 +158,18 @@ string FjClusterSequence::strategy_string ()  const {
     strategy = "N2Plain"; break;
   case N2Tiled:
     strategy = "N2Tiled"; break;
+  case N2MinHeapTiled:
+    strategy = "N2MinHeapTiled"; break;
   case N2PoorTiled:
     strategy = "N2PoorTiled"; break;
   case N3Dumb:
     strategy = "N3Dumb"; break;
+  case NlnNCam4pi:
+    strategy = "NlnNCam4pi"; break;
+  case NlnNCam2pi2R:
+    strategy = "NlnNCam2pi2R"; break;
+  case NlnNCam2piMultD:
+    strategy = "NlnNCam2piMultD"; break;
   default:
     strategy = "Unrecognized";
   }
@@ -478,4 +500,49 @@ void FjClusterSequence::_extract_tree_parents(
     unique_tree.push_back(position);
     extracted[position] = true;
   }
+}
+
+
+//======================================================================
+/// carries out the bookkeeping associated with the step of recombining
+/// jet_i and jet_j (assuming a distance dij) and returns the index
+/// of the recombined jet, newjet_k.
+void FjClusterSequence::_do_ij_recombination_step(
+                               const int & jet_i, const int & jet_j, 
+			       const double & dij, 
+			       int & newjet_k) {
+
+  // create the new jet
+  _jets.push_back(_jets[jet_i] + _jets[jet_j]);
+
+  // get its index
+  newjet_k = _jets.size()-1;
+
+  // get history index
+  int newstep_k = _history.size();
+  // and provide jet with the info
+  _jets[newjet_k].set_cluster_hist_index(newstep_k);
+
+  // finally sort out the history 
+  int hist_i = _jets[jet_i].cluster_hist_index();
+  int hist_j = _jets[jet_j].cluster_hist_index();
+
+  _add_step_to_history(newstep_k, min(hist_i, hist_j), max(hist_i,hist_j),
+		       newjet_k, dij);
+
+}
+
+
+//======================================================================
+/// carries out the bookkeeping associated with the step of recombining
+/// jet_i with the beam
+void FjClusterSequence::_do_iB_recombination_step(
+				  const int & jet_i, const double & diB) {
+  // get history index
+  int newstep_k = _history.size();
+
+  // recombine the jet with the beam
+  _add_step_to_history(newstep_k,_jets[jet_i].cluster_hist_index(),BeamJet,
+		       Invalid, diB);
+
 }

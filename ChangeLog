@@ -1,6 +1,30 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-04  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
+	* added routines for clustering the Cambridge algorithm based on
+	  Chan's closest pairs (CP) method. Currently they require that one
+	  include Chan's method via libCP2DChan.a -- things will be merged
+	  fully at a later date. The new strategies are:
+
+	    NlnNCam4pi
+	    NlnNCam2pi2R
+	    NlnNCam2piMultD
+
+          For 10^4 particles, on a dual core P4D with 2MB cache,
+	  NlnNCam2piMultD seems to be about 2.5 times faster than NlnN
+	  (and 1.7 times faster than N2MinHeapTiled described below).	
+
+	* added a version of the tiled N2 algorithm that makes use of the
+	  MinHeap developed for the CP work:
+
+	    N2MinHeapTiled
+ 
+	  On a dual-core P4D with 2MB cache, it seems to be the fastest
+	  general option for 400 \lesssim N \lesssim 16000.
+	
+	
 2006-07-17  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* added area-plots/midpoint-zmass-profile-N1947.eps to see what

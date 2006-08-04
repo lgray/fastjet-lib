@@ -67,6 +67,9 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
+///   -unique_write writes out the sequence of dij's according to the
+///                 "unique_history_order" (useful for verifying correctness).
+///
 ///   -cam          switch to preliminary (inclusive only) implementation of
 ///                 Cambridge algorithm
 ///
@@ -96,6 +99,7 @@ int main (int argc, char ** argv) {
   int  repeat  = cmdline.int_val("-repeat",1);
   int  combine = cmdline.int_val("-combine",1);
   bool write   = cmdline.present("-write");
+  bool unique_write = cmdline.present("-unique_write");
   bool hydjet  = cmdline.present("-hydjet");
   double ktR   = cmdline.double_val("-r",1.0);
   double inclkt = cmdline.double_val("-incl",-1.0);
@@ -110,7 +114,7 @@ int main (int argc, char ** argv) {
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(FjClusterSequence::cambridge_algorithm);}
+  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options were not recognized"<<endl; 
@@ -165,8 +169,8 @@ int main (int argc, char ** argv) {
     double kt = 1e-1;
     for (int iphi = 0; iphi<nphi; iphi++) {
       for (int ieta = -neta; ieta<neta+1; ieta++) {
-	double phi = (iphi+0.5) * (twopi/nphi) + rand()*0.00/RAND_MAX;
-	double eta = ieta * (10.0/neta)  + rand()*0.00/RAND_MAX;
+	double phi = (iphi+0.5) * (twopi/nphi) + rand()*0.001/RAND_MAX;
+	double eta = ieta * (10.0/neta)  + rand()*0.001/RAND_MAX;
 	kt = 0.0000001*(1+rand()*0.1/RAND_MAX);
 	double pminus = kt*exp(-eta);
 	double pplus  = kt*exp(+eta);
@@ -222,6 +226,23 @@ int main (int argc, char ** argv) {
       }
     }
     
+    // useful for testing that recombination sequences are unique
+    if (unique_write) {
+      vector<int> unique_history = clust_seq.unique_history_order();
+      // construct the inverse of the above mapping
+      vector<int> inv_unique_history(clust_seq.history().size());
+      for (unsigned int i = 0; i < unique_history.size(); i++) {
+	inv_unique_history[unique_history[i]] = i;}
+
+      for (unsigned int i = 0; i < unique_history.size(); i++) {
+	FjClusterSequence::history_element el = 
+	  clust_seq.history()[unique_history[i]];
+	int uhp1 = el.parent1>=0 ? inv_unique_history[el.parent1] : el.parent1;
+	int uhp2 = el.parent2>=0 ? inv_unique_history[el.parent2] : el.parent2;
+	printf("%7d u %15.8e %7d u %7d u\n",i,el.dij,uhp1, uhp2);
+      }
+    }
+
   } // irepeat
 
   } // iev

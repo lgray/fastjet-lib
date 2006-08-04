@@ -8,6 +8,8 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
+LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+
 SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc CmdLine.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 

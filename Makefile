@@ -7,6 +7,11 @@
 USE_CGAL = yes
 #USE_CGAL = no
 
+# the following affects whether we make Chan's method available
+# for the Cambridge algorithm
+USE_CP2DCHAN = yes
+#USE_CP2DCHAN = no
+
 # uncomment this to remove all assertions (mainly from CGAL) -- this
 # increaes the speed by about 10% (but leaves out many safety checks
 # that are useful if you plan on doing anything "unusual")
@@ -17,6 +22,10 @@ USE_CGAL = yes
 CXXFLAGS += -g
 
 #CGAL_MAKEFILE = .../some/path/makefile...
+
+# flags that will be needed for linking from examples/
+LDFLAGS+=-L../lib -lfastjet
+
 
 # Things needed when compiling with ktjet -- adjust to correspond
 # to your own setup (remember to "make double" the KtJet library)
@@ -54,6 +63,14 @@ else
   LIBPATH += $(CGAL_LIBPATH)
   LDFLAGS += $(LONG_NAME_PROBLEM_LDFLAGS) $(CGAL_LDFLAGS)
   CXX = $(CGAL_CXX)   #NB auto makefile stuff will fail without g++
+endif
+
+ifeq ($(USE_CP2DCHAN),yes)
+  INCLUDE+=-DCP2DCHAN -I../../chan
+  #INCLUDE+=-DCP2DCHAN -DTRACK_DEPTH -I../../chan
+  LIBPATH+=
+  LDFLAGS+=-L../../chan -lCP2DChan
+else
 endif
 
 

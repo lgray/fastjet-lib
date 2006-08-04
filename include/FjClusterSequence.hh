@@ -193,7 +193,7 @@ public:
   const std::vector<history_element> & history() const;
 
   /// returns the number of particles that were provided to the
-  /// clustering algorithm (helps the user finr their way around the
+  /// clustering algorithm (helps the user find their way around the
   /// history and jets objects if they weren't paying attention
   /// beforehand).
   unsigned int n_particles() const;
@@ -258,10 +258,25 @@ public:
   void _tiled_N2_cluster ();
   void _faster_tiled_N2_cluster ();
 
+#ifdef CP2DCHAN
+  void _minheap_faster_tiled_N2_cluster();
+  void _CP2DChan_cluster();
+  void _CP2DChan_cluster_2pi2R ();
+  void _CP2DChan_cluster_2piMultD ();
+  void _do_Cambridge_inclusive_jets();
+  void _CP2DChan_limited_cluster(double D);
+#endif // CP2DCHAN
+
   void _fill_initial_history();
   void _add_step_to_history(const int & step_number, const int & parent1, 
 			       const int & parent2, const int & jetp_index,
 			       const double & dij);
+
+  void _do_ij_recombination_step(const int & jet_i, const int & jet_j, 
+				 const double & dij, 
+				 int & newjet_k);
+
+  void _do_iB_recombination_step(const int & jet_i, const double & diB);
 
   /// internal routine associated with the construction of the unique
   /// history order (following children in the tree)
@@ -302,10 +317,18 @@ public:
   };
   /// structure analogous to BriefJet, but with the extra information
   /// needed for dealing with tiles
-  struct TiledJet {
+  class TiledJet {
+  public:
     double     eta, phi, kt2, NN_dist;
     TiledJet * NN, *previous, * next; 
     int        _jets_index, tile_index, diJ_posn;
+    // routines that are useful in the minheap version of tiled
+    // clustering ("misuse" the otherwise unused diJ_posn, so as
+    // to indicate whether jets need to have their minheap entries
+    // updated).
+    inline void label_minheap_update_needed() {diJ_posn = 1;};
+    inline void label_minheap_update_done()   {diJ_posn = 0;};
+    inline bool minheap_update_needed() const {return diJ_posn==1;};
   };
 
   //-- some of the functions that follow are templates and will work

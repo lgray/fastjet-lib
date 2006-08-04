@@ -8,7 +8,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc FjClusterSequence.cc FjPseudoJet.cc FjClusterSequence_N2.cc FjClusterSequence_TiledN2.cc FjClusterSequence_Delaunay.cc FjClusterSequence_DumbN3.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc FjClusterSequence.cc FjPseudoJet.cc FjClusterSequence_N2.cc FjClusterSequence_TiledN2.cc FjClusterSequence_Delaunay.cc FjClusterSequence_DumbN3.cc FjClusterSequence_CP2DChan.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
