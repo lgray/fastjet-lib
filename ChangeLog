@@ -4,26 +4,44 @@ ChangeLog for fastjet-release directory
 2006-08-04  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* added routines for clustering the Cambridge algorithm based on
-	  Chan's closest pairs (CP) method. Currently they require that one
-	  include Chan's method via libCP2DChan.a -- things will be merged
-	  fully at a later date. The new strategies are:
+	  Chan's closest pairs (CP) method. The new strategies are:
 
-	    NlnNCam4pi
-	    NlnNCam2pi2R
-	    NlnNCam2piMultD
-
+	    NlnNCam4pi          // all points duplicated
+	    NlnNCam2pi2R        // points within R of 0,2pi duplicated
+	    NlnNCam2piMultD     // two steps of clustering to reduce duplctn.
+                                   [fastest]
+	
           For 10^4 particles, on a dual core P4D with 2MB cache,
 	  NlnNCam2piMultD seems to be about 2.5 times faster than NlnN
 	  (and 1.7 times faster than N2MinHeapTiled described below).	
 
+	  As N grows larger, the advantages of the NlnNCam routines seem
+	  to disappear, presumably because we end up outside limits of
+	  cache. (And on machines with a small cache, e.g. anubis with
+	  512KB, the advantage of the Cambridge-specific routines seem to
+	  disappear.	
+	
 	* added a version of the tiled N2 algorithm that makes use of the
 	  MinHeap developed for the CP work:
 
 	    N2MinHeapTiled
  
 	  On a dual-core P4D with 2MB cache, it seems to be the fastest
-	  general option for 400 \lesssim N \lesssim 16000.
+	  general option for 400 \lesssim N \lesssim 16000. 
+
+	* the above options currently all require the CP2DChan library
+	  which is in cvs in ../chan/ -- compilation there uses scons:
+
+	        scons libCP2DChan.a
+
+          (was testing out scons as an alternative to make...). At some
+	  point, we should probably merge that codebase into ours.
 	
+	* added FjClusterSequence::_do_ij_recombination_step and 
+	  _do_iB_recombination_step so as to avoid rampant duplication of
+	  the associated code. Not all clusterings have switched over to
+	  this yet...
+
 	
 2006-07-17  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
