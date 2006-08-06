@@ -4,6 +4,14 @@ ChangeLog for fastjet-release directory
 
 	* switched remaining jet-finding strategies over to use of
 	  "_do_XY_recombination_step".
+
+	* updated thresholds for "Best" to take into account the
+	  N2MinHeapTiled version (though perhaps this should wait until
+	  we've incorporated MinHeap into our "standard" suite...	
+
+	  Have not updated things to deal with the Cambridge algorithm --
+	  not sure what the best option would be here, given that Chan's
+	  approach is so cache dependent...
 	
 2006-08-04  Gavin Salam  <salam@lpthe.jussieu.fr> 
 

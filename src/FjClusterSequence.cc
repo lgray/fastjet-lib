@@ -59,6 +59,9 @@ void FjClusterSequence::_initialise_and_run (
   _print_banner();
 
   if (_jets.size() == 0) {throw FjError("Cannot run jet-finder on empty event");}
+
+  // make a local copy of the jet definition (for future use?)
+  _jet_def = jet_def;
   
   _writeout_combinations = writeout_combinations;
   _jet_finder = jet_def.jet_finder();
@@ -73,11 +76,14 @@ void FjClusterSequence::_initialise_and_run (
   if (_strategy == Best) {
     int N = _jets.size();
 #ifndef DROP_CGAL
-    if (N > 9000/_Rparam) { // empirical observation of how it scales with R
-      _strategy = NlnN; }   // see GPS CCN27-57
-    else
+    if (N > 14500/_Rparam) { // empirical observation of how it scales with R
+      _strategy = NlnN; }    // see GPS CCN27-57 (Numbers have changed since 
+    else                     // introducing N2MinHeapTiled; scaling is approx.)
 #endif  // DROP_CGAL
-      if (N > 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
+      if (N > 450) {
+      _strategy = N2MinHeapTiled;
+    }
+    else if (N > 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
       _strategy = N2Tiled;
     } else {
       _strategy = N2Plain;

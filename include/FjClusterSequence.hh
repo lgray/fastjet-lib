@@ -140,8 +140,6 @@ class FjClusterSequence {
 //  /// things related to choice of algorithm
 //  enum FjJetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
 //
-protected:
-  static FjJetFinder _default_jet_finder;
 
 public:
   static void set_jet_finder (FjJetFinder jet_finder) {_default_jet_finder = jet_finder;};
@@ -217,7 +215,9 @@ public:
   std::vector<int> unique_history_order() const;
 
 
- protected:
+protected:
+  static FjJetFinder _default_jet_finder;
+  FjJetDefinition _jet_def;
 
   /// This is the routine that will do all the initialisation and
   /// then run the clustering (may be called by various constructors).
