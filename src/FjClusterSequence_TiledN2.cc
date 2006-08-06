@@ -347,18 +347,22 @@ void FjClusterSequence::_tiled_N2_cluster() {
       // has a future!
       if (jetA < jetB) {swap(jetA,jetB);}
 
-      // get the two history indices
-      int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      int hist_b = _jets[jetB->_jets_index].cluster_hist_index();
-      // create the recombined jet
-      _jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
-      int nn = _jets.size() - 1;
-      _jets[nn].set_cluster_hist_index(history_location);
-      // update history
-      //cout <<n-1<<" "<<jetA-head<<" "<<jetB-head<<"; ";
-      _add_step_to_history(history_location, 
-			   min(hist_a,hist_b),max(hist_a,hist_b),
-			   nn, diJ_min);
+      int nn; // new jet index
+      _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);
+
+      //OBS// get the two history indices
+      //OBSint hist_a = _jets[jetA->_jets_index].cluster_hist_index();
+      //OBSint hist_b = _jets[jetB->_jets_index].cluster_hist_index();
+      //OBS// create the recombined jet
+      //OBS_jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
+      //OBSint nn = _jets.size() - 1;
+      //OBS_jets[nn].set_cluster_hist_index(history_location);
+      //OBS// update history
+      //OBS//cout <<n-1<<" "<<jetA-head<<" "<<jetB-head<<"; ";
+      //OBS_add_step_to_history(history_location, 
+      //OBS  		   min(hist_a,hist_b),max(hist_a,hist_b),
+      //OBS			   nn, diJ_min);
+
       // what was jetB will now become the new jet
       _bj_remove_from_tiles(jetA);
       oldB = * jetB;  // take a copy because we will need it...
@@ -366,10 +370,12 @@ void FjClusterSequence::_tiled_N2_cluster() {
       _tj_set_jetinfo(jetB, nn); // also registers the jet in the tiling
     } else {
       // jet-beam recombination
-      // get the hist_index
-      int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      //cout <<n-1<<" "<<jetA-head<<" "<<-1<<"; ";
-      _add_step_to_history(history_location,hist_a,BeamJet,Invalid,diJ_min); 
+      _do_iB_recombination_step(jetA->_jets_index, diJ_min);
+	    
+      //OBS// get the hist_index
+      //OBSint hist_a = _jets[jetA->_jets_index].cluster_hist_index();
+      //OBS//cout <<n-1<<" "<<jetA-head<<" "<<-1<<"; ";
+      //OBS_add_step_to_history(history_location,hist_a,BeamJet,Invalid,diJ_min); 
       _bj_remove_from_tiles(jetA);
     }
 
@@ -599,18 +605,18 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
       int nn; // new jet index
       _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);
       
-      //// get the two history indices
-      //int ihstry_a = _jets[jetA->_jets_index].cluster_hist_index();
-      //int ihstry_b = _jets[jetB->_jets_index].cluster_hist_index();
-      //// create the recombined jet
-      //_jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
-      //int nn = _jets.size() - 1;
-      //_jets[nn].set_cluster_hist_index(history_location);
-      //// update history
-      ////cout <<n-1<<" "<<jetA-head<<" "<<jetB-head<<"; ";
-      //_add_step_to_history(history_location, 
-      //  		   min(ihstry_a,ihstry_b),max(ihstry_a,ihstry_b),
-      //			   nn, diJ_min);
+      //OBS// get the two history indices
+      //OBSint ihstry_a = _jets[jetA->_jets_index].cluster_hist_index();
+      //OBSint ihstry_b = _jets[jetB->_jets_index].cluster_hist_index();
+      //OBS// create the recombined jet
+      //OBS_jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
+      //OBSint nn = _jets.size() - 1;
+      //OBS_jets[nn].set_cluster_hist_index(history_location);
+      //OBS// update history
+      //OBS//cout <<n-1<<" "<<jetA-head<<" "<<jetB-head<<"; ";
+      //OBS_add_step_to_history(history_location, 
+      //OBS  		   min(ihstry_a,ihstry_b),max(ihstry_a,ihstry_b),
+      //OBS			   nn, diJ_min);
       // what was jetB will now become the new jet
       _bj_remove_from_tiles(jetA);
       oldB = * jetB;  // take a copy because we will need it...
@@ -621,9 +627,9 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
       // jet-beam recombination
       // get the hist_index
       _do_iB_recombination_step(jetA->_jets_index, diJ_min);
-      //int ihstry_a = _jets[jetA->_jets_index].cluster_hist_index();
-      ////cout <<n-1<<" "<<jetA-head<<" "<<-1<<"; ";
-      //_add_step_to_history(history_location,ihstry_a,BeamJet,Invalid,diJ_min); 
+      //OBSint ihstry_a = _jets[jetA->_jets_index].cluster_hist_index();
+      //OBS//cout <<n-1<<" "<<jetA-head<<" "<<-1<<"; ";
+      //OBS_add_step_to_history(history_location,ihstry_a,BeamJet,Invalid,diJ_min); 
       _bj_remove_from_tiles(jetA);
     }
 

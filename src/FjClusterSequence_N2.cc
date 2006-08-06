@@ -100,24 +100,28 @@ void FjClusterSequence::_simple_N2_cluster() {
       // has a future!
       if (jetA < jetB) {swap(jetA,jetB);}
 
-      // get the two history indices
-      int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      int hist_b = _jets[jetB->_jets_index].cluster_hist_index();
-      // create the recombined jet
-      _jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
-      int nn = _jets.size() - 1;
-      _jets[nn].set_cluster_hist_index(history_location);
-      // update history
-      _add_step_to_history(history_location, 
-			   min(hist_a,hist_b),max(hist_a,hist_b),
-			   nn, diJ_min);
+      int nn; // new jet index
+      _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);
+
+      //OBS // get the two history indices
+      //OBS int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
+      //OBS int hist_b = _jets[jetB->_jets_index].cluster_hist_index();
+      //OBS // create the recombined jet
+      //OBS _jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
+      //OBS int nn = _jets.size() - 1;
+      //OBS _jets[nn].set_cluster_hist_index(history_location);
+      //OBS // update history
+      //OBS _add_step_to_history(history_location, 
+      //OBS   		   min(hist_a,hist_b),max(hist_a,hist_b),
+      //OBS 			   nn, diJ_min);
       // what was jetB will now become the new jet
       _bj_set_jetinfo(jetB, nn);
     } else {
       // jet-beam recombination
-      // get the hist_index
-      int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      _add_step_to_history(history_location,hist_a,BeamJet,Invalid,diJ_min); 
+      _do_iB_recombination_step(jetA->_jets_index, diJ_min);
+      //OBS // get the hist_index
+      //OBS int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
+      //OBS _add_step_to_history(history_location,hist_a,BeamJet,Invalid,diJ_min); 
     }
 
     // now update our nearest neighbour info and diJ table

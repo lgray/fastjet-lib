@@ -95,22 +95,35 @@ void FjClusterSequence::_really_dumb_cluster () {
     int newn = 2*jetsp.size() - n;
     if (jj >= 0) {
       // combine pair
-      _jets.push_back(*jetsp[ii] + *jetsp[jj]);
-      jetsp[ii] = &_jets[_jets.size()-1];
+      int nn; // new jet index
+      _do_ij_recombination_step(jetsp[ii]-&_jets[0], 
+				jetsp[jj]-&_jets[0], ymin, nn);
+      
+      // sort out internal bookkeeping
+      jetsp[ii] = &_jets[nn];
       // have jj point to jet that was pointed at by n-1 
       // (since original jj is no longer current, so put n-1 into jj)
       jetsp[jj] = jetsp[n-1];
-
       indices[ii] = newn;
       indices[jj] = indices[n-1];
-      _add_step_to_history(newn,iiindex,
-			      jjindex_or_beam,_jets.size()-1,ymin);
+
+      //OBS_jets.push_back(*jetsp[ii] + *jetsp[jj]);
+      //OBSjetsp[ii] = &_jets[_jets.size()-1];
+      //OBS// have jj point to jet that was pointed at by n-1 
+      //OBS// (since original jj is no longer current, so put n-1 into jj)
+      //OBSjetsp[jj] = jetsp[n-1];
+      //OBS
+      //OBSindices[ii] = newn;
+      //OBSindices[jj] = indices[n-1];
+      //OBS_add_step_to_history(newn,iiindex,
+      //OBS			      jjindex_or_beam,_jets.size()-1,ymin);
     } else {
       // combine ii with beam
+      _do_iB_recombination_step(jetsp[ii]-&_jets[0], ymin);
       // put last jet (pointer) in place of ii (which has disappeared)
       jetsp[ii] = jetsp[n-1];
       indices[ii] = indices[n-1];
-      _add_step_to_history(newn,iiindex,jjindex_or_beam,Invalid, ymin);
+      //OBS_add_step_to_history(newn,iiindex,jjindex_or_beam,Invalid, ymin);
     }
   }
 

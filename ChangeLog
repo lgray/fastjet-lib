@@ -1,6 +1,10 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
+2006-08-04  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+	* switched remaining jet-finding strategies over to use of
+	  "_do_XY_recombination_step".
+	
 2006-08-04  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* added routines for clustering the Cambridge algorithm based on
