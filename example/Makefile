@@ -8,7 +8,9 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
-LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+ifeq ($(shell whoami),salam)
+  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+endif
 
 SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc CmdLine.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
@@ -50,7 +52,10 @@ depend:
 fastjet_example.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 fastjet_example.o: ../include/FjClusterSequence.hh
 fastjet_example.o: ../include/DynamicNearestNeighbours.hh
+fastjet_example.o: ../include/FjError.hh ../include/FjJetDefinition.hh
 fastjet_timing.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
 fastjet_timing.o: ../include/FjClusterSequence.hh
-fastjet_timing.o: ../include/DynamicNearestNeighbours.hh CmdLine.hh
+fastjet_timing.o: ../include/DynamicNearestNeighbours.hh
+fastjet_timing.o: ../include/FjError.hh ../include/FjJetDefinition.hh
+fastjet_timing.o: CmdLine.hh
 CmdLine.o: CmdLine.hh
