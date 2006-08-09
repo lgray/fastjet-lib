@@ -9,7 +9,7 @@ INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
 ifeq ($(shell whoami),salam)
-  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+#  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 endif
 
 SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc CmdLine.cc

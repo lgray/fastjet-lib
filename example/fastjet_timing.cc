@@ -114,7 +114,9 @@ int main (int argc, char ** argv) {
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
+  if (cmdline.present("-cam")) {
+    FjClusterSequence::set_jet_finder(cambridge_algorithm);
+  }
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options were not recognized"<<endl; 

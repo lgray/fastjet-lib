@@ -396,6 +396,8 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
   while (getline(input, line)) {
       //cout << line<<endl;
     istringstream linestream(line);
+    // take substrings to avoid problems when there are extra "pollution"
+    // characters (e.g. line-feed).
     if (line.substr(0,4) == "#END") {break;}
     if (line.substr(0,9) == "#SUBSTART") {
       // if more sub events follow, make copy of hard one here
