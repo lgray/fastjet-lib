@@ -48,9 +48,10 @@ void getjets () {
   lego->cd(1);
   gPad->SetTheta(40.549);
   gPad->SetPhi(110.101);
-  JetHist * jets = new JetHist("50GeV.res");
+//  JetHist * jets = new JetHist("50GeV.res");
+  JetHist * jets = new JetHist("50GeV+9minbias.res");
   jets->stack.Draw("lego1");
-  pl.DrawPaveLabel(x1,y1,x2,y2,"50GeV jets","brNDC");
+  pl.DrawPaveLabel(x1,y1,x2,y2,"50GeV jets + minbias","brNDC");
   
   lego->cd(2);
   gPad->SetTheta(40.549);
@@ -61,10 +62,12 @@ void getjets () {
   pl.DrawPaveLabel(x1,y1,x2,y2,"50GeV jets + ghosts","brNDC");
 
   lego->cd(3);
-  gPad->SetTheta(40.549);
-  gPad->SetPhi(110.101);
+//  gPad->SetTheta(40.549);
+  gPad->SetTheta(35);
+  gPad->SetPhi(160);
   //JetHist * jets = new JetHist("50GeV+10minbias.res");
-  JetHist * jets = new JetHist("50GeV+10minbias-ghosted.res");
+//  JetHist * jets = new JetHist("50GeV+10minbias-ghosted.res");
+  JetHist * jets = new JetHist("50GeV+9minbias.res");
   jets->stack.Draw("lego1 cyl");
   pl.DrawPaveLabel(x1,y1,x2,y2,"50GeV jets + minbias","brNDC");
 
