@@ -1,6 +1,7 @@
 // file: examples/Triangulation_2/Voronoi.C
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
 #include <CGAL/Boolean_set_operations_2.h>
 #include <CGAL/Gps_circle_segment_traits_2.h>
@@ -14,7 +15,10 @@
 #include <iterator>
 #include <cmath>
 
-struct Kernel : CGAL::Exact_predicates_inexact_constructions_kernel {};
+//struct Kernel : CGAL::Exact_predicates_inexact_constructions_kernel {};
+struct Kernel : CGAL::Exact_predicates_exact_constructions_kernel {};
+//typedef CGAL::Filtered_kernel< CGAL::Simple_cartesian<double> > Kernel;
+//typedef CGAL::Simple_cartesian<double> Kernel;
 
 typedef CGAL::Delaunay_triangulation_2<Kernel>  Triangulation;
 typedef Triangulation::Edge_iterator  Edge_iterator;
@@ -41,6 +45,10 @@ typedef std::list<Polygon_with_holes_2>            Pwh_list_2;
 const double twopi = 6.283185307179586476925286766559005768394;
 
 using namespace std;
+
+// allows us to have the same code regardless of whether we use
+// exact or inexact constructions...
+inline double to_double(double x) {return x;}
 
 //----------------------------------------------------------------------
 /// Construct a polygon from a circle.
@@ -112,7 +120,7 @@ template<class FP> Point to_point(const FP & funny_point) {
 ///
 /// It is a template so that we can use both vectors and points.
 template<class Obj> double to_theta(const Obj & obj) {
-  return atan2(obj.y(),obj.x());
+  return atan2(to_double(obj.y()),to_double(obj.x()));
 }
 
 //----------------------------------------------------------------------
@@ -122,7 +130,7 @@ template<class Obj> double to_theta(const Obj & obj) {
 ///
 /// It is a template so that we can use both vectors and points.
 template<class Obj> double triangle_area(const Obj& obj1, const Obj& obj2) {
-  return 0.5*(obj1.x()*obj2.y() - obj1.y()*obj2.x());
+  return to_double(0.5*(obj1.x()*obj2.y() - obj1.y()*obj2.x()));
 }
 
 
@@ -137,7 +145,7 @@ void gnuplot_output(ostream & ostr, const Polygon_2 & plgn) {
     if (it->is_linear()) {
       cout << it->source() << endl << it->target() << endl;
     } else {
-      cerr << "Circular arc" << endl;
+      //cerr << "Circular arc" << endl;
       Circle_2 circle = it->supporting_circle();
       Point circle_center = circle.center();
       Orientation orient = it->orientation();
@@ -151,7 +159,7 @@ void gnuplot_output(ostream & ostr, const Polygon_2 & plgn) {
       } else if (orient == CGAL::CLOCKWISE && end_theta > start_theta) {
 	start_theta += twopi;
       }
-      double radius = sqrt(circle.squared_radius());
+      double radius = sqrt(to_double(circle.squared_radius()));
       const int npoint = 20;
       for (int i = 0; i < npoint; i++) {
 	double theta = start_theta + i*(end_theta-start_theta)/npoint;
@@ -174,10 +182,10 @@ double polygon_area(const Polygon_2 & plgn) {
        it != plgn.curves_end(); it++) {
     double lcl_area;
     if (it->is_linear()) {
-      cout << it->source() << " -> " << it->target() << endl;
+      //cout << it->source() << " -> " << it->target() << endl;
       lcl_area = triangle_area(to_point(it->source()), to_point(it->target()));
     } else {
-      cerr << "Circular arc" << endl;
+      //cerr << "Circular arc" << endl;
       Circle_2 circle = it->supporting_circle();
       Point circle_center = circle.center();
       Orientation orient = it->orientation();
@@ -192,13 +200,13 @@ double polygon_area(const Polygon_2 & plgn) {
 	start_theta += twopi;
       }
       // area of circular pie slice
-      lcl_area = 0.5*circle.squared_radius()*(end_theta-start_theta);
+      lcl_area = 0.5*to_double(circle.squared_radius())*(end_theta-start_theta);
       // replace triangle defined wrt circle center with triangle
       // defined wrt origin
       lcl_area += triangle_area(start_point,end_point) - triangle_area(
 		     start_point-circle_center, end_point-circle_center);
     }
-    cerr << "   segment area = " <<lcl_area << endl;
+    //cerr << "   segment area = " <<lcl_area << endl;
     area += lcl_area;
   }
 
@@ -213,54 +221,32 @@ int main( )
 
   vector<Kernel::Segment_2> segments;
 
-  //std::ifstream in("data/voronoi.cin");
-  //std::istream_iterator<Point> begin(in);
-  //std::istream_iterator<Point> end;
-  Triangulation T;
-  //T.insert(begin, end);
-  T.insert(Point(0.0,0.0));
-  Vertex_handle first_vertex = T.insert(Point(1.0,0.0));
-  //T.insert(Point(-1.0,0.0));
-  //T.insert(Point(0.0,1.0));
+  const int nsep = 100*3;
+  for (int isep = 1; isep <= nsep; isep++) {
+    double sep = isep*(3.0/nsep);
+    //cerr << "sep = " << sep << endl;
 
-  ////// boundary points...
-  T.insert(Point(-10.0,0.0));
-  T.insert(Point(+10.0,0.0));
-  T.insert(Point(0.0,-10.0));
-  T.insert(Point(0.0,+10.0));
+    Triangulation T;
+    Vertex_handle zeroth_vertex = T.insert(Point(0.0,0.17));
+    Vertex_handle first_vertex  = T.insert(Point(sep,0.38));
 
+    ////// boundary points...
+    T.insert(Point(-10.0,0.0));
+    T.insert(Point(+10.0,0.0));
+    T.insert(Point(0.0,-10.0));
+    T.insert(Point(0.0,+10.0));
 
-  double area;
-  Polygon_2 plgn = create_voronoi_cell(T, first_vertex);
-  Polygon_2 circle = construct_polygon(Circle_2(first_vertex->point(),1.0));
-  // gnuplot code for viewing the points and the triangulation
-  cout << "set size square" << endl;
-  cout << "plot '-' w l, '-' w l,'-' w p ps 3" << endl;
-  gnuplot_output(cout, plgn);
-  area = polygon_area(plgn); cerr << "Polygn area = " << area << endl;
-  cout << endl;
-  gnuplot_output(cout, circle);
-  area = polygon_area(circle); cerr << "Circle area = " << area << endl;
-  
-  cout << "e"<<endl;
-  
+    double area;
+    Polygon_2 plgn = create_voronoi_cell(T, first_vertex);
+    Polygon_2 circle = construct_polygon(Circle_2(first_vertex->point(),1.0));
 
-  Pwh_list_2 vertex_neighbourhood;
-  CGAL::intersection(plgn, circle, std::back_inserter(vertex_neighbourhood)); 
-  gnuplot_output(cout, vertex_neighbourhood.begin()->outer_boundary());
+    Pwh_list_2 vertex_neighbourhood;
+    CGAL::intersection(plgn, circle, std::back_inserter(vertex_neighbourhood)); 
+    area = polygon_area(vertex_neighbourhood.begin()->outer_boundary()); 
+    Vector_2 dsep = zeroth_vertex->point()-first_vertex->point();
+    cout << sqrt(to_double(dsep.squared_length())) << " " << area << endl;
 
-  area = polygon_area(vertex_neighbourhood.begin()->outer_boundary()); cerr << "intrsctn area = " << area << endl;
-  cout << 'e' << endl;
-  
-  for(Vertex_iterator vertex_it = T.vertices_begin(); 
-      vertex_it != T.vertices_end(); vertex_it++) {
-    cout << vertex_it->point() << endl;
   }
-  cout << "e"<<endl;
-
-  //cerr << "Area is " << P.area() << endl; 
-
-
   
   return 0;
 }

@@ -8,6 +8,10 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
+# Gavin sometimes likes to compile with google's tcmalloc and profiler
+# libraries: tcmalloc gives a faster malloc (about 10% speed
+# gain on the CGAL based algorithms), while the profiler is useful
+# for a faithful estimation of where the time is being spent
 ifeq ($(shell whoami),salam)
 #  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 endif

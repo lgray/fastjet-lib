@@ -14,7 +14,7 @@ include $(CGAL_MAKEFILE)
 #---------------------------------------------------------------------#
 
 CXXFLAGS = \
-           -I../../include \
+           -I../../include  \
            $(CGAL_CXXFLAGS) \
            $(LONG_NAME_PROBLEM_CXXFLAGS)
 
@@ -28,6 +28,10 @@ LIBPATH = \
 LDFLAGS = \
           $(LONG_NAME_PROBLEM_LDFLAGS) \
           $(CGAL_LDFLAGS)
+
+ifeq ($(shell whoami),salam)
+  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+endif
 
 #---------------------------------------------------------------------#
 #                    target entries
