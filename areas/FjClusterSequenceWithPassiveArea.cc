@@ -36,7 +36,7 @@ public:
 
   /// return the area of the particle associated with the given
   /// index
-  double operator[] (int index) const {return _areas[index];};
+  double area (int index) const {return _areas[index];};
 
 private:
 
@@ -75,6 +75,7 @@ private:
   //inline double to_dble(double x) const {return x;}
   Polygon_2 construct_polygon(const Circle_2& circle) const;
   Polygon_2 construct_polygon(const Vertex_handle & vertex) const;
+  Polygon_2 construct_masked_polygon(const Vertex_handle & vertex) const;
   template<class FP> Point to_point(const FP & funny_point) const;
   template<class Obj> double to_theta(const Obj & obj) const;
   template<class Obj> double triangle_area(const Obj& obj1, const Obj& obj2) const;
@@ -128,7 +129,11 @@ PAC::Polygon_2 PAC::construct_polygon(const Vertex_handle & vertex) const {
     EEKernel::Segment_2 s;
     // make sure we're able to create a segment from it...
     assert(CGAL::assign(s,o));
-    // add one end of the point to the polygon (we're hoping that
+    // if the two points of the segment are equal don't add this
+    // segment to the polygon (it causes a precondition failure)
+    if (CGAL::compare(s[0].x(),s[1].x()) == CGAL::EQUAL &&
+	CGAL::compare(s[0].y(),s[1].y()) == CGAL::EQUAL) {continue;}
+    // add one end of the points to the polygon (we're hoping that
     // direction of edges is always consistent...)
     plgn.push_back(X_monotone_curve_2(s[0],s[1]));
   } while (++ec != first_edge);
@@ -137,7 +142,7 @@ PAC::Polygon_2 PAC::construct_polygon(const Vertex_handle & vertex) const {
 
 
 //----------------------------------------------------------------------
-/// Convert any funny type of point into a normal point, as long as the
+/// Convert any funny type of point into a normal double point, as long as the
 /// the funny_point satisfies the following conditions:
 ///
 /// - funny_point.x() and funny_point.y() are defined
@@ -148,6 +153,7 @@ template<class FP> PAC::Point PAC::to_point(const FP & funny_point) const {
   return Point(to_double(funny_point.x()), to_double(funny_point.y()));
 }
 
+
 //----------------------------------------------------------------------
 /// return the theta value of the object, in range -pi..pi. 
 ///
@@ -155,6 +161,7 @@ template<class FP> PAC::Point PAC::to_point(const FP & funny_point) const {
 template<class Obj> double PAC::to_theta(const Obj & obj) const {
   return atan2(to_double(obj.y()),to_double(obj.x()));
 }
+
 
 //----------------------------------------------------------------------
 /// returns the area of the triangle defined by the origin and the
@@ -203,6 +210,33 @@ void PAC::gnuplot_output(ostream & ostr, const Polygon_2 & plgn) const {
     }
   }
 
+}
+
+//----------------------------------------------------------------------
+/// construct the polygon corresponding to the voronoi cell of the supplied
+/// vertex, masked with a disc or radius _effective_R centred on the
+/// vertex.
+///
+PAC::Polygon_2 PAC::construct_masked_polygon(const Vertex_handle & vertex) const {
+
+  // get the voronoi-cell polygon
+  Polygon_2 plgn = construct_polygon(vertex);
+
+  // recall that circles take an effective radius...
+  Polygon_2 circle = construct_polygon(Circle_2(vertex->point(),
+						_effective_R_squared));
+  
+  Pwh_list_2 intersected_object;
+  CGAL::intersection(plgn, circle, std::back_inserter(intersected_object)); 
+
+  // make sure there's only one object in the list
+  assert(intersected_object.size() == 1);
+  // make sure there are no holes
+  assert(intersected_object.begin()->number_of_holes() == 0);
+
+  // the actual polygon we're interested is the outer boundary of the
+  // first element of the list...
+  return intersected_object.begin()->outer_boundary();
 }
 
 //----------------------------------------------------------------------
@@ -302,7 +336,8 @@ PAC::PassiveAreaCalc(const vector<FjPseudoJet>::const_iterator & jet_begin,
   assert(n_added > 0);
 
   // now add some final points at borders to make sure that all internal
-  // voronoi cells are finite
+  // voronoi cells are finite -- the choice of a factor 5 here is a little
+  // arbitrary (it should be at least sqrt(2)???)
   double range = 5*max(2*twopi, maxrap-minrap); // 5*max(phi-range,rap-range)
   double midrap = 0.5*(minrap+maxrap);
   _triang.insert(Point(midrap,3*pi+range));
@@ -310,6 +345,16 @@ PAC::PassiveAreaCalc(const vector<FjPseudoJet>::const_iterator & jet_begin,
   _triang.insert(Point(minrap-range, pi));
   _triang.insert(Point(maxrap+range, pi));
 
+  // now store the areas
+  _areas.resize(n_tot);
+  for (unsigned int i = 0; i < _areas.size(); i++) {
+    if (_vertices[i] == NULL) {
+      _areas[i] = 0;
+    } else {
+      Polygon_2 masked_cell = construct_masked_polygon(_vertices[i]);
+      _areas[i] = polygon_area(masked_cell);
+    }
+  }
 }
 
 
@@ -322,16 +367,20 @@ void FjClusterSequenceWithPassiveArea::_initializePA () {
   assert(_jet_def.jet_finder() == kt_algorithm);
   
   // run the PAC on our original particles
-  _pa_calc = auto_ptr<PAC>(new PAC(_jets.begin(), 
-					_jets.begin()+n_particles(),
-					_effective_Rfact*_jet_def.R()
-					));
+  //_pa_calc = auto_ptr<PAC>(new PAC(_jets.begin(), 
+  //      			   _jets.begin()+n_particles(),
+  //      			   _effective_Rfact*_jet_def.R()
+  //      			   ));
+  _pa_calc = new PAC(_jets.begin(), 
+		     _jets.begin()+n_particles(),
+		     _effective_Rfact*_jet_def.R()
+		     );
 
   // transfer the areas to our local structure -- first the initial
   // ones
   _passive_area.reserve(2*n_particles());
   for (unsigned int i = 0; i < n_particles(); i++) {
-    _passive_area.push_back((*_pa_calc)[i]);
+    _passive_area.push_back(_pa_calc->area(i));
   }
 			   
   // then the combined areas that arise from the clustering
@@ -345,4 +394,10 @@ void FjClusterSequenceWithPassiveArea::_initializePA () {
     }
     _passive_area.push_back(area);
   }
+
+}
+
+//----------------------------------------------------------------------
+FjClusterSequenceWithPassiveArea::~FjClusterSequenceWithPassiveArea() {
+  delete _pa_calc;
 }

@@ -1,5 +1,17 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
+2006-08-10  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
+	* incorporated a first passive areas class,
+	  FjClusterSequenceWithPassiveArea. It is quite slow, and
+	  currently seen only very limited testing, but seems to work in
+	  the 2-particle case...
+
+	  next steps: add gnuplot visulation, look at more complex events
+
+	* modified order of includes in some other class definitions to
+	  place private things after public ones.	
+	
 2006-08-04  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* switched remaining jet-finding strategies over to use of

@@ -1,6 +1,7 @@
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include "FjClusterSequenceWithMeanArea.hh"
+#include "FjClusterSequenceWithPassiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -28,13 +29,22 @@ int main (int argc, char ** argv) {
   double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   int    n            = cmdline.int_val("-n",20);
-  double dr_max       = cmdline.double_val("-r",2.1);
+  double dr_max       = cmdline.double_val("-dr_max",2.1);
 
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
+  FjJetFinder jet_finder = cmdline.present("-cam") ? 
+                                cambridge_algorithm : kt_algorithm;
+
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
     exit(-1);}
+
+  // create the definitions for our jet finder and areas spec...
+  FjJetDefinition jet_def(jet_finder, ktR, strategy);
+  FjActiveAreaSpec active_area_spec(cell_area, ghost_etamax, grid_scatter,
+				    kt_scatter, repeat);
+
+  cerr << "strategy is "<<jet_def.strategy()<<endl;
 
   // document what is happening...
   cout << "# " << cmdline.command_line() << endl;
@@ -51,10 +61,16 @@ int main (int argc, char ** argv) {
     input_jets[0] = FjPseudoJet(0.0,pt0,+pt0*pz,pt0*E);
     if (i >= 1) input_jets[1] = FjPseudoJet(0.0,pt1,-pt1*pz,pt1*E);
 
-    FjClusterSequenceWithMeanArea clust(input_jets,
-					cell_area,ghost_etamax,
-					grid_scatter, kt_scatter, repeat,
-					ktR,strategy);
+    FjClusterSequenceWithMeanArea clust(input_jets, jet_def,
+        				active_area_spec);
+    //FjClusterSequenceWithPassiveArea clust(input_jets, jet_def,
+    //    				   1.0);
+
+    //FjClusterSequenceWithMeanArea clust(input_jets,
+    //                                    cell_area,ghost_etamax,
+    //                                    grid_scatter, kt_scatter, repeat,
+    //                                    ktR,strategy);
+
 
     vector<FjPseudoJet> output_jets = sorted_by_pt(clust.inclusive_jets());
     printf ("%7.3f %7.3f %7.3f %7.3f %7.3f", dr, output_jets[0].rap(), 

@@ -135,17 +135,6 @@ template<class L>
   vector<int> unique_tree;
   unique_tree = unique_history_order();
 
-//  cout << "Printing unique-tree form of history for "<<_initial_n<<" "<<_history.size()<<" particles \n";
-//  for (unsigned i = 0; i < unique_tree.size(); i++) {
-//    const history_element & hist_element = _history[unique_tree[i]];
-//    cout << i <<" "<<unique_tree[i]<<" "<<hist_element.dij<<
-//     " "<<hist_element.parent1<<" "<<hist_element.parent2<<
-//      endl;
-//    //cout << i <<" "<<hist_element.dij<<
-//    //  " "<<hist_element.parent1<<" "<<hist_element.parent2<<
-//    //  endl;
-//  }
-
   // for future reference...
   _etamax_for_area = area_spec.ghost_etamax();
   _etalim_for_area = _etamax_for_area - _Rparam;
@@ -158,9 +147,6 @@ template<class L>
   _average_ext_area = FjPseudoJet(0.0,0.0,0.0,0.0);
   _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
      
-  // run the clustering multiple times so as to get areas of all the
-  // inclusive jets (one day this should be changed so as to get
-  // area of ALL jets.
   if (_n_seed_warnings < _max_seed_warnings) {
     cerr << "***** * WATCH OUT ******; I am resetting the random seed\n";
     _n_seed_warnings += 1;
@@ -168,15 +154,12 @@ template<class L>
   }
 
 
+  // run the clustering multiple times so as to get areas of all the jets
   for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
     // WARNING: setting seed manually at each turn of loop (because
     // we suspect that CGAL plays with it)
     srand(irepeat+2);
 
-
-    //FjClusterSequenceWithArea clust_seq(pseudojets,cell_area,etamax_for_area,
-    //    				grid_scatter, kt_scatter,
-    //					R,strategy);
     FjClusterSequenceWithArea clust_seq(pseudojets, jet_def, area_spec);
 
     // transfer areas from clust_seq into our object
