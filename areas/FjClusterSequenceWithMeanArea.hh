@@ -37,6 +37,31 @@ public:
 	  const FjStrategy & strategy = Best,
 	  const bool & writeout_combinations = false);
 
+  double area (const FjPseudoJet & jet) const {
+                             return _average_area[jet.cluster_hist_index()];};
+  double area_err (const FjPseudoJet & jet) const {
+                             return _average_area2[jet.cluster_hist_index()];};
+
+  FjPseudoJet extended_area (const FjPseudoJet & jet) const {
+                    return _average_ext_area[jet.cluster_hist_index()];};
+
+  /// return the transverse momentum per unit area excluding 
+  /// jets that have pt/area > median(pt/area)*range.
+  /// NB: this will be wrong for events that are not "dense" because
+  ///     of a large number of jets that will have zero pt.
+  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
+			  pttot_over_areatot_cut, mean_ratio_cut, play};
+
+  double pt_per_unit_area(mean_pt_strategies strat=median, double range=2.0 ) const;
+
+  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
+  /// abs(y)<raprange (for negative raprange, it defaults to
+  /// _etalim_for_area).
+  void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
+				  double exclude_above=-1.0);
+
+
+
 private:
 
   /// does the actual initialisation work 
@@ -72,31 +97,6 @@ private:
   /// the user a few times
   static int _n_seed_warnings;
   const static int _max_seed_warnings = 10;
-
-public : 
-  double area (const FjPseudoJet & jet) const {
-                             return _average_area[jet.cluster_hist_index()];};
-  double area_err (const FjPseudoJet & jet) const {
-                             return _average_area2[jet.cluster_hist_index()];};
-
-  FjPseudoJet extended_area (const FjPseudoJet & jet) const {
-                    return _average_ext_area[jet.cluster_hist_index()];};
-
-  /// return the transverse momentum per unit area excluding 
-  /// jets that have pt/area > median(pt/area)*range.
-  /// NB: this will be wrong for events that are not "dense" because
-  ///     of a large number of jets that will have zero pt.
-  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
-			  pttot_over_areatot_cut, mean_ratio_cut, play};
-
-  double pt_per_unit_area(mean_pt_strategies strat=median, double range=2.0 ) const;
-
-  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
-  /// abs(y)<raprange (for negative raprange, it defaults to
-  /// _etalim_for_area).
-  void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
-				  double exclude_above=-1.0);
-
 
 };
 

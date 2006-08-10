@@ -29,6 +29,7 @@ LDFLAGS = \
           $(LONG_NAME_PROBLEM_LDFLAGS) \
           $(CGAL_LDFLAGS)
 
+CXXFLAGS += -O3
 ifeq ($(shell whoami),salam)
   LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 endif

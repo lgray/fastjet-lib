@@ -17,7 +17,7 @@ LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
 
 PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc
 
-SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc FjClusterSequenceWithMeanArea.cc FlavourHolder.cc
+SRCS =  CmdLine.cc FjClusterSequenceWithArea.cc FjClusterSequenceWithMeanArea.cc FlavourHolder.cc FjClusterSequenceWithPassiveArea.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
 areas: areas.o $(OBJS) ../lib/libfastjet.a

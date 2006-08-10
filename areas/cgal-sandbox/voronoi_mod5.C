@@ -221,7 +221,7 @@ int main( )
 
   vector<Kernel::Segment_2> segments;
 
-  const int nsep = 100*3;
+  const int nsep = 333*3;
   for (int isep = 1; isep <= nsep; isep++) {
     double sep = isep*(3.0/nsep);
     //cerr << "sep = " << sep << endl;
