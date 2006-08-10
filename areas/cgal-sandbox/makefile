@@ -55,6 +55,9 @@ voronoi_mod3$(EXE_EXT): voronoi_mod3$(OBJ_EXT)
 voronoi_mod4$(EXE_EXT): voronoi_mod4$(OBJ_EXT)
 	$(CGAL_CXX) $(LIBPATH) $(EXE_OPT)voronoi_mod4 voronoi_mod4$(OBJ_EXT) $(LDFLAGS)
 
+voronoi_mod5$(EXE_EXT): voronoi_mod5$(OBJ_EXT)
+	$(CGAL_CXX) $(LIBPATH) $(EXE_OPT)voronoi_mod5 voronoi_mod5$(OBJ_EXT) $(LDFLAGS)
+
 ex_circle_segment$(EXE_EXT): ex_circle_segment$(OBJ_EXT)
 	$(CGAL_CXX) $(LIBPATH) $(EXE_OPT)ex_circle_segment ex_circle_segment$(OBJ_EXT) $(LDFLAGS)
 
