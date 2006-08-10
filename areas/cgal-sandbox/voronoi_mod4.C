@@ -14,18 +14,18 @@
 #include <iterator>
 #include <cmath>
 
-struct K : CGAL::Exact_predicates_inexact_constructions_kernel {};
+struct Kernel : CGAL::Exact_predicates_inexact_constructions_kernel {};
 
-typedef CGAL::Delaunay_triangulation_2<K>  Triangulation;
+typedef CGAL::Delaunay_triangulation_2<Kernel>  Triangulation;
 typedef Triangulation::Edge_iterator  Edge_iterator;
 typedef Triangulation::Edge_circulator  Edge_circulator;
 typedef Triangulation::Vertex_iterator Vertex_iterator;
 typedef Triangulation::Vertex_handle   Vertex_handle;
 typedef Triangulation::Point          Point;
-typedef K::Circle_2                                Circle_2;
-typedef K::Vector_2                                Vector_2;
+typedef Kernel::Circle_2                                Circle_2;
+typedef Kernel::Vector_2                                Vector_2;
 
-typedef CGAL::Gps_circle_segment_traits_2<K>       Traits_2;
+typedef CGAL::Gps_circle_segment_traits_2<Kernel>       Traits_2;
 typedef CGAL::General_polygon_set_2<Traits_2>           Polygon_set_2;
 typedef Traits_2::Polygon_2                             Polygon_2;
 typedef Traits_2::Polygon_with_holes_2                  Polygon_with_holes_2;
@@ -33,8 +33,8 @@ typedef Traits_2::Curve_2                               Curve_2;
 typedef Traits_2::X_monotone_curve_2                    X_monotone_curve_2;
 typedef CGAL::Orientation                         Orientation;
 
-//typedef CGAL::Polygon_2<K>                    Polygon_2;
-//typedef CGAL::Polygon_with_holes_2<K>         Polygon_with_holes_2;
+//typedef CGAL::Polygon_2<Kernel>                    Polygon_2;
+//typedef CGAL::Polygon_with_holes_2<Kernel>         Polygon_with_holes_2;
 typedef std::list<Polygon_with_holes_2>            Pwh_list_2;
 
 
@@ -84,7 +84,7 @@ Polygon_2 create_voronoi_cell(const Triangulation & T,
     assert(! T.is_infinite(ec));
     // get the dual of the edge of the triangulation
     CGAL::Object o = T.dual(ec);
-    K::Segment_2 s;
+    Kernel::Segment_2 s;
     // make sure we're able to create a segment from it...
     assert(CGAL::assign(s,o));
     // add one end of the point to the polygon (we're hoping that
@@ -96,17 +96,41 @@ Polygon_2 create_voronoi_cell(const Triangulation & T,
 
 
 //----------------------------------------------------------------------
+/// Convert any funny type of point into a normal point, as long as the
+/// the funny_point satisfies the following conditions:
+///
+/// - funny_point.x() and funny_point.y() are defined
+/// - the return type can be converted to a double with the CGAL function
+///   to_double
+///
+template<class FP> Point to_point(const FP & funny_point) {
+  return Point(to_double(funny_point.x()), to_double(funny_point.y()));
+}
+
+//----------------------------------------------------------------------
+/// return the theta value of the object, in range -pi..pi. 
+///
+/// It is a template so that we can use both vectors and points.
+template<class Obj> double to_theta(const Obj & obj) {
+  return atan2(obj.y(),obj.x());
+}
+
+//----------------------------------------------------------------------
+/// returns the area of the triangle defined by the origin and the
+/// two points. The result is positive when obj2 is oriented
+/// counterclockwise wrt obj1.
+///
+/// It is a template so that we can use both vectors and points.
+template<class Obj> double triangle_area(const Obj& obj1, const Obj& obj2) {
+  return 0.5*(obj1.x()*obj2.y() - obj1.y()*obj2.x());
+}
+
+
+//----------------------------------------------------------------------
 /// send a gnuplot-readable set of output points corresponding to the
 /// polygon to the ostr
 void gnuplot_output(ostream & ostr, const Polygon_2 & plgn) {
 
-  //ostream_iterator<pair<double,double> > test(cout,"\n");
-  //ostream_iterator<double> test(cout,"\n");
-  //pair<double, double> pp = make_pair(2.0,2.0);
-  //*test = pp;
-  //test++;
-  
-  
 
   for (Traits_2::Curve_const_iterator it = plgn.curves_begin();
        it != plgn.curves_end(); it++) {
@@ -117,51 +141,77 @@ void gnuplot_output(ostream & ostr, const Polygon_2 & plgn) {
       Circle_2 circle = it->supporting_circle();
       Point circle_center = circle.center();
       Orientation orient = it->orientation();
-      Point start_point = Point(to_double(it->source().x()),to_double(it->source().y()));
-      Point end_point = Point(to_double(it->target().x()),to_double(it->target().y()));
-      double start_phi = atan2(start_point.y()-circle_center.y(), 
-			       start_point.x()-circle_center.x());
-      double end_phi   = atan2(end_point.y()-circle_center.y(), 
-			       end_point.x()-circle_center.x());
+      Point start_point = to_point(it->source());
+      Point end_point   = to_point(it->target());
+      double start_theta = to_theta(start_point-circle_center);
+      double end_theta   = to_theta(end_point-circle_center);
       // things go counterclockwise...?
-      if (orient == CGAL::COUNTERCLOCKWISE && start_phi > end_phi) {
-	start_phi -= twopi;
-      } else if (orient == CGAL::CLOCKWISE && end_phi > start_phi) {
-	start_phi += twopi;
+      if (orient == CGAL::COUNTERCLOCKWISE && start_theta > end_theta) {
+	start_theta -= twopi;
+      } else if (orient == CGAL::CLOCKWISE && end_theta > start_theta) {
+	start_theta += twopi;
       }
       double radius = sqrt(circle.squared_radius());
       const int npoint = 20;
       for (int i = 0; i < npoint; i++) {
-	double phi = start_phi + i*(end_phi-start_phi)/npoint;
-	Point point(circle_center.x()+radius*cos(phi),
-		    circle_center.y()+radius*sin(phi));
+	double theta = start_theta + i*(end_theta-start_theta)/npoint;
+	Point point(circle_center.x()+radius*cos(theta),
+		    circle_center.y()+radius*sin(theta));
 	cout << point << endl;
       }
-      //cerr << orient << " " << CGAL::COUNTERCLOCKWISE << endl;
-      //cerr << start_phi << " "<<end_phi<<endl;
-      //cerr << " " << circle_center <<endl;
-      //cerr << " " << start_point <<endl;
-      //cerr << " " << end_point <<endl;
     }
-    //it->approximate(test, 14);
   }
 
-  //Traits_2::Curve_const_iterator it = plgn.curves_begin();
-  //for (; it != plgn.curves_end(); it++) {
-  //  //double x = to_double(it->source().x());
-  //  cout << it->source() << endl;
-  //}
-  //// close the polygon...
-  //it = plgn.curves_begin();
-  //cout << it->source() << endl;
 }
+
+//----------------------------------------------------------------------
+/// returns the area of a (general) Polygon_2
+double polygon_area(const Polygon_2 & plgn) {
+
+  double area = 0.0;
+
+  for (Traits_2::Curve_const_iterator it = plgn.curves_begin();
+       it != plgn.curves_end(); it++) {
+    double lcl_area;
+    if (it->is_linear()) {
+      cout << it->source() << " -> " << it->target() << endl;
+      lcl_area = triangle_area(to_point(it->source()), to_point(it->target()));
+    } else {
+      cerr << "Circular arc" << endl;
+      Circle_2 circle = it->supporting_circle();
+      Point circle_center = circle.center();
+      Orientation orient = it->orientation();
+      Point start_point = to_point(it->source());
+      Point end_point   = to_point(it->target());
+      double start_theta = to_theta(start_point-circle_center);
+      double end_theta   = to_theta(end_point-circle_center);
+      // things go counterclockwise...?
+      if (orient == CGAL::COUNTERCLOCKWISE && start_theta > end_theta) {
+	start_theta -= twopi;
+      } else if (orient == CGAL::CLOCKWISE && end_theta > start_theta) {
+	start_theta += twopi;
+      }
+      // area of circular pie slice
+      lcl_area = 0.5*circle.squared_radius()*(end_theta-start_theta);
+      // replace triangle defined wrt circle center with triangle
+      // defined wrt origin
+      lcl_area += triangle_area(start_point,end_point) - triangle_area(
+		     start_point-circle_center, end_point-circle_center);
+    }
+    cerr << "   segment area = " <<lcl_area << endl;
+    area += lcl_area;
+  }
+
+  return area;
+}
+
 
 
 //----------------------------------------------------------------------
 int main( )
 {
 
-  vector<K::Segment_2> segments;
+  vector<Kernel::Segment_2> segments;
 
   //std::ifstream in("data/voronoi.cin");
   //std::istream_iterator<Point> begin(in);
@@ -180,20 +230,26 @@ int main( )
   T.insert(Point(0.0,+10.0));
 
 
+  double area;
   Polygon_2 plgn = create_voronoi_cell(T, first_vertex);
   Polygon_2 circle = construct_polygon(Circle_2(first_vertex->point(),1.0));
   // gnuplot code for viewing the points and the triangulation
   cout << "set size square" << endl;
   cout << "plot '-' w l, '-' w l,'-' w p ps 3" << endl;
   gnuplot_output(cout, plgn);
+  area = polygon_area(plgn); cerr << "Polygn area = " << area << endl;
   cout << endl;
   gnuplot_output(cout, circle);
+  area = polygon_area(circle); cerr << "Circle area = " << area << endl;
+  
   cout << "e"<<endl;
   
 
   Pwh_list_2 vertex_neighbourhood;
   CGAL::intersection(plgn, circle, std::back_inserter(vertex_neighbourhood)); 
   gnuplot_output(cout, vertex_neighbourhood.begin()->outer_boundary());
+
+  area = polygon_area(vertex_neighbourhood.begin()->outer_boundary()); cerr << "intrsctn area = " << area << endl;
   cout << 'e' << endl;
   
   for(Vertex_iterator vertex_it = T.vertices_begin(); 
