@@ -142,6 +142,10 @@ void FjClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
     int newjet_k;
     _do_ij_recombination_step(jet_i, jet_j, distance2, newjet_k);
 
+    // don't bother with any further action if only one active particle
+    // is left (also avoid closest-pair error [cannot remove last particle]).
+    if (--n_active == 1) {break;}
+
     // now prepare operations on CP structure
     cIDs_to_remove.resize(0);
     cIDs_to_remove.push_back(coordIDs[jet_i].orig);
@@ -167,9 +171,9 @@ void FjClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
       jetIDs[new_cIDs[1]]         = newjet_k;
     } else {coordIDs[newjet_k].mirror = Invalid;}
     
-    // if we've reached one "active" jet we should exit...
-    n_active--;
-    if (n_active == 1) {break;}
+    //// if we've reached one "active" jet we should exit...
+    //n_active--;
+    //if (n_active == 1) {break;}
 
   } while(true);
   
@@ -201,7 +205,7 @@ void FjClusterSequence::_CP2DChan_cluster_2pi2R () {
 /// size 2pi + 2*0.3 and then carries on with 2pi+2*R
 void FjClusterSequence::_CP2DChan_cluster_2piMultD () {
 
-  // do a first run of clustering with up to a small distance parameter,
+  // do a first run of clustering up to a small distance parameter,
   if (_Rparam >= 0.39) {
     _CP2DChan_limited_cluster(min(_Rparam/2,0.3));
   }

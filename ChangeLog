@@ -1,5 +1,14 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
+
+2006-08-11  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
+	* played around with passive areas (including a plot or two) --
+	  they seem to work OK.
+
+	* fixed a bug (when reaching last pair of objects to cluster) in
+	  the CP2DChan strategies.
+	
 2006-08-10  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* incorporated a first passive areas class,
