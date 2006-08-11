@@ -3,6 +3,10 @@ ChangeLog for fastjet-release directory
 
 2006-08-11  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+        * modified FjPseudoJet's rapidity calculation so that it gives
+          answers that are not completely crazy for momenta where rounding
+          error causes the difference between E and pz to be zero.
+	
 	* played around with passive areas (including a plot or two) --
 	  they seem to work OK.
 

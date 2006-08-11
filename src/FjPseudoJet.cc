@@ -63,14 +63,32 @@ void FjPseudoJet::_finish_init () {
   }
   if (_phi < 0.0) {_phi += twopi;}
   if (_phi >= twopi) {_phi -= twopi;} // can happen is phi=-|eps<1e-15|?
-  if (this->E() != abs(this->pz())) {
-    _rap = 0.5*log((this->E() + this->pz())/(this->E() - this->pz()));
-      } else {
-    // Overlapping points can give problems. Let's lift the degeneracy
-    // in case of multiple 0-pT points (can be found at parton-level)
+  if (this->E() == abs(this->pz()) && _kt2 == 0) {
+    // Point has infinite rapidity -- convert that into a very large
+    // number, but in such a way that different 0-pt momenta will have
+    // different rapidities (so as to lift the degeneracy between
+    // them) [this can be relevant at parton-level]
     double MaxRapHere = MaxRap + abs(this->pz());
     if (this->pz() >= 0.0) {_rap = MaxRapHere;} else {_rap = -MaxRapHere;}
+  } else {
+    // get the rapidity in a way that's modestly insensitive to roundoff
+    // error when things pz,E are large (actually the best we can do without
+    // explicit knowledge of mass)
+    double effective_m2 = max(0.0,m2()); // force non tachyonic mass
+    double E_plus_pz    = _E + abs(_pz); // the safer of p+, p-
+    // p+/p- = (p+ p-) / (p-)^2 = (kt^2+m^2)/(p-)^2
+    _rap = 0.5*log((_kt2 + effective_m2)/(E_plus_pz*E_plus_pz));
+    if (_pz > 0) {_rap = - _rap;}
   }
+  //// original determination 
+  //if (this->E() != abs(this->pz())) {
+  //  _rap = 0.5*log((this->E() + this->pz())/(this->E() - this->pz()));
+  //    } else {
+  //  // Overlapping points can give problems. Let's lift the degeneracy
+  //  // in case of multiple 0-pT points (can be found at parton-level)
+  //  double MaxRapHere = MaxRap + abs(this->pz());
+  //  if (this->pz() >= 0.0) {_rap = MaxRapHere;} else {_rap = -MaxRapHere;}
+  //}
 }
 
 

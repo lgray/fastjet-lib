@@ -190,8 +190,8 @@ int main (int argc, char ** argv) {
   //      				  grid_scatter, kt_scatter, repeat,
   //					  ktR,strategy,writeout);
 
-  //FjClusterSequenceWithMeanArea clust_seq(input_particles,jet_def,area_spec,writeout);
-  FjClusterSequenceWithPassiveArea clust_seq(input_particles,jet_def,effective_R_fact,writeout);
+  FjClusterSequenceWithMeanArea clust_seq(input_particles,jet_def,area_spec,writeout);
+  //FjClusterSequenceWithPassiveArea clust_seq(input_particles,jet_def,effective_R_fact,writeout);
 
   cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
   //cerr << "number of particles = " << clust_seq.n_particles() << endl;

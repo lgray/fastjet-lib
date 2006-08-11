@@ -112,6 +112,8 @@ void FjClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
   Coord2D left_edge(minrap-1.0, -pi);
   Coord2D right_edge(maxrap+1.0, 3*pi);
 
+  //cerr << "minrap, maxrap = " << minrap << " " << maxrap << endl;
+
   // now create the closest pair search object
   ClosestPair2D cp(coords, left_edge, right_edge);
 
