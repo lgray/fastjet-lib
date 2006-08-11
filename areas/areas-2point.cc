@@ -61,15 +61,10 @@ int main (int argc, char ** argv) {
     input_jets[0] = FjPseudoJet(0.0,pt0,+pt0*pz,pt0*E);
     if (i >= 1) input_jets[1] = FjPseudoJet(0.0,pt1,-pt1*pz,pt1*E);
 
-    FjClusterSequenceWithMeanArea clust(input_jets, jet_def,
-        				active_area_spec);
-    //FjClusterSequenceWithPassiveArea clust(input_jets, jet_def,
-    //    				   1.0);
-
-    //FjClusterSequenceWithMeanArea clust(input_jets,
-    //                                    cell_area,ghost_etamax,
-    //                                    grid_scatter, kt_scatter, repeat,
-    //                                    ktR,strategy);
+    //FjClusterSequenceWithMeanArea clust(input_jets, jet_def,
+    //    				active_area_spec);
+    FjClusterSequenceWithPassiveArea clust(input_jets, jet_def,
+        				   1.0);
 
 
     vector<FjPseudoJet> output_jets = sorted_by_pt(clust.inclusive_jets());

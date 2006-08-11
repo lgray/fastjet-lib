@@ -225,18 +225,36 @@ PAC::Polygon_2 PAC::construct_masked_polygon(const Vertex_handle & vertex) const
   // recall that circles take an effective radius...
   Polygon_2 circle = construct_polygon(Circle_2(vertex->point(),
 						_effective_R_squared));
+
+  // determine whether we need to take the intersection with the circle
+  bool need_intersection=false;
+  for (Traits_2::Curve_const_iterator it = plgn.curves_begin();
+       it != plgn.curves_end(); it++) {
+    Vector_2 from_center = Vector_2(to_double(it->source().x()) 
+				    - to_double(vertex->point().x()),
+				    to_double(it->source().y()) 
+				    - to_double(vertex->point().y()));
+    if (to_double(from_center.squared_length()) > _effective_R_squared) {
+      need_intersection = true;
+      break;
+    }
+  }
   
-  Pwh_list_2 intersected_object;
-  CGAL::intersection(plgn, circle, std::back_inserter(intersected_object)); 
+  if (need_intersection) {
+    Pwh_list_2 intersected_object;
+    CGAL::intersection(plgn, circle, std::back_inserter(intersected_object)); 
 
-  // make sure there's only one object in the list
-  assert(intersected_object.size() == 1);
-  // make sure there are no holes
-  assert(intersected_object.begin()->number_of_holes() == 0);
-
-  // the actual polygon we're interested is the outer boundary of the
-  // first element of the list...
-  return intersected_object.begin()->outer_boundary();
+    // make sure there's only one object in the list
+    assert(intersected_object.size() == 1);
+    // make sure there are no holes
+    assert(intersected_object.begin()->number_of_holes() == 0);
+    
+    // the actual polygon we're interested is the outer boundary of the
+    // first element of the list...
+    return intersected_object.begin()->outer_boundary();
+  } else {
+    return plgn;
+  }
 }
 
 //----------------------------------------------------------------------

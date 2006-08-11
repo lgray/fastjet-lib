@@ -71,6 +71,7 @@
 #include "FjPseudoJet.hh"
 #include "FjClusterSequence.hh"
 #include "FjClusterSequenceWithMeanArea.hh"
+#include "FjClusterSequenceWithPassiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<valarray>
@@ -102,6 +103,7 @@ int main (int argc, char ** argv) {
   FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", Best)));
   double ktR   = cmdline.double_val("-r",1.0);
+  double effective_R_fact = cmdline.double_val("-rfact",1.0);
   FjJetFinder jet_fndr= cmdline.present("-cam")? cambridge_algorithm: kt_algorithm;
   //FjClusterSequence::set_jet_finder(jet_fndr);
   FjJetDefinition jet_def(jet_fndr, ktR, strategy);
@@ -188,7 +190,8 @@ int main (int argc, char ** argv) {
   //      				  grid_scatter, kt_scatter, repeat,
   //					  ktR,strategy,writeout);
 
-  FjClusterSequenceWithMeanArea clust_seq(input_particles,jet_def,area_spec,writeout);
+  //FjClusterSequenceWithMeanArea clust_seq(input_particles,jet_def,area_spec,writeout);
+  FjClusterSequenceWithPassiveArea clust_seq(input_particles,jet_def,effective_R_fact,writeout);
 
   cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
   //cerr << "number of particles = " << clust_seq.n_particles() << endl;
@@ -209,7 +212,8 @@ int main (int argc, char ** argv) {
     jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
   }
 
-  double median_pt_per_area = clust_seq.pt_per_unit_area();
+  //  double median_pt_per_area = clust_seq.pt_per_unit_area();
+  double median_pt_per_area = 0.0;
   printf(" ijet   rap      phi        Pt         area  +-   err   stddev  pt_corr\n");
   for (size_t j = 0; j < jets.size(); j++) {
     double area = clust_seq.area(jets[j]);
@@ -218,11 +222,11 @@ int main (int argc, char ** argv) {
 	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_err(jets[j]), clust_seq.area_err(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
   }
 
-  //cout << "median pt_over_area = " << clust_seq.pt_per_unit_area()<<endl;
-  cout << "median pt_over_area = " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
-  cout << "pt/area: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
-  cout << "pt/area with cut: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
-  cout << "average ratio (with cut): "<< clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
-  
+//  //cout << "median pt_over_area = " << clust_seq.pt_per_unit_area()<<endl;
+//  cout << "median pt_over_area = " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
+//  cout << "pt/area: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
+//  cout << "pt/area with cut: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
+//  cout << "average ratio (with cut): "<< clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
+//  
   } // iev
 }
