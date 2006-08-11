@@ -8,6 +8,10 @@ ChangeLog for fastjet-release directory
 
 	* fixed a bug (when reaching last pair of objects to cluster) in
 	  the CP2DChan strategies.
+
+	* in the main Makefile (and Triangulations.h) added option for
+	  using a simpler CGAL kernel -- this can give about 20% speed
+	  gain but it's not clear how robust it is.
 	
 2006-08-10  Gavin Salam  <salam@lpthe.jussieu.fr> 
 

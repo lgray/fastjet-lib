@@ -11,8 +11,12 @@ INCLUDE += $(FASTJET_INCLUDE) -I$(CDFCONEDIR)
 #LDFLAGS += -L../lib -lfastjet
 LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
 #LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs -ltcmalloc -lprofiler
+
 # get google malloc for debugging purposes...
-#LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
+ifeq ($(shell whoami),salam)
+  LDFLAGS += -L$(HOME)/software/local/lib -ltcmalloc -lprofiler
+endif
+
 #LDFLAGS += -L$(HOME)/software/local/lib 
 
 PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc areas-2point.cc

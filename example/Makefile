@@ -13,7 +13,7 @@ LDFLAGS += -L../lib -lfastjet
 # gain on the CGAL based algorithms), while the profiler is useful
 # for a faithful estimation of where the time is being spent
 ifeq ($(shell whoami),salam)
-#  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 endif
 
 SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc CmdLine.cc

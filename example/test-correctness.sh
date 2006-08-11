@@ -2,11 +2,11 @@
 
 #-- main part of configuration
 #nev=1000
-#nev=1000
-nev=10
+nev=1000
+#nev=10
 inputfile=~/work/fastjet/data/Pythia-PtMin50-LHC-1000ev.dat
-command="./fastjet_timing -write -nev $nev"
-#command="./fastjet_timing -unique_write -cam -nev $nev"
+#command="./fastjet_timing -write -nev $nev"
+command="./fastjet_timing -unique_write -cam -nev $nev"
 #---------------------------
 
 tmpbase=tmp-$$
@@ -20,7 +20,8 @@ $command -strategy $strategy < $inputfile | grep -v strategy > $reffile
 
 
 #for strategy in -04 -02 -01 +02 +03 +04 +00 +12 +13 +14
-for strategy in -04 -02 -01 +02 +03 +04 +00
+#for strategy in -04 -02 -01 +02 +03 +04 +00
+for strategy in -04 +12
 #for strategy in -2 -1 +2 +3 +4 +0
 #for strategy in +12 +13 +14
 #for strategy in -04

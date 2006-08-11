@@ -41,7 +41,11 @@
 
 /// the basic geometrical kernel that lies at the base of all CGAL
 /// operations
+#ifdef CGAL_SIMPLE_KERNEL
+struct K : CGAL::Simple_cartesian<double> {};
+#else
 struct K : CGAL::Exact_predicates_inexact_constructions_kernel {};
+#endif // CGAL_SIMPLE_KERNEL
 
 // our extras to help us navigate, find distance, etc.
 const int INFINITE_VERTEX=-1;

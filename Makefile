@@ -7,6 +7,11 @@
 USE_CGAL = yes
 #USE_CGAL = no
 
+# CGAL is based on a kernel for representing numbers -- setting 
+# USE_CGAL_SIMPLE_KERNEL to yes causes compilation to use a simpler
+# kernel, which is about 20% faster, but may not be as robust.
+USE_CGAL_SIMPLE_KERNEL = no
+
 # the following affects whether we make Chan's method available
 # for the Cambridge algorithm
 USE_CP2DCHAN = yes
@@ -63,6 +68,10 @@ else
   LIBPATH += $(CGAL_LIBPATH)
   LDFLAGS += $(LONG_NAME_PROBLEM_LDFLAGS) $(CGAL_LDFLAGS)
   CXX = $(CGAL_CXX)   #NB auto makefile stuff will fail without g++
+
+  ifeq ($(USE_CGAL_SIMPLE_KERNEL),yes)
+    INCLUDE += -DCGAL_SIMPLE_KERNEL
+  endif
 endif
 
 ifeq ($(USE_CP2DCHAN),yes)
