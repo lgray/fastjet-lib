@@ -35,7 +35,7 @@ src/		the .cc files for the FastJet library
 include/	the include (.hh) files for the FastJet library
 lib/            destination for the libfastjet.a library
 example/        contains some example programs
-data/           contains some files with data for events
+example/data/   contains some files with data for events
 
 ----------------------------------------------------------------------
 Known bugs

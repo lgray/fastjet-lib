@@ -3,7 +3,7 @@
 
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
-version=1.0.0b3
+version=1.9.0
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dir=fastjet-$version
@@ -29,7 +29,7 @@ else
     tar zcvhf $tarname $dir/(src|include|example|doc|.)/*.(f90|f|h|hh|alg|sh|c|cc|C|tex|eps) \
                       $dir/(src|include|example|doc)/Makefile \
                       $dir/Makefile \
-                      $dir/data/*.dat \
+                      $dir/example/data/*.dat \
                       $dir/**/(READM*[A-Z]|INSTALL|CHANGELOG|Doxyfile)\
                       $dir/lib/.dummy 
 

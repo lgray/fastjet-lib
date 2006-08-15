@@ -1,0 +1,57 @@
+Release Notes for fastjet
+-------------------------
+
+
+Changes from v1.0 to v2.0
+=========================
+
+New features:
+-------------
+
+- the inclusive Cambridge/Aachen jet finder has been added. Note that
+  the exclusive jets extraction for the Cambridge jet-finder does not
+  provide the definition as given in the original Cambridge paper. See
+  the documentation for further details
+
+- [areas]
+
+
+New optimizations:
+------------------
+- new clustering strategies have been added:
+  
+  
+    N2MinHeapTiled : like N2Tiled, except that the non-geometric
+                     part has been replaced with a N ln N algorithm
+                     (overall it still scales as N^2, but with a
+                     smaller coefficient)
+
+    NlnNCam2piMultD, NlnNCam2pi2R, NlnNCam4pi2R:
+                     NlnN strategies that work only for the Cambridge
+                     jet-finder -- the fastest of them is
+                     NlnNCam2piMultD. Depending on the size of the
+                     event and of the CPU cache it may be up to 2.5
+                     times faster than the CGAL-based NlnN
+                     strategy. Experiment on your own hardware and
+                     events to establish whether the speed gain is
+                     significant. 
+
+    Best           : was present before, now attempts to select best 
+                     among N2Plain, N2Tiled, N2MinHeapTiled, NlnN. 
+
+                     As the best option for a given N may depend on R
+                     and the event structure, you are advised to
+                     experiment with individual strategies if the
+                     last few tens of percent in speed are critical.
+                     
+
+
+Updates to user interface
+-------------------------
+
+- a new class, FjJetDefinition, has been introduced for holding
+  the details of the jet finder (which one, value of R, etc...) that
+  is to be used in a given clustering.
+
+- some errors that previously were assertions now throw an FjError
+  exception. Exception handling still remains limited.
