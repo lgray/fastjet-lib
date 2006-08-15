@@ -2,16 +2,28 @@ Release Notes for fastjet
 -------------------------
 
 
+NB: for namespace do something similar to 
+
+#define CGAL_BEGIN_NAMESPACE namespace CGAL {
+#define CGAL_END_NAMESPACE }
+
+For random numbers: two options -- take it from nlojet++, or else from
+clhep. The former looks far more manageable...
+
+
+
 Changes from v1.0 to v2.0
 =========================
 
 New features:
 -------------
 
-- the inclusive Cambridge/Aachen jet finder has been added. Note that
-  the exclusive jets extraction for the Cambridge jet-finder does not
-  provide the definition as given in the original Cambridge paper. See
-  the documentation for further details
+- the longitudinally invariant inclusive Cambridge/Aachen jet finder
+  has been added.
+
+  Note that the exclusive jets extraction for the Cambridge jet-finder
+  does not provide the definition as given in the original Cambridge
+  paper. See the documentation for further details
 
 - [areas]
 
