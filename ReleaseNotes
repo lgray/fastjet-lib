@@ -11,6 +11,13 @@ For random numbers: two options -- take it from nlojet++, or else from
 clhep. The former looks far more manageable...
 
 
+For changing names:
+
+for a in *.cc
+sed -e 's/#include "/#include "fastjet\//g' -e 's/Fj//g' $a 
+
+or maybe move some names to an "internal" include area?
+
 
 Changes from v1.0 to v2.0
 =========================
