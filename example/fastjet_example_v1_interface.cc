@@ -61,15 +61,10 @@ int main (int argc, char ** argv) {
     // back of the input_particles vector
     input_particles.push_back(FjPseudoJet(px,py,pz,E)); 
   }
-  
-  // create an object that represents your choice of jet finder and 
-  // the associated parameters
-  double Rparam = 1.0;
-  FjStrategy strategy = Best;
-  FjJetDefinition jet_def(kt_algorithm, Rparam, strategy);
 
-  // run the jet clustering with the above jet definition
-  FjClusterSequence clust_seq(input_particles, jet_def);
+  // run the jet clustering with option R=1.0 and strategy=Best
+  double Rparam = 1.0;
+  FjClusterSequence clust_seq(input_particles, Rparam, Best);
 
   // tell the user what was done
   cout << "Strategy adopted by FastJet was "<<

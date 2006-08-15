@@ -53,5 +53,8 @@ Updates to user interface
   the details of the jet finder (which one, value of R, etc...) that
   is to be used in a given clustering.
 
+  The v1 user interface continues to work, but is now deprecated (for
+  example it does not allow you to select a jet finder other than kt).
+
 - some errors that previously were assertions now throw an FjError
   exception. Exception handling still remains limited.
