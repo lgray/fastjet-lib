@@ -23,20 +23,24 @@ New optimizations:
   
     N2MinHeapTiled : like N2Tiled, except that the non-geometric
                      part has been replaced with a N ln N algorithm
-                     (overall it still scales as N^2, but with a
+                     (overall the strategy still scales as N^2, but with a
                      smaller coefficient)
 
     NlnNCam2piMultD, NlnNCam2pi2R, NlnNCam4pi2R:
-                     NlnN strategies that work only for the Cambridge
+
+                     NlnN strategies specific to the Cambridge
                      jet-finder -- the fastest of them is
                      NlnNCam2piMultD. Depending on the size of the
                      event and of the CPU cache it may be up to 2.5
                      times faster than the CGAL-based NlnN
                      strategy. Experiment on your own hardware and
                      events to establish whether the speed gain is
-                     significant. 
+                     significant.
 
-    Best           : was present before, now attempts to select best 
+                     These strategies are based on the work on dynamic
+                     Closest Pair problems by Timothy Chan.
+
+    Best           : (was present before) now attempts to select best 
                      among N2Plain, N2Tiled, N2MinHeapTiled, NlnN. 
 
                      As the best option for a given N may depend on R
@@ -49,12 +53,52 @@ New optimizations:
 Updates to user interface
 -------------------------
 
-- a new class, FjJetDefinition, has been introduced for holding
+While the v1 interface to fastjet has been maintained for backwards
+compatibility, for new developments in v2 and related forthcoming
+work, a new interface is provided as follows:
+
+- User accessible classes and enums have had the "Fj" prefix removed
+  and are instead now in namespace fastjet; the corresponding include
+  files are in the include/fastjet directory. So, for example instead
+  of
+
+    #include "FjClusterSequence.hh"
+    //...
+    FjClusterSequence clust_seq(...)
+
+  one now uses the following
+
+    #include "fastjet/ClusterSequence.hh"
+    //...
+    fastjet::ClusterSequence clust_seq(...)
+
+  If typing "fastjet::" the whole time seems too long-winded, you can
+  abbreviate "fastjet" as "fj" with
+
+    namespace fj = fastjet;
+
+  or eliminate the need for it altogether with
+
+    using namespace fastjet;
+  
+- a new class, fastjet::JetDefinition, has been introduced for holding
   the details of the jet finder (which one, value of R, etc...) that
   is to be used in a given clustering.
 
-  The v1 user interface continues to work, but is now deprecated (for
-  example it does not allow you to select a jet finder other than kt).
+    #include "fastjet/JetDefinition.hh"
+    #include "fastjet/ClusterSequence.hh"
+    //...
 
-- some errors that previously were assertions now throw an FjError
-  exception. Exception handling still remains limited.
+    double R = 0.7;
+
+    // define jet algorithm
+    fastjet::JetDefinition jet_def(fastjet::kt_algorithm, R);
+
+    // get the cluster sequence for a vector of 4-momenta and the 
+    // given jet definition
+    fastjet::ClusterSequence clust_seq(momenta, jet_def);
+
+- some errors that previously were assertions now throw an
+  fastjet::Error -- exception. A fully uniform handling of exceptions
+  is currently some way away however and users for whom this is an
+  important issue should contact the authors.
