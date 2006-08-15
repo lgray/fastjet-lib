@@ -10,7 +10,8 @@ ChangeLog for fastjet-release directory
 	* moved release number up to 1.9, in preparation for forthcoming
 	  release 2
 	
-
+        * updated examples to use new interface for specifying jet finder
+	
 2006-08-11  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
         * modified FjPseudoJet's rapidity calculation so that it gives

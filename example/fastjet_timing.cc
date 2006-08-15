@@ -114,8 +114,11 @@ int main (int argc, char ** argv) {
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
+  FjJetFinder jet_finder;
   if (cmdline.present("-cam")) {
-    FjClusterSequence::set_jet_finder(cambridge_algorithm);
+    jet_finder = cambridge_algorithm;
+  } else {
+    jet_finder = kt_algorithm;
   }
 
   if (!cmdline.all_options_used()) {cerr << 
@@ -185,9 +188,10 @@ int main (int argc, char ** argv) {
     }
   }
   
+  FjJetDefinition jet_def(jet_finder, ktR, strategy);
 
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
-    FjClusterSequence clust_seq(jets,ktR,strategy,write);
+    FjClusterSequence clust_seq(jets,jet_def,write);
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
     cout << "strategy used =  "<< clust_seq.strategy_string()<< endl;
