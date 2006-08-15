@@ -8,7 +8,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc FjClusterSequence.cc FjPseudoJet.cc FjClusterSequence_N2.cc FjClusterSequence_TiledN2.cc FjClusterSequence_Delaunay.cc FjClusterSequence_DumbN3.cc FjClusterSequence_CP2DChan.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc FjClusterSequence.cc FjPseudoJet.cc FjClusterSequence_N2.cc FjClusterSequence_TiledN2.cc FjClusterSequence_Delaunay.cc FjClusterSequence_DumbN3.cc FjClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -76,3 +76,6 @@ FjClusterSequence_DumbN3.o: ../include/FjClusterSequence.hh
 FjClusterSequence_DumbN3.o: ../include/DynamicNearestNeighbours.hh
 FjClusterSequence_DumbN3.o: ../include/FjError.hh
 FjClusterSequence_DumbN3.o: ../include/FjJetDefinition.hh
+ClosestPair2D.o: ../include/ClosestPair2D.hh ../include/ClosestPair2DBase.hh
+ClosestPair2D.o: ../include/SearchTree.hh ../include/MinHeap.hh
+MinHeap.o: ../include/MinHeap.hh

@@ -132,7 +132,7 @@ void FjClusterSequence::_print_banner() {
   _first_time = false;
   
   cout << "#---------------------------------------------------------------------\n";
-  cout << "#                      FastJet release 1.1   			 \n";
+  cout << "#                      FastJet release 1.9   			 \n";
   cout << "#            Written by Matteo Cacciari and Gavin Salam		 \n"; 
   cout << "#            http://www.lpthe.jussieu.fr/~salam/fastjet		 \n"; 
   cout << "#								      	 \n";

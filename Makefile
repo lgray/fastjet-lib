@@ -75,10 +75,11 @@ else
 endif
 
 ifeq ($(USE_CP2DCHAN),yes)
-  INCLUDE+=-DCP2DCHAN -I../../chan
+  INCLUDE += -DCP2DCHAN 
+  #INCLUDE+=-DCP2DCHAN -I../../chan
   #INCLUDE+=-DCP2DCHAN -DTRACK_DEPTH -I../../chan
-  LIBPATH+=
-  LDFLAGS+=-L../../chan -lCP2DChan
+  #LIBPATH+=
+  #LDFLAGS+=-L../../chan -lCP2DChan
 else
 endif
 

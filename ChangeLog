@@ -1,6 +1,16 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
+
+	* Copied Chan method across from its development directory
+
+	* Added a data/ directory with some sample input files
+
+	* moved release number up to 1.9, in preparation for forthcoming
+	  release 2
+	
+
 2006-08-11  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
         * modified FjPseudoJet's rapidity calculation so that it gives
