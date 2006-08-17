@@ -14,6 +14,9 @@ ChangeLog for fastjet-release directory
 	  added private/fastjet-rename-v1-to-v2.pl, to help in much of the
 	  renaming of internals.
 
+	* Introduced include/FjPseudoJet.hh and
+	  include/FjClusterSequence.hh files that provide access to
+	  everything needed by programs based on the v1 legacy interface
 	
 2006-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
 

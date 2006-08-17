@@ -22,6 +22,9 @@ OBJS = $(patsubst %.cc,%.o,$(SRCS))
 fastjet_example: fastjet_example.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_example fastjet_example.o  $(LDFLAGS)
 
+fastjet_example_v1_interface: fastjet_example_v1_interface.o  ../lib/libfastjet.a
+	$(CXX)  -o fastjet_example_v1_interface fastjet_example_v1_interface.o  $(LDFLAGS)
+
 # for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
 # variables must be set in ../Makefile
 ktjet_example: ktjet_example.o 
@@ -53,13 +56,20 @@ depend:
 	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
 # DO NOT DELETE
 
-fastjet_example.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+fastjet_example.o: ../include/FjPseudoJet.hh ../include/fastjet/PseudoJet.hh
+fastjet_example.o: ../include/fastjet/internal/numconsts.hh
+fastjet_example.o: ../include/fastjet/internal/base.hh
 fastjet_example.o: ../include/FjClusterSequence.hh
-fastjet_example.o: ../include/DynamicNearestNeighbours.hh
-fastjet_example.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-fastjet_timing.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+fastjet_example.o: ../include/fastjet/ClusterSequence.hh
+fastjet_example.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+fastjet_example.o: ../include/fastjet/Error.hh
+fastjet_example.o: ../include/fastjet/JetDefinition.hh
+fastjet_timing.o: ../include/FjPseudoJet.hh ../include/fastjet/PseudoJet.hh
+fastjet_timing.o: ../include/fastjet/internal/numconsts.hh
+fastjet_timing.o: ../include/fastjet/internal/base.hh
 fastjet_timing.o: ../include/FjClusterSequence.hh
-fastjet_timing.o: ../include/DynamicNearestNeighbours.hh
-fastjet_timing.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-fastjet_timing.o: CmdLine.hh
+fastjet_timing.o: ../include/fastjet/ClusterSequence.hh
+fastjet_timing.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+fastjet_timing.o: ../include/fastjet/Error.hh
+fastjet_timing.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
 CmdLine.o: CmdLine.hh
