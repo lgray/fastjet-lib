@@ -29,19 +29,21 @@
 //ENDHEADER
 
 
-#include "FjError.hh"
-#include "FjPseudoJet.hh"
+#include "fastjet/Error.hh"
+#include "fastjet/PseudoJet.hh"
 #include<valarray>
 #include<iostream>
 #include<sstream>
 #include<cmath>
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
 
 //----------------------------------------------------------------------
 // another constructor...
-FjPseudoJet::FjPseudoJet(const double px, const double py, const double pz, const double E) {
+PseudoJet::PseudoJet(const double px, const double py, const double pz, const double E) {
   
   _E  = E ;
   _px = px;
@@ -54,7 +56,7 @@ FjPseudoJet::FjPseudoJet(const double px, const double py, const double pz, cons
 
 //----------------------------------------------------------------------
 /// do standard end of initialisation
-void FjPseudoJet::_finish_init () {
+void PseudoJet::_finish_init () {
   _kt2 = this->px()*this->px() + this->py()*this->py();
   if (_kt2 == 0.0) {
     _phi = 0.0; } 
@@ -94,7 +96,7 @@ void FjPseudoJet::_finish_init () {
 
 //----------------------------------------------------------------------
 // return a valarray four-momentum
-valarray<double> FjPseudoJet::four_mom() const {
+valarray<double> PseudoJet::four_mom() const {
   valarray<double> mom(4);
   mom[0] = _px;
   mom[1] = _py;
@@ -106,7 +108,7 @@ valarray<double> FjPseudoJet::four_mom() const {
 //----------------------------------------------------------------------
 // Return the component corresponding to the specified index.
 // taken from CLHEP
-double FjPseudoJet::operator () (int i) const {
+double PseudoJet::operator () (int i) const {
   switch(i) {
   case X:
     return px();
@@ -118,28 +120,28 @@ double FjPseudoJet::operator () (int i) const {
     return e();
   default:
     ostringstream err;
-    err << "FjPseudoJet subscripting: bad index (" << i << ")";
-    throw FjError(err.str());
+    err << "PseudoJet subscripting: bad index (" << i << ")";
+    throw Error(err.str());
   }
   return 0.;
 }  
 
 //----------------------------------------------------------------------
 // return "sum" of two pseudojets
-FjPseudoJet operator+ (const FjPseudoJet & jet1, const FjPseudoJet & jet2) {
-  return FjPseudoJet(jet1.four_mom()+jet2.four_mom());
+PseudoJet operator+ (const PseudoJet & jet1, const PseudoJet & jet2) {
+  return PseudoJet(jet1.four_mom()+jet2.four_mom());
 } 
 
 
 //----------------------------------------------------------------------
 // return the product, coeff * jet
-FjPseudoJet operator* (double coeff, const FjPseudoJet & jet) {
-  return FjPseudoJet(coeff*jet.four_mom());
+PseudoJet operator* (double coeff, const PseudoJet & jet) {
+  return PseudoJet(coeff*jet.four_mom());
 } 
 
 //----------------------------------------------------------------------
 /// multiply the jet's momentum by the coefficient
-void FjPseudoJet::operator*=(double coeff) {
+void PseudoJet::operator*=(double coeff) {
   _px *= coeff;
   _py *= coeff;
   _pz *= coeff;
@@ -150,14 +152,14 @@ void FjPseudoJet::operator*=(double coeff) {
 
 //----------------------------------------------------------------------
 /// divide the jet's momentum by the coefficient
-void FjPseudoJet::operator/=(double coeff) {
+void PseudoJet::operator/=(double coeff) {
   (*this) *= 1.0/coeff;
 }
 
 
 //----------------------------------------------------------------------
 /// add the other jet's momentum to this jet
-void FjPseudoJet::operator+=(const FjPseudoJet & other_jet) {
+void PseudoJet::operator+=(const PseudoJet & other_jet) {
   _px += other_jet._px;
   _py += other_jet._py;
   _pz += other_jet._pz;
@@ -168,7 +170,7 @@ void FjPseudoJet::operator+=(const FjPseudoJet & other_jet) {
 
 //----------------------------------------------------------------------
 /// subtract the other jet's momentum from this jet
-void FjPseudoJet::operator-=(const FjPseudoJet & other_jet) {
+void PseudoJet::operator-=(const PseudoJet & other_jet) {
   _px -= other_jet._px;
   _py -= other_jet._py;
   _pz -= other_jet._pz;
@@ -179,7 +181,7 @@ void FjPseudoJet::operator-=(const FjPseudoJet & other_jet) {
 
 //----------------------------------------------------------------------
 // return kt-distance between this jet and another one
-double FjPseudoJet::kt_distance(const FjPseudoJet & other) const {
+double PseudoJet::kt_distance(const PseudoJet & other) const {
   //double distance = min(this->kt2(), other.kt2());
   double distance = min(_kt2, other._kt2);
   double dphi = abs(_phi - other._phi);
@@ -192,7 +194,7 @@ double FjPseudoJet::kt_distance(const FjPseudoJet & other) const {
 
 //----------------------------------------------------------------------
 // return squared cylinder (eta-phi) distance between this jet and another one
-double FjPseudoJet::plain_distance(const FjPseudoJet & other) const {
+double PseudoJet::plain_distance(const PseudoJet & other) const {
   double dphi = abs(_phi - other._phi);
   if (dphi > pi) {dphi = twopi - dphi;}
   double drap = _rap - other._rap;
@@ -238,7 +240,7 @@ template<class T> vector<T>  objects_sorted_by_values(
 
 //----------------------------------------------------------------------
 /// return a vector of jets sorted into decreasing kt2
-vector<FjPseudoJet> sorted_by_pt(const vector<FjPseudoJet> & jets) {
+vector<PseudoJet> sorted_by_pt(const vector<PseudoJet> & jets) {
   vector<double> minus_kt2(jets.size());
   for (size_t i = 0; i < jets.size(); i++) {minus_kt2[i] = -jets[i].kt2();}
   return objects_sorted_by_values(jets, minus_kt2);
@@ -246,7 +248,7 @@ vector<FjPseudoJet> sorted_by_pt(const vector<FjPseudoJet> & jets) {
 
 //----------------------------------------------------------------------
 /// return a vector of jets sorted into increasing rapidity
-vector<FjPseudoJet> sorted_by_rapidity(const vector<FjPseudoJet> & jets) {
+vector<PseudoJet> sorted_by_rapidity(const vector<PseudoJet> & jets) {
   vector<double> rapidities(jets.size());
   for (size_t i = 0; i < jets.size(); i++) {rapidities[i] = jets[i].rap();}
   return objects_sorted_by_values(jets, rapidities);
@@ -254,9 +256,12 @@ vector<FjPseudoJet> sorted_by_rapidity(const vector<FjPseudoJet> & jets) {
 
 //----------------------------------------------------------------------
 /// return a vector of jets sorted into decreasing energy
-vector<FjPseudoJet> sorted_by_E(const vector<FjPseudoJet> & jets) {
+vector<PseudoJet> sorted_by_E(const vector<PseudoJet> & jets) {
   vector<double> energies(jets.size());
   for (size_t i = 0; i < jets.size(); i++) {energies[i] = -jets[i].E();}
   return objects_sorted_by_values(jets, energies);
 }
+
+
+FASTJET_END_NAMESPACE
 

@@ -1,8 +1,10 @@
-#ifndef __CLOSESTPAIR2DBASE__HH__
-#define __CLOSESTPAIR2DBASE__HH__
+#ifndef __FASTJET_CLOSESTPAIR2DBASE__HH__
+#define __FASTJET_CLOSESTPAIR2DBASE__HH__
 
 #include<vector>
-#include "base.hh"
+#include "fastjet/internal/base.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 /// class for representing 2d coordinates and carrying out some basic 
@@ -91,4 +93,7 @@ public:
   
 };
 
-#endif // __CLOSESTPAIR2DBASE__HH__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_CLOSESTPAIR2DBASE__HH__

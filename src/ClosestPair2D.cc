@@ -1,8 +1,10 @@
-#include "ClosestPair2D.hh"
+#include "fastjet/internal/ClosestPair2D.hh"
 
 #include<limits>
 #include<iostream>
 #include<iomanip>
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 const unsigned int huge_unsigned = 4294967295U;
 const unsigned int twopow31      = 2147483648U;
@@ -458,3 +460,6 @@ void ClosestPair2D::_insert_into_search_tree(Point * new_point) {
     } while (++left_edge != new_circ);
   }
 }
+
+FASTJET_END_NAMESPACE
+

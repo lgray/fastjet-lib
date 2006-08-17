@@ -33,8 +33,10 @@
 
 #include<set>
 #include<list>
-#include "DnnPlane.hh"
+#include "fastjet/internal/DnnPlane.hh"
 using namespace std;
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 /// Initialiser from a set of points on an Eta-Phi plane, where both
@@ -351,3 +353,6 @@ void DnnPlane::_SetAndUpdateNearest(
 }
 
 #endif //  DROP_CGAL
+
+FASTJET_END_NAMESPACE
+

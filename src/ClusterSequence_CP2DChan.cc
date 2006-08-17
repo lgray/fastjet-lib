@@ -29,17 +29,19 @@
 //ENDHEADER
 
 #ifdef CP2DCHAN
-#include "FjClusterSequence.hh"
-#include "ClosestPair2D.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/internal/ClosestPair2D.hh"
 #include<limits>
 #include<vector>
 #include<cmath>
 #include<iostream>
 
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
 using namespace std;
 
 // place for things we don't want outside world to run into
-namespace FjPrivate {
+namespace Private {
   /// class for helping us deal with mirror-image particles.
   class MirrorInfo{
   public:
@@ -59,13 +61,13 @@ namespace FjPrivate {
   
 }
 
-using namespace FjPrivate;
+using namespace Private;
 
 
 //----------------------------------------------------------------------
 /// clusters only up to a distance Dlim -- does not deal with "inclusive" jets
 /// -- these are left to some other part of the program
-void FjClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
+void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
   
   unsigned int n = _initial_n;
 
@@ -189,9 +191,9 @@ void FjClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
 //----------------------------------------------------------------------
 /// a variant of the closest pair clustering which uses a region of
 /// size 2pi+2R in phi.
-void FjClusterSequence::_CP2DChan_cluster_2pi2R () {
+void ClusterSequence::_CP2DChan_cluster_2pi2R () {
 
-  if (_jet_finder != cambridge_algorithm) throw FjError("CP2DChan clustering method called for a jet-finder that is not the cambridge algorithm");
+  if (_jet_finder != cambridge_algorithm) throw Error("CP2DChan clustering method called for a jet-finder that is not the cambridge algorithm");
 
   // run the clustering with mirror copies kept such that only things
   // within _Rparam of a border are mirrored
@@ -205,7 +207,7 @@ void FjClusterSequence::_CP2DChan_cluster_2pi2R () {
 //----------------------------------------------------------------------
 /// a variant of the closest pair clustering which uses a region of
 /// size 2pi + 2*0.3 and then carries on with 2pi+2*R
-void FjClusterSequence::_CP2DChan_cluster_2piMultD () {
+void ClusterSequence::_CP2DChan_cluster_2piMultD () {
 
   // do a first run of clustering up to a small distance parameter,
   if (_Rparam >= 0.39) {
@@ -219,9 +221,9 @@ void FjClusterSequence::_CP2DChan_cluster_2piMultD () {
 
 //----------------------------------------------------------------------
 /// a 4pi variant of the closest pair clustering
-void FjClusterSequence::_CP2DChan_cluster () {
+void ClusterSequence::_CP2DChan_cluster () {
 
-  if (_jet_finder != cambridge_algorithm) throw FjError("_CP2DChan_cluster called for a jet-finder that is not the cambridge algorithm");
+  if (_jet_finder != cambridge_algorithm) throw Error("_CP2DChan_cluster called for a jet-finder that is not the cambridge algorithm");
 
   unsigned int n = _jets.size();
 
@@ -332,7 +334,7 @@ void FjClusterSequence::_CP2DChan_cluster () {
 
 
 //----------------------------------------------------------------------
-void FjClusterSequence::_do_Cambridge_inclusive_jets () {
+void ClusterSequence::_do_Cambridge_inclusive_jets () {
   unsigned int n = _history.size();
   for (unsigned int hist_i = 0; hist_i < n; hist_i++) {
     if (_history[hist_i].child == Invalid) {
@@ -342,3 +344,6 @@ void FjClusterSequence::_do_Cambridge_inclusive_jets () {
 }
 
 #endif // CP2DCHAN
+
+FASTJET_END_NAMESPACE
+

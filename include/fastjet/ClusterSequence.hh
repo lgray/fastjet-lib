@@ -40,29 +40,31 @@
  */
 //----------------------------------------------------------------------
 
-#ifndef __CLUSTERSEQUENCE_H_
-#define __CLUSTERSEQUENCE_H_
+#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
+#define __FASTJET_CLUSTERSEQUENCE_HH__
 
 #include<vector>
 #include<map>
-#include "DynamicNearestNeighbours.hh"
-#include "FjPseudoJet.hh"
+#include "fastjet/internal/DynamicNearestNeighbours.hh"
+#include "fastjet/PseudoJet.hh"
 #include<cassert>
 #include<iostream>
 #include<string>
 #include<cmath> // needed to get double std::abs(double)
-#include "FjError.hh"
-#include "FjJetDefinition.hh"
+#include "fastjet/Error.hh"
+#include "fastjet/JetDefinition.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 /// deals with clustering
-class FjClusterSequence {
+class ClusterSequence {
 
 
  public: 
 
   /// default constructor
-  FjClusterSequence () {};
+  ClusterSequence () {};
 
   /// create a clustersequence starting from the supplied set
   /// of pseudojets and clustering them with the long-invariant
@@ -73,18 +75,18 @@ class FjClusterSequence {
   /// clustering; otherwise strategy = NlnN* uses cylinders algorithms
   /// with some number of pi coverage. If writeout_combinations=true a
   /// summary of the recombination sequence is written out
-  template<class L> FjClusterSequence (const std::vector<L> & pseudojets, 
+  template<class L> ClusterSequence (const std::vector<L> & pseudojets, 
 		   const double & R = 1.0,
-		   const FjStrategy & strategy = Best,
+		   const Strategy & strategy = Best,
 		   const bool & writeout_combinations = false);
 
 
   /// create a clustersequence starting from the supplied set
   /// of pseudojets and clustering them with jet definition specified
   /// by jet_def (which also specifies the clustering strategy)
-  template<class L> FjClusterSequence (
+  template<class L> ClusterSequence (
 			          const std::vector<L> & pseudojets,
-				  const FjJetDefinition & jet_def,
+				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations = false);
 
 
@@ -95,7 +97,7 @@ class FjClusterSequence {
   /// return a vector of all jets (in the sense of the inclusive
   /// algorithm) with pt >= ptmin. Time taken should be of the order
   /// of the number of jets returned.
-  std::vector<FjPseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
+  std::vector<PseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
 
   /// return the number of jets (in the sense of the exclusive
   /// algorithm) that would be obtained when running the algorithm
@@ -105,11 +107,11 @@ class FjClusterSequence {
   /// return a vector of all jets (in the sense of the exclusive
   /// algorithm) that would be obtained when running the algorithm
   /// with the given dcut.
-  std::vector<FjPseudoJet> exclusive_jets (const double & dcut) const;
+  std::vector<PseudoJet> exclusive_jets (const double & dcut) const;
 
   /// return a vector of all jets when the event is clustered (in the
   /// exclusive sense) to exactly njets.
-  std::vector<FjPseudoJet> exclusive_jets (const int & njets) const;
+  std::vector<PseudoJet> exclusive_jets (const int & njets) const;
 
   /// return the dmin corresponding to the recombination that went from
   /// n+1 to n jets (sometimes known as d_{n n+1}).
@@ -122,27 +124,27 @@ class FjClusterSequence {
   double exclusive_dmerge_max (const int & njets) const;
 
   /// return a vector of the particles that make up jet
-  std::vector<FjPseudoJet> constituents (const FjPseudoJet & jet) const;
+  std::vector<PseudoJet> constituents (const PseudoJet & jet) const;
   /// add on to subjet_vector the subjets of jet.
-  void add_constituents (const FjPseudoJet & jet, 
-			 std::vector<FjPseudoJet> & subjet_vector) const;
+  void add_constituents (const PseudoJet & jet, 
+			 std::vector<PseudoJet> & subjet_vector) const;
 
   /// return the enum value of the strategy used to cluster the event
-  inline FjStrategy strategy_used () const {return _strategy;};
+  inline Strategy strategy_used () const {return _strategy;};
   std::string strategy_string () const;
 
 
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
   /// Cambridge algorithm). [May become virtual at some point]
-  double jet_scale_for_algorithm(const FjPseudoJet & jet) const;
+  double jet_scale_for_algorithm(const PseudoJet & jet) const;
 
 //  /// things related to choice of algorithm
-//  enum FjJetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
+//  enum JetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
 //
 
 public:
-  static void set_jet_finder (FjJetFinder jet_finder) {_default_jet_finder = jet_finder;};
+  static void set_jet_finder (JetFinder jet_finder) {_default_jet_finder = jet_finder;};
 
 
   /// a single element in the clustering history (see vector _history
@@ -164,7 +166,7 @@ public:
 		 /// recombine.
 
     int jetp_index; /// index in the _jets vector where we will find the
-                 /// FjPseudoJet object corresponding to this jet
+                 /// PseudoJet object corresponding to this jet
                  /// (i.e. the jet created at this entry of the
                  /// history). NB: if this element of the history
                  /// corresponds to a beam recombination, then
@@ -183,8 +185,8 @@ public:
   /// because we don't seem to be able to access protected elements of
   /// the class for an object that is not "this" (at least in case where
   /// "this" is of a slightly different kind from the object, both
-  /// derived from FjClusterSequence).
-  const std::vector<FjPseudoJet> & jets()    const;
+  /// derived from ClusterSequence).
+  const std::vector<PseudoJet> & jets()    const;
 
   /// allow the user to access the history in this raw manner (see
   /// above for motivation).
@@ -216,38 +218,38 @@ public:
 
 
 protected:
-  static FjJetFinder _default_jet_finder;
-  FjJetDefinition _jet_def;
+  static JetFinder _default_jet_finder;
+  JetDefinition _jet_def;
 
   /// This is the routine that will do all the initialisation and
   /// then run the clustering (may be called by various constructors).
   /// It assumes _jets contains the momenta to be clustered.
-  void _initialise_and_run (const FjJetDefinition & jet_def,
+  void _initialise_and_run (const JetDefinition & jet_def,
 			    const bool & writeout_combinations);
 
   /// This is an alternative routine for initialising and running the
   /// clustering, provided for legacy purposes. The jet finder is that
   /// specified in the static member _default_jet_finder.
   void _initialise_and_run (const double & R,
-			    const FjStrategy & strategy,
+			    const Strategy & strategy,
 			    const bool & writeout_combinations);
 
-  /// This contains the physical FjPseudoJets; for each FjPseudoJet one
+  /// This contains the physical PseudoJets; for each PseudoJet one
   /// can find the corresponding position in the _history by looking
   /// at _jets[i].cluster_hist_index().
-  std::vector<FjPseudoJet> _jets;
+  std::vector<PseudoJet> _jets;
 
 
   /// this vector will contain the branching history; for each stage,
   /// _history[i].jetp_index indicates where to look in the _jets
-  /// vector to get the physical FjPseudoJet.
+  /// vector to get the physical PseudoJet.
   std::vector<history_element> _history;
 
   bool _writeout_combinations;
   int  _initial_n;
   double _Rparam, _R2, _invR2;
-  FjStrategy    _strategy;
-  FjJetFinder   _jet_finder;
+  Strategy    _strategy;
+  JetFinder   _jet_finder;
 
  private:
 
@@ -444,10 +446,10 @@ protected:
 //----------------------------------------------------------------------
 // initialise from some generic type... Has to be made available
 // here in order for it the template aspect of it to work...
-template<class L> FjClusterSequence::FjClusterSequence (
+template<class L> ClusterSequence::ClusterSequence (
 			          const std::vector<L> & pseudojets,
 				  const double & R,
-				  const FjStrategy & strategy,
+				  const Strategy & strategy,
 				  const bool & writeout_combinations) {
 
   // this will ensure that we can point to jets without difficulties
@@ -455,7 +457,7 @@ template<class L> FjClusterSequence::FjClusterSequence (
   _jets.reserve(pseudojets.size()*2);
 
   // insert initial jets this way so that any type L that can be
-  // converted to a pseudojet will work fine (basically FjPseudoJet
+  // converted to a pseudojet will work fine (basically PseudoJet
   // and any type that has [] subscript access to the momentum
   // components, such as CLHEP HepLorentzVector).
   for (unsigned int i = 0; i < pseudojets.size(); i++) {
@@ -468,9 +470,9 @@ template<class L> FjClusterSequence::FjClusterSequence (
 //----------------------------------------------------------------------
 /// constructor of a jet-clustering sequence from a vector of
 /// four-momenta, with the jet definition specified by jet_def
-template<class L> FjClusterSequence::FjClusterSequence (
+template<class L> ClusterSequence::ClusterSequence (
 			          const std::vector<L> & pseudojets,
-				  const FjJetDefinition & jet_def,
+				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations) {
 
   // this will ensure that we can point to jets without difficulties
@@ -478,7 +480,7 @@ template<class L> FjClusterSequence::FjClusterSequence (
   _jets.reserve(pseudojets.size()*2);
 
   // insert initial jets this way so that any type L that can be
-  // converted to a pseudojet will work fine (basically FjPseudoJet
+  // converted to a pseudojet will work fine (basically PseudoJet
   // and any type that has [] subscript access to the momentum
   // components, such as CLHEP HepLorentzVector).
   for (unsigned int i = 0; i < pseudojets.size(); i++) {
@@ -488,28 +490,28 @@ template<class L> FjClusterSequence::FjClusterSequence (
 }
 
 
-inline const std::vector<FjPseudoJet> & FjClusterSequence::jets () const {
+inline const std::vector<PseudoJet> & ClusterSequence::jets () const {
   return _jets;
 }
 
-inline const std::vector<FjClusterSequence::history_element> & FjClusterSequence::history () const {
+inline const std::vector<ClusterSequence::history_element> & ClusterSequence::history () const {
   return _history;
 }
 
-inline unsigned int FjClusterSequence::n_particles() const {return _initial_n;}
+inline unsigned int ClusterSequence::n_particles() const {return _initial_n;}
 
 
 
-inline double FjClusterSequence::jet_scale_for_algorithm(
-				  const FjPseudoJet & jet) const {
+inline double ClusterSequence::jet_scale_for_algorithm(
+				  const PseudoJet & jet) const {
   if (_jet_finder == kt_algorithm)             {return jet.kt2();}
   else if (_jet_finder == cambridge_algorithm) {return 1.0;}
-  else {throw FjError("Unrecognised jet finder");}
+  else {throw Error("Unrecognised jet finder");}
 }
 
 
 //----------------------------------------------------------------------
-template <class J> inline void FjClusterSequence::_bj_set_jetinfo(
+template <class J> inline void ClusterSequence::_bj_set_jetinfo(
                             J * const jetA, const int _jets_index) const {
     jetA->eta  = _jets[_jets_index].rap();
     jetA->phi  = _jets[_jets_index].phi();
@@ -524,7 +526,7 @@ template <class J> inline void FjClusterSequence::_bj_set_jetinfo(
 
 
 //----------------------------------------------------------------------
-template <class J> inline double FjClusterSequence::_bj_dist(
+template <class J> inline double ClusterSequence::_bj_dist(
                 const J * const jetA, const J * const jetB) const {
   double dphi = std::abs(jetA->phi - jetB->phi);
   double deta = (jetA->eta - jetB->eta);
@@ -533,7 +535,7 @@ template <class J> inline double FjClusterSequence::_bj_dist(
 }
 
 //----------------------------------------------------------------------
-template <class J> inline double FjClusterSequence::_bj_diJ(const J * const jet) const {
+template <class J> inline double ClusterSequence::_bj_diJ(const J * const jet) const {
   double kt2 = jet->kt2;
   if (jet->NN != NULL) {if (jet->NN->kt2 < kt2) {kt2 = jet->NN->kt2;}}
   return jet->NN_dist * kt2;
@@ -543,7 +545,7 @@ template <class J> inline double FjClusterSequence::_bj_diJ(const J * const jet)
 //----------------------------------------------------------------------
 // set the NN for jet without checking whether in the process you might
 // have discovered a new nearest neighbour for another jet
-template <class J> inline void FjClusterSequence::_bj_set_NN_nocross(
+template <class J> inline void ClusterSequence::_bj_set_NN_nocross(
                  J * const jet, J * const head, const J * const tail) const {
   double NN_dist = _R2;
   J * NN  = NULL;
@@ -571,7 +573,7 @@ template <class J> inline void FjClusterSequence::_bj_set_NN_nocross(
 
 
 //----------------------------------------------------------------------
-template <class J> inline void FjClusterSequence::_bj_set_NN_crosscheck(J * const jet, 
+template <class J> inline void ClusterSequence::_bj_set_NN_crosscheck(J * const jet, 
 		    J * const head, const J * const tail) const {
   double NN_dist = _R2;
   J * NN  = NULL;
@@ -592,4 +594,7 @@ template <class J> inline void FjClusterSequence::_bj_set_NN_crosscheck(J * cons
 
 
 
-#endif // __CLUSTERSEQUENCE_H_
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_CLUSTERSEQUENCE_HH__

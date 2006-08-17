@@ -29,12 +29,14 @@
 //ENDHEADER
 
 
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<cmath>
 #include <cstdlib>
 #include<cassert>
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 using namespace std;
@@ -45,11 +47,11 @@ using namespace std;
 ///
 /// The only thing this routine has going for it is that memory usage
 /// is O(N)!
-void FjClusterSequence::_really_dumb_cluster () {
+void ClusterSequence::_really_dumb_cluster () {
 
   // the array that will be overwritten here will be one
   // of pointers to jets.
-  vector<FjPseudoJet *> jetsp(_jets.size());
+  vector<PseudoJet *> jetsp(_jets.size());
   vector<int>         indices(_jets.size());
 
   for (size_t i = 0; i<_jets.size(); i++) {
@@ -128,3 +130,6 @@ void FjClusterSequence::_really_dumb_cluster () {
   }
 
 }
+
+FASTJET_END_NAMESPACE
+

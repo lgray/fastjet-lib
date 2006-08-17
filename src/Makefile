@@ -8,7 +8,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc FjClusterSequence.cc FjPseudoJet.cc FjClusterSequence_N2.cc FjClusterSequence_TiledN2.cc FjClusterSequence_Delaunay.cc FjClusterSequence_DumbN3.cc FjClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -31,51 +31,76 @@ depend:
 	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
 # DO NOT DELETE
 
-DnnPlane.o: ../include/DnnPlane.hh ../include/Triangulation.hh
-DnnPlane.o: ../include/DynamicNearestNeighbours.hh ../include/numconsts.hh
-Dnn4piCylinder.o: ../include/Dnn4piCylinder.hh
-Dnn4piCylinder.o: ../include/DynamicNearestNeighbours.hh
-Dnn4piCylinder.o: ../include/numconsts.hh ../include/DnnPlane.hh
-Dnn4piCylinder.o: ../include/Triangulation.hh
-Dnn3piCylinder.o: ../include/Dnn3piCylinder.hh
-Dnn3piCylinder.o: ../include/DynamicNearestNeighbours.hh
-Dnn3piCylinder.o: ../include/numconsts.hh ../include/DnnPlane.hh
-Dnn3piCylinder.o: ../include/Triangulation.hh
-Dnn2piCylinder.o: ../include/Dnn2piCylinder.hh
-Dnn2piCylinder.o: ../include/DynamicNearestNeighbours.hh
-Dnn2piCylinder.o: ../include/numconsts.hh ../include/DnnPlane.hh
-Dnn2piCylinder.o: ../include/Triangulation.hh
-FjClusterSequence.o: ../include/FjError.hh ../include/FjPseudoJet.hh
-FjClusterSequence.o: ../include/numconsts.hh ../include/FjClusterSequence.hh
-FjClusterSequence.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequence.o: ../include/FjJetDefinition.hh
-FjPseudoJet.o: ../include/FjError.hh ../include/FjPseudoJet.hh
-FjPseudoJet.o: ../include/numconsts.hh
-FjClusterSequence_N2.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
-FjClusterSequence_N2.o: ../include/FjClusterSequence.hh
-FjClusterSequence_N2.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequence_N2.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-FjClusterSequence_TiledN2.o: ../include/FjPseudoJet.hh
-FjClusterSequence_TiledN2.o: ../include/numconsts.hh
-FjClusterSequence_TiledN2.o: ../include/FjClusterSequence.hh
-FjClusterSequence_TiledN2.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequence_TiledN2.o: ../include/FjError.hh
-FjClusterSequence_TiledN2.o: ../include/FjJetDefinition.hh
-FjClusterSequence_Delaunay.o: ../include/FjError.hh ../include/FjPseudoJet.hh
-FjClusterSequence_Delaunay.o: ../include/numconsts.hh
-FjClusterSequence_Delaunay.o: ../include/FjClusterSequence.hh
-FjClusterSequence_Delaunay.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequence_Delaunay.o: ../include/FjJetDefinition.hh
-FjClusterSequence_Delaunay.o: ../include/Dnn4piCylinder.hh
-FjClusterSequence_Delaunay.o: ../include/DnnPlane.hh
-FjClusterSequence_Delaunay.o: ../include/Triangulation.hh
-FjClusterSequence_Delaunay.o: ../include/Dnn3piCylinder.hh
-FjClusterSequence_Delaunay.o: ../include/Dnn2piCylinder.hh
-FjClusterSequence_DumbN3.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
-FjClusterSequence_DumbN3.o: ../include/FjClusterSequence.hh
-FjClusterSequence_DumbN3.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequence_DumbN3.o: ../include/FjError.hh
-FjClusterSequence_DumbN3.o: ../include/FjJetDefinition.hh
-ClosestPair2D.o: ../include/ClosestPair2D.hh ../include/ClosestPair2DBase.hh
-ClosestPair2D.o: ../include/SearchTree.hh ../include/MinHeap.hh
-MinHeap.o: ../include/MinHeap.hh
+DnnPlane.o: ../include/fastjet/internal/DnnPlane.hh
+DnnPlane.o: ../include/fastjet/internal/Triangulation.hh
+DnnPlane.o: ../include/fastjet/internal/base.hh
+DnnPlane.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+DnnPlane.o: ../include/fastjet/internal/numconsts.hh
+Dnn4piCylinder.o: ../include/fastjet/internal/Dnn4piCylinder.hh
+Dnn4piCylinder.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+Dnn4piCylinder.o: ../include/fastjet/internal/numconsts.hh
+Dnn4piCylinder.o: ../include/fastjet/internal/base.hh
+Dnn4piCylinder.o: ../include/fastjet/internal/DnnPlane.hh
+Dnn4piCylinder.o: ../include/fastjet/internal/Triangulation.hh
+Dnn3piCylinder.o: ../include/fastjet/internal/Dnn3piCylinder.hh
+Dnn3piCylinder.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+Dnn3piCylinder.o: ../include/fastjet/internal/numconsts.hh
+Dnn3piCylinder.o: ../include/fastjet/internal/base.hh
+Dnn3piCylinder.o: ../include/fastjet/internal/DnnPlane.hh
+Dnn3piCylinder.o: ../include/fastjet/internal/Triangulation.hh
+Dnn2piCylinder.o: ../include/fastjet/internal/Dnn2piCylinder.hh
+Dnn2piCylinder.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+Dnn2piCylinder.o: ../include/fastjet/internal/numconsts.hh
+Dnn2piCylinder.o: ../include/fastjet/internal/base.hh
+Dnn2piCylinder.o: ../include/fastjet/internal/DnnPlane.hh
+Dnn2piCylinder.o: ../include/fastjet/internal/Triangulation.hh
+ClusterSequence.o: ../include/fastjet/Error.hh
+ClusterSequence.o: ../include/fastjet/internal/base.hh
+ClusterSequence.o: ../include/fastjet/PseudoJet.hh
+ClusterSequence.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequence.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequence.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequence.o: ../include/fastjet/JetDefinition.hh
+PseudoJet.o: ../include/fastjet/Error.hh ../include/fastjet/internal/base.hh
+PseudoJet.o: ../include/fastjet/PseudoJet.hh
+PseudoJet.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequence_N2.o: ../include/fastjet/PseudoJet.hh
+ClusterSequence_N2.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequence_N2.o: ../include/fastjet/internal/base.hh
+ClusterSequence_N2.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequence_N2.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequence_N2.o: ../include/fastjet/Error.hh
+ClusterSequence_N2.o: ../include/fastjet/JetDefinition.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/PseudoJet.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/internal/base.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/Error.hh
+ClusterSequence_TiledN2.o: ../include/fastjet/JetDefinition.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/Error.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/base.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/PseudoJet.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/JetDefinition.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/Dnn4piCylinder.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/DnnPlane.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/Triangulation.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/Dnn3piCylinder.hh
+ClusterSequence_Delaunay.o: ../include/fastjet/internal/Dnn2piCylinder.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/PseudoJet.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/internal/base.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/Error.hh
+ClusterSequence_DumbN3.o: ../include/fastjet/JetDefinition.hh
+ClosestPair2D.o: ../include/fastjet/internal/ClosestPair2D.hh
+ClosestPair2D.o: ../include/fastjet/internal/ClosestPair2DBase.hh
+ClosestPair2D.o: ../include/fastjet/internal/base.hh
+ClosestPair2D.o: ../include/fastjet/internal/SearchTree.hh
+ClosestPair2D.o: ../include/fastjet/internal/MinHeap.hh
+MinHeap.o: ../include/fastjet/internal/MinHeap.hh
+MinHeap.o: ../include/fastjet/internal/base.hh

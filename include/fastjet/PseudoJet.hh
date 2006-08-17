@@ -32,13 +32,15 @@
 // NB: to do at some point
 //     - add += and *= operators
 
-#ifndef __PSEUDOJET_H_
-#define __PSEUDOJET_H_
+#ifndef __FASTJET_PSEUDOJET_HH__
+#define __FASTJET_PSEUDOJET_HH__
 
 #include<valarray>
 #include<vector>
 #include<cassert>
-#include "numconsts.hh"
+#include "fastjet/internal/numconsts.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //using namespace std;
 
@@ -48,13 +50,13 @@ const double MaxRap = 1e5;
 
 /// Class to contain pseudojets, including minimal information of use to
 /// to jet-clustering routines.
-class FjPseudoJet {
+class PseudoJet {
  public:
-  FjPseudoJet() {};
+  PseudoJet() {};
   /// construct a pseudojet from explicit components
-  FjPseudoJet(const double px, const double py, const double pz, const double E);
+  PseudoJet(const double px, const double py, const double pz, const double E);
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
-  template <class L> FjPseudoJet(const L & some_four_vector) ;
+  template <class L> PseudoJet(const L & some_four_vector) ;
 
   // first "const double &" says that result is a reference to the
   // stored value and that we will not change that stored value.
@@ -97,14 +99,14 @@ class FjPseudoJet {
   std::valarray<double> four_mom() const;
 
   /// returns kt distance between this jet and another
-  double kt_distance(const FjPseudoJet & other) const;
+  double kt_distance(const PseudoJet & other) const;
 
   /// returns squared cylinder (eta-phi) distance between this jet and another
-  double plain_distance(const FjPseudoJet & other) const;
+  double plain_distance(const PseudoJet & other) const;
 
   // this seemed to compile except if it was used
   friend inline double 
-    kt_distance(const FjPseudoJet & jet1, const FjPseudoJet & jet2) { 
+    kt_distance(const PseudoJet & jet1, const PseudoJet & jet2) { 
                                         return jet1.kt_distance(jet2);};
 
   /// returns distance between this jet and the beam
@@ -112,13 +114,13 @@ class FjPseudoJet {
 
   // maybe not necessary for it to be friend?
   // [but without it does not work...]
-  friend FjPseudoJet operator+(const FjPseudoJet &, const FjPseudoJet &);
-  friend FjPseudoJet operator*(double, const FjPseudoJet &);
+  friend PseudoJet operator+(const PseudoJet &, const PseudoJet &);
+  friend PseudoJet operator*(double, const PseudoJet &);
 
   void operator*=(double);
   void operator/=(double);
-  void operator+=(const FjPseudoJet &);
-  void operator-=(const FjPseudoJet &);
+  void operator+=(const PseudoJet &);
+  void operator-=(const PseudoJet &);
 
  private: 
   // NB: following order must be kept for things to behave sensibly...
@@ -135,13 +137,13 @@ class FjPseudoJet {
 // Routines to do with providing sorted arrays of vectors.
 
 /// return a vector of jets sorted into decreasing transverse momentum
-std::vector<FjPseudoJet> sorted_by_pt(const std::vector<FjPseudoJet> & jets);
+std::vector<PseudoJet> sorted_by_pt(const std::vector<PseudoJet> & jets);
 
 /// return a vector of jets sorted into increasing rapidity
-std::vector<FjPseudoJet> sorted_by_rapidity(const std::vector<FjPseudoJet> & jets);
+std::vector<PseudoJet> sorted_by_rapidity(const std::vector<PseudoJet> & jets);
 
 /// return a vector of jets sorted into decreasing energy
-std::vector<FjPseudoJet> sorted_by_E(const std::vector<FjPseudoJet> & jets);
+std::vector<PseudoJet> sorted_by_E(const std::vector<PseudoJet> & jets);
 
 //----------------------------------------------------------------------
 // some code to help sorting
@@ -176,7 +178,7 @@ private:
 /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
 // NB: do not know if it really needs to be inline, but when it wasn't
 //     linking failed with g++ (who knows what was wrong...)
-template <class L> inline  FjPseudoJet::FjPseudoJet(const L & some_four_vector) {
+template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 
   _px = some_four_vector[0];
   _py = some_four_vector[1];
@@ -189,9 +191,12 @@ template <class L> inline  FjPseudoJet::FjPseudoJet(const L & some_four_vector) 
 ////// fun and games...
 ////template<class L> class FJVector : public L {
 //////  /** Default Constructor: create jet with no constituents */
-//////  FjVector<L>();
+//////  Vector<L>();
 ////
 ////};
 ////
 
-#endif // __PSEUDOJET_H_
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_PSEUDOJET_HH__

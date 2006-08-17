@@ -30,12 +30,14 @@
 
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
-#ifndef __DNN4PICYLINDER_HH_
-#define __DNN4PICYLINDER_HH_
+#ifndef __FASTJET_DNN4PICYLINDER_HH__
+#define __FASTJET_DNN4PICYLINDER_HH__
 
-#include "DynamicNearestNeighbours.hh"
-#include "DnnPlane.hh"
-#include "numconsts.hh"
+#include "fastjet/internal/DynamicNearestNeighbours.hh"
+#include "fastjet/internal/DnnPlane.hh"
+#include "fastjet/internal/numconsts.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the surface of cylinder (using two copies of
@@ -117,5 +119,8 @@ inline Dnn4piCylinder::~Dnn4piCylinder() {
   delete _DNN2;
 }
 
-#endif //  __DNN4PICYLINDER_HH_
+
+FASTJET_END_NAMESPACE
+
+#endif //  __FASTJET_DNN4PICYLINDER_HH__
 #endif //  DROP_CGAL 

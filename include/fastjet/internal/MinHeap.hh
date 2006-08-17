@@ -1,12 +1,14 @@
 
-#ifndef __MINHEAP__HH__
-#define __MINHEAP__HH__
+#ifndef __FASTJET_MINHEAP__HH__
+#define __FASTJET_MINHEAP__HH__
 
 #include<vector>
 #include<cassert>
 #include<memory>
 #include<limits>
-#include "base.hh"
+#include "fastjet/internal/base.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //======================================================================
 /// A class which provides a "heap"-like structure that allows
@@ -53,4 +55,7 @@ private:
 
 };
 
-#endif // __MINHEAP__HH__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_MINHEAP__HH__

@@ -29,15 +29,17 @@
 //ENDHEADER
 
 
-#ifndef __DYNAMICNEARESTNEIGHBOURS_HH_
-#define __DYNAMICNEARESTNEIGHBOURS_HH_
+#ifndef __FASTJET_DYNAMICNEARESTNEIGHBOURS_HH__
+#define __FASTJET_DYNAMICNEARESTNEIGHBOURS_HH__
 
 #include<vector>
 #include<string>
 #include<iostream>
 #include<sstream>
 #include<cassert>
-#include "numconsts.hh"
+#include "fastjet/internal/numconsts.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// Shortcut for dealing with eta-phi coordinates.
 //typedef std::pair<double,double> EtaPhi;
@@ -163,4 +165,7 @@ public:
   virtual ~DynamicNearestNeighbours () {}
 };
   
-#endif // __DYNAMICNEARESTNEIGHBOURS_HH_
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_DYNAMICNEARESTNEIGHBOURS_HH__

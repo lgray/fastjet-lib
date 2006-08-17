@@ -28,9 +28,9 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "FjError.hh"
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/Error.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<sstream>
 #include<cmath>
@@ -38,27 +38,29 @@
 #include<cassert>
 #include<string>
 
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
 using namespace std;
 
 //// initialised static member has to go in the .cc code
-FjJetFinder FjClusterSequence::_default_jet_finder = kt_algorithm;
+JetFinder ClusterSequence::_default_jet_finder = kt_algorithm;
 //
 
-void FjClusterSequence::_initialise_and_run (
+void ClusterSequence::_initialise_and_run (
 				  const double & R,
-				  const FjStrategy & strategy,
+				  const Strategy & strategy,
 				  const bool & writeout_combinations) {
 
-  FjJetDefinition jet_def(_default_jet_finder, R, strategy);
+  JetDefinition jet_def(_default_jet_finder, R, strategy);
   _initialise_and_run(jet_def, writeout_combinations);
 }
 
-void FjClusterSequence::_initialise_and_run (
-				  const FjJetDefinition & jet_def,
+void ClusterSequence::_initialise_and_run (
+				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations) {
   _print_banner();
 
-  if (_jets.size() == 0) {throw FjError("Cannot run jet-finder on empty event");}
+  if (_jets.size() == 0) {throw Error("Cannot run jet-finder on empty event");}
 
   // make a local copy of the jet definition (for future use?)
   _jet_def = jet_def;
@@ -116,17 +118,17 @@ void FjClusterSequence::_initialise_and_run (
   } else {
     ostringstream err;
     err << "Unrecognised value for strategy: "<<_strategy;
-    throw FjError(err.str());
+    throw Error(err.str());
     //assert(false);
   }
 }
 
 
 // this needs to be defined outside the class definition.
-bool FjClusterSequence::_first_time = true;
+bool ClusterSequence::_first_time = true;
 //----------------------------------------------------------------------
 // prints a banner on the first call
-void FjClusterSequence::_print_banner() {
+void ClusterSequence::_print_banner() {
 
   if (!_first_time) {return;}
   _first_time = false;
@@ -151,7 +153,7 @@ void FjClusterSequence::_print_banner() {
 //----------------------------------------------------------------------
 // Return the component corresponding to the specified index.
 // taken from CLHEP
-string FjClusterSequence::strategy_string ()  const {
+string ClusterSequence::strategy_string ()  const {
   string strategy;
   switch(_strategy) {
   case NlnN:
@@ -185,10 +187,10 @@ string FjClusterSequence::strategy_string ()  const {
 
 //----------------------------------------------------------------------
 // return all inclusive jets with pt > ptmin
-vector<FjPseudoJet> FjClusterSequence::inclusive_jets (const double & ptmin) const{
+vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
   double dcut = ptmin*ptmin;
   int i = _history.size() - 1; // last jet
-  vector<FjPseudoJet> jets;
+  vector<PseudoJet> jets;
   if (_jet_finder == kt_algorithm) {
     while (i >= 0) {
       // with our specific definition of dij and diB (i.e. R appears only in 
@@ -208,11 +210,11 @@ vector<FjPseudoJet> FjClusterSequence::inclusive_jets (const double & ptmin) con
       // we can exit
       if (_history[i].parent2 != BeamJet) {break;}
       int parent1 = _history[i].parent1;
-      const FjPseudoJet & jet = _jets[_history[parent1].jetp_index];
+      const PseudoJet & jet = _jets[_history[parent1].jetp_index];
       if (jet.perp2() >= dcut) {jets.push_back(jet);}
       i--;
     }
-  } else {throw FjError("Unrecognized jet algorithm");}
+  } else {throw Error("Unrecognized jet algorithm");}
   return jets;
 }
 
@@ -220,7 +222,7 @@ vector<FjPseudoJet> FjClusterSequence::inclusive_jets (const double & ptmin) con
 //----------------------------------------------------------------------
 // return the number of exclusive jets that would have been obtained
 // running the algorithm in exclusive mode with the given dcut
-int FjClusterSequence::n_exclusive_jets (const double & dcut) const {
+int ClusterSequence::n_exclusive_jets (const double & dcut) const {
 
   // first locate the point where clustering would have stopped (i.e. the
   // first time max_dij_so_far > dcut)
@@ -239,7 +241,7 @@ int FjClusterSequence::n_exclusive_jets (const double & dcut) const {
 //----------------------------------------------------------------------
 // return all exclusive jets that would have been obtained running
 // the algorithm in exclusive mode with the given dcut
-vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const double & dcut) const {
+vector<PseudoJet> ClusterSequence::exclusive_jets (const double & dcut) const {
   int njets = n_exclusive_jets(dcut);
   return exclusive_jets(njets);
 }
@@ -247,7 +249,7 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const double & dcut) cons
 
 //----------------------------------------------------------------------
 // return the jets obtained by clustering the event to n jets.
-vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const {
+vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
 
   // make sure the user does not ask for more than jets than there
   // were particles in the first place.
@@ -263,7 +265,7 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const 
   if (2*_initial_n != static_cast<int>(_history.size())) {
     ostringstream err;
     err << "2*_initial_n != _history.size() -- this endangers internal assumptions!\n";
-    throw FjError(err.str());
+    throw Error(err.str());
     //assert(false);
   }
 
@@ -272,7 +274,7 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const 
   // which it refers were created before the stopping point -- if they
   // were then add them to the list, otherwise they are subsequent
   // recombinations of the jets that we are looking for.
-  vector<FjPseudoJet> jets;
+  vector<PseudoJet> jets;
   for (unsigned int i = stop_point; i < _history.size(); i++) {
     int parent1 = _history[i].parent1;
     if (parent1 < stop_point) {
@@ -288,10 +290,10 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const 
   // sanity check...
   if (static_cast<int>(jets.size()) != njets) {
     ostringstream err;
-    err << "FjClusterSequence::exclusive_jets: size of returned vector ("
+    err << "ClusterSequence::exclusive_jets: size of returned vector ("
 	 <<jets.size()<<") does not coincide with requested number of jets ("
 	 <<njets<<")";
-    throw FjError(err.str());
+    throw Error(err.str());
   }
 
   return jets;
@@ -300,7 +302,7 @@ vector<FjPseudoJet> FjClusterSequence::exclusive_jets (const int & njets) const 
 //----------------------------------------------------------------------
 /// return the dmin corresponding to the recombination that went from
 /// n+1 to n jets
-double FjClusterSequence::exclusive_dmerge (const int & njets) const {
+double ClusterSequence::exclusive_dmerge (const int & njets) const {
   assert(njets > 0);
   if (njets >= _initial_n) {return 0.0;}
   return _history[2*_initial_n-njets-1].dij;
@@ -312,7 +314,7 @@ double FjClusterSequence::exclusive_dmerge (const int & njets) const {
 /// up to the one that led to an n-jet final state; identical to
 /// exclusive_dmerge, except in cases where the dmin do not increase
 /// monotonically.
-double FjClusterSequence::exclusive_dmerge_max (const int & njets) const {
+double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
   assert(njets > 0);
   if (njets >= _initial_n) {return 0.0;}
   return _history[2*_initial_n-njets-1].max_dij_so_far;
@@ -321,8 +323,8 @@ double FjClusterSequence::exclusive_dmerge_max (const int & njets) const {
 
 //----------------------------------------------------------------------
 // return a vector of the particles that make up a jet
-vector<FjPseudoJet> FjClusterSequence::constituents (const FjPseudoJet & jet) const {
-  vector<FjPseudoJet> subjets;
+vector<PseudoJet> ClusterSequence::constituents (const PseudoJet & jet) const {
+  vector<PseudoJet> subjets;
   add_constituents(jet, subjets);
   return subjets;
 }
@@ -330,8 +332,8 @@ vector<FjPseudoJet> FjClusterSequence::constituents (const FjPseudoJet & jet) co
 
 //----------------------------------------------------------------------
 // recursive routine that adds on constituents of jet to the subjet_vector
-void FjClusterSequence::add_constituents (
-           const FjPseudoJet & jet, vector<FjPseudoJet> & subjet_vector) const {
+void ClusterSequence::add_constituents (
+           const PseudoJet & jet, vector<PseudoJet> & subjet_vector) const {
   // find out position in cluster history
   int i = jet.cluster_hist_index();
   int parent1 = _history[i].parent1;
@@ -356,9 +358,9 @@ void FjClusterSequence::add_constituents (
 
 //----------------------------------------------------------------------
 // initialise the history in a standard way
-void FjClusterSequence::_fill_initial_history () {
+void ClusterSequence::_fill_initial_history () {
 
-  if (_jets.size() == 0) {throw FjError("The event contains no momenta");}
+  if (_jets.size() == 0) {throw Error("The event contains no momenta");}
 
   // reserve sufficient space for everything
   _jets.reserve(_jets.size()*2);
@@ -375,7 +377,7 @@ void FjClusterSequence::_fill_initial_history () {
 
     _history.push_back(element);
     
-    // get cross-referencing right from FjPseudoJets
+    // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
   }
   _initial_n = _jets.size();
@@ -383,7 +385,7 @@ void FjClusterSequence::_fill_initial_history () {
 
 //----------------------------------------------------------------------
 // initialise the history in a standard way
-void FjClusterSequence::_add_step_to_history (
+void ClusterSequence::_add_step_to_history (
 	       const int & step_number, const int & parent1, 
 	       const int & parent2, const int & jetp_index,
 	       const double & dij) {
@@ -404,7 +406,7 @@ void FjClusterSequence::_add_step_to_history (
   _history[parent1].child = local_step;
   if (parent2 >= 0) {_history[parent2].child = local_step;}
 
-  // get cross-referencing right from FjPseudoJets
+  // get cross-referencing right from PseudoJets
   if (jetp_index != Invalid) {
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
@@ -427,7 +429,7 @@ void FjClusterSequence::_add_step_to_history (
 // will always correspond to the same set of consituent particles if 
 // two branching histories are equivalent in terms of the particles
 // contained in any given pseudojet.
-vector<int> FjClusterSequence::unique_history_order() const {
+vector<int> ClusterSequence::unique_history_order() const {
 
   // first construct an array that will tell us the lowest constituent
   // of a given jet -- this will always be one of the original
@@ -463,7 +465,7 @@ vector<int> FjClusterSequence::unique_history_order() const {
 
 //======================================================================
 // helper for unique_history_order
-void FjClusterSequence::_extract_tree_children(
+void ClusterSequence::_extract_tree_children(
        int position, 
        valarray<bool> & extracted, 
        const valarray<int> & lowest_constituent,
@@ -481,7 +483,7 @@ void FjClusterSequence::_extract_tree_children(
 
 //======================================================================
 // helper for unique_history_order
-void FjClusterSequence::_extract_tree_parents(
+void ClusterSequence::_extract_tree_parents(
        int position, 
        valarray<bool> & extracted, 
        const valarray<int> & lowest_constituent,
@@ -513,7 +515,7 @@ void FjClusterSequence::_extract_tree_parents(
 /// carries out the bookkeeping associated with the step of recombining
 /// jet_i and jet_j (assuming a distance dij) and returns the index
 /// of the recombined jet, newjet_k.
-void FjClusterSequence::_do_ij_recombination_step(
+void ClusterSequence::_do_ij_recombination_step(
                                const int & jet_i, const int & jet_j, 
 			       const double & dij, 
 			       int & newjet_k) {
@@ -542,7 +544,7 @@ void FjClusterSequence::_do_ij_recombination_step(
 //======================================================================
 /// carries out the bookkeeping associated with the step of recombining
 /// jet_i with the beam
-void FjClusterSequence::_do_iB_recombination_step(
+void ClusterSequence::_do_iB_recombination_step(
 				  const int & jet_i, const double & diB) {
   // get history index
   int newstep_k = _history.size();
@@ -552,3 +554,6 @@ void FjClusterSequence::_do_iB_recombination_step(
 		       Invalid, diB);
 
 }
+
+FASTJET_END_NAMESPACE
+

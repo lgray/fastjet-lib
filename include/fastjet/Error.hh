@@ -30,19 +30,21 @@
 
 
 
-#ifndef __ERROR_HH__
-#define __ERROR_HH__
+#ifndef __FASTJET_ERROR_HH__
+#define __FASTJET_ERROR_HH__
 
 #include<iostream>
 #include<string>
-#include "base.hh"
+#include "fastjet/internal/base.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// class corresponding to errors that will be thrown by fastjet
-class FjError {
+class Error {
 public:
   // constructors
-  FjError() {;};
-  FjError(const std::string & message) {
+  Error() {;};
+  Error(const std::string & message) {
     _message = message; std::cerr << message << std::endl;};
 
   std::string message() const {return _message;};
@@ -51,4 +53,7 @@ private:
   std::string _message;
 };
 
-#endif // __ERROR_HH__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_ERROR_HH__

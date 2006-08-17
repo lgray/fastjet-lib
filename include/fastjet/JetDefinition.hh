@@ -28,15 +28,17 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __JETDEFINITION_H_
-#define __JETDEFINITION_H_
+#ifndef __FASTJET_JETDEFINITION_HH__
+#define __FASTJET_JETDEFINITION_HH__
 
-#include "base.hh"
+#include "fastjet/internal/base.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //======================================================================
 /// the various options for the algorithmic strategy to adopt in
 /// clustering events with kt and cambridge style algorithms.
-enum FjStrategy {
+enum Strategy {
   /// experimental ...
   N2MinHeapTiled   = -4, 
   /// fastest from about 50..10^4
@@ -65,7 +67,7 @@ enum FjStrategy {
 
 //======================================================================
 /// the various families of jet-clustering algorithm
-enum FjJetFinder {
+enum JetFinder {
   /// the longitudinally invariant kt algorithm
   kt_algorithm=0,
   /// the longitudinally invariant variant of the cambridge algorithm
@@ -77,7 +79,7 @@ enum FjJetFinder {
 //======================================================================
 /// class that is intended to hold a full definition of the jet
 /// clusterer
-class FjJetDefinition {
+class JetDefinition {
   
 public:
 
@@ -85,24 +87,27 @@ public:
   /// with information about how algorithically to run it). 
   ///
   /// [at some point might recombination schemes be added here?]
-  FjJetDefinition(FjJetFinder jet_finder = kt_algorithm, 
+  JetDefinition(JetFinder jet_finder = kt_algorithm, 
 		  double R = 1.0, 
-		  FjStrategy strategy = Best) :
+		  Strategy strategy = Best) :
     _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
 };
 
 
   // return information about the definition...
-  FjJetFinder jet_finder  () const {return _jet_finder  ;}; 
+  JetFinder jet_finder  () const {return _jet_finder  ;}; 
   double      R           () const {return _Rparam      ;};
-  FjStrategy  strategy    () const {return _strategy    ;};
+  Strategy  strategy    () const {return _strategy    ;};
 
 private:
-  FjJetFinder _jet_finder;
+  JetFinder _jet_finder;
   double      _Rparam    ;
-  FjStrategy  _strategy  ;
+  Strategy  _strategy  ;
 
 
 };
 
-#endif // __JETDEFINITION_H_
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_JETDEFINITION_HH__

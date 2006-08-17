@@ -1,7 +1,9 @@
-#include "MinHeap.hh"
+#include "fastjet/internal/MinHeap.hh"
 #include<iostream>
 #include<cmath>
 #include<limits>
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
@@ -92,3 +94,6 @@ void MinHeap::update(unsigned int loc, double new_value) {
   }
 
 }
+
+FASTJET_END_NAMESPACE
+

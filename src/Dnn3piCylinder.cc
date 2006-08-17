@@ -31,8 +31,10 @@
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
 #include <set>
-#include "Dnn3piCylinder.hh"
+#include "fastjet/internal/Dnn3piCylinder.hh"
 using namespace std;
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 /// initialiser...
@@ -153,3 +155,6 @@ void Dnn3piCylinder::RemoveAndAddPoints(const vector<int> & indices_to_remove,
 }
 
 #endif //  DROP_CGAL 
+
+FASTJET_END_NAMESPACE
+

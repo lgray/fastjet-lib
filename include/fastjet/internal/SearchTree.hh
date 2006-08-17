@@ -1,13 +1,15 @@
 // Gavin's first attempt at a binary search tree of known maximum size...
 
 
-#ifndef __SEARCHTREE_HH__
-#define __SEARCHTREE_HH__
+#ifndef __FASTJET_SEARCHTREE_HH__
+#define __FASTJET_SEARCHTREE_HH__
 
 #include<vector>
 #include<cassert>
 #include<cstddef>
-#include "base.hh"
+#include "fastjet/internal/base.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 //======================================================================
@@ -312,7 +314,7 @@ template<class T> void SearchTree<T>::_initialize(const std::vector<T> & init) {
 
   // now label the rest of the nodes
   unsigned int scale = (n+1)/2;
-  unsigned int top   = min(n-1,scale);
+  unsigned int top   = std::min(n-1,scale);
   _nodes[top].parent = NULL;
   _top_node = &(_nodes[top]);
   _do_initial_connections(top, scale, 0, n, 0);
@@ -714,4 +716,7 @@ template<class T> typename SearchTree<T>::const_circulator SearchTree<T>::somewh
   return const_circulator(_top_node);
 }
 
-#endif // __SEARCHTREE_HH__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_SEARCHTREE_HH__

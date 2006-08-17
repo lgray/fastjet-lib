@@ -30,15 +30,17 @@
 
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
-#ifndef __TRIANGULATION__
-#define __TRIANGULATION__
+#ifndef __FASTJET_TRIANGULATION__
+#define __FASTJET_TRIANGULATION__
 
 // file: examples/Triangulation_2/Voronoi.C
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
 #include <CGAL/Triangulation_hierarchy_2.h>
 #include <CGAL/Triangulation_vertex_base_with_info_2.h>
-#include "base.hh"
+#include "fastjet/internal/base.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// the basic geometrical kernel that lies at the base of all CGAL
 /// operations
@@ -91,5 +93,8 @@ typedef Triangulation::Face_circulator Face_circulator;
 typedef Triangulation::Face_handle Face_handle;
 
 
-#endif // __TRIANGULATION__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_TRIANGULATION__
 #endif //  DROP_CGAL 

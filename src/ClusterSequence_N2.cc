@@ -29,13 +29,15 @@
 //ENDHEADER
 
 
-// The plain N^2 part of the FjClusterSequence class -- separated out
+// The plain N^2 part of the ClusterSequence class -- separated out
 // from the rest of the class implementation so as to speed up
 // compilation of this particular part while it is under test.
 
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream>
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 using namespace std;
@@ -43,7 +45,7 @@ using namespace std;
 //----------------------------------------------------------------------
 /// Order(N^2) clustering 
 ///
-void FjClusterSequence::_simple_N2_cluster() {
+void ClusterSequence::_simple_N2_cluster() {
   int n = _jets.size();
   BriefJet * briefjets = new BriefJet[n];
   BriefJet * jetA = briefjets, * jetB;
@@ -175,3 +177,6 @@ void FjClusterSequence::_simple_N2_cluster() {
   delete[] diJ;
   delete[] briefjets;
 }
+
+FASTJET_END_NAMESPACE
+

@@ -31,11 +31,13 @@
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
 
-#ifndef __DNNPLANE_HH_
-#define __DNNPLANE_HH_
+#ifndef __FASTJET_DNNPLANE_HH__
+#define __FASTJET_DNNPLANE_HH__
 
-#include "Triangulation.hh"
-#include "DynamicNearestNeighbours.hh"
+#include "fastjet/internal/Triangulation.hh"
+#include "fastjet/internal/DynamicNearestNeighbours.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 /// class derived from DynamicNearestNeighbours that provides an
@@ -153,6 +155,9 @@ inline double DnnPlane::eta(const int i) const {
 inline double DnnPlane::phi(const int i) const {
   return _supervertex[i].vertex->point().y(); };
 
-#endif //  __DNNPLANE_HH_
+
+FASTJET_END_NAMESPACE
+
+#endif //  __FASTJET_DNNPLANE_HH__
 
 #endif // DROP_CGAL

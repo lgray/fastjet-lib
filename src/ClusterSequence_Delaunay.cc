@@ -29,20 +29,22 @@
 //ENDHEADER
 
 
-#include "FjError.hh"
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/Error.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<sstream>
 #include<cmath>
 #include <cstdlib>
 #include<cassert>
-
+//
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
-#include "Dnn4piCylinder.hh"
-#include "Dnn3piCylinder.hh"
-#include "Dnn2piCylinder.hh"
+#include "fastjet/internal/Dnn4piCylinder.hh"
+#include "fastjet/internal/Dnn3piCylinder.hh"
+#include "fastjet/internal/Dnn2piCylinder.hh"
 #endif //  DROP_CGAL 
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
@@ -53,7 +55,7 @@ using namespace std;
 ///
 /// There may be internally asserted assumptions about absence of
 /// points with coincident eta-phi coordinates.
-void FjClusterSequence::_delaunay_cluster () {
+void ClusterSequence::_delaunay_cluster () {
 
   int n = _jets.size();
 
@@ -80,7 +82,7 @@ void FjClusterSequence::_delaunay_cluster () {
     ostringstream err;
     err << "ERROR: Requested strategy "<<strategy_string()<<" but it is not"<<endl;
     err << "       supported because FastJet was compiled without CGAL"<<endl;
-    throw FjError(err.str());
+    throw Error(err.str());
     //assert(false);
   }
 #endif // DROP_CGAL
@@ -88,7 +90,7 @@ void FjClusterSequence::_delaunay_cluster () {
     ostringstream err;
     err << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl;
     assert(false);
-    throw FjError(err.str());
+    throw Error(err.str());
   }
 
   // We will find nearest neighbour for each vertex, and include
@@ -180,7 +182,7 @@ void FjClusterSequence::_delaunay_cluster () {
       // to do away with warnings about type mismatch between point3 (int) 
       // and points.size (unsigned int)
       if (static_cast<unsigned int> (point3) != points.size()-1) {
-	throw FjError("INTERNAL ERROR: point3 != points.size()-1");}
+	throw Error("INTERNAL ERROR: point3 != points.size()-1");}
     } else {
       // update DNN
       DNN->RemovePoint(jet_i, updated_neighbours);
@@ -215,7 +217,7 @@ void FjClusterSequence::_delaunay_cluster () {
 ///
 /// . otherwise do nothing
 ///
-void FjClusterSequence::_add_ktdistance_to_map(
+void ClusterSequence::_add_ktdistance_to_map(
                           const int & ii, 
 			  DistMap & DijMap,
 			  const DynamicNearestNeighbours * DNN) {
@@ -248,4 +250,7 @@ void FjClusterSequence::_add_ktdistance_to_map(
     }
   }
 }
+
+
+FASTJET_END_NAMESPACE
 

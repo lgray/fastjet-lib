@@ -1,12 +1,14 @@
-#ifndef __CLOSESTPAIR2D__HH__
-#define __CLOSESTPAIR2D__HH__
+#ifndef __FASTJET_CLOSESTPAIR2D__HH__
+#define __FASTJET_CLOSESTPAIR2D__HH__
 
 #include<vector>
 #include<stack>
 #include<iostream>
-#include "ClosestPair2DBase.hh"
-#include "SearchTree.hh"
-#include "MinHeap.hh"
+#include "fastjet/internal/ClosestPair2DBase.hh"
+#include "fastjet/internal/SearchTree.hh"
+#include "fastjet/internal/MinHeap.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 /// concrete implementation for finding closest pairs in 2D -- will
@@ -54,7 +56,7 @@ public:
 			    std::vector<unsigned int> & new_IDs);
 
   // mostly for checking how things are working...
-  inline void print_tree_depths(ostream & outdev) const {
+  inline void print_tree_depths(std::ostream & outdev) const {
     outdev    << _trees[0]->max_depth() << " "
 	      << _trees[1]->max_depth() << " "
 	      << _trees[2]->max_depth() << "\n";
@@ -196,4 +198,7 @@ inline unsigned int ClosestPair2D::size() {
 }
 
 
-#endif // __CLOSESTPAIR2D__HH__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_CLOSESTPAIR2D__HH__

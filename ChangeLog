@@ -1,6 +1,20 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-17  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
+
+	* Reworked naming scheme, so that all includes are now in
+	  include/fastjet/ and those not destined for the user are in
+	  include/fastjet/internal; we've introduced a namespace (fastjet)
+	  and a fastjet/internal/base.hh file where we define begin and
+	  end macros for it; we've put everything into the namespace...
+
+	  The "Fj" prefix has been systematically removed...
+	
+	  added private/fastjet-rename-v1-to-v2.pl, to help in much of the
+	  renaming of internals.
+
+	
 2006-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
 
 	* Copied Chan method across from its development directory

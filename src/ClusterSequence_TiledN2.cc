@@ -29,25 +29,27 @@
 //ENDHEADER
 
 
-// The plain N^2 part of the FjClusterSequence class -- separated out
+// The plain N^2 part of the ClusterSequence class -- separated out
 // from the rest of the class implementation so as to speed up
 // compilation of this particular part while it is under test.
 
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<vector>
 #include<cmath>
-
+//
 #ifdef CP2DCHAN
-#include "MinHeap.hh"
+#include "fastjet/internal/MinHeap.hh"
 #endif // CP2DCHAN
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
 
 //----------------------------------------------------------------------
-void FjClusterSequence::_bj_remove_from_tiles(TiledJet * const jet) {
+void ClusterSequence::_bj_remove_from_tiles(TiledJet * const jet) {
   Tile * tile = & _tiles[jet->tile_index];
 
   if (jet->previous == NULL) {
@@ -83,7 +85,7 @@ void FjClusterSequence::_bj_remove_from_tiles(TiledJet * const jet) {
 /// with appropriate precautions when close to the edge of the tiled
 /// region.
 ///
-void FjClusterSequence::_initialise_tiles() {
+void ClusterSequence::_initialise_tiles() {
 
   // first decide tile sizes
   _tile_size_eta = _Rparam;
@@ -163,7 +165,7 @@ void FjClusterSequence::_initialise_tiles() {
 
 //----------------------------------------------------------------------
 /// return the tile index corresponding to the given eta,phi point
-int FjClusterSequence::_tile_index(const double & eta, const double & phi) const {
+int ClusterSequence::_tile_index(const double & eta, const double & phi) const {
   int ieta, iphi;
   if      (eta <= _tiles_eta_min) {ieta = 0;}
   else if (eta >= _tiles_eta_max) {ieta = _tiles_ieta_max-_tiles_ieta_min;}
@@ -186,7 +188,7 @@ int FjClusterSequence::_tile_index(const double & eta, const double & phi) const
 //----------------------------------------------------------------------
 // overloaded version which additionally sets up information regarding the
 // tiling
-inline void FjClusterSequence::_tj_set_jetinfo( TiledJet * const jet,
+inline void ClusterSequence::_tj_set_jetinfo( TiledJet * const jet,
 					      const int _jets_index) {
   // first call the generic setup
   _bj_set_jetinfo<>(jet, _jets_index);
@@ -207,7 +209,7 @@ inline void FjClusterSequence::_tj_set_jetinfo( TiledJet * const jet,
 
 //----------------------------------------------------------------------
 /// output the contents of the tiles
-void FjClusterSequence::_print_tiles(TiledJet * briefjets ) const {
+void ClusterSequence::_print_tiles(TiledJet * briefjets ) const {
   for (vector<Tile>::const_iterator tile = _tiles.begin(); 
        tile < _tiles.end(); tile++) {
     cout << "Tile " << tile - _tiles.begin()<<" = ";
@@ -230,7 +232,7 @@ void FjClusterSequence::_print_tiles(TiledJet * briefjets ) const {
 /// you go along (could have done it more C++ like with vector with reserved
 /// space, but fear is that it would have been slower, e.g. checking
 /// for end of vector at each stage to decide whether to resize it)
-void FjClusterSequence::_add_neighbours_to_tile_union(const int tile_index, 
+void ClusterSequence::_add_neighbours_to_tile_union(const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles) const {
   for (Tile * const * near_tile = _tiles[tile_index].begin_tiles; 
        near_tile != _tiles[tile_index].end_tiles; near_tile++){
@@ -245,7 +247,7 @@ void FjClusterSequence::_add_neighbours_to_tile_union(const int tile_index,
 /// Like _add_neighbours_to_tile_union, but only adds neighbours if 
 /// their "tagged" status is false; when a neighbour is added its
 /// tagged status is set to true.
-inline void FjClusterSequence::_add_untagged_neighbours_to_tile_union(
+inline void ClusterSequence::_add_untagged_neighbours_to_tile_union(
                const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
   for (Tile ** near_tile = _tiles[tile_index].begin_tiles; 
@@ -262,7 +264,7 @@ inline void FjClusterSequence::_add_untagged_neighbours_to_tile_union(
 
 //----------------------------------------------------------------------
 /// run a tiled clustering
-void FjClusterSequence::_tiled_N2_cluster() {
+void ClusterSequence::_tiled_N2_cluster() {
 
   _initialise_tiles();
 
@@ -505,7 +507,7 @@ void FjClusterSequence::_tiled_N2_cluster() {
 
 //----------------------------------------------------------------------
 /// run a tiled clustering
-void FjClusterSequence::_faster_tiled_N2_cluster() {
+void ClusterSequence::_faster_tiled_N2_cluster() {
 
   _initialise_tiles();
 
@@ -727,7 +729,7 @@ void FjClusterSequence::_faster_tiled_N2_cluster() {
 //----------------------------------------------------------------------
 /// run a tiled clustering, with our minheap for keeping track of the
 /// smallest dij
-void FjClusterSequence::_minheap_faster_tiled_N2_cluster() {
+void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 
   _initialise_tiles();
 
@@ -932,3 +934,6 @@ void FjClusterSequence::_minheap_faster_tiled_N2_cluster() {
 }
 
 #endif  // CP2DCHAN
+
+FASTJET_END_NAMESPACE
+
