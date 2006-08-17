@@ -20,6 +20,17 @@ ChangeLog for fastjet-release directory
 
 	* Removed the CP2DCHAN compile definition -- now the Chan code is
 	  always included.
+
+	* Added areas code to main release: created a base class
+	  ClusterSequenceWithArea, as well as derived classes:
+
+            ClusterSequenceActiveArea                // was WithMeanArea
+	    ClusterSequenceActiveAreaExplicitGhosts  // was WithArea
+
+	  and also included the class
+
+	    ActiveAreaSpec
+
 	
 2006-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
 

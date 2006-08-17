@@ -25,6 +25,10 @@ fastjet_example: fastjet_example.o  ../lib/libfastjet.a
 fastjet_example_v1_interface: fastjet_example_v1_interface.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_example_v1_interface fastjet_example_v1_interface.o  $(LDFLAGS)
 
+
+fastjet_areas: fastjet_areas.o  ../lib/libfastjet.a
+	$(CXX)  -o fastjet_areas fastjet_areas.o  $(LDFLAGS)
+
 # for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
 # variables must be set in ../Makefile
 ktjet_example: ktjet_example.o 
