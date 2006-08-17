@@ -50,8 +50,8 @@
 /// where the clustering can be repeated to aid timing and multiple
 /// events can be combined to get to larger multiplicities. Some options:
 ///
-///   -strategy N   indicate stratgey from the enum FjStrategy (see
-///                 FjClusterSequence.hh).
+///   -strategy N   indicate stratgey from the enum fj::Strategy (see
+///                 fj::ClusterSequence.hh).
 ///
 ///   -combine nev  for combining multiple events from the data file in order
 ///                 to get to large multiplicities.
@@ -68,9 +68,9 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
-#include "FjClusterSequenceWithMeanArea.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceActiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -88,12 +88,13 @@
 #include "Cluster.hh"
 
 
+namespace fj = fastjet;
 using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
-  vector<FjPseudoJet> cnst = cs.constituents(jet);
+void print_jet(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
+  vector<fj::PseudoJet> cnst = cs.constituents(jet);
   for (size_t i = 0; i < cnst.size(); i++) {
     printf("%6i %18.5f %18.5f %18.6e\n",i,cnst[i].rap(),cnst[i].phi(),cnst[i].perp());
   }
@@ -102,23 +103,22 @@ void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
 
 
 
-void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
-			double cell_area, double ghost_etamax,
-			double grid_scatter, double kt_scatter, int repeat,
-			double ktR, FjStrategy strategy,
+void determine_Zmass_kt(const vector<fj::PseudoJet> & event, 
+                        fj::JetDefinition jet_def,
+                        fj::ActiveAreaSpec active_area_spec,
 			double & mass, double & corrected_mass, 
 			double & ext_corrected_mass);
 
 enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
-void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
+void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
 			  double R, ConeVariant cone_variant,
 			  double & mass, double & corrected_mass);
 
-double Zmass_from_jets(const vector<FjPseudoJet> & jets);
+double Zmass_from_jets(const vector<fj::PseudoJet> & jets);
 
 void read_event(istream &, double, bool, bool,
-		vector<FjPseudoJet> &, vector<FjPseudoJet> & );
+		vector<fj::PseudoJet> &, vector<fj::PseudoJet> & );
 
 
 //----------------------------------------------------------------------
@@ -126,11 +126,11 @@ void read_event(istream &, double, bool, bool,
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
-  // allow the use to specify the FjStrategy either through the
+  // allow the use to specify the fj::Strategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
-  FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", Best)));
+  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
+				     cmdline.int_val("-clever", fj::Best)));
   int  repeat  = cmdline.int_val("-repeat",1);
   //bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
@@ -142,9 +142,9 @@ int main (int argc, char ** argv) {
   bool   massless = cmdline.present("-massless");
   int    nev      = int(cmdline.double_val("-nev",1.0));
   bool   nopileup  = cmdline.present("-nopileup"); 
-  double cell_area = cmdline.double_val("-cell_area",0.01);
+  double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
+  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   double bin_width    = cmdline.double_val("-bin",5.0);
   double max_bin      = cmdline.double_val("-max",400.0);
@@ -162,11 +162,17 @@ int main (int argc, char ** argv) {
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
   string rerun_string = cmdline.string_val("-rerun","");
   cerr <<"writefreq is "<<writefreq<<endl;
-  if (cmdline.present("-cam")) {FjClusterSequence::set_jet_finder(cambridge_algorithm);}
+  fj::JetFinder jet_finder = cmdline.present("-cam") ? 
+                                fj::cambridge_algorithm : fj::kt_algorithm;
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
     exit(-1);}
+
+  // create the definitions for our jet finder and areas spec...
+  fj::JetDefinition jet_def(jet_finder, ktR, strategy);
+  fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
+                                      grid_scatter, kt_scatter);
 
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
@@ -184,7 +190,7 @@ int main (int argc, char ** argv) {
 
   for (int iev = 0; iev < nev; iev++) {
     cerr << "Doing event "<< iev<<endl;
-    vector<FjPseudoJet> hard_event, full_event;
+    vector<fj::PseudoJet> hard_event, full_event;
     
     // read in the event 
     read_event(input, etamax, hydjet, massless, hard_event, full_event);
@@ -199,10 +205,8 @@ int main (int argc, char ** argv) {
 			   hard_ev_mass, hcor_ev_mass);
       hecr_ev_mass = hcor_ev_mass;
     } else {
-      determine_Zmass_kt(hard_event,
-		  cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-		  repeat, ktR, strategy, hard_ev_mass, hcor_ev_mass,
-		  hecr_ev_mass);
+      determine_Zmass_kt(hard_event, jet_def, active_area_spec,
+                         hard_ev_mass, hcor_ev_mass, hecr_ev_mass);
     }
 
 
@@ -214,10 +218,8 @@ int main (int argc, char ** argv) {
 			     full_ev_mass, fcor_ev_mass);
 	fecr_ev_mass = fcor_ev_mass;
       } else {
-	determine_Zmass_kt(full_event,
-			   cell_area,ghost_etamax, grid_scatter, kt_scatter, 
-			   repeat, ktR, strategy, full_ev_mass, fcor_ev_mass,
-			   fecr_ev_mass);
+	determine_Zmass_kt(full_event, jet_def, active_area_spec,
+                           full_ev_mass, fcor_ev_mass, fecr_ev_mass);
       }
     } else {
       full_ev_mass = hard_ev_mass;
@@ -278,24 +280,20 @@ int main (int argc, char ** argv) {
 
 
 //======================================================================
-void determine_Zmass_kt(const vector<FjPseudoJet> & event, 
-			double cell_area, double ghost_etamax,
-			double grid_scatter, double kt_scatter, int repeat,
-			double ktR, FjStrategy strategy,
+void determine_Zmass_kt(const vector<fj::PseudoJet> & event, 
+                        fj::JetDefinition jet_def,
+                        fj::ActiveAreaSpec active_area_spec,
 			double & mass, double & corrected_mass,
 			double & ext_corrected_mass) {
 
-  FjClusterSequenceWithMeanArea clust(event,
-				      cell_area,ghost_etamax,
-				      grid_scatter, kt_scatter, repeat,
-				      ktR,strategy);
+  fj::ClusterSequenceActiveArea clust(event,jet_def,active_area_spec);
 
   double median_pt_per_area = clust.pt_per_unit_area();
   
-  vector<FjPseudoJet> jets = clust.inclusive_jets();
+  vector<fj::PseudoJet> jets = clust.inclusive_jets();
   mass = Zmass_from_jets(jets);
 
-  vector<FjPseudoJet> corrected_jets(jets.size());
+  vector<fj::PseudoJet> corrected_jets(jets.size());
   for (unsigned i = 0; i < jets.size(); i++) {
     double correction_factor = 1 - 
       median_pt_per_area*clust.area(jets[i])/jets[i].perp(); 
@@ -306,19 +304,19 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 
   // now to the correction with the "extended" area
   for (unsigned i = 0; i < jets.size(); i++) {
-    FjPseudoJet ext_area = median_pt_per_area*clust.extended_area(jets[i]);
-    if (ext_area.perp2() >= jets[i].perp2() || 
-	ext_area.E()     >= jets[i].E()) {
+    fj::PseudoJet area_4vect = median_pt_per_area*clust.area_4vector(jets[i]);
+    if (area_4vect.perp2() >= jets[i].perp2() || 
+	area_4vect.E()     >= jets[i].E()) {
       // if the correction is too large, set the jet to zero
       corrected_jets[i] =  0.0 * jets[i];
     } else {
       // otherwise do an E-scheme subtraction
       double px,py,pz,E;
-      px = jets[i].px() - ext_area.px();
-      py = jets[i].py() - ext_area.py();
-      pz = jets[i].pz() - ext_area.pz();
-      E  = jets[i].E()  - ext_area.E();
-      corrected_jets[i] = FjPseudoJet(px,py,pz,E);
+      px = jets[i].px() - area_4vect.px();
+      py = jets[i].py() - area_4vect.py();
+      pz = jets[i].pz() - area_4vect.pz();
+      E  = jets[i].E()  - area_4vect.E();
+      corrected_jets[i] = fj::PseudoJet(px,py,pz,E);
     }
   }
 
@@ -328,7 +326,7 @@ void determine_Zmass_kt(const vector<FjPseudoJet> & event,
 
 
 //======================================================================
-void determine_Zmass_cone(const vector<FjPseudoJet> & event, 
+void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
 			double R, ConeVariant cone_variant,
 			double & mass, double & corrected_mass) {
   
@@ -368,9 +366,9 @@ void determine_Zmass_cone(const vector<FjPseudoJet> & event,
   m.run(towers,m_jets);
 
   // extract the jets
-  vector<FjPseudoJet> jets;
+  vector<fj::PseudoJet> jets;
   for (unsigned i=0; i < m_jets.size(); i++) 
-    jets.push_back(FjPseudoJet(m_jets[i].fourVector.px,
+    jets.push_back(fj::PseudoJet(m_jets[i].fourVector.px,
 			       m_jets[i].fourVector.py,
 			       m_jets[i].fourVector.pz,
 			       m_jets[i].fourVector.E));
@@ -381,16 +379,16 @@ void determine_Zmass_cone(const vector<FjPseudoJet> & event,
 
 
 //======================================================================
-double Zmass_from_jets(const vector<FjPseudoJet> & jets) {
-  vector<FjPseudoJet> sorted_jets = sorted_by_pt(jets);
+double Zmass_from_jets(const vector<fj::PseudoJet> & jets) {
+  vector<fj::PseudoJet> sorted_jets = sorted_by_pt(jets);
   double mass = sqrt(abs((sorted_jets[0]+sorted_jets[1]).m2()));
   return mass;
 }
 
 //======================================================================
 void read_event(istream & input, double etamax, bool hydjet, bool massless,
-		vector<FjPseudoJet> & hard_event, 
-		vector<FjPseudoJet> & full_event) {
+		vector<fj::PseudoJet> & hard_event, 
+		vector<fj::PseudoJet> & full_event) {
   string line;
   int  nsub  = 0;
   while (getline(input, line)) {
@@ -427,7 +425,7 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
 	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
       }
     }
-    FjPseudoJet psjet(fourvec);
+    fj::PseudoJet psjet(fourvec);
     psjet.set_user_index(0);
     if (abs(psjet.rap() < etamax)) {full_event.push_back(psjet);}
 

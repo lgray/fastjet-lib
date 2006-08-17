@@ -66,72 +66,88 @@ depend:
 # DO NOT DELETE
 
 CmdLine.o: CmdLine.hh
-FjClusterSequenceWithArea.o: FjClusterSequenceWithArea.hh
-FjClusterSequenceWithArea.o: ../include/FjPseudoJet.hh
-FjClusterSequenceWithArea.o: ../include/numconsts.hh
-FjClusterSequenceWithArea.o: ../include/FjClusterSequence.hh
-FjClusterSequenceWithArea.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequenceWithArea.o: ../include/FjError.hh
-FjClusterSequenceWithArea.o: ../include/FjJetDefinition.hh
-FjClusterSequenceWithMeanArea.o: ../include/FjPseudoJet.hh
-FjClusterSequenceWithMeanArea.o: ../include/numconsts.hh
-FjClusterSequenceWithMeanArea.o: ../include/FjClusterSequence.hh
-FjClusterSequenceWithMeanArea.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequenceWithMeanArea.o: ../include/FjError.hh
-FjClusterSequenceWithMeanArea.o: ../include/FjJetDefinition.hh
-FjClusterSequenceWithMeanArea.o: FjClusterSequenceWithMeanArea.hh
-FjClusterSequenceWithMeanArea.o: FjClusterSequenceWithArea.hh
 FlavourHolder.o: FlavourHolder.hh
-FjClusterSequenceWithPassiveArea.o: FjClusterSequenceWithPassiveArea.hh
-FjClusterSequenceWithPassiveArea.o: ../include/FjPseudoJet.hh
-FjClusterSequenceWithPassiveArea.o: ../include/numconsts.hh
-FjClusterSequenceWithPassiveArea.o: ../include/FjClusterSequence.hh
-FjClusterSequenceWithPassiveArea.o: ../include/DynamicNearestNeighbours.hh
-FjClusterSequenceWithPassiveArea.o: ../include/FjError.hh
-FjClusterSequenceWithPassiveArea.o: ../include/FjJetDefinition.hh
-areas.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
-areas.o: ../include/FjClusterSequence.hh
-areas.o: ../include/DynamicNearestNeighbours.hh ../include/FjError.hh
-areas.o: ../include/FjJetDefinition.hh CmdLine.hh
-areas-native.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+ClusterSequencePassiveArea.o: ClusterSequencePassiveArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/PseudoJet.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/base.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceWithArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/Error.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/JetDefinition.hh
+areas.o: ../include/FjPseudoJet.hh ../include/fastjet/PseudoJet.hh
+areas.o: ../include/fastjet/internal/numconsts.hh
+areas.o: ../include/fastjet/internal/base.hh ../include/FjClusterSequence.hh
+areas.o: ../include/fastjet/ClusterSequence.hh
+areas.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+areas.o: ../include/fastjet/Error.hh ../include/fastjet/JetDefinition.hh
+areas.o: CmdLine.hh
+areas-native.o: ../include/FjPseudoJet.hh ../include/fastjet/PseudoJet.hh
+areas-native.o: ../include/fastjet/internal/numconsts.hh
+areas-native.o: ../include/fastjet/internal/base.hh
 areas-native.o: ../include/FjClusterSequence.hh
-areas-native.o: ../include/DynamicNearestNeighbours.hh ../include/FjError.hh
-areas-native.o: ../include/FjJetDefinition.hh FjClusterSequenceWithArea.hh
-areas-native.o: CmdLine.hh
-areas-histogramming.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas-native.o: ../include/fastjet/ClusterSequence.hh
+areas-native.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+areas-native.o: ../include/fastjet/Error.hh
+areas-native.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
+areas-histogramming.o: ../include/FjPseudoJet.hh
+areas-histogramming.o: ../include/fastjet/PseudoJet.hh
+areas-histogramming.o: ../include/fastjet/internal/numconsts.hh
+areas-histogramming.o: ../include/fastjet/internal/base.hh
 areas-histogramming.o: ../include/FjClusterSequence.hh
-areas-histogramming.o: ../include/DynamicNearestNeighbours.hh
-areas-histogramming.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-areas-histogramming.o: FjClusterSequenceWithArea.hh CmdLine.hh
-areas-test-mean-class.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas-histogramming.o: ../include/fastjet/ClusterSequence.hh
+areas-histogramming.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+areas-histogramming.o: ../include/fastjet/Error.hh
+areas-histogramming.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
+areas-test-mean-class.o: ../include/FjPseudoJet.hh
+areas-test-mean-class.o: ../include/fastjet/PseudoJet.hh
+areas-test-mean-class.o: ../include/fastjet/internal/numconsts.hh
+areas-test-mean-class.o: ../include/fastjet/internal/base.hh
 areas-test-mean-class.o: ../include/FjClusterSequence.hh
-areas-test-mean-class.o: ../include/DynamicNearestNeighbours.hh
-areas-test-mean-class.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-areas-test-mean-class.o: FjClusterSequenceWithMeanArea.hh
-areas-test-mean-class.o: FjClusterSequenceWithArea.hh CmdLine.hh
-subtraction-tests.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+areas-test-mean-class.o: ../include/fastjet/ClusterSequence.hh
+areas-test-mean-class.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+areas-test-mean-class.o: ../include/fastjet/Error.hh
+areas-test-mean-class.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
+subtraction-tests.o: ../include/FjPseudoJet.hh
+subtraction-tests.o: ../include/fastjet/PseudoJet.hh
+subtraction-tests.o: ../include/fastjet/internal/numconsts.hh
+subtraction-tests.o: ../include/fastjet/internal/base.hh
 subtraction-tests.o: ../include/FjClusterSequence.hh
-subtraction-tests.o: ../include/DynamicNearestNeighbours.hh
-subtraction-tests.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-subtraction-tests.o: FjClusterSequenceWithMeanArea.hh
-subtraction-tests.o: FjClusterSequenceWithArea.hh CmdLine.hh CSHisto.hh
-subtraction-tests-mass.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+subtraction-tests.o: ../include/fastjet/ClusterSequence.hh
+subtraction-tests.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+subtraction-tests.o: ../include/fastjet/Error.hh
+subtraction-tests.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
+subtraction-tests.o: CSHisto.hh
+subtraction-tests-mass.o: ../include/FjPseudoJet.hh
+subtraction-tests-mass.o: ../include/fastjet/PseudoJet.hh
+subtraction-tests-mass.o: ../include/fastjet/internal/numconsts.hh
+subtraction-tests-mass.o: ../include/fastjet/internal/base.hh
 subtraction-tests-mass.o: ../include/FjClusterSequence.hh
-subtraction-tests-mass.o: ../include/DynamicNearestNeighbours.hh
-subtraction-tests-mass.o: ../include/FjError.hh ../include/FjJetDefinition.hh
-subtraction-tests-mass.o: FjClusterSequenceWithMeanArea.hh
-subtraction-tests-mass.o: FjClusterSequenceWithArea.hh CmdLine.hh CSHisto.hh
-subtraction-tests-inclpt.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
+subtraction-tests-mass.o: ../include/fastjet/ClusterSequence.hh
+subtraction-tests-mass.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+subtraction-tests-mass.o: ../include/fastjet/Error.hh
+subtraction-tests-mass.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
+subtraction-tests-mass.o: CSHisto.hh
+subtraction-tests-inclpt.o: ../include/FjPseudoJet.hh
+subtraction-tests-inclpt.o: ../include/fastjet/PseudoJet.hh
+subtraction-tests-inclpt.o: ../include/fastjet/internal/numconsts.hh
+subtraction-tests-inclpt.o: ../include/fastjet/internal/base.hh
 subtraction-tests-inclpt.o: ../include/FjClusterSequence.hh
-subtraction-tests-inclpt.o: ../include/DynamicNearestNeighbours.hh
-subtraction-tests-inclpt.o: ../include/FjError.hh
-subtraction-tests-inclpt.o: ../include/FjJetDefinition.hh
-subtraction-tests-inclpt.o: FjClusterSequenceWithMeanArea.hh
-subtraction-tests-inclpt.o: FjClusterSequenceWithArea.hh CmdLine.hh
+subtraction-tests-inclpt.o: ../include/fastjet/ClusterSequence.hh
+subtraction-tests-inclpt.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+subtraction-tests-inclpt.o: ../include/fastjet/Error.hh
+subtraction-tests-inclpt.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
 subtraction-tests-inclpt.o: CSHisto.hh
-areas-2point.o: ../include/FjPseudoJet.hh ../include/numconsts.hh
-areas-2point.o: ../include/FjClusterSequence.hh
-areas-2point.o: ../include/DynamicNearestNeighbours.hh ../include/FjError.hh
-areas-2point.o: ../include/FjJetDefinition.hh
-areas-2point.o: FjClusterSequenceWithMeanArea.hh FjClusterSequenceWithArea.hh
-areas-2point.o: FjClusterSequenceWithPassiveArea.hh CmdLine.hh
+areas-2point.o: ../include/fastjet/PseudoJet.hh
+areas-2point.o: ../include/fastjet/internal/numconsts.hh
+areas-2point.o: ../include/fastjet/internal/base.hh
+areas-2point.o: ../include/fastjet/ClusterSequence.hh
+areas-2point.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+areas-2point.o: ../include/fastjet/Error.hh
+areas-2point.o: ../include/fastjet/JetDefinition.hh
+areas-2point.o: ../include/fastjet/ClusterSequenceActiveArea.hh
+areas-2point.o: ../include/fastjet/ClusterSequenceWithArea.hh
+areas-2point.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+areas-2point.o: ../include/fastjet/ActiveAreaSpec.hh
+areas-2point.o: ClusterSequencePassiveArea.hh CmdLine.hh

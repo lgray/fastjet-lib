@@ -50,8 +50,8 @@
 /// where the clustering can be repeated to aid timing and multiple
 /// events can be combined to get to larger multiplicities. Some options:
 ///
-///   -strategy N   indicate stratgey from the enum FjStrategy (see
-///                 FjClusterSequence.hh).
+///   -strategy N   indicate stratgey from the enum fj::Strategy (see
+///                 fj::ClusterSequence.hh).
 ///
 ///   -combine nev  for combining multiple events from the data file in order
 ///                 to get to large multiplicities.
@@ -68,10 +68,10 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
-#include "FjClusterSequenceWithMeanArea.hh"
-#include "FjClusterSequenceWithPassiveArea.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "ClusterSequencePassiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<valarray>
@@ -80,12 +80,13 @@
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
 
+namespace fj = fastjet;
 using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
-  vector<FjPseudoJet> cnst = cs.constituents(jet);
+void print_jet(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
+  vector<fj::PseudoJet> cnst = cs.constituents(jet);
   for (size_t i = 0; i < cnst.size(); i++) {
     printf("%6i %18.5f %18.5f %18.6e\n",i,cnst[i].rap(),cnst[i].phi(),cnst[i].perp());
   }
@@ -97,27 +98,26 @@ void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
-  // allow the use to specify the FjStrategy either through the
+  // allow the use to specify the fj::Strategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
-  FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", Best)));
+  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
+				     cmdline.int_val("-clever", fj::Best)));
   double ktR   = cmdline.double_val("-r",1.0);
   double effective_R_fact = cmdline.double_val("-rfact",1.0);
-  FjJetFinder jet_fndr= cmdline.present("-cam")? cambridge_algorithm: kt_algorithm;
-  //FjClusterSequence::set_jet_finder(jet_fndr);
-  FjJetDefinition jet_def(jet_fndr, ktR, strategy);
+  fj::JetFinder jet_fndr= cmdline.present("-cam")? fj::cambridge_algorithm: fj::kt_algorithm;
+  fj::JetDefinition jet_def(jet_fndr, ktR, strategy);
 
   // set up things to do with how we measure the area
-  FjActiveAreaSpec area_spec;
+  fj::ActiveAreaSpec area_spec;
   area_spec.set_repeat      (cmdline.int_val("-repeat",1)            );
-  area_spec.set_cell_area   (cmdline.double_val("-cell_area",0.01)   );
+  area_spec.set_ghost_area   (cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01))   );
   area_spec.set_ghost_etamax(cmdline.double_val("-ghost_etamax",6.0) );
-  area_spec.set_grid_scatter(cmdline.double_val("-grid_scatter",1e-5));
+  area_spec.set_grid_scatter(cmdline.double_val("-grid_scatter",1e-4));
   area_spec.set_kt_scatter  (cmdline.double_val("-kt_scatter",0.1)   );
 
   //int  repeat  = cmdline.int_val("-repeat",1);
-  //double cell_area = cmdline.double_val("-cell_area",0.01);
+  //double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   //double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
   //double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
   //double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
@@ -140,7 +140,7 @@ int main (int argc, char ** argv) {
   cout << "# "<< cmdline.command_line() << endl;
 
   for (int iev = 0; iev < nev; iev++) {
-  vector<FjPseudoJet> input_particles;
+  vector<fj::PseudoJet> input_particles;
   string line;
   int  ndone = 0;
   while (getline(cin, line)) {
@@ -173,7 +173,7 @@ int main (int argc, char ** argv) {
 	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
       }
     }
-    FjPseudoJet psjet(fourvec);
+    fj::PseudoJet psjet(fourvec);
     psjet.set_user_index(0);
     if (abs(psjet.rap() < etamax)) {input_particles.push_back(psjet);}
   }
@@ -185,19 +185,19 @@ int main (int argc, char ** argv) {
   valarray<double> average_area2;
 
     
-  //FjClusterSequenceWithMeanArea clust_seq(input_particles,
-  //      				  cell_area,ghost_etamax,
+  //fj::ClusterSequenceActiveArea clust_seq(input_particles,
+  //      				  ghost_area,ghost_etamax,
   //      				  grid_scatter, kt_scatter, repeat,
   //					  ktR,strategy,writeout);
 
-  FjClusterSequenceWithMeanArea clust_seq(input_particles,jet_def,area_spec,writeout);
-  //FjClusterSequenceWithPassiveArea clust_seq(input_particles,jet_def,effective_R_fact,writeout);
+  fj::ClusterSequenceActiveArea clust_seq(input_particles,jet_def,area_spec,writeout);
+  //fj::ClusterSequencePassiveArea clust_seq(input_particles,jet_def,effective_R_fact,writeout);
 
   cerr << "strategy used =  "<< clust_seq.strategy_string()<< endl;
   //cerr << "number of particles = " << clust_seq.n_particles() << endl;
 
     
-  vector<FjPseudoJet> jets;
+  vector<fj::PseudoJet> jets;
   
   // now provide some nice output...
   if (inclkt >= 0.0) {
@@ -219,14 +219,14 @@ int main (int argc, char ** argv) {
     double area = clust_seq.area(jets[j]);
     
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,jets[j].rap(),
-	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_err(jets[j]), clust_seq.area_err(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
+	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
   }
 
 //  //cout << "median pt_over_area = " << clust_seq.pt_per_unit_area()<<endl;
-//  cout << "median pt_over_area = " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
-//  cout << "pt/area: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
-//  cout << "pt/area with cut: " << clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
-//  cout << "average ratio (with cut): "<< clust_seq.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
+//  cout << "median pt_over_area = " << clust_seq.pt_per_unit_area(fj::ClusterSequenceActiveArea::median)<<endl;
+//  cout << "pt/area: " << clust_seq.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot)<<endl;
+//  cout << "pt/area with cut: " << clust_seq.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut)<<endl;
+//  cout << "average ratio (with cut): "<< clust_seq.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut)<<endl;
 //  
   } // iev
 }
