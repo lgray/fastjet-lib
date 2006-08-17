@@ -1,5 +1,37 @@
-#include "FjClusterSequenceWithPassiveArea.hh"
 
+//STARTHEADER
+// $Id: FlavourHolder.hh 200 2006-07-13 17:17:02Z salam $
+//
+// Copyright (c) 2006 Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of a simple command-line handling environment
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+
+
+#include "ClusterSequencePassiveArea.hh"
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
@@ -9,7 +41,6 @@
 #include <CGAL/General_polygon_with_holes_2.h>
 #include <list>
 #include<cassert>
-
 #include <ostream>
 #include <iterator>
 #include <cmath>
@@ -17,21 +48,21 @@
 
 using namespace std;
 
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
-
-typedef FjClusterSequenceWithPassiveArea::PassiveAreaCalc PAC;
+typedef ClusterSequencePassiveArea::PassiveAreaCalc PAC;
 
 
 /// class for carrying out a passive area calculation on a set of initial
 /// vectors
-class FjClusterSequenceWithPassiveArea::PassiveAreaCalc {
+class ClusterSequencePassiveArea::PassiveAreaCalc {
 public:
   /// constructor that takes a range of a vector together with the
   /// effective radius for the intersection of discs with voronoi
   /// cells
-  PassiveAreaCalc(const vector<FjPseudoJet>::const_iterator &,
-		  const vector<FjPseudoJet>::const_iterator &,
+  PassiveAreaCalc(const vector<PseudoJet>::const_iterator &,
+		  const vector<PseudoJet>::const_iterator &,
 		  double effective_R);
 
   /// return the area of the particle associated with the given
@@ -303,8 +334,8 @@ double PAC::polygon_area(const Polygon_2 & plgn) const {
 
 //----------------------------------------------------------------------
 // the constructor...
-PAC::PassiveAreaCalc(const vector<FjPseudoJet>::const_iterator & jet_begin,
-		     const vector<FjPseudoJet>::const_iterator & jet_end,
+PAC::PassiveAreaCalc(const vector<PseudoJet>::const_iterator & jet_begin,
+		     const vector<PseudoJet>::const_iterator & jet_end,
 		     double effective_R) {
 
   assert(effective_R < 0.5*pi);
@@ -319,7 +350,7 @@ PAC::PassiveAreaCalc(const vector<FjPseudoJet>::const_iterator & jet_begin,
 
   // loop over jets and create the triangulation, as well as cross-referencing
   // info
-  for (vector<FjPseudoJet>::const_iterator jet_it = jet_begin; 
+  for (vector<PseudoJet>::const_iterator jet_it = jet_begin; 
        jet_it != jet_end; jet_it++) {
     if (jet_it->perp2() == 0.0 && jet_it->E() == jet_it->pz()) {
       // ignore jets with infinite rapidity
@@ -378,7 +409,7 @@ PAC::PassiveAreaCalc(const vector<FjPseudoJet>::const_iterator & jet_begin,
 
 //----------------------------------------------------------------------
 ///
-void FjClusterSequenceWithPassiveArea::_initializePA () {
+void ClusterSequencePassiveArea::_initializePA () {
   
   // check we're the Kt algorithm (Cambridge area is not calculable
   // in the same way).
@@ -416,6 +447,16 @@ void FjClusterSequenceWithPassiveArea::_initializePA () {
 }
 
 //----------------------------------------------------------------------
-FjClusterSequenceWithPassiveArea::~FjClusterSequenceWithPassiveArea() {
+ClusterSequencePassiveArea::~ClusterSequencePassiveArea() {
   delete _pa_calc;
 }
+
+FASTJET_END_NAMESPACE
+
+
+
+
+
+
+
+

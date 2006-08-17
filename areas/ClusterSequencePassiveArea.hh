@@ -1,28 +1,30 @@
-#ifndef __FJCLUSTERSEQUENCEWITHPASSIVEAREA__
-#define __FJCLUSTERSEQUENCEWITHPASSIVEAREA__
+#ifndef __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
+#define __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
 
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequenceWithArea.hh"
 #include<memory>
 #include<vector>
 
-class FjClusterSequenceWithPassiveArea : public FjClusterSequence {
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+class ClusterSequencePassiveArea : public ClusterSequenceWithArea {
 public:
-  template<class L> FjClusterSequenceWithPassiveArea
+  template<class L> ClusterSequencePassiveArea
          (const std::vector<L> & pseudojets, 
-	  const FjJetDefinition & jet_def,
+	  const JetDefinition & jet_def,
 	  double effective_Rfact = 1.0,
 	  const bool & writeout_combinations = false);
   
-  ~FjClusterSequenceWithPassiveArea();
+  ~ClusterSequencePassiveArea();
 
   /// return the area associated with the given jet
-  inline double area(const FjPseudoJet & jet) const {
+  virtual inline double area(const PseudoJet & jet) const {
     return _passive_area[jet.cluster_hist_index()];};
 
   /// return the error of the area associated with the given jet
   /// (0 by definition for a passive area)
-  inline double area_err(const FjPseudoJet & jet) const {
+  virtual inline double area_error(const PseudoJet & jet) const {
     return 0.0;};
 
   /// passive area calculator -- to be defined in the .cc file (it will do
@@ -43,12 +45,12 @@ private:
 
 //----------------------------------------------------------------------
 ///
-template<class L> FjClusterSequenceWithPassiveArea::FjClusterSequenceWithPassiveArea
+template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea
 (const std::vector<L> & pseudojets, 
- const FjJetDefinition & jet_def,
+ const JetDefinition & jet_def,
  double effective_Rfact,
  const bool & writeout_combinations) :
-  FjClusterSequence(pseudojets, jet_def, writeout_combinations),
+  ClusterSequence(pseudojets, jet_def, writeout_combinations),
   _effective_Rfact(effective_Rfact) {
 
   // the jet clustering's already been done, now worry about areas...
@@ -56,4 +58,9 @@ template<class L> FjClusterSequenceWithPassiveArea::FjClusterSequenceWithPassive
 }
 
 
-#endif // __FJCLUSTERSEQUENCEWITHPASSIVEAREA__
+
+FASTJET_END_NAMESPACE
+
+#endif // __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
+
+
