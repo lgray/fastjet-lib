@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: subtraction-tests-inclpt.cc 203 2006-07-14 17:20:51Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //

@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: ClusterSequence.cc 276 2006-08-17 10:40:32Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //
