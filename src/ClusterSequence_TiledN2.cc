@@ -33,15 +33,12 @@
 // from the rest of the class implementation so as to speed up
 // compilation of this particular part while it is under test.
 
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<vector>
 #include<cmath>
-//
-#ifdef CP2DCHAN
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/MinHeap.hh"
-#endif // CP2DCHAN
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -722,11 +719,6 @@ void ClusterSequence::_faster_tiled_N2_cluster() {
 
 
 //----------------------------------------------------------------------
-// following is included only if we have the MinHeap available (may
-// change later...)
-#ifdef CP2DCHAN
-
-//----------------------------------------------------------------------
 /// run a tiled clustering, with our minheap for keeping track of the
 /// smallest dij
 void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
@@ -933,7 +925,6 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
   delete[] briefjets;
 }
 
-#endif  // CP2DCHAN
 
 FASTJET_END_NAMESPACE
 

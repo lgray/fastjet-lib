@@ -105,7 +105,6 @@ void ClusterSequence::_initialise_and_run (
     this->_tiled_N2_cluster();
   } else if (_strategy == N2Plain) {
     this->_simple_N2_cluster();
-#ifdef CP2DCHAN
   } else if (_strategy == N2MinHeapTiled) {
     this->_minheap_faster_tiled_N2_cluster();
   } else if (_strategy == NlnNCam4pi) {
@@ -114,7 +113,6 @@ void ClusterSequence::_initialise_and_run (
     this->_CP2DChan_cluster_2pi2R();
   } else if (_strategy == NlnNCam2piMultD) {
     this->_CP2DChan_cluster_2piMultD();
-#endif //CP2DCHAN
   } else {
     ostringstream err;
     err << "Unrecognised value for strategy: "<<_strategy;
@@ -143,10 +141,8 @@ void ClusterSequence::_print_banner() {
 #ifndef DROP_CGAL
   cout << "# This package makes use of the CGAL library: http://www.cgal.org/    \n";
 #endif  // DROP_CGAL
-#ifdef CP2DCHAN
   cout << "# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th     \n";
   cout << "# ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002\n";
-#endif // CP2DCHAN
   cout << "#---------------------------------------------------------------------\n";
 }
 

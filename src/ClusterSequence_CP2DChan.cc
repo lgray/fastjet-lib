@@ -28,7 +28,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifdef CP2DCHAN
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/ClosestPair2D.hh"
 #include<limits>
@@ -342,8 +341,6 @@ void ClusterSequence::_do_Cambridge_inclusive_jets () {
     }
   }
 }
-
-#endif // CP2DCHAN
 
 FASTJET_END_NAMESPACE
 

@@ -260,14 +260,16 @@ protected:
   void _tiled_N2_cluster ();
   void _faster_tiled_N2_cluster ();
 
-#ifdef CP2DCHAN
+  //
   void _minheap_faster_tiled_N2_cluster();
+
+  // things needed specifically for Cambridge with Chan's 2D closest
+  // pairs method
   void _CP2DChan_cluster();
   void _CP2DChan_cluster_2pi2R ();
   void _CP2DChan_cluster_2piMultD ();
-  void _do_Cambridge_inclusive_jets();
   void _CP2DChan_limited_cluster(double D);
-#endif // CP2DCHAN
+  void _do_Cambridge_inclusive_jets();
 
   void _fill_initial_history();
   void _add_step_to_history(const int & step_number, const int & parent1, 

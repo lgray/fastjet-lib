@@ -39,7 +39,7 @@
 /// #END
 /// 
 /// An example input file containing 10 events is included as 
-/// ../data/Pythia-PtMin1000-LHC-10ev.dat
+/// data/Pythia-PtMin1000-LHC-10ev.dat
 ///
 /// Usage:
 ///   fastjet_timing [-strategy NUMBER] [-repeat nrepeats] [-massive] \
@@ -68,10 +68,13 @@
 ///                 for testing purposes)
 ///
 ///   -unique_write writes out the sequence of dij's according to the
-///                 "unique_history_order" (useful for verifying correctness).
+///                 "unique_history_order" (useful for verifying consistency
+///                 between different clustering strategies).
 ///
-///   -cam          switch to preliminary (inclusive only) implementation of
-///                 Cambridge algorithm
+///   -cam          switch to the inclusive Cambridge/Aachen algorithm --
+///                 note that the option -excld dcut provides a clustering
+///                 up to the dcut which is the minimum squared
+///                 distance between any pair of jets.
 ///
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"

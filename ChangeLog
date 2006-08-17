@@ -17,6 +17,9 @@ ChangeLog for fastjet-release directory
 	* Introduced include/FjPseudoJet.hh and
 	  include/FjClusterSequence.hh files that provide access to
 	  everything needed by programs based on the v1 legacy interface
+
+	* Removed the CP2DCHAN compile definition -- now the Chan code is
+	  always included.
 	
 2006-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
 

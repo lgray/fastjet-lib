@@ -12,11 +12,6 @@ USE_CGAL = yes
 # kernel, which is about 20% faster, but may not be as robust.
 USE_CGAL_SIMPLE_KERNEL = no
 
-# the following affects whether we make Chan's method available
-# for the Cambridge algorithm
-USE_CP2DCHAN = yes
-#USE_CP2DCHAN = no
-
 # uncomment this to remove all assertions (mainly from CGAL) -- this
 # increaes the speed by about 10% (but leaves out many safety checks
 # that are useful if you plan on doing anything "unusual")
@@ -72,15 +67,6 @@ else
   ifeq ($(USE_CGAL_SIMPLE_KERNEL),yes)
     INCLUDE += -DCGAL_SIMPLE_KERNEL
   endif
-endif
-
-ifeq ($(USE_CP2DCHAN),yes)
-  INCLUDE += -DCP2DCHAN 
-  #INCLUDE+=-DCP2DCHAN -I../../chan
-  #INCLUDE+=-DCP2DCHAN -DTRACK_DEPTH -I../../chan
-  #LIBPATH+=
-  #LDFLAGS+=-L../../chan -lCP2DChan
-else
 endif
 
 

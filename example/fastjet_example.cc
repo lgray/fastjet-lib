@@ -31,8 +31,9 @@
 
 //----------------------------------------------------------------------
 // fastjet example program. 
+//
 // Compile it with: make fastjet_example
-// run it with    : ./fastjet_example < ../data/single-event.dat
+// run it with    : ./fastjet_example < data/single-event.dat
 //
 // People who are familiar with the ktjet package are encouraged to
 // compare this file to the ktjet_example.cc program which does the
