@@ -158,11 +158,9 @@ template<class L> void ClusterSequenceActiveArea::_initialize (
   }
   //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
 
-
+  
 }
-
-
-
+  
 FASTJET_END_NAMESPACE
 
 #endif // __FASTJET_CLUSTERSEQUENCEACTIVEAREA_HH__
