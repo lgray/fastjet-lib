@@ -31,6 +31,11 @@ ChangeLog for fastjet-release directory
 
 	    ActiveAreaSpec
 
+	* Placed an explicit limit (via assertion) on R <= pi/2 (larger
+	  than this can cause crashes in many places...)
+
+	* Removed extraneous code in areas/, adapted remaining code to new
+	  interface.
 	
 2006-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
 

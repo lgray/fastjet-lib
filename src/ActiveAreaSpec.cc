@@ -1,3 +1,33 @@
+//STARTHEADER
+// $Id: subtraction-tests-inclpt.cc 203 2006-07-14 17:20:51Z salam $
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
 #include "fastjet/ActiveAreaSpec.hh"
 
 using namespace std;
@@ -25,8 +55,10 @@ void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   for (int ieta = -_neta; ieta <= _neta; ieta++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
       // include random offsets for all quantities
-      double phi = (iphi+0.5) * _dphi*(1 + rand()*_grid_scatter/RAND_MAX);
-      double eta = ieta * _deta*(1 + rand()*_grid_scatter/RAND_MAX);
+      double phi = (iphi+0.5) * _dphi + _dphi*rand()*_grid_scatter/RAND_MAX;
+      double eta = ieta * _deta + _deta*rand()*_grid_scatter/RAND_MAX;
+      //double phi = (iphi+0.5) * _dphi* + rand()*_grid_scatter/RAND_MAX;
+      //double eta = ieta * _deta + rand()*_grid_scatter/RAND_MAX;
       double kt = _mean_ghost_kt*(1+rand()*_kt_scatter/RAND_MAX);
      
       double pminus = kt*exp(-eta);

@@ -31,7 +31,8 @@
 #ifndef __FASTJET_JETDEFINITION_HH__
 #define __FASTJET_JETDEFINITION_HH__
 
-#include "fastjet/internal/base.hh"
+#include<cassert>
+#include "fastjet/internal/numconsts.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -91,6 +92,8 @@ public:
 		  double R = 1.0, 
 		  Strategy strategy = Best) :
     _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
+    // the largest sensible value for R
+    assert(_Rparam <= 0.5*pi);
 };
 
 
