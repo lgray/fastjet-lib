@@ -50,8 +50,8 @@
 /// where the clustering can be repeated to aid timing and multiple
 /// events can be combined to get to larger multiplicities. Some options:
 ///
-///   -strategy N   indicate stratgey from the enum FjStrategy (see
-///                 FjClusterSequence.hh).
+///   -strategy N   indicate stratgey from the enum fj::Strategy (see
+///                 fj::ClusterSequence.hh).
 ///
 ///   -combine nev  for combining multiple events from the data file in order
 ///                 to get to large multiplicities.
@@ -68,9 +68,9 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
-#include "FjClusterSequenceWithMeanArea.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceActiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -82,12 +82,13 @@
 #include "CSHisto.hh"
 
 
+namespace fj = fastjet;
 using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
-  vector<FjPseudoJet> cnst = cs.constituents(jet);
+void print_jet(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
+  vector<fj::PseudoJet> cnst = cs.constituents(jet);
   for (size_t i = 0; i < cnst.size(); i++) {
     printf("%6i %18.5f %18.5f %18.6e\n",i,cnst[i].rap(),cnst[i].phi(),cnst[i].perp());
   }
@@ -99,11 +100,11 @@ void print_jet(const FjClusterSequence & cs, const FjPseudoJet & jet) {
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
-  // allow the use to specify the FjStrategy either through the
+  // allow the use to specify the fj::Strategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
-  FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", Best)));
+  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
+				     cmdline.int_val("-clever", fj::Best)));
   int  repeat  = cmdline.int_val("-repeat",1);
   bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
@@ -115,9 +116,9 @@ int main (int argc, char ** argv) {
   bool   massless = cmdline.present("-massless");
   int    nev     = cmdline.int_val("-nev",1);
   bool   nopileup  = cmdline.present("-nopileup"); 
-  double cell_area = cmdline.double_val("-cell_area",0.01);
+  double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.00001);
+  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
@@ -127,6 +128,12 @@ int main (int argc, char ** argv) {
       "Error: some options unused"<<endl; 
     exit(-1);}
 
+  // create the definitions for our jet finder and areas spec...
+  fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
+  fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
+                                      grid_scatter, kt_scatter);
+
+
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
 
@@ -135,8 +142,8 @@ int main (int argc, char ** argv) {
   CSHisto inv_mass_corr(00.0, 400.0, 80);
 
   for (int iev = 0; iev < nev; iev++) {
-  vector<FjPseudoJet> full_event;
-  vector<FjPseudoJet> hard_event;
+  vector<fj::PseudoJet> full_event;
+  vector<fj::PseudoJet> hard_event;
   string line;
   int  nsub  = 0;
   cerr << "Doing event "<< iev<<endl;
@@ -172,7 +179,7 @@ int main (int argc, char ** argv) {
 	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
       }
     }
-    FjPseudoJet psjet(fourvec);
+    fj::PseudoJet psjet(fourvec);
     psjet.set_user_index(0);
     if (abs(psjet.rap() < etamax)) {full_event.push_back(psjet);}
 
@@ -191,18 +198,14 @@ int main (int argc, char ** argv) {
   valarray<double> average_area2;
 
     
-  FjClusterSequenceWithMeanArea full_clust(full_event,
-					  cell_area,ghost_etamax,
-					  grid_scatter, kt_scatter, repeat,
-					  ktR,strategy,writeout);
+  fj::ClusterSequenceActiveArea full_clust(full_event,jet_def,
+                                           active_area_spec,writeout);
 
-  FjClusterSequenceWithMeanArea hard_clust(hard_event,
-					  cell_area,ghost_etamax,
-					  grid_scatter, kt_scatter, repeat,
-					  ktR,strategy,writeout);
+  fj::ClusterSequenceActiveArea hard_clust(hard_event,jet_def,
+                                           active_area_spec,writeout);
 
-  vector<FjPseudoJet> hard_jets = sorted_by_pt(hard_clust.inclusive_jets());
-  vector<FjPseudoJet> full_jets = sorted_by_pt(full_clust.inclusive_jets());
+  vector<fj::PseudoJet> hard_jets = sorted_by_pt(hard_clust.inclusive_jets());
+  vector<fj::PseudoJet> full_jets = sorted_by_pt(full_clust.inclusive_jets());
 
   if (hard_jets[0].plain_distance(full_jets[0]) > 
       hard_jets[0].plain_distance(full_jets[1])) { 
@@ -220,7 +223,7 @@ int main (int argc, char ** argv) {
       endl ;
   }
 
-  vector<FjPseudoJet> corrected_jets(full_jets.size());
+  vector<fj::PseudoJet> corrected_jets(full_jets.size());
   for (unsigned i = 0; i < full_jets.size(); i++) {
     double correction_factor = 1 - 
       median_pt_per_area*full_clust.area(full_jets[i])/full_jets[i].perp(); 
@@ -245,18 +248,18 @@ int main (int argc, char ** argv) {
     double area = full_clust.area(full_jets[j]);
     
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,full_jets[j].rap(),
-	   full_jets[j].phi(),full_jets[j].perp(), area, full_clust.area_err(full_jets[j]), full_clust.area_err(full_jets[j])*sqrt(1.0*repeat), full_jets[j].perp() - area*median_pt_per_area);
+	   full_jets[j].phi(),full_jets[j].perp(), area, full_clust.area_error(full_jets[j]), full_clust.area_error(full_jets[j])*sqrt(1.0*repeat), full_jets[j].perp() - area*median_pt_per_area);
   }
 
-  //double dummy = full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::play);
+  //double dummy = full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::play);
   //cout << "median pt_over_area = " << full_clust.pt_per_unit_area()<<endl;
-  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::median)<<endl;
-  cerr << "old median  = " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::old_median)<<endl;
-  cerr << "pt/area: " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot)<<endl;
-  cerr << "pt/area with cut: " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut)<<endl;
-  cerr << "average ratio (with cut): "<< full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut)<<endl;
-  cerr << "pt/area with cut (range 3): " << full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::pttot_over_areatot_cut,3.0)<<endl;
-  cerr << "average ratio (range 3,with cut): "<< full_clust.pt_per_unit_area(FjClusterSequenceWithMeanArea::mean_ratio_cut,3.0)<<endl;
+  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median)<<endl;
+  cerr << "old median  = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::old_median)<<endl;
+  cerr << "pt/area: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot)<<endl;
+  cerr << "pt/area with cut: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut)<<endl;
+  cerr << "average ratio (with cut): "<< full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut)<<endl;
+  cerr << "pt/area with cut (range 3): " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut,3.0)<<endl;
+  cerr << "average ratio (range 3,with cut): "<< full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut,3.0)<<endl;
   } // if print_jets
 
   } // iev
