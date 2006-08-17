@@ -28,6 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
+
 #ifndef __FASTJET_ACTIVEAREASPEC_HH__
 #define __FASTJET_ACTIVEAREASPEC_HH__
 
