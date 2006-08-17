@@ -73,8 +73,8 @@
 ///   -cam          switch to preliminary (inclusive only) implementation of
 ///                 Cambridge algorithm
 ///
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<sstream>
 #include<valarray>
@@ -85,17 +85,21 @@
 
 using namespace std;
 
+// to avoid excessive typing, define an abbreviation for the 
+// fastjet namespace
+namespace fj = fastjet;
+
 inline double pow2(const double x) {return x*x;};
 
 /// a program to test and time the kt algorithm as implemented in fastjet
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
-  // allow the use to specify the FjStrategy either through the
+  // allow the use to specify the fj::Strategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
-  FjStrategy  strategy  = FjStrategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", Best)));
+  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
+                                        cmdline.int_val("-clever", fj::Best)));
   int  repeat  = cmdline.int_val("-repeat",1);
   int  combine = cmdline.int_val("-combine",1);
   bool write   = cmdline.present("-write");
@@ -114,11 +118,11 @@ int main (int argc, char ** argv) {
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
-  FjJetFinder jet_finder;
+  fj::JetFinder jet_finder;
   if (cmdline.present("-cam")) {
-    jet_finder = cambridge_algorithm;
+    jet_finder = fj::cambridge_algorithm;
   } else {
-    jet_finder = kt_algorithm;
+    jet_finder = fj::kt_algorithm;
   }
 
   if (!cmdline.all_options_used()) {cerr << 
@@ -127,7 +131,7 @@ int main (int argc, char ** argv) {
 
 
   for (int iev = 0; iev < nev; iev++) {
-  vector<FjPseudoJet> jets;
+  vector<fj::PseudoJet> jets;
   string line;
   int  ndone = 0;
   while (getline(cin, line)) {
@@ -160,7 +164,7 @@ int main (int argc, char ** argv) {
 	linestream >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3];
       }
     }
-    FjPseudoJet psjet(fourvec);
+    fj::PseudoJet psjet(fourvec);
     if (abs(psjet.rap() < etamax)) {jets.push_back(psjet);}
   }
 
@@ -174,7 +178,7 @@ int main (int argc, char ** argv) {
     double kt = 1e-1;
     for (int iphi = 0; iphi<nphi; iphi++) {
       for (int ieta = -neta; ieta<neta+1; ieta++) {
-	double phi = (iphi+0.5) * (twopi/nphi) + rand()*0.001/RAND_MAX;
+	double phi = (iphi+0.5) * (fj::twopi/nphi) + rand()*0.001/RAND_MAX;
 	double eta = ieta * (10.0/neta)  + rand()*0.001/RAND_MAX;
 	kt = 0.0000001*(1+rand()*0.1/RAND_MAX);
 	double pminus = kt*exp(-eta);
@@ -182,27 +186,27 @@ int main (int argc, char ** argv) {
 	double px = kt*sin(phi);
 	double py = kt*cos(phi);
 	//cout << kt<<" "<<eta<<" "<<phi<<"\n";
-	FjPseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
+	fj::PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
 	jets.push_back(mom);
       }
     }
   }
   
-  FjJetDefinition jet_def(jet_finder, ktR, strategy);
+  fj::JetDefinition jet_def(jet_finder, ktR, strategy);
 
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
-    FjClusterSequence clust_seq(jets,jet_def,write);
+    fj::ClusterSequence clust_seq(jets,jet_def,write);
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
     cout << "strategy used =  "<< clust_seq.strategy_string()<< endl;
 
     // now provide some nice output...
     if (inclkt >= 0.0) {
-      vector<FjPseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
+      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
 	if (show_constituents) {
-	  vector<FjPseudoJet> const_jets = clust_seq.constituents(jets[j]);
+	  vector<fj::PseudoJet> const_jets = clust_seq.constituents(jets[j]);
 	  for (size_t k = 0; k < const_jets.size(); k++) {
 	    printf("        jet%03u %15.8f %15.8f %15.8f\n",j,const_jets[k].rap(),
 		   const_jets[k].phi(),sqrt(const_jets[k].kt2()));
@@ -213,7 +217,7 @@ int main (int argc, char ** argv) {
     }
 
     if (excln > 0) {
-      vector<FjPseudoJet> jets = sorted_by_E(clust_seq.exclusive_jets(excln));
+      vector<fj::PseudoJet> jets = sorted_by_E(clust_seq.exclusive_jets(excln));
  
       cout << "Printing "<<excln<<" exclusive jets\n";
       for (size_t j = 0; j < jets.size(); j++) {
@@ -224,7 +228,7 @@ int main (int argc, char ** argv) {
     }
 
     if (excld > 0.0) {
-      vector<FjPseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
+      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",
@@ -241,7 +245,7 @@ int main (int argc, char ** argv) {
 	inv_unique_history[unique_history[i]] = i;}
 
       for (unsigned int i = 0; i < unique_history.size(); i++) {
-	FjClusterSequence::history_element el = 
+	fj::ClusterSequence::history_element el = 
 	  clust_seq.history()[unique_history[i]];
 	int uhp1 = el.parent1>=0 ? inv_unique_history[el.parent1] : el.parent1;
 	int uhp2 = el.parent2>=0 ? inv_unique_history[el.parent2] : el.parent2;

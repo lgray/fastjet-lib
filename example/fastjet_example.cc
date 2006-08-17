@@ -38,8 +38,8 @@
 // compare this file to the ktjet_example.cc program which does the
 // same thing in the ktjet framework.
 //----------------------------------------------------------------------
-#include "FjPseudoJet.hh"
-#include "FjClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -47,29 +47,30 @@
 using namespace std;
 
 // a declaration of a function that pretty prints a list of jets
-void print_jets (const FjClusterSequence &, const vector<FjPseudoJet> &);
+void print_jets (const fastjet::ClusterSequence &, 
+                 const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
   
-  vector<FjPseudoJet> input_particles;
+  vector<fastjet::PseudoJet> input_particles;
   
   // read in input particles
   double px, py , pz, E;
   while (cin >> px >> py >> pz >> E) {
-    // create a FjPseudoJet with these components and put it onto
+    // create a fastjet::PseudoJet with these components and put it onto
     // back of the input_particles vector
-    input_particles.push_back(FjPseudoJet(px,py,pz,E)); 
+    input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
   }
   
   // create an object that represents your choice of jet finder and 
   // the associated parameters
   double Rparam = 1.0;
-  FjStrategy strategy = Best;
-  FjJetDefinition jet_def(kt_algorithm, Rparam, strategy);
+  fastjet::Strategy strategy = fastjet::Best;
+  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
 
   // run the jet clustering with the above jet definition
-  FjClusterSequence clust_seq(input_particles, jet_def);
+  fastjet::ClusterSequence clust_seq(input_particles, jet_def);
 
   // tell the user what was done
   cout << "Strategy adopted by FastJet was "<<
@@ -77,7 +78,7 @@ int main (int argc, char ** argv) {
 
   // extract the inclusive jets with pt > 5 GeV, sorted by pt
   double ptmin = 5.0;
-  vector<FjPseudoJet> inclusive_jets = clust_seq.inclusive_jets(ptmin);
+  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(ptmin);
 
   // print them out
   cout << "Printing inclusive jets with pt > "<< ptmin<<" GeV\n";
@@ -87,7 +88,7 @@ int main (int argc, char ** argv) {
 
   // extract the exclusive jets with dcut = 25 GeV^2 
   double dcut = 25.0;
-  vector<FjPseudoJet> exclusive_jets = clust_seq.exclusive_jets(dcut);
+  vector<fastjet::PseudoJet> exclusive_jets = clust_seq.exclusive_jets(dcut);
 
   // print them out
   cout << "Printing exclusive jets with dcut = "<< dcut<<" GeV^2\n";
@@ -100,11 +101,11 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets
-void print_jets (const FjClusterSequence & clust_seq, 
-		 const vector<FjPseudoJet> & jets) {
+void print_jets (const fastjet::ClusterSequence & clust_seq, 
+		 const vector<fastjet::PseudoJet> & jets) {
 
   // sort jets into increasing pt
-  vector<FjPseudoJet> sorted_jets = sorted_by_pt(jets);  
+  vector<fastjet::PseudoJet> sorted_jets = sorted_by_pt(jets);  
 
   // label the columns
   printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", 

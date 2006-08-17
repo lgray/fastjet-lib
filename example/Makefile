@@ -56,18 +56,16 @@ depend:
 	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
 # DO NOT DELETE
 
-fastjet_example.o: ../include/FjPseudoJet.hh ../include/fastjet/PseudoJet.hh
+fastjet_example.o: ../include/fastjet/PseudoJet.hh
 fastjet_example.o: ../include/fastjet/internal/numconsts.hh
 fastjet_example.o: ../include/fastjet/internal/base.hh
-fastjet_example.o: ../include/FjClusterSequence.hh
 fastjet_example.o: ../include/fastjet/ClusterSequence.hh
 fastjet_example.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 fastjet_example.o: ../include/fastjet/Error.hh
 fastjet_example.o: ../include/fastjet/JetDefinition.hh
-fastjet_timing.o: ../include/FjPseudoJet.hh ../include/fastjet/PseudoJet.hh
+fastjet_timing.o: ../include/fastjet/PseudoJet.hh
 fastjet_timing.o: ../include/fastjet/internal/numconsts.hh
 fastjet_timing.o: ../include/fastjet/internal/base.hh
-fastjet_timing.o: ../include/FjClusterSequence.hh
 fastjet_timing.o: ../include/fastjet/ClusterSequence.hh
 fastjet_timing.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 fastjet_timing.o: ../include/fastjet/Error.hh
