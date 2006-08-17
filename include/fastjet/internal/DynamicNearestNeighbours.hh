@@ -29,8 +29,8 @@
 //ENDHEADER
 
 
-#ifndef __DYNAMICNEARESTNEIGHBOURS__
-#define __DYNAMICNEARESTNEIGHBOURS__
+#ifndef __DYNAMICNEARESTNEIGHBOURS_HH_
+#define __DYNAMICNEARESTNEIGHBOURS_HH_
 
 #include<vector>
 #include<string>
@@ -38,8 +38,6 @@
 #include<sstream>
 #include<cassert>
 #include "numconsts.hh"
-//using namespace std;
-
 
 /// Shortcut for dealing with eta-phi coordinates.
 //typedef std::pair<double,double> EtaPhi;
@@ -165,4 +163,4 @@ public:
   virtual ~DynamicNearestNeighbours () {}
 };
   
-#endif // __DYNAMICNEARESTNEIGHBOURS__
+#endif // __DYNAMICNEARESTNEIGHBOURS_HH_

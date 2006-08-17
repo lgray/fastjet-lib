@@ -1,6 +1,8 @@
 #ifndef __CLOSESTPAIR2DBASE__HH__
 #define __CLOSESTPAIR2DBASE__HH__
+
 #include<vector>
+#include "base.hh"
 
 //----------------------------------------------------------------------
 /// class for representing 2d coordinates and carrying out some basic 

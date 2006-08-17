@@ -1,15 +1,13 @@
 // Gavin's first attempt at a binary search tree of known maximum size...
 
 
-#ifndef __SEARCHTREE__HH__
-#define __SEARCHTREE__HH__
+#ifndef __SEARCHTREE_HH__
+#define __SEARCHTREE_HH__
 
 #include<vector>
 #include<cassert>
 #include<cstddef>
-
-using namespace std;
-
+#include "base.hh"
 
 
 //======================================================================
@@ -716,4 +714,4 @@ template<class T> typename SearchTree<T>::const_circulator SearchTree<T>::somewh
   return const_circulator(_top_node);
 }
 
-#endif // __SEARCHTREE__HH__
+#endif // __SEARCHTREE_HH__

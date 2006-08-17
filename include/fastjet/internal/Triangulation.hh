@@ -38,6 +38,7 @@
 #include <CGAL/Delaunay_triangulation_2.h>
 #include <CGAL/Triangulation_hierarchy_2.h>
 #include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include "base.hh"
 
 /// the basic geometrical kernel that lies at the base of all CGAL
 /// operations

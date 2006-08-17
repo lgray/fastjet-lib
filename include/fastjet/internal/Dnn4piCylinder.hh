@@ -30,13 +30,12 @@
 
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
-#ifndef __DNN4PICYLINDER__
-#define __DNN4PICYLINDER__
+#ifndef __DNN4PICYLINDER_HH_
+#define __DNN4PICYLINDER_HH_
 
 #include "DynamicNearestNeighbours.hh"
 #include "DnnPlane.hh"
 #include "numconsts.hh"
-using namespace std;
 
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the surface of cylinder (using two copies of
@@ -49,7 +48,7 @@ class Dnn4piCylinder : public DynamicNearestNeighbours {
   /// Initialiser from a set of points on an Eta-Phi plane, where
   /// eta can have an arbitrary ranges and phi must be in range
   /// 0 <= phi < 2pi
-  Dnn4piCylinder(const vector<EtaPhi> &, const bool & verbose = false );
+  Dnn4piCylinder(const std::vector<EtaPhi> &, const bool & verbose = false );
 
   /// Returns the index of  the nearest neighbour of point labelled
   /// by ii (assumes ii is valid)
@@ -64,10 +63,10 @@ class Dnn4piCylinder : public DynamicNearestNeighbours {
   /// not removed in the meantime)
   bool Valid(const int & index) const;
 
-  void RemoveAndAddPoints(const vector<int> & indices_to_remove,
-			  const vector<EtaPhi> & points_to_add,
-			  vector<int> & indices_added,
-			  vector<int> & indices_of_updated_neighbours);
+  void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
+			  const std::vector<EtaPhi> & points_to_add,
+			  std::vector<int> & indices_added,
+			  std::vector<int> & indices_of_updated_neighbours);
 
   ~Dnn4piCylinder();
 
@@ -118,5 +117,5 @@ inline Dnn4piCylinder::~Dnn4piCylinder() {
   delete _DNN2;
 }
 
-#endif //  __DNN4PICYLINDER__
+#endif //  __DNN4PICYLINDER_HH_
 #endif //  DROP_CGAL 

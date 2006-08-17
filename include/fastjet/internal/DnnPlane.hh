@@ -31,12 +31,12 @@
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
 
-#ifndef __DNNPLANE__
-#define __DNNPLANE__
+#ifndef __DNNPLANE_HH_
+#define __DNNPLANE_HH_
 
 #include "Triangulation.hh"
 #include "DynamicNearestNeighbours.hh"
-using namespace std;
+
 
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the Euclidean plane
@@ -47,7 +47,7 @@ class DnnPlane : public DynamicNearestNeighbours {
 
   /// Initialiser from a set of points on an Eta-Phi plane, where both
   /// eta and phi can have arbitrary ranges
-  DnnPlane(const vector<EtaPhi> &, const bool & verbose = false );
+  DnnPlane(const std::vector<EtaPhi> &, const bool & verbose = false );
 
 
   /// Returns the index of  the nearest neighbour of point labelled
@@ -63,10 +63,10 @@ class DnnPlane : public DynamicNearestNeighbours {
   /// not removed in the meantime)
   bool Valid(const int & index) const;
 
-  void RemoveAndAddPoints(const vector<int> & indices_to_remove,
-			  const vector<EtaPhi> & points_to_add,
-			  vector<int> & indices_added,
-			  vector<int> & indices_of_updated_neighbours);
+  void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
+			  const std::vector<EtaPhi> & points_to_add,
+			  std::vector<int> & indices_added,
+			  std::vector<int> & indices_of_updated_neighbours);
 
   /// returns the EtaPhi of point with index i.
   EtaPhi etaphi(const int i) const;
@@ -86,7 +86,7 @@ class DnnPlane : public DynamicNearestNeighbours {
     // later on for cylinder put a second vertex?
   };
 
-  vector<SuperVertex> _supervertex;
+  std::vector<SuperVertex> _supervertex;
   //set<Vertex_handle> _vertex_set;
   bool _verbose;
 
@@ -119,7 +119,7 @@ class DnnPlane : public DynamicNearestNeighbours {
   /// Note that j is NOT pushed onto indices_of_updated_neighbours --
   /// if you want it there, put it there yourself.
   void _SetAndUpdateNearest(const int & j, 
-			    vector<int> & indices_of_updated_neighbours);
+			    std::vector<int> & indices_of_updated_neighbours);
 
   /// given a vertex_handle returned by CGAL on insertion of a new
   /// points, crash if it turns out that it corresponds to a vertex
@@ -152,6 +152,7 @@ inline double DnnPlane::eta(const int i) const {
 
 inline double DnnPlane::phi(const int i) const {
   return _supervertex[i].vertex->point().y(); };
-#endif //  __DNNPLANE__
+
+#endif //  __DNNPLANE_HH_
 
 #endif // DROP_CGAL

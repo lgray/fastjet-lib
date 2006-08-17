@@ -30,13 +30,12 @@
 
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
-#ifndef __DNN3PICYLINDER__
-#define __DNN3PICYLINDER__
+#ifndef __DNN3PICYLINDER_HH_
+#define __DNN3PICYLINDER_HH_
 
 #include "DynamicNearestNeighbours.hh"
 #include "DnnPlane.hh"
 #include "numconsts.hh"
-using namespace std;
 
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the surface of cylinder (using one 
@@ -60,7 +59,7 @@ class Dnn3piCylinder : public DynamicNearestNeighbours {
   /// alternatively the routine will crash if it detects it occurring
   /// (only when finding the nearest neighbour index, not its
   /// distance).
-  Dnn3piCylinder(const vector<EtaPhi> &,
+  Dnn3piCylinder(const std::vector<EtaPhi> &,
 		 const bool & ignore_nearest_is_mirror = false,
 		 const bool & verbose = false );
 
@@ -77,10 +76,10 @@ class Dnn3piCylinder : public DynamicNearestNeighbours {
   /// not removed in the meantime)
   bool Valid(const int & index) const;
 
-  void RemoveAndAddPoints(const vector<int> & indices_to_remove,
-			  const vector<EtaPhi> & points_to_add,
-			  vector<int> & indices_added,
-			  vector<int> & indices_of_updated_neighbours);
+  void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
+			  const std::vector<EtaPhi> & points_to_add,
+			  std::vector<int> & indices_added,
+			  std::vector<int> & indices_of_updated_neighbours);
 
   ~Dnn3piCylinder();
 
@@ -144,11 +143,11 @@ class Dnn3piCylinder : public DynamicNearestNeighbours {
 
   // for each "true" vertex we have reference to indices in the euclidean
   // plane structure
-  vector<MirrorVertexInfo> _mirror_info;
+  std::vector<MirrorVertexInfo> _mirror_info;
   // for each index in the euclidean 0--3pi plane structure we want to
   // be able to get back to the "true" vertex index on the overall
   // 0--2pi cylinder structure
-  vector<int> _cylinder_index_of_plane_vertex;
+  std::vector<int> _cylinder_index_of_plane_vertex;
 
   // NB: we define POINTERS here because the initialisation gave
   //     us problems (things crashed!), perhaps because in practice
@@ -184,7 +183,7 @@ class Dnn3piCylinder : public DynamicNearestNeighbours {
   /// ADDITIONALLY push the cylinder_point (and if it exists the mirror
   /// copy) onto the vector plane_points.
   void _RegisterCylinderPoint (const EtaPhi & cylinder_point,
-			       vector<EtaPhi> & plane_points);
+			       std::vector<EtaPhi> & plane_points);
 };
 
 
@@ -219,7 +218,7 @@ inline int Dnn3piCylinder::NearestNeighbourIndex(const int & current) const {
   // that mirror copy is the closest point.
   assert(_ignore_nearest_is_mirror || this_cylinder_index != current);
   //if (this_cylinder_index == current) {
-  //  cerr << "WARNING point "<<current<<
+  //  std::cerr << "WARNING point "<<current<<
   //    " has its mirror copy as its own nearest neighbour"<<endl;
   //}
   return this_cylinder_index;
@@ -249,5 +248,5 @@ inline Dnn3piCylinder::~Dnn3piCylinder() {
   delete _DNN; 
 }
 
-#endif //  __DNN3PICYLINDER__
+#endif //  __DNN3PICYLINDER_HH_
 #endif //  DROP_CGAL 

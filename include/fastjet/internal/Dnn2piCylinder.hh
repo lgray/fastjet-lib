@@ -30,13 +30,13 @@
 
 
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
-#ifndef __DNN2PICYLINDER__
-#define __DNN2PICYLINDER__
+#ifndef __DNN2PICYLINDER_HH_
+#define __DNN2PICYLINDER_HH_
 
 #include "DynamicNearestNeighbours.hh"
 #include "DnnPlane.hh"
 #include "numconsts.hh"
-using namespace std;
+
 
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the surface of cylinder (using one 
@@ -60,7 +60,7 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   /// alternatively the routine will crash if it detects it occurring
   /// (only when finding the nearest neighbour index, not its
   /// distance).
-  Dnn2piCylinder(const vector<EtaPhi> &,
+  Dnn2piCylinder(const std::vector<EtaPhi> &,
 		 const bool & ignore_nearest_is_mirror = false,
 		 const bool & verbose = false );
 
@@ -77,10 +77,10 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   /// not removed in the meantime)
   bool Valid(const int & index) const;
 
-  void RemoveAndAddPoints(const vector<int> & indices_to_remove,
-			  const vector<EtaPhi> & points_to_add,
-			  vector<int> & indices_added,
-			  vector<int> & indices_of_updated_neighbours);
+  void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
+			  const std::vector<EtaPhi> & points_to_add,
+			  std::vector<int> & indices_added,
+			  std::vector<int> & indices_of_updated_neighbours);
 
   ~Dnn2piCylinder();
 
@@ -122,7 +122,7 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   ///
   /// We also need to be able to go from the euclidean plane indices
   /// back to the "true" cylinder index, and for this purpose we use
-  /// the vector _cylinder_index_of_plane_vertex[...], which in the above example has
+  /// the std::vector _cylinder_index_of_plane_vertex[...], which in the above example has
   /// the following contents
   ///
   /// _cylinder_index_of_plane_vertex[0] = 0
@@ -144,11 +144,11 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
 
   // for each "true" vertex we have reference to indices in the euclidean
   // plane structure
-  vector<MirrorVertexInfo> _mirror_info;
+  std::vector<MirrorVertexInfo> _mirror_info;
   // for each index in the euclidean 0--2pi plane structure we want to
   // be able to get back to the "true" vertex index on the overall
   // 0--2pi cylinder structure
-  vector<int> _cylinder_index_of_plane_vertex;
+  std::vector<int> _cylinder_index_of_plane_vertex;
 
   // NB: we define POINTERS here because the initialisation gave
   //     us problems (things crashed!), perhaps because in practice
@@ -173,7 +173,7 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   ///
   /// ADDITIONALLY push the cylinder_point onto the vector plane_points.
   void _RegisterCylinderPoint (const EtaPhi & cylinder_point,
-			       vector<EtaPhi> & plane_points);
+			       std::vector<EtaPhi> & plane_points);
 
   /// For each plane point specified in the vector plane_indices,
   /// establish whether there is a need to create a mirror point
@@ -191,8 +191,8 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   /// changed (this will include the new neighbours that have just been
   /// added)
   void _CreateNecessaryMirrorPoints(
-			  const vector<int> & plane_indices,
-			  vector<int> & updated_plane_points);
+			  const std::vector<int> & plane_indices,
+			  std::vector<int> & updated_plane_points);
 
 };
 
@@ -258,5 +258,5 @@ inline Dnn2piCylinder::~Dnn2piCylinder() {
   delete _DNN; 
 }
 
-#endif //  __DNN2PICYLINDER__
+#endif //  __DNN2PICYLINDER_HH_
 #endif //DROP_CGAL 

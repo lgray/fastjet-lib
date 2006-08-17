@@ -30,12 +30,12 @@
 
 
 
-#ifndef __FJERROR__
-#define __FJERROR__
+#ifndef __ERROR_HH__
+#define __ERROR_HH__
 
 #include<iostream>
 #include<string>
-
+#include "base.hh"
 
 /// class corresponding to errors that will be thrown by fastjet
 class FjError {
@@ -51,4 +51,4 @@ private:
   std::string _message;
 };
 
-#endif // __FJERROR__
+#endif // __ERROR_HH__

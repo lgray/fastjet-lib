@@ -28,9 +28,10 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FJJETDEFINITION_H_
-#define __FJJETDEFINITION_H_
+#ifndef __JETDEFINITION_H_
+#define __JETDEFINITION_H_
 
+#include "base.hh"
 
 //======================================================================
 /// the various options for the algorithmic strategy to adopt in
@@ -104,4 +105,4 @@ private:
 
 };
 
-#endif // __FJJETDEFINITION_H_
+#endif // __JETDEFINITION_H_

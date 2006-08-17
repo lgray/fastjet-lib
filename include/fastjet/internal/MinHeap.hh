@@ -6,6 +6,7 @@
 #include<cassert>
 #include<memory>
 #include<limits>
+#include "base.hh"
 
 //======================================================================
 /// A class which provides a "heap"-like structure that allows
