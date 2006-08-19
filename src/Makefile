@@ -8,7 +8,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc BasicRandom.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -126,10 +126,12 @@ ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/internal/DynamicNe
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/Error.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/JetDefinition.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/ActiveAreaSpec.hh
+ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/internal/BasicRandom.hh
 ActiveAreaSpec.o: ../include/fastjet/ActiveAreaSpec.hh
 ActiveAreaSpec.o: ../include/fastjet/PseudoJet.hh
 ActiveAreaSpec.o: ../include/fastjet/internal/numconsts.hh
 ActiveAreaSpec.o: ../include/fastjet/internal/base.hh
+ActiveAreaSpec.o: ../include/fastjet/internal/BasicRandom.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/PseudoJet.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/internal/numconsts.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/internal/base.hh
@@ -141,3 +143,6 @@ ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceWithArea.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ActiveAreaSpec.hh
+ClusterSequenceActiveArea.o: ../include/fastjet/internal/BasicRandom.hh
+BasicRandom.o: ../include/fastjet/internal/BasicRandom.hh
+BasicRandom.o: ../include/fastjet/internal/base.hh

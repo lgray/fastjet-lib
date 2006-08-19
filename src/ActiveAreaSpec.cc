@@ -29,10 +29,13 @@
 //ENDHEADER
 
 #include "fastjet/ActiveAreaSpec.hh"
+#include<iostream>
 
 using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+BasicRandom<double> ActiveAreaSpec::_random_generator;
 
 //======================================================================
 /// sets the detailed parameters for the ghosts (which may not be quite
@@ -46,6 +49,8 @@ void ActiveAreaSpec::_initialize() {
   _neta = int(ceil(_ghost_etamax/_deta)); _deta = _ghost_etamax / _neta;
   _actual_ghost_area = _dphi * _deta;
   _n_ghosts   = (2*_neta+1)*_nphi;
+
+  //_random_generator.info(cerr);
 }
 
 //----------------------------------------------------------------------
@@ -54,13 +59,22 @@ void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   // add momenta for ghosts
   for (int ieta = -_neta; ieta <= _neta; ieta++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
-      // include random offsets for all quantities
-      double phi = (iphi+0.5) * _dphi + _dphi*rand()*_grid_scatter/RAND_MAX;
-      double eta = ieta * _deta + _deta*rand()*_grid_scatter/RAND_MAX;
-      //double phi = (iphi+0.5) * _dphi* + rand()*_grid_scatter/RAND_MAX;
-      //double eta = ieta * _deta + rand()*_grid_scatter/RAND_MAX;
-      double kt = _mean_ghost_kt*(1+rand()*_kt_scatter/RAND_MAX);
+      // // include random offsets for all quantities
+      // double phi = (iphi+0.5) * _dphi + _dphi*rand()*_grid_scatter/RAND_MAX;
+      // double eta = ieta * _deta + _deta*rand()*_grid_scatter/RAND_MAX;
+      // //double phi = (iphi+0.5) * _dphi* + rand()*_grid_scatter/RAND_MAX;
+      // //double eta = ieta * _deta + rand()*_grid_scatter/RAND_MAX;
+      // double kt = _mean_ghost_kt*(1+rand()*_kt_scatter/RAND_MAX);
      
+      // include random offsets for all quantities
+      double phi = (iphi+0.5) * _dphi + _dphi*_our_rand()*_grid_scatter;
+      double eta = ieta * _deta + _deta*_our_rand()*_grid_scatter;
+      //double phi = (iphi+0.5) * _dphi* + _our_rand()*_grid_scatter;
+      //double eta = ieta * _deta + _our_rand()*_grid_scatter;
+      double kt = _mean_ghost_kt*(1+_our_rand()*_kt_scatter);
+
+
+
       double pminus = kt*exp(-eta);
       double pplus  = kt*exp(+eta);
       double px = kt*sin(phi);

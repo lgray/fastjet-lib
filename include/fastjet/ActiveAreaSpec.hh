@@ -34,6 +34,10 @@
 
 #include<vector>
 #include "fastjet/PseudoJet.hh"
+#include "fastjet/internal/BasicRandom.hh"
+
+// 
+#define STATIC_GENERATOR 1
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -103,6 +107,14 @@ private:
   // derived quantities
   double _actual_ghost_area, _dphi, _deta;
   int    _n_ghosts, _nphi, _neta;
+
+  //inline double _our_rand() const {return rand()*(1.0/RAND_MAX);};
+  inline double _our_rand() const {return _random_generator();};
+
+  static BasicRandom<double> _random_generator;
+  //mutable BasicRandom<double> _random_generator;
+
+  
 };
 
 FASTJET_END_NAMESPACE

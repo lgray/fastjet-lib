@@ -1,6 +1,35 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-19  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
+	* include/fastjet/internal/BasicRandom.hh   *** ADDED ***
+	* src/BasicRandom.hh                        *** ADDED ***
+
+	  Added these files, which are basically copies of the (GPL)
+	  random-number generator from Zoltan Nagy's nlojet++ program.
+
+	* include/fastjet/ActiveAreaSpec.hh
+	* ActiveAreaSpec.cc
+
+	  Added _our_rand() to return a random double between 0.0 and 1.0,
+	  checked that it gave identical results to before and then
+	  switched over to using the BasicRandom<double> class.
+
+	  NOTE: currently the random number generator object for
+	  ActiveAreaSpec is static (ie. there is a single sequence shared
+	  among all instances of ActiveAreaSpec). One consequence of this
+	  is that in areas-2point.cc, previously we restarted the sequence
+	  from the beginning for each separation Delta eta (giving some
+	  correlation between successive values of eta), whereas, now,
+	  successive values of eta are completely uncorrelated.
+
+	* include/fastjet/ClusterSequenceActiveArea.hh
+	  
+	  Commented the lines that reset the global C random seed and
+	  wrote a warning about this.
+
+	
 2006-08-17  Gavin Salam  <salam@lpthe.jussieu.fr>  & Matteo
 
 	* Reworked naming scheme, so that all includes are now in

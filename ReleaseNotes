@@ -6,8 +6,6 @@ To Do
 
 - "internal" namespace for things in fastjet/internal ???
 
-- areas/    move over to new v2 structures
-
 - example/fastjet_subtraction.cc
 
 - random numbers (two options -- take it from nlojet++, or else from
