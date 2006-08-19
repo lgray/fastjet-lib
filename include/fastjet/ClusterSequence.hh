@@ -144,6 +144,8 @@ class ClusterSequence {
 //
 
 public:
+  /// set the default (static) jet finder across all current and future
+  /// ClusterSequence objects -- deprecated.
   static void set_jet_finder (JetFinder jet_finder) {_default_jet_finder = jet_finder;};
 
 

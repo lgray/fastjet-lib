@@ -4,12 +4,25 @@ Release Notes for fastjet
 To Do
 -----
 
-- "internal" namespace for things in fastjet/internal ???
-
 - example/fastjet_subtraction.cc
 
-- random numbers (two options -- take it from nlojet++, or else from
-  clhep. The former looks far more manageable...
+- transfer of information from first ghosted run of C.S.ActiveArea
+  into the history of the class itself (to avoid extraneous
+  jet-finding run, which is costly for HI). Steps to completion
+  include:
+
+   . lumping together some of setup for a ClusterSequence object so
+     that the setup can be carried out easily from the ActiveSequence
+     derived class (stuff related to creating the jets array,
+     transferring info from JetDefinition, and printing of banner).
+
+   . member function of C.S.A.A. to transfer C.S.A.A.ExplicitGhosts
+     sequence into current sequence. It should also record the stratey
+     actually used?
+
+   . call to that member function after first repeat.
+
+- "internal" namespace for things in fastjet/internal ???
 
 - documentation for new release
 

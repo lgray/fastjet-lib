@@ -145,18 +145,9 @@ template<class L> void ClusterSequenceActiveArea::_initialize (
   _average_area_4vector = PseudoJet(0.0,0.0,0.0,0.0);
   _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
      
-  // if (_n_seed_warnings < _max_seed_warnings) {
-  //   cerr << "***** * WATCH OUT ******; I am resetting the random seed\n";
-  //   _n_seed_warnings += 1;
-  //   if (_n_seed_warnings == _max_seed_warnings) cerr << "[last time this warning is output]\n";
-  // }
-
 
   // run the clustering multiple times so as to get areas of all the jets
   for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
-    // WARNING: setting seed manually at each turn of loop (because
-    // we suspect that CGAL plays with it)
-    //srand(irepeat+2);
 
     ClusterSequenceActiveAreaExplicitGhosts clust_seq(pseudojets, jet_def, area_spec);
 
