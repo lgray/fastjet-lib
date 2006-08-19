@@ -46,6 +46,8 @@ using namespace std;
 JetFinder ClusterSequence::_default_jet_finder = kt_algorithm;
 //
 
+
+//----------------------------------------------------------------------
 void ClusterSequence::_initialise_and_run (
 				  const double & R,
 				  const Strategy & strategy,
@@ -55,22 +57,17 @@ void ClusterSequence::_initialise_and_run (
   _initialise_and_run(jet_def, writeout_combinations);
 }
 
+
+//----------------------------------------------------------------------
 void ClusterSequence::_initialise_and_run (
 				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations) {
-  _print_banner();
 
-  if (_jets.size() == 0) {throw Error("Cannot run jet-finder on empty event");}
+  // transfer all relevant info into internal variables
+  _decant_options(jet_def, writeout_combinations);
 
-  // make a local copy of the jet definition (for future use?)
-  _jet_def = jet_def;
-  
-  _writeout_combinations = writeout_combinations;
-  _jet_finder = jet_def.jet_finder();
-  _Rparam = jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
-  _strategy = jet_def.strategy();
-
-  // it's not too clear exactly what this does yet..
+  // set up the history entries for the initial particles (those
+  // currently in _jets)
   _fill_initial_history();
 
   // automatically redefine the strategy according to N if that is
@@ -92,7 +89,6 @@ void ClusterSequence::_initialise_and_run (
     }
   }
 
-    
   // run the code containing the selected strategy
   if (_strategy == NlnN || _strategy == NlnN3pi 
       || _strategy == NlnN4pi ) {
@@ -145,6 +141,52 @@ void ClusterSequence::_print_banner() {
   cout << "# ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002\n";
   cout << "#---------------------------------------------------------------------\n";
 }
+
+//----------------------------------------------------------------------
+// transfer all relevant info into internal variables
+void ClusterSequence::_decant_options(const JetDefinition & jet_def,
+                                      const bool & writeout_combinations) {
+
+  // let the user know what's going on
+  _print_banner();
+
+  // make a local copy of the jet definition (for future use?)
+  _jet_def = jet_def;
+  
+  _writeout_combinations = writeout_combinations;
+  _jet_finder = jet_def.jet_finder();
+  _Rparam = jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
+  _strategy = jet_def.strategy();
+}
+
+
+//----------------------------------------------------------------------
+// initialise the history in a standard way
+void ClusterSequence::_fill_initial_history () {
+
+  if (_jets.size() == 0) {throw Error("Cannot run jet-finder on empty event");}
+
+  // reserve sufficient space for everything
+  _jets.reserve(_jets.size()*2);
+  _history.reserve(_jets.size()*2);
+
+  for (int i = 0; i < static_cast<int>(_jets.size()) ; i++) {
+    history_element element;
+    element.parent1 = InexistentParent;
+    element.parent2 = InexistentParent;
+    element.child   = Invalid;
+    element.jetp_index = i;
+    element.dij     = 0.0;
+    element.max_dij_so_far = 0.0;
+
+    _history.push_back(element);
+    
+    // get cross-referencing right from PseudoJets
+    _jets[i].set_cluster_hist_index(i);
+  }
+  _initial_n = _jets.size();
+}
+
 
 //----------------------------------------------------------------------
 // Return the component corresponding to the specified index.
@@ -352,32 +394,6 @@ void ClusterSequence::add_constituents (
 }
 
 
-//----------------------------------------------------------------------
-// initialise the history in a standard way
-void ClusterSequence::_fill_initial_history () {
-
-  if (_jets.size() == 0) {throw Error("The event contains no momenta");}
-
-  // reserve sufficient space for everything
-  _jets.reserve(_jets.size()*2);
-  _history.reserve(_jets.size()*2);
-
-  for (int i = 0; i < static_cast<int>(_jets.size()) ; i++) {
-    history_element element;
-    element.parent1 = InexistentParent;
-    element.parent2 = InexistentParent;
-    element.child   = Invalid;
-    element.jetp_index = i;
-    element.dij     = 0.0;
-    element.max_dij_so_far = 0.0;
-
-    _history.push_back(element);
-    
-    // get cross-referencing right from PseudoJets
-    _jets[i].set_cluster_hist_index(i);
-  }
-  _initial_n = _jets.size();
-}
 
 //----------------------------------------------------------------------
 // initialise the history in a standard way

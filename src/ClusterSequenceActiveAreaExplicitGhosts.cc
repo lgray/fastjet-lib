@@ -88,7 +88,7 @@ bool ClustSeqActAreaEG::is_pure_ghost(const PseudoJet & jet) const
 //----------------------------------------------------------------------
 bool ClustSeqActAreaEG::is_pure_ghost(int hist_ix) const 
 {
-  return _is_pure_ghost[hist_ix];
+  return hist_ix >= 0 ? _is_pure_ghost[hist_ix] : false;
 }
 
 

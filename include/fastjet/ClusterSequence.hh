@@ -223,6 +223,11 @@ protected:
   static JetFinder _default_jet_finder;
   JetDefinition _jet_def;
 
+  /// transfer the vector<L> of input jets into our own vector<PseudoJet>
+  /// _jets (with some reserved space for future growth).
+  template<class L> void _transfer_input_jets(
+                                     const std::vector<L> & pseudojets);
+
   /// This is the routine that will do all the initialisation and
   /// then run the clustering (may be called by various constructors).
   /// It assumes _jets contains the momenta to be clustered.
@@ -235,6 +240,27 @@ protected:
   void _initialise_and_run (const double & R,
 			    const Strategy & strategy,
 			    const bool & writeout_combinations);
+
+  /// fills in the various member variables with "decanted" options from
+  /// the jet_definition and writeout_combinations variables
+  void _decant_options(const JetDefinition & jet_def,
+                       const bool & writeout_combinations);
+
+  /// fill out the history (and jet cross refs) related to the initial
+  /// set of jets (assumed already to have been "transferred"),
+  /// without any clustering
+  void _fill_initial_history();
+
+  /// carry out the recombination between the jets numbered jet_i and
+  /// jet_j, at distance scale dij; return the index newjet_k of the
+  /// result of the recombination of i and j.
+  void _do_ij_recombination_step(const int & jet_i, const int & jet_j, 
+				 const double & dij, int & newjet_k);
+
+  /// carry out an recombination step in which _jets[jet_i] merges with
+  /// the beam, 
+  void _do_iB_recombination_step(const int & jet_i, const double & diB);
+
 
   /// This contains the physical PseudoJets; for each PseudoJet one
   /// can find the corresponding position in the _history by looking
@@ -273,16 +299,9 @@ protected:
   void _CP2DChan_limited_cluster(double D);
   void _do_Cambridge_inclusive_jets();
 
-  void _fill_initial_history();
   void _add_step_to_history(const int & step_number, const int & parent1, 
 			       const int & parent2, const int & jetp_index,
 			       const double & dij);
-
-  void _do_ij_recombination_step(const int & jet_i, const int & jet_j, 
-				 const double & dij, 
-				 int & newjet_k);
-
-  void _do_iB_recombination_step(const int & jet_i, const double & diB);
 
   /// internal routine associated with the construction of the unique
   /// history order (following children in the tree)
@@ -448,16 +467,12 @@ protected:
 
 
 //----------------------------------------------------------------------
-// initialise from some generic type... Has to be made available
-// here in order for it the template aspect of it to work...
-template<class L> ClusterSequence::ClusterSequence (
-			          const std::vector<L> & pseudojets,
-				  const double & R,
-				  const Strategy & strategy,
-				  const bool & writeout_combinations) {
+// Transfer the initial jets into our internal structure
+template<class L> void ClusterSequence::_transfer_input_jets(
+                                       const std::vector<L> & pseudojets) {
 
   // this will ensure that we can point to jets without difficulties
-  // arising
+  // arising.
   _jets.reserve(pseudojets.size()*2);
 
   // insert initial jets this way so that any type L that can be
@@ -466,7 +481,22 @@ template<class L> ClusterSequence::ClusterSequence (
   // components, such as CLHEP HepLorentzVector).
   for (unsigned int i = 0; i < pseudojets.size(); i++) {
     _jets.push_back(pseudojets[i]);}
+  
+}
 
+//----------------------------------------------------------------------
+// initialise from some generic type... Has to be made available
+// here in order for it the template aspect of it to work...
+template<class L> ClusterSequence::ClusterSequence (
+			          const std::vector<L> & pseudojets,
+				  const double & R,
+				  const Strategy & strategy,
+				  const bool & writeout_combinations) {
+
+  // transfer the initial jets (type L) into our own array
+  _transfer_input_jets(pseudojets);
+
+  // run the clustering
   _initialise_and_run(R,strategy,writeout_combinations);
 }
 
@@ -479,17 +509,10 @@ template<class L> ClusterSequence::ClusterSequence (
 				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations) {
 
-  // this will ensure that we can point to jets without difficulties
-  // arising
-  _jets.reserve(pseudojets.size()*2);
+  // transfer the initial jets (type L) into our own array
+  _transfer_input_jets(pseudojets);
 
-  // insert initial jets this way so that any type L that can be
-  // converted to a pseudojet will work fine (basically PseudoJet
-  // and any type that has [] subscript access to the momentum
-  // components, such as CLHEP HepLorentzVector).
-  for (unsigned int i = 0; i < pseudojets.size(); i++) {
-    _jets.push_back(pseudojets[i]);}
-
+  // run the clustering
   _initialise_and_run(jet_def,writeout_combinations);
 }
 

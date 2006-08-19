@@ -49,21 +49,28 @@ using namespace std;
 class ClusterSequenceActiveArea : public ClusterSequenceWithArea {
 public:
 
+//  /// constructor based on JetDefinition and ActiveAreaSpec
+//  template<class L> ClusterSequenceActiveArea
+//         (const std::vector<L> & pseudojets, 
+//	  const JetDefinition & jet_def,
+//	  const ActiveAreaSpec & area_spec,
+//	  const bool & writeout_combinations = false) :
+//     ClusterSequenceWithArea(pseudojets, jet_def, writeout_combinations) {
+//	   _initialise(pseudojets, jet_def, area_spec, writeout_combinations);};
+
   /// constructor based on JetDefinition and ActiveAreaSpec
   template<class L> ClusterSequenceActiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const ActiveAreaSpec & area_spec,
-	  const bool & writeout_combinations = false) :
-     ClusterSequenceWithArea(pseudojets, jet_def, writeout_combinations) {
-	   _initialize(pseudojets, jet_def, area_spec, writeout_combinations);};
+	  const bool & writeout_combinations = false) ;
 
   virtual double area (const PseudoJet & jet) const {
                              return _average_area[jet.cluster_hist_index()];};
   virtual double area_error (const PseudoJet & jet) const {
                              return _average_area2[jet.cluster_hist_index()];};
 
-  PseudoJet area_4vector (const PseudoJet & jet) const {
+  virtual PseudoJet area_4vector (const PseudoJet & jet) const {
                     return _average_area_4vector[jet.cluster_hist_index()];};
 
   /// return the transverse momentum per unit area excluding 
@@ -85,12 +92,18 @@ public:
 
 private:
 
-  /// does the actual initialisation work 
-  template<class L> void _initialize
-         (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
-	  const bool & writeout_combinations = false);
+  ///// does the actual initialisation work 
+  //template<class L> void _initialise
+  //       (const std::vector<L> & pseudojets, 
+  //        const JetDefinition & jet_def,
+  //        const ActiveAreaSpec & area_spec,
+  //	  const bool & writeout_combinations = false);
+
+  /// does the initialisation and running specific to the active
+  /// areas class
+  void _initialise_and_run_AA (const JetDefinition & jet_def,
+                               const ActiveAreaSpec & area_spec,
+                               const bool & writeout_combinations = false);
 
 
   valarray<double> _average_area, _average_area2;
@@ -100,9 +113,15 @@ private:
   double _etamax_for_area; // max eta where we put ghosts
   double _etalim_for_area; // max eta where we trust jet areas
 
-  /// transfer areas from the ClusterSequenceActiveAreaExplicitGhosts object into
-  /// our internal area bookkeeping...
-  void _transfer_areas(const vector<int> &, 
+  /// transfer the history (and jet-momenta) from clust_seq to our
+  /// own internal structure while removing ghosts
+  void _transfer_ghost_free_history(
+           const ClusterSequenceActiveAreaExplicitGhosts & clust_seq);
+
+
+  /// transfer areas from the ClusterSequenceActiveAreaExplicitGhosts
+  /// object into our internal area bookkeeping...
+  void _transfer_areas(const vector<int> & unique_hist_order, 
                        const ClusterSequenceActiveAreaExplicitGhosts & );
 
   /// routine for extracting the tree in an order that will be independent
@@ -117,70 +136,27 @@ private:
 
   /// since we are playing nasty games with seeds, we should warn
   /// the user a few times
-  static int _n_seed_warnings;
-  const static int _max_seed_warnings = 10;
+  //static int _n_seed_warnings;
+  //const static int _max_seed_warnings = 10;
 
 };
 
 
-template<class L> void ClusterSequenceActiveArea::_initialize (
-		const std::vector<L> & pseudojets, 
-		const JetDefinition & jet_def,
-		const ActiveAreaSpec & area_spec,
-		const bool & writeout_combinations) 
-  {
-  // code for testing the unique tree
-  vector<int> unique_tree;
-  unique_tree = unique_history_order();
+template<class L> ClusterSequenceActiveArea::ClusterSequenceActiveArea 
+(const std::vector<L> & pseudojets, 
+ const JetDefinition & jet_def,
+ const ActiveAreaSpec & area_spec,
+ const bool & writeout_combinations) {
 
-  // for future reference...
-  _etamax_for_area = area_spec.ghost_etamax();
-  _etalim_for_area = _etamax_for_area - _Rparam;
-  
-  
-  // initialize our local area information
-  _average_area.resize(_history.size());  _average_area  = 0.0;
-  _average_area2.resize(_history.size()); _average_area2 = 0.0;
-  _average_area_4vector.resize(_history.size()); 
-  _average_area_4vector = PseudoJet(0.0,0.0,0.0,0.0);
-  _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
-     
+  // transfer the initial jets (type L) into our own array
+  _transfer_input_jets(pseudojets);
 
-  // run the clustering multiple times so as to get areas of all the jets
-  for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
+  // run the clustering for active areas
+  _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
 
-    ClusterSequenceActiveAreaExplicitGhosts clust_seq(pseudojets, jet_def, area_spec);
-
-    // transfer areas from clust_seq into our object
-    _transfer_areas(unique_tree, clust_seq);
-    //cerr << "non-jet area sum was " << _non_jet_area << endl;
-  }
-  
-  _average_area  /= area_spec.repeat();
-  _average_area2 /= area_spec.repeat();
-  if (area_spec.repeat() > 1) {
-    _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/
-                          (area_spec.repeat()-1));
-  } else {
-    _average_area2 = 0.0;
-  }
-
-  _non_jet_area  /= area_spec.repeat();
-  _non_jet_area2 /= area_spec.repeat();
-  _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
-			 area_spec.repeat());
-  _non_jet_number /= area_spec.repeat();
-
-  // following bizarre way of writing things is related to 
-  // poverty of operations on PseudoJet objects (as well as some confusion
-  // in one or two places)
-  for (unsigned i = 0; i < _average_area_4vector.size(); i++) {
-    _average_area_4vector[i] = (1.0/area_spec.repeat()) * _average_area_4vector[i];
-  }
-  //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
-
-  
 }
+
+
   
 FASTJET_END_NAMESPACE
 

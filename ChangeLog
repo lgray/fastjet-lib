@@ -3,6 +3,43 @@ ChangeLog for fastjet-release directory
 
 2006-08-19  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
+	* include/fastjet/Error.hh
+
+          error message output now states that this is a fastjet::Error
+	  error. 
+
+	* include/fastjet/ClusterSequence.hh
+	* src/ClusterSequence.cc
+
+	  Put some of the bookkeeping code into specific member functions
+	  (_transfer_input_jets, _decant_options), so that this
+	  housekeeping can be more easily (reliably) carried out also by
+	  derived classes.
+
+	  These new functions, as well as _do_iB_recombination_step,
+	  _do_ij_recombination_step have been made protected (as opposed
+	  to private), again for access from derived classes.
+
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+	 
+	  Arranged for _is_pure_ghost(int history_index) to return false
+	  for any negative value of history_index (so that e.g. BeamJet is
+	  not considered a ghost).
+
+	* include/fastjet/ClusterSequenceActiveArea.hh
+	* src/ClusterSequenceActiveArea.cc
+
+	  Rather than first running the clustering on the unghosted event
+	  and then providing area info from runs on ghosted events, this
+	  class now deduces the unghosted clustering sequence from a
+	  ghosted event, so as to reduce the number of runs. This is
+	  relevant for heavy-ions. If the requested number of repetitions
+	  is zero, it reverts to the plain unghosted-clustering
+
+	
+2006-08-19  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
 	* include/fastjet/internal/BasicRandom.hh   *** ADDED ***
 	* src/BasicRandom.hh                        *** ADDED ***
 

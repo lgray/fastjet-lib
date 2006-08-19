@@ -80,6 +80,10 @@ public:
 
   /// true if a jet is made exclusively of ghosts
   bool is_pure_ghost(const PseudoJet & jet) const;
+
+  /// true if the entry in the history index corresponds to a
+  /// ghost; if hist_ix does not correspond to an actual particle
+  /// (i.e. hist_ix < 0), then the result is false.
   bool is_pure_ghost(int history_index) const;
 
   /// returns the total area under study

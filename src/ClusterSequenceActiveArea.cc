@@ -41,8 +41,98 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 
-int ClusterSequenceActiveArea::_n_seed_warnings = 0;
-const int _max_seed_warnings = 10;
+//int ClusterSequenceActiveArea::_n_seed_warnings = 0;
+//const int _max_seed_warnings = 10;
+
+void ClusterSequenceActiveArea::_initialise_and_run_AA (
+		const JetDefinition & jet_def,
+		const ActiveAreaSpec & area_spec,
+		const bool & writeout_combinations) 
+{
+
+  // initialize our local area information
+  _average_area.resize(2*_jets.size());  _average_area  = 0.0;
+  _average_area2.resize(2*_jets.size()); _average_area2 = 0.0;
+  _average_area_4vector.resize(2*_jets.size()); 
+  _average_area_4vector = PseudoJet(0.0,0.0,0.0,0.0);
+  _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
+     
+  // for future reference...
+  _etamax_for_area = area_spec.ghost_etamax();
+  _etalim_for_area = _etamax_for_area - jet_def.R();
+
+  // Make sure we'll have at least one repetition -- then we can
+  // deduce the unghosted clustering sequence from one of the ghosted
+  // sequences. If we do not have any repetitions, then get the
+  // unghosted sequence from the plain unghosted clustering.
+  //
+  // NB: all decanting and filling of initial history will then
+  // be carried out by base-class routine
+  if (area_spec.repeat() <= 0) {
+    _initialise_and_run(jet_def, writeout_combinations);
+    return;
+  }
+
+  // transfer all relevant info into internal variables
+  _decant_options(jet_def, writeout_combinations);
+
+  // set up the history entries for the initial particles (those
+  // currently in _jets)
+  _fill_initial_history();
+
+  // record the input jets as they are currently
+  vector<PseudoJet> input_jets(_jets);
+
+  // code for testing the unique tree
+  vector<int> unique_tree;
+
+  
+  
+
+  // run the clustering multiple times so as to get areas of all the jets
+  for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
+
+    ClusterSequenceActiveAreaExplicitGhosts clust_seq(input_jets, 
+                                                      jet_def, area_spec);
+
+    if (irepeat == 0) {
+      // take the non-ghost part of the history and put into our own
+      // history.
+      _transfer_ghost_free_history(clust_seq);
+      // get the "unique" order that will be used for transferring all areas. 
+      unique_tree = unique_history_order();
+    }
+
+    // transfer areas from clust_seq into our object
+    _transfer_areas(unique_tree, clust_seq);
+  }
+  
+  _average_area  /= area_spec.repeat();
+  _average_area2 /= area_spec.repeat();
+  if (area_spec.repeat() > 1) {
+    _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/
+                          (area_spec.repeat()-1));
+  } else {
+    _average_area2 = 0.0;
+  }
+
+  _non_jet_area  /= area_spec.repeat();
+  _non_jet_area2 /= area_spec.repeat();
+  _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
+			 area_spec.repeat());
+  _non_jet_number /= area_spec.repeat();
+
+  // following bizarre way of writing things is related to 
+  // poverty of operations on PseudoJet objects (as well as some confusion
+  // in one or two places)
+  for (unsigned i = 0; i < _average_area_4vector.size(); i++) {
+    _average_area_4vector[i] = (1.0/area_spec.repeat()) * _average_area_4vector[i];
+  }
+  //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
+
+  
+}
+
 
 //----------------------------------------------------------------------
 double ClusterSequenceActiveArea::pt_per_unit_area(
@@ -193,15 +283,94 @@ void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
 }
 
 
+//----------------------------------------------------------------------
+/// transfer the history (and jet-momenta) from clust_seq to our
+/// own internal structure while removing ghosts
+void ClusterSequenceActiveArea::_transfer_ghost_free_history(
+             const ClusterSequenceActiveAreaExplicitGhosts & ghosted_seq) {
+  
+  const vector<history_element> & gs_history  = ghosted_seq.history();
+  vector<int> gs2self_hist_map(gs_history.size());
+
+  // work our way through to first non-trivial combination
+  unsigned igs = 0;
+  unsigned iself = 0;
+  while (gs_history[igs].parent1 == InexistentParent) {
+    // record correspondence 
+    if (!ghosted_seq.is_pure_ghost(igs)) {
+      gs2self_hist_map[igs] = iself++; 
+    } else {
+      gs2self_hist_map[igs] = Invalid; 
+    }
+    igs++;
+  };
+
+  // make sure the count of non-ghost initial jets is equal to
+  // what we already have in terms of initial jets
+  assert(iself == _history.size());
+
+  // now actually transfer things
+  do  {
+    // if we are a pure ghost, then go on to next round
+    if (ghosted_seq.is_pure_ghost(igs)) {
+      gs2self_hist_map[igs] = Invalid;
+      continue;
+    }
+
+    const history_element & gs_hist_el = gs_history[igs];
+
+    bool parent1_is_ghost = ghosted_seq.is_pure_ghost(gs_hist_el.parent1);
+    bool parent2_is_ghost = ghosted_seq.is_pure_ghost(gs_hist_el.parent2);
+
+    // if exactly one parent is a ghost then maintain info about the
+    // non-ghost correspondence for this jet, and then go on to next
+    // recombination in the ghosted sequence
+    if (parent1_is_ghost && !parent2_is_ghost && gs_hist_el.parent2 >= 0) {
+      gs2self_hist_map[igs] = gs2self_hist_map[gs_hist_el.parent2];
+      continue;
+    }
+    if (!parent1_is_ghost && parent2_is_ghost) {
+      gs2self_hist_map[igs] = gs2self_hist_map[gs_hist_el.parent1];
+      continue;
+    }
+
+    // no parents are ghosts...
+    if (gs_hist_el.parent2 >= 0) {
+      // recombination of two non-ghosts
+      gs2self_hist_map[igs] = _history.size();
+      // record the recombination in our own sequence
+      int newjet_k; // dummy var -- not used
+      //cerr << igs << " " << gs_hist_el.parent1 << " " << gs_hist_el.parent2 << endl;
+      //cerr << gs2self_hist_map[gs_hist_el.parent1] << " " << gs2self_hist_map[gs_hist_el.parent2] << endl;
+      int jet_i = _history[gs2self_hist_map[gs_hist_el.parent1]].jetp_index;
+      int jet_j = _history[gs2self_hist_map[gs_hist_el.parent2]].jetp_index;
+      //cerr << "recombining "<< jet_i << " and "<< jet_j << endl;
+      _do_ij_recombination_step(jet_i, jet_j, gs_hist_el.dij, newjet_k);
+    } else {
+      // we have a non-ghost that has become a beam-jet
+      assert(gs_history[igs].parent2 == BeamJet);
+      // record position
+      gs2self_hist_map[igs] = _history.size();
+      // record the recombination in our own sequence
+      _do_iB_recombination_step(
+             _history[gs2self_hist_map[gs_hist_el.parent1]].jetp_index,
+             gs_hist_el.dij);
+    }
+  } while (++igs < gs_history.size());
+
+  // finally transfer info about strategy used (which isn't necessarily
+  // always the one that got asked for...)
+  _strategy = ghosted_seq.strategy_used();
+}
 
 //----------------------------------------------------------------------
 void ClusterSequenceActiveArea::_transfer_areas(
 	    const vector<int> & unique_hist_order,
-    	    const ClusterSequenceActiveAreaExplicitGhosts & clust_seq  ) {
+    	    const ClusterSequenceActiveAreaExplicitGhosts & ghosted_seq  ) {
 
-  const vector<history_element> & cs_history  = clust_seq.history();
-  const vector<PseudoJet>     & cs_jets     = clust_seq.jets();
-  vector<int>    cs_unique_hist_order = clust_seq.unique_history_order();
+  const vector<history_element> & gs_history  = ghosted_seq.history();
+  const vector<PseudoJet>       & gs_jets     = ghosted_seq.jets();
+  vector<int>    gs_unique_hist_order = ghosted_seq.unique_history_order();
 
   const double tolerance = 1e-13; // to decide when two jets are the same
 
@@ -214,22 +383,22 @@ void ClusterSequenceActiveArea::_transfer_areas(
   valarray<PseudoJet> our_area_4vectors(_history.size());
   our_area_4vectors = PseudoJet(0.0,0.0,0.0,0.0);
 
-  for (unsigned i = 0; i < cs_history.size(); i++) {
+  for (unsigned i = 0; i < gs_history.size(); i++) {
     // only consider composite particles
-    unsigned cs_hist_index = cs_unique_hist_order[i];
-    if (cs_hist_index < clust_seq.n_particles()) continue;
-    const history_element & cs_hist = cs_history[cs_unique_hist_order[i]];
-    int parent1 = cs_hist.parent1;
-    int parent2 = cs_hist.parent2;
+    unsigned gs_hist_index = gs_unique_hist_order[i];
+    if (gs_hist_index < ghosted_seq.n_particles()) continue;
+    const history_element & gs_hist = gs_history[gs_unique_hist_order[i]];
+    int parent1 = gs_hist.parent1;
+    int parent2 = gs_hist.parent2;
 
     if (parent2 == BeamJet) {
       // need to look at parent to get the actual jet
       const PseudoJet & jet = 
-  	  cs_jets[cs_history[parent1].jetp_index];
-      double area = clust_seq.area(jet);
-      PseudoJet ext_area = clust_seq.area_4vector(jet);
+  	  gs_jets[gs_history[parent1].jetp_index];
+      double area = ghosted_seq.area(jet);
+      PseudoJet ext_area = ghosted_seq.area_4vector(jet);
 
-      if (clust_seq.is_pure_ghost(parent1)) {
+      if (ghosted_seq.is_pure_ghost(parent1)) {
 	if (abs(jet.rap()) < _etalim_for_area) {
 	  _non_jet_area  += area;
 	  _non_jet_area2 += area*area;
@@ -266,15 +435,15 @@ void ClusterSequenceActiveArea::_transfer_areas(
 	
       }
     }
-    else if (!clust_seq.is_pure_ghost(parent1) && 
-	     !clust_seq.is_pure_ghost(parent2)) {
+    else if (!ghosted_seq.is_pure_ghost(parent1) && 
+	     !ghosted_seq.is_pure_ghost(parent2)) {
 
       // get next "combined-particle" index in our own history
       while (++j < static_cast<int>(_history.size())) {
 	hist_index = unique_hist_order[j];
 	if (hist_index >= _initial_n) break;}
       
-      const PseudoJet & jet = cs_jets[cs_hist.jetp_index];
+      const PseudoJet & jet = gs_jets[gs_hist.jetp_index];
       const PseudoJet & refjet = _jets[_history[hist_index].jetp_index];
 
       // run sanity check 
@@ -285,10 +454,10 @@ void ClusterSequenceActiveArea::_transfer_areas(
 
       // update area and our local index (maybe redundant since later
       // the descendants will reupdate it?)
-      double area  = clust_seq.area(jet);
+      double area  = ghosted_seq.area(jet);
       our_areas[hist_index]  += area; 
 
-      PseudoJet ext_area = clust_seq.area_4vector(jet);
+      PseudoJet ext_area = ghosted_seq.area_4vector(jet);
       our_area_4vectors[hist_index] = our_area_4vectors[hist_index] + ext_area; 
 
       // now update areas of parents (so that they becomes areas
@@ -297,15 +466,15 @@ void ClusterSequenceActiveArea::_transfer_areas(
       // particles in the kt algorithm; for the Cambridge case it
       // means a jet's area will be the area just before it clusters
       // with another hard jet.
-      const PseudoJet & jet1 = cs_jets[cs_history[parent1].jetp_index];
+      const PseudoJet & jet1 = gs_jets[gs_history[parent1].jetp_index];
       int our_parent1 = _history[hist_index].parent1;
-      our_areas[our_parent1] = clust_seq.area(jet1);
-      our_area_4vectors[our_parent1] = clust_seq.area_4vector(jet1);
+      our_areas[our_parent1] = ghosted_seq.area(jet1);
+      our_area_4vectors[our_parent1] = ghosted_seq.area_4vector(jet1);
 
-      const PseudoJet & jet2 = cs_jets[cs_history[parent2].jetp_index];
+      const PseudoJet & jet2 = gs_jets[gs_history[parent2].jetp_index];
       int our_parent2 = _history[hist_index].parent2;
-      our_areas[our_parent2] = clust_seq.area(jet2);
-      our_area_4vectors[our_parent2] = clust_seq.area_4vector(jet2);
+      our_areas[our_parent2] = ghosted_seq.area(jet2);
+      our_area_4vectors[our_parent2] = ghosted_seq.area_4vector(jet2);
     }
 
   }
