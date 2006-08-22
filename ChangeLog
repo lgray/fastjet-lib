@@ -1,6 +1,15 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-22  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * example/fastjet_subtraction.cc
+
+          Added the subtraction using area_4vector. The results
+          are compared in output to the "standard" subtraction.
+          Added some comments.
+
+
 2006-08-19  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* include/fastjet/Error.hh

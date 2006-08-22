@@ -393,6 +393,113 @@ obtain a subjet analysis as follows:
 %======================================================================
 \section{Jet areas}
 
+Being a jet constituted by a finite number of particle, the notion
+of its {\sl area} (i.e. the surface in the $\eta$-$\phi$ plane over 
+which it extends) cannot be a rigorous one. It is however possible to 
+make this concept better defined via a proper definition.
+
+\ttt{FastJet} implements what is called an {\sl active} area.
+It is determined numerically by superimposing to the initial particles provided
+by the user a large number of extremely soft ``ghost'' particles, distributed
+on a uniform grid (with small random fluctuations to avoid degeneracies) in
+$\eta$ and $\phi$, which are then clusterd together with the real ones. The
+number of ghosts which belong to a jets gives a measure of its area.
+
+Alternative definitions of areas will be implemented in future versions.
+
+\subsection{fastjet::ActiveAreaSpec}
+The user must first of all create an object that specifies how he defines
+the (active) area. This is done via the class \ttt{fastjet::ActiveAreaSpec} 
+whose constructor is
+\begin{verbatim}
+fastjet::ActiveAreaSpec(double ghost_etamax, 
+                        int    repeat = 5,
+                        double ghost_area=0.01, 
+                        double grid_scatter = 1e-4, 
+                        double kt_scatter = 0.1,
+                        double mean_ghost_kt = 1e-100);
+\end{verbatim}
+\ttt{ghost\_etamax} defines the maximum rapidity up to which ghosts are
+generated. \ttt{ghost\_area} is the area of a single ghosts. The smaller this
+number the slower the program will run, but the more accurate the resulting
+areas will be. \ttt{repeat} represents the number of times
+the area of each jet is calculated before a result is given as an average
+of the various runs. If \ttt{repeat} $ > 1$ a numerical
+uncertainty, given by $\sigma/\sqrt{\ttt{repeat}-1}$, is also
+given.
+
+\ttt{grid\_scatter} and \ttt{kt\_scatter} are fractional random fluctuations of
+the position of the ghosts on the $\eta$-$\phi$ grid and of their transverse
+momentum.  \ttt{mean\_ghost\_kt} is the average transverse momentum of the
+ghosts.
+
+
+\subsection{fastjet::ClusterSequenceWithArea}
+Virtual base class that sets the interface for extensions 
+of \ttt{fastjet::ClusterSequence} that provide information about 
+the area of each jet. It inherits from \ttt{fastjet::ClusterSequence}.
+It includes the methods
+\begin{verbatim}
+  /// return the area associated with the given jet
+  double area (const PseudoJet & jet) const ;
+
+  /// return the error (uncertainty) associated with the determination
+  /// of the area of the jet
+  double area_error (const PseudoJet & jet) const ;
+
+  /// return a PseudoJet whose 4-vector is defined by the following integral
+  ///
+  ///       \int drap d\phi PseudoJet("rap,phi,pt=one") *
+  ///                           * Theta("rap,phi inside jet boundary")
+  ///
+  /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
+  /// rapdity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
+  /// inside jet boundary") is a function that is 1 when rap,phi
+  /// define a direction inside the jet boundary and 0 otherwise.
+  ///
+  fastjet::PseudoJet area_4vector(const PseudoJet & jet) const ;
+\end{verbatim}
+
+\subsection{fastjet::ClusterSequenceActiveArea}
+
+Main interfece for the active area determination. The user must define an object
+of this type in order to access the areas of the jets. Its constructor is
+\begin{verbatim}
+  /// constructor based on JetDefinition and ActiveAreaSpec
+  template<class L> fastjet::ClusterSequenceActiveArea
+         (const std::vector<L> & pseudojets, 
+	  const fastjet::JetDefinition & jet_def,
+	  const fastjet::ActiveAreaSpec & area_spec,
+	  const bool & writeout_combinations = false) ;
+\end{verbatim}
+
+This class inherits from \ttt{fastjet::ClusterSequenceWithArea}. In addition it
+includes some methods for extracting information about the estimated background
+in the clustered event. These methods might migrate to the virtual base class in
+the future.
+\begin{verbatim}
+  /// return the transverse momentum per unit area excluding 
+  /// jets that have pt/area > median(pt/area)*range.
+  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
+			  pttot_over_areatot_cut, mean_ratio_cut, play} ;
+
+  double pt_per_unit_area(mean_pt_strategies strat=median, 
+                          double range=2.0 ) const ;
+
+  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
+  /// abs(y)<raprange (for negative raprange, it defaults to
+  /// _etalim_for_area).
+  void parabolic_pt_per_unit_area(double & a, double & b, 
+                                  double raprange=-1.0,
+				  double exclude_above=-1.0);
+\end{verbatim}
+\ttt{pt\_per\_unit\_area} can usually be used for high luminosity events with
+pileup, while \ttt{parabolic\_pt\_per\_unit\_area} has been found to provide a
+better description of the background (its transverse momentum per unit area
+being parabolic cin $\eta$) in simulated Pb-Pb collisions at the LHC.
+
+
+
 %======================================================================
 \section{Example program}
 
