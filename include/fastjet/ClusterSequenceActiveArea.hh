@@ -73,13 +73,17 @@ public:
   virtual PseudoJet area_4vector (const PseudoJet & jet) const {
                     return _average_area_4vector[jet.cluster_hist_index()];};
 
-  /// return the transverse momentum per unit area excluding 
-  /// jets that have pt/area > median(pt/area)*range.
-  /// NB: this will be wrong for events that are not "dense" because
-  ///     of a large number of jets that will have zero pt.
+  /// enum providing a variety of tentative strategies for estimating
+  /// the background (non-jet) activity in a highly populated event; the
+  /// one that has been most extensively tested is median.
   enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
 			  pttot_over_areatot_cut, mean_ratio_cut, play};
 
+  /// return the transverse momentum per unit area according to one
+  /// of the above strategies; for some strategies (those with "cut"
+  /// in their name) the parameter "range" allows one to exclude a
+  /// subset of the jets for the background estimation, those that
+  /// have pt/area > median(pt/area)*range.
   double pt_per_unit_area(mean_pt_strategies strat=median, double range=2.0 ) const;
 
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range

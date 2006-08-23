@@ -70,7 +70,7 @@ const FjStrategy NlnN4pi     = fastjet::NlnN4pi;
 /// for use exclusively with the Cambridge algorithm
 const FjStrategy NlnNCam4pi   = fastjet::NlnNCam4pi;
 const FjStrategy NlnNCam2pi2R = fastjet::NlnNCam2pi2R;
-const FjStrategy NlnNCam2piMultD = fastjet::NlnNCam2piMultD;
+const FjStrategy NlnNCam      = fastjet::NlnNCam; // 2piMultD
 
 
 #endif //__FJCLUSTERSEQUENCE_HH__

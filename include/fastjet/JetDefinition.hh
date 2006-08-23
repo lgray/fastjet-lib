@@ -62,7 +62,7 @@ enum Strategy {
   /// for use exclusively with the Cambridge algorithm
   NlnNCam4pi   = 14,
   NlnNCam2pi2R = 13,
-  NlnNCam2piMultD = 12
+  NlnNCam      = 12 // 2piMultD
 };
 
 

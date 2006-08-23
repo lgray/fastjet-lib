@@ -1,6 +1,10 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-23  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+	* Renamed NlnNCam2piMultD -> NlnNCam (for simplicity).
+	
 2006-08-22  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * example/fastjet_subtraction.cc

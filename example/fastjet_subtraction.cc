@@ -144,7 +144,7 @@ int main (int argc, char ** argv) {
   inclusive_jets = clust_seq_full.inclusive_jets(ptmin);
 
   // print them out
-  cout << "Full event, with pilup, and its subtraction"<<endl;
+  cout << "Full event, with pileup, and its subtraction"<<endl;
   cout << "Number of input particles: "<<full_event.size()<<endl;
   cout << "Strategy used: "<<clust_seq_full.strategy_string()<<endl;
   cout << "Printing inclusive jets with pt > "<< ptmin<<" GeV (before subtraction)\n";

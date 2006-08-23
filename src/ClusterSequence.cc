@@ -107,7 +107,7 @@ void ClusterSequence::_initialise_and_run (
     this->_CP2DChan_cluster();
   } else if (_strategy == NlnNCam2pi2R) {
     this->_CP2DChan_cluster_2pi2R();
-  } else if (_strategy == NlnNCam2piMultD) {
+  } else if (_strategy == NlnNCam) {
     this->_CP2DChan_cluster_2piMultD();
   } else {
     ostringstream err;
@@ -214,8 +214,8 @@ string ClusterSequence::strategy_string ()  const {
     strategy = "NlnNCam4pi"; break;
   case NlnNCam2pi2R:
     strategy = "NlnNCam2pi2R"; break;
-  case NlnNCam2piMultD:
-    strategy = "NlnNCam2piMultD"; break;
+  case NlnNCam:
+    strategy = "NlnNCam"; break; // 2piMultD
   default:
     strategy = "Unrecognized";
   }

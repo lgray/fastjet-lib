@@ -77,7 +77,7 @@ int main (int argc, char ** argv) {
   cout << "Strategy adopted by FastJet was "<<
        clust_seq.strategy_string()<<endl<<endl;
 
-  // extract the inclusive jets with pt > 5 GeV, sorted by pt
+  // extract the inclusive jets with pt > 5 GeV
   double ptmin = 5.0;
   vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(ptmin);
 
