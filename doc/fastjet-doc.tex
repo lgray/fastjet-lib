@@ -479,7 +479,7 @@ fastjet::ActiveAreaSpec(double ghost_etamax,
 \end{verbatim}
 \ttt{ghost\_etamax} defines the maximum rapidity up to which ghosts
 are generated --- typically jet areas will be reliable for jets up to
-rapidity $\eta \simeq \ttt{ghost\_etamax} - R$. The \ttt{ghost\_area}
+rapidity $|\eta| \simeq \ttt{ghost\_etamax} - R$. The \ttt{ghost\_area}
 is the area associated with a single ghost. The number of ghosts is
 inversely proportional to the ghost area, and so a smaller area leads
 to a longer CPU-time for clustering. However small ghost areas give
@@ -547,9 +547,10 @@ In addition to providing clustering and jet-area determination, this class
 includes some methods for extracting information about the estimated background
 in the clustered event. 
 %
-These methods are to be considered as experimental, and they may be
-refined and elaborated upon in future releases. They may also migrate
-to the base class.
+These methods are to be considered as experimental. It is likely that
+their interfaces will change a in future release, and further
+refinements may be added. It is also possible that their functionality
+will be transferred to the base class.
 \begin{verbatim}
   /// enum providing a variety of tentative strategies for estimating
   /// the background (non-jet) activity in a highly populated event; the
@@ -614,6 +615,9 @@ is that the hard jets tend to have a much larger $\rho_i$ values, and this cut e
 quantities and results for various optionis. Mainly used for testing and
 development. Might disappear in future versions.
 \end{itemize}
+The jets that are considered with the above options are those whose
+area is considered reliable, i.e.\ those with $|\eta| <
+\mbox{\ttt{ghost\_etamax}} - R$.
 
 The \ttt{parabolic\_pt\_per\_unit\_area} member function has no
 strategy options, and simply
