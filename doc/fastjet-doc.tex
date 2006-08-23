@@ -393,10 +393,9 @@ obtain a subjet analysis as follows:
 %======================================================================
 \section{Jet areas}
 
-Being a jet constituted by a finite number of particle, the notion
-of its {\sl area} (i.e. the surface in the $\eta$-$\phi$ plane over 
-which it extends) cannot be a rigorous one. It is however possible to 
-make this concept better defined via a proper definition.
+Since a jet is constituted by only a finite number of particles, one needs a
+specific definition in order to make its {\sl area}  (i.e. the surface in the
+$\eta$-$\phi$ plane over which it extends) an unambiguous concept. 
 
 \ttt{FastJet} implements what is called an {\sl active} area.
 It is determined numerically by superimposing to the initial particles provided
@@ -414,7 +413,7 @@ whose constructor is
 \begin{verbatim}
 fastjet::ActiveAreaSpec(double ghost_etamax, 
                         int    repeat = 5,
-                        double ghost_area=0.01, 
+                        double ghost_area = 0.01, 
                         double grid_scatter = 1e-4, 
                         double kt_scatter = 0.1,
                         double mean_ghost_kt = 1e-100);
@@ -424,7 +423,7 @@ generated. \ttt{ghost\_area} is the area of a single ghosts. The smaller this
 number the slower the program will run, but the more accurate the resulting
 areas will be. \ttt{repeat} represents the number of times
 the area of each jet is calculated before a result is given as an average
-of the various runs. If \ttt{repeat} $ > 1$ a numerical
+of the various runs. If \ttt{repeat} $ > 1$ a statistical
 uncertainty, given by $\sigma/\sqrt{\ttt{repeat}-1}$, is also
 given.
 
@@ -435,7 +434,7 @@ ghosts.
 
 
 \subsection{fastjet::ClusterSequenceWithArea}
-Virtual base class that sets the interface for extensions 
+Base class that sets the interface for extensions 
 of \ttt{fastjet::ClusterSequence} that provide information about 
 the area of each jet. It inherits from \ttt{fastjet::ClusterSequence}.
 It includes the methods
@@ -475,8 +474,8 @@ of this type in order to access the areas of the jets. Its constructor is
 
 This class inherits from \ttt{fastjet::ClusterSequenceWithArea}. In addition it
 includes some methods for extracting information about the estimated background
-in the clustered event. These methods might migrate to the virtual base class in
-the future.
+in the clustered event. These methods might be ameliorated and refined, and 
+migrate to the base class, in the future.
 \begin{verbatim}
   /// return the transverse momentum per unit area excluding 
   /// jets that have pt/area > median(pt/area)*range.
@@ -496,9 +495,37 @@ the future.
 \ttt{pt\_per\_unit\_area} can usually be used for high luminosity events with
 pileup, while \ttt{parabolic\_pt\_per\_unit\_area} has been found to provide a
 better description of the background (its transverse momentum per unit area
-being parabolic cin $\eta$) in simulated Pb-Pb collisions at the LHC.
+being parabolic in $\eta$) in simulated Pb-Pb collisions at the LHC.
 
+\ttt{mean\_pt\_strategies} are options of \ttt{pt\_per\_unit\_area}. They dictate
+the strategy with which the transverse momentum per unit area of the 
+background of each event is determined. Valid choices are:
+\begin{itemize}
+\item[]\ttt{old\_median} - The median value of the set $\{{k_t}_i/area_i\}$, where
+$i$ runs over all jets found in the event.
+\item[]\ttt{median} - As previous one, but $i$ now runs only over the `real' jets (i.e.
+exluding those made up exclusively of ghosts). This definition is the default
+behaviour, and will coincide with the previous one for densely populated events. 
+\item[]\ttt{pttot\_over\_areatot} - The total pt over the total area, i.e. $\sum_i
+{k_t}_i/\sum_i area_i$, with $i$ running over all jets, including the only-ghost
+ones, if present.
+\item[]\ttt{pttot\_over\_areatot\_cut} - As previous one, but now the sum runs only on
+the jets whose $k_t/area$ ratio is smaller than \ttt{range} times the median
+defined by the option \ttt{median}. The rationale behind this option is of
+course that the hard jets tend to have a much larger transverse momentum over
+area ratio, and this cut excludes them from the background estimation.
+\item[]\ttt{mean\_ratio\_cut} - Cut as in previous option, but now the mean 
+ratio is calculated, $(1/\#~jets~in~sum) \sum_i {k_t}_i/area_i$.
+\item[]\ttt{play} - The function returns 0, but writes out a number of different
+quantities and results for various optionis. Mainly used for testing and
+development. Might disappear in future versions.
+\end{itemize}
 
+\ttt{parabolic\_pt\_per\_unit\_area} has no strategy optinos, and simply
+returns the coefficents $a$ and $b$ of the least square fit of all the
+$\{{k_t}_i/area_i\} <$ \ttt{exclude\_above}  to the parabolic shape $a +
+b\eta^2$. If \ttt{exclude\_above} $< 0$ (default behaviour) no upper limit is
+used.
 
 %======================================================================
 \section{Example program}

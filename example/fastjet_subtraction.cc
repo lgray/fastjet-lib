@@ -39,7 +39,7 @@
 // fastjet subtraction example program. 
 //
 // Compile it with: make fastjet_subtraction
-// run it with    : ./fastjet_subtraction < data/Pythia-Z2jets-lhc-pileup-1ev.dat
+// run it with    : ./fastjet_subtraction < data/Pythia-dijet-ptmin100-lhc-pileup-1ev.dat
 //
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
@@ -117,15 +117,13 @@ int main (int argc, char ** argv) {
   fastjet::ClusterSequenceActiveArea clust_seq(hard_event, 
                                                jet_def, area_spec);
 
-  // tell the user what was done
-  cout << "Strategy adopted by FastJet was "<<
-       clust_seq.strategy_string()<<endl<<endl;
 
   // extract the inclusive jets with pt > 5 GeV, sorted by pt
   double ptmin = 5.0;
   vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(ptmin);
 
   // print them out
+  cout << "" <<endl;
   cout << "Hard event only"<<endl;
   cout << "Number of input particles: "<<hard_event.size()<<endl;
   cout << "Strategy used: "<<clust_seq.strategy_string()<<endl;
