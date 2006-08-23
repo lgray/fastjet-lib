@@ -1,7 +1,7 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
-2006-08-23  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+2006-08-23  Gavin Salam <salam@lpthe.jussieu.fr>
 
 	* Renamed NlnNCam2piMultD -> NlnNCam (for simplicity).
 	
