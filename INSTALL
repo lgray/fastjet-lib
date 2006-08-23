@@ -31,18 +31,21 @@ which places the fastjet library in lib/.
 To run the example program cd to the example directory and do
 
   make fastjet_example
-  ./fastjet_example < ../data/single-event.dat
+  ./fastjet_example < data/single-event.dat
 
 The output should be 
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #---------------------------------------------------------------------
-#                      FastJet release 1.0
-#            Written by Matteo Cacciari and Gavin Salam
-#            http://www.lpthe.jussieu.fr/~salam/fastjet
-#
+#                      FastJet release 2.0                       
+#            Written by Matteo Cacciari and Gavin Salam          
+#            http://www.lpthe.jussieu.fr/~salam/fastjet          
+#                                                                        
 # Longitudinally invariant Kt Jet clustering, using the fast geometric
-# algorithms of hep-ph/0512210 (please cite this if you use FastJet)
+# algorithms of hep-ph/0512210 (please cite this if you use FastJet)  
+# This package makes use of the CGAL library: http://www.cgal.org/    
+# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th     
+# ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002
 #---------------------------------------------------------------------
 Strategy adopted by FastJet was N2Tiled
 
@@ -90,4 +93,18 @@ ktjet_timing
 	behaviour -- see the beginning of fastjet_timing.cc for
 	further information.
 
+fastjet_areas
+	example program for evaluating the areas of the jets in 
+	a single event (it reads in the same input file as fastjet_example)
+
+fastjet_subtraction
+	example program which uses the areas calculated by FastJet
+	for each jet to perform the subtraction of the background generated
+	by a number of pileup events. Sample input files for production
+	at high luminosity at the LHC of a Z boson, an hypotetical Z', 
+	or a dijet event with a ptmin = 100 GeV are in example/data/
  
+fastjet_example_v1_interface.cc
+        same as fastjet_example, but using the (now deprecated) interface
+	of Fastet v1.0. It still compiles correctly with v2.0, backward
+	compatibility having been ensured.
