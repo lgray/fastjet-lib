@@ -3,7 +3,7 @@
 
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
-version=1.9.0
+version=2.0.0b1
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dir=fastjet-$version
@@ -26,12 +26,14 @@ else
     echo "Could not create $dir as link to $origdir (former exists already)"
   else
     ln -s $origdir $dir
-    tar zcvhf $tarname $dir/(src|include|example|doc|.)/*.(f90|f|h|hh|alg|sh|c|cc|C|tex|eps) \
+    tar zcvhf $tarname $dir/(src|include|example|doc|.)/*.(f90|f|h|hh|alg|c|cc|C|tex|eps) \
                       $dir/(src|include|example|doc)/Makefile \
                       $dir/Makefile \
                       $dir/example/data/*.dat \
+                      $dir/include/* \
                       $dir/**/(READM*[A-Z]|INSTALL|CHANGELOG|Doxyfile)\
-                      $dir/lib/.dummy 
+                      $dir/lib/.dummy \
+		      --exclude .svn*
 
     echo ""
     # if it's gavin running this then automatically copy the tarfile
