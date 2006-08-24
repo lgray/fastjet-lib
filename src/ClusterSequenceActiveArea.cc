@@ -151,13 +151,15 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
   // there is nothing inside our region, so answer will always be zero
   if (pt_over_areas.size() == 0) {return 0.0;}
   
-  // get median (pt/area) [this is the "old" median definition]
+  // get median (pt/area) [this is the "old" median definition. It considers
+  // only the "real" jets in calculating the median, i.e. excluding the
+  // only-ghost ones]
   sort(pt_over_areas.begin(), pt_over_areas.end());
-  double old_median_ratio = pt_over_areas[pt_over_areas.size()/2];
+  double non_ghost_median_ratio = pt_over_areas[pt_over_areas.size()/2];
 
-  // new median definition that takes into account non-jet area, 
-  // and for fractional median position interpolates between the
-  // corresponding entries in the pt_over_areas array
+  // new median definition that takes into account non-jet area (i.e.
+  // jets composed only of ghosts), and for fractional median position 
+  // interpolates between the corresponding entries in the pt_over_areas array
   double nj_median_pos = (pt_over_areas.size()-1 - _non_jet_number)/2.0;
   double nj_median_ratio;
   if (nj_median_pos >= 0 && pt_over_areas.size() > 1) {
@@ -216,8 +218,8 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
   switch(strat) {
   case median:
     return nj_median_ratio;
-  case old_median:
-    return old_median_ratio; 
+  case non_ghost_median:
+    return non_ghost_median_ratio; 
   case pttot_over_areatot:
     return pt_sum / area_sum;
   case pttot_over_areatot_cut:
@@ -235,7 +237,7 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
 // fit a parabola to pt/area as a function of rapidity, using the
 // formulae of CCN28-36 (which actually fits f = a+b*x^2)
 void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
-       double & a, double & b, double raprange, double exclude_above) {
+       double & a, double & b, double raprange, double exclude_above) const {
   
   double this_raprange;
   if (raprange <= 0) {this_raprange = _etalim_for_area;}

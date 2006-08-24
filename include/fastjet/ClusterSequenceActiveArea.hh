@@ -76,7 +76,7 @@ public:
   /// enum providing a variety of tentative strategies for estimating
   /// the background (non-jet) activity in a highly populated event; the
   /// one that has been most extensively tested is median.
-  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
+  enum mean_pt_strategies{median=0, non_ghost_median, pttot_over_areatot, 
 			  pttot_over_areatot_cut, mean_ratio_cut, play};
 
   /// return the transverse momentum per unit area according to one
@@ -84,13 +84,14 @@ public:
   /// in their name) the parameter "range" allows one to exclude a
   /// subset of the jets for the background estimation, those that
   /// have pt/area > median(pt/area)*range.
-  double pt_per_unit_area(mean_pt_strategies strat=median, double range=2.0 ) const;
+  double pt_per_unit_area(mean_pt_strategies strat=median, 
+                          double range=2.0 ) const;
 
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
   /// abs(y)<raprange (for negative raprange, it defaults to
   /// _etalim_for_area).
   void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
-				  double exclude_above=-1.0);
+				  double exclude_above=-1.0) const;
 
 
 

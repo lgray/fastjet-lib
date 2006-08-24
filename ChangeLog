@@ -1,6 +1,12 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-08-24  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
+
+	* Renamed old_median -> non_ghost_median
+
+        * parabolic_pt_per_unit_area made const
+
 2006-08-23  Gavin Salam <salam@lpthe.jussieu.fr>
 
 	* Renamed NlnNCam2piMultD -> NlnNCam (for simplicity).

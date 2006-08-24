@@ -19,6 +19,12 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
+\addtolength{\textwidth}{2cm}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\textheight}{2cm}
+\addtolength{\topmargin}{-1cm}
+
+\parskip 3pt
 
 % make tex more amenable to 
 \global\emergencystretch = .9\hsize
@@ -31,7 +37,7 @@
 
 \title{FastJet 2.0$\beta$ user manual}
 \author{Matteo Cacciari and Gavin P. Salam\\
-  LPTHE, Univsersit\'e Pierre et Marie Curie -- Paris 6, \\Univsersit\'e
+  LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
   Denis Diderot -- Paris 7, CNRS UMR 7589
 }
 \date{}
@@ -47,7 +53,7 @@ geometrically-based algorithms \cite{fastjet} for the longitudinally
 invariant $k_t$ \cite{ktexcl,ktincl} and inclusive Cambridge/Aachen
 \cite{CamOrig,CamWobisch} jet-finders. It also provides access to
 tools that allow one to determine the areas of individual jets, which
-is of importance when corrrecting for underlying event and pileup
+is of importance when correcting for underlying event and pileup
 contamination.
 
 % This release has two aims: (a) to enable people with an immediate need
@@ -223,9 +229,9 @@ The class \ttt{fastjet::JetDefinition} contains a full specification
 of how to carry out the clustering. Its constructor is
 %
 \begin{verbatim}
-  JetDefinition(fastjet::JetFinder jet_finder = kt_algorithm,
-                double R = 1.0,
-                fastjet::Strategy strategy = Best);
+  fastjet::JetDefinition(fastjet::JetFinder jet_finder = kt_algorithm,
+                         double R = 1.0,
+                         fastjet::Strategy strategy = Best);
 \end{verbatim}
 %
 The jet finder is one of the entries of the \ttt{fastjet::JetFinder}
@@ -277,29 +283,15 @@ To run the jet clustering, create a \texttt{fastjet::ClusterSequence}
 object,\footnote{The analogue of \ktjet's \ttt{KtEvent}.}  through the
 following constructor
 \begin{verbatim}
-  template<class T> fastjet::ClusterSequence (const vector<T> & input_particles,
-                   const double & R = 1.0,
-                   const fastjet::Strategy & strategy = Best);
+  template<class L> fastjet::ClusterSequence
+                                  (const std::vector<L> & pseudojets,
+                                   const fastjet::JetDefinition & jet_def); 
 \end{verbatim}
 where \ttt{input\_particles} is the vector of initial particles of any
 type (\ttt{fastjet::PseudoJet}, \ttt{HepLorentzVector}, etc.) that can be
-used to initialise a \ttt{fastjet::PseudoJet}; \texttt{R}, which may be
-omitted (and then takes value $1$) sets the value of $R$ in
-eq.(\ref{eq:dij}), while \texttt{strategy}, which may also be omitted
-selects the algorithmic strategy to use while clustering and is an
-\texttt{enum} of type \texttt{fastjet::Strategy} with the following four
-potentially interesting values:
-\begin{center}
-\begin{tabular}{l|l}\hline
-  \texttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N \lesssim 50$)\\
-  \texttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
-  N \lesssim 10^4$)\\ 
-  \texttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
-  N \gtrsim 10^4$)\\ 
-  \texttt{Best} & automatic selection of the best of these based on $N$\\\hline 
-\end{tabular}
-\end{center}
-If \texttt{strategy} is omitted then the \texttt{Best} option is used.
+used to initialise a \ttt{fastjet::PseudoJet} and \ttt{jet\_def} contains
+the full specification of the clustering (see Section
+\ref{sec:fastjet::JetDefinition}).
 
 If the user wishes to access inclusive jets, the following member
 function should be used
@@ -428,11 +420,11 @@ information about jet areas.  It is derived from
 \ttt{fastjet::ClusterSequence}.  It includes the methods
 \begin{verbatim}
   /// return the area associated with the given jet
-  double area (const PseudoJet & jet) const ;
+  double area (const fastjet::PseudoJet & jet) const ;
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of the jet;
-  double area_error (const PseudoJet & jet) const ;
+  double area_error (const fastjet::PseudoJet & jet) const ;
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
   ///
@@ -470,12 +462,12 @@ the user must first create an object that specifies how to distribute
 the ghosts. This is done via the class \ttt{fastjet::ActiveAreaSpec} 
 whose constructor is
 \begin{verbatim}
-fastjet::ActiveAreaSpec(double ghost_etamax, 
-                        int    repeat = 5,
-                        double ghost_area = 0.01, 
-                        double grid_scatter = 1e-4, 
-                        double kt_scatter = 0.1,
-                        double mean_ghost_kt = 1e-100);
+  fastjet::ActiveAreaSpec(double ghost_etamax, 
+                          int    repeat = 5,
+                          double ghost_area = 0.01, 
+                          double grid_scatter = 1e-4, 
+                          double kt_scatter = 0.1,
+                          double mean_ghost_kt = 1e-100);
 \end{verbatim}
 \ttt{ghost\_etamax} defines the maximum rapidity up to which ghosts
 are generated --- typically jet areas will be reliable for jets up to
@@ -500,12 +492,6 @@ no need at all to use \ttt{repeat}$>1$.
 %
 If \ttt{repeat} $ > 1$, a statistical uncertainty on the area, given by
 $\sigma/\sqrt{\ttt{repeat}-1}$, is provided for each jet.
-
-% The \ttt{repeat} variable indicates the number of times
-% the area of each jet is calculated before a result is given as an average
-% of the various runs. If \ttt{repeat} $ > 1$ a statistical
-% uncertainty, given by $\sigma/\sqrt{\ttt{repeat}-1}$, is also
-% given.
 
 Other variables that the user may wish to set are: \ttt{grid\_scatter}
 and \ttt{kt\_scatter}, which  are fractional random fluctuations of the
@@ -533,7 +519,7 @@ Its constructor is
 This class is derived from \ttt{fastjet::ClusterSequenceWithArea}. The
 set of jets that it returns, as well as their particle content, is
 identical to that of \ttt{ClusterSequence}. In particular the ghosts
-particles are not included in the the jets returned to the user.
+particles are not included in the jets returned to the user.
 Furthermore, jets composed exclusively of ghosts are eliminated from
 the list of jets (since the number and momenta of any such jets
 fluctuates according to the random shifts of the ghosts on the
@@ -555,24 +541,23 @@ will be transferred to the base class.
   /// enum providing a variety of tentative strategies for estimating
   /// the background (non-jet) activity in a highly populated event; the
   /// one that has been most extensively tested is median.
-  enum mean_pt_strategies{median=0, old_median, pttot_over_areatot, 
-                          pttot_over_areatot_cut, mean_ratio_cut, play} ;
+  enum fastjet::mean_pt_strategies{median=0, non_ghost_median, pttot_over_areatot, 
+                                   pttot_over_areatot_cut, mean_ratio_cut, play} ;
 
   /// return the transverse momentum per unit area according to one
   /// of the above strategies; for some strategies (those with "cut"
   /// in their name) the parameter "range" allows one to exclude a
   /// subset of the jets for the background estimation, those that
   /// have pt/area > median(pt/area)*range.
-
-  double pt_per_unit_area(mean_pt_strategies strat=median, 
-                          double range=2.0 ) const ;
+  double pt_per_unit_area(fastjet::mean_pt_strategies strat=median, 
+                          double range=2.0 ) const;
 
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
   /// abs(y)<raprange (for negative raprange, it defaults to
   /// _etalim_for_area = ghost_etamax - Rparam).
   void parabolic_pt_per_unit_area(double & a, double & b, 
                                   double raprange=-1.0,
-                                  double exclude_above=-1.0);
+                                  double exclude_above=-1.0) const;
 \end{verbatim}
 \ttt{pt\_per\_unit\_area} can usually be used for high luminosity events with
 pileup, while \url{parabolic_pt_per_unit_area} has been found to provide a
@@ -585,35 +570,34 @@ the strategy with which the transverse momentum per unit area of the
 background of each event is determined. Valid choices are:
 \begin{itemize}
 
-\item[]\ttt{old\_median} - For each jet $i$ one defines the quantity
+\item[]\ttt{non\_ghost\_median} - For each jet $i$ one defines the quantity
   $\rho_i = p_{t,i} / A_i$ where $A_i$ is the jet area. This option
   returns the median value of the $\rho_i$ for the set of all true jets
   (those that contain at least one user particle --- as opposed to
   ghost jets, which contain only ghost particles).
 
-
-\item[]\ttt{median} - As above, but where the median is taken over
+\item[]\ttt{median} - This is the default choice. 
+  As above, but the median is taken over
   \emph{all} jets, including purely ghost jets. This definition
-  coincides the previous one for densely populated events, and
+  coincides with the previous one for densely populated events, and
   provides a more faithful estimation of the underlying activity for
-  more sparsely populated events.
+  more sparsely populated events. 
 
-\item[]\ttt{pttot\_over\_areatot} - The total pt over the total area, i.e. $\sum_i
-p_{t,i}/\sum_i A_i$, with $i$ running over all jets, including the pure-ghost
-ones, if present.
-
-\item[]\ttt{pttot\_over\_areatot\_cut} - As previous one, but now the sum runs only on
-the jets whose $\rho_i$ is smaller than \ttt{range} times the median
-defined by the option \ttt{median}. The rationale behind this option
-is that the hard jets tend to have a much larger $\rho_i$ values, and this cut excludes them from the background estimation.
-
-\item[]\ttt{mean\_ratio\_cut} - Returns the mean value of the $\rho_i$
-  over the set of jets surviving the cut in the previous option.
-
-
-\item[]\ttt{play} - The function returns 0.0, but writes out a number of different
-quantities and results for various optionis. Mainly used for testing and
-development. Might disappear in future versions.
+% \item[]\ttt{pttot\_over\_areatot} - The total pt over the total area, i.e. $\sum_i
+% p_{t,i}/\sum_i A_i$, with $i$ running over all jets, including the pure-ghost
+% ones, if present.
+% 
+% \item[]\ttt{pttot\_over\_areatot\_cut} - As previous one, but now the sum runs only on
+% the jets whose $\rho_i$ is smaller than \ttt{range} times the median
+% defined by the option \ttt{median}. The rationale behind this option
+% is that the hard jets tend to have a much larger $\rho_i$ values, and this cut excludes them from the background estimation.
+% 
+% \item[]\ttt{mean\_ratio\_cut} - Returns the mean value of the $\rho_i$
+%   over the set of jets surviving the cut in the previous option.
+% 
+% \item[]\ttt{play} - The function returns 0.0, but writes out a number of different
+% quantities and results for various options. Mainly used for testing and
+% development. Might disappear in future versions.
 \end{itemize}
 The jets that are considered with the above options are those whose
 area is considered reliable, i.e.\ those with $|\eta| <
@@ -621,7 +605,7 @@ area is considered reliable, i.e.\ those with $|\eta| <
 
 The \ttt{parabolic\_pt\_per\_unit\_area} member function has no
 strategy options, and simply
-returns the coefficents $a$ and $b$ of the least square fit of all the
+returns the coefficients $a$ and $b$ of the least square fit of all the
 $\rho_i <$ \ttt{exclude\_above}  to the parabolic function $a +
 b\eta^2$. If \ttt{exclude\_above} $< 0$ (default behaviour) no upper limit is
 used.
