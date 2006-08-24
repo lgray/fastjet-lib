@@ -154,7 +154,8 @@ void Dnn3piCylinder::RemoveAndAddPoints(const vector<int> & indices_to_remove,
   }
 }
 
-#endif //  DROP_CGAL 
 
 FASTJET_END_NAMESPACE
+
+#endif //  DROP_CGAL 
 

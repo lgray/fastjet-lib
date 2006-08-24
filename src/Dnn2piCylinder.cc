@@ -238,7 +238,7 @@ void Dnn2piCylinder::RemoveAndAddPoints(const vector<int> & indices_to_remove,
     indices_of_updated_neighbours.push_back(*iter);
   }
 }
-#endif //  DROP_CGAL 
 
 FASTJET_END_NAMESPACE
 
+#endif //  DROP_CGAL 

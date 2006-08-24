@@ -352,7 +352,6 @@ void DnnPlane::_SetAndUpdateNearest(
   _supervertex[j].NNdistance = mindist;
 }
 
-#endif //  DROP_CGAL
-
 FASTJET_END_NAMESPACE
 
+#endif //  DROP_CGAL
