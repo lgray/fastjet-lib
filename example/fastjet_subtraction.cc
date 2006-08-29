@@ -165,6 +165,9 @@ void print_jets (const fastjet::ClusterSequenceActiveArea & clust_seq,
   // sort jets into increasing pt
   vector<fastjet::PseudoJet> jets = sorted_by_pt(unsorted_jets);  
 
+  // the corrected jets will go in here
+  vector<fastjet::PseudoJet> corrected_jets(jets.size());
+  
   // get median pt per unit area
   // NB pt_per_unit_area exists only in ClusterSequenceActiveArea, and
   // not in the base class ClusterSequenceWithArea.
@@ -181,7 +184,6 @@ void print_jets (const fastjet::ClusterSequenceActiveArea & clust_seq,
     double pt_corr  = jets[j].perp() - area*median_pt_per_area;
 
     // "extended" correction
-    vector<fastjet::PseudoJet> corrected_jets(jets.size());
     fastjet::PseudoJet area_4vect = 
                        median_pt_per_area*clust_seq.area_4vector(jets[j]);
     if (area_4vect.perp2() >= jets[j].perp2() || 
