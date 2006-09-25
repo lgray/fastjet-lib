@@ -21,6 +21,12 @@ public:
     }
   };
 
+
+  SimpleHist & operator*=(double fact) {
+    for (unsigned i = 0; i < size(); i++) (*this)[i] *= fact;
+    return *this;
+  };
+
   unsigned int size() const {return _weights.size();};
 
 private:

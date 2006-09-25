@@ -1,6 +1,14 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-09-25  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
+
+	* added areas/areas-hist.cc for getting the distribution of areas
+	  for pure noise (+ option of anchor).
+
+	* moved the SimpleHist.hh file into this directory from ../../chan
+	
+	
 2006-08-24  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
 
 	* Renamed old_median -> non_ghost_median
