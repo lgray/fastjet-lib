@@ -68,15 +68,35 @@ class PseudoJet {
   inline const double & px()  const {return _px;};
   inline const double & py()  const {return _py;};
   inline const double & pz()  const {return _pz;};
-  inline const double & phi() const {return _phi;}; // note 0--2pi
+
+  /// returns phi (in the range 0..2pi)
+  inline const double phi() const {return phi_02pi();};
+
+  /// returns phi in the range -pi..pi
+  inline const double phi_std()  const {
+    return _phi > pi ? _phi-twopi : pi;};
+
+  /// returns phi in the range 0..2pi
+  inline const double phi_02pi() const {return _phi;};
+
+  /// returns the rapidity or some large value when the rapidity
+  /// is infinite
   inline const double & rap() const {return _rap;};
+
+  /// the same as rap()
   inline const double & rapidity() const {return _rap;}; // like CLHEP
+
+  /// returns the squared transverse momentum
   inline const double & kt2() const {return _kt2;};
+  /// returns the squared transverse momentum
   inline const double & perp2() const {return _kt2;};  // like CLHEP
+  /// returns the scalar transverse momentum
   inline double  perp() const {return sqrt(_kt2);};    // like CLHEP
-  /// return the squared invariant mass // like CLHEP
+  /// returns the squared invariant mass // like CLHEP
   inline double  m2() const {return (_E+_pz)*(_E-_pz)-_kt2;};    
-  double operator () (int i) const ; // returns vector components
+  /// returns component i, where X==0, Y==1, Z==2, E==3
+  double operator () (int i) const ; 
+  /// returns component i, where X==0, Y==1, Z==2, E==3
   inline double operator [] (int i) const { return (*this)(i); }; // this too
 
   // taken from CLHEP
@@ -98,24 +118,20 @@ class PseudoJet {
   /// are 3-mom, component 3 is energy).
   std::valarray<double> four_mom() const;
 
-  /// returns kt distance between this jet and another
+  /// returns kt distance (R=1) between this jet and another
   double kt_distance(const PseudoJet & other) const;
 
   /// returns squared cylinder (eta-phi) distance between this jet and another
   double plain_distance(const PseudoJet & other) const;
 
-  // this seemed to compile except if it was used
-  friend inline double 
-    kt_distance(const PseudoJet & jet1, const PseudoJet & jet2) { 
-                                        return jet1.kt_distance(jet2);};
+  //// this seemed to compile except if it was used
+  //friend inline double 
+  //  kt_distance(const PseudoJet & jet1, const PseudoJet & jet2) { 
+  //                                      return jet1.kt_distance(jet2);};
 
   /// returns distance between this jet and the beam
   inline const double & beam_distance() const {return _kt2;};
 
-  // maybe not necessary for it to be friend?
-  // [but without it does not work...]
-  friend PseudoJet operator+(const PseudoJet &, const PseudoJet &);
-  friend PseudoJet operator*(double, const PseudoJet &);
 
   void operator*=(double);
   void operator/=(double);
@@ -130,6 +146,16 @@ class PseudoJet {
   void _finish_init();
   //vertex_type * vertex0, vertex1;
 };
+
+
+//----------------------------------------------------------------------
+// routines for basic binary operations
+
+PseudoJet operator+(const PseudoJet &, const PseudoJet &);
+PseudoJet operator-(const PseudoJet &, const PseudoJet &);
+PseudoJet operator*(double, const PseudoJet &);
+PseudoJet operator*(const PseudoJet &, double);
+PseudoJet operator/(const PseudoJet &, double);
 
 
 

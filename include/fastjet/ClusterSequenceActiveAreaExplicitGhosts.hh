@@ -140,7 +140,7 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
     std::cout << "# Printing particles including ghosts\n";
     for (unsigned j = 0; j < _jets.size(); j++) {
       printf("%5u %20.13f %20.13f %20.13e\n",
-	       j,_jets[j].rap(),_jets[j].phi(),_jets[j].kt2());
+	       j,_jets[j].rap(),_jets[j].phi_02pi(),_jets[j].kt2());
     }
     std::cout << "# Finished printing particles including ghosts\n";
   }

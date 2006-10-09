@@ -61,7 +61,7 @@ void ClusterSequence::_delaunay_cluster () {
 
   vector<EtaPhi> points(n); // recall EtaPhi is just a typedef'd pair<double>
   for (int i = 0; i < n; i++) {
-    points[i] = EtaPhi(_jets[i].rap(),_jets[i].phi());
+    points[i] = EtaPhi(_jets[i].rap(),_jets[i].phi_02pi());
     points[i].sanitize(); // make sure things are in the right range
   }
 
@@ -157,7 +157,7 @@ void ClusterSequence::_delaunay_cluster () {
       //OBS 		      _jets.size()-1, SmallestDij);
 
       // add new point to points vector
-      EtaPhi newpoint(_jets[nn].rap(), _jets[nn].phi());
+      EtaPhi newpoint(_jets[nn].rap(), _jets[nn].phi_02pi());
       newpoint.sanitize(); // make sure it is in correct range
       points.push_back(newpoint);
     } else {

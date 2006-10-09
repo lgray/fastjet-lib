@@ -91,7 +91,7 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
     n_active++;
 
     coordIDs[jet_i].orig = ++coord_index;
-    coords[coord_index]  = Coord2D(_jets[jet_i].rap(), _jets[jet_i].phi());
+    coords[coord_index]  = Coord2D(_jets[jet_i].rap(), _jets[jet_i].phi_02pi());
     jetIDs[coord_index]  = jet_i;
     minrap = min(coords[coord_index].x,minrap);
     maxrap = max(coords[coord_index].x,maxrap);
@@ -158,7 +158,7 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
     if (coordIDs[jet_j].mirror != Invalid) 
       cIDs_to_remove.push_back(coordIDs[jet_j].mirror);
 
-    Coord2D new_point(_jets[newjet_k].rap(),_jets[newjet_k].phi());
+    Coord2D new_point(_jets[newjet_k].rap(),_jets[newjet_k].phi_02pi());
     new_points.resize(0);
     new_points.push_back(new_point);
     if (make_mirror(new_point, Dlim)) new_points.push_back(new_point);
@@ -241,8 +241,8 @@ void ClusterSequence::_CP2DChan_cluster () {
     } else {
       coordIDs[i].orig   = coord_index;
       coordIDs[i].mirror = coord_index+1;
-      coords[coord_index]   = Coord2D(_jets[i].rap(), _jets[i].phi());
-      coords[coord_index+1] = Coord2D(_jets[i].rap(), _jets[i].phi()+twopi);
+      coords[coord_index]   = Coord2D(_jets[i].rap(), _jets[i].phi_02pi());
+      coords[coord_index+1] = Coord2D(_jets[i].rap(), _jets[i].phi_02pi()+twopi);
       jetIDs[coord_index]   = i;
       jetIDs[coord_index+1] = i;
       minrap = min(coords[coord_index].x,minrap);
@@ -288,8 +288,8 @@ void ClusterSequence::_CP2DChan_cluster () {
     cIDs_to_remove[1] = coordIDs[jet_i].mirror;
     cIDs_to_remove[2] = coordIDs[jet_j].orig;
     cIDs_to_remove[3] = coordIDs[jet_j].mirror;
-    new_points[0] = Coord2D(_jets[newjet_k].rap(),_jets[newjet_k].phi());
-    new_points[1] = Coord2D(_jets[newjet_k].rap(),_jets[newjet_k].phi()+twopi);
+    new_points[0] = Coord2D(_jets[newjet_k].rap(),_jets[newjet_k].phi_02pi());
+    new_points[1] = Coord2D(_jets[newjet_k].rap(),_jets[newjet_k].phi_02pi()+twopi);
     // carry out the CP operation
     //cp.replace_many(cIDs_to_remove, new_points, new_cIDs);
     // remarkable the following is faster...

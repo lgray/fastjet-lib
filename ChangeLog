@@ -1,6 +1,14 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-10-09  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
+
+	* added a wider range of arithmetic operations on PseudoJets;
+	added phi_std() and phi_02pi() which return values respectively in
+	the -pi..pi range and 0..2pi range; in the clustering code,
+	switched from use of phi() to phi_02pi() to allow for future
+	changes to action of phi().
+	
 2006-09-25  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
 
 	* added areas/areas-hist.cc for getting the distribution of areas

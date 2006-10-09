@@ -541,7 +541,7 @@ inline double ClusterSequence::jet_scale_for_algorithm(
 template <class J> inline void ClusterSequence::_bj_set_jetinfo(
                             J * const jetA, const int _jets_index) const {
     jetA->eta  = _jets[_jets_index].rap();
-    jetA->phi  = _jets[_jets_index].phi();
+    jetA->phi  = _jets[_jets_index].phi_02pi();
     jetA->kt2  = jet_scale_for_algorithm(_jets[_jets_index]);
     jetA->_jets_index = _jets_index;
     // initialise NN info as well

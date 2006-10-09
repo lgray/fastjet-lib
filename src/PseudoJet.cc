@@ -64,7 +64,7 @@ void PseudoJet::_finish_init () {
     _phi = atan2(this->py(),this->px());
   }
   if (_phi < 0.0) {_phi += twopi;}
-  if (_phi >= twopi) {_phi -= twopi;} // can happen is phi=-|eps<1e-15|?
+  if (_phi >= twopi) {_phi -= twopi;} // can happen if phi=-|eps<1e-15|?
   if (this->E() == abs(this->pz()) && _kt2 == 0) {
     // Point has infinite rapidity -- convert that into a very large
     // number, but in such a way that different 0-pt momenta will have
@@ -129,14 +129,43 @@ double PseudoJet::operator () (int i) const {
 //----------------------------------------------------------------------
 // return "sum" of two pseudojets
 PseudoJet operator+ (const PseudoJet & jet1, const PseudoJet & jet2) {
-  return PseudoJet(jet1.four_mom()+jet2.four_mom());
+  //return PseudoJet(jet1.four_mom()+jet2.four_mom());
+  return PseudoJet(jet1.px()+jet2.px(),
+		   jet1.py()+jet2.py(),
+		   jet1.pz()+jet2.pz(),
+		   jet1.E() +jet2.E()  );
 } 
 
+//----------------------------------------------------------------------
+// return difference of two pseudojets
+PseudoJet operator- (const PseudoJet & jet1, const PseudoJet & jet2) {
+  //return PseudoJet(jet1.four_mom()-jet2.four_mom());
+  return PseudoJet(jet1.px()-jet2.px(),
+		   jet1.py()-jet2.py(),
+		   jet1.pz()-jet2.pz(),
+		   jet1.E() -jet2.E()  );
+} 
 
 //----------------------------------------------------------------------
 // return the product, coeff * jet
 PseudoJet operator* (double coeff, const PseudoJet & jet) {
-  return PseudoJet(coeff*jet.four_mom());
+  //return PseudoJet(coeff*jet.four_mom());
+  // the following code is hopefully more efficient
+  PseudoJet coeff_times_jet(jet);
+  coeff_times_jet *= coeff;
+  return coeff_times_jet;
+} 
+
+//----------------------------------------------------------------------
+// return the product, coeff * jet
+PseudoJet operator* (const PseudoJet & jet, double coeff) {
+  return coeff*jet;
+} 
+
+//----------------------------------------------------------------------
+// return the ratio, jet / coeff
+PseudoJet operator/ (const PseudoJet & jet, double coeff) {
+  return (1.0/coeff)*jet;
 } 
 
 //----------------------------------------------------------------------
