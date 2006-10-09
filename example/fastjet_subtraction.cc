@@ -192,17 +192,11 @@ void print_jets (const fastjet::ClusterSequenceActiveArea & clust_seq,
       corrected_jets[j] =  0.0 * jets[j];
     } else {
       // otherwise do an E-scheme subtraction
-      double px,py,pz,E;
-      px = jets[j].px() - area_4vect.px();
-      py = jets[j].py() - area_4vect.py();
-      pz = jets[j].pz() - area_4vect.pz();
-      E  = jets[j].E()  - area_4vect.E();
-      corrected_jets[j] = fastjet::PseudoJet(px,py,pz,E);
+      corrected_jets[j] = jets[j] - area_4vect;
     }
-    // NB We could also write: 
-    // area_4vect = (-1) * area_4vect;    // (the - operator is not defined)
-    // corrected_jets[j] = jets[j] + area_4vect;
-    // but the result will be different, since we are not avoiding
+    // NB We could also leave out the above "if": 
+    // corrected_jets[j] = jets[j] - area_4vect;
+    // but the result would be different, since we would not avoid
     // jets with negative Pt or energy
     
     printf("%5u %7.3f %7.3f %9.3f %7.3f %9.3f %7.3f %7.3f %9.3f\n",

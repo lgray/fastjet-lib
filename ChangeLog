@@ -8,6 +8,9 @@ ChangeLog for fastjet-release directory
 	the -pi..pi range and 0..2pi range; in the clustering code,
 	switched from use of phi() to phi_02pi() to allow for future
 	changes to action of phi().
+
+	* switched fastjet_subtraction.cc over to new arithmetic
+	  operations.
 	
 2006-09-25  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
 
