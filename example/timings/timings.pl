@@ -9,11 +9,13 @@ $baserep = 700;
 
 #############################################
 #
+# -4           -> mixed N^2 (tiled geometrical) and N ln N (for min dij)
 # -3, -2, -1   -> N^2 algorithm
 #  0           -> N^3
 # 2, 3, 4      -> N ln N 
-# 10           -> ktjet   
-# 11, 12       -> JetClu , MidPoint
+# 12,13,14     -> N ln N for cam
+# 100          -> ktjet   
+# 101, 102     -> JetClu , MidPoint
 #
 #############################################
 
@@ -21,13 +23,17 @@ $baserep = 700;
 #@strategy = (-2,-1,0,2,10);
 #@strategy = (-3,-1,2);
 #@strategy = (3,4);
-@strategy = (2);
-#@strategy = (-3,-1,0,2,10,11,12);
-#@strategy = (-3);
-#@strategy = (11,12);
-#@strategy = (-3,-1,2);
+#@strategy = (-4,-3,-1,2,12);
+@strategy = (1);
 #@strategy = (12);
-#@strategy = (11,12);
+#@strategy = (-3,-1,0,2,10,11,102);
+#@strategy = (-3);
+#@strategy = (11,102);
+#@strategy = (-3,-1,2);
+#@strategy = (102);
+#@strategy = (11,102);
+
+$radius=0.7;
 
 # number of runs to average over when getting
 # timings. Remember that first run will be discarded
@@ -39,12 +45,12 @@ $datadir="../../../data/";
 
 #$datafile="14TeV-1000ev.dat";
 #$datafile="Pythia-Minbias-LowPt-LHC-10kev.dat";
-$datafile="Pythia-PtMin1000-LHC-10kev.dat";
+#$datafile="Pythia-PtMin1000-LHC-10kev.dat";
 #$datafile="Pythia-Minbias-LowPt-LHC-1000ev.dat";
 #$datafile="Pythia-PtMin50-TeV-1000ev.dat";
 #$datafile="Pythia-1PtMin50+nMinBias-LHC-1001ev-semisorted.dat";
 #$datafile="Pythia-1PtMin50+nMinBias+200-LHC-1001ev-semisorted.dat";
-#$datafile= "Pythia-1PtMin50+nMinBias-mansorted.dat";
+$datafile= "Pythia-1PtMin50+nMinBias-mansorted.dat";
 
 $datafile= $datadir.$datafile;
 
@@ -52,9 +58,10 @@ $hostname=`hostname -s`;
 chomp($hostname);
 #$filename="timings-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-".$hostname.".dat";
+$filename="timings-LHC50+minbias+mansorted-R$radius-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-highN-".$hostname.".dat";
-$filename="timings-PtMin1000-LHC-highN-".$hostname.".dat";
+#$filename="timings-PtMin1000-LHC-highN-".$hostname.".dat";
 #$filename="timings.dat";
 open(OUT,">>$filename");
 
@@ -62,11 +69,11 @@ $uname=`uname -a`;
 print OUT "# ",$uname;
 if ( $uname =~ m/Darwin/ ) { $proc=`machine`; }   # to be improved
 if ( $uname =~ m/Linux/ ) { 
-      $proc=`grep "model name" /proc/cpuinfo | awk -F: '{ print \$2}' | sed s/\\(/[/g | sed s/\\)/]/g`; 
+      $proc=`grep "model name" /proc/cpuinfo | awk -F: '{ print \$2}' | sed s/\\(/[/g | sed s/\\)/]/g | sed 's/^/# /'`; 
       chomp($proc);
-      $proc = $proc." -- ".`grep "cpu MHz" /proc/cpuinfo | awk -F: '{ print \$2" MHz"}'`;
+      $proc = $proc." -- ".`grep "cpu MHz" /proc/cpuinfo | awk -F: '{ print \$2" MHz"}' | sed 's/^/# /'`;
 } 
-print OUT "# ",$proc;
+print OUT $proc;
 print OUT "# \n";
 
 
@@ -76,46 +83,38 @@ for (my $k=0; $k <= $#strategy; $k++ ) {
 $strategy = $strategy[$k];
 print OUT "# strategy = ",$strategy,"\n";
 
-# if ( $strategy >= 2 )  {$maxj = 16;}
-# if ( $strategy <= -1 ) {$maxj = 13;}
-# if ( $strategy == 0 )  {$maxj = 5;}
-# if ( $strategy == 10)  {$maxj = 6;}
-# if ( $strategy == 11)  {$maxj = 10; $algo = "-jetclu";}
-# if ( $strategy == 12)  {$maxj = 6; $algo = "-midpoint";}
-
-#$maxj = 100;
-#if ( $strategy >= 2 )  {$maxcomb = 500;}
-#if ( $strategy <= -1 ) {$maxcomb = 200;}
-#if ( $strategy == 0 )  {$maxcomb = 13;}
-#if ( $strategy == 10)  {$maxcomb = 20;}
-#if ( $strategy == 11)  {$maxcomb = 200; $algo = "-jetclu";}
-#if ( $strategy == 12)  {$maxcomb = 20; $algo = "-midpoint";}
-
 $maxj = 100;
+$algo = "";
 #if ( $strategy >= 2 )  {$maxcomb = 500;}
 #if ( $strategy >= 2 )  {$maxcomb = 9999;}
-if ( $strategy >= 2 )  {$maxcomb = 4000;}
+#if ( $strategy >= 2 )  {$maxcomb = 4000;}
+if ( $strategy >= 1 )  {$maxcomb = 700;}
 if ( $strategy <= -1 ) {$maxcomb = 150;}
+if ( $strategy <= -3 ) {$maxcomb = 270;}
 if ( $strategy == 0 )  {$maxcomb = 13;}
-if ( $strategy == 10)  {$maxcomb = 13;}
-if ( $strategy == 11)  {$maxcomb = 70; $algo = "-jetclu";}
-if ( $strategy == 12)  {$maxcomb = 13; $algo = "-midpoint";}
+if ( $strategy >= 12 && $strategy <= 14) {$algo = "-cam";}
+if ( $strategy == 100)  {$maxcomb = 13;}
+if ( $strategy == 101)  {$maxcomb = 70; $algo = "-jetclu";}
+if ( $strategy == 102)  {$maxcomb = 13; $algo = "-midpoint";}
 
 
-print "Strategy = $strategy\n";
+print "Strategy = $strategy, writing to $filename\n";
 my $npart;
 my $time = 0;
 my $readtime;
 for (my $j=1; $j <= $maxj; $j++) {
   $combine = $j;
-  #if ( $j > 5 ) { $combine = int(exp($j/3)); }
-  if ( $j > 13 ) { $combine = int(exp($j/5)); }
+  # use the following line with Pythia-1PtMin50+nMinBias-mansorted.dat
+  if ( $j > 5 ) { $combine = int(exp($j/3)); }
+  # use this for Pythia-PtMin1000-LHC-10kev.dat
+  #if ( $j > 13 ) { $combine = int(exp($j/5)); }
+
   if ($combine > $maxcomb) {last;}
 
   # arrange for situations where we have only 1 repeat?
-  if ( $strategy >= 2 ) {$repeat = 1 + int($baserep/$combine);}
-  if ( $strategy <= -1 ) {$repeat = 1 + int($baserep/$combine/$combine);}
-  if ( $strategy == 0 || $strategy >= 10) {$repeat = 2 + int($baserep/5/$combine/$combine/$combine);}
+  if ( $strategy >= 1 )  {$repeat = 1 + 2*int($baserep/$combine);}
+  if ( $strategy <= -1 ) {$repeat = 1 + 4*int($baserep/$combine/$combine);}
+  if ( $strategy == 0 || $strategy >= 100) {$repeat = 2 + int($baserep/5/$combine/$combine/$combine);}
 
   $cumultime = 0;
 
@@ -131,16 +130,16 @@ for (my $j=1; $j <= $maxj; $j++) {
     for (my $irun = 0; $irun <2; $irun++) {
       my $local_repeat;
       if ($irun == 0) {$local_repeat = 0} else {$local_repeat = $repeat;}
-      if ( $strategy < 5 ) {
+      if ( $strategy < 5 || ($strategy >= 12 && $strategy <= 14)) {
 	# NB brackets are needed to get time to output to a stderr I can grab!!
-	@lines=`(time -p ../fastjet_timing -strategy $strategy -combine $combine -repeat $local_repeat < $datafile) 2>&1`;
+	@lines=`(time -p ../fastjet_timing -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile) 2>&1`;
       }
 
-      if ( $strategy == 10 ) {  # run ktjet 
+      if ( $strategy == 100 ) {  # run ktjet 
 	@lines=`(time -p ../ktjet_timing  -combine $combine -repeat $local_repeat < $datafile > /dev/null) 2>&1`;
       }
 
-      if ( $strategy == 11 || $strategy == 12 ) { # run JetClu or MidPoint
+      if ( $strategy == 101 || $strategy == 102 ) { # run JetClu or MidPoint
 	@lines=`(time -p ../run-JetCluMidPoint/JCMP_algorithm  $algo -combine $combine -repeat $local_repeat < $datafile > /dev/null) 2>&1`;
       }
 
@@ -167,8 +166,8 @@ for (my $j=1; $j <= $maxj; $j++) {
     else {
       # choose an adaptive number of repeats
       if ($time < 1.0) {$repeat *= (1.0/$time); $repeat = int($repeat);}
-      if ($time > 10.0) {
-	$newrepeat = int(10.0/($time/$repeat))+1;
+      if ($time > 5.0) {
+	$newrepeat = int(5.0/($time/$repeat))+1;
 	if ($newrepeat < $repeat) {$repeat = $newrepeat}
       }
     }
@@ -176,6 +175,9 @@ for (my $j=1; $j <= $maxj; $j++) {
   
   print $npart." ".$cumultime/$repeat/($nstat_local-1)."\n";
   print OUT $npart." ".$cumultime/$repeat/($nstat_local-1)."\n";
+
+  # don't go beyond this limit
+  if ($time > $runtimelimit*0.5) {last;}
 }
 # two blank lines for easy gnuplot separation
 print OUT "\n\n";

@@ -3,7 +3,7 @@
 
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
-version=2.0.0b1
+version=2.0.0
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dir=fastjet-$version
@@ -31,7 +31,7 @@ else
                       $dir/Makefile \
                       $dir/example/data/*.dat \
                       $dir/include/* \
-                      $dir/**/(READM*[A-Z]|INSTALL|CHANGELOG|Doxyfile)\
+                      $dir/**/(READM*[A-Z]|INSTALL|Doxyfile|ReleaseNotes)\
                       $dir/lib/.dummy \
 		      --exclude .svn*
 

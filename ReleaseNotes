@@ -1,34 +1,6 @@
 Release Notes for fastjet
 -------------------------
 
-To Do
------
-
-- example/fastjet_subtraction.cc
-
-- transfer of information from first ghosted run of C.S.ActiveArea
-  into the history of the class itself (to avoid extraneous
-  jet-finding run, which is costly for HI). Steps to completion
-  include:
-
-   . lumping together some of setup for a ClusterSequence object so
-     that the setup can be carried out easily from the ActiveSequence
-     derived class (stuff related to creating the jets array,
-     transferring info from JetDefinition, and printing of banner).
-
-   . member function of C.S.A.A. to transfer C.S.A.A.ExplicitGhosts
-     sequence into current sequence. It should also record the stratey
-     actually used?
-
-   . call to that member function after first repeat.
-
-- "internal" namespace for things in fastjet/internal ???
-
-- documentation for new release
-
-- paper!
-
-
 Changes from v1.0 to v2.0
 =========================
 
@@ -43,7 +15,7 @@ New features:
   paper. See the documentation for further details
 
 - classes have been introduced for running jet clustering and
-  simulatneously collecting information about the area of each jet. 
+  simultaneously collecting information about the area of each jet. 
   The base class specifying the functionality is
    
     class ClusterSequenceWithArea;
@@ -71,16 +43,15 @@ New optimizations:
                      (overall the strategy still scales as N^2, but with a
                      smaller coefficient)
 
-    NlnNCam2piMultD, NlnNCam2pi2R, NlnNCam4pi2R:
+    NlnNCam, NlnNCam2pi2R, NlnNCam4pi:
 
-                     NlnN strategies specific to the Cambridge
-                     jet-finder -- the fastest of them is
-                     NlnNCam2piMultD. Depending on the size of the
-                     event and of the CPU cache it may be up to 2.5
-                     times faster than the CGAL-based NlnN
-                     strategy. Experiment on your own hardware and
-                     events to establish whether the speed gain is
-                     significant.
+                     NlnN strategies specific to the Cambridge/Aachen
+                     jet-finder -- the fastest of them is NlnNCam.
+                     Depending on the size of the event and of the CPU
+                     cache it may be up to 2.5 times faster than the
+                     CGAL-based NlnN strategy. Experiment on your own
+                     hardware and events to establish whether the
+                     speed gain is significant.
 
                      These strategies are based on the work on dynamic
                      Closest Pair problems by Timothy Chan.

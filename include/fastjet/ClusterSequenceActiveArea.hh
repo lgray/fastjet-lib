@@ -49,15 +49,6 @@ using namespace std;
 class ClusterSequenceActiveArea : public ClusterSequenceWithArea {
 public:
 
-//  /// constructor based on JetDefinition and ActiveAreaSpec
-//  template<class L> ClusterSequenceActiveArea
-//         (const std::vector<L> & pseudojets, 
-//	  const JetDefinition & jet_def,
-//	  const ActiveAreaSpec & area_spec,
-//	  const bool & writeout_combinations = false) :
-//     ClusterSequenceWithArea(pseudojets, jet_def, writeout_combinations) {
-//	   _initialise(pseudojets, jet_def, area_spec, writeout_combinations);};
-
   /// constructor based on JetDefinition and ActiveAreaSpec
   template<class L> ClusterSequenceActiveArea
          (const std::vector<L> & pseudojets, 
@@ -74,7 +65,7 @@ public:
                     return _average_area_4vector[jet.cluster_hist_index()];};
 
   /// enum providing a variety of tentative strategies for estimating
-  /// the background (non-jet) activity in a highly populated event; the
+  /// the background (e.g. non-jet) activity in a highly populated event; the
   /// one that has been most extensively tested is median.
   enum mean_pt_strategies{median=0, non_ghost_median, pttot_over_areatot, 
 			  pttot_over_areatot_cut, mean_ratio_cut, play};
@@ -96,13 +87,6 @@ public:
 
 
 private:
-
-  ///// does the actual initialisation work 
-  //template<class L> void _initialise
-  //       (const std::vector<L> & pseudojets, 
-  //        const JetDefinition & jet_def,
-  //        const ActiveAreaSpec & area_spec,
-  //	  const bool & writeout_combinations = false);
 
   /// does the initialisation and running specific to the active
   /// areas class

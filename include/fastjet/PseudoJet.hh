@@ -63,11 +63,11 @@ class PseudoJet {
   //
   // second "const" says that "this" will not be modified by these
   // functions.
-  inline const double & E()   const {return _E;};
-  inline const double & e()   const {return _E;}; // like CLHEP
-  inline const double & px()  const {return _px;};
-  inline const double & py()  const {return _py;};
-  inline const double & pz()  const {return _pz;};
+  inline double E()   const {return _E;};
+  inline double e()   const {return _E;}; // like CLHEP
+  inline double px()  const {return _px;};
+  inline double py()  const {return _py;};
+  inline double pz()  const {return _pz;};
 
   /// returns phi (in the range 0..2pi)
   inline const double phi() const {return phi_02pi();};
@@ -81,15 +81,15 @@ class PseudoJet {
 
   /// returns the rapidity or some large value when the rapidity
   /// is infinite
-  inline const double & rap() const {return _rap;};
+  inline double rap() const {return _rap;};
 
   /// the same as rap()
-  inline const double & rapidity() const {return _rap;}; // like CLHEP
+  inline double rapidity() const {return _rap;}; // like CLHEP
 
   /// returns the squared transverse momentum
-  inline const double & kt2() const {return _kt2;};
+  inline double kt2() const {return _kt2;};
   /// returns the squared transverse momentum
-  inline const double & perp2() const {return _kt2;};  // like CLHEP
+  inline double perp2() const {return _kt2;};  // like CLHEP
   /// returns the scalar transverse momentum
   inline double  perp() const {return sqrt(_kt2);};    // like CLHEP
   /// returns the squared invariant mass // like CLHEP
@@ -130,7 +130,7 @@ class PseudoJet {
   //                                      return jet1.kt_distance(jet2);};
 
   /// returns distance between this jet and the beam
-  inline const double & beam_distance() const {return _kt2;};
+  inline double beam_distance() const {return _kt2;};
 
 
   void operator*=(double);

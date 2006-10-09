@@ -70,14 +70,41 @@ void ClusterSequence::_initialise_and_run (
   // currently in _jets)
   _fill_initial_history();
 
+//  // automatically redefine the strategy according to N if that is
+//  // what the user requested
+//  if (_strategy == Best) {
+//    int N = _jets.size();
+//#ifndef DROP_CGAL
+//    if (N > 14500/_Rparam) { // empirical observation of how it scales with R
+//      _strategy = NlnN; }    // see GPS CCN27-57 (Numbers have changed since 
+//    else                     // introducing N2MinHeapTiled; scaling is approx.)
+//#endif  // DROP_CGAL
+//      if (N > 450) {
+//      _strategy = N2MinHeapTiled;
+//    }
+//    else if (N > 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
+//      _strategy = N2Tiled;
+//    } else {
+//      _strategy = N2Plain;
+//    }
+//  }
+
+
   // automatically redefine the strategy according to N if that is
-  // what the user requested
+  // what the user requested -- transition points (and especially
+  // their R-dependence) are based on empirical observations for a
+  // R=0.4, 0.7 and 1.0, running on toth (3.4GHz, Pentium IV D [dual
+  // core] with 2MB of cache).
   if (_strategy == Best) {
     int N = _jets.size();
+    if (N > 6200/pow(_Rparam,2.0) 
+	&& jet_def.jet_finder() == cambridge_algorithm) {
+      _strategy = NlnNCam;}
+    else
 #ifndef DROP_CGAL
-    if (N > 14500/_Rparam) { // empirical observation of how it scales with R
-      _strategy = NlnN; }    // see GPS CCN27-57 (Numbers have changed since 
-    else                     // introducing N2MinHeapTiled; scaling is approx.)
+    if (N > 16000/pow(_Rparam,1.15)) {
+      _strategy = NlnN; }   
+    else                    
 #endif  // DROP_CGAL
       if (N > 450) {
       _strategy = N2MinHeapTiled;
@@ -88,6 +115,7 @@ void ClusterSequence::_initialise_and_run (
       _strategy = N2Plain;
     }
   }
+
 
   // run the code containing the selected strategy
   if (_strategy == NlnN || _strategy == NlnN3pi 
@@ -128,7 +156,7 @@ void ClusterSequence::_print_banner() {
   _first_time = false;
   
   cout << "#---------------------------------------------------------------------\n";
-  cout << "#                   FastJet release 2.0 (beta 1)   			 \n";
+  cout << "#                        FastJet release 2.0    			 \n";
   cout << "#            Written by Matteo Cacciari and Gavin Salam		 \n"; 
   cout << "#            http://www.lpthe.jussieu.fr/~salam/fastjet		 \n"; 
   cout << "#								      	 \n";

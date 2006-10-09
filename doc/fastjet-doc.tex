@@ -35,7 +35,7 @@
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 
-\title{FastJet 2.0$\beta$ user manual}
+\title{FastJet 2.0 user manual}
 \author{Matteo Cacciari and Gavin P. Salam\\
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
   Denis Diderot -- Paris 7, CNRS UMR 7589
@@ -71,7 +71,7 @@ events whose number $N$ of particles $\sim 10^4$.
 %
 We anticipate that the \fastjet facilities will also be made available
 at a later date with a more developed interface as part of the planned
-multi-purpose \texttt{HepJet} jet-finding package \cite{HepJet}.
+multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
 
 There are a range of variants possible for the both the $k_t$ and
 Cambridge jet-finders. For the $k_t$ jet finder, \fastjet implements
@@ -106,8 +106,8 @@ follows:
 The exclusive jet algorithm is similar except that (a) when a $d_{iB}$
 is the smallest value, that particle is considered to become part of
 the beam jet (i.e.\ is discarded) and (b) clustering is stopped when
-all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. Generally in the
-exclusive mode $R$ is set to $1$.
+all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. In the
+exclusive mode $R$ is commonly set to $1$.
 
 Currently the Cambridge/Aachen jet-finder is provided only in an
 inclusive version, whose formulation is identical to that of the $k_t$
@@ -179,17 +179,19 @@ for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
 %
 It has the following member functions for accessing the components
 \begin{verbatim}
-  double E()     const ; // returns the energy component
-  double e()     const ; // returns the energy component
-  double px()    const ; // returns the x momentum component
-  double py()    const ; // returns the y momentum component
-  double pz()    const ; // returns the z momentum component
-  double phi()   const ; // returns the azimuthal angle in the range 0--2pi
-  double rap()   const ; // returns the rapidity
+  double E()        const ; // returns the energy component
+  double e()        const ; // returns the energy component
+  double px()       const ; // returns the x momentum component
+  double py()       const ; // returns the y momentum component
+  double pz()       const ; // returns the z momentum component
+  double phi()      const ; // returns the azimuthal angle in range 0--2pi
+  double phi_std()  const ; // returns the azimuthal angle
+                            // in range -pi to pi
+  double rap()      const ; // returns the rapidity
   double rapidity() const ; // returns the rapidity
-  double kt2()   const ; // returns the squared transverse momentum
-  double perp2() const ; // returns the squared transverse momentum
-  double perp()  const ; // returns the transverse momentum
+  double kt2()      const ; // returns the squared transverse momentum
+  double perp2()    const ; // returns the squared transverse momentum
+  double perp()     const ; // returns the transverse momentum
   double operator[] (int i) const; // returns component i
 
   /// return a valarray containing the four-momentum (components 0--2
@@ -205,6 +207,11 @@ wishes to keep track of the identity of a \ttt{fastjet::PseudoJet} object
   /// return the user_index
   int user_index() const ;
 \end{verbatim}
+Finally the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} are defined, with
+the former acting on pairs of \ttt{PseudoJet}s and the latter acting
+on a \ttt{PseudoJet} and a \ttt{double} coefficient. Analgous
+\ttt{+=}, etc., operators, are also defined.
+
 
 We also provide routines for taking an unsorted vector of
 \ttt{fastjet::PseudoJet}s and returning a sorted vector,
@@ -255,7 +262,7 @@ potentially interesting values:
   \texttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
   N \gtrsim 15000$)\\ 
   \texttt{NlnNCam} & based on Chan's $N\ln N$ closest pairs algorithm (fastest for \\&$
-  N \gtrsim 10^4$), suitable only for the Cambridge jet finder\\ 
+  N \gtrsim 6000$), suitable only for the Cambridge jet finder\\ 
   \texttt{Best} & automatic selection of the best of these based on
   $N$ and $R$\\\hline 
 \end{tabular}
@@ -267,13 +274,19 @@ pairs \cite{Chan} (rather than the more involved nearest neighbour
 graph), is suitable only for the Cambridge algorithm whose distance
 measure is purely geometrical.
 
-If \texttt{strategy} is omitted then the \texttt{Best} option is
-set. Note that the $N$ ranges quoted above for which a given strategy is
-optimal hold for $R=1$; the general $R$ dependence can be non trivial,
-and while some attempt has been made to to account for it in the
-choice of the strategy with the ``\texttt{Best}'' option, there may
-exist specific regions of $N$ and $R$ in which a manual choice of
-strategy can give faster execution.
+If \texttt{strategy} is omitted then the \texttt{Best} option is set.
+Note that the $N$ ranges quoted above for which a given strategy is
+optimal hold for $R=1$; the general $R$ dependence can be significant
+(and non-trivial), for example for the Cambridge/Aachen jet finder
+with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2TiledMinHeap} strategy
+only for $N\gtrsim 37000$. While some attempt has been made to account
+for the $R$-dependence in the choice of the strategy with the
+``\texttt{Best}'' option, there may exist specific regions of $N$ and
+$R$ in which a manual choice of strategy can give faster execution.
+Furthermore the \texttt{NlnNCam} strategy's timings may depend
+strongly on the size of the cache, and the transitions that have been
+adopted are based on a cache size of $2$~MB. Finally for a given $N$
+and $R$, the optimal strategy may also depend on the event structure. 
 
 %......................................................................
 \subsection{fastjet::ClusterSequence}
@@ -432,7 +445,7 @@ information about jet areas.  It is derived from
   ///                           * Theta("rap,phi inside jet boundary")
   ///
   /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
-  /// rapdity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
+  /// rapidity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
   /// inside jet boundary") is a function that is 1 when rap,phi
   /// define a direction inside the jet boundary and 0 otherwise.
   ///
@@ -448,7 +461,7 @@ extremely soft ``ghost'' particles to the event, and letting them
 cluster with the user's event (as well as between themselves). The
 ghosts are distributed on a uniform grid (with small random
 fluctuations to avoid degeneracies) in $\eta$ and $\phi$. The number
-of ghosts which end up in a given jet provides a measure of its area.
+of ghosts that end up in a given jet provides a measure of its area.
 Because the ghosts are extremely soft (and because the $k_t$ and
 Cambridge/Aachen jet finders are infrared safe), the presence of the
 ghosts does not affect the set of user particles that end up in a
@@ -476,7 +489,7 @@ is the area associated with a single ghost. The number of ghosts is
 inversely proportional to the ghost area, and so a smaller area leads
 to a longer CPU-time for clustering. However small ghost areas give
 more accurate results. We have found the default ghost area given
-above to be a suitable for most applications.
+above to be suitable for most applications.
 
 For sparse events, the set of ghost particles that end up in a given
 jet is not unique, and depends on the degeneracy-breaking random
@@ -526,20 +539,20 @@ fluctuates according to the random shifts of the ghosts on the
 grid).\footnote{In order to extract jet including their ghosts (and
   any pure ghost jets), use the class
   \url{ClusterSequenceActiveAreaExplicitGhosts} whose interface is
-  documented in the corresponding include file}
+  documented in the corresponding include file.}
 
 
 In addition to providing clustering and jet-area determination, this class
 includes some methods for extracting information about the estimated background
 in the clustered event. 
 %
-These methods are to be considered as experimental. It is likely that
-their interfaces will change a in future release, and further
+These methods are to be considered \emph{experimental}: it is likely that
+their interfaces will change in a future release, and further
 refinements may be added. It is also possible that their functionality
 will be transferred to the base class.
 \begin{verbatim}
   /// enum providing a variety of tentative strategies for estimating
-  /// the background (non-jet) activity in a highly populated event; the
+  /// the background (e.g. non-jet) activity in a highly populated event; the
   /// one that has been most extensively tested is median.
   enum fastjet::mean_pt_strategies{median=0, non_ghost_median, pttot_over_areatot, 
                                    pttot_over_areatot_cut, mean_ratio_cut, play} ;
@@ -567,7 +580,7 @@ being parabolic in $\eta$) in simulated Pb-Pb collisions at the LHC.
 The \ttt{mean\_pt\_strategies} are options of
 \ttt{pt\_per\_unit\_area}. They dictate
 the strategy with which the transverse momentum per unit area of the 
-background of each event is determined. Valid choices are:
+background of each event is determined. Common choices are:
 \begin{itemize}
 
 \item[]\ttt{non\_ghost\_median} - For each jet $i$ one defines the quantity
@@ -604,11 +617,10 @@ area is considered reliable, i.e.\ those with $|\eta| <
 \mbox{\ttt{ghost\_etamax}} - R$.
 
 The \ttt{parabolic\_pt\_per\_unit\_area} member function has no
-strategy options, and simply
-returns the coefficients $a$ and $b$ of the least square fit of all the
-$\rho_i <$ \ttt{exclude\_above}  to the parabolic function $a +
-b\eta^2$. If \ttt{exclude\_above} $< 0$ (default behaviour) no upper limit is
-used.
+strategy options, and simply returns the coefficients $a$ and $b$ of
+the least square fit of all the $\rho_i <$ \ttt{exclude\_above} to the
+parabolic function $a + b\eta^2$. If \ttt{exclude\_above} $< 0$
+(default behaviour) no upper limit is used.
 
 %======================================================================
 \section{Example program}
@@ -691,7 +703,7 @@ of the variable \ttt{USE\_CGAL} which should be either \ttt{yes} or
 
 
 The \ttt{NlnNCam} strategy does not require CGAL, since it is based on
-a considerably simpler computational-geometry structure.
+a considerably simpler computational-geometry structure~\cite{Chan}.
 
 
 
@@ -703,9 +715,9 @@ a considerably simpler computational-geometry structure.
 \bibitem{fastjet}
   M.~Cacciari and G.~P.~Salam,
   %``Dispelling the N**3 myth for the k(t) jet-finder,''
-  hep-ph/0512210, to appear in Phys.~Lett.~B.
+  Phys.\ Lett.\ B {\bf 641} (2006) 57
+  [hep-ph/0512210].
   %%CITATION = HEP-PH 0512210;%%
-  %%Cited 1 time in SPIRES-HEP
 
 
 \bibitem{ktexcl}

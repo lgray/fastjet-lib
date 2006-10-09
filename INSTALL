@@ -2,8 +2,8 @@ Installation instructions for fastjet
 -------------------------------------
 
 As a first step the user should decide whether or not they want to
-have access to the N ln N algorithms, based on the Computational
-Geometry Algorithms Library (CGAL).
+have access to the N ln N algorithms for the kt algorithm, based on
+the Computational Geometry Algorithms Library (CGAL).
 
 If the user does not wish to use it, he or she should ensure that the
 Makefile in the top directory has the line
@@ -106,5 +106,5 @@ fastjet_subtraction
  
 fastjet_example_v1_interface.cc
         same as fastjet_example, but using the (now deprecated) interface
-	of Fastet v1.0. It still compiles correctly with v2.0, backward
+	of FastJet v1.0. It still compiles correctly with v2.0, backward
 	compatibility having been ensured.

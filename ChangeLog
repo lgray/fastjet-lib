@@ -4,13 +4,21 @@ ChangeLog for fastjet-release directory
 2006-10-09  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
 
 	* added a wider range of arithmetic operations on PseudoJets;
-	added phi_std() and phi_02pi() which return values respectively in
-	the -pi..pi range and 0..2pi range; in the clustering code,
-	switched from use of phi() to phi_02pi() to allow for future
-	changes to action of phi().
+	  added phi_std() and phi_02pi() which return values respectively
+	  in the -pi..pi range and 0..2pi range; in the clustering code,
+	  switched from use of phi() to phi_02pi() to allow for future
+	  changes to action of phi().
 
 	* switched fastjet_subtraction.cc over to new arithmetic
 	  operations.
+
+	* programmed improved formulae for automatic choice of best
+	  strategy, including the choice also for the Cambridge algorithm.
+
+	* switched a number of member function of PseudoJet over from
+	  const double & to simply double.
+
+	* various small changes made to the documentation.
 	
 2006-09-25  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
 

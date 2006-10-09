@@ -76,7 +76,7 @@ public:
   ///                           * Theta("rap,phi inside jet boundary")
   ///
   /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
-  /// rapdity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
+  /// rapidity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
   /// inside jet boundary") is a function that is 1 when rap,phi
   /// define a direction inside the jet boundary and 0 otherwise.
   ///
