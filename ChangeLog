@@ -1,8 +1,15 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-10-12  Gavin Salam <salam@lpthe.jussieu.fr>
+	    
+	* in include/fastjet/ClusterSequence.hh added a slightly more
+	  user-friendly message for the doxygen main page.
+
 2006-10-09  Gavin Salam <salam@lpthe.jussieu.fr> + Matteo
 
+	    --- release of fastjet-2.0.0 ---
+	
 	* added a wider range of arithmetic operations on PseudoJets;
 	  added phi_std() and phi_02pi() which return values respectively
 	  in the -pi..pi range and 0..2pi range; in the clustering code,

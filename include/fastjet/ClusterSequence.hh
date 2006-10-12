@@ -35,7 +35,10 @@
 //......................................................................
 /*! \mainpage FastJet code documentation
  *
- * See also the main <a
+ * These pages provide automatically generated documentation for the 
+ * FastJet package.
+ * 
+ * For further information and normal documentation, see the main <a
  * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
  */
 //----------------------------------------------------------------------

@@ -33,7 +33,7 @@ else
                       $dir/include/* \
                       $dir/**/(READM*[A-Z]|INSTALL|Doxyfile|ReleaseNotes)\
                       $dir/lib/.dummy \
-		      --exclude .svn*
+		      --exclude '.svn*' --exclude '*~'
 
     echo ""
     # if it's gavin running this then automatically copy the tarfile
