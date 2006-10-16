@@ -8,7 +8,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc BasicRandom.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc BasicRandom.cc JetDefinition.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -146,3 +146,7 @@ ClusterSequenceActiveArea.o: ../include/fastjet/ActiveAreaSpec.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/internal/BasicRandom.hh
 BasicRandom.o: ../include/fastjet/internal/BasicRandom.hh
 BasicRandom.o: ../include/fastjet/internal/base.hh
+JetDefinition.o: ../include/fastjet/JetDefinition.hh
+JetDefinition.o: ../include/fastjet/internal/numconsts.hh
+JetDefinition.o: ../include/fastjet/internal/base.hh
+JetDefinition.o: ../include/fastjet/Error.hh

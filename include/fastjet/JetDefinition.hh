@@ -33,6 +33,7 @@
 
 #include<cassert>
 #include "fastjet/internal/numconsts.hh"
+#include<string>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -62,7 +63,9 @@ enum Strategy {
   /// for use exclusively with the Cambridge algorithm
   NlnNCam4pi   = 14,
   NlnNCam2pi2R = 13,
-  NlnNCam      = 12 // 2piMultD
+  NlnNCam      = 12, // 2piMultD
+  /// the plugin has been used...
+  plugin_strategy = 999
 };
 
 
@@ -73,7 +76,9 @@ enum JetFinder {
   kt_algorithm=0,
   /// the longitudinally invariant variant of the cambridge algorithm
   /// (aka Aachen algoithm).
-  cambridge_algorithm=1
+  cambridge_algorithm=1,
+  /// any plugin algorithm supplied by the user
+  plugin_algorithm = 99
 };
 
 
@@ -83,6 +88,10 @@ enum JetFinder {
 class JetDefinition {
   
 public:
+
+  /// forward declaration of a class that allows the user to introduce
+  /// their own plugin 
+  class Plugin;
 
   /// constructor that to fully specify a jet-definition (together
   /// with information about how algorithically to run it). 
@@ -94,22 +103,67 @@ public:
     _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
     // the largest sensible value for R
     assert(_Rparam <= 0.5*pi);
-};
+    assert(_jet_finder != plugin_algorithm &&
+	   _strategy   != plugin_strategy);
+    _plugin = 0;
+  };
 
+  /// constructor based on a pointer to a user's plugin; the object
+  /// pointed to must remain valid for the whole duration of existence
+  /// of the JetDefinition and any related ClusterSequences
+  JetDefinition(const Plugin * plugin) {
+    _plugin = plugin;
+    _strategy = plugin_strategy;
+    _Rparam = -1.0;
+    _jet_finder = plugin_algorithm;
+  };
+
+  /// return a pointer to the plugin 
+  const Plugin * plugin() const {return _plugin;};
 
   // return information about the definition...
   JetFinder jet_finder  () const {return _jet_finder  ;}; 
   double      R           () const {return _Rparam      ;};
   Strategy  strategy    () const {return _strategy    ;};
 
+  /// return a textual description of the current jet definition 
+  std::string description() const;
+
+
 private:
   JetFinder _jet_finder;
   double      _Rparam    ;
   Strategy  _strategy  ;
 
-
+  const Plugin * _plugin;
 };
 
+
+// forward declaration, needed in order to specify interface for the
+// plugin.
+class ClusterSequence;
+
+
+//======================================================================
+/// a class that allows a user to introduce their own "plugin" jet
+/// finder
+class JetDefinition::Plugin{
+public:
+  /// return a textual description of the jet-definition implemented
+  /// in this plugin
+  virtual std::string description() const = 0;
+
+  /// given a ClusterSequence that has been filled up with initial
+  /// particles, the following function should fill up the rest of the
+  /// ClusterSequence, using the following member functions of
+  /// ClusterSequence:
+  ///   - plugin_do_ij_recombination()
+  ///   - plugin_do_iB_recombination()
+  virtual void run_clustering(ClusterSequence &) const = 0;
+
+  /// a destructor to be overloaded if need be...
+  virtual ~Plugin() {};
+};
 
 FASTJET_END_NAMESPACE
 

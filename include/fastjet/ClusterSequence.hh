@@ -142,9 +142,38 @@ class ClusterSequence {
   /// Cambridge algorithm). [May become virtual at some point]
   double jet_scale_for_algorithm(const PseudoJet & jet) const;
 
-//  /// things related to choice of algorithm
-//  enum JetFinder { kt_algorithm = 0, cambridge_algorithm = 1};
-//
+  //----- next follow functions designed specifically for plugins, which
+  //      may only be called when plugin_activated() returns true
+
+  /// record the fact that there has been a recombination between
+  /// jets()[jet_i] and jets()[jet_k], with the specified dij, and
+  /// return the index (newjet_k) allocated to the new jet, whose
+  /// momentum is assumed to be the 4-vector sum of that of jet_i and
+  /// jet_j
+  void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, 
+				      int & newjet_k) {
+    assert(plugin_activated());
+    _do_ij_recombination_step(jet_i, jet_j, dij, newjet_k);
+  };
+
+  /// as for the simpler variant of plugin_record_ij_recombination,
+  /// except that the new jet is attributed the momentum and
+  /// user_index of newjet
+  void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, 
+				      const PseudoJet & newjet, 
+				      int & newjet_k);
+
+  /// record the fact that there has been a recombination between
+  /// jets()[jet_i] and the beam, with the specified diB; when looking
+  /// for inclusive jets, any iB recombination will returned to the user 
+  /// as a jet.
+  void plugin_record_iB_recombination(int jet_i, double diB) {
+    assert(plugin_activated());
+    _do_iB_recombination_step(jet_i, diB);
+  };
+
+  /// returns true when the plugin is allowed to run the show.
+  inline bool plugin_activated() const {return _plugin_activated;};
 
 public:
   /// set the default (static) jet finder across all current and future
@@ -284,6 +313,7 @@ protected:
 
  private:
 
+  bool _plugin_activated;
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();

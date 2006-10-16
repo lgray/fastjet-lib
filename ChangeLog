@@ -1,6 +1,30 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-10-16  Gavin Salam <salam@lpthe.jussieu.fr>
+
+        Introduced plugin functionality (CCN28-76)
+	
+	* added description() member function to JetDefinition class
+	  (involved adding src/JetDefinition.cc which returns a default
+	  value).
+
+	* added a JetDefinition::Plugin abstract base class, which serves
+	  as a model for user-supplied plugins; added an JetDefinition
+	  constructor that takes a pointer to a plugin.
+
+        * added checks in ClusterSequence to see whether we're dealing
+	  with a plugin -- if we are then the plugin clustering routine is
+	  called instead of ours; 
+
+	  modified the inclusive_jets() routine so that it behaves
+	  sensibly regardless of the diB values and ordering of the
+	  clustering returned by the plugin.
+
+	  added "plugin_record_ij_recombination", etc., member functions
+	  to allow the plugin to make a record of what it's done in the
+	  cluster sequence.	
+	
 2006-10-12  Gavin Salam <salam@lpthe.jussieu.fr>
 	    
 	* in include/fastjet/ClusterSequence.hh added a slightly more

@@ -70,24 +70,13 @@ void ClusterSequence::_initialise_and_run (
   // currently in _jets)
   _fill_initial_history();
 
-//  // automatically redefine the strategy according to N if that is
-//  // what the user requested
-//  if (_strategy == Best) {
-//    int N = _jets.size();
-//#ifndef DROP_CGAL
-//    if (N > 14500/_Rparam) { // empirical observation of how it scales with R
-//      _strategy = NlnN; }    // see GPS CCN27-57 (Numbers have changed since 
-//    else                     // introducing N2MinHeapTiled; scaling is approx.)
-//#endif  // DROP_CGAL
-//      if (N > 450) {
-//      _strategy = N2MinHeapTiled;
-//    }
-//    else if (N > 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
-//      _strategy = N2Tiled;
-//    } else {
-//      _strategy = N2Plain;
-//    }
-//  }
+  // run the plugin if that's what's decreed
+  if (_jet_finder == plugin_algorithm) {
+    _plugin_activated = true;
+    _jet_def.plugin()->run_clustering( (*this) );
+    _plugin_activated = false;
+    return;
+  }
 
 
   // automatically redefine the strategy according to N if that is
@@ -185,6 +174,10 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def,
   _jet_finder = jet_def.jet_finder();
   _Rparam = jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
   _strategy = jet_def.strategy();
+
+  // disallow interference from the plugin
+  _plugin_activated = false;
+  
 }
 
 
@@ -244,11 +237,29 @@ string ClusterSequence::strategy_string ()  const {
     strategy = "NlnNCam2pi2R"; break;
   case NlnNCam:
     strategy = "NlnNCam"; break; // 2piMultD
+  case plugin_strategy:
+    strategy = "plugin strategy"; break;
   default:
     strategy = "Unrecognized";
   }
   return strategy;
 }  
+
+
+//----------------------------------------------------------------------
+// record an ij recombination and reset the _jets[newjet_k] momentum and
+// user index to be those of newjet
+void ClusterSequence::plugin_record_ij_recombination(
+	   int jet_i, int jet_j, double dij, 
+	   const PseudoJet & newjet, int & newjet_k) {
+
+  plugin_record_ij_recombination(jet_i, jet_j, dij, newjet_k);
+
+  // now transfer newjet into place
+  int tmp_index = _jets[newjet_k].cluster_hist_index();
+  _jets[newjet_k] = newjet;
+  _jets[newjet_k].set_cluster_hist_index(tmp_index);
+}
 
 
 //----------------------------------------------------------------------
@@ -278,6 +289,18 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       int parent1 = _history[i].parent1;
       const PseudoJet & jet = _jets[_history[parent1].jetp_index];
       if (jet.perp2() >= dcut) {jets.push_back(jet);}
+      i--;
+    }
+  } else if (_jet_finder == plugin_algorithm) {
+    // for inclusive jets with a plugin algorith, we make no
+    // assumptions about anything (relation of dij to momenta,
+    // ordering of the dij, etc.)
+    while (i >= 0) {
+      if (_history[i].parent2 == BeamJet) {
+	int parent1 = _history[i].parent1;
+	const PseudoJet & jet = _jets[_history[parent1].jetp_index];
+	if (jet.perp2() >= dcut) {jets.push_back(jet);}
+      }
       i--;
     }
   } else {throw Error("Unrecognized jet algorithm");}
