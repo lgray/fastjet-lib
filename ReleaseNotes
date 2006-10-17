@@ -1,6 +1,26 @@
 Release Notes for fastjet
 -------------------------
 
+======================================================================
+Changes from v2.0 to v2.1
+=========================
+
+New features:
+-------------
+
+- introduced plugin facility for alternative jet finders, via an
+  abstract base class
+ 
+    class JetDefinition::Plugin
+
+  Plugins are to be provided as classes derived from this,
+  implementing the relevant virtual functions (see manual and examples
+  for further info).
+
+- [in progress] provided plugins for CDF JetClu, CDF Midpoint, PxCone
+
+
+======================================================================
 Changes from v1.0 to v2.0
 =========================
 

@@ -36,7 +36,7 @@
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 
-\title{FastJet 2.0 user manual}
+\title{FastJet 2.1 user manual}
 \author{Matteo Cacciari and Gavin P. Salam\\
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
   Denis Diderot -- Paris 7, CNRS UMR 7589
@@ -45,6 +45,9 @@
 
 \begin{document}
 \maketitle
+
+%----------------------------------------------------------------------
+\tableofcontents
 
 %----------------------------------------------------------------------
 \section{Introduction}
@@ -288,6 +291,12 @@ Furthermore the \texttt{NlnNCam} strategy's timings may depend
 strongly on the size of the cache, and the transitions that have been
 adopted are based on a cache size of $2$~MB. Finally for a given $N$
 and $R$, the optimal strategy may also depend on the event structure. 
+
+A textual description of the jet definition can be obtained by a call
+to the member function
+\begin{verbatim}
+  std::string description(); 
+\end{verbatim}
 
 %......................................................................
 \subsection{fastjet::ClusterSequence}
@@ -622,6 +631,120 @@ strategy options, and simply returns the coefficients $a$ and $b$ of
 the least square fit of all the $\rho_i <$ \ttt{exclude\_above} to the
 parabolic function $a + b\eta^2$. If \ttt{exclude\_above} $< 0$
 (default behaviour) no upper limit is used.
+
+%======================================================================
+\section{Plugin jet finders}
+
+It can be useful to have a common interface for a range of jet finders
+beyond the $k_t$ and Cambridge algorithms, and it can also be useful
+to use the area-measurement tools for these other jet finders. In
+order to facilitate this, the \fastjet package provides a
+\emph{plugin} facility, allowing almost any other jet finder to be
+used within the same framework.
+
+Any plugin is to be derived from the abstract base class
+\ttt{fastjet::JetDefinition::Plugin},
+\begin{verbatim}
+  class JetDefinition::Plugin{
+  public:
+    /// return a textual description of the jet-definition implemented
+    /// in this plugin
+    virtual std::string description() const = 0;
+  
+    /// given a ClusterSequence that has been filled up with initial
+    /// particles, the following function should fill up the rest of the
+    /// ClusterSequence, using the following member functions of
+    /// ClusterSequence:
+    ///   - plugin_do_ij_recombination(...)
+    ///   - plugin_do_iB_recombination(...)
+    virtual void run_clustering(ClusterSequence &) const = 0;
+  
+    /// a destructor to be replaced if necessary in derived classes...
+    virtual ~Plugin() {};
+  };
+\end{verbatim}
+A \ttt{JetDefinition} can be constructed by providing a pointer to a
+\ttt{JetDefinition::Plugin}; the \ttt{JetDefinition} can then be used
+as described above.
+\begin{verbatim}
+   // have some plugin class derived from the Plugin base class
+   class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
+
+   // create an instance of the CDFMidPointPlugin class 
+   CDFMidPointPlugin cdf_midpoint( [... options ...] );
+   // create the jet definition
+   fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
+
+   // then create ClusterSequence with the input particles and jet_def,
+   // and use it to extract jets as usual
+\end{verbatim}
+
+Any plugin class must define the \ttt{description} and
+\ttt{run\_clustering} member functions. The former just returns a
+textual description of the jet finder and its options (e.g.\ radius,
+etc.), while the latter does the hard work of running the user's own
+jet algorithm and transferring the information to the
+\ttt{ClusterSequence} class. This is best illustrated with an example:
+\begin{verbatim}
+using namespace fastjet;
+
+void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) {
+  
+  // when run_clustering is called, the clust_seq has already been
+  // filled with the initial particles, which are available through the 
+  // jets() array
+  const vector<PseudoJet> & initial_particles = clust_seq.jets();
+
+  // it is up to the user to do their own clustering on these initial
+  // particles
+
+  // ...
+\end{verbatim}
+Once the plugin has run its own clustering it must transfer the
+information back to the \ttt{clust\_seq}. This is done by recording
+mergings between pairs of particles or between a particle and the
+beam. The new momenta are stored in the \ttt{clust\_seq.jets()}
+vector, after the initial particles. Note though that the plugin is
+not allowed to modify \ttt{clust\_seq.jets()} itself. Instead it must
+tell \ttt{clust\_seq} what recombinations have occurred, via the
+following (\ttt{ClusterSequence} member) functions
+\begin{verbatim}
+  /// record the fact that there has been a recombination between
+  /// jets()[jet_i] and jets()[jet_k], with the specified dij, and
+  /// return the index (newjet_k) allocated to the new jet, whose
+  /// momentum is assumed to be the 4-vector sum of that of jet_i and
+  /// jet_j
+  void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, 
+				      int & newjet_k);
+
+  /// as for the simpler variant of plugin_record_ij_recombination,
+  /// except that the new jet is attributed the momentum and
+  /// user_index of newjet
+  void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, 
+				      const PseudoJet & newjet, 
+				      int & newjet_k);
+
+  /// record the fact that there has been a recombination between
+  /// jets()[jet_i] and the beam, with the specified diB; when looking
+  /// for inclusive jets, any iB recombination will returned to the user 
+  /// as a jet.
+  void plugin_record_iB_recombination(int jet_i, double diB);
+\end{verbatim}
+These \ttt{dij} recombination functions return the index
+\ttt{newjet\_k} of the newly formed pseudojet. The plugin may need to
+keep track of this index in order to specify subsequent
+recombinations.
+
+Certain (cone) jet algorithms do not perform pairwise clustering ---
+in these cases the plugin must invent a ficititious series of pairwise
+recombinations that leads to same final jets.
+
+\comment{Example plugin jet finders are provided in such and such a
+  location...}
+
+% Any attempt to call these functions from outside the plugin will cause
+% an error.
+
 
 %======================================================================
 \section{Example program}

@@ -157,11 +157,11 @@ public:
   /// particles, the following function should fill up the rest of the
   /// ClusterSequence, using the following member functions of
   /// ClusterSequence:
-  ///   - plugin_do_ij_recombination()
-  ///   - plugin_do_iB_recombination()
+  ///   - plugin_do_ij_recombination(...)
+  ///   - plugin_do_iB_recombination(...)
   virtual void run_clustering(ClusterSequence &) const = 0;
 
-  /// a destructor to be overloaded if need be...
+  /// a destructor to be replaced if necessary in derived classes...
   virtual ~Plugin() {};
 };
 
