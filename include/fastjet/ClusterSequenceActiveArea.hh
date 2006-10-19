@@ -80,7 +80,7 @@ public:
 
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
   /// abs(y)<raprange (for negative raprange, it defaults to
-  /// _etalim_for_area).
+  /// _safe_rap_for_area).
   void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
 				  double exclude_above=-1.0) const;
 
@@ -99,8 +99,8 @@ private:
   valarray<PseudoJet> _average_area_4vector;
   double           _non_jet_area, _non_jet_area2, _non_jet_number;
 
-  double _etamax_for_area; // max eta where we put ghosts
-  double _etalim_for_area; // max eta where we trust jet areas
+  double _maxrap_for_area; // max rap where we put ghosts
+  double _safe_rap_for_area; // max rap where we trust jet areas
 
   /// transfer the history (and jet-momenta) from clust_seq to our
   /// own internal structure while removing ghosts

@@ -20,6 +20,14 @@ New features:
 - [in progress] provided plugins for CDF JetClu, CDF Midpoint, PxCone
 
 
+Notational changes:
+-------------------
+
+- in the documentation, replaced eta -> y, to make it clear that it's
+  rapidity and not pseudorapidity that is being used throughout. Some
+  internal code continues to use variables called "eta" -- but these
+  are actually proper rapidity.
+
 ======================================================================
 Changes from v1.0 to v2.0
 =========================

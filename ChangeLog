@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-10-19  Gavin Salam <salam@lpthe.jussieu.fr>
+
+	* replaced eta -> y (or rap) in documentation (was potentially
+	  unclear before) and in ActiveAreaSpec class...
+	
 2006-10-16  Gavin Salam <salam@lpthe.jussieu.fr>
 
         Introduced plugin functionality (CCN28-76)

@@ -43,12 +43,12 @@ BasicRandom<double> ActiveAreaSpec::_random_generator;
 /// in nicely into 2pi etc...
 void ActiveAreaSpec::_initialize() {
   // add on area-measuring dummy particles
-  _deta = sqrt(_ghost_area);
-  _dphi = _deta;
+  _drap = sqrt(_ghost_area);
+  _dphi = _drap;
   _nphi = int(ceil(twopi/_dphi)); _dphi = twopi/_nphi;
-  _neta = int(ceil(_ghost_etamax/_deta)); _deta = _ghost_etamax / _neta;
-  _actual_ghost_area = _dphi * _deta;
-  _n_ghosts   = (2*_neta+1)*_nphi;
+  _nrap = int(ceil(_ghost_maxrap/_drap)); _drap = _ghost_maxrap / _nrap;
+  _actual_ghost_area = _dphi * _drap;
+  _n_ghosts   = (2*_nrap+1)*_nphi;
 
   //_random_generator.info(cerr);
 }
@@ -57,29 +57,29 @@ void ActiveAreaSpec::_initialize() {
 /// adds the ghost 4-momenta to the vector of PseudoJet's
 void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   // add momenta for ghosts
-  for (int ieta = -_neta; ieta <= _neta; ieta++) {
+  for (int irap = -_nrap; irap <= _nrap; irap++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
       // // include random offsets for all quantities
       // double phi = (iphi+0.5) * _dphi + _dphi*rand()*_grid_scatter/RAND_MAX;
-      // double eta = ieta * _deta + _deta*rand()*_grid_scatter/RAND_MAX;
+      // double rap = irap * _drap + _drap*rand()*_grid_scatter/RAND_MAX;
       // //double phi = (iphi+0.5) * _dphi* + rand()*_grid_scatter/RAND_MAX;
-      // //double eta = ieta * _deta + rand()*_grid_scatter/RAND_MAX;
+      // //double rap = irap * _drap + rand()*_grid_scatter/RAND_MAX;
       // double kt = _mean_ghost_kt*(1+rand()*_kt_scatter/RAND_MAX);
      
       // include random offsets for all quantities
       double phi = (iphi+0.5) * _dphi + _dphi*_our_rand()*_grid_scatter;
-      double eta = ieta * _deta + _deta*_our_rand()*_grid_scatter;
+      double rap = irap * _drap + _drap*_our_rand()*_grid_scatter;
       //double phi = (iphi+0.5) * _dphi* + _our_rand()*_grid_scatter;
-      //double eta = ieta * _deta + _our_rand()*_grid_scatter;
+      //double rap = irap * _drap + _our_rand()*_grid_scatter;
       double kt = _mean_ghost_kt*(1+_our_rand()*_kt_scatter);
 
 
 
-      double pminus = kt*exp(-eta);
-      double pplus  = kt*exp(+eta);
+      double pminus = kt*exp(-rap);
+      double pplus  = kt*exp(+rap);
       double px = kt*sin(phi);
       double py = kt*cos(phi);
-      //cout << kt<<" "<<eta<<" "<<phi<<"\n";
+      //cout << kt<<" "<<rap<<" "<<phi<<"\n";
       //if (phi>=twopi || phi < 0.0) cout << "Hey: "<< phi-twopi<<"\n";
       PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
       //mom.set_user_index(1);  // for ghost particles (user index now lost...)

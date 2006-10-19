@@ -95,8 +95,8 @@ follows:
     \label{eq:dij}
     d_{ij} = \min(k_{ti}^2,{k_{tj}^2}) \Delta R_{ij}^2 / R^2
   \end{equation}
-  with $\Delta R_{ij}^2 = (\eta_i-\eta_j)^2 + (\phi_i-\phi_j)^2$,
-  where $k_{ti}$, $\eta_i$ and $\phi_i$ are the transverse momentum,
+  with $\Delta R_{ij}^2 = (y_i-y_j)^2 + (\phi_i-\phi_j)^2$,
+  where $k_{ti}$, $y_i$ and $\phi_i$ are the transverse momentum,
   rapidity and azimuth of particle $i$ and $R$ is a jet-radius
   parameter usually taken of order $1$; for each parton $i$ also work
   out the beam distance $d_{iB} = k_{ti}^2$.
@@ -427,7 +427,7 @@ obtain a subjet analysis as follows:
 
 Since a jet is made up of only a finite number of particles, one needs a
 specific definition in order to make its {\sl area}  (i.e. the surface in the
-$\eta$-$\phi$ plane over which it extends) an unambiguous
+$y$-$\phi$ plane over which it extends) an unambiguous
 concept. Currently only a single kind of area definition exists,
 which we refer to as an {\sl active} area~\cite{CSAreas}, however
 since future releases are expected to implement additional definitions of
@@ -470,7 +470,7 @@ area \cite{CSAreas}.  It is determined by adding a large number of
 extremely soft ``ghost'' particles to the event, and letting them
 cluster with the user's event (as well as between themselves). The
 ghosts are distributed on a uniform grid (with small random
-fluctuations to avoid degeneracies) in $\eta$ and $\phi$. The number
+fluctuations to avoid degeneracies) in $y$ and $\phi$. The number
 of ghosts that end up in a given jet provides a measure of its area.
 Because the ghosts are extremely soft (and because the $k_t$ and
 Cambridge/Aachen jet finders are infrared safe), the presence of the
@@ -485,16 +485,16 @@ the user must first create an object that specifies how to distribute
 the ghosts. This is done via the class \ttt{fastjet::ActiveAreaSpec} 
 whose constructor is
 \begin{verbatim}
-  fastjet::ActiveAreaSpec(double ghost_etamax, 
+  fastjet::ActiveAreaSpec(double ghost_maxrap, 
                           int    repeat = 5,
                           double ghost_area = 0.01, 
                           double grid_scatter = 1e-4, 
                           double kt_scatter = 0.1,
                           double mean_ghost_kt = 1e-100);
 \end{verbatim}
-\ttt{ghost\_etamax} defines the maximum rapidity up to which ghosts
+\ttt{ghost\_maxrap} defines the maximum rapidity up to which ghosts
 are generated --- typically jet areas will be reliable for jets up to
-rapidity $|\eta| \simeq \ttt{ghost\_etamax} - R$. The \ttt{ghost\_area}
+rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. The \ttt{ghost\_area}
 is the area associated with a single ghost. The number of ghosts is
 inversely proportional to the ghost area, and so a smaller area leads
 to a longer CPU-time for clustering. However small ghost areas give
@@ -518,7 +518,7 @@ $\sigma/\sqrt{\ttt{repeat}-1}$, is provided for each jet.
 
 Other variables that the user may wish to set are: \ttt{grid\_scatter}
 and \ttt{kt\_scatter}, which  are fractional random fluctuations of the
-position of the ghosts on the $\eta$-$\phi$ grid and of their
+position of the ghosts on the $y$-$\phi$ grid and of their
 transverse momentum; and \ttt{mean\_ghost\_kt} which is the average transverse
 momentum of the ghosts.
 
@@ -576,8 +576,8 @@ will be transferred to the base class.
                           double range=2.0 ) const;
 
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
-  /// abs(y)<raprange (for negative raprange, it defaults to
-  /// _etalim_for_area = ghost_etamax - Rparam).
+  /// abs(y) < raprange (for negative raprange, it defaults to
+  /// abs(y) < ghost_maxrap - Rparam).
   void parabolic_pt_per_unit_area(double & a, double & b, 
                                   double raprange=-1.0,
                                   double exclude_above=-1.0) const;
@@ -585,7 +585,7 @@ will be transferred to the base class.
 \ttt{pt\_per\_unit\_area} can usually be used for high luminosity events with
 pileup, while \url{parabolic_pt_per_unit_area} has been found to provide a
 better description of the background (its transverse momentum per unit area
-being parabolic in $\eta$) in simulated Pb-Pb collisions at the LHC.
+being parabolic in $y$) in simulated Pb-Pb collisions at the LHC.
 
 The \ttt{mean\_pt\_strategies} are options of
 \ttt{pt\_per\_unit\_area}. They dictate
@@ -623,13 +623,13 @@ background of each event is determined. Common choices are:
 % development. Might disappear in future versions.
 \end{itemize}
 The jets that are considered with the above options are those whose
-area is considered reliable, i.e.\ those with $|\eta| <
-\mbox{\ttt{ghost\_etamax}} - R$.
+area is considered reliable, i.e.\ those with $|y| <
+\mbox{\ttt{ghost\_maxrap}} - R$.
 
 The \ttt{parabolic\_pt\_per\_unit\_area} member function has no
 strategy options, and simply returns the coefficients $a$ and $b$ of
 the least square fit of all the $\rho_i <$ \ttt{exclude\_above} to the
-parabolic function $a + b\eta^2$. If \ttt{exclude\_above} $< 0$
+parabolic function $a + by^2$. If \ttt{exclude\_above} $< 0$
 (default behaviour) no upper limit is used.
 
 %======================================================================

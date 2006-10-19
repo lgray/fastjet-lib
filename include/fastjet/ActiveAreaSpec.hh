@@ -47,19 +47,19 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class ActiveAreaSpec {
 public:
   /// default constructor
-  ActiveAreaSpec(): _ghost_etamax(6.0), _repeat(5), _ghost_area(0.01), 
+  ActiveAreaSpec(): _ghost_maxrap(6.0), _repeat(5), _ghost_area(0.01), 
                     _grid_scatter(1e-4), _kt_scatter(0.1), 
                     _mean_ghost_kt(1e-100),
                     _actual_ghost_area(-1.0) {_initialize();};
   
   /// explicit constructor
-  explicit ActiveAreaSpec(double ghost_etamax, 
+  explicit ActiveAreaSpec(double ghost_maxrap, 
                           int    repeat = 5,
                           double ghost_area=0.01, 
                           double grid_scatter = 1e-4, 
                           double kt_scatter = 0.1,
                           double mean_ghost_kt = 1e-100): 
-    _ghost_etamax(ghost_etamax), 
+    _ghost_maxrap(ghost_maxrap), 
     _repeat(repeat), 
     _ghost_area(ghost_area), 
     _grid_scatter(grid_scatter),  
@@ -72,7 +72,8 @@ public:
   void _initialize();
 
   // for accessing values set by the user
-  inline double ghost_etamax() const {return _ghost_etamax;};
+  inline double ghost_etamax() const {return _ghost_maxrap;};
+  inline double ghost_maxrap() const {return _ghost_maxrap;};
   inline double ghost_area   () const {return _ghost_area   ;};
   inline double grid_scatter() const {return _grid_scatter;};
   inline double kt_scatter  () const {return _kt_scatter  ;};
@@ -85,7 +86,7 @@ public:
 
   // when explicitly modifying values, sometimes call the initializer
   inline void set_ghost_area   (double val) {_ghost_area    = val; _initialize();};
-  inline void set_ghost_etamax(double val) {_ghost_etamax = val; _initialize();};
+  inline void set_ghost_maxrap(double val) {_ghost_maxrap = val; _initialize();};
   inline void set_grid_scatter(double val) {_grid_scatter   = val; };
   inline void set_kt_scatter  (double val) {_kt_scatter     = val; };
   inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; };
@@ -97,7 +98,7 @@ public:
 private:
   
   // quantities that determine nature and distribution of ghosts
-  double _ghost_etamax;
+  double _ghost_maxrap;
   int    _repeat      ;
   double _ghost_area   ;  
   double _grid_scatter;
@@ -105,8 +106,8 @@ private:
   double _mean_ghost_kt;
 
   // derived quantities
-  double _actual_ghost_area, _dphi, _deta;
-  int    _n_ghosts, _nphi, _neta;
+  double _actual_ghost_area, _dphi, _drap;
+  int    _n_ghosts, _nphi, _nrap;
 
   //inline double _our_rand() const {return rand()*(1.0/RAND_MAX);};
   inline double _our_rand() const {return _random_generator();};

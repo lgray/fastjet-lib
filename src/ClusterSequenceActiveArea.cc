@@ -58,8 +58,8 @@ void ClusterSequenceActiveArea::_initialise_and_run_AA (
   _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
      
   // for future reference...
-  _etamax_for_area = area_spec.ghost_etamax();
-  _etalim_for_area = _etamax_for_area - jet_def.R();
+  _maxrap_for_area = area_spec.ghost_maxrap();
+  _safe_rap_for_area = _maxrap_for_area - jet_def.R();
 
   // Make sure we'll have at least one repetition -- then we can
   // deduce the unghosted clustering sequence from one of the ghosted
@@ -142,7 +142,7 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
   vector<double> pt_over_areas;
 
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < _etalim_for_area) {
+    if (abs(incl_jets[i].rap()) < _safe_rap_for_area) {
       double this_area = area(incl_jets[i]);
       pt_over_areas.push_back(incl_jets[i].perp()/this_area);
     }
@@ -178,7 +178,7 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
   double ratio_sum = 0.0; 
   double ratio_n = _non_jet_number;
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < _etalim_for_area) {
+    if (abs(incl_jets[i].rap()) < _safe_rap_for_area) {
       double this_area = area(incl_jets[i]);
       pt_sum   += incl_jets[i].perp();
       area_sum += this_area;
@@ -240,7 +240,7 @@ void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
        double & a, double & b, double raprange, double exclude_above) const {
   
   double this_raprange;
-  if (raprange <= 0) {this_raprange = _etalim_for_area;}
+  if (raprange <= 0) {this_raprange = _safe_rap_for_area;}
   else {this_raprange = raprange;}
 
   int n=0;
@@ -401,7 +401,7 @@ void ClusterSequenceActiveArea::_transfer_areas(
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
 
       if (ghosted_seq.is_pure_ghost(parent1)) {
-	if (abs(jet.rap()) < _etalim_for_area) {
+	if (abs(jet.rap()) < _safe_rap_for_area) {
 	  _non_jet_area  += area;
 	  _non_jet_area2 += area*area;
 	  _non_jet_number += 1;

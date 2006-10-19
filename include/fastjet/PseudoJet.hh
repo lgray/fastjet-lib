@@ -121,7 +121,7 @@ class PseudoJet {
   /// returns kt distance (R=1) between this jet and another
   double kt_distance(const PseudoJet & other) const;
 
-  /// returns squared cylinder (eta-phi) distance between this jet and another
+  /// returns squared cylinder (rap-phi) distance between this jet and another
   double plain_distance(const PseudoJet & other) const;
 
   //// this seemed to compile except if it was used
