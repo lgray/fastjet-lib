@@ -420,6 +420,40 @@ vector<PseudoJet> ClusterSequence::constituents (const PseudoJet & jet) const {
 
 
 //----------------------------------------------------------------------
+/// returns a vector of size n_particles() which indicates, for 
+/// each of the initial particles (in the order in which they were
+/// supplied), which of the supplied jets it belongs to; if it does
+/// not belong to any of the supplied jets, the index is set to -1;
+vector<int> ClusterSequence::particle_jet_indices(
+                        const vector<PseudoJet> & jets) const {
+
+  vector<int> indices(n_particles());
+
+  // first label all particles as not belonging to any jets
+  for (unsigned ipart = 0; ipart < n_particles(); ipart++) 
+    indices[ipart] = -1;
+
+  // then for each of the jets relabel its consituents as belonging to
+  // that jet
+  for (unsigned ijet = 0; ijet < jets.size(); ijet++) {
+
+    vector<PseudoJet> jet_constituents(constituents(jets[ijet]));
+
+    for (unsigned ip = 0; ip < jet_constituents.size(); ip++) {
+      // a safe (if slightly redundant) way of getting the particle
+      // index (for initial particles it is actually safe to assume
+      // ipart=iclust).
+      unsigned iclust = jet_constituents[ip].cluster_hist_index();
+      unsigned ipart = history()[iclust].jetp_index;
+      indices[ipart] = ijet;
+    }
+  }
+
+  return indices;
+}
+
+
+//----------------------------------------------------------------------
 // recursive routine that adds on constituents of jet to the subjet_vector
 void ClusterSequence::add_constituents (
            const PseudoJet & jet, vector<PseudoJet> & subjet_vector) const {

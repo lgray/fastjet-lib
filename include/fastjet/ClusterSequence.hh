@@ -232,6 +232,11 @@ public:
   /// beforehand).
   unsigned int n_particles() const;
 
+  /// returns a vector of size n_particles() which indicates, for 
+  /// each of the initial particles (in the order in which they were
+  /// supplied), which of the supplied jets it belongs to; if it does
+  /// not belong to any of the supplied jets, the index is set to -1;
+  std::vector<int> particle_jet_indices(const std::vector<PseudoJet> &) const;
 
   /// routine that returns a an order in which to read the history
   /// such that clusterings that lead to identical jet compositions

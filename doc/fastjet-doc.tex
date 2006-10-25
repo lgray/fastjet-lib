@@ -36,7 +36,7 @@
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 
-\title{FastJet 2.1 user manual}
+\title{FastJet 2.1 user manual (in progress)}
 \author{Matteo Cacciari and Gavin P. Salam\\
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
   Denis Diderot -- Paris 7, CNRS UMR 7589
@@ -189,7 +189,7 @@ for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
   \ttt{HepLorentzVector} (so as to allow compilation even without
   \clhep).}
 %
-It has the following member functions for accessing the components
+It includes the following member functions for accessing the components
 \begin{verbatim}
   double E()        const ; // returns the energy component
   double e()        const ; // returns the energy component
@@ -204,6 +204,8 @@ It has the following member functions for accessing the components
   double kt2()      const ; // returns the squared transverse momentum
   double perp2()    const ; // returns the squared transverse momentum
   double perp()     const ; // returns the transverse momentum
+  double m2()       const ; // returns squared invariant mass
+  double m()        const ; // returns invariant mass (-sqrt(-m2()) if m2() < 0)
   double operator[] (int i) const; // returns component i
 
   /// return a valarray containing the four-momentum (components 0--2

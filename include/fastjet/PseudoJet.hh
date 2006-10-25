@@ -112,6 +112,15 @@ class PseudoJet {
   /// set the cluster_hist_index, intended to be used by clustering routines.
   inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;};
 
+  /// alternative name for cluster_hist_index() [perhaps more meaningful]
+  inline const int cluster_sequence_history_index() const {
+    return cluster_hist_index();};
+  /// alternative name for set_cluster_hist_index(...) [perhaps more
+  /// meaningful]
+  inline void set_cluster_sequence_history_index(const int index) {
+    set_cluster_hist_index(index);};
+
+
   /// return the user_index, intended to allow the user to "add" information
   inline const int & user_index() const {return _user_index;};
   /// set the user_index, intended to allow the user to "add" information

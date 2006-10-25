@@ -5,6 +5,15 @@ ChangeLog for fastjet-release directory
 
         * added m() method to PseudoJet (like CLHEP, for negative m2() it
 	  returns -sqrt(-m2())).
+
+	* to PseudoJet, added cluster_sequence_history_index() and
+	  set_cluster_sequence_history_index(...) as alternative names for
+	  cluster_hist_index() and set_cluster_hist_index(...), in the
+	  hope that these new names might be more meaningful.
+
+	* added a function particle_jet_indices(...) to ClusterSequence so
+	  as to allow the user to easily identify which particles fall into
+	  which jet (or no jet at all).	 [NOT YET DOCUMENTED]
 	
 2006-10-19  Gavin Salam <salam@lpthe.jussieu.fr>
 
