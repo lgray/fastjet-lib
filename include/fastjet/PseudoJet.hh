@@ -94,6 +94,9 @@ class PseudoJet {
   inline double  perp() const {return sqrt(_kt2);};    // like CLHEP
   /// returns the squared invariant mass // like CLHEP
   inline double  m2() const {return (_E+_pz)*(_E-_pz)-_kt2;};    
+  /// returns the invariant mass 
+  /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
+  inline double  m() const;    
   /// returns component i, where X==0, Y==1, Z==2, E==3
   double operator () (int i) const ; 
   /// returns component i, where X==0, Y==1, Z==2, E==3
@@ -221,6 +224,12 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 ////
 ////};
 ////
+
+// taken literally from CLHEP
+inline double PseudoJet::m() const {
+  double mm = m2();
+  return mm < 0.0 ? -std::sqrt(-mm) : std::sqrt(mm);
+}
 
 
 FASTJET_END_NAMESPACE

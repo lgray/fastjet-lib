@@ -23,7 +23,7 @@ justbelow(f,x,xlim) = x <= xlim ? f : -1
 set label 1 "Hydjet v 1.1"                          at 12,8e-6
 set label 2 "[Pythia P_{t,min} = 10 GeV, unquenched]" at 12,1e-6
 
-set label 3 "k_t alg, R=0.4" at graph 0.03,0.93
+set label 3 "k_t alg, R=0.4" at graph 0.03,0.93 front
 set label 4 "|y| < 5" at graph 0.03,0.85
 set label 5 "FastJet" at graph 0.03,0.77
 
