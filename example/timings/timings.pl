@@ -23,8 +23,9 @@ $baserep = 700;
 #@strategy = (-2,-1,0,2,10);
 #@strategy = (-3,-1,2);
 #@strategy = (3,4);
-#@strategy = (-4,-3,-1,2,12);
-@strategy = (1);
+@strategy = (-4,-3,-1,2,12);
+#@strategy = (1);
+#@strategy = (12);
 #@strategy = (12);
 #@strategy = (-3,-1,0,2,10,11,102);
 #@strategy = (-3);
@@ -33,7 +34,8 @@ $baserep = 700;
 #@strategy = (102);
 #@strategy = (11,102);
 
-$radius=0.7;
+#$radius=0.7;
+$radius=1.0;
 
 # number of runs to average over when getting
 # timings. Remember that first run will be discarded
