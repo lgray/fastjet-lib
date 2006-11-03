@@ -6,7 +6,8 @@
 $pythia_exec = "../../pythia/gen-events";
 $jet_exec    = "./subtraction-tests-mass";
 
-$hydjet_exec = "../../hydjet/test2_hydjet";
+#$hydjet_exec = "../../hydjet/test2_hydjet";
+$hydjet_exec = "../../hydjet/run_hydjet";
 $incljet_exec = "./subtraction-tests-inclpt";
 $ttbarjet_exec = "./subtraction-tests-ttbar";
 
