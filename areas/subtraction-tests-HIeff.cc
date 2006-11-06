@@ -302,47 +302,51 @@ int main (int argc, char ** argv) {
       pt_fake_entries.add_entry(full_corrected_jets[i].perp());
     }
 
+
+    // sending output to a file...
+    if ( iev+1==nev || (iev+1) % writefreq == 0) {
+    ofstream output(output_file.c_str());
+    if (rerun_string != "") {
+      output << "# Rerun with:\n";
+      output << "# "<<rerun_string<<endl;
+    }
+    output << "# " << cmdline.command_line() << endl;
+    output << "# " << jet_def.description() << endl;
+    output << "# max rap-phi distance (for matching jets) = " << max_rapphi_dist << endl;
+    output << "# nev = " <<iev+1 <<endl;
+    for(unsigned int ipt = 0; ipt < pt_true_entries.outflow_size(); ipt++) {
+      double binhi = ipt >= pt_true_entries.size() ? 100000.0 : 
+        pt_true_entries.binhi(ipt);
+      output << "# index = "<< ipt*2 << " ; "
+             << "pt range = " << pt_true_entries.binlo(ipt) 
+             << " - " << binhi << " ; "
+             << "  true = " << pt_true_entries[ipt]
+             << "  fake = " << pt_fake_entries[ipt]
+             << "  lost = " << pt_lost_entries[ipt] << endl
+             << "# ptoffset distribution" << endl;
+      for (unsigned ibin = 0; ibin < pt_offsets[ipt].size(); ibin++) {
+        output << pt_offsets[ipt].binlo(ibin) << " " 
+               << pt_offsets[ipt].binmid(ibin) << " "
+               << pt_offsets[ipt].binhi(ibin) << " "
+               << pt_offsets[ipt][ibin]/pt_true_entries[ipt] << endl;
+      }
+      output << endl << endl;
+      output << "# index = "<< ipt*2+1 
+             << " rap-phi offset distribution " << endl;
+      for (unsigned ibin = 0; ibin < rapphi_offsets[ipt].size(); ibin++) {
+        output << rapphi_offsets[ipt].binlo(ibin) << " " 
+               << rapphi_offsets[ipt].binmid(ibin) << " "
+               << rapphi_offsets[ipt].binhi(ibin) << " "
+               << rapphi_offsets[ipt][ibin]/pt_true_entries[ipt] << endl;
+      }
+      output << endl << endl;
+      
+    }
+    }
+
   } // iev
   
   
-  // sending output to a file...
-  ofstream output(output_file.c_str());
-  if (rerun_string != "") {
-    output << "# Rerun with:\n";
-    output << "# "<<rerun_string<<endl;
-  }
-  output << "# " << cmdline.command_line() << endl;
-  output << "# " << jet_def.description() << endl;
-  output << "# max rap-phi distance (for matching jets) = " << max_rapphi_dist << endl;
-  output << "# nev = " <<nev <<endl;
-  for(unsigned int ipt = 0; ipt < pt_true_entries.outflow_size(); ipt++) {
-    double binhi = ipt >= pt_true_entries.size() ? 100000.0 : 
-      pt_true_entries.binhi(ipt);
-    output << "# index = "<< ipt*2 << " ; "
-           << "pt range = " << pt_true_entries.binlo(ipt) 
-           << " - " << binhi << " ; "
-           << "  true = " << pt_true_entries[ipt]
-           << "  fake = " << pt_fake_entries[ipt]
-           << "  lost = " << pt_lost_entries[ipt] << endl
-           << "# ptoffset distribution" << endl;
-    for (unsigned ibin = 0; ibin < pt_offsets[ipt].size(); ibin++) {
-      output << pt_offsets[ipt].binlo(ibin) << " " 
-             << pt_offsets[ipt].binmid(ibin) << " "
-             << pt_offsets[ipt].binhi(ibin) << " "
-             << pt_offsets[ipt][ibin] << endl;
-    }
-    output << endl << endl;
-    output << "# index = "<< ipt*2+1 
-           << " rap-phi offset distribution " << endl;
-    for (unsigned ibin = 0; ibin < rapphi_offsets[ipt].size(); ibin++) {
-      output << rapphi_offsets[ipt].binlo(ibin) << " " 
-             << rapphi_offsets[ipt].binmid(ibin) << " "
-             << rapphi_offsets[ipt].binhi(ibin) << " "
-             << rapphi_offsets[ipt][ibin] << endl;
-    }
-    output << endl << endl;
-
-  }
 
 }
 
