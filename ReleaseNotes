@@ -19,6 +19,7 @@ New features:
 
 - [in progress] provided plugins for CDF JetClu, CDF Midpoint, PxCone
 
+- introduced PseudoJet::squared_distance (does same as "plain_distance")
 
 Notational changes:
 -------------------

@@ -1,6 +1,22 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-06  Gavin Salam <salam@lpthe.jussieu.fr>
+
+        * added squared_distance(...) to PseudoJet (does the same as
+	  plain_distance, but the name is more logical).
+
+        * added areas/subtraction-tests-HIeff.cc for carrying out
+	  efficiency and purity studies.
+
+	* areas/SimpleHist.hh got modified to provide more extensive
+	  histogramming facilities (notably an overflow bin)
+
+	* areas/run-mass-test.pl was modified to as to enable combined
+	  hydjet+subtraction-tests-HIeff running. (Had previously also
+	  been modified to have run_hydjet as the executable rather than
+	  test2_hydjet).	
+	
 2006-10-25  Gavin Salam <salam@lpthe.jussieu.fr>
 
         * added m() method to PseudoJet (like CLHEP, for negative m2() it

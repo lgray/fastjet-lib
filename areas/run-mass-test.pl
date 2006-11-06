@@ -10,6 +10,7 @@ $jet_exec    = "./subtraction-tests-mass";
 $hydjet_exec = "../../hydjet/run_hydjet";
 $incljet_exec = "./subtraction-tests-inclpt";
 $ttbarjet_exec = "./subtraction-tests-ttbar";
+$HIeff_exec = "./subtraction-tests-HIeff";
 
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
@@ -22,6 +23,7 @@ $jet_opts    = "";
 $nev         = 0;
 $outfile     = "";
 $run_hydjet  = 0;
+$run_HIeff   = 0;
 
 # extract the options that will go to pythia / jet-prof
 while ($#ARGV >= 0) {
@@ -46,6 +48,7 @@ while ($#ARGV >= 0) {
   elsif ($opt eq '-iseq')   {$pythia_opts .= " $opt ".(shift @ARGV);}
   # hydjet options...
   elsif ($opt eq '-nhsel')  {$pythia_opts .= " $opt ".(shift @ARGV); $run_hydjet=1;}
+  elsif ($opt eq '-HIeff')  {$run_hydjet=1; $run_HIeff = 1;}
   elsif ($opt eq '-ptminhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-ptmaxhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
   # remaining opts go to jet prog
@@ -61,7 +64,11 @@ system("mknod $pipename p");
 # replace executables in this case to look at incl-pt spectrum with hydjet...
 if ($run_hydjet) {
   $pythia_exec = $hydjet_exec;
-  $jet_exec    = $incljet_exec;
+  if ($run_HIeff) {
+    $jet_exec = $HIeff_exec;
+  } else {
+    $jet_exec    = $incljet_exec;
+  }
 }
 
 # run pythia and the analysis program separately

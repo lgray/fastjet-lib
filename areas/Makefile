@@ -56,6 +56,9 @@ subtraction-tests-ttbar: subtraction-tests-ttbar.o $(OBJS) ../lib/libfastjet.a
 subtraction-tests-inclpt: subtraction-tests-inclpt.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-inclpt subtraction-tests-inclpt.o $(OBJS)  $(LDFLAGS)
 
+subtraction-tests-HIeff: subtraction-tests-HIeff.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o subtraction-tests-HIeff subtraction-tests-HIeff.o $(OBJS)  $(LDFLAGS)
+
 
 areas-empty-event: areas-empty-event.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-empty-event areas-empty-event.o $(OBJS)  $(LDFLAGS)

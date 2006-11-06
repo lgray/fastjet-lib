@@ -135,6 +135,10 @@ class PseudoJet {
 
   /// returns squared cylinder (rap-phi) distance between this jet and another
   double plain_distance(const PseudoJet & other) const;
+  /// returns squared cylinder (rap-phi) distance between this jet and
+  /// another
+  inline double squared_distance(const PseudoJet & other) const {
+    return plain_distance(other);};
 
   //// this seemed to compile except if it was used
   //friend inline double 
