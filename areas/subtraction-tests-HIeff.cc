@@ -267,7 +267,7 @@ int main (int argc, char ** argv) {
     full_corrected_jets = sorted_by_pt(full_corrected_jets);
     
     unsigned  nmatch;
-    reorder_jets(hard_jets, full_corrected_jets, pt_min_bin, nmatch);
+    reorder_jets(hard_jets, full_corrected_jets, max_rapphi_dist, nmatch);
 
     //// --- print out some info
     //cout << "Matched "<<nmatch<<" jets"<< endl;
