@@ -112,7 +112,7 @@ int main (int argc, char ** argv) {
   fj::ActiveAreaSpec area_spec;
   area_spec.set_repeat      (cmdline.int_val("-repeat",1)            );
   area_spec.set_ghost_area   (cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01))   );
-  area_spec.set_ghost_etamax(cmdline.double_val("-ghost_etamax",6.0) );
+  area_spec.set_ghost_maxrap(cmdline.double_val("-ghost_etamax",6.0) );
   area_spec.set_grid_scatter(cmdline.double_val("-grid_scatter",1e-4));
   area_spec.set_kt_scatter  (cmdline.double_val("-kt_scatter",0.1)   );
 
@@ -212,14 +212,18 @@ int main (int argc, char ** argv) {
     jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
   }
 
-  //  double median_pt_per_area = clust_seq.pt_per_unit_area();
-  double median_pt_per_area = 0.0;
+  double median_pt_per_area = clust_seq.pt_per_unit_area();
+  double sub_a, sub_b;
+  clust_seq.parabolic_pt_per_unit_area(sub_a, sub_b);
+
+  // double median_pt_per_area = 0.0;
   printf(" ijet   rap      phi        Pt         area  +-   err   stddev  pt_corr\n");
   for (size_t j = 0; j < jets.size(); j++) {
     double area = clust_seq.area(jets[j]);
     
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,jets[j].rap(),
-	   jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
+             jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
+	   //jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*(sub_a + sub_b*pow2(jets[j].rap()))); // parabolic subtraction.
   }
 
 //  //cout << "median pt_over_area = " << clust_seq.pt_per_unit_area()<<endl;

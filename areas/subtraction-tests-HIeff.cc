@@ -130,7 +130,8 @@ void print_jet(const fj::PseudoJet & jet) {
 // double Zmass_from_jets(const vector<fj::PseudoJet> & jets);
 
 void read_event(istream &, double, bool, bool, double,
-		vector<vector<fj::PseudoJet> >&, vector<fj::PseudoJet> & );
+		vector<vector<fj::PseudoJet> >&, vector<fj::PseudoJet> &,
+                string &);
 
 // handy shorthands
 typedef vector<fj::PseudoJet> jet_vector;
@@ -172,6 +173,8 @@ int main (int argc, char ** argv) {
   double pt_max_bin      = cmdline.double_val("-ptmaxbin", 100.0);
   // options related to matching
   double max_rapphi_dist = cmdline.double_val("-maxrapphi",ktR);
+  // we will study only those jets that are below maxrap
+  double maxrap = cmdline.double_val("-maxrap",2.0);
   //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
@@ -219,8 +222,10 @@ int main (int argc, char ** argv) {
 
   for(int ipt = 0; ipt <= nptbins; ipt++) {
     pt_offsets[ipt].declare(-35.0,35.0,35);
-    rapphi_offsets[ipt].declare(0.0,1.0,25);
+    rapphi_offsets[ipt].declare(0.0,min(1.0,max_rapphi_dist),25);
   }
+
+  string input_description;
 
   for (int iev = 0; iev < nev; iev++) {
     if (iev < 100 || iev%100 == 0) cerr << "Doing event "<< iev<<endl;
@@ -229,8 +234,10 @@ int main (int argc, char ** argv) {
     
     // read in the event 
     read_event(input, etamax, hydjet, massless, discard_below_pt, 
-               hard_events, full_event); 
+               hard_events, full_event, input_description); 
       
+    cout << "Event size = " << full_event.size() << endl;
+
     //-- run the jet finder on the full event ----------------------
     fj::ClusterSequenceActiveArea full_seq(full_event, jet_def, 
                                            active_area_spec);
@@ -285,20 +292,22 @@ int main (int argc, char ** argv) {
 
     //------ now do some proper analysis ----------
     for (unsigned i = 0; i < hard_jets.size(); i++) {
-      if (hard_jets[i].perp() < pt_min_bin) {continue;}
+      if (hard_jets[i].perp() < pt_min_bin 
+          || abs(hard_jets[i].rap()) > maxrap) {continue;}
       unsigned int ipt = pt_true_entries.bin(hard_jets[i].perp());
       pt_true_entries[ipt]++;
       if (i < nmatch) {
         pt_offsets[ipt].add_entry(full_corrected_jets[i].perp() 
                                                    - hard_jets[i].perp());
-        rapphi_offsets[ipt].add_entry(hard_jets[i].squared_distance(
-                                                     full_corrected_jets[i]));
+        rapphi_offsets[ipt].add_entry(sqrt(hard_jets[i].squared_distance(
+                                                   full_corrected_jets[i])));
       } else {
         pt_lost_entries[ipt]++;
       }
     }
     for (unsigned i = nmatch; i < full_corrected_jets.size(); i++) {
-      if (full_corrected_jets[i].perp() < pt_min_bin) {continue;}
+      if (full_corrected_jets[i].perp() < pt_min_bin  
+          || abs(full_corrected_jets[i].rap()) > maxrap) {continue;}
       pt_fake_entries.add_entry(full_corrected_jets[i].perp());
     }
 
@@ -311,8 +320,12 @@ int main (int argc, char ** argv) {
       output << "# "<<rerun_string<<endl;
     }
     output << "# " << cmdline.command_line() << endl;
+    output << "# input was taken from ---------------------" << endl;
+    output << input_description;
+    output << "# ------------------------------------------" << endl;
     output << "# " << jet_def.description() << endl;
     output << "# max rap-phi distance (for matching jets) = " << max_rapphi_dist << endl;
+    output << "# maxrap (for studying jets) = " << maxrap << endl;
     output << "# nev = " <<iev+1 <<endl;
     for(unsigned int ipt = 0; ipt < pt_true_entries.outflow_size(); ipt++) {
       double binhi = ipt >= pt_true_entries.size() ? 100000.0 : 
@@ -401,7 +414,7 @@ void reorder_jets(jet_vector & ref_jets,
     accept = dist2 < max_dist2;
     // then make sure no already-paired other jet is closer
     for (unsigned iop = 0; iop < ir ; iop++) {
-      accept &= ref_jets[ir].squared_distance(other_jets[iop]) >= dist2;
+      accept = accept && ref_jets[ir].squared_distance(other_jets[iop]) >= dist2;
     }
     // if the pairing is not accepted
     if (! accept) {
@@ -428,10 +441,13 @@ void reorder_jets(jet_vector & ref_jets,
 void read_event(istream & input, double etamax, bool hydjet, bool massless,
 		double discard_below_pt,
 		vector<vector<fj::PseudoJet> > & hard_events, 
-		vector<fj::PseudoJet> & full_event) {
+		vector<fj::PseudoJet> & full_event, 
+                string & input_description) {
   string line;
   int  nsub  = 0;
   vector<fj::PseudoJet> sub_event;
+
+  static bool first_go = true;
 
   while (getline(input, line)) {
       //cout << line<<endl;
@@ -443,7 +459,10 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
       sub_event.resize(0);
       nsub += 1;
     }
-    if (line.substr(0,1) == "#") {continue;}
+    if (line.substr(0,1) == "#") {
+      if (first_go) input_description += line + "\n";
+      continue;}
+    first_go = false;
     valarray<double> fourvec(4);
     if (hydjet) {
       // special reading from hydjet.txt event record (though actually

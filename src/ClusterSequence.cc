@@ -145,7 +145,7 @@ void ClusterSequence::_print_banner() {
   _first_time = false;
   
   cout << "#---------------------------------------------------------------------\n";
-  cout << "#                        FastJet release 2.0    			 \n";
+  cout << "#                     FastJet release 2.1 beta    			 \n";
   cout << "#            Written by Matteo Cacciari and Gavin Salam		 \n"; 
   cout << "#            http://www.lpthe.jussieu.fr/~salam/fastjet		 \n"; 
   cout << "#								      	 \n";

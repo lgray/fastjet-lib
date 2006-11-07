@@ -86,6 +86,7 @@ public:
 
   // when explicitly modifying values, sometimes call the initializer
   inline void set_ghost_area   (double val) {_ghost_area    = val; _initialize();};
+  inline void set_ghost_etamax(double val) {_ghost_maxrap = val; _initialize();};
   inline void set_ghost_maxrap(double val) {_ghost_maxrap = val; _initialize();};
   inline void set_grid_scatter(double val) {_grid_scatter   = val; };
   inline void set_kt_scatter  (double val) {_kt_scatter     = val; };
