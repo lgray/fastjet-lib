@@ -219,11 +219,20 @@ int main (int argc, char ** argv) {
   // spreads in pt and rap-phi distance -- note the nptbins+1 limit 
   // to allow for "outflow" bins
   vector<SimpleHist> pt_offsets(nptbins+1), rapphi_offsets(nptbins+1);
+  vector<SimpleHist> matched_masses(nptbins+1), fake_masses(nptbins+1);
+  vector<SimpleHist> matched_areas(nptbins+1), fake_areas(nptbins+1);
 
   for(int ipt = 0; ipt <= nptbins; ipt++) {
-    pt_offsets[ipt].declare(-35.0,35.0,35);
+    pt_offsets    [ipt].declare(-35.0,35.0,35);
     rapphi_offsets[ipt].declare(0.0,min(1.0,max_rapphi_dist),25);
+    matched_masses[ipt].declare(0.0,10.0,40);
+    fake_masses   [ipt].declare(0.0,10.0,40);
+    matched_areas [ipt].declare(0.0,2.0,40);
+    fake_areas    [ipt].declare(0.0,2.0,40);
   }
+  double reference_area = fj::pi * pow2(ktR);
+  cout <<  "reference_area = " << reference_area << endl;
+
 
   string input_description;
 
@@ -255,6 +264,9 @@ int main (int argc, char ** argv) {
         if (jet->perp() > rho_at_rap*area.perp()) {
           fj::PseudoJet corrected_jet = *jet - rho_at_rap*area;
           if (corrected_jet.perp() > 10.0) {
+            // make sure the corrected jet retains its "identity"
+            corrected_jet.set_cluster_hist_index(
+                                jet->cluster_hist_index());
             full_corrected_jets.push_back(corrected_jet);}
         }
       }
@@ -301,14 +313,26 @@ int main (int argc, char ** argv) {
                                                    - hard_jets[i].perp());
         rapphi_offsets[ipt].add_entry(sqrt(hard_jets[i].squared_distance(
                                                    full_corrected_jets[i])));
+        // reference mass is that for a pair of partons each with with pt/2
+        // separated by R
+        double ref_mass = full_corrected_jets[i].perp()*ktR;
+        matched_masses[ipt].add_entry(full_corrected_jets[i].m()/ref_mass);
+        matched_areas[ipt].add_entry(full_seq.area(full_corrected_jets[i])
+                                                            /reference_area);
       } else {
         pt_lost_entries[ipt]++;
       }
     }
+    // now run over the unmatched (fake) corrected jets
     for (unsigned i = nmatch; i < full_corrected_jets.size(); i++) {
       if (full_corrected_jets[i].perp() < pt_min_bin  
           || abs(full_corrected_jets[i].rap()) > maxrap) {continue;}
+      unsigned int ipt = pt_true_entries.bin(full_corrected_jets[i].perp());
       pt_fake_entries.add_entry(full_corrected_jets[i].perp());
+      double ref_mass = full_corrected_jets[i].perp()*ktR;
+      fake_masses[ipt].add_entry(full_corrected_jets[i].m()/ref_mass);
+      fake_areas[ipt].add_entry(full_seq.area(full_corrected_jets[i])
+                                                            /reference_area);
     }
 
 
@@ -330,27 +354,47 @@ int main (int argc, char ** argv) {
     for(unsigned int ipt = 0; ipt < pt_true_entries.outflow_size(); ipt++) {
       double binhi = ipt >= pt_true_entries.size() ? 100000.0 : 
         pt_true_entries.binhi(ipt);
-      output << "# index = "<< ipt*2 << " ; "
+      output << "# index = "<< ipt*4 << " ; "
              << "pt range = " << pt_true_entries.binlo(ipt) 
              << " - " << binhi << " ; "
              << "  true = " << pt_true_entries[ipt]
              << "  fake = " << pt_fake_entries[ipt]
              << "  lost = " << pt_lost_entries[ipt] << endl
-             << "# ptoffset distribution" << endl;
+             << "#  ptoffset distribution" << endl;
       for (unsigned ibin = 0; ibin < pt_offsets[ipt].size(); ibin++) {
         output << pt_offsets[ipt].binlo(ibin) << " " 
                << pt_offsets[ipt].binmid(ibin) << " "
                << pt_offsets[ipt].binhi(ibin) << " "
-               << pt_offsets[ipt][ibin]/pt_true_entries[ipt] << endl;
+               << pt_offsets[ipt][ibin]/(pt_true_entries[ipt]-pt_lost_entries[ipt]) << endl;
       }
       output << endl << endl;
-      output << "# index = "<< ipt*2+1 
-             << " rap-phi offset distribution " << endl;
+      output << "# index = "<< ipt*4+1 
+             << "  rap-phi offset distribution " << endl;
       for (unsigned ibin = 0; ibin < rapphi_offsets[ipt].size(); ibin++) {
         output << rapphi_offsets[ipt].binlo(ibin) << " " 
                << rapphi_offsets[ipt].binmid(ibin) << " "
                << rapphi_offsets[ipt].binhi(ibin) << " "
-               << rapphi_offsets[ipt][ibin]/pt_true_entries[ipt] << endl;
+               << rapphi_offsets[ipt][ibin]/(pt_true_entries[ipt]-pt_lost_entries[ipt]) << endl;
+      }
+      output << endl << endl;
+      output << "# index = "<< ipt*4+2 
+             << "  mass/(pt*R) distribution (matched, fake) " << endl;
+      for (unsigned ibin = 0; ibin < matched_masses[ipt].size(); ibin++) {
+        output << matched_masses[ipt].binlo(ibin) << " " 
+               << matched_masses[ipt].binmid(ibin) << " "
+               << matched_masses[ipt].binhi(ibin) << " "
+               << matched_masses[ipt][ibin]/(pt_true_entries[ipt]-pt_lost_entries[ipt]) << " "
+               << fake_masses[ipt][ibin]/(pt_fake_entries[ipt]) << endl;
+      }
+      output << endl << endl;
+      output << "# index = "<< ipt*4+3
+             << "  area/(pi R^2)  distribution (matched, fake) " << endl;
+      for (unsigned ibin = 0; ibin < matched_masses[ipt].size(); ibin++) {
+        output << matched_areas[ipt].binlo(ibin) << " " 
+               << matched_areas[ipt].binmid(ibin) << " "
+               << matched_areas[ipt].binhi(ibin) << " "
+               << matched_areas[ipt][ibin]/(pt_true_entries[ipt]-pt_lost_entries[ipt]) << " "
+               << fake_areas[ipt][ibin]/(pt_fake_entries[ipt]) << endl;
       }
       output << endl << endl;
       
