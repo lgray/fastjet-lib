@@ -270,7 +270,7 @@ potentially interesting values:
   \texttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N \lesssim 50$)\\
   \texttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
   N \lesssim 400$)\\ 
-  \texttt{N2TiledMinHeap} & a tiled $N^2$ algorithm with a heap for
+  \texttt{N2MinHeapTiled} & a tiled $N^2$ algorithm with a heap for
   tracking the minimum of \\& $d_{ij}$ (fastest for $400 \lesssim
   N \lesssim 15000$)\\ 
   \texttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
@@ -292,7 +292,7 @@ If \texttt{strategy} is omitted then the \texttt{Best} option is set.
 Note that the $N$ ranges quoted above for which a given strategy is
 optimal hold for $R=1$; the general $R$ dependence can be significant
 (and non-trivial), for example for the Cambridge/Aachen jet finder
-with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2TiledMinHeap} strategy
+with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2MinHeapTiled} strategy
 only for $N\gtrsim 37000$. While some attempt has been made to account
 for the $R$-dependence in the choice of the strategy with the
 ``\texttt{Best}'' option, there may exist specific regions of $N$ and
@@ -845,8 +845,8 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 \section*{Acknowledgements}
 
 We wish to thank Timothy Chan for helpful exchanges about the details
-of his dynamic closest pair algorithm. We thank Markus Wobisch for
-comments on the documentation.
+of his dynamic closest pair algorithm. We thank Markus Wobisch and
+Andreas Oehler for comments on the documentation.
 
 
 %======================================================================
