@@ -253,6 +253,7 @@ int main (int argc, char ** argv) {
     vector<fj::PseudoJet> full_jets = full_seq.inclusive_jets();
     double a, b;
     full_seq.parabolic_pt_per_unit_area(a,b);
+    cout << "a, b = " << a << " " << b << endl;
     vector<fj::PseudoJet> full_corrected_jets;
     typedef vector<fj::PseudoJet>::const_iterator jet_iter;
     // get a vector of corrected jets (only those whose corrected pt
@@ -490,6 +491,7 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
   string line;
   int  nsub  = 0;
   vector<fj::PseudoJet> sub_event;
+  vector<fj::PseudoJet> tmp_full_event;
 
   static bool first_go = true;
 
@@ -499,7 +501,7 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
     if (line == "#END") {break;}
     if (line == "#HARDEND") {
       hard_events.push_back(sub_event);
-      copy(sub_event.begin(), sub_event.end(), back_inserter(full_event));
+      copy(sub_event.begin(), sub_event.end(), back_inserter(tmp_full_event));
       sub_event.resize(0);
       nsub += 1;
     }
@@ -531,11 +533,19 @@ void read_event(istream & input, double etamax, bool hydjet, bool massless,
     }
     fj::PseudoJet psjet(fourvec);
     psjet.set_user_index(0);
-    if (abs(psjet.rap() < etamax) && psjet.perp() >= discard_below_pt) {
+    if (abs(psjet.rap() < etamax)) {
       sub_event.push_back(psjet);}
   }
 
-  copy(sub_event.begin(), sub_event.end(), back_inserter(full_event));
+  copy(sub_event.begin(), sub_event.end(), back_inserter(tmp_full_event));
+
+  // put a pt cut onto the full event
+  for (unsigned i = 0; i < tmp_full_event.size(); i++) {
+    if (tmp_full_event[i].perp() >= discard_below_pt) {
+      full_event.push_back(tmp_full_event[i]);
+    }
+  }
+
 
   //// if we have read in only one event, copy it across here...
   //if (nsub == 1) hard_event = full_event;

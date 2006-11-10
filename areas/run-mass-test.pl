@@ -51,6 +51,7 @@ while ($#ARGV >= 0) {
   elsif ($opt eq '-nh' || $opt eq '-ytfl' || $opt eq '-ylfl')  {$pythia_opts .= " $opt ".(shift @ARGV); $run_hydjet=1;}
   elsif ($opt eq '-HIeff')  {$run_hydjet=1; $run_HIeff = 1;}
   elsif ($opt eq '-CMS')    {$pythia_opts .= " $opt";}
+  elsif ($opt eq '-rhic')    {$pythia_opts .= " $opt";}
   elsif ($opt eq '-ptminhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-ptmaxhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
   # remaining opts go to jet prog
