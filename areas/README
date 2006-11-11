@@ -1,0 +1,27 @@
+
+README for the fastjet-release/areas/ directory
+-----------------------------------------------
+
+QM2006/
+        material and plots related specifically to the Quark-Matter
+        2006 presentation
+
+area-plots/
+        plots relating to area corrections, including 
+
+        - motivational plots (e.g. pt/area scatter) 
+        - some Z/Z' mass results.
+
+ttbar/
+        plots related to ttbar jet finding (and corrections of UE
+        and pileup, etc., there).
+
+hydjet_inclpt/
+        plots and runs related to the inclusive pt spectrum as
+        obtained with hydjet events for LHC PbPb running
+
+hydjet_eff/
+        runs (and plots?) related to studies of the efficiencies in
+        jet-finding on hydjet events.
+
+

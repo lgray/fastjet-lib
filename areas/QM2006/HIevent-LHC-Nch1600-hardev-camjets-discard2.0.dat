@@ -1,0 +1,17 @@
+# ../areas-test-mean-class -incl 1.0 -r 0.4 -in HIevent-LHC-Nch1600-hardev.dat -cam -discard 2.0 
+#---------------------------------------------------------------------
+#                     FastJet release 2.1 beta    			 
+#            Written by Matteo Cacciari and Gavin Salam		 
+#            http://www.lpthe.jussieu.fr/~salam/fastjet		 
+#								      	 
+# Longitudinally invariant Kt Jet clustering, using the fast geometric
+# algorithms of hep-ph/0512210 (please cite this if you use FastJet)  
+# This package makes use of the CGAL library: http://www.cgal.org/    
+# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th     
+# ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002
+#---------------------------------------------------------------------
+# median_pt_per_area = 0
+# sub_a, sub_b = 166.574 -293.748
+ ijet   rap      phi        Pt       area  +-   err   stddev  pt_corr  ptcr(a,b)
+    0  -0.14410  0.96035     83.224  0.519 +-  0.000  0.000     83.22      0.00
+    1  -0.26422  3.93011     77.209  0.529 +-  0.000  0.000     77.21     -0.00

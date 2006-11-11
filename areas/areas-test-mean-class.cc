@@ -73,6 +73,7 @@
 #include "fastjet/ClusterSequenceActiveArea.hh"
 #include "ClusterSequencePassiveArea.hh"
 #include<iostream>
+#include<fstream>
 #include<sstream>
 #include<valarray>
 #include<vector>
@@ -133,6 +134,15 @@ int main (int argc, char ** argv) {
   int    nev     = cmdline.int_val("-nev",1);
   bool   print_jets = cmdline.present("-print_jets");
 
+  double discard_below_pt = cmdline.value("-discard",-1.0);
+
+  istream * input;
+  if (cmdline.present("-in")) {
+    input = new ifstream(cmdline.value<string>("-in").c_str());
+  } else {
+    input = &cin;
+  }
+
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
     exit(-1);}
@@ -143,7 +153,7 @@ int main (int argc, char ** argv) {
   vector<fj::PseudoJet> input_particles;
   string line;
   int  ndone = 0;
-  while (getline(cin, line)) {
+  while (getline(*input, line)) {
       //cout << line<<endl;
     istringstream linestream(line);
     if (line == "#END") {
@@ -175,7 +185,8 @@ int main (int argc, char ** argv) {
     }
     fj::PseudoJet psjet(fourvec);
     psjet.set_user_index(0);
-    if (abs(psjet.rap() < etamax)) {input_particles.push_back(psjet);}
+    if (abs(psjet.rap() < etamax) && psjet.perp() > discard_below_pt) {
+      input_particles.push_back(psjet);}
   }
 
   //srand(2); // moved inside loop
@@ -216,13 +227,16 @@ int main (int argc, char ** argv) {
   double sub_a, sub_b;
   clust_seq.parabolic_pt_per_unit_area(sub_a, sub_b);
 
+  cout << "# median_pt_per_area = "  << median_pt_per_area << endl;
+  cout << "# sub_a, sub_b = "  << sub_a << " " << sub_b << endl;
+
   // double median_pt_per_area = 0.0;
-  printf(" ijet   rap      phi        Pt         area  +-   err   stddev  pt_corr\n");
+  printf(" ijet   rap      phi        Pt       area  +-   err   stddev  pt_corr  ptcr(a,b)\n");
   for (size_t j = 0; j < jets.size(); j++) {
     double area = clust_seq.area(jets[j]);
     
-    printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f %7.3f %10.3f\n",j,jets[j].rap(),
-             jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area);
+    printf("%5u %9.5f %8.5f %10.3f %6.3f +- %6.3f %6.3f %9.2f %9.2f\n",j,jets[j].rap(),
+           jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*median_pt_per_area, jets[j].perp()-area*(sub_a + sub_b*pow2(jets[j].rap())));
 	   //jets[j].phi(),jets[j].perp(), area, clust_seq.area_error(jets[j]), clust_seq.area_error(jets[j])*sqrt(1.0*area_spec.repeat()), jets[j].perp() - area*(sub_a + sub_b*pow2(jets[j].rap()))); // parabolic subtraction.
   }
 

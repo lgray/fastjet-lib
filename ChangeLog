@@ -1,6 +1,20 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-11  Gavin Salam <salam@lpthe.jussieu.fr>
+
+        * added a whole bunch of plots and related material in the
+	  area-plots directory that previously weren't in version control
+
+	* added a QM2006/ directory which includes some material
+	  (jet-finding on individual events) for illustrative plots.
+
+	* in areas/ put a recent version of the CmdLine.* utility class.
+
+	* added areas/README to help navigate that directory, which is
+	  rapidly becoming too complex!
+	
+	
 2006-11-06  Gavin Salam <salam@lpthe.jussieu.fr>
 
         * added squared_distance(...) to PseudoJet (does the same as
