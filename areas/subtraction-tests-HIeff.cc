@@ -221,14 +221,15 @@ int main (int argc, char ** argv) {
   vector<SimpleHist> pt_offsets(nptbins+1), rapphi_offsets(nptbins+1);
   vector<SimpleHist> matched_masses(nptbins+1), fake_masses(nptbins+1);
   vector<SimpleHist> matched_areas(nptbins+1), fake_areas(nptbins+1);
+  SimpleHist all_areas(0.0,2.0,20);
 
   for(int ipt = 0; ipt <= nptbins; ipt++) {
     pt_offsets    [ipt].declare(-35.0,35.0,35);
     rapphi_offsets[ipt].declare(0.0,min(1.0,max_rapphi_dist),25);
     matched_masses[ipt].declare(0.0,10.0,40);
     fake_masses   [ipt].declare(0.0,10.0,40);
-    matched_areas [ipt].declare(0.0,2.0,40);
-    fake_areas    [ipt].declare(0.0,2.0,40);
+    matched_areas [ipt].declare(0.0,2.0,20);
+    fake_areas    [ipt].declare(0.0,2.0,20);
   }
   double reference_area = fj::pi * pow2(ktR);
   cout <<  "reference_area = " << reference_area << endl;
@@ -326,8 +327,11 @@ int main (int argc, char ** argv) {
     }
     // now run over the unmatched (fake) corrected jets
     for (unsigned i = nmatch; i < full_corrected_jets.size(); i++) {
-      if (full_corrected_jets[i].perp() < pt_min_bin  
-          || abs(full_corrected_jets[i].rap()) > maxrap) {continue;}
+      if (abs(full_corrected_jets[i].rap()) > maxrap) {continue;}
+      all_areas.add_entry(full_seq.area(full_corrected_jets[i])
+                          /reference_area);
+
+      if (full_corrected_jets[i].perp() < pt_min_bin) {continue;}
       unsigned int ipt = pt_true_entries.bin(full_corrected_jets[i].perp());
       pt_fake_entries.add_entry(full_corrected_jets[i].perp());
       double ref_mass = full_corrected_jets[i].perp()*ktR;
@@ -390,7 +394,7 @@ int main (int argc, char ** argv) {
       output << endl << endl;
       output << "# index = "<< ipt*4+3
              << "  area/(pi R^2)  distribution (matched, fake) " << endl;
-      for (unsigned ibin = 0; ibin < matched_masses[ipt].size(); ibin++) {
+      for (unsigned ibin = 0; ibin < matched_areas[ipt].size(); ibin++) {
         output << matched_areas[ipt].binlo(ibin) << " " 
                << matched_areas[ipt].binmid(ibin) << " "
                << matched_areas[ipt].binhi(ibin) << " "
@@ -400,6 +404,18 @@ int main (int argc, char ** argv) {
       output << endl << endl;
       
     }
+    output << "# index = "<< pt_true_entries.outflow_size()*4
+           << "  area/(pi R^2)  distribution (ALL) " << endl;
+    double totwgt = all_areas.total_weight();
+    for (unsigned ibin = 0; ibin < all_areas.size(); ibin++) {
+      output << all_areas.binlo(ibin) << " " 
+             << all_areas.binmid(ibin) << " "
+             << all_areas.binhi(ibin) << " "
+             << all_areas[ibin]/totwgt 
+             << endl;
+    }
+    output << endl << endl;
+    
     }
 
   } // iev

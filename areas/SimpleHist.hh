@@ -40,10 +40,16 @@ public:
     if (v >= _minv && v < _maxv) {
       int i = int((v-_minv)/_dv); 
       if (i >= 0 && i < int(size())) {return unsigned(i);} 
-      else {return size();}
-    } else {
-      return size();
     }
+    // otherwise...
+    return size();
+  }
+
+  /// return the total weight in the histogram (inefficient)...
+  double total_weight() const {
+    double tot = 0.0;
+    for (unsigned i = 0; i < _weights.size(); i++) tot += _weights[i];
+    return tot;
   }
 
   void add_entry(double v, double weight = 1.0) {
@@ -93,7 +99,7 @@ public:
 
 
 private:
-  double _minv, _maxv, _dv;
+  double _minv, _maxv, _dv, _total_weight;
   std::valarray<double> _weights;
   std::string _name;
 };
