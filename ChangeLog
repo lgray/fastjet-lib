@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-13  Gavin Salam <salam@lpthe.jussieu.fr>
+
+        * Added more stuff related to plots & sorted out some svn:ignore
+	  properties 
+	
 2006-11-11  Gavin Salam <salam@lpthe.jussieu.fr>
 
         * added a whole bunch of plots and related material in the
