@@ -17,3 +17,6 @@ plot 1 lt 0 t ''
 
 replot "<grep 'pt range' ../hydjet_eff/hydjetDEF_nhsel1_ptminhard10_kt_r0.4_maxrapphi0.2.res | sed 's/#.*range =//'" u ($1+0.01):(1-$13/($7)) w st lt 1 lw 2 t 'Efficiency',\
    '' u 1:(1-$10/($7+$10)) w st lt 3 lw 2 t 'Purity' 
+
+#replot "<grep 'pt range' ../hydjet_eff/hydjetDEF_nhsel1_ptminhard10_kt_r0.4_maxrapphi0.2_discard1.0.res | sed 's/#.*range =//'" u ($1+0.01):(1-$13/($7)) w st lt 1 lw 2 t 'Efficiency',\
+#   '' u 1:(1-$10/($7+$10)) w st lt 3 lw 2 t 'Purity' 
