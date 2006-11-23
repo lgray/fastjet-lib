@@ -16,6 +16,7 @@ set label 1 'kt algorithm' at 1.9,2 right
 #replot 'cam-areas-anchored-vlong.res' t 'jets with 1 hard parton' w l lt 3 lw 3
 
 plot 'kt-areas-vlong.res' t 'purely soft jets' w l lt 1 lw 3
+`gnupr areas-hist-pure-soft.eps col`
 replot 'kt-areas-anchored-vlong.res' t 'jets with 1 hard parton' w l lt 3 lw 3
 
 
