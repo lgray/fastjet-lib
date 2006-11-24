@@ -3,14 +3,30 @@
 # script for running pythia and piping its output into some jet-finding
 # program (splits options up appropriately between the two programs)
 
-$pythia_exec = "../../pythia/gen-events";
-$jet_exec    = "./subtraction-tests-mass";
+# determine user running job
+$user=`whoami`; chomp $user;
+if ($user eq 'salam') {$basedir = '/ada1/lpthe/salam/work/fastjet';}
+elsif ($user eq 'cacciari') {$basedir = '/ada1/lpthe/cacciari/physics/voronoi/fastjet';}
+else {print 'Unkown user\n'; exit;}
 
-#$hydjet_exec = "../../hydjet/test2_hydjet";
-$hydjet_exec = "../../hydjet/run_hydjet";
-$incljet_exec = "./subtraction-tests-inclpt";
-$ttbarjet_exec = "./subtraction-tests-ttbar";
-$HIeff_exec = "./subtraction-tests-HIeff";
+# determine architecture
+# Piping does not work on Mac. Don't use it if running there
+$arch=`uname`; chomp $arch;
+if ($arch eq 'Darwin') { $pipe = 0; } else { $pipe = 1;}
+
+# if cacciari is running on linux, use Gavin's executables
+if ($user eq 'cacciari' && $arch eq 'Linux') 
+                 {$basedir = '/ada1/lpthe/salam/work/fastjet';}
+
+# Executables
+$pythia_exec = "$basedir/pythia/gen-events";
+$jet_exec    = "$basedir/fastjet-release/areas/subtraction-tests-mass";
+
+#$hydjet_exec = "$basedir/hydjet/test2_hydjet";
+$hydjet_exec = "$basedir/hydjet/run_hydjet";
+$incljet_exec = "$basedir/fastjet-release/areas/subtraction-tests-inclpt";
+$ttbarjet_exec = "$basedir/fastjet-release/areas/subtraction-tests-ttbar";
+$HIeff_exec = "$basedir/fastjet-release/areas/subtraction-tests-HIeff";
 
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
@@ -62,7 +78,7 @@ $jet_opts    .= " -nev $nev -in  $pipename -out $outfile";
 
 # make the pipe that will be used for communication between the
 # programs
-system("mknod $pipename p");
+if ($pipe) {system("mknod $pipename p");}
 
 # replace executables in this case to look at incl-pt spectrum with hydjet...
 if ($run_hydjet) {
@@ -84,9 +100,11 @@ $pid = fork();
 # for the slave...
 print "NEW PID IS $pid\n";
 if ($pid == 0) {system("$pythia"); exit(0);}
+if (not $pipe) {sleep(20);}
 # for the original program
 system($analysis); 
 
+if ($pipe) {
 # since processes writing to pipes can lead to large temporary files
 # (and since it's not nice to leave dead processes around), do our
 # best to kill the slave and its children, if necessary...
@@ -104,6 +122,7 @@ if ($slave_alive) {
     }
   }
 }
+}
 
 
 #system("$pythia &");
@@ -111,5 +130,6 @@ if ($slave_alive) {
 
 
 # clean up...
-unlink($pipename);
+if ($pipe) {unlink($pipename);}
+else {system("rm $pipename");}
 
