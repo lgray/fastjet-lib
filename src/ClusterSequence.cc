@@ -617,8 +617,12 @@ void ClusterSequence::_do_ij_recombination_step(
 			       const double & dij, 
 			       int & newjet_k) {
 
-  // create the new jet
-  _jets.push_back(_jets[jet_i] + _jets[jet_j]);
+  // create the new jet by recombining the first two
+  PseudoJet newjet;
+  _jet_def.recombiner()->recombine(_jets[jet_i], _jets[jet_j], newjet);
+  _jets.push_back(newjet);
+  // original version...
+  //_jets.push_back(_jets[jet_i] + _jets[jet_j]);
 
   // get its index
   newjet_k = _jets.size()-1;

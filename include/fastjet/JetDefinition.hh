@@ -33,7 +33,9 @@
 
 #include<cassert>
 #include "fastjet/internal/numconsts.hh"
+#include "fastjet/PseudoJet.hh"
 #include<string>
+#include<memory>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -83,6 +85,21 @@ enum JetFinder {
 
 
 //======================================================================
+/// the various recombination schemes
+enum RecombinationScheme {
+  /// summing the 4-momenta
+  E_scheme=0,
+  /// pt weighted recombination of y,phi (and summing of pt's)
+  pt_scheme=1,
+  /// pt^2 weighted recombination of y,phi (and summing of pt's)
+  pt2_scheme=2
+};
+
+
+
+
+
+//======================================================================
 /// class that is intended to hold a full definition of the jet
 /// clusterer
 class JetDefinition {
@@ -93,20 +110,38 @@ public:
   /// their own plugin 
   class Plugin;
 
-  /// constructor that to fully specify a jet-definition (together
+  // forward declaration of a class that will provide the
+  // recombination scheme facilities and/or allow a user to
+  // extend these facilities
+  class Recombiner;
+
+  /// constructor to fully specify a jet-definition (together
   /// with information about how algorithically to run it). 
   ///
   /// [at some point might recombination schemes be added here?]
   JetDefinition(JetFinder jet_finder = kt_algorithm, 
-		  double R = 1.0, 
-		  Strategy strategy = Best) :
+                double R = 1.0, 
+                Strategy strategy = Best,
+                RecombinationScheme recomb_scheme = E_scheme) :
     _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
     // the largest sensible value for R
     assert(_Rparam <= 0.5*pi);
     assert(_jet_finder != plugin_algorithm &&
-	   _strategy   != plugin_strategy);
+           _strategy   != plugin_strategy);
     _plugin = 0;
+    set_recombination_scheme(recomb_scheme);
   };
+  
+
+  /// constructor with alternative ordering or arguments -- note that
+  /// we have not provided a default jet finder, to avoid ambiguous
+  /// JetDefinition() constructor.
+  JetDefinition(JetFinder jet_finder, 
+                double R = 1.0, 
+                RecombinationScheme recomb_scheme = E_scheme,
+                Strategy strategy = Best) {
+    JetDefinition(jet_finder, R, strategy, recomb_scheme);};
+
 
   /// constructor based on a pointer to a user's plugin; the object
   /// pointed to must remain valid for the whole duration of existence
@@ -116,15 +151,26 @@ public:
     _strategy = plugin_strategy;
     _Rparam = -1.0;
     _jet_finder = plugin_algorithm;
+    set_recombination_scheme(E_scheme);
   };
+
+  /// set the recombination scheme to the one provided
+  void set_recombination_scheme(RecombinationScheme);
+
+  /// set the recombiner class to the one provided
+  void set_recombiner(const Recombiner * recomb) {_recombiner = recomb;};
 
   /// return a pointer to the plugin 
   const Plugin * plugin() const {return _plugin;};
 
   // return information about the definition...
   JetFinder jet_finder  () const {return _jet_finder  ;}; 
-  double      R           () const {return _Rparam      ;};
+  double    R           () const {return _Rparam      ;};
   Strategy  strategy    () const {return _strategy    ;};
+
+  /// return a pointer to the currently defined recombiner
+  const Recombiner * recombiner() const {
+    return _recombiner == 0 ? & _default_recombiner : _recombiner;};
 
   /// return a textual description of the current jet definition 
   std::string description() const;
@@ -136,6 +182,56 @@ private:
   Strategy  _strategy  ;
 
   const Plugin * _plugin;
+
+
+
+public:
+  //======================================================================
+  // A class that will provide the recombination scheme facilities and/or
+  // allow a user to extend these facilities
+  class Recombiner {
+  public:
+    /// return a textual description of the recombination scheme
+    /// implemented here
+    virtual std::string description() const = 0;
+    
+    /// recombine pa and pb and put result into pab
+    virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
+                           PseudoJet & pab) const = 0;
+    
+    /// a destructor to be replaced if necessary in derived classes...
+    virtual ~Recombiner() {};
+  };
+  
+  
+  //======================================================================
+  // A class that will provide the recombination scheme facilities and/or
+  // allow a user to extend these facilities
+  class DefaultRecombiner : public Recombiner {
+  public:
+    DefaultRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 
+      _recomb_scheme(recomb_scheme) {};
+    
+    virtual std::string description() const;
+    
+    /// recombine pa and pb and put result into pab
+    virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
+                           PseudoJet & pab) const;
+    
+  private:
+    RecombinationScheme _recomb_scheme;
+  };
+
+
+private:
+
+  // when we use our own recombiner it's useful to point to it here
+  // so that we don't have to worry about deleting it etc...
+  DefaultRecombiner _default_recombiner;
+  const Recombiner * _recombiner;
+
+
+
 };
 
 
@@ -164,6 +260,11 @@ public:
   /// a destructor to be replaced if necessary in derived classes...
   virtual ~Plugin() {};
 };
+
+
+
+
+
 
 FASTJET_END_NAMESPACE
 

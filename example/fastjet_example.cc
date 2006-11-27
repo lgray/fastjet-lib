@@ -68,12 +68,15 @@ int main (int argc, char ** argv) {
   // the associated parameters
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;
-  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
+  fastjet::RecombinationScheme recomb_scheme = fastjet::E_scheme;
+  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy, recomb_scheme);
+  //fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, recomb_scheme, strategy);
 
   // run the jet clustering with the above jet definition
   fastjet::ClusterSequence clust_seq(input_particles, jet_def);
 
   // tell the user what was done
+  cout << "Ran " << jet_def.description() << endl;
   cout << "Strategy adopted by FastJet was "<<
        clust_seq.strategy_string()<<endl<<endl;
 

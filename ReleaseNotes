@@ -17,9 +17,24 @@ New features:
   implementing the relevant virtual functions (see manual and examples
   for further info).
 
+- introduced "description" member function for the JetDefinition
+  class, which returns a (sted::string) textual description of the
+  algorithm defined.
+
 - [in progress] provided plugins for CDF JetClu, CDF Midpoint, PxCone
 
+- [in progress] introduced option of control over recombination scheme
+     + still need to check pt/pt2 schemes against ktjet?
+     + understand what's going on with ordering of arguments
+     + decide whether to include Et and Et2 schemes (but these
+       are IR unsafe for massive particles unless one does a stage
+       of "filtering" first).
+
+Minor additions
+---------------
+
 - introduced PseudoJet::squared_distance (does same as "plain_distance")
+
 
 Notational changes:
 -------------------
@@ -28,6 +43,7 @@ Notational changes:
   rapidity and not pseudorapidity that is being used throughout. Some
   internal code continues to use variables called "eta" -- but these
   are actually proper rapidity.
+
 
 ======================================================================
 Changes from v1.0 to v2.0

@@ -12,13 +12,84 @@ string JetDefinition::description() const {
     return plugin()->description();
   } else if (jet_finder() == kt_algorithm) {
     name << "Longitudinally invariant kt algorithm with R = " << R();
+    name << " and " << recombiner()->description();
   } else if (jet_finder() == cambridge_algorithm) {
     name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
 	 << R() ;
+    name << " and " << recombiner()->description();
   } else {
     throw Error("Unrecognized jet_finder");
   }
   return name.str();
+}
+
+
+void JetDefinition::set_recombination_scheme(
+                               RecombinationScheme recomb_scheme) {
+  _default_recombiner = JetDefinition::DefaultRecombiner(recomb_scheme);
+  _recombiner = 0;
+}
+
+
+string JetDefinition::DefaultRecombiner::description() const {
+  switch(_recomb_scheme) {
+  case E_scheme:
+    return "E scheme recombination";
+  case pt_scheme:
+    return "pt scheme recombination";
+  case pt2_scheme:
+    return "pt2 scheme recombination";
+  default:
+    ostringstream err;
+    err << "DefaultRecombiner: unrecognized recombination scheme " 
+        << _recomb_scheme;
+    throw Error(err.str());
+  }
+}
+
+
+void JetDefinition::DefaultRecombiner::recombine(
+           const PseudoJet & pa, const PseudoJet & pb,
+           PseudoJet & pab) const {
+  
+  double weighta, weightb;
+
+  switch(_recomb_scheme) {
+  case E_scheme:
+    pab = pa + pb; 
+    pab.set_user_index(0);
+    return;
+  // all remaining schemes are massless recombinations and locally
+  // we just set weights, while the hard work is done below...
+  case pt_scheme:
+    weighta = pa.perp(); 
+    weightb = pb.perp();
+    break;
+  case pt2_scheme:
+    weighta = pa.perp2(); 
+    weightb = pb.perp2();
+    break;
+  default:
+    ostringstream err;
+    err << "DefaultRecombiner: unrecognized recombination scheme " 
+        << _recomb_scheme;
+    throw Error(err.str());
+  }
+
+  double perp_ab = pa.perp() + pb.perp();
+  double y_ab    = (weighta * pa.rap() + weightb * pb.rap())/(weighta+weightb);
+  
+  // take care with periodicity in phi...
+  double phi_a = pa.phi(), phi_b = pb.phi();
+  if (phi_a - phi_b > pi)  phi_b += twopi;
+  if (phi_a - phi_b < -pi) phi_b -= twopi;
+  double phi_ab = (weighta * phi_a + weightb * phi_b)/(weighta+weightb);
+
+  pab = PseudoJet(perp_ab*cos(phi_ab),
+                  perp_ab*sin(phi_ab),
+                  perp_ab*sinh(y_ab),
+                  perp_ab*cosh(y_ab));
+  pab.set_user_index(0);
 }
 
 FASTJET_END_NAMESPACE

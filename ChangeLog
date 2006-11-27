@@ -1,6 +1,16 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-27  Gavin Salam <salam@lpthe.jussieu.fr>
+
+        * added recombination scheme functionality, both via a plugin (not
+	  currently tested much) and (for standard use) with a
+	  RecombinationScheme enum; take a look at ReleaseNotes for things
+	  that still need to be done/tested...
+
+	  Modified example program so that it makes recombination scheme
+	  freedom explicitly visible.
+	
 2006-11-13  Gavin Salam <salam@lpthe.jussieu.fr>
 
         * Added more stuff related to plots & sorted out some svn:ignore
