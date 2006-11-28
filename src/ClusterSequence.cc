@@ -202,6 +202,9 @@ void ClusterSequence::_fill_initial_history () {
 
     _history.push_back(element);
     
+    // do any momentum preprocessing needed by the recombination scheme
+    _jet_def.recombiner()->preprocess(_jets[i]);
+
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
   }

@@ -92,7 +92,9 @@ enum RecombinationScheme {
   /// pt weighted recombination of y,phi (and summing of pt's)
   pt_scheme=1,
   /// pt^2 weighted recombination of y,phi (and summing of pt's)
-  pt2_scheme=2
+  pt2_scheme=2,
+  /// for the user's external scheme
+  external_scheme = 99
 };
 
 
@@ -140,8 +142,20 @@ public:
                 double R = 1.0, 
                 RecombinationScheme recomb_scheme = E_scheme,
                 Strategy strategy = Best) {
-    JetDefinition(jet_finder, R, strategy, recomb_scheme);};
+    *this = JetDefinition(jet_finder, R, strategy, recomb_scheme);
+  };
 
+
+  /// constructor in a form that allows the user to provide a pointer
+  /// to an external recombiner class (which must remain valid for the
+  /// life of the JetDefinition object).
+  JetDefinition(JetFinder jet_finder, 
+                double R, 
+                const Recombiner * recombiner,
+                Strategy strategy = Best) {
+    *this = JetDefinition(jet_finder, R, strategy, external_scheme);
+    _recombiner = recombiner;
+  };
 
   /// constructor based on a pointer to a user's plugin; the object
   /// pointed to must remain valid for the whole duration of existence
@@ -158,7 +172,10 @@ public:
   void set_recombination_scheme(RecombinationScheme);
 
   /// set the recombiner class to the one provided
-  void set_recombiner(const Recombiner * recomb) {_recombiner = recomb;};
+  void set_recombiner(const Recombiner * recomb) {
+    _recombiner = recomb;
+    _default_recombiner = DefaultRecombiner(external_scheme);
+  };
 
   /// return a pointer to the plugin 
   const Plugin * plugin() const {return _plugin;};
@@ -167,8 +184,11 @@ public:
   JetFinder jet_finder  () const {return _jet_finder  ;}; 
   double    R           () const {return _Rparam      ;};
   Strategy  strategy    () const {return _strategy    ;};
+  RecombinationScheme recombination_scheme() const {
+    return _default_recombiner.scheme();};
 
-  /// return a pointer to the currently defined recombiner
+  /// return a pointer to the currently defined recombiner (it may
+  /// be the internal one)
   const Recombiner * recombiner() const {
     return _recombiner == 0 ? & _default_recombiner : _recombiner;};
 
@@ -177,6 +197,8 @@ public:
 
 
 private:
+
+
   JetFinder _jet_finder;
   double      _Rparam    ;
   Strategy  _strategy  ;
@@ -198,6 +220,10 @@ public:
     /// recombine pa and pb and put result into pab
     virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
                            PseudoJet & pab) const = 0;
+
+    /// routine to be called for preprocessing input jets (to make them
+    /// compatible with the scheme requirements (e.g. massless).
+    virtual void preprocess(PseudoJet & p) const {};
     
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Recombiner() {};
@@ -217,6 +243,11 @@ public:
     /// recombine pa and pb and put result into pab
     virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
                            PseudoJet & pab) const;
+
+    virtual void preprocess(PseudoJet & p) const;
+
+    /// return the index of the recombination scheme
+    RecombinationScheme scheme() const {return _recomb_scheme;};
     
   private:
     RecombinationScheme _recomb_scheme;
@@ -229,8 +260,6 @@ private:
   // so that we don't have to worry about deleting it etc...
   DefaultRecombiner _default_recombiner;
   const Recombiner * _recombiner;
-
-
 
 };
 

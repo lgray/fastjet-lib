@@ -24,11 +24,12 @@ New features:
 - [in progress] provided plugins for CDF JetClu, CDF Midpoint, PxCone
 
 - [in progress] introduced option of control over recombination scheme
-     + still need to check pt/pt2 schemes against ktjet?
-     + understand what's going on with ordering of arguments
+     + decide whether to introduce boost-inv equivalents ot pt and pt2
+       schemes?
      + decide whether to include Et and Et2 schemes (but these
        are IR unsafe for massive particles unless one does a stage
        of "filtering" first).
+     + write documentation
 
 Minor additions
 ---------------

@@ -92,4 +92,28 @@ void JetDefinition::DefaultRecombiner::recombine(
   pab.set_user_index(0);
 }
 
+
+void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
+  switch(_recomb_scheme) {
+  case E_scheme:
+    break;
+  case pt_scheme:
+  case pt2_scheme:
+    {
+      // these schemes (as in the ktjet implementation) need massless
+      // initial 4-vectors with essentially E=|p|.
+      double newE = sqrt(p.perp2()+p.pz()*p.pz());
+      int    user_index = p.user_index();
+      p = PseudoJet(p.px(), p.py(), p.pz(), newE);
+      p.set_user_index(user_index);
+    }
+    break;
+  default:
+    ostringstream err;
+    err << "DefaultRecombiner: unrecognized recombination scheme " 
+        << _recomb_scheme;
+    throw Error(err.str());
+  }
+}
+
 FASTJET_END_NAMESPACE

@@ -36,7 +36,8 @@ int main (int argc, char ** argv) {
   // run the inclusive jet clustering in PP mode using the covariant
   // E-scheme for recobination (type=4, angle=2, recom=1, rparameter=1.0)
   double Rparam = 1.0;
-  KtEvent clust_seq(input_particles,4,2,1,Rparam);
+  KtEvent clust_seq(input_particles,4,2,1,Rparam); // GPS TMP
+  //KtEvent clust_seq(input_particles,4,2,1,Rparam);
 
   // extract the inclusive jets with pt > 5 GeV, sorted by pt
   double ptmin = 5.0;

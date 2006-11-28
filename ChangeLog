@@ -1,6 +1,16 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-28  Gavin Salam <salam@lpthe.jussieu.fr>
+
+	* fixed problems with alternative orderings of arguments in
+	  JetDefinition constructor; added constructor with external
+	  recombination scheme; added "preprocess" virtual function to
+	  recombination scheme so that it carries out necessary
+	  modification of momenta before running the clustering (as in
+	  ktjet), and checked that pt and pt2 schemes give results
+	  identical to those in ktjet (albeit boost-dependent...)
+	
 2006-11-27  Gavin Salam <salam@lpthe.jussieu.fr>
 
         * added recombination scheme functionality, both via a plugin (not
@@ -10,6 +20,12 @@ ChangeLog for fastjet-release directory
 
 	  Modified example program so that it makes recombination scheme
 	  freedom explicitly visible.
+	
+2006-11-23  Gavin Salam <salam@lpthe.jussieu.fr>
+
+        * added areas/area-hist-plots/ which contains results of area
+	  histograms for "idealized" soft clustering and clustering with a
+	  single hard parton.
 	
 2006-11-13  Gavin Salam <salam@lpthe.jussieu.fr>
 
