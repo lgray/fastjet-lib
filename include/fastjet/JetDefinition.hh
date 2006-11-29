@@ -90,9 +90,23 @@ enum RecombinationScheme {
   /// summing the 4-momenta
   E_scheme=0,
   /// pt weighted recombination of y,phi (and summing of pt's)
+  /// with preprocessing to make things massless by rescaling E=|\vec p|
   pt_scheme=1,
   /// pt^2 weighted recombination of y,phi (and summing of pt's)
+  /// with preprocessing to make things massless by rescaling E=|\vec p|
   pt2_scheme=2,
+  /// pt weighted recombination of y,phi (and summing of pt's)
+  /// with preprocessing to make things massless by rescaling |\vec p|->=E
+  Et_scheme=3,
+  /// pt^2 weighted recombination of y,phi (and summing of pt's)
+  /// with preprocessing to make things massless by rescaling |\vec p|->=E
+  Et2_scheme=4,
+  /// pt weighted recombination of y,phi (and summing of pt's), with 
+  /// no preprocessing
+  BIpt_scheme=5,
+  /// pt^2 weighted recombination of y,phi (and summing of pt's)
+  /// no preprocessing
+  BIpt2_scheme=6,
   /// for the user's external scheme
   external_scheme = 99
 };
@@ -209,8 +223,8 @@ private:
 
 public:
   //======================================================================
-  // A class that will provide the recombination scheme facilities and/or
-  // allow a user to extend these facilities
+  /// An abstract base class that will provide the recombination scheme
+  /// facilities and/or allow a user to extend these facilities
   class Recombiner {
   public:
     /// return a textual description of the recombination scheme
@@ -231,8 +245,8 @@ public:
   
   
   //======================================================================
-  // A class that will provide the recombination scheme facilities and/or
-  // allow a user to extend these facilities
+  /// A class that will provide the recombination scheme facilities and/or
+  /// allow a user to extend these facilities
   class DefaultRecombiner : public Recombiner {
   public:
     DefaultRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 

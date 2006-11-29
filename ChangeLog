@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-29  Gavin Salam <salam@lpthe.jussieu.fr>
+
+	* Added the Et and Et2 schemes, as well as boost invariant BIpt
+	  and BIpt2 schemes.
+	
 2006-11-28  Gavin Salam <salam@lpthe.jussieu.fr>
 
 	* fixed problems with alternative orderings of arguments in

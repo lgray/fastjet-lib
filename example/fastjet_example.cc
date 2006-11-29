@@ -61,7 +61,6 @@ int main (int argc, char ** argv) {
   while (cin >> px >> py >> pz >> E) {
     // create a fastjet::PseudoJet with these components and put it onto
     // back of the input_particles vector
-    //E = sqrt(px*px+py*py+pz*pz); // GPS TMP
     input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
   }
   
@@ -70,7 +69,6 @@ int main (int argc, char ** argv) {
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;
   fastjet::RecombinationScheme recomb_scheme = fastjet::E_scheme;
-  //fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy, recomb_scheme);
   fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, recomb_scheme, strategy);
 
   // run the jet clustering with the above jet definition

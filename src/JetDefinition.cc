@@ -39,6 +39,14 @@ string JetDefinition::DefaultRecombiner::description() const {
     return "pt scheme recombination";
   case pt2_scheme:
     return "pt2 scheme recombination";
+  case Et_scheme:
+    return "Et scheme recombination";
+  case Et2_scheme:
+    return "Et2 scheme recombination";
+  case BIpt_scheme:
+    return "boost-invariant pt scheme recombination";
+  case BIpt2_scheme:
+    return "boost-invariant pt2 scheme recombination";
   default:
     ostringstream err;
     err << "DefaultRecombiner: unrecognized recombination scheme " 
@@ -62,10 +70,14 @@ void JetDefinition::DefaultRecombiner::recombine(
   // all remaining schemes are massless recombinations and locally
   // we just set weights, while the hard work is done below...
   case pt_scheme:
+  case Et_scheme:
+  case BIpt_scheme:
     weighta = pa.perp(); 
     weightb = pb.perp();
     break;
   case pt2_scheme:
+  case Et2_scheme:
+  case BIpt2_scheme:
     weighta = pa.perp2(); 
     weightb = pb.perp2();
     break;
@@ -96,6 +108,8 @@ void JetDefinition::DefaultRecombiner::recombine(
 void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
   switch(_recomb_scheme) {
   case E_scheme:
+  case BIpt_scheme:
+  case BIpt2_scheme:
     break;
   case pt_scheme:
   case pt2_scheme:
@@ -105,6 +119,17 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
       double newE = sqrt(p.perp2()+p.pz()*p.pz());
       int    user_index = p.user_index();
       p = PseudoJet(p.px(), p.py(), p.pz(), newE);
+      p.set_user_index(user_index);
+    }
+    break;
+  case Et_scheme:
+  case Et2_scheme:
+    {
+      // these schemes (as in the ktjet implementation) need massless
+      // initial 4-vectors with essentially E=|p|.
+      double rescale = p.E()/sqrt(p.perp2()+p.pz()*p.pz());
+      int    user_index = p.user_index();
+      p = PseudoJet(rescale*p.px(), rescale*p.py(), rescale*p.pz(), p.E());
       p.set_user_index(user_index);
     }
     break;
