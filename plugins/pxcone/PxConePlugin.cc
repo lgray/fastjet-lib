@@ -1,0 +1,126 @@
+#include "PxConePlugin.hh"
+
+#include "fastjet/ClusterSequence.hh"
+#include <sstream>
+
+// pxcone stuff
+#include "pxcone.h"
+
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+using namespace std;
+
+string PxConePlugin::description () const {
+  ostringstream desc;
+  
+  desc << "PxCone jet finder with " 
+       << "cone_radius = "        << cone_radius        () << ", "
+       << "min_jet_energy = "     << min_jet_energy     () << ", "
+       << "overlap_threshold  = " << overlap_threshold  () << ", "
+       << "E_scheme_jets  = "     << E_scheme_jets      () ;
+
+  return desc.str();
+}
+
+
+void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+ 
+  // only have hh mode
+  int mode = 2;
+
+  int    ntrak = clust_seq.jets().size(), itkdm = 4;
+  double ptrak[ntrak][4];
+  for (int i = 0; i < ntrak; i++) {
+    ptrak[i][0] = clust_seq.jets()[i].px();
+    ptrak[i][1] = clust_seq.jets()[i].py();
+    ptrak[i][2] = clust_seq.jets()[i].pz();
+    ptrak[i][3] = clust_seq.jets()[i].E();
+  }  
+
+  // max number of allowed jets
+  int mxjet = ntrak;
+  int njet;
+  double pjet[mxjet][5];
+  int    ipass[ntrak], ijmul[mxjet], ierr;
+
+  // run pxcone
+  pxcone(
+    mode   ,    // 1=>e+e-, 2=>hadron-hadron
+    ntrak  ,    // Number of particles
+    itkdm  ,    // First dimension of PTRAK array: 
+    &(ptrak[0][0])  ,    // Array of particle 4-momenta (Px,Py,Pz,E)
+    cone_radius()  ,    // Cone size (half angle) in radians
+    min_jet_energy() ,    // Minimum Jet energy (GeV)
+    overlap_threshold()  ,    // Maximum fraction of overlap energy in a jet
+    mxjet  ,    // Maximum possible number of jets
+    njet   ,    // Number of jets found
+    &(pjet[0][0]),       // 5-vectors of jets
+    ipass,      // Particle k belongs to jet number IPASS(k)-1
+                // IPASS = -1 if not assosciated to a jet
+    ijmul,      // Jet i contains IJMUL[i] particles
+    ierr        // = 0 if all is OK ;   = -1 otherwise
+    );
+
+  if (ierr != 0) throw Error("An error occurred while running PXCONE");
+
+  // now transfer information back 
+  valarray<int> last_index_created(njet);
+
+  vector<vector<int> > jet_particle_content(njet);
+
+  // get a list of particles in each jet
+  for (int itrak = 0; itrak < ntrak; itrak++) {
+    int jet_i = ipass[itrak] - 1;
+    if (jet_i >= 0) jet_particle_content[jet_i].push_back(itrak);
+  }
+
+  // now transfer the jets back into our own structure -- we will
+  // mimic the cone code with a sequential recombination sequence in
+  // which the jets are built up by adding one particle at a time
+  for(int ipxjet = njet-1; ipxjet >= 0; ipxjet--) {
+    const vector<int> & jet_trak_list = jet_particle_content[ipxjet];
+    int jet_k = jet_trak_list[0];
+  
+    for (unsigned ilist = 1; ilist < jet_trak_list.size(); ilist++) {
+      int jet_i = jet_k;
+      // retrieve our misappropriated index for the jet
+      int jet_j = jet_trak_list[ilist];
+      // do a fake recombination step with dij=0
+      double dij = 0.0;
+      //clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
+      if (ilist != jet_trak_list.size()-1 || E_scheme_jets()) {
+        // our E-scheme recombination in cases where it doesn't matter
+        clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
+      } else {
+        // put in pxcone's momentum for the last recombination so that the
+        // final inclusive jet corresponds exactly to PXCONE's
+        clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, 
+                                PseudoJet(pjet[ipxjet][0],pjet[ipxjet][1],
+                                          pjet[ipxjet][2],pjet[ipxjet][3]),
+                                                 jet_k);
+      }
+    }
+  
+    // NB: put a sensible looking d_iB just to be nice...
+    double d_iB = clust_seq.jets()[jet_k].perp2();
+    clust_seq.plugin_record_iB_recombination(jet_k, d_iB);
+  }
+
+
+  //// following code is for testing only
+  //cout << endl;
+  //for (int ijet = 0; ijet < njet; ijet++) {
+  //  PseudoJet jet(pjet[ijet][0],pjet[ijet][1],pjet[ijet][2],pjet[ijet][3]);
+  //  cout << jet.perp() << " " << jet.rap() << endl;
+  //}
+  //cout << "-----------------------------------------------------\n";
+  //vector<PseudoJet> ourjets(clust_seq.inclusive_jets());
+  //for (vector<PseudoJet>::const_iterator ourjet = ourjets.begin();
+  //     ourjet != ourjets.end(); ourjet++) {
+  //  cout << ourjet->perp() << " " << ourjet->rap() << endl;
+  //}
+  ////cout << endl;
+}
+
+FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
