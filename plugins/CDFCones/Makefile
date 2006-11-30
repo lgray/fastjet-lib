@@ -25,7 +25,7 @@ cdfcode-clean:
 	cd CDFcode && $(MAKE) clean
 
 distclean: clean
-	rm libCDFConesPlugin.a  *~
+	rm -f libCDFConesPlugin.a  *~
 
 depend:
 	makedepend  $(INCLUDE) -I. --   -- $(SRCS)

@@ -28,8 +28,9 @@ usage_examples/
 
         - build fastjet (see instructions in parent directory)
         - build the plugins:
-            cd PxCone; make; cd ..
-            cd CDFCones; make; cd ..
+            make
+          (if you just want a subset of plugins just go to the
+          relevant directory and build what you need).
 
         - then build an example program and then run it
             cd usage_examples
