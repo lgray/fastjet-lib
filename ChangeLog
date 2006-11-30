@@ -1,6 +1,12 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-11-30  Gavin Salam <salam@lpthe.jussieu.fr>
+
+	* Renamed the plugin directories (to have capitalisation
+	  corresponding to library names), added the CDF cone code
+	  together with Makefiles etc.
+	
 2006-11-29  Gavin Salam <salam@lpthe.jussieu.fr>
 
 	* Added the Et and Et2 schemes, as well as boost invariant BIpt

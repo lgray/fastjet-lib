@@ -26,6 +26,14 @@ CXXFLAGS += -g
 # flags that will be needed for linking from examples/
 LDFLAGS+=-L../lib -lfastjet
 
+# if you compile the pxcone plugin, you will need a fortran compiler
+FC = g77
+FFLAGS = -O3
+# for linking C++ with fortran, you must specify where to find
+# the relevant fortan libraries; in the example below, G77LIBDIR is
+# an environment variable that has been set by the user previously
+F77LIB = -L$(G77LIBDIR) -lg2c
+
 
 # Things needed when compiling with ktjet -- adjust to correspond
 # to your own setup (remember to "make double" the KtJet library)

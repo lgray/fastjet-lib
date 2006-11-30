@@ -5,17 +5,20 @@ include ../../Makefile
 
 CXXSRC = PxConePlugin.cc 
 F77SRC = pxcone.f
-COMMONOBJ = $(patsubst %.cc,%.o,$(CXXSRC)) $(patsubst %.f,%.o,$(F77SRC))
+OBJS = $(patsubst %.cc,%.o,$(CXXSRC)) $(patsubst %.f,%.o,$(F77SRC))
 
-F77 = g77
-FFLAGS = -O3
-
+# fastjet includes
 INCLUDE += -I../../include
 
-libPxConePlugin.a: $(COMMONOBJ)
-	ar cru libPxConePlugin.a $(COMMONOBJ)
+libPxConePlugin.a: $(OBJS)
+	ar cru libPxConePlugin.a $(OBJS)
 	ranlib libPxConePlugin.a
 
+clean:
+	rm -f $(OBJS)
+
+distclean: clean
+	rm -f libPxConePlugin.a *~
 
 depend:
 	makedepend  $(INCLUDE) -I. --   -- $(CXXSRC) $(F77SRC)
