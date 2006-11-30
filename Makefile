@@ -1,4 +1,4 @@
-# fastjet/Makefile
+ # fastjet/Makefile
 
 # set this to "yes" if you have the CGAL library installed and want
 # to have the N ln N clustering option. In this case you should make 
@@ -31,7 +31,10 @@ FC = g77
 FFLAGS = -O3
 # for linking C++ with fortran, you must specify where to find
 # the relevant fortan libraries; in the example below, G77LIBDIR is
-# an environment variable that has been set by the user previously
+# an environment variable that has been set by the user previously.
+# It points to the directory which contains libg2c.a
+# alternatively, try uncommenting the line below
+#G77LIBDIR = $(shell dirname `locate libg2c.a | head -1`) 
 F77LIB = -L$(G77LIBDIR) -lg2c
 
 

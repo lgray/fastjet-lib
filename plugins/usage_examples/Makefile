@@ -1,7 +1,8 @@
 
-# remember to make sure that F77LIB (in ../Makefile) contains what
-# it's supposed to for linking with fotran (if you plan to use the
-# pxcone_example or many_algs_example programs).
+# remember to make sure that F77LIB (in ../../Makefile) contains what
+# it's supposed to for linking with fortran (if you plan to use the
+# pxcone_example or many_algs_example programs), by defining the
+# environment variable G77LIBDIR
 
 include ../../Makefile
 
