@@ -135,9 +135,9 @@ public:
   /// with information about how algorithically to run it). 
   ///
   /// [at some point might recombination schemes be added here?]
-  JetDefinition(JetFinder jet_finder = kt_algorithm, 
-                double R = 1.0, 
-                Strategy strategy = Best,
+  JetDefinition(JetFinder jet_finder, 
+                double R, 
+                Strategy strategy,
                 RecombinationScheme recomb_scheme = E_scheme) :
     _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
     // the largest sensible value for R
@@ -152,7 +152,7 @@ public:
   /// constructor with alternative ordering or arguments -- note that
   /// we have not provided a default jet finder, to avoid ambiguous
   /// JetDefinition() constructor.
-  JetDefinition(JetFinder jet_finder, 
+  JetDefinition(JetFinder jet_finder = kt_algorithm, 
                 double R = 1.0, 
                 RecombinationScheme recomb_scheme = E_scheme,
                 Strategy strategy = Best) {
@@ -210,17 +210,6 @@ public:
   std::string description() const;
 
 
-private:
-
-
-  JetFinder _jet_finder;
-  double      _Rparam    ;
-  Strategy  _strategy  ;
-
-  const Plugin * _plugin;
-
-
-
 public:
   //======================================================================
   /// An abstract base class that will provide the recombination scheme
@@ -235,8 +224,8 @@ public:
     virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
                            PseudoJet & pab) const = 0;
 
-    /// routine to be called for preprocessing input jets (to make them
-    /// compatible with the scheme requirements (e.g. massless).
+    /// routine called to preprocess each input jet (to make all input
+    /// jets compatible with the scheme requirements (e.g. massless).
     virtual void preprocess(PseudoJet & p) const {};
     
     /// a destructor to be replaced if necessary in derived classes...
@@ -269,6 +258,13 @@ public:
 
 
 private:
+
+
+  JetFinder _jet_finder;
+  double      _Rparam    ;
+  Strategy  _strategy  ;
+
+  const Plugin * _plugin;
 
   // when we use our own recombiner it's useful to point to it here
   // so that we don't have to worry about deleting it etc...

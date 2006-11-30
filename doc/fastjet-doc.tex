@@ -36,7 +36,7 @@
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 
-\title{FastJet 2.1 user manual (in progress)}
+\title{FastJet 2.1 user manual}
 \author{Matteo Cacciari and Gavin P. Salam\\
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
   Denis Diderot -- Paris 7, CNRS UMR 7589
@@ -67,7 +67,8 @@ invariant $k_t$ \cite{ktexcl,ktincl} and inclusive Cambridge/Aachen
 \cite{CamOrig,CamWobisch} jet-finders. It also provides access to
 tools that allow one to determine the areas of individual jets, which
 is of importance when correcting for underlying event and pileup
-contamination.
+contamination. Finally external jet finders can be accessed through
+the fastjet interface using a ``plugin'' facility.
 
 % This release has two aims: (a) to enable people with an immediate need
 % for speed in $k_t$ jet-finding to have immediate access to fast
@@ -76,24 +77,28 @@ contamination.
 % exposed in \cite{fastjet}. 
 
 The implementation of the inclusive Cambridge algorithm and of jet
-areas are new 
-features of version~2 of \fastjet; other changes include a new
-interface (the old one will be retained), and new algorithmic
+areas are new features of version~2 of \fastjet; other changes include
+a new interface (the old one will be retained), and new algorithmic
 strategies that can provide a factor of two improvement in speed for
-events whose number $N$ of particles $\sim 10^4$.
+events whose number $N$ of particles $\sim 10^4$. Choices of
+recombination schemes and plugins are new features of version 2.1.
 %
-We anticipate that the \fastjet facilities will also be made available
+We anticipate that the \fastjet facilities may also be made available
 at a later date with a more developed interface as part of the planned
 multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
+%
+In the meantime the plugin feature provides a similar functionality.
+Plugins are included for the fortran PxCone code and for the CDF C++
+JetClu and MidPoint cone jet finders.
 
 There are a range of variants possible for the both the $k_t$ and
 Cambridge jet-finders. For the $k_t$ jet finder, \fastjet implements
-the so-called $\Delta R$ distance measure with $E$-scheme
-recombination, as recommended in \cite{RunII-jet-physics}. It has both
-exclusive \cite{ktexcl} and inclusive modes \cite{ktincl}, the latter
-currently being in more widespread use, though the exclusive mode has
-physical advantages in certain cases.  We provide access to both
-modes.
+the so-called $\Delta R$ distance measure (as recommended in
+\cite{RunII-jet-physics}) with various recombination schemes. It has
+both exclusive \cite{ktexcl} and inclusive modes \cite{ktincl}, the
+latter currently being in more widespread use, though the exclusive
+mode has physical advantages in certain cases.  We provide access to
+both modes.
 
 %......................................................................
 \subsection{$\boldsymbol{k_t}$ jet finder}
@@ -749,8 +754,9 @@ Any plugin is to be derived from the abstract base class
   };
 \end{verbatim}
 A \ttt{JetDefinition} can be constructed by providing a pointer to a
-\ttt{JetDefinition::Plugin}; the \ttt{JetDefinition} can then be used
-as described above.
+\ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
+can then be used identically to the normal \ttt{JetDefinition} objects
+used in the previous sections.
 \begin{verbatim}
    // have some plugin class derived from the Plugin base class
    class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
@@ -822,10 +828,14 @@ recombinations.
 
 Certain (cone) jet algorithms do not perform pairwise clustering ---
 in these cases the plugin must invent a ficititious series of pairwise
-recombinations that leads to same final jets.
+recombinations that leads to the same final jets.
 
-\comment{Example plugin jet finders are provided in such and such a
-  location...}
+Example plugin jet finders that are provided with fastjet are the
+\ttt{CDFMidPointPlugin} illustrated above and also a
+\ttt{CDFJetCluPlugin}. These interface code available at
+\cite{CDFCones}. The \ttt{PxConePlugin} interfaces the PxCone code
+\cite{PxCone}.  Examples using these plugins and some further
+documentation are provided in the \ttt{plugins/} directory.
 
 % Any attempt to call these functions from outside the plugin will cause
 % an error.
@@ -923,16 +933,52 @@ We wish to thank Timothy Chan for helpful exchanges about the details
 of his dynamic closest pair algorithm. We thank Markus Wobisch and
 Andreas Oehler for comments on the documentation.
 
+We are grateful to Joey Huston and Mike Seymour for providing
+permission to distribute their cone jet-finder codes as plugins for
+fastjet.
 
 \appendix
 
 %======================================================================
 \section{External Recombination Schemes}
 
-Fill this out...
+If the user wishes to introduce a new recombination scheme, they may
+do so writing a class derived from \ttt{JetDefinition::Recombiner}:
+\begin{verbatim}
+  class JetDefinition::Recombiner {
+  public:
+    /// return a textual description of the recombination scheme
+    /// implemented here
+    virtual std::string description() const = 0;
+    
+    /// recombine pa and pb and put result into pab
+    virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
+                           PseudoJet & pab) const = 0;
+
+    /// routine called to preprocess each input jet (to make all input
+    /// jets compatible with the scheme requirements (e.g. massless).
+    virtual void preprocess(PseudoJet & p) const {};
+    
+    /// a destructor to be replaced if necessary in derived classes...
+    virtual ~Recombiner() {};
+  };
+\end{verbatim}
+A jet definition can then be constructed by providing a pointer to an
+object derived from \ttt{JetDefinition::Recombiner} instead of the
+\ttt{RecombinationScheme} index:
+\begin{verbatim}
+  JetDefinition(JetFinder jet_finder, 
+                double R, 
+                const JetDefinition::Recombiner * recombiner,
+                Strategy strategy = Best);
+\end{verbatim}
+The derived class \ttt{JetDefinition::DefaultRecombiner} is what is
+used internally to implement the various recombination schemes if an
+external \ttt{Recombiner} is not provided. It provides a useful
+example of how to implement a new \ttt{Recombiner} class.
 
 %======================================================================
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 
 \bibitem{fastjet}
   M.~Cacciari and G.~P.~Salam,
@@ -955,6 +1001,27 @@ Fill this out...
   %\prd{48}{1993}{3160} 
   [hep-ph/9305266]. 
   %%CITATION = HEP-PH 9305266;%%
+
+\bibitem{CamOrig}
+  Y.~L.~Dokshitzer, G.~D.~Leder, S.~Moretti and B.~R.~Webber,
+  %``Better jet clustering algorithms,''
+  JHEP {\bf 9708}, 001 (1997)
+  [hep-ph/9707323];
+  %%CITATION = HEP-PH 9707323;%%
+
+\bibitem{CamWobisch}
+  M.~Wobisch and T.~Wengler,
+   ``Hadronization corrections to jet cross sections in deep-inelastic
+  %scattering,''
+  arXiv:hep-ph/9907280;
+  %%CITATION = HEP-PH 9907280;%%
+  %\cite{Wobisch:2000dk}
+%\bibitem{Wobisch:2000dk}
+  M.~Wobisch,
+   ``Measurement and QCD analysis of jet cross sections in deep-inelastic
+  %positron proton collisions at s**(1/2) = 300-GeV,''
+DESY-THESIS-2000-049.
+%\href{http://www.slac.stanford.edu/spires/find/hep/www?r=desy-thesis-2000-049}{SPIRES entry}
   
 
 
@@ -977,6 +1044,18 @@ hep-ex/0005012.
   [hep-ph/0210022].
   %%CITATION = HEP-PH 0210022;%%
 
+\bibitem{Chan}
+  T.~M.~Chan,
+  ``Closest-point problems simplified on the RAM,''
+  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
+  p.~472 (2002).
+
+\bibitem{CSAreas} M.~Cacciari and G.~P.~Salam, in preparation.
+
+\bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
+
+\bibitem{PxCone} L.~A.~del~Pozo and M.~H.~Seymour, unpublished.
+
 
 \bibitem{CGAL}
 %Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
@@ -988,36 +1067,10 @@ J.-D.~Boissonnat {\it et al.},
 % Triangulations in CGAL
 Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
 
-\bibitem{CamOrig}
-  Y.~L.~Dokshitzer, G.~D.~Leder, S.~Moretti and B.~R.~Webber,
-  %``Better jet clustering algorithms,''
-  JHEP {\bf 9708}, 001 (1997)
-  [hep-ph/9707323];
-  %%CITATION = HEP-PH 9707323;%%
-
-\bibitem{CamWobisch}
-  M.~Wobisch and T.~Wengler,
-   ``Hadronization corrections to jet cross sections in deep-inelastic
-  %scattering,''
-  arXiv:hep-ph/9907280;
-  %%CITATION = HEP-PH 9907280;%%
-  %\cite{Wobisch:2000dk}
-%\bibitem{Wobisch:2000dk}
-  M.~Wobisch,
-   ``Measurement and QCD analysis of jet cross sections in deep-inelastic
-  %positron proton collisions at s**(1/2) = 300-GeV,''
-DESY-THESIS-2000-049.
-%\href{http://www.slac.stanford.edu/spires/find/hep/www?r=desy-thesis-2000-049}{SPIRES entry}
-
-\bibitem{Chan}
-  T.~M.~Chan,
-  ``Closest-point problems simplified on the RAM,''
-  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
-  p.~472 (2002).
-
-\bibitem{CSAreas} M.~Cacciari and G.~P.~Salam, in preparation.
-
 \end{thebibliography}
+
+
+
 
 
 \end{document}

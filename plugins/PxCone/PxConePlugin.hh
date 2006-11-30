@@ -1,3 +1,33 @@
+//STARTHEADER
+// $Id: ClusterSequence.cc 370 2006-11-28 16:25:44Z salam $
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
 #ifndef __PXCONEPLUGIN_HH__
 #define __PXCONEPLUGIN_HH__
 
@@ -7,11 +37,55 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// a plugin for fastjet-v2.1 that provides an interface to the fortran
-/// pxcone algorithm
+//----------------------------------------------------------------------
+//
+/// PxConePlugin is a plugin for fastjet (v2.1 upwards) that provides
+/// an interface to the fortran pxcone iterative cone algorithm with
+/// midpoint seeds.
+///
+/// Pxcone was written by Luis del Pozo and Michael H. Seymour. It is
+/// not a "supported" program, so if you encounter problems, you are
+/// on your own...
+///
+/// Note that pxcone sometimes encounters non-stable iterations; in
+/// such cases it returns an error -- the plugin propagates this by
+/// throwing a fastjet::Error exception; if the user wishes to have
+/// robust code, they should catch this exception.
+///
+/// Pxcone has a hard-coded limit (by default 4000) on the maximum
+/// number of particles and protojets; if the number of particles or
+/// protojets exceeds this, again a fastjet::Error exception will be
+/// thrown.
+///
+/// The functionality of pxcone is described at 
+/// http://www.hep.man.ac.uk/u/wplano/ConeJet.ps
+///
+//
+//----------------------------------------------------------------------
 class PxConePlugin : public JetDefinition::Plugin {
 public:
-  /// a compact constructor
+
+  /// constructor for the PxConePlugin, whose arguments have the
+  /// following meaning:
+  ///
+  ///   - the cone_radius is as usual in cone algorithms
+  ///
+  ///   - stables cones (protojets) below min_jet_energy are discarded
+  ///     before calling the splitting procedure to resolve overlaps
+  ///     (called epslon in pxcone).
+  ///
+  ///   - when two protojets overlap, if
+  ///       (overlapping_Et)/(Et_of_softer_protojet) < overlap_threshold
+  ///     the overlapping energy is split between the two protojets;
+  ///     otherwise the less energetic protojet is discarded. Called
+  ///     ovlim in pxcone.
+  ///
+  ///   - pxcone carries out p-scheme recombination, and the resulting 
+  ///     jets are massless; setting E_scheme_jets = true (default
+  ///     false) doesn't change the jet composition, but the final
+  ///     momentum sum for the jets is carried out by direct
+  ///     four-vector addition instead of p-scheme recombination.
+  ///
   PxConePlugin (double  cone_radius      , 
 		double  min_jet_energy = 5.0  , 
 		double  overlap_threshold = 0.5,

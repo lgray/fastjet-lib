@@ -28,6 +28,9 @@ Then in the src/ directory do
 
 which places the fastjet library in lib/. 
 
+To build the cone jet-finder plugins, you should type "make" in each
+of the plugin/PxCone and plugin/CDFCones directories.
+
 To run the example program cd to the example directory and do
 
   make fastjet_example
@@ -37,16 +40,17 @@ The output should be
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #---------------------------------------------------------------------
-#                      FastJet release 2.0                       
-#            Written by Matteo Cacciari and Gavin Salam          
-#            http://www.lpthe.jussieu.fr/~salam/fastjet          
-#                                                                        
+#                       FastJet release 2.1 
+#            Written by Matteo Cacciari and Gavin Salam
+#            http://www.lpthe.jussieu.fr/~salam/fastjet
+#
 # Longitudinally invariant Kt Jet clustering, using the fast geometric
-# algorithms of hep-ph/0512210 (please cite this if you use FastJet)  
-# This package makes use of the CGAL library: http://www.cgal.org/    
-# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th     
+# algorithms of hep-ph/0512210 (please cite this if you use FastJet)
+# This package makes use of the CGAL library: http://www.cgal.org/
+# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th
 # ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002
 #---------------------------------------------------------------------
+Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
 Strategy adopted by FastJet was N2Tiled
 
 Printing inclusive jets with pt > 5 GeV

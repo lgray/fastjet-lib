@@ -6,6 +6,22 @@ ChangeLog for fastjet-release directory
 	* Renamed the plugin directories (to have capitalisation
 	  corresponding to library names), added the CDF cone code
 	  together with Makefiles etc.
+
+        * added plugins/usage_examples to illustrate how to use the
+	  plugins, and how to use multiple jet algorithms together; added
+	  some documentation to the pxcone and midpoint plugins (jetclu
+	  users are on their own for the time being...)
+
+	* adapted Doxyfile to include the plugins directory; made it
+	  non-recurisve so that it doesn't get the CDF code and as a
+	  result had to add various directories by hand
+
+	* added mention of plugins/ directory in documentation.
+
+	* Updated the banner to include mention of plugins; compactified
+	  the rest a little.
+
+	* Updated ReleaseNotes to reflect the current status
 	
 2006-11-29  Gavin Salam <salam@lpthe.jussieu.fr>
 

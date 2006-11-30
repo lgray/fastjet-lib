@@ -2,13 +2,18 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Changes from v2.0 to v2.1
+Changes from v2.0 to v2.1 (beta)
 =========================
 
 New features:
 -------------
 
-- introduced plugin facility for alternative jet finders, via an
+- introduced option of control over recombination scheme, with a
+  RecombinationScheme enum (a variable of this type should be provided
+  to the JetDefinition constructor) and also the possibility of an
+  externally defined recombination scheme.
+
+- introduced a "plugin" facility for alternative jet finders, via an
   abstract base class
  
     class JetDefinition::Plugin
@@ -21,10 +26,10 @@ New features:
   class, which returns a (std::string) textual description of the
   algorithm defined.
 
-- [in progress] provided plugins for CDF JetClu, CDF Midpoint, PxCone
+- provided plugins for CDF JetClu, CDF Midpoint, PxCone code; the
+  plugins, the code they interface to and example programs are to be
+  found in the new plugins/ directory.
 
-- [in progress] introduced option of control over recombination scheme
-     + write documentation
 
 Minor additions
 ---------------

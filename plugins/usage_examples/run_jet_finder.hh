@@ -1,0 +1,46 @@
+//STARTHEADER
+// $Id: ClusterSequence.cc 370 2006-11-28 16:25:44Z salam $
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+#ifndef __RUN_JET_FINDER__HH__
+#define __RUN_JET_FINDER__HH__
+
+
+#include "fastjet/JetDefinition.hh"
+#include "fastjet/PseudoJet.hh"
+#include <iostream>
+
+void run_jet_finder (const std::vector<fastjet::PseudoJet> & input_particles,
+                     const fastjet::JetDefinition & jet_def);
+
+void read_input_particles(std::istream & input, 
+                          std::vector<fastjet::PseudoJet> & input_particles);
+
+
+#endif // __RUN_JET_FINDER__HH__

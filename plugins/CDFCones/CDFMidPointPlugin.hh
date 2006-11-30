@@ -1,3 +1,33 @@
+//STARTHEADER
+// $Id: ClusterSequence.cc 370 2006-11-28 16:25:44Z salam $
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
 #ifndef __CDFMIDPOINTPLUGIN_HH__
 #define __CDFMIDPOINTPLUGIN_HH__
 
@@ -7,23 +37,50 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// a plugin for fastjet-v2.1 that provides an interface to the CDF
-/// midpoint algorithm
+//----------------------------------------------------------------------
+//
+/// CDFMidPointPlugin is a plugin for fastjet (v2.1 upwards) that
+/// provides an interface to the CDF version of Run-II iterative cone
+/// algorithm with midpoint seeds (also known as ILCA).
+///
+/// The CDF code has been taken from Joey Huston's webpage
+/// http://www.pa.msu.edu/~huston/Les_Houches_2005/Les_Houches_SM.html
+///
+/// Note that the CDF midpoint code contains options that go beyond
+/// those described in the Tevatron run-II document (hep-ex/0005012),
+/// notably search-cones, as described in hep-ph/0111434, and
+/// midpoints bewteen multiplets of stable cones.
+//
+//----------------------------------------------------------------------
 class CDFMidPointPlugin : public JetDefinition::Plugin {
 public:
-  /// a compact constructor
-  CDFMidPointPlugin (double   cone_radius, 
-		     double   overlap_threshold = 0.5, 
-		     double   seed_threshold = 1.0,	     
-		     double   cone_area_fraction = 1.0) : 
-    _seed_threshold     (seed_threshold     ),    
-    _cone_radius        (cone_radius        ),
-    _cone_area_fraction (cone_area_fraction ),
-    _max_pair_size      (2                  ),
-    _max_iterations     (100                ),
-    _overlap_threshold  (overlap_threshold  )  {};
-
-  /// a constructor that looks like the one provided by CDF
+  ///
+  /// A CDFMidPointPlugin constructor that looks like the one provided
+  /// by CDF. Its arguments should have the following meaning:
+  ///
+  /// - seed_threshold: minimum pt for a particle to be considered 
+  ///   a seed of the iteration.
+  ///
+  /// - cone_radius: standard meaning
+  ///
+  /// - cone_area_fraction: stable-cones are searched for with a
+  ///   radius Rsearch = R * sqrt(cone_area_fraction), and then
+  ///   expanded to size R afterwards; note (hep-ph/0610012) that this
+  ///   introduces IR unsafety at NLO for X+2-jet observables (where X
+  ///   any hard object).
+  ///
+  /// - max_pair_size: "midpoints" can be added between pairs of
+  ///   stable cones, triplets of stable cones, etc.; max_pair_size
+  ///   indicates the maximum number of stable cones that are
+  ///   assembled when adding midpoints.
+  ///
+  /// - max_iterations: the maximum number of iterations to carry out
+  ///   when looking for a stable cone.
+  ///
+  /// - overlap_threshold: if
+  ///     (overlapping_Et)/(Et_of_softer_protojet) < overlap_threshold,
+  ///   overlapping jets are split, otherwise they are merged.
+  ///
   CDFMidPointPlugin (
                      double seed_threshold     ,	 
 		     double cone_radius        ,
@@ -37,6 +94,19 @@ public:
     _max_pair_size      (max_pair_size      ),
     _max_iterations     (max_iterations     ),
     _overlap_threshold  (overlap_threshold  )  {};
+
+  /// a compact constructor
+  CDFMidPointPlugin (double   cone_radius, 
+		     double   overlap_threshold = 0.5, 
+		     double   seed_threshold = 1.0,	     
+		     double   cone_area_fraction = 1.0) : 
+    _seed_threshold     (seed_threshold     ),    
+    _cone_radius        (cone_radius        ),
+    _cone_area_fraction (cone_area_fraction ),
+    _max_pair_size      (2                  ),
+    _max_iterations     (100                ),
+    _overlap_threshold  (overlap_threshold  )  {};
+
 
   // some functions to return info about parameters
   double seed_threshold     () const {return _seed_threshold     ;};

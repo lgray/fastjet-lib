@@ -1,0 +1,41 @@
+README for the plugins directory/
+---------------------------------
+
+This directory contains plugins that allow one to use certain cone
+jet-finders within the fastjet framework.
+
+For instructions on how to build and use plugins, see the main fastjet
+docuemtation. For documentation on specific plugins, see the plugin
+header files which contain extensive information.
+
+PxCone/
+        contains the pxcone code and the associated plugin; note that
+        since pxcone is in fortran, when linking with this plugin it
+        is necessary to link also with fortran libraries, and the
+        variable that provides the options for this F77LIB is defined
+        in ../Makefile.
+
+CDFCones/
+        contains CDF's code for their jetclu and midpoint jet finders
+        (actually in the CDFcode subdirectory), as well as the
+        associated plugins.
+
+
+usage_examples/
+        some programs to illustrate use of individual plugins as well
+        as several jet finders together. To run these programs, you
+        should first:
+
+        - build fastjet (see instructions in parent directory)
+        - build the plugins:
+            cd PxCone; make; cd ..
+            cd CDFCones; make; cd ..
+
+        - then build an example program and then run it
+            cd usage_examples
+            make
+            ./many_algs_example < data/single-event.dat
+        
+
+        
+
