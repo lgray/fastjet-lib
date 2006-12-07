@@ -156,7 +156,7 @@ void ClusterSequence::_print_banner() {
   cout << "# using fast geometric algorithms, with optional external jet-finder    \n";
   cout << "# plugins. Please cite hep-ph/0512210 if you use this code.             \n";
   cout << "#								      	   \n";
-  cout << "# This packages uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM\n";
+  cout << "# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM \n";
   cout << "# Symp. Discr. Alg, p.472 (2002)";
 #ifndef DROP_CGAL
   cout << " as well as CGAL: http://www.cgal.org/";
