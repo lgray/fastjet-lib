@@ -3,55 +3,69 @@
 
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
-version=2.0.0
+#version=2.0.0
+version=2.1.0b0
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
-dir=fastjet-$version
-tarname=$dir.tgz
+dirhere=fastjet-release
+dirtar=fastjet-$version
+tarname=$dirtar.tgz
+tmptarname=tmp-$tarname
 
 # make sure we have Makefile with use CGAL=no
-echo "Moving original Makefile out of way to make a copy with USE_CGAL = no"
-mv -v Makefile Makefile.orig
-cat Makefile.orig | sed 's/^USE_CGAL *= *yes/USE_CGAL = no/' > Makefile
 
-pushd ..
-
-if [[ -e $tarname ]]
+if [[ -e ../$tarname ]]
 then
   echo "Tarfile $tarname already exists. Not proceeding."
+elif [[ -e /tmp/$dirtar ]]
+then
+  echo "/tmp/$dirtar already exists, not proceeding"
 else
-  echo "Creating $tarname:"
-  if [[ -e $dir ]] 
-  then
-    echo "Could not create $dir as link to $origdir (former exists already)"
-  else
-    ln -s $origdir $dir
-    tar zcvhf $tarname $dir/(src|include|example|doc|.)/*.(f90|f|h|hh|alg|c|cc|C|tex|eps) \
-                      $dir/(src|include|example|doc)/Makefile \
-                      $dir/Makefile \
-                      $dir/example/data/*.dat \
-                      $dir/include/* \
-                      $dir/**/(READM*[A-Z]|INSTALL|Doxyfile|ReleaseNotes)\
-                      $dir/lib/.dummy \
-		      --exclude '.svn*' --exclude '*~'
+  echo "Moving original Makefile out of way to make a copy with USE_CGAL = no"
+  mv -v Makefile Makefile.orig
+  cat Makefile.orig | sed 's/^USE_CGAL *= *yes/USE_CGAL = no/' > Makefile
+  pushd ..
 
-    echo ""
+  echo "Creating tmp-$tarname"
+  tar zcf $tmptarname $dirhere/(src|include|example|plugins|)/**/*.(f90|f|h|hh|alg|c|cc|C|tex|eps) \
+                      $dirhere/doc/*.(tex|eps|sty) \
+                      $dirhere/(src|include|example|doc|plugins)/**/Makefile \
+                      $dirhere/Makefile \
+                      $dirhere/example/data/*.dat \
+                      $dirhere/plugins/usage_examples/data \
+                      $dirhere/include/* \
+                      $dirhere/**/(README|INSTALL|Doxyfile|ReleaseNotes)\
+                      $dirhere/lib/.dummy \
+		      --exclude '.svn*' --exclude '*~'
+  fulltarloc=`pwd`
+  pushd /tmp
+  echo "Unpacking it as /tmp/$dirhere"
+  tar zxf $fulltarloc/$tmptarname
+  mv -v /tmp/$dirhere /tmp/$dirtar
+  echo "Repacking it with directory name $dirtar"
+  tar zcvf $fulltarloc/$tarname $dirtar
+  echo 
+  echo "Removing /tmp/$dirhere"
+  rm -rf $dirtar
+  popd
+  rm -v $tmptarname
+
+  echo ""
     # if it's gavin running this then automatically copy the tarfile
     # to the web-space
-    if [[ $USER = salam ]]
-    then
+  if [[ $USER = salam ]]
+      then
       echo "Copying .tgz file to web-site"
       cp -vp $tarname ~salam/www/repository/software/fastjet/
       echo "************   Remember to edit web page **********"
-    fi
-
-    rm $dir
   fi
+
+  popd
+  echo "Putting original Makefile back"
+  mv -v Makefile.orig Makefile
+  
 fi
 
 #tar zcf $tarname
-popd
-mv -v Makefile.orig Makefile
-#echo "Putting original Makefile back"
 
 

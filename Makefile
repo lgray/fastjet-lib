@@ -35,7 +35,8 @@ FFLAGS = -O3
 # It points to the directory which contains libg2c.a
 # alternatively, try uncommenting the line below
 #G77LIBDIR = $(shell dirname `locate libg2c.a | head -1`) 
-F77LIB = -L$(G77LIBDIR) -lg2c
+#F77LIB = -L$(G77LIBDIR) -lg2c
+F77LIB = $(G77LIBDIR)/libg2c.a
 
 
 # Things needed when compiling with ktjet -- adjust to correspond

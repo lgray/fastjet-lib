@@ -30,6 +30,8 @@ New features:
   plugins, the code they interface to and example programs are to be
   found in the new plugins/ directory.
 
+- added ClusterSequence::unclustered_particles() a vector containing
+  the unclustered particles (relevant for some plugin algorithms).
 
 Minor additions
 ---------------

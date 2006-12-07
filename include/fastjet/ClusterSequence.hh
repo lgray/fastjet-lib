@@ -238,7 +238,7 @@ public:
   /// not belong to any of the supplied jets, the index is set to -1;
   std::vector<int> particle_jet_indices(const std::vector<PseudoJet> &) const;
 
-  /// routine that returns a an order in which to read the history
+  /// routine that returns an order in which to read the history
   /// such that clusterings that lead to identical jet compositions
   /// but different histories (because of degeneracies in the
   /// clustering order) will have matching constituents for each
@@ -254,6 +254,11 @@ public:
   /// [see GPS CCN28-12 for more info -- of course a full explanation
   /// here would be better...]
   std::vector<int> unique_history_order() const;
+
+  /// return the set of particles that have not been clustered. For 
+  /// kt and cam/aachen algorithms this should always be null, but for
+  /// cone type algorithms it can be non-null;
+  std::vector<PseudoJet> unclustered_particles() const;
 
 
 protected:
@@ -367,6 +372,10 @@ protected:
   /// will be set by default to be true for the first run
   static bool _first_time;
 
+  /// record the number of warnings provided about the exclusive
+  /// algorithm -- so that we don't print it out more than a few
+  /// times.
+  static int _n_exclusive_warnings;
 
   //----------------------------------------------------------------------
   /// the fundamental structure which contains the minimal info about

@@ -135,8 +135,10 @@ void ClusterSequence::_initialise_and_run (
 }
 
 
-// this needs to be defined outside the class definition.
+// these needs to be defined outside the class definition.
 bool ClusterSequence::_first_time = true;
+int ClusterSequence::_n_exclusive_warnings = 0;
+
 //----------------------------------------------------------------------
 // prints a banner on the first call
 void ClusterSequence::_print_banner() {
@@ -352,6 +354,13 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
   // make sure the user does not ask for more than jets than there
   // were particles in the first place.
   assert (njets <= _initial_n);
+
+  // provide a warning when extracting exclusive jets 
+  if (_jet_def.jet_finder() != kt_algorithm && _n_exclusive_warnings < 5) {
+    _n_exclusive_warnings++;
+    cerr << "FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care." << endl;
+  }
+
 
   // calculate the point where we have to stop the clustering.
   // relation between stop_point, njets assumes one extra jet disappears
@@ -586,6 +595,20 @@ void ClusterSequence::_extract_tree_children(
   int child = _history[position].child;
   if (child  >= 0) _extract_tree_children(child,extracted,lowest_constituent,unique_tree);
 }
+
+
+//======================================================================
+// return the list of unclustered particles
+vector<PseudoJet> ClusterSequence::unclustered_particles() const {
+  vector<PseudoJet> unclustered;
+  for (unsigned i = 0; i < n_particles() ; i++) {
+    if (_history[i].child == Invalid) 
+      unclustered.push_back(_jets[_history[i].jetp_index]);
+  }
+  return unclustered;
+}
+
+
 
 //======================================================================
 // helper for unique_history_order

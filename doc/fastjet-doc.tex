@@ -511,6 +511,14 @@ obtain a subjet analysis as follows:
   // run whatever subjet analysis is of interest here on jet0_seq.
 \end{verbatim}
 
+\paragraph{Unclustered particles.}  User-supplied plugin jet finders
+(see section~\ref{sec:plugins}) may have the property that not all
+particles are clustered into jets. In such a case it can be useful to
+obtain the list of unclustered particles. This can be done as
+follows:
+\begin{verbatim}
+  vector<fastjet::PseudoJet> unclustered = clust_seq.unclustered_particles();
+\end{verbatim}
 
 %======================================================================
 \section{Jet areas}
@@ -724,6 +732,7 @@ parabolic function $a + by^2$. If \ttt{exclude\_above} $< 0$
 
 %======================================================================
 \section{Plugin jet finders}
+\label{sec:plugins}
 
 It can be useful to have a common interface for a range of jet finders
 beyond the $k_t$ and Cambridge algorithms, and it can also be useful
