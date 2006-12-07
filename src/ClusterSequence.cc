@@ -159,7 +159,7 @@ void ClusterSequence::_print_banner() {
   cout << "# This packages uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM\n";
   cout << "# Symp. Discr. Alg, p.472 (2002)";
 #ifndef DROP_CGAL
-  cout << "# as well as CGAL: http://www.cgal.org/";
+  cout << " as well as CGAL: http://www.cgal.org/";
 #endif  // DROP_CGAL
   cout << ".\n";
   cout << "#-----------------------------------------------------------------------\n";
