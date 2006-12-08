@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 
   // common parameters
   double jet_radius = 0.7;
+  //double jet_radius = 1.0;
   double overlap_threshold = 0.5;
 
 
