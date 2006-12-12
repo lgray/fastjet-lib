@@ -8,6 +8,12 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
+# plugin includes here are temporary and subject to change...
+PLUGIN_INCLUDE = -I../plugins/CDFCones -I../plugins/PxCone -I../plugins/SCones
+PLUGIN_LIBRARY = -L../plugins/CDFCones -L../plugins/PxCone -L../plugins/SCones -lCDFConesPlugin -lPxConePlugin -lSConesPlugin -L$(HOME)/tex/jets/IRSafeCone/scones/src -lscones $(F77LIB)
+
+INCLUDE += $(PLUGIN_INCLUDE)
+
 # Gavin sometimes likes to compile with google's tcmalloc and profiler
 # libraries: tcmalloc gives a faster malloc (about 10% speed
 # gain on the CGAL based algorithms), while the profiler is useful
@@ -16,7 +22,7 @@ ifeq ($(shell whoami),salam)
   LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 endif
 
-SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc CmdLine.cc
+SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc fastjet_timing_plugins.cc CmdLine.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
 fastjet_example: fastjet_example.o  ../lib/libfastjet.a
@@ -42,6 +48,9 @@ ktjet_example.o: ktjet_example.cc
 
 fastjet_timing: fastjet_timing.o CmdLine.o ../lib/libfastjet.a
 	$(CXX)  -o fastjet_timing fastjet_timing.o CmdLine.o  $(LDFLAGS)
+
+fastjet_timing_plugins: fastjet_timing_plugins.o CmdLine.o ../lib/libfastjet.a
+	$(CXX)  -o fastjet_timing_plugins fastjet_timing_plugins.o CmdLine.o  $(LDFLAGS) $(PLUGIN_LIBRARY)
 
 # for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
 # variables must be set in ../Makefile

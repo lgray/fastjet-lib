@@ -17,6 +17,9 @@ $baserep = 700;
 # 100          -> ktjet   
 # 101, 102     -> JetClu , MidPoint
 #
+# 201, 202     -> plugins for JetClu and MidPoint
+# 203          -> plugin for pxcone
+# 204          -> plugin for scones
 #############################################
 
 # set of strategies to run
@@ -31,11 +34,12 @@ $baserep = 700;
 #@strategy = (-3);
 #@strategy = (11,102);
 #@strategy = (-3,-1,2);
-@strategy = (102);
+#@strategy = (102);
+@strategy = (204,203,101,201,202);
 #@strategy = (11,102);
 
-$radius=0.4;
-#$radius=0.7;
+#$radius=0.4;
+$radius=0.7;
 #$radius=1.0;
 
 # number of runs to average over when getting
@@ -100,6 +104,11 @@ if ( $strategy >= 12 && $strategy <= 14) {$algo = "-cam";}
 if ( $strategy == 100)  {$maxcomb = 13;}
 if ( $strategy == 101)  {$maxcomb = 70; $algo = "-jetclu";}
 if ( $strategy == 102)  {$maxcomb = 13; $algo = "-midpoint";}
+# the plugin versions of the algorithms
+if ( $strategy == 201)  {$maxcomb = 70; $algo = "-jetclu";}
+if ( $strategy == 202)  {$maxcomb = 13; $algo = "-midpoint";}
+if ( $strategy == 203)  {$maxcomb = 22; $algo = "-pxcone";}
+if ( $strategy == 204)  {$maxcomb = 22; $algo = "-scones";}
 
 
 print "Strategy = $strategy, writing to $filename\n";
@@ -134,9 +143,10 @@ for (my $j=1; $j <= $maxj; $j++) {
     for (my $irun = 0; $irun <2; $irun++) {
       my $local_repeat;
       if ($irun == 0) {$local_repeat = 0} else {$local_repeat = $repeat;}
-      if ( $strategy < 5 || ($strategy >= 12 && $strategy <= 14)) {
+      if ( $strategy < 5 || ($strategy >= 12 && $strategy <= 14 || $strategy >= 200)) {
 	# NB brackets are needed to get time to output to a stderr I can grab!!
-	@lines=`(time -p ../fastjet_timing -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile) 2>&1`;
+	#@lines=`(time -p ../fastjet_timing -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile) 2>&1`;
+	@lines=`(time -p ../fastjet_timing_plugins -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile) 2>&1`;
       }
 
       if ( $strategy == 100 ) {  # run ktjet 
