@@ -23,7 +23,7 @@ $baserep = 700;
 #@strategy = (-2,-1,0,2,10);
 #@strategy = (-3,-1,2);
 #@strategy = (3,4);
-@strategy = (-4,-3,-1,2,12);
+#@strategy = (-4,-3,-1,2,12);
 #@strategy = (1);
 #@strategy = (12);
 #@strategy = (12);
@@ -31,7 +31,7 @@ $baserep = 700;
 #@strategy = (-3);
 #@strategy = (11,102);
 #@strategy = (-3,-1,2);
-#@strategy = (102);
+@strategy = (102);
 #@strategy = (11,102);
 
 $radius=0.4;
@@ -61,7 +61,8 @@ $hostname=`hostname -s`;
 chomp($hostname);
 #$filename="timings-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-".$hostname.".dat";
-$filename="timings-LHC50+minbias+mansorted-R$radius-".$hostname.".dat";
+#$filename="timings-LHC50+minbias+mansorted-R$radius-".$hostname.".dat";
+$filename="tmp-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-highN-".$hostname.".dat";
 #$filename="timings-PtMin1000-LHC-highN-".$hostname.".dat";
@@ -143,11 +144,11 @@ for (my $j=1; $j <= $maxj; $j++) {
       }
 
       if ( $strategy == 101 || $strategy == 102 ) { # run JetClu or MidPoint
-	@lines=`(time -p ../run-JetCluMidPoint/JCMP_algorithm  $algo -combine $combine -repeat $local_repeat < $datafile > /dev/null) 2>&1`;
+	@lines=`(time -p ../../../run-JetCluMidPoint/JCMP_algorithm  $algo -combine $combine -repeat $local_repeat < $datafile > /dev/null) 2>&1`;
       }
 
       foreach my $line (@lines) {
-	if ($line =~ /number of particles = ([0-9]+)/) {$npart = $1;}
+	if ($line =~ /number of particles *= *([0-9]+)/i) {$npart = $1;}
 	if ($line =~ /user ([0-9\.]+)/) {$time = $1;}
       }
       # record the read time on the first round
