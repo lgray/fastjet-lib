@@ -12,6 +12,7 @@ LDFLAGS += -L../../lib -lfastjet
 
 INCLUDE += -I../PxCone
 INCLUDE += -I../CDFCones
+INCLUDE += -I../SCones
 
 many_algs_example: many_algs_example.o run_jet_finder.o
 	$(CXX) $(CXXFLAGS) -o many_algs_example many_algs_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin -L../PxCone -lPxConePlugin $(F77LIB)
@@ -20,6 +21,11 @@ many_algs_example: many_algs_example.o run_jet_finder.o
 pxcone_example: pxcone_example.o run_jet_finder.o
 	$(CXX) $(CXXFLAGS) -o pxcone_example pxcone_example.o run_jet_finder.o $(LDFLAGS) -L../PxCone -lPxConePlugin $(F77LIB)
 
+
+scones_example: scones_example.o run_jet_finder.o
+	$(CXX) $(CXXFLAGS) -o scones_example scones_example.o run_jet_finder.o $(LDFLAGS) -L../SCones -lSConesPlugin -L$(HOME)/tex/jets/IRSafeCone/scones/src -lscones
+
+
 cdfmidpoint_example: cdfmidpoint_example.o run_jet_finder.o
 	$(CXX) $(CXXFLAGS) -o cdfmidpoint_example cdfmidpoint_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin
 
@@ -27,11 +33,11 @@ clean:
 	rm -f *.o
 
 distclean: clean
-	rm -f pxcone_example  many_algs_example cdfmidpoint_example *~
+	rm -f pxcone_example scones_example many_algs_example cdfmidpoint_example *~
 
 
 depend:
-	makedepend  $(INCLUDE) -I. --   -- pxcone_example.cc run_jet_finder.cc many_algs_example.cc cdfmidpoint_example.cc
+	makedepend  $(INCLUDE) -I. --   -- pxcone_example.cc scones_example.cc run_jet_finder.cc many_algs_example.cc cdfmidpoint_example.cc
 
 # DO NOT DELETE
 
@@ -40,6 +46,11 @@ pxcone_example.o: ../../include/fastjet/internal/numconsts.hh
 pxcone_example.o: ../../include/fastjet/internal/base.hh
 pxcone_example.o: ../../include/fastjet/PseudoJet.hh
 pxcone_example.o: ../PxCone/PxConePlugin.hh
+scones_example.o: run_jet_finder.hh ../../include/fastjet/JetDefinition.hh
+scones_example.o: ../../include/fastjet/internal/numconsts.hh
+scones_example.o: ../../include/fastjet/internal/base.hh
+scones_example.o: ../../include/fastjet/PseudoJet.hh
+scones_example.o: ../PxCone/PxConePlugin.hh
 run_jet_finder.o: ../../include/fastjet/PseudoJet.hh
 run_jet_finder.o: ../../include/fastjet/internal/numconsts.hh
 run_jet_finder.o: ../../include/fastjet/internal/base.hh

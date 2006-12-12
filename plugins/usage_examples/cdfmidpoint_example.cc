@@ -38,6 +38,9 @@
 
 #include "run_jet_finder.hh"
 #include "CDFMidPointPlugin.hh"
+#include<vector>
+#include<iostream>
+using namespace std;
 
 int main(int argc, char** argv) {
 
@@ -60,7 +63,9 @@ int main(int argc, char** argv) {
   fastjet::JetDefinition jet_def(plugin);
 
   // call the example routine that runs with arbitrary jet definitions
-  run_jet_finder(jet_def);
+  vector<fastjet::PseudoJet> particles;
+  read_input_particles(cin, particles);
+  run_jet_finder(particles, jet_def);
 
   // clean up plugin memory.
   delete plugin;

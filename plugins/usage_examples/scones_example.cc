@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id$
+// $Id: pxcone_example.cc 380 2006-12-07 09:25:46Z salam $
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //
@@ -40,7 +40,7 @@
 //----------------------------------------------------------------------
 
 #include "run_jet_finder.hh"
-#include "PxConePlugin.hh"
+#include "SConesPlugin.hh"
 #include<vector>
 #include<iostream>
 using namespace std;
@@ -53,11 +53,8 @@ int main(int argc, char** argv) {
 
   // allocate a new plugin
   double cone_radius = 0.7;
-  double min_jet_energy = 5.0;
   double overlap_threshold = 0.5;
-  bool   E_scheme_jets = false;
-  plugin = new fastjet::PxConePlugin (cone_radius, min_jet_energy, 
-                                      overlap_threshold, E_scheme_jets);
+  plugin = new fastjet::SConesPlugin (cone_radius, overlap_threshold);
 
   // create a jet-definition based on the plugin
   fastjet::JetDefinition jet_def(plugin);
