@@ -63,7 +63,8 @@ void run_jet_finder (const vector<fastjet::PseudoJet> & input_particles,
   print_jets(clust_seq, inclusive_jets);
   cout << endl;
 
-
+  // print out unclustered stuff
+  cout << clust_seq.unclustered_particles().size() << " particles unclustered" << endl;
 }
 
 

@@ -46,12 +46,17 @@ public:
   Error() {;};
   Error(const std::string & message) {
     _message = message; 
-    std::cerr << "fastjet::Error: "<<message << std::endl;};
+    if (_print_errors) std::cerr << "fastjet::Error: "<<message << std::endl;
+  };
 
   std::string message() const {return _message;};
 
+  static void set_print_errors(bool print_errors) {
+    _print_errors = print_errors;};
+
 private:
   std::string _message;
+  static bool _print_errors;
 };
 
 
