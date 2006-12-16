@@ -36,17 +36,6 @@ void SConesPlugin::run_clustering(ClusterSequence & clust_seq) const {
   Cscones scones;
   scones.compute_jets(scones_momenta, cone_radius(), overlap_threshold());
 
-  // temporary, for dealing with warnings...
-  if (scones.n_warnings > 0) {
-    // print the event (very dirty...)
-    cout.precision(14);
-    cout << "Culprit event is:" << endl;
-    for (int i = 0; i < n; i++) {
-      const PseudoJet & p = clust_seq.jets()[i]; // shorthand
-      cout << p.px() << " " << p.py() << " " << p.pz() << " " << p.E() << endl;
-    }
-  }
-  
   // extract the jets [in reverse order -- to get nice ordering in pt at end]
   int njet = scones.jets.size();
 
@@ -73,5 +62,19 @@ void SConesPlugin::run_clustering(ClusterSequence & clust_seq) const {
     clust_seq.plugin_record_iB_recombination(jet_k, d_iB);
   }
 }
+
+
+// OBSOLETE CODE  
+//// temporary, for dealing with warnings...
+//if (scones.n_warnings > 0) {
+//  // print the event (very dirty...)
+//  cout.precision(14);
+//  cout << "Culprit event is:" << endl;
+//  for (int i = 0; i < n; i++) {
+//    const PseudoJet & p = clust_seq.jets()[i]; // shorthand
+//    cout << p.px() << " " << p.py() << " " << p.pz() << " " << p.E() << endl;
+//  }
+//}
+
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
