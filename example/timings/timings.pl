@@ -29,13 +29,13 @@ $baserep = 700;
 #@strategy = (-4,-3,-1,2,12);
 #@strategy = (1);
 #@strategy = (12);
-#@strategy = (12);
+@strategy = (102);
 #@strategy = (-3,-1,0,2,10,11,102);
 #@strategy = (-3);
 #@strategy = (11,102);
 #@strategy = (-3,-1,2);
 #@strategy = (102);
-@strategy = (204,203,101,201,202);
+#@strategy = (204,203,101,201,202);
 #@strategy = (11,102);
 
 #$radius=0.4;

@@ -133,9 +133,10 @@ int main (int argc, char ** argv) {
   bool   massless = cmdline.present("-massless");
   int  nev     = cmdline.int_val("-nev",1);
   bool add_dense_coverage = cmdline.present("-dense");
-  
+
   // for cone algorithms
-  double overlap_threshold = 0.5;
+  double overlap_threshold = cmdline.double_val("-overlap",0.5);
+  double seed_threshold = cmdline.double_val("-seed",1.0);
 
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
@@ -144,7 +145,6 @@ int main (int argc, char ** argv) {
   if (cmdline.present("-cam")) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
   } else if (cmdline.present("-midpoint")) {
-    double seed_threshold = 1.0;
     double cone_area_fraction = 1.0;
     int    max_pair_size = 2;
     int    max_iterations = 100;
