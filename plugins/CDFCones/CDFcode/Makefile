@@ -3,9 +3,10 @@
 
 include ../../../Makefile
 
-# with some gcc's midpoint can be a lot slower at -O3 than -O2, so
-# ensure we only use -O2 for it
-CXXFLAGSmidpoint = $(patsubst -O3,-O2,$(CXXFLAGS))
+# with gcc's midpoint can be a lot slower with optimization than without;
+# accordingly we have a special CXXFLAGS for the midpoint algorithm to 
+# eliminate any (de)optimization
+CXXFLAGSmidpoint = 
 
 all : libJetAlgs.a
 
