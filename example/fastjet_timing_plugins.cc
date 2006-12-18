@@ -242,6 +242,7 @@ int main (int argc, char ** argv) {
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
     cout << "strategy used =  "<< clust_seq.strategy_string()<< endl;
+    cout << "Algorithm: " << jet_def.description() << endl;
 
     // now provide some nice output...
     if (inclkt >= 0.0) {

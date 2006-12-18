@@ -20,6 +20,7 @@ $baserep = 700;
 # 201, 202     -> plugins for JetClu and MidPoint
 # 203          -> plugin for pxcone
 # 204          -> plugin for scones
+# 212          -> MidPoint with seed threshold = 0?
 #############################################
 
 # set of strategies to run
@@ -29,13 +30,14 @@ $baserep = 700;
 #@strategy = (-4,-3,-1,2,12);
 #@strategy = (1);
 #@strategy = (12);
-@strategy = (102);
+#@strategy = (102);
 #@strategy = (-3,-1,0,2,10,11,102);
 #@strategy = (-3);
 #@strategy = (11,102);
 #@strategy = (-3,-1,2);
 #@strategy = (102);
-#@strategy = (204,203,101,201,202);
+# for cones
+@strategy = (1,204,203,101,201,202,212);
 #@strategy = (11,102);
 
 #$radius=0.4;
@@ -66,7 +68,8 @@ chomp($hostname);
 #$filename="timings-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-R$radius-".$hostname.".dat";
-$filename="tmp-".$hostname.".dat";
+$filename="timings-LHC50+minbias+mansorted-R$radius-cones-".$hostname.".dat";
+#$filename="tmp-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-highN-".$hostname.".dat";
 #$filename="timings-PtMin1000-LHC-highN-".$hostname.".dat";
@@ -107,6 +110,7 @@ if ( $strategy == 102)  {$maxcomb = 13; $algo = "-midpoint";}
 # the plugin versions of the algorithms
 if ( $strategy == 201)  {$maxcomb = 70; $algo = "-jetclu";}
 if ( $strategy == 202)  {$maxcomb = 13; $algo = "-midpoint";}
+if ( $strategy == 212)  {$maxcomb = 10; $algo = "-midpoint -seed 0.0";}
 if ( $strategy == 203)  {$maxcomb = 22; $algo = "-pxcone";}
 if ( $strategy == 204)  {$maxcomb = 22; $algo = "-scones";}
 
@@ -115,6 +119,7 @@ print "Strategy = $strategy, writing to $filename\n";
 my $npart;
 my $time = 0;
 my $readtime;
+my $algorithm;
 for (my $j=1; $j <= $maxj; $j++) {
   $combine = $j;
   # use the following line with Pythia-1PtMin50+nMinBias-mansorted.dat
@@ -159,6 +164,7 @@ for (my $j=1; $j <= $maxj; $j++) {
 
       foreach my $line (@lines) {
 	if ($line =~ /number of particles *= *([0-9]+)/i) {$npart = $1;}
+        if ($line =~ /^Algorithm:/) {$algorithm = $line;}
 	if ($line =~ /user ([0-9\.]+)/) {$time = $1;}
       }
       # record the read time on the first round
@@ -187,6 +193,10 @@ for (my $j=1; $j <= $maxj; $j++) {
     }
   }
   
+  if ($j == 1) {
+    print "# $algorithm";
+    print OUT "# $algorithm";
+  }
   print $npart." ".$cumultime/$repeat/($nstat_local-1)."\n";
   print OUT $npart." ".$cumultime/$repeat/($nstat_local-1)."\n";
 
