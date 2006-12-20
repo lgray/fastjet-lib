@@ -17,7 +17,8 @@ string SConesPlugin::description () const {
   
   desc << "SCones jet finder with " 
        << "cone_radius = "        << cone_radius        () << ", "
-       << "overlap_threshold  = " << overlap_threshold  () ;
+       << "overlap_threshold  = " << overlap_threshold  () << ", "
+       << "n_pass_max  = "        << n_pass_max         () ;
 
   return desc.str();
 }
@@ -34,7 +35,8 @@ void SConesPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   // run the jet finding
   Cscones scones;
-  scones.compute_jets(scones_momenta, cone_radius(), overlap_threshold());
+  scones.compute_jets(scones_momenta, cone_radius(), overlap_threshold(),
+                      n_pass_max());
 
   // extract the jets [in reverse order -- to get nice ordering in pt at end]
   int njet = scones.jets.size();
