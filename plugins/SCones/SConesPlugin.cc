@@ -20,6 +20,12 @@ string SConesPlugin::description () const {
        << "overlap_threshold  = " << overlap_threshold  () << ", "
        << "n_pass_max  = "        << n_pass_max         () ;
 
+  // create a fake scones object so that we can find out more about it
+  Cscones scones;
+  if (scones.merge_identical_protocones) {
+    desc << ", and (IR unsafe) merge_indentical_protocones=true" ;
+  }
+
   return desc.str();
 }
 

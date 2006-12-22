@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-12-21  Gavin Salam <salam@lpthe.jussieu.fr> + Gregory Soyez
+
+	* Modified SCones plugin so that it provides information also on
+	  the use of "wrong" split-merge procedure.
+	
 2006-12-18  Gavin Salam <salam@lpthe.jussieu.fr> + Gregory Soyez
 
 	* Added output of description of the algorithm in the
