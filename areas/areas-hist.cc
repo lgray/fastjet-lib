@@ -65,6 +65,13 @@ int main (int argc, char ** argv) {
     exit(-1);
   }
 
+  ostream * ostr;
+  if (cmdline.present("-out")) {
+    ostr = new ofstream(cmdline.value<string>("-out").c_str());
+  } else {
+    ostr = & cout;
+  }
+
   if (!cmdline.all_options_used()) {
     cerr << "ERROR: exiting become some options unrecognized" << endl;
     exit(-1);
@@ -77,16 +84,16 @@ int main (int argc, char ** argv) {
   // the histogram...
   SimpleHist areahist(-0.000001,histmax/fj::pi,nhist);
 
-  cout << "# " << cmdline.command_line() << endl;
-  cout << "# strategy     = " << jet_def.strategy()<<endl;
-  cout << "# anchor_pt    = " << anchor_pt    << endl;
-  cout << "# ktR          = " << ktR          << endl;
-  cout << "# ghost_etamax = " << ghost_etamax << endl;
-  cout << "# ghost_area   = " << ghost_area   << endl;
-  cout << "# nev          = " << n            << endl;
-  cout << "# nhist        = " << nhist        << endl;
-  cout << "# histmax      = " << histmax      << endl;
-  cout << "# jet def      = " << jet_def.description() << endl;
+  (*ostr) << "# " << cmdline.command_line() << endl;
+  (*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
+  (*ostr) << "# anchor_pt    = " << anchor_pt    << endl;
+  (*ostr) << "# ktR          = " << ktR          << endl;
+  (*ostr) << "# ghost_etamax = " << ghost_etamax << endl;
+  (*ostr) << "# ghost_area   = " << ghost_area   << endl;
+  (*ostr) << "# nev          = " << n            << endl;
+  (*ostr) << "# nhist        = " << nhist        << endl;
+  (*ostr) << "# histmax      = " << histmax      << endl;
+  (*ostr) << "# jet def      = " << jet_def.description() << endl;
 
   int njets = 0;
   double average_area = 0.0, average_ar2 = 0.0;
@@ -107,24 +114,24 @@ int main (int argc, char ** argv) {
 	average_ar2  += pow2(normarea);
 	areahist.add_entry(normarea);
 	njets++;
-        //cout << setw(12) << output_jets[j].rap() << " " 
+        //(*ostr) << setw(12) << output_jets[j].rap() << " " 
         //     << setw(10) << normarea  << " "
         //     << setw(4)  << output_jets[j].user_index() << endl; 
       }
     }
     //vector<fj::PseudoJet> unclust = clust.unclustered_particles();
-    //cout << "Unclustered particles: " << unclust.size() << endl;
+    //(*ostr) << "Unclustered particles: " << unclust.size() << endl;
     //for (unsigned j = 0; j < unclust.size(); j++) {
-    //  cout << "UNCLUST: " << unclust[j].rap() << " " << unclust[j].phi() << " " << unclust[j].perp() << " " << unclust[j].cluster_hist_index() << endl;
+    //  (*ostr) << "UNCLUST: " << unclust[j].rap() << " " << unclust[j].phi() << " " << unclust[j].perp() << " " << unclust[j].cluster_hist_index() << endl;
   }
 
   average_area /= njets;
   average_ar2  /= njets;
   average_ar2 = sqrt((average_ar2-pow2(average_area))/njets);
-  cout << "# average area = " << average_area << " +- " << average_ar2 << endl;
+  (*ostr) << "# average area = " << average_area << " +- " << average_ar2 << endl;
   double rescale = 1.0 / (areahist.binsize() * njets);
   for (unsigned i = 0; i < areahist.size(); i++) {
-    cout << areahist.binmid(i) << " " << areahist[i]*rescale 
+    (*ostr) << areahist.binmid(i) << " " << areahist[i]*rescale 
 	 << " " << sqrt(areahist[i])*rescale << endl;
   }
 }
