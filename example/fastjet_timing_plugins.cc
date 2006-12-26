@@ -80,7 +80,7 @@
 ///
 ///   -pxcone       switch to the PxCone jet finder
 /// 
-///   -scones       switch to the SCones jet finder (seedless cones)
+///   -siscone       switch to the SISCone jet finder (seedless cones)
 ///
 ///   -midpoint     switch to CDF's midpoint code
 ///
@@ -98,7 +98,7 @@
 
 // for all the plugins
 #include "PxConePlugin.hh"
-#include "SConesPlugin.hh"
+#include "SISConePlugin.hh"
 #include "CDFMidPointPlugin.hh"
 #include "CDFJetCluPlugin.hh"
 
@@ -161,8 +161,8 @@ int main (int argc, char ** argv) {
     double seed_threshold = 1.0;
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
-  } else if (cmdline.present("-scones")) {
-    jet_def = fj::JetDefinition( new fj::SConesPlugin (
+  } else if (cmdline.present("-siscone")) {
+    jet_def = fj::JetDefinition( new fj::SISConePlugin (
                                       ktR, overlap_threshold));
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);

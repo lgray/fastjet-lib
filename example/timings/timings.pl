@@ -19,7 +19,7 @@ $baserep = 700;
 #
 # 201, 202     -> plugins for JetClu and MidPoint
 # 203          -> plugin for pxcone
-# 204          -> plugin for scones
+# 204          -> plugin for siscone
 # 212          -> MidPoint with seed threshold = 0?
 #############################################
 
@@ -114,7 +114,7 @@ if ( $strategy == 201)  {$maxcomb = 70; $algo = "-jetclu";}
 if ( $strategy == 202)  {$maxcomb = 20; $algo = "-midpoint";}
 if ( $strategy == 212)  {$maxcomb = 10; $algo = "-midpoint -seed 0.0";}
 if ( $strategy == 203)  {$maxcomb = 22; $algo = "-pxcone";}
-if ( $strategy == 204)  {$maxcomb = 30; $algo = "-scones";}
+if ( $strategy == 204)  {$maxcomb = 30; $algo = "-siscone";}
 
 
 print "Strategy = $strategy, writing to $filename\n";

@@ -9,8 +9,8 @@ INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
 # plugin includes here are temporary and subject to change...
-PLUGIN_INCLUDE = -I../plugins/CDFCones -I../plugins/PxCone -I../plugins/SCones
-PLUGIN_LIBRARY = -L../plugins/CDFCones -L../plugins/PxCone -L../plugins/SCones -lCDFConesPlugin -lPxConePlugin -lSConesPlugin -L$(HOME)/tex/jets/IRSafeCone/scones/src -lscones $(F77LIB)
+PLUGIN_INCLUDE = -I../plugins/CDFCones -I../plugins/PxCone -I../plugins/SISCone
+PLUGIN_LIBRARY = -L../plugins/CDFCones -L../plugins/PxCone -L../plugins/SISCone -lCDFConesPlugin -lPxConePlugin -lSISConePlugin  $(F77LIB)
 
 INCLUDE += $(PLUGIN_INCLUDE)
 
