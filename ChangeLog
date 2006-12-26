@@ -1,6 +1,18 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-12-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* dealt with renaming from scones -> siscone; 
+
+	* added the siscone repository as an "external" repository to
+	  fastjet, inside plugins/SISCone (so that it is updated
+	  automatically each time fastjet is updated -- but note: commits
+	  do not recurse automatically down...)
+
+        * also updated the usage_examples (many_algs_example now also runs
+	  siscone).	
+	
 2006-12-21  Gavin Salam <salam@lpthe.jussieu.fr> + Gregory Soyez
 
 	* Modified SCones plugin so that it provides information also on

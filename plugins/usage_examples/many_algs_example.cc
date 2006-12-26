@@ -38,6 +38,7 @@
 
 #include "run_jet_finder.hh"
 #include "CDFMidPointPlugin.hh"
+#include "SISConePlugin.hh"
 #include "PxConePlugin.hh"
 #include<vector>
 #include<iostream>
@@ -53,8 +54,8 @@ int main(int argc, char** argv) {
   
   // we will have four jet definitions, and the first two will be
   // plugins
-  vector<fastjet::JetDefinition> jet_defs(4);
-  vector<fastjet::JetDefinition::Plugin *> plugins(2);
+  vector<fastjet::JetDefinition> jet_defs(5);
+  vector<fastjet::JetDefinition::Plugin *> plugins(3);
 
   // common parameters
   double jet_radius = 0.7;
@@ -82,9 +83,14 @@ int main(int argc, char** argv) {
   jet_defs[1] = fastjet::JetDefinition(plugins[1]);
   
 
+  // set up a siscone jet definition
+  int npass = 0; // do infinite number of passes
+  plugins[2] = new fastjet::SISConePlugin (jet_radius, overlap_threshold, npass);
+  jet_defs[2] = fastjet::JetDefinition(plugins[2]);
+
   // set up kt and cam/aachen definitions
-  jet_defs[2] = fastjet::JetDefinition(fastjet::kt_algorithm, jet_radius);
-  jet_defs[3] = fastjet::JetDefinition(fastjet::cambridge_algorithm, 
+  jet_defs[3] = fastjet::JetDefinition(fastjet::kt_algorithm, jet_radius);
+  jet_defs[4] = fastjet::JetDefinition(fastjet::cambridge_algorithm, 
                                        jet_radius);
 
 
@@ -97,4 +103,5 @@ int main(int argc, char** argv) {
   // clean up plugin memory.
   delete plugins[0];
   delete plugins[1];
+  delete plugins[2];
 }

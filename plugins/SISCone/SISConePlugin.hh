@@ -1,5 +1,5 @@
-#ifndef __SCONESPLUGIN_HH__
-#define __SCONESPLUGIN_HH__
+#ifndef __SISCONEPLUGIN_HH__
+#define __SISCONEPLUGIN_HH__
 
 #include "fastjet/JetDefinition.hh"
 
@@ -8,15 +8,15 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
-/// SConesPlugin is a plugin for fastjet (v2.1 upwards) that provides
-/// an interface to the seedless cone jet finder by Gregory Soyez and
-/// Gavin Salam.
+/// SISConePlugin is a plugin for fastjet (v2.1 upwards) that provides
+/// an interface to the seedless infrared safe cone jet finder by
+/// Gregory Soyez and Gavin Salam.
 ///
-/// As of 2006-12-12, this plugin is in development, as is the SCones
-/// code itself
-class SConesPlugin : public JetDefinition::Plugin {
+/// As of 2006-12-26, this plugin is beta, as is the SISCone code
+/// itself
+class SISConePlugin : public JetDefinition::Plugin {
 public:
-  SConesPlugin (double cone_radius,
+  SISConePlugin (double cone_radius,
                 double overlap_threshold = 0.5,
                 int    n_pass_max = 1) :
     _cone_radius           (cone_radius       ),
@@ -45,5 +45,5 @@ private:
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
 
-#endif // __SCONESPLUGIN_HH__
+#endif // __SISCONEPLUGIN_HH__
 

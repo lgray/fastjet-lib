@@ -150,7 +150,7 @@ void ClusterSequence::_print_banner() {
   //Symp. Discr. Alg, p.472 (2002) and  CGAL (http://www.cgal.org);
 
   cout << "#------------------------------------------------------------------------\n";
-  cout << "#                       FastJet release 2.1 beta   			   \n";
+  cout << "#                       FastJet release 2.1 beta1  			   \n";
   cout << "#              Written by Matteo Cacciari and Gavin Salam		   \n"; 
   cout << "#              http://www.lpthe.jussieu.fr/~salam/fastjet		   \n"; 
   cout << "#								      	   \n";

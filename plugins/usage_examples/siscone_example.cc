@@ -40,7 +40,7 @@
 //----------------------------------------------------------------------
 
 #include "run_jet_finder.hh"
-#include "SConesPlugin.hh"
+#include "SISConePlugin.hh"
 #include<vector>
 #include<iostream>
 using namespace std;
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   // allocate a new plugin
   double cone_radius = 0.7;
   double overlap_threshold = 0.5;
-  plugin = new fastjet::SConesPlugin (cone_radius, overlap_threshold);
+  plugin = new fastjet::SISConePlugin (cone_radius, overlap_threshold);
 
   // create a jet-definition based on the plugin
   fastjet::JetDefinition jet_def(plugin);

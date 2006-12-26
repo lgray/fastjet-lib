@@ -64,7 +64,7 @@ void run_jet_finder (const vector<fastjet::PseudoJet> & input_particles,
   cout << endl;
 
   // print out unclustered stuff
-  cout << clust_seq.unclustered_particles().size() << " particles unclustered" << endl;
+  cout << clust_seq.unclustered_particles().size() << " particles unclustered" << endl << endl;
 }
 
 
@@ -75,8 +75,12 @@ void read_input_particles(istream & input,
 
   // read in input particles
   double px, py , pz, E;
-  while (input >> px >> py >> pz >> E) {
-    // create a fastjet::PseudoJet with these components and put it onto
+  string line;
+  while (getline(input, line)) {
+    if (line.substr(0,1) == "#") {continue;}
+    istringstream linestream(line);
+    linestream >> px >> py >> pz >> E;
+  // create a fastjet::PseudoJet with these components and put it onto
     // back of the input_particles vector
     input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
   }

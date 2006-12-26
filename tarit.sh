@@ -4,7 +4,7 @@
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
 #version=2.0.0
-version=2.1.0b0
+version=2.1.0b1
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dirhere=fastjet-release
@@ -27,14 +27,17 @@ else
   pushd ..
 
   echo "Creating tmp-$tarname"
-  tar zcf $tmptarname $dirhere/(src|include|example|plugins|)/**/*.(f90|f|h|hh|alg|c|cc|C|tex|eps) \
+  tar zcf $tmptarname $dirhere/(src|include|example|plugins|)/**/*.(f90|f|h|hh|alg|c|cc|C|tex|eps|cpp) \
                       $dirhere/doc/*.(tex|eps|sty) \
                       $dirhere/(src|include|example|doc|plugins)/**/Makefile \
                       $dirhere/Makefile \
                       $dirhere/example/data/*.dat \
                       $dirhere/plugins/usage_examples/data \
                       $dirhere/include/* \
-                      $dirhere/**/(README|INSTALL|Doxyfile|ReleaseNotes)\
+                      $dirhere/**/(README|INSTALL|Doxyfile|ReleaseNotes|COPYING)\
+                      $dirhere/plugins/SISCone/siscone/doc/html/*.html
+                      $dirhere/plugins/SISCone/siscone/ChangeLog
+                      $dirhere/plugins/SISCone/siscone/examples/events/single-event.dat
                       $dirhere/lib/.dummy \
 		      --exclude '.svn*' --exclude '*~'
   fulltarloc=`pwd`

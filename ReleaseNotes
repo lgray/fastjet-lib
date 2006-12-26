@@ -2,7 +2,17 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Changes from v2.0 to v2.1 (beta)
+Changes from v2.1.0b0 to v2.1.0b1
+=========================
+
+New features:
+-------------
+
+- added the SISCone plugin and the beta version of the siscone code
+  (authored by Soyez & Salam)
+
+======================================================================
+Changes from v2.0 to v2.1 (beta0)
 =========================
 
 New features:

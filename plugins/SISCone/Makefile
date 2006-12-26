@@ -3,22 +3,31 @@
 include ../../Makefile
 
 
-CXXSRC = SConesPlugin.cc 
+CXXSRC = SISConePlugin.cc 
 OBJS = $(patsubst %.cc,%.o,$(CXXSRC)) 
+
+MAKESUBDIR = siscone_src
+SUBDIR = siscone/src
 
 # fastjet includes
 FASTJET_INCLUDE = -I../../include
 INCLUDE += $(FASTJET_INCLUDE)
 
 # scones includes
-INCLUDE += -I$(HOME)/tex/jets/IRSafeCone/scones/src
+INCLUDE += -I$(SUBDIR)
 
-libSConesPlugin.a: $(OBJS)
-	ar cru libSConesPlugin.a $(OBJS)
-	ranlib libSConesPlugin.a
+all: libSConesPlugin.a
+
+libSConesPlugin.a: $(OBJS) $(MAKESUBDIR)
+	ar cru libSISConePlugin.a $(OBJS) $(SUBDIR)/*.o
+	ranlib libSISConePlugin.a
+
+siscone_src:
+	@cd $(SUBDIR) && $(MAKE) $(MAKECMDGOALS)
 
 clean:
 	rm -f $(OBJS)
+	@cd $(SUBDIR) && $(MAKE) $(MAKECMDGOALS)
 
 distclean: clean
 	rm -f libSConesPlugin.a *~
@@ -30,10 +39,10 @@ depend:
 
 # DO NOT DELETE
 
-SConesPlugin.o: ../../include/fastjet/ClusterSequence.hh
-SConesPlugin.o: ../../include/fastjet/internal/DynamicNearestNeighbours.hh
-SConesPlugin.o: ../../include/fastjet/internal/numconsts.hh
-SConesPlugin.o: ../../include/fastjet/internal/base.hh
-SConesPlugin.o: ../../include/fastjet/PseudoJet.hh
-SConesPlugin.o: ../../include/fastjet/Error.hh
-SConesPlugin.o: ../../include/fastjet/JetDefinition.hh SConesPlugin.hh
+SISConePlugin.o: ../../include/fastjet/ClusterSequence.hh
+SISConePlugin.o: ../../include/fastjet/internal/DynamicNearestNeighbours.hh
+SISConePlugin.o: ../../include/fastjet/internal/numconsts.hh
+SISConePlugin.o: ../../include/fastjet/internal/base.hh
+SISConePlugin.o: ../../include/fastjet/PseudoJet.hh
+SISConePlugin.o: ../../include/fastjet/Error.hh
+SISConePlugin.o: ../../include/fastjet/JetDefinition.hh SISConePlugin.hh

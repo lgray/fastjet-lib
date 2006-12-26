@@ -1,54 +1,54 @@
 
 // fastjet stuff
 #include "fastjet/ClusterSequence.hh"
-#include "SConesPlugin.hh"
+#include "SISConePlugin.hh"
 
 // scones stuff
 #include "momentum.h"
-#include "scones.h"
+#include "siscone.h"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
-using namespace scones;
+using namespace siscone;
 
-string SConesPlugin::description () const {
+string SISConePlugin::description () const {
   ostringstream desc;
   
-  desc << "SCones jet finder with " 
+  desc << "SISCone jet finder with " 
        << "cone_radius = "        << cone_radius        () << ", "
        << "overlap_threshold  = " << overlap_threshold  () << ", "
        << "n_pass_max  = "        << n_pass_max         () ;
 
   // create a fake scones object so that we can find out more about it
-  Cscones scones;
-  if (scones.merge_identical_protocones) {
+  Csiscone siscone;
+  if (siscone.merge_identical_protocones) {
     desc << ", and (IR unsafe) merge_indentical_protocones=true" ;
   }
 
   return desc.str();
 }
 
-void SConesPlugin::run_clustering(ClusterSequence & clust_seq) const {
+void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   int n = clust_seq.jets().size();
-  // transfer fastjet initial particles into the scones type
-  vector<Cmomentum> scones_momenta(n);
+  // transfer fastjet initial particles into the siscone type
+  vector<Cmomentum> siscone_momenta(n);
   for(int i = 0; i < n; i++) {
     const PseudoJet & p = clust_seq.jets()[i]; // shorthand
-    scones_momenta[i] = Cmomentum(p.px(), p.py(), p.pz(), p.E());
+    siscone_momenta[i] = Cmomentum(p.px(), p.py(), p.pz(), p.E());
   }
 
   // run the jet finding
-  Cscones scones;
-  scones.compute_jets(scones_momenta, cone_radius(), overlap_threshold(),
+  Csiscone siscone;
+  siscone.compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
                       n_pass_max());
 
   // extract the jets [in reverse order -- to get nice ordering in pt at end]
-  int njet = scones.jets.size();
+  int njet = siscone.jets.size();
 
   for (int ijet = njet-1; ijet >= 0; ijet--) {
-    const Cjet & jet = scones.jets[ijet]; // shorthand
+    const Cjet & jet = siscone.jets[ijet]; // shorthand
     
     // Successively merge the particles that make up the cone jet
     // until we have all particles in it.  Start off with the zeroth
@@ -74,7 +74,7 @@ void SConesPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
 // OBSOLETE CODE  
 //// temporary, for dealing with warnings...
-//if (scones.n_warnings > 0) {
+//if (siscone.n_warnings > 0) {
 //  // print the event (very dirty...)
 //  cout.precision(14);
 //  cout << "Culprit event is:" << endl;

@@ -12,18 +12,18 @@ LDFLAGS += -L../../lib -lfastjet
 
 INCLUDE += -I../PxCone
 INCLUDE += -I../CDFCones
-INCLUDE += -I../SCones
+INCLUDE += -I../SISCone
 
 many_algs_example: many_algs_example.o run_jet_finder.o
-	$(CXX) $(CXXFLAGS) -o many_algs_example many_algs_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin -L../PxCone -lPxConePlugin $(F77LIB)
+	$(CXX) $(CXXFLAGS) -o many_algs_example many_algs_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin -L../SISCone -lSISConePlugin -L../PxCone -lPxConePlugin $(F77LIB)
 
 
 pxcone_example: pxcone_example.o run_jet_finder.o
 	$(CXX) $(CXXFLAGS) -o pxcone_example pxcone_example.o run_jet_finder.o $(LDFLAGS) -L../PxCone -lPxConePlugin $(F77LIB)
 
 
-scones_example: scones_example.o run_jet_finder.o
-	$(CXX) $(CXXFLAGS) -o scones_example scones_example.o run_jet_finder.o $(LDFLAGS) -L../SCones -lSConesPlugin -L$(HOME)/tex/jets/IRSafeCone/scones/src -lscones
+siscone_example: siscone_example.o run_jet_finder.o
+	$(CXX) $(CXXFLAGS) -o siscone_example siscone_example.o run_jet_finder.o $(LDFLAGS) -L../SISCone -lSISConePlugin 
 
 
 cdfmidpoint_example: cdfmidpoint_example.o run_jet_finder.o
@@ -33,11 +33,11 @@ clean:
 	rm -f *.o
 
 distclean: clean
-	rm -f pxcone_example scones_example many_algs_example cdfmidpoint_example *~
+	rm -f pxcone_example siscone_example many_algs_example cdfmidpoint_example *~
 
 
 depend:
-	makedepend  $(INCLUDE) -I. --   -- pxcone_example.cc scones_example.cc run_jet_finder.cc many_algs_example.cc cdfmidpoint_example.cc
+	makedepend  $(INCLUDE) -I. --   -- pxcone_example.cc siscone_example.cc run_jet_finder.cc many_algs_example.cc cdfmidpoint_example.cc
 
 # DO NOT DELETE
 
@@ -46,11 +46,11 @@ pxcone_example.o: ../../include/fastjet/internal/numconsts.hh
 pxcone_example.o: ../../include/fastjet/internal/base.hh
 pxcone_example.o: ../../include/fastjet/PseudoJet.hh
 pxcone_example.o: ../PxCone/PxConePlugin.hh
-scones_example.o: run_jet_finder.hh ../../include/fastjet/JetDefinition.hh
-scones_example.o: ../../include/fastjet/internal/numconsts.hh
-scones_example.o: ../../include/fastjet/internal/base.hh
-scones_example.o: ../../include/fastjet/PseudoJet.hh
-scones_example.o: ../PxCone/PxConePlugin.hh
+siscone_example.o: run_jet_finder.hh ../../include/fastjet/JetDefinition.hh
+siscone_example.o: ../../include/fastjet/internal/numconsts.hh
+siscone_example.o: ../../include/fastjet/internal/base.hh
+siscone_example.o: ../../include/fastjet/PseudoJet.hh
+siscone_example.o: ../SISCone/SISConePlugin.hh
 run_jet_finder.o: ../../include/fastjet/PseudoJet.hh
 run_jet_finder.o: ../../include/fastjet/internal/numconsts.hh
 run_jet_finder.o: ../../include/fastjet/internal/base.hh
@@ -63,7 +63,7 @@ many_algs_example.o: ../../include/fastjet/internal/numconsts.hh
 many_algs_example.o: ../../include/fastjet/internal/base.hh
 many_algs_example.o: ../../include/fastjet/PseudoJet.hh
 many_algs_example.o: ../CDFCones/CDFMidPointPlugin.hh
-many_algs_example.o: ../PxCone/PxConePlugin.hh
+many_algs_example.o: ../SISCone/SISConePlugin.hh ../PxCone/PxConePlugin.hh
 cdfmidpoint_example.o: run_jet_finder.hh
 cdfmidpoint_example.o: ../../include/fastjet/JetDefinition.hh
 cdfmidpoint_example.o: ../../include/fastjet/internal/numconsts.hh
