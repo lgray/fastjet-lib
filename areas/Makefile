@@ -7,9 +7,11 @@ include ../Makefile
 CDFCONEDIR=../../JetClu+MidPoint-StandAlone/src
 FASTJET_INCLUDE = -I../include 
 # also put in the CDF cone cone
-INCLUDE += $(FASTJET_INCLUDE) -I$(CDFCONEDIR)
+#INCLUDE += $(FASTJET_INCLUDE) -I$(CDFCONEDIR) -I../plugins/SISCone -I../plugins/CDCones
+INCLUDE += $(FASTJET_INCLUDE)  -I../plugins/SISCone -I../plugins/CDFCones
 #LDFLAGS += -L../lib -lfastjet
-LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs
+#LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs -L../plugins/SISCone -l SISConePlugin -L../plugins/CDFCones -lCDFCones
+LDFLAGS += -L../lib -lfastjet  -L../plugins/SISCone -l SISConePlugin -L../plugins/CDFCones -lCDFConesPlugin
 #LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs -ltcmalloc -lprofiler
 
 # get google malloc for debugging purposes...

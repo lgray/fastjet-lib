@@ -13,12 +13,44 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// Gregory Soyez and Gavin Salam.
 ///
 /// As of 2006-12-26, this plugin is beta, as is the SISCone code
-/// itself
+/// itself.
+///
+/// SISCone uses geometrical techniques to exhaustively consider all
+/// possible distinct cones. It then finds out which ones are stable
+/// and sends the result to the Tevatron Run-II type split-merge
+/// procedure for overlapping cones.
+///
+/// Three parameters govern the "physics" of the algorithm:
+///
+///  - the cone_radius (this should be self-explanatory!)
+///
+///  - the overlap_threshold is the parameter which dictates how much
+///    two jets must overlap if they are to be merged
+///
+///  - Not all particles are in stable cones in the first round of
+///    searching for stable cones; one can therefore optionally have the
+///    the jet finder carry out additional passes of searching for
+///    stable cones among particles that were in no stable cone in
+///    previous passes --- the maximum number of passes carried out is
+///    n_pass_max. If this is zero then additional passes are carried
+///    out until no new stable cones are found.
+///
+/// The final jets can be accessed by requestion the
+/// inclusive_jets(...) from the ClusterSequence object. Note that
+/// these PseudoJets have their user_index() set to the index of the
+/// pass in which they were found (first pass = 0).
+///
+/// For further information on the details of the algorithm see the
+/// SISCone paper; for documentation about the implementation, see the
+/// siscone/doc/html/index.html file.
+//
 class SISConePlugin : public JetDefinition::Plugin {
 public:
+
+  /// Constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,
-                double overlap_threshold = 0.5,
-                int    n_pass_max = 1) :
+                 double overlap_threshold = 0.5,
+                 int    n_pass_max = 1) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ) {};
@@ -26,7 +58,7 @@ public:
   /// the cone radius
   double cone_radius        () const {return _cone_radius        ;};
 
-  /// Fraction of overlap energy in a jet above which jets are medged
+  /// Fraction of overlap energy in a jet above which jets are merged
   /// and below which jets are split.
   double overlap_threshold  () const {return _overlap_threshold  ;};
 

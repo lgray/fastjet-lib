@@ -3,6 +3,15 @@ ChangeLog for fastjet-release directory
 
 2006-12-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+        * Added SISCone to the list of plugins made automatically
+
+        * SISCone plugin now sets the jet "user_index" to be equal to the
+	  pass at which the jet was found; documentation added to the
+	  beginning of the class...
+	
+	* adapated areas/areas-hist.cc to use midpoint and siscone plugins
+	  as well...
+	
 	* dealt with renaming from scones -> siscone; 
 
 	* added the siscone repository as an "external" repository to
@@ -12,6 +21,8 @@ ChangeLog for fastjet-release directory
 
         * also updated the usage_examples (many_algs_example now also runs
 	  siscone).	
+
+	* made this version 2.1.0b1 (changed tarit, but did not "tag" it)
 	
 2006-12-21  Gavin Salam <salam@lpthe.jussieu.fr> + Gregory Soyez
 

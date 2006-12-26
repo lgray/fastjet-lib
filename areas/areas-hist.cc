@@ -1,16 +1,25 @@
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
-#include "ClusterSequencePassiveArea.hh"
 #include<iostream>
+#include<iomanip>
 #include<sstream>
 #include<fstream>
 #include<valarray>
 #include<vector>
 #include <cstdlib>
 #include<cstddef> // for size_t
-#include "CmdLine.hh"
 #include<cmath>
+
+// fastjet stuff
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "ClusterSequencePassiveArea.hh"
+
+// get the plugins
+#include "SISConePlugin.hh"
+#include "CDFMidPointPlugin.hh"
+
+// local things
+#include "CmdLine.hh"
 #include "SimpleHist.hh"
 
 namespace fj = fastjet;
@@ -35,16 +44,38 @@ int main (int argc, char ** argv) {
   int    repeat = 1;
   double anchor_pt = cmdline.present("-anchor") ? 100.0 : 0.0;
 
-  fj::JetFinder jet_finder = cmdline.present("-cam") ? 
-                                fj::cambridge_algorithm : fj::kt_algorithm;
+  int nhist      = cmdline.value("-nhist",150);
+  double histmax = cmdline.value("-histmax",9.0);
+
+  fj::JetDefinition jet_def;
+  if (cmdline.present("-cam")) {
+    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);}
+  else if (cmdline.present("-kt")) {
+    jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);}
+  else if (cmdline.present("-midpoint")) {
+    double overlap = cmdline.value("-f",0.5);
+    double seed    = cmdline.value("-seed",0.0);
+    jet_def = fj::JetDefinition(new fj::CDFMidPointPlugin(ktR,overlap,seed));}
+  else if (cmdline.present("-siscone")) {
+    double overlap = cmdline.value("-f",0.5);
+    int    npass   = cmdline.value("-npass",1);
+    jet_def = fj::JetDefinition(new fj::SISConePlugin(ktR,overlap,npass));}
+  else {
+    cerr << "Must specify one of -kt | -cam | -siscone" << endl;
+    exit(-1);
+  }
+
+  if (!cmdline.all_options_used()) {
+    cerr << "ERROR: exiting become some options unrecognized" << endl;
+    exit(-1);
+  }
 
   // create the definitions for our jet finder and areas spec...
-  fj::JetDefinition jet_def(jet_finder, ktR, strategy);
   fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, 
 				      ghost_area, grid_scatter, kt_scatter);
 
   // the histogram...
-  SimpleHist areahist(-0.000001,9.0/fj::pi,150);
+  SimpleHist areahist(-0.000001,histmax/fj::pi,nhist);
 
   cout << "# " << cmdline.command_line() << endl;
   cout << "# strategy     = " << jet_def.strategy()<<endl;
@@ -53,7 +84,9 @@ int main (int argc, char ** argv) {
   cout << "# ghost_etamax = " << ghost_etamax << endl;
   cout << "# ghost_area   = " << ghost_area   << endl;
   cout << "# nev          = " << n            << endl;
-  cout << "# jet finder   = " << jet_finder   << endl;
+  cout << "# nhist        = " << nhist        << endl;
+  cout << "# histmax      = " << histmax      << endl;
+  cout << "# jet def      = " << jet_def.description() << endl;
 
   int njets = 0;
   double average_area = 0.0, average_ar2 = 0.0;
@@ -66,15 +99,23 @@ int main (int argc, char ** argv) {
     vector<fj::PseudoJet> output_jets(clust.inclusive_jets());
     for (unsigned j = 0; j < output_jets.size(); j++) {
       // only take jets that are reasonably close to center
-      if (abs(output_jets[j].rap()) < ghost_etamax - ktR &&
-	  output_jets[j].perp2() > pow2(anchor_pt)*0.999999) {
+      //if (abs(output_jets[j].rap()) < ghost_etamax - ktR &&
+      //    output_jets[j].perp2() > pow2(anchor_pt)*0.999999) {
+      if (true) {
 	double normarea = clust.area(output_jets[j])/fj::pi*pow2(ktR);
 	average_area += normarea; 
 	average_ar2  += pow2(normarea);
 	areahist.add_entry(normarea);
 	njets++;
+        //cout << setw(12) << output_jets[j].rap() << " " 
+        //     << setw(10) << normarea  << " "
+        //     << setw(4)  << output_jets[j].user_index() << endl; 
       }
     }
+    //vector<fj::PseudoJet> unclust = clust.unclustered_particles();
+    //cout << "Unclustered particles: " << unclust.size() << endl;
+    //for (unsigned j = 0; j < unclust.size(); j++) {
+    //  cout << "UNCLUST: " << unclust[j].rap() << " " << unclust[j].phi() << " " << unclust[j].perp() << " " << unclust[j].cluster_hist_index() << endl;
   }
 
   average_area /= njets;
