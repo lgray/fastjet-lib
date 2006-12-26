@@ -61,7 +61,14 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
       int jet_j = jet.content[ipart];
       // and merge them (with a fake dij)
       double dij = 0.0;
-      clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
+
+      // create the new jet by hand so that we can adjust its user index
+      PseudoJet newjet = clust_seq.jets()[jet_i] + clust_seq.jets()[jet_j];
+
+      // set the user index to be the pass in which the jet was discovered
+      newjet.set_user_index(jet.pass);
+        
+      clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, newjet, jet_k);
     }
     // we have merged all the jet's particles into a single object, so now
     // "declare" it to be a beam (inclusive) jet.
