@@ -1,6 +1,15 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2006-12-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* Added a "caching" option to the SISCone plugin to allow runs
+	  with multiple overlap_threshold values (and everything else
+	  identical) to reuse the set of stable cones.	
+
+	* in PseudoJet introduced the "have_same_momentum(jeta, jetb)"
+	  function (used in SISCone plugin).
+	
 2006-12-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
         * Added SISCone to the list of plugins made automatically

@@ -51,6 +51,11 @@ PseudoJet::PseudoJet(const double px, const double py, const double pz, const do
   _pz = pz;
 
   this->_finish_init();
+
+  // some default values for these two indices
+  set_cluster_hist_index(-1);
+  set_user_index(-1);
+
 };
 
 
@@ -82,6 +87,7 @@ void PseudoJet::_finish_init () {
     _rap = 0.5*log((_kt2 + effective_m2)/(E_plus_pz*E_plus_pz));
     if (_pz > 0) {_rap = - _rap;}
   }
+
   //// original determination 
   //if (this->E() != abs(this->pz())) {
   //  _rap = 0.5*log((this->E() + this->pz())/(this->E() - this->pz()));
@@ -193,7 +199,7 @@ void PseudoJet::operator+=(const PseudoJet & other_jet) {
   _py += other_jet._py;
   _pz += other_jet._pz;
   _E  += other_jet._E ;
-  _finish_init(); // we need to recalculate phi,rap,kt2  
+  _finish_init(); // we need to recalculate phi,rap,kt2
 }
 
 
@@ -204,7 +210,16 @@ void PseudoJet::operator-=(const PseudoJet & other_jet) {
   _py -= other_jet._py;
   _pz -= other_jet._pz;
   _E  -= other_jet._E ;
-  _finish_init(); // we need to recalculate phi,rap,kt2  
+  _finish_init(); // we need to recalculate phi,rap,kt2
+}
+
+//----------------------------------------------------------------------
+/// returns true if the momenta of the two input jets are identical
+bool have_same_momentum(const PseudoJet & jeta, const PseudoJet & jetb) {
+  return jeta.px() == jetb.px()
+    &&   jeta.py() == jetb.py()
+    &&   jeta.pz() == jetb.pz()
+    &&   jeta.E()  == jetb.E();
 }
 
 

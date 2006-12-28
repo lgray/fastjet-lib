@@ -2,9 +2,20 @@
 #define __SISCONEPLUGIN_HH__
 
 #include "fastjet/JetDefinition.hh"
+#include <vector>
+#include <memory>
+
+// put a forward declaration to the Csiscone class to avoid having to
+// include the siscone headers here
+namespace siscone {
+  class Csiscone;
+}
 
 // questionable whether this should be in fastjet namespace or not...
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+// another forward declaration to reduce includes
+class PseudoJet;
 
 //----------------------------------------------------------------------
 //
@@ -35,6 +46,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///    n_pass_max. If this is zero then additional passes are carried
 ///    out until no new stable cones are found.
 ///
+/// One parameter governs some internal algorithmic shortcuts: 
+///
+/// - if "caching" is turned on then the last event clustered by
+///   siscone is stored -- if the current event is identical and the
+///   cone_radius and n_pass_mass are identical, then the only part of
+///   the clustering that needs to be rerun is the split-merge part,
+///   leading to significant speed gains; there is a small (O(N) storage
+///   and speed) penalty for caching, so it should be kept off
+///   (default) if only a single overlap_threshold is used.
+///
 /// The final jets can be accessed by requestion the
 /// inclusive_jets(...) from the ClusterSequence object. Note that
 /// these PseudoJets have their user_index() set to the index of the
@@ -50,10 +71,17 @@ public:
   /// Constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
-                 int    n_pass_max = 1) :
+                 int    n_pass_max = 1,
+                 bool   caching = false) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
-    _n_pass_max            (n_pass_max ) {};
+    _n_pass_max            (n_pass_max ), 
+    _caching               (caching)             {};
+
+  /// copy constructor
+  SISConePlugin (const SISConePlugin & plugin) {
+    *this = plugin;
+  }
 
   /// the cone radius
   double cone_radius        () const {return _cone_radius        ;};
@@ -66,6 +94,10 @@ public:
   /// as infinity).
   int n_pass_max  () const {return _n_pass_max  ;};
 
+
+  /// indicates whether caching is turned on or not.
+  bool caching() const {return _caching ;};
+
   // the things that are required by base class
   virtual std::string description () const;
   virtual void run_clustering(ClusterSequence &) const;
@@ -73,6 +105,12 @@ public:
 private:
   double _cone_radius, _overlap_threshold;
   int    _n_pass_max;
+  bool   _caching;
+
+  // variables for caching the results and the input
+  static std::auto_ptr<SISConePlugin          > stored_plugin;
+  static std::auto_ptr<std::vector<PseudoJet> > stored_particles;
+  static std::auto_ptr<siscone::Csiscone      > stored_siscone;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

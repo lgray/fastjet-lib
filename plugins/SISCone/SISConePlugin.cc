@@ -12,13 +12,19 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 using namespace siscone;
 
+// the static objects
+auto_ptr<SISConePlugin     > SISConePlugin::stored_plugin    ;
+auto_ptr<vector<PseudoJet> > SISConePlugin::stored_particles ;
+auto_ptr<Csiscone          > SISConePlugin::stored_siscone   ;
+
 string SISConePlugin::description () const {
   ostringstream desc;
   
   desc << "SISCone jet finder with " 
-       << "cone_radius = "        << cone_radius        () << ", "
-       << "overlap_threshold  = " << overlap_threshold  () << ", "
-       << "n_pass_max  = "        << n_pass_max         () ;
+       << "cone_radius = "       << cone_radius        () << ", "
+       << "overlap_threshold = " << overlap_threshold  () << ", "
+       << "n_pass_max = "        << n_pass_max         () << ", "
+       << "caching turned "      << (caching() ? "on" : "off");
 
   // create a fake scones object so that we can find out more about it
   Csiscone siscone;
@@ -29,26 +35,70 @@ string SISConePlugin::description () const {
   return desc.str();
 }
 
+
 void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
-  int n = clust_seq.jets().size();
-  // transfer fastjet initial particles into the siscone type
-  vector<Cmomentum> siscone_momenta(n);
-  for(int i = 0; i < n; i++) {
-    const PseudoJet & p = clust_seq.jets()[i]; // shorthand
-    siscone_momenta[i] = Cmomentum(p.px(), p.py(), p.pz(), p.E());
+
+  Csiscone * siscone;
+  Csiscone   local_siscone;
+
+  unsigned n = clust_seq.jets().size();
+
+  bool new_siscone = true; // by default we'll be running it
+
+  if (caching()) {
+
+    // Establish if we have a cached run with the same R, npass and
+    // particles. If not then do any tidying up / reallocation that's
+    // necessary for the next round of caching, otherwise just set
+    // relevant pointers so that we can reuse and old run.
+    if (stored_siscone.get() != 0) {
+      new_siscone = !(stored_plugin->cone_radius()   == cone_radius()
+                      && stored_plugin->n_pass_max() == n_pass_max()  
+                      && stored_particles->size()    == n);
+      if (!new_siscone) {
+        for(unsigned i = 0; i < n; i++) {
+          // only check momentum because indices will be correctly dealt
+          // with anyway when extracting the clustering order.
+          new_siscone |= !have_same_momentum(clust_seq.jets()[i], 
+                                             (*stored_particles)[i]);
+        }
+      }
+    } 
+      
+    // allocate the new siscone, etc., if need be
+    if (new_siscone) {
+      stored_siscone  .reset( new Csiscone                           );
+      stored_particles.reset( new vector<PseudoJet>(clust_seq.jets()));
+      stored_plugin   .reset( new SISConePlugin(*this)               );
+    }
+
+    siscone = stored_siscone.get();
+  } else {
+    siscone = &local_siscone;
   }
 
-  // run the jet finding
-  Csiscone siscone;
-  siscone.compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
-                      n_pass_max());
+  if (new_siscone) {
+    // transfer fastjet initial particles into the siscone type
+    vector<Cmomentum> siscone_momenta(n);
+    for(unsigned i = 0; i < n; i++) {
+      const PseudoJet & p = clust_seq.jets()[i]; // shorthand
+      siscone_momenta[i] = Cmomentum(p.px(), p.py(), p.pz(), p.E());
+    }
+    
+    // run the jet finding
+    siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
+                          n_pass_max());
+  } else {
+    // just run the overlap part of the jets.
+    siscone->recompute_jets(overlap_threshold());
+  }
 
   // extract the jets [in reverse order -- to get nice ordering in pt at end]
-  int njet = siscone.jets.size();
+  int njet = siscone->jets.size();
 
   for (int ijet = njet-1; ijet >= 0; ijet--) {
-    const Cjet & jet = siscone.jets[ijet]; // shorthand
+    const Cjet & jet = siscone->jets[ijet]; // shorthand
     
     // Successively merge the particles that make up the cone jet
     // until we have all particles in it.  Start off with the zeroth

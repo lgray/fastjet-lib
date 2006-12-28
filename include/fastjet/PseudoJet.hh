@@ -173,7 +173,8 @@ PseudoJet operator*(double, const PseudoJet &);
 PseudoJet operator*(const PseudoJet &, double);
 PseudoJet operator/(const PseudoJet &, double);
 
-
+/// returns true if the momenta of the two input jets are identical
+bool have_same_momentum(const PseudoJet &, const PseudoJet &);
 
 //----------------------------------------------------------------------
 // Routines to do with providing sorted arrays of vectors.
