@@ -8,6 +8,7 @@ public:
   SimpleHist(double minv, double maxv, unsigned int n): 
     _minv(minv), _maxv(maxv), _dv((maxv-minv)/n), _weights(n+1) {
     _weights = 0.0;
+    _have_total = false;
   };
 
   // declare (or redeclare) the histogram
@@ -15,6 +16,7 @@ public:
     _minv = minv; _maxv = maxv; _dv = (maxv-minv)/n; 
     _weights.resize(n+1);
     _weights = 0.0;
+    _have_total = false;
   }
 
   double min() const {return _minv;};
@@ -24,7 +26,7 @@ public:
   /// returns the size of the histogram plus outflow bin
   unsigned int outflow_size() const {return _weights.size();};
 
-  double & operator[](int i) {return _weights[i];};
+  double & operator[](int i) {_have_total = false; return _weights[i];};
   const double & operator[](int i) const {return _weights[i];};
   
   /// returns the outflow bin
@@ -47,9 +49,13 @@ public:
 
   /// return the total weight in the histogram (inefficient)...
   double total_weight() const {
-    double tot = 0.0;
-    for (unsigned i = 0; i < _weights.size(); i++) tot += _weights[i];
-    return tot;
+    if (!_have_total) {
+      _total_weight = 0.0;
+      for (unsigned i = 0; i < _weights.size(); i++) {
+        _total_weight += _weights[i];}
+      _have_total = true;
+    }
+    return _total_weight;
   }
 
   void add_entry(double v, double weight = 1.0) {
@@ -57,6 +63,7 @@ public:
     //  int i = int((v-_minv)/_dv); 
     //  if (i >= 0 && i < int(_weights.size())) _weights[i] += weight;
     //}
+    _have_total = false;
     _weights[bin(v)] += weight;
   };
 
@@ -99,21 +106,23 @@ public:
 
 
 private:
-  double _minv, _maxv, _dv, _total_weight;
+  double _minv, _maxv, _dv;
   std::valarray<double> _weights;
   std::string _name;
+  mutable double _total_weight;
+  mutable bool   _have_total;
 };
 
 
 
 // Binary operations with constants -----------------------------
-SimpleHist operator*(const SimpleHist & hist, double fact) {
+inline SimpleHist operator*(const SimpleHist & hist, double fact) {
   SimpleHist result(hist.min(), hist.max(), hist.outflow_size());
   for (unsigned i = 0; i < hist.outflow_size(); i++) result[i] = hist[i] * fact;
   return result;
 }
 
-SimpleHist operator/(const SimpleHist & hist, double fact) {
+inline SimpleHist operator/(const SimpleHist & hist, double fact) {
   SimpleHist result(hist.min(), hist.max(), hist.outflow_size());
   for (unsigned i = 0; i < hist.outflow_size(); i++) result[i] = hist[i] / fact;
   return result;
@@ -129,42 +138,42 @@ inline SimpleHist operator/(double fact, const SimpleHist & hist) {
 
 
 // Binary operations with other histograms ------------------------
-SimpleHist operator*(const SimpleHist & hista, const SimpleHist & histb) {
+inline SimpleHist operator*(const SimpleHist & hista, const SimpleHist & histb) {
   assert(hista.outflow_size() == histb.outflow_size());
-  SimpleHist result(hista.min(), hista.max(), hista.outflow_size());
+  SimpleHist result(hista.min(), hista.max(), hista.size());
   for (unsigned i = 0; i < hista.outflow_size(); i++) result[i] = hista[i] * histb[i];
   return result;
 }
-SimpleHist operator/(const SimpleHist & hista, const SimpleHist & histb) {
+inline SimpleHist operator/(const SimpleHist & hista, const SimpleHist & histb) {
   assert(hista.outflow_size() == histb.outflow_size());
-  SimpleHist result(hista.min(), hista.max(), hista.outflow_size());
+  SimpleHist result(hista.min(), hista.max(), hista.size());
   for (unsigned i = 0; i < hista.outflow_size(); i++) result[i] = hista[i] / histb[i];
   return result;
 }
-SimpleHist operator+(const SimpleHist & hista, const SimpleHist & histb) {
+inline SimpleHist operator+(const SimpleHist & hista, const SimpleHist & histb) {
   assert(hista.outflow_size() == histb.outflow_size());
-  SimpleHist result(hista.min(), hista.max(), hista.outflow_size());
+  SimpleHist result(hista.min(), hista.max(), hista.size());
   for (unsigned i = 0; i < hista.outflow_size(); i++) result[i] = hista[i] + histb[i];
   return result;
 }
-SimpleHist operator-(const SimpleHist & hista, const SimpleHist & histb) {
+inline SimpleHist operator-(const SimpleHist & hista, const SimpleHist & histb) {
   assert(hista.outflow_size() == histb.outflow_size());
-  SimpleHist result(hista.min(), hista.max(), hista.outflow_size());
+  SimpleHist result(hista.min(), hista.max(), hista.size());
   for (unsigned i = 0; i < hista.outflow_size(); i++) result[i] = hista[i] - histb[i];
   return result;
 }
 
 
 // Unary mathematical functions
-SimpleHist sqrt(const SimpleHist & hist) {
-  SimpleHist result(hist.min(), hist.max(), hist.outflow_size());
+inline SimpleHist sqrt(const SimpleHist & hist) {
+  SimpleHist result(hist.min(), hist.max(), hist.size());
   for (unsigned i = 0; i < hist.outflow_size(); i++) result[i] = sqrt(hist[i]);
   return result;
 }
 
 // Unary mathematical functions
-SimpleHist pow2(const SimpleHist & hist) {
-  SimpleHist result(hist.min(), hist.max(), hist.outflow_size());
+inline SimpleHist pow2(const SimpleHist & hist) {
+  SimpleHist result(hist.min(), hist.max(), hist.size());
   for (unsigned i = 0; i < hist.outflow_size(); i++) result[i] = hist[i]*hist[i];
   return result;
 }
