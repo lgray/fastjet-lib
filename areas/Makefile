@@ -61,6 +61,8 @@ subtraction-tests-inclpt: subtraction-tests-inclpt.o $(OBJS) ../lib/libfastjet.a
 subtraction-tests-HIeff: subtraction-tests-HIeff.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-HIeff subtraction-tests-HIeff.o $(OBJS)  $(LDFLAGS)
 
+subtraction-HIeff-iter: subtraction-HIeff-iter.o  CmdLine.o ../lib/libfastjet.a
+	$(CXX)  -o subtraction-HIeff-iter subtraction-HIeff-iter.o  CmdLine.o $(LDFLAGS)
 
 areas-empty-event: areas-empty-event.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-empty-event areas-empty-event.o $(OBJS)  $(LDFLAGS)

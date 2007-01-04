@@ -27,6 +27,7 @@ $hydjet_exec = "$basedir/hydjet/run_hydjet";
 $incljet_exec = "$basedir/fastjet-release/areas/subtraction-tests-inclpt";
 $ttbarjet_exec = "$basedir/fastjet-release/areas/subtraction-tests-ttbar";
 $HIeff_exec = "$basedir/fastjet-release/areas/subtraction-tests-HIeff";
+$HIeff_iter_exec = "/ada1/lpthe/cacciari/physics/voronoi/fastjet/fastjet-release/areas/subtraction-HIeff-iter";
 
 # establish a hopefully unique name for named-pipe
 $hostname=`hostname -s`; chomp $hostname;
@@ -66,6 +67,7 @@ while ($#ARGV >= 0) {
   elsif ($opt eq '-nhsel')  {$pythia_opts .= " $opt ".(shift @ARGV); $run_hydjet=1;}
   elsif ($opt eq '-nh' || $opt eq '-ytfl' || $opt eq '-ylfl')  {$pythia_opts .= " $opt ".(shift @ARGV); $run_hydjet=1;}
   elsif ($opt eq '-HIeff')  {$run_hydjet=1; $run_HIeff = 1;}
+  elsif ($opt eq '-HIeff_iter')  {$run_hydjet=1; $run_HIeff_iter = 1;}
   elsif ($opt eq '-CMS')    {$pythia_opts .= " $opt";}
   elsif ($opt eq '-rhic')    {$pythia_opts .= " $opt";}
   elsif ($opt eq '-ptminhard')  {$pythia_opts .= " $opt ".(shift @ARGV);}
@@ -85,6 +87,8 @@ if ($run_hydjet) {
   $pythia_exec = $hydjet_exec;
   if ($run_HIeff) {
     $jet_exec = $HIeff_exec;
+  } elsif ($run_HIeff_iter ) {
+    $jet_exec = $HIeff_iter_exec;
   } else {
     $jet_exec    = $incljet_exec;
   }
