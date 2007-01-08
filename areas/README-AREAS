@@ -25,3 +25,7 @@ hydjet_eff/
         jet-finding on hydjet events.
 
 
+areas-1gluon-for-root.cc
+        prints out areas of 1-gluon configurations in a format that's
+        suitable for the root scripts in root-games/
+

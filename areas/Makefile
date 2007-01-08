@@ -67,6 +67,9 @@ subtraction-HIeff-iter: subtraction-HIeff-iter.o  CmdLine.o ../lib/libfastjet.a
 areas-empty-event: areas-empty-event.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-empty-event areas-empty-event.o $(OBJS)  $(LDFLAGS)
 
+areas-1gluon-for-root: areas-1gluon-for-root.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o areas-1gluon-for-root areas-1gluon-for-root.o $(OBJS)  $(LDFLAGS)
+
 clean: 
 	rm -f *.o
 

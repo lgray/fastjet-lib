@@ -58,11 +58,13 @@ JetHist::JetHist (const string & filename) {
     int    i;
     double eta, phi, pt;
     cout << filename <<": jet "<<_jets.size()<<endl;
-    while (getline(file,line)) {
+    bool have_line = true;
+    while (have_line || getline(file,line)) {
+      have_line = false;
       if (line.substr(0,4) == "#END") {break;}
       istringstream sline(line);
       sline >> i >> eta >> phi >> pt;
-      //cout << i << " "<<eta<<" "<<phi<<" "<<pt<<endl;
+      cout << i << " "<<eta<<" "<<phi<<" "<<pt<<endl;
       hist->Fill(phi,eta,pt); // fill at phi,eta with weight pt
       
       // workaround for bug in stacks: fill all lower elements of the stack
@@ -75,7 +77,8 @@ JetHist::JetHist (const string & filename) {
     // give it a colour (whatever that means...)
     //hist->SetFillColor(_jets.size());
     int njet = _jets.size();
-    hist->SetFillColor(njet+2);
+    //hist->SetFillColor(njet+2);
+    hist->SetFillColor(njet%50+2); // %50 seems tomake to diff to many-jet case
     //if (njet == 0) hist->SetFillColor(kRed);
     //else if (njet == 1) hist->SetFillColor(kBlue);
     //else  hist->SetFillColor(kGreen);

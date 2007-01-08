@@ -1,6 +1,19 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-01-08  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* areas/area-plots/2point-areas-3alg.gp
+	  Passive area for 3 algs
+
+	* areas/areas-1gluon-for-root.cc
+	  areas/root-games/ghosted_plots.C
+
+          root-related stuff for when there's a single hard parton
+	  (illustrate active areas)
+
+	
+	
 2007-01-02  Gavin Salam  <salam@lpthe.jussieu.fr>
 
         * added the areas/hydjet_eff directory to repository

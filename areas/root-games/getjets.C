@@ -44,14 +44,18 @@ void getjets () {
    
 
   // create the jet histograms
-  lego->Divide(2,2);
-  lego->cd(1);
+  //lego->Divide(2,2);
+  //lego->cd(1);
   gPad->SetTheta(40.549);
   gPad->SetPhi(110.101);
 //  JetHist * jets = new JetHist("50GeV.res");
-  JetHist * jets = new JetHist("50GeV+9minbias.res");
+  JetHist * jets = new JetHist("../a");
+  //JetHist * jets = new JetHist("50GeV+9minbias.res");
   jets->stack.Draw("lego1");
   pl.DrawPaveLabel(x1,y1,x2,y2,"50GeV jets + minbias","brNDC");
+
+  return;
+  ///
   
   lego->cd(2);
   gPad->SetTheta(40.549);
