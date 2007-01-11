@@ -182,12 +182,15 @@ int main (int argc, char ** argv) {
   double discard_below_pt = cmdline.double_val("-discard",-1.0);
   
   // options related to iterative subtraction
-  // dump the constant term in the parabolic subtraction by this factor
+  // damp the constant term in the parabolic subtraction by this factor
   double damp = cmdline.double_val("-damp",1.0);
-  // number of iterations
-  int dim = cmdline.int_val("-nr",2);
+  // number of iterations (best is usually 2, with rmin = 0.1)
+  int nr = cmdline.int_val("-nr",1);
   // initial R
-  double rmin = cmdline.double_val("-rmin",0.2);
+  double rmin = cmdline.double_val("-rmin",0.1);
+  // minimum pt at which we are booking corrected jets and hard jets
+  // below this value we just discard everything
+  double ptcut = cmdline.double_val("-ptcut",10.0);
 
   //ConeVariant cone_variant = not_cone;
   //if (cmdline.present("-searchcone")) {
@@ -287,16 +290,13 @@ int main (int argc, char ** argv) {
     //-- run the jet finder on the full event ----- ITERATIVE
     vector<fj::PseudoJet> full_corrected_jets;
     vector<fj::PseudoJet> inputs = full_event;
-    //const int dim = 7;
-    //double rs[dim] = {0.2,0.25,0.3,0.35,0.4,0.45,ktR};
     auto_ptr<fj::ClusterSequenceActiveArea> full_seq_iter;	
-    for ( int i = 0; i < dim; i++ ) {
-      cout << "Event size = " << inputs.size() << endl;
-      //double r = rs[i];
+    for ( int i = 0; i < nr; i++ ) {
+      if ( iev < 10 ) {cout << "Event size = " << inputs.size() << endl;}
       double r;
-      if ( dim > 1 ) { r = rmin + (ktR - rmin)/(dim-1.)*float(i); }
+      if ( nr > 1 ) { r = rmin + (ktR - rmin)/(nr-1.)*float(i); }
       else { r = ktR; }
-      cout << "R = " << r << endl;
+      if ( iev < 10 ) {cout << "R = " << r << endl;}
 
       // do the clustering
       fj::JetDefinition jet_def(jet_finder, r , strategy);    
@@ -313,10 +313,12 @@ int main (int argc, char ** argv) {
 
       // subtraction
       double a, b;
-      full_seq_iter->parabolic_pt_per_unit_area(a,b,-1.,10000.); // limit rap range 
-      cout << "a, b = " << a << " " << b << endl;
+      // the limit on the range is needed to avoid the fit to
+      // return NAN when a small radius is used
+      full_seq_iter->parabolic_pt_per_unit_area(a,b,-1.,10000.);  
+      if ( iev < 10 ) {cout << "a, b = " << a << " " << b << endl;}
       double median_pt_per_area = full_seq_iter->pt_per_unit_area();
-      cout << "median = " << median_pt_per_area << endl;
+      if ( iev < 10 ) {cout << "median = " << median_pt_per_area << endl;}
 
       // get a vector of corrected jets, copy it to inputs
       vector<fj::PseudoJet> full_corrected_jets_iter;
@@ -326,14 +328,16 @@ int main (int argc, char ** argv) {
            double rho_at_rap = a*damp + b*pow2(jet->rap());
            // after first step, subtract with median (few jets)
            if ( i > 0 ) { rho_at_rap = median_pt_per_area; }
-           //if ( full_jets_iter.size() < 100 ) { rho_at_rap = median_pt_per_area; }
  	   fj::PseudoJet area = full_seq_iter->area_4vector(*jet);
            if (jet->perp() > rho_at_rap*area.perp()) {
              fj::PseudoJet corrected_jet = *jet - rho_at_rap*area; 
+             // at last step, only include jets whose pt > ptcut
+             if ( i < nr-1 || corrected_jet.perp() > ptcut) {
                // make sure the corrected jet retains its "identity"
                corrected_jet.set_cluster_hist_index(
                                    jet->cluster_hist_index());
                full_corrected_jets_iter.push_back(corrected_jet);
+	     }
            }
         }
       }      
@@ -345,7 +349,7 @@ int main (int argc, char ** argv) {
       //for(int k = 0; k < 4; k++ ){
       //   cout << k << " " <<  tmp2[k].rap() << " " << tmp2[k].phi() << " " <<tmp2[k].perp() << endl;
       //}
-      if ( i == dim-1) { full_corrected_jets = full_corrected_jets_iter; } //last iter
+      if ( i == nr-1) { full_corrected_jets = full_corrected_jets_iter; } //last iter
    }
    
 
@@ -355,7 +359,7 @@ int main (int argc, char ** argv) {
     vector<fj::PseudoJet> hard_jets;
     for (unsigned ihard = 0; ihard < hard_events.size();  ihard++) {
       fj::ClusterSequence hard_seq(hard_events[ihard], jet_def);
-      vector<fj::PseudoJet> event_jets = hard_seq.inclusive_jets(10.0);
+      vector<fj::PseudoJet> event_jets = hard_seq.inclusive_jets(ptcut);
       copy(event_jets.begin(), event_jets.end(), back_inserter(hard_jets));
     }
 
@@ -368,13 +372,15 @@ int main (int argc, char ** argv) {
     unsigned  nmatch;
     reorder_jets(hard_jets, full_corrected_jets, max_rapphi_dist, nmatch);
 
-    // --- print out some info
-//     cout << "Matched "<<nmatch<<" jets"<< endl;
-//     for (unsigned i = 0; i < nmatch; i++) {
-// //      cout << i << " " << hard_jets[i].perp() << " " << full_jets[i].perp() << "  " << full_corrected_jets[i].perp() << " " << hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
-//       cout << i << " " << hard_jets[i].perp() << " " << full_corrected_jets[i].perp() << " " << hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
-//     }
-    cout << " +++++++ " << endl;
+    if ( iev < 10 ) {
+        // --- print out some info
+        cout << "Matched "<<nmatch<<" jets"<< endl;
+        for (unsigned i = 0; i < nmatch; i++) {
+ //      cout << i << " " << hard_jets[i].perp() << " " << full_jets[i].perp() << "  " << full_corrected_jets[i].perp() << " " << hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
+           cout << i << " " << hard_jets[i].perp() << " " << full_corrected_jets[i].perp() << " " << hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
+        }
+        cout << " +++++++ " << endl;
+    }
     
 //     for (jet_iter jet = hard_jets.begin(); jet != hard_jets.end(); jet++) {
 //       print_jet(*jet);}
