@@ -1,6 +1,27 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-01-12  Gavin Salam  <salam@lpthe.jussieu.fr> + matteo
+
+        * areas/SubtractionDefinition.hh
+          definition class for a future subtraction class
+
+        * areas/ClusterSequenceWithSubtraction.hh
+          class for subtraction
+
+        * areas/subtraction-HIeff-native.cc
+          main program which will eventually use the new
+          subtraction class
+
+        * areas/subtraction-HIeff-iter.cc
+          Added before. Slightly modified version of 
+          subtraction-HIeff-tests.cc.
+          Performs a multi-pass subtraction,
+          the same which will eventually be performed by the
+          "-native" file above.
+
+
+
 2007-01-08  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* areas/area-plots/2point-areas-3alg.gp
