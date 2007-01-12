@@ -31,11 +31,11 @@
 #ifndef __FASTJET_CLUSTERSEQUENCEWITHSUBTRACTION_HH__
 #define __FASTJET_CLUSTERSEQUENCEWITHSUBTRACTION_HH__
 
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
 #include<iostream>
 #include<vector>
-
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "SubtractionDefinition.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -45,7 +45,7 @@ using namespace std;
 /// class that implements the subtraction of a parabolic or flat
 /// background, giving access to both the unsubtracted and the
 /// subtracted jets
-class ClusterSequenceWithSubtraction : public ClusterSequenceWithArea {
+class ClusterSequenceWithSubtraction : public ClusterSequenceActiveArea {
 
 public:
 
@@ -54,14 +54,14 @@ public:
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const ActiveAreaSpec & area_spec,
-	  const SubtractionDefinition & sub_def,
-	  const bool & writeout_combinations = false) ;
+	  const SubtractionDefinition & sub_def) ;
 
-}
 
-  /// function returning the inclusive jets WITHOUT subtraction
-  vector<PseudoJet> unsubtracted_jets() const;
-  
+
+  /// function returning the jet WITHOUT subtraction
+  PseudoJet unsubtracted(const PseudoJet &) const;
+
+};  
   
 FASTJET_END_NAMESPACE
 
