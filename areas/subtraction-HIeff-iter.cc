@@ -288,7 +288,7 @@ int main (int argc, char ** argv) {
 
 
     //-- run the jet finder on the full event ----- ITERATIVE
-    vector<fj::PseudoJet> full_corrected_jets;
+    vector<fj::PseudoJet> full_jets,full_corrected_jets;
     vector<fj::PseudoJet> inputs = full_event;
     auto_ptr<fj::ClusterSequenceActiveArea> full_seq_iter;	
     for ( int i = 0; i < nr; i++ ) {
@@ -359,13 +359,13 @@ int main (int argc, char ** argv) {
     vector<fj::PseudoJet> hard_jets;
     for (unsigned ihard = 0; ihard < hard_events.size();  ihard++) {
       fj::ClusterSequence hard_seq(hard_events[ihard], jet_def);
-      vector<fj::PseudoJet> event_jets = hard_seq.inclusive_jets(ptcut);
+      vector<fj::PseudoJet> event_jets = hard_seq.inclusive_jets(0.);
       copy(event_jets.begin(), event_jets.end(), back_inserter(hard_jets));
     }
 
     //-- then put the jets into some sensible common order...
     hard_jets = sorted_by_pt(hard_jets);
-//    full_jets = sorted_by_pt(full_jets);
+    full_jets = sorted_by_pt(full_seq_iter->inclusive_jets());
     full_corrected_jets = sorted_by_pt(full_corrected_jets);
 //    inputs = sorted_by_pt(inputs);
     
@@ -375,12 +375,23 @@ int main (int argc, char ** argv) {
     if ( iev < 10 ) {
         // --- print out some info
         cout << "Matched "<<nmatch<<" jets"<< endl;
-        for (unsigned i = 0; i < nmatch; i++) {
- //      cout << i << " " << hard_jets[i].perp() << " " << full_jets[i].perp() << "  " << full_corrected_jets[i].perp() << " " << hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
-           cout << i << " " << hard_jets[i].perp() << " " << full_corrected_jets[i].perp() << " " << hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
-        }
+//        for (unsigned i = 0; i < nmatch; i++) {
+        for (unsigned i = 0; i < full_corrected_jets.size(); i++) {
+           if ( nr == 1 ) {
+              cout << i << " " << hard_jets[i].perp() << " " << hard_jets[i].phi() << " " << hard_jets[i].rap() << "  "
+	                << full_jets[i].perp() << "  " 
+			<< full_corrected_jets[i].perp() << " " << full_corrected_jets[i].phi() << " " << full_corrected_jets[i].rap() << " "
+			<< hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
+           } else {
+	      cout << i << " " << hard_jets[i].perp() << " " << hard_jets[i].phi() << " " << hard_jets[i].rap() << "  "
+	                << full_corrected_jets[i].perp() << " " << full_corrected_jets[i].phi() << " " << full_corrected_jets[i].rap() <<" "
+			<< hard_jets[i].squared_distance(full_corrected_jets[i]) << endl ; 
+           }
+	   if ( i == nmatch-1 ) { cout << " " << endl; }
+	}
         cout << " +++++++ " << endl;
     }
+
     
 //     for (jet_iter jet = hard_jets.begin(); jet != hard_jets.end(); jet++) {
 //       print_jet(*jet);}
@@ -552,14 +563,15 @@ void reorder_jets(jet_vector & ref_jets,
   // jets)
   int n_ref = ref_jets.size();
   int n_other = other_jets.size();
-  n = min(n_ref, n_other);
-
+//  n = min(n_ref, n_other);
+  n = n_ref;
+  
   double max_dist2 = pow2(max_dist);
 
   // now search for correspondences
   for (unsigned ir = 0; ir < n; ir++) {
     // first find the closest of the remaining "other" jets
-    for (unsigned io = ir+1; io < n; io++) {
+    for (unsigned io = ir+1; io < n_other; io++) {
       if (ref_jets[ir].squared_distance(other_jets[io]) <
 	  ref_jets[ir].squared_distance(other_jets[ir])) {
 	swap(other_jets[io],other_jets[ir]);
