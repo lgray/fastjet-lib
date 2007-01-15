@@ -188,9 +188,10 @@ int main (int argc, char ** argv) {
   int nr = cmdline.int_val("-nr",1);
   // initial R
   double rmin = cmdline.double_val("-rmin",0.1);
-  // minimum pt at which we are booking corrected jets and hard jets
+  // minimum pt at which we are matching corrected jets and hard jets
   // below this value we just discard everything
   double ptcut = cmdline.double_val("-ptcut",10.0);
+  double ptcuthard = cmdline.double_val("-ptcuthard",10.0);
 
   //ConeVariant cone_variant = not_cone;
   //if (cmdline.present("-searchcone")) {
@@ -359,7 +360,7 @@ int main (int argc, char ** argv) {
     vector<fj::PseudoJet> hard_jets;
     for (unsigned ihard = 0; ihard < hard_events.size();  ihard++) {
       fj::ClusterSequence hard_seq(hard_events[ihard], jet_def);
-      vector<fj::PseudoJet> event_jets = hard_seq.inclusive_jets(0.);
+      vector<fj::PseudoJet> event_jets = hard_seq.inclusive_jets(ptcuthard);
       copy(event_jets.begin(), event_jets.end(), back_inserter(hard_jets));
     }
 
@@ -374,6 +375,8 @@ int main (int argc, char ** argv) {
 
     if ( iev < 10 ) {
         // --- print out some info
+        cout << "Hard Jets "<<hard_jets.size() << endl;
+        cout << "Corrected Jets "<<full_corrected_jets.size()<< endl;
         cout << "Matched "<<nmatch<<" jets"<< endl;
 //        for (unsigned i = 0; i < nmatch; i++) {
         for (unsigned i = 0; i < full_corrected_jets.size(); i++) {
