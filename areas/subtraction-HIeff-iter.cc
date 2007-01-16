@@ -300,7 +300,11 @@ int main (int argc, char ** argv) {
       if ( iev < 10 ) {cout << "R = " << r << endl;}
 
       // do the clustering
-      fj::JetDefinition jet_def(jet_finder, r , strategy);    
+      fj::JetDefinition jet_def(jet_finder, r , strategy);
+      double cell_area = min(r*r*3.1415/10.,ghost_area); 
+      if ( iev < 10 ) {cout << "ghost_area = " << cell_area << endl;}  
+      fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, cell_area, 
+                                      grid_scatter, kt_scatter);
       full_seq_iter.reset(new 
                   fj::ClusterSequenceActiveArea (inputs, jet_def,active_area_spec));
       vector<fj::PseudoJet> full_jets_iter = full_seq_iter->inclusive_jets();

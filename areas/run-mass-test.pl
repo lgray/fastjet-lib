@@ -24,6 +24,9 @@ $jet_exec    = "$basedir/fastjet-release/areas/subtraction-tests-mass";
 
 #$hydjet_exec = "$basedir/hydjet/test2_hydjet";
 $hydjet_exec = "$basedir/hydjet/run_hydjet";
+# I have made my own version of run_hydjet for Linux, MC
+if ($user eq 'cacciari' && $arch eq 'Linux') 
+   {$hydjet_exec = "/ada1/lpthe/cacciari/physics/voronoi/fastjet/hydjet/run_hydjet";}
 $incljet_exec = "$basedir/fastjet-release/areas/subtraction-tests-inclpt";
 $ttbarjet_exec = "$basedir/fastjet-release/areas/subtraction-tests-ttbar";
 $HIeff_exec = "$basedir/fastjet-release/areas/subtraction-tests-HIeff";
