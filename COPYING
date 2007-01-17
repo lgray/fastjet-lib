@@ -12,6 +12,13 @@ For the plugin jet finders, the licensing situation is as follows:
 
 The "interface" part of the plugins are GPL.
 
+FastJet and SISCone are the result of original scientific research. If
+you use them in scientific work you are also encouraged to cite the
+papers which describe them.
+
+FastJet: M. Cacciari and G.P. Salam, Phys.Lett.B641 (2006) 57 [hep-ph/0512210]
+SISCone: G.P. Salam and G. Soyez, hep-ph/07mmnnn
+
 ----------------------------------------------------------------------
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
