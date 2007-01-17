@@ -1,3 +1,18 @@
+FastJet is released under the GNU General Public License v2 (given
+below).
+
+Permission is specifically to link with CGAL (which is under a QPL
+license) and where relevant the plugins.
+
+For the plugin jet finders, the licensing situation is as follows:
+
+. CDF code: unknown (permission for distribution granted by J.Huston)
+. PxCone code: unknown (permission for distribution granted by M.H.Seymour)
+. SISCone code: GPL
+
+The "interface" part of the plugins are GPL.
+
+----------------------------------------------------------------------
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
