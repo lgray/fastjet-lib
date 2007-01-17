@@ -33,19 +33,24 @@ int main (int argc, char ** argv) {
   double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   double ghost_kt = cmdline.double_val("-ghost_kt",1e-100);
+  double partner_phi = cmdline.double_val("-partner",0.0);
   int skip = cmdline.int_val("-skip",0);
   string outfile = cmdline.string_val("-out");
 
   if (!cmdline.all_options_used()) exit(-1);
 
-  //fj::JetDefinition jet_def(fj::kt_algorithm, ktR);
-  fj::JetDefinition jet_def(new fj::SISConePlugin(ktR,0.50,0));
+  fj::JetDefinition jet_def(fj::kt_algorithm, ktR);
+  //fj::JetDefinition jet_def(new fj::SISConePlugin(ktR,0.50,0));
   fj::ActiveAreaSpec active_area_spec(ghost_etamax, 1, ghost_area, 
                                       grid_scatter, kt_scatter, ghost_kt);
 
   for (int irep = 0; irep <= skip; irep++) {
     vector<fj::PseudoJet> empty_input;
     empty_input.push_back(fj::PseudoJet(-100.0,0.0,0.0,100.0));
+    if (partner_phi != 0.0) {
+      empty_input.push_back(fj::PseudoJet(-100.0*cos(partner_phi),
+                                          -100.0*sin(partner_phi),0.0,100.0));
+    }
     fj::ClusterSequenceActiveAreaExplicitGhosts clust_seq(empty_input,jet_def,active_area_spec);
     if (irep < skip) continue;
 

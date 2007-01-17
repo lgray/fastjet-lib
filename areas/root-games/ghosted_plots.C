@@ -7,7 +7,7 @@
 // before running this, make sure that you've typed
 //   .L jet-plots.C+
 // then run this with 
-//   .x ghosted-plots.C
+//   .x ghosted_plots.C
 
 // aborted attempt...
 
@@ -50,7 +50,9 @@ void ghosted_plots () {
   gPad->SetPhi(110.101);
 //  JetHist * jets = new JetHist("50GeV.res");
   //JetHist * jets = new JetHist("ghosted-siscone.dat");
-  JetHist * jets = new JetHist("ghosted-siscone-f0.60.dat");
+  JetHist * jets = new JetHist("ghosted-siscone-pair1.0.dat");
+  //JetHist * jets = new JetHist("ghosted-kt-pair0.9.dat");
+  //JetHist * jets = new JetHist("ghosted-siscone-f0.60.dat");
   jets->stack.Draw("lego1");
   pl.DrawPaveLabel(x1,y1,x2,y2,"SISCone, R=1, f=0.60","brNDC");
 
