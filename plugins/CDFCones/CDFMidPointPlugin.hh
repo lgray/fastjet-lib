@@ -93,7 +93,7 @@ public:
     _cone_area_fraction (cone_area_fraction ),
     _max_pair_size      (max_pair_size      ),
     _max_iterations     (max_iterations     ),
-    _overlap_threshold  (overlap_threshold  )  {};
+    _overlap_threshold  (overlap_threshold  )  {}
 
   /// a compact constructor
   CDFMidPointPlugin (double   cone_radius, 
@@ -105,16 +105,16 @@ public:
     _cone_area_fraction (cone_area_fraction ),
     _max_pair_size      (2                  ),
     _max_iterations     (100                ),
-    _overlap_threshold  (overlap_threshold  )  {};
+    _overlap_threshold  (overlap_threshold  )  {}
 
 
   // some functions to return info about parameters
-  double seed_threshold     () const {return _seed_threshold     ;};
-  double cone_radius        () const {return _cone_radius        ;};
-  double cone_area_fraction () const {return _cone_area_fraction ;};
-  int    max_pair_size      () const {return _max_pair_size      ;};
-  int    max_iterations     () const {return _max_iterations     ;};
-  double overlap_threshold  () const {return _overlap_threshold  ;};
+  double seed_threshold     () const {return _seed_threshold     ;}
+  double cone_radius        () const {return _cone_radius        ;}
+  double cone_area_fraction () const {return _cone_area_fraction ;}
+  int    max_pair_size      () const {return _max_pair_size      ;}
+  int    max_iterations     () const {return _max_iterations     ;}
+  double overlap_threshold  () const {return _overlap_threshold  ;}
 
 
   // the things that are required by base class

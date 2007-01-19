@@ -76,7 +76,7 @@ public:
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
-    _caching               (caching)             {};
+    _caching               (caching)             {}
 
   /// copy constructor
   SISConePlugin (const SISConePlugin & plugin) {
@@ -84,19 +84,19 @@ public:
   }
 
   /// the cone radius
-  double cone_radius        () const {return _cone_radius        ;};
+  double cone_radius        () const {return _cone_radius        ;}
 
   /// Fraction of overlap energy in a jet above which jets are merged
   /// and below which jets are split.
-  double overlap_threshold  () const {return _overlap_threshold  ;};
+  double overlap_threshold  () const {return _overlap_threshold  ;}
 
   /// the maximum number of passes of stable-cone searching (<=0 is same
   /// as infinity).
-  int n_pass_max  () const {return _n_pass_max  ;};
+  int n_pass_max  () const {return _n_pass_max  ;}
 
 
   /// indicates whether caching is turned on or not.
-  bool caching() const {return _caching ;};
+  bool caching() const {return _caching ;}
 
   // the things that are required by base class
   virtual std::string description () const;

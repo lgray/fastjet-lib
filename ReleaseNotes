@@ -11,6 +11,12 @@ New features:
 - added the SISCone plugin and the beta version of the siscone code
   (authored by Soyez & Salam)
 
+Bug fixes
+---------
+
+- removed extraneous semicolons after functions that were causing
+  problems on some compilers.
+
 ======================================================================
 Changes from v2.0 to v2.1 (beta0)
 =========================
@@ -47,6 +53,7 @@ Minor additions
 ---------------
 
 - introduced PseudoJet::squared_distance (does same as "plain_distance")
+
 
 
 Notational changes:

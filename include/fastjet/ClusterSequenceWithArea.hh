@@ -49,15 +49,15 @@ public:
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const bool & writeout_combinations = false) :
-     ClusterSequence(pseudojets, jet_def, writeout_combinations) {};
+           ClusterSequence(pseudojets, jet_def, writeout_combinations) {}
 
 
   /// default constructor
-  ClusterSequenceWithArea() {};
+  ClusterSequenceWithArea() {}
 
 
   /// destructor
-  virtual ~ClusterSequenceWithArea() {};
+  virtual ~ClusterSequenceWithArea() {}
 
 
   /// return the area associated with the given jet; this base class

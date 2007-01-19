@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-01-19  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
+	* removed some extraneous semi-colons after functions in many
+	  places...
+
 2007-01-12  Gavin Salam  <salam@lpthe.jussieu.fr> + matteo
 
         * areas/SubtractionDefinition.hh

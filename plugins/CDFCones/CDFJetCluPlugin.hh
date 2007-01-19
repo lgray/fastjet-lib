@@ -52,7 +52,7 @@ public:
     _adjacency_cut     (   2               ),
     _max_iterations    ( 100               ),
     _iratch            (   1               ),
-    _overlap_threshold ( overlap_threshold )  {};
+    _overlap_threshold ( overlap_threshold )  {}
 
   /// a constructor that looks like the one provided by CDF
   CDFJetCluPlugin (
@@ -67,15 +67,15 @@ public:
     _adjacency_cut     (adjacency_cut     ),
     _max_iterations    (max_iterations    ),
     _iratch            (iratch            ),
-    _overlap_threshold (overlap_threshold )  {};
+    _overlap_threshold (overlap_threshold )  {}
 
   // some functions to return info about parameters
-  double seed_threshold    () const {return _seed_threshold    ;};
-  double cone_radius       () const {return _cone_radius       ;};
-  int    adjacency_cut     () const {return _adjacency_cut     ;};
-  int    max_iterations    () const {return _max_iterations    ;};
-  int    iratch            () const {return _iratch            ;};
-  double overlap_threshold () const {return _overlap_threshold ;};
+  double seed_threshold    () const {return _seed_threshold    ;}
+  double cone_radius       () const {return _cone_radius       ;}
+  int    adjacency_cut     () const {return _adjacency_cut     ;}
+  int    max_iterations    () const {return _max_iterations    ;}
+  int    iratch            () const {return _iratch            ;}
+  double overlap_threshold () const {return _overlap_threshold ;}
 
 
   // the things that are required by base class

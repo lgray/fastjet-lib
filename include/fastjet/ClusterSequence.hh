@@ -67,7 +67,7 @@ class ClusterSequence {
  public: 
 
   /// default constructor
-  ClusterSequence () {};
+  ClusterSequence () {}
 
   /// create a clustersequence starting from the supplied set
   /// of pseudojets and clustering them with the long-invariant
@@ -133,7 +133,7 @@ class ClusterSequence {
 			 std::vector<PseudoJet> & subjet_vector) const;
 
   /// return the enum value of the strategy used to cluster the event
-  inline Strategy strategy_used () const {return _strategy;};
+  inline Strategy strategy_used () const {return _strategy;}
   std::string strategy_string () const;
 
 
@@ -154,7 +154,7 @@ class ClusterSequence {
 				      int & newjet_k) {
     assert(plugin_activated());
     _do_ij_recombination_step(jet_i, jet_j, dij, newjet_k);
-  };
+  }
 
   /// as for the simpler variant of plugin_record_ij_recombination,
   /// except that the new jet is attributed the momentum and
@@ -170,15 +170,15 @@ class ClusterSequence {
   void plugin_record_iB_recombination(int jet_i, double diB) {
     assert(plugin_activated());
     _do_iB_recombination_step(jet_i, diB);
-  };
+  }
 
   /// returns true when the plugin is allowed to run the show.
-  inline bool plugin_activated() const {return _plugin_activated;};
+  inline bool plugin_activated() const {return _plugin_activated;}
 
 public:
   /// set the default (static) jet finder across all current and future
   /// ClusterSequence objects -- deprecated.
-  static void set_jet_finder (JetFinder jet_finder) {_default_jet_finder = jet_finder;};
+  static void set_jet_finder (JetFinder jet_finder) {_default_jet_finder = jet_finder;}
 
 
   /// a single element in the clustering history (see vector _history
@@ -398,9 +398,9 @@ protected:
     // clustering ("misuse" the otherwise unused diJ_posn, so as
     // to indicate whether jets need to have their minheap entries
     // updated).
-    inline void label_minheap_update_needed() {diJ_posn = 1;};
-    inline void label_minheap_update_done()   {diJ_posn = 0;};
-    inline bool minheap_update_needed() const {return diJ_posn==1;};
+    inline void label_minheap_update_needed() {diJ_posn = 1;}
+    inline void label_minheap_update_done()   {diJ_posn = 0;}
+    inline bool minheap_update_needed() const {return diJ_posn==1;}
   };
 
   //-- some of the functions that follow are templates and will work
@@ -435,7 +435,7 @@ protected:
       if (_jets[res->_jets_index].cluster_hist_index() == hist_index) {break;}
     }
     return res;
-  };
+  }
 
 
   //-- remaining functions are different in various cases, so we

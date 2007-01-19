@@ -55,7 +55,7 @@ public:
 	  const ActiveAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceWithArea() {
-	   _initialise(pseudojets,jet_def,area_spec,writeout_combinations); };
+	   _initialise(pseudojets,jet_def,area_spec,writeout_combinations); }
 
   /// does the actual work of initialisation
   template<class L> void _initialise

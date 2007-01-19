@@ -228,7 +228,7 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
   _pz = some_four_vector[2];
   _E  = some_four_vector[3];
   this->_finish_init();
-};
+}
 
 
 ////// fun and games...
