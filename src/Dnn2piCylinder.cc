@@ -60,7 +60,7 @@ Dnn2piCylinder::Dnn2piCylinder(
 
   vector<int> updated_point_indices; // we'll not use information from this
   _CreateNecessaryMirrorPoints(plane_point_indices,updated_point_indices);
-};
+}
 
 
 //----------------------------------------------------------------------

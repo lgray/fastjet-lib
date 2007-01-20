@@ -45,7 +45,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class DnnPlane : public DynamicNearestNeighbours {
  public:
   /// empty initaliser
-  DnnPlane() {};
+  DnnPlane() {}
 
   /// Initialiser from a set of points on an Eta-Phi plane, where both
   /// eta and phi can have arbitrary ranges
@@ -103,7 +103,7 @@ class DnnPlane : public DynamicNearestNeighbours {
     double distx= p1.x()-p2.x();
     double disty= p1.y()-p2.y();
     return distx*distx+disty*disty;
-  };
+  }
 
   //---------------------------------------------------------------------- 
   /// Determines the index and distance of the nearest neighbour to 
@@ -136,24 +136,24 @@ class DnnPlane : public DynamicNearestNeighbours {
 // functions defined above
 
 inline int DnnPlane::NearestNeighbourIndex(const int & ii) const {
-  return _supervertex[ii].NNindex;};
+  return _supervertex[ii].NNindex;}
 
 inline double DnnPlane::NearestNeighbourDistance(const int & ii) const {
-  return _supervertex[ii].NNdistance;};
+  return _supervertex[ii].NNdistance;}
 
 inline bool DnnPlane::Valid(const int & index) const {
   if (index >= 0 && index < static_cast<int>(_supervertex.size())) {
-    return (_supervertex[index].vertex != NULL);} else {return false;} };
+    return (_supervertex[index].vertex != NULL);} else {return false;} }
 
 inline EtaPhi DnnPlane::etaphi(const int i) const {
   Point * p = & (_supervertex[i].vertex->point());
-  return EtaPhi(p->x(),p->y()); };
+  return EtaPhi(p->x(),p->y()); }
 
 inline double DnnPlane::eta(const int i) const {
-  return _supervertex[i].vertex->point().x(); };
+  return _supervertex[i].vertex->point().x(); }
 
 inline double DnnPlane::phi(const int i) const {
-  return _supervertex[i].vertex->point().y(); };
+  return _supervertex[i].vertex->point().y(); }
 
 
 FASTJET_END_NAMESPACE

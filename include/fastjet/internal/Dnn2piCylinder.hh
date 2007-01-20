@@ -46,7 +46,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class Dnn2piCylinder : public DynamicNearestNeighbours {
  public:
   /// empty initaliser
-  Dnn2piCylinder() {};
+  Dnn2piCylinder() {}
 
   /// Initialiser from a set of points on an Eta-Phi plane, where
   /// eta can have an arbitrary ranges and phi must be in range
@@ -164,7 +164,7 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   inline EtaPhi _remap_phi(const EtaPhi & point) {
     double phi = point.second;
     if (phi < pi) { phi += twopi ;} else {phi -= twopi;}
-    return EtaPhi(point.first, phi);};
+    return EtaPhi(point.first, phi);}
 
 
   //----------------------------------------------------------------------
@@ -234,7 +234,7 @@ inline int Dnn2piCylinder::NearestNeighbourIndex(const int & current) const {
   //    " has its mirror copy as its own nearest neighbour"<<endl;
   //}
   return this_cylinder_index;
-};
+}
 
 inline double Dnn2piCylinder::NearestNeighbourDistance(const int & current) const {
   int main_index = _mirror_info[current].main_index;
@@ -249,11 +249,11 @@ inline double Dnn2piCylinder::NearestNeighbourDistance(const int & current) cons
       _DNN->NearestNeighbourDistance(mirror_index) ; 
   }
  
-};
+}
 
 inline bool Dnn2piCylinder::Valid(const int & index) const {
   return (_DNN->Valid(_mirror_info[index].main_index));
-};
+}
 
 
 inline Dnn2piCylinder::~Dnn2piCylinder() {

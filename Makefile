@@ -20,6 +20,7 @@ USE_CGAL_SIMPLE_KERNEL = no
 # when uncommented, keeps debugging information in object file
 # (negligble impact on speed \sim 1%)
 CXXFLAGS += -g
+#CXXFLAGS += -g -pedantic -Wno-long-long -Wimplicit -Wreturn-type -Wunused -Wparentheses
 
 #CGAL_MAKEFILE = .../some/path/makefile...
 

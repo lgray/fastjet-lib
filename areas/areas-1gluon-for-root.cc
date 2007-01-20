@@ -3,6 +3,7 @@
 #include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
 #include "SISConePlugin.hh"
 #include<iostream>
+#include<iomanip>
 #include<fstream>
 #include<sstream>
 #include<valarray>
@@ -63,6 +64,10 @@ int main (int argc, char ** argv) {
       vector<fj::PseudoJet> particles(clust_seq.constituents(jets[j]));
       for (size_t ip = 0; ip < particles.size(); ip++) {
         ostr << " " << ip << " " << particles[ip] << endl;
+        cout << setprecision(14) << particles[ip][0] << " "
+             << particles[ip][1] << " "
+             << particles[ip][2] << " "
+             << particles[ip][3] << endl;
       }
       ostr << "#END" <<endl;
     }

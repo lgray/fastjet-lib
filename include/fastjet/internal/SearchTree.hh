@@ -165,7 +165,7 @@ template<class T> void SearchTree<T>::Node::reset_parents_link_to_me(SearchTree<
   if (parent == NULL) {return;}
   if (parent->right == this) {parent->right = XX;}
   else {parent->left = XX;}
-};
+}
 
 
 
@@ -177,38 +177,38 @@ public:
   friend class SearchTree<T>::const_circulator;
   friend class SearchTree<T>;
 
-  circulator() : _node(NULL) {};
+  circulator() : _node(NULL) {}
 
-  circulator(Node * node) : _node(node) {};
+  circulator(Node * node) : _node(node) {}
 
-  const T * operator->() const {return &(_node->value);};
-  T * operator->() {return &(_node->value);};
+  const T * operator->() const {return &(_node->value);}
+  T * operator->() {return &(_node->value);}
   const T & operator*() const {return _node->value;}
   T & operator*() {return _node->value;}
 
   /// prefix increment (structure copied from stl_bvector.h)
   circulator & operator++() {
     _node = _node->successor; 
-    return *this;};
+    return *this;}
 
   /// postfix increment ["int" argument tells compiler it's postfix]
   /// (structure copied from stl_bvector.h)
   circulator operator++(int) {
     circulator tmp = *this;
     _node = _node->successor; 
-    return tmp;};
+    return tmp;}
 
   /// prefix decrement (structure copied from stl_bvector.h)
   circulator & operator--() {
     _node = _node->predecessor; 
-    return *this;};
+    return *this;}
 
   /// postfix decrement ["int" argument tells compiler it's postfix]
   /// (structure copied from stl_bvector.h)
   circulator operator--(int) {
     circulator tmp = *this;
     _node = _node->predecessor; 
-    return tmp;};
+    return tmp;}
 
   /// return a circulator referring to the next node
   circulator next() const {
@@ -218,8 +218,8 @@ public:
   circulator previous() const {
     return circulator(_node->predecessor);}
 
-  bool operator!=(const circulator & other) const {return other._node != _node;};
-  bool operator==(const circulator & other) const {return other._node == _node;};
+  bool operator!=(const circulator & other) const {return other._node != _node;}
+  bool operator==(const circulator & other) const {return other._node == _node;}
 
 private:
   Node * _node;
@@ -230,38 +230,38 @@ private:
 template<class T> class SearchTree<T>::const_circulator{
 public:
 
-  const_circulator() : _node(NULL) {};
+  const_circulator() : _node(NULL) {}
 
-  const_circulator(const Node * node) : _node(node) {};
-  const_circulator(const circulator & circ) :_node(circ._node) {};
+  const_circulator(const Node * node) : _node(node) {}
+  const_circulator(const circulator & circ) :_node(circ._node) {}
 
-  const T * operator->() {return &(_node->value);};
+  const T * operator->() {return &(_node->value);}
   const T & operator*() const {return _node->value;}
 
   /// prefix increment (structure copied from stl_bvector.h)
   const_circulator & operator++() {
     _node = _node->successor; 
-    return *this;};
+    return *this;}
 
   /// postfix increment ["int" argument tells compiler it's postfix]
   /// (structure copied from stl_bvector.h)
   const_circulator operator++(int) {
     const_circulator tmp = *this;
     _node = _node->successor; 
-    return tmp;};
+    return tmp;}
 
 
   /// prefix decrement (structure copied from stl_bvector.h)
   const_circulator & operator--() {
     _node = _node->predecessor; 
-    return *this;};
+    return *this;}
 
   /// postfix decrement ["int" argument tells compiler it's postfix]
   /// (structure copied from stl_bvector.h)
   const_circulator operator--(int) {
     const_circulator tmp = *this;
     _node = _node->predecessor; 
-    return tmp;};
+    return tmp;}
 
   /// return a circulator referring to the next node
   const_circulator next() const {
@@ -273,8 +273,8 @@ public:
 
 
 
-  bool operator!=(const const_circulator & other) const {return other._node != _node;};
-  bool operator==(const const_circulator & other) const {return other._node == _node;};
+  bool operator!=(const const_circulator & other) const {return other._node != _node;}
+  bool operator==(const const_circulator & other) const {return other._node == _node;}
 
 private:
   const Node * _node;

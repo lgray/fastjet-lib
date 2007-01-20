@@ -56,7 +56,7 @@ PseudoJet::PseudoJet(const double px, const double py, const double pz, const do
   set_cluster_hist_index(-1);
   set_user_index(-1);
 
-};
+}
 
 
 //----------------------------------------------------------------------

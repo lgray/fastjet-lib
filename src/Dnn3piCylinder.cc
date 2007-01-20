@@ -54,7 +54,7 @@ Dnn3piCylinder::Dnn3piCylinder(
 
   if (_verbose) cout << "============== Preparing _DNN" << endl;
   _DNN = new DnnPlane(plane_points, verbose);
-};
+}
 
 
 //----------------------------------------------------------------------

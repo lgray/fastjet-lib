@@ -1,10 +1,13 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
-2007-01-19  Gavin Salam  <salam@lpthe.jussieu.fr> 
+2007-01-19+20  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* removed some extraneous semi-colons after functions in many
-	  places...
+	  places, and checked that library now compiles with the "-pedantic
+	  -Wno-long-long -Wimplicit -Wreturn-type -Wunused -Wparentheses"
+	  options. NB PxConePlugin needs some more work on it before it
+	  will compile (variable length arrays).
 
 2007-01-12  Gavin Salam  <salam@lpthe.jussieu.fr> + matteo
 

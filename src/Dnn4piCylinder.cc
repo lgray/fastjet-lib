@@ -53,7 +53,7 @@ Dnn4piCylinder::Dnn4piCylinder(
   _DNN1 = new DnnPlane(input_points, verbose);
   if (_verbose) cout << "============== Preparing _DNN2" << endl;
   _DNN2 = new DnnPlane(copied_points, verbose);
-};
+}
 
 
 //----------------------------------------------------------------------
