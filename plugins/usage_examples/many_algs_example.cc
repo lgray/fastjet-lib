@@ -84,8 +84,10 @@ int main(int argc, char** argv) {
   
 
   // set up a siscone jet definition
-  int npass = 0; // do infinite number of passes
-  plugins[2] = new fastjet::SISConePlugin (jet_radius, overlap_threshold, npass);
+  int npass = 0;               // do infinite number of passes
+  double protojet_ptmin = 0.0; // use all protojets
+  plugins[2] = new fastjet::SISConePlugin (jet_radius, overlap_threshold, 
+                                           npass, protojet_ptmin);
   jet_defs[2] = fastjet::JetDefinition(plugins[2]);
 
   // set up kt and cam/aachen definitions

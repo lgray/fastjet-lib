@@ -1,10 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
-2007-01-19+20  Gavin Salam  <salam@lpthe.jussieu.fr>
+2007-01-23  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 	
         * removed more (all?) extraneous semi-colons
 	* added fastjet-release/test-script.sh
+	* added protojet_ptmin argument to SISConePlugin constructor (etc.)
 	
 2007-01-19+20  Gavin Salam  <salam@lpthe.jussieu.fr> 
 

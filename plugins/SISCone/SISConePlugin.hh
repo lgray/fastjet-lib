@@ -31,12 +31,13 @@ class PseudoJet;
 /// and sends the result to the Tevatron Run-II type split-merge
 /// procedure for overlapping cones.
 ///
-/// Three parameters govern the "physics" of the algorithm:
+/// Four parameters govern the "physics" of the algorithm:
 ///
 ///  - the cone_radius (this should be self-explanatory!)
 ///
 ///  - the overlap_threshold is the parameter which dictates how much
-///    two jets must overlap if they are to be merged
+///    two jets must overlap (pt_overlap/min(pt1,pt2)) if they are to be 
+///    merged
 ///
 ///  - Not all particles are in stable cones in the first round of
 ///    searching for stable cones; one can therefore optionally have the
@@ -45,6 +46,10 @@ class PseudoJet;
 ///    previous passes --- the maximum number of passes carried out is
 ///    n_pass_max. If this is zero then additional passes are carried
 ///    out until no new stable cones are found.
+///
+///  - Protojet ptmin: protojets that are below this ptmin
+///    (default = 0) are discarded before each iteration of the
+///    split-merge loop.
 ///
 /// One parameter governs some internal algorithmic shortcuts: 
 ///
@@ -72,10 +77,24 @@ public:
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
                  int    n_pass_max = 1,
+                 double protojet_ptmin = 0.0, 
                  bool   caching = false) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
+    _protojet_ptmin        (protojet_ptmin),
+    _caching               (caching)             {}
+  
+  /// backwards compatible constructor for the SISCone Plugin class
+  /// (avoid using this in future).
+  SISConePlugin (double cone_radius,
+                 double overlap_threshold,
+                 int    n_pass_max,
+                 bool   caching ) :
+    _cone_radius           (cone_radius       ),
+    _overlap_threshold     (overlap_threshold ),
+    _n_pass_max            (n_pass_max ), 
+    _protojet_ptmin        (0.0),
     _caching               (caching)             {}
 
   /// copy constructor
@@ -94,6 +113,9 @@ public:
   /// as infinity).
   int n_pass_max  () const {return _n_pass_max  ;}
 
+  /// minimum pt for a protojet to be considered in the split-merge step
+  /// of the algorithm
+  double protojet_ptmin  () const {return _protojet_ptmin  ;}
 
   /// indicates whether caching is turned on or not.
   bool caching() const {return _caching ;}
@@ -105,6 +127,7 @@ public:
 private:
   double _cone_radius, _overlap_threshold;
   int    _n_pass_max;
+  double _protojet_ptmin;
   bool   _caching;
 
   // variables for caching the results and the input

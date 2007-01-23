@@ -24,6 +24,7 @@ string SISConePlugin::description () const {
        << "cone_radius = "       << cone_radius        () << ", "
        << "overlap_threshold = " << overlap_threshold  () << ", "
        << "n_pass_max = "        << n_pass_max         () << ", "
+       << "protojet_ptmin = "    << protojet_ptmin()      << ", "
        << "caching turned "      << (caching() ? "on" : "off");
 
   // create a fake scones object so that we can find out more about it
@@ -88,10 +89,10 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     
     // run the jet finding
     siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
-                          n_pass_max());
+                          n_pass_max(), protojet_ptmin());
   } else {
     // just run the overlap part of the jets.
-    siscone->recompute_jets(overlap_threshold());
+    siscone->recompute_jets(overlap_threshold(), protojet_ptmin());
   }
 
   // extract the jets [in reverse order -- to get nice ordering in pt at end]
