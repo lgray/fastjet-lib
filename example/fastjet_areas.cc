@@ -121,7 +121,7 @@ void print_jets (const fastjet::ClusterSequenceWithArea & clust_seq,
   }
 
 
-};
+}
 
 
 

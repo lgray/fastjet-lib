@@ -208,7 +208,7 @@ void print_jets (const fastjet::ClusterSequenceActiveArea & clust_seq,
   cout << "median pt_over_area = " << median_pt_per_area << endl << endl;
 
 
-};
+}
 
 
 

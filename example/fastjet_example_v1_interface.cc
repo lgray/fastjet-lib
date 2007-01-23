@@ -114,4 +114,4 @@ void print_jets (const FjClusterSequence & clust_seq,
 	   sorted_jets[i].perp(), n_constituents);
   }
 
-};
+}

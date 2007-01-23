@@ -92,7 +92,7 @@ using namespace std;
 // fastjet namespace
 namespace fj = fastjet;
 
-inline double pow2(const double x) {return x*x;};
+inline double pow2(const double x) {return x*x;}
 
 /// a program to test and time the kt algorithm as implemented in fastjet
 int main (int argc, char ** argv) {
@@ -112,7 +112,7 @@ int main (int argc, char ** argv) {
   double inclkt = cmdline.double_val("-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
-  double etamax = cmdline.double_val("-etamax",1.0e310);
+  double etamax = cmdline.double_val("-etamax",1.0e305);
   bool   show_constituents = cmdline.present("-const");
   bool   massless = cmdline.present("-massless");
   int  nev     = cmdline.int_val("-nev",1);

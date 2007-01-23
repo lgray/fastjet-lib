@@ -107,4 +107,4 @@ void print_jets (const fastjet::ClusterSequence & clust_seq,
 	   sorted_jets[i].perp(), n_constituents);
   }
 
-};
+}

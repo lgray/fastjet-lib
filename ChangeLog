@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-01-19+20  Gavin Salam  <salam@lpthe.jussieu.fr>
+	
+        * removed more (all?) extraneous semi-colons
+	* added fastjet-release/test-script.sh
+	
 2007-01-19+20  Gavin Salam  <salam@lpthe.jussieu.fr> 
 
 	* removed some extraneous semi-colons after functions in many

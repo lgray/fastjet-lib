@@ -12,7 +12,7 @@
 #include<vector>
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
-#include "numconsts.hh"
+#include "fastjet/internal/numconsts.hh"
 
 
 /** Need to include these KtJet Headers */
@@ -21,7 +21,7 @@
 using namespace std;
 using namespace KtJet;
 
-inline double pow2(const double x) {return x*x;};
+inline double pow2(const double x) {return x*x;}
 
 /// a program to test and time the kt algorithm as implemented in ktjet
 int main (int argc, char ** argv) {
@@ -97,7 +97,7 @@ int main (int argc, char ** argv) {
       for (size_t j = 0; j < jets.size(); j++) {
 	if (jets[j].perp() < inclkt) {break;}
 	double phi = jets[j].phi();
-	if (phi < 0.0) {phi += twopi;}
+	if (phi < 0.0) {phi += fastjet::twopi;}
 	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rapidity(),phi,jets[j].perp());
       }
     }

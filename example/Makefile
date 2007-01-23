@@ -3,6 +3,8 @@
 # include the Makefile in the top directory, which has the bits and pieces
 # needed to get CGAL working
 include ../Makefile
+# make sure we use the pedantic flags here (defined in ../Makefile)
+CXXFLAGS += $(CXXPEDANTIC)
 
 FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
@@ -85,4 +87,11 @@ fastjet_timing.o: ../include/fastjet/ClusterSequence.hh
 fastjet_timing.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 fastjet_timing.o: ../include/fastjet/Error.hh
 fastjet_timing.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
+fastjet_timing_plugins.o: ../include/fastjet/PseudoJet.hh
+fastjet_timing_plugins.o: ../include/fastjet/internal/numconsts.hh
+fastjet_timing_plugins.o: ../include/fastjet/internal/base.hh
+fastjet_timing_plugins.o: ../include/fastjet/ClusterSequence.hh
+fastjet_timing_plugins.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+fastjet_timing_plugins.o: ../include/fastjet/Error.hh
+fastjet_timing_plugins.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
 CmdLine.o: CmdLine.hh

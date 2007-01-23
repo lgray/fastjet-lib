@@ -5,6 +5,8 @@
 # environment variable G77LIBDIR
 
 include ../../Makefile
+# make sure we use the pedantic flags here (defined in ../Makefile)
+CXXFLAGS += $(CXXPEDANTIC)
 
 FASTJET_INCLUDE = -I../../include
 INCLUDE += $(FASTJET_INCLUDE)

@@ -89,4 +89,4 @@ void print_jets (const vector<KtLorentzVector> & jets) {
 	   jets[i].perp(), n_constituents);
   }
 
-};
+}
