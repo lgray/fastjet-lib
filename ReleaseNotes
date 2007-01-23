@@ -17,6 +17,11 @@ Bug fixes
 - removed extraneous semicolons after functions that were causing
   problems on some compilers.
 
+Other additions
+---------------
+
+- Added COPYING file with GPL license
+
 ======================================================================
 Changes from v2.0 to v2.1 (beta0)
 =========================
