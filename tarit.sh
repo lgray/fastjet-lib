@@ -39,7 +39,7 @@ else
                       $dirhere/plugins/SISCone/siscone/doc/html/*.html \
                       $dirhere/plugins/SISCone/siscone/ChangeLog \
                       $dirhere/plugins/SISCone/siscone/examples/events/single-event.dat \
-                      $dirhere/lib/.dummy 
+                      $dirhere/test-script.sh $dirhere/lib/.dummy 
   
   fulltarloc=`pwd`
   pushd /tmp
