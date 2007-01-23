@@ -24,7 +24,8 @@ endif
 PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc areas-2point.cc
 
 MINSRCS =  CmdLine.cc  FlavourHolder.cc
-SRCS =  $(MINSRCS) ClusterSequencePassiveArea.cc
+#SRCS =  $(MINSRCS) ClusterSequencePassiveArea.cc
+SRCS =  $(MINSRCS) 
 MINOBJS = $(patsubst %.cc,%.o,$(MINSRCS))
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -57,6 +58,9 @@ subtraction-tests-ttbar: subtraction-tests-ttbar.o $(OBJS) ../lib/libfastjet.a
 
 subtraction-tests-inclpt: subtraction-tests-inclpt.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-inclpt subtraction-tests-inclpt.o $(OBJS)  $(LDFLAGS)
+
+subtraction-tests-inclpt-2pass: subtraction-tests-inclpt-2pass.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o subtraction-tests-inclpt-2pass  subtraction-tests-inclpt-2pass.o $(OBJS)  $(LDFLAGS)
 
 subtraction-tests-HIeff: subtraction-tests-HIeff.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-HIeff subtraction-tests-HIeff.o $(OBJS)  $(LDFLAGS)
