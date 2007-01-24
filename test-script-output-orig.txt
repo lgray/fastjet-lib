@@ -67,7 +67,7 @@ Printing inclusive jets with pt > 5 GeV
     8  -4.83615  2.20502      5.027    4.152 +-  0.201
 
 #------------------------------------------------------------------------
-#                       FastJet release 2.1 beta1  			   
+#                       FastJet release 2.1 beta2  			   
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   

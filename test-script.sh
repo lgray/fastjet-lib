@@ -7,7 +7,7 @@
 # set G77LIBDIR if the user has not set it in its environment
 if [[ ! $G77LIBDIR ]] ; then
     dir=`locate libg2c.a | head -1`
-    G77LIBDIR=`dirname $dir`/
+    export G77LIBDIR=`dirname $dir`/
     echo Setting G77LIBDIR to $G77LIBDIR
 fi
 
