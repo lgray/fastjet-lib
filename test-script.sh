@@ -63,8 +63,12 @@ mv $OUTPUT test-script-output.txt
 echo 
 echo
 echo Comparing output from these runs to expected output:
+diff  test-script-output.txt  test-script-output-orig.txt > $OUTPUT
 DIFF=`diff  test-script-output.txt  test-script-output-orig.txt`
-if [[ $DIFF ]]; then echo $DIFF
+if [[ $DIFF ]]; then cat $OUTPUT
 else 
 echo Results are identical
 fi
+
+# remove temporary output file
+rm -f $OUTPUT
