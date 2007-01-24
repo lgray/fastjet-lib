@@ -4,7 +4,7 @@
 #version=0.9.0c-20050929-1200
 #version=0.9pre-20060203-2140
 #version=2.0.0
-version=2.1.0b1
+version=2.1.0b2
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dirhere=fastjet-release
@@ -39,7 +39,8 @@ else
                       $dirhere/plugins/SISCone/siscone/doc/html/*.html \
                       $dirhere/plugins/SISCone/siscone/ChangeLog \
                       $dirhere/plugins/SISCone/siscone/examples/events/single-event.dat \
-                      $dirhere/test-script.sh $dirhere/lib/.dummy 
+                      $dirhere/test-script.sh $dirhere/lib/.dummy \
+                      $dirhere/test-script-output-orig.txt
   
   fulltarloc=`pwd`
   pushd /tmp

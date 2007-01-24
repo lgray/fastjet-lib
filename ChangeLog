@@ -1,6 +1,12 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-01-24  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+          
+        * tweaked test-script.sh some more
+        * added fastjet-release/test-script-output-orig.txt
+        * modified tarit.sh accordingly
+
 2007-01-23  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 	
         * removed more (all?) extraneous semi-colons
