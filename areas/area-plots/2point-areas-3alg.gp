@@ -2,7 +2,7 @@
 
 
 reset
-set dat sty li
+set sty dat li
 
 set key bottom
 set yrange [0:1.8]
@@ -10,8 +10,10 @@ set xrange [0:2.1]
 
 set size square
 set size 0.9
-set xlabel '{/Symbol D}R'
-set ylabel 'Area / {/Symbol p}R^2'
+set xlabel '{/Symbol D}_{12}/R'
+set ylabel 'a({/Symbol D}_{12}) / {/Symbol p}R^2' offset 1
+set label 1 'passive area' at 2,1.6 right
+set label 2 'p_{t2} @<&{.}< p_{t1}' at 2,1.45 right
 
 set key spacing 1.5
 
@@ -35,9 +37,9 @@ fcone(d) = (d<1)? pi : fdeficit(d)
 
 set samples 500
 
-  plot fkt(x)/pi+0.01             w l lt 1 lw 2 t 'kt passive area'
+  plot fkt(x)/pi+0.01             w l lt 1 lw 2 t 'k_t'
 
-replot fcam(x)/pi            w l lt 3 lw 2 t 'cam passive area'
+replot fcam(x)/pi            w l lt 3 lw 2 t      'Cambridge/Aachen'
 
-replot fcone(x)/pi-0.01            w l lt 2 lw 2 t 'cone passive area'
+replot fcone(x)/pi-0.01            w l lt 2 lw 2 t 'cone'
 
