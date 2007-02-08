@@ -1,6 +1,11 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-02-08  Gavin Salam  <salam@lpthe.jussieu.fr> 
+
+	* modified tarit.sh so that it indicates which svn commands to
+	  use to tag the release
+
 2007-01-24  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
           
         * tweaked test-script.sh some more
