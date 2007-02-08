@@ -73,8 +73,8 @@ else
   URL=`svn info | grep URL | sed 's/^.*URL: //'`
   tagURL=`echo $URL | sed "s/trunk\/fastjet-release/tags\/fastjet-$version/"`
   echo "Remember to tag the version:"
-  echo "svn mkdir $tagURL"
-  echo "svn copy  -m 'tagged release of version $version' $URL $tagURL/"
+  echo "svn mkdir $tagURL -m 'made directory for tag of release $version' "
+  echo "svn copy  -m 'tagged release of release $version' $URL $tagURL/"
 fi
 
 #tar zcf $tarname
