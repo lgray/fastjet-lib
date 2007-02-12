@@ -134,7 +134,6 @@ public:
   /// constructor to fully specify a jet-definition (together
   /// with information about how algorithically to run it). 
   ///
-  /// [at some point might recombination schemes be added here?]
   JetDefinition(JetFinder jet_finder, 
                 double R, 
                 Strategy strategy,
