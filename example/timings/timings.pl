@@ -38,7 +38,7 @@ $baserep = 700;
 #@strategy = (102);
 # for cones
 #@strategy = (1,204,203,101,201,202,212);
-@strategy = (202);
+@strategy = (204);
 #@strategy = (11,102);
 
 #$radius=0.4;
