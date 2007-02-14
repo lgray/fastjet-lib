@@ -1,10 +1,9 @@
 #!/bin/zsh
 # create a tar archive
 
-#version=0.9.0c-20050929-1200
-#version=0.9pre-20060203-2140
-#version=2.0.0
-version=2.1.0b2
+# deduce version automatically from the appropriate include file
+version=`grep 'fastjet_version = ' include/fastjet/version.hh | sed 's/.* = \"//' | sed 's/\".*//'`
+
 origdir=`pwd | sed 's/.*\///'`
 echo "Will make an archive of $origdir/"
 dirhere=fastjet-release
@@ -58,10 +57,11 @@ else
   echo ""
     # if it's gavin running this then automatically copy the tarfile
     # to the web-space
-  if [[ $USER = salam ]]
+  webdir=~salam/www/repository/software/fastjet/
+  if [[ $USER = salam && -e $webdir ]]
       then
       echo "Copying .tgz file to web-site"
-      cp -vp $tarname ~salam/www/repository/software/fastjet/
+      cp -vp $tarname $webdir
       echo "************   Remember to edit web page **********"
   fi
 

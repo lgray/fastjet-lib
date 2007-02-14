@@ -2,6 +2,16 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Changes from v2.1.0b2 to v2.1.0b3
+=================================
+
+Bug fixes
+---------
+
+- included new siscone version which addresses problems with collinear
+  safety and co-circular points.
+
+======================================================================
 Changes from v2.1.0b1 to v2.1.0b2
 =================================
 

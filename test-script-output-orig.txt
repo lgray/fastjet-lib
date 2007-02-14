@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------
-#                       FastJet release 2.1 beta2  			   
+#                      FastJet release 2.1.0b3
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -40,7 +40,7 @@ jet #        rapidity             phi              pt  n constituents
     8      3.42713139      5.74362063      5.17254118       13
     9     -4.83615264      2.20502275      5.02711586       12
 #------------------------------------------------------------------------
-#                       FastJet release 2.1 beta2  			   
+#                      FastJet release 2.1.0b3
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -67,7 +67,7 @@ Printing inclusive jets with pt > 5 GeV
     8  -4.83615  2.20502      5.027    4.152 +-  0.201
 
 #------------------------------------------------------------------------
-#                       FastJet release 2.1 beta2  			   
+#                      FastJet release 2.1.0b3
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -119,15 +119,15 @@ jet #        rapidity             phi              pt  n constituents
 138 particles unclustered
 
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-#                   SISCone   version 1.0beta                      o
-#           http://www.lpthe.jussieu.fr/~soyez/siscone             o
+#                    SISCone   version 1.0.1                       o
+#              http://projects.hepforge.org/siscone                o
 #                                                                  o
 # This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
 # SISCone is written by Gavin Salam and Gregory Soyez              o
 # It is released under the terms of the GNU General Public License o
 #                                                                  o
 # A description of the algorithm is available in the arXiv         o
-# preprint hep-ph/0701nnn. Please cite it if you use SISCone       o
+# preprint hep-ph/0702nnn. Please cite it if you use SISCone       o
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
 Ran SISCone jet finder with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, caching turned off

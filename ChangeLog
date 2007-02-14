@@ -6,6 +6,14 @@ ChangeLog for fastjet-release directory
 
 	* updated test-script.sh to accept -j2 option for faster compilation
 
+	* ADDED include/fastjet/version.hh which sets the version number;
+	  this is used throughout, also in tarit.sh and in svntagit.sh
+
+	* ADDED svntagit.sh which will one day deal with all the tagging...
+
+	* updated the test script ref. output to reflect the new version
+  	  numbers
+	
 2007-02-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* switched external reference to siscone over to new repository, 

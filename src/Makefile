@@ -64,6 +64,7 @@ ClusterSequence.o: ../include/fastjet/internal/numconsts.hh
 ClusterSequence.o: ../include/fastjet/ClusterSequence.hh
 ClusterSequence.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 ClusterSequence.o: ../include/fastjet/JetDefinition.hh
+ClusterSequence.o: ../include/fastjet/version.hh
 PseudoJet.o: ../include/fastjet/Error.hh ../include/fastjet/internal/base.hh
 PseudoJet.o: ../include/fastjet/PseudoJet.hh
 PseudoJet.o: ../include/fastjet/internal/numconsts.hh

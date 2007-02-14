@@ -31,6 +31,7 @@
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/version.hh" // stores the current version number
 #include<iostream>
 #include<sstream>
 #include<cmath>
@@ -150,7 +151,7 @@ void ClusterSequence::_print_banner() {
   //Symp. Discr. Alg, p.472 (2002) and  CGAL (http://www.cgal.org);
 
   cout << "#------------------------------------------------------------------------\n";
-  cout << "#                       FastJet release 2.1 beta2  			   \n";
+  cout << "#                      FastJet release " << fastjet_version << endl;
   cout << "#              Written by Matteo Cacciari and Gavin Salam		   \n"; 
   cout << "#              http://www.lpthe.jussieu.fr/~salam/fastjet		   \n"; 
   cout << "#								      	   \n";
