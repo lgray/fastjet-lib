@@ -20,12 +20,19 @@ auto_ptr<Csiscone          > SISConePlugin::stored_siscone   ;
 string SISConePlugin::description () const {
   ostringstream desc;
   
+  const string on = "on";
+  const string off = "off";
+  const string pt2m2 = "pt^2+m^2";
+  const string pt2 = "pt^2";
+
   desc << "SISCone jet finder with " ;
   desc << "cone_radius = "       << cone_radius        () << ", ";
   desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
-  desc << "caching turned "      << (caching() ? "on" : "off");
+  desc << "S-M ordering on = " << (split_merge_on_transverse_mass ? 
+                                   pt2m2 : pt2) << ", ";
+  desc << "caching turned "      << (caching() ? on : off);
 
   // create a fake scones object so that we can find out more about it
   Csiscone siscone;
