@@ -18,7 +18,7 @@ INCLUDE += -I$(SUBDIR)
 
 all: libSISConePlugin.a
 
-libSISConePlugin.a: $(OBJS) $(MAKESUBDIR) $(SUBDIR)/*.o
+libSISConePlugin.a: $(OBJS) $(MAKESUBDIR) siscone_src
 	ar cru libSISConePlugin.a $(OBJS) $(SUBDIR)/*.o
 	ranlib libSISConePlugin.a
 
