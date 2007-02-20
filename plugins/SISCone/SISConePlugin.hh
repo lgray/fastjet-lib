@@ -78,12 +78,14 @@ public:
                  double overlap_threshold = 0.5,
                  int    n_pass_max = 1,
                  double protojet_ptmin = 0.0, 
-                 bool   caching = false) :
+                 bool   caching = false,
+                 bool   split_merge_on_transverse_mass = true) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (protojet_ptmin),
-    _caching               (caching)             {}
+    _caching               (caching),             
+    _split_merge_on_transverse_mass (split_merge_on_transverse_mass) {}
   
   /// backwards compatible constructor for the SISCone Plugin class
   /// (avoid using this in future).
@@ -95,7 +97,8 @@ public:
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (0.0),
-    _caching               (caching)             {}
+    _caching               (caching),
+    _split_merge_on_transverse_mass(true)     {}
 
   /// copy constructor
   SISConePlugin (const SISConePlugin & plugin) {
@@ -117,6 +120,11 @@ public:
   /// of the algorithm
   double protojet_ptmin  () const {return _protojet_ptmin  ;}
 
+  /// indicates whether the split-merge orders on transverse mass or not.
+  bool split_merge_on_transverse_mass() const {return _split_merge_on_transverse_mass ;}
+  void set_split_merge_on_transverse_mass(bool val) {
+    _split_merge_on_transverse_mass = val;}
+
   /// indicates whether caching is turned on or not.
   bool caching() const {return _caching ;}
 
@@ -128,7 +136,7 @@ private:
   double _cone_radius, _overlap_threshold;
   int    _n_pass_max;
   double _protojet_ptmin;
-  bool   _caching;
+  bool   _caching, _split_merge_on_transverse_mass;
 
   // variables for caching the results and the input
   static std::auto_ptr<SISConePlugin          > stored_plugin;

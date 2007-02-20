@@ -23,14 +23,14 @@ string SISConePlugin::description () const {
   const string on = "on";
   const string off = "off";
   const string pt2m2 = "pt^2+m^2";
-  const string pt2 = "pt^2";
+  const string pt2 = "pt^2 (IR unsafe)";
 
   desc << "SISCone jet finder with " ;
   desc << "cone_radius = "       << cone_radius        () << ", ";
   desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
-  desc << "S-M ordering on = " << (split_merge_on_transverse_mass ? 
+  desc << "S-M ordering on = " << (_split_merge_on_transverse_mass ? 
                                    pt2m2 : pt2) << ", ";
   desc << "caching turned "      << (caching() ? on : off);
 
@@ -96,10 +96,12 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     
     // run the jet finding
     siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
-                          n_pass_max(), protojet_ptmin());
+                          n_pass_max(), protojet_ptmin(), 
+                          split_merge_on_transverse_mass());
   } else {
     // just run the overlap part of the jets.
-    siscone->recompute_jets(overlap_threshold(), protojet_ptmin());
+    siscone->recompute_jets(overlap_threshold(), protojet_ptmin(), 
+                            split_merge_on_transverse_mass());
   }
 
   // extract the jets [in reverse order -- to get nice ordering in pt at end]

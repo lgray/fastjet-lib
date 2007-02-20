@@ -1,6 +1,21 @@
-
 ChangeLog for fastjet-release directory
 ---------------------------------------
+
+2007-02-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc (main): 
+	  added the -nomt option for choosing the ordering in siscone
+	  split merge.
+	
+	* plugins/SISCone/SISConePlugin.cc|h: 
+	  added the "bool split_merge_on_transverse_mass" parameter to
+	  constructor, put in a corresponding member variable and used it
+	  when calling siscone.
+
+2007-02-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/Makefile (libSISConePlugin.a): fixed some
+	  dependencies wrt to the siscone distribution directory.
 
 2007-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 

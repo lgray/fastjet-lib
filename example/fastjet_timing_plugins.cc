@@ -162,8 +162,9 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
   } else if (cmdline.present("-siscone")) {
-    jet_def = fj::JetDefinition( new fj::SISConePlugin (
-                                      ktR, overlap_threshold));
+    fj::SISConePlugin * plugin = new fj::SISConePlugin (ktR, overlap_threshold);
+    if (cmdline.present("-nomt")) plugin->set_split_merge_on_transverse_mass(false);
+    jet_def = fj::JetDefinition(plugin);
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }
@@ -248,7 +249,7 @@ int main (int argc, char ** argv) {
     if (inclkt >= 0.0) {
       vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
       for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
+	printf("%5u %15.8f %15.8f %15.8e\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
 	if (show_constituents) {
 	  vector<fj::PseudoJet> const_jets = clust_seq.constituents(jets[j]);
 	  for (size_t k = 0; k < const_jets.size(); k++) {
