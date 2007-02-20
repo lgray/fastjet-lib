@@ -162,7 +162,8 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
   } else if (cmdline.present("-siscone")) {
-    fj::SISConePlugin * plugin = new fj::SISConePlugin (ktR, overlap_threshold);
+    int npass = cmdline.value("-npass",1);
+    fj::SISConePlugin * plugin = new fj::SISConePlugin (ktR, overlap_threshold,npass);
     if (cmdline.present("-nomt")) plugin->set_split_merge_on_transverse_mass(false);
     jet_def = fj::JetDefinition(plugin);
   } else {
