@@ -28,8 +28,9 @@ using namespace std;
 inline double pow2(const double x) {return x*x;};
 
 //----------------------------------------------------------------------
-/// A program that allows one to determine the area of a simple 2-parton
-/// system as a function of the separation of the partons
+/// A program that allows one to determine the distribution of areas
+/// in events populated either by ghosts only, or by ghosts and a single
+/// hard particle
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
