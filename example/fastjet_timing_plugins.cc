@@ -145,13 +145,18 @@ int main (int argc, char ** argv) {
   if (cmdline.present("-cam")) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
   } else if (cmdline.present("-midpoint")) {
+    typedef fj::CDFMidPointPlugin MPPlug; // for brevity
     double cone_area_fraction = 1.0;
     int    max_pair_size = 2;
     int    max_iterations = 100;
+    MPPlug::SplitMergeScale sm_scale = MPPlug::SM_pt;
+    if (cmdline.present("-sm-mt")) sm_scale = MPPlug::SM_mt;
+    if (cmdline.present("-sm-Et")) sm_scale = MPPlug::SM_Et;
     jet_def = fj::JetDefinition( new fj::CDFMidPointPlugin (
                                       seed_threshold, ktR, 
                                       cone_area_fraction, max_pair_size,
-                                      max_iterations, overlap_threshold));
+                                      max_iterations, overlap_threshold,
+                                      sm_scale));
   } else if (cmdline.present("-pxcone")) {
     double min_jet_energy = 5.0;
     jet_def = fj::JetDefinition( new fj::PxConePlugin (
@@ -250,7 +255,8 @@ int main (int argc, char ** argv) {
     if (inclkt >= 0.0) {
       vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
       for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8e\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
+	//printf("%5u %15.8f %15.8f %15.8e\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
+	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
 	if (show_constituents) {
 	  vector<fj::PseudoJet> const_jets = clust_seq.constituents(jets[j]);
 	  for (size_t k = 0; k < const_jets.size(); k++) {

@@ -20,9 +20,9 @@ INCLUDE += $(PLUGIN_INCLUDE)
 # libraries: tcmalloc gives a faster malloc (about 10% speed
 # gain on the CGAL based algorithms), while the profiler is useful
 # for a faithful estimation of where the time is being spent
-ifeq ($(shell whoami),salam)
-  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
-endif
+#ifeq ($(shell whoami),salam)
+#  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
+#endif
 
 SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc fastjet_timing_plugins.cc CmdLine.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))

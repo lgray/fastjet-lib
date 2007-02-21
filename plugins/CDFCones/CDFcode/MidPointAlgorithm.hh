@@ -7,6 +7,9 @@
 
 class MidPointAlgorithm
 {
+ public:
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt};
+
  private:
   double _seedThreshold;
   double _coneRadius;
@@ -14,6 +17,7 @@ class MidPointAlgorithm
   int    _maxPairSize;
   int    _maxIterations;
   double _overlapThreshold;
+  SplitMergeScale _smScale;
 
  public:
   MidPointAlgorithm():
@@ -22,15 +26,17 @@ class MidPointAlgorithm
     _coneAreaFraction(0.25),
     _maxPairSize(2),
     _maxIterations(100),
-    _overlapThreshold(0.75)
+    _overlapThreshold(0.75),
+    _smScale(SM_pt)
   {}
-  MidPointAlgorithm(double st, double cr, double caf, int mps, int mi, double ot):
+  MidPointAlgorithm(double st, double cr, double caf, int mps, int mi, double ot, SplitMergeScale sm = SM_pt):
     _seedThreshold(st),
     _coneRadius(cr),
     _coneAreaFraction(caf),
     _maxPairSize(mps),
     _maxIterations(mi),
-    _overlapThreshold(ot)
+    _overlapThreshold(ot),
+    _smScale(sm)
   {}
   void findStableConesFromSeeds(std::vector<PhysicsTower>& particles, std::vector<Cluster>& stableCones);
   void findStableConesFromMidPoints(std::vector<PhysicsTower>& particles, std::vector<Cluster>& stableCones);
@@ -40,6 +46,11 @@ class MidPointAlgorithm
 			  std::vector< std::vector<bool> >& distanceOK, int maxClustersInPair);
   void splitAndMerge(std::vector<Cluster>& stableCones, std::vector<Cluster>& jets);
   void run(std::vector<PhysicsTower>& particles, std::vector<Cluster>& jets);
+
+  /// sort the clusters into whatever order is 
+  void local_sort(std::vector<Cluster>&);
+
 };
+
 
 #endif

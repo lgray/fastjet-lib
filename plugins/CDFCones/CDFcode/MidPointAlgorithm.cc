@@ -1,6 +1,7 @@
 #include "MidPointAlgorithm.hh"
 #include "ClusterComparisons.hh"
 #include <algorithm>
+#include <iostream>
 #include <cmath>
 
 void MidPointAlgorithm::findStableConesFromSeeds(std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones)
@@ -50,8 +51,10 @@ void MidPointAlgorithm::findStableConesFromMidPoints(std::vector<PhysicsTower>& 
     iterateCone(midPoint.y(),midPoint.phi(),midPoint.pt(),towers,stableCones,reduceConeSize);
   }
 
-  sort(stableCones.begin(),stableCones.end(),ClusterPtGreater());
+  //sort(stableCones.begin(),stableCones.end(),ClusterPtGreater());
+  local_sort(stableCones);  // GPS mod. to allow split-merge with various scales
 }
+
 
 void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, double startPt,
 				    std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones, bool reduceConeSize)
@@ -146,7 +149,9 @@ void MidPointAlgorithm::splitAndMerge(std::vector<Cluster>& stableCones, std::ve
   bool mergingNotFinished = true;
   while(mergingNotFinished){
     // Sort the stable cones (highest pt first).
-    sort(stableCones.begin(),stableCones.end(),ClusterPtGreater());
+    //sort(stableCones.begin(),stableCones.end(),ClusterPtGreater());
+    local_sort(stableCones);
+
     // Start with the highest pt cone.
     std::vector<Cluster>::iterator stableConeIter1 = stableCones.begin();
     if(stableConeIter1 == stableCones.end())   // Stable cone list empty?
@@ -173,7 +178,29 @@ void MidPointAlgorithm::splitAndMerge(std::vector<Cluster>& stableCones, std::ve
 	}
 	if(overlap.size()){   // non-empty overlap
 	  coneNotModified = false;
-	  if(overlap.fourVector.pt() >= _overlapThreshold*stableConeIter2->fourVector.pt()){
+          // GPS mod to allow various scale choices in split merge --------
+          double overlap_scale, jet2_scale;
+          switch(_smScale) {
+          case SM_pt:
+            overlap_scale = overlap.fourVector.pt();
+            jet2_scale    = stableConeIter2->fourVector.pt();
+            break;
+          case SM_Et:
+            overlap_scale = overlap.fourVector.Et();
+            jet2_scale    = stableConeIter2->fourVector.Et();
+            break;
+          case SM_mt:
+            overlap_scale = overlap.fourVector.mt();
+            jet2_scale    = stableConeIter2->fourVector.mt();
+            break;
+          default:
+            std::cerr << "Unrecognized value for _smScale: " 
+                      << _smScale << std::endl;
+            exit(-1);
+          }
+	  if(overlap_scale >= _overlapThreshold*jet2_scale){
+          // end of GPS modification ---------------------------
+          //if(overlap.fourVector.pt() >= _overlapThreshold*stableConeIter2->fourVector.pt()){
 	    // Merge the two cones.
 	    for(std::vector<PhysicsTower>::iterator towerIter2 = stableConeIter2->towerList.begin();
 		towerIter2 != stableConeIter2->towerList.end();
@@ -239,8 +266,30 @@ void MidPointAlgorithm::splitAndMerge(std::vector<Cluster>& stableCones, std::ve
     }
   }
 
-  sort(jets.begin(),jets.end(),ClusterPtGreater());
+  //sort(jets.begin(),jets.end(),ClusterPtGreater());
+  local_sort(jets); // GPS mod. to allow split-merge with various scales
 }
+
+
+
+void MidPointAlgorithm::local_sort(std::vector<Cluster>& clusters) {
+  switch(_smScale) {
+  case SM_pt:
+    sort(clusters.begin(),clusters.end(),ClusterPtGreater());
+    break;
+  case SM_Et:
+    sort(clusters.begin(),clusters.end(),ClusterFourVectorEtGreater());
+    break;
+  case SM_mt:
+    sort(clusters.begin(),clusters.end(),ClusterMtGreater());
+    break;
+  default:
+    std::cerr << "Unrecognized value for _smScale: " << _smScale << std::endl;
+    exit(-1);
+  }
+}
+
+
 
 void MidPointAlgorithm::run(std::vector<PhysicsTower>& towers, std::vector<Cluster>& jets)
 {
@@ -249,3 +298,5 @@ void MidPointAlgorithm::run(std::vector<PhysicsTower>& towers, std::vector<Clust
   findStableConesFromMidPoints(towers,stableCones);
   splitAndMerge(stableCones,jets);
 }
+
+

@@ -30,6 +30,7 @@
 
 #include "CDFMidPointPlugin.hh"
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/Error.hh"
 #include <sstream>
 
 // CDF stuff
@@ -44,13 +45,31 @@ using namespace std;
 string CDFMidPointPlugin::description () const {
   ostringstream desc;
   
+  string sm_scale_string = "split-merge uses ";
+  switch(_sm_scale) {
+  case SM_pt:
+    sm_scale_string += "pt";
+    break;
+  case SM_Et:
+    sm_scale_string += "Et";
+    break;
+  case SM_mt:
+    sm_scale_string += "mt";
+    break;
+  default:
+    ostringstream err;
+    err << "Unrecognized split-merge scale choice = " << _sm_scale;
+    throw Error(err.str());
+  }
+
   desc << "CDF MidPoint jet finder with " 
        << "seed_threshold = "     << seed_threshold     () << ", "
        << "cone_radius = "        << cone_radius        () << ", "
        << "cone_area_fraction = " << cone_area_fraction () << ", " 
        << "max_pair_size = "      << max_pair_size      () << ", "
        << "max_iterations = "     << max_iterations     () << ", "
-       << "overlap_threshold  = " << overlap_threshold  () ;
+       << "overlap_threshold  = " << overlap_threshold  () << ", "
+       << sm_scale_string ;
 
   return desc.str();
 }
@@ -75,7 +94,8 @@ void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   // prepare the CDF algorithm
   MidPointAlgorithm m(_seed_threshold,_cone_radius,_cone_area_fraction,
-		      _max_pair_size,_max_iterations,_overlap_threshold);
+		      _max_pair_size,_max_iterations,_overlap_threshold,
+                      MidPointAlgorithm::SplitMergeScale(_sm_scale));
     
   // run the CDF algorithm
   std::vector<Cluster> jets;

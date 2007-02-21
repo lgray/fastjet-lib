@@ -1,6 +1,20 @@
 ChangeLog for fastjet-release directory
 ---------------------------------------
 
+2007-02-21  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* plugins/CDFCones/CDFMidPointPlugin.hh|cc: 
+	  added the option of specifying the scale to be used in the
+	  split-merge step (pt is default, but we also have Et and mt), to
+	  take advantage of the modification made to the CDF code below.
+
+	* plugins/CDFCones/CDFcode/MidPointAlgorithm.hh|cc:
+	  added the option of specifying the scale to be used in the
+	  split-merge step (pt is default, but we also have Et and mt)
+
+	  NB: this means that the CDF code we release is now actually a
+	  modified version of the original.
+
 2007-02-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/CmdLine.*

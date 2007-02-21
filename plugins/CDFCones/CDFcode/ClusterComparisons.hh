@@ -30,4 +30,13 @@ class ClusterPtGreater
   }
 };
 
+class ClusterMtGreater
+{
+ public:
+  int operator()(const Cluster& c1, const Cluster& c2) const
+  {
+    return c1.fourVector.mt() > c2.fourVector.mt();
+  }
+};
+
 #endif

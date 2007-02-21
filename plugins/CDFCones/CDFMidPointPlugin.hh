@@ -41,7 +41,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //
 /// CDFMidPointPlugin is a plugin for fastjet (v2.1 upwards) that
 /// provides an interface to the CDF version of Run-II iterative cone
-/// algorithm with midpoint seeds (also known as ILCA).
+/// algorithm with midpoint seeds (also known as the Iterative Legacy
+/// Cone Algorithm, ILCA).
 ///
 /// The CDF code has been taken from Joey Huston's webpage
 /// http://www.pa.msu.edu/~huston/Les_Houches_2005/Les_Houches_SM.html
@@ -50,10 +51,18 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// those described in the Tevatron run-II document (hep-ex/0005012),
 /// notably search-cones, as described in hep-ph/0111434, and
 /// midpoints bewteen multiplets of stable cones.
+///
+/// Additionally, the version of the CDF midpoint code distributed
+/// here has been modified by the FastJet authors, so as to allow one
+/// to choose the scale used in the split-merge step.
 //
 //----------------------------------------------------------------------
 class CDFMidPointPlugin : public JetDefinition::Plugin {
 public:
+  /// the choice of scale to be used in the split-merge step
+  // NB: just replicates what we've added to the CDF midpoint code
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt};
+
   ///
   /// A CDFMidPointPlugin constructor that looks like the one provided
   /// by CDF. Its arguments should have the following meaning:
@@ -81,19 +90,33 @@ public:
   ///     (overlapping_Et)/(Et_of_softer_protojet) < overlap_threshold,
   ///   overlapping jets are split, otherwise they are merged.
   ///
+  /// - sm_scale: a choice for the scale to be used in the split-merge
+  ///   step (both for ordering the momenta and quantifying the
+  ///   overlap); the three options are
+  ///
+  ///    . SM_pt: pt (default -- source of small IR safety issue in purely
+  ///      hadronic events)
+  ///
+  ///    . SM_Et: Et (not boost invariant, reduces to mt at zero rapidity and
+  ///      to pt and infinite rapidity)
+  ///
+  ///    . SM_mt: transverse mass = sqrt(m^2+pt^2)
+  ///
   CDFMidPointPlugin (
                      double seed_threshold     ,	 
 		     double cone_radius        ,
 		     double cone_area_fraction ,
 		     int    max_pair_size      ,
 		     int    max_iterations     ,
-		     double overlap_threshold  ) :
+		     double overlap_threshold  ,
+                     SplitMergeScale sm_scale = SM_pt) :
     _seed_threshold     (seed_threshold     ),    
     _cone_radius        (cone_radius        ),
     _cone_area_fraction (cone_area_fraction ),
     _max_pair_size      (max_pair_size      ),
     _max_iterations     (max_iterations     ),
-    _overlap_threshold  (overlap_threshold  )  {}
+    _overlap_threshold  (overlap_threshold  ),
+    _sm_scale           (sm_scale)             {}
 
   /// a compact constructor
   CDFMidPointPlugin (double   cone_radius, 
@@ -105,7 +128,8 @@ public:
     _cone_area_fraction (cone_area_fraction ),
     _max_pair_size      (2                  ),
     _max_iterations     (100                ),
-    _overlap_threshold  (overlap_threshold  )  {}
+    _overlap_threshold  (overlap_threshold  ),
+    _sm_scale           (SM_pt)                {}
 
 
   // some functions to return info about parameters
@@ -129,7 +153,7 @@ private:
   int    _max_pair_size     ;
   int    _max_iterations    ;
   double _overlap_threshold ;
-
+  SplitMergeScale _sm_scale ;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

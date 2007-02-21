@@ -14,6 +14,7 @@ class LorentzVector
   LorentzVector(const LorentzVector& p): px(p.px), py(p.py), pz(p.pz), E(p.E) {}
   double p()   const {return sqrt(px*px + py*py + pz*pz);}
   double pt()  const {return sqrt(px*px + py*py);}
+  double mt()  const {return sqrt((E-pz)*(E+pz));}
   double y()   const {return 0.5*log((E + pz)/(E - pz));}
   double Et()  const {return E/p()*pt();}
   double eta() const {return 0.5*log((p() + pz)/(p() - pz));}
