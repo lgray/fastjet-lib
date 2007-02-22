@@ -107,10 +107,10 @@ int main (int argc, char ** argv) {
     vector<fj::PseudoJet> output_jets(clust.inclusive_jets());
     for (unsigned j = 0; j < output_jets.size(); j++) {
       // only take jets that are reasonably close to center
-      //if (abs(output_jets[j].rap()) < ghost_etamax - ktR &&
-      //    output_jets[j].perp2() > pow2(anchor_pt)*0.999999) {
-      if (true) {
-	double normarea = clust.area(output_jets[j])/fj::pi*pow2(ktR);
+      if (abs(output_jets[j].rap()) < ghost_etamax - ktR &&
+          output_jets[j].perp2() > pow2(anchor_pt)*0.999999) {
+      //if (true) {
+	double normarea = clust.area(output_jets[j])/(fj::pi*pow2(ktR));
 	average_area += normarea; 
 	average_ar2  += pow2(normarea);
 	areahist.add_entry(normarea);

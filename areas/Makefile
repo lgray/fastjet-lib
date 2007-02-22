@@ -77,6 +77,9 @@ areas-empty-event: areas-empty-event.o $(OBJS) ../lib/libfastjet.a
 areas-1gluon-for-root: areas-1gluon-for-root.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o areas-1gluon-for-root areas-1gluon-for-root.o $(OBJS)  $(LDFLAGS)
 
+areas-anomal-dim: areas-anomal-dim.o  CmdLine.o ../lib/libfastjet.a
+	$(CXX)  -o areas-anomal-dim areas-anomal-dim.o  CmdLine.o $(LDFLAGS)
+
 clean: 
 	rm -f *.o
 

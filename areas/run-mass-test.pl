@@ -15,8 +15,8 @@ $arch=`uname`; chomp $arch;
 if ($arch eq 'Darwin') { $pipe = 0; } else { $pipe = 1;}
 
 # if cacciari is running on linux, use Gavin's executables
-if ($user eq 'cacciari' && $arch eq 'Linux') 
-                 {$basedir = '/ada1/lpthe/salam/work/fastjet';}
+#if ($user eq 'cacciari' && $arch eq 'Linux') 
+#                 {$basedir = '/ada1/lpthe/salam/work/fastjet';}
 
 # Executables
 $pythia_exec = "$basedir/pythia/gen-events";

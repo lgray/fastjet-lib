@@ -105,8 +105,8 @@ void print_jet(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
 void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event, 
                        fj::JetDefinition jet_def,
                        fj::ActiveAreaSpec active_area_spec,
-		       CSHisto & , CSHisto & , CSHisto &  , CSHisto & 
-		       );
+		       CSHisto & , CSHisto & , CSHisto &  , CSHisto & , 
+		       CSHisto &);
 
 // enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
@@ -191,6 +191,8 @@ int main (int argc, char ** argv) {
   CSHisto inclpt_fcor(min_bin, max_bin, nbins);
   CSHisto inclpt_fcrp(min_bin, max_bin, nbins);
   CSHisto inclpt_fcrp_xcl(min_bin, max_bin, nbins);
+  CSHisto hard_area(0.0, 2.0, 100);
+  CSHisto full_area(0.0, 2.0, 100);
 
 
   for (int iev = 0; iev < nev; iev++) {
@@ -209,7 +211,7 @@ int main (int argc, char ** argv) {
     // just the hard event
     fill_inclpt_ktalg(hard_event, jet_def, active_area_spec,
                       inclpt_hard, inclpt_hcor, 
-		      inclpt_hcrp, inclpt_hcrp_xcl);
+		      inclpt_hcrp, inclpt_hcrp_xcl, hard_area);
 
 
     // fill histograms with inclusive jet cross sections for
@@ -217,7 +219,7 @@ int main (int argc, char ** argv) {
     if (full_event.size() != hard_event.size()) {
       fill_inclpt_ktalg(full_event, jet_def, active_area_spec,
                         inclpt_full, inclpt_fcor, 
-			inclpt_fcrp, inclpt_fcrp_xcl);
+			inclpt_fcrp, inclpt_fcrp_xcl, full_area);
     }
 
     // limit the amount of information that is output 
@@ -259,8 +261,29 @@ int main (int argc, char ** argv) {
 	       << inclpt_hcrp_xcl.bin_weight(i)/((iev+1)*bin_width) <<" "
 	       << inclpt_fcrp_xcl.bin_weight(i)/((iev+1)*bin_width) <<endl;
       }
+
+      // print out area histograms.
+      output << "\n\n" << endl;
+      output << "# Areas distribution\n"
+             << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3) hard(4) full(5)\n"
+             << endl;
+      double avg_hard = 0; 
+      double avg_full = 0;
+      for (unsigned i = 0; i < hard_area.size(); i++) {
+	avg_hard += hard_area.bin_centre(i)*hard_area.bin_weight(i);
+	avg_full += full_area.bin_centre(i)*full_area.bin_weight(i);
+	output << hard_area.bin_lower_edge(i) <<" "
+               << hard_area.bin_centre(i) <<" "
+               << hard_area.bin_upper_edge(i) <<" "
+               << hard_area.bin_weight(i)/(2./100.)/hard_area.total_weight() <<" "
+               << full_area.bin_weight(i)/(2./100.)/full_area.total_weight() << endl;
+      }
+      avg_hard /= hard_area.total_weight();
+      avg_full /= full_area.total_weight();
+      output << "# Average hard = " << avg_hard << endl;
+      output << "# Average full = " << avg_full << endl;
+      
     }
-    
   } // iev
   
   
@@ -276,7 +299,8 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
                        CSHisto & inclpt_uncorrected, 
                        CSHisto & inclpt_corrected,
                        CSHisto & inclpt_corrected_withrap, 
-                       CSHisto & inclpt_corrected_withrap_xcl) {
+                       CSHisto & inclpt_corrected_withrap_xcl,
+		       CSHisto & area_hist) {
 
   // sometimes (with the -discard flag) it happens that you discard
   // _all_ particles in the event. In such a case don't even think of
@@ -315,6 +339,7 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
       double pt   = jets[i].perp();
       double rap  = jets[i].rap();
       double area = clust.area(jets[i]);
+      area_hist.fill(area/fj::pi/pow2(jet_def.R()));
       inclpt_corrected.fill(pt- median_pt_per_area*area);
       inclpt_corrected_withrap.fill(pt-area*(a+b*rap*rap));
       inclpt_corrected_withrap_xcl.fill(pt-area*(a_xcl+b_xcl*rap*rap));
