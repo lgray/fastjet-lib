@@ -30,7 +30,7 @@ string SISConePlugin::description () const {
   desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
-  desc << "S-M ordering on = " << (_split_merge_on_transverse_mass ? 
+  desc << "split-merge uses = " << (_split_merge_on_transverse_mass ? 
                                    pt2m2 : pt2) << ", ";
   desc << "caching turned "      << (caching() ? on : off);
 
