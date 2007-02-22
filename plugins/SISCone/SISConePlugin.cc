@@ -22,15 +22,15 @@ string SISConePlugin::description () const {
   
   const string on = "on";
   const string off = "off";
-  const string pt2m2 = "pt^2+m^2";
-  const string pt2 = "pt^2 (IR unsafe)";
+  const string pt2m2 = "sqrt(pt^2+m^2)";
+  const string pt2 = "pt (IR unsafe)";
 
   desc << "SISCone jet finder with " ;
   desc << "cone_radius = "       << cone_radius        () << ", ";
   desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
-  desc << "split-merge uses = " << (_split_merge_on_transverse_mass ? 
+  desc << "split-merge uses " << (_split_merge_on_transverse_mass ? 
                                    pt2m2 : pt2) << ", ";
   desc << "caching turned "      << (caching() ? on : off);
 
