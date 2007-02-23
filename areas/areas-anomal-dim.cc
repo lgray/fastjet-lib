@@ -34,6 +34,9 @@ inline double pow2(const double x) {return x*x;};
 
 int main (int argc, char ** argv) {
 
+  
+  srand(1);
+
   CmdLine cmdline(argc,argv);
 
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
@@ -86,8 +89,8 @@ int main (int argc, char ** argv) {
 
 
   // the histogram...
-  SimpleHist softareahist(-0.000001,3.,150);
-  SimpleHist hardareahist(-0.000001,3.,150);
+  SimpleHist softareahist(-0.000001,2.,100);
+  SimpleHist hardareahist(-0.000001,2.,100);
 
   (*ostr) << "# " << cmdline.command_line() << endl;
   (*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
@@ -114,25 +117,36 @@ int main (int argc, char ** argv) {
 
     // input the hard jet
     fj::PseudoJet hard_particle(hard_pt,0.0,0.0,hard_pt);
-//    fj::PseudoJet hard_particle(hard_pt,0.0,hard_pt,sqrt(2.*hard_pt*hard_pt));
+//    fj::PseudoJet
+//      hard_particle(hard_pt/sqrt(3.),hard_pt/sqrt(3.),hard_pt/sqrt(3.),hard_pt);
     hard_particle.set_user_index(2);
     input_jets.push_back(hard_particle);
+    fj::PseudoJet hard_particle2(-hard_pt,0.0,0.0,hard_pt);
+//    fj::PseudoJet 
+//      hard_particle2(-hard_pt/sqrt(3.),-hard_pt/sqrt(3.),-hard_pt/sqrt(3.),hard_pt);
+    hard_particle2.set_user_index(2);
+    input_jets.push_back(hard_particle2);
 
 
     // generate the quasi-random soft particles
       //int nphi = 63;
       //int neta = 200;
-      int nphi = 63;
-      int neta = 120;
-      //int nphi = 10;
-      //int neta = 15;
-      double etamin = -6.0, etamax = 6.0;
-      for (int iphi = 0; iphi<nphi; iphi++) {
-        for (int ieta = 0; ieta < neta+1; ieta++) {  
-          double phi = (iphi+0.5) * (fj::twopi/nphi) + rand()*0.1/RAND_MAX;
-	  double eta = etamin + ieta * ((etamax-etamin)/neta)  
-	                                  + rand()*0.1/RAND_MAX;
-	  double kt = soft_pt*(1+rand()*0.1/RAND_MAX);
+      //int nphi = 63;
+      //int neta = 120;
+      int nphi = 20;
+      int neta = 40;
+      double etamin = -4.0, etamax = 4.0;
+      double randomness = 0.1;
+      int nsoft = 10000;
+      for(int isoft = 0; isoft < nsoft; isoft++) {
+//      for (int iphi = 0; iphi<nphi; iphi++) {
+//        for (int ieta = 0; ieta < neta+1; ieta++) {  
+//          double phi = (iphi+0.5) * (fj::twopi/nphi) + rand()*randomness/RAND_MAX;
+//	  double eta = etamin + ieta * ((etamax-etamin)/neta)  
+//	                                   + rand()*randomness/RAND_MAX;
+          double phi =  fj::twopi*rand()/RAND_MAX;
+          double eta = etamin + (etamax-etamin)*rand()/RAND_MAX;
+	  double kt = soft_pt*(1-randomness/2.+rand()*randomness/RAND_MAX);
 	  //cout <<iphi << " "<< ieta << " "<< phi<< " "<< eta<<" "<<kt<<endl;
 	  double pminus = kt*exp(-eta);
 	  double pplus  = kt*exp(+eta);
@@ -142,9 +156,9 @@ int main (int argc, char ** argv) {
 	  fj::PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
 	  mom.set_user_index(1);
 	  input_jets.push_back(mom);
-        }
-      }
-    
+//        }
+//      }
+     } // isoft
     //cout << input_jets.size() << endl;
     
     // do the clustering  
@@ -157,20 +171,31 @@ int main (int argc, char ** argv) {
     bool hard = false;
     //cout << "# of jets found " << output_jets.size()  << endl;
     for (unsigned j = 0; j < output_jets.size(); j++) {
+    bool hard2 = false;
       // only take jets that are reasonably close to center
       if (abs(output_jets[j].rap()) < ghost_etamax - ktR) {
 	double normarea = clust.area(output_jets[j])/(fj::pi*pow2(ktR));
 	// loop over constituents, look for hard particle
 	//cout << " hard_found " << hard_found << endl;
-	if ( hard_found == false ) {
+//	if ( hard_found == false ) {
 	  //cout << "j " << j << endl;
 	  vector<fj::PseudoJet> constits = clust.constituents(output_jets[j]);
+          //normarea = float(constits.size())/nsoft*fj::twopi*(etamax-etamin)/(fj::pi*pow2(ktR));
 	   for (unsigned k = 0; k < constits.size(); k++) {
 	     if (constits[k].user_index() == 2) { hard_found = true;
-	                                          hard = true; 
+	                                          hard = true;
+//						  cout << "hard pt " << constits[k].perp() << endl; 
+//						  cout << "hard rap " << constits[k].rap() << endl; 
+//						  cout << "hard phi " << constits[k].phi() << endl; 
 						  break; }
 	   }
-	}
+//	}
+//        if ( abs(output_jets[j].rap()) < 0.5*ktR && abs(output_jets[j].phi() - fj::pi) < 0.5*ktR ) 
+//              { hard2 = true; }
+
+//        if ( hard || hard2 ) { cout << hard << " " << hard2 << " " <<  output_jets[j].rap()
+//	                            <<  " " << output_jets[j].phi() << endl; }
+
 	if ( hard ) {
 	  average_area_hard += normarea; 
 	  average_ar2_hard  += pow2(normarea);
@@ -195,15 +220,18 @@ int main (int argc, char ** argv) {
   average_ar2_hard = sqrt((average_ar2_hard-pow2(average_area_hard))/nhardjets);
   average_area_soft /= nsoftjets;
   average_ar2_soft  /= nsoftjets;
+  double save_av2 = average_ar2_soft;
   average_ar2_soft = sqrt((average_ar2_soft-pow2(average_area_soft))/nsoftjets);
-
+  
+  (*ostr) << "# av of squares " <<  save_av2 << endl;
   (*ostr) << "# hard jets = " << nhardjets << endl;
   (*ostr) << "# soft jets = " << nsoftjets << endl;
   (*ostr) << "# average area hard = " << average_area_hard << " +- " <<  average_ar2_hard << endl;
   (*ostr) << "# average area soft = " << average_area_soft << " +- " <<  average_ar2_soft << endl;
+  (*ostr) << "# correct av. area hard (?) = " <<  save_av2/average_area_soft << endl;
 
   double rescale = 1.0 / (hardareahist.binsize() * nhardjets);
-  double softrescale = 1.0 / (hardareahist.binsize() * nsoftjets);
+  double softrescale = 1.0 / (softareahist.binsize() * nsoftjets);
   for (unsigned i = 0; i < hardareahist.size(); i++) {
     (*ostr) << hardareahist.binmid(i) 
             << " " << hardareahist[i]*rescale 
