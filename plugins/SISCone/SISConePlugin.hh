@@ -64,7 +64,8 @@ class PseudoJet;
 /// The final jets can be accessed by requestion the
 /// inclusive_jets(...) from the ClusterSequence object. Note that
 /// these PseudoJets have their user_index() set to the index of the
-/// pass in which they were found (first pass = 0).
+/// pass in which they were found (first pass = 0). NB: This does not
+/// currently work for jets that consist of a single particle.
 ///
 /// For further information on the details of the algorithm see the
 /// SISCone paper; for documentation about the implementation, see the

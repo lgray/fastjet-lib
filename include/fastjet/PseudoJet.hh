@@ -228,6 +228,9 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
   _pz = some_four_vector[2];
   _E  = some_four_vector[3];
   this->_finish_init();
+  // some default values for these two indices
+  set_cluster_hist_index(-1);
+  set_user_index(-1);
 }
 
 
