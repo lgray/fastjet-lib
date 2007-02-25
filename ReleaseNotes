@@ -5,11 +5,20 @@ Release Notes for fastjet
 Changes from v2.1.0b2 to v2.1.0b3
 =================================
 
-Bug fixes
----------
+Plugin modifications
+--------------------
 
-- included new siscone version which addresses problems with collinear
-  safety and co-circular points.
+- included new siscone version which uses transverse mass (mt) rather
+  than pt in the split-merge procedure, to address an IR problem in
+  events where the hadronic part conserves momentum -- this can have
+  an effect on some physical distributions; the siscone update also
+  addresses issues with collinear safety and co-circular points.
+
+- included bug fixes to pxcone regarding 2pi periodicity when
+  recombining momenta
+
+- modified the version of the CDF midpoint cone code so as to allow it
+  to use mt and Et as the parameters in the split--merge step.
 
 ======================================================================
 Changes from v2.1.0b1 to v2.1.0b2
