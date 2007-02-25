@@ -59,6 +59,10 @@
 *. LAST MOD  :   2-Mar-93
 *.
 *. Modification Log.
+*. 25-Feb-07: G P Salam   - fix bugs concerning 2pi periodicity in eta phi mode
+*.                        - added commented code to get consistent behaviour
+*.                          regardless of particle order (replaces n-way 
+*.                          midpoints with 2-way midpoints however...)
 *. 2-Jan-97: M Wobisch    - fix bug concerning COS2R in eta phi mode
 *. 4-Apr-93: M H Seymour  - Change 2d arrays to 1d in PXTRY & PXNEW
 *. 2-Apr-93: M H Seymour  - Major changes to add boost-invariant mode
@@ -88,7 +92,7 @@ cMWobisch
       DOUBLE PRECISION RSEP
 cMWobisch
       LOGICAL UNSTBL
-      INTEGER I,J,N,MU,N1,N2, ITERR
+      INTEGER I,J,N,MU,N1,N2, ITERR, NJTORG
       INTEGER NCALL, NPRINT
       DOUBLE PRECISION ROLD, EPSOLD, OVOLD
       SAVE NCALL,NPRINT,ROLD, EPSOLD, OVOLD
@@ -117,6 +121,7 @@ cMWobisch
          WRITE (6,*) ' *********** PXCONE: Cone Jet-finder ***********'
          WRITE (6,*) '    Written by Luis Del Pozo of OPAL'
          WRITE (6,*) '    Modified for eta-phi by Mike Seymour'
+         WRITE (6,*) '    Includes bug fixes by Wobisch, Salam'
          WRITE(6,1000)'   Cone Size R = ',CONER,' Radians'
          WRITE(6,1001)'   Min Jet energy Epsilon = ',EPSLON,' GeV'
          WRITE(6,1002)'   Overlap fraction parameter = ',OVLIM
@@ -230,11 +235,14 @@ cMW - for Rsep=1 goto 145
 c      GOTO 145
 
 *** Now look between all pairs of jets as seed axes.
-      DO 140 N1 = 1,NJET-1
+c      NJTORG = NJET           ! GPS -- to get consistent behaviour (2-way midpnts)
+c      DO 140 N1 = 1,NJTORG-1  ! GPS -- to get consistent behaviour (2-way midpnts)
+      DO 140 N1 = 1,NJET-1  
          VEC1(1)=PJ(1,N1)
          VEC1(2)=PJ(2,N1)
          VEC1(3)=PJ(3,N1)
          IF (MODE.NE.2) CALL PXNORV(3,VEC1,VEC1,ITERR)
+C         DO 150 N2 = N1+1,NJTORG ! GPS -- to get consistent behaviour
          DO 150 N2 = N1+1,NJET
             VEC2(1)=PJ(1,N2)
             VEC2(2)=PJ(2,N2)
@@ -245,7 +253,9 @@ c      GOTO 145
                CALL PXNORV(3,VSEED,VSEED,ITERR)
             ELSE
                VSEED(1)=VSEED(1)/2
-               VSEED(2)=VSEED(2)/2
+               !VSEED(2)=VSEED(2)/2
+               ! GPS 25/02/07
+               VSEED(2)=PXMDPI(VEC1(2)+0.5d0*PXMDPI(VEC2(2)-VEC1(2)))
             ENDIF
 C---ONLY BOTHER IF THEY ARE BETWEEN 1 AND 2 CONE RADII APART
             IF (MODE.NE.2) THEN
@@ -436,8 +446,11 @@ C+SEQ,DECLARE.
              ELSE
                 PJ(1,I)=PJ(1,I)
      +               + PP(4,N)/(PP(4,N)+PJ(4,I))*(PP(1,N)-PJ(1,I))
-                PJ(2,I)=PJ(2,I)
-     +               + PP(4,N)/(PP(4,N)+PJ(4,I))*PXMDPI(PP(2,N)-PJ(2,I))
+c GPS 25/02/07
+                PJ(2,I)=PXMDPI(PJ(2,I)
+     +             + PP(4,N)/(PP(4,N)+PJ(4,I))*PXMDPI(PP(2,N)-PJ(2,I)))
+c                PJ(2,I)=PJ(2,I)
+c     +               + PP(4,N)/(PP(4,N)+PJ(4,I))*PXMDPI(PP(2,N)-PJ(2,I))
                 PJ(4,I)=PJ(4,I)+PP(4,N)
              ENDIF
           ENDIF
@@ -684,9 +697,13 @@ C+SEQ,DECLARE.
              ELSE
                 PNEW(1)=PNEW(1)
      +              + PP(4+NPP)/(PP(4+NPP)+PNEW(4))*(PP(1+NPP)-PNEW(1))
-                PNEW(2)=PNEW(2)
+c                PNEW(2)=PNEW(2)
+c     +              + PP(4+NPP)/(PP(4+NPP)+PNEW(4))
+c     +               *PXMDPI(PP(2+NPP)-PNEW(2))
+! GPS 25/02/07
+                PNEW(2)=PXMDPI(PNEW(2)
      +              + PP(4+NPP)/(PP(4+NPP)+PNEW(4))
-     +               *PXMDPI(PP(2+NPP)-PNEW(2))
+     +               *PXMDPI(PP(2+NPP)-PNEW(2)))
                 PNEW(4)=PNEW(4)+PP(4+NPP)
              ENDIF
           ELSE
