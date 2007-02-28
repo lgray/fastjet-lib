@@ -128,9 +128,12 @@ void ClustSeqActAreaEG::_post_process() {
       _is_pure_ghost[i]  = _is_pure_ghost[_history[i].parent1] && 
 	                   _is_pure_ghost[_history[i].parent2]   ;
       _areas[i]          = _areas[_history[i].parent1] + 
-	                   _areas[_history[i].parent2]  ;
-      _area_4vectors[i] = _area_4vectors[_history[i].parent1] + 
-	                   _area_4vectors[_history[i].parent2]  ;
+	                   _areas[_history[i].parent2]  ;			   
+      _jet_def.recombiner()->recombine(_area_4vectors[_history[i].parent1], 
+	                   _area_4vectors[_history[i].parent2],
+			   _area_4vectors[i]);	
+//      _area_4vectors[i] = _area_4vectors[_history[i].parent1] + 
+//                          _area_4vectors[_history[i].parent2]  ;
     }
 
   }

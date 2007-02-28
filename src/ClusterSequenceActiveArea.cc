@@ -143,7 +143,12 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
 
   for (unsigned i = 0; i < incl_jets.size(); i++) {
     if (abs(incl_jets[i].rap()) < _safe_rap_for_area) {
-      double this_area = area(incl_jets[i]);
+      double this_area;
+      if ( strat == median_4vector ) {
+          this_area = area_4vector(incl_jets[i]).perp();
+      } else {
+          this_area = area(incl_jets[i]);
+      }
       pt_over_areas.push_back(incl_jets[i].perp()/this_area);
     }
   }
@@ -179,7 +184,12 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
   double ratio_n = _non_jet_number;
   for (unsigned i = 0; i < incl_jets.size(); i++) {
     if (abs(incl_jets[i].rap()) < _safe_rap_for_area) {
-      double this_area = area(incl_jets[i]);
+      double this_area;
+      if ( strat == median_4vector ) {
+          this_area = area_4vector(incl_jets[i]).perp();
+      } else {
+          this_area = area(incl_jets[i]);
+      }
       pt_sum   += incl_jets[i].perp();
       area_sum += this_area;
       double ratio = incl_jets[i].perp()/this_area;
@@ -217,6 +227,7 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
 
   switch(strat) {
   case median:
+  case median_4vector:
     return nj_median_ratio;
   case non_ghost_median:
     return non_ghost_median_ratio; 
@@ -237,7 +248,8 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
 // fit a parabola to pt/area as a function of rapidity, using the
 // formulae of CCN28-36 (which actually fits f = a+b*x^2)
 void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
-       double & a, double & b, double raprange, double exclude_above) const {
+       double & a, double & b, double raprange, double exclude_above,
+       bool use_area_4vector) const {
   
   double this_raprange;
   if (raprange <= 0) {this_raprange = _safe_rap_for_area;}
@@ -251,7 +263,12 @@ void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
 
   for (unsigned i = 0; i < incl_jets.size(); i++) {
     if (abs(incl_jets[i].rap()) < this_raprange) {
-      double this_area = area(incl_jets[i]);
+      double this_area;
+      if ( use_area_4vector ) {
+          this_area = area_4vector(incl_jets[i]).perp();     
+      } else {
+          this_area = area(incl_jets[i]);
+      }
       double f = incl_jets[i].perp()/this_area;
       if (exclude_above <= 0.0 || f < exclude_above) {
 	double x = incl_jets[i].rap(); double x2 = x*x;
@@ -484,10 +501,15 @@ void ClusterSequenceActiveArea::_transfer_areas(
   _average_area  += our_areas; 
   _average_area2 += our_areas*our_areas; 
 
-  // poverty of operators forces us to write things this way...
-  //_average_area_4vector = _average_area_4vector + our_area_4vectors;
   _average_area_4vector += our_area_4vectors;
-  
+  //// Use the proper recombination scheme when averaging the area_4vectors
+  //// over multiple ghost runs (repeat); put the result in a temporary vector
+  //// because we are not sure if the recombiner can read and write from the 
+  //// same vector safely. 
+  //PseudoJet tmpsum;
+  //_jet_def.recombiner()->recombine(_average_area_4vector,_our_area_4vectors,
+  //				   tmpsum);
+  //_average_area_4vector = tmpsum;
 }
 
 

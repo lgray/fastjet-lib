@@ -89,18 +89,22 @@ void JetDefinition::DefaultRecombiner::recombine(
   }
 
   double perp_ab = pa.perp() + pb.perp();
-  double y_ab    = (weighta * pa.rap() + weightb * pb.rap())/(weighta+weightb);
-  
-  // take care with periodicity in phi...
-  double phi_a = pa.phi(), phi_b = pb.phi();
-  if (phi_a - phi_b > pi)  phi_b += twopi;
-  if (phi_a - phi_b < -pi) phi_b -= twopi;
-  double phi_ab = (weighta * phi_a + weightb * phi_b)/(weighta+weightb);
-
-  pab = PseudoJet(perp_ab*cos(phi_ab),
-                  perp_ab*sin(phi_ab),
-                  perp_ab*sinh(y_ab),
-                  perp_ab*cosh(y_ab));
+  if (perp_ab != 0.0) { // weights also non-zero...
+    double y_ab    = (weighta * pa.rap() + weightb * pb.rap())/(weighta+weightb);
+    
+    // take care with periodicity in phi...
+    double phi_a = pa.phi(), phi_b = pb.phi();
+    if (phi_a - phi_b > pi)  phi_b += twopi;
+    if (phi_a - phi_b < -pi) phi_b -= twopi;
+    double phi_ab = (weighta * phi_a + weightb * phi_b)/(weighta+weightb);
+    
+    pab = PseudoJet(perp_ab*cos(phi_ab),
+		    perp_ab*sin(phi_ab),
+		    perp_ab*sinh(y_ab),
+		    perp_ab*cosh(y_ab));
+  } else { // weights are zero
+    pab = PseudoJet(0.0,0.0,0.0,0.0);
+  }
   pab.set_user_index(0);
 }
 

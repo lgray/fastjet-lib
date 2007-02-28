@@ -44,6 +44,7 @@ int main (int argc, char ** argv) {
   int    n            = cmdline.int_val("-n",20);
   int    repeat = 1;
   double anchor_pt = cmdline.present("-anchor") ? 100.0 : 0.0;
+  int    writefreq    = int(cmdline.double_val("-freq",1.0*max(n/10,1000)));
 
   int nhist      = cmdline.value("-nhist",150);
   double histmax = cmdline.value("-histmax",9.0);
@@ -66,13 +67,13 @@ int main (int argc, char ** argv) {
     exit(-1);
   }
 
-  ostream * ostr;
+  string outfile;
   if (cmdline.present("-out")) {
-    ostr = new ofstream(cmdline.value<string>("-out").c_str());
-  } else {
-    ostr = & cout;
+     outfile = cmdline.value<string>("-out");
+  } else { 
+     outfile = "";
   }
-
+  
   if (!cmdline.all_options_used()) {
     cerr << "ERROR: exiting become some options unrecognized" << endl;
     exit(-1);
@@ -85,16 +86,6 @@ int main (int argc, char ** argv) {
   // the histogram...
   SimpleHist areahist(-0.000001,histmax/fj::pi,nhist);
 
-  (*ostr) << "# " << cmdline.command_line() << endl;
-  (*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
-  (*ostr) << "# anchor_pt    = " << anchor_pt    << endl;
-  (*ostr) << "# ktR          = " << ktR          << endl;
-  (*ostr) << "# ghost_etamax = " << ghost_etamax << endl;
-  (*ostr) << "# ghost_area   = " << ghost_area   << endl;
-  (*ostr) << "# nev          = " << n            << endl;
-  (*ostr) << "# nhist        = " << nhist        << endl;
-  (*ostr) << "# histmax      = " << histmax      << endl;
-  (*ostr) << "# jet def      = " << jet_def.description() << endl;
 
   int njets = 0;
   double average_area = 0.0, average_ar2 = 0.0;
@@ -124,15 +115,42 @@ int main (int argc, char ** argv) {
     //(*ostr) << "Unclustered particles: " << unclust.size() << endl;
     //for (unsigned j = 0; j < unclust.size(); j++) {
     //  (*ostr) << "UNCLUST: " << unclust[j].rap() << " " << unclust[j].phi() << " " << unclust[j].perp() << " " << unclust[j].cluster_hist_index() << endl;
-  }
 
-  average_area /= njets;
-  average_ar2  /= njets;
-  average_ar2 = sqrt((average_ar2-pow2(average_area))/njets);
-  (*ostr) << "# average area = " << average_area << " +- " << average_ar2 << endl;
-  double rescale = 1.0 / (areahist.binsize() * njets);
-  for (unsigned i = 0; i < areahist.size(); i++) {
-    (*ostr) << areahist.binmid(i) << " " << areahist[i]*rescale 
-	 << " " << sqrt(areahist[i])*rescale << endl;
-  }
+
+    if ( i+1==n || (i+1) % writefreq == 0 || i+1 == 10 || i+1 == 100 ) { 
+
+       // (re-)initialise the output file
+       ostream * ostr;
+       if ( outfile != "" ) {
+         ostr = new ofstream(outfile.c_str());
+       } else {
+         ostr = & cout;
+       }
+    
+       (*ostr) << "# " << cmdline.command_line() << endl;
+       (*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
+       (*ostr) << "# anchor_pt    = " << anchor_pt    << endl;
+       (*ostr) << "# ktR          = " << ktR          << endl;
+       (*ostr) << "# ghost_etamax = " << ghost_etamax << endl;
+       (*ostr) << "# ghost_area   = " << ghost_area   << endl;
+       (*ostr) << "# nev          = " << n            << endl;
+       (*ostr) << "# nhist        = " << nhist        << endl;
+       (*ostr) << "# histmax      = " << histmax      << endl;
+       (*ostr) << "# jet def      = " << jet_def.description() << endl;
+       (*ostr) << "# "                                << endl;
+       (*ostr) << "# number of events = " << i+1 << endl;
+   
+    
+       double av_ar2 = sqrt((average_ar2/njets-pow2(average_area/njets))/njets);
+       (*ostr) << "# average area = " << average_area/njets << " +- " << av_ar2 << endl;
+       double rescale = 1.0 / (areahist.binsize() * njets);
+       for (unsigned i = 0; i < areahist.size(); i++) {
+           (*ostr) << areahist.binmid(i) << " " << areahist[i]*rescale 
+	   << " " << sqrt(areahist[i])*rescale << endl;
+       }
+       
+       if ( outfile != "" ) { delete ostr; }
+    }
+  } // end loop over events
+
 }

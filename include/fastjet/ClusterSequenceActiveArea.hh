@@ -68,7 +68,8 @@ public:
   /// the background (e.g. non-jet) activity in a highly populated event; the
   /// one that has been most extensively tested is median.
   enum mean_pt_strategies{median=0, non_ghost_median, pttot_over_areatot, 
-			  pttot_over_areatot_cut, mean_ratio_cut, play};
+			  pttot_over_areatot_cut, mean_ratio_cut, play,
+			  median_4vector};
 
   /// return the transverse momentum per unit area according to one
   /// of the above strategies; for some strategies (those with "cut"
@@ -82,7 +83,8 @@ public:
   /// abs(y)<raprange (for negative raprange, it defaults to
   /// _safe_rap_for_area).
   void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
-				  double exclude_above=-1.0) const;
+				  double exclude_above=-1.0, 
+				  bool use_area_4vector=false ) const;
 
 
 
