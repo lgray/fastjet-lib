@@ -36,6 +36,9 @@ int main (int argc, char ** argv) {
   CmdLine cmdline(argc,argv);
   fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", fj::Best)));
+  fj::RecombinationScheme  rec_scheme  = cmdline.present("-pt_scheme") ? fj::BIpt_scheme :
+              		                fj::E_scheme;
+
   double ktR   = cmdline.double_val("-r",1.0);
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
@@ -51,9 +54,9 @@ int main (int argc, char ** argv) {
 
   fj::JetDefinition jet_def;
   if (cmdline.present("-cam")) {
-    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);}
+    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, rec_scheme, strategy);}
   else if (cmdline.present("-kt")) {
-    jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);}
+    jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, rec_scheme, strategy);}
   else if (cmdline.present("-midpoint")) {
     double overlap = cmdline.value("-f",0.5);
     double seed    = cmdline.value("-seed",0.0);
