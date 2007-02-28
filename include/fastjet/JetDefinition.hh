@@ -229,6 +229,18 @@ public:
     
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Recombiner() {};
+
+    /// pa += pb in the given recombination scheme. Not virtual -- the
+    /// user should have no reason to want to redefine this!
+    inline void plus_equal(PseudoJet & pa, const PseudoJet & pb) const {
+      // put result in a temporary location in case the recombiner
+      // does something funny (ours doesn't, but who knows about the
+      // user's)
+      PseudoJet pres; 
+      recombine(pa,pb,pres);
+      pa = pres;
+    }
+
   };
   
   

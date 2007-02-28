@@ -1,10 +1,17 @@
-ChangeLog for fastjet-release directory
----------------------------------------
-
 2007-02-28  Gavin Salam  <salam@lpthe.jussieu.fr> + MC
 
+	* src/ClusterSequenceActiveArea.cc: 
+	  switched over to use of the current recombination scheme when
+	  averaging 4vector areas over multiple repeats with different
+	  ghosts. 
+	
+	* include/fastjet/JetDefinition.hh: 
+	  added Recombiner::plus_equal(A,B) to help simplify code in
+	  various places  
+	
         * src/ClusterSequenceActiveArea.cc|hh 
-  	  Added median_4vector option to mean_pt_strategies for pt_per_unit_area
+  	  Added median_4vector option to mean_pt_strategies for
+  	  pt_per_unit_area 
 	  Added use_area_4vector to parabolic_pt_per_unit_area
 	  NB. Neither is the default.
 

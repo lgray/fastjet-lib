@@ -477,7 +477,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
       our_areas[hist_index]  += area; 
 
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
-      our_area_4vectors[hist_index] = our_area_4vectors[hist_index] + ext_area; 
+      //our_area_4vectors[hist_index] = our_area_4vectors[hist_index] + ext_area; 
+      _jet_def.recombiner()->plus_equal(our_area_4vectors[hist_index], ext_area);
 
       // now update areas of parents (so that they becomes areas
       // immediately before clustering occurred). This is of use
@@ -501,15 +502,13 @@ void ClusterSequenceActiveArea::_transfer_areas(
   _average_area  += our_areas; 
   _average_area2 += our_areas*our_areas; 
 
-  _average_area_4vector += our_area_4vectors;
-  //// Use the proper recombination scheme when averaging the area_4vectors
-  //// over multiple ghost runs (repeat); put the result in a temporary vector
-  //// because we are not sure if the recombiner can read and write from the 
-  //// same vector safely. 
-  //PseudoJet tmpsum;
-  //_jet_def.recombiner()->recombine(_average_area_4vector,_our_area_4vectors,
-  //				   tmpsum);
-  //_average_area_4vector = tmpsum;
+  //_average_area_4vector += our_area_4vectors;
+  // Use the proper recombination scheme when averaging the area_4vectors
+  // over multiple ghost runs (i.e. the repeat stage);
+  for (unsigned i = 0; i < _average_area_4vector.size(); i++) {
+    _jet_def.recombiner()->plus_equal(_average_area_4vector[i],
+                                       our_area_4vectors[i]);
+  }
 }
 
 

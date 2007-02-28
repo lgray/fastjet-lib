@@ -43,6 +43,7 @@ int main (int argc, char ** argv) {
   double ghost_etamax = cmdline.double_val("-ghost_etamax",4.0);
   double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
+  int repeat = cmdline.value("-repeat", 1);
 
   fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", fj::Best)));
@@ -91,7 +92,6 @@ int main (int argc, char ** argv) {
   }
 
   // create the definitions for our jet finder and areas spec...
-  int repeat = 1;
   fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, 
 				      ghost_area, grid_scatter, kt_scatter);
 
