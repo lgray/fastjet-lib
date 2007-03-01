@@ -148,7 +148,10 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   SISConeExtras * extras = new SISConeExtras;
   for (unsigned ipass = 0; ipass < siscone->protocones_list.size(); ipass++) {
     for (unsigned ipc = 0; ipc < siscone->protocones_list[ipass].size(); ipc++) {
-      PseudoJet protocone(siscone->protocones_list[ipass][ipc]);
+      double rap = siscone->protocones_list[ipass][ipc].eta;
+      double phi = siscone->protocones_list[ipass][ipc].phi;
+      PseudoJet protocone(cos(phi),sin(phi),sinh(rap),cosh(rap));
+      //PseudoJet protocone(siscone->protocones_list[ipass][ipc]);
       protocone.set_user_index(ipass);
       extras->_protocones.push_back(protocone);
     }
