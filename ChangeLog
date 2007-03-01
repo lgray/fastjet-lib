@@ -1,3 +1,19 @@
+2007-03-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+
+2007-03-01 (later) Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.cc|hh: 
+	  added a new member function
+	  SISConeExtras::most_ambiguous_split(), which returns the degree
+	  of ambiguity of the most ambiguous decision about attributing a
+	  particle to one or other jet during a split step.  Useful for
+	  testing purposes.
+
+	* example/fastjet_timing_plugins.cc: 
+	  started adding minimal access to cone information with the
+	  "-cones" option.
+
 2007-03-01  MC
 
         * doc/fastjet-doc.tex

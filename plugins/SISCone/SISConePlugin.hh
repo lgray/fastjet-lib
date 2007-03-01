@@ -164,9 +164,15 @@ public:
   /// (specifically, the number of protocones.
   std::string description() const;
 
+  /// return the smallest difference in squared distance encountered
+  /// during splitting between a particle and two overlapping
+  /// protojets.
+  inline double most_ambiguous_split() const {return _most_ambiguous_split;}
+
 private:
   std::vector<PseudoJet> _protocones;
   const SISConePlugin * _jet_def_plugin;
+  double                _most_ambiguous_split;
   // let us be written to by SISConePlugin
   friend class SISConePlugin;
 };

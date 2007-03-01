@@ -125,6 +125,7 @@ int main (int argc, char ** argv) {
   bool unique_write = cmdline.present("-unique_write");
   bool hydjet  = cmdline.present("-hydjet");
   double ktR   = cmdline.double_val("-r",1.0);
+  ktR   = cmdline.double_val("-R",ktR); // allow -r and -R
   double inclkt = cmdline.double_val("-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
@@ -134,8 +135,12 @@ int main (int argc, char ** argv) {
   int  nev     = cmdline.int_val("-nev",1);
   bool add_dense_coverage = cmdline.present("-dense");
 
+  bool show_cones = cmdline.present("-cones"); // only works for siscone
+
   // for cone algorithms
+  // allow -f and -overlap
   double overlap_threshold = cmdline.double_val("-overlap",0.5);
+  overlap_threshold = cmdline.double_val("-f",overlap_threshold); 
   double seed_threshold = cmdline.double_val("-seed",1.0);
 
   // The following option causes the Cambridge algo to be used.
@@ -305,6 +310,14 @@ int main (int argc, char ** argv) {
       }
     }
 
+
+    // provide some complementary information for SISCone 
+    if (show_cones) {
+      const fj::SISConeExtras * extras = 
+        dynamic_cast<const fj::SISConeExtras *>(clust_seq.extras());
+      cout << "most ambiguous split (difference in squared dist) = "
+           << extras->most_ambiguous_split() << endl;
+    }
   } // irepeat
 
   } // iev

@@ -156,6 +156,7 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
       extras->_protocones.push_back(protocone);
     }
   }
+  extras->_most_ambiguous_split = siscone->most_ambiguous_split;
 
   // tell it what the jet definition was
   extras->_jet_def_plugin = this;
