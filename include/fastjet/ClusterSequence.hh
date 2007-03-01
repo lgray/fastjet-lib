@@ -179,7 +179,7 @@ class ClusterSequence {
   class Extras {
   public:
     virtual ~Extras() {}
-    virtual std::string description() {return "This is a dummy extras class that contains no extra information! Derive from it if you want to use it to provide extra information from a plugin jet finder";}
+    virtual std::string description() const {return "This is a dummy extras class that contains no extra information! Derive from it if you want to use it to provide extra information from a plugin jet finder";}
   };
 
   /// the plugin can associated some extra information with the

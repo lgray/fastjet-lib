@@ -47,16 +47,7 @@ SISConePlugin.o: ../../include/fastjet/PseudoJet.hh
 SISConePlugin.o: ../../include/fastjet/Error.hh
 SISConePlugin.o: ../../include/fastjet/JetDefinition.hh SISConePlugin.hh
 SISConePlugin.o: siscone/src/momentum.h /usr/include/math.h
-SISConePlugin.o: /usr/include/features.h /usr/include/sys/cdefs.h
-SISConePlugin.o: /usr/include/gnu/stubs.h /usr/include/bits/huge_val.h
-SISConePlugin.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
-SISConePlugin.o: siscone/src/reference.h siscone/src/siscone.h
-SISConePlugin.o: siscone/src/protocones.h siscone/src/vicinity.h
-SISConePlugin.o: siscone/src/defines.h siscone/src/quadtree.h
-SISConePlugin.o: /usr/include/stdio.h /usr/include/bits/types.h
-SISConePlugin.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
-SISConePlugin.o: /usr/include/libio.h /usr/include/_G_config.h
-SISConePlugin.o: /usr/include/wchar.h /usr/include/bits/wchar.h
-SISConePlugin.o: /usr/include/gconv.h /usr/include/bits/stdio_lim.h
-SISConePlugin.o: /usr/include/bits/sys_errlist.h siscone/src/hash.h
+SISConePlugin.o: siscone/src/reference.h siscone/src/defines.h
+SISConePlugin.o: siscone/src/siscone.h siscone/src/protocones.h
+SISConePlugin.o: siscone/src/vicinity.h siscone/src/quadtree.h
 SISConePlugin.o: siscone/src/split_merge.h

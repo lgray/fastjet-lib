@@ -53,6 +53,9 @@ siscone_example.o: ../../include/fastjet/internal/numconsts.hh
 siscone_example.o: ../../include/fastjet/internal/base.hh
 siscone_example.o: ../../include/fastjet/PseudoJet.hh
 siscone_example.o: ../SISCone/SISConePlugin.hh
+siscone_example.o: ../../include/fastjet/ClusterSequence.hh
+siscone_example.o: ../../include/fastjet/internal/DynamicNearestNeighbours.hh
+siscone_example.o: ../../include/fastjet/Error.hh
 run_jet_finder.o: ../../include/fastjet/PseudoJet.hh
 run_jet_finder.o: ../../include/fastjet/internal/numconsts.hh
 run_jet_finder.o: ../../include/fastjet/internal/base.hh
@@ -65,7 +68,10 @@ many_algs_example.o: ../../include/fastjet/internal/numconsts.hh
 many_algs_example.o: ../../include/fastjet/internal/base.hh
 many_algs_example.o: ../../include/fastjet/PseudoJet.hh
 many_algs_example.o: ../CDFCones/CDFMidPointPlugin.hh
-many_algs_example.o: ../SISCone/SISConePlugin.hh ../PxCone/PxConePlugin.hh
+many_algs_example.o: ../SISCone/SISConePlugin.hh
+many_algs_example.o: ../../include/fastjet/ClusterSequence.hh
+many_algs_example.o: ../../include/fastjet/internal/DynamicNearestNeighbours.hh
+many_algs_example.o: ../../include/fastjet/Error.hh ../PxCone/PxConePlugin.hh
 cdfmidpoint_example.o: run_jet_finder.hh
 cdfmidpoint_example.o: ../../include/fastjet/JetDefinition.hh
 cdfmidpoint_example.o: ../../include/fastjet/internal/numconsts.hh
