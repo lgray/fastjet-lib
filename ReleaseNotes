@@ -5,10 +5,31 @@ Release Notes for fastjet
 Changes from v2.1.0b2 to v2.1.0b3
 =================================
 
+FastJet enhancements
+--------------------
+
+- methods for estimating the underlying now have the option of using
+  area_4vector rather than the plain area
+
+FastJet bug fixes
+-----------------
+
+- area_4vector is now calculated with the same recombination scheme as
+  the jets themselves
+
+- massless recombination schemes now work correctly on particles with
+  zero momentum
+
 Plugin modifications
 --------------------
 
-- included new siscone version which uses transverse mass (mt) rather
+- the plugin mechanism now allows a plugin to add "extra" information
+  to the ClusterSequence, essentially by providing an auto_ptr to a
+  class derived from (the new) ClusterSequence::Extras; an example of
+  this has been implemented with siscone (SISConeExtras) which allows
+  a user to access the initial (stable) protocones.
+
+- included new siscone version (1.1) which uses transverse mass (mt) rather
   than pt in the split-merge procedure, to address an IR problem in
   events where the hadronic part conserves momentum -- this can have
   an effect on some physical distributions; the siscone update also

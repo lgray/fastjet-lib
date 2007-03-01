@@ -1,3 +1,22 @@
+2007-03-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* test-script-output-orig.txt
+	  updated this so that it corresponds to current output.
+	
+	* include/fastjet/ClusterSequence.hh: 
+	  added the ClusterSequence::Extras class, as well as
+	  ClusterSequence::extras() function which returns a (possibly
+	  null) pointer to any extras.
+	
+	* plugins/SISCone/SISConePlugin.hh|cc: 
+	  updated them to reflect a change in naming in siscone;
+	  added SISConeExtras class (derives from
+	  ClusterSequence::Extras), whose contents are set up from within
+	  the plugin and which allows a user to access the protocones.
+
+	* ReleaseNotes: 
+	  updated to reflect recent additions
+
 2007-02-28  Gavin Salam  <salam@lpthe.jussieu.fr> + MC
 
 	* src/ClusterSequenceActiveArea.cc: 
@@ -28,7 +47,9 @@
 
 	* plugins/PxCone/pxcone.f: 
 	  fixed some bugs in the way momenta are recombined relating to
-	  2pi periodicity of phi; identified a source of 
+	  2pi periodicity of phi; identified origin of a remaining problem
+	  of jets depending on the order of input particles -- related to
+	  the way the n-way midpoints are determined.
 
 2007-02-24  Gavin Salam  <salam@lpthe.jussieu.fr>
 

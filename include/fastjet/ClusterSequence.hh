@@ -50,6 +50,7 @@
 #include<map>
 #include "fastjet/internal/DynamicNearestNeighbours.hh"
 #include "fastjet/PseudoJet.hh"
+#include<memory>
 #include<cassert>
 #include<iostream>
 #include<string>
@@ -172,12 +173,31 @@ class ClusterSequence {
     _do_iB_recombination_step(jet_i, diB);
   }
 
+  /// a class intended to serve as a base in case a plugin needs to
+  /// associate extra information with a ClusterSequence (see
+  /// SISConePlugin.* for an example).
+  class Extras {
+  public:
+    virtual ~Extras() {}
+    virtual std::string description() {return "This is a dummy extras class that contains no extra information! Derive from it if you want to use it to provide extra information from a plugin jet finder";}
+  };
+
+  /// the plugin can associated some extra information with the
+  /// ClusterSequence object by calling this function
+  inline void plugin_associate_extras(std::auto_ptr<Extras> extras_in) {
+    _extras = extras_in;
+  }
+
   /// returns true when the plugin is allowed to run the show.
   inline bool plugin_activated() const {return _plugin_activated;}
 
+  /// returns a pointer to the extras object (may be null)
+  const Extras * extras() const {return _extras.get();}
+
 public:
   /// set the default (static) jet finder across all current and future
-  /// ClusterSequence objects -- deprecated.
+  /// ClusterSequence objects -- deprecated and obsolescent (i.e. may be
+  /// suppressed in a future release).
   static void set_jet_finder (JetFinder jet_finder) {_default_jet_finder = jet_finder;}
 
 
@@ -324,6 +344,7 @@ protected:
  private:
 
   bool _plugin_activated;
+  std::auto_ptr<Extras> _extras; // things the plugin might want to add
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();

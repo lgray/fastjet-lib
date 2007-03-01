@@ -22,7 +22,7 @@ string SISConePlugin::description () const {
   
   const string on = "on";
   const string off = "off";
-  const string pt2m2 = "sqrt(pt^2+m^2)";
+  const string pt2m2 = "mt=sqrt(pt^2+m^2)";
   const string pt2 = "pt (IR unsafe)";
 
   desc << "SISCone jet finder with " ;
@@ -41,6 +41,13 @@ string SISConePlugin::description () const {
   }
 
   return desc.str();
+}
+
+
+/// shortcut for converting siscone Cmomentum into PseudoJet
+template<> PseudoJet::PseudoJet(const Cmomentum & four_vector) {
+  (*this) = PseudoJet(four_vector.px,four_vector.py,four_vector.pz,
+                      four_vector.E);
 }
 
 
@@ -113,12 +120,12 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     // Successively merge the particles that make up the cone jet
     // until we have all particles in it.  Start off with the zeroth
     // particle.
-    int jet_k = jet.content[0];
-    for (unsigned ipart = 1; ipart < jet.content.size(); ipart++) {
+    int jet_k = jet.contents[0];
+    for (unsigned ipart = 1; ipart < jet.contents.size(); ipart++) {
       // take the last result of the merge
       int jet_i = jet_k;
       // and the next element of the jet
-      int jet_j = jet.content[ipart];
+      int jet_j = jet.contents[ipart];
       // and merge them (with a fake dij)
       double dij = 0.0;
 
@@ -136,8 +143,32 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     double d_iB = clust_seq.jets()[jet_k].perp2();
     clust_seq.plugin_record_iB_recombination(jet_k, d_iB);
   }
+
+  // now copy the list of protocones into an "extras" objects
+  SISConeExtras * extras = new SISConeExtras;
+  for (unsigned ipass = 0; ipass < siscone->protocones_list.size(); ipass++) {
+    for (unsigned ipc = 0; ipc < siscone->protocones_list[ipass].size(); ipc++) {
+      PseudoJet protocone(siscone->protocones_list[ipass][ipc]);
+      protocone.set_user_index(ipass);
+      extras->_protocones.push_back(protocone);
+    }
+  }
+
+  // tell it what the jet definition was
+  extras->_jet_def_plugin = this;
+
+  // give the extras object to the cluster sequence.
+  clust_seq.plugin_associate_extras(auto_ptr<ClusterSequence::Extras>(extras));
 }
 
+
+/// 
+string SISConeExtras::description() const {
+  ostringstream ostr;
+  ostr << "This SISCone clustering found " << protocones().size() 
+       << " stable protocones";
+  return ostr.str();
+}
 
 // OBSOLETE CODE  
 //// temporary, for dealing with warnings...

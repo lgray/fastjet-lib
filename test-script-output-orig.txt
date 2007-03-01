@@ -82,6 +82,7 @@ Printing inclusive jets with pt > 5 GeV
   *********** PXCONE: Cone Jet-finder ***********
      Written by Luis Del Pozo of OPAL
      Modified for eta-phi by Mike Seymour
+     Includes bug fixes by Wobisch, Salam
     Cone Size R =  0.70   Radians
     Min Jet energy Epsilon =  5.00  GeV
     Overlap fraction parameter =  0.50
@@ -89,11 +90,11 @@ Printing inclusive jets with pt > 5 GeV
      is provided for comparative purposes only
   ***********************************************
 
-Ran PxCone jet finder with cone_radius = 0.7, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0
+Ran PxCone jet finder with cone_radius = 0.7, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0 (NB: non-standard version of PxCone, including small bug fixes by Gavin Salam)
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
-    0     -0.86720060      2.90514979    983.52166328       34
+    0     -0.86720060      2.90514996    983.52166328       34
     1      0.22063360      6.03064288    901.07011563       32
     2     -1.17242666      6.11484953     74.18667950       38
     3      0.39761584      0.62576016     14.62451610       17
@@ -102,7 +103,7 @@ jet #        rapidity             phi              pt  n constituents
 
 212 particles unclustered
 
-Ran CDF MidPoint jet finder with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5
+Ran CDF MidPoint jet finder with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
@@ -119,18 +120,18 @@ jet #        rapidity             phi              pt  n constituents
 138 particles unclustered
 
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-#                    SISCone   version 1.0.1                       o
+#                    SISCone   version 1.1.0beta                   o
 #              http://projects.hepforge.org/siscone                o
 #                                                                  o
 # This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
-# SISCone is written by Gavin Salam and Gregory Soyez              o
+# SISCone was written by Gavin Salam and Gregory Soyez             o
 # It is released under the terms of the GNU General Public License o
 #                                                                  o
 # A description of the algorithm is available in the arXiv         o
 # preprint hep-ph/0702nnn. Please cite it if you use SISCone       o
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
-Ran SISCone jet finder with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, caching turned off
+Ran SISCone jet finder with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses mt=sqrt(pt^2+m^2), caching turned off
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
@@ -140,12 +141,9 @@ jet #        rapidity             phi              pt  n constituents
     3      0.37165751      0.63216516     13.74566752       14
     4     -1.63118707      4.01902795      7.50472376        6
     5     -2.55310918      0.78265712      7.37305192       10
-    6     -1.78661758      1.23402802      7.33778407       11
-    7     -4.17998158      1.25436280      6.66642290       16
-    8      0.92614378      4.12998575      6.20635282       15
-    9      2.97422517      5.43817969      5.36866878       16
-   10     -1.08952371      0.51673395      5.14752491        9
-   11     -4.71813299      5.14913981      5.12920838       15
+    6     -4.17998158      1.25436280      6.66642290       16
+    7     -1.88990327      1.22581328      6.36497338       10
+    8     -1.08097559      0.63235861      5.88571378       10
 
 0 particles unclustered
 

@@ -2,6 +2,7 @@
 #define __SISCONEPLUGIN_HH__
 
 #include "fastjet/JetDefinition.hh"
+#include "fastjet/ClusterSequence.hh" // needed for the extras we define
 #include <vector>
 #include <memory>
 
@@ -143,7 +144,33 @@ private:
   static std::auto_ptr<SISConePlugin          > stored_plugin;
   static std::auto_ptr<std::vector<PseudoJet> > stored_particles;
   static std::auto_ptr<siscone::Csiscone      > stored_siscone;
+
 };
+
+
+//======================================================================
+/// Class that provides extra information about a SISCone clustering
+class SISConeExtras : public ClusterSequence::Extras {
+public:
+  /// returns a reference to the vector of protocones
+  const std::vector<PseudoJet> & protocones() const {return _protocones;}
+
+  /// access to the siscone jet def plugin (more convenient than
+  /// getting it from the original jet definition, because here it's
+  /// directly of the right type (rather than the base type)
+  const SISConePlugin * jet_def_plugin() const {return _jet_def_plugin;}
+
+  /// return a brief summary of the contents of the extras object
+  /// (specifically, the number of protocones.
+  std::string description() const;
+
+private:
+  std::vector<PseudoJet> _protocones;
+  const SISConePlugin * _jet_def_plugin;
+  // let us be written to by SISConePlugin
+  friend class SISConePlugin;
+};
+
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
 
