@@ -1,3 +1,10 @@
+2007-03-01  MC
+
+        * doc/fastjet-doc.tex
+          Updated the documentation to describe the new options
+          of pt_per_unit_area and parabolic_pt_per_unit_area
+          concerning the use of area_4vector
+
 2007-03-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* test-script-output-orig.txt

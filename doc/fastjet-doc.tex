@@ -663,7 +663,8 @@ will be transferred to the base class.
   /// the background (e.g. non-jet) activity in a highly populated event; the
   /// one that has been most extensively tested is median.
   enum fastjet::mean_pt_strategies{median=0, non_ghost_median, pttot_over_areatot, 
-                                   pttot_over_areatot_cut, mean_ratio_cut, play} ;
+                                   pttot_over_areatot_cut, mean_ratio_cut, play,
+                                   median_4vector} ;
 
   /// return the transverse momentum per unit area according to one
   /// of the above strategies; for some strategies (those with "cut"
@@ -678,7 +679,8 @@ will be transferred to the base class.
   /// abs(y) < ghost_maxrap - Rparam).
   void parabolic_pt_per_unit_area(double & a, double & b, 
                                   double raprange=-1.0,
-                                  double exclude_above=-1.0) const;
+                                  double exclude_above=-1.0,
+                                  bool use_area_4_vector=false) const;
 \end{verbatim}
 \ttt{pt\_per\_unit\_area} can usually be used for high luminosity events with
 pileup, while \url{parabolic_pt_per_unit_area} has been found to provide a
@@ -704,6 +706,12 @@ background of each event is determined. Common choices are:
   provides a more faithful estimation of the underlying activity for
   more sparsely populated events. 
 
+\item[]\ttt{median\_4vector} - Like \ttt{median}, but the areas are calculated
+  using the \ttt{area\_4vector()} function. Gives a more faithful 
+  estimation of the background for highly populated events. 
+  Should eventually become the default.
+
+
 % \item[]\ttt{pttot\_over\_areatot} - The total pt over the total area, i.e. $\sum_i
 % p_{t,i}/\sum_i A_i$, with $i$ running over all jets, including the pure-ghost
 % ones, if present.
@@ -724,11 +732,13 @@ The jets that are considered with the above options are those whose
 area is considered reliable, i.e.\ those with $|y| <
 \mbox{\ttt{ghost\_maxrap}} - R$.
 
-The \ttt{parabolic\_pt\_per\_unit\_area} member function has no
-strategy options, and simply returns the coefficients $a$ and $b$ of
+The \ttt{parabolic\_pt\_per\_unit\_area} member function 
+returns the coefficients $a$ and $b$ of
 the least square fit of all the $\rho_i <$ \ttt{exclude\_above} to the
 parabolic function $a + by^2$. If \ttt{exclude\_above} $< 0$
-(default behaviour) no upper limit is used.
+(default behaviour) no upper limit is used. Its only strategy option is the
+boolean \ttt{use\_area\_4vector}. When set to true, 
+the \ttt{area\_4vector()} function is used internally to evaluate the areas.
 
 %======================================================================
 \section{Plugin jet finders}
