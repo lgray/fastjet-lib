@@ -20,6 +20,9 @@ FastJet bug fixes
 - massless recombination schemes now work correctly on particles with
   zero momentum
 
+- PseudoJet::phi_std() returned wrong result for phi < pi -- thanks to
+  Oscar Stal for pointing this out.
+
 Plugin modifications
 --------------------
 

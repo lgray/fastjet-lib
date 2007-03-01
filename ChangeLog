@@ -7,6 +7,10 @@
 
 2007-03-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJet.hh: 
+	  fixed bug in phi_std() pointed out by Oscar Stal,
+	  <oscar.stal@tsl.uu.se> 
+
 	* test-script-output-orig.txt
 	  updated this so that it corresponds to current output.
 	

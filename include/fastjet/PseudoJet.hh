@@ -74,7 +74,7 @@ class PseudoJet {
 
   /// returns phi in the range -pi..pi
   inline const double phi_std()  const {
-    return _phi > pi ? _phi-twopi : pi;};
+    return _phi > pi ? _phi-twopi : _phi;};
 
   /// returns phi in the range 0..2pi
   inline const double phi_02pi() const {return _phi;};
