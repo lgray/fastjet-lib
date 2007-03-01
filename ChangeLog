@@ -1,7 +1,7 @@
-2007-03-01  Gavin Salam  <salam@lpthe.jussieu.fr>
-
-
 2007-03-01 (later) Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	  added transverse mass functions.
 
 	* plugins/SISCone/SISConePlugin.cc|hh: 
 	  added a new member function
