@@ -751,6 +751,10 @@ order to facilitate this, the \fastjet package provides a
 \emph{plugin} facility, allowing almost any other jet finder to be
 used within the same framework.
 
+%----------------------------------------------------------------------
+\subsection{Generic plugin use and construction}
+\label{sec:generic-plugin-use}
+
 Any plugin is to be derived from the abstract base class
 \ttt{fastjet::JetDefinition::Plugin},
 \begin{verbatim}
@@ -853,12 +857,19 @@ Example plugin jet finders that are provided with fastjet are the
 \ttt{CDFMidPointPlugin} illustrated above and also a
 \ttt{CDFJetCluPlugin}. These interface code available at
 \cite{CDFCones}. The \ttt{PxConePlugin} interfaces the PxCone code
-\cite{PxCone}.  Examples using these plugins and some further
+\cite{PxCone}.  The \ttt{SISConePlugin}, described in detail below
+interfaces the infrared safe seedless cone algorithm of
+\cite{SISCone}. Examples using these plugins and some further
 documentation are provided in the \ttt{plugins/} directory.
 
 % Any attempt to call these functions from outside the plugin will cause
 % an error.
 
+%----------------------------------------------------------------------
+\subsection{SISCone Plugin}
+\label{sec:siscone-plugin}
+
+To be written...
 
 %======================================================================
 \section{Example program}
