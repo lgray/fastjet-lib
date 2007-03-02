@@ -38,6 +38,7 @@
 #include<valarray>
 #include<vector>
 #include<cassert>
+#include <cmath>
 #include "fastjet/internal/numconsts.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -97,7 +98,7 @@ class PseudoJet {
   /// returns the squared transverse mass = kt^2+m^2
   inline double mperp2() const {return (_E+_pz)*(_E-_pz);};
   /// returns the transverse mass = sqrt(kt^2+m^2)
-  inline double mperp() const {return sqrt(abs(mperp2()));};
+  inline double mperp() const {return sqrt(std::abs(mperp2()));};
   /// returns the invariant mass 
   /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
   inline double  m() const;    
