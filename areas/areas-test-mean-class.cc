@@ -71,6 +71,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
+#include "SISConePlugin.hh"
 #include "ClusterSequencePassiveArea.hh"
 #include<iostream>
 #include<fstream>
@@ -106,8 +107,27 @@ int main (int argc, char ** argv) {
 				     cmdline.int_val("-clever", fj::Best)));
   double ktR   = cmdline.double_val("-r",1.0);
   double effective_R_fact = cmdline.double_val("-rfact",1.0);
-  fj::JetFinder jet_fndr= cmdline.present("-cam")? fj::cambridge_algorithm: fj::kt_algorithm;
-  fj::JetDefinition jet_def(jet_fndr, ktR, strategy);
+
+
+  //fj::JetFinder jet_fndr= cmdline.present("-cam")? fj::cambridge_algorithm: fj::kt_algorithm;
+  //fj::JetDefinition jet_def(jet_fndr, ktR, strategy);
+
+  fj::JetDefinition jet_def;
+  fj::RecombinationScheme  rec_scheme  = 
+    cmdline.present("-pt_scheme") ? fj::BIpt_scheme : fj::E_scheme;
+  if (cmdline.present("-cam")) {
+    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, rec_scheme, strategy);}
+  else if (cmdline.present("-kt")) {
+    jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, rec_scheme, strategy);}
+  else if (cmdline.present("-siscone")) {
+    double overlap = cmdline.value("-f",0.5);
+    int    npass   = cmdline.value("-npass",1);
+    jet_def = fj::JetDefinition(new fj::SISConePlugin(ktR,overlap,npass));}
+  else {
+    cerr << "Must specify one of -kt | -cam | -siscone" << endl;
+    exit(-1);
+  }
+
 
   // set up things to do with how we measure the area
   fj::ActiveAreaSpec area_spec;
@@ -212,7 +232,7 @@ int main (int argc, char ** argv) {
   
   // now provide some nice output...
   if (inclkt >= 0.0) {
-    jets = clust_seq.inclusive_jets(inclkt);
+    jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
   }
 
   if (excln > 0) {

@@ -97,7 +97,7 @@ int main (int argc, char ** argv) {
     input_jets.push_back(fj::PseudoJet(anchor_pt,0.0,0.0,anchor_pt));
     fj::ClusterSequenceActiveAreaExplicitGhosts clust(input_jets, jet_def, 
 						      active_area_spec);
-
+    cout << clust.n_particles() << endl;
     vector<fj::PseudoJet> output_jets(clust.inclusive_jets());
     for (unsigned j = 0; j < output_jets.size(); j++) {
       // only take jets that are reasonably close to center
