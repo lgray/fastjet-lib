@@ -1,3 +1,9 @@
+2007-03-03  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* switched the plugins/SISCone svn:externals property to point to 
+	  svn+ssh://login.hepforge.org/hepforge/svn/siscone/tags/siscone-1.1.0
+	  rather than 
+	  svn+ssh://login.hepforge.org/hepforge/svn/siscone/trunk
 2007-03-01 (later) Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 
