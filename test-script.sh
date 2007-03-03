@@ -72,8 +72,10 @@ popd
 # mv the output file to a "decent" place
 mv $OUTPUT test-script-output.txt
 echo 
-echo
-echo Comparing output from these runs to expected output:
+echo -----------------------------------------------------------
+echo "Comparing output from these runs (test-script-output.txt) "
+echo "to the expected output (test-script-output-orig.txt)"
+echo -----------------------------------------------------------
 diff  test-script-output.txt  test-script-output-orig.txt > $OUTPUT
 DIFF=`diff  test-script-output.txt  test-script-output-orig.txt`
 if [[ $DIFF ]]; then cat $OUTPUT
