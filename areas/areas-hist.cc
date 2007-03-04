@@ -123,6 +123,8 @@ int main (int argc, char ** argv) {
     //  (*ostr) << "UNCLUST: " << unclust[j].rap() << " " << unclust[j].phi() << " " << unclust[j].perp() << " " << unclust[j].cluster_hist_index() << endl;
 
 
+    double av_ar2 = sqrt((average_ar2/njets-pow2(average_area/njets))/njets);
+    relative_error = abs(av_ar2/(average_area/njets));
     if ( i+1==n || (i+1) % writefreq == 0 || i+1 == 10 || i+1 == 100 || 
          relative_error < precision_limit ) { 
 
@@ -147,9 +149,6 @@ int main (int argc, char ** argv) {
        (*ostr) << "# "                                << endl;
        (*ostr) << "# number of events = " << i+1 << endl;
    
-    
-       double av_ar2 = sqrt((average_ar2/njets-pow2(average_area/njets))/njets);
-       relative_error = abs(av_ar2/(average_area/njets));
        (*ostr) << "# average area = " << average_area/njets << " +- " << av_ar2 << endl;
        double rescale = 1.0 / (areahist.binsize() * njets);
        for (unsigned i = 0; i < areahist.size(); i++) {
