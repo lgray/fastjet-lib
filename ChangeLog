@@ -1,5 +1,11 @@
 2007-03-04  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* doc/fastjet-doc.tex: 
+	  Wrote the SISCone section; moved the example program forward,
+	  since it uses only features from section 2, not all the
+	  subsequence stuff. Updated intro.
+	  
+
 	* plugins/SISCone/SISConePlugin.hh: 
 	  added the stable_cones() method to SISConeExtras, which is
 	  identical to protocones() (but stable_cones is a more consistent

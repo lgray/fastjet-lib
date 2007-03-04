@@ -19,7 +19,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
-%\usepackage{hyperref}
+\usepackage{hyperref}
 \addtolength{\textwidth}{2cm}
 \addtolength{\oddsidemargin}{-1cm}
 \addtolength{\textheight}{2cm}
@@ -35,6 +35,7 @@
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
+\newcommand{\order}[1]{\left(#1\right)}
 
 \title{FastJet 2.1 user manual}
 \author{Matteo Cacciari and Gavin P. Salam\\
@@ -56,6 +57,7 @@
 \end{abstract}
 
 %----------------------------------------------------------------------
+\newpage
 \tableofcontents
 
 %----------------------------------------------------------------------
@@ -89,7 +91,9 @@ multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
 %
 In the meantime the plugin feature provides a similar functionality.
 Plugins are included for the fortran PxCone code and for the CDF C++
-JetClu and MidPoint cone jet finders.
+JetClu and MidPoint cone jet finders (all infrared unsafe), as well as
+the recent Seedless Infrared-Safe Cone (SISCone) jet
+finder~\cite{SISCone}.
 
 There are a range of variants possible for the both the $k_t$ and
 Cambridge jet-finders. For the $k_t$ jet finder, \fastjet implements
@@ -101,7 +105,7 @@ mode has physical advantages in certain cases.  We provide access to
 both modes.
 
 %......................................................................
-\subsection{$\boldsymbol{k_t}$ jet finder}
+\subsection[$k_t$ jet finder]{$\boldsymbol{k_t}$ jet finder}
 The definition of the inclusive $k_t$ jet finder that is coded is as
 follows:
 \begin{itemize}
@@ -521,6 +525,66 @@ follows:
 \end{verbatim}
 
 %======================================================================
+\section{Example program}
+
+For full details see the example program
+\ttt{example/fastjet\_example.cc} that is distributed with the
+\ttt{FastJet} code. For the reader who is familiar with \ttt{KtJet}
+\cite{KtJet}, the example program is also given as it would be written
+for \ttt{KtJet}, in the file \ttt{example/ktjet\_example.cc}.
+
+A simplified version of the \fastjet example program is given below.
+
+\begin{verbatim}
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
+using namespace std;
+
+int main (int argc, char ** argv) {
+  vector<fastjet::PseudoJet> input_particles;
+  
+  // read in input particles
+  double px, py , pz, E;
+  while (cin >> px >> py >> pz >> E) {
+    // push fastjet::PseudoJet of (px,py,pz,E) on back of input_particles
+    input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
+  }
+
+  // create an object that represents your choice of jet finder and
+  // its associated parameters
+  double Rparam = 1.0;
+  fastjet::Strategy strategy = fastjet::Best;
+  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
+
+  // run the jet clustering with the above jet definition
+  fastjet::ClusterSequence clust_seq(input_particles, jet_def);
+
+  // extract the inclusive jets with pt > 5 GeV
+  double ptmin = 5.0;
+  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(ptmin);
+
+  // extract the exclusive jets with dcut = 25 GeV^2 and sort them
+  // in order of increasing pt
+  double dcut = 25.0;
+  vector<fastjet::PseudoJet> exclusive_jets = sorted_by_pt(
+                                        clust_seq.exclusive_jets(dcut));
+
+  // print out the details for each jet
+  for (unsigned int i = 0; i < exclusive_jets.size(); i++) {
+    // get constituents of the jet. NB this is through a member function 
+    // of clust_seq because that is where the information is held.
+    vector<fastjet::PseudoJet> constituents = 
+                               clust_seq.constituents(exclusive_jets[i])
+
+    printf("%5u %15.8f %15.8f %15.8f %8u\n",
+           i, exclusive_jets[i].rap(), exclusive_jets[i].phi(),
+           exclusive_jets[i].perp(), constituents.size());
+  }
+}
+\end{verbatim}
+
+
+%======================================================================
 \section{Jet areas}
 
 Since a jet is made up of only a finite number of particles, one needs a
@@ -853,11 +917,14 @@ Certain (cone) jet algorithms do not perform pairwise clustering ---
 in these cases the plugin must invent a ficititious series of pairwise
 recombinations that leads to the same final jets.
 
-Example plugin jet finders that are provided with fastjet are the
+Example plugin jet finders that are provided with \fastjet are the
 \ttt{CDFMidPointPlugin} illustrated above and also a
 \ttt{CDFJetCluPlugin}. These interface code available at
 \cite{CDFCones}. The \ttt{PxConePlugin} interfaces the PxCone code
-\cite{PxCone}.  The \ttt{SISConePlugin}, described in detail below
+\cite{PxCone}.  All three of these cone jet finders, though widely
+used, are infrared unsafe.
+%
+The \ttt{SISConePlugin}, described in detail below,
 interfaces the infrared safe seedless cone algorithm of
 \cite{SISCone}. Examples using these plugins and some further
 documentation are provided in the \ttt{plugins/} directory.
@@ -869,66 +936,141 @@ documentation are provided in the \ttt{plugins/} directory.
 \subsection{SISCone Plugin}
 \label{sec:siscone-plugin}
 
-To be written...
+SISCone~\cite{SISCone} is an implementation of a cone type jet finder.
+As with most modern cone algorithms, it is divided into two parts:
+first it searches for stable cones; then, because a particle can
+appear in more than one stable cone, a `split--merge' procedure is
+applied, which ensures that no particle ends up in more than one jet.
+The stable cones are identified using an $\order{N^2 \ln N}$ seedless
+approach. This (and some care in the the `split--merge' procedure)
+ensures that the jets it produces are insensitive to additional soft
+particles and collinear splittings (i.e.\ the jets are infrared
+and collinear safe).
 
-%======================================================================
-\section{Example program}
-
-For full details see the example program
-\ttt{example/fastjet\_example.cc} that is distributed with the
-\ttt{FastJet} code. For the reader who is familiar with \ttt{KtJet}
-\cite{KtJet}, the example program is also given as it would be written
-for \ttt{KtJet}, in the file \ttt{example/ktjet\_example.cc}.
-
-A simplified version of the \fastjet example program is given below.
-
+The plugin library and include files are to be be found in the
+\verb:plugins/SISCone: directory, and the main header file is
+\verb:SISConePlugin.hh:. The \verb:SISConePlugin: class has a
+constructor with the following structure
 \begin{verbatim}
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
-using namespace std;
-
-int main (int argc, char ** argv) {
-  vector<fastjet::PseudoJet> input_particles;
-  
-  // read in input particles
-  double px, py , pz, E;
-  while (cin >> px >> py >> pz >> E) {
-    // push fastjet::PseudoJet of (px,py,pz,E) on back of input_particles
-    input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
-  }
-
-  // create an object that represents your choice of jet finder and
-  // its associated parameters
-  double Rparam = 1.0;
-  fastjet::Strategy strategy = fastjet::Best;
-  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
-
-  // run the jet clustering with the above jet definition
-  fastjet::ClusterSequence clust_seq(input_particles, jet_def);
-
-  // extract the inclusive jets with pt > 5 GeV
-  double ptmin = 5.0;
-  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets(ptmin);
-
-  // extract the exclusive jets with dcut = 25 GeV^2 and sort them
-  // in order of increasing pt
-  double dcut = 25.0;
-  vector<fastjet::PseudoJet> exclusive_jets = sorted_by_pt(
-                                        clust_seq.exclusive_jets(dcut));
-
-  // print out the details for each jet
-  for (unsigned int i = 0; i < exclusive_jets.size(); i++) {
-    // get constituents of the jet. NB this is through a member function 
-    // of clust_seq because that is where the information is held.
-    vector<fastjet::PseudoJet> constituents = 
-                               clust_seq.constituents(exclusive_jets[i])
-
-    printf("%5u %15.8f %15.8f %15.8f %8u\n",
-           i, exclusive_jets[i].rap(), exclusive_jets[i].phi(),
-           exclusive_jets[i].perp(), constituents.size());
-  }
-}
+  SISConePlugin (double cone_radius,
+                 double overlap_threshold = 0.5,
+                 int    n_pass_max = 1,
+                 double protojet_ptmin = 0.0, 
+                 bool   caching = false,
+                 bool   split_merge_on_transverse_mass = true);
 \end{verbatim}
+A cone centered at $y_c,\phi_c$ is stable if the sum of momenta of all
+particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
+\verb:cone_radius:^2$ has rapidity $y_c,\phi_c$.
+%
+The \verb:overlap_threshold: is the fraction of overlapping transverse
+mass ($m_t^2 = p_t^2 + m^2$) above which two protojets are merged in a
+Tevatron Run~II type \cite{RunII-jet-physics} split--merge procedure.
+The radius and overlap parameters are a common feature of most modern
+cone algorithms. Because some event particles are not to be found in
+any stable cone \cite{EHT}, SISCone can carry out multiple stable-cone
+search passes (as advocated in \cite{TeV4LHC}): in each pass one
+searches for stable cones using just the subset of particles not
+present in any stable cone in earlier passes. Up to \verb:n_pass_max:
+passes are carried out, and the algorithm automatically stops at the
+highest pass that gives no new stable cones. Setting the
+$\verb:n_pass_max: = 0$ is equivalent to setting it to $\infty$.
+Since concern has been expressed that an excessive number of stable
+cones may complicate cone jets in events with high
+noise~\cite{RunII-jet-physics}, the \verb:protojet_ptmin: parameter
+allows one to use only protojets  with $p_t \ge \verb:protojet_ptmin:$
+in the split--merge phase (all others are thrown away).
+
+In many cases SISCone's most time-consuming step is the search for
+stable cones. If one has multiple \verb:SISConePlugin:-based jet
+definitions, each with \verb:caching=true:, a check will be carried
+out whether the previously clustered event had the same set of
+particles and the same cone radius and number of passes. If it did,
+the stable cones are simply reused from the previous event, rather
+than being recalculated, and only the split--merge step is repeated,
+often leading to considerable speed gains.
+
+A final comment concerns the \verb:split_merge_on_transverse_mass:
+parameter. If \verb:true:, split--merge uses the transverse mass as
+its ordering variable. If \verb:false:, it uses transverse momentum
+--- the latter leads to infrared unsafety and so is to be avoided in
+general.  The option of using it is nevertheless kept for historical
+comparison purposes, since many previous cone algorithms used $p_t$ as
+the ordering variable.
+
+An example of the use of the SISCone plugin would be as follows:
+\begin{verbatim}
+  // define a generic plugin pointer
+  fastjet::JetDefinition::Plugin * plugin;
+
+  // allocate a new plugin for SISCone
+  double cone_radius = 0.7;
+  double overlap_threshold = 0.5;
+  plugin = new fastjet::SISConePlugin (cone_radius, overlap_threshold);
+
+  // create a jet-definition based on the plugin
+  fastjet::JetDefinition jet_def(plugin);
+
+  // prepare the set of particles
+  vector<fastjet::PseudoJet> particles;
+  read_input_particles(cin, particles); // or whatever you want here
+
+  // run the jet finder and look at the jets
+  fastjet::ClusterSequence clust_seq(particles, jet_def);
+  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
+  // then analyse the jets as for native FastJet jets
+
+  // only when you will no longer be using the jet definition, or
+  // ClusterSequence objects that involve it, may you delete the 
+  // plugin
+  delete plugin;
+\end{verbatim}
+Note that the it makes no sense to ask for exclusive jets from a
+SISCone based \verb:ClusterSequence:.
+
+Some extra output information is appropriate for a cone algorithm that
+is not of relevance in clustering algorithms. Accordingly SISCone
+`misappropriates' the \verb:user_index(): of the jets, using it to
+return the pass in which a jet was found.\footnote{Owing to the
+  current internal representation of jets in \fastjet, this does not
+  work for jets consisting of a single particle --- the user index of
+  the jet is then just the user index originally attributed to that
+  particle (by default, $-1$).} %
+The user may also obtain a list of the positions of original stable
+cones as follows:
+\begin{verbatim}
+   const fastjet::SISConeExtras * extras = 
+             dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
+   vector<fastjet::PseudoJet> stable_cones(extras->stable_cones());
+\end{verbatim}
+The stable cones are represented as four-momenta, for which only the
+rapidity and azimuth are meaningful. As for the jets, the
+\verb:user_index(): indicates the pass at which a given stable cone
+was found.
+
+Since SISCone is infrared safe, it may meaningfully be used also with
+the \verb:ClusterSequenceActiveArea: class. Note however that in that
+case ones loses the cone-specific information from the jets, because
+of the way \fastjet filters out the information relating to ghosts in
+the clustering. If the user needs both areas and cone-specific
+information, she/he should use the
+\verb:ClusterSequenceActiveAreaExplicitGhosts: class (for usage
+information, see the corresponding \verb:.hh: file). 
+
+A final remark concerns speed and memory requirements: as mentioned
+above, SISCone takes $\order{N^2 \ln N}$ time to find jets, and the
+memory use is $\order{N^2}$; taking $N=10^3$ as a reference point, it
+runs in a few tenths of a second, making it about 100 times slower
+than \fastjet.
+%
+These are `expected' results, i.e.\ valid for a suitably random set of
+particles. In area determinations, the ghost particles are anything
+but random, and run times and memory usage are, in practice, somewhat
+larger than for a normal QCD event with the same number of particles.
+We therefore recommend running with not too small a \verb:ghost_area:
+(e.g.\ $\sim 0.05$) and using $\verb:grid_scatter:=1$, which helps to
+reduce the number of stable cones (and correspondingly, the time and
+memory usage of the subsequent split--merge step).
 
 %======================================================================
 \section{Compilation notes}
@@ -965,7 +1107,7 @@ Andreas Oehler for comments on the documentation.
 
 We are grateful to Joey Huston and Mike Seymour for providing
 permission to distribute their cone jet-finder codes as plugins for
-fastjet.
+fastjet. 
 
 \appendix
 
@@ -1059,6 +1201,10 @@ DESY-THESIS-2000-049.
 \bibitem{HepJet} \texttt{HepJet} is being planned in collaboration
   with authors of \ttt{KtJet} \cite{KtJet}.
 
+\bibitem{SISCone} G.~P.~Salam and G.~Soyez, in preparation; standalone
+  code available from \url{http://projects.hepforge.org/siscone}.
+
+
 %\cite{Blazey:2000qt}
 \bibitem{RunII-jet-physics}
 G.~C.~Blazey {\it et al.},
@@ -1096,6 +1242,25 @@ Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
 J.-D.~Boissonnat {\it et al.},
 % Triangulations in CGAL
 Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
+
+
+\bibitem{EHT}
+  S.~D.~Ellis, J.~Huston and M.~Tonnesmann,
+  %``On building better cone jet algorithms,''
+in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
+  Particle Physics (Snowmass 2001) } ed. N.~Graf, p. P513
+%in {\it  the Proceedings of APS / DPF / DPB Summer Study on the
+%Future of Particle Physics (Snowmass 2001), Snowmass, Colorado, 30
+%Jun - 21 Jul 2001, pp P513}
+  [hep-ph/0111434].
+  %%CITATION = HEP-PH 0111434;%%
+
+\bibitem{TeV4LHC}
+  TeV4LHC QCD Working Group {\it et al.},
+  %``Tevatron-for-LHC report of the QCD working group,''
+  hep-ph/0610012.
+  %%CITATION = HEP-PH 0610012;%%
+
 
 \end{thebibliography}
 
