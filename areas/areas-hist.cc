@@ -45,7 +45,9 @@ int main (int argc, char ** argv) {
   double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   int    n            = cmdline.int_val("-n",20);
-  int    repeat = 1;
+  int repeat = cmdline.value("-repeat", 1);
+  double precision_limit = cmdline.value("-prec",1e-4);
+  
   double anchor_pt = cmdline.present("-anchor") ? 100.0 : 0.0;
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(n/10,1000)));
 
@@ -92,12 +94,13 @@ int main (int argc, char ** argv) {
 
   int njets = 0;
   double average_area = 0.0, average_ar2 = 0.0;
+  double relative_error = 1e100;
   for (int i = 0; i<n; i++) {
     vector<fj::PseudoJet> input_jets(0);
     input_jets.push_back(fj::PseudoJet(anchor_pt,0.0,0.0,anchor_pt));
     fj::ClusterSequenceActiveAreaExplicitGhosts clust(input_jets, jet_def, 
 						      active_area_spec);
-    cout << clust.n_particles() << endl;
+    //cout << "Clustering " << clust.n_particles() << " particles" << endl;
     vector<fj::PseudoJet> output_jets(clust.inclusive_jets());
     for (unsigned j = 0; j < output_jets.size(); j++) {
       // only take jets that are reasonably close to center
@@ -120,7 +123,8 @@ int main (int argc, char ** argv) {
     //  (*ostr) << "UNCLUST: " << unclust[j].rap() << " " << unclust[j].phi() << " " << unclust[j].perp() << " " << unclust[j].cluster_hist_index() << endl;
 
 
-    if ( i+1==n || (i+1) % writefreq == 0 || i+1 == 10 || i+1 == 100 ) { 
+    if ( i+1==n || (i+1) % writefreq == 0 || i+1 == 10 || i+1 == 100 || 
+         relative_error < precision_limit ) { 
 
        // (re-)initialise the output file
        ostream * ostr;
@@ -145,6 +149,7 @@ int main (int argc, char ** argv) {
    
     
        double av_ar2 = sqrt((average_ar2/njets-pow2(average_area/njets))/njets);
+       relative_error = abs(av_ar2/(average_area/njets));
        (*ostr) << "# average area = " << average_area/njets << " +- " << av_ar2 << endl;
        double rescale = 1.0 / (areahist.binsize() * njets);
        for (unsigned i = 0; i < areahist.size(); i++) {
@@ -154,6 +159,8 @@ int main (int argc, char ** argv) {
        
        if ( outfile != "" ) { delete ostr; }
     }
+    
+    if ( relative_error < precision_limit ) {break;}
   } // end loop over events
 
 }
