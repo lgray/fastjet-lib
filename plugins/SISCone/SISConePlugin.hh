@@ -152,8 +152,12 @@ private:
 /// Class that provides extra information about a SISCone clustering
 class SISConeExtras : public ClusterSequence::Extras {
 public:
-  /// returns a reference to the vector of protocones
+  /// returns a reference to the vector of stable cones (aka protocones)
+  const std::vector<PseudoJet> & stable_cones() const {return _protocones;}
+
+  /// an old name for getting the vector of stable cones (aka protocones)
   const std::vector<PseudoJet> & protocones() const {return _protocones;}
+
 
   /// access to the siscone jet def plugin (more convenient than
   /// getting it from the original jet definition, because here it's

@@ -1,3 +1,10 @@
+2007-03-04  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.hh: 
+	  added the stable_cones() method to SISConeExtras, which is
+	  identical to protocones() (but stable_cones is a more consistent
+	  name).
+
 2007-03-03  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* switched the plugins/SISCone svn:externals property to point to 
