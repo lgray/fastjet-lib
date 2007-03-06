@@ -33,6 +33,7 @@
 #define __FASTJET_ACTIVEAREASPEC_HH__
 
 #include<vector>
+#include<string>
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/internal/BasicRandom.hh"
 
@@ -92,6 +93,9 @@ public:
   inline void set_kt_scatter  (double val) {_kt_scatter     = val; };
   inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; };
   inline void set_repeat      (int    val) {_repeat         = val; };
+  
+  /// for a summary
+  std::string description();
 
   /// push the ghost 4-momenta onto the back of the vector of PseudoJets
   void add_ghosts(std::vector<PseudoJet> & ) const;

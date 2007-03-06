@@ -1,3 +1,11 @@
+2007-03-06  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
+
+	* include/fastjet/version.hh: 
+	  updated internal version number (to avoid confusion)
+
+	* include/fastjet/ActiveAreaSpec.hh|cc: 
+	  added description() member function
+
 2007-03-04  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex: 
@@ -17,6 +25,7 @@
 	  svn+ssh://login.hepforge.org/hepforge/svn/siscone/tags/siscone-1.1.0
 	  rather than 
 	  svn+ssh://login.hepforge.org/hepforge/svn/siscone/trunk
+
 2007-03-01 (later) Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 

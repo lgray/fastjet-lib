@@ -30,6 +30,7 @@
 
 #include "fastjet/ActiveAreaSpec.hh"
 #include<iostream>
+#include<sstream>
 
 using namespace std;
 
@@ -87,6 +88,19 @@ void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       //_is_pure_ghost.push_back(true);
     }
   }
+}
+
+string ActiveAreaSpec::description() {
+
+  ostringstream ostr;
+  ostr << "Active area specification with ghosts of area " << actual_ghost_area() 
+       << " (had requested " << ghost_area() << ")"
+       << ", placed up to y = " << ghost_maxrap() 
+       << ", scattered rel. to perfect grid by " << grid_scatter() 
+       << ", mean_ghost_kt = " << mean_ghost_kt()
+       << ", rel kt_scatter =  " << kt_scatter()
+       << ", n repetitions of ghost distributions =  " << repeat();
+  return ostr.str();
 }
 
 FASTJET_END_NAMESPACE
