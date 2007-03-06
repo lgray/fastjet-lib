@@ -6,6 +6,8 @@
 	* include/fastjet/ActiveAreaSpec.hh|cc: 
 	  added description() member function
 
+	* moved siscone external back onto siscone trunk
+	
 2007-03-04  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex: 
