@@ -99,7 +99,11 @@ int main (int argc, char ** argv) {
   // the histograms...
   SimpleHist softareahist(-0.000001,2.,100);
   SimpleHist hardareahist(-0.000001,2.,100);
-  SimpleHist hardptdist(hard_pt*0.5,hard_pt*1.5,50);
+  SimpleHist hardptdist(hard_pt*0.2,hard_pt*1.8,80);
+  double rho = nsoft/(fj::twopi*2.*ghost_etamax)*soft_pt;
+  double typical_soft_contrib = rho*fj::pi*ktR*ktR*0.6;
+  SimpleHist ptdist(typical_soft_contrib*0.1 + hard_pt,
+                    typical_soft_contrib*2 + hard_pt,200 );
 
   int nhardjets = 0, nsoftjets = 0;
   double average_area_hard = 0.0, average_ar2_hard = 0.0,
@@ -184,20 +188,20 @@ int main (int argc, char ** argv) {
 	  av_pt2 += output_jets[j].perp()*output_jets[j].perp();
           
 	  // perform subtraction on hard jets
-//          double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
-          double median_pt = clust.pt_per_unit_area();
+          double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
+// to use this is wrong unless -pt_scheme is used
+//          double median_pt = clust.pt_per_unit_area();
           double hard_area = clust.area(output_jets[j]);
 	  fj::PseudoJet areavect = clust.area_4vector(output_jets[j]);
-	  double sub_pt = output_jets[j].perp() - hard_area*median_pt;
+//	  double sub_pt = output_jets[j].perp() - hard_area*median_pt;
 	  fj::PseudoJet sub_4vec = output_jets[j] - median_pt*areavect;
-//	  fj::PseudoJet sub_4vec = output_jets[j] - median_pt*areavect/(1-ktR*ktR/8.*0.55 +
-//	  ktR*ktR*ktR*ktR/192.*0.55*0.55);
-//	  fj::PseudoJet sub_4vec = output_jets[j] - 398.*areavect;
+
 	  double sub_pt_4vec = sub_4vec.perp();
-	  sub_pt = sub_pt_4vec;
+	  double sub_pt = sub_pt_4vec;
 	  av_sub_pt += sub_pt;
 	  av_sub_pt2 += sub_pt*sub_pt;
 	  hardptdist.add_entry(sub_pt);
+	  ptdist.add_entry(output_jets[j].perp());
 	  if ( i < 10 ) { 
   	    cout << "median pt per unit area " << median_pt << endl;
             cout << hard_pt << " " << output_jets[j].perp() << " " <<  sub_pt << endl;  
@@ -272,12 +276,25 @@ int main (int argc, char ** argv) {
 
       (*ostr) << "\n\n" << endl;
       double rescalept = 1.0 / (hardptdist.binsize() * nhardjets);
+      (*ostr) << "# Subtracted pt" << endl;
       for (unsigned i = 0; i < hardptdist.size(); i++) {
         (*ostr) << hardptdist.binmid(i) 
                 << " " << hardptdist[i]*rescalept
   	        << " " << sqrt(hardptdist[i])*rescalept 
 	        << endl;
       }
+
+
+      (*ostr) << "\n\n" << endl;
+      rescalept = 1.0 / (ptdist.binsize() * nhardjets);
+      (*ostr) << "# Reconstructed pt" << endl;
+      for (unsigned i = 0; i < ptdist.size(); i++) {
+        (*ostr) << ptdist.binmid(i) 
+                << " " << ptdist[i]*rescalept
+  	        << " " << sqrt(ptdist[i])*rescalept 
+	        << endl;
+      }
+
     }
   
     (*ostr) << " " << endl;

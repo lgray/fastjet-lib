@@ -143,6 +143,7 @@ int main (int argc, char ** argv) {
        (*ostr) << "# ghost_etamax = " << ghost_etamax << endl;
        (*ostr) << "# ghost_area   = " << ghost_area   << endl;
        (*ostr) << "# nev          = " << n            << endl;
+       (*ostr) << "# precision    = " << precision_limit << endl;
        (*ostr) << "# nhist        = " << nhist        << endl;
        (*ostr) << "# histmax      = " << histmax      << endl;
        (*ostr) << "# jet def      = " << jet_def.description() << endl;
