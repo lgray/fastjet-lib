@@ -75,19 +75,45 @@ class PseudoJet;
 class SISConePlugin : public JetDefinition::Plugin {
 public:
 
+  /// enum for the different split-merge scale choices;
+  /// Note that order _must_ be the same as in siscone
+  enum SplitMergeScale {SM_pt,     ///< transverse momentum (E-scheme), IR unsafe
+                        SM_Et,     ///< transverse energy (E-scheme), not long. boost invariant
+                                   ///< original run-II choice [may not be implemented]
+                        SM_mt,     ///< transverse mass (E-scheme), IR safe except
+                                   ///< in decays of two identical narrow heavy particles
+                        SM_pttilde ///< pt-scheme pt = \sum_{i in jet} |p_{ti}|, should
+                                   ///< be IR safe in all cases
+  };
+
+
   /// Constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
                  int    n_pass_max = 1,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
-                 bool   split_merge_on_transverse_mass = true) :
+                 SplitMergeScale  split_merge_scale = SM_mt) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (protojet_ptmin),
     _caching               (caching),             
-    _split_merge_on_transverse_mass (split_merge_on_transverse_mass) {}
+    _split_merge_scale     (split_merge_scale) {}
+
+  /// Backwards compatible constructor for the SISCone Plugin class
+  SISConePlugin (double cone_radius,
+                 double overlap_threshold,
+                 int    n_pass_max,
+                 double protojet_ptmin, 
+                 bool   caching ,
+                 bool   split_merge_on_transverse_mass) :
+    _cone_radius           (cone_radius       ),
+    _overlap_threshold     (overlap_threshold ),
+    _n_pass_max            (n_pass_max ), 
+    _protojet_ptmin        (protojet_ptmin),
+    _caching               (caching),             
+    _split_merge_scale     (split_merge_on_transverse_mass ? SM_mt : SM_pt) {}
   
   /// backwards compatible constructor for the SISCone Plugin class
   /// (avoid using this in future).
@@ -100,7 +126,7 @@ public:
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (0.0),
     _caching               (caching),
-    _split_merge_on_transverse_mass(true)     {}
+    _split_merge_scale     (SM_mt)     {}
 
   /// copy constructor
   SISConePlugin (const SISConePlugin & plugin) {
@@ -122,10 +148,18 @@ public:
   /// of the algorithm
   double protojet_ptmin  () const {return _protojet_ptmin  ;}
 
+
+  /// indicates scale used in split-merge
+  SplitMergeScale split_merge_scale() const {return _split_merge_scale;}
+  /// sets scale used in split-merge
+  void set_split_merge_scale(SplitMergeScale sms) {_split_merge_scale = sms;}
+
   /// indicates whether the split-merge orders on transverse mass or not.
-  bool split_merge_on_transverse_mass() const {return _split_merge_on_transverse_mass ;}
+  /// retained for backwards compatibility with 2.1.0b3
+  bool split_merge_on_transverse_mass() const {return _split_merge_scale == SM_mt ;}
   void set_split_merge_on_transverse_mass(bool val) {
-    _split_merge_on_transverse_mass = val;}
+    _split_merge_scale = val  ? SM_mt : SM_pt;}
+
 
   /// indicates whether caching is turned on or not.
   bool caching() const {return _caching ;}
@@ -138,7 +172,8 @@ private:
   double _cone_radius, _overlap_threshold;
   int    _n_pass_max;
   double _protojet_ptmin;
-  bool   _caching, _split_merge_on_transverse_mass;
+  bool   _caching;//, _split_merge_on_transverse_mass;
+  SplitMergeScale _split_merge_scale;
 
   // variables for caching the results and the input
   static std::auto_ptr<SISConePlugin          > stored_plugin;

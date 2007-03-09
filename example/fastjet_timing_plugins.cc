@@ -172,9 +172,13 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
   } else if (cmdline.present("-siscone")) {
+    typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",1);
-    fj::SISConePlugin * plugin = new fj::SISConePlugin (ktR, overlap_threshold,npass);
-    if (cmdline.present("-nomt")) plugin->set_split_merge_on_transverse_mass(false);
+    SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass);
+    if (cmdline.present("-sm-pt")) plugin->set_split_merge_scale(SISPlug::SM_pt);
+    if (cmdline.present("-sm-mt")) plugin->set_split_merge_scale(SISPlug::SM_mt);
+    if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
+    if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
     jet_def = fj::JetDefinition(plugin);
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);

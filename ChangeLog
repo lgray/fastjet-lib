@@ -1,3 +1,11 @@
+2007-03-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.cc|hh: 
+	  introduced the SISConePlugin::SplitMergeScale enum (like the one
+	  for the CDF plugin) and implemented the interface between this
+	  and siscone's corresponding enum (NB: they must be ordered the
+	  same way, otherwise you will get surprises...).
+
 2007-03-06  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* include/fastjet/version.hh: 
