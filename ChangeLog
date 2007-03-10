@@ -1,5 +1,17 @@
 2007-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* plugins/CDFCones/CDFcode/ClusterComparisons.hh: 
+	* plugins/CDFCones/CDFcode/Cluster.hh: 
+	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc|hh: 
+	  added support for the pt_tilde scale in the split-merge
+	  procedure; note that the way this is done adds a small (1-3%)
+	  speed penalty for all choices.
+	
+	
+	* plugins/CDFCones/CDFMidPointPlugin.cc|hh: 
+	  added the corresponding pt_tilde entry to the SplitMergeScale
+	  enum.
+
 	* plugins/SISCone/SISConePlugin.hh: 
 	  changed default split_merge_scale to SM_pttilde; in legacy
 	  interface, bool split_merge_on_transverse_mass now decides

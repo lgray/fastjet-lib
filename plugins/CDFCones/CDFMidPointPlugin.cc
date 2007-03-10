@@ -56,6 +56,9 @@ string CDFMidPointPlugin::description () const {
   case SM_mt:
     sm_scale_string += "mt";
     break;
+  case SM_pttilde:
+    sm_scale_string += "pttilde (scalar sum of pts)";
+    break;
   default:
     ostringstream err;
     err << "Unrecognized split-merge scale choice = " << _sm_scale;

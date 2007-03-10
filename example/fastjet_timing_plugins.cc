@@ -155,6 +155,7 @@ int main (int argc, char ** argv) {
     int    max_pair_size = 2;
     int    max_iterations = 100;
     MPPlug::SplitMergeScale sm_scale = MPPlug::SM_pt;
+    if (cmdline.present("-sm-pttilde")) sm_scale = MPPlug::SM_pttilde;
     if (cmdline.present("-sm-mt")) sm_scale = MPPlug::SM_mt;
     if (cmdline.present("-sm-Et")) sm_scale = MPPlug::SM_Et;
     jet_def = fj::JetDefinition( new fj::CDFMidPointPlugin (

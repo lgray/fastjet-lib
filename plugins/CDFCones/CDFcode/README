@@ -16,3 +16,8 @@ essentially as downloaded from Joey Huston's page, EXCEPT that we have
   LorentzVector.hh 
 
 
+GPS 10 March 2007
+
+added functionality for the "pt_tilde" scale in the split-merge; as
+well as modifications in the places indicated above, we've also added
+maintenance of the pt_tilde scale in the Cluster.hh class.

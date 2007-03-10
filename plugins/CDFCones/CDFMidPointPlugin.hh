@@ -61,7 +61,7 @@ class CDFMidPointPlugin : public JetDefinition::Plugin {
 public:
   /// the choice of scale to be used in the split-merge step
   // NB: just replicates what we've added to the CDF midpoint code
-  enum SplitMergeScale {SM_pt, SM_Et, SM_mt};
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde};
 
   ///
   /// A CDFMidPointPlugin constructor that looks like the one provided

@@ -193,6 +193,10 @@ void MidPointAlgorithm::splitAndMerge(std::vector<Cluster>& stableCones, std::ve
             overlap_scale = overlap.fourVector.mt();
             jet2_scale    = stableConeIter2->fourVector.mt();
             break;
+          case SM_pttilde:
+            overlap_scale = overlap.pt_tilde;
+            jet2_scale    = stableConeIter2->pt_tilde;
+            break;
           default:
             std::cerr << "Unrecognized value for _smScale: " 
                       << _smScale << std::endl;
@@ -282,6 +286,9 @@ void MidPointAlgorithm::local_sort(std::vector<Cluster>& clusters) {
     break;
   case SM_mt:
     sort(clusters.begin(),clusters.end(),ClusterMtGreater());
+    break;
+  case SM_pttilde:
+    sort(clusters.begin(),clusters.end(),ClusterPtTildeGreater());
     break;
   default:
     std::cerr << "Unrecognized value for _smScale: " << _smScale << std::endl;

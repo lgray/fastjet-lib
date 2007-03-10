@@ -39,4 +39,13 @@ class ClusterMtGreater
   }
 };
 
+class ClusterPtTildeGreater
+{
+ public:
+  int operator()(const Cluster& c1, const Cluster& c2) const
+  {
+    return c1.pt_tilde > c2.pt_tilde;
+  }
+};
+
 #endif

@@ -8,7 +8,7 @@
 class MidPointAlgorithm
 {
  public:
-  enum SplitMergeScale {SM_pt, SM_Et, SM_mt};
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde};
 
  private:
   double _seedThreshold;
