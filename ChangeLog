@@ -1,3 +1,10 @@
+2007-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.hh: 
+	  changed default split_merge_scale to SM_pttilde; in legacy
+	  interface, bool split_merge_on_transverse_mass now decides
+	  between SM_mt and SM_pttilde;
+
 2007-03-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/SISCone/SISConePlugin.cc|hh: 
