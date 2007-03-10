@@ -93,7 +93,7 @@ public:
                  int    n_pass_max = 1,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
-                 SplitMergeScale  split_merge_scale = SM_mt) :
+                 SplitMergeScale  split_merge_scale = SM_pttilde) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
@@ -113,7 +113,7 @@ public:
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (protojet_ptmin),
     _caching               (caching),             
-    _split_merge_scale     (split_merge_on_transverse_mass ? SM_mt : SM_pt) {}
+    _split_merge_scale     (split_merge_on_transverse_mass ? SM_mt : SM_pttilde) {}
   
   /// backwards compatible constructor for the SISCone Plugin class
   /// (avoid using this in future).
