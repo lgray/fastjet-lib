@@ -2,6 +2,25 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Changes from v2.1.0b3 to v2.1.0b4
+=================================
+
+FastJet modifications
+---------------------
+
+- default number of repeats for the active area specification has been
+  changed from 5 to 1 (the latter goes fast, but note that it provides
+  a zero error estimate for the area).
+
+Plugin modifications
+--------------------
+
+************* FILL THIS IN *************
+
+
+
+
+======================================================================
 Changes from v2.1.0b2 to v2.1.0b3
 =================================
 

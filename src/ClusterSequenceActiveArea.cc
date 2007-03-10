@@ -436,9 +436,22 @@ void ClusterSequenceActiveArea::_transfer_areas(
 	const PseudoJet & refjet = 
 	  _jets[_history[_history[hist_index].parent1].jetp_index];
 	//if (jet.perp2() != refjet.perp2()) {
+	//if (abs(jet.perp2()-refjet.perp2()) > 
+	//            tolerance*max(jet.perp2(),refjet.perp2())) {
+
+        // If pt disagrees check E; if they both disagree there's a
+        // problem here... NB: a massive particle with zero pt may
+        // have its pt changed when a ghost is added -- this is why we
+        // also require the energy to be wrong before complaining
 	if (abs(jet.perp2()-refjet.perp2()) > 
-	            tolerance*max(jet.perp2(),refjet.perp2())) {
-	  cerr << jet.perp() << " " << refjet.perp() << " "<< jet.perp() - refjet.perp() << endl;
+	            tolerance*max(jet.perp2(),refjet.perp2())
+            && abs(jet.E()-refjet.E()) > tolerance*max(jet.E(),refjet.E())) {
+	  cerr << jet.perp() << " " << refjet.perp() << " "
+               << jet.perp() - refjet.perp() << endl;
+          cerr << refjet.px() << " " 
+               << refjet.py() << " " 
+               << refjet.pz() << " " 
+               << refjet.E() << endl;
 	  throw Error("Could not match clustering sequence for an inclusive jet when reconstructing areas"); }
 
 	// set the area at this clustering stage

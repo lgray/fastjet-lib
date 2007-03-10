@@ -48,14 +48,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class ActiveAreaSpec {
 public:
   /// default constructor
-  ActiveAreaSpec(): _ghost_maxrap(6.0), _repeat(5), _ghost_area(0.01), 
+  ActiveAreaSpec(): _ghost_maxrap(6.0), _repeat(1), _ghost_area(0.01), 
                     _grid_scatter(1e-4), _kt_scatter(0.1), 
                     _mean_ghost_kt(1e-100),
                     _actual_ghost_area(-1.0) {_initialize();};
   
   /// explicit constructor
   explicit ActiveAreaSpec(double ghost_maxrap, 
-                          int    repeat = 5,
+                          int    repeat = 1,
                           double ghost_area=0.01, 
                           double grid_scatter = 1e-4, 
                           double kt_scatter = 0.1,

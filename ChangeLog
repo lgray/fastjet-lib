@@ -1,5 +1,8 @@
 2007-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/ActiveAreaSpec.hh: 
+	  changed default repeat value to 1 (was 5);
+
 	* plugins/CDFCones/CDFcode/ClusterComparisons.hh: 
 	* plugins/CDFCones/CDFcode/Cluster.hh: 
 	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc|hh: 

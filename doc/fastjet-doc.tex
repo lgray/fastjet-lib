@@ -648,7 +648,7 @@ the ghosts. This is done via the class \ttt{fastjet::ActiveAreaSpec}
 whose constructor is
 \begin{verbatim}
   fastjet::ActiveAreaSpec(double ghost_maxrap, 
-                          int    repeat = 5,
+                          int    repeat = 1,
                           double ghost_area = 0.01, 
                           double grid_scatter = 1e-4, 
                           double kt_scatter = 0.1,
@@ -668,10 +668,11 @@ jet is not unique, and depends on the degeneracy-breaking random
 shifts added to the ghost positions, as compared to a perfect grid
 distribution. To obtain a reliable area one may then repeat the
 area determination several times, the number of times being specified
-by the \ttt{repeat} variable. For hadron-level events the default of
+by the \ttt{repeat} variable. For hadron-level events a value of
 $5$ is sufficient to give jet areas that are determined to within a
-few percent. In practice it is often satisfactory even to set
-\ttt{repeat}$=1$. For events with a dense distribution of true
+few percent. In practice it is usually satisfactory even to set
+\ttt{repeat}$=1$ and this is the default since it runs faster. For
+events with a dense distribution of true 
 particles, there is no degeneracy in the ghost clustering and there is
 no need at all to use \ttt{repeat}$>1$.
 %
