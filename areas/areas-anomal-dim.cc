@@ -79,6 +79,8 @@ int main (int argc, char ** argv) {
   int    hist    = cmdline.value("-hist",1);
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(n/10,1000)));
   
+  bool   emission = cmdline.present("-emission");
+  
   string outfile;
   if (cmdline.present("-out")) {
      outfile = cmdline.value<string>("-out");
@@ -116,15 +118,39 @@ int main (int argc, char ** argv) {
     if ( i < 10 ) { cout << "# event " << i << endl; }
     vector<fj::PseudoJet> input_jets(0);
 
+    double hardpt = hard_pt;
+    if ( emission ) {
+       double emitted_pt = hard_pt*rand()/RAND_MAX;
+       double emitted_dist = fj::pi*rand()/RAND_MAX;
+       double y_phi = fj::twopi*rand()/RAND_MAX;
+       double emitted_y = emitted_dist*sin(y_phi);
+       double emitted_phi = emitted_dist*cos(y_phi);
+  //     cout << emitted_dist << " " << emitted_pt << " " << emitted_y << " " << emitted_phi <<
+  //     endl;
+       double em_pminus = emitted_pt*exp(-emitted_y);
+       double em_pplus  = emitted_pt*exp(+emitted_y);
+       double em_px = emitted_pt*cos(emitted_phi);
+       double em_py = emitted_pt*sin(emitted_phi);
+       fj::PseudoJet emitted_mom(em_px,em_py,0.5*(em_pplus-em_pminus),
+                                             0.5*(em_pplus+em_pminus));
+       input_jets.push_back(emitted_mom);
+//       cout  << "emitted " << emitted_mom.perp() << " " << 
+//               emitted_mom.rap() << " " << emitted_mom.phi_std() << endl;
+       // decrease the hard_pt by the emitted amount (so that sum
+       // is the hard_pt in input
+       hardpt -= emitted_pt;
+    }
 
     if ( hard_pt > 0 ) {
       // input the hard jet
-      fj::PseudoJet hard_particle(hard_pt,0.0,0.0,hard_pt);
+      fj::PseudoJet hard_particle(hardpt,0.0,0.0,hardpt);
+//      cout << "hard " << hard_particle.perp() << " " <<
+//               hard_particle.rap() << " " << hard_particle.phi() << endl;
 //    fj::PseudoJet
 //      hard_particle(hard_pt/sqrt(3.),hard_pt/sqrt(3.),hard_pt/sqrt(3.),hard_pt);
       hard_particle.set_user_index(2);
       input_jets.push_back(hard_particle);
-      fj::PseudoJet hard_particle2(-hard_pt,0.0,0.0,hard_pt);
+      fj::PseudoJet hard_particle2(-hardpt,0.0,0.0,hardpt);
 //    fj::PseudoJet 
 //      hard_particle2(-hard_pt/sqrt(3.),-hard_pt/sqrt(3.),-hard_pt/sqrt(3.),hard_pt);
       hard_particle2.set_user_index(2);
