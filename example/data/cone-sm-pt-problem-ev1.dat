@@ -1,0 +1,13 @@
+# cluster this event with
+#
+# ../fastjet_timing_plugins -siscone -sm-pt -r 0.9 -f 0.7 -incl 0 < cone-sm-pt-problem-ev1.dat
+# OR 
+# ../fastjet_timing_plugins -midpoint -sm-pt -r 0.9 -f 0.7 -incl 0 < cone-sm-pt-problem-ev1.dat
+#
+# and compare to the output from running cone-sm-pt-problem-ev2.dat to
+# see the issue with p_t in the split-merge procedure
+ 86.01   66     0 140
+ 64     -66     0 140
+-77     -70     0 140
+-73      70     0 140
+-0.01     0.0 200 201

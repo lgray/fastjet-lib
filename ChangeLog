@@ -1,3 +1,9 @@
+2007-03-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* example/data/cone-sm-pt-problem-ev(1|2).dat: 
+	  added two simple example events to illustrate the split-merge problem
+	  with pt ordering.
+	
 2007-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ActiveAreaSpec.hh: 
