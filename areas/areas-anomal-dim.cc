@@ -101,12 +101,14 @@ int main (int argc, char ** argv) {
   // the histograms...
   SimpleHist softareahist(-0.000001,2.,100);
   SimpleHist hardareahist(-0.000001,2.,100);
-  SimpleHist hardptdist(hard_pt*0.2,hard_pt*1.8,80);
-  double rho = nsoft/(fj::twopi*2.*ghost_etamax)*soft_pt;
-  double typical_soft_contrib = rho*fj::pi*ktR*ktR*0.6;
-  SimpleHist ptdist(typical_soft_contrib*0.1 + hard_pt,
-                    typical_soft_contrib*2 + hard_pt,200 );
-
+//   SimpleHist hardptdist(hard_pt*0.2,hard_pt*1.8,80);
+//   double rho = nsoft/(fj::twopi*2.*ghost_etamax)*soft_pt;
+//   double typical_soft_contrib = rho*fj::pi*ktR*ktR*0.6;
+//   SimpleHist ptdist(typical_soft_contrib*0.1 + hard_pt,
+//                     typical_soft_contrib*2 + hard_pt,200 );
+  SimpleHist hardptdist(0.,2000.,1000);
+  SimpleHist ptdist(0.,2000.,1000);
+  
   int nhardjets = 0, nsoftjets = 0;
   double average_area_hard = 0.0, average_ar2_hard = 0.0,
          average_area_soft = 0.0, average_ar2_soft = 0.0;
