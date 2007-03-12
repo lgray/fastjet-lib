@@ -111,6 +111,13 @@ class PseudoJet {
   enum { X=0, Y=1, Z=2, T=3, NUM_COORDINATES=4, SIZE=NUM_COORDINATES };
 
 
+  /// transform this jet (given in the rest frame of prest) into a jet
+  /// in the lab frame
+  PseudoJet & boost(const PseudoJet & prest);
+  /// transform this jet (given in lab) into a jet in the rest
+  /// frame of ps
+  PseudoJet & unboost(const PseudoJet & prest);
+
   /// return the cluster_hist_index, intended to be used by clustering
   /// routines.
   inline const int & cluster_hist_index() const {return _cluster_hist_index;};

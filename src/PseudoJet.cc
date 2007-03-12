@@ -214,6 +214,60 @@ void PseudoJet::operator-=(const PseudoJet & other_jet) {
 }
 
 //----------------------------------------------------------------------
+/// transform this jet (given in the rest frame of prest) into a jet
+/// in the lab frame;
+//
+// NB: code adapted from that in herwig f77 (checked how it worked
+// long ago)
+PseudoJet & PseudoJet::boost(const PseudoJet & prest) {
+  
+  if (prest.px() == 0.0 && prest.py() == 0.0 && prest.pz() == 0.0) 
+    return *this;
+
+  double m = prest.m();
+  assert(m != 0);
+
+  double pf4  = (  px()*prest.px() + py()*prest.py()
+                 + pz()*prest.pz() + E()*prest.E() )/m;
+  double fn   = (pf4 + E()) / (prest.E() + m);
+  _px +=  fn*prest.px();
+  _py +=  fn*prest.py();
+  _pz +=  fn*prest.pz();
+  _E = pf4;
+
+  _finish_init(); // we need to recalculate phi,rap,kt2
+  return *this;
+}
+
+
+//----------------------------------------------------------------------
+/// transform this jet (given in the rest frame of prest) into a jet
+/// in the lab frame;
+//
+// NB: code adapted from that in herwig f77 (checked how it worked
+// long ago)
+PseudoJet & PseudoJet::unboost(const PseudoJet & prest) {
+  
+  if (prest.px() == 0.0 && prest.py() == 0.0 && prest.pz() == 0.0) 
+    return *this;
+
+  double m = prest.m();
+  assert(m != 0);
+
+  double pf4  = ( -px()*prest.px() - py()*prest.py()
+                 - pz()*prest.pz() + E()*prest.E() )/m;
+  double fn   = (pf4 + E()) / (prest.E() + m);
+  _px -=  fn*prest.px();
+  _py -=  fn*prest.py();
+  _pz -=  fn*prest.pz();
+  _E = pf4;
+
+  _finish_init(); // we need to recalculate phi,rap,kt2
+  return *this;
+}
+
+
+//----------------------------------------------------------------------
 /// returns true if the momenta of the two input jets are identical
 bool have_same_momentum(const PseudoJet & jeta, const PseudoJet & jetb) {
   return jeta.px() == jetb.px()
