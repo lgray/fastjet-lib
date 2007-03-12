@@ -3,9 +3,11 @@
 	* src/PseudoJet.cc|hh: 
 	  added boost(...) and unboost(...) methods.
 
+	* example/data/cone-darktower.dat: 
 	* example/data/cone-sm-pt-problem-ev(1|2).dat: 
 	  added two simple example events to illustrate the split-merge problem
-	  with pt ordering.
+	  with pt ordering, as well as the dark-tower problem in
+	  single-pass algs.
 	
 2007-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
