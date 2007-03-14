@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------
-#                      FastJet release 2.1.0b3
+#                      FastJet release 2.1.0b4
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -40,7 +40,7 @@ jet #        rapidity             phi              pt  n constituents
     8      3.42713139      5.74362063      5.17254118       13
     9     -4.83615264      2.20502275      5.02711586       12
 #------------------------------------------------------------------------
-#                      FastJet release 2.1.0b3
+#                      FastJet release 2.1.0b4
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -67,7 +67,7 @@ Printing inclusive jets with pt > 5 GeV
     8  -4.83615  2.20502      5.027    4.152 +-  0.201
 
 #------------------------------------------------------------------------
-#                      FastJet release 2.1.0b3
+#                      FastJet release 2.1.0b4
 #              Written by Matteo Cacciari and Gavin Salam		   
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -120,7 +120,7 @@ jet #        rapidity             phi              pt  n constituents
 138 particles unclustered
 
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-#                    SISCone   version 1.1.0                       o
+#                    SISCone   version 1.1.1alpha                  o
 #              http://projects.hepforge.org/siscone                o
 #                                                                  o
 # This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
@@ -131,7 +131,7 @@ jet #        rapidity             phi              pt  n constituents
 # preprint hep-ph/0702nnn. Please cite it if you use SISCone       o
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
-Ran SISCone jet finder with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses mt=sqrt(pt^2+m^2), caching turned off
+Ran SISCone jet finder with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
@@ -141,9 +141,10 @@ jet #        rapidity             phi              pt  n constituents
     3      0.37165751      0.63216516     13.74566752       14
     4     -1.63118707      4.01902795      7.50472376        6
     5     -2.55310918      0.78265712      7.37305192       10
-    6     -4.17998158      1.25436280      6.66642290       16
-    7     -1.88990327      1.22581328      6.36497338       10
-    8     -1.08097559      0.63235861      5.88571378       10
+    6     -1.78661758      1.23402802      7.33778407       11
+    7     -4.17998158      1.25436280      6.66642290       16
+    8     -1.08952371      0.51673395      5.14752491        9
+    9      3.05762711      5.47097964      5.08623145       15
 
 0 particles unclustered
 
