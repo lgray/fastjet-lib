@@ -1,3 +1,13 @@
+2007-03-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.hh: 
+	  changed the default number of passes to 0
+
+	* plugins/SISCone/SISConePlugin.cc: 
+	  fixed bug in choice of split-merge scale when recomputing jets
+	  from a cached siscone run.
+	  
+
 2007-03-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc|hh: 

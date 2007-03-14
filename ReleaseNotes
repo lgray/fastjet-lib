@@ -15,7 +15,13 @@ FastJet modifications
 Plugin modifications
 --------------------
 
-************* FILL THIS IN *************
+- addapted plugin to accomodate new scale for use in the SISCone
+  split-merge (pttilde), with a corresponding change of interface.
+
+  Changed default number of passes for SISCone to 0.
+  
+- Added the pttilde scale choice to the CDF plugin.
+
 
 
 

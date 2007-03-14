@@ -90,7 +90,7 @@ public:
   /// Constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
-                 int    n_pass_max = 1,
+                 int    n_pass_max = 0,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
                  SplitMergeScale  split_merge_scale = SM_pttilde) :
