@@ -90,7 +90,7 @@ Printing inclusive jets with pt > 5 GeV
      is provided for comparative purposes only
   ***********************************************
 
-Ran PxCone jet finder with cone_radius = 0.7, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0 (NB: non-standard version of PxCone, including small bug fixes by Gavin Salam)
+Ran PxCone jet algorithm with cone_radius = 0.7, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0 (NB: non-standard version of PxCone, containing small bug fixes by Gavin Salam)
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
@@ -103,7 +103,7 @@ jet #        rapidity             phi              pt  n constituents
 
 212 particles unclustered
 
-Ran CDF MidPoint jet finder with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
+Ran CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
@@ -131,7 +131,7 @@ jet #        rapidity             phi              pt  n constituents
 # preprint hep-ph/0702nnn. Please cite it if you use SISCone       o
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
-Ran SISCone jet finder with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off
+Ran SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents

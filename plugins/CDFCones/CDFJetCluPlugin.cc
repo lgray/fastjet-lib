@@ -44,7 +44,7 @@ using namespace std;
 string CDFJetCluPlugin::description () const {
   ostringstream desc;
   
-  desc << "CDF JetClu jet finder with " 
+  desc << "CDF JetClu jet algorithm with " 
        << "seed_threshold = "     << seed_threshold    () << ", "
        << "cone_radius = "        << cone_radius       () << ", "
        << "adjacency_cut = "      << adjacency_cut     () << ", " 

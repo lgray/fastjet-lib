@@ -29,7 +29,7 @@ string SISConePlugin::description () const {
   string sm_scale_string = "split-merge uses " + 
     split_merge_scale_name(Esplit_merge_scale(split_merge_scale()));
 
-  desc << "SISCone jet finder with " ;
+  desc << "SISCone jet algorithm with " ;
   desc << "cone_radius = "       << cone_radius        () << ", ";
   desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";

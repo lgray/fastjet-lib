@@ -44,12 +44,12 @@ using namespace std;
 string PxConePlugin::description () const {
   ostringstream desc;
   
-  desc << "PxCone jet finder with " 
+  desc << "PxCone jet algorithm with " 
        << "cone_radius = "        << cone_radius        () << ", "
        << "min_jet_energy = "     << min_jet_energy     () << ", "
        << "overlap_threshold  = " << overlap_threshold  () << ", "
        << "E_scheme_jets  = "     << E_scheme_jets      () 
-       << " (NB: non-standard version of PxCone, including small bug fixes by Gavin Salam)";
+       << " (NB: non-standard version of PxCone, containing small bug fixes by Gavin Salam)";
 
   return desc.str();
 }

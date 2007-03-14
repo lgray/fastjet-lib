@@ -65,8 +65,13 @@ string CDFMidPointPlugin::description () const {
     throw Error(err.str());
   }
 
-  desc << "CDF MidPoint jet finder with " 
-       << "seed_threshold = "     << seed_threshold     () << ", "
+  
+  if (cone_area_fraction() == 1) {
+    desc << "CDF MidPoint jet algorithm, with " ;
+  } else {
+    desc << "CDF MidPoint+Searchcone jet algorithm, with ";
+  }
+  desc << "seed_threshold = "     << seed_threshold     () << ", "
        << "cone_radius = "        << cone_radius        () << ", "
        << "cone_area_fraction = " << cone_area_fraction () << ", " 
        << "max_pair_size = "      << max_pair_size      () << ", "
