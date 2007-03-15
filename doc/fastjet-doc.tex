@@ -955,32 +955,38 @@ constructor with the following structure
 \begin{verbatim}
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
-                 int    n_pass_max = 1,
+                 int    n_pass_max = 0,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
-                 bool   split_merge_on_transverse_mass = true);
+                 SISConePlugin::SplitMergeScale   
+                   split_merge_scale = SISConePlugin::SM_pttilde);
 \end{verbatim}
 A cone centered at $y_c,\phi_c$ is stable if the sum of momenta of all
 particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
 \verb:cone_radius:^2$ has rapidity $y_c,\phi_c$.
 %
-The \verb:overlap_threshold: is the fraction of overlapping transverse
-mass ($m_t^2 = p_t^2 + m^2$) above which two protojets are merged in a
-Tevatron Run~II type \cite{RunII-jet-physics} split--merge procedure.
-The radius and overlap parameters are a common feature of most modern
-cone algorithms. Because some event particles are not to be found in
-any stable cone \cite{EHT}, SISCone can carry out multiple stable-cone
+The \verb:overlap_threshold: is the fraction of overlapping momentum
+above which two protojets are merged in a Tevatron Run~II type
+\cite{RunII-jet-physics} split--merge procedure.  The radius and
+overlap parameters are a common feature of most modern cone
+algorithms. Because some event particles are not to be found in any
+stable cone \cite{EHT}, SISCone can carry out multiple stable-cone
 search passes (as advocated in \cite{TeV4LHC}): in each pass one
 searches for stable cones using just the subset of particles not
 present in any stable cone in earlier passes. Up to \verb:n_pass_max:
 passes are carried out, and the algorithm automatically stops at the
-highest pass that gives no new stable cones. Setting the
+highest pass that gives no new stable cones. The default of
 $\verb:n_pass_max: = 0$ is equivalent to setting it to $\infty$.
 Since concern has been expressed that an excessive number of stable
 cones may complicate cone jets in events with high
 noise~\cite{RunII-jet-physics}, the \verb:protojet_ptmin: parameter
-allows one to use only protojets  with $p_t \ge \verb:protojet_ptmin:$
-in the split--merge phase (all others are thrown away).
+allows one to use only protojets with $p_t \ge \verb:protojet_ptmin:$
+in the split--merge phase (all others are thrown away).\footnote{Early
+  experience indicates that \ttt{protojet\_ptmin} is actually
+  perfectly adequate and that potential problems of massively
+  agglomerated jets that can occur in high-noise environments (for a
+  wide range of cone algorithms) can be addressed with a slightly
+  larger value of the \ttt{overlap\_threshold}, $ \gtrsim 0.6$.}
 
 In many cases SISCone's most time-consuming step is the search for
 stable cones. If one has multiple \verb:SISConePlugin:-based jet
@@ -991,13 +997,23 @@ the stable cones are simply reused from the previous event, rather
 than being recalculated, and only the split--merge step is repeated,
 often leading to considerable speed gains.
 
-A final comment concerns the \verb:split_merge_on_transverse_mass:
-parameter. If \verb:true:, split--merge uses the transverse mass as
-its ordering variable. If \verb:false:, it uses transverse momentum
---- the latter leads to infrared unsafety and so is to be avoided in
-general.  The option of using it is nevertheless kept for historical
-comparison purposes, since many previous cone algorithms used $p_t$ as
-the ordering variable.
+A final comment concerns the \verb:split_merge_scale:
+parameter. This controls both the scale used for ordering the
+protojets during the split--merge step during the split--merge step,
+and also the scale used to measure the degree of overlap between
+protojets. While various options have been implemented, 
+\begin{verbatim}
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde };
+\end{verbatim}
+we recommend using only the last of them $\tilde p_t = \sum_{i \in
+  \mathrm{jet}}|p_{t,i}|$, which is also the default scale. The other
+scales are included only for historical comparison purposes: $p_t$
+(used in several other codes) is IR unsafe for events whose hadronic
+component conserves momentum, $E_t$ (advocated in
+\cite{RunII-jet-physics}) is not boost-invariant, and $m_t = \sqrt{m^2
+  + p_t^2}$ is IR unsafe for events whose hadronic component conserves
+momentum and stems from the decay of two identical particles.
+
 
 An example of the use of the SISCone plugin would be as follows:
 \begin{verbatim}
