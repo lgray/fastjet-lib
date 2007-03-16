@@ -1,3 +1,9 @@
+2007-03-16  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* example/data/cone-midpoint-problem-ev1.dat
+	* example/data/cone-midpoint-problem-ev2.dat
+	  added these to illustrate the IR problem with midpoint
+	
 2007-03-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/SISCone/SISConePlugin.hh: 

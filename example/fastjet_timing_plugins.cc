@@ -156,6 +156,7 @@ int main (int argc, char ** argv) {
     int    max_iterations = 100;
     MPPlug::SplitMergeScale sm_scale = MPPlug::SM_pt;
     if (cmdline.present("-sm-pttilde")) sm_scale = MPPlug::SM_pttilde;
+    if (cmdline.present("-sm-pt")) sm_scale = MPPlug::SM_pt; // default
     if (cmdline.present("-sm-mt")) sm_scale = MPPlug::SM_mt;
     if (cmdline.present("-sm-Et")) sm_scale = MPPlug::SM_Et;
     jet_def = fj::JetDefinition( new fj::CDFMidPointPlugin (
@@ -171,7 +172,7 @@ int main (int argc, char ** argv) {
   } else if (cmdline.present("-jetclu")) {
     double seed_threshold = 1.0;
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
-                                      ktR, overlap_threshold, seed_threshold));
+                                      ktR, overlap_threshold, seed_thshold));
   } else if (cmdline.present("-siscone")) {
     typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",1);
