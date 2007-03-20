@@ -74,6 +74,7 @@ int main (int argc, char ** argv) {
   double hard_pt = cmdline.double_val("-hard",10.0);
   double randomness = cmdline.double_val("-randomness",0.1);
   int    nsoft       = cmdline.int_val("-nsoft",10000);
+  int    nhard       = cmdline.int_val("-nhard",2);
 
   int    n       = cmdline.int_val("-n",20);
   int    hist    = cmdline.value("-hist",1);
@@ -114,49 +115,66 @@ int main (int argc, char ** argv) {
          average_area_soft = 0.0, average_ar2_soft = 0.0;
   double av_sub_pt = 0.0, av_sub_pt2 = 0.0;
   double av_pt = 0.0, av_pt2 = 0.0;
+  double tot_weight = 0.0;
+  double alphas = 0.1;
+  double ca = 3.0;
+  double cf = 4.0/3.0;
+  double ptlim = 1.0;
+  double distlim = 0.4;
   	 
 	 
   for (int i = 0; i<n; i++) {
     if ( i < 10 ) { cout << "# event " << i << endl; }
     vector<fj::PseudoJet> input_jets(0);
 
+    // the hard scale from input
     double hardpt = hard_pt;
+    
+    double weight = 1;
+    double coeff = 2.*alphas*cf/fj::pi;
     if ( emission ) {
        double emitted_pt = hard_pt*rand()/RAND_MAX;
-       double emitted_dist = fj::pi*rand()/RAND_MAX;
-       double y_phi = fj::twopi*rand()/RAND_MAX;
-       double emitted_y = emitted_dist*sin(y_phi);
-       double emitted_phi = emitted_dist*cos(y_phi);
-  //     cout << emitted_dist << " " << emitted_pt << " " << emitted_y << " " << emitted_phi <<
-  //     endl;
-       double em_pminus = emitted_pt*exp(-emitted_y);
-       double em_pplus  = emitted_pt*exp(+emitted_y);
-       double em_px = emitted_pt*cos(emitted_phi);
-       double em_py = emitted_pt*sin(emitted_phi);
-       fj::PseudoJet emitted_mom(em_px,em_py,0.5*(em_pplus-em_pminus),
-                                             0.5*(em_pplus+em_pminus));
-       input_jets.push_back(emitted_mom);
-//       cout  << "emitted " << emitted_mom.perp() << " " << 
-//               emitted_mom.rap() << " " << emitted_mom.phi_std() << endl;
-       // decrease the hard_pt by the emitted amount (so that sum
-       // is the hard_pt in input
-       hardpt -= emitted_pt;
+       double emitted_dist = ktR*2.*rand()/RAND_MAX;
+       weight = coeff*emitted_pt/emitted_dist;
+       if ( emitted_pt < ptlim || emitted_dist < distlim ) {
+           weight = 1.0 -  coeff*log(hard_pt/ptlim)*(1.0/distlim - 0.5/ktR);
+           if ( weight < 0. ) {cout << " !!!! NEGATIVE WEIGHT !!!! " << weight << endl;}
+           if ( i < 10 ) {cout << emitted_dist << " " << emitted_pt << endl;
+	                  cout << "weight " << weight << endl;}
+       } else {
+           double y_phi = fj::twopi*rand()/RAND_MAX;
+           double emitted_y = emitted_dist*sin(y_phi);
+           double emitted_phi = emitted_dist*cos(y_phi);
+           weight = alphas*ca/fj::pi/emitted_pt/emitted_dist/emitted_dist;
+           if ( i < 10 ) {
+	       cout << emitted_dist << " " << emitted_pt << " " << emitted_y << " " << emitted_phi <<    endl;
+               cout << "weight " << weight << endl;
+           }
+	   double em_pminus = emitted_pt*exp(-emitted_y);
+           double em_pplus  = emitted_pt*exp(+emitted_y);
+           double em_px = emitted_pt*cos(emitted_phi);
+           double em_py = emitted_pt*sin(emitted_phi);
+           fj::PseudoJet emitted_mom(em_px,em_py,0.5*(em_pplus-em_pminus),
+                                                 0.5*(em_pplus+em_pminus));
+           input_jets.push_back(emitted_mom);
+//           cout  << "emitted " << emitted_mom.perp() << " " << 
+//                   emitted_mom.rap() << " " << emitted_mom.phi_std() << endl;
+          // decrease the hard_pt by the emitted amount (so that sum
+           // is the hard_pt in input
+          hardpt -= emitted_pt;
+      }
     }
 
     if ( hard_pt > 0 ) {
       // input the hard jet
       fj::PseudoJet hard_particle(hardpt,0.0,0.0,hardpt);
-//      cout << "hard " << hard_particle.perp() << " " <<
-//               hard_particle.rap() << " " << hard_particle.phi() << endl;
-//    fj::PseudoJet
-//      hard_particle(hard_pt/sqrt(3.),hard_pt/sqrt(3.),hard_pt/sqrt(3.),hard_pt);
       hard_particle.set_user_index(2);
       input_jets.push_back(hard_particle);
-      fj::PseudoJet hard_particle2(-hardpt,0.0,0.0,hardpt);
-//    fj::PseudoJet 
-//      hard_particle2(-hard_pt/sqrt(3.),-hard_pt/sqrt(3.),-hard_pt/sqrt(3.),hard_pt);
-      hard_particle2.set_user_index(2);
-      input_jets.push_back(hard_particle2);
+      if ( nhard >= 2 ) {
+        fj::PseudoJet hard_particle2(-hardpt,0.0,0.0,hardpt);
+        hard_particle2.set_user_index(2);
+        input_jets.push_back(hard_particle2);
+      } 
     }
     
     double etamin = -ghost_etamax, etamax = ghost_etamax;
@@ -193,7 +211,7 @@ int main (int argc, char ** argv) {
 	double normarea = clust.area(output_jets[j])/(fj::pi*pow2(ktR));
 	// loop over constituents, look for hard particle
 	//cout << " hard_found " << hard_found << endl;
-	if ( hard_found < 2 ) {
+	if ( hard_found < nhard ) {
 	  //cout << "j " << j << endl;
 	  vector<fj::PseudoJet> constits = clust.constituents(output_jets[j]);
           //normarea = float(constits.size())/nsoft*fj::twopi*(etamax-etamin)/(fj::pi*pow2(ktR));
@@ -205,15 +223,17 @@ int main (int argc, char ** argv) {
 	}
 
 	if ( hard ) {
-	  average_area_hard += normarea; 
-	  average_ar2_hard  += pow2(normarea);
-	  hardareahist.add_entry(normarea);
+	  average_area_hard += normarea*weight; 
+	  average_ar2_hard  += pow2(normarea)*weight;
+	  hardareahist.add_entry(normarea,weight);
 	  nhardjets++; 
+	  tot_weight += weight;
+	  if ( i < 10 ) {cout << "tot weight " << tot_weight << endl;}
 	  hard = false;
     
           // study pt of hard jet
-	  av_pt += output_jets[j].perp();
-	  av_pt2 += output_jets[j].perp()*output_jets[j].perp();
+	  av_pt += output_jets[j].perp()*weight;
+	  av_pt2 += output_jets[j].perp()*output_jets[j].perp()*weight;
           
 	  // perform subtraction on hard jets
           double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
@@ -226,10 +246,10 @@ int main (int argc, char ** argv) {
 
 	  double sub_pt_4vec = sub_4vec.perp();
 	  double sub_pt = sub_pt_4vec;
-	  av_sub_pt += sub_pt;
-	  av_sub_pt2 += sub_pt*sub_pt;
-	  hardptdist.add_entry(sub_pt);
-	  ptdist.add_entry(output_jets[j].perp());
+	  av_sub_pt += sub_pt*weight;
+	  av_sub_pt2 += sub_pt*sub_pt*weight;
+	  hardptdist.add_entry(sub_pt,weight);
+	  ptdist.add_entry(output_jets[j].perp(),weight);
 	  if ( i < 10 ) { 
   	    cout << "median pt per unit area " << median_pt << endl;
             cout << hard_pt << " " << output_jets[j].perp() << " " <<  sub_pt << endl;  
@@ -278,19 +298,22 @@ int main (int argc, char ** argv) {
     (*ostr) << "# av of squares " <<  average_ar2_soft/ nsoftjets << endl;
     (*ostr) << "# hard jets = " << nhardjets << endl;
     (*ostr) << "# soft jets = " << nsoftjets << endl;
-    (*ostr) << "# average area hard = " << average_area_hard / nhardjets << 
-     " +- " <<sqrt((average_ar2_hard/nhardjets-pow2(average_area_hard/nhardjets))/nhardjets) << endl;
+    (*ostr) << "# total weight = " << tot_weight << endl;
+//    (*ostr) << "# average area hard = " << average_area_hard / nhardjets << 
+//     " +- " <<sqrt((average_ar2_hard/nhardjets-pow2(average_area_hard/nhardjets))/nhardjets) << endl;
+    (*ostr) << "# average area hard = " << average_area_hard / tot_weight << 
+     " +- "  <<sqrt((average_ar2_hard/tot_weight-pow2(average_area_hard/tot_weight))/tot_weight) << endl;
     (*ostr) << "# average area soft = " << average_area_soft/nsoftjets  << 
      " +- " <<  sqrt((average_ar2_soft/nsoftjets-pow2(average_area_soft/nsoftjets))/nsoftjets) << endl;
     (*ostr) << "# correct av. area hard (?) = " <<  (average_ar2_soft/nsoftjets)/(average_area_soft/nsoftjets) << endl;
 
-    (*ostr) << "# average pt = " << av_pt/nhardjets << 
-     " +- " <<  sqrt((av_pt2/nhardjets-pow2(av_pt/nhardjets))/nhardjets) << endl;
-    (*ostr) << "# average subtracted pt = " << av_sub_pt/nhardjets << 
-     " +- " <<  sqrt((av_sub_pt2/nhardjets-pow2(av_sub_pt/nhardjets))/nhardjets) << endl;
+    (*ostr) << "# average pt = " << av_pt/tot_weight << 
+     " +- " <<  sqrt((av_pt2/tot_weight-pow2(av_pt/tot_weight))/tot_weight) << endl;
+    (*ostr) << "# average subtracted pt = " << av_sub_pt/tot_weight << 
+     " +- " <<  sqrt((av_sub_pt2/tot_weight-pow2(av_sub_pt/tot_weight))/tot_weight) << endl;
 
-    if ( hist ) { 
-      double rescale = 1.0 / (hardareahist.binsize() * nhardjets);
+    if ( hist ) {
+      double rescale = 1.0 / (hardareahist.binsize() *  hardareahist.total_weight());
       double softrescale = 1.0 / (softareahist.binsize() * nsoftjets);
       for (unsigned i = 0; i < hardareahist.size(); i++) {
         (*ostr) << hardareahist.binmid(i) 
@@ -303,7 +326,7 @@ int main (int argc, char ** argv) {
 
 
       (*ostr) << "\n\n" << endl;
-      double rescalept = 1.0 / (hardptdist.binsize() * nhardjets);
+      double rescalept = 1.0 / (hardptdist.binsize() * hardareahist.total_weight());
       (*ostr) << "# Subtracted pt" << endl;
       for (unsigned i = 0; i < hardptdist.size(); i++) {
         (*ostr) << hardptdist.binmid(i) 
@@ -314,7 +337,7 @@ int main (int argc, char ** argv) {
 
 
       (*ostr) << "\n\n" << endl;
-      rescalept = 1.0 / (ptdist.binsize() * nhardjets);
+      rescalept = 1.0 / (ptdist.binsize() * hardareahist.total_weight());
       (*ostr) << "# Reconstructed pt" << endl;
       for (unsigned i = 0; i < ptdist.size(); i++) {
         (*ostr) << ptdist.binmid(i) 
