@@ -80,6 +80,7 @@
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
 #include "CSHisto.hh"
+#include "SimpleHist.hh"
 
 
 // for getting cone algorithm from CDF
@@ -106,7 +107,7 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
                        fj::JetDefinition jet_def,
                        fj::ActiveAreaSpec active_area_spec,
 		       CSHisto & , CSHisto & , CSHisto &  , CSHisto & , 
-		       CSHisto &);
+		       CSHisto &, SimpleHist &);
 
 // enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
@@ -193,6 +194,8 @@ int main (int argc, char ** argv) {
   CSHisto inclpt_fcrp_xcl(min_bin, max_bin, nbins);
   CSHisto hard_area(0.0, 2.0, 100);
   CSHisto full_area(0.0, 2.0, 100);
+  SimpleHist area_vs_pt_hard(0.,200.,20);
+  SimpleHist area_vs_pt_full(area_vs_pt_hard);
 
 
   for (int iev = 0; iev < nev; iev++) {
@@ -202,7 +205,7 @@ int main (int argc, char ** argv) {
     // read in the event 
     read_event(input, etamax, hydjet, massless, discard_below_pt, hard_event, full_event); 
       
-    //cout << "Event sizes: "<<hard_event.size()<<" "<<full_event.size()<<endl;
+    cout << "Event sizes: "<<hard_event.size()<<" "<<full_event.size()<<endl;
 
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
@@ -211,7 +214,8 @@ int main (int argc, char ** argv) {
     // just the hard event
     fill_inclpt_ktalg(hard_event, jet_def, active_area_spec,
                       inclpt_hard, inclpt_hcor, 
-		      inclpt_hcrp, inclpt_hcrp_xcl, hard_area);
+		      inclpt_hcrp, inclpt_hcrp_xcl, hard_area,
+		      area_vs_pt_hard);
 
 
     // fill histograms with inclusive jet cross sections for
@@ -219,7 +223,8 @@ int main (int argc, char ** argv) {
     if (full_event.size() != hard_event.size()) {
       fill_inclpt_ktalg(full_event, jet_def, active_area_spec,
                         inclpt_full, inclpt_fcor, 
-			inclpt_fcrp, inclpt_fcrp_xcl, full_area);
+			inclpt_fcrp, inclpt_fcrp_xcl, full_area,
+			area_vs_pt_full);
     }
 
     // limit the amount of information that is output 
@@ -282,6 +287,22 @@ int main (int argc, char ** argv) {
       avg_full /= full_area.total_weight();
       output << "# Average hard = " << avg_hard << endl;
       output << "# Average full = " << avg_full << endl;
+
+
+      // print out area_vs_pt histograms.
+      output << "\n\n" << endl;
+      output << "# Area vs pt of jets\n"
+             << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3)  av-area-hard(4) av-area-full(5)\n"
+             << endl;
+      for (unsigned i = 0; i < area_vs_pt_hard.size(); i++) {
+	output << area_vs_pt_hard.binlo(i) <<" "
+               << area_vs_pt_hard.binmid(i) <<" "
+               << area_vs_pt_hard.binhi(i) <<" " 
+               << area_vs_pt_hard.average(i) <<" " 	       
+	       << endl;
+
+      }
+
       
     }
   } // iev
@@ -300,7 +321,8 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
                        CSHisto & inclpt_corrected,
                        CSHisto & inclpt_corrected_withrap, 
                        CSHisto & inclpt_corrected_withrap_xcl,
-		       CSHisto & area_hist) {
+		       CSHisto & area_hist,
+		       SimpleHist & area_vs_pt) {
 
   // sometimes (with the -discard flag) it happens that you discard
   // _all_ particles in the event. In such a case don't even think of
@@ -339,7 +361,9 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
       double pt   = jets[i].perp();
       double rap  = jets[i].rap();
       double area = clust.area(jets[i]);
-      area_hist.fill(area/fj::pi/pow2(jet_def.R()));
+      double area_over_piRsq = area/fj::pi/pow2(jet_def.R());
+      area_hist.fill(area_over_piRsq);
+      area_vs_pt.add_entry(pt,area_over_piRsq);
       inclpt_corrected.fill(pt- median_pt_per_area*area);
       inclpt_corrected_withrap.fill(pt-area*(a+b*rap*rap));
       inclpt_corrected_withrap_xcl.fill(pt-area*(a_xcl+b_xcl*rap*rap));

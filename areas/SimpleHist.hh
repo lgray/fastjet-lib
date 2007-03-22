@@ -6,9 +6,11 @@ class SimpleHist {
 public:
   SimpleHist() {};
   SimpleHist(double minv, double maxv, unsigned int n): 
-    _minv(minv), _maxv(maxv), _dv((maxv-minv)/n), _weights(n+1) {
+    _minv(minv), _maxv(maxv), _dv((maxv-minv)/n), _weights(n+1), _entries(n+1){
     _weights = 0.0;
+    _entries = 0;
     _have_total = false;
+    _have_total_entries = false;
   };
 
   // declare (or redeclare) the histogram
@@ -16,7 +18,10 @@ public:
     _minv = minv; _maxv = maxv; _dv = (maxv-minv)/n; 
     _weights.resize(n+1);
     _weights = 0.0;
+    _entries.resize(n+1);
+    _entries = 0;
     _have_total = false;
+    _have_total_entries = false;
   }
 
   double min() const {return _minv;};
@@ -33,11 +38,23 @@ public:
   double & outflow() {return _weights[size()];};
   const double & outflow() const {return _weights[size()];};
 
+
+  /// different operator for the entries
+  int & operator()(int i) {_have_total_entries = false; return _entries[i];};
+  const int & operator()(int i) const {return _entries[i];};
+  
+  /// returns the entries in the outflow bin
+  int & outflow_entries() {return _entries[size()];};
+  const int & outflow_entries() const {return _entries[size()];};
+
   double binlo (int i) const {return i*_dv + _minv;};
   double binhi (int i) const {return (i+1)*_dv + _minv;};
   double binmid(int i) const {return (i+0.5)*_dv + _minv;};
   double binsize()     const {return _dv;};
 
+  /// return average in each bin = _weights[i]/+entries[i]
+  const double average (int i) const {return _weights[i]/float(_entries[i]); };
+  
   unsigned int bin(double v) const {
     if (v >= _minv && v < _maxv) {
       int i = int((v-_minv)/_dv); 
@@ -58,6 +75,17 @@ public:
     return _total_weight;
   }
 
+  /// return the total number of entries in the histogram (inefficient)...
+  int total_entries() const {
+    if (!_have_total_entries) {
+      _total_entries = 0;
+      for (unsigned i = 0; i < _entries.size(); i++) {
+        _total_entries += _entries[i];}
+      _have_total_entries = true;
+    }
+    return _total_entries;
+  }
+
   void add_entry(double v, double weight = 1.0) {
     //if (v >= _minv && v < _maxv) {
     //  int i = int((v-_minv)/_dv); 
@@ -65,6 +93,8 @@ public:
     //}
     _have_total = false;
     _weights[bin(v)] += weight;
+    _have_total_entries = false;
+    _entries[bin(v)]++;
   };
 
   // Operations with constants ---------------------------------------
@@ -108,9 +138,12 @@ public:
 private:
   double _minv, _maxv, _dv;
   std::valarray<double> _weights;
+  std::valarray<int> _entries;
   std::string _name;
   mutable double _total_weight;
+  mutable int    _total_entries;
   mutable bool   _have_total;
+  mutable bool   _have_total_entries;
 };
 
 
