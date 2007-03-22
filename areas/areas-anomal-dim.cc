@@ -116,6 +116,7 @@ int main (int argc, char ** argv) {
   double av_sub_pt = 0.0, av_sub_pt2 = 0.0;
   double av_pt = 0.0, av_pt2 = 0.0;
   double tot_weight = 0.0;
+  double tot_neg_weight;
   double alphas = 0.1;
   double ca = 3.0;
   double cf = 4.0/3.0;
@@ -137,8 +138,10 @@ int main (int argc, char ** argv) {
        double emitted_dist = ktR*2.*rand()/RAND_MAX;
        weight = coeff*emitted_pt/emitted_dist;
        if ( emitted_pt < ptlim || emitted_dist < distlim ) {
-           weight = 1.0 -  coeff*log(hard_pt/ptlim)*(1.0/distlim - 0.5/ktR);
-           if ( weight < 0. ) {cout << " !!!! NEGATIVE WEIGHT !!!! " << weight << endl;}
+           weight = 1.0 -  coeff*log(hard_pt/ptlim)*log(2.*ktR/distlim);
+           if ( weight < 0. ) { tot_neg_weight += weight; 
+	                        cout << " !!!! NEGATIVE WEIGHT !!!! " << weight << endl;
+			      }
            if ( i < 10 ) {cout << emitted_dist << " " << emitted_pt << endl;
 	                  cout << "weight " << weight << endl;}
        } else {
@@ -280,6 +283,7 @@ int main (int argc, char ** argv) {
     (*ostr) << "# " << cmdline.command_line() << endl;
     (*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
     (*ostr) << "# hard_pt      = " << hard_pt    << endl;
+    (*ostr) << "# nhard        = " << nhard    << endl;
     (*ostr) << "# soft_pt      = " << soft_pt    << endl;
     (*ostr) << "# nsoft        = " << nsoft    << endl;
     (*ostr) << "# randomness   = " << randomness   << endl;
@@ -299,6 +303,7 @@ int main (int argc, char ** argv) {
     (*ostr) << "# hard jets = " << nhardjets << endl;
     (*ostr) << "# soft jets = " << nsoftjets << endl;
     (*ostr) << "# total weight = " << tot_weight << endl;
+    (*ostr) << "# total negative weight = " << tot_neg_weight << endl;
 //    (*ostr) << "# average area hard = " << average_area_hard / nhardjets << 
 //     " +- " <<sqrt((average_ar2_hard/nhardjets-pow2(average_area_hard/nhardjets))/nhardjets) << endl;
     (*ostr) << "# average area hard = " << average_area_hard / tot_weight << 
@@ -326,7 +331,7 @@ int main (int argc, char ** argv) {
 
 
       (*ostr) << "\n\n" << endl;
-      double rescalept = 1.0 / (hardptdist.binsize() * hardareahist.total_weight());
+      double rescalept = 1.0 / (hardptdist.binsize() * hardptdist.total_weight());
       (*ostr) << "# Subtracted pt" << endl;
       for (unsigned i = 0; i < hardptdist.size(); i++) {
         (*ostr) << hardptdist.binmid(i) 
@@ -337,7 +342,7 @@ int main (int argc, char ** argv) {
 
 
       (*ostr) << "\n\n" << endl;
-      rescalept = 1.0 / (ptdist.binsize() * hardareahist.total_weight());
+      rescalept = 1.0 / (ptdist.binsize() * ptdist.total_weight());
       (*ostr) << "# Reconstructed pt" << endl;
       for (unsigned i = 0; i < ptdist.size(); i++) {
         (*ostr) << ptdist.binmid(i) 
