@@ -194,7 +194,7 @@ int main (int argc, char ** argv) {
   CSHisto inclpt_fcrp_xcl(min_bin, max_bin, nbins);
   CSHisto hard_area(0.0, 2.0, 100);
   CSHisto full_area(0.0, 2.0, 100);
-  SimpleHist area_vs_pt_hard(0.,200.,20);
+  SimpleHist area_vs_pt_hard(0.,1000.,20);
   SimpleHist area_vs_pt_full(area_vs_pt_hard);
 
 
@@ -204,8 +204,10 @@ int main (int argc, char ** argv) {
     
     // read in the event 
     read_event(input, etamax, hydjet, massless, discard_below_pt, hard_event, full_event); 
-      
-    cout << "Event sizes: "<<hard_event.size()<<" "<<full_event.size()<<endl;
+    
+    if ( iev < 10 ) {
+       cout << "Event sizes: "<<hard_event.size()<<" "<<full_event.size()<<endl;
+    }
 
     // dumb it down if need be...
     if (nopileup)  full_event = hard_event;
@@ -270,7 +272,7 @@ int main (int argc, char ** argv) {
       // print out area histograms.
       output << "\n\n" << endl;
       output << "# Areas distribution\n"
-             << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3) hard(4) full(5)\n"
+             << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3) hard(4) full(5)"
              << endl;
       double avg_hard = 0; 
       double avg_full = 0;
@@ -292,13 +294,15 @@ int main (int argc, char ** argv) {
       // print out area_vs_pt histograms.
       output << "\n\n" << endl;
       output << "# Area vs pt of jets\n"
-             << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3)  av-area-hard(4) av-area-full(5)\n"
+             << "# bin-lower-edge(1) bin-centre(2) bin-upper-edge(3) av-area-hard(4) av-area-hard-error(5) area-hard-entries(6)"
              << endl;
       for (unsigned i = 0; i < area_vs_pt_hard.size(); i++) {
 	output << area_vs_pt_hard.binlo(i) <<" "
                << area_vs_pt_hard.binmid(i) <<" "
                << area_vs_pt_hard.binhi(i) <<" " 
                << area_vs_pt_hard.average(i) <<" " 	       
+               << area_vs_pt_hard.error(i) <<" " 	       
+               << area_vs_pt_hard.entries_in_bin(i) <<" " 	       
 	       << endl;
 
       }
