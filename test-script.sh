@@ -65,7 +65,8 @@ popd
 # try out some plugin examples
 pushd plugins/usage_examples
 if [ $CLEAN ]; then make clean || exit -1; fi
-make $MAKEARGS cdfmidpoint_example many_algs_example pxcone_example siscone_example || exit -1
+#make $MAKEARGS cdfmidpoint_example many_algs_example pxcone_example siscone_example || exit -1
+make $MAKEARGS cdfmidpoint_example many_algs_example siscone_example || exit -1
 (./many_algs_example < data/single-event.dat | tee -a $OUTPUT) || exit -1
 popd
 
