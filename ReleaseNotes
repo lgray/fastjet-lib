@@ -2,6 +2,33 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Summary of main changes from v2.0.0 to v2.1.0
+=============================================
+
+- added plugin structure for external jet finders.
+
+- included plugins for SISCone, CDFMidPoint, CDFJetClu, PxCone (with
+  extensions for MidPoint and bug fixes for PxCone relative to public
+  codes).
+
+- introduced option of control over recombination scheme, with a
+  RecombinationScheme enum, which applies also to area_4vector.
+
+- added description() member function to JetDefinition class, so 
+  that you can get a (string) summary of what you're running!
+
+- changed the default number of repeats in ActiveAreaSpec to 1 (which
+  is sufficient for most purposes).
+
+For further details, see the changes listed in detail below.
+
+======================================================================
+Changes from v2.1.0b4 to v2.1.0
+===============================
+
+- corrected bug in test-script.sh
+
+======================================================================
 Changes from v2.1.0b3 to v2.1.0b4
 =================================
 
@@ -15,14 +42,12 @@ FastJet modifications
 Plugin modifications
 --------------------
 
-- addapted plugin to accomodate new scale for use in the SISCone
+- adapted plugin to accomodate new scale for use in the SISCone
   split-merge (pttilde), with a corresponding change of interface.
 
   Changed default number of passes for SISCone to 0.
   
 - Added the pttilde scale choice to the CDF plugin.
-
-
 
 
 

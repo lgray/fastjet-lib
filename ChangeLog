@@ -1,3 +1,8 @@
+2007-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + MC
+
+	* test-script.sh
+	  corrected bug related to G77LIBDIR
+
 2007-03-16  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* example/data/cone-midpoint-problem-ev1.dat

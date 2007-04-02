@@ -1,6 +1,18 @@
 Installation instructions for fastjet
 -------------------------------------
 
+------------
+Quick method
+------------
+
+Run the following to build FastJet and its plugins and to test them.
+
+./test-script.sh
+
+------------------
+Longer description
+------------------
+
 As a first step the user should decide whether or not they want to
 have access to the N ln N algorithms for the kt algorithm, based on
 the Computational Geometry Algorithms Library (CGAL).
@@ -28,8 +40,8 @@ Then in the src/ directory do
 
 which places the fastjet library in lib/. 
 
-To build the cone jet-finder plugins, you should type "make" in each
-of the plugin/PxCone and plugin/CDFCones directories.
+To build the cone jet-finder plugins, you should type "make" in the 
+plugin/ directory.
 
 To run the example program cd to the example directory and do
 
@@ -40,7 +52,7 @@ The output should be
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #---------------------------------------------------------------------
-#                       FastJet release 2.1 
+#                       FastJet release 2.1.0
 #            Written by Matteo Cacciari and Gavin Salam
 #            http://www.lpthe.jussieu.fr/~salam/fastjet
 #
