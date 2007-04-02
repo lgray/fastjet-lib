@@ -78,31 +78,6 @@ Printing inclusive jets with pt > 5 GeV
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 # Symp. Discr. Alg, p.472 (2002) as well as CGAL: http://www.cgal.org/.
 #-----------------------------------------------------------------------
-
-  *********** PXCONE: Cone Jet-finder ***********
-     Written by Luis Del Pozo of OPAL
-     Modified for eta-phi by Mike Seymour
-     Includes bug fixes by Wobisch, Salam
-    Cone Size R =  0.70   Radians
-    Min Jet energy Epsilon =  5.00  GeV
-    Overlap fraction parameter =  0.50
-     PXCONE is not a supported product and is
-     is provided for comparative purposes only
-  ***********************************************
-
-Ran PxCone jet algorithm with cone_radius = 0.7, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0 (NB: non-standard version of PxCone, containing small bug fixes by Gavin Salam)
-Printing inclusive jets with pt > 5 GeV
----------------------------------------
-jet #        rapidity             phi              pt  n constituents
-    0     -0.86720060      2.90514996    983.52166328       34
-    1      0.22063360      6.03064288    901.07011563       32
-    2     -1.17242666      6.11484953     74.18667950       38
-    3      0.39761584      0.62576016     14.62451610       17
-    4     -2.29795205      1.11790085     12.14285478       14
-    5     -1.69873765      4.01961767      7.75067955        7
-
-212 particles unclustered
-
 Ran CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------

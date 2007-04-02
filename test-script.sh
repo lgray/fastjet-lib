@@ -4,19 +4,20 @@
 # Usage
 # ./test-script.sh [-c] [-j2]
 
-# set G77LIBDIR if the user has not set it in its environment
-if [[ ! $G77LIBDIR ]] ; then
-    dir=`locate libg2c.a | head -1`
-    dir=`dirname $dir` 
-    echo Setting G77LIBDIR to $dir
-    echo Press return to accept, or input a different directory
-    read newdir
-    if [[ $newdir == "" ]]; then
-        export G77LIBDIR=$dir
-    else
-        export G77LIBDIR=$newdir
-    fi
-fi
+# following was designed for when pxcone was part of test script.
+# # set G77LIBDIR if the user has not set it in its environment
+# if [[ ! $G77LIBDIR ]] ; then
+#     dir=`locate libg2c.a | head -1`
+#     dir=`dirname $dir` 
+#     echo Setting G77LIBDIR to $dir
+#     echo Press return to accept, or input a different directory
+#     read newdir
+#     if [[ $newdir == "" ]]; then
+#         export G77LIBDIR=$dir
+#     else
+#         export G77LIBDIR=$newdir
+#     fi
+# fi
 
 # set CLEAN to "empty string" in order NOT to clean
 CLEAN=""

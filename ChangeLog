@@ -1,7 +1,12 @@
 2007-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + MC
 
+	* plugins/usage_examples/many_algs_example.cc: 
+	  removed PxCone by default (compile with -DUSEPXCONE get it back
+	  and adapt Makefile too).
+	
 	* test-script.sh
-	  corrected bug related to G77LIBDIR
+	  corrected bug related to G77LIBDIR; removed fortran related
+	  stuff (pxcone now out by default)
 
 2007-03-16  Gavin SALAM  <salam@lpthe.jussieu.fr>
 

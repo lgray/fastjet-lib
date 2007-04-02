@@ -16,8 +16,11 @@ INCLUDE += -I../PxCone
 INCLUDE += -I../CDFCones
 INCLUDE += -I../SISCone
 
+# many_algs_example: many_algs_example.o run_jet_finder.o
+# 	$(CXX) $(CXXFLAGS) -o many_algs_example many_algs_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin -L../SISCone -lSISConePlugin -L../PxCone -lPxConePlugin $(F77LIB)
+# 
 many_algs_example: many_algs_example.o run_jet_finder.o
-	$(CXX) $(CXXFLAGS) -o many_algs_example many_algs_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin -L../SISCone -lSISConePlugin -L../PxCone -lPxConePlugin $(F77LIB)
+	$(CXX) $(CXXFLAGS) -o many_algs_example many_algs_example.o run_jet_finder.o $(LDFLAGS) -L../CDFCones -lCDFConesPlugin -L../SISCone -lSISConePlugin 
 
 
 pxcone_example: pxcone_example.o run_jet_finder.o

@@ -1,6 +1,9 @@
 # makefile to speed up "making" of plugins
 
-all: pxcone cdfcones siscone
+all: cdfcones siscone
+
+# pxcone left out by default because it needs fortran compiler & libs.
+#all: pxcone cdfcones siscone
 
 pxcone:
 	cd PxCone && $(MAKE)

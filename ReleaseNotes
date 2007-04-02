@@ -28,6 +28,10 @@ Changes from v2.1.0b4 to v2.1.0
 
 - corrected bug in test-script.sh
 
+- removed PxCone from default tests and from 
+  plugins/usage_examples/many_algs_example.cc (to avoid fortran
+  compilation issues).
+
 ======================================================================
 Changes from v2.1.0b3 to v2.1.0b4
 =================================

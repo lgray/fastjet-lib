@@ -40,8 +40,13 @@ Then in the src/ directory do
 
 which places the fastjet library in lib/. 
 
-To build the cone jet-finder plugins, you should type "make" in the 
-plugin/ directory.
+To build the cone jet-finder plugins, you should go to the plugin
+directory and type
+  
+  make
+  make pxcone      // OPTIONAL --  if you want fortran pxcone plugin
+                   // to be compiled too -- make sure you also set
+                   // G77LIBDIR in the main Makefile
 
 To run the example program cd to the example directory and do
 

@@ -44,6 +44,10 @@
 #include<iostream>
 #include "fastjet/PseudoJet.hh"
 
+// uncomment the following line if you have pxcone and want to use it
+// (and make sure you include the libraries etc in the Makefile).
+//#define USEPXCONE
+
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -62,13 +66,21 @@ int main(int argc, char** argv) {
   //double jet_radius = 1.0;
   double overlap_threshold = 0.5;
 
+  vector<fastjet::JetDefinition>::const_iterator 
+    jet_def_begin = jet_defs.begin();
 
-  // set up a pxcone jet definition
+  // set up a pxcone jet definition (if wanted -- requires f77, and you
+  // should compile the pxcone plugin (not there by default))
+#ifdef USEPXCONE
   double min_jet_energy = 5.0;
   bool   E_scheme_jets = false;
   plugins[0] = new fastjet::PxConePlugin (jet_radius, min_jet_energy, 
                                          overlap_threshold, E_scheme_jets);
   jet_defs[0] = fastjet::JetDefinition(plugins[0]);
+#else
+  plugins[0] = NULL;
+  jet_def_begin++; // skip first jet def
+#endif // USEPXCONE
 
 
 
@@ -97,13 +109,13 @@ int main(int argc, char** argv) {
 
 
   // call the example jet-finding routine with each of jet definitions
-  for (vector<fastjet::JetDefinition>::const_iterator jd_it = jet_defs.begin();
+  for (vector<fastjet::JetDefinition>::const_iterator jd_it = jet_def_begin;
        jd_it != jet_defs.end(); jd_it++) {
     run_jet_finder(input_particles, *jd_it);
   }
 
   // clean up plugin memory.
-  delete plugins[0];
+  if (plugins[0] != NULL) delete plugins[0]; // pxcone may not be defined
   delete plugins[1];
   delete plugins[2];
 }
