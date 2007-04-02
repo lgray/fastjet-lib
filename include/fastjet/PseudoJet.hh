@@ -112,10 +112,10 @@ class PseudoJet {
 
 
   /// transform this jet (given in the rest frame of prest) into a jet
-  /// in the lab frame
+  /// in the lab frame [NOT FULLY TESTED]
   PseudoJet & boost(const PseudoJet & prest);
   /// transform this jet (given in lab) into a jet in the rest
-  /// frame of ps
+  /// frame of ps  [NOT FULLY TESTED]
   PseudoJet & unboost(const PseudoJet & prest);
 
   /// return the cluster_hist_index, intended to be used by clustering
