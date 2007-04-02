@@ -8,7 +8,6 @@
 # plugins. Please cite hep-ph/0512210 if you use this code.             
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# Symp. Discr. Alg, p.472 (2002) as well as CGAL: http://www.cgal.org/.
 #-----------------------------------------------------------------------
 Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
 Strategy adopted by FastJet was N2Tiled
@@ -49,7 +48,6 @@ jet #        rapidity             phi              pt  n constituents
 # plugins. Please cite hep-ph/0512210 if you use this code.             
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# Symp. Discr. Alg, p.472 (2002) as well as CGAL: http://www.cgal.org/.
 #-----------------------------------------------------------------------
 Strategy adopted by FastJet was N2MinHeapTiled
 
@@ -76,7 +74,6 @@ Printing inclusive jets with pt > 5 GeV
 # plugins. Please cite hep-ph/0512210 if you use this code.             
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# Symp. Discr. Alg, p.472 (2002) as well as CGAL: http://www.cgal.org/.
 #-----------------------------------------------------------------------
 Ran CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV

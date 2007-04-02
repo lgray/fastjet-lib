@@ -70,8 +70,9 @@ make $MAKEARGS cdfmidpoint_example many_algs_example siscone_example || exit -1
 (./many_algs_example < data/single-event.dat | tee -a $OUTPUT) || exit -1
 popd
 
-# mv the output file to a "decent" place
-mv $OUTPUT test-script-output.txt
+# mv the output file to a "decent" place (remove 
+#mv $OUTPUT  test-script-output.txt
+grep -v 'Symp. Discr. Alg' $OUTPUT > test-script-output.txt
 echo 
 echo -----------------------------------------------------------
 echo "Comparing output from these runs (test-script-output.txt) "
