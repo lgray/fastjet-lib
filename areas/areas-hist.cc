@@ -46,7 +46,7 @@ int main (int argc, char ** argv) {
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   int    n            = cmdline.int_val("-n",20);
   int repeat = cmdline.value("-repeat", 1);
-  double precision_limit = cmdline.value("-prec",1e-4);
+  double precision_limit = cmdline.value("-prec",0.);
   
   double anchor_pt = cmdline.present("-anchor") ? 100.0 : 0.0;
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(n/10,1000)));
@@ -151,6 +151,8 @@ int main (int argc, char ** argv) {
        (*ostr) << "# number of events = " << i+1 << endl;
    
        (*ostr) << "# average area = " << average_area/njets << " +- " << av_ar2 << endl;
+       (*ostr) << "# <A^2>        = " << average_ar2/njets << endl;
+       (*ostr) << "# sqrt(<A^2>-<A>^2)  = " << av_ar2*sqrt(njets) << endl;
        double rescale = 1.0 / (areahist.binsize() * njets);
        for (unsigned i = 0; i < areahist.size(); i++) {
            (*ostr) << areahist.binmid(i) << " " << areahist[i]*rescale 

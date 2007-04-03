@@ -194,7 +194,7 @@ int main (int argc, char ** argv) {
   CSHisto inclpt_fcrp_xcl(min_bin, max_bin, nbins);
   CSHisto hard_area(0.0, 2.0, 100);
   CSHisto full_area(0.0, 2.0, 100);
-  SimpleHist area_vs_pt_hard(0.,1000.,20);
+  SimpleHist area_vs_pt_hard(0.,2000.,50);
   SimpleHist area_vs_pt_full(area_vs_pt_hard);
 
 
@@ -349,7 +349,7 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
   //cout << "a_xcl,b_xcl =" << a_xcl <<" " <<b_xcl<<endl;
 
 
-  vector<fj::PseudoJet> jets = clust.inclusive_jets();
+  vector<fj::PseudoJet> jets = sorted_by_pt(clust.inclusive_jets());
 
   for (unsigned i = 0; i < jets.size(); i++) {
     if (abs(jets[i].rap()) < active_area_spec.ghost_etamax() - 1.0) 
@@ -367,13 +367,20 @@ void fill_inclpt_ktalg(const vector<fj::PseudoJet> & event,
       double area = clust.area(jets[i]);
       double area_over_piRsq = area/fj::pi/pow2(jet_def.R());
       area_hist.fill(area_over_piRsq);
-      area_vs_pt.add_entry(pt,area_over_piRsq);
       inclpt_corrected.fill(pt- median_pt_per_area*area);
       inclpt_corrected_withrap.fill(pt-area*(a+b*rap*rap));
       inclpt_corrected_withrap_xcl.fill(pt-area*(a_xcl+b_xcl*rap*rap));
     }
 
   }
+  
+  // check area vs pt of two hardest jets
+  for (unsigned i = 0; i < 1; i++) {
+      double pt   = jets[i].perp();
+      double area = clust.area(jets[i]);
+      double area_over_piRsq = area/fj::pi/pow2(jet_def.R());
+      area_vs_pt.add_entry(pt,area_over_piRsq);
+  }  
 
   //for (unsigned i = 0; i < corrected_jets.size(); i++) {
   //  if (abs(corrected_jets[i].rap()) < ghost_etamax - 1.0) 
