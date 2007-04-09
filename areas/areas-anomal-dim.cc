@@ -271,7 +271,7 @@ int main (int argc, char ** argv) {
             for (unsigned m = 0; m < output_jets_rad.size(); m++) {
   	      vector<fj::PseudoJet> constits = clust_rad->constituents(output_jets_rad[m]);
  	      for (unsigned k = 0; k < constits.size(); k++) {
-	       if (constits[k].user_index() == 2) { cout  << "FOUND, m = " << m << endl; ihard = m; break;} 
+	       if (constits[k].user_index() == 2) { if ( i < 10 ) { cout << "FOUND, m = " << m << endl;}; ihard = m; break;} 
               }
 	    }   
 	    double normarea_rad = clust_rad->area(output_jets_rad[ihard])/(fj::pi*pow2(ktR));
@@ -281,9 +281,11 @@ int main (int argc, char ** argv) {
 //  	    average_area_rad +=	    weight;
 //	    cout << "WEIGHT " << weight << endl;
 //	    average_ar2_rad +=  pow2(weight);
-	    cout << "areas " << normarea_rad << " " << normarea << " "
-	         << radiated.perp() << " " 
-	         << radiated.rap() << " " << weight*(normarea_rad - normarea) << endl;
+            if ( i < 10 ) {
+  	      cout << "areas " << normarea_rad << " " << normarea << " "
+	           << radiated.perp() << " " 
+	           << radiated.rap() << " " << weight*(normarea_rad - normarea) << endl;
+	    }
 	  }
     
           // study pt of hard jet
