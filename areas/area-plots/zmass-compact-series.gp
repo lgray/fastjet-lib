@@ -37,7 +37,7 @@ replot file              u ($1+binshift):4    w fs ls 2 t  'cam, high lumi'
 
 `gnupr zmass-compact-series-02.eps col`
 
-replot file      u ($1+binshift):5    w fs ls 3 t  '{/Symbol -} correction'
+replot file      u ($1+binshift):5    w fs ls 3 t  '{/Symbol -} area correction'
 
 `gnupr zmass-compact-series-03.eps col`
 
