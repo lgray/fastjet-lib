@@ -26,16 +26,18 @@ set sty line 1 lt 1 lw 4
 set sty line 2 lt 1 lw 4 lc rgb "#00a000"
 set sty line 3 lt 1 lw 6 lc rgb "black"
 
+#file='../mass-tests/highlumi-r0.7.res'
+file='../mass-tests/camarea-highlumi-r0.7.res'
 
-plot '../mass-tests/highlumi-r0.7.res'              u ($1+binshift):2    w fs ls 1 t  'k_t, no pileup'
+plot file              u ($1+binshift):2    w fs ls 1 t  'cam, no pileup'
 
 `gnupr zmass-compact-series-01.eps col`
 
-replot '../mass-tests/highlumi-r0.7.res'              u ($1+binshift):4    w fs ls 2 t  'k_t, high lumi'
+replot file              u ($1+binshift):4    w fs ls 2 t  'cam, high lumi'
 
 `gnupr zmass-compact-series-02.eps col`
 
-replot '../mass-tests/highlumi-r0.7.res'      u ($1+binshift):5    w fs ls 3 t  '{/Symbol -} correction'
+replot file      u ($1+binshift):5    w fs ls 3 t  '{/Symbol -} correction'
 
 `gnupr zmass-compact-series-03.eps col`
 
