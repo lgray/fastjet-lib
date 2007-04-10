@@ -12,6 +12,7 @@ set key spacing 1.5
 binsize=2
 binshift=binsize*0.5
 
+set size 0.85
 
 set label 1 'R=0.7, LHC' at graph 0.9,0.4 right
 ymax=0.027
