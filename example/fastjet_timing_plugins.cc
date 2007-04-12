@@ -172,7 +172,7 @@ int main (int argc, char ** argv) {
   } else if (cmdline.present("-jetclu")) {
     double seed_threshold = 1.0;
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
-                                      ktR, overlap_threshold, seed_thshold));
+                                      ktR, overlap_threshold, seed_threshold));
   } else if (cmdline.present("-siscone")) {
     typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",1);
@@ -323,6 +323,15 @@ int main (int argc, char ** argv) {
         dynamic_cast<const fj::SISConeExtras *>(clust_seq.extras());
       cout << "most ambiguous split (difference in squared dist) = "
            << extras->most_ambiguous_split() << endl;
+      vector<fastjet::PseudoJet> stable_cones(extras->stable_cones()); 
+      stable_cones = sorted_by_rapidity(stable_cones);
+      //for (unsigned int i = 0; i < stable_cones.size(); i++) {
+      if (stable_cones[i].phi() < 5.0 && stable_cones[i].phi() > 4.0) {
+        printf("%5u %15.8f %15.8f %15.8f\n",
+               i,stable_cones[i].rap(),stable_cones[i].phi(),
+               stable_cones[i].perp() );
+      }
+      //}
     }
   } // irepeat
 
