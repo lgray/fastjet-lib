@@ -175,8 +175,9 @@ int main (int argc, char ** argv) {
                                       ktR, overlap_threshold, seed_threshold));
   } else if (cmdline.present("-siscone")) {
     typedef fj::SISConePlugin SISPlug; // for brevity
-    int npass = cmdline.value("-npass",1);
-    SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass);
+    int npass = cmdline.value("-npass",0);
+    double sisptmin = cmdline.value("-sisptmin",0.0);
+    SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass,sisptmin);
     if (cmdline.present("-sm-pt")) plugin->set_split_merge_scale(SISPlug::SM_pt);
     if (cmdline.present("-sm-mt")) plugin->set_split_merge_scale(SISPlug::SM_mt);
     if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
