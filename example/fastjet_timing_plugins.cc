@@ -325,13 +325,13 @@ int main (int argc, char ** argv) {
            << extras->most_ambiguous_split() << endl;
       vector<fastjet::PseudoJet> stable_cones(extras->stable_cones()); 
       stable_cones = sorted_by_rapidity(stable_cones);
-      //for (unsigned int i = 0; i < stable_cones.size(); i++) {
-      if (stable_cones[i].phi() < 5.0 && stable_cones[i].phi() > 4.0) {
+      for (unsigned int i = 0; i < stable_cones.size(); i++) {
+      //if (stable_cones[i].phi() < 5.0 && stable_cones[i].phi() > 4.0) {
         printf("%5u %15.8f %15.8f %15.8f\n",
                i,stable_cones[i].rap(),stable_cones[i].phi(),
                stable_cones[i].perp() );
-      }
       //}
+      }
     }
   } // irepeat
 
