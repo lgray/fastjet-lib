@@ -129,14 +129,27 @@ class ClusterSequence {
 
   /// return a vector of the particles that make up jet
   std::vector<PseudoJet> constituents (const PseudoJet & jet) const;
-  /// add on to subjet_vector the subjets of jet.
+
+
+  /// output the supplied vector of jets in a format that can be read
+  /// by an appropriate root script; the format is:
+  /// jet-n jet-px jet-py jet-pz jet-E 
+  ///   particle-n particle-rap particle-phi particle-pt
+  ///   particle-n particle-rap particle-phi particle-pt
+  ///   ...
+  /// #END
+  /// ... [i.e. above repeated]
+  void print_jets_for_root(const std::vector<PseudoJet> & jets, 
+                           std::ostream & ostr = std::cout) const;
+
+
+  /// add on to subjet_vector the subjets of jet (for internal use mainly)
   void add_constituents (const PseudoJet & jet, 
 			 std::vector<PseudoJet> & subjet_vector) const;
 
   /// return the enum value of the strategy used to cluster the event
   inline Strategy strategy_used () const {return _strategy;}
   std::string strategy_string () const;
-
 
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 

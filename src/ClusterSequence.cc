@@ -437,6 +437,34 @@ vector<PseudoJet> ClusterSequence::constituents (const PseudoJet & jet) const {
   return subjets;
 }
 
+//----------------------------------------------------------------------
+/// output the supplied vector of jets in a format that can be read
+/// by an appropriate root script; the format is:
+/// jet-n jet-px jet-py jet-pz jet-E 
+///   particle-n particle-rap particle-phi particle-pt
+///   particle-n particle-rap particle-phi particle-pt
+///   ...
+/// #END
+/// ... [i.e. above repeated]
+void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets, 
+                                          ostream & ostr) const {
+  for (unsigned i = 0; i < jets.size(); i++) {
+    ostr << i  << " "
+         << jets[i].px() << " "
+         << jets[i].py() << " "
+         << jets[i].pz() << " "
+         << jets[i].E() << endl;
+    vector<PseudoJet> cst = constituents(jets[i]);
+    for (unsigned j = 0; j < cst.size() ; j++) {
+      ostr << " " << j << " "
+           << cst[j].rap() << " "
+           << cst[j].phi() << " "
+           << cst[j].perp() << endl;
+    }
+    ostr << "#END" << endl;
+  }
+}
+
 
 //----------------------------------------------------------------------
 /// returns a vector of size n_particles() which indicates, for 

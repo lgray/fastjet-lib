@@ -90,6 +90,7 @@
 #include "fastjet/ClusterSequence.hh"
 #include<iostream>
 #include<sstream>
+#include<fstream>
 #include<valarray>
 #include<vector>
 #include <cstdlib>
@@ -142,6 +143,9 @@ int main (int argc, char ** argv) {
   double overlap_threshold = cmdline.double_val("-overlap",0.5);
   overlap_threshold = cmdline.double_val("-f",overlap_threshold); 
   double seed_threshold = cmdline.double_val("-seed",1.0);
+
+  // for printing jets to a file for reading by root
+  string rootfile = cmdline.value<string>("-root","");
 
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
@@ -277,6 +281,10 @@ int main (int argc, char ** argv) {
 	  }
 	  cout << "\n\n";
 	}
+      }
+      if (rootfile != "") {
+        ofstream ostr(rootfile.c_str());
+        clust_seq.print_jets_for_root(jets,ostr);
       }
     }
 

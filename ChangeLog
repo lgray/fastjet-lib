@@ -1,3 +1,21 @@
+2007-04-13  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* example/root/jet-plots.C: *** ADDED ***
+	  root script for plotting output from print_jets_for_root(...);
+	  see instructions at beginning for usage.
+
+	* include/fastjet/ClusterSequence.hh|cc: 
+	  added print_jets_for_root, which takes jets and outputs them in
+	  a form suitable for the root script...
+
+	* example/fastjet_timing_plugins.cc: 
+	  fixed a bug that prevented compilation and added some extra
+	  cone-related options.
+	
+-----------------------------------------------
+released 2.1.0 on 2007-04-02
+-----------------------------------------------	
+	
 2007-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + MC
 
 	* plugins/usage_examples/many_algs_example.cc: 
