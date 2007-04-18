@@ -79,6 +79,10 @@ enum JetFinder {
   /// the longitudinally invariant variant of the cambridge algorithm
   /// (aka Aachen algoithm).
   cambridge_algorithm=1,
+  /// like the k_t but with distance measures 
+  ///       dij = min(1/kti^2,1/ktj^2) Delta R_{ij}^2 / R^2
+  ///       diB = 1/kti^2
+  antikt_algorithm=2, 
   /// any plugin algorithm supplied by the user
   plugin_algorithm = 99
 };

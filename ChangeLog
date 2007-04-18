@@ -1,3 +1,15 @@
+2007-04-18  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
+
+	* include/fastjet/JetDefinition.hh: 
+	* include/fastjet/ClusterSequence.hh: 
+	* src/JetDefinition.cc: 
+	* src/ClusterSequence.cc: 
+
+          introduced the "antikt" algorithm.
+
+	* example/fastjet_timing_plugins.cc
+	  got it working with antikt
+	
 2007-04-13  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* example/root/jet-plots.C: *** ADDED ***

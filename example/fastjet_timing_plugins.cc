@@ -153,6 +153,8 @@ int main (int argc, char ** argv) {
   fj::JetDefinition jet_def;
   if (cmdline.present("-cam")) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
+  } else if (cmdline.present("-antikt")) {
+    jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, strategy);
   } else if (cmdline.present("-midpoint")) {
     typedef fj::CDFMidPointPlugin MPPlug; // for brevity
     double cone_area_fraction = 1.0;

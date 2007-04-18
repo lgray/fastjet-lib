@@ -303,8 +303,9 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       if (jet.perp2() >= dcut) {jets.push_back(jet);}
       i--;
     }
-  } else if (_jet_finder == plugin_algorithm) {
-    // for inclusive jets with a plugin algorith, we make no
+  } else if (_jet_finder == plugin_algorithm 
+             || _jet_finder == antikt_algorithm) {
+    // for inclusive jets with a plugin algorithm, we make no
     // assumptions about anything (relation of dij to momenta,
     // ordering of the dij, etc.)
     while (i >= 0) {

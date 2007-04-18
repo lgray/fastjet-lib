@@ -17,6 +17,10 @@ string JetDefinition::description() const {
     name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
 	 << R() ;
     name << " and " << recombiner()->description();
+  } else if (jet_finder() == antikt_algorithm) {
+    name << "Longitudinally invariant anti-kt algorithm with R = " 
+	 << R() ;
+    name << " and " << recombiner()->description();
   } else {
     throw Error("Unrecognized jet_finder");
   }
