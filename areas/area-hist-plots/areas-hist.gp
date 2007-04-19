@@ -4,7 +4,7 @@ set sty dat li
 set xrange [0:2]
 
 set xlabel 'A / {/Symbol p}R^2'
-set ylabel '1/N dN/dA' offset 1
+set ylabel '{/Symbol p}R^2/N dN/dA ' offset 1
 
 set yrange [0:3]
 set key spacing 1.5
