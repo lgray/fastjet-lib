@@ -152,7 +152,7 @@ int main (int argc, char ** argv) {
    
        (*ostr) << "# average area = " << average_area/njets << " +- " << av_ar2 << endl;
        (*ostr) << "# <A^2>        = " << average_ar2/njets << endl;
-       (*ostr) << "# sqrt(<A^2>-<A>^2)  = " << av_ar2*sqrt(njets) << endl;
+       (*ostr) << "# sqrt(<A^2>-<A>^2)  = " << av_ar2*sqrt(float(njets)) << endl;
        double rescale = 1.0 / (areahist.binsize() * njets);
        for (unsigned i = 0; i < areahist.size(); i++) {
            (*ostr) << areahist.binmid(i) << " " << areahist[i]*rescale 
