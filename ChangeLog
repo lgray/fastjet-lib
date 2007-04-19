@@ -1,3 +1,12 @@
+2007-04-19  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
+
+	* src/ClusterSequenceActiveArea.cc|hh: 
+          moved the check on equivalence of ghosted jets into a common
+	  member function for ij and iB recombination -- now they both use
+	  pt == ptref || E == Eref. At some point this check should be
+	  made more robust (move away from momentum and towards tags or
+	  something similar).
+	
 2007-04-18  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* include/fastjet/JetDefinition.hh: 

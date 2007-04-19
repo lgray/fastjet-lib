@@ -125,6 +125,13 @@ private:
   /// do the part of the extraction associated with the parents of pos.
   void _extract_tree_parents (int pos, valarray<bool> &, const valarray<int> &,  vector<int> &) const;
 
+  /// check if two jets have the same momentum to within the
+  /// tolerance (and if pt's are not the same we're forgiving and
+  /// look to see if the energy is the same)
+  bool _jets_have_same_perp_or_E(const PseudoJet & jet, 
+                                  const PseudoJet & refjet, 
+                                  double tolerance) const;
+
   /// since we are playing nasty games with seeds, we should warn
   /// the user a few times
   //static int _n_seed_warnings;

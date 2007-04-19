@@ -359,8 +359,6 @@ void ClusterSequenceActiveArea::_transfer_ghost_free_history(
       gs2self_hist_map[igs] = _history.size();
       // record the recombination in our own sequence
       int newjet_k; // dummy var -- not used
-      //cerr << igs << " " << gs_hist_el.parent1 << " " << gs_hist_el.parent2 << endl;
-      //cerr << gs2self_hist_map[gs_hist_el.parent1] << " " << gs2self_hist_map[gs_hist_el.parent2] << endl;
       int jet_i = _history[gs2self_hist_map[gs_hist_el.parent1]].jetp_index;
       int jet_j = _history[gs2self_hist_map[gs_hist_el.parent2]].jetp_index;
       //cerr << "recombining "<< jet_i << " and "<< jet_j << endl;
@@ -426,7 +424,7 @@ void ClusterSequenceActiveArea::_transfer_areas(
       } else {
 
 	// get next "combined-particle" index in our own history
-	// making sure we don't go beyond it's bounds (if we do
+	// making sure we don't go beyond its bounds (if we do
 	// then we're in big trouble anyway...)
 	while (++j < static_cast<int>(_history.size())) {
 	  hist_index = unique_hist_order[j];
@@ -435,24 +433,13 @@ void ClusterSequenceActiveArea::_transfer_areas(
 	// sanity check 
 	const PseudoJet & refjet = 
 	  _jets[_history[_history[hist_index].parent1].jetp_index];
-	//if (jet.perp2() != refjet.perp2()) {
-	//if (abs(jet.perp2()-refjet.perp2()) > 
-	//            tolerance*max(jet.perp2(),refjet.perp2())) {
 
         // If pt disagrees check E; if they both disagree there's a
         // problem here... NB: a massive particle with zero pt may
         // have its pt changed when a ghost is added -- this is why we
         // also require the energy to be wrong before complaining
-	if (abs(jet.perp2()-refjet.perp2()) > 
-	            tolerance*max(jet.perp2(),refjet.perp2())
-            && abs(jet.E()-refjet.E()) > tolerance*max(jet.E(),refjet.E())) {
-	  cerr << jet.perp() << " " << refjet.perp() << " "
-               << jet.perp() - refjet.perp() << endl;
-          cerr << refjet.px() << " " 
-               << refjet.py() << " " 
-               << refjet.pz() << " " 
-               << refjet.E() << endl;
-	  throw Error("Could not match clustering sequence for an inclusive jet when reconstructing areas"); }
+        if (!_jets_have_same_perp_or_E(jet,refjet,tolerance))
+          throw Error("Could not match clustering sequence for an inclusive jet when reconstructing areas");
 
 	// set the area at this clustering stage
 	our_areas[hist_index]  = area; 
@@ -479,10 +466,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
       const PseudoJet & refjet = _jets[_history[hist_index].jetp_index];
 
       // run sanity check 
-      if (abs(jet.perp2()-refjet.perp2()) > 
-	  tolerance*max(jet.perp2(),refjet.perp2())) {
-	  cerr << jet.perp() << " " << refjet.perp() << " "<< jet.perp() - refjet.perp() << endl;
-	  throw Error("Could not match clustering sequence for an exclusive jet when reconstructing areas"); }
+      if (!_jets_have_same_perp_or_E(jet,refjet,tolerance))
+        throw Error("Could not match clustering sequence for an exclusive jet when reconstructing areas");
 
       // update area and our local index (maybe redundant since later
       // the descendants will reupdate it?)
@@ -490,7 +475,6 @@ void ClusterSequenceActiveArea::_transfer_areas(
       our_areas[hist_index]  += area; 
 
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
-      //our_area_4vectors[hist_index] = our_area_4vectors[hist_index] + ext_area; 
       _jet_def.recombiner()->plus_equal(our_area_4vectors[hist_index], ext_area);
 
       // now update areas of parents (so that they becomes areas
@@ -525,6 +509,26 @@ void ClusterSequenceActiveArea::_transfer_areas(
 }
 
 
+/// check if two jets have the same momentum to within the
+/// tolerance (and if pt's are not the same we're forgiving and
+/// look to see if the energy is the same)
+bool ClusterSequenceActiveArea::_jets_have_same_perp_or_E(
+                                const PseudoJet & jet, 
+                                const PseudoJet & refjet, 
+                                double tolerance) const {
+  if (abs(jet.perp2()-refjet.perp2()) > 
+      tolerance*max(jet.perp2(),refjet.perp2())
+      && abs(jet.E()-refjet.E()) > tolerance*max(jet.E(),refjet.E())) {
+    cerr << jet.perp() << " " << refjet.perp() << " "
+         << jet.perp() - refjet.perp() << endl;
+    cerr << refjet.px() << " " 
+         << refjet.py() << " " 
+         << refjet.pz() << " " 
+         << refjet.E() << endl;
+    return false;
+  }
+  return true;
+}
 
 FASTJET_END_NAMESPACE
 
