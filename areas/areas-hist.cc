@@ -59,6 +59,8 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, rec_scheme, strategy);}
   else if (cmdline.present("-kt")) {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, rec_scheme, strategy);}
+  else if (cmdline.present("-antikt")) {
+    jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, rec_scheme, strategy);}
   else if (cmdline.present("-midpoint")) {
     double overlap = cmdline.value("-f",0.5);
     double seed    = cmdline.value("-seed",0.0);
