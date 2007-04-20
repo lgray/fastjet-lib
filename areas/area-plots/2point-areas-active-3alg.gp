@@ -7,8 +7,8 @@ set sty dat li
 set yrange [0:1.8]
 set xrange [0:2.0]
 
-set xlabel '{/Symbol Dh}'
-set ylabel 'Area / {/Symbol p}R^2'
+set xlabel '{/Symbol D}_{12}/R'
+set ylabel 'A({/Symbol D}_{12}) / {/Symbol p}R^2'
 
 set label 1 'thin lines: passive area' at 0.04,1.7
 set label 2 'thick lines: active area' at 1.9,0.5 right
