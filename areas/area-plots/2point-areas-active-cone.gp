@@ -4,14 +4,19 @@
 reset
 set sty dat li
 
-set yrange [0:1.8]
+set yrange [0.23:0.35]
 set xrange [0:2.0]
 
 set xlabel '{/Symbol D}_{12}/R'
-set ylabel 'A({/Symbol D}_{12}) / {/Symbol p}R^2'
+set ylabel 'A_{cone,R}({/Symbol D}_{12}) / {/Symbol p}R^2' offset 1
 
-set label 1 'thin lines: passive area' at 0.04,1.7
-set label 2 'thick lines: active area' at 1.9,0.5 right
+#set label 1 'thin lines: passive area' at 0.04,1.7
+#set label 2 'thick lines: active area' at 1.9,0.5 right
+
+set ytics 0.05
+set mytics 5
+
+set size 1.0,0.6
 
 #set grid
 
@@ -60,11 +65,5 @@ coneactive = 6; set style line coneactive lt 3 lw 6
 
 set sample 1000
 
-  plot fkt(x)/pi w l ls ktpassive t ''
-replot 'kt-2point-area-nrep100k.res'   u 1:($3/pi)  w l ls ktactive t 'kt'
-
-replot fcam(x)/pi            w l ls campassive t ''
-replot 'cam-2point-area-nrep100k.res' u 1:($3/pi)    w l ls camactive t 'cam'
-
-replot fcone(x)/pi  w l ls conepassive t ''
-replot fconeactive(x) w l ls coneactive t 'cone'           
+plot 0.25 w l lt 0 t '',\
+     fconeactive(x) w l ls coneactive t ''           
