@@ -36,8 +36,9 @@ string SISConePlugin::description () const {
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
   desc <<  sm_scale_string                                << ", ";
   desc << "caching turned "      << (caching() ? on : off);
+  desc << ", SM stop scale = "     << _split_merge_stopping_scale;
 
-  // create a fake scones object so that we can find out more about it
+  // create a fake siscone object so that we can find out more about it
   Csiscone siscone;
   if (siscone.merge_identical_protocones) {
     desc << ", and (IR unsafe) merge_indentical_protocones=true" ;
@@ -95,6 +96,9 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   } else {
     siscone = &local_siscone;
   }
+
+  // make sure stopping scale is set in siscone
+  siscone->SM_var2_hardest_cut_off = _split_merge_stopping_scale*_split_merge_stopping_scale;
 
   if (new_siscone) {
     // transfer fastjet initial particles into the siscone type

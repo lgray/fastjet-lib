@@ -68,9 +68,11 @@ int main (int argc, char ** argv) {
   else if (cmdline.present("-siscone")) {
     double overlap = cmdline.value("-f",0.5);
     int    npass   = cmdline.value("-npass",1);
-    jet_def = fj::JetDefinition(new fj::SISConePlugin(ktR,overlap,npass));}
+    fj::SISConePlugin * plugin = new fj::SISConePlugin(ktR,overlap,npass);
+    if (cmdline.present("-smstop"))plugin->set_split_merge_stopping_scale(1e-50);
+    jet_def = fj::JetDefinition(plugin);}
   else {
-    cerr << "Must specify one of -kt | -cam | -siscone" << endl;
+    cerr << "Must specify one of -kt | -cam | -siscone | -antikt" << endl;
     exit(-1);
   }
 
@@ -99,7 +101,7 @@ int main (int argc, char ** argv) {
   double relative_error = 1e100;
   for (int i = 0; i<n; i++) {
     vector<fj::PseudoJet> input_jets(0);
-    input_jets.push_back(fj::PseudoJet(anchor_pt,0.0,0.0,anchor_pt));
+    if (anchor_pt != 0.0) input_jets.push_back(fj::PseudoJet(anchor_pt,0.0,0.0,anchor_pt));
     fj::ClusterSequenceActiveAreaExplicitGhosts clust(input_jets, jet_def, 
 						      active_area_spec);
     //cout << "Clustering " << clust.n_particles() << " particles" << endl;

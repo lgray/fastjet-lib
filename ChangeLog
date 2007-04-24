@@ -1,3 +1,10 @@
+2007-04-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.hh|cc: 
+	  added the split_merge_on_transverse_mass in the constructor (+
+	  other ways of accessing it), which interfaces with SISCone's
+	  SM_var2_hardest_cut_off variable.
+	
 2007-04-19  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* src/ClusterSequenceActiveArea.cc|hh: 

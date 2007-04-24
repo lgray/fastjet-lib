@@ -93,13 +93,15 @@ public:
                  int    n_pass_max = 0,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
-                 SplitMergeScale  split_merge_scale = SM_pttilde) :
+                 SplitMergeScale  split_merge_scale = SM_pttilde,
+                 double split_merge_stopping_scale = 0.0) :
     _cone_radius           (cone_radius       ),
     _overlap_threshold     (overlap_threshold ),
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (protojet_ptmin),
     _caching               (caching),             
-    _split_merge_scale     (split_merge_scale) {}
+    _split_merge_scale     (split_merge_scale),
+    _split_merge_stopping_scale (split_merge_stopping_scale) {}
 
   /// Backwards compatible constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,
@@ -160,6 +162,18 @@ public:
   void set_split_merge_on_transverse_mass(bool val) {
     _split_merge_scale = val  ? SM_mt : SM_pt;}
 
+  /// set the "split_merge_stopping_scale": if the scale variable for
+  /// all protojets is below this, then stop the split-merge procedure
+  /// and keep only those jets found so far. This is useful in
+  /// determination of areas of hard jets because it can be used to
+  /// avoid running the split-merging on the pure ghost-part of the
+  /// event.
+  void set_split_merge_stopping_scale(double scale) {
+    _split_merge_stopping_scale = scale;}
+
+  /// return the value of the split_merge_stopping_scale (see
+  /// set_split_merge_stopping_scale(...) for description)
+  double split_merge_stopping_scale() {return _split_merge_stopping_scale;}
 
   /// indicates whether caching is turned on or not.
   bool caching() const {return _caching ;}
@@ -174,6 +188,7 @@ private:
   double _protojet_ptmin;
   bool   _caching;//, _split_merge_on_transverse_mass;
   SplitMergeScale _split_merge_scale;
+  double _split_merge_stopping_scale;
 
   // variables for caching the results and the input
   static std::auto_ptr<SISConePlugin          > stored_plugin;
