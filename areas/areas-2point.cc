@@ -31,6 +31,7 @@ int main (int argc, char ** argv) {
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   int    n            = cmdline.int_val("-n",20);
   double dr_max       = cmdline.double_val("-dr_max",2.1);
+  double dr_min       = cmdline.double_val("-dr_min",0.0);
 
   fj::JetFinder jet_finder = cmdline.present("-cam") ? 
                                 fj::cambridge_algorithm : fj::kt_algorithm;
@@ -54,7 +55,7 @@ int main (int argc, char ** argv) {
   
   double pt0 = 10000.0, pt1 = 1.0;
   for (int i = 0; i<=n; i++) {
-    double dr = (i * dr_max) / n;
+    double dr = dr_min + (i * (dr_max-dr_min)) / n;
     double pz = sinh(dr*0.5);
     double E  = cosh(dr*0.5);
     // constrct jets at eta = +- dr
