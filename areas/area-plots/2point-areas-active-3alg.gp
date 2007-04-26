@@ -65,6 +65,8 @@ replot 'kt-2point-area-nrep100k.res'   u 1:($3/pi)  w l ls ktactive t 'kt'
 
 replot fcam(x)/pi            w l ls campassive t ''
 replot 'cam-2point-area-nrep100k.res' u 1:($3/pi)    w l ls camactive t 'cam'
+replot fcam(x)/pi            w l ls campassive t ''
+replot 'cam-2point-area-nrep100k-1_1.05.res' u 1:($3/pi)    w l ls camactive t 'cam'
 
 replot fcone(x)/pi  w l ls conepassive t ''
 replot fconeactive(x) w l ls coneactive t 'cone'           
