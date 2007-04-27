@@ -64,7 +64,9 @@ int main (int argc, char ** argv) {
   else if (cmdline.present("-siscone")) {
     double overlap = cmdline.double_val("-f",0.5);
     int    npass   = cmdline.int_val("-npass",1);
-    jet_def = fj::JetDefinition(new fj::SISConePlugin(ktR,overlap,npass));}
+    fj::SISConePlugin * plugin = new fj::SISConePlugin(ktR,overlap,npass);
+    if (cmdline.present("-smstop"))plugin->set_split_merge_stopping_scale(1e-50);
+    jet_def = fj::JetDefinition(plugin);}
   else {
     cerr << "Must specify one of -kt | -cam | -siscone" << endl;
     exit(-1);
