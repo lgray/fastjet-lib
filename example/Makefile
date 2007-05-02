@@ -38,6 +38,8 @@ fastjet_areas: fastjet_areas.o  ../lib/libfastjet.a
 
 fastjet_subtraction: fastjet_subtraction.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_subtraction fastjet_subtraction.o  $(LDFLAGS)
+#fastjet_subtraction: fastjet_subtraction.o  ../lib/libfastjet.a ../areas/ClusterSequencePassiveArea.o
+#	$(CXX)  -o fastjet_subtraction fastjet_subtraction.o ../areas/ClusterSequencePassiveArea.o $(LDFLAGS)
 
 # for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
 # variables must be set in ../Makefile

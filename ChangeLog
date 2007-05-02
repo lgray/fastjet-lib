@@ -1,3 +1,24 @@
+2007-05-02  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
+
+	* include/fastjet/ClusterSequenceWithArea.hh|cc: 
+	  added empty_area(...), n_empty_jets(...),
+	  median_pt_per_unit_area(...),
+	  median_pt_per_unit_area_4vector(...), and the one that does the
+	  work, median_pt_per_unit_something, as virtual functions, so
+	  that these facilities can be accessed with any of the area
+	  classes.
+
+	* include/fastjet/ClusterSequenceActiveArea.hh|cc: 
+	  added versions of empty_area(...), n_empty_jets(...), that make
+	  use of all the information that's available from the ghosts.	
+	
+	* include/fastjet/JetDefinition.hh: 
+        * plugins/*/*Plugin.hh:
+	  added the double R() const abstract virtual member function to
+	  the JetDefinition::Plugin class, and updated all the plugins, so
+	  that one can get a sensible value of R out of any algorithm.
+	  
+	
 2007-04-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* plugins/SISCone/SISConePlugin.hh|cc: 

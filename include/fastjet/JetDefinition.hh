@@ -118,6 +118,12 @@ enum RecombinationScheme {
 
 
 
+// forward declaration, needed in order to specify interface for the
+// plugin.
+class ClusterSequence;
+
+
+
 
 //======================================================================
 /// class that is intended to hold a full definition of the jet
@@ -147,9 +153,9 @@ public:
     assert(_Rparam <= 0.5*pi);
     assert(_jet_finder != plugin_algorithm &&
            _strategy   != plugin_strategy);
-    _plugin = 0;
+    _plugin = NULL;
     set_recombination_scheme(recomb_scheme);
-  };
+  }
   
 
   /// constructor with alternative ordering or arguments -- note that
@@ -160,7 +166,7 @@ public:
                 RecombinationScheme recomb_scheme = E_scheme,
                 Strategy strategy = Best) {
     *this = JetDefinition(jet_finder, R, strategy, recomb_scheme);
-  };
+  }
 
 
   /// constructor in a form that allows the user to provide a pointer
@@ -172,7 +178,7 @@ public:
                 Strategy strategy = Best) {
     *this = JetDefinition(jet_finder, R, strategy, external_scheme);
     _recombiner = recombiner;
-  };
+  }
 
   /// constructor based on a pointer to a user's plugin; the object
   /// pointed to must remain valid for the whole duration of existence
@@ -180,10 +186,10 @@ public:
   JetDefinition(const Plugin * plugin) {
     _plugin = plugin;
     _strategy = plugin_strategy;
-    _Rparam = -1.0;
+    _Rparam = _plugin->R();
     _jet_finder = plugin_algorithm;
     set_recombination_scheme(E_scheme);
-  };
+  }
 
   /// set the recombination scheme to the one provided
   void set_recombination_scheme(RecombinationScheme);
@@ -192,22 +198,22 @@ public:
   void set_recombiner(const Recombiner * recomb) {
     _recombiner = recomb;
     _default_recombiner = DefaultRecombiner(external_scheme);
-  };
+  }
 
   /// return a pointer to the plugin 
   const Plugin * plugin() const {return _plugin;};
 
   // return information about the definition...
-  JetFinder jet_finder  () const {return _jet_finder  ;}; 
-  double    R           () const {return _Rparam      ;};
-  Strategy  strategy    () const {return _strategy    ;};
+  JetFinder jet_finder  () const {return _jet_finder  ;}
+  double    R           () const {return _Rparam      ;}
+  Strategy  strategy    () const {return _strategy    ;}
   RecombinationScheme recombination_scheme() const {
-    return _default_recombiner.scheme();};
+    return _default_recombiner.scheme();}
 
   /// return a pointer to the currently defined recombiner (it may
   /// be the internal one)
   const Recombiner * recombiner() const {
-    return _recombiner == 0 ? & _default_recombiner : _recombiner;};
+    return _recombiner == 0 ? & _default_recombiner : _recombiner;}
 
   /// return a textual description of the current jet definition 
   std::string description() const;
@@ -254,7 +260,7 @@ public:
   class DefaultRecombiner : public Recombiner {
   public:
     DefaultRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 
-      _recomb_scheme(recomb_scheme) {};
+      _recomb_scheme(recomb_scheme) {}
     
     virtual std::string description() const;
     
@@ -265,12 +271,35 @@ public:
     virtual void preprocess(PseudoJet & p) const;
 
     /// return the index of the recombination scheme
-    RecombinationScheme scheme() const {return _recomb_scheme;};
+    RecombinationScheme scheme() const {return _recomb_scheme;}
     
   private:
     RecombinationScheme _recomb_scheme;
   };
 
+
+  //======================================================================
+  /// a class that allows a user to introduce their own "plugin" jet
+  /// finder
+  class Plugin{
+  public:
+    /// return a textual description of the jet-definition implemented
+    /// in this plugin
+    virtual std::string description() const = 0;
+    
+    /// given a ClusterSequence that has been filled up with initial
+    /// particles, the following function should fill up the rest of the
+    /// ClusterSequence, using the following member functions of
+    /// ClusterSequence:
+    ///   - plugin_do_ij_recombination(...)
+    ///   - plugin_do_iB_recombination(...)
+    virtual void run_clustering(ClusterSequence &) const = 0;
+    
+    virtual double R() const = 0;
+    
+    /// a destructor to be replaced if necessary in derived classes...
+    virtual ~Plugin() {};
+  };
 
 private:
 
@@ -286,33 +315,6 @@ private:
   DefaultRecombiner _default_recombiner;
   const Recombiner * _recombiner;
 
-};
-
-
-// forward declaration, needed in order to specify interface for the
-// plugin.
-class ClusterSequence;
-
-
-//======================================================================
-/// a class that allows a user to introduce their own "plugin" jet
-/// finder
-class JetDefinition::Plugin{
-public:
-  /// return a textual description of the jet-definition implemented
-  /// in this plugin
-  virtual std::string description() const = 0;
-
-  /// given a ClusterSequence that has been filled up with initial
-  /// particles, the following function should fill up the rest of the
-  /// ClusterSequence, using the following member functions of
-  /// ClusterSequence:
-  ///   - plugin_do_ij_recombination(...)
-  ///   - plugin_do_iB_recombination(...)
-  virtual void run_clustering(ClusterSequence &) const = 0;
-
-  /// a destructor to be replaced if necessary in derived classes...
-  virtual ~Plugin() {};
 };
 
 

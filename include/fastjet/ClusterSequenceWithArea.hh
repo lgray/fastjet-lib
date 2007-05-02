@@ -64,10 +64,37 @@ public:
   /// returns 0.
   virtual double area       (const PseudoJet & jet) const {return 0.0;}
 
-
   /// return the error (uncertainty) associated with the determination
   /// of the area of this jet; this base class returns 0.
   virtual double area_error (const PseudoJet & jet) const {return 0.0;}
+
+  /// return the total area, up to |y|<maxrap, that is free of jets
+  virtual double empty_area(double maxrap) const;
+
+  /// return something similar to the number of pure ghost jets
+  /// in the given rapidity range in an active area case.
+  /// For the local implementation we return empty_area/(0.55 pi R^2),
+  /// based on measured properties of ghost jets with kt and cam. Note
+  /// that the number returned is a double.
+  virtual double n_empty_jets(double maxrap) const {
+    double R = jet_def().R();
+    return empty_area(maxrap)/(0.55*pi*R*R);
+  }
+
+  /// the median of (pt/area) for jets contained within |y|<maxrap, 
+  /// making use also of the info on n_empty_jets
+  virtual double median_pt_per_unit_area(double maxrap) const;
+
+  /// the median of (pt/area_4vector) for jets contained within
+  /// making use also of the info on n_empty_jets
+  virtual double median_pt_per_unit_area_4vector(double maxrap) const;
+  
+  /// the function that does the work for median_pt_per_unit_area and 
+  /// median_pt_per_unit_area_4vector: 
+  /// - something_is_area_4vect = false -> use plain area
+  /// - something_is_area_4vect = true  -> use 4-vector area
+  virtual double median_pt_per_unit_something(
+                     double maxrap, bool use_area_4vector) const;
 
 
   /// return a PseudoJet whose 4-vector is defined by the following integral

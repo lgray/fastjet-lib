@@ -151,6 +151,9 @@ class ClusterSequence {
   inline Strategy strategy_used () const {return _strategy;}
   std::string strategy_string () const;
 
+  /// return a reference to the jet definition
+  const JetDefinition & jet_def() const {return _jet_def;}
+
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
   /// Cambridge algorithm). [May become virtual at some point]

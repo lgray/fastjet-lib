@@ -50,8 +50,14 @@ template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea
  const JetDefinition & jet_def,
  double effective_Rfact,
  const bool & writeout_combinations) :
-  ClusterSequence(pseudojets, jet_def, writeout_combinations),
+  //ClusterSequence(pseudojets, jet_def, writeout_combinations),
   _effective_Rfact(effective_Rfact) {
+
+  // transfer the initial jets (type L) into our own array
+  _transfer_input_jets(pseudojets);
+
+  // run the clustering
+  _initialise_and_run(jet_def,writeout_combinations);
 
   // the jet clustering's already been done, now worry about areas...
   _initializePA();

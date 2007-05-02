@@ -86,7 +86,15 @@ public:
 				  double exclude_above=-1.0, 
 				  bool use_area_4vector=false ) const;
 
+  /// rewrite the empty area from the parent class, so as to use
+  /// all info at our disposal
+  /// return the total area, up to |y|<maxrap, that consists of ghost
+  /// jets
+  virtual double empty_area(double maxrap) const;
 
+  /// return the true number of empty jets (replaces
+  /// ClusterSequenceWithArea::n_empty_jets(...))
+  virtual double n_empty_jets(double maxrap) const;
 
 private:
 
@@ -137,7 +145,20 @@ private:
   //static int _n_seed_warnings;
   //const static int _max_seed_warnings = 10;
 
+  // record the number of repeats
+  int _area_spec_repeat;
+
+  /// a class for our internal storage of ghost jets
+  class GhostJet : public PseudoJet {
+  public:
+    GhostJet(const PseudoJet & j, double a) : PseudoJet(j), area(a){}
+    double area;
+  };
+
+  std::vector<GhostJet> _ghost_jets;
 };
+
+
 
 
 template<class L> ClusterSequenceActiveArea::ClusterSequenceActiveArea 

@@ -115,9 +115,12 @@ public:
   /// unaffected.
   bool E_scheme_jets()         const {return _E_scheme_jets      ;}
 
+
   // the things that are required by base class
   virtual std::string description () const;
   virtual void run_clustering(ClusterSequence &) const;
+  /// the plugin mechanism's standard way of accessing the jet radius
+  virtual double R() const {return cone_radius();}
 
 private:
 

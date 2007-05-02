@@ -50,6 +50,9 @@ void ClusterSequenceActiveArea::_initialise_and_run_AA (
 		const bool & writeout_combinations) 
 {
 
+  // store this for future use
+  _area_spec_repeat = area_spec.repeat();
+
   // initialize our local area information
   _average_area.resize(2*_jets.size());  _average_area  = 0.0;
   _average_area2.resize(2*_jets.size()); _average_area2 = 0.0;
@@ -303,6 +306,28 @@ void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
 
 
 //----------------------------------------------------------------------
+double ClusterSequenceActiveArea::empty_area(double maxrap) const {
+  double empty = 0.0;
+  for (unsigned  i = 0; i < _ghost_jets.size(); i++) {
+    if (abs(_ghost_jets[i].rap()) < maxrap) {
+      empty += _ghost_jets[i].area;
+    }
+  }
+  empty /= _area_spec_repeat;
+  return empty;
+}
+
+//----------------------------------------------------------------------
+double ClusterSequenceActiveArea::n_empty_jets(double maxrap) const {
+  double inrange = 0;
+  for (unsigned  i = 0; i < _ghost_jets.size(); i++) {
+    if (abs(_ghost_jets[i].rap()) < maxrap) inrange++;
+  }
+  inrange /= _area_spec_repeat;
+  return inrange;
+}
+
+//----------------------------------------------------------------------
 /// transfer the history (and jet-momenta) from clust_seq to our
 /// own internal structure while removing ghosts
 void ClusterSequenceActiveArea::_transfer_ghost_free_history(
@@ -416,6 +441,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
 
       if (ghosted_seq.is_pure_ghost(parent1)) {
+        // record the existence of the pure ghost jet for future use
+        _ghost_jets.push_back(GhostJet(jet,area));
 	if (abs(jet.rap()) < _safe_rap_for_area) {
 	  _non_jet_area  += area;
 	  _non_jet_area2 += area*area;

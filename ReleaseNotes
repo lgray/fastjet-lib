@@ -2,6 +2,25 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Changes from v2.1.0 to v2.2.0
+===============================
+
+- extended the features of the ClusterSequenceWithArea base class, so
+  that common area manipulations can be carried out directly from
+  there.
+
+- changed plugin base class, so that it now includes R() virtual
+  member, and modified the various plugins to account for this.
+
+- adapted SISCone plugin to the 1.Z.Y release of SISCone
+
+- added the "antikt" algorithm
+
+- added ClusterSequence::print_jets_for_root(...) and a corresponding root
+  script (example/root/jet-plots.C), so as to help with visualisation.
+
+
+======================================================================
 Summary of main changes from v2.0.0 to v2.1.0
 =============================================
 

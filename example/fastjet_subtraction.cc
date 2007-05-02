@@ -44,6 +44,7 @@
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
+//#include "../areas/ClusterSequencePassiveArea.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -52,7 +53,7 @@ using namespace std;
 
 // A declaration of a function that pretty prints a list of jets
 // The subtraction is also performed inside this function
-void print_jets (const fastjet::ClusterSequenceActiveArea &, 
+void print_jets (const fastjet::ClusterSequenceWithArea &, 
                  const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
@@ -116,6 +117,7 @@ int main (int argc, char ** argv) {
   // run the jet clustering with the above jet definition. hard event first
   fastjet::ClusterSequenceActiveArea clust_seq(hard_event, 
                                                jet_def, area_spec);
+  //fastjet::ClusterSequencePassiveArea clust_seq(hard_event, jet_def);
 
 
   // extract the inclusive jets with pt > 5 GeV, sorted by pt
@@ -138,6 +140,7 @@ int main (int argc, char ** argv) {
   // run the jet clustering with the above jet definition
   fastjet::ClusterSequenceActiveArea clust_seq_full(full_event, 
                                                     jet_def, area_spec);
+  //fastjet::ClusterSequencePassiveArea clust_seq_full(full_event, jet_def,0.9);
 
   // extract the inclusive jets with pt > 20 GeV, sorted by pt
   ptmin = 20.0;
@@ -158,8 +161,9 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets, and performs the subtraction
-/// in two different ways
-void print_jets (const fastjet::ClusterSequenceActiveArea & clust_seq, 
+/// in two different ways, using a generic ClusterSequenceWithArea
+/// type object.
+void print_jets (const fastjet::ClusterSequenceWithArea & clust_seq, 
 		 const vector<fastjet::PseudoJet> & unsorted_jets ) {
 
   // sort jets into increasing pt
@@ -168,11 +172,11 @@ void print_jets (const fastjet::ClusterSequenceActiveArea & clust_seq,
   // the corrected jets will go in here
   vector<fastjet::PseudoJet> corrected_jets(jets.size());
   
-  // get median pt per unit area
-  // NB pt_per_unit_area exists only in ClusterSequenceActiveArea, and
-  // not in the base class ClusterSequenceWithArea.
-  // This might change in a future release
-  double median_pt_per_area = clust_seq.pt_per_unit_area();
+  // get median pt per unit area -- you must decide the rapidity range
+  // in which you measure the activity. (If doing a ghost-based active
+  // area, make sure that your ghosts go up at least to \sim range+R).
+  double range = 5.0;
+  double median_pt_per_area = clust_seq.median_pt_per_unit_area(range);
 
   printf(" ijet     rap     phi        Pt    area  Pt corr  (rap corr phi corr Pt corr)ext\n");
   for (size_t j = 0; j < jets.size(); j++) {
