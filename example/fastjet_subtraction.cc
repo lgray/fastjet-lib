@@ -44,7 +44,7 @@
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
-//#include "../areas/ClusterSequencePassiveArea.hh"
+#include "../areas/ClusterSequencePassiveArea.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -115,8 +115,7 @@ int main (int argc, char ** argv) {
                                     ghost_area);
 
   // run the jet clustering with the above jet definition. hard event first
-  fastjet::ClusterSequenceActiveArea clust_seq(hard_event, 
-                                               jet_def, area_spec);
+  fastjet::ClusterSequenceActiveArea clust_seq(hard_event, jet_def, area_spec);
   //fastjet::ClusterSequencePassiveArea clust_seq(hard_event, jet_def);
 
 
@@ -138,8 +137,7 @@ int main (int argc, char ** argv) {
   // repeat everything on the full event
 
   // run the jet clustering with the above jet definition
-  fastjet::ClusterSequenceActiveArea clust_seq_full(full_event, 
-                                                    jet_def, area_spec);
+  fastjet::ClusterSequenceActiveArea clust_seq_full(full_event, jet_def, area_spec);
   //fastjet::ClusterSequencePassiveArea clust_seq_full(full_event, jet_def,0.9);
 
   // extract the inclusive jets with pt > 20 GeV, sorted by pt
