@@ -413,7 +413,7 @@ void ClusterSequencePassiveArea::_initializePA () {
   
   // check we're the Kt algorithm (Cambridge area is not calculable
   // in the same way).
-  assert(_jet_def.jet_finder() == kt_algorithm);
+  //assert(_jet_def.jet_finder() == kt_algorithm);
   
   // run the PAC on our original particles
   //_pa_calc = auto_ptr<PAC>(new PAC(_jets.begin(), 

@@ -23,7 +23,7 @@ endif
 
 PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc areas-2point.cc
 
-MINSRCS =  CmdLine.cc  FlavourHolder.cc
+MINSRCS =  CmdLine.cc  FlavourHolder.cc jet_def_from_cmdline.cc
 #SRCS =  $(MINSRCS) ClusterSequencePassiveArea.cc
 SRCS =  $(MINSRCS) 
 MINOBJS = $(patsubst %.cc,%.o,$(MINSRCS))

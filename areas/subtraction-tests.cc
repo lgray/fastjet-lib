@@ -71,6 +71,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
+//#include "ClusterSequencePassiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -79,6 +80,7 @@
 #include <cstdlib>
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
+#include "jet_def_from_cmdline.hh"
 #include "CSHisto.hh"
 
 
@@ -108,7 +110,7 @@ int main (int argc, char ** argv) {
   int  repeat  = cmdline.int_val("-repeat",1);
   bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
-  double ktR   = cmdline.double_val("-r",1.0);
+  //double ktR   = cmdline.double_val("-r",1.0);
   //double inclkt = cmdline.double_val("-incl",-1.0);
   //int    excln  = cmdline.int_val   ("-excln",-1);
   //double excld  = cmdline.double_val("-excld",-1.0);
@@ -124,12 +126,15 @@ int main (int argc, char ** argv) {
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
 
+  fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
+  
+
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unused"<<endl; 
     exit(-1);}
 
   // create the definitions for our jet finder and areas spec...
-  fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
+  //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
   fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
                                       grid_scatter, kt_scatter);
 
@@ -200,9 +205,12 @@ int main (int argc, char ** argv) {
     
   fj::ClusterSequenceActiveArea full_clust(full_event,jet_def,
                                            active_area_spec,writeout);
-
+  
   fj::ClusterSequenceActiveArea hard_clust(hard_event,jet_def,
                                            active_area_spec,writeout);
+
+  //fj::ClusterSequencePassiveArea full_clust(full_event,jet_def);
+  //fj::ClusterSequencePassiveArea hard_clust(hard_event,jet_def);
 
   vector<fj::PseudoJet> hard_jets = sorted_by_pt(hard_clust.inclusive_jets());
   vector<fj::PseudoJet> full_jets = sorted_by_pt(full_clust.inclusive_jets());
@@ -211,8 +219,8 @@ int main (int argc, char ** argv) {
       hard_jets[0].plain_distance(full_jets[1])) { 
     swap(full_jets[0],full_jets[1]);}
 
-  double median_pt_per_area = full_clust.pt_per_unit_area();
-  double median_pt_per_area_hard = hard_clust.pt_per_unit_area();
+  double median_pt_per_area = full_clust.median_pt_per_unit_area(5.0);
+  double median_pt_per_area_hard = hard_clust.median_pt_per_unit_area(5.0);
 
   for (int i = 0; i < 2; i++) {
     cout << full_jets[i].perp() - hard_jets[i].perp() <<" "
@@ -253,13 +261,15 @@ int main (int argc, char ** argv) {
 
   //double dummy = full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::play);
   //cout << "median pt_over_area = " << full_clust.pt_per_unit_area()<<endl;
-  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median)<<endl;
-  cerr << "old median  = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::old_median)<<endl;
-  cerr << "pt/area: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot)<<endl;
-  cerr << "pt/area with cut: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut)<<endl;
-  cerr << "average ratio (with cut): "<< full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut)<<endl;
-  cerr << "pt/area with cut (range 3): " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut,3.0)<<endl;
-  cerr << "average ratio (range 3,with cut): "<< full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut,3.0)<<endl;
+  cerr << "median pt_over_area (plain) = " << full_clust.median_pt_per_unit_area(5.0)<<endl;
+  cerr << "median pt_over_area (4vec)  = " << full_clust.median_pt_per_unit_area_4vector(5.0)<<endl;
+//  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median)<<endl;
+//  //  cerr << "old median  = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::old_median)<<endl;
+//  cerr << "pt/area: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot)<<endl;
+//  cerr << "pt/area with cut: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut)<<endl;
+//  cerr << "average ratio (with cut): "<< full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut)<<endl;
+//  cerr << "pt/area with cut (range 3): " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot_cut,3.0)<<endl;
+//  cerr << "average ratio (range 3,with cut): "<< full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::mean_ratio_cut,3.0)<<endl;
   } // if print_jets
 
   } // iev
@@ -268,6 +278,7 @@ int main (int argc, char ** argv) {
   // sending output to a file...
   ofstream output(output_file.c_str());
   output << "# " << cmdline.command_line() << endl;
+  output << "# " << jet_def.description() << endl;
 
   // print out mass histograms (only meaningful for the Z).
   for (unsigned i = 0; i < inv_mass_hard.size(); i++) {
