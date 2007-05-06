@@ -21,7 +21,7 @@ endif
 
 #LDFLAGS += -L$(HOME)/software/local/lib 
 
-PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc areas-2point.cc
+PROG_SRCS = areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc areas-2point.cc subtraction-correlation.cc
 
 MINSRCS =  CmdLine.cc  FlavourHolder.cc jet_def_from_cmdline.cc
 #SRCS =  $(MINSRCS) ClusterSequencePassiveArea.cc
@@ -49,6 +49,9 @@ areas-2point: areas-2point.o $(OBJS) ../lib/libfastjet.a
 
 subtraction-tests: subtraction-tests.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests subtraction-tests.o $(OBJS)  $(LDFLAGS)
+
+subtraction-correlation: subtraction-correlation.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o subtraction-correlation subtraction-correlation.o $(OBJS)  $(LDFLAGS)
 
 subtraction-tests-mass: subtraction-tests-mass.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-mass subtraction-tests-mass.o $(OBJS)  $(LDFLAGS)
