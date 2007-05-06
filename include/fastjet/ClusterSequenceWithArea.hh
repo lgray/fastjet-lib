@@ -105,24 +105,24 @@ public:
   ///
   /// The subtraction for a jet with uncorrected pt pt^U and area A is
   ///
-  ///   pt^S = pt^U - median*A +- error * sqrt(A*mean_area)
+  ///   pt^S = pt^U - median*A +- sigma*sqrt(A)
   ///
   /// where the error is only that associated with the fluctuations
   /// in the noise and not that associated with the noise having 
   /// caused changes in the hard-particle content of the jet.
   ///
   /// (NB: subtraction may also be done with 4-vector area of course)
-  void get_median_rho_and_error(double maxrap, bool use_area_4vector,
-                                        double & median, double & error,
+  void get_median_rho_and_sigma(double maxrap, bool use_area_4vector,
+                                        double & median, double & sigma,
                                         double & mean_area);
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area
-  void get_median_rho_and_error(double maxrap, bool use_area_4vector,
-                                        double & median, double & error) {
+  void get_median_rho_and_sigma(double maxrap, bool use_area_4vector,
+                                        double & median, double & sigma) {
     double mean_area;
-    get_median_rho_and_error(maxrap,  use_area_4vector,
-                             median,  error, mean_area);
+    get_median_rho_and_sigma(maxrap,  use_area_4vector,
+                             median,  sigma, mean_area);
   }
 
   /// return a PseudoJet whose 4-vector is defined by the following integral

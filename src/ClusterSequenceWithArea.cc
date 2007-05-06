@@ -72,9 +72,9 @@ double ClusterSequenceWithArea::median_pt_per_unit_something(
 }
 
 
-void ClusterSequenceWithArea::get_median_rho_and_error(
+void ClusterSequenceWithArea::get_median_rho_and_sigma(
             double maxrap, bool use_area_4vector,
-            double & median, double & error, double & mean_area) {
+            double & median, double & sigma, double & mean_area) {
 
   vector<double> pt_over_areas;
   vector<PseudoJet> incl_jets = inclusive_jets();
@@ -98,7 +98,7 @@ void ClusterSequenceWithArea::get_median_rho_and_error(
   // there is nothing inside our region, so answer will always be zero
   if (pt_over_areas.size() == 0) {
     median = 0.0;
-    error  = 0.0;
+    sigma  = 0.0;
     mean_area = 0.0;
     return;
   }
@@ -132,8 +132,9 @@ void ClusterSequenceWithArea::get_median_rho_and_error(
     res[i] = nj_median_ratio;
   }
   median = res[0];
-  error  = res[0] - res[1];
+  double error  = res[0] - res[1];
   mean_area = total_area / total_njets;
+  sigma  = error * sqrt(mean_area);
 }
 
 
