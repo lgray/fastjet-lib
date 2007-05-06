@@ -9,6 +9,8 @@ median=23.3123
 err=6.14532
 mean_area=0.56316
 
+set label 1 "k_t algorithm, R=0.5" at graph 0.05,0.92 left
+
 set yrange [0:200]
 set xrange [0:1.2]
 

@@ -5,7 +5,10 @@ reset
 
 #plot "< cat sample-lhc-ptmin100-iseq05-kt-R0.7.res | grep -v '#' |  awk '{if ($2<4&&$2>-4) print $4,$5}'" u 2:1 w p  t ''
 
-set xlabel 'y'
+set label 1 "k_t algorithm, R=0.5" at graph 0.95,0.92 right
+#set label 2 "R=0.5" at graph 0.95,0.87 right
+
+set xlabel 'y_j'
 set ylabel 'p_{tj} / A_j [GeV]' offset 1
 
 set size 1.0

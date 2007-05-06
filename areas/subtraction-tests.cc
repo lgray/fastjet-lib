@@ -271,12 +271,12 @@ int main (int argc, char ** argv) {
   //cout << "median pt_over_area = " << full_clust.pt_per_unit_area()<<endl;
   cerr << "#median pt_over_area (plain) = " << full_clust.median_pt_per_unit_area(medianrap)<<endl;
   cerr << "#median pt_over_area (4vec)  = " << full_clust.median_pt_per_unit_area_4vector(medianrap)<<endl;
-  double median,err,mean_area;
-  full_clust.get_median_rho_and_error(medianrap,false,median,err,mean_area);
-  cerr << "#median pt_over_area (plain) = " << median << " +- " << err 
+  double median,sigma,mean_area;
+  full_clust.get_median_rho_and_sigma(medianrap,false,median,sigma,mean_area);
+  cerr << "#median pt_over_area (plain) = " << median << " +- " << sigma 
        << "   <area> = " << mean_area << endl;
-  full_clust.get_median_rho_and_error(medianrap, true,median,err, mean_area);
-  cerr << "#median pt_over_area (4vec)  = " << median << " +- " << err
+  full_clust.get_median_rho_and_sigma(medianrap, true,median,sigma, mean_area);
+  cerr << "#median pt_over_area (4vec)  = " << median << " +- " << sigma
        << "   <area> = " << mean_area << endl;
 
 //  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median)<<endl;
