@@ -126,6 +126,8 @@ int main (int argc, char ** argv) {
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
 
+  double medianrap = cmdline.value("-medianrap",4.0);
+
   fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
   
 
@@ -133,10 +135,15 @@ int main (int argc, char ** argv) {
       "Error: some options unused"<<endl; 
     exit(-1);}
 
+
   // create the definitions for our jet finder and areas spec...
   //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
   fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
                                       grid_scatter, kt_scatter);
+
+  cout << "# " << cmdline.command_line() << endl;
+  cout << "# " << jet_def.description() << endl;
+  cout << "# " << active_area_spec.description() << endl;
 
 
   // input will be from the file named with the "-in" option
@@ -219,11 +226,12 @@ int main (int argc, char ** argv) {
       hard_jets[0].plain_distance(full_jets[1])) { 
     swap(full_jets[0],full_jets[1]);}
 
-  double median_pt_per_area = full_clust.median_pt_per_unit_area(5.0);
-  double median_pt_per_area_hard = hard_clust.median_pt_per_unit_area(5.0);
+  double median_pt_per_area = full_clust.median_pt_per_unit_area(medianrap);
+  double median_pt_per_area_hard = hard_clust.median_pt_per_unit_area(medianrap);
 
   for (int i = 0; i < 2; i++) {
-    cout << full_jets[i].perp() - hard_jets[i].perp() <<" "
+    cout <<"# "
+         << full_jets[i].perp() - hard_jets[i].perp() <<" "
          << full_jets[i].plain_distance(hard_jets[i]) <<" "
 	 << full_jets[i].perp() - hard_jets[i].perp() 
             - median_pt_per_area*full_clust.area(full_jets[i]) <<" "
@@ -242,16 +250,16 @@ int main (int argc, char ** argv) {
   double hard_ev_mass = sqrt(abs((hard_jets[0]+hard_jets[1]).m2()));
   double full_ev_mass = sqrt(abs((full_jets[0]+full_jets[1]).m2()));
   double corr_ev_mass = sqrt(abs((corrected_jets[0]+corrected_jets[1]).m2()));
-  cout <<"inv mass of two hardest (hard ev) jets = "<< hard_ev_mass << endl;
-  cout <<"inv mass of two hardest (full ev) jets = "<< full_ev_mass << endl;
-  cout <<"inv mass of two hardest (corr ev) jets = "<< corr_ev_mass << endl;
+  cout <<"#inv mass of two hardest (hard ev) jets = "<< hard_ev_mass << endl;
+  cout <<"#inv mass of two hardest (full ev) jets = "<< full_ev_mass << endl;
+  cout <<"#inv mass of two hardest (corr ev) jets = "<< corr_ev_mass << endl;
 
   inv_mass_hard.fill(hard_ev_mass);
   inv_mass_full.fill(full_ev_mass);
   inv_mass_corr.fill(corr_ev_mass);
 
   if (print_jets) {
-  printf(" ijet   eta      phi        Pt         area  +-   err   stddev  pt_corr\n");
+  printf("#ijet   eta      phi        Pt         area  +-   err   stddev  pt_corr\n");
   for (size_t j = 0; j < full_jets.size(); j++) {
     double area = full_clust.area(full_jets[j]);
     
@@ -261,8 +269,16 @@ int main (int argc, char ** argv) {
 
   //double dummy = full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::play);
   //cout << "median pt_over_area = " << full_clust.pt_per_unit_area()<<endl;
-  cerr << "median pt_over_area (plain) = " << full_clust.median_pt_per_unit_area(5.0)<<endl;
-  cerr << "median pt_over_area (4vec)  = " << full_clust.median_pt_per_unit_area_4vector(5.0)<<endl;
+  cerr << "#median pt_over_area (plain) = " << full_clust.median_pt_per_unit_area(medianrap)<<endl;
+  cerr << "#median pt_over_area (4vec)  = " << full_clust.median_pt_per_unit_area_4vector(medianrap)<<endl;
+  double median,err,mean_area;
+  full_clust.get_median_rho_and_error(medianrap,false,median,err,mean_area);
+  cerr << "#median pt_over_area (plain) = " << median << " +- " << err 
+       << "   <area> = " << mean_area << endl;
+  full_clust.get_median_rho_and_error(medianrap, true,median,err, mean_area);
+  cerr << "#median pt_over_area (4vec)  = " << median << " +- " << err
+       << "   <area> = " << mean_area << endl;
+
 //  cerr << "median pt_over_area = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median)<<endl;
 //  //  cerr << "old median  = " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::old_median)<<endl;
 //  cerr << "pt/area: " << full_clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::pttot_over_areatot)<<endl;

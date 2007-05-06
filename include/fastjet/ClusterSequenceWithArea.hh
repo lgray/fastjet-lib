@@ -83,19 +83,47 @@ public:
 
   /// the median of (pt/area) for jets contained within |y|<maxrap, 
   /// making use also of the info on n_empty_jets
-  virtual double median_pt_per_unit_area(double maxrap) const;
+  double median_pt_per_unit_area(double maxrap) const;
 
   /// the median of (pt/area_4vector) for jets contained within
   /// making use also of the info on n_empty_jets
-  virtual double median_pt_per_unit_area_4vector(double maxrap) const;
+  double median_pt_per_unit_area_4vector(double maxrap) const;
   
   /// the function that does the work for median_pt_per_unit_area and 
   /// median_pt_per_unit_area_4vector: 
   /// - something_is_area_4vect = false -> use plain area
   /// - something_is_area_4vect = true  -> use 4-vector area
-  virtual double median_pt_per_unit_something(
+  double median_pt_per_unit_something(
                      double maxrap, bool use_area_4vector) const;
 
+  /// using jets up to maxrap (and with 4-vector areas if
+  /// use_area_4vector), calculate the median pt/area, as well as an
+  /// "error" (uncertainty), which is defined as the 1-sigma
+  /// half-width of the distribution of pt/A, obtained by looking for
+  /// the point below which we have (1-0.6827)/2 of the jets
+  /// (including empty jets).
+  ///
+  /// The subtraction for a jet with uncorrected pt pt^U and area A is
+  ///
+  ///   pt^S = pt^U - median*A +- error * sqrt(A*mean_area)
+  ///
+  /// where the error is only that associated with the fluctuations
+  /// in the noise and not that associated with the noise having 
+  /// caused changes in the hard-particle content of the jet.
+  ///
+  /// (NB: subtraction may also be done with 4-vector area of course)
+  void get_median_rho_and_error(double maxrap, bool use_area_4vector,
+                                        double & median, double & error,
+                                        double & mean_area);
+
+  /// same as the full version of get_median_rho_and_error, but without
+  /// access to the mean_area
+  void get_median_rho_and_error(double maxrap, bool use_area_4vector,
+                                        double & median, double & error) {
+    double mean_area;
+    get_median_rho_and_error(maxrap,  use_area_4vector,
+                             median,  error, mean_area);
+  }
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
   ///

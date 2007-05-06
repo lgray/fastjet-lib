@@ -1,3 +1,11 @@
+2007-05-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequenceWithArea.hh|cc: 
+	  added get_median_rho_and_error(...) to allow one to extract
+	  the median together with the size of fluctuations around the
+	  median (and the mean error, of use in doing converting
+	  fluctuations to errors on individual jets).
+	
 2007-05-02  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* include/fastjet/ClusterSequenceWithArea.hh|cc: 
