@@ -16,7 +16,7 @@ JetDefinition jet_def_from_cmdline(const CmdLine & cmdline) {
   } else if (cmdline.present("-antikt")) {
     jet_def = JetDefinition(antikt_algorithm,R);
   } else {
-    double f = cmdline.value("-f",0.7);
+    double f = cmdline.value("-f",0.5);
     if (cmdline.present("-midpoint")) {
       double seed = cmdline.value("-seed",1);
       jet_def = new CDFMidPointPlugin(R, f, seed);
