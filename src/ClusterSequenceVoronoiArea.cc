@@ -279,7 +279,7 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 
   vdg.resetIterator();
   GraphEdge *e=NULL;
-  int v_index;
+  unsigned int v_index;
   int p_index;
   vector<PseudoJet>::const_iterator jet;
 
