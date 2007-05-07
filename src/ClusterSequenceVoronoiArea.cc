@@ -324,20 +324,34 @@ void ClusterSequenceVoronoiArea::_initializeVA () {
   // transfer the areas to our local structure
   //  -- first the initial ones
   _voronoi_area.reserve(2*n_particles());
-  for (unsigned int i=0; i<n_particles(); i++)
+  for (unsigned int i=0; i<n_particles(); i++) {
     _voronoi_area.push_back(_pa_calc->area(i));
-
+    // make a stab at a 4-vector area
+    if (_jets[i].perp2() > 0) {
+      _voronoi_area_4vector.push_back((_pa_calc->area(i)/_jets[i].perp())
+                                      * _jets[i]);
+    } else {
+      // not sure what to do here -- just put zero (it won't be meaningful
+      // anyway)
+      _voronoi_area_4vector.push_back(PseudoJet(0.0,0.0,0.0,0.0));
+    }
+  }
 	   
   //  -- then the combined areas that arise from the clustering
   for (unsigned int i = n_particles(); i < _history.size(); i++) {
     double area;
+    PseudoJet area_4vect;
     if (_history[i].parent2 >= 0) {
       area = _voronoi_area[_history[i].parent1] + 
   	     _voronoi_area[_history[i].parent2];
+      area_4vect = _voronoi_area_4vector[_history[i].parent1] + 
+                   _voronoi_area_4vector[_history[i].parent2];
     } else {
       area = _voronoi_area[_history[i].parent1];
+      area_4vect = _voronoi_area_4vector[_history[i].parent1];
     }
     _voronoi_area.push_back(area);
+    _voronoi_area_4vector.push_back(area_4vect);
   }
 
 }
