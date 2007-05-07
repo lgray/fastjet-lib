@@ -70,7 +70,7 @@
 ///
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "fastjet/ClusterSequenceWithArea.hh"
 //#include "ClusterSequencePassiveArea.hh"
 #include<iostream>
 #include<sstream>
@@ -108,7 +108,6 @@ int main (int argc, char ** argv) {
   fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
 				     cmdline.int_val("-clever", fj::Best)));
   int  repeat  = cmdline.int_val("-repeat",1);
-  bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
   //double ktR   = cmdline.double_val("-r",1.0);
   //double inclkt = cmdline.double_val("-incl",-1.0);
@@ -130,22 +129,31 @@ int main (int argc, char ** argv) {
 
   fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
   
+  fj::AreaDefinition area_def;
+  if (cmdline.present("-voronoi")) {
+    // create the definitions for our jet finder and areas spec...
+    //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
+    fj::VoronoiAreaSpec voronoi_area_spec(1.0);
+    area_def = voronoi_area_spec;
+  } else {
+    // create the definitions for our jet finder and areas spec...
+    //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
+    fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
+                                        grid_scatter, kt_scatter);
+    area_def = active_area_spec;
+  }
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unused"<<endl; 
     exit(-1);}
 
 
-  // create the definitions for our jet finder and areas spec...
-  //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
-  fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
-                                      grid_scatter, kt_scatter);
 
   // sending output to a file...
   ofstream output(output_file.c_str());
   output << "# " << cmdline.command_line() << endl;
   output << "# " << jet_def.description() << endl;
-  output << "# " << active_area_spec.description() << endl;
+  output << "# " << area_def.description() << endl;
 
   fj::JetDefinition rho_jet_def(fj::kt_algorithm,0.5);
 
@@ -213,16 +221,10 @@ int main (int argc, char ** argv) {
   valarray<double> average_area2;
 
     
-  fj::ClusterSequenceActiveArea full_clust(full_event,jet_def,
-                                           active_area_spec,writeout);
-  
-  fj::ClusterSequenceActiveArea rho_clust(full_event,rho_jet_def,
-                                           active_area_spec,writeout);
-  fj::ClusterSequenceActiveArea rho_hard_clust(hard_event,rho_jet_def,
-                                           active_area_spec,writeout);
-
-  fj::ClusterSequenceActiveArea hard_clust(hard_event,jet_def,
-                                           active_area_spec,writeout);
+  fj::ClusterSequenceWithArea full_clust(full_event,jet_def, area_def);
+  fj::ClusterSequenceWithArea rho_clust(full_event,rho_jet_def, area_def);
+  fj::ClusterSequenceWithArea rho_hard_clust(hard_event,rho_jet_def, area_def);
+  fj::ClusterSequenceWithArea hard_clust(hard_event,jet_def, area_def);
 
   //fj::ClusterSequencePassiveArea full_clust(full_event,jet_def);
   //fj::ClusterSequencePassiveArea hard_clust(hard_event,jet_def);
