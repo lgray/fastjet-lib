@@ -8,7 +8,7 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-class ClusterSequencePassiveArea : public ClusterSequenceWithArea {
+class ClusterSequencePassiveArea : public ClusterSequenceAreaBase {
 public:
   template<class L> ClusterSequencePassiveArea
          (const std::vector<L> & pseudojets, 
