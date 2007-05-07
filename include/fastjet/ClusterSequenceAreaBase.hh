@@ -68,6 +68,20 @@ public:
   /// of the area of this jet; this base class returns 0.
   virtual double area_error (const PseudoJet & jet) const {return 0.0;}
 
+  /// return a PseudoJet whose 4-vector is defined by the following integral
+  ///
+  ///       \int drap d\phi PseudoJet("rap,phi,pt=one") *
+  ///                           * Theta("rap,phi inside jet boundary")
+  ///
+  /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
+  /// rapidity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
+  /// inside jet boundary") is a function that is 1 when rap,phi
+  /// define a direction inside the jet boundary and 0 otherwise.
+  ///
+  /// This base class returns a null 4-vector.
+  virtual PseudoJet area_4vector(const PseudoJet & jet) const {
+    return PseudoJet(0.0,0.0,0.0,0.0);}
+
   /// return the total area, up to |y|<maxrap, that is free of jets
   virtual double empty_area(double maxrap) const;
 
@@ -125,19 +139,6 @@ public:
                              median,  sigma, mean_area);
   }
 
-  /// return a PseudoJet whose 4-vector is defined by the following integral
-  ///
-  ///       \int drap d\phi PseudoJet("rap,phi,pt=one") *
-  ///                           * Theta("rap,phi inside jet boundary")
-  ///
-  /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
-  /// rapidity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
-  /// inside jet boundary") is a function that is 1 when rap,phi
-  /// define a direction inside the jet boundary and 0 otherwise.
-  ///
-  /// This base class returns a null 4-vector.
-  virtual PseudoJet area_4vector(const PseudoJet & jet) const {
-    return PseudoJet(0.0,0.0,0.0,0.0);}
 
 };
 

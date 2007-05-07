@@ -296,6 +296,10 @@ public:
   /// cone type algorithms it can be non-null;
   std::vector<PseudoJet> unclustered_particles() const;
 
+  /// transfer the sequence contained in other_seq into our own;
+  /// any plugin "extras" contained in the from_seq will be lost
+  /// from there.
+  void transfer_from_sequence(ClusterSequence & from_seq);
 
 protected:
   static JetFinder _default_jet_finder;

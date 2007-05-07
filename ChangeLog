@@ -1,5 +1,13 @@
 2007-05-07  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
+	* ClusterSequence.hh|cc: 
+	  added the transfer_from_sequence(...) member, which copies the
+	  information from another sequence into this one.
+
+	* include/fastjet/ClusterSequenceWithArea.hh:  *** ADDED ***
+	  class to access a generic type of area, as specified through an
+	  AreaDefinition.
+
 	* AreaDefinition.hh|cc    *** ADDED ***
           start of work towards an area definition, to be used as an input
 	  to the future ClusterSequenceWithArea.hh|cc

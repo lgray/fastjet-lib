@@ -11,7 +11,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.o
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -163,3 +163,9 @@ JetDefinition.o: ../include/fastjet/internal/numconsts.hh
 JetDefinition.o: ../include/fastjet/internal/base.hh
 JetDefinition.o: ../include/fastjet/PseudoJet.hh ../include/fastjet/Error.hh
 Error.o: ../include/fastjet/Error.hh ../include/fastjet/internal/base.hh
+AreaDefinition.o: ../include/fastjet/AreaDefinition.hh
+AreaDefinition.o: ../include/fastjet/ActiveAreaSpec.hh
+AreaDefinition.o: ../include/fastjet/PseudoJet.hh
+AreaDefinition.o: ../include/fastjet/internal/numconsts.hh
+AreaDefinition.o: ../include/fastjet/internal/base.hh
+AreaDefinition.o: ../include/fastjet/internal/BasicRandom.hh

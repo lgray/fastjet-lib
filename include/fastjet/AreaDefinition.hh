@@ -66,10 +66,16 @@ public:
 
   /// constructor for an area definition based on an active area
   /// specification, together with an option to get explicit ghosts
-  AreaDefinition(const ActiveAreaSpec & spec, bool explicit_ghosts = false);
+  AreaDefinition(const ActiveAreaSpec & spec, bool explicit_ghosts = false) {
+    _active_spec = spec;
+    _area_type   = explicit_ghosts ? active_area_explicit_ghosts : active_area;
+  }
 
   /// constructor for an area definition based on a voronoi area specification
-  AreaDefinition(const VoronoiAreaSpec & );
+  AreaDefinition(const VoronoiAreaSpec & spec) {
+    _voronoi_spec = spec;
+    _area_type    = voronoi_area;
+  }
 
   /// return a description of the current area definition
   std::string description() const;

@@ -259,6 +259,31 @@ string ClusterSequence::strategy_string ()  const {
 
 
 //----------------------------------------------------------------------
+/// transfer the sequence contained in other_seq into our own;
+/// any plugin "extras" contained in the from_seq will be lost
+/// from there.
+void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
+
+  // the metadata
+  _jet_def                 = from_seq._jet_def                ;
+  _writeout_combinations   = from_seq._writeout_combinations  ;
+  _initial_n               = from_seq._initial_n              ;
+  _Rparam                  = from_seq._Rparam                 ;
+  _R2                      = from_seq._R2                     ;
+  _invR2                   = from_seq._invR2                  ;
+  _strategy                = from_seq._strategy               ;
+  _jet_finder              = from_seq._jet_finder             ;
+  _plugin_activated        = from_seq._plugin_activated       ;
+
+  // the data
+  _jets     = from_seq._jets;
+  _history  = from_seq._history;
+  // the following transferse ownership of the extras from the from_seq
+  _extras   = from_seq._extras;
+
+}
+
+//----------------------------------------------------------------------
 // record an ij recombination and reset the _jets[newjet_k] momentum and
 // user index to be those of newjet
 void ClusterSequence::plugin_record_ij_recombination(
