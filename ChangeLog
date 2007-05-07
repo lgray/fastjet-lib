@@ -1,3 +1,14 @@
+2007-05-07  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* include/fastjet/ClusterSequenceWithArea.hh|cc: Append Voronoi
+	  area computation.
+
+	* src/ClusterSequenceVoronoiArea.hh|cc: Add a class to compute the
+	  Voronoi area.
+
+	* src/Voronoi.hh|cc: Add O'Sullivan C++ adaptation of Fortune's
+	  code to compute Voronoi diagrams.
+
 2007-05-07  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* ClusterSequence.hh|cc: 

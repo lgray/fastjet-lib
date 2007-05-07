@@ -34,7 +34,7 @@
 #include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
 #include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
-//#include "fastjet/ClusterSequenceVoronoiArea.hh"
+#include "fastjet/ClusterSequenceVoronoiArea.hh"
 #include "fastjet/AreaDefinition.hh"
 
 FASTJET_BEGIN_NAMESPACE
@@ -44,7 +44,7 @@ public:
   template<class L> ClusterSequenceWithArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const AreaDefinition & area_def);
+	  const AreaDefinition & area_def_in);
 
   /// return a reference to the area definition
   const AreaDefinition & area_def() const {return _area_def;}
@@ -86,7 +86,7 @@ private:
 template<class L> ClusterSequenceWithArea::ClusterSequenceWithArea
 (const std::vector<L> & pseudojets, 
  const JetDefinition  & jet_def,
- const AreaDefinition & area_def) : _area_def(area_def) {
+ const AreaDefinition & area_def_in) : _area_def(area_def_in) {
   
   ClusterSequenceAreaBase * _area_base_ptr;
   switch(_area_def.area_type()) {
@@ -101,10 +101,10 @@ template<class L> ClusterSequenceWithArea::ClusterSequenceWithArea
                                                    _area_def.active_spec());
     break;
   case AreaDefinition::voronoi_area:
-    //_area_base_ptr = new ClusterSequenceVoronoiArea(pseudojets, 
-    //                                               jet_def, 
-    //                                               _area_def.passive_spec());
-    //break;
+    _area_base_ptr = new ClusterSequenceVoronoiArea(pseudojets, 
+                                                   jet_def, 
+                                                   _area_def.voronoi_spec());
+    break;
   default:
     std::cerr << "Error: unrecognized area_type in ClusterSequenceWithArea:" 
               << _area_def.area_type() << std::endl;
