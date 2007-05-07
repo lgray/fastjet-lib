@@ -64,6 +64,8 @@ private:
 class AreaDefinition {
 public:
 
+  AreaDefinition() {_area_type = invalid_area;}
+
   /// constructor for an area definition based on an active area
   /// specification, together with an option to get explicit ghosts
   AreaDefinition(const ActiveAreaSpec & spec, bool explicit_ghosts = false) {
@@ -81,8 +83,8 @@ public:
   std::string description() const;
 
   /// the different types of area that are supported
-  enum AreaType {active_area=0, active_area_explicit_ghosts = 1, 
-                 voronoi_area=2};
+  enum AreaType {invalid_area = -1, active_area = 0, 
+                 active_area_explicit_ghosts = 1, voronoi_area=2};
   
   /// return info about the type of area being used by this defn
   AreaType area_type() const {return _area_type;}
