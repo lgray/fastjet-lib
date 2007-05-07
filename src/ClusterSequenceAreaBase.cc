@@ -1,4 +1,4 @@
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequenceAreaBase.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -9,7 +9,7 @@ using namespace std;
 /// 
 /// Calculate this as 2pi*2*maxrap - \sum_{|y_i|<maxrap} A_i
 ///
-double ClusterSequenceWithArea::empty_area(double maxrap) const {
+double ClusterSequenceAreaBase::empty_area(double maxrap) const {
   double empty = twopi * 2*maxrap;
   vector<PseudoJet> incl_jets(inclusive_jets(0.0));
   for (unsigned i = 0; i < incl_jets.size(); i++) {
@@ -18,11 +18,11 @@ double ClusterSequenceWithArea::empty_area(double maxrap) const {
   return empty;
 }
 
-double ClusterSequenceWithArea::median_pt_per_unit_area(double maxrap) const {
+double ClusterSequenceAreaBase::median_pt_per_unit_area(double maxrap) const {
   return median_pt_per_unit_something(maxrap,false);
 }
 
-double ClusterSequenceWithArea::median_pt_per_unit_area_4vector(double maxrap) const {
+double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(double maxrap) const {
   return median_pt_per_unit_something(maxrap,true);
 }
 
@@ -31,7 +31,7 @@ double ClusterSequenceWithArea::median_pt_per_unit_area_4vector(double maxrap) c
 /// the median of (pt/area) for jets contained within |y|<maxrap, counting
 /// the empty area as if it were made up of a collection of empty
 /// jets each of area (0.55 * pi R^2).
-double ClusterSequenceWithArea::median_pt_per_unit_something(
+double ClusterSequenceAreaBase::median_pt_per_unit_something(
                 double maxrap, bool use_area_4vector) const {
 
   vector<double> pt_over_areas;
@@ -72,7 +72,7 @@ double ClusterSequenceWithArea::median_pt_per_unit_something(
 }
 
 
-void ClusterSequenceWithArea::get_median_rho_and_sigma(
+void ClusterSequenceAreaBase::get_median_rho_and_sigma(
             double maxrap, bool use_area_4vector,
             double & median, double & sigma, double & mean_area) {
 

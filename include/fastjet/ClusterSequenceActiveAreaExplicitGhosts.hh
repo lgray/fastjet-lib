@@ -32,7 +32,7 @@
 #define __FASTJET_CLUSTERSEQUENCEACTIVEAREAEXPLICITGHOSTS_HH_ 
 
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/ActiveAreaSpec.hh"
 #include<iostream>
 #include<vector>
@@ -45,7 +45,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// will be a random quantity... Figure out what to do about seeds 
 /// later...)
 class ClusterSequenceActiveAreaExplicitGhosts : 
-  public ClusterSequenceWithArea {
+  public ClusterSequenceAreaBase {
 public:
   /// constructor using a ActiveAreaSpec to specify how the area is
   /// to be measured
@@ -54,7 +54,7 @@ public:
           const JetDefinition & jet_def,
 	  const ActiveAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) 
-	   : ClusterSequenceWithArea() {
+	   : ClusterSequenceAreaBase() {
 	   _initialise(pseudojets,jet_def,area_spec,writeout_combinations); }
 
   /// does the actual work of initialisation

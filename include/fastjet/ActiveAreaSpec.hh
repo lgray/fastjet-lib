@@ -95,7 +95,7 @@ public:
   inline void set_repeat      (int    val) {_repeat         = val; };
   
   /// for a summary
-  std::string description();
+  std::string description() const;
 
   /// push the ghost 4-momenta onto the back of the vector of PseudoJets
   void add_ghosts(std::vector<PseudoJet> & ) const;

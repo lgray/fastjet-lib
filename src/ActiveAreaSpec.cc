@@ -90,7 +90,7 @@ void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   }
 }
 
-string ActiveAreaSpec::description() {
+string ActiveAreaSpec::description() const {
 
   ostringstream ostr;
   ostr << "Active area specification with ghosts of area " << actual_ghost_area() 

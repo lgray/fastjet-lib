@@ -28,8 +28,8 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
-#define __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+#ifndef __FASTJET_CLUSTERSEQUENCEAREABASE_HH__
+#define __FASTJET_CLUSTERSEQUENCEAREABASE_HH__
 
 #include "fastjet/ClusterSequence.hh"
 
@@ -40,12 +40,12 @@ FASTJET_BEGIN_NAMESPACE
 ///
 /// the virtual functions here all return 0, since no area determination
 /// is implemented.
-class ClusterSequenceWithArea : public ClusterSequence {
+class ClusterSequenceAreaBase : public ClusterSequence {
 public:
   
   /// a constructor which just carries out the construction of the
   /// parent class
-  template<class L> ClusterSequenceWithArea
+  template<class L> ClusterSequenceAreaBase
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const bool & writeout_combinations = false) :
@@ -53,11 +53,11 @@ public:
 
 
   /// default constructor
-  ClusterSequenceWithArea() {}
+  ClusterSequenceAreaBase() {}
 
 
   /// destructor
-  virtual ~ClusterSequenceWithArea() {}
+  virtual ~ClusterSequenceAreaBase() {}
 
 
   /// return the area associated with the given jet; this base class
@@ -145,4 +145,4 @@ public:
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+#endif // __FASTJET_CLUSTERSEQUENCEAREABASE_HH__

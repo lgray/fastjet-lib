@@ -33,7 +33,7 @@
 
 
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
 #include<iostream>
 #include<vector>
@@ -46,7 +46,7 @@ using namespace std;
 /// that it also provides access to the area of a jet (which
 /// will be a random quantity... Figure out what to do about seeds 
 /// later...)
-class ClusterSequenceActiveArea : public ClusterSequenceWithArea {
+class ClusterSequenceActiveArea : public ClusterSequenceAreaBase {
 public:
 
   /// constructor based on JetDefinition and ActiveAreaSpec
@@ -93,7 +93,7 @@ public:
   virtual double empty_area(double maxrap) const;
 
   /// return the true number of empty jets (replaces
-  /// ClusterSequenceWithArea::n_empty_jets(...))
+  /// ClusterSequenceAreaBase::n_empty_jets(...))
   virtual double n_empty_jets(double maxrap) const;
 
 private:

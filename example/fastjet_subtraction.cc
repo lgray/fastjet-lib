@@ -44,7 +44,7 @@
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
-#include "../areas/ClusterSequencePassiveArea.hh"
+//#include "../areas/ClusterSequencePassiveArea.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -53,7 +53,7 @@ using namespace std;
 
 // A declaration of a function that pretty prints a list of jets
 // The subtraction is also performed inside this function
-void print_jets (const fastjet::ClusterSequenceWithArea &, 
+void print_jets (const fastjet::ClusterSequenceAreaBase &, 
                  const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
@@ -159,9 +159,9 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets, and performs the subtraction
-/// in two different ways, using a generic ClusterSequenceWithArea
+/// in two different ways, using a generic ClusterSequenceAreaBase
 /// type object.
-void print_jets (const fastjet::ClusterSequenceWithArea & clust_seq, 
+void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq, 
 		 const vector<fastjet::PseudoJet> & unsorted_jets ) {
 
   // sort jets into increasing pt
