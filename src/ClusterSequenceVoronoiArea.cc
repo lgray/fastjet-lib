@@ -289,11 +289,9 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
       p_index = voronoi_indices[v_index];
       if (p_index!=-1){
 	jet = jet_begin+voronoi_indices[v_index];
-	if (fabs(jet->phi()-M_PI)<M_PI){
-	  _areas[p_index]+=
-	    edge_circle_intersection(voronoi_particles[v_index], *e, 
-				     _effective_R_squared);
-	}
+	_areas[p_index]+=
+	  edge_circle_intersection(voronoi_particles[v_index], *e, 
+				   _effective_R_squared);
       }
     }
     v_index = e->point2;
@@ -301,11 +299,9 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
       p_index = voronoi_indices[v_index];
       if (p_index!=-1){
 	jet = jet_begin+voronoi_indices[v_index];
-	if (fabs(jet->phi()-M_PI)<M_PI){
-	  _areas[p_index]+=
-	    edge_circle_intersection(voronoi_particles[v_index], *e, 
-				     _effective_R_squared);
-	}
+	_areas[p_index]+=
+	  edge_circle_intersection(voronoi_particles[v_index], *e, 
+				   _effective_R_squared);
       }
     }
   }
