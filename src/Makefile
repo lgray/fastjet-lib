@@ -31,7 +31,7 @@ clean:
 
 
 depend:
-	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
+	makedepend $(FASTJET_INCLUDE) -Y -- $(CXXFLAGS) -- $(SRCS)
 # DO NOT DELETE
 
 DnnPlane.o: ../include/fastjet/internal/DnnPlane.hh
@@ -156,13 +156,6 @@ ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceAreaBase.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ActiveAreaSpec.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/internal/BasicRandom.hh
-Voronoi.o: /usr/include/stdio.h /usr/include/features.h
-Voronoi.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
-Voronoi.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h
-Voronoi.o: /usr/include/bits/types.h /usr/include/bits/typesizes.h
-Voronoi.o: /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h
-Voronoi.o: /usr/include/bits/wchar.h /usr/include/gconv.h
-Voronoi.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
 Voronoi.o: ../include/fastjet/internal/Voronoi.hh
 Voronoi.o: ../include/fastjet/ClusterSequenceWithArea.hh
 Voronoi.o: ../include/fastjet/ClusterSequenceAreaBase.hh
@@ -177,15 +170,7 @@ Voronoi.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 Voronoi.o: ../include/fastjet/ActiveAreaSpec.hh
 Voronoi.o: ../include/fastjet/internal/BasicRandom.hh
 Voronoi.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
-Voronoi.o: ../include/fastjet/AreaDefinition.hh /usr/include/math.h
-Voronoi.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
-Voronoi.o: /usr/include/bits/mathcalls.h /usr/include/stdlib.h
-Voronoi.o: /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h
-Voronoi.o: /usr/include/bits/endian.h /usr/include/sys/select.h
-Voronoi.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
-Voronoi.o: /usr/include/bits/time.h /usr/include/sys/sysmacros.h
-Voronoi.o: /usr/include/bits/pthreadtypes.h /usr/include/alloca.h
-Voronoi.o: /usr/include/string.h
+Voronoi.o: ../include/fastjet/AreaDefinition.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/PseudoJet.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/internal/numconsts.hh
@@ -202,26 +187,6 @@ ClusterSequenceVoronoiArea.o: ../include/fastjet/internal/Voronoi.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceWithArea.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
-ClusterSequenceVoronoiArea.o: /usr/include/math.h /usr/include/features.h
-ClusterSequenceVoronoiArea.o: /usr/include/sys/cdefs.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/wordsize.h
-ClusterSequenceVoronoiArea.o: /usr/include/gnu/stubs.h
-ClusterSequenceVoronoiArea.o: /usr/include/gnu/stubs-32.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/huge_val.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/mathdef.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/mathcalls.h
-ClusterSequenceVoronoiArea.o: /usr/include/stdlib.h /usr/include/sys/types.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/types.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/typesizes.h
-ClusterSequenceVoronoiArea.o: /usr/include/time.h /usr/include/endian.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/endian.h
-ClusterSequenceVoronoiArea.o: /usr/include/sys/select.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/select.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/sigset.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/time.h
-ClusterSequenceVoronoiArea.o: /usr/include/sys/sysmacros.h
-ClusterSequenceVoronoiArea.o: /usr/include/bits/pthreadtypes.h
-ClusterSequenceVoronoiArea.o: /usr/include/alloca.h /usr/include/string.h
 BasicRandom.o: ../include/fastjet/internal/BasicRandom.hh
 BasicRandom.o: ../include/fastjet/internal/base.hh
 JetDefinition.o: ../include/fastjet/JetDefinition.hh
