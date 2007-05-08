@@ -10,6 +10,8 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 LDFLAGS += -L../lib -lfastjet
 
+CXXFLAGS += -Woverloaded-virtual
+
 # plugin includes here are temporary and subject to change...
 PLUGIN_INCLUDE = -I../plugins/CDFCones -I../plugins/PxCone -I../plugins/SISCone
 PLUGIN_LIBRARY = -L../plugins/CDFCones -L../plugins/PxCone -L../plugins/SISCone -lCDFConesPlugin -lPxConePlugin -lSISConePlugin  $(F77LIB)
@@ -72,7 +74,7 @@ realclean: clean
 	rm -f  fastjet_example fastjet_timing ktjet_example ktjet_timing
 
 depend:
-	makedepend $(FASTJET_INCLUDE) --   -- $(SRCS)
+	makedepend $(FASTJET_INCLUDE) -Y -- $(CXXFLAGS) -- $(SRCS)
 # DO NOT DELETE
 
 fastjet_example.o: ../include/fastjet/PseudoJet.hh
