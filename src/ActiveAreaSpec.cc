@@ -68,11 +68,11 @@ void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       // double kt = _mean_ghost_kt*(1+rand()*_kt_scatter/RAND_MAX);
      
       // include random offsets for all quantities
-      double phi = (iphi+0.5) * _dphi + _dphi*_our_rand()*_grid_scatter;
-      double rap = irap * _drap + _drap*_our_rand()*_grid_scatter;
+      double phi = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
+      double rap = irap * _drap + _drap*(_our_rand()-0.5)*_grid_scatter;
       //double phi = (iphi+0.5) * _dphi* + _our_rand()*_grid_scatter;
       //double rap = irap * _drap + _our_rand()*_grid_scatter;
-      double kt = _mean_ghost_kt*(1+_our_rand()*_kt_scatter);
+      double kt = _mean_ghost_kt*(1+(_our_rand()-0.5)*_kt_scatter);
 
 
 

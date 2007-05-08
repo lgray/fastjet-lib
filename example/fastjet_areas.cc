@@ -43,7 +43,7 @@
 //
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "fastjet/ClusterSequenceWithArea.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -73,16 +73,23 @@ int main (int argc, char ** argv) {
   fastjet::Strategy strategy = fastjet::Best;
   fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
 
-  // create an object that specifies how we to define the (active) area
-  double ghost_etamax = 6.0;
-  int    active_area_repeats = 3;
-  double ghost_area    = 0.01;
-  fastjet::ActiveAreaSpec area_spec(ghost_etamax, active_area_repeats, 
-                                    ghost_area);
+  // create an object that specifies how we to define the area
+  fastjet::AreaDefinition area_def;
+  bool use_active = true;
+  if (use_active) {
+    double ghost_etamax = 7.0;
+    int    active_area_repeats = 3;
+    double ghost_area    = 0.01;
+    area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
+                                       ghost_area);
+  } else {
+    double effective_Rfact = 1.0;
+    area_def = fastjet::VoronoiAreaSpec(effective_Rfact);
+  }
 
   // run the jet clustering with the above jet definition
-  fastjet::ClusterSequenceActiveArea clust_seq(input_particles, 
-                                               jet_def, area_spec);
+  fastjet::ClusterSequenceWithArea clust_seq(input_particles, 
+                                               jet_def, area_def);
 
   // tell the user what was done
   cout << "Strategy adopted by FastJet was "<<

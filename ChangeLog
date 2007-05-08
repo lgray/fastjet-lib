@@ -1,3 +1,22 @@
+
+2007-05-08  Gavin, Matteo & Gregory
+
+	* example/fastjet_areas.cc: 
+	  adapted example to new form of ClusterSequenceWithAreas
+
+	* include/fastjet/AreaDefinition.hh: 
+	  added default constructor for VoronoiAreaSpec
+
+	* ActiveAreaSpec.cc|hh
+	  changed default grid_scatter (1e-4 -> 1.0) [gives better
+	  systematics at large ghost areas, and runs faster on cone], and
+	  redefined scatter (kt and y,phi) to be around central values
+	  (rather than an asymmetric shift as before).
+
+	* ClusterSequenceWithArea.hh
+	  added constructors that take ActiveAreaSpec and VoronoiAreaSpec
+	  directly. 
+	
 2007-05-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* ClusterSequenceVoronoiArea.hh|cc: 

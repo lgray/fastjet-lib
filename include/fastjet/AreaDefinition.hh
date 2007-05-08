@@ -46,11 +46,17 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class VoronoiAreaSpec {
 public:
 
-  VoronoiAreaSpec(double effective_Rfact = 1.0) : 
-    _effective_Rfact(effective_Rfact) {};
+  /// default constructor (effective_Rfact = 1);
+  VoronoiAreaSpec() : _effective_Rfact(1.0) {};
   
+  /// constructor that allows you to set effective_Rfact.
+  VoronoiAreaSpec(double effective_Rfact) : 
+    _effective_Rfact(effective_Rfact) {};
+
+  /// return the value of effective_Rfact
   double effective_Rfact() const {return _effective_Rfact;}
 
+  /// return a textual description of the area definition.
   std::string description() const;
 
 private:

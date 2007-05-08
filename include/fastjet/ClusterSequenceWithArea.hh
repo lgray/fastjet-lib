@@ -44,7 +44,23 @@ public:
   template<class L> ClusterSequenceWithArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const AreaDefinition & area_def_in);
+	  const AreaDefinition & area_def_in)  : _area_def(area_def_in) {
+    initialize_and_run_cswa(pseudojets, jet_def);
+  }
+
+  template<class L> ClusterSequenceWithArea
+         (const std::vector<L> & pseudojets, 
+	  const JetDefinition & jet_def,
+	  const ActiveAreaSpec & area_spec)   : _area_def(area_spec){
+    initialize_and_run_cswa(pseudojets, jet_def);
+  }
+
+  template<class L> ClusterSequenceWithArea
+         (const std::vector<L> & pseudojets, 
+	  const JetDefinition & jet_def,
+	  const VoronoiAreaSpec & area_spec)   : _area_def(area_spec){
+    initialize_and_run_cswa(pseudojets, jet_def);
+  }
 
   /// return a reference to the area definition
   const AreaDefinition & area_def() const {return _area_def;}
@@ -78,15 +94,21 @@ public:
 
 
 private:
+
+  template<class L> void initialize_and_run_cswa (
+                                 const std::vector<L> & pseudojets, 
+                                 const JetDefinition & jet_def);
+
   std::auto_ptr<ClusterSequenceAreaBase> _area_base;
   AreaDefinition _area_def;
 };
 
 //----------------------------------------------------------------------
-template<class L> ClusterSequenceWithArea::ClusterSequenceWithArea
-(const std::vector<L> & pseudojets, 
- const JetDefinition  & jet_def,
- const AreaDefinition & area_def_in) : _area_def(area_def_in) {
+//template<class L> ClusterSequenceWithArea::ClusterSequenceWithArea
+template<class L> void ClusterSequenceWithArea::initialize_and_run_cswa(
+           const std::vector<L> & pseudojets, 
+           const JetDefinition  & jet_def)
+ {
   
   ClusterSequenceAreaBase * _area_base_ptr;
   switch(_area_def.area_type()) {

@@ -57,7 +57,7 @@ public:
   explicit ActiveAreaSpec(double ghost_maxrap, 
                           int    repeat = 1,
                           double ghost_area=0.01, 
-                          double grid_scatter = 1e-4, 
+                          double grid_scatter = 1.0, 
                           double kt_scatter = 0.1,
                           double mean_ghost_kt = 1e-100): 
     _ghost_maxrap(ghost_maxrap), 
