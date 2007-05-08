@@ -49,6 +49,9 @@ using namespace std;
 class ClusterSequenceActiveArea : public ClusterSequenceAreaBase {
 public:
 
+  /// default constructor
+  ClusterSequenceActiveArea() {}
+
   /// constructor based on JetDefinition and ActiveAreaSpec
   template<class L> ClusterSequenceActiveArea
          (const std::vector<L> & pseudojets, 
@@ -96,21 +99,21 @@ public:
   /// ClusterSequenceAreaBase::n_empty_jets(...))
   virtual double n_empty_jets(double maxrap) const;
 
-private:
+protected:
+  void _initialise_AA(const JetDefinition & jet_def,
+                      const ActiveAreaSpec & area_spec,
+                      const bool & writeout_combinations,
+                      bool & continue_running);
+
+  void _run_AA(const ActiveAreaSpec & area_spec);
+
+  void _postprocess_AA(const ActiveAreaSpec & area_spec);
 
   /// does the initialisation and running specific to the active
   /// areas class
   void _initialise_and_run_AA (const JetDefinition & jet_def,
                                const ActiveAreaSpec & area_spec,
                                const bool & writeout_combinations = false);
-
-
-  valarray<double> _average_area, _average_area2;
-  valarray<PseudoJet> _average_area_4vector;
-  double           _non_jet_area, _non_jet_area2, _non_jet_number;
-
-  double _maxrap_for_area; // max rap where we put ghosts
-  double _safe_rap_for_area; // max rap where we trust jet areas
 
   /// transfer the history (and jet-momenta) from clust_seq to our
   /// own internal structure while removing ghosts
@@ -122,6 +125,19 @@ private:
   /// object into our internal area bookkeeping...
   void _transfer_areas(const vector<int> & unique_hist_order, 
                        const ClusterSequenceActiveAreaExplicitGhosts & );
+
+  /// child classes benefit from having these at their disposal
+  valarray<double> _average_area, _average_area2;
+
+private:
+
+
+  valarray<PseudoJet> _average_area_4vector;
+  double           _non_jet_area, _non_jet_area2, _non_jet_number;
+
+  double _maxrap_for_area; // max rap where we put ghosts
+  double _safe_rap_for_area; // max rap where we trust jet areas
+
 
   /// routine for extracting the tree in an order that will be independent
   /// of any degeneracies in the recombination sequence that don't

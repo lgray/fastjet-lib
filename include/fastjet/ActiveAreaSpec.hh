@@ -42,24 +42,38 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// namespace to hold default parameters for the active area spec
+namespace aas {
+  const double def_ghost_maxrap  = 6.0;
+  const int    def_repeat        = 1;
+  const double def_ghost_area    = 0.01;
+  const double def_grid_scatter  = 1.0;
+  const double def_kt_scatter    = 0.1;
+  const double def_mean_ghost_kt = 1e-100;
+}
+
 //----------------------------------------------------------------------
 /// Class that defines the parameters that go into the measurement
 /// of active jet areas.
 class ActiveAreaSpec {
 public:
   /// default constructor
-  ActiveAreaSpec(): _ghost_maxrap(6.0), _repeat(1), _ghost_area(0.01), 
-                    _grid_scatter(1.0), _kt_scatter(0.1), 
-                    _mean_ghost_kt(1e-100),
+  ActiveAreaSpec(): _ghost_maxrap (aas::def_ghost_maxrap), 
+                    _repeat       (aas::def_repeat), 
+                    _ghost_area   (aas::def_ghost_area), 
+                    _grid_scatter (aas::def_grid_scatter), 
+                    _kt_scatter   (aas::def_kt_scatter), 
+                    _mean_ghost_kt(aas::def_mean_ghost_kt),
                     _actual_ghost_area(-1.0) {_initialize();};
   
   /// explicit constructor
   explicit ActiveAreaSpec(double ghost_maxrap, 
-                          int    repeat = 1,
-                          double ghost_area=0.01, 
-                          double grid_scatter = 1.0, 
-                          double kt_scatter = 0.1,
-                          double mean_ghost_kt = 1e-100): 
+                          int    repeat        = aas::def_repeat,
+                          double ghost_area    = aas::def_ghost_area,   
+                          double grid_scatter  = aas::def_grid_scatter, 
+                          double kt_scatter    = aas::def_kt_scatter,   
+                          double mean_ghost_kt = aas::def_mean_ghost_kt
+                          ): 
     _ghost_maxrap(ghost_maxrap), 
     _repeat(repeat), 
     _ghost_area(ghost_area), 
@@ -140,6 +154,11 @@ private:
 
   
 };
+
+////----------------------------------------------------------------------
+//class PassiveAreaSpec : public ActiveAreaSpec {
+//public:
+//}
 
 FASTJET_END_NAMESPACE
 

@@ -44,6 +44,7 @@
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequencePassiveArea.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -51,7 +52,7 @@
 using namespace std;
 
 // a declaration of a function that pretty prints a list of jets
-void print_jets (const fastjet::ClusterSequenceWithArea &, 
+void print_jets (const fastjet::ClusterSequenceAreaBase &, 
                  const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
@@ -80,6 +81,8 @@ int main (int argc, char ** argv) {
     double ghost_etamax = 7.0;
     int    active_area_repeats = 3;
     double ghost_area    = 0.01;
+    //int    active_area_repeats = 3;
+    //double ghost_area    = 0.06;
     area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
                                        ghost_area);
   } else {
@@ -90,6 +93,12 @@ int main (int argc, char ** argv) {
   // run the jet clustering with the above jet definition
   fastjet::ClusterSequenceWithArea clust_seq(input_particles, 
                                              jet_def, area_def);
+  // run the jet clustering with the above jet definition
+  //fastjet::ClusterSequencePassiveArea clust_seq(input_particles, jet_def, 
+  //                                              area_def.active_spec());
+
+  cout << clust_seq.empty_area(4.0) << endl;
+  cout << clust_seq.n_empty_jets(4.0) << endl;
 
   // tell the user what was done
   cout << "Strategy adopted by FastJet was "<<
@@ -110,7 +119,7 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets
-void print_jets (const fastjet::ClusterSequenceWithArea & clust_seq, 
+void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq, 
 		 const vector<fastjet::PseudoJet> & unsorted_jets) {
 
   // sort jets into increasing pt

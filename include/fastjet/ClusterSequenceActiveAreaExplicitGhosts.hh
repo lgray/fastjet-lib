@@ -55,13 +55,29 @@ public:
 	  const ActiveAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
-	   _initialise(pseudojets,jet_def,area_spec,writeout_combinations); }
+           std::vector<L> * ghosts = NULL;
+	   _initialise(pseudojets,jet_def,&area_spec,ghosts,0.0,
+                       writeout_combinations); }
+
+  template<class L> ClusterSequenceActiveAreaExplicitGhosts
+         (const std::vector<L> & pseudojets, 
+          const JetDefinition & jet_def,
+          const std::vector<L> & ghosts,
+          double ghost_area,
+	  const bool & writeout_combinations = false) 
+	   : ClusterSequenceAreaBase() {
+           const ActiveAreaSpec * area_spec = NULL;
+	   _initialise(pseudojets,jet_def,area_spec,&ghosts,ghost_area,
+                       writeout_combinations); }
+
 
   /// does the actual work of initialisation
   template<class L> void _initialise
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
+	  const ActiveAreaSpec * area_spec,
+	  const std::vector<L> * ghosts,
+	  double                 ghost_area,
 	  const bool & writeout_combinations); 
 
   //vector<PseudoJet> constituents (const PseudoJet & jet) const;
@@ -103,6 +119,11 @@ private:
   /// the jet area
   void _add_ghosts(const ActiveAreaSpec & area_spec); 
 
+  /// another way of adding ghosts
+  template<class L> void _add_ghosts (
+	  const std::vector<L> & ghosts,
+	  double                 ghost_area);
+
   /// routine to be called after the processing is done so as to
   /// establish summary information on all the jets (areas, whether
   /// pure ghost, etc.)
@@ -117,7 +138,9 @@ private:
 template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
+	  const ActiveAreaSpec * area_spec,
+	  const std::vector<L> * ghosts,
+	  double                 ghost_area,
 	  const bool & writeout_combinations) {
   // don't reserve space yet -- will be done below
 
@@ -134,7 +157,11 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
 
   _initial_hard_n = _jets.size();
 
-  _add_ghosts(area_spec);
+  if (area_spec != NULL) {
+    _add_ghosts(*area_spec);
+  } else {
+    _add_ghosts(*ghosts, ghost_area);
+  }
 
   if (writeout_combinations) {
     std::cout << "# Printing particles including ghosts\n";
@@ -159,6 +186,22 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
 
 inline unsigned int ClusterSequenceActiveAreaExplicitGhosts::n_hard_particles() const {return _initial_hard_n;}
 
+
+//----------------------------------------------------------------------
+/// add an explicitly specified bunch of ghosts
+template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_add_ghosts (
+	  const std::vector<L> & ghosts,
+	  double                 ghost_area) {
+
+  
+  for (unsigned i = 0; i < ghosts.size(); i++) {
+    _is_pure_ghost.push_back(true);
+    _jets.push_back(ghosts[i]);
+  }
+  // and record some info about ghosts
+  _ghost_area = ghost_area;
+  _n_ghosts   = ghosts.size();
+}
 
 
 FASTJET_END_NAMESPACE

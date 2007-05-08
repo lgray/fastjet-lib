@@ -1,3 +1,18 @@
+2007-05-08  Gavin SALAM  <salam@lpthe.jussieu.fr> & matteo
+
+	* include/fastjet/ClusterSequencePassiveArea.hh: ***ADDED***
+	* src/ClusterSequencePassiveArea.cc:             ***ADDED***
+
+	  added a passive class that scans a single ghost over the event,
+	  repeating the clustering once for each ghost position -- the
+	  name may well evolve in the coming days.
+
+	* ClusterSequenceActiveArea.hh|cc: 
+	  changed some private/protected statuses to allow the PassiveArea
+	  to access whatever it needs to access, and split some of the
+	  functions into pieces so that they can be used piecemeal from
+	  derived class.
+
 2007-05-08  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* src/ClusterSequenceVoronoiArea.cc: 
