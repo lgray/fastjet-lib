@@ -97,6 +97,7 @@ public:
 
   /// return a reference to the active area spec
   const ActiveAreaSpec  & active_spec()  const {return _active_spec;}
+  ActiveAreaSpec & active_spec()  {return _active_spec;}
 
   /// return a reference to the voronoi area spec
   const VoronoiAreaSpec & voronoi_spec() const {return _voronoi_spec;}

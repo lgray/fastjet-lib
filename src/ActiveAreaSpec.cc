@@ -51,6 +51,8 @@ void ActiveAreaSpec::_initialize() {
   _actual_ghost_area = _dphi * _drap;
   _n_ghosts   = (2*_nrap+1)*_nphi;
 
+  // checkpoint the status of the random number generator.
+  checkpoint_random();
   //_random_generator.info(cerr);
 }
 

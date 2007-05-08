@@ -49,7 +49,7 @@ class ActiveAreaSpec {
 public:
   /// default constructor
   ActiveAreaSpec(): _ghost_maxrap(6.0), _repeat(1), _ghost_area(0.01), 
-                    _grid_scatter(1e-4), _kt_scatter(0.1), 
+                    _grid_scatter(1.0), _kt_scatter(0.1), 
                     _mean_ghost_kt(1e-100),
                     _actual_ghost_area(-1.0) {_initialize();};
   
@@ -93,7 +93,24 @@ public:
   inline void set_kt_scatter  (double val) {_kt_scatter     = val; };
   inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; };
   inline void set_repeat      (int    val) {_repeat         = val; };
+
+  /// get all relevant information about the status of the 
+  /// random number generator, so that it can be reset subsequently
+  /// with set_random_status.
+  inline void get_random_status(std::vector<int> & __iseed) const {
+    _random_generator.get_status(__iseed);}
+
+  /// set the status of the random number generator, as obtained
+  /// previously with get_random_status. Note that the random
+  /// generator is a static member of the class, i.e. common to all
+  /// instances of the class --- so if you modify the random for this
+  /// instance, you modify it for all instances.
+  inline void set_random_status(const std::vector<int> & __iseed) {
+    _random_generator.set_status(__iseed);}
   
+  inline void checkpoint_random() {get_random_status(_random_checkpoint);}
+  inline void restore_checkpoint_random() {set_random_status(_random_checkpoint);}
+
   /// for a summary
   std::string description() const;
 
@@ -117,6 +134,7 @@ private:
   //inline double _our_rand() const {return rand()*(1.0/RAND_MAX);};
   inline double _our_rand() const {return _random_generator();};
 
+  std::vector<int> _random_checkpoint;
   static BasicRandom<double> _random_generator;
   //mutable BasicRandom<double> _random_generator;
 

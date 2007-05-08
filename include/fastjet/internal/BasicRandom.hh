@@ -22,6 +22,8 @@
 
 //   Standard includes
 #include <iostream>
+#include <vector>
+#include <cassert>
 #include "fastjet/internal/base.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -82,6 +84,18 @@ public:
     _M_iseed[0] = __new_seed[0];
     _M_iseed[1] = __new_seed[1];
   }
+
+  void set_status(const std::vector<int> & __iseed) {
+    assert(__iseed.size() >= 2);
+    _M_iseed[0] = __iseed[0];
+    _M_iseed[1] = __iseed[1];
+  }
+
+  void get_status(std::vector<int> & __iseed) {
+    __iseed.resize(2);
+    __iseed[0] = _M_iseed[0];
+    __iseed[1] = _M_iseed[1];
+  }
   
   //   minimum and maximum values
   inline static value_type min() { return 0;}
@@ -128,6 +142,18 @@ public:
     int *__new_seed = (int*) __iseed;
     _M_iseed[0] = __new_seed[0];
     _M_iseed[1] = __new_seed[1];
+  }
+  
+  void set_status(const std::vector<int> & __iseed) {
+    assert(__iseed.size() >= 2);
+    _M_iseed[0] = __iseed[0];
+    _M_iseed[1] = __iseed[1];
+  }
+
+  void get_status(std::vector<int> & __iseed) {
+    __iseed.resize(2);
+    __iseed[0] = _M_iseed[0];
+    __iseed[1] = _M_iseed[1];
   }
   
   /// minimum value returned by the generator

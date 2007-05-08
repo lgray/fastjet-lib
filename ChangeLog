@@ -1,4 +1,15 @@
+2007-05-08  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* ActiveAreaSpec.hh|cc: 
+	  added get_random_statu(), set_random_status(),
+	  checkpoint_random(), restore_checkpoint_random(), to facilitate
+	  the user's life when then need correlated random numbers for the
+	  areas.
+
+	* include/fastjet/internal/BasicRandom.hh: 
+	  added set_status and get_status routines in the <int> and
+	  <double> versions.
+	
 2007-05-08  Gavin, Matteo & Gregory
 
 	* example/fastjet_areas.cc: 

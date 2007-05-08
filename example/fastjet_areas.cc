@@ -89,7 +89,7 @@ int main (int argc, char ** argv) {
 
   // run the jet clustering with the above jet definition
   fastjet::ClusterSequenceWithArea clust_seq(input_particles, 
-                                               jet_def, area_def);
+                                             jet_def, area_def);
 
   // tell the user what was done
   cout << "Strategy adopted by FastJet was "<<
@@ -104,7 +104,6 @@ int main (int argc, char ** argv) {
   cout << "---------------------------------------\n";
   print_jets(clust_seq, inclusive_jets);
   cout << endl;
-
 
 }
 
