@@ -60,6 +60,16 @@ void ClusterSequenceActiveArea::_initialise_and_run_AA (
 }
 
 //----------------------------------------------------------------------
+void ClusterSequenceActiveArea::_resize_and_zero_AA () {
+  // initialize our local area information
+  _average_area.resize(2*_jets.size());  _average_area  = 0.0;
+  _average_area2.resize(2*_jets.size()); _average_area2 = 0.0;
+  _average_area_4vector.resize(2*_jets.size()); 
+  _average_area_4vector = PseudoJet(0.0,0.0,0.0,0.0);
+  _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
+}
+
+//---------------------------------a-------------------------------------
 void ClusterSequenceActiveArea::_initialise_AA (
 		const JetDefinition & jet_def,
 		const ActiveAreaSpec & area_spec,
@@ -70,12 +80,8 @@ void ClusterSequenceActiveArea::_initialise_AA (
   // store this for future use
   _area_spec_repeat = area_spec.repeat();
 
-  // initialize our local area information
-  _average_area.resize(2*_jets.size());  _average_area  = 0.0;
-  _average_area2.resize(2*_jets.size()); _average_area2 = 0.0;
-  _average_area_4vector.resize(2*_jets.size()); 
-  _average_area_4vector = PseudoJet(0.0,0.0,0.0,0.0);
-  _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
+  // make sure placeholders are there & zeroed
+  _resize_and_zero_AA();
      
   // for future reference...
   _maxrap_for_area = area_spec.ghost_maxrap();

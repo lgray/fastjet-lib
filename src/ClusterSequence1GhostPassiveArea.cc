@@ -37,7 +37,7 @@ using namespace std;
 
 //----------------------------------------------------------------------
 /// global routine for initialising and running a general passive area
-void ClusterSequence1GhostPassiveArea::_initialise_and_run_PA (
+void ClusterSequence1GhostPassiveArea::_initialise_and_run_1GPA (
 		const JetDefinition & jet_def,
 		const ActiveAreaSpec & area_spec,
 		const bool & writeout_combinations) {
@@ -45,7 +45,7 @@ void ClusterSequence1GhostPassiveArea::_initialise_and_run_PA (
   bool continue_running;
   _initialise_AA(jet_def,  area_spec, writeout_combinations, continue_running);
   if (continue_running) {
-    _run_PA(area_spec);
+    _run_1GPA(area_spec);
     _postprocess_AA(area_spec);
   }
 }
@@ -53,7 +53,7 @@ void ClusterSequence1GhostPassiveArea::_initialise_and_run_PA (
 
 //----------------------------------------------------------------------
 /// routine for running a passive area one ghost at a time.
-void ClusterSequence1GhostPassiveArea::_run_PA (const ActiveAreaSpec & area_spec) {
+void ClusterSequence1GhostPassiveArea::_run_1GPA (const ActiveAreaSpec & area_spec) {
     // record the input jets as they are currently
   vector<PseudoJet> input_jets(_jets);
 

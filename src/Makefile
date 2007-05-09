@@ -11,7 +11,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc Voronoi.cc ClusterSequenceVoronoiArea.cc ClusterSequence1GhostPassiveArea.cc BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc ActiveAreaSpec.cc ClusterSequenceActiveArea.cc Voronoi.cc ClusterSequenceVoronoiArea.cc ClusterSequencePassiveArea.cc ClusterSequence1GhostPassiveArea.cc BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
@@ -189,6 +189,22 @@ ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceWithArea.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/PseudoJet.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/base.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/Error.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/JetDefinition.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ActiveAreaSpec.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/internal/BasicRandom.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/AreaDefinition.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/PseudoJet.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/internal/numconsts.hh

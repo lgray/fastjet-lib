@@ -100,6 +100,7 @@ public:
   virtual double n_empty_jets(double maxrap) const;
 
 protected:
+  void _resize_and_zero_AA ();
   void _initialise_AA(const JetDefinition & jet_def,
                       const ActiveAreaSpec & area_spec,
                       const bool & writeout_combinations,
@@ -128,11 +129,11 @@ protected:
 
   /// child classes benefit from having these at their disposal
   valarray<double> _average_area, _average_area2;
+  valarray<PseudoJet> _average_area_4vector;
 
 private:
 
 
-  valarray<PseudoJet> _average_area_4vector;
   double           _non_jet_area, _non_jet_area2, _non_jet_number;
 
   double _maxrap_for_area; // max rap where we put ghosts

@@ -1,3 +1,27 @@
+2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo [later]
+
+	* JetDefinition.cc|hh: 
+	* plugins/SISCone/SISConePlugin.hh|cc: 
+	  added mechanism for supporting ghosted passive areas in plugins
+
+	* include/fastjet/ClusterSequencePassiveArea.hh  *** ADDED ***
+        * src/ClusterSequencePassiveArea.cc              *** ADDED ***
+
+	  put in support for this passive area class that redirects one to
+	  the supposedly optimal passive-area determination for each each
+	  algorithm.	
+
+
+	* include/fastjet/AreaDefinition.hh:
+        * include/fastjet/ClusterSequence1GhostPassiveArea.hh:
+        * include/fastjet/ClusterSequencePassiveArea.hh:
+        * include/fastjet/ClusterSequenceActiveArea.hh:
+        * include/fastjet/ClusterSequenceWithArea.hh:
+
+          various changes related to the above, including selection of the
+	  PassiveArea from the WithArea class.
+
+
 2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
         * ClusterSequencePassiveArea -> ClusterSequence1GhostPassiveArea

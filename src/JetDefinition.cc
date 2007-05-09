@@ -183,4 +183,9 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
   }
 }
 
+void JetDefinition::Plugin::set_ghost_separation_scale(double scale) const {
+      throw Error("set_ghost_separation_scale not supported");
+}
+ 
+
 FASTJET_END_NAMESPACE

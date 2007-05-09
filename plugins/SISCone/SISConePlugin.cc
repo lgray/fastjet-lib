@@ -111,12 +111,12 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     // run the jet finding
     //cout << "plg sms: " << split_merge_scale() << endl;
     siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
-                          n_pass_max(), protojet_ptmin(), 
+                          n_pass_max(), protojet_or_ghost_ptmin(), 
                           Esplit_merge_scale(split_merge_scale()));
   } else {
     // just run the overlap part of the jets.
     //cout << "plg rcmp sms: " << split_merge_scale() << endl;
-    siscone->recompute_jets(overlap_threshold(), protojet_ptmin(), 
+    siscone->recompute_jets(overlap_threshold(), protojet_or_ghost_ptmin(), 
                             Esplit_merge_scale(split_merge_scale()));
   }
 

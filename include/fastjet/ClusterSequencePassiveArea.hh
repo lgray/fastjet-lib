@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id$
+// $Id: ClusterSequencePassiveArea.hh 626 2007-05-09 15:23:02Z salam $
 //
 // Copyright (c) 2005-2007, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
@@ -28,13 +28,12 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_CLUSTERSEQUENCE1GHOSTPASSIVEAREA_HH__
-#define __FASTJET_CLUSTERSEQUENCE1GHOSTPASSIVEAREA_HH__
+#ifndef __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
+#define __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
 
 
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceAreaBase.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "fastjet/ClusterSequence1GhostPassiveArea.hh"
 #include<iostream>
 #include<vector>
 
@@ -46,41 +45,31 @@ using namespace std;
 /// that it also provides access to the area of a jet (which
 /// will be a random quantity... Figure out what to do about seeds 
 /// later...)
-class ClusterSequence1GhostPassiveArea : public ClusterSequenceActiveArea {
+class ClusterSequencePassiveArea : public ClusterSequence1GhostPassiveArea {
 public:
 
-  ClusterSequence1GhostPassiveArea() {}
-
-  /// constructor based on JetDefinition and 1GhostPassiveAreaSpec
-  template<class L> ClusterSequence1GhostPassiveArea
+  /// constructor based on JetDefinition and PassiveAreaSpec
+  template<class L> ClusterSequencePassiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const ActiveAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) ;
 
-  /// return an estimate for the number of empty jets -- one uses the
-  /// AreaBase one rather than the ActiveArea one (which for which we
-  /// not have the information).
-  virtual double n_empty_jets(double maxrap) const {
-    return ClusterSequenceAreaBase::n_empty_jets(maxrap);
-  }
-
-protected:
-  /// does the initialisation and running specific to the passive
-  /// areas class
-  void _initialise_and_run_1GPA (const JetDefinition & jet_def,
-                               const ActiveAreaSpec & area_spec,
-                               const bool & writeout_combinations = false);
 
 private:
 
-  void _run_1GPA(const ActiveAreaSpec & area_spec);
+  /// does the initialisation and running specific to the passive
+  /// areas class
+  void _initialise_and_run_PA (const JetDefinition & jet_def,
+                               const ActiveAreaSpec & area_spec,
+                               const bool & writeout_combinations = false);
+
 };
 
 
 
 
-template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassiveArea 
+template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea 
 (const std::vector<L> & pseudojets, 
  const JetDefinition & jet_def,
  const ActiveAreaSpec & area_spec,
@@ -90,7 +79,7 @@ template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassive
   _transfer_input_jets(pseudojets);
 
   // run the clustering for passive areas
-  _initialise_and_run_1GPA(jet_def, area_spec, writeout_combinations);
+  _initialise_and_run_PA(jet_def, area_spec, writeout_combinations);
 
 }
 
@@ -98,4 +87,4 @@ template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassive
   
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_CLUSTERSEQUENCE1GHOSTPASSIVEAREA_HH__
+#endif // __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__

@@ -34,7 +34,7 @@
 #include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
 #include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
-#include "fastjet/ClusterSequence1GhostPassiveArea.hh"
+#include "fastjet/ClusterSequencePassiveArea.hh"
 #include "fastjet/ClusterSequenceVoronoiArea.hh"
 #include "fastjet/AreaDefinition.hh"
 
@@ -128,8 +128,13 @@ template<class L> void ClusterSequenceWithArea::initialize_and_run_cswa(
                                                    jet_def, 
                                                    _area_def.voronoi_spec());
     break;
-  case AreaDefinition::passive_area:
+  case AreaDefinition::one_ghost_passive_area:
     _area_base_ptr = new ClusterSequence1GhostPassiveArea(pseudojets, 
+						    jet_def, 
+						    _area_def.active_spec());
+    break;
+  case AreaDefinition::passive_area:
+    _area_base_ptr = new ClusterSequencePassiveArea(pseudojets, 
 						    jet_def, 
 						    _area_def.active_spec());
     break;

@@ -13,10 +13,12 @@ LDFLAGS += -L../lib -lfastjet
 CXXFLAGS += -Woverloaded-virtual
 
 # plugin includes here are temporary and subject to change...
-PLUGIN_INCLUDE = -I../plugins/CDFCones -I../plugins/PxCone -I../plugins/SISCone
-PLUGIN_LIBRARY = -L../plugins/CDFCones -L../plugins/PxCone -L../plugins/SISCone -lCDFConesPlugin -lPxConePlugin -lSISConePlugin  $(F77LIB)
+PLUGIN_INCLUDE = -I../plugins/CDFCones  -I../plugins/SISCone
+PLUGIN_LIBRARY = -L../plugins/CDFCones  -L../plugins/SISCone -lCDFConesPlugin  -lSISConePlugin
+PLUGIN77_INCLUDE = $(PLUGIN_INCLUDE) -I../plugins/PxCone
+PLUGIN77_LIBRARY = $(PLUGIN_LIBRARY) -L../plugins/PxCone -lPxConePlugin  $(F77LIB)
 
-INCLUDE += $(PLUGIN_INCLUDE)
+INCLUDE += $(PLUGIN77_INCLUDE)
 
 # Gavin sometimes likes to compile with google's tcmalloc and profiler
 # libraries: tcmalloc gives a faster malloc (about 10% speed
@@ -36,7 +38,7 @@ fastjet_example_v1_interface: fastjet_example_v1_interface.o  ../lib/libfastjet.
 	$(CXX)  -o fastjet_example_v1_interface fastjet_example_v1_interface.o  $(LDFLAGS)
 
 fastjet_areas: fastjet_areas.o  ../lib/libfastjet.a
-	$(CXX)  -o fastjet_areas fastjet_areas.o  $(LDFLAGS)
+	$(CXX)  -o fastjet_areas fastjet_areas.o  $(LDFLAGS) $(PLUGIN_LIBRARY)
 
 fastjet_subtraction: fastjet_subtraction.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_subtraction fastjet_subtraction.o  $(LDFLAGS)
@@ -56,7 +58,7 @@ fastjet_timing: fastjet_timing.o CmdLine.o ../lib/libfastjet.a
 	$(CXX)  -o fastjet_timing fastjet_timing.o CmdLine.o  $(LDFLAGS)
 
 fastjet_timing_plugins: fastjet_timing_plugins.o CmdLine.o ../lib/libfastjet.a
-	$(CXX)  -o fastjet_timing_plugins fastjet_timing_plugins.o CmdLine.o  $(LDFLAGS) $(PLUGIN_LIBRARY)
+	$(CXX)  -o fastjet_timing_plugins fastjet_timing_plugins.o CmdLine.o  $(LDFLAGS) $(PLUGIN77_LIBRARY)
 
 # for the following to compile the KTJET_INCLUDE and KTJET_LIBRARY
 # variables must be set in ../Makefile
@@ -113,6 +115,7 @@ fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhost
 fastjet_subtraction.o: ../include/fastjet/ActiveAreaSpec.hh
 fastjet_subtraction.o: ../include/fastjet/internal/BasicRandom.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
 fastjet_subtraction.o: ../include/fastjet/AreaDefinition.hh
 fastjet_areas.o: ../include/fastjet/PseudoJet.hh
@@ -129,5 +132,6 @@ fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 fastjet_areas.o: ../include/fastjet/ActiveAreaSpec.hh
 fastjet_areas.o: ../include/fastjet/internal/BasicRandom.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
 fastjet_areas.o: ../include/fastjet/AreaDefinition.hh

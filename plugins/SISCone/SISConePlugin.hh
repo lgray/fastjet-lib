@@ -5,6 +5,7 @@
 #include "fastjet/ClusterSequence.hh" // needed for the extras we define
 #include <vector>
 #include <memory>
+#include <cmath>
 
 // put a forward declaration to the Csiscone class to avoid having to
 // include the siscone headers here
@@ -115,7 +116,8 @@ public:
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (protojet_ptmin),
     _caching               (caching),             
-    _split_merge_scale     (split_merge_on_transverse_mass ? SM_mt : SM_pttilde) {}
+    _split_merge_scale     (split_merge_on_transverse_mass ? SM_mt : SM_pttilde),
+    _ghost_sep_scale       (0.0)  {}
   
   /// backwards compatible constructor for the SISCone Plugin class
   /// (avoid using this in future).
@@ -128,7 +130,8 @@ public:
     _n_pass_max            (n_pass_max ), 
     _protojet_ptmin        (0.0),
     _caching               (caching),
-    _split_merge_scale     (SM_mt)     {}
+    _split_merge_scale     (SM_mt),
+    _ghost_sep_scale       (0.0) {}
 
   /// copy constructor
   SISConePlugin (const SISConePlugin & plugin) {
@@ -150,6 +153,12 @@ public:
   /// of the algorithm
   double protojet_ptmin  () const {return _protojet_ptmin  ;}
 
+  /// return the scale to be passed to SISCone as the protojet_ptmin
+  /// -- if we have a ghost separation scale that is above the
+  /// protojet_ptmin, then the ghost_separation_scale becomes the
+  /// relevant one to use here
+  double protojet_or_ghost_ptmin  () const {return std::max(_protojet_ptmin,
+                                                            _ghost_sep_scale);}
 
   /// indicates scale used in split-merge
   SplitMergeScale split_merge_scale() const {return _split_merge_scale;}
@@ -184,6 +193,21 @@ public:
   /// the plugin mechanism's standard way of accessing the jet radius
   virtual double R() const {return cone_radius();}
 
+  /// return true since there is specific support for the measurement
+  /// of passive areas, in the sense that areas determined from all
+  /// particles below the ghost separation scale will be a passive
+  /// area. 
+  virtual bool supports_ghosted_passive_areas() const {return true;}
+  
+  /// set the ghost separation scale for passive area determinations
+  /// _just_ in the next run (strictly speaking that makes the routine
+  /// a non const, so related internal info must be stored as a mutable)
+  virtual void set_ghost_separation_scale(double scale) const {
+    _ghost_sep_scale = scale;
+  }
+
+  virtual double ghost_separation_scale() const {return _ghost_sep_scale;}
+
 private:
   double _cone_radius, _overlap_threshold;
   int    _n_pass_max;
@@ -191,6 +215,8 @@ private:
   bool   _caching;//, _split_merge_on_transverse_mass;
   SplitMergeScale _split_merge_scale;
   double _split_merge_stopping_scale;
+
+  mutable double _ghost_sep_scale;
 
   // variables for caching the results and the input
   static std::auto_ptr<SISConePlugin          > stored_plugin;

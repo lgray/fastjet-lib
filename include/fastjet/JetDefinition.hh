@@ -308,6 +308,18 @@ public:
     
     virtual double R() const = 0;
     
+    /// return true if there is specific support for the measurement
+    /// of passive areas, in the sense that areas determined from all
+    /// particles below the ghost separation scale will be a passive
+    /// area. [If you don't understand this, ignore it!]
+    virtual bool supports_ghosted_passive_areas() const {return false;}
+
+    /// set the ghost separation scale for passive area determinations
+    /// in future runs (strictly speaking that makes the routine
+    /// a non const, so related internal info must be stored as a mutable)
+    virtual void set_ghost_separation_scale(double scale) const;
+    virtual double ghost_separation_scale() const {return 0.0;}
+
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Plugin() {};
   };

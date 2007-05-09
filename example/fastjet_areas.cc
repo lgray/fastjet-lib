@@ -45,6 +45,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceWithArea.hh"
 #include "fastjet/ClusterSequencePassiveArea.hh"
+#include "SISConePlugin.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -72,22 +73,23 @@ int main (int argc, char ** argv) {
   // the associated parameters
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;
-  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
+  //fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
   //fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, Rparam, strategy);
-  //fastjet::JetDefinition jet_def(fastjet::cambridge_for_passive_algorithm, Rparam, strategy);
-  jet_def.set_extra_param(1e-50);
+  fastjet::JetDefinition jet_def(new fastjet::SISConePlugin(1.0));
 
   // create an object that specifies how we to define the area
   fastjet::AreaDefinition area_def;
-  bool use_active = false;
+  bool use_active = true;
   if (use_active) {
     double ghost_etamax = 7.0;
     int    active_area_repeats = 3;
     double ghost_area    = 0.01;
     //int    active_area_repeats = 100;
     //double ghost_area    = 0.06;
-    area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
-                                       ghost_area);
+    //area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
+    //                                   ghost_area);
+    fastjet::ActiveAreaSpec area_spec(ghost_etamax, active_area_repeats, ghost_area);
+    area_def = fastjet::AreaDefinition(area_spec,fastjet::AreaDefinition::passive_area);
   } else {
     double effective_Rfact = 1.0;
     area_def = fastjet::VoronoiAreaSpec(effective_Rfact);

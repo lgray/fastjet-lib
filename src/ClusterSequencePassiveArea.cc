@@ -1,0 +1,85 @@
+//STARTHEADER
+// $Id: ClusterSequence1GhostPassiveArea.cc 626 2007-05-09 15:23:02Z salam $
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+#include "fastjet/ClusterSequencePassiveArea.hh"
+#include "fastjet/ClusterSequenceVoronoiArea.hh"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+
+using namespace std;
+
+//----------------------------------------------------------------------
+/// global routine for initialising and running a passive area that is
+/// correct in general, but that chooses an optimal approach for
+/// various special cases.
+void ClusterSequencePassiveArea::_initialise_and_run_PA (
+		const JetDefinition & jet_def,
+		const ActiveAreaSpec & area_spec,
+		const bool & writeout_combinations) {
+
+  if (jet_def.jet_finder() == kt_algorithm) {
+    // first run the passive area
+    ClusterSequenceVoronoiArea csva(_jets,jet_def,VoronoiAreaSpec(1.0));
+    // now set up and transfer relevant information    
+    // first the clustering sequence
+    transfer_from_sequence(csva);
+    // then the areas
+    _resize_and_zero_AA();
+    for (unsigned i = 0; i < _history.size(); i++) {
+      _average_area[i] = csva.area(_jets[_history[i].jetp_index]);
+      int ijetp = _history[i].jetp_index;
+      if (ijetp != Invalid) _average_area_4vector[i] = csva.area_4vector(_jets[ijetp]);
+    }
+
+  } else if (jet_def.jet_finder() == cambridge_algorithm) {
+    // run a variant of the cambridge algorithm that has been hacked
+    // to deal with passive areas
+    JetDefinition tmp_jet_def = jet_def;
+    tmp_jet_def.set_jet_finder(cambridge_for_passive_algorithm);
+    tmp_jet_def.set_extra_param(sqrt(area_spec.mean_ghost_kt()));
+    _initialise_and_run_AA(tmp_jet_def, area_spec, writeout_combinations);
+    _jet_def = jet_def;
+
+  } else if (jet_def.jet_finder() == antikt_algorithm) {
+    // for the antikt algorithm, passive and active are identical
+    _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
+
+  } else {
+    // for a generic algorithm, just run the 1GhostPassiveArea
+    _initialise_and_run_1GPA(jet_def, area_spec, writeout_combinations);
+  }
+}
+
+
+
+
+FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
+
