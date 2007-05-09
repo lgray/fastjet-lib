@@ -1,3 +1,16 @@
+2007-05-09  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* include/fastjet/ClusterSequenceWithArea.hh: 
+	  redirect to the ClusterSequencePAssiveArea class when area type
+	  is set to passive_area
+
+	* include/fastjet/AreaDefinition.hh: 
+	  - added passive_area to the list of allowed area types.
+	  - added a new ctor specifying an ActiveAreaSpec together with
+	    an AreaType. This allow definition of active,
+	    active_with_explicit_ghosts and passive areas.
+	
+
 2007-05-08  Gavin SALAM  <salam@lpthe.jussieu.fr> & matteo
 
 	* include/fastjet/ClusterSequencePassiveArea.hh: ***ADDED***

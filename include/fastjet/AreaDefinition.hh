@@ -69,7 +69,11 @@ private:
 ///
 class AreaDefinition {
 public:
-
+  /// the different types of area that are supported
+  enum AreaType {invalid_area = -1, active_area = 0, 
+                 active_area_explicit_ghosts = 1, voronoi_area=2,
+		 passive_area = 3};
+  
   AreaDefinition() {_area_type = invalid_area;}
 
   /// constructor for an area definition based on an active area
@@ -77,6 +81,13 @@ public:
   AreaDefinition(const ActiveAreaSpec & spec, bool explicit_ghosts = false) {
     _active_spec = spec;
     _area_type   = explicit_ghosts ? active_area_explicit_ghosts : active_area;
+  }
+
+  /// constructor for an area definition based on 
+  /// an active or passive area specification
+  AreaDefinition(const ActiveAreaSpec & spec, AreaType type) {
+    _active_spec = spec;
+    _area_type   = type;
   }
 
   /// constructor for an area definition based on a voronoi area specification
@@ -88,10 +99,6 @@ public:
   /// return a description of the current area definition
   std::string description() const;
 
-  /// the different types of area that are supported
-  enum AreaType {invalid_area = -1, active_area = 0, 
-                 active_area_explicit_ghosts = 1, voronoi_area=2};
-  
   /// return info about the type of area being used by this defn
   AreaType area_type() const {return _area_type;}
 
@@ -102,8 +109,6 @@ public:
   /// return a reference to the voronoi area spec
   const VoronoiAreaSpec & voronoi_spec() const {return _voronoi_spec;}
   
-
-
 private:
 
   AreaType        _area_type;
