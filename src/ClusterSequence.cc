@@ -258,6 +258,23 @@ string ClusterSequence::strategy_string ()  const {
 }  
 
 
+double ClusterSequence::jet_scale_for_algorithm(
+				  const PseudoJet & jet) const {
+  if (_jet_finder == kt_algorithm)             {return jet.kt2();}
+  else if (_jet_finder == cambridge_algorithm) {return 1.0;}
+  else if (_jet_finder == antikt_algorithm) {
+    double kt2=jet.kt2();
+    return kt2 > 1e-300 ? 1.0/kt2 : 1e300;
+  } else if (_jet_finder == cambridge_for_passive_algorithm) {
+    double kt2 = jet.kt2();
+    double lim = _jet_def.extra_param();
+    if (kt2 < lim*lim && kt2 != 0.0) {
+      return 1.0/kt2;
+    } else {return 1.0;}
+  } else {throw Error("Unrecognised jet finder");}
+}
+
+
 //----------------------------------------------------------------------
 /// transfer the sequence contained in other_seq into our own;
 /// any plugin "extras" contained in the from_seq will be lost
@@ -329,7 +346,8 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       i--;
     }
   } else if (_jet_finder == plugin_algorithm 
-             || _jet_finder == antikt_algorithm) {
+             || _jet_finder == antikt_algorithm
+             || _jet_finder == cambridge_for_passive_algorithm) {
     // for inclusive jets with a plugin algorithm, we make no
     // assumptions about anything (relation of dij to momenta,
     // ordering of the dij, etc.)

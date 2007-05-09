@@ -617,18 +617,6 @@ inline unsigned int ClusterSequence::n_particles() const {return _initial_n;}
 
 
 
-inline double ClusterSequence::jet_scale_for_algorithm(
-				  const PseudoJet & jet) const {
-  if (_jet_finder == kt_algorithm)             {return jet.kt2();}
-  else if (_jet_finder == cambridge_algorithm) {return 1.0;}
-  else if (_jet_finder == antikt_algorithm) {
-    double kt2=jet.kt2();
-    return kt2 > 1e-300 ? 1.0/kt2 : 1e300;
-  }
-  else {throw Error("Unrecognised jet finder");}
-}
-
-
 //----------------------------------------------------------------------
 template <class J> inline void ClusterSequence::_bj_set_jetinfo(
                             J * const jetA, const int _jets_index) const {

@@ -51,6 +51,10 @@ string JetDefinition::description() const {
     name << "Longitudinally invariant anti-kt algorithm with R = " 
 	 << R() ;
     name << " and " << recombiner()->description();
+  } else if (jet_finder() == cambridge_for_passive_algorithm) {
+    name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
+	 << R() << "and a special hack whereby particles with kt < " 
+         << extra_param() << "are treated as passive ghosts";
   } else {
     throw Error("Unrecognized jet_finder");
   }

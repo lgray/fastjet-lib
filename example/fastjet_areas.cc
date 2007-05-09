@@ -73,15 +73,18 @@ int main (int argc, char ** argv) {
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;
   fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
+  //fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, Rparam, strategy);
+  //fastjet::JetDefinition jet_def(fastjet::cambridge_for_passive_algorithm, Rparam, strategy);
+  jet_def.set_extra_param(1e-50);
 
   // create an object that specifies how we to define the area
   fastjet::AreaDefinition area_def;
-  bool use_active = true;
+  bool use_active = false;
   if (use_active) {
     double ghost_etamax = 7.0;
     int    active_area_repeats = 3;
     double ghost_area    = 0.01;
-    //int    active_area_repeats = 3;
+    //int    active_area_repeats = 100;
     //double ghost_area    = 0.06;
     area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
                                        ghost_area);

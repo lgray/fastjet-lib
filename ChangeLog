@@ -1,4 +1,14 @@
+2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* JetDefinition.cc|hh: 
+	* ClusterSequence.cc|hh: 
+	  introduced cambridge_for_passive_algorithm (for internal use
+	  only), and moved the jet_scale_for_algorithm routine into the
+	  .cc file.
+
 2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/JetDefinition.cc: 
 
 	* src/ClusterSequence.cc: 
 	  updated banner to reflect current status

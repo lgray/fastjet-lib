@@ -83,6 +83,9 @@ enum JetFinder {
   ///       dij = min(1/kti^2,1/ktj^2) Delta R_{ij}^2 / R^2
   ///       diB = 1/kti^2
   antikt_algorithm=2, 
+  /// a version of cambridge with a special distance measure for particles
+  /// whose pt is < extra_param()
+  cambridge_for_passive_algorithm=11,
   /// any plugin algorithm supplied by the user
   plugin_algorithm = 99
 };
@@ -206,9 +209,17 @@ public:
   // return information about the definition...
   JetFinder jet_finder  () const {return _jet_finder  ;}
   double    R           () const {return _Rparam      ;}
+  // a general purpose extra parameter, whose meaning depends on
+  // the algorithm, and may often be unused.
+  double    extra_param () const {return _extra_param ;}
   Strategy  strategy    () const {return _strategy    ;}
   RecombinationScheme recombination_scheme() const {
     return _default_recombiner.scheme();}
+
+  /// (re)set the jet finder
+  void set_jet_finder(JetFinder njf) {_jet_finder = njf;}
+  /// (re)set the general purpose extra parameter
+  void set_extra_param(double xtra_param) {_extra_param = xtra_param;}
 
   /// return a pointer to the currently defined recombiner (it may
   /// be the internal one)
@@ -305,7 +316,8 @@ private:
 
 
   JetFinder _jet_finder;
-  double      _Rparam    ;
+  double    _Rparam;
+  double    _extra_param ; ///< parameter whose meaning varies according to context
   Strategy  _strategy  ;
 
   const Plugin * _plugin;
