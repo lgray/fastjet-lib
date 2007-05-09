@@ -83,9 +83,9 @@ int main (int argc, char ** argv) {
   if (use_active) {
     double ghost_etamax = 7.0;
     int    active_area_repeats = 3;
-    //double ghost_area    = 0.01;
+    double ghost_area    = 0.01;
     //int    active_area_repeats = 100;
-    double ghost_area    = 0.1;
+    //double ghost_area    = 0.1;
     //area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
     //                                   ghost_area);
     fastjet::ActiveAreaSpec area_spec(ghost_etamax, active_area_repeats, ghost_area);
