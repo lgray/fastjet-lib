@@ -99,6 +99,10 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   // make sure stopping scale is set in siscone
   siscone->SM_var2_hardest_cut_off = _split_merge_stopping_scale*_split_merge_stopping_scale;
+  // when running with ghosts for passive areas, do not put the
+  // ghosts into the stable-cone search (not relevant)
+  siscone->stable_cone_soft_pt2_cutoff = ghost_separation_scale()
+                                         * ghost_separation_scale();
 
   if (new_siscone) {
     // transfer fastjet initial particles into the siscone type
