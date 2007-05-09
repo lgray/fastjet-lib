@@ -10,7 +10,8 @@
 	
 	* many places:
 	  set the svn:keywords property to "Id" on many files where it was
-	  missing. Sorted out a 
+	  missing. Sorted out some copyright statements (e.g. Voronoi.cc
+	  we should not be claiming copyright!)
 	
 2007-05-09  Gregory Soyez  <g.soyez@ulg.ac.be>
 
