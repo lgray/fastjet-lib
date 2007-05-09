@@ -156,7 +156,7 @@ private:
 };
 
 ////----------------------------------------------------------------------
-//class PassiveAreaSpec : public ActiveAreaSpec {
+//class 1GhostPassiveAreaSpec : public ActiveAreaSpec {
 //public:
 //}
 

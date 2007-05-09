@@ -28,8 +28,8 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
-#define __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
+#ifndef __FASTJET_CLUSTERSEQUENCE1GHOSTPASSIVEAREA_HH__
+#define __FASTJET_CLUSTERSEQUENCE1GHOSTPASSIVEAREA_HH__
 
 
 #include "fastjet/PseudoJet.hh"
@@ -46,11 +46,11 @@ using namespace std;
 /// that it also provides access to the area of a jet (which
 /// will be a random quantity... Figure out what to do about seeds 
 /// later...)
-class ClusterSequencePassiveArea : public ClusterSequenceActiveArea {
+class ClusterSequence1GhostPassiveArea : public ClusterSequenceActiveArea {
 public:
 
-  /// constructor based on JetDefinition and PassiveAreaSpec
-  template<class L> ClusterSequencePassiveArea
+  /// constructor based on JetDefinition and 1GhostPassiveAreaSpec
+  template<class L> ClusterSequence1GhostPassiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const ActiveAreaSpec & area_spec,
@@ -77,7 +77,7 @@ private:
 
 
 
-template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea 
+template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassiveArea 
 (const std::vector<L> & pseudojets, 
  const JetDefinition & jet_def,
  const ActiveAreaSpec & area_spec,
@@ -95,4 +95,4 @@ template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea
   
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_CLUSTERSEQUENCEPASSIVEAREA_HH__
+#endif // __FASTJET_CLUSTERSEQUENCE1GHOSTPASSIVEAREA_HH__

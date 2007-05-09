@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/ClusterSequencePassiveArea.hh"
+#include "fastjet/ClusterSequence1GhostPassiveArea.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -37,7 +37,7 @@ using namespace std;
 
 //----------------------------------------------------------------------
 /// global routine for initialising and running a general passive area
-void ClusterSequencePassiveArea::_initialise_and_run_PA (
+void ClusterSequence1GhostPassiveArea::_initialise_and_run_PA (
 		const JetDefinition & jet_def,
 		const ActiveAreaSpec & area_spec,
 		const bool & writeout_combinations) {
@@ -53,7 +53,7 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
 
 //----------------------------------------------------------------------
 /// routine for running a passive area one ghost at a time.
-void ClusterSequencePassiveArea::_run_PA (const ActiveAreaSpec & area_spec) {
+void ClusterSequence1GhostPassiveArea::_run_PA (const ActiveAreaSpec & area_spec) {
     // record the input jets as they are currently
   vector<PseudoJet> input_jets(_jets);
 

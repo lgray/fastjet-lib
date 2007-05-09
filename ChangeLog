@@ -1,5 +1,7 @@
 2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+        * ClusterSequencePassiveArea -> ClusterSequence1GhostPassiveArea
+	
 	* JetDefinition.cc|hh: 
 	* ClusterSequence.cc|hh: 
 	  introduced cambridge_for_passive_algorithm (for internal use
