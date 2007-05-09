@@ -54,9 +54,11 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
     // then the areas
     _resize_and_zero_AA();
     for (unsigned i = 0; i < _history.size(); i++) {
-      _average_area[i] = csva.area(_jets[_history[i].jetp_index]);
       int ijetp = _history[i].jetp_index;
-      if (ijetp != Invalid) _average_area_4vector[i] = csva.area_4vector(_jets[ijetp]);
+      if (ijetp != Invalid) {
+        _average_area[i] = csva.area(_jets[ijetp]);
+        _average_area_4vector[i] = csva.area_4vector(_jets[ijetp]);
+      }
     }
 
   } else if (jet_def.jet_finder() == cambridge_algorithm) {
@@ -71,6 +73,18 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
   } else if (jet_def.jet_finder() == antikt_algorithm) {
     // for the antikt algorithm, passive and active are identical
     _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
+
+  } else if (jet_def.jet_finder() == plugin_algorithm &&
+             jet_def.plugin()->supports_ghosted_passive_areas()) {
+    // for some plugin algorithms, one can "prime" the algorithm with information
+    // about the ghost scale, and then an "AA" run will actually give a passive
+    // area
+    double ghost_sep_scale_store = jet_def.plugin()->ghost_separation_scale();
+    jet_def.plugin()->set_ghost_separation_scale(sqrt(area_spec.mean_ghost_kt()));
+    _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
+
+    // restore the original ghost_sep_scale
+    jet_def.plugin()->set_ghost_separation_scale(ghost_sep_scale_store);
 
   } else {
     // for a generic algorithm, just run the 1GhostPassiveArea
