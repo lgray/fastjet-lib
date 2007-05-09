@@ -74,11 +74,13 @@ int main (int argc, char ** argv) {
 
   double soft_pt = cmdline.double_val("-soft",1.0);
   double hard_pt = cmdline.double_val("-hard",10.0);
+  double rad_pt  = cmdline.double_val("-rad",hard_pt);
   double randomness = cmdline.double_val("-randomness",0.1);
   int    nsoft       = cmdline.int_val("-nsoft",10000);
   int    nhard       = cmdline.int_val("-nhard",1);
   double ptlim = cmdline.double_val("-ptlim",1e-2);
   double distlim = cmdline.double_val("-distlim",1e-2);
+  double distmax = cmdline.double_val("-distmax",2.);
   
   int    n       = cmdline.int_val("-n",20);
   int    hist    = cmdline.value("-hist",1);
@@ -86,6 +88,7 @@ int main (int argc, char ** argv) {
   
   bool   emission = cmdline.present("-emission");
   bool   linear = cmdline.present("-linear");
+  bool   checkpoint = cmdline.present("-checkpoint");
   
   string outfile;
   if (cmdline.present("-out")) {
@@ -129,9 +132,9 @@ int main (int argc, char ** argv) {
   double av_pt = 0.0, av_pt2 = 0.0;
 
   double logptlim = log(ptlim);
-  double loghardpt = log(hard_pt);
+  double loghardpt = log(rad_pt);
   double logdistlim = log(distlim);
-  double log2R = log(2.*ktR);
+  double logdistmaxR = log(distmax*ktR);
   double alphas = 0.3;
   double ca = 3.0;
   double cf = 4.0/3.0;
@@ -150,17 +153,17 @@ int main (int argc, char ** argv) {
     if ( emission ) {
 //       double emitted_pt,emitted_dist;
        if (linear) {
-          emitted_pt = ptlim + (hard_pt - ptlim)*rand()/RAND_MAX;
-          emitted_dist = distlim + (ktR*2.-distlim)*rand()/RAND_MAX;
+          emitted_pt = ptlim + (rad_pt - ptlim)*rand()/RAND_MAX;
+          emitted_dist = distlim + (ktR*distmax-distlim)*rand()/RAND_MAX;
           weight = coeff/emitted_pt/emitted_dist;
-	  weight *= (hard_pt - ptlim)*(ktR*2.-distlim); // jacobian
+	  weight *= (rad_pt - ptlim)*(ktR*distmax-distlim); // jacobian
        } else {
           double u = logptlim + (loghardpt-logptlim)*rand()/RAND_MAX;
           emitted_pt = exp(u);
-          u = logdistlim + (log2R-logdistlim)*rand()/RAND_MAX;
+          u = logdistlim + (logdistmaxR-logdistlim)*rand()/RAND_MAX;
           emitted_dist = exp(u);
           weight = coeff;
-	  weight *= (loghardpt-logptlim)*(log2R-logdistlim); // jacobian
+	  weight *= (loghardpt-logptlim)*(logdistmaxR-logdistlim); // jacobian
        }
        if ( i < 10 ) {cout << "emitted pt, dist " << emitted_pt << " " << emitted_dist << endl;
 	              cout << "weight " << weight << endl;}
@@ -221,6 +224,7 @@ int main (int argc, char ** argv) {
     //cout << input_jets.size() << endl;
     
     // do the clustering WITHOUT the radiated particle
+    if (checkpoint) active_area_spec.checkpoint_random();
     fj::ClusterSequenceActiveArea clust(input_jets,jet_def,active_area_spec);
     // analyse the jets
     vector<fj::PseudoJet> output_jets(sorted_by_pt(clust.inclusive_jets()));
@@ -232,6 +236,7 @@ int main (int argc, char ** argv) {
 //       cout << "radiated pt " << radiated.perp() << endl;
        input_jets.push_back(radiated);
        // redo the clustering WITH the radiated particle
+       if (checkpoint) active_area_spec.restore_checkpoint_random();
        clust_rad.reset(new fj::ClusterSequenceActiveArea (input_jets,jet_def,active_area_spec));
        // analyse the jets
        output_jets_rad = sorted_by_pt(clust_rad->inclusive_jets());
@@ -351,7 +356,9 @@ int main (int argc, char ** argv) {
     //(*ostr) << "# nhist        = " << nhist        << endl;
     //(*ostr) << "# histmax      = " << histmax      << endl;
     (*ostr) << "# jet def      = " << jet_def.description() << endl;
+    (*ostr) << "# w max        = " << rad_pt << endl;
     (*ostr) << "# w cutoff     = " << ptlim << endl;
+    (*ostr) << "# dist max     = " << distmax << endl;
     (*ostr) << "# dist cutoff  = " << distlim << endl;
     
     (*ostr) << "# "                                << endl;
