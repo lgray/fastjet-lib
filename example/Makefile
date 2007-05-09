@@ -26,7 +26,7 @@ INCLUDE += $(PLUGIN_INCLUDE)
 #  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 #endif
 
-SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc fastjet_timing_plugins.cc CmdLine.cc fastjet_subtraction.cc 
+SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc fastjet_timing_plugins.cc CmdLine.cc fastjet_subtraction.cc fastjet_areas.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
 fastjet_example: fastjet_example.o  ../lib/libfastjet.a
@@ -99,3 +99,35 @@ fastjet_timing_plugins.o: ../include/fastjet/internal/DynamicNearestNeighbours.h
 fastjet_timing_plugins.o: ../include/fastjet/Error.hh
 fastjet_timing_plugins.o: ../include/fastjet/JetDefinition.hh CmdLine.hh
 CmdLine.o: CmdLine.hh
+fastjet_subtraction.o: ../include/fastjet/PseudoJet.hh
+fastjet_subtraction.o: ../include/fastjet/internal/numconsts.hh
+fastjet_subtraction.o: ../include/fastjet/internal/base.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequenceWithArea.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequence.hh
+fastjet_subtraction.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+fastjet_subtraction.o: ../include/fastjet/Error.hh
+fastjet_subtraction.o: ../include/fastjet/JetDefinition.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveArea.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+fastjet_subtraction.o: ../include/fastjet/ActiveAreaSpec.hh
+fastjet_subtraction.o: ../include/fastjet/internal/BasicRandom.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
+fastjet_subtraction.o: ../include/fastjet/AreaDefinition.hh
+fastjet_areas.o: ../include/fastjet/PseudoJet.hh
+fastjet_areas.o: ../include/fastjet/internal/numconsts.hh
+fastjet_areas.o: ../include/fastjet/internal/base.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequenceWithArea.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequence.hh
+fastjet_areas.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+fastjet_areas.o: ../include/fastjet/Error.hh
+fastjet_areas.o: ../include/fastjet/JetDefinition.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveArea.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+fastjet_areas.o: ../include/fastjet/ActiveAreaSpec.hh
+fastjet_areas.o: ../include/fastjet/internal/BasicRandom.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
+fastjet_areas.o: ../include/fastjet/AreaDefinition.hh
