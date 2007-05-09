@@ -1,5 +1,8 @@
 2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* src/ClusterSequence.cc: 
+	  updated banner to reflect current status
+
 	* example/Makefile (depend): 
 	* src/Makefile: 
 	  removed CXXFLAGS from make depend (it caused it to get all CGAL
