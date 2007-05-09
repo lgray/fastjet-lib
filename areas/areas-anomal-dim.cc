@@ -9,10 +9,12 @@
 #include<cmath>
 
 // fastjet stuff
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
-#include "ClusterSequencePassiveArea.hh"
+//#include "fastjet/PseudoJet.hh"
+//#include "fastjet/ClusterSequence.hh"
+//#include "fastjet/AreaDefinition.hh"
+#include "fastjet/ClusterSequenceWithArea.hh"
+//#include "fastjet/ClusterSequenceActiveArea.hh"
+//#include "ClusterSequencePassiveArea.hh"
 
 // get the plugins
 #include "SISConePlugin.hh"
@@ -78,8 +80,8 @@ int main (int argc, char ** argv) {
   double randomness = cmdline.double_val("-randomness",0.1);
   int    nsoft       = cmdline.int_val("-nsoft",10000);
   int    nhard       = cmdline.int_val("-nhard",1);
-  double ptlim = cmdline.double_val("-ptlim",1e-2);
-  double distlim = cmdline.double_val("-distlim",1e-2);
+  double ptlim = cmdline.double_val("-ptlim",1.);
+  double distlim = cmdline.double_val("-distlim",1e-3);
   double distmax = cmdline.double_val("-distmax",2.);
   
   int    n       = cmdline.int_val("-n",20);
@@ -89,7 +91,8 @@ int main (int argc, char ** argv) {
   bool   emission = cmdline.present("-emission");
   bool   linear = cmdline.present("-linear");
   bool   checkpoint = cmdline.present("-checkpoint");
-  
+  bool   passivearea =  cmdline.present("-passive");
+
   string outfile;
   if (cmdline.present("-out")) {
      outfile = cmdline.value<string>("-out");
@@ -111,7 +114,15 @@ int main (int argc, char ** argv) {
   // create the definitions for our jet finder and areas spec...
   fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, 
 				      ghost_area, grid_scatter, kt_scatter);
-
+  fj::VoronoiAreaSpec voronoi_area_spec(1.0);
+  
+  fj::AreaDefinition area_def;
+  if ( ! passivearea ) {
+        area_def = fastjet::AreaDefinition(active_area_spec);
+  } else {
+        area_def = fastjet::AreaDefinition(active_area_spec,fastjet::AreaDefinition::passive_area);
+ //       area_def = voronoi_area_spec;
+  }
 
   // the histograms...
   SimpleHist softareahist(-0.000001,2.,100);
@@ -224,20 +235,23 @@ int main (int argc, char ** argv) {
     //cout << input_jets.size() << endl;
     
     // do the clustering WITHOUT the radiated particle
-    if (checkpoint) active_area_spec.checkpoint_random();
-    fj::ClusterSequenceActiveArea clust(input_jets,jet_def,active_area_spec);
+    if (checkpoint) area_def.active_spec().checkpoint_random();
+//    fj::ClusterSequenceActiveArea clust(input_jets,jet_def,active_area_spec);
+    fj::ClusterSequenceWithArea clust(input_jets,jet_def,area_def);
     // analyse the jets
     vector<fj::PseudoJet> output_jets(sorted_by_pt(clust.inclusive_jets()));
     
     // add radiated particle
-    auto_ptr<fj::ClusterSequenceActiveArea> clust_rad;
+//    auto_ptr<fj::ClusterSequenceActiveArea> clust_rad;
+    auto_ptr<fj::ClusterSequenceWithArea> clust_rad;
     vector<fj::PseudoJet> output_jets_rad;	    
     if (emission) {
 //       cout << "radiated pt " << radiated.perp() << endl;
        input_jets.push_back(radiated);
        // redo the clustering WITH the radiated particle
-       if (checkpoint) active_area_spec.restore_checkpoint_random();
-       clust_rad.reset(new fj::ClusterSequenceActiveArea (input_jets,jet_def,active_area_spec));
+       if (checkpoint) area_def.active_spec().restore_checkpoint_random();
+//       clust_rad.reset(new fj::ClusterSequenceActiveArea (input_jets,jet_def,active_area_spec));
+       clust_rad.reset(new fj::ClusterSequenceWithArea(input_jets,jet_def,area_def));
        // analyse the jets
        output_jets_rad = sorted_by_pt(clust_rad->inclusive_jets());
     }
@@ -300,7 +314,8 @@ int main (int argc, char ** argv) {
 	  av_pt2 += pow2(output_jets[j].perp());
           
 	  // perform subtraction on hard jets
-          double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
+//          double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
+          double median_pt = clust.median_pt_per_unit_area_4vector(ghost_etamax-ktR);
 // to use this is wrong unless -pt_scheme is used
 //          double median_pt = clust.pt_per_unit_area();
           double hard_area = clust.area(output_jets[j]);
@@ -377,8 +392,11 @@ int main (int argc, char ** argv) {
      " +- " <<  sqrt((average_ar2_soft/nsoftjets-pow2(average_area_soft/nsoftjets))/nsoftjets) << endl;
     (*ostr) << "# correct av. area hard (?) = " <<  (average_ar2_soft/nsoftjets)/(average_area_soft/nsoftjets) << endl;
 
-    (*ostr) << "# average area rad = " << average_area_rad / nhardjets  <<
-     " +- "  <<sqrt((average_ar2_rad/nhardjets-pow2(average_area_rad/nhardjets))/nhardjets) << endl;
+    double area_rad = average_area_rad / nhardjets;
+    double area_rad_err = sqrt((average_ar2_rad/nhardjets-pow2(average_area_rad/nhardjets))/nhardjets);
+    (*ostr) << "# average area rad = " << area_rad  <<  " +- "  << area_rad_err << endl;
+
+    (*ostr) << "# d factor (assuming linearity and intersect in 0) = " << area_rad/coeff*fj::pi/log(rad_pt/ptlim) <<  " +- "  << area_rad_err/coeff*fj::pi/log(rad_pt/ptlim) << endl;
 
     (*ostr) << "# average pt = " << av_pt/nhardjets << 
      " +- " <<  sqrt((av_pt2/nhardjets-pow2(av_pt/nhardjets))/nhardjets) << endl;
