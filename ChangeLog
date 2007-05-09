@@ -111,6 +111,13 @@
 	  median (and the mean error, of use in doing converting
 	  fluctuations to errors on individual jets).
 	
+2007-05-05  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* areas/jet_def_from_cmdline.cc|hh: 
+
+	  added this so as to provide easy (and common) access to a jet
+	  finder from the command-line
+
 2007-05-02  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* include/fastjet/ClusterSequenceWithArea.hh|cc: 

@@ -176,7 +176,6 @@ int main (int argc, char ** argv) {
                                       ktR, min_jet_energy,
                                       overlap_threshold));
   } else if (cmdline.present("-jetclu")) {
-    double seed_threshold = 1.0;
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
   } else if (cmdline.present("-siscone")) {
