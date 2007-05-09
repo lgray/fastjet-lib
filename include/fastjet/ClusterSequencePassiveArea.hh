@@ -1,7 +1,7 @@
 //STARTHEADER
-// $Id: ClusterSequenceActiveArea.hh 602 2007-05-07 13:10:41Z salam $
+// $Id$
 //
-// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+// Copyright (c) 2005-2007, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.

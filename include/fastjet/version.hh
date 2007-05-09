@@ -1,8 +1,7 @@
-
 //STARTHEADER
-// $Id: base.hh 293 2006-08-17 19:38:38Z salam $
+// $Id$
 //
-// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+// Copyright (c) 2005-2007, Matteo Cacciari and Gavin Salam
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.

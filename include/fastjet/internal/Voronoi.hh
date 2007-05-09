@@ -2,32 +2,27 @@
 #define __FASTJET__VORONOI_H__
 
 //STARTHEADER
-// $Id: FlavourHolder.hh 200 2006-07-13 17:17:02Z salam $
+// $Id$
 //
-// Copyright (c) 2006 Matteo Cacciari and Gavin Salam
+// Copyright (c) 1994 by AT&T Bell Laboratories (see below)
+//
 //
 //----------------------------------------------------------------------
-// This file is part of a simple command-line handling environment
+// This file is included as part of FastJet but was mostly written by
+// S. Fortune in C, put into C++ with memory management by S
+// O'Sullivan, and with further interface and memeory management
+// modifications by Gregory Soyez.
 //
-//  FastJet is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
+// Permission to use, copy, modify, and distribute this software for
+// any purpose without fee is hereby granted, provided that this
+// entire notice is included in all copies of any software which is or
+// includes a copy or modification of this software and in all copies
+// of the supporting documentation for such software. THIS SOFTWARE IS
+// BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED WARRANTY.
+// IN PARTICULAR, NEITHER THE AUTHORS NOR AT&T MAKE ANY REPRESENTATION
+// OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY OF THIS
+// SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
 //
-//  The algorithms that underlie FastJet have required considerable
-//  development and are described in hep-ph/0512210. If you use
-//  FastJet as part of work towards a scientific publication, please
-//  include a citation to the FastJet paper.
-//
-//  FastJet is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with FastJet; if not, write to the Free Software
-//  Foundation, Inc.:
-//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //----------------------------------------------------------------------
 //ENDHEADER
 

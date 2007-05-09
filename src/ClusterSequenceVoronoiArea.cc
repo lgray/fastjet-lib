@@ -1,7 +1,7 @@
 //STARTHEADER
-// $Id: FlavourHolder.hh 200 2006-07-13 17:17:02Z salam $
+// $Id$
 //
-// Copyright (c) 2006 Matteo Cacciari and Gavin Salam
+// Copyright (c) 2006-2007 Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of a simple command-line handling environment

@@ -1,3 +1,14 @@
+2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/Makefile (depend): 
+	* src/Makefile: 
+	  removed CXXFLAGS from make depend (it caused it to get all CGAL
+	  files).
+	
+	* many places:
+	  set the svn:keywords property to "Id" on many files where it was
+	  missing. Sorted out a 
+	
 2007-05-09  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* include/fastjet/ClusterSequenceWithArea.hh: 

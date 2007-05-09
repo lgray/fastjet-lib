@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: ClusterSequenceActiveArea.cc 589 2007-05-02 17:22:35Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //
