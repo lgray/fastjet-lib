@@ -26,7 +26,7 @@ INCLUDE += $(PLUGIN_INCLUDE)
 #  LDFLAGS += -L/ada1/lpthe/salam/software/local/lib -ltcmalloc -lprofiler
 #endif
 
-SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc fastjet_timing_plugins.cc CmdLine.cc
+SRCS = fastjet_example.cc ktjet_example.cc fastjet_timing.cc fastjet_timing_plugins.cc CmdLine.cc fastjet_subtraction.cc 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
 fastjet_example: fastjet_example.o  ../lib/libfastjet.a
@@ -74,7 +74,7 @@ realclean: clean
 	rm -f  fastjet_example fastjet_timing ktjet_example ktjet_timing
 
 depend:
-	makedepend $(FASTJET_INCLUDE) -Y -- $(CXXFLAGS) -- $(SRCS)
+	makedepend $(FASTJET_INCLUDE) -Y -- -- $(SRCS)
 # DO NOT DELETE
 
 fastjet_example.o: ../include/fastjet/PseudoJet.hh
