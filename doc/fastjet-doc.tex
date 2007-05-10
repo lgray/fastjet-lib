@@ -32,8 +32,10 @@
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 \newcommand{\order}[1]{\left(#1\right)}
+\newcommand{\ie}{{\it i.e.}\ }
+\newcommand{\eg}{{\it e.g.}\ }
 
-\title{FastJet 2.1 user manual}
+\title{FastJet 2.2 user manual}
 \author{Matteo Cacciari and Gavin P. Salam\\
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
   Denis Diderot -- Paris 7, CNRS UMR 7589
@@ -80,12 +82,17 @@ a new interface (the old one will be retained), and new algorithmic
 strategies that can provide a factor of two improvement in speed for
 events whose number $N$ of particles $\sim 10^4$. Choices of
 recombination schemes and plugins are new features of version 2.1.
+Version 2.2 introduces a broader set of area measures and
+\comment{perhaps} the anti-$k_t$ algorithm.
 %
-We anticipate that the \fastjet facilities may also be made available
-at a later date with a more developed interface as part of the planned
-multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
+% We anticipate that the \fastjet facilities may also be made available
+% at a later date with a more developed interface as part of the planned
+% multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
 %
-In the meantime the plugin feature provides a similar functionality.
+A plugin facility allows one to access external jet finders through
+the \fastjet interface, and overlays \fastjet features such as areas
+onto the external jet finders.
+%
 Plugins are included for the fortran PxCone code and for the CDF C++
 JetClu and MidPoint cone jet finders (all infrared unsafe), as well as
 the recent Seedless Infrared-Safe Cone (SISCone) jet
@@ -583,14 +590,148 @@ int main (int argc, char ** argv) {
 %======================================================================
 \section{Jet areas}
 
-Since a jet is made up of only a finite number of particles, one needs a
-specific definition in order to make its {\sl area}  (i.e. the surface in the
-$y$-$\phi$ plane over which it extends) an unambiguous
-concept. Currently only a single kind of area definition exists,
-which we refer to as an {\sl active} area~\cite{CSAreas}, however
-since future releases are expected to implement additional definitions of
-areas, it was deemed useful to provide a base class defining a common
-interface to access information about jet areas.
+Since a jet is made up of only a finite number of particles, one needs
+a specific definition in order to make its {\sl area} (i.e. the
+surface in the $y$-$\phi$ plane over which it extends) an unambiguous
+concept. Three definitions of area have been proposed
+in~\cite{CSSAreas} and they are implemented in \fastjet:
+\begin{itemize}
+\item Active areas add a uniform background of extremely soft massless
+  `ghost' particles to the event and allow them to participate in the
+  clustering. The area of a given jet is proportional to the number of
+  ghosts it contains. Because the ghosts are extremely soft (and
+  sensible jet finders are infrared safe), the presence of the ghosts
+  does not affect the set of user particles that end up in a given
+  jet.
+
+\item Passive areas are defined as follows. One adds a single randomly
+  placed ghost at a time to the event. One examines which jet (if any)
+  the ghost ends up in. One repeats the procedure many times and the
+  passive area of a jet is then proportional to the probability of it
+  containing the ghost.
+\item The Voronoi area of a jet is the sum of the Voronoi areas of its
+  constituent particles. The Voronoi area of a particle is obtained by
+  determining the Voronoi diagram for the event as a whole, and
+  intersecting the Voronoi cell of the particle with a circle of
+  radius $R$ centred on the particle.
+\end{itemize}
+The area can be calculated either as a scalar, or as a 4-vector.
+Essentially the scalar case corresponds to counting the number of
+ghosts in the jet, while the $4$-vector case corresponds to summing
+their 4-vectors (normalised such that for a narrow jet, the transverse
+component of the $4$-vector is equal to the scalar area).
+
+Jet areas are obtained by clustering with the class
+\ttt{ClusterSequenceWithArea} (rather than \ttt{ClusterSequence}, from
+which it is derived). Its constructor takes an \ttt{AreaDefinition}
+argument in addition to the list of particles and the
+\ttt{JetDefinition}.
+
+%----------------------------------------------------------------------
+\subsection{fastjet::AreaDefinition}
+
+Area definitions are contained in \ttt{fastjet::AreaDefinition}
+class. Its two main constructors are:
+\begin{verbatim}
+  fastjet::AreaDefinition(fastjet::AreaType area_type, 
+                          fastjet::GhostedAreaSpec ghost_spec);
+\end{verbatim}
+for the various active and passive areas (which all involve ghosts)
+and
+\begin{verbatim}
+  fastjet::AreaDefinition(fastjet::VoronoiAreaSpec voronoi_spec);
+\end{verbatim}
+for the voronoi area. A default constructor exists, and provides an
+active area with a \ttt{ghost\_spec} that is suitable for a majority
+of area measurements with clustering algorithms and typical Tevatron
+and LHC rapidity coverage.
+
+\subsubsection{Ghosted Areas (active and passive)}
+\label{sec:ghosted-areas}
+
+There are two variants each of the active and passive areas, as
+defined by the \ttt{AreaType} \ttt{enum}:
+\begin{verbatim}
+enum AreaType{ [...],
+               active_area, 
+               active_area_explicit_ghosts,
+               one_ghost_passive_area, 
+               passive_area, 
+               [...]};
+\end{verbatim}
+The two active variants give identical results. The second one
+explicitly includes the ghosts as final particles returned to the
+user. The first of the passive variants explicitly runs through the
+procedure mentioned above, \ie it clusters the events with one ghost
+at a time, and repeats this for very many ghosts. This can be quite
+slow, se we also provide the \ttt{passive\_area} option, which makes
+use of information specific to the jet finder in order to speed up the
+area determination.\footnote{This ability is provided for $k_t$,
+  Cambridge/Aachen, anti-$k_t$ and the SISCone plugin. In the case of
+  $k_t$ it is actually a Voronoi area that is used, since this can be
+  shown to be equivalent to the passive area~\cite{CSSAreas}. For
+  other algorithms it defaults back to the
+  \ttt{one\_ghost\_passive\_area} approach.}
+
+In order to carry out a clustering with a ghosted area determination,
+the user should also create an object that specifies how to distribute
+the ghosts.\footnote{Or accept a default --- which uses the default
+  values listed in the explicit constructor and $\ttt{ghost\_maxrap} =
+  6$} %
+This is done via the class \ttt{fastjet::GhostedAreaSpec} whose
+constructor is
+\begin{verbatim}
+  fastjet::GhostedAreaSpec(double ghost_maxrap, 
+                           int    repeat        = 1,
+                           double ghost_area    = 0.01, 
+                           double grid_scatter  = 1.0, 
+                           double kt_scatter    = 0.1,
+                           double mean_ghost_kt = 1e-100);
+\end{verbatim}
+The ghosts are distributed on a uniform grid in $y$ and $\phi$, with
+small random fluctuations to avoid degeneracies. The
+\ttt{ghost\_maxrap} defines the maximum rapidity up to which ghosts
+are generated --- typically jet areas will be reliable for jets up to
+rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. The \ttt{ghost\_area}
+is the area associated with a single ghost. The number of ghosts is
+inversely proportional to the ghost area, and so a smaller area leads
+to a longer CPU-time for clustering. However small ghost areas give
+more accurate results. We have found the default ghost area given
+above to be suitable for most applications.
+
+For sparse events, the set of ghost particles that end up in a given
+jet is not unique, and depends on the degeneracy-breaking random
+shifts added to the ghost positions, as compared to a perfect grid
+distribution. To obtain a reliable area one may then repeat the
+area determination several times, the number of times being specified
+by the \ttt{repeat} variable. For hadron-level events a value of
+$5$ is sufficient to give jet areas that are determined to within a
+few percent. In practice it is usually satisfactory even to set
+\ttt{repeat}$=1$ and this is the default since it runs faster. For
+events with a dense distribution of true 
+particles, there is no degeneracy in the ghost clustering and there is
+no need at all to use \ttt{repeat}$>1$.
+%
+If \ttt{repeat} $ > 1$, a statistical uncertainty on the area, given by
+$\sigma/\sqrt{\ttt{repeat}-1}$, is provided for each jet.
+
+Other variables that the user may wish to set are: \ttt{grid\_scatter}
+and \ttt{kt\_scatter}, which  are fractional random fluctuations of the
+position of the ghosts on the $y$-$\phi$ grid and of their
+transverse momentum; and \ttt{mean\_ghost\_kt} which is the average transverse
+momentum of the ghosts.
+
+
+
+\subsubsection{Voronoi Areas}
+\label{sec:voronoi-areas}
+
+
+% Currently only a single kind of area definition exists,
+% which we refer to as an {\sl active} area~\cite{CSSAreas}, however
+% since future releases are expected to implement additional definitions of
+% areas, it was deemed useful to provide a base class defining a common
+% interface to access information about jet areas.
 
 %Alternative definitions of areas will be implemented in future versions.
 
@@ -624,7 +765,108 @@ information about jet areas.  It is derived from
 \subsection{Active areas}
 
 Currently, \ttt{FastJet} implements what is called an {\sl active}
-area \cite{CSAreas}.  It is determined by adding a large number of
+area \cite{CSSAreas}.  It is determined by adding a large number of
+extremely soft ``ghost'' particles to the event, and letting them
+cluster with the user's event (as well as between themselves). The
+ghosts are distributed on a uniform grid (with small random
+fluctuations to avoid degeneracies) in $y$ and $\phi$. The number
+of ghosts that end up in a given jet provides a measure of its area.
+Because the ghosts are extremely soft (and because the $k_t$ and
+Cambridge/Aachen jet finders are infrared safe), the presence of the
+ghosts does not affect the set of user particles that end up in a
+given jet.
+
+
+\subsubsection{fastjet::ActiveAreaSpec}
+
+In order to carry out a clustering with a ghosted area determination,
+the user must first create an object that specifies how to distribute
+the ghosts. This is done via the class \ttt{fastjet::GhostedAreaSpec}
+whose constructor is
+\begin{verbatim}
+  fastjet::GhostedAreaSpec(double ghost_maxrap, 
+                           int    repeat        = 1,
+                           double ghost_area    = 0.01, 
+                           double grid_scatter  = 1.0, 
+                           double kt_scatter    = 0.1,
+                           double mean_ghost_kt = 1e-100);
+\end{verbatim}
+\ttt{ghost\_maxrap} defines the maximum rapidity up to which ghosts
+are generated --- typically jet areas will be reliable for jets up to
+rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. The \ttt{ghost\_area}
+is the area associated with a single ghost. The number of ghosts is
+inversely proportional to the ghost area, and so a smaller area leads
+to a longer CPU-time for clustering. However small ghost areas give
+more accurate results. We have found the default ghost area given
+above to be suitable for most applications.
+
+For sparse events, the set of ghost particles that end up in a given
+jet is not unique, and depends on the degeneracy-breaking random
+shifts added to the ghost positions, as compared to a perfect grid
+distribution. To obtain a reliable area one may then repeat the
+area determination several times, the number of times being specified
+by the \ttt{repeat} variable. For hadron-level events a value of
+$5$ is sufficient to give jet areas that are determined to within a
+few percent. In practice it is usually satisfactory even to set
+\ttt{repeat}$=1$ and this is the default since it runs faster. For
+events with a dense distribution of true 
+particles, there is no degeneracy in the ghost clustering and there is
+no need at all to use \ttt{repeat}$>1$.
+%
+If \ttt{repeat} $ > 1$, a statistical uncertainty on the area, given by
+$\sigma/\sqrt{\ttt{repeat}-1}$, is provided for each jet.
+
+Other variables that the user may wish to set are: \ttt{grid\_scatter}
+and \ttt{kt\_scatter}, which  are fractional random fluctuations of the
+position of the ghosts on the $y$-$\phi$ grid and of their
+transverse momentum; and \ttt{mean\_ghost\_kt} which is the average transverse
+momentum of the ghosts.
+
+
+
+\subsubsection{Voronoi Areas}
+\label{sec:voronoi-areas}
+
+
+% Currently only a single kind of area definition exists,
+% which we refer to as an {\sl active} area~\cite{CSSAreas}, however
+% since future releases are expected to implement additional definitions of
+% areas, it was deemed useful to provide a base class defining a common
+% interface to access information about jet areas.
+
+%Alternative definitions of areas will be implemented in future versions.
+
+\subsection{fastjet::ClusterSequenceWithArea}
+
+This is a base class for representing cluster sequences that include
+information about jet areas.  It is derived from
+\ttt{fastjet::ClusterSequence}.  It includes the methods
+\begin{verbatim}
+  /// return the area associated with the given jet
+  double area (const fastjet::PseudoJet & jet) const ;
+
+  /// return the error (uncertainty) associated with the determination
+  /// of the area of the jet;
+  double area_error (const fastjet::PseudoJet & jet) const ;
+
+  /// return a PseudoJet whose 4-vector is defined by the following integral
+  ///
+  ///       \int drap d\phi PseudoJet("rap,phi,pt=one") *
+  ///                           * Theta("rap,phi inside jet boundary")
+  ///
+  /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
+  /// rapidity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
+  /// inside jet boundary") is a function that is 1 when rap,phi
+  /// define a direction inside the jet boundary and 0 otherwise.
+  ///
+  fastjet::PseudoJet area_4vector(const PseudoJet & jet) const ;
+\end{verbatim}
+
+%----------------------------------------------------------------------
+\subsection{Active areas}
+
+Currently, \ttt{FastJet} implements what is called an {\sl active}
+area \cite{CSSAreas}.  It is determined by adding a large number of
 extremely soft ``ghost'' particles to the event, and letting them
 cluster with the user's event (as well as between themselves). The
 ghosts are distributed on a uniform grid (with small random
@@ -1239,7 +1481,7 @@ hep-ex/0005012.
   in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
   p.~472 (2002).
 
-\bibitem{CSAreas} M.~Cacciari and G.~P.~Salam, in preparation.
+\bibitem{CSSAreas} M.~Cacciari,  G.~P.~Salam and G.~Soyez, in preparation.
 
 \bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
 
