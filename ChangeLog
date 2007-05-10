@@ -1,3 +1,19 @@
+2007-05-10  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* ActiveAreaSpec -> GhostedAreaSpec: 
+	  changed the name to reflect use of this class for passive &
+	  active; 
+	
+	* AreaDefinition.hh|cc
+          moved AreaType enum out of class. Sorted out the descriptions.
+
+	* ClusterSequenceActiveAreaExplicitGhosts.cc|hh: 
+	  sorted out empty_area for this case too.
+
+	* plugins/SISCone/SISConePlugin.hh: 
+	  fixed missing component in a constructor
+	
+	
 2007-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo [later]
 
 	* JetDefinition.cc|hh: 

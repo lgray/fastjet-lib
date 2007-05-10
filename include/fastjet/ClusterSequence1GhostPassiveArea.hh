@@ -55,7 +55,7 @@ public:
   template<class L> ClusterSequence1GhostPassiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
+	  const GhostedAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) ;
 
   /// return an estimate for the number of empty jets -- one uses the
@@ -69,12 +69,12 @@ protected:
   /// does the initialisation and running specific to the passive
   /// areas class
   void _initialise_and_run_1GPA (const JetDefinition & jet_def,
-                               const ActiveAreaSpec & area_spec,
+                               const GhostedAreaSpec & area_spec,
                                const bool & writeout_combinations = false);
 
 private:
 
-  void _run_1GPA(const ActiveAreaSpec & area_spec);
+  void _run_1GPA(const GhostedAreaSpec & area_spec);
 };
 
 
@@ -83,7 +83,7 @@ private:
 template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassiveArea 
 (const std::vector<L> & pseudojets, 
  const JetDefinition & jet_def,
- const ActiveAreaSpec & area_spec,
+ const GhostedAreaSpec & area_spec,
  const bool & writeout_combinations) {
 
   // transfer the initial jets (type L) into our own array

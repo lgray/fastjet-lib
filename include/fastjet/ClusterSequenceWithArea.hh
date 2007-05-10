@@ -52,7 +52,7 @@ public:
   template<class L> ClusterSequenceWithArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec)   : _area_def(area_spec){
+	  const GhostedAreaSpec & area_spec)   : _area_def(area_spec){
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 
@@ -113,30 +113,30 @@ template<class L> void ClusterSequenceWithArea::initialize_and_run_cswa(
   
   ClusterSequenceAreaBase * _area_base_ptr;
   switch(_area_def.area_type()) {
-  case AreaDefinition::active_area:
+  case active_area:
     _area_base_ptr = new ClusterSequenceActiveArea(pseudojets, 
                                                    jet_def, 
-                                                   _area_def.active_spec());
+                                                   _area_def.ghost_spec());
     break;
-  case AreaDefinition::active_area_explicit_ghosts:
+  case active_area_explicit_ghosts:
     _area_base_ptr = new ClusterSequenceActiveAreaExplicitGhosts(pseudojets, 
                                                    jet_def, 
-                                                   _area_def.active_spec());
+                                                   _area_def.ghost_spec());
     break;
-  case AreaDefinition::voronoi_area:
+  case voronoi_area:
     _area_base_ptr = new ClusterSequenceVoronoiArea(pseudojets, 
                                                    jet_def, 
                                                    _area_def.voronoi_spec());
     break;
-  case AreaDefinition::one_ghost_passive_area:
+  case one_ghost_passive_area:
     _area_base_ptr = new ClusterSequence1GhostPassiveArea(pseudojets, 
 						    jet_def, 
-						    _area_def.active_spec());
+						    _area_def.ghost_spec());
     break;
-  case AreaDefinition::passive_area:
+  case passive_area:
     _area_base_ptr = new ClusterSequencePassiveArea(pseudojets, 
 						    jet_def, 
-						    _area_def.active_spec());
+						    _area_def.ghost_spec());
     break;
   default:
     std::cerr << "Error: unrecognized area_type in ClusterSequenceWithArea:" 

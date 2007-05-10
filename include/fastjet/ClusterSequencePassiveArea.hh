@@ -52,16 +52,19 @@ public:
   template<class L> ClusterSequencePassiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
+	  const GhostedAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) ;
 
+  /// return an empty area that's appropriate to the passive area
+  /// determination carried out
+  virtual double empty_area(double maxrap) const;
 
 private:
 
   /// does the initialisation and running specific to the passive
   /// areas class
   void _initialise_and_run_PA (const JetDefinition & jet_def,
-                               const ActiveAreaSpec & area_spec,
+                               const GhostedAreaSpec & area_spec,
                                const bool & writeout_combinations = false);
 
 };
@@ -72,7 +75,7 @@ private:
 template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea 
 (const std::vector<L> & pseudojets, 
  const JetDefinition & jet_def,
- const ActiveAreaSpec & area_spec,
+ const GhostedAreaSpec & area_spec,
  const bool & writeout_combinations) {
 
   // transfer the initial jets (type L) into our own array

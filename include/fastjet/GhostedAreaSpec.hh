@@ -29,8 +29,8 @@
 //ENDHEADER
 
 
-#ifndef __FASTJET_ACTIVEAREASPEC_HH__
-#define __FASTJET_ACTIVEAREASPEC_HH__
+#ifndef __FASTJET_GHOSTEDAREASPEC_HH__
+#define __FASTJET_GHOSTEDAREASPEC_HH__
 
 #include<vector>
 #include<string>
@@ -43,7 +43,7 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// namespace to hold default parameters for the active area spec
-namespace aas {
+namespace gas {
   const double def_ghost_maxrap  = 6.0;
   const int    def_repeat        = 1;
   const double def_ghost_area    = 0.01;
@@ -55,24 +55,24 @@ namespace aas {
 //----------------------------------------------------------------------
 /// Class that defines the parameters that go into the measurement
 /// of active jet areas.
-class ActiveAreaSpec {
+class GhostedAreaSpec {
 public:
   /// default constructor
-  ActiveAreaSpec(): _ghost_maxrap (aas::def_ghost_maxrap), 
-                    _repeat       (aas::def_repeat), 
-                    _ghost_area   (aas::def_ghost_area), 
-                    _grid_scatter (aas::def_grid_scatter), 
-                    _kt_scatter   (aas::def_kt_scatter), 
-                    _mean_ghost_kt(aas::def_mean_ghost_kt),
+  GhostedAreaSpec(): _ghost_maxrap (gas::def_ghost_maxrap), 
+                    _repeat       (gas::def_repeat), 
+                    _ghost_area   (gas::def_ghost_area), 
+                    _grid_scatter (gas::def_grid_scatter), 
+                    _kt_scatter   (gas::def_kt_scatter), 
+                    _mean_ghost_kt(gas::def_mean_ghost_kt),
                     _actual_ghost_area(-1.0) {_initialize();};
   
   /// explicit constructor
-  explicit ActiveAreaSpec(double ghost_maxrap, 
-                          int    repeat        = aas::def_repeat,
-                          double ghost_area    = aas::def_ghost_area,   
-                          double grid_scatter  = aas::def_grid_scatter, 
-                          double kt_scatter    = aas::def_kt_scatter,   
-                          double mean_ghost_kt = aas::def_mean_ghost_kt
+  explicit GhostedAreaSpec(double ghost_maxrap, 
+                          int    repeat        = gas::def_repeat,
+                          double ghost_area    = gas::def_ghost_area,   
+                          double grid_scatter  = gas::def_grid_scatter, 
+                          double kt_scatter    = gas::def_kt_scatter,   
+                          double mean_ghost_kt = gas::def_mean_ghost_kt
                           ): 
     _ghost_maxrap(ghost_maxrap), 
     _repeat(repeat), 
@@ -156,10 +156,10 @@ private:
 };
 
 ////----------------------------------------------------------------------
-//class 1GhostPassiveAreaSpec : public ActiveAreaSpec {
+//class 1GhostPassiveAreaSpec : public GhostedAreaSpec {
 //public:
 //}
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_ACTIVEAREASPEC_HH__
+#endif // __FASTJET_GHOSTEDAREASPEC_HH__

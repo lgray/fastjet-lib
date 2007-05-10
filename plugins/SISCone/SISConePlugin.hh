@@ -102,7 +102,8 @@ public:
     _protojet_ptmin        (protojet_ptmin),
     _caching               (caching),             
     _split_merge_scale     (split_merge_scale),
-    _split_merge_stopping_scale (split_merge_stopping_scale) {}
+    _split_merge_stopping_scale (split_merge_stopping_scale),
+    _ghost_sep_scale       (0.0) {}
 
   /// Backwards compatible constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,

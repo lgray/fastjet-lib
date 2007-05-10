@@ -48,7 +48,7 @@ using namespace std;
 /// global routine for running active area
 void ClusterSequenceActiveArea::_initialise_and_run_AA (
 		const JetDefinition & jet_def,
-		const ActiveAreaSpec & area_spec,
+		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations) {
 
   bool continue_running;
@@ -72,7 +72,7 @@ void ClusterSequenceActiveArea::_resize_and_zero_AA () {
 //---------------------------------a-------------------------------------
 void ClusterSequenceActiveArea::_initialise_AA (
 		const JetDefinition & jet_def,
-		const ActiveAreaSpec & area_spec,
+		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations,
                 bool & continue_running) 
 {
@@ -112,7 +112,7 @@ void ClusterSequenceActiveArea::_initialise_AA (
 
 
 //----------------------------------------------------------------------
-void ClusterSequenceActiveArea::_run_AA (const ActiveAreaSpec & area_spec) {
+void ClusterSequenceActiveArea::_run_AA (const GhostedAreaSpec & area_spec) {
   // record the input jets as they are currently
   vector<PseudoJet> input_jets(_jets);
 
@@ -141,7 +141,7 @@ void ClusterSequenceActiveArea::_run_AA (const ActiveAreaSpec & area_spec) {
 
 //----------------------------------------------------------------------
 /// run the postprocessing for the active area (and derived classes)
-void ClusterSequenceActiveArea::_postprocess_AA (const ActiveAreaSpec & area_spec) {
+void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_spec) {
   _average_area  /= area_spec.repeat();
   _average_area2 /= area_spec.repeat();
   if (area_spec.repeat() > 1) {
@@ -170,7 +170,7 @@ void ClusterSequenceActiveArea::_postprocess_AA (const ActiveAreaSpec & area_spe
 // //----------------------------------------------------------------------
 // void ClusterSequenceActiveArea::_initialise_and_run_AA (
 // 		const JetDefinition & jet_def,
-// 		const ActiveAreaSpec & area_spec,
+// 		const GhostedAreaSpec & area_spec,
 // 		const bool & writeout_combinations) 
 // {
 // 
@@ -433,9 +433,16 @@ void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
 //----------------------------------------------------------------------
 double ClusterSequenceActiveArea::empty_area(double maxrap) const {
   double empty = 0.0;
+  // first deal with ghost jets
   for (unsigned  i = 0; i < _ghost_jets.size(); i++) {
     if (abs(_ghost_jets[i].rap()) < maxrap) {
       empty += _ghost_jets[i].area;
+    }
+  }
+  // then deal with unclustered ghosts
+  for (unsigned  i = 0; i < _unclustered_ghosts.size(); i++) {
+    if (abs(_unclustered_ghosts[i].rap()) < maxrap) {
+      empty += _unclustered_ghosts[i].area;
     }
   }
   empty /= _area_spec_repeat;
@@ -646,6 +653,16 @@ void ClusterSequenceActiveArea::_transfer_areas(
       our_area_4vectors[our_parent2] = ghosted_seq.area_4vector(jet2);
     }
 
+  }
+
+  // now add unclustered ghosts to the relevant list so that we can
+  // calculate empty area later.
+  vector<PseudoJet> unclust = ghosted_seq.unclustered_particles();
+  for (unsigned iu = 0; iu < unclust.size();  iu++) {
+    if (ghosted_seq.is_pure_ghost(unclust[iu])) {
+      double area = ghosted_seq.area(unclust[iu]);
+      _unclustered_ghosts.push_back(GhostJet(unclust[iu],area));
+    }
   }
 
   _average_area  += our_areas; 

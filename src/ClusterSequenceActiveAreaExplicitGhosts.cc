@@ -42,7 +42,7 @@ typedef ClusterSequenceActiveAreaExplicitGhosts ClustSeqActAreaEG;
 //----------------------------------------------------------------------
 ///
 void ClustSeqActAreaEG::_add_ghosts (
-			 const ActiveAreaSpec & area_spec) {
+			 const GhostedAreaSpec & area_spec) {
 
   // add the ghosts to the jets
   area_spec.add_ghosts(_jets);
@@ -91,6 +91,17 @@ bool ClustSeqActAreaEG::is_pure_ghost(int hist_ix) const
   return hist_ix >= 0 ? _is_pure_ghost[hist_ix] : false;
 }
 
+//----------------------------------------------------------------------
+double ClustSeqActAreaEG::empty_area(double maxrap) const {
+  vector<PseudoJet> unclust = unclustered_particles();
+  double area = 0.0;
+  for (unsigned iu = 0; iu < unclust.size();  iu++) {
+    if (is_pure_ghost(unclust[iu]) && abs(unclust[iu].rap()) < maxrap) {
+      area += _ghost_area;
+    }
+  }
+  return area;
+}
 
 //======================================================================
 // sort out the areas

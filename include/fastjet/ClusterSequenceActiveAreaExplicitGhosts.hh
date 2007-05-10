@@ -33,7 +33,7 @@
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceAreaBase.hh"
-#include "fastjet/ActiveAreaSpec.hh"
+#include "fastjet/GhostedAreaSpec.hh"
 #include<iostream>
 #include<vector>
 
@@ -47,12 +47,12 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class ClusterSequenceActiveAreaExplicitGhosts : 
   public ClusterSequenceAreaBase {
 public:
-  /// constructor using a ActiveAreaSpec to specify how the area is
+  /// constructor using a GhostedAreaSpec to specify how the area is
   /// to be measured
   template<class L> ClusterSequenceActiveAreaExplicitGhosts
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
+	  const GhostedAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
            std::vector<L> * ghosts = NULL;
@@ -66,7 +66,7 @@ public:
           double ghost_area,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
-           const ActiveAreaSpec * area_spec = NULL;
+           const GhostedAreaSpec * area_spec = NULL;
 	   _initialise(pseudojets,jet_def,area_spec,&ghosts,ghost_area,
                        writeout_combinations); }
 
@@ -75,7 +75,7 @@ public:
   template<class L> void _initialise
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const ActiveAreaSpec * area_spec,
+	  const GhostedAreaSpec * area_spec,
 	  const std::vector<L> * ghosts,
 	  double                 ghost_area,
 	  const bool & writeout_combinations); 
@@ -102,6 +102,10 @@ public:
   /// (i.e. hist_ix < 0), then the result is false.
   bool is_pure_ghost(int history_index) const;
 
+  /// return the total area, up to |y|<maxrap, that consists of
+  /// unclustered ghosts
+  virtual double empty_area(double maxrap) const;
+
   /// returns the total area under study
   double total_area () const;
   
@@ -117,7 +121,7 @@ private:
 
   /// adds the "ghost" momenta, which will be used to estimate
   /// the jet area
-  void _add_ghosts(const ActiveAreaSpec & area_spec); 
+  void _add_ghosts(const GhostedAreaSpec & area_spec); 
 
   /// another way of adding ghosts
   template<class L> void _add_ghosts (
@@ -138,7 +142,7 @@ private:
 template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const ActiveAreaSpec * area_spec,
+	  const GhostedAreaSpec * area_spec,
 	  const std::vector<L> * ghosts,
 	  double                 ghost_area,
 	  const bool & writeout_combinations) {

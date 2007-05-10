@@ -68,28 +68,29 @@ int main (int argc, char ** argv) {
     // back of the input_particles vector
     input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
   }
-  
+
   // create an object that represents your choice of jet finder and 
   // the associated parameters
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;
-  //fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
+  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
   //fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, Rparam, strategy);
-  fastjet::JetDefinition jet_def(new fastjet::SISConePlugin(1.0));
+  //fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, Rparam, strategy);
+  //fastjet::JetDefinition jet_def(new fastjet::SISConePlugin(1.0));
 
   // create an object that specifies how we to define the area
   fastjet::AreaDefinition area_def;
-  bool use_active = true;
-  if (use_active) {
+  bool use_voronoi = false;
+  if (!use_voronoi) {
     double ghost_etamax = 7.0;
-    int    active_area_repeats = 3;
-    double ghost_area    = 0.01;
+    int    active_area_repeats = 1;
+    //double ghost_area    = 0.01;
     //int    active_area_repeats = 100;
-    //double ghost_area    = 0.1;
-    //area_def = fastjet::ActiveAreaSpec(ghost_etamax, active_area_repeats, 
-    //                                   ghost_area);
-    fastjet::ActiveAreaSpec area_spec(ghost_etamax, active_area_repeats, ghost_area);
-    area_def = fastjet::AreaDefinition(area_spec,fastjet::AreaDefinition::passive_area);
+    double ghost_area    = 0.05;
+    //area_def = fastjet::GhostedAreaSpec(ghost_etamax, active_area_repeats, 
+    fastjet::GhostedAreaSpec ghost_spec(ghost_etamax, active_area_repeats, 
+                                        ghost_area);
+    area_def = fastjet::AreaDefinition(fastjet::passive_area,ghost_spec);
   } else {
     double effective_Rfact = 1.0;
     area_def = fastjet::VoronoiAreaSpec(effective_Rfact);
@@ -106,6 +107,8 @@ int main (int argc, char ** argv) {
   cout << clust_seq.n_empty_jets(4.0) << endl;
 
   // tell the user what was done
+  cout << "Jet definition was: " << jet_def.description() << endl;
+  cout << "Area definition was: " << area_def.description() << endl;
   cout << "Strategy adopted by FastJet was "<<
        clust_seq.strategy_string()<<endl<<endl;
 
@@ -118,6 +121,9 @@ int main (int argc, char ** argv) {
   cout << "---------------------------------------\n";
   print_jets(clust_seq, inclusive_jets);
   cout << endl;
+
+  cout << clust_seq.unclustered_particles().size() << endl;
+
 
 }
 

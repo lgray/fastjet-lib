@@ -42,7 +42,7 @@ using namespace std;
 /// various special cases.
 void ClusterSequencePassiveArea::_initialise_and_run_PA (
 		const JetDefinition & jet_def,
-		const ActiveAreaSpec & area_spec,
+		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations) {
 
   if (jet_def.jet_finder() == kt_algorithm) {
@@ -92,7 +92,16 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
   }
 }
 
-
+//----------------------------------------------------------------------
+// dispatch to most relevant empty area calculation...
+double ClusterSequencePassiveArea::empty_area (double maxrap) const {
+  if (jet_def().jet_finder() == kt_algorithm) {
+    // run the naive algorithm
+    return ClusterSequenceAreaBase::empty_area(maxrap);
+  } else {
+    return ClusterSequence1GhostPassiveArea::empty_area(maxrap);
+  }
+}
 
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

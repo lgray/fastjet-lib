@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/ActiveAreaSpec.hh"
+#include "fastjet/GhostedAreaSpec.hh"
 #include<iostream>
 #include<sstream>
 
@@ -36,13 +36,13 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-BasicRandom<double> ActiveAreaSpec::_random_generator;
+BasicRandom<double> GhostedAreaSpec::_random_generator;
 
 //======================================================================
 /// sets the detailed parameters for the ghosts (which may not be quite
 /// the same as those requested -- this is in order for things to fit
 /// in nicely into 2pi etc...
-void ActiveAreaSpec::_initialize() {
+void GhostedAreaSpec::_initialize() {
   // add on area-measuring dummy particles
   _drap = sqrt(_ghost_area);
   _dphi = _drap;
@@ -58,7 +58,7 @@ void ActiveAreaSpec::_initialize() {
 
 //----------------------------------------------------------------------
 /// adds the ghost 4-momenta to the vector of PseudoJet's
-void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
+void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   // add momenta for ghosts
   for (int irap = -_nrap; irap <= _nrap; irap++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
@@ -92,13 +92,13 @@ void ActiveAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   }
 }
 
-string ActiveAreaSpec::description() const {
+string GhostedAreaSpec::description() const {
 
   ostringstream ostr;
-  ostr << "Active area specification with ghosts of area " << actual_ghost_area() 
+  ostr << "ghosts of area " << actual_ghost_area() 
        << " (had requested " << ghost_area() << ")"
        << ", placed up to y = " << ghost_maxrap() 
-       << ", scattered rel. to perfect grid by " << grid_scatter() 
+       << ", scattered wrt to perfect grid by (rel) " << grid_scatter() 
        << ", mean_ghost_kt = " << mean_ghost_kt()
        << ", rel kt_scatter =  " << kt_scatter()
        << ", n repetitions of ghost distributions =  " << repeat();

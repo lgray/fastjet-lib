@@ -39,7 +39,7 @@ using namespace std;
 /// global routine for initialising and running a general passive area
 void ClusterSequence1GhostPassiveArea::_initialise_and_run_1GPA (
 		const JetDefinition & jet_def,
-		const ActiveAreaSpec & area_spec,
+		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations) {
 
   bool continue_running;
@@ -53,7 +53,7 @@ void ClusterSequence1GhostPassiveArea::_initialise_and_run_1GPA (
 
 //----------------------------------------------------------------------
 /// routine for running a passive area one ghost at a time.
-void ClusterSequence1GhostPassiveArea::_run_1GPA (const ActiveAreaSpec & area_spec) {
+void ClusterSequence1GhostPassiveArea::_run_1GPA (const GhostedAreaSpec & area_spec) {
     // record the input jets as they are currently
   vector<PseudoJet> input_jets(_jets);
 
@@ -76,7 +76,7 @@ void ClusterSequence1GhostPassiveArea::_run_1GPA (const ActiveAreaSpec & area_sp
       vector<PseudoJet> some_ghosts;
       some_ghosts.push_back(all_ghosts[ig]);
       ClusterSequenceActiveAreaExplicitGhosts clust_seq(input_jets, jet_def(), 
-                                                       some_ghosts, area_spec.ghost_area());
+                                                       some_ghosts, area_spec.actual_ghost_area());
 
       if (irepeat == 0 && ig == 0) {
         // take the non-ghost part of the history and put into our own

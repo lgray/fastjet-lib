@@ -52,11 +52,11 @@ public:
   /// default constructor
   ClusterSequenceActiveArea() {}
 
-  /// constructor based on JetDefinition and ActiveAreaSpec
+  /// constructor based on JetDefinition and GhostedAreaSpec
   template<class L> ClusterSequenceActiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const ActiveAreaSpec & area_spec,
+	  const GhostedAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) ;
 
   virtual double area (const PseudoJet & jet) const {
@@ -92,7 +92,7 @@ public:
   /// rewrite the empty area from the parent class, so as to use
   /// all info at our disposal
   /// return the total area, up to |y|<maxrap, that consists of ghost
-  /// jets
+  /// jets or unclustered ghosts
   virtual double empty_area(double maxrap) const;
 
   /// return the true number of empty jets (replaces
@@ -102,18 +102,18 @@ public:
 protected:
   void _resize_and_zero_AA ();
   void _initialise_AA(const JetDefinition & jet_def,
-                      const ActiveAreaSpec & area_spec,
+                      const GhostedAreaSpec & area_spec,
                       const bool & writeout_combinations,
                       bool & continue_running);
 
-  void _run_AA(const ActiveAreaSpec & area_spec);
+  void _run_AA(const GhostedAreaSpec & area_spec);
 
-  void _postprocess_AA(const ActiveAreaSpec & area_spec);
+  void _postprocess_AA(const GhostedAreaSpec & area_spec);
 
   /// does the initialisation and running specific to the active
   /// areas class
   void _initialise_and_run_AA (const JetDefinition & jet_def,
-                               const ActiveAreaSpec & area_spec,
+                               const GhostedAreaSpec & area_spec,
                                const bool & writeout_combinations = false);
 
   /// transfer the history (and jet-momenta) from clust_seq to our
@@ -173,6 +173,7 @@ private:
   };
 
   std::vector<GhostJet> _ghost_jets;
+  std::vector<GhostJet> _unclustered_ghosts;
 };
 
 
@@ -181,7 +182,7 @@ private:
 template<class L> ClusterSequenceActiveArea::ClusterSequenceActiveArea 
 (const std::vector<L> & pseudojets, 
  const JetDefinition & jet_def,
- const ActiveAreaSpec & area_spec,
+ const GhostedAreaSpec & area_spec,
  const bool & writeout_combinations) {
 
   // transfer the initial jets (type L) into our own array

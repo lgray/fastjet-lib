@@ -50,17 +50,30 @@ string AreaDefinition::description() const {
 
   switch(area_type()) {
   case active_area:
-    return active_spec().description();
+    ostr << "Active area (hidden ghosts) with " ;
+    ostr << ghost_spec().description();
+    break;
   case active_area_explicit_ghosts:
-    ostr << active_spec().description() << " (explicit ghosts)" ;
-    return ostr.str();
+    ostr << "Active area (explicit ghosts) with " ;
+    ostr << ghost_spec().description();
+    break;
+  case one_ghost_passive_area:
+    ostr << "Passive area (one ghost at a time) with " ;
+    ostr << ghost_spec().description();
+    break;
+  case passive_area:
+    ostr << "Passive area (optimal alg. based on jet.def.), where relevant with " ;
+    ostr << ghost_spec().description()  ;
+    break;
   case voronoi_area:
-    return voronoi_spec().description();
+    ostr << voronoi_spec().description();
+    break;
   default:
     cerr << "Error: unrecognized area_type in AreaDefinition::description():" 
          << area_type() << endl;
     exit(-1);
   }
+  return ostr.str();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

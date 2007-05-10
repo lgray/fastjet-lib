@@ -32,7 +32,7 @@
 #ifndef __FASTJET_AREADEFINITION_HH__
 #define __FASTJET_AREADEFINITION_HH__
 
-#include "fastjet/ActiveAreaSpec.hh"
+#include "fastjet/GhostedAreaSpec.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -64,33 +64,62 @@ private:
 };
 
 
+/// the different types of area that are supported
+enum AreaType {invalid_area = -1, active_area = 0, 
+               active_area_explicit_ghosts = 1, voronoi_area=2,
+               one_ghost_passive_area = 3, passive_area = 4};
+
+
 //----------------------------------------------------------------------
 /// class that holds a generic area definition
 ///
 class AreaDefinition {
 public:
-  /// the different types of area that are supported
-  enum AreaType {invalid_area = -1, active_area = 0, 
-                 active_area_explicit_ghosts = 1, voronoi_area=2,
-		 one_ghost_passive_area = 3, passive_area = 4};
   
-  AreaDefinition() {_area_type = invalid_area;}
-
-  /// constructor for an area definition based on an active area
-  /// specification, together with an option to get explicit ghosts
-  AreaDefinition(const ActiveAreaSpec & spec, bool explicit_ghosts = false) {
-    _active_spec = spec;
-    _area_type   = explicit_ghosts ? active_area_explicit_ghosts : active_area;
+  /// default constructor, which provides a ghosted active area, with
+  /// sensible defaults for the ghosts.
+  AreaDefinition() {
+    _area_type  = active_area;
+    _ghost_spec = GhostedAreaSpec();
   }
 
-  /// constructor for an area definition based on 
-  /// an active or passive area specification
-  AreaDefinition(const ActiveAreaSpec & spec, AreaType type) {
-    _active_spec = spec;
+  /// constructor for an area definition based on an area type and a
+  /// ghosted area specification
+  AreaDefinition(AreaType type, const GhostedAreaSpec & spec) {
+    _ghost_spec = spec;
     _area_type   = type;
+    assert(type != voronoi_area);
   }
 
-  /// constructor for an area definition based on a voronoi area specification
+  /// constructor for an area definition based on an area type and a
+  /// voronoi area specification (type must be voronoi_area)
+  AreaDefinition(AreaType type, const VoronoiAreaSpec & spec) {
+    _voronoi_spec = spec;
+    _area_type   = type;
+    assert(type == voronoi_area);
+  }
+
+  /// constructor for an area definition based on an area type and 
+  /// which attempts to provide sensible defaults for everything else
+  AreaDefinition(AreaType type) {
+    _area_type   = type;
+    if (type == voronoi_area) {
+      _voronoi_spec = VoronoiAreaSpec();
+    } else {
+      _ghost_spec = GhostedAreaSpec();
+    }
+  }
+
+  /// constructor for an area definition based on an ghosted area
+  /// specification, and an option to select which ghosted area you want
+  AreaDefinition(const GhostedAreaSpec & spec, AreaType type = active_area) {
+    _ghost_spec = spec;
+    _area_type   = type;
+    assert(type != voronoi_area);
+  }
+
+  /// constructor for an area definition based on a voronoi area
+  /// specification
   AreaDefinition(const VoronoiAreaSpec & spec) {
     _voronoi_spec = spec;
     _area_type    = voronoi_area;
@@ -103,8 +132,8 @@ public:
   AreaType area_type() const {return _area_type;}
 
   /// return a reference to the active area spec
-  const ActiveAreaSpec  & active_spec()  const {return _active_spec;}
-  ActiveAreaSpec & active_spec()  {return _active_spec;}
+  const GhostedAreaSpec  & ghost_spec()  const {return _ghost_spec;}
+  GhostedAreaSpec & ghost_spec()  {return _ghost_spec;}
 
   /// return a reference to the voronoi area spec
   const VoronoiAreaSpec & voronoi_spec() const {return _voronoi_spec;}
@@ -112,7 +141,7 @@ public:
 private:
 
   AreaType        _area_type;
-  ActiveAreaSpec  _active_spec;
+  GhostedAreaSpec  _ghost_spec;
   VoronoiAreaSpec _voronoi_spec;
 };
 
