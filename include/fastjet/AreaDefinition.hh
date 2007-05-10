@@ -65,9 +65,10 @@ private:
 
 
 /// the different types of area that are supported
-enum AreaType {invalid_area = -1, active_area = 0, 
-               active_area_explicit_ghosts = 1, voronoi_area=2,
-               one_ghost_passive_area = 3, passive_area = 4};
+enum AreaType {invalid_area = -1, 
+               active_area = 0, active_area_explicit_ghosts = 1,
+               one_ghost_passive_area = 10, passive_area = 11, 
+               voronoi_area=20};
 
 
 //----------------------------------------------------------------------

@@ -1,5 +1,9 @@
 2007-05-10  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* include/fastjet/AreaDefinition.hh: (later)
+	  changed the enum values and order for AreaType (to make them
+	  more logical)
+
 	* include/fastjet/ActiveAreaSpec.hh: *** ADDED ***
 	  new version of this file, which just defines ActiveAreaSpec =
 	  GhostedAreaSpec, for backwards compatibility
