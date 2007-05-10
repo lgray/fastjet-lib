@@ -5,9 +5,20 @@ Release Notes for fastjet
 Changes from v2.1.0 to v2.2.0
 ===============================
 
-- extended the features of the ClusterSequenceWithArea base class, so
-  that common area manipulations can be carried out directly from
-  there.
+- added functionality for Passive areas and Voronoi areas, and
+  provided a new common interface for accessing all different types of
+  areas. Old functionality is retained EXCEPT, that the base class
+  has been renamed:
+
+      ClusterSequenceWithArea -> ClusterSequenceAreaBase
+
+  Most programs would have used ClusterSequenceActiveArea directly
+  without referring to the base class, and in this case backwards
+  compatibility is retained.
+
+  Note that ClusterSequenceWithArea is now the class for accessing a
+  generic area, using an AreaDefinition to specify the area you need
+  (see example/fastjet_areas.cc for an example).
 
 - changed plugin base class, so that it now includes R() virtual
   member, and modified the various plugins to account for this.

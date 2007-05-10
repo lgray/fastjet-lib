@@ -1,5 +1,9 @@
 2007-05-10  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* include/fastjet/ActiveAreaSpec.hh: *** ADDED ***
+	  new version of this file, which just defines ActiveAreaSpec =
+	  GhostedAreaSpec, for backwards compatibility
+
 	* ActiveAreaSpec -> GhostedAreaSpec: 
 	  changed the name to reflect use of this class for passive &
 	  active; 

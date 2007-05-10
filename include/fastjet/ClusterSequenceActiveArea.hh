@@ -38,6 +38,9 @@
 #include<iostream>
 #include<vector>
 
+// for backwards compatibility
+#include "fastjet/ActiveAreaSpec.hh"
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
