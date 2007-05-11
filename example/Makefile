@@ -40,6 +40,9 @@ fastjet_example_v1_interface: fastjet_example_v1_interface.o  ../lib/libfastjet.
 fastjet_areas: fastjet_areas.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_areas fastjet_areas.o  $(LDFLAGS) $(PLUGIN_LIBRARY)
 
+#fastjet_areas_2.1.0: fastjet_areas_2.1.0.o  ../lib/libfastjet.a
+#	$(CXX)  -o fastjet_areas_2.1.0 fastjet_areas_2.1.0.o  $(LDFLAGS) $(PLUGIN_LIBRARY)
+
 fastjet_subtraction: fastjet_subtraction.o  ../lib/libfastjet.a
 	$(CXX)  -o fastjet_subtraction fastjet_subtraction.o  $(LDFLAGS)
 

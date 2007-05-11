@@ -24,7 +24,7 @@ libfastjet.a: $(OBJS)
 	ranlib libfastjet.a
 
 install: libfastjet.a
-	cp -p libfastjet.a ../lib/
+	cp libfastjet.a ../lib/
 
 clean:
 	rm -f $(OBJS) libfastjet.a

@@ -38,8 +38,18 @@
 #include<iostream>
 #include<vector>
 
-// for backwards compatibility
+//------------ backwards compatibility with version 2.1 -------------
+// for backwards compatibility make ActiveAreaSpec name available
 #include "fastjet/ActiveAreaSpec.hh"
+// and provide the old name (ClusterSequenceWithArea) 
+// for (ClusterSequenceAreaBase) if one is not explicitly including
+// the new fastjet/ClusterSequenceWithArea.hh (if that file
+// is included subsequently, the define will be undone.
+#ifndef __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+#define ClusterSequenceWithArea ClusterSequenceAreaBase
+#endif //__FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+//--------------------------------------------------------------------
+
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

@@ -1,3 +1,13 @@
+2007-05-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequenceActiveArea.hh: 
+	* include/fastjet/ClusterSequenceWithArea.hh: 
+
+	  partially fixed the problem of backwards compatibility with v2.1
+	  by #defining ClusterSequenceWithArea as ClusterSequenceAreaBase,
+	  UNLESS ClusterSequenceWithArea is explicitly included anywhere.
+
+	
 2007-05-10  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* include/fastjet/AreaDefinition.hh: (later)
