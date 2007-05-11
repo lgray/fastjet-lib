@@ -41,13 +41,13 @@
 //------------ backwards compatibility with version 2.1 -------------
 // for backwards compatibility make ActiveAreaSpec name available
 #include "fastjet/ActiveAreaSpec.hh"
-// and provide the old name (ClusterSequenceWithArea) 
+// and provide the old name (ClusterSequenceArea) 
 // for (ClusterSequenceAreaBase) if one is not explicitly including
-// the new fastjet/ClusterSequenceWithArea.hh (if that file
+// the new fastjet/ClusterSequenceArea.hh (if that file
 // is included subsequently, the define will be undone.
-#ifndef __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
-#define ClusterSequenceWithArea ClusterSequenceAreaBase
-#endif //__FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+#ifndef __FASTJET_CLUSTERSEQUENCEAREA_HH__
+#define ClusterSequenceArea ClusterSequenceAreaBase
+#endif //__FASTJET_CLUSTERSEQUENCEAREA_HH__
 //--------------------------------------------------------------------
 
 

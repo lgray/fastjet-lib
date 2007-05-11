@@ -108,7 +108,7 @@ CmdLine.o: CmdLine.hh
 fastjet_subtraction.o: ../include/fastjet/PseudoJet.hh
 fastjet_subtraction.o: ../include/fastjet/internal/numconsts.hh
 fastjet_subtraction.o: ../include/fastjet/internal/base.hh
-fastjet_subtraction.o: ../include/fastjet/ClusterSequenceWithArea.hh
+fastjet_subtraction.o: ../include/fastjet/ClusterSequenceArea.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequenceAreaBase.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequence.hh
 fastjet_subtraction.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
@@ -118,6 +118,7 @@ fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 fastjet_subtraction.o: ../include/fastjet/GhostedAreaSpec.hh
 fastjet_subtraction.o: ../include/fastjet/internal/BasicRandom.hh
+fastjet_subtraction.o: ../include/fastjet/ActiveAreaSpec.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequencePassiveArea.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
@@ -125,7 +126,7 @@ fastjet_subtraction.o: ../include/fastjet/AreaDefinition.hh
 fastjet_areas.o: ../include/fastjet/PseudoJet.hh
 fastjet_areas.o: ../include/fastjet/internal/numconsts.hh
 fastjet_areas.o: ../include/fastjet/internal/base.hh
-fastjet_areas.o: ../include/fastjet/ClusterSequenceWithArea.hh
+fastjet_areas.o: ../include/fastjet/ClusterSequenceArea.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequenceAreaBase.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequence.hh
 fastjet_areas.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
@@ -135,6 +136,7 @@ fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 fastjet_areas.o: ../include/fastjet/GhostedAreaSpec.hh
 fastjet_areas.o: ../include/fastjet/internal/BasicRandom.hh
+fastjet_areas.o: ../include/fastjet/ActiveAreaSpec.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequencePassiveArea.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh

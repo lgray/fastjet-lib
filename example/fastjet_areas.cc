@@ -43,7 +43,7 @@
 //
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/ClusterSequencePassiveArea.hh"
 #include "SISConePlugin.hh"
 #include<iostream> // needed for io
@@ -97,7 +97,7 @@ int main (int argc, char ** argv) {
   }
 
   // run the jet clustering with the above jet definition
-  fastjet::ClusterSequenceWithArea clust_seq(input_particles, 
+  fastjet::ClusterSequenceArea clust_seq(input_particles, 
                                              jet_def, area_def);
   // run the jet clustering with the above jet definition
   //fastjet::ClusterSequencePassiveArea clust_seq(input_particles, jet_def, 

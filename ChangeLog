@@ -1,3 +1,11 @@
+2007-05-11  Gavin SALAM  <salam@lpthe.jussieu.fr> (later)
+
+	* include/fastjet/ClusterSequenceWithArea.hh
+          -> include/fastjet/ClusterSequenceArea.hh
+
+	  + corresponding renaming in various places -- designed to ensure
+	  we really can get full backwards compatibility.
+	
 2007-05-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequenceActiveArea.hh: 

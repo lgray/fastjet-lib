@@ -28,8 +28,8 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
-#define __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+#ifndef __FASTJET_CLUSTERSEQUENCEAREA_HH__
+#define __FASTJET_CLUSTERSEQUENCEAREA_HH__
 
 #include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/ClusterSequenceActiveArea.hh"
@@ -41,29 +41,29 @@
 //----- undo backwards compatibility with version 2.1 ---------------
 // ClusterSequenceActiveArea.hh provided some backwards compat. defs. 
 // so that progs written for 2.1 still work -- if the user explicitly
-// includes ClusterSequenceWithArea, these defs are undone.
-#undef ClusterSequenceWithArea
+// includes ClusterSequenceArea, these defs are undone.
+#undef ClusterSequenceArea
 //-------------------------------------------------------------------
 
 FASTJET_BEGIN_NAMESPACE
 
-class ClusterSequenceWithArea : public ClusterSequenceAreaBase {
+class ClusterSequenceArea : public ClusterSequenceAreaBase {
 public:
-  template<class L> ClusterSequenceWithArea
+  template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const AreaDefinition & area_def_in)  : _area_def(area_def_in) {
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 
-  template<class L> ClusterSequenceWithArea
+  template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const GhostedAreaSpec & area_spec)   : _area_def(area_spec){
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 
-  template<class L> ClusterSequenceWithArea
+  template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
 	  const VoronoiAreaSpec & area_spec)   : _area_def(area_spec){
@@ -112,8 +112,8 @@ private:
 };
 
 //----------------------------------------------------------------------
-//template<class L> ClusterSequenceWithArea::ClusterSequenceWithArea
-template<class L> void ClusterSequenceWithArea::initialize_and_run_cswa(
+//template<class L> ClusterSequenceArea::ClusterSequenceArea
+template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
            const std::vector<L> & pseudojets, 
            const JetDefinition  & jet_def)
  {
@@ -146,7 +146,7 @@ template<class L> void ClusterSequenceWithArea::initialize_and_run_cswa(
 						    _area_def.ghost_spec());
     break;
   default:
-    std::cerr << "Error: unrecognized area_type in ClusterSequenceWithArea:" 
+    std::cerr << "Error: unrecognized area_type in ClusterSequenceArea:" 
               << _area_def.area_type() << std::endl;
     exit(-1);
   }
@@ -157,6 +157,6 @@ template<class L> void ClusterSequenceWithArea::initialize_and_run_cswa(
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+#endif // __FASTJET_CLUSTERSEQUENCEAREA_HH__
 
 
