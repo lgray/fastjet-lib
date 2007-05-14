@@ -12,7 +12,7 @@
 //#include "fastjet/PseudoJet.hh"
 //#include "fastjet/ClusterSequence.hh"
 //#include "fastjet/AreaDefinition.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 //#include "fastjet/ClusterSequenceActiveArea.hh"
 //#include "ClusterSequencePassiveArea.hh"
 
@@ -112,7 +112,7 @@ int main (int argc, char ** argv) {
   if ( !(linear) && distlim == 0 ) { distlim = 1e-100;}
 
   // create the definitions for our jet finder and areas spec...
-  fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, 
+  fj::GhostedAreaSpec active_area_spec(ghost_etamax, repeat, 
 				      ghost_area, grid_scatter, kt_scatter);
   fj::VoronoiAreaSpec voronoi_area_spec(1.0);
   
@@ -120,7 +120,7 @@ int main (int argc, char ** argv) {
   if ( ! passivearea ) {
         area_def = fastjet::AreaDefinition(active_area_spec);
   } else {
-        area_def = fastjet::AreaDefinition(active_area_spec,fastjet::AreaDefinition::passive_area);
+        area_def = fastjet::AreaDefinition(fastjet::passive_area,active_area_spec);
  //       area_def = voronoi_area_spec;
   }
 
@@ -235,23 +235,20 @@ int main (int argc, char ** argv) {
     //cout << input_jets.size() << endl;
     
     // do the clustering WITHOUT the radiated particle
-    if (checkpoint) area_def.active_spec().checkpoint_random();
-//    fj::ClusterSequenceActiveArea clust(input_jets,jet_def,active_area_spec);
-    fj::ClusterSequenceWithArea clust(input_jets,jet_def,area_def);
+    if (checkpoint) area_def.ghost_spec().checkpoint_random();
+    fj::ClusterSequenceArea clust(input_jets,jet_def,area_def);
     // analyse the jets
     vector<fj::PseudoJet> output_jets(sorted_by_pt(clust.inclusive_jets()));
     
     // add radiated particle
-//    auto_ptr<fj::ClusterSequenceActiveArea> clust_rad;
-    auto_ptr<fj::ClusterSequenceWithArea> clust_rad;
+    auto_ptr<fj::ClusterSequenceArea> clust_rad;
     vector<fj::PseudoJet> output_jets_rad;	    
     if (emission) {
 //       cout << "radiated pt " << radiated.perp() << endl;
        input_jets.push_back(radiated);
        // redo the clustering WITH the radiated particle
-       if (checkpoint) area_def.active_spec().restore_checkpoint_random();
-//       clust_rad.reset(new fj::ClusterSequenceActiveArea (input_jets,jet_def,active_area_spec));
-       clust_rad.reset(new fj::ClusterSequenceWithArea(input_jets,jet_def,area_def));
+       if (checkpoint) area_def.ghost_spec().restore_checkpoint_random();
+       clust_rad.reset(new fj::ClusterSequenceArea(input_jets,jet_def,area_def));
        // analyse the jets
        output_jets_rad = sorted_by_pt(clust_rad->inclusive_jets());
     }
