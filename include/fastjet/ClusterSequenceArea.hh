@@ -38,13 +38,6 @@
 #include "fastjet/ClusterSequenceVoronoiArea.hh"
 #include "fastjet/AreaDefinition.hh"
 
-//----- undo backwards compatibility with version 2.1 ---------------
-// ClusterSequenceActiveArea.hh provided some backwards compat. defs. 
-// so that progs written for 2.1 still work -- if the user explicitly
-// includes ClusterSequenceArea, these defs are undone.
-#undef ClusterSequenceArea
-//-------------------------------------------------------------------
-
 FASTJET_BEGIN_NAMESPACE
 
 class ClusterSequenceArea : public ClusterSequenceAreaBase {
