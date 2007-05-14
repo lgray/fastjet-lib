@@ -50,11 +50,11 @@ JetHist::JetHist (const string & filename) {
   ostringstream bname;
   bname << filename <<"-background";
   _background = new TH2F(bname.str().c_str(),bname.str().c_str(),
-			 nbins,0.0,phimax,2*nbins,-etamax,etamax);
+			 2*nbins,-etamax,etamax,nbins,0.0,phimax);
   _background->SetFillColor(kWhite);
   // these were supposed to have labelled the axes, but it doesn't work.
-  _background->GetXaxis()->SetTitle("#phi");
-  _background->GetYaxis()->SetTitle("#eta");
+  _background->GetXaxis()->SetTitle("#eta");
+  _background->GetYaxis()->SetTitle("#phi");
   _background->GetZaxis()->SetTitle("p_{#perp}");
   stack.Add(_background);
 
@@ -63,7 +63,7 @@ JetHist::JetHist (const string & filename) {
     ostringstream name;
     name << filename<<"-jet-"<< _jets.size();
     TH2F * hist = new TH2F(name.str().c_str(),name.str().c_str(),
-			   nbins,0.0,phimax,2*nbins,-etamax,etamax);
+			   2*nbins,-etamax,etamax,nbins,0.0,phimax);
     int    i;
     double eta, phi, pt;
     //cout << filename <<": jet "<<_jets.size()<<endl;
@@ -74,7 +74,7 @@ JetHist::JetHist (const string & filename) {
       istringstream sline(line);
       sline >> i >> eta >> phi >> pt;
       //cout << i << " "<<eta<<" "<<phi<<" "<<pt<<endl;
-      hist->Fill(phi,eta,pt); // fill at phi,eta with weight pt
+      hist->Fill(eta,phi,pt); // fill at phi,eta with weight pt
       
       // workaround for bug in stacks: fill all lower elements of the stack
       // with a fake amount -- this, miraculously will lead to correct coloring
@@ -126,8 +126,8 @@ void showjets (const char * filename, const char * label = 0) {
   TCanvas * lego = new TCanvas("lego","lego options",400,50,800,600);
   Int_t cancolor = 0;
   lego->SetFillColor(cancolor);
-  lego->SetTheta(40.549);
-  lego->SetPhi(110.101);
+  lego->SetTheta(30.0);
+  lego->SetPhi(20.0);
 
   ////vector<double> col 
   int ngrey = 3;
