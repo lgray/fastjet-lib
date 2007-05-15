@@ -29,6 +29,51 @@ using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
+
+/// micro class to calculate averages and errors
+class AverageAndError {
+public:
+
+   /// default constructor
+   AverageAndError() { _sum = 0.0; _sum2 = 0.0; _n=0;}
+   
+   /// add one event
+   inline void add(double x)  { _sum += x, 
+                                _sum2 += x*x;
+			        _n += 1;
+			      }
+ 
+   /// return sum
+   inline double sum() const { return _sum; }
+
+   /// return sum2
+   inline double sum2() const { return _sum2; }
+   
+   /// return number of events
+   inline int n() const { return _n; }
+   
+   /// calculate and return average
+   inline double average() const { return (_n > 0) ? _sum/_n : 0. ; }
+
+   /// calculate and return average of squares
+   inline double average2() const { return (_n > 0) ? _sum2/_n : 0. ; }
+
+   /// calculate and return error
+   inline double error() const { return (_n > 1) ? sqrt((_sum2/_n - _sum*_sum/_n/_n)/(_n-1)) : 0.; }
+
+   /// calculate and return the standard deviation
+   inline double sd() const { return (_n > 1) ? sqrt(_sum2/_n - _sum*_sum/_n/_n) : 0.; }
+   
+private:
+
+double _sum, _sum2;
+int _n;
+
+};
+
+
+
+
 //----------------------------------------------------------------------
 /// A program that allows one to determine the distribution of areas
 /// in events populated either by soft particles only, or by the soft
@@ -43,7 +88,7 @@ int main (int argc, char ** argv) {
 
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",4.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
+  double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   int repeat = cmdline.value("-repeat", 1);
 
@@ -92,6 +137,8 @@ int main (int argc, char ** argv) {
   bool   linear = cmdline.present("-linear");
   bool   checkpoint = cmdline.present("-checkpoint");
   bool   passivearea =  cmdline.present("-passive");
+  bool   oneghostarea =  cmdline.present("-oneghost");
+  bool   voronoiarea =  cmdline.present("-voronoi");
 
   string outfile;
   if (cmdline.present("-out")) {
@@ -117,11 +164,14 @@ int main (int argc, char ** argv) {
   fj::VoronoiAreaSpec voronoi_area_spec(1.0);
   
   fj::AreaDefinition area_def;
-  if ( ! passivearea ) {
-        area_def = fastjet::AreaDefinition(active_area_spec);
-  } else {
+  if ( passivearea ) {
         area_def = fastjet::AreaDefinition(fastjet::passive_area,active_area_spec);
- //       area_def = voronoi_area_spec;
+  } else if ( oneghostarea ) {
+        area_def = fastjet::AreaDefinition(fastjet::one_ghost_passive_area,active_area_spec);
+  } else if ( voronoiarea ) {
+        area_def = voronoi_area_spec;
+  } else {
+        area_def = fastjet::AreaDefinition(active_area_spec);
   }
 
   // the histograms...
@@ -136,11 +186,7 @@ int main (int argc, char ** argv) {
   SimpleHist ptdist(0.,2000.,1000);
   
   int nhardjets = 0, nsoftjets = 0;
-  double average_area_hard = 0.0, average_ar2_hard = 0.0,
-         average_area_soft = 0.0, average_ar2_soft = 0.0;
-  double average_area_rad = 0.0, average_ar2_rad = 0.0;
-  double av_sub_pt = 0.0, av_sub_pt2 = 0.0;
-  double av_pt = 0.0, av_pt2 = 0.0;
+  AverageAndError rho,area_hard,area_soft,area_rad,pt,subtracted_pt;
 
   double logptlim = log(ptlim);
   double loghardpt = log(rad_pt);
@@ -278,8 +324,7 @@ int main (int argc, char ** argv) {
 	if ( hard ) {
 	  hard = false;
 
-	  average_area_hard += normarea; 
-	  average_ar2_hard  += pow2(normarea);
+	  area_hard.add(normarea);
 	  hardareahist.add_entry(normarea);
 	  nhardjets++; 
 	  
@@ -293,8 +338,7 @@ int main (int argc, char ** argv) {
               }
 	    }   
 	    double normarea_rad = clust_rad->area(output_jets_rad[ihard])/(fj::pi*pow2(ktR));
-  	    average_area_rad += weight*(normarea_rad - normarea);
-	    average_ar2_rad += pow2(weight*(normarea_rad - normarea));
+            area_rad.add(weight*(normarea_rad - normarea));
 // debug
 //  	    average_area_rad +=	    weight;
 //	    cout << "WEIGHT " << weight << endl;
@@ -307,8 +351,7 @@ int main (int argc, char ** argv) {
 	  }
     
           // study pt of hard jet
-	  av_pt += output_jets[j].perp();
-	  av_pt2 += pow2(output_jets[j].perp());
+	  pt.add(output_jets[j].perp());
           
 	  // perform subtraction on hard jets
 //          double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
@@ -320,10 +363,11 @@ int main (int argc, char ** argv) {
 //	  double sub_pt = output_jets[j].perp() - hard_area*median_pt;
 	  fj::PseudoJet sub_4vec = output_jets[j] - median_pt*areavect;
 
+          rho.add(median_pt);
+
 	  double sub_pt_4vec = sub_4vec.perp();
 	  double sub_pt = sub_pt_4vec;
-	  av_sub_pt += sub_pt;
-	  av_sub_pt2 += sub_pt*sub_pt;
+	  subtracted_pt.add(sub_pt);
 	  hardptdist.add_entry(sub_pt);
 	  ptdist.add_entry(output_jets[j].perp());
 	  if ( i < 10 ) { 
@@ -332,8 +376,7 @@ int main (int argc, char ** argv) {
 	         << j << " " << output_jets[j].perp() << " " <<  sub_pt << endl;  
           }
 	} else {
-	  average_area_soft += normarea; 
-	  average_ar2_soft  += pow2(normarea);
+	  area_soft.add(normarea);
 	  softareahist.add_entry(normarea);
 	  nsoftjets++; 
         }
@@ -368,6 +411,7 @@ int main (int argc, char ** argv) {
     //(*ostr) << "# nhist        = " << nhist        << endl;
     //(*ostr) << "# histmax      = " << histmax      << endl;
     (*ostr) << "# jet def      = " << jet_def.description() << endl;
+    (*ostr) << "# area def     = " << area_def.description() << endl;
     (*ostr) << "# w max        = " << rad_pt << endl;
     (*ostr) << "# w cutoff     = " << ptlim << endl;
     (*ostr) << "# dist max     = " << distmax << endl;
@@ -375,30 +419,24 @@ int main (int argc, char ** argv) {
     
     (*ostr) << "# "                                << endl;
     (*ostr) << "# number of events = " << i+1 << endl;
-    (*ostr) << "# U.E. energy density = " << float(nsoft)*soft_pt/2/ghost_etamax/fj::twopi << endl;
-
+    (*ostr) << "# U.E. energy density (input) = " << float(nsoft)*soft_pt/2/ghost_etamax/fj::twopi << endl;
+    (*ostr) << "# U.E. energy density (measured) = " << rho.average() << " +- " << rho.error() << endl;
   
-    (*ostr) << "# av of squares " <<  average_ar2_soft/ nsoftjets << endl;
+    (*ostr) << "# av of squares " <<  area_soft.average2() << endl;
     (*ostr) << "# hard jets = " << nhardjets << endl;
     (*ostr) << "# soft jets = " << nsoftjets << endl;
-//    (*ostr) << "# average area hard = " << average_area_hard / nhardjets << 
-//     " +- " <<sqrt((average_ar2_hard/nhardjets-pow2(average_area_hard/nhardjets))/nhardjets) << endl;
-    (*ostr) << "# average area hard = " << average_area_hard / nhardjets  << 
-     " +- "  <<sqrt((average_ar2_hard/nhardjets-pow2(average_area_hard/nhardjets))/nhardjets) << endl;
-    (*ostr) << "# average area soft = " << average_area_soft/nsoftjets  << 
-     " +- " <<  sqrt((average_ar2_soft/nsoftjets-pow2(average_area_soft/nsoftjets))/nsoftjets) << endl;
-    (*ostr) << "# correct av. area hard (?) = " <<  (average_ar2_soft/nsoftjets)/(average_area_soft/nsoftjets) << endl;
+    (*ostr) << "# average area hard = " << area_hard.average() <<  " +- " << area_hard.error() << endl;
 
-    double area_rad = average_area_rad / nhardjets;
-    double area_rad_err = sqrt((average_ar2_rad/nhardjets-pow2(average_area_rad/nhardjets))/nhardjets);
-    (*ostr) << "# average area rad = " << area_rad  <<  " +- "  << area_rad_err << endl;
+    (*ostr) << "# average area soft = " << area_soft.average() <<  " +- " << area_soft.error() << endl;
+    (*ostr) << "# correct av. area hard (?) = " <<  area_soft.average2()/area_soft.average() << endl;
 
-    (*ostr) << "# d factor (assuming linearity and intersect in 0) = " << area_rad/coeff*fj::pi/log(rad_pt/ptlim) <<  " +- "  << area_rad_err/coeff*fj::pi/log(rad_pt/ptlim) << endl;
+    (*ostr) << "# average area rad = " << area_rad.average() << " +- " << area_rad.error() << endl;
+    (*ostr) << "# d factor (assuming linearity and intersect in 0) = "
+       << area_rad.average()/coeff*fj::pi/log(rad_pt/ptlim) <<  " +- " 
+       << area_rad.error()/coeff*fj::pi/log(rad_pt/ptlim) << endl;
 
-    (*ostr) << "# average pt = " << av_pt/nhardjets << 
-     " +- " <<  sqrt((av_pt2/nhardjets-pow2(av_pt/nhardjets))/nhardjets) << endl;
-    (*ostr) << "# average subtracted pt = " << av_sub_pt/nhardjets << 
-     " +- " <<  sqrt((av_sub_pt2/nhardjets-pow2(av_sub_pt/nhardjets))/nhardjets) << endl;
+    (*ostr) << "# average pt = " << pt.average() <<  " +- " << pt.error() << endl;
+    (*ostr) << "# average subtracted pt = " << subtracted_pt.average() <<  " +- " << subtracted_pt.error() << endl;
 
     if ( hist ) {
       double rescale = 1.0 / (hardareahist.binsize() *  hardareahist.total_weight());
