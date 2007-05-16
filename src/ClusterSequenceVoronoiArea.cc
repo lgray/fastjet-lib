@@ -67,20 +67,16 @@ private:
    * the area is returned
    */
   double edge_circle_intersection(const Point &p0,
-				  const GraphEdge &edge,
-				  const double R_2);
+				  const GraphEdge &edge);
 
-
-  /// send a gnuplot-readable set of output points corresponding to the
-  /// polygon to the ostr
-  //void gnuplot_output(ostream & ostr, const Polygon_2 & plgn) const;
+  /// get the area of a circle of radius R centred on the point 0 with
+  /// 1 and 2 on each "side" of the arc. dij is the distance between
+  /// point i and point j and all distances are squared
+  inline double circle_area(const double d12_2, double d01_2, double d02_2){
+    return 0.5*_effective_R_squared
+      *acos((d01_2+d02_2-d12_2)/(2*sqrt(d01_2*d02_2)));
+  }
 };
-
-
-inline double circle_area(const double d12_2, double d01_2, double d02_2,
-                          const double R_2){
-  return 0.5*R_2*acos((d01_2+d02_2-d12_2)/(2*sqrt(d01_2*d02_2)));
-}
 
 
 /**
@@ -88,8 +84,7 @@ inline double circle_area(const double d12_2, double d01_2, double d02_2,
  * the area is returned
  */
 double VAC::edge_circle_intersection(const Point &p0,
-				     const GraphEdge &edge,
-				     const double R_2){
+				     const GraphEdge &edge){
   Point p1(edge.x1-p0.x, edge.y1-p0.y);
   Point p2(edge.x2-p0.x, edge.y2-p0.y);
   Point pdiff = p2-p1;
@@ -102,11 +97,11 @@ double VAC::edge_circle_intersection(const Point &p0,
   double d02_2 = norm(p2);
   
   // compute intersections between edge line and circle
-  double delta = d12_2*R_2 - cross*cross;
+  double delta = d12_2*_effective_R_squared - cross*cross;
   
   // if no intersection, area=area_circle
   if (delta<=0){
-    return circle_area(d12_2, d01_2, d02_2, R_2);
+    return circle_area(d12_2, d01_2, d02_2);
   }
 
   // we'll only need delta's sqrt now
@@ -125,7 +120,7 @@ double VAC::edge_circle_intersection(const Point &p0,
 
   // if tp is negative, tm also => inters = circle
   if (tp<0)
-    return circle_area(d12_2, d01_2, d02_2, R_2);
+    return circle_area(d12_2, d01_2, d02_2);
 
   // we need the second intersection
   double tm = -(delta+b)/d12_2;
@@ -141,22 +136,22 @@ double VAC::edge_circle_intersection(const Point &p0,
     //  - the lenght for the circle are easily obtained
     if (tm<0)
       return tp*0.5*fabs(cross)
-        +circle_area((1-tp)*(1-tp)*d12_2, R_2, d02_2, R_2);
+        +circle_area((1-tp)*(1-tp)*d12_2, _effective_R_squared, d02_2);
 
     // now, 0 < tm < tp < 1
     // the segment intersects twice the circle
     //   area = 2 cirles at ends + a triangle in the middle
     // again, simplifications are staightforward
     return (tp-tm)*0.5*fabs(cross)
-      + circle_area(tm*tm*d12_2, d01_2, R_2, R_2)
-      + circle_area((1-tp)*(1-tp)*d12_2, R_2, d02_2, R_2);
+      + circle_area(tm*tm*d12_2, d01_2, _effective_R_squared)
+      + circle_area((1-tp)*(1-tp)*d12_2, _effective_R_squared, d02_2);
   }
 
   // now, we have tp>1
 
   // if in addition tm>1, intersectino is a circle
   if (tm>1)
-    return circle_area(d12_2, d01_2, d02_2, R_2);
+    return circle_area(d12_2, d01_2, d02_2);
 
   // if tm<0, the triangle is inside the circle
   if (tm<0)
@@ -166,47 +161,8 @@ double VAC::edge_circle_intersection(const Point &p0,
   //   area = circle from 1 to m and triangle from m to 2
 
   return (1-tm)*0.5*fabs(cross)
-    +circle_area(tm*tm*d12_2, d01_2, R_2, R_2);
+    +circle_area(tm*tm*d12_2, d01_2, _effective_R_squared);
 }
-
-
-// send a gnuplot-readable set of output points corresponding to the
-// polygon to the ostr
-//----------------------------------------------------------------------
-//void VAC::gnuplot_output(ostream & ostr, const Polygon_2 & plgn) const {
-  /*
-  for (Traits_2::Curve_const_iterator it = plgn.curves_begin();
-       it != plgn.curves_end(); it++) {
-    if (it->is_linear()) {
-      cout << it->source() << endl << it->target() << endl;
-    } else {
-      //cerr << "Circular arc" << endl;
-      Circle_2 circle = it->supporting_circle();
-      Point circle_center = circle.center();
-      Orientation orient = it->orientation();
-      Point start_point = to_point(it->source());
-      Point end_point   = to_point(it->target());
-      double start_theta = to_theta(start_point-circle_center);
-      double end_theta   = to_theta(end_point-circle_center);
-      // things go counterclockwise...?
-      if (orient == CGAL::COUNTERCLOCKWISE && start_theta > end_theta) {
-	start_theta -= twopi;
-      } else if (orient == CGAL::CLOCKWISE && end_theta > start_theta) {
-	start_theta += twopi;
-      }
-      double radius = sqrt(to_double(circle.squared_radius()));
-      const int npoint = 20;
-      for (int i = 0; i < npoint; i++) {
-	double theta = start_theta + i*(end_theta-start_theta)/npoint;
-	Point point(circle_center.x()+radius*cos(theta),
-		    circle_center.y()+radius*sin(theta));
-	cout << point << endl;
-      }
-    }
-  }
-  */
-//}
-
 
 
 // the constructor...
@@ -215,8 +171,6 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 		     const vector<PseudoJet>::const_iterator &jet_end,
 		     double effective_R) {
 
-  // Question? Why Pi/2 if multiplied by R after
-  //           Why mutliplied by R ?
   assert(effective_R < 0.5*pi);
 
   vector<Point> voronoi_particles;
@@ -290,8 +244,7 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
       if (p_index!=-1){
 	jet = jet_begin+voronoi_indices[v_index];
 	_areas[p_index]+=
-	  edge_circle_intersection(voronoi_particles[v_index], *e, 
-				   _effective_R_squared);
+	  edge_circle_intersection(voronoi_particles[v_index], *e);
       }
     }
     v_index = e->point2;
@@ -300,8 +253,7 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
       if (p_index!=-1){
 	jet = jet_begin+voronoi_indices[v_index];
 	_areas[p_index]+=
-	  edge_circle_intersection(voronoi_particles[v_index], *e, 
-				   _effective_R_squared);
+	  edge_circle_intersection(voronoi_particles[v_index], *e);
       }
     }
   }
