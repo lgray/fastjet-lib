@@ -80,7 +80,9 @@ int main (int argc, char ** argv) {
   
   double pt0 = 10000.0, pt1 = 1.0;
   for (int i = 0; i<=n; i++) {
-    double dr = dr_min + (i * (dr_max-dr_min)) / n;
+    double dr;
+    if ( n == 1 ) { dr = dr_min; i++; } 
+    else { dr = dr_min + (i * (dr_max-dr_min)) / n; }
     double pz = sinh(dr*0.5);
     double E  = cosh(dr*0.5);
     // constrct jets at eta = +- dr
