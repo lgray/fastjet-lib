@@ -11,8 +11,8 @@
 // fastjet stuff
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
-#include "ClusterSequencePassiveArea.hh"
+#include "fastjet/ClusterSequenceArea.hh"
+//#include "ClusterSequencePassiveArea.hh"
 
 // get the plugins
 #include "SISConePlugin.hh"
@@ -42,7 +42,7 @@ int main (int argc, char ** argv) {
   double ktR   = cmdline.double_val("-r",1.0);
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
+  double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   int    n            = cmdline.int_val("-n",20);
   int repeat = cmdline.value("-repeat", 1);
@@ -67,7 +67,7 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition(new fj::CDFMidPointPlugin(ktR,overlap,seed));}
   else if (cmdline.present("-siscone")) {
     double overlap = cmdline.value("-f",0.5);
-    int    npass   = cmdline.value("-npass",1);
+    int    npass   = cmdline.value("-npass",0);
     fj::SISConePlugin * plugin = new fj::SISConePlugin(ktR,overlap,npass);
     if (cmdline.present("-smstop"))plugin->set_split_merge_stopping_scale(1e-50);
     jet_def = fj::JetDefinition(plugin);}
@@ -89,8 +89,10 @@ int main (int argc, char ** argv) {
   }
 
   // create the definitions for our jet finder and areas spec...
-  fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, 
-				      ghost_area, grid_scatter, kt_scatter);
+  fj::GhostedAreaSpec ghosted_area_spec(ghost_etamax, repeat, 
+                                        ghost_area, grid_scatter, kt_scatter);
+  fj::AreaDefinition area_def(fj::active_area_explicit_ghosts, 
+                              ghosted_area_spec);
 
   // the histogram...
   SimpleHist areahist(-0.000001,histmax/fj::pi,nhist);
@@ -101,9 +103,9 @@ int main (int argc, char ** argv) {
   double relative_error = 1e100;
   for (int i = 0; i<n; i++) {
     vector<fj::PseudoJet> input_jets(0);
-    if (anchor_pt != 0.0) input_jets.push_back(fj::PseudoJet(anchor_pt,0.0,0.0,anchor_pt));
-    fj::ClusterSequenceActiveAreaExplicitGhosts clust(input_jets, jet_def, 
-						      active_area_spec);
+    if (anchor_pt != 0.0) 
+      input_jets.push_back(fj::PseudoJet(anchor_pt,0.0,0.0,anchor_pt));
+    fj::ClusterSequenceArea clust(input_jets, jet_def, area_def);
     //cout << "Clustering " << clust.n_particles() << " particles" << endl;
     vector<fj::PseudoJet> output_jets(clust.inclusive_jets());
     for (unsigned j = 0; j < output_jets.size(); j++) {
@@ -151,6 +153,8 @@ int main (int argc, char ** argv) {
        (*ostr) << "# nhist        = " << nhist        << endl;
        (*ostr) << "# histmax      = " << histmax      << endl;
        (*ostr) << "# jet def      = " << jet_def.description() << endl;
+       (*ostr) << "# "                                << endl;
+       (*ostr) << "# area def     = " << area_def.description() << endl;
        (*ostr) << "# "                                << endl;
        (*ostr) << "# number of events = " << i+1 << endl;
    
