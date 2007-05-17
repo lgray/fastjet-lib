@@ -50,7 +50,9 @@ JetHist::JetHist (const string & filename) {
   ostringstream bname;
   bname << filename <<"-background";
   _background = new TH2F(bname.str().c_str(),bname.str().c_str(),
-			 2*nbins,-etamax,etamax,nbins,0.0,phimax);
+  			 2*nbins,-etamax,etamax,nbins,0.0,phimax);
+  //_background = new TH2F(bname.str().c_str(),bname.str().c_str(),
+  //			 2*nbins,-etamax,etamax,2,0.0,phimax);
   _background->SetFillColor(kWhite);
   // these were supposed to have labelled the axes, but it doesn't work.
   _background->GetXaxis()->SetTitle("#eta");
@@ -136,7 +138,12 @@ void showjets (const char * filename, const char * label = 0) {
       for (int ib = 0; ib < ngrey; ib++) {
         int icol = 7+ir + ngrey *ig + ngrey*ngrey * ib;
         TColor * color=(TColor*)(gROOT->GetListOfColors()->At(icol));
-        color->SetRGB(1-ir*1.0/ngrey,1-ig*1.0/ngrey,1-ib*1.0/ngrey);
+        if (icol == 7) {
+          // avoid white -- put grey instead
+          color->SetRGB(0.5,0.5,0.5);
+        } else {
+          color->SetRGB(1-ir*1.0/ngrey,1-ig*1.0/ngrey,1-ib*1.0/ngrey);
+        }
       }
     }
   }
