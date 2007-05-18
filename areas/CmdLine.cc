@@ -1,32 +1,27 @@
-//STARTHEADER
-// $Id$
-//
-// Copyright (c) 2005 Matteo Cacciari and Gavin Salam
-//
-//----------------------------------------------------------------------
-// This file is part of a simple command-line handling environment
-//
-//  FastJet is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
-//
-//  The algorithms that underlie FastJet have required considerable
-//  development and are described in hep-ph/0512210. If you use
-//  FastJet as part of work towards a scientific publication, please
-//  include a citation to the FastJet paper.
-//
-//  FastJet is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with FastJet; if not, write to the Free Software
-//  Foundation, Inc.:
-//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//----------------------------------------------------------------------
-//ENDHEADER
+///////////////////////////////////////////////////////////////////////////////
+// File: CmdLine.cc                                                          //
+// Part of the CmdLine library                                               //
+//                                                                           //
+// Copyright (c) 2007 Gavin Salam                                            //
+//                                                                           //
+// This program is free software; you can redistribute it and/or modify      //
+// it under the terms of the GNU General Public License as published by      //
+// the Free Software Foundation; either version 2 of the License, or         //
+// (at your option) any later version.                                       //
+//                                                                           //
+// This program is distributed in the hope that it will be useful,           //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of            //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             //
+// GNU General Public License for more details.                              //
+//                                                                           //
+// You should have received a copy of the GNU General Public License         //
+// along with this program; if not, write to the Free Software               //
+// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA //
+//                                                                           //
+// $Revision::                                                              $//
+// $Date::                                                                  $//
+///////////////////////////////////////////////////////////////////////////////
+
 
 
 #include "CmdLine.hh"
@@ -126,7 +121,7 @@ string CmdLine::string_val(const string & opt, const string & defval) const {
 // Return the integer value corresponding to the specified option;
 // Not too sure what happens if option is present_and_set but does not
 // have string value...
-int CmdLine::int_val(const string & opt) {
+int CmdLine::int_val(const string & opt) const {
   int result;
   string optstring = string_val(opt);
   istringstream optstream(optstring);
@@ -139,7 +134,7 @@ int CmdLine::int_val(const string & opt) {
 }
 
 // as above, but if opt is not present_and_set, return default
-int CmdLine::int_val(const string & opt, const int & defval) {
+int CmdLine::int_val(const string & opt, const int & defval) const {
   if (this->present_and_set(opt)) {return int_val(opt);} 
   else {return defval;}
 }
@@ -168,7 +163,7 @@ double CmdLine::double_val(const string & opt, const double & defval) const {
 
 
 // return the full command line including the command itself
-string CmdLine::command_line() {
+string CmdLine::command_line() const {
   return __command_line;
 }
 
@@ -179,7 +174,7 @@ bool CmdLine::all_options_used() const {
   for(map<string,bool>::const_iterator opt = __options_used.begin();
       opt != __options_used.end(); opt++) {
     bool this_one = opt->second;
-    if (! this_one) {cerr << "Option "<<opt->first<<" unused"<<endl;}
+    if (! this_one) {cerr << "Option "<<opt->first<<" unused/unrecognized"<<endl;}
     result = result && this_one;
   }
   return result;

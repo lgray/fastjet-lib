@@ -1,32 +1,26 @@
-//STARTHEADER
-// $Id$
-//
-// Copyright (c) 2005 Matteo Cacciari and Gavin Salam
-//
-//----------------------------------------------------------------------
-// This file is part of a simple command-line handling environment
-//
-//  FastJet is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
-//
-//  The algorithms that underlie FastJet have required considerable
-//  development and are described in hep-ph/0512210. If you use
-//  FastJet as part of work towards a scientific publication, please
-//  include a citation to the FastJet paper.
-//
-//  FastJet is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with FastJet; if not, write to the Free Software
-//  Foundation, Inc.:
-//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//----------------------------------------------------------------------
-//ENDHEADER
+///////////////////////////////////////////////////////////////////////////////
+// File: CmdLine.hh                                                          //
+// Part of the CmdLine library
+//                                                                           //
+// Copyright (c) 2007 Gavin Salam                                            //
+//                                                                           //
+// This program is free software; you can redistribute it and/or modify      //
+// it under the terms of the GNU General Public License as published by      //
+// the Free Software Foundation; either version 2 of the License, or         //
+// (at your option) any later version.                                       //
+//                                                                           //
+// This program is distributed in the hope that it will be useful,           //
+// but WITHOUT ANY WARRANTY; without even the implied warranty of            //
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             //
+// GNU General Public License for more details.                              //
+//                                                                           //
+// You should have received a copy of the GNU General Public License         //
+// along with this program; if not, write to the Free Software               //
+// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA //
+//                                                                           //
+// $Revision::                                                              $//
+// $Date::                                                                  $//
+///////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef __CMDLINE__
@@ -72,15 +66,19 @@ class CmdLine {
   /// true if the option is present and corresponds to a value
   bool    present_and_set(const string & opt) const;
 
+  /// return a reference to the vector of command-line arguments (0 is
+  /// command).
+  inline const vector<string> & arguments() const {return __arguments;}
+
   /// returns the value of the argument converted to type T
   template<class T> T value(const string & opt) const;
   template<class T> T value(const string & opt, const T & defval) const;
 
 
   /// return the integer value corresponding to the given option
-  int     int_val(const string & opt);
+  int     int_val(const string & opt) const;
   /// return the integer value corresponding to the given option or default if option is absent
-  int     int_val(const string & opt, const int & defval);
+  int     int_val(const string & opt, const int & defval) const;
 
   /// return the double value corresponding to the given option
   double  double_val(const string & opt) const;
@@ -93,7 +91,7 @@ class CmdLine {
   string  string_val(const string & opt, const string & defval) const;
 
   /// return the full command line
-  string  command_line();
+  string  command_line() const;
 
   /// return true if all options have been asked for at some point or other
   bool all_options_used() const;

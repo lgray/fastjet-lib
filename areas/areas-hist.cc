@@ -21,6 +21,7 @@
 // local things
 #include "CmdLine.hh"
 #include "SimpleHist.hh"
+#include "jet_def_from_cmdline.hh"
 
 namespace fj = fastjet;
 using namespace std;
@@ -34,12 +35,12 @@ inline double pow2(const double x) {return x*x;};
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
-  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", fj::Best)));
-  fj::RecombinationScheme  rec_scheme  = cmdline.present("-pt_scheme") ? fj::BIpt_scheme :
-              		                fj::E_scheme;
+  //fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
+  //				     cmdline.int_val("-clever", fj::Best)));
+  //fj::RecombinationScheme  rec_scheme  = cmdline.present("-pt_scheme") ? fj::BIpt_scheme :
+  //            		                fj::E_scheme;
 
-  double ktR   = cmdline.double_val("-r",1.0);
+  //double ktR   = cmdline.double_val("-r",1.0);
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
   double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
@@ -54,27 +55,30 @@ int main (int argc, char ** argv) {
   int nhist      = cmdline.value("-nhist",150);
   double histmax = cmdline.value("-histmax",9.0);
 
-  fj::JetDefinition jet_def;
-  if (cmdline.present("-cam")) {
-    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, rec_scheme, strategy);}
-  else if (cmdline.present("-kt")) {
-    jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, rec_scheme, strategy);}
-  else if (cmdline.present("-antikt")) {
-    jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, rec_scheme, strategy);}
-  else if (cmdline.present("-midpoint")) {
-    double overlap = cmdline.value("-f",0.5);
-    double seed    = cmdline.value("-seed",0.0);
-    jet_def = fj::JetDefinition(new fj::CDFMidPointPlugin(ktR,overlap,seed));}
-  else if (cmdline.present("-siscone")) {
-    double overlap = cmdline.value("-f",0.5);
-    int    npass   = cmdline.value("-npass",0);
-    fj::SISConePlugin * plugin = new fj::SISConePlugin(ktR,overlap,npass);
-    if (cmdline.present("-smstop"))plugin->set_split_merge_stopping_scale(1e-50);
-    jet_def = fj::JetDefinition(plugin);}
-  else {
-    cerr << "Must specify one of -kt | -cam | -siscone | -antikt" << endl;
-    exit(-1);
-  }
+  // NB: default value of R is 0.7 !!!
+  fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
+  double ktR = jet_def.R();
+
+  //if (cmdline.present("-cam")) {
+  //  jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, rec_scheme, strategy);}
+  //else if (cmdline.present("-kt")) {
+  //  jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, rec_scheme, strategy);}
+  //else if (cmdline.present("-antikt")) {
+  //  jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, rec_scheme, strategy);}
+  //else if (cmdline.present("-midpoint")) {
+  //  double overlap = cmdline.value("-f",0.5);
+  //  double seed    = cmdline.value("-seed",0.0);
+  //  jet_def = fj::JetDefinition(new fj::CDFMidPointPlugin(ktR,overlap,seed));}
+  //else if (cmdline.present("-siscone")) {
+  //  double overlap = cmdline.value("-f",0.5);
+  //  int    npass   = cmdline.value("-npass",0);
+  //  fj::SISConePlugin * plugin = new fj::SISConePlugin(ktR,overlap,npass);
+  //  if (cmdline.present("-smstop"))plugin->set_split_merge_stopping_scale(1e-50);
+  //  jet_def = fj::JetDefinition(plugin);}
+  //else {
+  //  cerr << "Must specify one of -kt | -cam | -siscone | -antikt" << endl;
+  //  exit(-1);
+  //}
 
   string outfile;
   if (cmdline.present("-out")) {
@@ -143,9 +147,9 @@ int main (int argc, char ** argv) {
        }
     
        (*ostr) << "# " << cmdline.command_line() << endl;
-       (*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
+       //(*ostr) << "# strategy     = " << jet_def.strategy()<<endl;
        (*ostr) << "# anchor_pt    = " << anchor_pt    << endl;
-       (*ostr) << "# ktR          = " << ktR          << endl;
+       //(*ostr) << "# ktR          = " << ktR          << endl;
        (*ostr) << "# ghost_etamax = " << ghost_etamax << endl;
        (*ostr) << "# ghost_area   = " << ghost_area   << endl;
        (*ostr) << "# nev          = " << n            << endl;
