@@ -62,3 +62,35 @@ JetDefinition jet_def_from_cmdline(const CmdLine & cmdline) {
   }
   return jet_def;
 }
+
+
+//----------------------------------------------------------------------
+AreaDefinition area_def_from_cmdline(const CmdLine & cmdline) {
+
+  AreaDefinition area_def;
+
+  int  repeat  = cmdline.int_val("-repeat",1);
+  double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
+  double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
+  double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
+  double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
+
+  if (cmdline.present("-voronoi")) {
+    // create the definitions for our jet finder and areas spec...
+    //JetDefinition jet_def(kt_algorithm, ktR, strategy);
+    double voronoi_rescale = cmdline.value("-voronoi_rescale",1.0);
+    VoronoiAreaSpec voronoi_area_spec(voronoi_rescale);
+    area_def = AreaDefinition(voronoi_area_spec);
+  } else {
+    // create the definitions for our jet finder and areas spec...
+    //JetDefinition jet_def(kt_algorithm, ktR, strategy);
+    GhostedAreaSpec ghosted_area_spec(ghost_etamax, repeat, ghost_area, 
+                                          grid_scatter, kt_scatter);
+    if (cmdline.present("-passive")) {
+      area_def = AreaDefinition(passive_area, ghosted_area_spec);
+    } else {
+      area_def = AreaDefinition(active_area, ghosted_area_spec);
+    }
+  }
+  return area_def;
+}

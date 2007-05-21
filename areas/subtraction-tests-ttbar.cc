@@ -74,9 +74,6 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -84,14 +81,11 @@
 #include<vector>
 #include <cstdlib>
 #include<cstddef> // for size_t
+#include "fastjet/ClusterSequenceArea.hh"
 #include "CmdLine.hh"
 #include "CSHisto.hh"
 #include "FlavourHolder.hh"
-
-// for getting cone algorithm from CDF
-#include "MidPointAlgorithm.hh"
-#include "PhysicsTower.hh"
-#include "Cluster.hh"
+#include "jet_def_from_cmdline.hh"
 
 
 namespace fj = fastjet;
@@ -99,7 +93,8 @@ using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-
+const double maxrap_for_median = 4.0;
+bool rho_from_area_4vector = true;
 
 
 //void determine_Zmass_kt(const vector<fj::PseudoJet> & event, 
@@ -109,8 +104,6 @@ inline double pow2(const double x) {return x*x;};
 //			double & mass, double & corrected_mass, 
 //			double & ext_corrected_mass);
 
-enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
-
 //void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
 //			  double R, ConeVariant cone_variant,
 //			  double & mass, double & corrected_mass);
@@ -118,7 +111,10 @@ enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
 void look_at_event(const vector<fj::PseudoJet> & event,
 		   const fj::JetDefinition  & jet_def,
-		   const fj::ActiveAreaSpec & area_spec,
+		   const fj::AreaDefinition & area_def,
+                   bool                       rho_uses_cam05,
+		   const fj::JetDefinition  & rho_jet_def,
+		   const fj::AreaDefinition & rho_area_def,
 		   const bool verbose, 
 		   double & Wmass_incl, double & tmass_incl,
 		   double & Wmass_excl, double & tmass_excl,
@@ -145,33 +141,19 @@ int main (int argc, char ** argv) {
   int    nev        = int(cmdline.double_val("-nev",1.0));
   bool   nopileup   = cmdline.present("-nopileup"); 
 
-  // properties of the jet algorithm
-  // allow the use to specify the fj::Strategy either through the
-  // -clever or the -strategy options (both will take numerical
-  // values); the latter will override the former.
-  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", fj::Best)));
-  double ktR   = cmdline.double_val("-r",1.0);
-  fj::JetFinder jet_fndr= cmdline.present("-cam")? fj::cambridge_algorithm: fj::kt_algorithm;
-  fj::JetDefinition jet_def(jet_fndr, ktR, strategy);
+  // properties of the jet algorithm and the area finding
+  fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
+  fj::AreaDefinition area_def = area_def_from_cmdline(cmdline);
 
-  // allow for a cone???
-  ConeVariant cone_variant = not_cone;
-  if (cmdline.present("-searchcone")) {
-    cone_variant = searchcone_075; }
-  else if (cmdline.present("-cone")) {
-    cone_variant = midpoint_050; }
-  else if (cmdline.present("-cone075")) {
-    cone_variant = midpoint_075; }
-  bool   cone         = cone_variant != not_cone;
 
-  // set up things to do with how we measure the area
-  fj::ActiveAreaSpec area_spec;
-  area_spec.set_repeat      (cmdline.int_val("-repeat",1)            );
-  area_spec.set_ghost_area   (cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01))   );
-  area_spec.set_ghost_etamax(cmdline.double_val("-ghost_etamax",6.0) );
-  area_spec.set_grid_scatter(cmdline.double_val("-grid_scatter",1e-4));
-  area_spec.set_kt_scatter  (cmdline.double_val("-kt_scatter",0.1)   );
+  // for (e.g.) cone algorithm, allow one to estimate rho with a more
+  // reliable alg.
+  bool rho_uses_cam05 = cmdline.present("-rho_uses_cam05");
+  fj::JetDefinition  rho_jet_def (fj::cambridge_algorithm,0.5);
+  fj::AreaDefinition rho_area_def(fj::VoronoiAreaSpec(0.5));
+  
+
+  rho_from_area_4vector = ! cmdline.present("-plain_rho");
 
   // how we process and output things
   bool   verbose      = cmdline.present("-verbose");
@@ -226,7 +208,9 @@ int main (int argc, char ** argv) {
     double Wmass_excl_ecor, tmass_excl_ecor;
 
 
-    look_at_event(hard_event, jet_def, area_spec, verbose, 
+    look_at_event(hard_event, jet_def, area_def, 
+                  rho_uses_cam05, rho_jet_def, rho_area_def,
+                  verbose, 
 		  Wmass_incl, tmass_incl,
 		  Wmass_excl, tmass_excl,
 		  Wmass_incl_ecor, tmass_incl_ecor,
@@ -245,7 +229,9 @@ int main (int argc, char ** argv) {
 
     // only run things again if we truly have an event to run on...
     if (full_event.size() != hard_event.size()) {
-      look_at_event(full_event, jet_def, area_spec, verbose, 
+      look_at_event(full_event, jet_def, area_def, 
+                    rho_uses_cam05, rho_jet_def, rho_area_def,
+                    verbose, 
 		    Wmass_incl, tmass_incl,
 		    Wmass_excl, tmass_excl,
 		    Wmass_incl_ecor, tmass_incl_ecor,
@@ -272,6 +258,14 @@ int main (int argc, char ** argv) {
 	output << "# "<<rerun_string<<endl;
       }
       output << "# " << cmdline.command_line() << endl;
+      output << "# jet_def  = " <<  jet_def.description() << endl;
+      output << "# area_def = " << area_def.description() << endl;
+      if (rho_uses_cam05) {
+        output << "# rho_jet_def  = " <<  rho_jet_def.description() << endl;
+        output << "# rho_area_def = " << rho_area_def.description() << endl;
+      }
+      output << "# maxrap_for_median = " << maxrap_for_median << endl;
+      output << "# rho_from_area_4vector = " << rho_from_area_4vector << endl;
       output << "# nev = " <<iev+1 <<endl;
       output << "# bin-lo(1) bin-mid (2) bin-hi(3) ";
       int jj = 3;
@@ -438,11 +432,14 @@ int b_count(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
 //-------------------------------------------------------------
 void separate_event(const vector<fj::PseudoJet> & event, 
 		    vector<fj::PseudoJet> & leptonic_event, 
-		    fj::ClusterSequenceActiveArea * & clust_seq,
+		    fj::ClusterSequenceArea * & clust_seq,
 		    const fj::JetDefinition & jet_def,
-		    const fj::ActiveAreaSpec & area_spec) {
+		    const fj::AreaDefinition & area_def,
+                    vector<fj::PseudoJet> & hadronic_event
+                    ) {
 
-  vector<fj::PseudoJet> hadronic_event;
+  // make sure the event is clear
+  hadronic_event.resize(0);
 
   // we will separate out the muon and any neutrinos from the other
   // particles (using the user index which has been set to the particle
@@ -462,7 +459,7 @@ void separate_event(const vector<fj::PseudoJet> & event,
     }
   }
 
-  clust_seq = new fj::ClusterSequenceActiveArea(hadronic_event, jet_def, area_spec);
+  clust_seq = new fj::ClusterSequenceArea(hadronic_event, jet_def, area_def);
 
 }
 
@@ -471,7 +468,7 @@ void separate_event(const vector<fj::PseudoJet> & event,
 /// modified by subtraction) and runs an analysis to extract the W
 /// mass and top mass; NB it assumes that it is the bbar that is to be
 /// associated with the hadronically decaying W
-void extract_masses(const fj::ClusterSequenceActiveArea & cs, 
+void extract_masses(const fj::ClusterSequenceArea & cs, 
 		    const vector<fj::PseudoJet> & jets,
 		    const bool verbose, 
 		    double & Wmass, 
@@ -522,7 +519,7 @@ void extract_masses(const fj::ClusterSequenceActiveArea & cs,
 //----------------------------------------------------------------------
 /// correct the vector of jets based on their extended area and the 
 /// pt_per_unit_area
-void ext_correct_jets(const fj::ClusterSequenceActiveArea & cs, 
+void ext_correct_jets(const fj::ClusterSequenceArea & cs, 
 		      vector<fj::PseudoJet> & jets,
 		      const double pt_per_unit_area) {
 
@@ -544,7 +541,10 @@ void ext_correct_jets(const fj::ClusterSequenceActiveArea & cs,
 /// for extracting information about it...
 void look_at_event(const vector<fj::PseudoJet> & event,
 		   const fj::JetDefinition  & jet_def,
-		   const fj::ActiveAreaSpec & area_spec,
+		   const fj::AreaDefinition & area_def,
+                   bool                       rho_uses_cam05,
+		   const fj::JetDefinition  & rho_jet_def,
+		   const fj::AreaDefinition & rho_area_def,
 		   const bool verbose,
 		   double & Wmass_incl, double & tmass_incl,
 		   double & Wmass_excl, double & tmass_excl,
@@ -553,11 +553,13 @@ void look_at_event(const vector<fj::PseudoJet> & event,
 		   ) {
   
   vector<fj::PseudoJet> leptonic_event;
+  vector<fj::PseudoJet> hadronic_event;
   
-  fj::ClusterSequenceActiveArea * clust_seq;
+  fj::ClusterSequenceArea * clust_seq;
 
   // extract the leptonic and jet parts of the event
-  separate_event(event, leptonic_event, clust_seq, jet_def, area_spec);
+  separate_event(event, leptonic_event, clust_seq, jet_def, 
+                 area_def, hadronic_event);
 
   if (verbose) {
     // print general header...
@@ -573,10 +575,18 @@ void look_at_event(const vector<fj::PseudoJet> & event,
     cout << " "<<endl;
   }
 
-  // print jetty part of the event (only jets with pt > 5 GeV)
-
-  double median_pt_over_area = clust_seq->pt_per_unit_area(
-  				  fj::ClusterSequenceActiveArea::median);
+  // use the default or an alternative alg to estimate rho
+  double median_pt_over_area;
+  if (rho_uses_cam05) {
+    fj::ClusterSequenceArea rho_cs(hadronic_event, rho_jet_def, rho_area_def);
+    median_pt_over_area = rho_cs.median_pt_per_unit_something(
+                                   maxrap_for_median, rho_from_area_4vector);
+  } else {
+    //median_pt_over_area = clust_seq->median_pt_per_unit_area_4vector(
+    //                                                 maxrap_for_median);
+    median_pt_over_area = clust_seq->median_pt_per_unit_something(
+                                   maxrap_for_median, rho_from_area_4vector);
+  }
 
   vector<fj::PseudoJet> jets;
 
