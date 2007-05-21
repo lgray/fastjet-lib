@@ -6,7 +6,7 @@ unset multiplot
 set macros
 set fit errorvariables
 
-set term postscript enhanced color size 25cm,10cm colortext 
+set term postscript portrait enhanced color size 25cm,10cm colortext 
 filename="sub-correl-2tile.eps"
 set output filename
 
