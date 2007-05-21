@@ -70,7 +70,7 @@
 ///
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 //#include "ClusterSequencePassiveArea.hh"
 #include<iostream>
 #include<sstream>
@@ -119,7 +119,7 @@ int main (int argc, char ** argv) {
   bool   nopileup  = cmdline.present("-nopileup"); 
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
+  double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
@@ -138,9 +138,9 @@ int main (int argc, char ** argv) {
   } else {
     // create the definitions for our jet finder and areas spec...
     //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
-    fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
-                                        grid_scatter, kt_scatter);
-    area_def = active_area_spec;
+    fj::GhostedAreaSpec ghosted_area_spec(ghost_etamax, repeat, ghost_area, 
+                                          grid_scatter, kt_scatter);
+    area_def = ghosted_area_spec;
   }
 
   if (!cmdline.all_options_used()) {cerr << 
@@ -148,14 +148,15 @@ int main (int argc, char ** argv) {
     exit(-1);}
 
 
+  fj::JetDefinition rho_jet_def(fj::kt_algorithm,0.6);
 
   // sending output to a file...
   ofstream output(output_file.c_str());
   output << "# " << cmdline.command_line() << endl;
-  output << "# " << jet_def.description() << endl;
-  output << "# " << area_def.description() << endl;
+  output << "# jet_def: " << jet_def.description() << endl;
+  output << "# rho_jet_def: " << rho_jet_def.description() << endl;
+  output << "# area_def: " << area_def.description() << endl;
 
-  fj::JetDefinition rho_jet_def(fj::kt_algorithm,0.5);
 
 
   // input will be from the file named with the "-in" option
@@ -164,6 +165,7 @@ int main (int argc, char ** argv) {
   double direct_rho = 0.0;
   vector<fj::PseudoJet> full_event;
   vector<fj::PseudoJet> hard_event;
+  vector<fj::PseudoJet> pileup;
   string line;
   int  nsub  = 0;
   cerr << "Doing event "<< iev<<endl;
@@ -201,10 +203,13 @@ int main (int argc, char ** argv) {
     }
     fj::PseudoJet psjet(fourvec);
     psjet.set_user_index(0);
-    if (abs(psjet.rap() < etamax)) {full_event.push_back(psjet);}
-    if (abs(psjet.rap() < medianrap) && nsub>=2) {
-      direct_rho += psjet.perp();}
-
+    if (abs(psjet.rap() < etamax)) {
+      full_event.push_back(psjet);
+      if (nsub >= 2) {
+        pileup.push_back(psjet); // get just the pileup
+        if (abs(psjet.rap() < medianrap)) direct_rho += psjet.perp();
+      }
+    }
   }
   direct_rho /= (2*medianrap*fj::twopi);
 
@@ -221,10 +226,11 @@ int main (int argc, char ** argv) {
   valarray<double> average_area2;
 
     
-  fj::ClusterSequenceWithArea full_clust(full_event,jet_def, area_def);
-  fj::ClusterSequenceWithArea rho_clust(full_event,rho_jet_def, area_def);
-  fj::ClusterSequenceWithArea rho_hard_clust(hard_event,rho_jet_def, area_def);
-  fj::ClusterSequenceWithArea hard_clust(hard_event,jet_def, area_def);
+  fj::ClusterSequenceArea full_clust(full_event,jet_def, area_def);
+  fj::ClusterSequenceArea hard_clust(hard_event,jet_def, area_def);
+  fj::ClusterSequenceArea rho_full_clust  (full_event,rho_jet_def, area_def);
+  fj::ClusterSequenceArea rho_hard_clust  (hard_event,rho_jet_def, area_def);
+  fj::ClusterSequenceArea rho_pileup_clust(pileup,    rho_jet_def, area_def);
 
   //fj::ClusterSequencePassiveArea full_clust(full_event,jet_def);
   //fj::ClusterSequencePassiveArea hard_clust(hard_event,jet_def);
@@ -242,29 +248,38 @@ int main (int argc, char ** argv) {
 
   double rho_UE, sigma_UE;
   rho_hard_clust.get_median_rho_and_sigma(medianrap,false,rho_UE,sigma_UE);
+  double rho,sigma;
+  rho_full_clust.get_median_rho_and_sigma(medianrap,false,rho,sigma);
+  double rho_PU,sigma_PU;
+  rho_pileup_clust.get_median_rho_and_sigma(medianrap,false,rho_PU,sigma_PU);
   
 
-  double rho,sigma;
   // do it with plain areas
   if (iev == 0) {
-    output << " hard-pt full-pt full-sub-pt error area rho sigma" << endl;
+    output << "# cols: 1=hard-pt 2=hard-sub-pt 3=hard-sub-err 4=hard-area 5=rho_UE 6=sigma_UE" << endl;
+    output << "# cols: 7=full-pt 8=full-sub-pt 9=full-sub-err 10=full-area 11=rho 12=sigma" << endl;
+    output << "# cols: 13=rho_PU 14=sigma_PU 15=direct_rho(PU)" << endl;
   }
-  //full_clust.get_median_rho_and_sigma(medianrap,false,rho,sigma);
-  rho_clust.get_median_rho_and_sigma(medianrap,false,rho,sigma);
   for (int i = 0; i < 2; i++) {
-    double area = full_clust.area(full_jets[i]);
+    double area_full = full_clust.area(full_jets[i]);
     double area_hard = hard_clust.area(hard_jets[i]);
     output << hard_jets[i].perp() << " " 
-           << full_jets[i].perp() << " "
-           << full_jets[i].perp() - area*rho << " "
-           << sqrt(area)*sigma << " "
-           << area  << " "
+           << hard_jets[i].perp() - area_hard*rho_UE<< " "
+           << sqrt(area_hard)*sigma_UE << " "
+           << area_hard  << " "
+           << rho_UE  << " "
+           << sigma_UE  << " "
+      //
+           << full_jets[i].perp() << " " 
+           << full_jets[i].perp() - area_full*rho<< " "
+           << sqrt(area_full)*sigma << " "
+           << area_full  << " "
            << rho  << " "
            << sigma  << " "
-           << rho_UE  << " "
-           << direct_rho << " "
-           << area_hard << " "
-           << endl;
+      //
+           << rho_PU  << " "
+           << sigma_PU  << " "
+           << direct_rho << endl;
   }
 
   } // iev
