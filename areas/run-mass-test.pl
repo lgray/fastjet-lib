@@ -20,6 +20,10 @@ if ($arch eq 'Darwin') { $pipe = 0; } else { $pipe = 1;}
 
 # Executables
 $pythia_exec = "$basedir/pythia/gen-events";
+if ($user eq 'cacciari' && $arch eq 'Linux') {
+# use gavin's one
+  $pythia_exec = "/ada1/lpthe/salam/work/fastjet/pythia/gen-events";
+}
 $jet_exec    = "$basedir/fastjet-release/areas/subtraction-tests-mass";
 
 #$hydjet_exec = "$basedir/hydjet/test2_hydjet";

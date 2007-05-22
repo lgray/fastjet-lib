@@ -68,9 +68,7 @@
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
 ///
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
-#include "fastjet/ClusterSequenceActiveArea.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -80,18 +78,15 @@
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
 #include "CSHisto.hh"
-
-
-// for getting cone algorithm from CDF
-#include "MidPointAlgorithm.hh"
-#include "PhysicsTower.hh"
-#include "Cluster.hh"
+#include "jet_def_from_cmdline.hh"
 
 
 namespace fj = fastjet;
 using namespace std;
 
 inline double pow2(const double x) {return x*x;};
+
+const double maxrap_for_median = 4.0;
 
 void print_jet(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
   vector<fj::PseudoJet> cnst = cs.constituents(jet);
@@ -105,15 +100,18 @@ void print_jet(const fj::ClusterSequence & cs, const fj::PseudoJet & jet) {
 
 void determine_Zmass_kt(const vector<fj::PseudoJet> & event, 
                         fj::JetDefinition jet_def,
-                        fj::ActiveAreaSpec active_area_spec,
+                        fj::AreaDefinition area_def,
+                        bool                       rho_uses_something,
+	   	        const fj::JetDefinition  & rho_jet_def,
+		        const fj::AreaDefinition & rho_area_def,
 			double & mass, double & corrected_mass, 
 			double & ext_corrected_mass);
 
-enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
+//enum ConeVariant {not_cone, midpoint_050, midpoint_075, searchcone_075};
 
-void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
-			  double R, ConeVariant cone_variant,
-			  double & mass, double & corrected_mass);
+//void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
+//			  double R, ConeVariant cone_variant,
+//			  double & mass, double & corrected_mass);
 
 double Zmass_from_jets(const vector<fj::PseudoJet> & jets);
 
@@ -142,50 +140,56 @@ int main (int argc, char ** argv) {
   bool   massless = cmdline.present("-massless");
   int    nev      = int(cmdline.double_val("-nev",1.0));
   bool   nopileup  = cmdline.present("-nopileup"); 
-  double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
-  double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
-  double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
+
+  // properties of the jet algorithm and the area finding
+  fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
+  fj::AreaDefinition area_def = area_def_from_cmdline(cmdline);
+
+  // for (e.g.) cone algorithm, allow one to estimate rho with a more
+  // reliable alg.
+  bool rho_uses_cam05 = cmdline.present("-rho_uses_cam05");
+  bool rho_uses_kt05 = cmdline.present("-rho_uses_kt05");
+  bool rho_uses_something = false;
+  fj::JetDefinition  rho_jet_def ;
+  fj::AreaDefinition rho_area_def;
+  if (rho_uses_cam05) {
+    rho_jet_def  = fj::JetDefinition (fj::cambridge_algorithm,0.5);
+    rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.5));
+    rho_uses_something = true;
+  } else if (rho_uses_kt05) {
+    rho_jet_def  = fj::JetDefinition (fj::kt_algorithm,0.5);
+    rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.9));
+    rho_uses_something = true;
+  }
+
   double bin_width    = cmdline.double_val("-bin",5.0);
   double max_bin      = cmdline.double_val("-max",400.0);
+  double min_bin      = cmdline.double_val("-min",0.0);
   //bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
-  ConeVariant cone_variant = not_cone;
-  if (cmdline.present("-searchcone")) {
-    cone_variant = searchcone_075; }
-  else if (cmdline.present("-cone")) {
-    cone_variant = midpoint_050; }
-  else if (cmdline.present("-cone075")) {
-    cone_variant = midpoint_075; }
-  bool   cone         = cone_variant != not_cone;
+
   int    writefreq    = int(cmdline.double_val("-freq",1.0*max(nev/10,1000)));
   string rerun_string = cmdline.string_val("-rerun","");
   cerr <<"writefreq is "<<writefreq<<endl;
-  fj::JetFinder jet_finder = cmdline.present("-cam") ? 
-                                fj::cambridge_algorithm : fj::kt_algorithm;
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options unsupported"<<endl; 
     exit(-1);}
 
-  // create the definitions for our jet finder and areas spec...
-  fj::JetDefinition jet_def(jet_finder, ktR, strategy);
-  fj::ActiveAreaSpec active_area_spec(ghost_etamax, repeat, ghost_area, 
-                                      grid_scatter, kt_scatter);
 
   // input will be from the file named with the "-in" option
   ifstream input(input_file.c_str());
 
-  int nbins = int(max_bin/bin_width + 0.5);
-  CSHisto inv_mass_hard(00.0, max_bin, nbins);
-  CSHisto inv_mass_hcor(00.0, max_bin, nbins);
-  CSHisto inv_mass_full(00.0, max_bin, nbins);
-  CSHisto inv_mass_fcor(00.0, max_bin, nbins);
+  int nbins = int((max_bin-min_bin)/bin_width + 0.5);
+  CSHisto inv_mass_hard(min_bin, max_bin, nbins);
+  CSHisto inv_mass_hcor(min_bin, max_bin, nbins);
+  CSHisto inv_mass_full(min_bin, max_bin, nbins);
+  CSHisto inv_mass_fcor(min_bin, max_bin, nbins);
 
   // histograms using the "extended" area subtraction...
-  CSHisto inv_mass_hecr(00.0, max_bin, nbins);
-  CSHisto inv_mass_fecr(00.0, max_bin, nbins);
+  CSHisto inv_mass_hecr(min_bin, max_bin, nbins);
+  CSHisto inv_mass_fecr(min_bin, max_bin, nbins);
 
 
   for (int iev = 0; iev < nev; iev++) {
@@ -200,27 +204,29 @@ int main (int argc, char ** argv) {
     
     // deduce the masses
     double hard_ev_mass, hcor_ev_mass, hecr_ev_mass;
-    if (cone) {
-      determine_Zmass_cone(hard_event, ktR, cone_variant,
-			   hard_ev_mass, hcor_ev_mass);
-      hecr_ev_mass = hcor_ev_mass;
-    } else {
-      determine_Zmass_kt(hard_event, jet_def, active_area_spec,
+//    if (cone) {
+//      determine_Zmass_cone(hard_event, ktR, cone_variant,
+//			   hard_ev_mass, hcor_ev_mass);
+//     hecr_ev_mass = hcor_ev_mass;
+//    } else {
+      determine_Zmass_kt(hard_event, jet_def, area_def,
+                         rho_uses_something,rho_jet_def,rho_area_def,
                          hard_ev_mass, hcor_ev_mass, hecr_ev_mass);
-    }
+//    }
 
 
     double full_ev_mass, fcor_ev_mass, fecr_ev_mass;
     if (full_event.size() != hard_event.size()) {
       // run things again only if the vectors are different...
-      if (cone) {
-	determine_Zmass_cone(full_event, ktR, cone_variant,
-			     full_ev_mass, fcor_ev_mass);
-	fecr_ev_mass = fcor_ev_mass;
-      } else {
-	determine_Zmass_kt(full_event, jet_def, active_area_spec,
+//      if (cone) {
+//	determine_Zmass_cone(full_event, ktR, cone_variant,
+//			     full_ev_mass, fcor_ev_mass);
+//	fecr_ev_mass = fcor_ev_mass;
+//     } else {
+	determine_Zmass_kt(full_event, jet_def, area_def,
+                           rho_uses_something,rho_jet_def,rho_area_def,
                            full_ev_mass, fcor_ev_mass, fecr_ev_mass);
-      }
+//      }
     } else {
       full_ev_mass = hard_ev_mass;
       fcor_ev_mass = hcor_ev_mass;
@@ -256,6 +262,13 @@ int main (int argc, char ** argv) {
 	output << "# "<<rerun_string<<endl;
       }
       output << "# " << cmdline.command_line() << endl;
+      output << "# jet_def  = " <<  jet_def.description() << endl;
+      output << "# area_def = " << area_def.description() << endl;
+      if (rho_uses_something) {
+        output << "# rho_jet_def  = " <<  rho_jet_def.description() << endl;
+        output << "# rho_area_def = " << rho_area_def.description() << endl;
+      }
+      output << "# maxrap_for_median = " << maxrap_for_median << endl;
       output << "# nev = " <<iev+1 <<endl;
       output << "# bin-centre hard hcor full fcor hecr fecr" <<endl;
       
@@ -282,13 +295,28 @@ int main (int argc, char ** argv) {
 //======================================================================
 void determine_Zmass_kt(const vector<fj::PseudoJet> & event, 
                         fj::JetDefinition jet_def,
-                        fj::ActiveAreaSpec active_area_spec,
+                        fj::AreaDefinition area_def,
+                        bool                       rho_uses_something,
+	   	        const fj::JetDefinition  & rho_jet_def,
+		        const fj::AreaDefinition & rho_area_def,
 			double & mass, double & corrected_mass,
 			double & ext_corrected_mass) {
 
-  fj::ClusterSequenceActiveArea clust(event,jet_def,active_area_spec);
+  fj::ClusterSequenceArea clust(event,jet_def,area_def);
 
-  double median_pt_per_area = clust.pt_per_unit_area();
+//  double median_pt_per_area = clust.pt_per_unit_area();
+  // use the default or an alternative alg to estimate rho
+  double median_pt_per_area,median_pt_per_area_4vect;
+  if (rho_uses_something) {
+    fj::ClusterSequenceArea rho_cs(event, rho_jet_def, rho_area_def);
+    median_pt_per_area = rho_cs.median_pt_per_unit_area(maxrap_for_median);
+    median_pt_per_area_4vect = rho_cs.median_pt_per_unit_something(
+                                   maxrap_for_median, true);
+  } else {
+    median_pt_per_area = clust.median_pt_per_unit_area(maxrap_for_median);
+    median_pt_per_area_4vect = clust.median_pt_per_unit_something(
+                                   maxrap_for_median, true);
+  }
   
   vector<fj::PseudoJet> jets = clust.inclusive_jets();
   mass = Zmass_from_jets(jets);
@@ -304,7 +332,7 @@ void determine_Zmass_kt(const vector<fj::PseudoJet> & event,
 
   // now to the correction with the "extended" area
   for (unsigned i = 0; i < jets.size(); i++) {
-    fj::PseudoJet area_4vect = median_pt_per_area*clust.area_4vector(jets[i]);
+    fj::PseudoJet area_4vect = median_pt_per_area_4vect*clust.area_4vector(jets[i]);
     if (area_4vect.perp2() >= jets[i].perp2() || 
 	area_4vect.E()     >= jets[i].E()) {
       // if the correction is too large, set the jet to zero
@@ -326,56 +354,56 @@ void determine_Zmass_kt(const vector<fj::PseudoJet> & event,
 
 
 //======================================================================
-void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
-			double R, ConeVariant cone_variant,
-			double & mass, double & corrected_mass) {
-  
-  // Define MidPoint algorithm.
-  double m_seedThreshold    = 1;
-  double m_coneRadius       = R;
-
-  double m_overlapThreshold;
-  double m_coneAreaFraction;
-  switch(cone_variant) {
-  case(midpoint_050): 
-    m_coneAreaFraction = 1.00;
-    m_overlapThreshold = 0.50; break;
-  case(midpoint_075): 
-    m_coneAreaFraction = 1.00;
-    m_overlapThreshold = 0.75; break;
-  case(searchcone_075):
-    m_coneAreaFraction = 0.25;
-    m_overlapThreshold = 0.75; break;
-  default:
-    cerr << "Unrecognized cone_variant: "<<cone_variant<<endl; 
-    exit(-1);
-  }
-
-  int    m_maxPairSize      = 2;
-  int    m_maxIterations    = 100;
-  MidPointAlgorithm m(m_seedThreshold,m_coneRadius,m_coneAreaFraction,m_maxPairSize,m_maxIterations,m_overlapThreshold);
-
-  // convert our event into a the CDF format
-  vector<PhysicsTower> towers;
-  for (unsigned i = 0; i < event.size(); i++) 
-    towers.push_back(PhysicsTower(LorentzVector(
-		  event[i].px(),event[i].py(),event[i].pz(),event[i].E())));
-  
-  // run the jet algorithm
-  vector<Cluster> m_jets;
-  m.run(towers,m_jets);
-
-  // extract the jets
-  vector<fj::PseudoJet> jets;
-  for (unsigned i=0; i < m_jets.size(); i++) 
-    jets.push_back(fj::PseudoJet(m_jets[i].fourVector.px,
-			       m_jets[i].fourVector.py,
-			       m_jets[i].fourVector.pz,
-			       m_jets[i].fourVector.E));
- 
-  mass = Zmass_from_jets(jets);
-  corrected_mass = mass;
-}
+// void determine_Zmass_cone(const vector<fj::PseudoJet> & event, 
+// 			double R, ConeVariant cone_variant,
+// 			double & mass, double & corrected_mass) {
+//   
+//   // Define MidPoint algorithm.
+//   double m_seedThreshold    = 1;
+//   double m_coneRadius       = R;
+// 
+//   double m_overlapThreshold;
+//   double m_coneAreaFraction;
+//   switch(cone_variant) {
+//   case(midpoint_050): 
+//     m_coneAreaFraction = 1.00;
+//     m_overlapThreshold = 0.50; break;
+//   case(midpoint_075): 
+//     m_coneAreaFraction = 1.00;
+//     m_overlapThreshold = 0.75; break;
+//   case(searchcone_075):
+//     m_coneAreaFraction = 0.25;
+//     m_overlapThreshold = 0.75; break;
+//   default:
+//     cerr << "Unrecognized cone_variant: "<<cone_variant<<endl; 
+//     exit(-1);
+//   }
+// 
+//   int    m_maxPairSize      = 2;
+//   int    m_maxIterations    = 100;
+//   MidPointAlgorithm m(m_seedThreshold,m_coneRadius,m_coneAreaFraction,m_maxPairSize,m_maxIterations,m_overlapThreshold);
+// 
+//   // convert our event into a the CDF format
+//   vector<PhysicsTower> towers;
+//   for (unsigned i = 0; i < event.size(); i++) 
+//     towers.push_back(PhysicsTower(LorentzVector(
+// 		  event[i].px(),event[i].py(),event[i].pz(),event[i].E())));
+//   
+//   // run the jet algorithm
+//   vector<Cluster> m_jets;
+//   m.run(towers,m_jets);
+// 
+//   // extract the jets
+//   vector<fj::PseudoJet> jets;
+//   for (unsigned i=0; i < m_jets.size(); i++) 
+//     jets.push_back(fj::PseudoJet(m_jets[i].fourVector.px,
+// 			       m_jets[i].fourVector.py,
+// 			       m_jets[i].fourVector.pz,
+// 			       m_jets[i].fourVector.E));
+//  
+//   mass = Zmass_from_jets(jets);
+//   corrected_mass = mass;
+// }
 
 
 //======================================================================

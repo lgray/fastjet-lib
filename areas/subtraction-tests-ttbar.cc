@@ -112,7 +112,7 @@ bool rho_from_area_4vector = true;
 void look_at_event(const vector<fj::PseudoJet> & event,
 		   const fj::JetDefinition  & jet_def,
 		   const fj::AreaDefinition & area_def,
-                   bool                       rho_uses_cam05,
+                   bool                       rho_uses_something,
 		   const fj::JetDefinition  & rho_jet_def,
 		   const fj::AreaDefinition & rho_area_def,
 		   const bool verbose, 
@@ -150,14 +150,17 @@ int main (int argc, char ** argv) {
   // reliable alg.
   bool rho_uses_cam05 = cmdline.present("-rho_uses_cam05");
   bool rho_uses_kt05 = cmdline.present("-rho_uses_kt05");
+  bool rho_uses_something = false;
   fj::JetDefinition  rho_jet_def ;
   fj::AreaDefinition rho_area_def;
   if (rho_uses_cam05) {
     rho_jet_def  = fj::JetDefinition (fj::cambridge_algorithm,0.5);
     rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.5));
+    rho_uses_something = true;
   } else if (rho_uses_kt05) {
     rho_jet_def  = fj::JetDefinition (fj::kt_algorithm,0.5);
     rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.9));
+    rho_uses_something = true;
   }
 
   rho_from_area_4vector = ! cmdline.present("-plain_rho");
@@ -216,7 +219,7 @@ int main (int argc, char ** argv) {
 
 
     look_at_event(hard_event, jet_def, area_def, 
-                  rho_uses_cam05, rho_jet_def, rho_area_def,
+                  rho_uses_something, rho_jet_def, rho_area_def,
                   verbose, 
 		  Wmass_incl, tmass_incl,
 		  Wmass_excl, tmass_excl,
@@ -237,7 +240,7 @@ int main (int argc, char ** argv) {
     // only run things again if we truly have an event to run on...
     if (full_event.size() != hard_event.size()) {
       look_at_event(full_event, jet_def, area_def, 
-                    rho_uses_cam05, rho_jet_def, rho_area_def,
+                    rho_uses_something, rho_jet_def, rho_area_def,
                     verbose, 
 		    Wmass_incl, tmass_incl,
 		    Wmass_excl, tmass_excl,
@@ -267,7 +270,7 @@ int main (int argc, char ** argv) {
       output << "# " << cmdline.command_line() << endl;
       output << "# jet_def  = " <<  jet_def.description() << endl;
       output << "# area_def = " << area_def.description() << endl;
-      if (rho_uses_cam05) {
+      if (rho_uses_something) {
         output << "# rho_jet_def  = " <<  rho_jet_def.description() << endl;
         output << "# rho_area_def = " << rho_area_def.description() << endl;
       }
@@ -549,7 +552,7 @@ void ext_correct_jets(const fj::ClusterSequenceArea & cs,
 void look_at_event(const vector<fj::PseudoJet> & event,
 		   const fj::JetDefinition  & jet_def,
 		   const fj::AreaDefinition & area_def,
-                   bool                       rho_uses_cam05,
+                   bool                       rho_uses_something,
 		   const fj::JetDefinition  & rho_jet_def,
 		   const fj::AreaDefinition & rho_area_def,
 		   const bool verbose,
@@ -584,7 +587,7 @@ void look_at_event(const vector<fj::PseudoJet> & event,
 
   // use the default or an alternative alg to estimate rho
   double median_pt_over_area;
-  if (rho_uses_cam05) {
+  if (rho_uses_something) {
     fj::ClusterSequenceArea rho_cs(hadronic_event, rho_jet_def, rho_area_def);
     median_pt_over_area = rho_cs.median_pt_per_unit_something(
                                    maxrap_for_median, rho_from_area_4vector);
