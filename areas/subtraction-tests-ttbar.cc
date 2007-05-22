@@ -149,9 +149,16 @@ int main (int argc, char ** argv) {
   // for (e.g.) cone algorithm, allow one to estimate rho with a more
   // reliable alg.
   bool rho_uses_cam05 = cmdline.present("-rho_uses_cam05");
-  fj::JetDefinition  rho_jet_def (fj::cambridge_algorithm,0.5);
-  fj::AreaDefinition rho_area_def(fj::VoronoiAreaSpec(0.5));
-  
+  bool rho_uses_kt05 = cmdline.present("-rho_uses_kt05");
+  fj::JetDefinition  rho_jet_def ;
+  fj::AreaDefinition rho_area_def;
+  if (rho_uses_cam05) {
+    rho_jet_def  = fj::JetDefinition (fj::cambridge_algorithm,0.5);
+    rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.5));
+  } else if (rho_uses_kt05) {
+    rho_jet_def  = fj::JetDefinition (fj::kt_algorithm,0.5);
+    rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.9));
+  }
 
   rho_from_area_4vector = ! cmdline.present("-plain_rho");
 
