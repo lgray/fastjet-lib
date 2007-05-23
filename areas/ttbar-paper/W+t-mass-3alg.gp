@@ -10,6 +10,7 @@ set x2range [xmin:xmax]
 
 unset multiplot
 filename="W+t-mass-3alg.eps"
+#filename="Wt.eps"
 set term postscript enhance color dashed portrait size 15cm,20cm
 set output filename
 
@@ -43,20 +44,31 @@ set macros
 
 R="0.4"
 
-kt="kt_R".R.".res"
-cam="cam_R".R.".res"
+kt  ="kt_R".R.".res"
+cam ="cam_R".R.".res"
 cone="siscone_R0.4_f0.5_passive_RUC.res"
 
+kt  ="../tmp/kt_R". R."_bin2_long.res"
+cam ="../tmp/cam_R".R."_bin2_long.res"
+#cam ="siscone_R0.4_f0.75_passive_RUC.res"
+#cone="siscone_R0.4_f0.5_passive_RUC.res"
+#cone="siscone_R0.4_f0.5_passive_RUC.res"
+#cone="antikt_R0.4_RUC.res"
+
+linenp ="lt  2 lw 2 lc rgb '#00a000'"
+linenps="lt  1 lw 3"
+linepu ="lt  3 lw 2"
+linepus="lt -1 lw 2"
 
 plotobj="\
-        u 1:(below($1,115,$4))    w st lt 2 lw 1 t  @nopile,\
-    ''  u 1:(above($1,135,$5))    w st lt 2 lw 1 t  '',\
-    ''  u 1:(below($1,115,$8))    w st lt 1 lw 3 t  @nopilesub,\
-    ''  u 1:(above($1,135,$9))    w st lt 1 lw 3 t  '',\
-    ''  u 1:(below($1,115,$12))   w st lt 3 lw 1 t  @pile,\
-    ''  u 1:(above($1,135,$13))   w st lt 3 lw 1 t  '',\
-    ''  u 1:(below($1,115,$16))   w st lt -1 lw 2 t @pilesub,\
-    ''  u 1:(above($1,135,$17))   w st lt -1 lw 2 t  ''"
+        u 1:(below($1,115,$4))    w st @linenp  t  @nopile,\
+    ''  u 1:(above($1,135,$5))    w st @linenp  t  '',\
+    ''  u 1:(below($1,115,$8))    w st @linenps t  @nopilesub,\
+    ''  u 1:(above($1,135,$9))    w st @linenps t  '',\
+    ''  u 1:(below($1,115,$12))   w st @linepu  t  @pile,\
+    ''  u 1:(above($1,135,$13))   w st @linepu  t  '',\
+    ''  u 1:(below($1,115,$16))   w st @linepus t @pilesub,\
+    ''  u 1:(above($1,135,$17))   w st @linepus t  ''"
 
 nopile="'no pileup'"
 nopilesub="'no pileup, sub'"

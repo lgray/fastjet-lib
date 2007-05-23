@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-1.2
 %%Title: W+t-mass-3alg.eps
 %%Creator: gnuplot 4.3 patchlevel 0
-%%CreationDate: Tue May 22 18:10:26 2007
+%%CreationDate: Wed May 23 15:39:29 2007
 %%For:salam salam
 %%Pages: 1
 %%DocumentFonts: Helvetica
@@ -50,7 +50,7 @@ SDict begin [
   /Author (Gavin SALAM)
 %  /Producer (gnuplot)
 %  /Keywords ()
-  /CreationDate (Tue May 22 18:10:26 2007)
+  /CreationDate (Wed May 23 15:39:29 2007)
   /DOCINFO pdfmark
 end
 } ifelse
@@ -457,6 +457,51 @@ gsave
 0 setgray
 newpath
 (Helvetica) findfont 140 scalefont setfont
+gsave % colour palette begin
+/maxcolors 0 def
+/HSV2RGB {  exch dup 0.0 eq {pop exch pop dup dup} % achromatic gray
+  { /HSVs exch def /HSVv exch def 6.0 mul dup floor dup 3 1 roll sub
+     /HSVf exch def /HSVi exch cvi def /HSVp HSVv 1.0 HSVs sub mul def
+	 /HSVq HSVv 1.0 HSVs HSVf mul sub mul def 
+	 /HSVt HSVv 1.0 HSVs 1.0 HSVf sub mul sub mul def
+	 /HSVi HSVi 6 mod def 0 HSVi eq {HSVv HSVt HSVp}
+	 {1 HSVi eq {HSVq HSVv HSVp}{2 HSVi eq {HSVp HSVv HSVt}
+	 {3 HSVi eq {HSVp HSVq HSVv}{4 HSVi eq {HSVt HSVp HSVv}
+	 {HSVv HSVp HSVq} ifelse} ifelse} ifelse} ifelse} ifelse
+  } ifelse} def
+/Constrain {
+  dup 0 lt {0 exch pop}{dup 1 gt {1 exch pop} if} ifelse} def
+/YIQ2RGB {
+  3 copy -1.702 mul exch -1.105 mul add add Constrain 4 1 roll
+  3 copy -0.647 mul exch -0.272 mul add add Constrain 5 1 roll
+  0.621 mul exch -0.956 mul add add Constrain 3 1 roll } def
+/CMY2RGB {  1 exch sub exch 1 exch sub 3 2 roll 1 exch sub 3 1 roll exch } def
+/XYZ2RGB {  3 copy -0.9017 mul exch -0.1187 mul add exch 0.0585 mul exch add
+  Constrain 4 1 roll 3 copy -0.0279 mul exch 1.999 mul add exch
+  -0.9844 mul add Constrain 5 1 roll -0.2891 mul exch -0.5338 mul add
+  exch 1.91 mul exch add Constrain 3 1 roll} def
+/SelectSpace {ColorSpace (HSV) eq {HSV2RGB}{ColorSpace (XYZ) eq {
+  XYZ2RGB}{ColorSpace (CMY) eq {CMY2RGB}{ColorSpace (YIQ) eq {YIQ2RGB}
+  if} ifelse} ifelse} ifelse} def
+/InterpolatedColor false def
+/cF7 {sqrt} bind def	% sqrt(x)
+/cF5 {dup dup mul mul} bind def	% x^3
+/cF15 {360 mul sin} bind def	% sin(360x)
+/pm3dround {maxcolors 0 gt {dup 1 ge
+	{pop 1} {maxcolors mul floor maxcolors 1 sub div} ifelse} if} def
+/pm3dGamma 1.0 1.5 div def
+/ColorSpace (RGB) def
+Color true and { % COLOUR vs. GRAY map
+  InterpolatedColor { %% Interpolation vs. RGB-Formula
+    /g {stroke pm3dround /grayv exch def interpolate
+        SelectSpace setrgbcolor} bind def
+  }{
+  /g {stroke pm3dround dup cF7 Constrain exch dup cF5 Constrain exch cF15 Constrain 
+       SelectSpace setrgbcolor} bind def
+  } ifelse
+}{
+  /g {stroke pm3dround pm3dGamma exp setgray} bind def
+} ifelse
 1.000 UL
 LTb
 826 3916 M
@@ -825,85 +870,180 @@ LTb
 ] -46.7 MLshow
 1.000 UL
 LTb
-1.000 UL
+2.000 UL
 LT1
-LTb
+0.00 0.63 0.00 C LTb
 3446 5504 M
 [ [(Helvetica) 140.0 0.0 true true 0 (no pileup)]
 ] -46.7 MRshow
 LT1
-3530 5504 M
+0.00 0.63 0.00 C 3530 5504 M
 399 0 V
 826 4128 M
+0 -5 V
+36 0 V
+0 38 V
+37 0 V
+0 8 V
+36 0 V
+0 46 V
+36 0 V
+0 6 V
+37 0 V
+0 14 V
+36 0 V
+0 27 V
+36 0 V
+0 43 V
+37 0 V
+0 45 V
+36 0 V
 0 28 V
-91 0 V
-0 24 V
-91 0 V
-0 101 V
-91 0 V
-0 62 V
-90 0 V
-0 103 V
-91 0 V
-0 189 V
-91 0 V
-0 233 V
-91 0 V
-0 376 V
-91 0 V
-0 -19 V
-91 0 V
-0 -775 V
-91 0 V
-0 -197 V
-90 0 V
-0 -101 V
-91 0 V
-0 3 V
-91 0 V
-0 -28 V
-91 0 V
-0 -33 V
-91 0 V
-0 16 V
-91 0 V
-0 -194 V
-272 0 R
-0 319 V
-91 0 V
+36 0 V
+0 44 V
+37 0 V
+0 19 V
+36 0 V
+0 102 V
+36 0 V
 0 50 V
-91 0 V
-0 82 V
-91 0 V
-0 65 V
-91 0 V
-0 132 V
-91 0 V
-0 71 V
-91 0 V
-0 92 V
-90 0 V
+37 0 V
+0 59 V
+36 0 V
 0 105 V
-91 0 V
-0 -225 V
-91 0 V
-0 -300 V
-91 0 V
-0 -116 V
-91 0 V
-0 -71 V
-91 0 V
-0 -31 V
-91 0 V
-0 -6 V
-90 0 V
-0 -29 V
-91 0 V
-0 2 V
-91 0 V
+37 0 V
+0 110 V
+36 0 V
+0 175 V
+36 0 V
+0 221 V
+37 0 V
+0 141 V
+36 0 V
+0 -67 V
+36 0 V
+0 -311 V
+37 0 V
+0 -285 V
+36 0 V
+0 -246 V
+36 0 V
+0 -129 V
+37 0 V
+0 -79 V
+36 0 V
+0 -47 V
+36 0 V
+0 -36 V
+37 0 V
+0 -22 V
+36 0 V
+0 -19 V
+36 0 V
+0 -24 V
+37 0 V
+0 -3 V
+36 0 V
 0 -11 V
-91 0 V
-0 -7 V
+36 0 V
+0 -12 V
+37 0 V
+0 -1 V
+36 0 V
+0 -17 V
+36 0 V
+0 28 V
+37 0 V
+0 -25 V
+36 0 V
+0 -182 V
+stroke
+LT1
+0.00 0.63 0.00 C 2571 3916 M
+0 296 V
+36 0 V
+0 43 V
+36 0 V
+0 39 V
+37 0 V
+0 -14 V
+36 0 V
+0 38 V
+36 0 V
+0 23 V
+37 0 V
+0 26 V
+36 0 V
+0 54 V
+36 0 V
+0 18 V
+37 0 V
+0 40 V
+36 0 V
+36 0 V
+0 44 V
+37 0 V
+0 69 V
+36 0 V
+0 39 V
+36 0 V
+0 49 V
+37 0 V
+0 50 V
+36 0 V
+0 74 V
+36 0 V
+0 61 V
+37 0 V
+0 -21 V
+36 0 V
+0 -94 V
+36 0 V
+0 -116 V
+37 0 V
+0 -128 V
+36 0 V
+0 -116 V
+36 0 V
+0 -77 V
+37 0 V
+0 -53 V
+36 0 V
+0 -54 V
+36 0 V
+0 -37 V
+37 0 V
+0 -32 V
+36 0 V
+0 1 V
+37 0 V
+0 -25 V
+36 0 V
+0 -8 V
+36 0 V
+0 -14 V
+37 0 V
+0 1 V
+36 0 V
+0 -8 V
+36 0 V
+0 -12 V
+37 0 V
+0 -9 V
+36 0 V
+0 -9 V
+36 0 V
+0 18 V
+37 0 V
+0 -14 V
+36 0 V
+0 -11 V
+36 0 V
+0 8 V
+37 0 V
+0 -16 V
+36 0 V
+0 6 V
 stroke
 3.000 UL
 LT0
@@ -914,222 +1054,501 @@ LTb
 LT0
 3530 5294 M
 399 0 V
-826 4160 M
-0 10 V
-91 0 V
-0 58 V
-91 0 V
-0 118 V
-91 0 V
-0 66 V
-90 0 V
-0 140 V
-91 0 V
-0 257 V
-91 0 V
-0 239 V
-91 0 V
-0 336 V
-91 0 V
-0 -596 V
-91 0 V
-0 -497 V
-91 0 V
-0 -128 V
-90 0 V
-0 -8 V
-91 0 V
-0 -10 V
-91 0 V
-0 -34 V
-91 0 V
-0 -39 V
-91 0 V
-0 -3 V
-91 0 V
-0 -153 V
-272 0 R
-0 392 V
-91 0 V
-0 69 V
-91 0 V
-0 87 V
-91 0 V
-0 57 V
-91 0 V
-0 95 V
-91 0 V
-0 161 V
-91 0 V
-0 35 V
-90 0 V
-0 -156 V
-91 0 V
-0 -326 V
-91 0 V
-0 -141 V
-91 0 V
-0 -72 V
-91 0 V
-0 -27 V
-91 0 V
-0 -42 V
-91 0 V
-0 6 V
-90 0 V
-0 1 V
-91 0 V
-0 -3 V
-91 0 V
-0 -7 V
-91 0 V
-0 -7 V
-stroke
-1.000 UL
-LT2
-826 3996 M
-0 55 V
-91 0 V
-0 8 V
-91 0 V
-0 48 V
-91 0 V
-0 42 V
-90 0 V
-0 11 V
-91 0 V
-0 97 V
-91 0 V
+826 4152 M
+0 24 V
+36 0 V
+0 13 V
+37 0 V
+0 34 V
+36 0 V
+0 21 V
+36 0 V
+0 19 V
+37 0 V
 0 33 V
-91 0 V
-0 90 V
-91 0 V
-0 184 V
-91 0 V
-0 141 V
-91 0 V
-0 89 V
-90 0 V
-0 -65 V
-91 0 V
-0 -189 V
-91 0 V
-0 -146 V
-91 0 V
-0 -109 V
-91 0 V
-0 -60 V
-91 0 V
-0 -309 V
-272 0 R
-0 100 V
-91 0 V
-0 67 V
-91 0 V
-0 17 V
-91 0 V
-0 15 V
-91 0 V
-0 81 V
-91 0 V
-0 -13 V
-91 0 V
-0 93 V
-90 0 V
+36 0 V
+0 27 V
+36 0 V
+0 37 V
+37 0 V
+0 77 V
+36 0 V
+0 11 V
+36 0 V
+0 55 V
+37 0 V
+0 57 V
+36 0 V
+0 66 V
+36 0 V
+0 98 V
+37 0 V
+0 76 V
+36 0 V
+0 164 V
+37 0 V
+0 123 V
+36 0 V
+0 227 V
+36 0 V
+0 92 V
+37 0 V
+0 -136 V
+36 0 V
+0 -240 V
+36 0 V
+0 -385 V
+37 0 V
+0 -227 V
+36 0 V
+0 -93 V
+36 0 V
+0 -80 V
+37 0 V
+0 -23 V
+36 0 V
+0 -55 V
+36 0 V
+0 -2 V
+37 0 V
 0 -20 V
-91 0 V
-0 67 V
-91 0 V
-0 124 V
-91 0 V
+36 0 V
+0 -9 V
+36 0 V
+0 -17 V
+37 0 V
+0 -2 V
+36 0 V
+0 -10 V
+36 0 V
+37 0 V
+0 -7 V
+36 0 V
+0 12 V
+36 0 V
 0 -13 V
-91 0 V
-0 30 V
-91 0 V
+37 0 V
+0 -13 V
+36 0 V
+0 -170 V
+364 0 R
+0 363 V
+36 0 V
+0 53 V
+36 0 V
+0 16 V
+37 0 V
+0 16 V
+36 0 V
+0 42 V
+36 0 V
+0 23 V
+37 0 V
+0 60 V
+36 0 V
+0 14 V
+36 0 V
+0 5 V
+37 0 V
+0 78 V
+36 0 V
+0 32 V
+36 0 V
+0 71 V
+37 0 V
+0 -16 V
+3043 4673 L
+0 114 V
+36 0 V
+0 15 V
+37 0 V
+0 9 V
+36 0 V
+0 2 V
+36 0 V
+0 -31 V
+37 0 V
+0 -114 V
+36 0 V
+0 -161 V
+36 0 V
+0 -124 V
+37 0 V
+0 -120 V
+36 0 V
+0 -53 V
+36 0 V
+0 -48 V
+37 0 V
+0 -22 V
+36 0 V
+0 -36 V
+36 0 V
+0 3 V
+37 0 V
 0 -11 V
-91 0 V
-0 -28 V
-90 0 V
-0 -57 V
-91 0 V
-0 -108 V
-91 0 V
-0 -45 V
-91 0 V
+36 0 V
+0 -5 V
+37 0 V
+0 -11 V
+36 0 V
+0 -5 V
+36 0 V
+0 8 V
+37 0 V
+0 -15 V
+36 0 V
 0 -12 V
+36 0 V
+0 2 V
+37 0 V
+0 -12 V
+36 0 V
+0 15 V
+36 0 V
+0 -14 V
+37 0 V
+0 1 V
+36 0 V
+0 -12 V
+36 0 V
+0 7 V
+37 0 V
+0 -8 V
+36 0 V
+0 1 V
 stroke
 2.000 UL
-LTb
-826 4125 M
-0 79 V
-91 0 V
-0 14 V
-91 0 V
-0 72 V
-91 0 V
-0 113 V
-90 0 V
-0 111 V
-91 0 V
-0 135 V
-91 0 V
-0 253 V
-91 0 V
-0 49 V
-91 0 V
-0 -108 V
-91 0 V
-0 -272 V
-91 0 V
-0 -238 V
-90 0 V
-0 -95 V
-91 0 V
-0 -44 V
-91 0 V
-0 -15 V
-91 0 V
-0 -33 V
-91 0 V
-0 -38 V
-91 0 V
-0 -192 V
-272 0 R
-0 382 V
-91 0 V
-0 70 V
-91 0 V
-0 33 V
-91 0 V
-0 60 V
-91 0 V
-0 91 V
-91 0 V
-0 86 V
-91 0 V
-0 -90 V
-90 0 V
-0 6 V
-91 0 V
-0 -121 V
-91 0 V
-0 -125 V
-91 0 V
-0 -73 V
-91 0 V
-0 -94 V
-91 0 V
-0 -23 V
-91 0 V
-0 -12 V
-90 0 V
-0 -30 V
-91 0 V
-0 -12 V
-91 0 V
+LT2
+826 4014 M
+0 25 V
+36 0 V
+0 8 V
+37 0 V
+0 18 V
+36 0 V
 0 4 V
-91 0 V
+36 0 V
+0 4 V
+37 0 V
+0 13 V
+36 0 V
+0 18 V
+36 0 V
+0 19 V
+37 0 V
+0 -5 V
+36 0 V
+0 24 V
+36 0 V
+0 11 V
+37 0 V
+0 25 V
+36 0 V
+0 8 V
+36 0 V
+0 42 V
+37 0 V
+0 42 V
+36 0 V
+0 16 V
+37 0 V
+0 19 V
+36 0 V
+0 73 V
+36 0 V
+0 6 V
+37 0 V
+0 62 V
+36 0 V
+0 74 V
+36 0 V
+0 47 V
+37 0 V
+0 112 V
+36 0 V
+0 27 V
+36 0 V
+0 84 V
+37 0 V
+0 -15 V
+36 0 V
+0 -27 V
+36 0 V
+0 -25 V
+37 0 V
+0 -69 V
+36 0 V
+0 -30 V
+36 0 V
+0 -65 V
+37 0 V
+0 -57 V
+36 0 V
+0 -57 V
+36 0 V
+0 -36 V
+37 0 V
+0 -56 V
+36 0 V
+0 -34 V
+36 0 V
+0 -40 V
+37 0 V
+0 -11 V
+36 0 V
+0 -352 V
+364 0 R
+0 119 V
+36 0 V
+0 29 V
+36 0 V
+0 -21 V
+37 0 V
+0 30 V
+36 0 V
+0 -2 V
+36 0 V
+0 4 V
+37 0 V
+0 21 V
+36 0 V
+0 13 V
+36 0 V
+0 8 V
+37 0 V
+0 16 V
+36 0 V
+0 1 V
+36 0 V
+0 27 V
+37 0 V
+0 1 V
+36 0 V
+3043 4193 L
+36 0 V
+0 14 V
+37 0 V
+0 34 V
+36 0 V
+0 -3 V
+36 0 V
+0 43 V
+37 0 V
+0 -7 V
+36 0 V
+0 57 V
+36 0 V
+0 17 V
+37 0 V
+0 34 V
+36 0 V
+0 7 V
+36 0 V
+0 43 V
+37 0 V
+0 2 V
+36 0 V
+0 12 V
+36 0 V
+0 16 V
+37 0 V
+0 4 V
+36 0 V
+0 3 V
+37 0 V
+0 7 V
+36 0 V
+0 -22 V
+36 0 V
+0 -15 V
+37 0 V
+0 -29 V
+36 0 V
+0 -15 V
+36 0 V
+0 -15 V
+37 0 V
+0 -43 V
+36 0 V
+0 -9 V
+36 0 V
+0 -23 V
+37 0 V
+0 -24 V
+36 0 V
+36 0 V
+0 -27 V
+37 0 V
+0 -22 V
+36 0 V
 0 -17 V
+stroke
+LTb
+826 4140 M
+0 20 V
+36 0 V
+0 35 V
+37 0 V
+0 14 V
+36 0 V
+0 9 V
+36 0 V
+0 25 V
+37 0 V
+0 33 V
+36 0 V
+0 55 V
+36 0 V
+0 2 V
+37 0 V
+0 76 V
+36 0 V
+0 4 V
+36 0 V
+0 52 V
+37 0 V
+0 46 V
+36 0 V
+0 76 V
+36 0 V
+0 69 V
+37 0 V
+0 72 V
+36 0 V
+0 84 V
+37 0 V
+0 39 V
+36 0 V
+0 87 V
+36 0 V
+0 18 V
+37 0 V
+0 -53 V
+36 0 V
+0 -76 V
+36 0 V
+0 -48 V
+37 0 V
+0 -91 V
+36 0 V
+0 -110 V
+36 0 V
+0 -106 V
+37 0 V
+0 -86 V
+36 0 V
+0 -55 V
+36 0 V
+0 -31 V
+37 0 V
+0 -71 V
+36 0 V
+0 -1 V
+36 0 V
+0 -43 V
+37 0 V
+0 -5 V
+36 0 V
+0 -34 V
+36 0 V
+0 23 V
+37 0 V
+0 -34 V
+36 0 V
+0 3 V
+36 0 V
+0 -9 V
+37 0 V
+0 -20 V
+36 0 V
+0 -193 V
+364 0 R
+0 371 V
+36 0 V
+0 3 V
+36 0 V
+0 32 V
+37 0 V
+0 21 V
+36 0 V
+0 23 V
+36 0 V
+0 29 V
+37 0 V
+0 34 V
+36 0 V
+0 25 V
+36 0 V
+0 23 V
+37 0 V
+0 62 V
+36 0 V
+0 12 V
+36 0 V
+0 24 V
+37 0 V
+0 7 V
+36 0 V
+3043 4583 L
+36 0 V
+0 15 V
+37 0 V
+0 17 V
+36 0 V
+0 -15 V
+36 0 V
+0 -51 V
+37 0 V
+0 -32 V
+36 0 V
+0 -35 V
+36 0 V
+0 -47 V
+37 0 V
+0 -53 V
+36 0 V
+0 -46 V
+36 0 V
+0 -42 V
+37 0 V
+0 -50 V
+36 0 V
+0 2 V
+36 0 V
+0 -38 V
+37 0 V
+0 -23 V
+36 0 V
+0 -19 V
+37 0 V
+0 -26 V
+36 0 V
+0 -14 V
+36 0 V
+0 -32 V
+37 0 V
+0 16 V
+36 0 V
+0 -4 V
+36 0 V
+0 -9 V
+37 0 V
+0 -22 V
+36 0 V
+0 -7 V
+36 0 V
+0 7 V
+37 0 V
+0 -7 V
+36 0 V
+0 1 V
+36 0 V
+0 -15 V
+37 0 V
+0 5 V
+36 0 V
+0 -4 V
 stroke
 1.000 UL
 LTb
@@ -1142,6 +1561,51 @@ Z stroke
 1.000 UP
 1.000 UL
 LTb
+gsave % colour palette begin
+/maxcolors 0 def
+/HSV2RGB {  exch dup 0.0 eq {pop exch pop dup dup} % achromatic gray
+  { /HSVs exch def /HSVv exch def 6.0 mul dup floor dup 3 1 roll sub
+     /HSVf exch def /HSVi exch cvi def /HSVp HSVv 1.0 HSVs sub mul def
+	 /HSVq HSVv 1.0 HSVs HSVf mul sub mul def 
+	 /HSVt HSVv 1.0 HSVs 1.0 HSVf sub mul sub mul def
+	 /HSVi HSVi 6 mod def 0 HSVi eq {HSVv HSVt HSVp}
+	 {1 HSVi eq {HSVq HSVv HSVp}{2 HSVi eq {HSVp HSVv HSVt}
+	 {3 HSVi eq {HSVp HSVq HSVv}{4 HSVi eq {HSVt HSVp HSVv}
+	 {HSVv HSVp HSVq} ifelse} ifelse} ifelse} ifelse} ifelse
+  } ifelse} def
+/Constrain {
+  dup 0 lt {0 exch pop}{dup 1 gt {1 exch pop} if} ifelse} def
+/YIQ2RGB {
+  3 copy -1.702 mul exch -1.105 mul add add Constrain 4 1 roll
+  3 copy -0.647 mul exch -0.272 mul add add Constrain 5 1 roll
+  0.621 mul exch -0.956 mul add add Constrain 3 1 roll } def
+/CMY2RGB {  1 exch sub exch 1 exch sub 3 2 roll 1 exch sub 3 1 roll exch } def
+/XYZ2RGB {  3 copy -0.9017 mul exch -0.1187 mul add exch 0.0585 mul exch add
+  Constrain 4 1 roll 3 copy -0.0279 mul exch 1.999 mul add exch
+  -0.9844 mul add Constrain 5 1 roll -0.2891 mul exch -0.5338 mul add
+  exch 1.91 mul exch add Constrain 3 1 roll} def
+/SelectSpace {ColorSpace (HSV) eq {HSV2RGB}{ColorSpace (XYZ) eq {
+  XYZ2RGB}{ColorSpace (CMY) eq {CMY2RGB}{ColorSpace (YIQ) eq {YIQ2RGB}
+  if} ifelse} ifelse} ifelse} def
+/InterpolatedColor false def
+/cF7 {sqrt} bind def	% sqrt(x)
+/cF5 {dup dup mul mul} bind def	% x^3
+/cF15 {360 mul sin} bind def	% sin(360x)
+/pm3dround {maxcolors 0 gt {dup 1 ge
+	{pop 1} {maxcolors mul floor maxcolors 1 sub div} ifelse} if} def
+/pm3dGamma 1.0 1.5 div def
+/ColorSpace (RGB) def
+Color true and { % COLOUR vs. GRAY map
+  InterpolatedColor { %% Interpolation vs. RGB-Formula
+    /g {stroke pm3dround /grayv exch def interpolate
+        SelectSpace setrgbcolor} bind def
+  }{
+  /g {stroke pm3dround dup cF7 Constrain exch dup cF5 Constrain exch cF15 Constrain 
+       SelectSpace setrgbcolor} bind def
+  } ifelse
+}{
+  /g {stroke pm3dround pm3dGamma exp setgray} bind def
+} ifelse
 1.000 UL
 LTb
 826 2026 M
@@ -1508,153 +1972,338 @@ LTb
 ] -46.7 MLshow
 1.000 UL
 LTb
-1.000 UL
+2.000 UL
 LT1
-826 2249 M
-0 33 V
-91 0 V
-0 41 V
-91 0 V
-0 92 V
-91 0 V
-0 33 V
-90 0 V
-0 154 V
-91 0 V
-0 214 V
-91 0 V
-0 304 V
-91 0 V
-0 366 V
-91 0 V
-0 -407 V
-91 0 V
-0 -614 V
-91 0 V
-0 -155 V
-90 0 V
-0 -20 V
-91 0 V
-0 -38 V
-91 0 V
-0 -18 V
-91 0 V
-0 -41 V
-91 0 V
-0 -14 V
-91 0 V
-0 -153 V
-272 0 R
-0 342 V
-91 0 V
-0 59 V
-91 0 V
-0 81 V
-91 0 V
-0 106 V
-91 0 V
-0 57 V
-91 0 V
-0 149 V
-91 0 V
-0 129 V
-90 0 V
+0.00 0.63 0.00 C 826 2248 M
+0 6 V
+36 0 V
+0 38 V
+37 0 V
+0 14 V
+36 0 V
+0 11 V
+36 0 V
+0 26 V
+37 0 V
+0 50 V
+36 0 V
+0 10 V
+36 0 V
+0 48 V
+37 0 V
+0 38 V
+36 0 V
+0 38 V
+36 0 V
+0 39 V
+37 0 V
+0 47 V
+36 0 V
+0 63 V
+36 0 V
+0 86 V
+37 0 V
+0 107 V
+36 0 V
+0 99 V
+37 0 V
+0 155 V
+36 0 V
+0 196 V
+36 0 V
+0 177 V
+37 0 V
+0 68 V
+36 0 V
+0 -276 V
+36 0 V
+0 -377 V
+37 0 V
+0 -266 V
+36 0 V
+0 -158 V
+36 0 V
+0 -88 V
+37 0 V
 0 -57 V
-91 0 V
-0 -325 V
-91 0 V
-0 -201 V
-91 0 V
-0 -122 V
-91 0 V
+36 0 V
+0 -38 V
+36 0 V
+0 3 V
+37 0 V
+0 -40 V
+36 0 V
+0 -12 V
+36 0 V
+0 -18 V
+37 0 V
+0 24 V
+36 0 V
+0 -38 V
+36 0 V
+0 1 V
+37 0 V
+0 -22 V
+36 0 V
+0 10 V
+36 0 V
+0 -3 V
+37 0 V
+0 -10 V
+36 0 V
+0 -173 V
+stroke
+LT1
+0.00 0.63 0.00 C 2571 2026 M
+0 341 V
+36 0 V
+0 17 V
+36 0 V
+0 26 V
+37 0 V
+0 53 V
+36 0 V
+0 -3 V
+36 0 V
+0 25 V
+37 0 V
+0 31 V
+36 0 V
+0 37 V
+36 0 V
+0 42 V
+37 0 V
+0 40 V
+36 0 V
+0 12 V
+36 0 V
+0 66 V
+37 0 V
+0 44 V
+36 0 V
+0 61 V
+36 0 V
+0 24 V
+37 0 V
+0 98 V
+36 0 V
+0 48 V
+36 0 V
+0 -28 V
+37 0 V
+0 -46 V
+36 0 V
+0 -163 V
+36 0 V
+0 -148 V
+37 0 V
+0 -104 V
+36 0 V
+0 -102 V
+36 0 V
+0 -51 V
+37 0 V
 0 -42 V
-91 0 V
+36 0 V
+0 -29 V
+36 0 V
+0 -32 V
+37 0 V
+0 -14 V
+36 0 V
 0 -20 V
-91 0 V
-0 7 V
-90 0 V
-0 -27 V
-91 0 V
-0 5 V
-91 0 V
+37 0 V
+0 4 V
+36 0 V
+0 -23 V
+36 0 V
+0 4 V
+37 0 V
 0 -6 V
-91 0 V
-0 -16 V
+36 0 V
+0 -6 V
+36 0 V
+37 0 V
+0 -8 V
+36 0 V
+0 1 V
+36 0 V
+0 -15 V
+37 0 V
+0 -6 V
+36 0 V
+0 -8 V
+36 0 V
+0 14 V
+37 0 V
+0 -9 V
+36 0 V
+0 -2 V
 stroke
 3.000 UL
 LT0
-826 2255 M
-0 39 V
-91 0 V
-0 36 V
-91 0 V
-0 125 V
-91 0 V
-0 14 V
-90 0 V
-0 185 V
-91 0 V
-0 245 V
-91 0 V
-0 285 V
-91 0 V
-0 307 V
-91 0 V
-0 -565 V
-91 0 V
-0 -533 V
-91 0 V
-0 -93 V
-90 0 V
-0 -17 V
-91 0 V
-0 -28 V
-91 0 V
-0 -32 V
-91 0 V
-0 -35 V
-91 0 V
-0 -9 V
-91 0 V
-0 -153 V
-272 0 R
-0 368 V
-91 0 V
-0 89 V
-91 0 V
-0 55 V
-91 0 V
-0 99 V
-91 0 V
-0 155 V
-91 0 V
-0 58 V
-91 0 V
-0 115 V
-90 0 V
-0 -169 V
-91 0 V
-0 -354 V
-91 0 V
-0 -148 V
-91 0 V
-0 -71 V
-91 0 V
-0 -35 V
-91 0 V
-0 -13 V
-91 0 V
-0 6 V
-90 0 V
-0 -26 V
-91 0 V
+826 2248 M
+0 38 V
+36 0 V
+0 23 V
+37 0 V
 0 16 V
-91 0 V
-0 -16 V
-91 0 V
+36 0 V
+36 0 V
+0 52 V
+37 0 V
+0 42 V
+36 0 V
+0 3 V
+36 0 V
+0 61 V
+37 0 V
+0 25 V
+36 0 V
+0 49 V
+36 0 V
+0 38 V
+37 0 V
+0 68 V
+36 0 V
+0 56 V
+36 0 V
+0 128 V
+37 0 V
+0 98 V
+36 0 V
+0 102 V
+37 0 V
+0 173 V
+36 0 V
+0 185 V
+36 0 V
+0 139 V
+37 0 V
+0 -32 V
+36 0 V
+0 -410 V
+36 0 V
+0 -354 V
+37 0 V
+0 -216 V
+36 0 V
+0 -116 V
+36 0 V
+0 -66 V
+37 0 V
+0 -39 V
+36 0 V
+0 -13 V
+36 0 V
+0 -20 V
+37 0 V
+0 -18 V
+36 0 V
+0 -14 V
+36 0 V
+0 -5 V
+37 0 V
+0 -2 V
+36 0 V
+0 -14 V
+36 0 V
+0 -8 V
+37 0 V
+0 -13 V
+36 0 V
+36 0 V
+37 0 V
+0 -1 V
+36 0 V
+0 -177 V
+364 0 R
+0 365 V
+36 0 V
+0 27 V
+36 0 V
+0 27 V
+37 0 V
+0 35 V
+36 0 V
+0 14 V
+36 0 V
+0 38 V
+37 0 V
+0 42 V
+36 0 V
+0 17 V
+36 0 V
+0 67 V
+37 0 V
+0 21 V
+36 0 V
+0 21 V
+36 0 V
+0 62 V
+37 0 V
+0 37 V
+36 0 V
+0 70 V
+36 0 V
+0 63 V
+3116 2932 L
+0 55 V
+36 0 V
+0 -22 V
+36 0 V
+0 -55 V
+37 0 V
+0 -91 V
+36 0 V
+0 -198 V
+36 0 V
+0 -138 V
+37 0 V
+0 -94 V
+36 0 V
+0 -69 V
+36 0 V
+0 -29 V
+37 0 V
+0 -38 V
+36 0 V
+0 -17 V
+36 0 V
+0 -13 V
+37 0 V
+0 -27 V
+36 0 V
+37 0 V
+0 -5 V
+36 0 V
+0 6 V
+36 0 V
+0 -15 V
+37 0 V
+0 -5 V
+36 0 V
+0 3 V
+36 0 V
+0 -18 V
+37 0 V
+0 7 V
+36 0 V
+0 -14 V
+36 0 V
+0 5 V
+37 0 V
+0 -18 V
+36 0 V
+0 26 V
+36 0 V
+0 -22 V
+37 0 V
+0 3 V
+36 0 V
 0 -14 V
 stroke
-1.000 UL
+2.000 UL
 LT2
 LTb
 3446 3615 M
@@ -1663,154 +2312,341 @@ LTb
 LT2
 3530 3615 M
 399 0 V
-826 2137 M
-0 44 V
-91 0 V
-0 4 V
-91 0 V
-0 52 V
-91 0 V
-0 32 V
-90 0 V
-0 52 V
-91 0 V
-0 80 V
-91 0 V
-0 31 V
-91 0 V
-0 229 V
-91 0 V
-0 187 V
-91 0 V
-0 151 V
-91 0 V
-0 -123 V
-90 0 V
-0 -125 V
-91 0 V
-0 -219 V
-91 0 V
-0 -135 V
-91 0 V
-0 -38 V
-91 0 V
-0 -67 V
-91 0 V
-0 -266 V
-272 0 R
-0 169 V
-91 0 V
-0 4 V
-91 0 V
-0 34 V
-91 0 V
-0 39 V
-91 0 V
-0 29 V
-91 0 V
-0 45 V
-91 0 V
-0 30 V
-90 0 V
-0 83 V
-91 0 V
-0 128 V
-91 0 V
+826 2143 M
+0 24 V
+36 0 V
+0 14 V
+37 0 V
+0 -8 V
+36 0 V
+0 15 V
+36 0 V
+0 26 V
+37 0 V
 0 11 V
-91 0 V
+36 0 V
 0 9 V
-91 0 V
+36 0 V
+0 8 V
+37 0 V
+0 19 V
+36 0 V
+0 26 V
+36 0 V
+0 10 V
+37 0 V
+0 37 V
+36 0 V
+0 20 V
+36 0 V
+0 12 V
+37 0 V
+0 66 V
+36 0 V
+0 14 V
+37 0 V
+0 52 V
+36 0 V
+0 44 V
+36 0 V
+0 37 V
+37 0 V
+0 113 V
+36 0 V
+0 72 V
+36 0 V
+0 113 V
+37 0 V
+0 25 V
+36 0 V
+0 47 V
+36 0 V
+0 9 V
+37 0 V
+0 -31 V
+36 0 V
+0 -100 V
+36 0 V
+0 -31 V
+37 0 V
+0 -98 V
+36 0 V
+0 -37 V
+36 0 V
+0 -84 V
+37 0 V
+0 -60 V
+36 0 V
+0 -39 V
+36 0 V
+0 -40 V
+37 0 V
+0 -66 V
+36 0 V
+0 10 V
+36 0 V
+0 -34 V
+37 0 V
+0 -36 V
+36 0 V
+0 -286 V
+364 0 R
+0 134 V
+36 0 V
+0 11 V
+36 0 V
+0 11 V
+37 0 V
+0 6 V
+36 0 V
+0 -4 V
+36 0 V
+0 44 V
+37 0 V
+0 4 V
+36 0 V
+0 12 V
+36 0 V
+0 17 V
+37 0 V
+0 19 V
+36 0 V
+0 16 V
+36 0 V
+0 14 V
+37 0 V
+3007 2324 L
+36 0 V
+0 31 V
+36 0 V
+0 2 V
+37 0 V
+0 27 V
+36 0 V
+0 28 V
+36 0 V
+0 40 V
+37 0 V
+0 32 V
+36 0 V
+0 16 V
+36 0 V
+0 29 V
+37 0 V
+0 55 V
+36 0 V
+0 8 V
+36 0 V
+0 26 V
+37 0 V
+0 -4 V
+36 0 V
+0 4 V
+36 0 V
+0 -3 V
+37 0 V
+0 -6 V
+36 0 V
+0 -32 V
+37 0 V
+0 -8 V
+36 0 V
+0 -38 V
+36 0 V
+0 1 V
+37 0 V
+0 -37 V
+36 0 V
+0 -24 V
+36 0 V
+0 -29 V
+37 0 V
+0 -27 V
+36 0 V
+0 -21 V
+36 0 V
+0 -21 V
+37 0 V
+0 -14 V
+36 0 V
+0 -27 V
+36 0 V
 0 -22 V
-91 0 V
-0 -35 V
-91 0 V
-0 -71 V
-90 0 V
-0 -82 V
-91 0 V
-0 -72 V
-91 0 V
+37 0 V
 0 -19 V
-91 0 V
-0 -64 V
+36 0 V
+0 6 V
 stroke
-2.000 UL
 LTb
 3446 3405 M
 [ [(Helvetica) 140.0 0.0 true true 0 (pileup, sub)]
 ] -46.7 MRshow
 3530 3405 M
 399 0 V
-826 2224 M
-0 63 V
-91 0 V
-0 -8 V
-91 0 V
-0 80 V
-91 0 V
-0 125 V
-90 0 V
-0 75 V
-91 0 V
-0 173 V
-91 0 V
-0 222 V
-91 0 V
-0 205 V
-91 0 V
-0 -139 V
-91 0 V
-0 -308 V
-91 0 V
-0 -239 V
-90 0 V
-0 -164 V
-91 0 V
-0 -13 V
-91 0 V
-0 -34 V
-91 0 V
-0 -25 V
-91 0 V
-0 12 V
-91 0 V
-0 -223 V
-272 0 R
-0 347 V
-91 0 V
-0 16 V
-91 0 V
-0 80 V
-91 0 V
-0 80 V
-91 0 V
-0 84 V
-91 0 V
-0 72 V
-91 0 V
+826 2233 M
+0 25 V
+36 0 V
+0 15 V
+37 0 V
+0 28 V
+36 0 V
+0 15 V
+36 0 V
+0 8 V
+37 0 V
+0 23 V
+36 0 V
+0 41 V
+36 0 V
 0 51 V
-90 0 V
-0 -68 V
-91 0 V
-0 -160 V
-91 0 V
-0 -59 V
-91 0 V
-0 -114 V
-91 0 V
-0 -66 V
-91 0 V
-0 -47 V
-91 0 V
-0 -9 V
-90 0 V
-0 -27 V
-91 0 V
-0 -9 V
-91 0 V
-0 -12 V
-91 0 V
-0 -40 V
+37 0 V
+0 7 V
+36 0 V
+0 42 V
+36 0 V
+0 28 V
+37 0 V
+0 61 V
+36 0 V
+0 69 V
+36 0 V
+0 39 V
+37 0 V
+0 104 V
+36 0 V
+0 85 V
+37 0 V
+0 73 V
+36 0 V
+0 106 V
+36 0 V
+0 49 V
+37 0 V
+0 -11 V
+36 0 V
+0 2 V
+36 0 V
+0 -129 V
+37 0 V
+0 -123 V
+36 0 V
+0 -139 V
+36 0 V
+0 -102 V
+37 0 V
+0 -83 V
+36 0 V
+0 -63 V
+36 0 V
+0 -51 V
+37 0 V
+0 -16 V
+36 0 V
+0 -61 V
+36 0 V
+0 -23 V
+37 0 V
+0 -11 V
+36 0 V
+0 -24 V
+36 0 V
+0 6 V
+37 0 V
+0 -28 V
+36 0 V
+0 14 V
+36 0 V
+0 -15 V
+37 0 V
+0 -10 V
+36 0 V
+0 -209 V
+364 0 R
+0 313 V
+36 0 V
+0 51 V
+36 0 V
+0 7 V
+37 0 V
+0 3 V
+36 0 V
+0 23 V
+36 0 V
+0 39 V
+37 0 V
+0 30 V
+36 0 V
+0 12 V
+36 0 V
+0 52 V
+37 0 V
+0 14 V
+36 0 V
+0 39 V
+36 0 V
+0 41 V
+37 0 V
+3007 2690 L
+36 0 V
+0 1 V
+36 0 V
+0 21 V
+37 0 V
+0 47 V
+36 0 V
+0 -3 V
+36 0 V
+0 -50 V
+37 0 V
+0 -6 V
+36 0 V
+0 -60 V
+36 0 V
+0 -11 V
+37 0 V
+0 -78 V
+36 0 V
+0 -46 V
+36 0 V
+0 -51 V
+37 0 V
+0 -23 V
+36 0 V
+0 -86 V
+36 0 V
+0 -22 V
+37 0 V
+0 -22 V
+36 0 V
+0 -7 V
+37 0 V
+0 -15 V
+36 0 V
+0 -39 V
+36 0 V
+0 -7 V
+37 0 V
+0 13 V
+36 0 V
+0 -18 V
+36 0 V
+0 -15 V
+37 0 V
+0 -10 V
+36 0 V
+0 -7 V
+36 0 V
+0 -6 V
+37 0 V
+0 12 V
+36 0 V
+0 -16 V
+36 0 V
+0 -7 V
+37 0 V
+0 -8 V
+36 0 V
+0 -6 V
 stroke
 1.000 UL
 LTb
@@ -1823,6 +2659,51 @@ Z stroke
 1.000 UP
 1.000 UL
 LTb
+gsave % colour palette begin
+/maxcolors 0 def
+/HSV2RGB {  exch dup 0.0 eq {pop exch pop dup dup} % achromatic gray
+  { /HSVs exch def /HSVv exch def 6.0 mul dup floor dup 3 1 roll sub
+     /HSVf exch def /HSVi exch cvi def /HSVp HSVv 1.0 HSVs sub mul def
+	 /HSVq HSVv 1.0 HSVs HSVf mul sub mul def 
+	 /HSVt HSVv 1.0 HSVs 1.0 HSVf sub mul sub mul def
+	 /HSVi HSVi 6 mod def 0 HSVi eq {HSVv HSVt HSVp}
+	 {1 HSVi eq {HSVq HSVv HSVp}{2 HSVi eq {HSVp HSVv HSVt}
+	 {3 HSVi eq {HSVp HSVq HSVv}{4 HSVi eq {HSVt HSVp HSVv}
+	 {HSVv HSVp HSVq} ifelse} ifelse} ifelse} ifelse} ifelse
+  } ifelse} def
+/Constrain {
+  dup 0 lt {0 exch pop}{dup 1 gt {1 exch pop} if} ifelse} def
+/YIQ2RGB {
+  3 copy -1.702 mul exch -1.105 mul add add Constrain 4 1 roll
+  3 copy -0.647 mul exch -0.272 mul add add Constrain 5 1 roll
+  0.621 mul exch -0.956 mul add add Constrain 3 1 roll } def
+/CMY2RGB {  1 exch sub exch 1 exch sub 3 2 roll 1 exch sub 3 1 roll exch } def
+/XYZ2RGB {  3 copy -0.9017 mul exch -0.1187 mul add exch 0.0585 mul exch add
+  Constrain 4 1 roll 3 copy -0.0279 mul exch 1.999 mul add exch
+  -0.9844 mul add Constrain 5 1 roll -0.2891 mul exch -0.5338 mul add
+  exch 1.91 mul exch add Constrain 3 1 roll} def
+/SelectSpace {ColorSpace (HSV) eq {HSV2RGB}{ColorSpace (XYZ) eq {
+  XYZ2RGB}{ColorSpace (CMY) eq {CMY2RGB}{ColorSpace (YIQ) eq {YIQ2RGB}
+  if} ifelse} ifelse} ifelse} def
+/InterpolatedColor false def
+/cF7 {sqrt} bind def	% sqrt(x)
+/cF5 {dup dup mul mul} bind def	% x^3
+/cF15 {360 mul sin} bind def	% sin(360x)
+/pm3dround {maxcolors 0 gt {dup 1 ge
+	{pop 1} {maxcolors mul floor maxcolors 1 sub div} ifelse} if} def
+/pm3dGamma 1.0 1.5 div def
+/ColorSpace (RGB) def
+Color true and { % COLOUR vs. GRAY map
+  InterpolatedColor { %% Interpolation vs. RGB-Formula
+    /g {stroke pm3dround /grayv exch def interpolate
+        SelectSpace setrgbcolor} bind def
+  }{
+  /g {stroke pm3dround dup cF7 Constrain exch dup cF5 Constrain exch cF15 Constrain 
+       SelectSpace setrgbcolor} bind def
+  } ifelse
+}{
+  /g {stroke pm3dround pm3dGamma exp setgray} bind def
+} ifelse
 1.000 UL
 LTb
 826 138 M
@@ -2192,9 +3073,9 @@ LTb
 ] -46.7 MLshow
 1.000 UL
 LTb
-1.000 UL
+2.000 UL
 LT1
-826 315 M
+0.00 0.63 0.00 C 826 315 M
 0 50 V
 91 0 V
 0 78 V
@@ -2228,7 +3109,9 @@ LT1
 0 -10 V
 91 0 V
 0 -209 V
-272 0 R
+stroke
+LT1
+0.00 0.63 0.00 C 2552 138 M
 0 277 V
 91 0 V
 0 60 V
@@ -2337,7 +3220,7 @@ LT0
 91 0 V
 0 -22 V
 stroke
-1.000 UL
+2.000 UL
 LT2
 826 189 M
 0 16 V
@@ -2410,7 +3293,6 @@ LT2
 91 0 V
 0 -24 V
 stroke
-2.000 UL
 LTb
 826 277 M
 0 49 V
