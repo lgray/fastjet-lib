@@ -11,7 +11,8 @@ set label 1 "k_t algorithm, R=0.5" at graph 0.95,0.92 right
 set xlabel 'y_j'
 set ylabel 'p_{tj} / A_j [GeV]' offset 1
 
-set size 1.0
+set size 1,0.8
+#set size 1.0
 #set size ratio 0.8
 
 set xrange [-4:4]

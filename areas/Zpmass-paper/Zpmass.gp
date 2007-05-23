@@ -4,7 +4,7 @@ reset
 set st dat li
 
 xmin=1900
-xmax=2300
+xmax=2150
 set xrange  [xmin:xmax]
 set x2range [xmin:xmax]
 
@@ -22,28 +22,12 @@ binsize=2
 binshift=binsize*0.5
 
 
-##set label 3 'ttbar events' at graph 0.035,0.79
-#ymax=0.025
-#set yrange [0:ymax]
-#yarr=0.16*ymax
-#ybrr=0.05*ymax
-##set arrow 1 from 80.45,yarr to 80.45,ybrr lt 0
-##set arrow 2 from 175,yarr   to 175.0,ybrr lt 0
-#set ytics 0,0.01
-set mxtics 4
-set mytics 2
-
-#set label 10 "W"   at 60,0.013 right
-#set label 11 "top" at 180,0.012 
-
-#below(x,lim,y)= x<=lim ? y : -5
-#above(x,lim,y)= x>=lim ? y : -5
-
-
 set macros
 
-
-alg='cam-r1-iseq001-pileup-shiftedhist.res'
+R="0.7"
+#alg='tmp/cam-r1.0-iseq001-pileup-RUK.res'
+alg='tmp/kt-r'.R.'-iseq001-pileup-RUK.res'
+#alg='cam-r1-iseq001-pileup-shiftedhist.res'
 #alg='kt-r1-iseq001-pileup.res'
 #alg='siscone-r1-f0.5-passive-RUK-iseq001-pileup.res'
 
@@ -53,37 +37,28 @@ linepu ="lt  3 lw 2"
 linepus="lt -1 lw 2"
 
 plotobj="\
-        u 1:($2)    w st @linenp  t  @nopile,\
-    ''  u 1:($6)    w st @linenps t  @nopilesub,\
-    ''  u 1:($4)    w st @linepu  t  @pile,\
-    ''  u 1:($7)    w st @linepus t @pilesub"
+        u 1:($2)    w histeps @linenp  t  @nopile,\
+    ''  u 1:($6)    w histeps @linenps t  @nopilesub,\
+    ''  u 1:($4)    w histeps @linepu  t  @pile,\
+    ''  u 1:($7)    w histeps @linepus t @pilesub"
 
 nopile="'no pileup'"
 nopilesub="'no pileup, sub'"
 pile="'pileup'"
 pilesub="'pileup, sub'"
-#pile="''"
-#pilesub="''" 
 
 set size 1,1.1
 set multiplot layout 3,1 scale 1,1.3
 
-#set x2tics
-#set format x " "
-#set xlabel " "
+set label 1  'k_t, R='.R   at graph 0.035,0.91 
+set label 2  "LHC, high lumi"   at graph 0.035,0.79 
+set label 3  "Z{/Symbol \242} at 2 TeV"   at graph 0.035,0.70
 
-set label 1  'k_t, R=0.4'   at graph 0.035,0.91 
-
-
-#plot kt @plotobj
 
 #--- cam
-#nopile="''"
-#nopilesub="''"
-#pile="'pileup'"
-#pilesub="'pileup, sub'"
-set label 1  'Cam/Aachen, R=1' 
-set yrange [0:0.014]
+#set label 1  'Cam/Aachen, R=1' 
+#set yrange [0:0.014]
+set yrange [0:0.015]
 set ytics 0.005
 set mytics 5
 set xtics 100
@@ -94,13 +69,6 @@ set xlabel 'm [GeV]'
 set format x2 " "
 plot alg @plotobj
 
-# #--- last one (cone)
-# set label 2 'LHC, high lumi' at graph 0.965,0.91 right
-# unset key
-# set format x "%g"
-# set xlabel 'reconstructed W / top mass [GeV]'
-# set label 1  'SISCone, R=0.4, f=0.5'
-# plot cone @plotobj
 
 
 unset multiplot

@@ -5,6 +5,8 @@ set xrange [0:]
 set xlabel 'A_j'
 set ylabel 'p_{tj} [GeV]' offset 1
 
+set size 1,0.8
+
 median=23.3123
 err=6.14532
 mean_area=0.56316
