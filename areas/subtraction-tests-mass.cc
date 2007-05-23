@@ -132,10 +132,6 @@ int main (int argc, char ** argv) {
   int  repeat  = cmdline.int_val("-repeat",1);
   //bool writeout   = cmdline.present("-write");
   bool hydjet  = cmdline.present("-hydjet");
-  double ktR   = cmdline.double_val("-r",1.0);
-  //double inclkt = cmdline.double_val("-incl",-1.0);
-  //int    excln  = cmdline.int_val   ("-excln",-1);
-  //double excld  = cmdline.double_val("-excld",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e310);
   bool   massless = cmdline.present("-massless");
   int    nev      = int(cmdline.double_val("-nev",1.0));
@@ -204,29 +200,16 @@ int main (int argc, char ** argv) {
     
     // deduce the masses
     double hard_ev_mass, hcor_ev_mass, hecr_ev_mass;
-//    if (cone) {
-//      determine_Zmass_cone(hard_event, ktR, cone_variant,
-//			   hard_ev_mass, hcor_ev_mass);
-//     hecr_ev_mass = hcor_ev_mass;
-//    } else {
-      determine_Zmass_kt(hard_event, jet_def, area_def,
-                         rho_uses_something,rho_jet_def,rho_area_def,
-                         hard_ev_mass, hcor_ev_mass, hecr_ev_mass);
-//    }
+    determine_Zmass_kt(hard_event, jet_def, area_def,
+                       rho_uses_something,rho_jet_def,rho_area_def,
+                       hard_ev_mass, hcor_ev_mass, hecr_ev_mass);
 
 
     double full_ev_mass, fcor_ev_mass, fecr_ev_mass;
     if (full_event.size() != hard_event.size()) {
-      // run things again only if the vectors are different...
-//      if (cone) {
-//	determine_Zmass_cone(full_event, ktR, cone_variant,
-//			     full_ev_mass, fcor_ev_mass);
-//	fecr_ev_mass = fcor_ev_mass;
-//     } else {
-	determine_Zmass_kt(full_event, jet_def, area_def,
-                           rho_uses_something,rho_jet_def,rho_area_def,
-                           full_ev_mass, fcor_ev_mass, fecr_ev_mass);
-//      }
+      determine_Zmass_kt(full_event, jet_def, area_def,
+                         rho_uses_something,rho_jet_def,rho_area_def,
+                         full_ev_mass, fcor_ev_mass, fecr_ev_mass);
     } else {
       full_ev_mass = hard_ev_mass;
       fcor_ev_mass = hcor_ev_mass;
