@@ -610,15 +610,22 @@ void look_at_event(const vector<fj::PseudoJet> & event,
   if (verbose) cout << "inclusive corrected" << endl;
   extract_masses(*clust_seq, jets, verbose, Wmass_incl_ecor, tmass_incl_ecor);
 
-  // view the event "exclusively" as consisting of 4 jets
-  jets = clust_seq->exclusive_jets(4);
-  if (verbose) cout << "exclusive" << endl;
-  extract_masses(*clust_seq, jets, verbose, Wmass_excl, tmass_excl);
+  if (jet_def.jet_finder() == fj::kt_algorithm) {
+    // view the event "exclusively" as consisting of 4 jets
+    jets = clust_seq->exclusive_jets(4);
+    if (verbose) cout << "exclusive" << endl;
+    extract_masses(*clust_seq, jets, verbose, Wmass_excl, tmass_excl);
+    
+    // correct the jets and get new masses
+    ext_correct_jets(*clust_seq, jets, median_pt_over_area);
+    if (verbose) cout << "exclusive corrected" << endl;
+    extract_masses(*clust_seq, jets, verbose, Wmass_excl_ecor, tmass_excl_ecor);
+  } else {
+    Wmass_excl = 0.0;
+    tmass_excl = 0.0;
+    Wmass_excl_ecor = 0.0;
+    tmass_excl_ecor = 0.0;
+  }
 
-  // correct the jets and get new masses
-  ext_correct_jets(*clust_seq, jets, median_pt_over_area);
-  if (verbose) cout << "exclusive corrected" << endl;
-  extract_masses(*clust_seq, jets, verbose, Wmass_excl_ecor, tmass_excl_ecor);
-  
   delete clust_seq;
 }
