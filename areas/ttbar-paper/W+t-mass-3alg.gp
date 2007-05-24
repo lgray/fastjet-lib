@@ -50,6 +50,7 @@ cone="siscone_R0.4_f0.5_passive_RUC.res"
 
 kt  ="../tmp/kt_R". R."_bin2_long.res"
 cam ="../tmp/cam_R".R."_bin2_long.res"
+cone="../tmp/siscone_R".R."_f0.5_passive_RUK_bin2_long.res"
 #cam ="siscone_R0.4_f0.75_passive_RUC.res"
 #cone="siscone_R0.4_f0.5_passive_RUC.res"
 #cone="siscone_R0.4_f0.5_passive_RUC.res"
@@ -85,7 +86,7 @@ set x2tics
 set format x " "
 set xlabel " "
 
-set label 1  'k_t, R=0.4'   at graph 0.035,0.91 
+set label 1  'k_t, R='.R   at graph 0.035,0.91 
 
 
 plot kt @plotobj
@@ -95,7 +96,7 @@ nopile="''"
 nopilesub="''"
 pile="'pileup'"
 pilesub="'pileup, sub'"
-set label 1  'Cam/Aachen, R=0.4' 
+set label 1  'Cam/Aachen, R='.R
 
 #unset key
 set format x2 " "
@@ -106,7 +107,7 @@ set label 2 'LHC, high lumi' at graph 0.965,0.91 right
 unset key
 set format x "%g"
 set xlabel 'reconstructed W / top mass [GeV]'
-set label 1  'SISCone, R=0.4, f=0.5'
+set label 1  'SISCone, R='.R.', f=0.5'
 plot cone @plotobj
 
 

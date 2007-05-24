@@ -105,42 +105,36 @@ int main (int argc, char ** argv) {
   // allow the use to specify the fj::Strategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
-  fj::Strategy  strategy  = fj::Strategy(cmdline.int_val("-strategy",
-				     cmdline.int_val("-clever", fj::Best)));
-  int  repeat  = cmdline.int_val("-repeat",1);
   bool hydjet  = cmdline.present("-hydjet");
-  //double ktR   = cmdline.double_val("-r",1.0);
-  //double inclkt = cmdline.double_val("-incl",-1.0);
-  //int    excln  = cmdline.int_val   ("-excln",-1);
-  //double excld  = cmdline.double_val("-excld",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e310);
   bool   massless = cmdline.present("-massless");
   int    nev     = cmdline.int_val("-nev",1);
   bool   nopileup  = cmdline.present("-nopileup"); 
-  double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
-  double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
-  double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
-  bool   print_jets   = cmdline.present("-print_jets");
   string input_file   = cmdline.string_val("-in");
   string output_file  = cmdline.string_val("-out");
 
   double medianrap = cmdline.value("-medianrap",4.0);
 
+  // get defs for jet finding
   fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
-  
-  fj::AreaDefinition area_def;
-  if (cmdline.present("-voronoi")) {
-    // create the definitions for our jet finder and areas spec...
-    //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
-    fj::VoronoiAreaSpec voronoi_area_spec(1.0);
-    area_def = voronoi_area_spec;
-  } else {
-    // create the definitions for our jet finder and areas spec...
-    //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
-    fj::GhostedAreaSpec ghosted_area_spec(ghost_etamax, repeat, ghost_area, 
-                                          grid_scatter, kt_scatter);
-    area_def = ghosted_area_spec;
+  fj::AreaDefinition area_def = area_def_from_cmdline(cmdline);
+
+  // get defs for area
+  fj::JetDefinition rho_jet_def(fj::kt_algorithm,0.6);
+  fj::AreaDefinition rho_area_def(area_def);
+  // for (e.g.) cone algorithm, allow one to estimate rho with a more
+  // reliable alg.
+  bool rho_uses_cam05 = cmdline.present("-rho_uses_cam05");
+  bool rho_uses_kt05 = cmdline.present("-rho_uses_kt05");
+  bool rho_uses_something = false;
+  if (rho_uses_cam05) {
+    rho_jet_def  = fj::JetDefinition (fj::cambridge_algorithm,0.5);
+    rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.5));
+    rho_uses_something = true;
+  } else if (rho_uses_kt05) {
+    rho_jet_def  = fj::JetDefinition (fj::kt_algorithm,0.5);
+    rho_area_def = fj::AreaDefinition(fj::VoronoiAreaSpec(0.9));
+    rho_uses_something = true;
   }
 
   if (!cmdline.all_options_used()) {cerr << 
@@ -148,14 +142,13 @@ int main (int argc, char ** argv) {
     exit(-1);}
 
 
-  fj::JetDefinition rho_jet_def(fj::kt_algorithm,0.6);
-
   // sending output to a file...
   ofstream output(output_file.c_str());
   output << "# " << cmdline.command_line() << endl;
   output << "# jet_def: " << jet_def.description() << endl;
-  output << "# rho_jet_def: " << rho_jet_def.description() << endl;
   output << "# area_def: " << area_def.description() << endl;
+  output << "# rho_jet_def: " << rho_jet_def.description() << endl;
+  output << "# rho_area_def: " << rho_jet_def.description() << endl;
 
 
 
@@ -228,9 +221,9 @@ int main (int argc, char ** argv) {
     
   fj::ClusterSequenceArea full_clust(full_event,jet_def, area_def);
   fj::ClusterSequenceArea hard_clust(hard_event,jet_def, area_def);
-  fj::ClusterSequenceArea rho_full_clust  (full_event,rho_jet_def, area_def);
-  fj::ClusterSequenceArea rho_hard_clust  (hard_event,rho_jet_def, area_def);
-  fj::ClusterSequenceArea rho_pileup_clust(pileup,    rho_jet_def, area_def);
+  fj::ClusterSequenceArea rho_full_clust  (full_event,rho_jet_def, rho_area_def);
+  fj::ClusterSequenceArea rho_hard_clust  (hard_event,rho_jet_def, rho_area_def);
+  fj::ClusterSequenceArea rho_pileup_clust(pileup,    rho_jet_def, rho_area_def);
 
   //fj::ClusterSequencePassiveArea full_clust(full_event,jet_def);
   //fj::ClusterSequencePassiveArea hard_clust(hard_event,jet_def);
