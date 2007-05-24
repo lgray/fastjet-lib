@@ -43,6 +43,7 @@ JetHist::JetHist (const string & filename) {
   ifstream file(filename.c_str());
   string line;
   double etamax=6;
+  //double etamax=5;
   double phimax = 2*3.14159265;
   int    nbins=40;
 
@@ -130,6 +131,10 @@ void showjets (const char * filename, const char * label = 0) {
   lego->SetFillColor(cancolor);
   lego->SetTheta(30.0);
   lego->SetPhi(20.0);
+
+  // orientation used for plots in subtraction paper
+  //lego->SetTheta(62.15);
+  //lego->SetPhi(9.15);
 
   ////vector<double> col 
   int ngrey = 3;
