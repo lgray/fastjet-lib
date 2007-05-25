@@ -9,12 +9,7 @@
 #include<cmath>
 
 // fastjet stuff
-//#include "fastjet/PseudoJet.hh"
-//#include "fastjet/ClusterSequence.hh"
-//#include "fastjet/AreaDefinition.hh"
 #include "fastjet/ClusterSequenceArea.hh"
-//#include "fastjet/ClusterSequenceActiveArea.hh"
-//#include "ClusterSequencePassiveArea.hh"
 
 // get the plugins
 #include "SISConePlugin.hh"
@@ -124,7 +119,7 @@ int main (int argc, char ** argv) {
   double rad_pt  = cmdline.double_val("-rad",hard_pt);
   double randomness = cmdline.double_val("-randomness",0.1);
   int    nsoft       = cmdline.int_val("-nsoft",10000);
-  int    nhard       = cmdline.int_val("-nhard",1);
+  int    nhard       = cmdline.int_val("-nhard",2);
   double ptlim = cmdline.double_val("-ptlim",1.);
   double distlim = cmdline.double_val("-distlim",1e-3);
   double distmax = cmdline.double_val("-distmax",2.);
@@ -139,6 +134,7 @@ int main (int argc, char ** argv) {
   bool   passivearea =  cmdline.present("-passive");
   bool   oneghostarea =  cmdline.present("-oneghost");
   bool   voronoiarea =  cmdline.present("-voronoi");
+  bool   area4vector = ! cmdline.present("-plain_area");
 
   string outfile;
   if (cmdline.present("-out")) {
@@ -186,7 +182,7 @@ int main (int argc, char ** argv) {
   SimpleHist ptdist(0.,2000.,1000);
   
   int nhardjets = 0, nsoftjets = 0;
-  AverageAndError rho,area_hard,area_soft,area_rad,pt,subtracted_pt;
+  AverageAndError rho,area_hard,area_soft,area_rad,pt,subtracted_pt,pt_soft;
 
   double logptlim = log(ptlim);
   double loghardpt = log(rad_pt);
@@ -354,19 +350,21 @@ int main (int argc, char ** argv) {
 	  pt.add(output_jets[j].perp());
           
 	  // perform subtraction on hard jets
-//          double median_pt = clust.pt_per_unit_area(fj::ClusterSequenceActiveArea::median_4vector);
-          double median_pt = clust.median_pt_per_unit_area_4vector(ghost_etamax-ktR);
-// to use this is wrong unless -pt_scheme is used
-//          double median_pt = clust.pt_per_unit_area();
-          double hard_area = clust.area(output_jets[j]);
-	  fj::PseudoJet areavect = clust.area_4vector(output_jets[j]);
-//	  double sub_pt = output_jets[j].perp() - hard_area*median_pt;
-	  fj::PseudoJet sub_4vec = output_jets[j] - median_pt*areavect;
-
+          // not to use area4vector is wrong unless -pt_scheme is used
+          double median_pt =
+	  clust.median_pt_per_unit_something(ghost_etamax-ktR,area4vector);
           rho.add(median_pt);
 
-	  double sub_pt_4vec = sub_4vec.perp();
-	  double sub_pt = sub_pt_4vec;
+          double sub_pt;
+          double hard_area = clust.area(output_jets[j]);
+          if (area4vector) {
+	      fj::PseudoJet areavect = clust.area_4vector(output_jets[j]);
+ 	      fj::PseudoJet sub_4vec = output_jets[j] - median_pt*areavect;
+	      sub_pt = sub_4vec.perp();
+          } else {
+ 	      sub_pt = output_jets[j].perp() - hard_area*median_pt;
+          }
+	  
 	  subtracted_pt.add(sub_pt);
 	  hardptdist.add_entry(sub_pt);
 	  ptdist.add_entry(output_jets[j].perp());
@@ -379,6 +377,12 @@ int main (int argc, char ** argv) {
 	  area_soft.add(normarea);
 	  softareahist.add_entry(normarea);
 	  nsoftjets++; 
+
+          // study pt of soft jet
+	  if (abs(output_jets[j].rap()) < ghost_etamax-ktR) {
+	     pt_soft.add(output_jets[j].perp());
+	  }   
+          
         }
 	
       } // end selection of central jets
@@ -403,6 +407,8 @@ int main (int argc, char ** argv) {
     (*ostr) << "# nhard        = " << nhard    << endl;
     (*ostr) << "# soft_pt      = " << soft_pt    << endl;
     (*ostr) << "# nsoft        = " << nsoft    << endl;
+    (*ostr) << "# soft density = " << nsoft/2./etamax/2./fj::pi << endl;
+    (*ostr) << "# soft area    = " <<  1./(nsoft/2./etamax/2./fj::pi) << endl;
     (*ostr) << "# randomness   = " << randomness   << endl;
     (*ostr) << "# R            = " << ktR          << endl;
     (*ostr) << "# ghost_etamax = " << ghost_etamax << endl;
@@ -419,7 +425,7 @@ int main (int argc, char ** argv) {
     
     (*ostr) << "# "                                << endl;
     (*ostr) << "# number of events = " << i+1 << endl;
-    (*ostr) << "# U.E. energy density (input) = " << float(nsoft)*soft_pt/2/ghost_etamax/fj::twopi << endl;
+    (*ostr) << "# U.E. energy density (input) = " << float(nsoft)*soft_pt/2./ghost_etamax/fj::twopi << endl;
     (*ostr) << "# U.E. energy density (measured) = " << rho.average() << " +- " << rho.error() << endl;
   
     (*ostr) << "# av of squares " <<  area_soft.average2() << endl;
@@ -435,8 +441,9 @@ int main (int argc, char ** argv) {
        << area_rad.average()/coeff*fj::pi/log(rad_pt/ptlim) <<  " +- " 
        << area_rad.error()/coeff*fj::pi/log(rad_pt/ptlim) << endl;
 
-    (*ostr) << "# average pt = " << pt.average() <<  " +- " << pt.error() << endl;
+    (*ostr) << "# average hard pt = " << pt.average() <<  " +- " << pt.error() << endl;
     (*ostr) << "# average subtracted pt = " << subtracted_pt.average() <<  " +- " << subtracted_pt.error() << endl;
+    (*ostr) << "# average soft pt = " << pt_soft.average() <<  " +- " << pt_soft.error() << endl;
 
     if ( hist ) {
       double rescale = 1.0 / (hardareahist.binsize() *  hardareahist.total_weight());

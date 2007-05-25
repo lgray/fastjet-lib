@@ -83,6 +83,9 @@ areas-1gluon-for-root: areas-1gluon-for-root.o $(OBJS) ../lib/libfastjet.a
 areas-anomal-dim: areas-anomal-dim.o  CmdLine.o ../lib/libfastjet.a
 	$(CXX)  -o areas-anomal-dim areas-anomal-dim.o  CmdLine.o $(LDFLAGS)
 
+areas-fractal-scaling: areas-fractal-scaling.o CmdLine.o jet_def_from_cmdline.o ../lib/libfastjet.a
+	$(CXX)  -o areas-fractal-scaling areas-fractal-scaling.o  CmdLine.o jet_def_from_cmdline.o $(LDFLAGS)
+
 clean: 
 	rm -f *.o
 
