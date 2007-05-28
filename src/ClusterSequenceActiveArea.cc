@@ -634,6 +634,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
       our_areas[hist_index]  += area; 
 
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
+      //cout << "aa " << our_area_4vectors[hist_index].perp2() << endl;
+      //cout << "bb " << ext_area.perp2() << endl;
       _jet_def.recombiner()->plus_equal(our_area_4vectors[hist_index], ext_area);
 
       // now update areas of parents (so that they becomes areas
