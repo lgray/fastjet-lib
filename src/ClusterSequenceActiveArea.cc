@@ -634,8 +634,22 @@ void ClusterSequenceActiveArea::_transfer_areas(
       our_areas[hist_index]  += area; 
 
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
-      //cout << "aa " << our_area_4vectors[hist_index].perp2() << endl;
-      //cout << "bb " << ext_area.perp2() << endl;
+
+      // GPS TMP debugging (jetclu) -----------------------
+      //ext_area = PseudoJet(1e-100,1e-100,1e-100,4e-100);
+      //our_area_4vectors[hist_index] = ext_area;
+      //cout << "aa " 
+      //     << our_area_4vectors[hist_index].px() << " "
+      //     << our_area_4vectors[hist_index].py() << " "
+      //     << our_area_4vectors[hist_index].pz() << " "
+      //     << our_area_4vectors[hist_index].E() << endl;
+      //cout << "bb " 
+      //     << ext_area.px() << " "
+      //     << ext_area.py() << " "
+      //     << ext_area.pz() << " "
+      //     << ext_area.E() << endl;
+      //---------------------------------------------------
+
       _jet_def.recombiner()->plus_equal(our_area_4vectors[hist_index], ext_area);
 
       // now update areas of parents (so that they becomes areas

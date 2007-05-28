@@ -115,7 +115,6 @@ void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
       // JetClu does E-scheme recombination so we can stick with the
       // simple option
       clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
-
       //if (itow != ntow) {
       //  clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
       //} else {
