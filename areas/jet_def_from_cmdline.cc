@@ -2,6 +2,7 @@
 
 #include "SISConePlugin.hh"
 #include "CDFMidPointPlugin.hh"
+#include "CDFJetCluPlugin.hh"
 
 using namespace fastjet;
 
@@ -27,6 +28,10 @@ JetDefinition jet_def_from_cmdline(const CmdLine & cmdline) {
       // MIDPOINT
       double seed = cmdline.value("-seed",1);
       jet_def = new CDFMidPointPlugin(R, f, seed);
+    } else if (cmdline.present("-jetclu")) {
+      // JETCLU 
+      double seed = cmdline.value("-seed",1);
+      jet_def = new CDFJetCluPlugin(R, f, seed);
     } else if (cmdline.present("-siscone")) {
       // SISCONE
       int npass = cmdline.value("-npass", 0);
