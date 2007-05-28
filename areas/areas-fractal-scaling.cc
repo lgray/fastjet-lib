@@ -99,8 +99,8 @@ int main (int argc, char ** argv) {
   
   bool   checkpoint = cmdline.present("-checkpoint");
 //  bool   passivearea =  cmdline.present("-passive");
-//  bool   oneghostarea =  cmdline.present("-oneghost");
-//  bool   voronoiarea =  cmdline.present("-voronoi");
+  bool   oneghost2 =  cmdline.present("-oneghost2");
+  bool   voronoi2 =  cmdline.present("-voronoi2");
 //  bool   area4vector = ! cmdline.present("-plain_area");
 
   string outfile;
@@ -123,8 +123,14 @@ int main (int argc, char ** argv) {
   
   fj::AreaDefinition area_def_2;
 //        area_def_2 = fastjet::AreaDefinition(fastjet::passive_area,active_area_spec);
-//        area_def_2 = fastjet::AreaDefinition(fastjet::one_ghost_passive_area,active_area_spec);
+  if ( oneghost2 ) {
+        area_def.ghost_spec().set_repeat(1);
+        area_def_2 = fastjet::AreaDefinition(fastjet::one_ghost_passive_area,area_def.ghost_spec());
+  } else if ( voronoi2 ) {
         area_def_2 = voronoi_area_spec;
+  } else { cerr << "Area2 not set" << endl;
+           abort();
+  }
 //        area_def_2 = fastjet::AreaDefinition(active_area_spec);
  
   int  nsoftjets = 0;
@@ -211,6 +217,7 @@ int main (int argc, char ** argv) {
     //(*ostr) << "# histmax      = " << histmax      << endl;
     (*ostr) << "# jet def      = " << jet_def.description() << endl;
     (*ostr) << "# area def     = " << area_def.description() << endl;
+    (*ostr) << "# area2 def     = " << area_def_2.description() << endl;
     (*ostr) << "# "                                << endl;
     (*ostr) << "# number of events = " << i+1 << endl;
     (*ostr) << "# soft jets = " << nsoftjets << endl;
