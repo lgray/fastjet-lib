@@ -93,7 +93,7 @@ using namespace std;
 
 inline double pow2(const double x) {return x*x;};
 
-const double maxrap_for_median = 4.0;
+double maxrap_for_median = 4.0;
 bool rho_from_area_4vector = true;
 
 
@@ -140,6 +140,7 @@ int main (int argc, char ** argv) {
   bool   massless   = cmdline.present("-massless");
   int    nev        = int(cmdline.double_val("-nev",1.0));
   bool   nopileup   = cmdline.present("-nopileup"); 
+  maxrap_for_median = cmdline.value("-maxrap_median",maxrap_for_median);
 
   // properties of the jet algorithm and the area finding
   fj::JetDefinition jet_def = jet_def_from_cmdline(cmdline);
