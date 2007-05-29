@@ -1,13 +1,48 @@
-# gnuplot file
-reset
+# gnuplot file for setting up a bunch of variables
+# and macros related to jet plots
+#reset
 
 set macros
 
-jetalg(R)=sprintf("kt_%3.1f_RUK_noMI.res",R)
-series="jetalg(0.4) u 2:5 w l lt 1, jetalg(0.5) u 2:5 w l lt 1 lw 2, jetalg(0.6) u 2:5 w l lt 1 lw 3, jetalg(0.8) u 2:5 w l lt 1 lw 4, jetalg(1.0) u 2:5 w l lt 1 lw 5"
+# each of these functions returns a string corresponding to
+# jet alg, R and m=0|1 -> noUE(MI)|withUE(MI)
+kt(R,m)     = sprintf("kt_%3.1f_RUK%s.res",R,(m==1)?"":"_noMI")
+cam(R,m)    = sprintf("cam_%3.1f_RUK%s.res",R,(m==1)?"":"_noMI")
+antikt(R,m) = sprintf("antikt_%3.1f_RUK%s.res",R,(m==1)?"":"_noMI")
+siscone(R,m)= sprintf("siscone_%3.1f_f0.75_RUK%s.res",R,(m==1)?"":"_noMI")
+jetclu(R,m) = sprintf("jetclu_%3.1f_f0.75_%s.res",R,(m==1)?"voronoi_RUK":"RUK_noMI")
 
-jetalg2(R)=sprintf("jetclu_%3.1f_RUK_noMI.res",R)
-series2="jetalg2(0.4) u 2:5 w l lt 1, jetalg2(0.5) u 2:5 w l lt 1 lw 2, jetalg2(0.6) u 2:5 w l lt 1 lw 3, jetalg2(0.8) u 2:5 w l lt 1 lw 4, jetalg2(1.0) u 2:5 w l lt 1 lw 5"
+
+# get a whole plot entry corresponding to the algorithm,R,m, column
+# line type and line width
+entry(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u 2:%d w histeps lt %d lw %d",\
+                         alg,R,m,col,lt,lw)
+
+mW_mt=80.45/175.0
+
+entryW(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u ($2/mW_mt):($%d*mW_mt) w histeps lt %d lw %d", alg,R,m,col,lt,lw)
+
+# get a series of different R values
+series(alg,m,col,lt)=entry(alg,0.4,m,col,lt,1).",".\
+                     entry(alg,0.5,m,col,lt,2).",".\
+                     entry(alg,0.6,m,col,lt,3).",".\
+                     entry(alg,0.8,m,col,lt,4).",".\
+                     entry(alg,1.0,m,col,lt,5)
+
+# get a series of different algs
+algs(R,m,col,lw) =   entry("kt",      R,m,col,1,lw)."t 'k_t',".\
+                     entry("cam",     R,m,col,2,lw)."t 'Cam/Aachen',".\
+                     entry("antikt",  R,m,col,3,lw)."t 'anti-k_t',".\
+                     entry("jetclu",  R,m,col,4,lw)."t 'jetclu',".\
+                     entry("siscone", R,m,col,5,lw)."t 'siscone'"
+
+# get a series of different algs with jetclu rescaled 
+algsresc(R,m,col,lw) =   entry("kt",      R,m,col,1,lw)."t 'k_t',".\
+                     entry("cam",     R,m,col,2,lw)."t 'Cam/Aachen',".\
+                     entry("antikt",  R,m,col,3,lw)."t 'anti-k_t',".\
+                     entry("jetclu", 0.8*R,m,col,4,lw)."t 'jetclu (R*0.8)',".\
+                     entry("siscone", R,m,col,5,lw)."t 'siscone'"
 
 
-seriesA(col)=sprintf("jetalg(0.4) u 2:%d w l lt 1, jetalg(0.%d) u 2:%d w l lt 1 lw 2, jetalg(0.6) u 2:%d w l lt 1 lw 3, jetalg(0.8) u 2:%d w l lt 1 lw 4, jetalg(1.0) u 2:%d w l lt 1 lw 5",col,col,col,col,col)
+TWresc(alg,R,m,col,lw) = entry(alg,R,m,col,1,lw)."t 'top',".\
+                         entryW(alg,R,m,col-1,3,lw)."t 'W rescaled'"
