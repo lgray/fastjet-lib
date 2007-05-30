@@ -11,16 +11,19 @@ cam(R,m)    = sprintf("cam_%3.1f_RUK%s.res",R,(m==1)?"":"_noMI")
 antikt(R,m) = sprintf("antikt_%3.1f_RUK%s.res",R,(m==1)?"":"_noMI")
 siscone(R,m)= sprintf("siscone_%3.1f_f0.75_RUK%s.res",R,(m==1)?"":"_noMI")
 jetclu(R,m) = sprintf("jetclu_%3.1f_f0.75_%s.res",R,(m==1)?"voronoi_RUK":"RUK_noMI")
+jetclu01(R,m) = sprintf("jetclu_seed0.1_%3.1f_f0.75_%s.res",R,(m==1)?"voronoi_RUK":"RUK_noMI")
+jetclu05(R,m) = sprintf("jetclu_seed0.5_%3.1f_f0.75_%s.res",R,(m==1)?"voronoi_RUK":"RUK_noMI")
+jetclu20(R,m) = sprintf("jetclu_seed2.0_%3.1f_f0.75_%s.res",R,(m==1)?"voronoi_RUK":"RUK_noMI")
 
 
 # get a whole plot entry corresponding to the algorithm,R,m, column
 # line type and line width
-entry(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u 2:%d w histeps lt %d lw %d",\
+entry(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u 2:%d w l lt %d lw %d",\
                          alg,R,m,col,lt,lw)
 
 mW_mt=80.45/175.0
 
-entryW(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u ($2/mW_mt):($%d*mW_mt) w histeps lt %d lw %d", alg,R,m,col,lt,lw)
+entryW(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u ($2/mW_mt):($%d*mW_mt) w l lt %d lw %d", alg,R,m,col,lt,lw)
 
 # get a series of different R values
 series(alg,m,col,lt)=entry(alg,0.4,m,col,lt,1).",".\

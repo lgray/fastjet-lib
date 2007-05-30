@@ -598,6 +598,7 @@ void look_at_event(const vector<fj::PseudoJet> & event,
     median_pt_over_area = clust_seq->median_pt_per_unit_something(
                                    maxrap_for_median, rho_from_area_4vector);
   }
+  //cout << median_pt_over_area << endl;
 
   vector<fj::PseudoJet> jets;
 
