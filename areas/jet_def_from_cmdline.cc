@@ -26,11 +26,11 @@ JetDefinition jet_def_from_cmdline(const CmdLine & cmdline) {
     double f = cmdline.value("-f",0.5);
     if (cmdline.present("-midpoint")) {
       // MIDPOINT
-      double seed = cmdline.value("-seed",1);
+      double seed = cmdline.value("-seed",1.0);
       jet_def = new CDFMidPointPlugin(R, f, seed);
     } else if (cmdline.present("-jetclu")) {
       // JETCLU 
-      double seed = cmdline.value("-seed",1);
+      double seed = cmdline.value("-seed",1.0);
       jet_def = new CDFJetCluPlugin(R, f, seed);
     } else if (cmdline.present("-siscone")) {
       // SISCONE
