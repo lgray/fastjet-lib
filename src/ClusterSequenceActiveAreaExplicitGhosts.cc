@@ -29,6 +29,7 @@
 //ENDHEADER
 
 #include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
+#include<limits>
 
 using namespace std;
 
@@ -38,6 +39,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 typedef ClusterSequenceActiveAreaExplicitGhosts ClustSeqActAreaEG;
 
 
+int ClustSeqActAreaEG::_n_warn_dangerous_particles = 0;
 
 //----------------------------------------------------------------------
 ///
@@ -106,6 +108,36 @@ double ClustSeqActAreaEG::empty_area(double maxrap) const {
 //======================================================================
 // sort out the areas
 void ClustSeqActAreaEG::_post_process() {
+
+  // first check for danger signals.
+  // Establish largest ghost transverse momentum
+  _max_ghost_perp2 = 0.0;
+  for (int i = 0; i < _initial_n; i++) {
+    if (_is_pure_ghost[i] && _jets[i].perp2() > _max_ghost_perp2) 
+      _max_ghost_perp2 = _jets[i].perp2();
+  }
+
+  // now find out if any of the particles are close to danger
+  double danger_ratio = numeric_limits<double>::epsilon();
+  danger_ratio = danger_ratio * danger_ratio;
+  _has_dangerous_particles = false;
+  for (int i = 0; i < _initial_n; i++) {
+    if (_is_pure_ghost[i] && 
+        danger_ratio * _jets[i].perp2() <=  _max_ghost_perp2) {
+      _has_dangerous_particles = true;
+      break;
+    }
+  }
+
+  if (_has_dangerous_particles && 
+      _n_warn_dangerous_particles < _max_warn_dangerous_particles) {
+    cerr << "ClusterSequenceActiveAreaExplicitGhosts WARNING:" << endl
+         << "  ghosts not sufficiently soft wrt some of the input particles"; 
+    _n_warn_dangerous_particles++;
+    if (_n_warn_dangerous_particles == _max_warn_dangerous_particles) 
+      cerr << " (last such warning)";
+    cerr << endl;
+  }
 
   // sort out sizes
   _areas.resize(_history.size());

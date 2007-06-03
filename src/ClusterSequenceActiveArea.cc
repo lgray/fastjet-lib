@@ -34,6 +34,7 @@
 #include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
 #include<iostream>
 #include<vector>
+#include<sstream>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -106,6 +107,9 @@ void ClusterSequenceActiveArea::_initialise_AA (
   // set up the history entries for the initial particles (those
   // currently in _jets)
   _fill_initial_history();
+
+  // by default it does not...
+  _has_dangerous_particles = false;
   
   continue_running = true;
 }
@@ -125,6 +129,7 @@ void ClusterSequenceActiveArea::_run_AA (const GhostedAreaSpec & area_spec) {
     ClusterSequenceActiveAreaExplicitGhosts clust_seq(input_jets, 
                                                       jet_def(), area_spec);
 
+    _has_dangerous_particles |= clust_seq.has_dangerous_particles();
     if (irepeat == 0) {
       // take the non-ghost part of the history and put into our own
       // history.
@@ -546,7 +551,7 @@ void ClusterSequenceActiveArea::_transfer_areas(
   const vector<PseudoJet>       & gs_jets     = ghosted_seq.jets();
   vector<int>    gs_unique_hist_order = ghosted_seq.unique_history_order();
 
-  const double tolerance = 1e-13; // to decide when two jets are the same
+  const double tolerance = 1e-11; // to decide when two jets are the same
 
   int j = -1;
   int hist_index = -1;
@@ -597,8 +602,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
         // problem here... NB: a massive particle with zero pt may
         // have its pt changed when a ghost is added -- this is why we
         // also require the energy to be wrong before complaining
-        if (!_jets_have_same_perp_or_E(jet,refjet,tolerance))
-          throw Error("Could not match clustering sequence for an inclusive jet when reconstructing areas");
+        _throw_unless_jets_have_same_perp_or_E(jet, refjet, tolerance,
+                                               ghosted_seq);
 
 	// set the area at this clustering stage
 	our_areas[hist_index]  = area; 
@@ -625,8 +630,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
       const PseudoJet & refjet = _jets[_history[hist_index].jetp_index];
 
       // run sanity check 
-      if (!_jets_have_same_perp_or_E(jet,refjet,tolerance))
-        throw Error("Could not match clustering sequence for an exclusive jet when reconstructing areas");
+      _throw_unless_jets_have_same_perp_or_E(jet, refjet, tolerance,
+                                             ghosted_seq);
 
       // update area and our local index (maybe redundant since later
       // the descendants will reupdate it?)
@@ -697,22 +702,34 @@ void ClusterSequenceActiveArea::_transfer_areas(
 /// check if two jets have the same momentum to within the
 /// tolerance (and if pt's are not the same we're forgiving and
 /// look to see if the energy is the same)
-bool ClusterSequenceActiveArea::_jets_have_same_perp_or_E(
+void ClusterSequenceActiveArea::_throw_unless_jets_have_same_perp_or_E(
                                 const PseudoJet & jet, 
                                 const PseudoJet & refjet, 
-                                double tolerance) const {
+                                double tolerance,
+          const ClusterSequenceActiveAreaExplicitGhosts & jets_ghosted_seq
+) const {
+
   if (abs(jet.perp2()-refjet.perp2()) > 
       tolerance*max(jet.perp2(),refjet.perp2())
       && abs(jet.E()-refjet.E()) > tolerance*max(jet.E(),refjet.E())) {
-    cerr << jet.perp() << " " << refjet.perp() << " "
-         << jet.perp() - refjet.perp() << endl;
-    cerr << refjet.px() << " " 
+    ostringstream ostr;
+    ostr << "Could not match clustering sequence for an inclusive/exclusive jet when reconstructing areas" << endl;
+    ostr << "  Ref-Jet: "
+         << refjet.px() << " " 
          << refjet.py() << " " 
          << refjet.pz() << " " 
          << refjet.E() << endl;
-    return false;
+    ostr << "  New-Jet: "
+         << jet.px() << " " 
+         << jet.py() << " " 
+         << jet.pz() << " " 
+         << jet.E() << endl;
+    if (jets_ghosted_seq.has_dangerous_particles()) {
+      ostr << "  NB: some particles have pt too low wrt ghosts -- this may be the cause" << endl;}
+    //ostr << jet.perp() << " " << refjet.perp() << " "
+    //     << jet.perp() - refjet.perp() << endl;
+    throw Error(ostr.str());
   }
-  return true;
 }
 
 FASTJET_END_NAMESPACE
