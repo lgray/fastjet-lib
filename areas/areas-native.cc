@@ -115,15 +115,18 @@ int main (int argc, char ** argv) {
   int    nev     = cmdline.int_val("-nev",1);
   double ghost_area = cmdline.double_val("-ghost_area",cmdline.double_val("-cell_area",0.01));
   double ghost_etamax = cmdline.double_val("-ghost_etamax",6.0);
-  double grid_scatter = cmdline.double_val("-grid_scatter",0.0001);
+  double grid_scatter = cmdline.double_val("-grid_scatter",1.0);
   double kt_scatter   = cmdline.double_val("-kt_scatter",0.1);
   bool   print_jets = cmdline.present("-print_jets");
 
 
   // create the definitions for our jet finder and areas spec...
-  fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
-  fj::ActiveAreaSpec active_area_spec(ghost_etamax, 1, ghost_area, 
-                                      grid_scatter, kt_scatter);
+  //fj::JetDefinition jet_def(fj::kt_algorithm, ktR, strategy);
+  //fj::ActiveAreaSpec active_area_spec(ghost_etamax, 1, ghost_area, 
+  //                                    grid_scatter, kt_scatter);
+  fj::JetDefinition jet_def(fj::cambridge_algorithm, ktR, strategy);
+  /fj::ActiveAreaSpec active_area_spec(ghost_etamax, 1, ghost_area, 
+  //                                    grid_scatter, kt_scatter);
 
 
   for (int iev = 0; iev < nev; iev++) {

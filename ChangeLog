@@ -1,3 +1,17 @@
+2007-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceActiveArea.cc: 
+	  made error for unmatched sequences more explicit and provided a
+	  explanation of origin (based on has_dangerous_particles()
+	  below), when the suspected cause is particles with low pt.
+
+	  Also added (but did not test) has_dangerous_particles().
+	
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc|hh: 
+	  added max_ghost_perp2() and has_dangerous_particles() member
+	  functions, as well as an explicit warning (first few times) in
+	  cases which are dangerous (particle pt2 < ghost pt);
+
 2007-05-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* TODO: *** ADDED ***

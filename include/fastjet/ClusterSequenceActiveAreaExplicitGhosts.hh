@@ -109,6 +109,15 @@ public:
   /// returns the total area under study
   double total_area () const;
   
+  /// returns the largest squared transverse momentum among
+  /// all ghosts
+  double max_ghost_perp2() const {return _max_ghost_perp2;}
+
+  /// returns true if there are any particles whose transverse momentum
+  /// if so low that there's a risk of the ghosts having modified the
+  /// clustering sequence
+  bool has_dangerous_particles() const {return _has_dangerous_particles;}
+
 private:
 
   int    _n_ghosts;
@@ -116,6 +125,13 @@ private:
   std::vector<bool> _is_pure_ghost;
   std::vector<double> _areas;
   std::vector<PseudoJet> _area_4vectors;
+  
+  // things related to checks for dangerous particles
+  double _max_ghost_perp2;
+  bool   _has_dangerous_particles; 
+  static int _n_warn_dangerous_particles;
+  static const int _max_warn_dangerous_particles = 5;
+
   
   unsigned int _initial_hard_n;
 

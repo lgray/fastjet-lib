@@ -138,6 +138,11 @@ protected:
   valarray<double> _average_area, _average_area2;
   valarray<PseudoJet> _average_area_4vector;
 
+  /// returns true if there are any particles whose transverse momentum
+  /// if so low that there's a risk of the ghosts having modified the
+  /// clustering sequence
+  bool has_dangerous_particles() const {return _has_dangerous_particles;}
+
 private:
 
 
@@ -145,6 +150,8 @@ private:
 
   double _maxrap_for_area; // max rap where we put ghosts
   double _safe_rap_for_area; // max rap where we trust jet areas
+
+  bool   _has_dangerous_particles; 
 
 
   /// routine for extracting the tree in an order that will be independent
@@ -160,9 +167,11 @@ private:
   /// check if two jets have the same momentum to within the
   /// tolerance (and if pt's are not the same we're forgiving and
   /// look to see if the energy is the same)
-  bool _jets_have_same_perp_or_E(const PseudoJet & jet, 
-                                  const PseudoJet & refjet, 
-                                  double tolerance) const;
+  void _throw_unless_jets_have_same_perp_or_E(const PseudoJet & jet, 
+                                              const PseudoJet & refjet, 
+                                              double tolerance,
+             const ClusterSequenceActiveAreaExplicitGhosts & jets_ghosted_seq
+                                              ) const;
 
   /// since we are playing nasty games with seeds, we should warn
   /// the user a few times
