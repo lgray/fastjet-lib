@@ -1,3 +1,18 @@
+2007-06-04  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/internal/LimitedWarning.hh: *** ADDED ***
+	  added this for dealing with warnings that should appear a
+	  limited number of times
+
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc|hh: 
+	  fixed bug (a missing "!") in determination of
+	  has_dangerous_particles, and switched warnings over to the
+	  LimitedWarning class.
+	
+	* src/ClusterSequenceAreaBase.cc: 
+	  added warnings about jet alg used in median determination (if
+	  not kt, cam)
+
 2007-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequenceActiveArea.cc: 

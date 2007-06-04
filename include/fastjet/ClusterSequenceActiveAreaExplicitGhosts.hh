@@ -34,6 +34,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/GhostedAreaSpec.hh"
+#include "fastjet/internal/LimitedWarning.hh"
 #include<iostream>
 #include<vector>
 
@@ -129,8 +130,10 @@ private:
   // things related to checks for dangerous particles
   double _max_ghost_perp2;
   bool   _has_dangerous_particles; 
-  static int _n_warn_dangerous_particles;
-  static const int _max_warn_dangerous_particles = 5;
+  static LimitedWarning _warnings;
+
+  //static int _n_warn_dangerous_particles;
+  //static const int _max_warn_dangerous_particles = 5;
 
   
   unsigned int _initial_hard_n;

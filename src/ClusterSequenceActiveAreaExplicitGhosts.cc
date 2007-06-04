@@ -39,7 +39,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 typedef ClusterSequenceActiveAreaExplicitGhosts ClustSeqActAreaEG;
 
 
-int ClustSeqActAreaEG::_n_warn_dangerous_particles = 0;
+LimitedWarning ClustSeqActAreaEG::_warnings;
 
 //----------------------------------------------------------------------
 ///
@@ -122,22 +122,14 @@ void ClustSeqActAreaEG::_post_process() {
   danger_ratio = danger_ratio * danger_ratio;
   _has_dangerous_particles = false;
   for (int i = 0; i < _initial_n; i++) {
-    if (_is_pure_ghost[i] && 
+    if (!_is_pure_ghost[i] && 
         danger_ratio * _jets[i].perp2() <=  _max_ghost_perp2) {
       _has_dangerous_particles = true;
       break;
     }
   }
 
-  if (_has_dangerous_particles && 
-      _n_warn_dangerous_particles < _max_warn_dangerous_particles) {
-    cerr << "ClusterSequenceActiveAreaExplicitGhosts WARNING:" << endl
-         << "  ghosts not sufficiently soft wrt some of the input particles"; 
-    _n_warn_dangerous_particles++;
-    if (_n_warn_dangerous_particles == _max_warn_dangerous_particles) 
-      cerr << " (last such warning)";
-    cerr << endl;
-  }
+  if (_has_dangerous_particles) _warnings.warn("ClusterSequenceActiveAreaExplicitGhosts: \n  ghosts not sufficiently soft wrt some of the input particles");
 
   // sort out sizes
   _areas.resize(_history.size());

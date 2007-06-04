@@ -32,6 +32,7 @@
 #define __FASTJET_CLUSTERSEQUENCEAREABASE_HH__
 
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/internal/LimitedWarning.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -140,6 +141,13 @@ public:
   }
 
 
+private:
+  /// handle warning messages
+  static LimitedWarning _warnings;
+
+  /// check the jet algorithm is suitable (and if not issue a warning)
+  void _check_jet_alg_good_for_median() const;
+  
 };
 
 

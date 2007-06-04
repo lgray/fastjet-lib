@@ -1,7 +1,7 @@
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2006-2007, Matteo Cacciari, Gavin Salam and Gregory Soyez
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -28,18 +28,39 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
-#define __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
 
-#include "fastjet/ClusterSequenceAreaBase.hh"
+#ifndef __FASTJET_LIMITEDWARNING_HH__
+#define __FASTJET_LIMITEDWARNING_HH__
 
-FASTJET_BEGIN_NAMESPACE
+#include<iostream>
+#include<string>
 
-//----- backwards compatibility with version 2.1 ---------------
-typedef ClusterSequenceAreaBase ClusterSequenceWithArea;
+/// class to provide facilities for giving warnings up to some maximum
+/// number of times
+class LimitedWarning {
+public:
+  
+  /// constructor that provides a default maximum number of warnings
+  LimitedWarning() : _max_warn(_max_warn_default), _n_warn_so_far(0) {}
 
-FASTJET_END_NAMESPACE
+  /// constructor that provides a used-set max number of warnings
+  LimitedWarning(int max_warn) : _max_warn(max_warn), _n_warn_so_far(0) {}
 
-#endif // __FASTJET_CLUSTERSEQUENCEWITHAREA_HH__
+  /// output a warning to ostr
+  void warn(const std::string & warning, std::ostream & ostr = std::cerr) {
+    if (_n_warn_so_far < _max_warn) {
+      ostr << "WARNING: ";
+      ostr << warning;
+      _n_warn_so_far++;
+      if (_n_warn_so_far == _max_warn) ostr << " (LAST SUCH WARNING)";
+      ostr << std::endl;
+    }
+  }
 
+private:
+  int _max_warn, _n_warn_so_far;
+  static const int _max_warn_default = 5;
+  
+};
 
+#endif // __FASTJET_LIMITEDWARNING_HH__

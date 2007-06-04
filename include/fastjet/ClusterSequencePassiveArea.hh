@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: ClusterSequencePassiveArea.hh 626 2007-05-09 15:23:02Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2007, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //

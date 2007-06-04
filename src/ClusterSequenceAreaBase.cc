@@ -1,8 +1,46 @@
+
+//STARTHEADER
+// $Id$
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+
+
+
 #include "fastjet/ClusterSequenceAreaBase.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
 using namespace std;
+
+
+/// allow for warnings
+LimitedWarning ClusterSequenceAreaBase::_warnings;
 
 //----------------------------------------------------------------------
 /// return the total area, up to |y|<maxrap, that is free of jets.
@@ -33,6 +71,8 @@ double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(double maxrap) c
 /// jets each of area (0.55 * pi R^2).
 double ClusterSequenceAreaBase::median_pt_per_unit_something(
                 double maxrap, bool use_area_4vector) const {
+
+  _check_jet_alg_good_for_median();
 
   vector<double> pt_over_areas;
   vector<PseudoJet> incl_jets = inclusive_jets();
@@ -75,6 +115,8 @@ double ClusterSequenceAreaBase::median_pt_per_unit_something(
 void ClusterSequenceAreaBase::get_median_rho_and_sigma(
             double maxrap, bool use_area_4vector,
             double & median, double & sigma, double & mean_area) {
+
+  _check_jet_alg_good_for_median();
 
   vector<double> pt_over_areas;
   vector<PseudoJet> incl_jets = inclusive_jets();
@@ -136,6 +178,17 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   mean_area = total_area / total_njets;
   sigma  = error * sqrt(mean_area);
 }
+
+
+/// check the jet algorithm is suitable (and if not issue a warning)
+void ClusterSequenceAreaBase::_check_jet_alg_good_for_median() const {
+  if (jet_def().jet_finder() != kt_algorithm
+      && jet_def().jet_finder() != cambridge_algorithm
+      && jet_def().jet_finder() !=  cambridge_for_passive_algorithm) {
+    _warnings.warn("ClusterSequenceAreaBase: jet_def being used may not be suitable for estimating diffuse backgrounds (good options are kt, cam)");
+  }
+}
+
 
 
 FASTJET_END_NAMESPACE

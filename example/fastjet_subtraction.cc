@@ -107,6 +107,8 @@ int main (int argc, char ** argv) {
   double R = 0.7;
   fastjet::Strategy strategy = fastjet::Best;
   fastjet::JetDefinition jet_def(fastjet::kt_algorithm, R, strategy);
+  //fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, R, strategy);
+  //fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, R, strategy);
 
   // create an object that specifies how we to define the (active) area
   double ghost_etamax = 6.0;
@@ -114,8 +116,8 @@ int main (int argc, char ** argv) {
   double ghost_area    = 0.01;
   fastjet::ActiveAreaSpec area_spec(ghost_etamax, active_area_repeats, 
                                     ghost_area);
-  //fastjet::AreaDefinition area_def(area_spec);
-  fastjet::AreaDefinition area_def(fastjet::VoronoiAreaSpec(1.0));
+  fastjet::AreaDefinition area_def(area_spec);
+  //fastjet::AreaDefinition area_def(fastjet::VoronoiAreaSpec(1.0));
 
   // run the jet clustering with the above jet definition. hard event first
   fastjet::ClusterSequenceArea clust_seq(hard_event, jet_def, area_def);
