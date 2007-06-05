@@ -53,6 +53,10 @@ subtraction-tests: subtraction-tests.o $(OBJS) ../lib/libfastjet.a
 subtraction-correlation: subtraction-correlation.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-correlation subtraction-correlation.o $(OBJS)  $(LDFLAGS)
 
+subtraction-correl-pull: subtraction-correl-pull.o 
+	$(CXX)  -o subtraction-correl-pull subtraction-correl-pull.o 
+
+
 subtraction-tests-mass: subtraction-tests-mass.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-mass subtraction-tests-mass.o $(OBJS)  $(LDFLAGS)
 
@@ -103,6 +107,9 @@ jet_def_from_cmdline.o: ../include/fastjet/JetDefinition.hh
 jet_def_from_cmdline.o: ../include/fastjet/internal/numconsts.hh
 jet_def_from_cmdline.o: ../include/fastjet/internal/base.hh
 jet_def_from_cmdline.o: ../include/fastjet/PseudoJet.hh
+jet_def_from_cmdline.o: ../include/fastjet/AreaDefinition.hh
+jet_def_from_cmdline.o: ../include/fastjet/GhostedAreaSpec.hh
+jet_def_from_cmdline.o: ../include/fastjet/internal/BasicRandom.hh
 areas-hist.o: ../include/fastjet/PseudoJet.hh
 areas-hist.o: ../include/fastjet/internal/numconsts.hh
 areas-hist.o: ../include/fastjet/internal/base.hh
@@ -111,6 +118,7 @@ areas-hist.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 areas-hist.o: ../include/fastjet/Error.hh ../include/fastjet/JetDefinition.hh
 areas-hist.o: ../include/fastjet/ClusterSequenceArea.hh
 areas-hist.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+areas-hist.o: ../include/fastjet/internal/LimitedWarning.hh
 areas-hist.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 areas-hist.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 areas-hist.o: ../include/fastjet/GhostedAreaSpec.hh
@@ -138,6 +146,7 @@ areas-native.o: ../include/fastjet/Error.hh
 areas-native.o: ../include/fastjet/JetDefinition.hh
 areas-native.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 areas-native.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+areas-native.o: ../include/fastjet/internal/LimitedWarning.hh
 areas-native.o: ../include/fastjet/GhostedAreaSpec.hh
 areas-native.o: ../include/fastjet/internal/BasicRandom.hh CmdLine.hh
 areas-histogramming.o: ../include/fastjet/PseudoJet.hh
@@ -149,6 +158,7 @@ areas-histogramming.o: ../include/fastjet/Error.hh
 areas-histogramming.o: ../include/fastjet/JetDefinition.hh
 areas-histogramming.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 areas-histogramming.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+areas-histogramming.o: ../include/fastjet/internal/LimitedWarning.hh
 areas-histogramming.o: ../include/fastjet/GhostedAreaSpec.hh
 areas-histogramming.o: ../include/fastjet/internal/BasicRandom.hh CmdLine.hh
 areas-test-mean-class.o: ../include/fastjet/PseudoJet.hh
@@ -160,6 +170,7 @@ areas-test-mean-class.o: ../include/fastjet/Error.hh
 areas-test-mean-class.o: ../include/fastjet/JetDefinition.hh
 areas-test-mean-class.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 areas-test-mean-class.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+areas-test-mean-class.o: ../include/fastjet/internal/LimitedWarning.hh
 areas-test-mean-class.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 areas-test-mean-class.o: ../include/fastjet/GhostedAreaSpec.hh
 areas-test-mean-class.o: ../include/fastjet/internal/BasicRandom.hh
@@ -175,27 +186,35 @@ subtraction-tests.o: ../include/fastjet/Error.hh
 subtraction-tests.o: ../include/fastjet/JetDefinition.hh
 subtraction-tests.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 subtraction-tests.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+subtraction-tests.o: ../include/fastjet/internal/LimitedWarning.hh
 subtraction-tests.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 subtraction-tests.o: ../include/fastjet/GhostedAreaSpec.hh
 subtraction-tests.o: ../include/fastjet/internal/BasicRandom.hh
 subtraction-tests.o: ../include/fastjet/ActiveAreaSpec.hh
 subtraction-tests.o: ../include/fastjet/ClusterSequenceWithArea.hh CmdLine.hh
-subtraction-tests.o: jet_def_from_cmdline.hh CSHisto.hh
-subtraction-tests-mass.o: ../include/fastjet/PseudoJet.hh
-subtraction-tests-mass.o: ../include/fastjet/internal/numconsts.hh
-subtraction-tests-mass.o: ../include/fastjet/internal/base.hh
+subtraction-tests.o: jet_def_from_cmdline.hh
+subtraction-tests.o: ../include/fastjet/AreaDefinition.hh CSHisto.hh
+subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceArea.hh
+subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceAreaBase.hh
 subtraction-tests-mass.o: ../include/fastjet/ClusterSequence.hh
 subtraction-tests-mass.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+subtraction-tests-mass.o: ../include/fastjet/internal/numconsts.hh
+subtraction-tests-mass.o: ../include/fastjet/internal/base.hh
+subtraction-tests-mass.o: ../include/fastjet/PseudoJet.hh
 subtraction-tests-mass.o: ../include/fastjet/Error.hh
 subtraction-tests-mass.o: ../include/fastjet/JetDefinition.hh
+subtraction-tests-mass.o: ../include/fastjet/internal/LimitedWarning.hh
 subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceActiveArea.hh
-subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceAreaBase.hh
 subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 subtraction-tests-mass.o: ../include/fastjet/GhostedAreaSpec.hh
 subtraction-tests-mass.o: ../include/fastjet/internal/BasicRandom.hh
 subtraction-tests-mass.o: ../include/fastjet/ActiveAreaSpec.hh
 subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceWithArea.hh
-subtraction-tests-mass.o: CmdLine.hh CSHisto.hh
+subtraction-tests-mass.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+subtraction-tests-mass.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
+subtraction-tests-mass.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
+subtraction-tests-mass.o: ../include/fastjet/AreaDefinition.hh CmdLine.hh
+subtraction-tests-mass.o: CSHisto.hh jet_def_from_cmdline.hh
 subtraction-tests-inclpt.o: ../include/fastjet/PseudoJet.hh
 subtraction-tests-inclpt.o: ../include/fastjet/internal/numconsts.hh
 subtraction-tests-inclpt.o: ../include/fastjet/internal/base.hh
@@ -205,6 +224,7 @@ subtraction-tests-inclpt.o: ../include/fastjet/Error.hh
 subtraction-tests-inclpt.o: ../include/fastjet/JetDefinition.hh
 subtraction-tests-inclpt.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 subtraction-tests-inclpt.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+subtraction-tests-inclpt.o: ../include/fastjet/internal/LimitedWarning.hh
 subtraction-tests-inclpt.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 subtraction-tests-inclpt.o: ../include/fastjet/GhostedAreaSpec.hh
 subtraction-tests-inclpt.o: ../include/fastjet/internal/BasicRandom.hh
@@ -220,6 +240,7 @@ areas-2point.o: ../include/fastjet/Error.hh
 areas-2point.o: ../include/fastjet/JetDefinition.hh
 areas-2point.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 areas-2point.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+areas-2point.o: ../include/fastjet/internal/LimitedWarning.hh
 areas-2point.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 areas-2point.o: ../include/fastjet/GhostedAreaSpec.hh
 areas-2point.o: ../include/fastjet/internal/BasicRandom.hh
@@ -232,6 +253,17 @@ subtraction-correlation.o: ../include/fastjet/ClusterSequence.hh
 subtraction-correlation.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 subtraction-correlation.o: ../include/fastjet/Error.hh
 subtraction-correlation.o: ../include/fastjet/JetDefinition.hh
-subtraction-correlation.o: ../include/fastjet/ClusterSequenceWithArea.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequenceArea.hh
 subtraction-correlation.o: ../include/fastjet/ClusterSequenceAreaBase.hh
-subtraction-correlation.o: CmdLine.hh jet_def_from_cmdline.hh CSHisto.hh
+subtraction-correlation.o: ../include/fastjet/internal/LimitedWarning.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequenceActiveArea.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+subtraction-correlation.o: ../include/fastjet/GhostedAreaSpec.hh
+subtraction-correlation.o: ../include/fastjet/internal/BasicRandom.hh
+subtraction-correlation.o: ../include/fastjet/ActiveAreaSpec.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequenceWithArea.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
+subtraction-correlation.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
+subtraction-correlation.o: ../include/fastjet/AreaDefinition.hh CmdLine.hh
+subtraction-correlation.o: jet_def_from_cmdline.hh CSHisto.hh
