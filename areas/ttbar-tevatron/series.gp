@@ -32,8 +32,9 @@ entryW(alg,R,m,col,lt,lw)=sprintf("%s(%f,%d) u ($2/mW_mt):($%d*mW_mt) w l lt %d 
 series(alg,m,col,lt)=entry(alg,0.4,m,col,lt,1)."t '".alg." R = 0.4'".",".\
                      entry(alg,0.5,m,col,lt,2)."t '".alg." R = 0.5'".",".\
                      entry(alg,0.6,m,col,lt,3)."t '".alg." R = 0.6'".",".\
-                     entry(alg,0.8,m,col,lt,4)."t '".alg." R = 0.8'".",".\
-                     entry(alg,1.0,m,col,lt,5)."t '".alg." R = 1.0'"
+                     entry(alg,0.7,m,col,lt,4)."t '".alg." R = 0.7'".",".\
+                     entry(alg,0.8,m,col,lt,5)."t '".alg." R = 0.8'".",".\
+                     entry(alg,1.0,m,col,lt,6)."t '".alg." R = 1.0'"
 
 # get a series of different algs
 algs(R,m,col,lw) =   entry("kt",      R,m,col,1,lw)."t 'k_t',".\

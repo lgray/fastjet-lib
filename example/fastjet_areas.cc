@@ -103,8 +103,8 @@ int main (int argc, char ** argv) {
   //fastjet::ClusterSequencePassiveArea clust_seq(input_particles, jet_def, 
   //                                              area_def.active_spec());
 
-  cout << clust_seq.empty_area(4.0) << endl;
-  cout << clust_seq.n_empty_jets(4.0) << endl;
+  //cout << clust_seq.empty_area(4.0) << endl;
+  //cout << clust_seq.n_empty_jets(4.0) << endl;
 
   // tell the user what was done
   cout << "Jet definition was: " << jet_def.description() << endl;

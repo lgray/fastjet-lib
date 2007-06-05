@@ -1,14 +1,15 @@
-#------------------------------------------------------------------------
-#                      FastJet release 2.1.0
-#              Written by Matteo Cacciari and Gavin Salam		   
+#--------------------------------------------------------------------------
+#                      FastJet release 2.2.0beta
+#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
 # Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
-# using fast geometric algorithms, with optional external jet-finder    
-# plugins. Please cite hep-ph/0512210 if you use this code.             
+# using fast geometric algorithms, with area measures and optional external
+# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-#-----------------------------------------------------------------------
+# and CGAL: http://www.cgal.org/.
+#-------------------------------------------------------------------------
 Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
 Strategy adopted by FastJet was N2Tiled
 
@@ -38,43 +39,48 @@ jet #        rapidity             phi              pt  n constituents
     7     -4.71909257      4.09173629      5.57326514       15
     8      3.42713139      5.74362063      5.17254118       13
     9     -4.83615264      2.20502275      5.02711586       12
-#------------------------------------------------------------------------
-#                      FastJet release 2.1.0
-#              Written by Matteo Cacciari and Gavin Salam		   
+#--------------------------------------------------------------------------
+#                      FastJet release 2.2.0beta
+#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
 # Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
-# using fast geometric algorithms, with optional external jet-finder    
-# plugins. Please cite hep-ph/0512210 if you use this code.             
+# using fast geometric algorithms, with area measures and optional external
+# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-#-----------------------------------------------------------------------
-Strategy adopted by FastJet was N2MinHeapTiled
+# and CGAL: http://www.cgal.org/.
+#-------------------------------------------------------------------------
+Jet definition was: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
+Area definition was: Passive area (optimal alg. based on jet.def.), where relevant with ghosts of area 0.0473947 (had requested 0.05), placed up to y = 7, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
+Strategy adopted by FastJet was N2Tiled
 
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
  ijet   rap      phi        Pt         area  +-   err
-    0  -0.86731  2.90511    983.387    2.490 +-  0.096
-    1   0.22380  6.04226    910.288    4.029 +-  0.140
-    2  -1.16521  6.04589     70.789    4.641 +-  0.252
-    3  -2.34732  1.25431     10.723    2.949 +-  0.019
-    4  -1.19480  0.80734      8.293    2.440 +-  0.052
-    5  -1.71897  4.01955      8.164    2.537 +-  0.201
-    6  -4.71909  4.09174      5.573    4.215 +-  0.453
-    7   3.42713  5.74362      5.173    3.418 +-  0.221
-    8  -4.83615  2.20502      5.027    4.152 +-  0.201
+    0  -0.86731  2.90511    983.387    2.592 +-  0.000
+    1   0.22380  6.04226    910.288    4.141 +-  0.000
+    2  -1.16521  6.04589     70.789    4.141 +-  0.000
+    3  -2.34732  1.25431     10.723    2.826 +-  0.000
+    4  -1.19480  0.80734      8.293    2.533 +-  0.000
+    5  -1.71897  4.01955      8.164    2.898 +-  0.000
+    6  -4.71909  4.09174      5.573    4.315 +-  0.000
+    7   3.42713  5.74362      5.173    3.586 +-  0.000
+    8  -4.83615  2.20502      5.027    4.985 +-  0.000
 
-#------------------------------------------------------------------------
-#                      FastJet release 2.1.0
-#              Written by Matteo Cacciari and Gavin Salam		   
+0
+#--------------------------------------------------------------------------
+#                      FastJet release 2.2.0beta
+#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
 # Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
-# using fast geometric algorithms, with optional external jet-finder    
-# plugins. Please cite hep-ph/0512210 if you use this code.             
+# using fast geometric algorithms, with area measures and optional external
+# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-#-----------------------------------------------------------------------
+# and CGAL: http://www.cgal.org/.
+#-------------------------------------------------------------------------
 Ran CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
@@ -92,7 +98,7 @@ jet #        rapidity             phi              pt  n constituents
 138 particles unclustered
 
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-#                    SISCone   version 1.1.1                       o
+#                    SISCone   version 1.1.2-devel                 o
 #              http://projects.hepforge.org/siscone                o
 #                                                                  o
 # This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
@@ -100,10 +106,10 @@ jet #        rapidity             phi              pt  n constituents
 # It is released under the terms of the GNU General Public License o
 #                                                                  o
 # A description of the algorithm is available in the arXiv         o
-# preprint hep-ph/0702nnn. Please cite it if you use SISCone       o
+# preprint 0704.0292[hep-ph]. Please cite it if you use SISCone.   o
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
-Ran SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off
+Ran SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off, SM stop scale = 0
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
 jet #        rapidity             phi              pt  n constituents
