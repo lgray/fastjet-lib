@@ -148,7 +148,7 @@ int main (int argc, char ** argv) {
   output << "# jet_def: " << jet_def.description() << endl;
   output << "# area_def: " << area_def.description() << endl;
   output << "# rho_jet_def: " << rho_jet_def.description() << endl;
-  output << "# rho_area_def: " << rho_jet_def.description() << endl;
+  output << "# rho_area_def: " << rho_area_def.description() << endl;
 
 
 
@@ -256,23 +256,28 @@ int main (int argc, char ** argv) {
   for (int i = 0; i < 2; i++) {
     double area_full = full_clust.area(full_jets[i]);
     double area_hard = hard_clust.area(hard_jets[i]);
-    output << hard_jets[i].perp() << " " 
+    output 
+      // hard: 1-6
+           << hard_jets[i].perp() << " " 
            << hard_jets[i].perp() - area_hard*rho_UE<< " "
            << sqrt(area_hard)*sigma_UE << " "
            << area_hard  << " "
            << rho_UE  << " "
            << sigma_UE  << " "
-      //
+      // full: 7-12
            << full_jets[i].perp() << " " 
            << full_jets[i].perp() - area_full*rho<< " "
            << sqrt(area_full)*sigma << " "
            << area_full  << " "
            << rho  << " "
            << sigma  << " "
-      //
+      // event info: 13-15
            << rho_PU  << " "
            << sigma_PU  << " "
-           << direct_rho << endl;
+           << direct_rho << " "
+      // distance between hard & full jets (matching quality measure): 16
+           << sqrt(hard_jets[i].squared_distance(full_jets[i])) << " "
+           << endl;
   }
 
   } // iev
