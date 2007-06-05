@@ -1,6 +1,11 @@
+#ifndef __SIMPLEHIST_HH__
+#define __SIMPLEHIST_HH__
+
 #include<valarray>
 #include<string>
 #include<cmath>
+#include<iostream>
+#include<cassert>
 
 class SimpleHist {
 public:
@@ -225,3 +230,149 @@ inline SimpleHist pow2(const SimpleHist & hist) {
   return result;
 }
 
+/// output the histogram to standard output -- an operator<< might
+/// have seemed nice, but less easy to generalize to multiple
+/// histograms
+inline void output(const SimpleHist & hist0, std::ostream * ostr = (&std::cout)) {
+  for (unsigned i = 0; i < hist0.size(); i++) {
+    *ostr << hist0.binlo(i)  << " " 
+          << hist0.binmid(i) << " "
+          << hist0.binhi(i) << " "
+          << hist0[i] << std::endl;
+  }
+}
+
+
+inline void output(const SimpleHist & hist0, 
+                   const SimpleHist & hist1, 
+                   std::ostream * ostr = (&std::cout)) {
+  assert(hist0.size() == hist1.size() && 
+         hist0.min()  == hist1.min() &&
+         hist0.max()  == hist1.max());
+  for (unsigned i = 0; i < hist0.size(); i++) {
+    *ostr << hist0.binlo(i)  << " " 
+          << hist0.binmid(i) << " "
+          << hist0.binhi(i) << " "
+          << hist0[i] << " "
+          << hist1[i] << " "
+          << std::endl;
+  }
+}
+
+inline void output(const SimpleHist & hist0, 
+                   const SimpleHist & hist1, 
+                   const SimpleHist & hist2, 
+                   std::ostream * ostr = (&std::cout)) {
+  assert(hist0.size() == hist1.size() && 
+         hist0.min()  == hist1.min() &&
+         hist0.max()  == hist1.max());
+  assert(hist0.size() == hist2.size() && 
+         hist0.min()  == hist2.min() &&
+         hist0.max()  == hist2.max());
+  for (unsigned i = 0; i < hist0.size(); i++) {
+    *ostr << hist0.binlo(i)  << " " 
+          << hist0.binmid(i) << " "
+          << hist0.binhi(i) << " "
+          << hist0[i] << " "
+          << hist1[i] << " "
+          << hist2[i] << " "
+          << std::endl;
+  }
+}
+
+
+inline void output(const SimpleHist & hist0, 
+                   const SimpleHist & hist1, 
+                   const SimpleHist & hist2, 
+                   const SimpleHist & hist3, 
+                   std::ostream * ostr = (&std::cout)) {
+  assert(hist0.size() == hist1.size() && 
+         hist0.min()  == hist1.min() &&
+         hist0.max()  == hist1.max());
+  assert(hist0.size() == hist2.size() && 
+         hist0.min()  == hist2.min() &&
+         hist0.max()  == hist2.max());
+  assert(hist0.size() == hist3.size() && 
+         hist0.min()  == hist3.min() &&
+         hist0.max()  == hist3.max());
+  for (unsigned i = 0; i < hist0.size(); i++) {
+    *ostr << hist0.binlo(i)  << " " 
+          << hist0.binmid(i) << " "
+          << hist0.binhi(i) << " "
+          << hist0[i] << " "
+          << hist1[i] << " "
+          << hist2[i] << " "
+          << hist3[i] << " "
+          << std::endl;
+  }
+}
+
+inline void output(const SimpleHist & hist0, 
+                   const SimpleHist & hist1, 
+                   const SimpleHist & hist2, 
+                   const SimpleHist & hist3, 
+                   const SimpleHist & hist4, 
+                   std::ostream * ostr = (&std::cout)) {
+  assert(hist0.size() == hist1.size() && 
+         hist0.min()  == hist1.min() &&
+         hist0.max()  == hist1.max());
+  assert(hist0.size() == hist2.size() && 
+         hist0.min()  == hist2.min() &&
+         hist0.max()  == hist2.max());
+  assert(hist0.size() == hist3.size() && 
+         hist0.min()  == hist3.min() &&
+         hist0.max()  == hist3.max());
+  assert(hist0.size() == hist4.size() && 
+         hist0.min()  == hist4.min() &&
+         hist0.max()  == hist4.max());
+  for (unsigned i = 0; i < hist0.size(); i++) {
+    *ostr << hist0.binlo(i)  << " " 
+          << hist0.binmid(i) << " "
+          << hist0.binhi(i) << " "
+          << hist0[i] << " "
+          << hist1[i] << " "
+          << hist2[i] << " "
+          << hist3[i] << " "
+          << hist4[i] << " "
+          << std::endl;
+  }
+}
+
+inline void output(const SimpleHist & hist0, 
+                   const SimpleHist & hist1, 
+                   const SimpleHist & hist2, 
+                   const SimpleHist & hist3, 
+                   const SimpleHist & hist4, 
+                   const SimpleHist & hist5, 
+                   std::ostream * ostr = (&std::cout)) {
+  assert(hist0.size() == hist1.size() && 
+         hist0.min()  == hist1.min() &&
+         hist0.max()  == hist1.max());
+  assert(hist0.size() == hist2.size() && 
+         hist0.min()  == hist2.min() &&
+         hist0.max()  == hist2.max());
+  assert(hist0.size() == hist3.size() && 
+         hist0.min()  == hist3.min() &&
+         hist0.max()  == hist3.max());
+  assert(hist0.size() == hist4.size() && 
+         hist0.min()  == hist4.min() &&
+         hist0.max()  == hist4.max());
+  assert(hist0.size() == hist5.size() && 
+         hist0.min()  == hist5.min() &&
+         hist0.max()  == hist5.max());
+  for (unsigned i = 0; i < hist0.size(); i++) {
+    *ostr << hist0.binlo(i)  << " " 
+          << hist0.binmid(i) << " "
+          << hist0.binhi(i) << " "
+          << hist0[i] << " "
+          << hist1[i] << " "
+          << hist2[i] << " "
+          << hist3[i] << " "
+          << hist4[i] << " "
+          << hist5[i] << " "
+          << std::endl;
+  }
+}
+
+
+#endif // __SIMPLEHIST_HH__
