@@ -590,13 +590,22 @@ void ClusterSequenceActiveArea::_transfer_areas(
 	// get next "combined-particle" index in our own history
 	// making sure we don't go beyond its bounds (if we do
 	// then we're in big trouble anyway...)
-	while (++j < static_cast<int>(_history.size())) {
+	while (++j < int(_history.size())) {
 	  hist_index = unique_hist_order[j];
 	  if (hist_index >= _initial_n) break;}
 
-	// sanity check 
-	const PseudoJet & refjet = 
-	  _jets[_history[_history[hist_index].parent1].jetp_index];
+        // sanity checking -- do not overrun
+        if (j >= int(_history.size())) throw Error("ClusterSequenceActiveArea: overran reference array in diB matching");
+
+        // sanity check -- make sure we are taking about the same 
+        // jet in reference and new sequences
+        int refjet_index = _history[_history[hist_index].parent1].jetp_index;
+        assert(refjet_index >= 0 && refjet_index < int(_jets.size()));
+	const PseudoJet & refjet = _jets[refjet_index];
+
+      //cerr << "Inclusive" << endl;
+      //cerr << gs_history[parent1].jetp_index << " " << gs_jets.size() << endl;
+      //cerr << _history[_history[hist_index].parent1].jetp_index << " " << _jets.size() << endl;
 
         // If pt disagrees check E; if they both disagree there's a
         // problem here... NB: a massive particle with zero pt may
@@ -622,10 +631,22 @@ void ClusterSequenceActiveArea::_transfer_areas(
 	     !ghosted_seq.is_pure_ghost(parent2)) {
 
       // get next "combined-particle" index in our own history
-      while (++j < static_cast<int>(_history.size())) {
+      while (++j < int(_history.size())) {
 	hist_index = unique_hist_order[j];
 	if (hist_index >= _initial_n) break;}
       
+      // sanity checking -- do not overrun
+      if (j >= int(_history.size())) throw Error("ClusterSequenceActiveArea: overran reference array in dij matching");
+
+      // make sure that our reference history entry is also for
+      // an exclusive (dij) clustering (otherwise the comparison jet
+      // will not exist)
+      if (_history[hist_index].parent2 == BeamJet) throw Error("ClusterSequenceActiveArea: could not match clustering sequences (encountered dij matched with diB)");
+
+      //cerr << "Exclusive: hist_index,hist_size: " << hist_index << " " << _history.size()<< endl;
+      //cerr << gs_hist.jetp_index << " " << gs_jets.size() << endl;
+      //cerr << _history[hist_index].jetp_index << " " << _jets.size() << endl;
+
       const PseudoJet & jet = gs_jets[gs_hist.jetp_index];
       const PseudoJet & refjet = _jets[_history[hist_index].jetp_index];
 

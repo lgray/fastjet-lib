@@ -1,3 +1,15 @@
+2007-06-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc: 
+	  amplified warning message.
+	
+	* src/ClusterSequenceActiveArea.cc: 
+	  added extra checking when matching different sequences (bounds,
+	  making sure we match dij with dij and not dij with diB).
+
+	* include/fastjet/JetDefinition.hh: 
+	  added enum entry for the genkt_algorithm
+
 2007-06-05  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* test-script-output-orig.txt

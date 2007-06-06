@@ -129,7 +129,7 @@ void ClustSeqActAreaEG::_post_process() {
     }
   }
 
-  if (_has_dangerous_particles) _warnings.warn("ClusterSequenceActiveAreaExplicitGhosts: \n  ghosts not sufficiently soft wrt some of the input particles");
+  if (_has_dangerous_particles) _warnings.warn("ClusterSequenceActiveAreaExplicitGhosts: \n  ghosts not sufficiently soft wrt some of the input particles\n  a common cause is (unphysical?) input particles with pt=0 but finite rapidity");
 
   // sort out sizes
   _areas.resize(_history.size());

@@ -83,9 +83,16 @@ enum JetFinder {
   ///       dij = min(1/kti^2,1/ktj^2) Delta R_{ij}^2 / R^2
   ///       diB = 1/kti^2
   antikt_algorithm=2, 
+  /// like the k_t but with distance measures 
+  ///       dij = min(kti^{2p},ktj^{2p}) Delta R_{ij}^2 / R^2
+  ///       diB = 1/kti^{2p}
+  genkt_algorithm=3, 
   /// a version of cambridge with a special distance measure for particles
   /// whose pt is < extra_param()
   cambridge_for_passive_algorithm=11,
+  /// a version of genkt with a special distance measure for particles
+  /// whose pt is < extra_param() [relevant for passive areas when p<=0]
+  genkt_for_passive_algorithm=13, 
   /// any plugin algorithm supplied by the user
   plugin_algorithm = 99
 };
