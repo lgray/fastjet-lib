@@ -26,7 +26,7 @@ private:
   vector<TH2F *> _jets;
   TH2F * _background;
 public:
-  JetHist(const string & filename);
+  JetHist(const string & filename, double etamax=6.0, int nbins=40);
   ~JetHist();
   THStack stack;
   TH2F * jet(int i) {return i>= 0 ? _jets[i] : _background;}
@@ -39,13 +39,13 @@ public:
 //        ipart eta phi pt
 //        ...
 //       #END
-JetHist::JetHist (const string & filename) {
+JetHist::JetHist (const string & filename, double etamax, int nbins) {
   ifstream file(filename.c_str());
   string line;
-  double etamax=6;
+  //double etamax=6;
   //double etamax=5;
   double phimax = 2*3.14159265;
-  int    nbins=40;
+  //int    nbins=40;
 
   // construct a histogram for the background to the jets
   ostringstream bname;
@@ -114,29 +114,16 @@ JetHist::~JetHist () {
 }
 
 //----------------------------------------------------------------------
-/// show the jets contained in filename (as produced by
-/// ClusterSequence::print_jets_for_root()), with an optional label
-void showjets (const char * filename, const char * label = 0) {
-
-  // display the various 2-d drawing options
-  gROOT->Reset();
+/// set up a reasonable bunch of colours
+void set_default_colours(TCanvas * lego) {
   gStyle->SetOptStat(0);
   gStyle->SetPalette(1);
   gStyle->SetCanvasColor(1);
   gStyle->SetFrameFillColor(0);
 
-  // set up canvas
-  TCanvas * lego = new TCanvas("lego","lego options",400,50,800,600);
   Int_t cancolor = 0;
   lego->SetFillColor(cancolor);
-  lego->SetTheta(30.0);
-  lego->SetPhi(20.0);
 
-  // orientation used for plots in subtraction paper
-  //lego->SetTheta(62.15);
-  //lego->SetPhi(9.15);
-
-  ////vector<double> col 
   int ngrey = 3;
   for (int ir = 0; ir < ngrey; ir++) {
     for (int ig = 0; ig < ngrey; ig++) {
@@ -152,23 +139,39 @@ void showjets (const char * filename, const char * label = 0) {
       }
     }
   }
+}
+
+//----------------------------------------------------------------------
+/// show the jets contained in filename (as produced by
+/// ClusterSequence::print_jets_for_root()), with an optional label
+void showjets (const char * filename, const char * label = 0) {
+
+  // display the various 2-d drawing options
+  gROOT->Reset();
+
+  // set up canvas
+  TCanvas * lego = new TCanvas("lego","lego options",400,50,800,600);
+  lego->SetTheta(30.0);
+  lego->SetPhi(20.0);
+
+  // orientation used for plots in subtraction paper
+  //lego->SetTheta(62.15);
+  //lego->SetPhi(9.15);
+
+  ////vector<double> col 
+
+  set_default_colours(lego);
 
   TPaveLabel pl;
   Float_t x1=0.63, y1=0.875, x2=0.95, y2=0.925;
    
-
-  // create the jet histograms
-  //lego->Divide(2,2);
-  //lego->cd(1);
-  //gPad->SetTheta(40.549);
-  //gPad->SetPhi(110.101);
   JetHist * jets = new JetHist(filename);
   jets->stack.Draw("lego1");
   if (label != 0) {
     pl.DrawPaveLabel(x1,y1,x2,y2,label,"brNDC");
   }
 
-  //delete jets;
+  // do not delete jets -- otherwise you lose everything!;
 
   return;
   ///
