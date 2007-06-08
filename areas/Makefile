@@ -90,6 +90,9 @@ areas-anomal-dim: areas-anomal-dim.o  CmdLine.o ../lib/libfastjet.a
 areas-fractal-scaling: areas-fractal-scaling.o CmdLine.o jet_def_from_cmdline.o ../lib/libfastjet.a
 	$(CXX)  -o areas-fractal-scaling areas-fractal-scaling.o  CmdLine.o jet_def_from_cmdline.o $(LDFLAGS)
 
+area-border-fractal-dimension: area-border-fractal-dimension.o CmdLine.o jet_def_from_cmdline.o ../lib/libfastjet.a
+	$(CXX)  -o area-border-fractal-dimension area-border-fractal-dimension.o  CmdLine.o jet_def_from_cmdline.o $(LDFLAGS)
+
 clean: 
 	rm -f *.o
 
