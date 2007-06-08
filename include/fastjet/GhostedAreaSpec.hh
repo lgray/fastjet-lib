@@ -108,6 +108,11 @@ public:
   inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; };
   inline void set_repeat      (int    val) {_repeat         = val; };
 
+  /// return nphi (ghosts layed out (-nrap, 0..nphi-1), (-nrap+1,0..nphi-1),
+  /// ... (nrap,0..nphi-1)
+  inline int nphi() const {return _nphi;}
+  inline int nrap() const {return _nrap;}
+
   /// get all relevant information about the status of the 
   /// random number generator, so that it can be reset subsequently
   /// with set_random_status.
