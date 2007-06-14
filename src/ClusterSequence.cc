@@ -474,6 +474,78 @@ double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
 
 
 //----------------------------------------------------------------------
+/// if the jet has parents in the clustering, it returns true
+/// and sets parent1 and parent2 equal to them.
+///
+/// if it has no parents it returns false and sets parent1 and
+/// parent2 to zero
+bool ClusterSequence::has_parents(const PseudoJet & jet, PseudoJet & parent1, 
+                              PseudoJet & parent2) const {
+
+  const history_element & hist = _history[jet.cluster_hist_index()];
+
+  // make sure we do not run into any unexpected situations --
+  // i.e. both parents valid, or neither
+  assert ((hist.parent1 >= 0 && hist.parent2 >= 0) || 
+          (hist.parent1 < 0 && hist.parent2 < 0));
+
+  if (hist.parent1 < 0) {
+    parent1 = PseudoJet(0.0,0.0,0.0,0.0);
+    parent2 = parent1;
+    return false;
+  } else {
+    parent1 = _jets[_history[hist.parent1].jetp_index];
+    parent2 = _jets[_history[hist.parent2].jetp_index];
+    // order the parents in decreasing pt
+    if (parent1.perp2() < parent2.perp2()) swap(parent1,parent2);
+    return true;
+  }
+}
+
+//----------------------------------------------------------------------
+/// if the jet has a child then return true and give the child jet
+/// otherwise return false and set the child to zero
+bool ClusterSequence::has_child(const PseudoJet & jet, PseudoJet & child) const {
+
+  const history_element & hist = _history[jet.cluster_hist_index()];
+
+  if (hist.child >= 0) {
+    child = _jets[_history[hist.child].jetp_index];
+    return true;
+  } else {
+    child = PseudoJet(0.0,0.0,0.0,0.0);
+    return false;
+  }
+}
+
+
+//----------------------------------------------------------------------
+/// if this jet has a child (and so a partner) return true
+/// and give the partner, otherwise return false and set the
+/// partner to zero
+bool ClusterSequence::has_partner(const PseudoJet & jet, 
+                              PseudoJet & partner) const {
+
+  const history_element & hist = _history[jet.cluster_hist_index()];
+
+  if (hist.child >= 0) {
+    const history_element & child_hist = _history[hist.child];
+    if (child_hist.parent1 == jet.cluster_hist_index()) {
+      // partner will be child's parent2
+      partner = _jets[_history[child_hist.parent2].jetp_index];
+    } else {
+      // partner will be child's parent1
+      partner = _jets[_history[child_hist.parent1].jetp_index];
+    }
+    return true;
+  } else {
+    partner = PseudoJet(0.0,0.0,0.0,0.0);
+    return false;
+  }
+}
+
+
+//----------------------------------------------------------------------
 // return a vector of the particles that make up a jet
 vector<PseudoJet> ClusterSequence::constituents (const PseudoJet & jet) const {
   vector<PseudoJet> subjets;

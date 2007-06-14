@@ -127,6 +127,24 @@ class ClusterSequence {
   /// monotonically.
   double exclusive_dmerge_max (const int & njets) const;
 
+
+  /// if the jet has parents in the clustering, it returns true
+  /// and sets parent1 and parent2 equal to them.
+  ///
+  /// if it has no parents it returns false and sets parent1 and
+  /// parent2 to zero
+  bool has_parents(const PseudoJet & jet, PseudoJet & parent1, 
+               PseudoJet & parent2) const;
+
+  /// if the jet has a child then return true and give the child jet
+  /// otherwise return false and set the child to zero
+  bool has_child(const PseudoJet & jet, PseudoJet & child) const;
+
+  /// if this jet has a child (and so a partner) return true
+  /// and give the partner, otherwise return false and set the
+  /// partner to zero
+  bool has_partner(const PseudoJet & jet, PseudoJet & partner) const;
+
   /// return a vector of the particles that make up jet
   std::vector<PseudoJet> constituents (const PseudoJet & jet) const;
 

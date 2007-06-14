@@ -282,11 +282,28 @@ int main (int argc, char ** argv) {
 	  }
 	  cout << "\n\n";
 	}
+        // family tests
+        //fj::PseudoJet parent1, parent2;
+        //bool has_parents = clust_seq.has_parents(jets[j],parent1,parent2);
+        //if (has_parents) {
+        //  cout << "parent pt's: " << parent1.perp() << " " << parent2.perp() <<endl;
+        //  fj::PseudoJet child_from1, child_from2;
+        //  clust_seq.has_child(parent1, child_from1);
+        //  clust_seq.has_child(parent2, child_from2);
+        //  cout << "parents' children pt: " << child_from1.perp() << " " << child_from2.perp() << endl;
+        //  fj::PseudoJet partner_from1, partner_from2;
+        //  clust_seq.has_partner(parent1, partner_from1);
+        //  clust_seq.has_partner(parent2, partner_from2);
+        //  cout << "parents' partners' pt: " << partner_from1.perp() << " " << partner_from2.perp() << endl;
+        //} else {
+        //  cout << "has no parents" << endl;
+        //}
       }
       if (rootfile != "") {
         ofstream ostr(rootfile.c_str());
         clust_seq.print_jets_for_root(jets,ostr);
       }
+
     }
 
     if (excln > 0) {
@@ -308,6 +325,7 @@ int main (int argc, char ** argv) {
 	       j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
       }
     }
+
     
     // useful for testing that recombination sequences are unique
     if (unique_write) {

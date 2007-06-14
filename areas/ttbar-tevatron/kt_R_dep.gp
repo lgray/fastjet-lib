@@ -6,9 +6,9 @@ reset
 load 'series.gp'
 
 ll='w l ls'
-set style line 1 lt 1 lw 3 
-set style line 2 lt 2 lw 3 lc rgb "#008000"
-set style line 3 lt 3 lw 3 
+set style line 1 lt 1 lw 4 
+set style line 2 lt 2 lw 4 lc rgb "#008000"
+set style line 3 lt 3 lw 4 
 
 
 set yrange [0:0.045]
@@ -56,6 +56,39 @@ R=0.8
 R=1.0
 @plan
 `gnupr kt_R_dep_R1.0.eps cld`
+
+plan='\
+set label 1 "k_t" at graph 0.04,0.93;\
+set label 4 "R=".sprintf("%3.1f",R) at graph 0.04,0.85;\
+set label 5 "tt -> bqq+b{/Symbol mn_m}" at graph 0.04,0.77;\
+plot \
+     kt(R,0) u 2:5 @ll 1 t "no UE", \
+     kt(R,1) u 2:5 @ll 2 t "with UE"'
+
+R=0.4
+@plan
+`gnupr kt_R_dep_noPU_R0.4.eps cld`
+
+R=0.5
+@plan
+`gnupr kt_R_dep_noPU_R0.5.eps cld`
+
+R=0.6
+@plan
+`gnupr kt_R_dep_noPU_R0.6.eps cld`
+
+R=0.7
+@plan
+`gnupr kt_R_dep_noPU_R0.7.eps cld`
+
+R=0.8
+@plan
+`gnupr kt_R_dep_noPU_R0.8.eps cld`
+
+R=1.0
+@plan
+`gnupr kt_R_dep_noPU_R1.0.eps cld`
+
 
 set key width -3
 plan='\

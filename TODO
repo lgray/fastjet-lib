@@ -10,8 +10,15 @@ High priority
 Medium priority
 ---------------
 
+- decide whether to copy jets for the diB step. If so, pay attention
+  to
+  * parents(...), child(), partner()
+  * ??? area transfer ???
+
+
 - sort out error in passive area with jetclu (calling function that
   should not be called)?
 
 - sort out error in active area with jetclu (valgrind shouts a lot,
-  programs die)?
+  programs die)? [may be resolved -- check?]
+
