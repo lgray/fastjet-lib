@@ -11,7 +11,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)  -I../plugins/SISCone -I../plugins/CDFCones
 #LDFLAGS += -L../lib -lfastjet
 #LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs -L../plugins/SISCone -l SISConePlugin -L../plugins/CDFCones -lCDFCones
-LDFLAGS += -L../lib -lfastjet  -L../plugins/SISCone -l SISConePlugin -L../plugins/CDFCones -lCDFConesPlugin
+LDFLAGS += -L../lib -lfastjet  -L../plugins/SISCone -l SISConePlugin -L../plugins/CDFCones -lCDFConesPlugin -lfastjet
 #LDFLAGS += -L../lib -lfastjet -L$(CDFCONEDIR) -lJetAlgs -ltcmalloc -lprofiler
 
 # get google malloc for debugging purposes...
@@ -62,6 +62,9 @@ subtraction-tests-mass: subtraction-tests-mass.o $(OBJS) ../lib/libfastjet.a
 
 test-boosted-decay: test-boosted-decay.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o test-boosted-decay test-boosted-decay.o $(OBJS)  $(LDFLAGS)
+
+test-boosted-decay-optimise: test-boosted-decay-optimise.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o test-boosted-decay-optimise test-boosted-decay-optimise.o $(OBJS)  $(LDFLAGS)
 
 subtraction-tests-ttbar: subtraction-tests-ttbar.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-ttbar subtraction-tests-ttbar.o $(OBJS)  $(LDFLAGS)
