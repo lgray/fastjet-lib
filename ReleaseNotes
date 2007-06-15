@@ -2,33 +2,35 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Changes from v2.1.0 to v2.2.0
+Changes from v2.1.0 to v2.2beta0
 ===============================
 
+- added the anti-kt algorithm (LPTHE-07-03)
+
 - added functionality for Passive areas and Voronoi areas, and
-  provided a new common interface for accessing all different types of
-  areas. Old functionality is retained EXCEPT, that the base class
-  has been renamed:
+  provided a new common class for accessing all different types of
+  areas: ClusterSequenceArea. Areas are now defined much in the same
+  way as jets, via an AreaDefinition, which is passed as an argument
+  to ClusterSequenceArea. NB: the Voronoi area uses Fortune's
+  sweepline code for calculating the Voronoi diagram.
 
-      ClusterSequenceWithArea -> ClusterSequenceAreaBase
-
-  Most programs would have used ClusterSequenceActiveArea directly
-  without referring to the base class, and in this case backwards
-  compatibility is retained.
-
-  Note that ClusterSequenceWithArea is now the class for accessing a
-  generic area, using an AreaDefinition to specify the area you need
-  (see example/fastjet_areas.cc for an example).
+- added facilities for navigating the cluster sequence (has_parents,
+  has_child and has_partner members of ClutserSequence)
 
 - changed plugin base class, so that it now includes R() virtual
   member, and modified the various plugins to account for this.
 
-- adapted SISCone plugin to the 1.Z.Y release of SISCone
+- modified the plugin interface to provide facilities to help with
+  passive areas.
 
-- added the "antikt" algorithm
+- adapted SISCone plugin to the 1.Z.Y release of SISCone -- main
+  changes are facilities and improvements related areas: some speed
+  improvements on the split-merge (relevant for active areas) and a
+  fairly efficient way of running passive areas.
 
 - added ClusterSequence::print_jets_for_root(...) and a corresponding root
-  script (example/root/jet-plots.C), so as to help with visualisation.
+  script (example/root/jet-plots.C), so as to provide a crude
+  visualisation tool.
 
 
 ======================================================================

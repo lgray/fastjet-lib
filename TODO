@@ -2,9 +2,10 @@
 High priority
 -------------
 
-- fix bug in reconstruction of areas from hosted sequences
-
 - move doc over to new area approach
+
+- fix build problem for plugin subdirectories on macs (copy SISCone 
+  sub-dir structure)
 
 ---------------
 Medium priority
@@ -15,10 +16,15 @@ Medium priority
   * parents(...), child(), partner()
   * ??? area transfer ???
 
-
 - sort out error in passive area with jetclu (calling function that
   should not be called)?
 
 - sort out error in active area with jetclu (valgrind shouts a lot,
   programs die)? [may be resolved -- check?]
+
+
+----
+Done
+----
+- fix bug in reconstruction of areas from hosted sequences (* Done *)
 

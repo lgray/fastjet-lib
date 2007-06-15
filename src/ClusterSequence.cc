@@ -160,7 +160,7 @@ void ClusterSequence::_print_banner() {
   cout << "# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.\n";
   cout << "#								      	   \n";
   cout << "# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM \n";
-  cout << "# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algroithm and code " ;
+  cout << "# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code " ;
 #ifndef DROP_CGAL
   cout << endl << "# and CGAL: http://www.cgal.org/";
 #endif  // DROP_CGAL
