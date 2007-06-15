@@ -23,7 +23,7 @@ endif
 
 PROG_SRCS = areas-hist.cc areas.cc areas-native.cc areas-histogramming.cc areas-test-mean-class.cc subtraction-tests.cc subtraction-tests-mass.cc subtraction-tests-inclpt.cc areas-2point.cc subtraction-correlation.cc
 
-MINSRCS =  CmdLine.cc  FlavourHolder.cc jet_def_from_cmdline.cc
+MINSRCS =  CmdLine.cc  FlavourHolder.cc jet_def_from_cmdline.cc read_event.cc
 #SRCS =  $(MINSRCS) ClusterSequencePassiveArea.cc
 SRCS =  $(MINSRCS) 
 MINOBJS = $(patsubst %.cc,%.o,$(MINSRCS))
@@ -59,6 +59,9 @@ subtraction-correl-pull: subtraction-correl-pull.o
 
 subtraction-tests-mass: subtraction-tests-mass.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-mass subtraction-tests-mass.o $(OBJS)  $(LDFLAGS)
+
+test-boosted-decay: test-boosted-decay.o $(OBJS) ../lib/libfastjet.a
+	$(CXX)  -o test-boosted-decay test-boosted-decay.o $(OBJS)  $(LDFLAGS)
 
 subtraction-tests-ttbar: subtraction-tests-ttbar.o $(OBJS) ../lib/libfastjet.a
 	$(CXX)  -o subtraction-tests-ttbar subtraction-tests-ttbar.o $(OBJS)  $(LDFLAGS)
@@ -113,6 +116,9 @@ jet_def_from_cmdline.o: ../include/fastjet/PseudoJet.hh
 jet_def_from_cmdline.o: ../include/fastjet/AreaDefinition.hh
 jet_def_from_cmdline.o: ../include/fastjet/GhostedAreaSpec.hh
 jet_def_from_cmdline.o: ../include/fastjet/internal/BasicRandom.hh
+read_event.o: read_event.hh ../include/fastjet/PseudoJet.hh
+read_event.o: ../include/fastjet/internal/numconsts.hh
+read_event.o: ../include/fastjet/internal/base.hh
 areas-hist.o: ../include/fastjet/PseudoJet.hh
 areas-hist.o: ../include/fastjet/internal/numconsts.hh
 areas-hist.o: ../include/fastjet/internal/base.hh

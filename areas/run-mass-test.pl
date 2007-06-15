@@ -34,6 +34,7 @@ if ($user eq 'cacciari' && $arch eq 'Linux')
 $incljet_exec = "$basedir/fastjet-release/areas/subtraction-tests-inclpt";
 #$incljet_exec = "$basedir/fastjet-release/areas/subtraction-tests-inclpt-2pass";
 $ttbarjet_exec = "$basedir/fastjet-release/areas/subtraction-tests-ttbar";
+$boostedjet_exec = "$basedir/fastjet-release/areas/test-boosted-decay";
 $HIeff_exec = "$basedir/fastjet-release/areas/subtraction-tests-HIeff";
 $HIeff_iter_exec = "/ada1/lpthe/cacciari/physics/voronoi/fastjet/fastjet-release/areas/subtraction-HIeff-iter";
 
@@ -69,6 +70,9 @@ while ($#ARGV >= 0) {
   # pythia opts (others)
   elsif ($opt eq '-lumi')   {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-ptmin')  {$pythia_opts .= " $opt ".(shift @ARGV);}
+  elsif ($opt eq '-WW')     {$pythia_opts .= " $opt ".(shift @ARGV);
+                             $jet_exec = $boostedjet_exec;}
+  elsif ($opt eq '-boosted') {$jet_exec = $boostedjet_exec;}
   elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}  elsif ($opt eq '-Zpmass') {$pythia_opts .= " $opt ".(shift @ARGV);}
   elsif ($opt eq '-iseq')   {$pythia_opts .= " $opt ".(shift @ARGV);}
   # hydjet options...
