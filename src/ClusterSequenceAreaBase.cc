@@ -43,41 +43,45 @@ using namespace std;
 LimitedWarning ClusterSequenceAreaBase::_warnings;
 
 //----------------------------------------------------------------------
-/// return the total area, up to |y|<maxrap, that is free of jets.
+/// return the total area, within range, that is free of jets.
 /// 
-/// Calculate this as 2pi*2*maxrap - \sum_{|y_i|<maxrap} A_i
+/// Calculate this as (range area) - \sum_{i in range} A_i
 ///
-double ClusterSequenceAreaBase::empty_area(double maxrap) const {
-  double empty = twopi * 2*maxrap;
+//double ClusterSequenceAreaBase::empty_area(double maxrap) const {
+double ClusterSequenceAreaBase::empty_area(const RangeDefinition & range) const {
+//  double empty = twopi * 2*maxrap;
+  double empty = range.area();
   vector<PseudoJet> incl_jets(inclusive_jets(0.0));
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < maxrap) empty -= area(incl_jets[i]);
+//    if (abs(incl_jets[i].rap()) < maxrap) empty -= area(incl_jets[i]);
+    if (range.is_in_range(incl_jets[i])) empty -= area(incl_jets[i]);
   }
   return empty;
 }
 
-double ClusterSequenceAreaBase::median_pt_per_unit_area(double maxrap) const {
-  return median_pt_per_unit_something(maxrap,false);
+double ClusterSequenceAreaBase::median_pt_per_unit_area(const RangeDefinition & range) const {
+  return median_pt_per_unit_something(range,false);
 }
 
-double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(double maxrap) const {
-  return median_pt_per_unit_something(maxrap,true);
+double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(const RangeDefinition & range) const {
+  return median_pt_per_unit_something(range,true);
 }
 
 
 //----------------------------------------------------------------------
-/// the median of (pt/area) for jets contained within |y|<maxrap, counting
+/// the median of (pt/area) for jets contained within range, counting
 /// the empty area as if it were made up of a collection of empty
 /// jets each of area (0.55 * pi R^2).
 double ClusterSequenceAreaBase::median_pt_per_unit_something(
-                double maxrap, bool use_area_4vector) const {
+                const RangeDefinition & range, bool use_area_4vector) const {
 
   _check_jet_alg_good_for_median();
 
   vector<double> pt_over_areas;
   vector<PseudoJet> incl_jets = inclusive_jets();
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < maxrap) {
+//    if (abs(incl_jets[i].rap()) < maxrap) {
+    if (range.is_in_range(incl_jets[i])) {
       double this_area;
       if (use_area_4vector) {
           this_area = area_4vector(incl_jets[i]).perp();
@@ -97,7 +101,8 @@ double ClusterSequenceAreaBase::median_pt_per_unit_something(
   sort(pt_over_areas.begin(), pt_over_areas.end());
 
   // now get the median, accounting for empty jets
-  double nj_median_pos = (pt_over_areas.size()-1 - n_empty_jets(maxrap))/2.0;
+//  double nj_median_pos = (pt_over_areas.size()-1 - n_empty_jets(maxrap))/2.0;
+  double nj_median_pos = (pt_over_areas.size()-1 - n_empty_jets(range))/2.0;
   double nj_median_ratio;
   if (nj_median_pos >= 0 && pt_over_areas.size() > 1) {
     int int_nj_median = int(nj_median_pos);
@@ -112,8 +117,66 @@ double ClusterSequenceAreaBase::median_pt_per_unit_something(
 }
 
 
+//----------------------------------------------------------------------
+/// fits a form pt_per_unit_area(y) = a + b*y^2 for jets in range. 
+/// exclude_above allows one to exclude large values of pt/area from fit. 
+/// use_area_4vector = true uses the 4vector areas.
+void ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
+       double & a, double & b, const RangeDefinition & range, 
+       double exclude_above, bool use_area_4vector) const {
+  
+  int n=0;
+  int n_excluded = 0;
+  double mean_f=0, mean_x2=0, mean_x4=0, mean_fx2=0; 
+
+  vector<PseudoJet> incl_jets = inclusive_jets();
+
+  for (unsigned i = 0; i < incl_jets.size(); i++) {
+//    if (abs(incl_jets[i].rap()) < maxrap) {
+    if (range.is_in_range(incl_jets[i])) {
+      double this_area;
+      if ( use_area_4vector ) {
+          this_area = area_4vector(incl_jets[i]).perp();     
+      } else {
+          this_area = area(incl_jets[i]);
+      }
+      double f = incl_jets[i].perp()/this_area;
+      if (exclude_above <= 0.0 || f < exclude_above) {
+	double x = incl_jets[i].rap(); double x2 = x*x;
+	mean_f   += f;
+	mean_x2  += x2;
+	mean_x4  += x2*x2;
+	mean_fx2 += f*x2;
+	n++;
+      } else {
+	n_excluded++;
+      }
+    }
+  }
+
+  if (n <= 1) {
+    // meaningful results require at least two jets inside the
+    // area -- mind you if there are empty jets we should be in 
+    // any case doing something special...
+    a = 0.0;
+    b = 0.0;
+  } else {
+    mean_f   /= n;
+    mean_x2  /= n;
+    mean_x4  /= n;
+    mean_fx2 /= n;
+    
+    b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
+    a = mean_f - b*mean_x2;
+  }
+  //cerr << "n_excluded = "<< n_excluded << endl;
+}
+
+
+
+
 void ClusterSequenceAreaBase::get_median_rho_and_sigma(
-            double maxrap, bool use_area_4vector,
+            const RangeDefinition & range, bool use_area_4vector,
             double & median, double & sigma, double & mean_area) {
 
   _check_jet_alg_good_for_median();
@@ -124,7 +187,8 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   double total_njets = 0;
 
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < maxrap) {
+//    if (abs(incl_jets[i].rap()) < maxrap) {
+    if (range.is_in_range(incl_jets[i])) {
       double this_area;
       if (use_area_4vector) {
           this_area = area_4vector(incl_jets[i]).perp();
@@ -155,9 +219,11 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   double posn[2] = {0.5, (1.0-0.6827)/2.0};
   double res[2];
   
-  double n_empty = n_empty_jets(maxrap);
+//  double n_empty = n_empty_jets(maxrap);
+  double n_empty = n_empty_jets(range);
   total_njets += n_empty;
-  total_area  += empty_area(maxrap);
+//  total_area  += empty_area(maxrap);
+  total_area  += empty_area(range);
 
   for (int i = 0; i < 2; i++) {
     double nj_median_pos = 

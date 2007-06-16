@@ -129,6 +129,7 @@ ClusterSequenceAreaBase.o: ../include/fastjet/PseudoJet.hh
 ClusterSequenceAreaBase.o: ../include/fastjet/Error.hh
 ClusterSequenceAreaBase.o: ../include/fastjet/JetDefinition.hh
 ClusterSequenceAreaBase.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequenceAreaBase.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/PseudoJet.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/internal/numconsts.hh
@@ -139,6 +140,7 @@ ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/internal/DynamicNe
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/Error.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/JetDefinition.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/GhostedAreaSpec.hh
 ClusterSequenceActiveAreaExplicitGhosts.o: ../include/fastjet/internal/BasicRandom.hh
 GhostedAreaSpec.o: ../include/fastjet/GhostedAreaSpec.hh
@@ -156,6 +158,7 @@ ClusterSequenceActiveArea.o: ../include/fastjet/JetDefinition.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceAreaBase.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequenceActiveArea.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/GhostedAreaSpec.hh
 ClusterSequenceActiveArea.o: ../include/fastjet/internal/BasicRandom.hh
@@ -171,6 +174,7 @@ Voronoi.o: ../include/fastjet/internal/base.hh
 Voronoi.o: ../include/fastjet/PseudoJet.hh ../include/fastjet/Error.hh
 Voronoi.o: ../include/fastjet/JetDefinition.hh
 Voronoi.o: ../include/fastjet/internal/LimitedWarning.hh
+Voronoi.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/PseudoJet.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/internal/numconsts.hh
@@ -184,6 +188,7 @@ ClusterSequenceVoronoiArea.o: ../include/fastjet/internal/DynamicNearestNeighbou
 ClusterSequenceVoronoiArea.o: ../include/fastjet/Error.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/JetDefinition.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequenceVoronoiArea.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/internal/Voronoi.hh
 ClusterSequenceVoronoiArea.o: ../include/fastjet/ClusterSequenceWithArea.hh
 ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequencePassiveArea.hh
@@ -197,6 +202,7 @@ ClusterSequencePassiveArea.o: ../include/fastjet/internal/DynamicNearestNeighbou
 ClusterSequencePassiveArea.o: ../include/fastjet/Error.hh
 ClusterSequencePassiveArea.o: ../include/fastjet/JetDefinition.hh
 ClusterSequencePassiveArea.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequencePassiveArea.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 ClusterSequencePassiveArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequencePassiveArea.o: ../include/fastjet/GhostedAreaSpec.hh
@@ -215,6 +221,7 @@ ClusterSequence1GhostPassiveArea.o: ../include/fastjet/internal/DynamicNearestNe
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/Error.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/JetDefinition.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequence1GhostPassiveArea.o: ../include/fastjet/RangeDefinition.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 ClusterSequence1GhostPassiveArea.o: ../include/fastjet/GhostedAreaSpec.hh

@@ -33,6 +33,7 @@
 
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/RangeDefinition.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -83,35 +84,49 @@ public:
   virtual PseudoJet area_4vector(const PseudoJet & jet) const {
     return PseudoJet(0.0,0.0,0.0,0.0);}
 
-  /// return the total area, up to |y|<maxrap, that is free of jets
-  virtual double empty_area(double maxrap) const;
+  /// return the total area, within range, that is free of jets
+//  virtual double empty_area(double maxrap) const;
+  virtual double empty_area(const RangeDefinition & range) const;
 
   /// return something similar to the number of pure ghost jets
   /// in the given rapidity range in an active area case.
   /// For the local implementation we return empty_area/(0.55 pi R^2),
   /// based on measured properties of ghost jets with kt and cam. Note
   /// that the number returned is a double.
-  virtual double n_empty_jets(double maxrap) const {
+//  virtual double n_empty_jets(double maxrap) const {
+  virtual double n_empty_jets(const RangeDefinition & range) const {
     double R = jet_def().R();
-    return empty_area(maxrap)/(0.55*pi*R*R);
+    return empty_area(range)/(0.55*pi*R*R);
   }
 
-  /// the median of (pt/area) for jets contained within |y|<maxrap, 
+  /// the median of (pt/area) for jets contained within range, 
   /// making use also of the info on n_empty_jets
-  double median_pt_per_unit_area(double maxrap) const;
+//  double median_pt_per_unit_area(double maxrap) const;
+  double median_pt_per_unit_area(const RangeDefinition & range) const;
 
   /// the median of (pt/area_4vector) for jets contained within
   /// making use also of the info on n_empty_jets
-  double median_pt_per_unit_area_4vector(double maxrap) const;
+//  double median_pt_per_unit_area_4vector(double maxrap) const;
+  double median_pt_per_unit_area_4vector(const RangeDefinition & range) const;
   
   /// the function that does the work for median_pt_per_unit_area and 
   /// median_pt_per_unit_area_4vector: 
   /// - something_is_area_4vect = false -> use plain area
   /// - something_is_area_4vect = true  -> use 4-vector area
+//  double median_pt_per_unit_something(
+//                     double maxrap, bool use_area_4vector) const;
   double median_pt_per_unit_something(
-                     double maxrap, bool use_area_4vector) const;
+                    const RangeDefinition & range, bool use_area_4vector) const;
 
-  /// using jets up to maxrap (and with 4-vector areas if
+  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range "range". 
+  /// exclude_above allows one to exclude large values of pt/area from fit. 
+  /// use_area_4vector = true uses the 4vector areas.
+//  void parabolic_pt_per_unit_area(double & a, double & b, double maxrap, 
+  void parabolic_pt_per_unit_area(double & a, double & b, const RangeDefinition & range, 
+                                  double exclude_above=-1.0, 
+			          bool use_area_4vector=false) const;
+
+  /// using jets withing range (and with 4-vector areas if
   /// use_area_4vector), calculate the median pt/area, as well as an
   /// "error" (uncertainty), which is defined as the 1-sigma
   /// half-width of the distribution of pt/A, obtained by looking for
@@ -127,16 +142,18 @@ public:
   /// caused changes in the hard-particle content of the jet.
   ///
   /// (NB: subtraction may also be done with 4-vector area of course)
-  void get_median_rho_and_sigma(double maxrap, bool use_area_4vector,
+//  void get_median_rho_and_sigma(double maxrap, bool use_area_4vector,
+  void get_median_rho_and_sigma(const RangeDefinition & range, bool use_area_4vector,
                                         double & median, double & sigma,
                                         double & mean_area);
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area
-  void get_median_rho_and_sigma(double maxrap, bool use_area_4vector,
+//  void get_median_rho_and_sigma(double maxrap, bool use_area_4vector,
+  void get_median_rho_and_sigma(const RangeDefinition & range, bool use_area_4vector,
                                         double & median, double & sigma) {
     double mean_area;
-    get_median_rho_and_sigma(maxrap,  use_area_4vector,
+    get_median_rho_and_sigma(range,  use_area_4vector,
                              median,  sigma, mean_area);
   }
 

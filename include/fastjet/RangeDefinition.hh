@@ -1,0 +1,70 @@
+#ifndef __FASTJET_RANGEDEFINITION_HH__
+#define __FASTJET_RANGEDEFINITION_HH__
+
+#include "fastjet/PseudoJet.hh"
+#include<sstream>
+#include<string>
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+//----------------------------------------------------------------------
+//
+/// class for holding a range definition specification, given by limits
+/// on rapidity and azimuth.
+///
+class RangeDefinition {
+public:
+
+  /// constructor for a range definition given by |y|<rapmax
+  RangeDefinition(double rapmax) {
+                     assert ( rapmax > 0.0 );
+                     _rapmax = rapmax;
+		     _rapmin = -rapmax;
+		     _phimin = 0.0;
+		     _phimax = twopi; }
+		     
+  /// constructor for a range definition given by 
+  /// rapmin < y < rapmax, phimin < phi < phimax
+  RangeDefinition(double rapmin, double rapmax, 
+                  double phimin = 0.0, double phimax = twopi) {
+                     assert ( rapmin < rapmax);
+                     assert ( phimin < phimax);
+                     _rapmax = rapmax;
+		     _rapmin = rapmin;
+		     _phimin = phimin;
+		     _phimax = phimax; }
+
+
+  /// return bool according to whether the jet is within the given range
+  inline bool is_in_range(PseudoJet & jet) const {
+    double rap = jet.rap();
+    double phi = jet.phi();
+    return ( rap >= _rapmin && 
+             rap <= _rapmax &&
+             phi >= _phimin &&
+             phi <= _phimax);
+  }
+  
+  /// Area of the range region
+  inline double area() const {
+    return (_rapmax - _rapmin)*(_phimax - _phimin);
+  }
+  
+  /// Description of range
+  inline std::string description() const {
+    std::ostringstream ostr;
+    ostr << "Range: " << _rapmin << " y "   << _rapmax << ", "
+                      << _phimin << " phi " << _phimax ;
+    return ostr.str();
+}
+  
+private:
+  double _rapmin,_rapmax,_phimin,_phimax;
+
+
+};
+
+FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
+
+
+#endif // __FASTJET_RANGEDEFINITION_HH__
