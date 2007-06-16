@@ -27,7 +27,7 @@ public:
   virtual ~RangeDefinition() {}
      
   /// constructor for a range definition given by 
-  /// rapmin < y < rapmax, phimin < phi < phimax
+  /// rapmin <= y <= rapmax, phimin <= phi <= phimax
   RangeDefinition(double rapmin, double rapmax, 
                   double phimin = 0.0, double phimax = twopi) {
                      assert ( rapmin < rapmax);

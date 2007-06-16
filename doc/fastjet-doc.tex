@@ -752,7 +752,6 @@ information about jet areas.  It is derived from
 namespace of course) according to the choice
 made with \ttt{AreaDefinition}. The user might of course also use these
 classes directly. 
-
 It includes the methods
 \begin{verbatim}
   /// return a reference to the area definition
@@ -777,19 +776,43 @@ It includes the methods
   ///
   fastjet::PseudoJet area_4vector(const PseudoJet & jet) const ;
   
-  /// return the total area, up to |y|<maxrap, that is free of jets
-  double empty_area(double maxrap) const ;
+  /// return the total area, within range, that is free of jets
+  double empty_area(const RangeDefinition & range) const;
 
   /// return something similar to the number of pure ghost jets
-  /// in the given rapidity range in an active area case.
+  /// in the given range in an active area case.
   /// For the local implementation we return empty_area/(0.55 pi R^2),
   /// based on measured properties of ghost jets with kt and cam. Note
   /// that the number returned is a double.
-  double n_empty_jets(double maxrap) const ;
+  double n_empty_jets(const RangeDefinition & range) const {
+    double R = jet_def().R();
+    return empty_area(range)/(0.55*pi*R*R);
+  }
 \end{verbatim}
 
+The \ttt{RangeDefinition} class allows the user to set the rapidity-azimuth range
+over which he wishes to study the areas of the jets. It has two
+constructors. The first is
+\begin{verbatim}
+  /// constructor for a range definition given by |y|<rapmax
+  fastjet::RangeDefinition(double rapmax);
+\end{verbatim}
+which defines a range inclusive in azimuth (0--2$\pi$), and bound by a
+maximum value for $\mathrm{abs}(y)$. Note that in the methods above (and below)
+a \ttt{RangeDefinition} instance instantiated by this constructor can
+simply be replaced by the double \ttt{rapmax}.
+The second constructor,
+\begin{verbatim}
+  /// constructor for a range definition given by 
+  /// rapmin <= y <= rapmax, phimin <= phi <= phimax
+  fastjet::RangeDefinition(double rapmin, double rapmax, 
+                           double phimin = 0.0, double phimax = twopi);
+\end{verbatim}
+allows one to fully specify a rectangle in the rapidity-azimuth plane.
+
 The following methods, belonging to the base class
-\ttt{ClusterSequenceAreaBase}, are also accessible:
+\ttt{ClusterSequenceAreaBase}, are also accessible from
+\ttt{ClusterSequenceArea}:
 \begin{verbatim}
   /// the median of (pt/area) for jets contained within |y|<maxrap, 
   /// making use also of the info on n_empty_jets
