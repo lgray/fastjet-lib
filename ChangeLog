@@ -1,3 +1,10 @@
+2007-06-16  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* ClusterSequence--various-area-classes.cc|hh
+	  adapted all the derived classes so that they take the
+	  RangeDefinition rather than maxrap -- this is subsequent to
+	  changes made below
+
 2007-06-16  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * RangeDefinition.hh

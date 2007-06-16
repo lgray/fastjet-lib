@@ -98,13 +98,13 @@ public:
 
   /// rewrite the empty area from the parent class, so as to use
   /// all info at our disposal
-  /// return the total area, up to |y|<maxrap, that consists of ghost
+  /// return the total area, in the given y-phi range, that consists of ghost
   /// jets or unclustered ghosts
-  virtual double empty_area(double maxrap) const;
+  virtual double empty_area(const RangeDefinition & range) const;
 
   /// return the true number of empty jets (replaces
   /// ClusterSequenceAreaBase::n_empty_jets(...))
-  virtual double n_empty_jets(double maxrap) const;
+  virtual double n_empty_jets(const RangeDefinition & range) const;
 
 protected:
   void _resize_and_zero_AA ();

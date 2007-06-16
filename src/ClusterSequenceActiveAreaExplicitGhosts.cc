@@ -94,11 +94,12 @@ bool ClustSeqActAreaEG::is_pure_ghost(int hist_ix) const
 }
 
 //----------------------------------------------------------------------
-double ClustSeqActAreaEG::empty_area(double maxrap) const {
+double ClustSeqActAreaEG::empty_area(const RangeDefinition & range) const {
   vector<PseudoJet> unclust = unclustered_particles();
   double area = 0.0;
   for (unsigned iu = 0; iu < unclust.size();  iu++) {
-    if (is_pure_ghost(unclust[iu]) && abs(unclust[iu].rap()) < maxrap) {
+    //if (is_pure_ghost(unclust[iu]) && abs(unclust[iu].rap()) < maxrap) {
+    if (is_pure_ghost(unclust[iu]) && range.is_in_range(unclust[iu])) {
       area += _ghost_area;
     }
   }

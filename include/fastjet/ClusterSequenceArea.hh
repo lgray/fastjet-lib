@@ -80,17 +80,29 @@ public:
   virtual PseudoJet area_4vector(const PseudoJet & jet) const {
     return _area_base->area_4vector(jet);}
 
-  /// return the total area, up to |y|<maxrap, that is free of jets
-  virtual double empty_area(double maxrap) const {
-    return _area_base->empty_area(maxrap);}
+  // /// return the total area, up to |y|<maxrap, that is free of jets
+  // virtual double empty_area(double maxrap) const {
+  //   return _area_base->empty_area(maxrap);}
+  // 
+  // /// return something similar to the number of pure ghost jets
+  // /// in the given rapidity range in an active area case.
+  // /// For the local implementation we return empty_area/(0.55 pi R^2),
+  // /// based on measured properties of ghost jets with kt and cam. Note
+  // /// that the number returned is a double.
+  // virtual double n_empty_jets(double maxrap) const {
+  //   return _area_base->n_empty_jets(maxrap);
+
+  /// return the total area, in the given rap-phi range, that is free of jets
+  virtual double empty_area(const RangeDefinition & range) const {
+    return _area_base->empty_area(range);}
 
   /// return something similar to the number of pure ghost jets
-  /// in the given rapidity range in an active area case.
+  /// in the given rap-phi range in an active area case.
   /// For the local implementation we return empty_area/(0.55 pi R^2),
   /// based on measured properties of ghost jets with kt and cam. Note
   /// that the number returned is a double.
-  virtual double n_empty_jets(double maxrap) const {
-    return _area_base->n_empty_jets(maxrap);
+  virtual double n_empty_jets(const RangeDefinition & range) const {
+    return _area_base->n_empty_jets(range);
   }
 
 

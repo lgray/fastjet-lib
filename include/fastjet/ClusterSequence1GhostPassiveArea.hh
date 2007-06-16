@@ -61,8 +61,8 @@ public:
   /// return an estimate for the number of empty jets -- one uses the
   /// AreaBase one rather than the ActiveArea one (which for which we
   /// not have the information).
-  virtual double n_empty_jets(double maxrap) const {
-    return ClusterSequenceAreaBase::n_empty_jets(maxrap);
+  virtual double n_empty_jets(const RangeDefinition & range) const {
+    return ClusterSequenceAreaBase::n_empty_jets(range);
   }
 
 protected:

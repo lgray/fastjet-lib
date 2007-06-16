@@ -22,13 +22,17 @@ public:
 		     _rapmin = -rapmax;
 		     _phimin = 0.0;
 		     _phimax = twopi; }
-		     
+  
+  /// destructor does nothing
+  virtual ~RangeDefinition() {}
+     
   /// constructor for a range definition given by 
   /// rapmin < y < rapmax, phimin < phi < phimax
   RangeDefinition(double rapmin, double rapmax, 
                   double phimin = 0.0, double phimax = twopi) {
                      assert ( rapmin < rapmax);
                      assert ( phimin < phimax);
+                     assert ( phimin >= 0.0 );
                      _rapmax = rapmax;
 		     _rapmin = rapmin;
 		     _phimin = phimin;
@@ -36,7 +40,7 @@ public:
 
 
   /// return bool according to whether the jet is within the given range
-  inline bool is_in_range(PseudoJet & jet) const {
+  virtual inline bool is_in_range(const PseudoJet & jet) const {
     double rap = jet.rap();
     double phi = jet.phi();
     return ( rap >= _rapmin && 
@@ -46,15 +50,15 @@ public:
   }
   
   /// Area of the range region
-  inline double area() const {
+  virtual inline double area() const {
     return (_rapmax - _rapmin)*(_phimax - _phimin);
   }
   
   /// Description of range
-  inline std::string description() const {
+  virtual inline std::string description() const {
     std::ostringstream ostr;
-    ostr << "Range: " << _rapmin << " y "   << _rapmax << ", "
-                      << _phimin << " phi " << _phimax ;
+    ostr << "Range: " << _rapmin << " <= y <= "   << _rapmax << ", "
+                      << _phimin << " <= phi <= " << _phimax ;
     return ostr.str();
 }
   

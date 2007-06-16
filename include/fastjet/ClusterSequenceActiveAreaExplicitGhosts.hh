@@ -105,7 +105,7 @@ public:
 
   /// return the total area, up to |y|<maxrap, that consists of
   /// unclustered ghosts
-  virtual double empty_area(double maxrap) const;
+  virtual double empty_area(const RangeDefinition & range) const;
 
   /// returns the total area under study
   double total_area () const;
