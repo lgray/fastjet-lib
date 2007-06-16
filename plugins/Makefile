@@ -6,21 +6,21 @@ all: cdfcones siscone
 #all: pxcone cdfcones siscone
 
 pxcone:
-	cd PxCone && $(MAKE)
+	@cd PxCone && $(MAKE)  $(MAKECMDGOALS)
 
 cdfcones:
-	cd CDFCones && $(MAKE)
+	@cd CDFCones && $(MAKE)  $(MAKECMDGOALS)
 
 siscone:
-	cd SISCone && $(MAKE)
+	@cd SISCone && $(MAKE)  $(MAKECMDGOALS)
 
 clean:
-	cd PxCone   && $(MAKE) clean
-	cd CDFCones && $(MAKE) clean
-	cd SISCone  && $(MAKE) clean
+	cd PxCone   && $(MAKE)  $(MAKECMDGOALS)
+	cd CDFCones && $(MAKE)  $(MAKECMDGOALS)
+	cd SISCone  && $(MAKE)  $(MAKECMDGOALS)
 
 distclean:
-	cd PxCone && $(MAKE) distclean
-	cd CDFCones && $(MAKE) distclean
-	cd SISCone && $(MAKE) distclean
+	cd PxCone && $(MAKE)  $(MAKECMDGOALS)
+	cd CDFCones && $(MAKE)  $(MAKECMDGOALS)
+	cd SISCone && $(MAKE)  $(MAKECMDGOALS)
 	rm -f *~
