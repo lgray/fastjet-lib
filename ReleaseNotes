@@ -7,15 +7,17 @@ Changes from v2.1.0 to v2.2beta0
 
 - added the anti-kt algorithm (LPTHE-07-03)
 
-- added functionality for Passive areas and Voronoi areas, and
-  provided a new common class for accessing all different types of
-  areas: ClusterSequenceArea. Areas are now defined much in the same
-  way as jets, via an AreaDefinition, which is passed as an argument
+- Provided  a new common class for accessing all different types of  
+  areas: ClusterSequenceArea.
+
+- added functionality for Passive areas and Voronoi areas. 
+  Areas are now defined much in the same way as jets, via an 
+  AreaDefinition, which is passed as an argument
   to ClusterSequenceArea. NB: the Voronoi area uses Fortune's
   sweepline code for calculating the Voronoi diagram.
 
 - added facilities for navigating the cluster sequence (has_parents,
-  has_child and has_partner members of ClutserSequence)
+  has_child and has_partner members of ClusterSequence)
 
 - changed plugin base class, so that it now includes R() virtual
   member, and modified the various plugins to account for this.
