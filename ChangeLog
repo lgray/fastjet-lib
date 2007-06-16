@@ -5,6 +5,10 @@
 	  RangeDefinition rather than maxrap -- this is subsequent to
 	  changes made below
 
+        * plugins/Makefile 
+          plugins/CDFCones/Makefile
+          fixed error on Macs (case-insensitive file system)
+
 2007-06-16  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * RangeDefinition.hh

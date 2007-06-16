@@ -11,11 +11,11 @@ INCLUDE += -I../../include
 # CDFcode/ includes
 INCLUDE += -ICDFcode
 
-libCDFConesPlugin.a: $(OBJS) cdfcode
+libCDFConesPlugin.a: $(OBJS) cdfcode-dir
 	ar cru libCDFConesPlugin.a $(OBJS) CDFcode/*.o
 	ranlib libCDFConesPlugin.a
 
-cdfcode:
+cdfcode-dir:
 	cd CDFcode && $(MAKE)
 
 clean: cdfcode-clean
