@@ -97,6 +97,13 @@ enum JetFinder {
   plugin_algorithm = 99
 };
 
+/// provide standard Les Houches nomenclature (algorithm is general
+/// recipe without the parameters)
+typedef JetFinder JetAlgorithm;
+
+/// provide other possible names for the Cambridge/Aachen algorithm?
+const JetAlgorithm aachen_algorithm = cambridge_algorithm;
+const JetAlgorithm cambridge_aachen_algorithm = cambridge_algorithm;
 
 //======================================================================
 /// the various recombination schemes
