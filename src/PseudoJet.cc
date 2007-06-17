@@ -133,6 +133,17 @@ double PseudoJet::operator () (int i) const {
 }  
 
 //----------------------------------------------------------------------
+// return the pseudorapidity
+double PseudoJet::pseudorapidity() const {
+  if (px() == 0.0 && py() ==0.0) return MaxRap;
+  if (pz() == 0.0) return 0.0;
+
+  double theta = atan(perp()/pz());
+  if (theta < 0) theta += pi;
+  return -log(tan(theta/2));
+}
+
+//----------------------------------------------------------------------
 // return "sum" of two pseudojets
 PseudoJet operator+ (const PseudoJet & jet1, const PseudoJet & jet2) {
   //return PseudoJet(jet1.four_mom()+jet2.four_mom());

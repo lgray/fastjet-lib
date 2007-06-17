@@ -64,41 +64,46 @@ class PseudoJet {
   //
   // second "const" says that "this" will not be modified by these
   // functions.
-  inline double E()   const {return _E;};
-  inline double e()   const {return _E;}; // like CLHEP
-  inline double px()  const {return _px;};
-  inline double py()  const {return _py;};
-  inline double pz()  const {return _pz;};
+  inline double E()   const {return _E;}
+  inline double e()   const {return _E;} // like CLHEP
+  inline double px()  const {return _px;}
+  inline double py()  const {return _py;}
+  inline double pz()  const {return _pz;}
 
   /// returns phi (in the range 0..2pi)
-  inline const double phi() const {return phi_02pi();};
+  inline const double phi() const {return phi_02pi();}
 
   /// returns phi in the range -pi..pi
   inline const double phi_std()  const {
-    return _phi > pi ? _phi-twopi : _phi;};
+    return _phi > pi ? _phi-twopi : _phi;}
 
   /// returns phi in the range 0..2pi
-  inline const double phi_02pi() const {return _phi;};
+  inline const double phi_02pi() const {return _phi;}
 
   /// returns the rapidity or some large value when the rapidity
   /// is infinite
-  inline double rap() const {return _rap;};
+  inline double rap() const {return _rap;}
 
   /// the same as rap()
-  inline double rapidity() const {return _rap;}; // like CLHEP
+  inline double rapidity() const {return _rap;} // like CLHEP
+
+  /// returns the pseudo-rapidity or some large value when the
+  /// rapidity is infinite
+  double pseudorapidity() const;
+  double eta() const {return pseudorapidity();}
 
   /// returns the squared transverse momentum
-  inline double kt2() const {return _kt2;};
+  inline double kt2() const {return _kt2;}
   /// returns the squared transverse momentum
-  inline double perp2() const {return _kt2;};  // like CLHEP
+  inline double perp2() const {return _kt2;}  // like CLHEP
   /// returns the scalar transverse momentum
-  inline double  perp() const {return sqrt(_kt2);};    // like CLHEP
+  inline double  perp() const {return sqrt(_kt2);}    // like CLHEP
   /// returns the squared invariant mass // like CLHEP
-  inline double  m2() const {return (_E+_pz)*(_E-_pz)-_kt2;};    
+  inline double  m2() const {return (_E+_pz)*(_E-_pz)-_kt2;}    
   /// returns the squared transverse mass = kt^2+m^2
-  inline double mperp2() const {return (_E+_pz)*(_E-_pz);};
+  inline double mperp2() const {return (_E+_pz)*(_E-_pz);}
   /// returns the transverse mass = sqrt(kt^2+m^2)
-  inline double mperp() const {return sqrt(std::abs(mperp2()));};
+  inline double mperp() const {return sqrt(std::abs(mperp2()));}
   /// returns the invariant mass 
   /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
   inline double  m() const;    
@@ -120,23 +125,23 @@ class PseudoJet {
 
   /// return the cluster_hist_index, intended to be used by clustering
   /// routines.
-  inline const int & cluster_hist_index() const {return _cluster_hist_index;};
+  inline const int & cluster_hist_index() const {return _cluster_hist_index;}
   /// set the cluster_hist_index, intended to be used by clustering routines.
-  inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;};
+  inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;}
 
   /// alternative name for cluster_hist_index() [perhaps more meaningful]
   inline const int cluster_sequence_history_index() const {
-    return cluster_hist_index();};
+    return cluster_hist_index();}
   /// alternative name for set_cluster_hist_index(...) [perhaps more
   /// meaningful]
   inline void set_cluster_sequence_history_index(const int index) {
-    set_cluster_hist_index(index);};
+    set_cluster_hist_index(index);}
 
 
   /// return the user_index, intended to allow the user to "add" information
-  inline const int & user_index() const {return _user_index;};
+  inline const int & user_index() const {return _user_index;}
   /// set the user_index, intended to allow the user to "add" information
-  inline void set_user_index(const int index) {_user_index = index;};
+  inline void set_user_index(const int index) {_user_index = index;}
 
   /// return a valarray containing the four-momentum (components 0-2
   /// are 3-mom, component 3 is energy).
@@ -150,15 +155,15 @@ class PseudoJet {
   /// returns squared cylinder (rap-phi) distance between this jet and
   /// another
   inline double squared_distance(const PseudoJet & other) const {
-    return plain_distance(other);};
+    return plain_distance(other);}
 
   //// this seemed to compile except if it was used
   //friend inline double 
   //  kt_distance(const PseudoJet & jet1, const PseudoJet & jet2) { 
-  //                                      return jet1.kt_distance(jet2);};
+  //                                      return jet1.kt_distance(jet2);}
 
   /// returns distance between this jet and the beam
-  inline double beam_distance() const {return _kt2;};
+  inline double beam_distance() const {return _kt2;}
 
 
   void operator*=(double);

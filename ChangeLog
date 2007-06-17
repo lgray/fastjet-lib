@@ -1,5 +1,8 @@
 2007-06-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* src/PseudoJet.cc: 
+	  added pseudorapidity() method.
+
 	* plugins/CDFCones/CDFJetCluPlugin.hh: 
 	  added control of ratcheting to quick constructor for
 	  CDFJetCluPlugin. 
