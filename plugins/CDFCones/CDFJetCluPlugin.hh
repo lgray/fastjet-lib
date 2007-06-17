@@ -46,12 +46,13 @@ public:
   /// a compact constructor
   CDFJetCluPlugin (double   cone_radius, 
 		   double   overlap_threshold = 0.5, 
-		   double   seed_threshold = 1.0) : 
+		   double   seed_threshold = 1.0,
+		   int      iratch = 1) : 
     _seed_threshold    ( seed_threshold    ),    
     _cone_radius       ( cone_radius       ),
     _adjacency_cut     (   2               ),
     _max_iterations    ( 100               ),
-    _iratch            (   1               ),
+    _iratch            ( iratch            ),
     _overlap_threshold ( overlap_threshold )  {}
 
   /// a constructor that looks like the one provided by CDF
