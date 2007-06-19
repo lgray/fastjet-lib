@@ -14,6 +14,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///
 class RangeDefinition {
 public:
+  /// default constructor
+  RangeDefinition() {}
 
   /// constructor for a range definition given by |y|<rapmax
   RangeDefinition(double rapmax) {
