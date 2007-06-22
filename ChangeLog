@@ -1,5 +1,12 @@
 2007-06-22  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/regression-test.pl:   *** ADDED ***
+	  regression-tests*.res                  *** ADDED ***
+
+	  added this directory for carrying out regressions tests and
+	  output files, so as to (help) ensure that each new version of
+	  fastjet is giving consistent results.
+
 	* ChangeLog (this file!): 
 	  moved contents of INTERNAL_CHANGELOG (deleted) into here.
 
