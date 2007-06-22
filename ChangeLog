@@ -1,3 +1,8 @@
+2007-06-22  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* README: adapted this to reflect current situation with plugins
+	  and anti-kt
+
 2007-06-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/JetDefinition.hh: 
