@@ -43,9 +43,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// the various options for the algorithmic strategy to adopt in
 /// clustering events with kt and cambridge style algorithms.
 enum Strategy {
-  /// experimental ...
+  /// fastest form about 500..10^4
   N2MinHeapTiled   = -4, 
-  /// fastest from about 50..10^4
+  /// fastest from about 50..500
   N2Tiled     = -3, 
   /// legacy
   N2PoorTiled = -2, 

@@ -1,5 +1,11 @@
 2007-06-22  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* ChangeLog (this file!): 
+	  moved contents of INTERNAL_CHANGELOG (deleted) into here.
+
+	* include/fastjet/JetDefinition.hh: 
+	  updated comments relating to optimal strategy for a given N
+
 	* README: adapted this to reflect current situation with plugins
 	  and anti-kt
 
@@ -1559,4 +1565,28 @@ released 2.1.0 on 2007-04-02
 2006-02-04   v1.0.0b0
 	* added minimal standard files (ChangeLog, LICENSE) and headers
 	for GNU dist and included cvs ID string in all code files.
+
+----------------------------------------------------------------------
+2006/02/04 GPS
+--------------
+
+FjClusterSequence.hh
+FjClusterSequence_TiledN2.cc
+        fixed bug in tiling for R/=1 (assumptions about indices for
+        wrapping in phi that were hard-coded for R=1).
+
+example/ktjet_timing.cc  *** ADDED ***
+        Makefile adapted too...
+
+----------------------------------------------------------------------
+2006/02/03 GPS
+--------------
+
+Various things done since copying across from previous directory in
+preparation for release:
+
+Name changes:        Fj prefix added to public types
+FjStrategy:          turned into enum and renamed from "clever"
+directory structure: src/, example/, lib/, include/ rather single dir
+documentation:       added doc/fastjet-doc.tex as a manual
 
