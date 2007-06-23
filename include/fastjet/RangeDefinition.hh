@@ -51,12 +51,12 @@ public:
              phi <= _phimax);
   }
   
-  /// Area of the range region
+  /// area of the range region
   virtual inline double area() const {
     return (_rapmax - _rapmin)*(_phimax - _phimin);
   }
   
-  /// Description of range
+  /// textual description of range
   virtual inline std::string description() const {
     std::ostringstream ostr;
     ostr << "Range: " << _rapmin << " <= y <= "   << _rapmax << ", "
