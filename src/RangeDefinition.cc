@@ -1,0 +1,57 @@
+//STARTHEADER
+// $Id: $
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+#include "fastjet/RangeDefinition.hh";
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+using namespace std;
+ 
+/// calculate, and set in _total_area, the area with a numerical test
+/// takes a reasonable time with rapmax = 10, npoints = 100
+void RangeDefinition::_numerical_total_area(double rapmax, int npoints) {
+
+      int count = 0;
+      double deltaphi = twopi/double(npoints);
+      double deltarap = 2.0*rapmax/double(npoints);
+      double phi = 0.0;
+      for(int i = 0; i < npoints; i++) {
+        double rap = -rapmax;
+        for (int j = 0; j < npoints; j++) {
+	  if ( is_in_range(rap,phi) ) { count++; }
+          rap += deltarap;
+        }
+        phi += deltaphi;
+      }
+
+      _total_area = double(count)/double(npoints*npoints)*2.0*twopi*rapmax;
+}
+
+FASTJET_END_NAMESPACE
