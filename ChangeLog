@@ -1,3 +1,7 @@
+2007-06-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* moved SISConePlugin/siscone over to 1.2.0 tag of siscone
+
 2007-06-22  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/regression-test.pl:   *** ADDED ***
