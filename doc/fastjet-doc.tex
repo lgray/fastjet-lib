@@ -916,10 +916,13 @@ The second constructor,
 \end{verbatim}
 allows one to fully specify a rectangle in the rapidity-azimuth plane.
 
-\ttt{fastjet::RangeDefinition} contains three virtual functions,
+\ttt{fastjet::RangeDefinition} contains four function functions,
 \begin{verbatim}
   /// return bool according to whether the jet is within the given range
-  virtual bool is_in_range(const PseudoJet & jet) const ;
+  bool is_in_range(const PseudoJet & jet) const ;
+
+  /// return bool according to whether the (rap,phi) point is within the given range
+  virtual bool is_in_range(double rap, double phi) const ;
 
   /// area of the range region
   virtual double area() const ;
@@ -927,7 +930,7 @@ allows one to fully specify a rectangle in the rapidity-azimuth plane.
   /// description of range
   virtual std::string description() const ;
 \end{verbatim}
-These function can be overloaded by the user in a derived class, where a
+The virtual functions can be overloaded by the user in a derived class, where a
 different range definition can be specified. An example is given in
 Appendix~\ref{app:b}, which implements a circular range centred on a
 jet's axis.
@@ -1621,7 +1624,7 @@ background momentum level can be defined by the user by writing a new
 class derived from \ttt{fastjet::RangeDefinition}. The following example
 defines a range which is centred on a given jet axis (as opposed to
 covering a fixed, given region in the rapidity-azimuth plane), and
-extends up to a given distance $d$. 
+extends up to a distance $d$ from the jet. 
 
 Note that this range definition will of course then lead to a different
 median $p_t$ per unit area for each jet. This choice of range can be
@@ -1629,7 +1632,7 @@ used, for instance, in heavy ion collisions, where the background
 distribution is expected to be non uniform in rapidity and, in the case
 of non-central collisions, also in azimuth. Upon wisely choosing the
 distance $d$, using \ttt{CircularRange} will then allow one to use
-\ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area()} in such cases
+\ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}[\ttt{\_4vector}]\ttt{()} in such cases
 too, without having to resort to
 \ttt{ClusterSequenceArea::parabolic\_pt\_per\_unit\_area()}.
 
@@ -1643,7 +1646,8 @@ public:
   CircularRange(const fastjet::PseudoJet & jet, double distance) {
                 _distance = distance;
                 _rapjet = jet.rap();
-                _phijet = jet.phi(); }
+                _phijet = jet.phi();
+                _total_area = fastjet::pi*_distance*_distance; }
   
   /// destructor
   virtual ~CircularRange() {}
@@ -1654,14 +1658,9 @@ public:
     ostr << "Range: within distance "<< _distance << " of given jet." ;
     return ostr.str(); }
   
-  /// return total area of range
-  virtual inline double area() const { return fastjet::pi*_distance*_distance; }
-  
-  /// return bool according to whether jet is in range
-  virtual inline bool is_in_range(const fastjet::PseudoJet & jet) const {
+  /// return bool according to whether (rap,phi) point is in range
+  virtual inline bool is_in_range(double rap, double phi) const {
      double pi = fastjet::pi;
-     double rap = jet.rap();
-     double phi = jet.phi();
      double deltaphi = _phijet - phi;
      if ( deltaphi > pi) { deltaphi -= 2.*pi; }
      else if ( deltaphi < -pi) { deltaphi += 2.*pi; }
@@ -1671,10 +1670,24 @@ public:
 
 private:
   double _distance,_rapjet,_phijet;  
-  fastjet::RangeDefinition _range;
 };
 \end{verbatim}
 
+The user might also wish to overload the virtual function
+\ttt{RangeDefinition::area()}, rather than rely on the base class function to
+return the protected \ttt{\_total\_area} variable, set by the constructor.
+
+Finally, the protected function 
+\begin{verbatim}
+  /// calculate, and set in _total_area, the area with a numerical test
+  /// takes a reasonable time with rapmax = 10, npoints = 100
+  void _numerical_total_area(double rapmax, int npoints) ;
+\end{verbatim}
+is also provided by the \ttt{RangeDefinition} base class, and can be called by
+the constructor of the derived class. It allows one to
+calculate numerically the area of a given range, in case it changes
+dynamically (for instance, if a circular range centred on a jet is intersected
+with a rigid boundary in rapidity and/or azimuth).
 
 %======================================================================
 \begin{thebibliography}{99}

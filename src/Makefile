@@ -11,7 +11,7 @@ FASTJET_INCLUDE = -I../include
 INCLUDE += $(FASTJET_INCLUDE)
 #INCLUDE = 
 
-SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc GhostedAreaSpec.cc ClusterSequenceActiveArea.cc Voronoi.cc ClusterSequenceVoronoiArea.cc ClusterSequencePassiveArea.cc ClusterSequence1GhostPassiveArea.cc BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc
+SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc ClusterSequence.cc PseudoJet.cc ClusterSequence_N2.cc ClusterSequence_TiledN2.cc ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc GhostedAreaSpec.cc ClusterSequenceActiveArea.cc Voronoi.cc ClusterSequenceVoronoiArea.cc ClusterSequencePassiveArea.cc ClusterSequence1GhostPassiveArea.cc BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc RangeDefinition.cc
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
