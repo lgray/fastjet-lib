@@ -16,6 +16,10 @@ Changes from v2.1.0 to v2.2beta0
   to ClusterSequenceArea. NB: the Voronoi area uses Fortune's
   sweepline code for calculating the Voronoi diagram.
 
+- Added class RangeDefinition which allows detailed definitions
+  of the rapidity-azimuth ranges over which to study jet areas
+  and possibly perform noise subtraction
+
 - added facilities for navigating the cluster sequence (has_parents,
   has_child and has_partner members of ClusterSequence)
 
@@ -25,7 +29,7 @@ Changes from v2.1.0 to v2.2beta0
 - modified the plugin interface to provide facilities to help with
   passive areas.
 
-- adapted SISCone plugin to the 1.Z.Y release of SISCone -- main
+- adapted SISCone plugin to the 1.2.0 release of SISCone -- main
   changes are facilities and improvements related areas: some speed
   improvements on the split-merge (relevant for active areas) and a
   fairly efficient way of running passive areas.
