@@ -98,15 +98,16 @@ jet #        rapidity             phi              pt  n constituents
 138 particles unclustered
 
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-#                    SISCone   version 1.1.2-devel                 o
+#                    SISCone   version 1.2.0                       o
 #              http://projects.hepforge.org/siscone                o
 #                                                                  o
 # This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
 # SISCone was written by Gavin Salam and Gregory Soyez             o
 # It is released under the terms of the GNU General Public License o
 #                                                                  o
-# A description of the algorithm is available in the arXiv         o
-# preprint 0704.0292[hep-ph]. Please cite it if you use SISCone.   o
+# A description of the algorithm is available in the publication   o
+# JHEP 05 (2007) 086 [arXiv:0704.0292 (hep-ph)].                   o
+# Please cite it if you use SISCone.                               o
 #ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
 Ran SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off, SM stop scale = 0
