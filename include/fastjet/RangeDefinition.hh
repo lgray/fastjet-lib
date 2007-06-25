@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id:  $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //

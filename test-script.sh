@@ -30,6 +30,10 @@ do
       CLEAN="1"
   elif [[ $arg == "-j2" ]]; then
       MAKEARGS=$arg
+  elif [[ $arg == "-j4" ]]; then
+      MAKEARGS=$arg
+  elif [[ $arg == "-j8" ]]; then
+      MAKEARGS=$arg
   fi
 done 
 

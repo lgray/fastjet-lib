@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //
@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/RangeDefinition.hh";
+#include "fastjet/RangeDefinition.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
