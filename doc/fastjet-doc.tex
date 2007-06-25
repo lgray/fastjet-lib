@@ -428,7 +428,7 @@ following constructor
 \begin{verbatim}
   template<class L> fastjet::ClusterSequence
                                   (const std::vector<L> & input_particles,
-                                  const fastjet::JetDefinition & jet_def); 
+                                   const fastjet::JetDefinition & jet_def); 
 \end{verbatim}
 where \ttt{input\_particles} is the vector of initial particles of any
 type (\ttt{fastjet::PseudoJet}, \ttt{HepLorentzVector}, etc.) that can be
@@ -1642,8 +1642,8 @@ public:
   
   CircularRange(const fastjet::PseudoJet & jet, double distance) {
                 _distance = distance;
-		_rapjet = jet.rap();
-		_phijet = jet.phi(); }
+                _rapjet = jet.rap();
+                _phijet = jet.phi(); }
   
   /// destructor
   virtual ~CircularRange() {}
@@ -1735,8 +1735,7 @@ M. Cacciari, G.P. Salam and G. Soyez, LPTHE-07-03.
   JHEP {\bf 0705} 086 (2007),
   arXiv:0704.0292; 
   %%CITATION = arXiv:0704.0292;%%
-standalone
-  code available from \url{http://projects.hepforge.org/siscone}.
+standalone code available from \url{http://projects.hepforge.org/siscone}.
 
 
 %\cite{Blazey:2000qt}
