@@ -1,3 +1,14 @@
+2007-06-27  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/version.hh
+	  updated version number to 2.2beta0
+
+	* test-script-output-orig.txt
+	  adapted this to current version
+
+	* example/fastjet_subtraction.cc
+	  sorted out some poor naming
+	
 2007-06-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* moved SISConePlugin/siscone over to 1.2.0 tag of siscone

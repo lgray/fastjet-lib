@@ -1,5 +1,5 @@
 #--------------------------------------------------------------------------
-#                      FastJet release 2.2.0beta
+#                      FastJet release 2.2beta0
 #  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -40,7 +40,7 @@ jet #        rapidity             phi              pt  n constituents
     8      3.42713139      5.74362063      5.17254118       13
     9     -4.83615264      2.20502275      5.02711586       12
 #--------------------------------------------------------------------------
-#                      FastJet release 2.2.0beta
+#                      FastJet release 2.2beta0
 #  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   

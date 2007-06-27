@@ -192,18 +192,18 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
     double pt_corr  = jets[j].perp() - area*median_pt_per_area;
 
     // "extended" correction
-    fastjet::PseudoJet area_4vect = 
+    fastjet::PseudoJet sub_4vect = 
                        median_pt_per_area*clust_seq.area_4vector(jets[j]);
-    if (area_4vect.perp2() >= jets[j].perp2() || 
-	area_4vect.E()     >= jets[j].E()) {
+    if (sub_4vect.perp2() >= jets[j].perp2() || 
+	sub_4vect.E()     >= jets[j].E()) {
       // if the correction is too large, set the jet to zero
       corrected_jets[j] =  0.0 * jets[j];
     } else {
       // otherwise do an E-scheme subtraction
-      corrected_jets[j] = jets[j] - area_4vect;
+      corrected_jets[j] = jets[j] - sub_4vect;
     }
     // NB We could also leave out the above "if": 
-    // corrected_jets[j] = jets[j] - area_4vect;
+    // corrected_jets[j] = jets[j] - sub_4vect;
     // but the result would be different, since we would not avoid
     // jets with negative Pt or energy
     
