@@ -84,6 +84,15 @@ public:
   virtual PseudoJet area_4vector(const PseudoJet & jet) const {
     return PseudoJet(0.0,0.0,0.0,0.0);}
 
+  /// true if a jet is made exclusively of ghosts
+  ///
+  /// NB: most area classes do not give any explicit ghost jets, but
+  /// some do, and they should replace this function with their own
+  /// version.
+  virtual bool is_pure_ghost(const PseudoJet & jet) const {
+    return false;
+  }
+
   /// return the total area, within range, that is free of jets
   virtual double empty_area(const RangeDefinition & range) const;
 

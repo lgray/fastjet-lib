@@ -96,7 +96,7 @@ public:
   virtual PseudoJet area_4vector (const PseudoJet & jet) const;
 
   /// true if a jet is made exclusively of ghosts
-  bool is_pure_ghost(const PseudoJet & jet) const;
+  virtual bool is_pure_ghost(const PseudoJet & jet) const;
 
   /// true if the entry in the history index corresponds to a
   /// ghost; if hist_ix does not correspond to an actual particle

@@ -14,7 +14,9 @@ Changes from v2.1.0 to v2.2beta0
   Areas are now defined much in the same way as jets, via an 
   AreaDefinition, which is passed as an argument
   to ClusterSequenceArea. NB: the Voronoi area uses Fortune's
-  sweepline code for calculating the Voronoi diagram.
+  sweepline code for calculating the Voronoi diagram and so does not
+  require CGAL to be installed (it still is needed for NlnN kt
+  clustering). 
 
 - Added class RangeDefinition which allows detailed definitions
   of the rapidity-azimuth ranges over which to study jet areas

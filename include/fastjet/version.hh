@@ -35,7 +35,7 @@
 
 FASTJET_BEGIN_NAMESPACE
 
-const char* fastjet_version = "2.2beta0";
+const char* fastjet_version = "2.2beta1-devel";
 
 FASTJET_END_NAMESPACE
 

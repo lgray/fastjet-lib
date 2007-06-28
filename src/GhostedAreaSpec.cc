@@ -85,9 +85,7 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       //cout << kt<<" "<<rap<<" "<<phi<<"\n";
       //if (phi>=twopi || phi < 0.0) cout << "Hey: "<< phi-twopi<<"\n";
       PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
-      //mom.set_user_index(1);  // for ghost particles (user index now lost...)
       event.push_back(mom);
-      //_is_pure_ghost.push_back(true);
     }
   }
 }

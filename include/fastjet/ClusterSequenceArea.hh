@@ -105,6 +105,10 @@ public:
     return _area_base->n_empty_jets(range);
   }
 
+  /// true if a jet is made exclusively of ghosts
+  virtual bool is_pure_ghost(const PseudoJet & jet) const {
+    return _area_base->is_pure_ghost(jet);
+  }
 
 private:
 
