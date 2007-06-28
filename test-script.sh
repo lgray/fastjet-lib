@@ -76,7 +76,7 @@ popd
 
 # mv the output file to a "decent" place (remove 
 #mv $OUTPUT  test-script-output.txt
-grep -v 'Symp. Discr. Alg' $OUTPUT > test-script-output.txt
+grep -v 'CGAL' $OUTPUT > test-script-output.txt
 echo 
 echo -----------------------------------------------------------
 echo "Comparing output from these runs (test-script-output.txt) "

@@ -1,3 +1,12 @@
+2007-06-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* test-script.sh + test-script-output-orig.txt: 
+	  sorted out some little hiccups in test script output
+
+-----------------------------------------------
+released 2.2beta0 on 2007-06-28
+-----------------------------------------------	
+	
 2007-06-27  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/version.hh

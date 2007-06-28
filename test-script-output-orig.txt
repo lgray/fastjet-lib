@@ -8,7 +8,7 @@
 # jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# and CGAL: http://www.cgal.org/.
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 #-------------------------------------------------------------------------
 Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
 Strategy adopted by FastJet was N2Tiled
@@ -49,7 +49,7 @@ jet #        rapidity             phi              pt  n constituents
 # jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# and CGAL: http://www.cgal.org/.
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 #-------------------------------------------------------------------------
 Jet definition was: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
 Area definition was: Passive area (optimal alg. based on jet.def.), where relevant with ghosts of area 0.0473947 (had requested 0.05), placed up to y = 7, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
@@ -70,7 +70,7 @@ Printing inclusive jets with pt > 5 GeV
 
 0
 #--------------------------------------------------------------------------
-#                      FastJet release 2.2.0beta
+#                      FastJet release 2.2beta0
 #  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
 #              http://www.lpthe.jussieu.fr/~salam/fastjet		   
 #								      	   
@@ -79,7 +79,7 @@ Printing inclusive jets with pt > 5 GeV
 # jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# and CGAL: http://www.cgal.org/.
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 #-------------------------------------------------------------------------
 Ran CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV
