@@ -1,5 +1,9 @@
 2007-06-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/GhostedAreaSpec.hh: 
+	  added deprecated access to intenal random number generator (for
+	  internal development purposes) -- not guaranteed to stay.
+	
 	* include/fastjet/ClusterSequenceAreaBase.hh: 
 	* include/fastjet/ClusterSequenceArea.hh: 
 	  Added is_pure_ghost as a virtual function in the area base

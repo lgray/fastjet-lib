@@ -136,6 +136,9 @@ public:
   /// push the ghost 4-momenta onto the back of the vector of PseudoJets
   void add_ghosts(std::vector<PseudoJet> & ) const;
 
+  /// very deprecated public access to internal random number generator
+  inline double random_at_own_risk() const {return _our_rand();};
+
 private:
   
   // quantities that determine nature and distribution of ghosts
@@ -150,13 +153,12 @@ private:
   double _actual_ghost_area, _dphi, _drap;
   int    _n_ghosts, _nphi, _nrap;
 
-  //inline double _our_rand() const {return rand()*(1.0/RAND_MAX);};
-  inline double _our_rand() const {return _random_generator();};
 
   std::vector<int> _random_checkpoint;
   static BasicRandom<double> _random_generator;
   //mutable BasicRandom<double> _random_generator;
 
+  inline double _our_rand() const {return _random_generator();};
   
 };
 
