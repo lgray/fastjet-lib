@@ -124,7 +124,8 @@ public:
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range "range". 
   /// exclude_above allows one to exclude large values of pt/area from fit. 
   /// use_area_4vector = true uses the 4vector areas.
-  void parabolic_pt_per_unit_area(double & a, double & b, const RangeDefinition & range, 
+  void parabolic_pt_per_unit_area(double & a, double & b, 
+                                  const RangeDefinition & range, 
                                   double exclude_above=-1.0, 
 			          bool use_area_4vector=false) const;
 
@@ -144,18 +145,40 @@ public:
   /// caused changes in the hard-particle content of the jet.
   ///
   /// (NB: subtraction may also be done with 4-vector area of course)
-  void get_median_rho_and_sigma(const RangeDefinition & range, bool use_area_4vector,
-                                        double & median, double & sigma,
-                                        double & mean_area);
+  void get_median_rho_and_sigma(const RangeDefinition & range, 
+                                bool use_area_4vector,
+                                double & median, double & sigma,
+                                double & mean_area);
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area
-  void get_median_rho_and_sigma(const RangeDefinition & range, bool use_area_4vector,
-                                        double & median, double & sigma) {
+  void get_median_rho_and_sigma(const RangeDefinition & range, 
+                                bool use_area_4vector,
+                                double & median, double & sigma) {
     double mean_area;
     get_median_rho_and_sigma(range,  use_area_4vector,
                              median,  sigma, mean_area);
   }
+  
+  
+
+  /// return a subtracted jet, using area_4vector, given rho
+  PseudoJet subtracted_jet(const PseudoJet & jet,
+                           const double rho) const;
+
+  /// return a subtracted jet, using area_4vector
+  PseudoJet subtracted_jet(const PseudoJet & jet,
+                           const RangeDefinition & range) const;
+
+  /// return the subtracted pt, given rho
+  double subtracted_pt(const PseudoJet & jet,
+                       const double rho,
+	               bool use_area_4vector=false) const;
+
+  /// return the subtracted pt
+  double subtracted_pt(const PseudoJet & jet,
+                       const RangeDefinition & range,
+	               bool use_area_4vector=false) const;
 
 
 private:

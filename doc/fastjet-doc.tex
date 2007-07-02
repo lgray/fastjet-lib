@@ -677,6 +677,22 @@ therefore be convenient to select a Voronoi area type, rather than an
 active one, when using areas for phenomenological tasks like pileup
 subtraction~\cite{cs}, as it is generally obtained in a much faster way.
 
+To summarise, in order to access the areas of the jets the user is exposed to two main
+classes:
+\begin{verbatim}
+   class fastjet::AreaDefinition;
+   class fastje::ClusterSequenceArea;
+\end{verbatim}
+
+If jet areas are to be used to study the level of a diffuse noise which might be present
+in the event (like underlying event particles or pilup), a further specification, the
+phase space region over which to study such noise, will have to be given via the class
+\begin{verbatim}
+   class fastjet::RangeDefinition;
+\end{verbatim}
+These classes are described in detail below, and an example program is given in 
+section~\ref{sec:ex-prog-sub}.
+
 %----------------------------------------------------------------------
 \subsection{fastjet::AreaDefinition}
 
@@ -846,32 +862,30 @@ Information about the specification in use is returned by
 
 \subsection{fastjet::ClusterSequenceArea}
 
-This is a base class for representing cluster sequences that include
-information about jet areas.  It is derived from
-\ttt{fastjet::ClusterSequenceAreaBase}, and the latter from
-\ttt{fastjet::ClusterSequence}.  
-
-
+This is the main class\footnote{  
 \ttt{ClusterSequenceArea} makes use of one among
 \ttt{ClusterSequenceActiveArea}, 
 \ttt{ClusterSequenceActiveAreaExplicitGhosts}, 
 \ttt{ClusterSequencePassiveArea},
 \ttt{ClusterSequence1GhostPassiveArea} or 
 \ttt{ClusterSequenceVoronoiArea} (all of them in the \ttt{fastjet}
-namespace of course) according to the choice
+namespace of course), according to the choice
 made with \ttt{AreaDefinition}. The user might of course also use these
-classes directly. 
-It includes the methods
+classes directly.} to which the user is exposed 
+for accessing cluster sequences that include
+information about jet areas.  It is derived from
+\ttt{fastjet::ClusterSequenceAreaBase} (and the latter from
+\ttt{fastjet::ClusterSequence}) and includes the methods
 \begin{verbatim}
   /// return a reference to the area definition
-  const fastjet::AreaDefinition & area_def() const ; 
+  virtual const fastjet::AreaDefinition & area_def() const ; 
 
   /// return the area associated with the given jet
-  double area (const fastjet::PseudoJet & jet) const ;
+  virtual double area (const fastjet::PseudoJet & jet) const ;
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of the jet;
-  double area_error (const fastjet::PseudoJet & jet) const ;
+  virtual double area_error (const fastjet::PseudoJet & jet) const ;
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
   ///
@@ -883,8 +897,9 @@ It includes the methods
   /// inside jet boundary") is a function that is 1 when rap,phi
   /// define a direction inside the jet boundary and 0 otherwise.
   ///
-  fastjet::PseudoJet area_4vector(const PseudoJet & jet) const ;
-  \end{verbatim}
+  virtual fastjet::PseudoJet area_4vector(const PseudoJet & jet) const ;
+\end{verbatim}
+
 
 \subsubsection{Areas and background subtraction}
 
@@ -935,9 +950,9 @@ different range definition can be specified. An example is given in
 Appendix~\ref{app:b}, which implements a circular range centred on a
 jet's axis.
 
-Once a range has been chosen, the following methods, belonging either to
-the base class \ttt{ClusterSequenceAreaBase} or to \ttt{ClusterSequenceArea}, 
-are available:
+Once a range has been specified, the following methods, belonging  to
+the base class \ttt{ClusterSequenceAreaBase}, 
+are available for extracting the diffuse noise level and its fluctuations:
 \begin{verbatim}
   /// the median of (pt/area) for jets contained within range, 
   /// making use also of the info on n_empty_jets
@@ -981,7 +996,6 @@ are available:
                                 bool use_area_4vector,
                                 double & median, double & sigma);
 
-
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the given range.
   /// exclude_above allows one to exclude large values of pt/area from fit. 
   /// use_area_4vector = true uses the 4vector areas.
@@ -989,26 +1003,36 @@ are available:
                                   const RangeDefinition & range,
                                   double exclude_above = -1.0, 
                                   bool use_area_4vector = false) const;
-
-  /// return the total area, within range, that is free of jets
-  double empty_area(const RangeDefinition & range) const;
-
-  /// return something similar to the number of pure ghost jets
-  /// in the given range in an active area case.
-  /// For the local implementation we return empty_area/(0.55 pi R^2),
-  /// based on measured properties of ghost jets with kt and cam. Note
-  /// that the number returned is a double.
-  double n_empty_jets(const RangeDefinition & range) const;
 \end{verbatim}
-
 Note that more specialised methods for extracting the noise level might
 be present at the level of a specific class, e.g.
 \ttt{ClusterSequenceActiveArea}. At least some of them 
 should however be considered as obsolete, and might be removed in 
 future releases of \ttt{FastJet}.
 
+Finally, the base class \ttt{ClusterSequenceAreaBase} contains virtual methods (usually
+overloaded by the derived classes) that deal with pure-ghost jets that might be formed
+when adding ghost particles to the events in order to calculate ghosted areas:
+\begin{verbatim}
+  /// true if a jet is made exclusively of ghosts
+  ///
+  /// NB: most area classes do not give any explicit ghost jets, but
+  /// some do, and they should replace this function with their own
+  /// version.
+  virtual bool is_pure_ghost(const PseudoJet & jet) const ;
+
+  /// return the total area, within range, that is free of jets
+  virtual double empty_area(const RangeDefinition & range) const;
+
+  /// return something similar to the number of pure ghost jets
+  /// in the given range in an active area case.
+  /// Note that the number returned is a double.
+  virtual double n_empty_jets(const RangeDefinition & range) const;
+\end{verbatim}
 
 \subsection{Example program with areas and subtraction}
+\label{sec:ex-prog-sub}
+
 The following simplified example program clusters a series of input
 particles into jets, evaluates the median transverse momentum per unit
 area of the event (both for the standard area, and the alternative

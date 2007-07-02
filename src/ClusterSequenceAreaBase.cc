@@ -246,6 +246,56 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
 }
 
 
+
+/// return a subtracted jet, using area_4vector, given rho
+PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
+                                                  const double rho) const {
+  PseudoJet area4vect = area_4vector(jet);
+  PseudoJet sub_jet;
+  // sanity check
+  if (rho*area4vect.perp() < jet.perp() ) { 
+    sub_jet = jet - rho*area4vect;
+  } else { sub_jet = PseudoJet(0.0,0.0,0.0,0.0); }
+  return sub_jet;
+}
+
+
+/// return a subtracted jet, using area_4vector
+PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
+                                       const RangeDefinition & range) const {
+  double rho = median_pt_per_unit_area_4vector(range);
+  PseudoJet sub_jet = subtracted_jet(jet, rho);
+  return sub_jet;
+}
+
+
+/// return the subtracted pt, given rho
+double ClusterSequenceAreaBase::subtracted_pt(const PseudoJet & jet,
+                                              const double rho,
+                                              bool use_area_4vector) const {
+  if ( use_area_4vector ) { 
+     PseudoJet sub_jet = subtracted_jet(jet,rho);
+     return sub_jet.perp();
+  } else {
+     return jet.perp() - rho*area(jet);
+  }
+}  
+
+
+/// return the subtracted pt
+double ClusterSequenceAreaBase::subtracted_pt(const PseudoJet & jet,
+                                              const RangeDefinition & range,
+                                              bool use_area_4vector) const {
+  if ( use_area_4vector ) { 
+     PseudoJet sub_jet = subtracted_jet(jet,range);
+     return sub_jet.perp();
+  } else {
+     double rho = median_pt_per_unit_area(range);
+     return subtracted_pt(jet,rho,false);
+  }
+}  
+
+
 /// check the jet algorithm is suitable (and if not issue a warning)
 void ClusterSequenceAreaBase::_check_jet_alg_good_for_median() const {
   if (jet_def().jet_finder() != kt_algorithm
