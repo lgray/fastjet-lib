@@ -39,6 +39,11 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// return a string containing information about the release
+//  NB: (implemented in ClusterSequence.cc but defined here because
+//  this is a visible location)
+std::string fastjet_version_string();
+
 //======================================================================
 /// the various options for the algorithmic strategy to adopt in
 /// clustering events with kt and cambridge style algorithms.

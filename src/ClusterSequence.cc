@@ -140,6 +140,14 @@ void ClusterSequence::_initialise_and_run (
 bool ClusterSequence::_first_time = true;
 int ClusterSequence::_n_exclusive_warnings = 0;
 
+
+//----------------------------------------------------------------------
+// the version string
+string fastjet_version_string() {
+  return "FastJet version "+string(fastjet_version);
+}
+
+
 //----------------------------------------------------------------------
 // prints a banner on the first call
 void ClusterSequence::_print_banner() {

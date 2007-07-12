@@ -1,3 +1,14 @@
+2007-07-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/SISConePlugin.cc: 
+	  added output of SISCone version number within the plugin
+	  description.
+
+	* include/fastjet/JetDefinition.hh: 
+	* src/ClusterSequence.cc: 
+	  added fastjet_version_string() function which returns a string
+	  along the lines of "FastJet version 2.2beta1-devel"
+	
 2007-06-28  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * added subtracted_jet and subtracted_pt methods
