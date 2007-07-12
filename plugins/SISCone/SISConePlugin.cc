@@ -37,13 +37,15 @@ string SISConePlugin::description () const {
   desc <<  sm_scale_string                                << ", ";
   desc << "caching turned "      << (caching() ? on : off);
   desc << ", SM stop scale = "     << _split_merge_stopping_scale;
-  desc << ", SISCone code v" << VERSION << endl;
+
 
   // create a fake siscone object so that we can find out more about it
   Csiscone siscone;
   if (siscone.merge_identical_protocones) {
     desc << ", and (IR unsafe) merge_indentical_protocones=true" ;
   }
+
+  desc << ", SISCone code v" << VERSION;
 
   return desc.str();
 }
