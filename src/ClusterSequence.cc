@@ -482,6 +482,25 @@ double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
 
 
 //----------------------------------------------------------------------
+// work through the object's history until
+bool ClusterSequence::object_in_jet(const PseudoJet & object, 
+                                    const PseudoJet & jet) const {
+
+  // make sure the object conceivably belongs to this clustering
+  // sequence
+  assert(_potentially_valid(object) && _potentially_valid(jet));
+
+  const PseudoJet * this_object = &object;
+  const PseudoJet * childp;
+  while(true) {
+    if (this_object->cluster_hist_index() == jet.cluster_hist_index()) {
+      return true;
+    } else if (has_child(*this_object, childp)) {this_object = childp;}
+    else {return false;}
+  }
+}
+
+//----------------------------------------------------------------------
 /// if the jet has parents in the clustering, it returns true
 /// and sets parent1 and parent2 equal to them.
 ///
@@ -515,13 +534,38 @@ bool ClusterSequence::has_parents(const PseudoJet & jet, PseudoJet & parent1,
 /// otherwise return false and set the child to zero
 bool ClusterSequence::has_child(const PseudoJet & jet, PseudoJet & child) const {
 
-  const history_element & hist = _history[jet.cluster_hist_index()];
-
-  if (hist.child >= 0) {
-    child = _jets[_history[hist.child].jetp_index];
+  //const history_element & hist = _history[jet.cluster_hist_index()];
+  //
+  //if (hist.child >= 0) {
+  //  child = _jets[_history[hist.child].jetp_index];
+  //  return true;
+  //} else {
+  //  child = PseudoJet(0.0,0.0,0.0,0.0);
+  //  return false;
+  //}
+  const PseudoJet * childp;
+  bool res = has_child(jet, childp);
+  if (res) {
+    child = *childp;
     return true;
   } else {
     child = PseudoJet(0.0,0.0,0.0,0.0);
+    return false;
+  }
+}
+
+bool ClusterSequence::has_child(const PseudoJet & jet, const PseudoJet * & childp) const {
+
+  const history_element & hist = _history[jet.cluster_hist_index()];
+
+  // check that this jet has a child and that the child corresponds to
+  // a true jet [RETHINK-IF-CHANGE-NUMBERING: what is the right
+  // behaviour if the child is the same jet but made inclusive...?]
+  if (hist.child >= 0 && _history[hist.child].jetp_index >= 0) {
+    childp = &(_jets[_history[hist.child].jetp_index]);
+    return true;
+  } else {
+    childp = NULL;
     return false;
   }
 }
@@ -536,10 +580,13 @@ bool ClusterSequence::has_partner(const PseudoJet & jet,
 
   const history_element & hist = _history[jet.cluster_hist_index()];
 
-  if (hist.child >= 0) {
+  // make sure we have a child and that the child does not correspond
+  // to a clustering with the beam (or some other invalid quantity)
+  if (hist.child >= 0 && _history[hist.child].parent2 >= 0) {
     const history_element & child_hist = _history[hist.child];
     if (child_hist.parent1 == jet.cluster_hist_index()) {
-      // partner will be child's parent2
+      // partner will be child's parent2 -- for iB clustering
+      // parent2 will not be valid
       partner = _jets[_history[child_hist.parent2].jetp_index];
     } else {
       // partner will be child's parent1

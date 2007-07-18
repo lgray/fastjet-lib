@@ -127,6 +127,17 @@ class ClusterSequence {
   /// monotonically.
   double exclusive_dmerge_max (const int & njets) const;
 
+  /// returns true iff the object is included in the jet. 
+  ///
+  /// NB: this is only sensible if the object is already registered
+  /// within the cluster sequence, so you cannot use it with an input
+  /// particle to the CS (since the particle won't have the history
+  /// index set properly).
+  ///
+  /// For nice clustering structures it should run in O(ln(N)) time
+  /// but in worst cases (certain cone plugins) it can take O(n) time,
+  /// where n is the number of particles in the jet.
+  bool object_in_jet(const PseudoJet & object, const PseudoJet & jet) const;
 
   /// if the jet has parents in the clustering, it returns true
   /// and sets parent1 and parent2 equal to them.
@@ -139,6 +150,10 @@ class ClusterSequence {
   /// if the jet has a child then return true and give the child jet
   /// otherwise return false and set the child to zero
   bool has_child(const PseudoJet & jet, PseudoJet & child) const;
+
+  /// Version of has_child that sets a pointer to the child if the child
+  /// exists;
+  bool has_child(const PseudoJet & jet, const PseudoJet * & childp) const;
 
   /// if this jet has a child (and so a partner) return true
   /// and give the partner, otherwise return false and set the
@@ -322,6 +337,13 @@ public:
 protected:
   static JetFinder _default_jet_finder;
   JetDefinition _jet_def;
+
+  /// returns true if the jet has a history index contained within
+  /// the range of this CS
+  bool _potentially_valid(const PseudoJet & jet) const {
+    return jet.cluster_hist_index() >= 0 
+      && jet.cluster_hist_index() < int(_history.size());
+  }
 
   /// transfer the vector<L> of input jets into our own vector<PseudoJet>
   /// _jets (with some reserved space for future growth).

@@ -1,3 +1,22 @@
+2007-07-18  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+
+	* include/fastjet/ClusterSequence.hh|cc: 
+	  added version of has_child which returns a pointer to the
+	  child (more efficient) and also introduced object_in_jet
+
+	  Corrected bugs in has_child and has_partner, related to the
+	  treatment of cases near beam jets;
+
+	  introduced a new protected member function
+	  _potentially_valid(jet), for checking the use of a jet won't
+	  lead to crash-causing nonsense (it may still lead to meaningless
+	  answers).	
+	
+	  NB: now adding [RETHINK-IF-CHANGE-NUMBERING: ...] in
+	  neighoburhood of things that may be affected if we ever decide
+	  to give inclusive jets their own separate identify.	
+	
 2007-07-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/SISCone/SISConePlugin.cc: 
