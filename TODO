@@ -2,10 +2,7 @@
 High priority
 -------------
 
-- move doc over to new area approach
-
-- fix build problem for plugin subdirectories on macs (copy SISCone 
-  sub-dir structure)
+- clean up doc on new areas methods
 
 ---------------
 Medium priority
@@ -15,6 +12,7 @@ Medium priority
   to
   * parents(...), child(), partner()
   * ??? area transfer ???
+  * anything highlighted with RETHINK-IF-CHANGE-NUMBERING
 
 - sort out error in passive area with jetclu (calling function that
   should not be called)?
@@ -22,9 +20,18 @@ Medium priority
 - sort out error in active area with jetclu (valgrind shouts a lot,
   programs die)? [may be resolved -- check?]
 
+- v3: Think about making ClusterSequence actually just point to an 
+  implementation class that does all the work; then both
+  ClusterSequence and all the PseudoJets could point to it through a
+  reference counting pointer -- this would allow one (e.g.) to get the
+  constituents of a jet without manually going via the
+  ClusterSequence.
 
 ----
 Done
 ----
 - fix bug in reconstruction of areas from hosted sequences (* Done *)
+- move doc over to new area approach
+- fix build problem for plugin subdirectories on macs (copy SISCone 
+  sub-dir structure)
 
