@@ -1,3 +1,9 @@
+2007-07-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/GhostedAreaSpec.hh: 
+	  added GhostedAreaSpec::generator_at_own_risk() for access to the
+	  internal generator object.
+
 2007-07-18  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 
