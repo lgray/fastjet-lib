@@ -1,3 +1,12 @@
+2007-07-30  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* src/Makefile:
+	  removed the pedantic option because CGAL 3.3 fails with it.
+
+	* example/fastjet_timing_plugins.cc
+	  added output of fastjet version
+	  
+
 2007-07-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/GhostedAreaSpec.hh: 

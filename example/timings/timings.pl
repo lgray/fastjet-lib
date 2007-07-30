@@ -36,14 +36,15 @@ $baserep = 700;
 #@strategy = (11,102);
 #@strategy = (-3,-1,2);
 #@strategy = (102);
+@strategy = (2);
 # for cones
 #@strategy = (1,204,203,101,201,202,212);
-@strategy = (204);
+#@strategy = (204);
 #@strategy = (11,102);
 
 #$radius=0.4;
-$radius=0.7;
-#$radius=1.0;
+#$radius=0.7;
+$radius=1.0;
 
 # number of runs to average over when getting
 # timings. Remember that first run will be discarded
