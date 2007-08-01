@@ -1,14 +1,14 @@
 C example program to run siscone from f77
 C
-C To compile, type: 
-C    make sisconef77
+C To compile, type:
+C    make siscone_example
 C
 C To use, type: 
-C    ./sisconef77 < ../example/data/single-event.dat     
+C    ./siscone_example < ../example/data/single-event.dat     
 C    
 C $Id$
 C
-      program sisconef77
+      program siscone_example
       implicit none
       integer n
       parameter (n = 1000)
@@ -34,6 +34,5 @@ c.....write out jets
          write(*,*) (jets(j,i), j=1,4), sqrt(jets(1,i)**2+jets(2,i)**2)
       enddo
             
-      return
       end
       

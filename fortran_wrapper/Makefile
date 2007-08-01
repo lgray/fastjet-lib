@@ -10,14 +10,14 @@ INCLUDE += $(FASTJET_INCLUDE)  -I$(FASTJETDIR)/plugins/SISCone -I$(FASTJETDIR)/p
 LDFLAGS += -L$(FASTJETDIR)/lib -lfastjet  -L$(FASTJETDIR)/plugins/SISCone -lSISConePlugin -L$(FASTJETDIR)/plugins/CDFCones -lCDFConesPlugin -lfastjet
 
 
-siscone : siscone.o fastjetsiscone.o $(FASTJETDIR)/lib/libfastjet.a
-	  g77  -o siscone  siscone.o fastjetsiscone.o $(LDFLAGS) -lstdc++
+siscone_example: siscone_example.o fastjetsiscone.o $(FASTJETDIR)/lib/libfastjet.a
+	  g77  -o siscone_example  siscone_example.o fastjetsiscone.o $(LDFLAGS) -lstdc++
 
 clean: 
 	rm -f *.o
 
 realclean: clean
-	rm -f siscone
+	rm -f siscone_example
 
 depend:
 	makedepend $(FASTJET_INCLUDE) -Y --   -- $(SRCS) $(PROG_SRCS)
