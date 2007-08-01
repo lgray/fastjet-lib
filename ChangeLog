@@ -1,3 +1,9 @@
+2007-08-01  Matteo & Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/        *** ADDED ***
+	  wrote a wrapper to show how to use parts of fastjet from
+	  Fortran.	
+	
 2007-07-30  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* src/Makefile:
