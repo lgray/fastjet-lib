@@ -28,7 +28,7 @@ c ... fill in p (NB, energy is p(4,i))
 c.....run the clustering        
       call fastjetsiscone(p,npart,R,f,jets,njets)   ! ... now you have the jets
 
-c.....write out jets
+c.....write out all inclusive jets, in order of decreasing pt
       write(*,*) '      px         py          pz         E         pT'
       do i=1,njets
          write(*,*) (jets(j,i), j=1,4), sqrt(jets(1,i)**2+jets(2,i)**2)

@@ -56,6 +56,7 @@ extern "C" {
 // and on output 
 //
 //   F77JETS  the output jet momenta (whose second dim should be >= NPART)
+//            sorted in order of decreasing p_t.
 //   NJETS    the number of output jets 
 //
 void fastjetsiscone_(const double * p, const int & npart,                   
