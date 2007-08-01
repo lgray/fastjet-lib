@@ -1,0 +1,19 @@
+README file for fastjet-X.Y.Z/fortran_wrapper
+---------------------------------------------
+
+This directory is intended to illustrate how to write a wrapper to
+fastjet so as to be able to access it from Fortran (or any other
+prehistoric language).
+
+fastjetsiscone.cc
+        the file that does the wrapping
+
+siscone_example.f
+        an example showing how to use it from a fortran main
+
+Makefile
+        contains relevant libraries!
+
+One day, if there is real demand, the authors might consider writing a
+more complete set of wrappers.
+

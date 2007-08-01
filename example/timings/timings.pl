@@ -36,20 +36,21 @@ $baserep = 700;
 #@strategy = (11,102);
 #@strategy = (-3,-1,2);
 #@strategy = (102);
-@strategy = (2);
+#@strategy = (2);
+@strategy = (100);
 # for cones
 #@strategy = (1,204,203,101,201,202,212);
 #@strategy = (204);
 #@strategy = (11,102);
 
 #$radius=0.4;
-#$radius=0.7;
-$radius=1.0;
+$radius=0.7;
+#$radius=1.0;
 
 # number of runs to average over when getting
 # timings. Remember that first run will be discarded
 $nstat=6;
-# if run time exceeds this, pare down the number of nstat
+# if run time exceeds this, exit the program
 $runtimelimit=100; 
 
 $datadir="../../../data/";
@@ -107,7 +108,7 @@ if ( $strategy <= -1 ) {$maxcomb = 150;}
 if ( $strategy <= -3 ) {$maxcomb = 270;}
 if ( $strategy == 0 )  {$maxcomb = 13;}
 if ( $strategy >= 12 && $strategy <= 14) {$algo = "-cam";}
-if ( $strategy == 100)  {$maxcomb = 13;}
+if ( $strategy == 100)  {$maxcomb = 30;}
 if ( $strategy == 101)  {$maxcomb = 70; $algo = "-jetclu";}
 if ( $strategy == 102)  {$maxcomb = 13; $algo = "-midpoint";}
 # the plugin versions of the algorithms
@@ -158,7 +159,7 @@ for (my $j=1; $j <= $maxj; $j++) {
       }
 
       if ( $strategy == 100 ) {  # run ktjet 
-	@lines=`(time -p ../ktjet_timing  -combine $combine -repeat $local_repeat < $datafile > /dev/null) 2>&1`;
+	@lines=`(time -p ../ktjet_timing  -r $radius -combine $combine -repeat $local_repeat < $datafile ) 2>&1`;
       }
 
       if ( $strategy == 101 || $strategy == 102 ) { # run JetClu or MidPoint

@@ -75,6 +75,7 @@ int main (int argc, char ** argv) {
 
     if (i!=0) {continue;}
     cout << "Number of particles = "<< jets.size() << endl;
+    cout << "Algorithm: KtJet (long.inv.) with R = " << ktR << endl;
 
     // Print out the number of final state jets
     //std::cout << "Number of final state jets: " << ev.getNJets() << std::endl;
