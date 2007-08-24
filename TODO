@@ -4,8 +4,9 @@ High priority
 
 - clean up doc on new areas methods
 
-- reproduce and then fix segmentation found in subtraction work when
-  using Voronoi area for calorimeter with perfectly square tiles
+- understand and then fix segmentation violation in
+  bug-examples/voronoi-square-problem related to Voronoi diagrams of
+  certain sets of points on a square grid.
 
 
 ---------------

@@ -289,6 +289,14 @@ bool have_same_momentum(const PseudoJet & jeta, const PseudoJet & jetb) {
 
 
 //----------------------------------------------------------------------
+/// return a pseudojet with the given pt, y, phi and mass
+PseudoJet PtYPhiM(double pt, double y, double phi, double m) {
+  double ptm = sqrt(pt*pt+m*m);
+  return PseudoJet(pt*cos(phi), pt*sin(phi), ptm*sinh(y), ptm*cosh(y));
+}
+
+
+//----------------------------------------------------------------------
 // return kt-distance between this jet and another one
 double PseudoJet::kt_distance(const PseudoJet & other) const {
   //double distance = min(this->kt2(), other.kt2());

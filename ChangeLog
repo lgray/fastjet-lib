@@ -1,3 +1,17 @@
+2007-08-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* bug-examples/:                           *** ADDED ***
+	* bug-examples/voronoi-square-problem.*    *** ADDED ***
+	  added this directory as a common place for putting code that
+	  highlights bugs that need solving, together with a specific
+	  example bug.
+	
+	* include/fastjet/PseudoJet.hh: 
+	* src/PseudoJet.cc: 
+	  added a PtYPhiM(...) function for creating a pseudojet
+	  from pt, y, phi, m (alternative would be a constructor from some
+	  new type that just held pt,y,phi,m?)
+	
 2007-08-01  Matteo & Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* fortran_wrapper/        *** ADDED ***

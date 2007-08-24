@@ -193,6 +193,9 @@ PseudoJet operator/(const PseudoJet &, double);
 /// returns true if the momenta of the two input jets are identical
 bool have_same_momentum(const PseudoJet &, const PseudoJet &);
 
+/// return a pseudojet with the given pt, y, phi and mass
+PseudoJet PtYPhiM(double pt, double y, double phi, double m = 0.0);
+
 //----------------------------------------------------------------------
 // Routines to do with providing sorted arrays of vectors.
 
