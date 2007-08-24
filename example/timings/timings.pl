@@ -37,8 +37,8 @@ $baserep = 700;
 #@strategy = (-3,-1,2);
 #@strategy = (102);
 #@strategy = (2);
-@strategy = (100);
 # for cones
+@strategy = (204);
 #@strategy = (1,204,203,101,201,202,212);
 #@strategy = (204);
 #@strategy = (11,102);
@@ -109,14 +109,14 @@ if ( $strategy <= -3 ) {$maxcomb = 270;}
 if ( $strategy == 0 )  {$maxcomb = 13;}
 if ( $strategy >= 12 && $strategy <= 14) {$algo = "-cam";}
 if ( $strategy == 100)  {$maxcomb = 30;}
-if ( $strategy == 101)  {$maxcomb = 70; $algo = "-jetclu";}
+if ( $strategy == 101)  {$maxcomb = 350; $algo = "-jetclu";}
 if ( $strategy == 102)  {$maxcomb = 13; $algo = "-midpoint";}
 # the plugin versions of the algorithms
 if ( $strategy == 201)  {$maxcomb = 70; $algo = "-jetclu";}
-if ( $strategy == 202)  {$maxcomb = 20; $algo = "-midpoint";}
+if ( $strategy == 202)  {$maxcomb = 50; $algo = "-midpoint";}
 if ( $strategy == 212)  {$maxcomb = 10; $algo = "-midpoint -seed 0.0";}
 if ( $strategy == 203)  {$maxcomb = 22; $algo = "-pxcone";}
-if ( $strategy == 204)  {$maxcomb = 30; $algo = "-siscone";}
+if ( $strategy == 204)  {$maxcomb = 140; $algo = "-siscone";}
 
 
 print "Strategy = $strategy, writing to $filename\n";

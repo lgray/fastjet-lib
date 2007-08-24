@@ -4,6 +4,10 @@ High priority
 
 - clean up doc on new areas methods
 
+- reproduce and then fix segmentation found in subtraction work when
+  using Voronoi area for calorimeter with perfectly square tiles
+
+
 ---------------
 Medium priority
 ---------------

@@ -50,7 +50,7 @@
 
 
 # strategy = 101
-# 
+# Algorithm: native jetclu
 119 0.000369718309859155
 297 0.00116421052631579
 465 0.00315428571428571
@@ -82,16 +82,17 @@
 
 
 # strategy = 202
-# Algorithm: CDF MidPoint jet finder with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5
-119 0.00328476821192053
-297 0.0141428571428571
-465 0.04024
-719 0.111111111111111
-828 0.128857142857143
-955 0.1696
-1428 0.603
-2259 4.198
-3428 12.482
+# Algorithm: CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt (FastJet version 2.2beta1-devel)
+119 0.0033112582781457
+297 0.0142571428571429
+465 0.0418333333333333
+719 0.11425
+828 0.132
+955 0.1748
+1428 0.625
+2259 4.425
+3428 13.21
+4874 70.21
 
 
 # strategy = 212
@@ -105,3 +106,23 @@
 1428 21.812
 
 
+# Linux toth.lpthe.jussieu.fr 2.6.22.1-27.fc7 #1 SMP Tue Jul 17 17:13:26 EDT 2007 i686 i686 i386 GNU/Linux
+#  Intel[R] Pentium[R] D CPU 3.40GHz
+#  Intel[R] Pentium[R] D CPU 3.40GHz -- #  3417.017 MHz
+#  3417.017 MHz
+#
+# strategy = 204
+# Algorithm: SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off, SM stop scale = 0, SISCone code v1.2.0 (FastJet version 2.2beta1-devel)
+119 0.00386259541984733
+297 0.0186153846153846
+465 0.0438095238095238
+719 0.11375
+828 0.157333333333333
+955 0.203
+1428 0.496
+2259 1.332
+3428 3.105
+4874 6.654
+6976 15.312
+9423 28.798
+13433 61.6325
