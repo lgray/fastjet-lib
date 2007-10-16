@@ -302,8 +302,12 @@ void MidPointAlgorithm::run(std::vector<PhysicsTower>& towers, std::vector<Clust
 {
   std::vector<Cluster> stableCones;
   findStableConesFromSeeds(towers,stableCones);
-  findStableConesFromMidPoints(towers,stableCones);
-  splitAndMerge(stableCones,jets);
+  // GPS addition to prevent crashes if no stable cones
+  // are found (e.g. all particles below seed threshold)
+  if (stableCones.size() > 0) {
+    findStableConesFromMidPoints(towers,stableCones);
+    splitAndMerge(stableCones,jets);
+  }
 }
 
 

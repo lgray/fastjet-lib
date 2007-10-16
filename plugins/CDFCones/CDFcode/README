@@ -1,6 +1,7 @@
 README for the CDFcode directory
 --------------------------------
 
+----------------------------------------------------------------------
 GPS 21 February 2007
 
 This directory contains code by CDF for jet clustering. It is
@@ -16,8 +17,16 @@ essentially as downloaded from Joey Huston's page, EXCEPT that we have
   LorentzVector.hh 
 
 
+----------------------------------------------------------------------
 GPS 10 March 2007
 
 added functionality for the "pt_tilde" scale in the split-merge; as
 well as modifications in the places indicated above, we've also added
 maintenance of the pt_tilde scale in the Cluster.hh class.
+
+
+----------------------------------------------------------------------
+GPS 16 October 2007
+
+added protection in midpoint code for cases when no stable cones are
+found (e.g. because all particles are below seed threshold).
