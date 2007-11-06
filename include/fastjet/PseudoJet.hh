@@ -59,6 +59,28 @@ class PseudoJet {
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
   template <class L> PseudoJet(const L & some_four_vector) ;
 
+  /// reset the 4-momentum according to the supplied components; NB
+  /// this will not modify the user_index and cluster_hist_index
+  /// associated with the object.
+  inline void reset(double px, double py, double pz, double E) {
+    _px = px;
+    _py = py;
+    _pz = pz;
+    _E  = E;
+    _finish_init();
+  }
+
+  /// reset the 4-momentum according to the supplied generic 4-vector; NB
+  /// this will not modify the user_index and cluster_hist_index
+  /// associated with the object.
+  template <class L> inline void reset(const L & some_four_vector) {
+    _px = some_four_vector[0];
+    _py = some_four_vector[1];
+    _pz = some_four_vector[2];
+    _E  = some_four_vector[3];
+    _finish_init();
+  }
+
   // first "const double &" says that result is a reference to the
   // stored value and that we will not change that stored value.
   //

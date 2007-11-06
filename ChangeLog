@@ -1,3 +1,8 @@
+2007-11-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	  added PseudoJet::reset(...) for modifying the 4-momentum.
+
 2007-10-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc: 
