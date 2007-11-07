@@ -5,6 +5,12 @@ Release Notes for fastjet
 Changes from v2.2beta0 to v2.2beta1
 ===================================
 
+- switched to autotools for compmilation and installation
+
+- plugins include files are now to be accessed as 
+  #include "fastjet/SISConePlugin.hh" 
+  (previously the fastjet/ was not there).
+
 - added PseudoJet::reset(...) functions to reset the contents of a
   PseudoJet.
 
