@@ -1,3 +1,14 @@
+2007-11-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh:
+	  modified reset(...) a little so that we have:
+	  - version with 4 args (px,...,E) and template (vectorial) version
+          - version that takes a PseudoJet
+	  The first ones reset the indices to default values; the latter
+	  just copies the PseudoJet;
+
+	  Also coordinated the resetting of indices.
+
 2007-11-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 

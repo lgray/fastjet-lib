@@ -52,9 +52,8 @@ PseudoJet::PseudoJet(const double px, const double py, const double pz, const do
 
   this->_finish_init();
 
-  // some default values for these two indices
-  set_cluster_hist_index(-1);
-  set_user_index(-1);
+  // some default values for the history and user indices
+  _reset_indices();
 
 }
 

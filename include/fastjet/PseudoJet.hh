@@ -59,28 +59,6 @@ class PseudoJet {
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
   template <class L> PseudoJet(const L & some_four_vector) ;
 
-  /// reset the 4-momentum according to the supplied components; NB
-  /// this will not modify the user_index and cluster_hist_index
-  /// associated with the object.
-  inline void reset(double px, double py, double pz, double E) {
-    _px = px;
-    _py = py;
-    _pz = pz;
-    _E  = E;
-    _finish_init();
-  }
-
-  /// reset the 4-momentum according to the supplied generic 4-vector; NB
-  /// this will not modify the user_index and cluster_hist_index
-  /// associated with the object.
-  template <class L> inline void reset(const L & some_four_vector) {
-    _px = some_four_vector[0];
-    _py = some_four_vector[1];
-    _pz = some_four_vector[2];
-    _E  = some_four_vector[3];
-    _finish_init();
-  }
-
   // first "const double &" says that result is a reference to the
   // stored value and that we will not change that stored value.
   //
@@ -193,12 +171,36 @@ class PseudoJet {
   void operator+=(const PseudoJet &);
   void operator-=(const PseudoJet &);
 
+  /// reset the 4-momentum according to the supplied components and
+  /// put the user and history indices back to their default values
+  inline void reset(double px, double py, double pz, double E);
+  
+  /// reset the PseudoJet to be equal to psjet (including its
+  /// indices); NB if the argument is derived from a PseudoJet then
+  /// the "reset" used will be the templated version (which does not
+  /// know about indices...)
+  inline void reset(const PseudoJet & psjet) {
+    (*this) = psjet;
+  }
+
+  /// reset the 4-momentum according to the supplied generic 4-vector
+  /// (accessible via indexing, [0]==px,...[3]==E) and put the user
+  /// and history indices back to their default values.
+  template <class L> inline void reset(const L & some_four_vector) {
+    reset(some_four_vector[0], some_four_vector[1],
+          some_four_vector[2], some_four_vector[3]);
+  }
+
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;
   double _phi, _rap, _kt2; 
   int    _cluster_hist_index, _user_index;
+  /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
+  /// set the indices to default values
+  void _reset_indices();
+
   //vertex_type * vertex0, vertex1;
 };
 
@@ -269,12 +271,25 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
   _py = some_four_vector[1];
   _pz = some_four_vector[2];
   _E  = some_four_vector[3];
-  this->_finish_init();
+  _finish_init();
   // some default values for these two indices
+  _reset_indices();
+}
+
+
+//----------------------------------------------------------------------
+inline void PseudoJet::_reset_indices() { 
   set_cluster_hist_index(-1);
   set_user_index(-1);
 }
 
+//----------------------------------------------------------------------
+/// specialization of the "reset" template for case where something
+/// is reset to a pseudojet -- it then takes the user and history
+/// indices from the psjet
+// template<> inline void PseudoJet::reset<PseudoJet>(const PseudoJet & psjet) {
+//   (*this) = psjet;
+// }
 
 ////// fun and games...
 ////template<class L> class FJVector : public L {
@@ -288,6 +303,16 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 inline double PseudoJet::m() const {
   double mm = m2();
   return mm < 0.0 ? -std::sqrt(-mm) : std::sqrt(mm);
+}
+
+
+inline void PseudoJet::reset(double px, double py, double pz, double E) {
+  _px = px;
+  _py = py;
+  _pz = pz;
+  _E  = E;
+  _finish_init();
+  _reset_indices();
 }
 
 
