@@ -51,5 +51,5 @@ fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/PxCone
 fastjet_timing_plugins_LDADD += ../plugins/PxCone/libPxConePlugin.la ${FLIBS}
 endif
 
-TESTS_ENVIRONMENT = $(SHELL)
-TESTS = test-example.sh test-areas.sh
+#TESTS_ENVIRONMENT = $(SHELL)
+#TESTS = test-example.sh test-areas.sh
