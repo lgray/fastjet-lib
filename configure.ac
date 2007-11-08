@@ -149,7 +149,7 @@ AC_SUBST(CONFIG_LIBS_PLUGINS)
 dnl---------------------------------
 dnl make sure examples dir is there
 dnl---------------------------------
-AC_CONFIG_FILES( example/Makefile example/data/Makefile )
+AC_CONFIG_FILES( example/Makefile example/data/Makefile example/root/Makefile )
 
 dnl---------------------------------
 dnl and the documentation

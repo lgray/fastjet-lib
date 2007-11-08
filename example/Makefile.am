@@ -1,9 +1,9 @@
 # for the time being allow these things to be distributed but without
 # any particular help to go with them? This should change at some point
 
-SUBDIRS = data
+SUBDIRS = data root
 EXTRA_DIST = Makefile.alt ktjet_example.cc ktjet_timing.cc CmdLine.hh\
-	test-example.sh test-areas.sh
+	test-example.sh test-areas.sh makefile.static
 
 noinst_PROGRAMS = fastjet_example fastjet_example_v1_interface\
 	fastjet_areas fastjet_subtraction\

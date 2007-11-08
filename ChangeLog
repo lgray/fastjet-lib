@@ -1,5 +1,11 @@
 2007-11-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* example/root/Makefile.am: * example/Makefile.am: * configure.ac:
+  	  put in some stuff missing from the
+	  distribution (example/makefile.static, example/root/...)
+
+2007-11-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
 	* MERGED svn/fastjet/branches/fastjet-release-autoconf (Rev 938)
 	  back into the trunk; assembled the Changelogs to be in date
 	  order across the two groups of chages.
