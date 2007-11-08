@@ -1,5 +1,9 @@
 2007-11-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* plugins/(PxCone|CDFCones|SISCone)/Makefile.am: 
+	* plugins/(PxCone|CDFCones|SISCone)/...Plugin.hh: ***ADDED***
+	  added 
+
 	* example/root/Makefile.am: * example/Makefile.am: * configure.ac:
   	  put in some stuff missing from the
 	  distribution (example/makefile.static, example/root/...)
