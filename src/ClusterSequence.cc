@@ -160,7 +160,7 @@ void ClusterSequence::_print_banner() {
 
   cout << "#--------------------------------------------------------------------------\n";
   cout << "#                      FastJet release " << fastjet_version << endl;
-  cout << "#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez\n"; 
+  cout << "#            Written by M. Cacciari, G.P. Salam and G. Soyez            \n"; 
   cout << "#              http://www.lpthe.jussieu.fr/~salam/fastjet		   \n"; 
   cout << "#								      	   \n";
   cout << "# Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering\n";

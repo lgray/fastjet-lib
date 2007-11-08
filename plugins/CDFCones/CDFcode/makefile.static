@@ -1,7 +1,7 @@
 #CXXFLAGS = -Wall -O3 -march=i686
 #CXXFLAGSmidpoint = -Wall -O3 -march=i686
 
-include ../../../Makefile
+include ../../../makefile.static
 
 # with gcc's midpoint can be a lot slower with optimization than without;
 # accordingly we have a special CXXFLAGS for the midpoint algorithm to 

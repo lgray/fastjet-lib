@@ -1,0 +1,26 @@
+# makefile to speed up "making" of plugins
+
+all: cdfcones-lib siscone-lib
+
+# pxcone left out by default because it needs fortran compiler & libs.
+#all: pxcone cdfcones siscone
+
+pxcone-lib:
+	cd PxCone && $(MAKE) -f makefile.static 
+
+cdfcones-lib:
+	cd CDFCones && $(MAKE) -f makefile.static
+
+siscone-lib:
+	cd SISCone && $(MAKE)  -f makefile.static
+
+clean:
+	cd PxCone   && $(MAKE) -f makefile.static $(MAKECMDGOALS)
+	cd CDFCones && $(MAKE) -f makefile.static $(MAKECMDGOALS)
+	cd SISCone  && $(MAKE) -f makefile.static $(MAKECMDGOALS)
+
+distclean:
+	cd PxCone && $(MAKE) -f makefile.static $(MAKECMDGOALS)
+	cd CDFCones && $(MAKE) -f makefile.static $(MAKECMDGOALS)
+	cd SISCone && $(MAKE) -f makefile.static $(MAKECMDGOALS)
+	rm -f *~

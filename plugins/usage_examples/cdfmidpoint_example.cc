@@ -37,7 +37,17 @@
 //----------------------------------------------------------------------
 
 #include "run_jet_finder.hh"
-#include "CDFMidPointPlugin.hh"
+
+// get info on how fastjet was configured
+#include "fastjet/config.h"
+
+// make sure we have what is needed
+#ifdef ENABLE_PLUGIN_CDFCONES
+#  include "fastjet/CDFMidPointPlugin.hh"
+#else
+#  error "CDFMidPointPlugin not configured according to config.h"
+#endif
+
 #include<vector>
 #include<iostream>
 using namespace std;

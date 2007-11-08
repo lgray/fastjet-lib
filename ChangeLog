@@ -1,3 +1,54 @@
+2007-11-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* MERGED svn/fastjet/branches/fastjet-release-autoconf (Rev 938)
+	  back into the trunk; assembled the Changelogs to be in date
+	  order across the two groups of chages.
+
+2007-11-08  gavin salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac: 
+	  removed EXEEXT for fastjet-config (relevant presumably only for
+	  cygwin, where, as a script, it should not have the extension).
+
+	* example/Makefile.alt: 
+          removed explicit path to fastjet-config
+	
+2007-11-07  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* m4/CGAL.m4: move the local m4 macro defs in the m4 subdir
+	* Makefile.am (ACLOCAL_AMFLAGS): add info on the local m4 macros
+	* autogen.sh: search local aclocal m4 macros in the m4 subdir
+	* INSTALL: add info regarding autoreconf
+	
+
+2007-11-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* autogen.sh: 
+          removed lines replacing libtool->glibtool on MAC, since with
+	  fresh compilation of recent autoconf, automake and libtool, it's
+	  all working fine.
+	
+	* doc/Makefile.am *** ADDED ***
+	  added doc/ to the tarfile
+
+	* fortran_wrapper/siscone_example.f: 
+	* fortran_wrapper/Makefile -> Makefile.alt
+	* fortran_wrapper/Makefile.am
+	* Makefile.am
+	* configure.ac
+          got the fortran wrapper example working
+	
+2007-11-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+	* configure.ac: 
+	* example/Makefile.am: 
+	* plugins/usage_examples/Makefile.am: 
+
+          when pxcone is enabled, the following macros get called
+	    AC_PROG_F77
+            AC_F77_LIBRARY_LDFLAGS
+          they set up FLIBS, which is then used where relevant
+	
+
 2007-11-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh:
@@ -14,6 +65,291 @@
 	* include/fastjet/PseudoJet.hh: 
 	  added PseudoJet::reset(...) for modifying the 4-momentum.
 
+2007-11-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	  promoted Gregory to full author status.
+
+	* include/fastjet/version.hh: 
+	* configure.ac: 
+	* src/genconfig.sh: ***ADDED***
+
+	  arranged things so that we generate include/fastjet/config.h
+	  even with the makefile.static options, and we also use the
+	  version number from config.h in fastjet output...
+
+          + fixed some dependence  issues in other makefiles
+
+	* example/fastjet_timing_plugins.cc: 
+	* example/fastjet_areas.cc: 
+        * plugins/usage_examples/cdfmidpoint_example.cc
+        * plugins/usage_examples/siscone_example.cc
+        * plugins/usage_examples/many_algs_example.cc
+        * plugins/usage_examples/pxcone_example.cc
+
+	  adapted them to get rid of PLUGINS_NOT_IN_FASTJET and use
+	  instead config.h
+
+	* example/Makefile.alt: 
+	  documented a bit better
+
+2007-11-05  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* fastjet-config.in: 
+	  configure.ac:
+	  Previous replacement of AM_LIBS by CONFIG_LIBS had
+	  some influence on fastjet-config that was not properly
+	  taken into account. This should be fixed now.
+
+	* plugins/SISCone/fastjet
+	  plugins/CDFCones/fastjet
+	  plugins/PxCone/fastjet:
+	  Those 3 directories now contain the header files for the
+	  corresponding plugins
+
+	* plugins/SISCone/fastjet/Makefile.am
+	  plugins/CDFCones/fastjet/Makefile.am
+	  plugins/PxCone/fastjet/Makefile.am:
+	  Files added for autotools support
+
+	* plugins/SISCone/SISConePlugin.cc
+	  plugins/CDFCones/CDFJetCluPlugin.cc
+	  plugins/CDFCones/CDFMidPointPlugin.cc
+	  plugins/PxCone/PxConePlugin.cc
+	  plugins/usage_examples/Makefile.am
+	  plugins/usage_examples/siscone_example.cc
+	  plugins/usage_examples/cdfmidpoint_example.cc
+	  plugins/usage_examples/pxcone_example.cc
+	  plugins/usage_examples/many_algs_example.cc
+	  examples/Makefile.am
+	  example/fastjet_timing_plugins.cc
+	  example/fastjet_areas.cc:
+
+	  update to match the new include path structure
+
+	
+2007-11-01  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* INSTALL: add a bit more details
+
+	* CGAL.m4 (ACX_CHECK_CGAL):
+	  fix the previous changes. CGAL check starts by looking
+	  for a --with-cgalmakefile option. If this is absent it 
+	  looks for a defined CGAL_MAKEFILE variable. Otherwise,
+	  the default location is used.
+
+2007-10-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* CGAL.m4 (ACX_CHECK_CGAL): 
+	  hopefully fixed problem with it not finding the CGAL makefile  
+	
+	* autogen.sh: 
+	  fixed minor incompatibility with plain sh (in Darwin "if")
+
+2007-10-27  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* example/fastjet_timing_plugins.cc: 
+	  plugins/usage_examples/many_algs_examples.cc: 
+	  use config.h to get the info on the available plugins
+	  For the static build (using makefile.static), we
+	  explicitely define the SISCone and CDFCones flags.
+	
+	* example/test-areas.sh:                  *** ADDED ***
+	  example/test-example.sh:                *** ADDED ***
+	  test-compare.sh:                        *** ADDED ***
+	  test-script-output-orig.txt
+	  example/Makefile.am:
+	  add tests accessible through "make check".
+	  Note that the comparison results file has been reorganised
+	  to follow the order in which tests are run now (the latter 
+	  being a consequence of the build/Makefile order).
+
+	* plugins/usage_examples/Makefile.am: 
+	  build many_algs_example and the enabled plugins tests
+
+	* example/Makefile.am:
+	  - build different executables: 
+	    fastjet_example fastjet_example_v1_interface
+	    fastjet_areas fastjet_subtraction
+            fastjet_timing fastjet_timing_plugin
+
+	* autogen.sh: Add test to use glibtool(ize) under Darwin (Mac)
+	
+
+2007-10-24  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* series of small fixes to have a working make distcheck:
+	  - correctly set the include dirs in case one builds into a
+	    directory which is not the one containing the sources
+	  - fix issues with the conditional build of plugins to make sure
+	    that distribution-related make goals include all directories
+
+	
+2007-10-24  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_areas.cc: 
+	* example/fastjet_timing_plugins.cc: 
+	  Arranged for these to work both with new compilations and old
+	  (with ifdefs at beginning to decide where to search for
+	  plugins), using the PLUGINS_NOT_IN_FASTJET define for the old case
+	
+	* makefile.static: 
+	  added
+	  CXXFLAGS += -DPLUGINS_NOT_IN_FASTJET
+          to signal to example programs what is going on -- maybe sort
+	  this out more elegantly later?
+
+	* test-script.sh: 
+	  arranged for it to use makefile.static (for now)
+	
+	* example/makefile.static
+	  put this in (things had got lost)
+
+	* example/Makefile.alt
+	  this one should provide an example of how to get things to work
+	  with the new build/install procedure
+	  
+
+2007-10-24  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* plugins/PxCone/Makefile.am        *** ADDED ***
+	  plugins/Makefile.am
+	  configure.ac:
+	  Add autotools support for the PxCone plugin
+
+	* configure.ac:
+	  - add options to enable plugins:
+	      --enable-siscone  (default=yes)
+	      --enable-cdfcones (default=yes)
+	      --enable-pxcone   (default=no)
+	  - add recursion into the SISCone autotools build
+	  - the --enable-shared cmd-line option is already handled by
+	    libtool. We just need to add AM_DISABLE_SHARED to disable the
+	    shared lib by default (can still be changed by using
+	    --enable-shared)
+
+	* fastjet-config.in: added a '--prefix' option which returns the
+	  installation dir
+
+	
+2007-10-24  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac: 
+          included mention of the new Makefiles
+	
+	* Makefile.am, example/Makefile.am, example/data/Makefile.am
+	  Added the latter two and hopefully the example should now be
+	  included in the tarball (but testing seems to be awkard)
+	
+	* fastjet-config.in: 
+	  fixed bug left in from previous mod
+
+2007-10-23  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* Makefile.am: the script is installed ad bin_SCRIPT!!!!
+	
+
+2007-10-23  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* fastjet-config.in: 
+	  removed -static ouput in case where things only built with
+  	  static option (but not tested)
+
+          changed some a+="b" to a=$a"b" for compatibility with mac
+	
+2007-10-22  Gavin SALAM  <salam@tycho.lpthe.jussieu.fr>
+
+	* example/Makefile.alt *** ADDED ***
+	  illustration of how to compile things with the new structure.
+
+2007-10-20  salam  <salam@BISON>
+
+	* INSTALL: 
+	  started adding some instructions
+
+	* configure.ac: 
+	  sorted out order of libraries for siscone plugin in fastjet-config
+
+2007-10-19  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* configure.ac: 
+	  plugins/SISCone/Makefile_main_SISCone.am  *** ADDED ***
+
+	  We add an additional Makefile.am to avoid the '/' in the SUBDIRS
+	  in plugins/SISCone/Makefile.am which does not seem supported by
+	  older vesions of automake
+
+	  We also replace each occurence of VAR+="value" by
+	  VAR=${VAR}"value" which is more portable and apparently
+	  supported by older versions of autoconf
+	
+
+2007-10-19  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac: 
+	  changed version number by hand here to reflect what we have in
+  	  the code (this needs to be dealt with properly at some point),
+	  so that tarballs can't get confused with those already released.
+
+
+2007-10-18  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* configure.ac: 
+	  fastjet-config.in
+	  include/Makefile.am                   *** ADDED ***
+	  include/fastjet/Makefile.am        	*** ADDED ***
+	  include/fastjet/internal/Makefile.am	*** ADDED ***
+	  plugins/CDFCones/Mkefile.am		*** ADDED ***
+	  plugins/CDFCones/CDFcode/Makefile.am  *** ADDED ***
+
+	  A set of updates:
+	   - added installation of fastjet headers
+	   - added build of the CDFCones plugin
+	   - and fixed issues with the SISCone plugin
+	   - fixed bug in fastjet-config wrt plugins
+
+	
+2007-10-17  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* plugins/Makefile.am           *** ADDED ***
+	  plugins/SISCone/Makefile.am   *** ADDED ***
+	  These two files, together with modification of the main
+	  configure.ac and Makefile.am allow for the SISCone plugin to be
+	  installed
+	
+	* modify the main Makefile.am so the fastjet-config program is
+	  installed
+	
+	* autogen.sh           *** ADDED ***
+	  configure.ac	       *** ADDED ***
+	  config.h.in	       *** ADDED ***
+	  fastjet-config.in    *** ADDED ***
+	  CGAL.m4 	       *** ADDED ***
+	  Makefile.am 	       *** ADDED ***
+	  src/Makefile.am      *** ADDED ***
+	  This is the base files for an automake/autoconf-generated build
+	  of fastjet. With those files, building of the main lib can be
+	  done by issuing ./autogen.sh <configure-options>; make; make
+	  install
+	  There are configure options to configure the type of lib (shared
+	  or static) and the CGAL support.
+	
+	* Change the external reference to the SISCone svn so that
+	  it points to the development trunk. This allows to use
+	  the makefile.static and autoconf things already implemented
+	  there.
+
+	* rename "ReleaseNotes' into "NEWS" and added "AUTHORS"
+	  This is done to satisfy GNU standards
+
+	* move all Makefile to makefile.static
+	  In doing that, we have updated the makefile contents so
+	  that the recursive behaviour is not broken
+	
+2007-10-17  Gregory Soyez  <g.soyez@ulg.ac.be>
+	* BRANCHED (REVISION 889) -> svn/fastjet/branches/fastjet-release-autoconf
+	  for autoconf related work
+÷	
 2007-10-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc: 

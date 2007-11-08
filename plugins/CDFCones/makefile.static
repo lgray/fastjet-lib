@@ -1,6 +1,6 @@
 
 # include basic definitions
-include ../../Makefile
+include ../../makefile.static
 
 SRCS = CDFJetCluPlugin.cc CDFMidPointPlugin.cc
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
@@ -16,24 +16,25 @@ libCDFConesPlugin.a: $(OBJS) cdfcode-dir
 	ranlib libCDFConesPlugin.a
 
 cdfcode-dir:
-	cd CDFcode && $(MAKE)
+	cd CDFcode && $(MAKE) -f makefile.static 
 
 clean: cdfcode-clean
 	rm -f $(OBJS)
 
 cdfcode-clean:
-	cd CDFcode && $(MAKE) clean
+	cd CDFcode && $(MAKE)  -f makefile.static clean
 
 distclean: clean
 	rm -f libCDFConesPlugin.a  *~
 
 depend:
-	makedepend  $(INCLUDE) -I. --   -- $(SRCS)
+	makedepend  -f makefile.static $(INCLUDE) -I. --   -- $(SRCS)
 
 
 # DO NOT DELETE
 
-CDFJetCluPlugin.o: CDFJetCluPlugin.hh ../../include/fastjet/JetDefinition.hh
+CDFJetCluPlugin.o: fastjet/CDFJetCluPlugin.hh
+CDFJetCluPlugin.o: ../../include/fastjet/JetDefinition.hh
 CDFJetCluPlugin.o: ../../include/fastjet/internal/numconsts.hh
 CDFJetCluPlugin.o: ../../include/fastjet/internal/base.hh
 CDFJetCluPlugin.o: ../../include/fastjet/PseudoJet.hh
@@ -42,7 +43,7 @@ CDFJetCluPlugin.o: ../../include/fastjet/internal/DynamicNearestNeighbours.hh
 CDFJetCluPlugin.o: ../../include/fastjet/Error.hh CDFcode/JetCluAlgorithm.hh
 CDFJetCluPlugin.o: CDFcode/PhysicsTower.hh CDFcode/LorentzVector.hh
 CDFJetCluPlugin.o: CDFcode/CalTower.hh CDFcode/Cluster.hh CDFcode/Centroid.hh
-CDFMidPointPlugin.o: CDFMidPointPlugin.hh
+CDFMidPointPlugin.o: fastjet/CDFMidPointPlugin.hh
 CDFMidPointPlugin.o: ../../include/fastjet/JetDefinition.hh
 CDFMidPointPlugin.o: ../../include/fastjet/internal/numconsts.hh
 CDFMidPointPlugin.o: ../../include/fastjet/internal/base.hh

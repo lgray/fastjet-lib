@@ -1,11 +1,11 @@
 
 // fastjet stuff
 #include "fastjet/ClusterSequence.hh"
-#include "SISConePlugin.hh"
+#include "fastjet/SISConePlugin.hh"
 
 // scones stuff
-#include "momentum.h"
-#include "siscone.h"
+#include "siscone/momentum.h"
+#include "siscone/siscone.h"
 
 // other stuff
 #include<sstream>

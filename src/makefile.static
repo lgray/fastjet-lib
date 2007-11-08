@@ -1,8 +1,8 @@
-# fastjet/src/Makefile
+# fastjet/src/makefile.static
 
 # include the Makefile in the top directory, which has the bits and pieces
 # needed to get CGAL working
-include ../Makefile
+include ../makefile.static
 
 # make sure we use the pedantic flags here (defined in ../Makefile)
 #CXXFLAGS += $(CXXPEDANTIC)
@@ -15,23 +15,25 @@ SRCS = DnnPlane.cc Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc Cluster
 
 OBJS = $(patsubst %.cc,%.o,$(SRCS))
 
-
-
 all: libfastjet.a
 
 libfastjet.a: $(OBJS)
 	ar cru libfastjet.a $(OBJS)
 	ranlib libfastjet.a
 
+# generate the config.h file
+../include/fastjet/config.h: ../configure.ac genconfig.sh
+	./genconfig.sh
+
 install: libfastjet.a
-	cp libfastjet.a ../lib/
+	cp -p libfastjet.a ../lib/
 
 clean:
 	rm -f $(OBJS) libfastjet.a
 
 
 depend:
-	makedepend $(FASTJET_INCLUDE) -Y --  -- $(SRCS)
+	makedepend -f makefile.static $(FASTJET_INCLUDE) -Y --  -- $(SRCS)
 # DO NOT DELETE
 
 DnnPlane.o: ../include/fastjet/internal/DnnPlane.hh
@@ -64,7 +66,7 @@ ClusterSequence.o: ../include/fastjet/internal/numconsts.hh
 ClusterSequence.o: ../include/fastjet/ClusterSequence.hh
 ClusterSequence.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 ClusterSequence.o: ../include/fastjet/JetDefinition.hh
-ClusterSequence.o: ../include/fastjet/version.hh
+ClusterSequence.o: ../include/fastjet/version.hh ../include/fastjet/config.h
 PseudoJet.o: ../include/fastjet/Error.hh ../include/fastjet/internal/base.hh
 PseudoJet.o: ../include/fastjet/PseudoJet.hh
 PseudoJet.o: ../include/fastjet/internal/numconsts.hh
@@ -241,3 +243,7 @@ AreaDefinition.o: ../include/fastjet/PseudoJet.hh
 AreaDefinition.o: ../include/fastjet/internal/numconsts.hh
 AreaDefinition.o: ../include/fastjet/internal/base.hh
 AreaDefinition.o: ../include/fastjet/internal/BasicRandom.hh
+RangeDefinition.o: ../include/fastjet/RangeDefinition.hh
+RangeDefinition.o: ../include/fastjet/PseudoJet.hh
+RangeDefinition.o: ../include/fastjet/internal/numconsts.hh
+RangeDefinition.o: ../include/fastjet/internal/base.hh

@@ -1,6 +1,6 @@
 
 # common fastjet definitions
-include ../../Makefile
+include ../../makefile.static
 
 
 CXXSRC = PxConePlugin.cc 
@@ -21,11 +21,12 @@ distclean: clean
 	rm -f libPxConePlugin.a *~
 
 depend:
-	makedepend  $(INCLUDE) -I. --   -- $(CXXSRC) $(F77SRC)
+	makedepend -f makefile.static $(INCLUDE) -I. --   -- $(CXXSRC) $(F77SRC)
 
 # DO NOT DELETE
 
-PxConePlugin.o: PxConePlugin.hh ../../include/fastjet/JetDefinition.hh
+PxConePlugin.o: fastjet/PxConePlugin.hh
+PxConePlugin.o: ../../include/fastjet/JetDefinition.hh
 PxConePlugin.o: ../../include/fastjet/internal/numconsts.hh
 PxConePlugin.o: ../../include/fastjet/internal/base.hh
 PxConePlugin.o: ../../include/fastjet/PseudoJet.hh

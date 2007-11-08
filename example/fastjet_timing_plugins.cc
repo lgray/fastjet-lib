@@ -97,11 +97,19 @@
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
 
-// for all the plugins
-#include "PxConePlugin.hh"
-#include "SISConePlugin.hh"
-#include "CDFMidPointPlugin.hh"
-#include "CDFJetCluPlugin.hh"
+// get info on how fastjet was configured
+#include "fastjet/config.h"
+
+#ifdef ENABLE_PLUGIN_SISCONE
+#include "fastjet/SISConePlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_CDFCONES
+#include "fastjet/CDFMidPointPlugin.hh"
+#include "fastjet/CDFJetCluPlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_PXCONE
+#include "fastjet/PxConePlugin.hh"
+#endif
 
 using namespace std;
 
@@ -156,6 +164,7 @@ int main (int argc, char ** argv) {
   } else if (cmdline.present("-antikt")) {
     jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, strategy);
   } else if (cmdline.present("-midpoint")) {
+#ifdef ENABLE_PLUGIN_CDFCONES
     typedef fj::CDFMidPointPlugin MPPlug; // for brevity
     double cone_area_fraction = 1.0;
     int    max_pair_size = 2;
@@ -170,15 +179,28 @@ int main (int argc, char ** argv) {
                                       cone_area_fraction, max_pair_size,
                                       max_iterations, overlap_threshold,
                                       sm_scale));
+#else  // ENABLE_PLUGIN_CDFCONES
+    cerr << "midpoint requested, but not available for this compilation" << endl;
+#endif // ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-pxcone")) {
+#ifdef ENABLE_PLUGIN_PXCONE
     double min_jet_energy = 5.0;
     jet_def = fj::JetDefinition( new fj::PxConePlugin (
                                       ktR, min_jet_energy,
                                       overlap_threshold));
+#else  // ENABLE_PLUGIN_PXCONE
+    cerr << "pxcone requested, but not available for this compilation" << endl;
+    exit(-1);
+#endif // ENABLE_PLUGIN_PXCONE
   } else if (cmdline.present("-jetclu")) {
+#ifdef ENABLE_PLUGIN_CDFCONES
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
+#else  // ENABLE_PLUGIN_CDFCONES
+    cerr << "jetclu requested, but not available for this compilation" << endl;
+#endif // ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-siscone")) {
+#ifdef ENABLE_PLUGIN_SISCONE
     typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",0);
     double sisptmin = cmdline.value("-sisptmin",0.0);
@@ -188,6 +210,9 @@ int main (int argc, char ** argv) {
     if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
     if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
     jet_def = fj::JetDefinition(plugin);
+#else  // ENABLE_PLUGIN_SISCONE
+    cerr << "jetclu requested, but not available for this compilation" << endl;
+#endif // ENABLE_PLUGIN_SISCONE
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }

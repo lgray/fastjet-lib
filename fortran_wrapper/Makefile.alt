@@ -1,0 +1,21 @@
+# Makefile showing how to build the fortran wrapper given a properly 
+# installed fastjet compilation
+
+FASTJET_CONFIG=fastjet-config
+
+CXXFLAGS += $(shell $(FASTJET_CONFIG) --cxxflags)
+LIBS += $(shell $(FASTJET_CONFIG) --libs --plugins )
+
+
+siscone_example: siscone_example.o fastjetsiscone.o 
+	  g77  -o siscone_example  siscone_example.o fastjetsiscone.o $(LIBS) -lstdc++
+
+clean: 
+	rm -f *.o
+
+realclean: clean
+	rm -f siscone_example
+
+depend:
+	makedepend $(FASTJET_INCLUDE) -Y --   -- $(SRCS) $(PROG_SRCS)
+# DO NOT DELETE

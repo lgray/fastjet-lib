@@ -21,7 +21,7 @@
 
 # set CLEAN to "empty string" in order NOT to clean
 CLEAN=""
-MAKEARGS=""
+MAKEARGS="-f makefile.static "
 
 # flag -c in input to clean, -jN to make
 for arg in $*
@@ -29,11 +29,11 @@ do
   if [[ $arg == "-c" ]]; then
       CLEAN="1"
   elif [[ $arg == "-j2" ]]; then
-      MAKEARGS=$arg
+      MAKEARGS=$MAKEARGS" "$arg
   elif [[ $arg == "-j4" ]]; then
-      MAKEARGS=$arg
+      MAKEARGS=$MAKEARGS" "$arg
   elif [[ $arg == "-j8" ]]; then
-      MAKEARGS=$arg
+      MAKEARGS=$MAKEARGS" "$arg
   fi
 done 
 
@@ -43,19 +43,19 @@ OUTPUT=/tmp/output$$
 
 # build the main package
 pushd src
-if [ $CLEAN ]; then make clean || exit -1; fi
+if [ $CLEAN ]; then make $MAKEARGS clean || exit -1; fi
 make $MAKEARGS install
 popd
 
 # build the plugins
 pushd plugins
-if [ $CLEAN ]; then make clean || exit -1; fi
+if [ $CLEAN ]; then make $MAKEARGS clean || exit -1; fi
 make $MAKEARGS || exit -1
 popd
 
 # build the examples and test a couple
 pushd example
-if [ $CLEAN ]; then make clean || exit -1; fi
+if [ $CLEAN ]; then make $MAKEARGS clean || exit -1; fi
 make $MAKEARGS fastjet_example  || exit -1
 (./fastjet_example < data/single-event.dat | tee $OUTPUT) || exit -1
 make $MAKEARGS fastjet_areas || exit -1
@@ -68,7 +68,7 @@ popd
 
 # try out some plugin examples
 pushd plugins/usage_examples
-if [ $CLEAN ]; then make clean || exit -1; fi
+if [ $CLEAN ]; then make $MAKEARGS clean || exit -1; fi
 #make $MAKEARGS cdfmidpoint_example many_algs_example pxcone_example siscone_example || exit -1
 make $MAKEARGS cdfmidpoint_example many_algs_example siscone_example || exit -1
 (./many_algs_example < data/single-event.dat | tee -a $OUTPUT) || exit -1

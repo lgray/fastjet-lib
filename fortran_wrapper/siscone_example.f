@@ -1,7 +1,12 @@
 C example program to run siscone from f77
 C
-C To compile, type:
-C    make siscone_example
+C To compile, first make sure that the installation bin directory
+C is in your path (so as to have access to fastjet-config) and then 
+C type
+C    make -f Makefile.alt siscone_example
+C
+C Given the complications inherent in mixing C++ and fortran, your 
+C mileage may vary...
 C
 C To use, type: 
 C    ./siscone_example < ../example/data/single-event.dat     

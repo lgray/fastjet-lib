@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "CDFMidPointPlugin.hh"
+#include "fastjet/CDFMidPointPlugin.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/Error.hh"
 #include <sstream>

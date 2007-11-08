@@ -1,33 +1,37 @@
 
 # common fastjet definitions
-include ../../Makefile
+include ../../makefile.static
 
 
 CXXSRC = SISConePlugin.cc 
 OBJS = $(patsubst %.cc,%.o,$(CXXSRC)) 
 
-MAKESUBDIR = siscone_src
-SUBDIR = siscone/src
+MAKESUBDIR = siscone_config siscone_src
+SUBDIR = siscone/siscone
+SUBDIR_CONFIG = siscone
 
 # fastjet includes
 FASTJET_INCLUDE = -I../../include
 INCLUDE += $(FASTJET_INCLUDE)
 
 # scones includes
-INCLUDE += -I$(SUBDIR)
+INCLUDE += -I$(SUBDIR_CONFIG)
 
 all: libSISConePlugin.a
 
-libSISConePlugin.a: $(OBJS) $(MAKESUBDIR) siscone_src
+libSISConePlugin.a: $(MAKESUBDIR) $(OBJS)
 	ar cru libSISConePlugin.a $(OBJS) $(SUBDIR)/*.o
 	ranlib libSISConePlugin.a
 
+siscone_config:
+	@cd $(SUBDIR_CONFIG) && $(MAKE) -f makefile.static config
+
 siscone_src:
-	@cd $(SUBDIR) && $(MAKE) $(MAKECMDGOALS)
+	@cd $(SUBDIR) && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 
 clean:
 	rm -f $(OBJS)
-	@cd $(SUBDIR) && $(MAKE) $(MAKECMDGOALS)
+	@cd $(SUBDIR) && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 
 distclean: clean
 	rm -f libSISConePlugin.a *~
@@ -35,7 +39,7 @@ distclean: clean
 # NB: only use "relative" includes here (others are too subject
 #     to change according to the system one is on...)
 depend:
-	makedepend   $(FASTJET_INCLUDE) -I. -Isiscone/src --   -- $(CXXSRC)
+	makedepend  -f makefile.static $(FASTJET_INCLUDE) -I. -Isiscone/src --   -- $(CXXSRC)
 
 # DO NOT DELETE
 
@@ -45,9 +49,5 @@ SISConePlugin.o: ../../include/fastjet/internal/numconsts.hh
 SISConePlugin.o: ../../include/fastjet/internal/base.hh
 SISConePlugin.o: ../../include/fastjet/PseudoJet.hh
 SISConePlugin.o: ../../include/fastjet/Error.hh
-SISConePlugin.o: ../../include/fastjet/JetDefinition.hh SISConePlugin.hh
-SISConePlugin.o: siscone/src/momentum.h /usr/include/math.h
-SISConePlugin.o: siscone/src/reference.h siscone/src/defines.h
-SISConePlugin.o: siscone/src/siscone.h siscone/src/protocones.h
-SISConePlugin.o: siscone/src/vicinity.h siscone/src/quadtree.h
-SISConePlugin.o: siscone/src/split_merge.h
+SISConePlugin.o: ../../include/fastjet/JetDefinition.hh
+SISConePlugin.o: fastjet/SISConePlugin.hh

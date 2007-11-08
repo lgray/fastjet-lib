@@ -28,14 +28,15 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include<string>
-
 #ifndef __FASTJET_VERSION_HH__
 #define __FASTJET_VERSION_HH__
 
+#include<string>
+#include "fastjet/config.h"
+
 FASTJET_BEGIN_NAMESPACE
 
-const char* fastjet_version = "2.2beta1-devel";
+const char* fastjet_version = PACKAGE_VERSION;
 
 FASTJET_END_NAMESPACE
 

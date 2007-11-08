@@ -10,77 +10,6 @@
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 # Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 #-------------------------------------------------------------------------
-Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
-Strategy adopted by FastJet was N2Tiled
-
-Printing inclusive jets with pt > 5 GeV
----------------------------------------
-jet #        rapidity             phi              pt  n constituents
-    0     -0.86730713      2.90511470    983.38727662       35
-    1      0.22380471      6.04226446    910.28808604       52
-    2     -1.16520657      6.04589034     70.78886044       48
-    3     -2.34731970      1.25431317     10.72317440       18
-    4     -1.19479918      0.80734483      8.29342805       15
-    5     -1.71897064      4.01955399      8.16413672        9
-    6     -4.71909257      4.09173629      5.57326514       15
-    7      3.42713139      5.74362063      5.17254118       13
-    8     -4.83615264      2.20502275      5.02711586       12
-
-Printing exclusive jets with dcut = 25 GeV^2
---------------------------------------------
-jet #        rapidity             phi              pt  n constituents
-    0     -0.86730713      2.90511470    983.38727662       35
-    1      0.22093749      6.02911715    898.62586887       29
-    2     -1.16520657      6.04589034     70.78886044       48
-    3      0.36257181      0.54763129     16.65531147       23
-    4     -2.34731970      1.25431317     10.72317440       18
-    5     -1.19479918      0.80734483      8.29342805       15
-    6     -1.71897064      4.01955399      8.16413672        9
-    7     -4.71909257      4.09173629      5.57326514       15
-    8      3.42713139      5.74362063      5.17254118       13
-    9     -4.83615264      2.20502275      5.02711586       12
-#--------------------------------------------------------------------------
-#                      FastJet release 2.2beta0
-#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
-#              http://www.lpthe.jussieu.fr/~salam/fastjet		   
-#								      	   
-# Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
-# using fast geometric algorithms, with area measures and optional external
-# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
-#								      	   
-# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
-#-------------------------------------------------------------------------
-Jet definition was: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
-Area definition was: Passive area (optimal alg. based on jet.def.), where relevant with ghosts of area 0.0473947 (had requested 0.05), placed up to y = 7, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
-Strategy adopted by FastJet was N2Tiled
-
-Printing inclusive jets with pt > 5 GeV
----------------------------------------
- ijet   rap      phi        Pt         area  +-   err
-    0  -0.86731  2.90511    983.387    2.592 +-  0.000
-    1   0.22380  6.04226    910.288    4.141 +-  0.000
-    2  -1.16521  6.04589     70.789    4.141 +-  0.000
-    3  -2.34732  1.25431     10.723    2.826 +-  0.000
-    4  -1.19480  0.80734      8.293    2.533 +-  0.000
-    5  -1.71897  4.01955      8.164    2.898 +-  0.000
-    6  -4.71909  4.09174      5.573    4.315 +-  0.000
-    7   3.42713  5.74362      5.173    3.586 +-  0.000
-    8  -4.83615  2.20502      5.027    4.985 +-  0.000
-
-0
-#--------------------------------------------------------------------------
-#                      FastJet release 2.2beta0
-#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
-#              http://www.lpthe.jussieu.fr/~salam/fastjet		   
-#								      	   
-# Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
-# using fast geometric algorithms, with area measures and optional external
-# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
-#								      	   
-# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
-#-------------------------------------------------------------------------
 Ran CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
@@ -153,3 +82,74 @@ jet #        rapidity             phi              pt  n constituents
 
 0 particles unclustered
 
+#--------------------------------------------------------------------------
+#                      FastJet release 2.2beta0
+#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
+#              http://www.lpthe.jussieu.fr/~salam/fastjet		   
+#								      	   
+# Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
+# using fast geometric algorithms, with area measures and optional external
+# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
+#								      	   
+# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+#-------------------------------------------------------------------------
+Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
+Strategy adopted by FastJet was N2Tiled
+
+Printing inclusive jets with pt > 5 GeV
+---------------------------------------
+jet #        rapidity             phi              pt  n constituents
+    0     -0.86730713      2.90511470    983.38727662       35
+    1      0.22380471      6.04226446    910.28808604       52
+    2     -1.16520657      6.04589034     70.78886044       48
+    3     -2.34731970      1.25431317     10.72317440       18
+    4     -1.19479918      0.80734483      8.29342805       15
+    5     -1.71897064      4.01955399      8.16413672        9
+    6     -4.71909257      4.09173629      5.57326514       15
+    7      3.42713139      5.74362063      5.17254118       13
+    8     -4.83615264      2.20502275      5.02711586       12
+
+Printing exclusive jets with dcut = 25 GeV^2
+--------------------------------------------
+jet #        rapidity             phi              pt  n constituents
+    0     -0.86730713      2.90511470    983.38727662       35
+    1      0.22093749      6.02911715    898.62586887       29
+    2     -1.16520657      6.04589034     70.78886044       48
+    3      0.36257181      0.54763129     16.65531147       23
+    4     -2.34731970      1.25431317     10.72317440       18
+    5     -1.19479918      0.80734483      8.29342805       15
+    6     -1.71897064      4.01955399      8.16413672        9
+    7     -4.71909257      4.09173629      5.57326514       15
+    8      3.42713139      5.74362063      5.17254118       13
+    9     -4.83615264      2.20502275      5.02711586       12
+#--------------------------------------------------------------------------
+#                      FastJet release 2.2beta0
+#  Written by M. Cacciari and G.P. Salam with contributions from G. Soyez
+#              http://www.lpthe.jussieu.fr/~salam/fastjet		   
+#								      	   
+# Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
+# using fast geometric algorithms, with area measures and optional external
+# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
+#								      	   
+# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+#-------------------------------------------------------------------------
+Jet definition was: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
+Area definition was: Passive area (optimal alg. based on jet.def.), where relevant with ghosts of area 0.0473947 (had requested 0.05), placed up to y = 7, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
+Strategy adopted by FastJet was N2Tiled
+
+Printing inclusive jets with pt > 5 GeV
+---------------------------------------
+ ijet   rap      phi        Pt         area  +-   err
+    0  -0.86731  2.90511    983.387    2.592 +-  0.000
+    1   0.22380  6.04226    910.288    4.141 +-  0.000
+    2  -1.16521  6.04589     70.789    4.141 +-  0.000
+    3  -2.34732  1.25431     10.723    2.826 +-  0.000
+    4  -1.19480  0.80734      8.293    2.533 +-  0.000
+    5  -1.71897  4.01955      8.164    2.898 +-  0.000
+    6  -4.71909  4.09174      5.573    4.315 +-  0.000
+    7   3.42713  5.74362      5.173    3.586 +-  0.000
+    8  -4.83615  2.20502      5.027    4.985 +-  0.000
+
+Number of unclustered particles: 0

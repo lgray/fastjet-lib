@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "PxConePlugin.hh"
+#include "fastjet/PxConePlugin.hh"
 
 #include "fastjet/ClusterSequence.hh"
 #include <sstream>

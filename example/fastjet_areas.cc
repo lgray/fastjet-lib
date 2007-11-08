@@ -45,7 +45,14 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/ClusterSequencePassiveArea.hh"
-#include "SISConePlugin.hh"
+
+// get info on how fastjet was configured
+#include "fastjet/config.h"
+
+#ifdef ENABLE_PLUGIN_SISCONE
+#include "fastjet/SISConePlugin.hh"
+#endif
+
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -122,7 +129,9 @@ int main (int argc, char ** argv) {
   print_jets(clust_seq, inclusive_jets);
   cout << endl;
 
-  cout << clust_seq.unclustered_particles().size() << endl;
+  
+  cout << "Number of unclustered particles: " 
+       << clust_seq.unclustered_particles().size() << endl;
 
 
 }

@@ -30,7 +30,7 @@
 
 #include <iostream>
 #include "fastjet/ClusterSequence.hh"
-#include "SISConePlugin.hh"
+#include "fastjet/SISConePlugin.hh"
 
 namespace fj = fastjet;
 using namespace std;

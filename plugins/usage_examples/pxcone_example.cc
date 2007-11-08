@@ -40,7 +40,16 @@
 //----------------------------------------------------------------------
 
 #include "run_jet_finder.hh"
-#include "PxConePlugin.hh"
+
+// get info on how fastjet was configured
+#include "fastjet/config.h"
+
+#ifdef ENABLE_PLUGIN_PXCONE
+#  include "fastjet/PxConePlugin.hh"
+#else
+#  error "PxConePlugin not configured according to config.h"
+#endif
+
 #include<vector>
 #include<iostream>
 using namespace std;

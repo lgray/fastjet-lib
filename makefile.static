@@ -1,11 +1,11 @@
- # fastjet/Makefile
+# fastjet/Makefile
 
 # set this to "yes" if you have the CGAL library installed and want
 # to have the N ln N clustering option. In this case you should make 
 # sure that the CGAL_MAKEFILE environment variable is defined and points
 # to the CGAL Makefile (which defines various flags)
-USE_CGAL = yes
-#USE_CGAL = no
+#USE_CGAL = yes
+USE_CGAL = no
 
 # CGAL is based on a kernel for representing numbers -- setting 
 # USE_CGAL_SIMPLE_KERNEL to yes causes compilation to use a simpler
@@ -17,18 +17,25 @@ USE_CGAL_SIMPLE_KERNEL = no
 # that are useful if you plan on doing anything "unusual")
 #CXXFLAGS += -DNDEBUG
 
+# this tells the example programs to search just for "XYZPlugin.hh"
+# rather than "fastjet/XYZPlugin.hh"
+# WAS USED ONLY DURING DEVEL
+#CXXFLAGS += -DPLUGINS_NOT_IN_FASTJET
+
 # when uncommented, keeps debugging information in object file
 # (negligble impact on speed \sim 1%)
 CXXFLAGS += -g
 CXXPEDANTIC = -pedantic -ansi -Wno-long-long -Wimplicit -Wreturn-type -Wunused -Wparentheses
 
 
-#CGAL_MAKEFILE = .../some/path/makefile...
+CGAL_MAKEFILE = /usr/share/cgal/cgal.mk
 
 # flags that will be needed for linking from examples/
 LDFLAGS+=-L../lib -lfastjet
 
 # if you compile the pxcone plugin, you will need a fortran compiler
+# you will also need to manually edit include/fastjet/config.h (or
+# src/genconfig.sh) to reflect the existence of pxcone.
 FC = g77
 FFLAGS = -O3
 # for linking C++ with fortran, you must specify where to find

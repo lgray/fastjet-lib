@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "CDFJetCluPlugin.hh"
+#include "fastjet/CDFJetCluPlugin.hh"
 #include "fastjet/ClusterSequence.hh"
 #include <sstream>
 

@@ -1,6 +1,99 @@
+-------------------------------------
 Installation instructions for fastjet
 -------------------------------------
 
+As of version 2.2beta1-devel, fastjet has moved over to the use of
+autotools (for a few versions thereafter, the old build system will be
+retained in parallel, see below). 
+
+First configure fastjet for your local machine and needs with
+
+% ./configure [options]
+
+The full list of possible options can be obtained with ./configure
+--help; some useful ones include:
+
+   --prefix=<where-you-wish-to-install>   (default=/usr/local)
+		    specify location where FastJet will be installed
+		    The library and plugins will be installed in
+		    ${prefix}/lib while the headers will be placed in
+		    ${prefix}/include/fastjet
+
+   --enable-shared  enable contruction of shared libraries
+
+   --enable-cgal    enable use of CGAL libraries, which are needed 
+                    for the N ln N version of the k_t algorithm and
+                    N^{3/2} version of anti-k_t; relevant mainly if you
+                    expect to have N>15000.
+
+   --with-cgalmakefile=makefile
+                    specify location of CGAL Makefile (which contains
+                    info on correct compilation flags when using
+                    CGAL).  In the absence of this flag, the
+                    environment variable $(CGAL_MAKEFILE) will be used
+                    to locate the CGAL Makefile. If this is absent too,
+		    the default location (/usr/share/cgal/cgal.mk) is 
+		    used.
+
+    --enable-siscone          (default=yes)
+                    enables the SISCone plugin
+
+    --enable-cdfcones         (default=yes)
+		    enables the CDFJetClu and CDFMidPoint plugins
+
+    --enable-pxcone           (default=no)
+		    enables the PxCone plugin (note this is in f77,
+                    and so you may have to deal with C++/f77
+                    compatibility issues)
+
+Then compile and install:
+
+% make
+% make install
+
+To check that your compilation is giving answers as expected, type
+
+% make check
+
+As well as installing the libraries and headers, "make install" also
+installs ${prefix}/bin/fastjet-config; assuming this is in your path,
+then you can compile a program that uses fastjet as follows
+
+% g++ `fastjet-config --cxxflags` myprog.cc -c -o myprog.o
+% g++ myprog.o -o myprog `fastjet-config --libs --plugins` 
+
+the --plugins option is only needed if you want access to plugins!
+Other examples of the usage of this are given in the Makefile.alt file
+in the example directory.
+
+
+Note on the --enable-foo usage
+------------------------------
+each --enable-foo option can also be specified using
+--enable-foo=yes. If, instead you want to disable the 
+option, you can use --enable-foo=no or --disable-foo 
+
+Note for SVN users
+------------------
+If you download a subversion copy of FastJet, you first need to
+generate all configuration files. This is done by using
+
+% autoreconf --install
+% ./configure [configure option]
+
+or, alternatively,
+
+% ./autogen.sh [configure option]
+
+Remarks: 
+- adding '--force' to the list of autoreconf arguments will overwrite
+  the INSTALL file with the default version
+- using the autogen.sh script automatically runs ./configure 
+  (with the specified options)
+
+======================================================================
+OLD (NON-STANDARD) BUILD SYSTEM
+======================================================================
 ------------
 Quick method
 ------------
@@ -12,6 +105,10 @@ Run the following to build FastJet and its plugins and to test them.
 ------------------
 Longer description
 ------------------
+
+To make it possible to have two build systems in parallel, the
+makefiles for the old system are named makefile.static -- you should
+tell make to use them explicitly with the "-f makefile.static" option.
 
 As a first step the user should decide whether or not they want to
 have access to the N ln N algorithms for the kt algorithm, based on
@@ -35,22 +132,23 @@ the user to set this variable during the install process.
 
 Then in the src/ directory do
 
-  make
-  make install
+  make -f makefile.static
+  make -f makefile.static install
 
 which places the fastjet library in lib/. 
 
 To build the cone jet-finder plugins, you should go to the plugin
 directory and type
   
-  make
-  make pxcone      // OPTIONAL --  if you want fortran pxcone plugin
+  make -f makefile.static
+  make -f makefile.static pxcone      
+                   // OPTIONAL --  if you want fortran pxcone plugin
                    // to be compiled too -- make sure you also set
                    // G77LIBDIR in the main Makefile
 
 To run the example program cd to the example directory and do
 
-  make fastjet_example
+  make -f makefile.static fastjet_example
   ./fastjet_example < data/single-event.dat
 
 The output should be 
@@ -113,6 +211,9 @@ ktjet_timing
 	may be run with a variety of command-line options to control
 	behaviour -- see the beginning of fastjet_timing.cc for
 	further information.
+
+fastjet_timing_plugins
+        similar to fastjet_timing, but also works for plugins
 
 fastjet_areas
 	example program for evaluating the areas of the jets in 

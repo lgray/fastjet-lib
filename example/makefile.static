@@ -1,8 +1,8 @@
-# fastjet/example/Makefile
+# fastjet/example/makefile.static
 
 # include the Makefile in the top directory, which has the bits and pieces
 # needed to get CGAL working
-include ../Makefile
+include ../makefile.static
 # make sure we use the pedantic flags here (defined in ../Makefile)
 CXXFLAGS += $(CXXPEDANTIC)
 
@@ -15,8 +15,10 @@ CXXFLAGS += -Woverloaded-virtual
 # plugin includes here are temporary and subject to change...
 PLUGIN_INCLUDE = -I../plugins/CDFCones  -I../plugins/SISCone
 PLUGIN_LIBRARY = -L../plugins/CDFCones  -L../plugins/SISCone -lCDFConesPlugin  -lSISConePlugin
-PLUGIN77_INCLUDE = $(PLUGIN_INCLUDE) -I../plugins/PxCone
-PLUGIN77_LIBRARY = $(PLUGIN_LIBRARY) -L../plugins/PxCone -lPxConePlugin  $(F77LIB)
+#PLUGIN77_INCLUDE = $(PLUGIN_INCLUDE) -I../plugins/PxCone
+#PLUGIN77_LIBRARY = $(PLUGIN_LIBRARY) -L../plugins/PxCone -lPxConePlugin  $(F77LIB)
+PLUGIN77_INCLUDE = $(PLUGIN_INCLUDE) 
+PLUGIN77_LIBRARY = $(PLUGIN_LIBRARY) 
 
 INCLUDE += $(PLUGIN77_INCLUDE)
 
@@ -80,7 +82,7 @@ realclean: clean
 	rm -f  fastjet_example fastjet_timing ktjet_example ktjet_timing
 
 depend:
-	makedepend $(FASTJET_INCLUDE) -Y -- -- $(SRCS)
+	makedepend -f makefile.static $(FASTJET_INCLUDE) -Y -- -- $(SRCS)
 # DO NOT DELETE
 
 fastjet_example.o: ../include/fastjet/PseudoJet.hh
@@ -115,6 +117,7 @@ fastjet_subtraction.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 fastjet_subtraction.o: ../include/fastjet/Error.hh
 fastjet_subtraction.o: ../include/fastjet/JetDefinition.hh
 fastjet_subtraction.o: ../include/fastjet/internal/LimitedWarning.hh
+fastjet_subtraction.o: ../include/fastjet/RangeDefinition.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 fastjet_subtraction.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 fastjet_subtraction.o: ../include/fastjet/GhostedAreaSpec.hh
@@ -135,6 +138,7 @@ fastjet_areas.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 fastjet_areas.o: ../include/fastjet/Error.hh
 fastjet_areas.o: ../include/fastjet/JetDefinition.hh
 fastjet_areas.o: ../include/fastjet/internal/LimitedWarning.hh
+fastjet_areas.o: ../include/fastjet/RangeDefinition.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveArea.hh
 fastjet_areas.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
 fastjet_areas.o: ../include/fastjet/GhostedAreaSpec.hh
