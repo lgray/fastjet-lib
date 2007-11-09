@@ -1,5 +1,12 @@
 2007-11-09  Gregory Soyez  <g.soyez@ulg.ac.be>
 
+	* test-compare.sh:
+	  test-script-output-orig.txt:
+	  Allow to test the complete set of installed plugins.
+
+	* plugins/usage_examples/many_algs_example.cc (main): 
+	  append the anti-kt clustering algorithm
+
 	* fastjet-config.in: sort out the -static issue
 	  Now, shared lib is used by default if enabled. You can still
 	  use the static one using the --shared=no flag

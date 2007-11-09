@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
   
   // we will have four jet definitions, and the first two will be
   // plugins
-  vector<fastjet::JetDefinition> jet_defs(5);
+  vector<fastjet::JetDefinition> jet_defs(6);
   vector<fastjet::JetDefinition::Plugin *> plugins(3);
 
   // common parameters
@@ -121,6 +121,8 @@ int main(int argc, char** argv) {
   // set up kt and cam/aachen definitions
   jet_defs[3] = fastjet::JetDefinition(fastjet::kt_algorithm, jet_radius);
   jet_defs[4] = fastjet::JetDefinition(fastjet::cambridge_algorithm, 
+                                       jet_radius);
+  jet_defs[5] = fastjet::JetDefinition(fastjet::antikt_algorithm, 
                                        jet_radius);
 
   // call the example jet-finding routine with each of jet definitions
