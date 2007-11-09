@@ -1,4 +1,4 @@
-EXTRA_DIST = test-plugins.sh run_jet_finder.hh
+EXTRA_DIST = test-plugins.sh run_jet_finder.hh makefile.static
 
 noinst_PROGRAMS = many_algs_example
 many_algs_example_SOURCES = run_jet_finder.cc many_algs_example.cc 
