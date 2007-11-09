@@ -102,6 +102,7 @@ dnl----------------
 dnl general
 AC_CONFIG_FILES( plugins/Makefile plugins/usage_examples/Makefile )
 CONFIG_LIBS_PLUGINS=""
+CONFIG_LIBS_PLUGINS_STATIC=""
 
 dnl SISCone
 AC_ARG_ENABLE(siscone,
@@ -111,6 +112,7 @@ AC_ARG_ENABLE(siscone,
 if [[ "x$ENABLE_SISCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_SISCONE, [], [The SISCone plugin is enabled])
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lSISConePlugin -lsiscone"
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libSISConePlugin.a \${installationdir}/lib/libsiscone.a"
 fi
 AC_CONFIG_SUBDIRS(plugins/SISCone/siscone)
 AC_CONFIG_FILES( plugins/SISCone/Makefile plugins/SISCone/fastjet/Makefile )
@@ -122,8 +124,9 @@ AC_ARG_ENABLE(cdfcones,
 	[ENABLE_CDFCONES="$enableval"],
 	[ENABLE_CDFCONES="yes"])
 if [[ "x$ENABLE_CDFCONES" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_CDFCONES, [], [The CDFJetClu and CDFMidPoint plugins areenabled])
+   AC_DEFINE(ENABLE_PLUGIN_CDFCONES, [], [The CDFJetClu and CDFMidPoint plugins are enabled])
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lCDFConesPlugin"
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libCDFConesPlugin.a"
 fi
 AC_CONFIG_FILES(plugins/CDFCones/Makefile plugins/CDFCones/CDFcode/Makefile\
                 plugins/CDFCones/fastjet/Makefile )
@@ -140,11 +143,13 @@ if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    AC_PROG_F77
    AC_F77_LIBRARY_LDFLAGS
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lPxConePlugin "${FLIBS}
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libPxConePlugin.a "${FLIBS}
 fi
 AC_CONFIG_FILES( plugins/PxCone/Makefile plugins/PxCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)
+AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
 
 dnl---------------------------------
 dnl make sure examples dir is there

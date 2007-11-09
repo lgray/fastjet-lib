@@ -1,6 +1,6 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* The CDFJetClu and CDFMidPoint plugins areenabled */
+/* The CDFJetClu and CDFMidPoint plugins are enabled */
 #undef ENABLE_PLUGIN_CDFCONES
 
 /* The PxCone plugin is enabled */

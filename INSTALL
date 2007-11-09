@@ -63,6 +63,8 @@ then you can compile a program that uses fastjet as follows
 % g++ myprog.o -o myprog `fastjet-config --libs --plugins` 
 
 the --plugins option is only needed if you want access to plugins!
+If shared libraries are built, they will be used by default. You can
+still switch to the static libraries by adding the --shared=no option.
 Other examples of the usage of this are given in the Makefile.alt file
 in the example directory.
 

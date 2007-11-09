@@ -1,3 +1,10 @@
+2007-11-09  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* fastjet-config.in: sort out the -static issue
+	  Now, shared lib is used by default if enabled. You can still
+	  use the static one using the --shared=no flag
+	
+
 2007-11-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/FjPseudoJet.hh: 
@@ -8,6 +15,9 @@
 	  comes alphabetically before 2.2.0)
 	
 2007-11-08  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* test-compare.sh: all tests will be launched from here
+	  This allows to test examples before plugins examples
 
 	* plugins/(PxCone|CDFCones|SISCone)/...Plugin.hh:
 	  added a #warning to tell the user to switch to new version
