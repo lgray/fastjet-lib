@@ -23,8 +23,16 @@ echo "Comparing output from these runs (test-script-output.txt) "
 echo "to the expected output (test-script-output-orig.txt)"
 echo -----------------------------------------------------------
 grep -v 'CGAL' output.tmp > test-script-output.txt
-diff --ignore-matching-lines="release" --ignore-matching-lines="Written" --ignore-matching-lines="SISCone" test-script-output.txt test-script-output-orig.txt > output.tmp
-DIFF=`diff --ignore-matching-lines="release" --ignore-matching-lines="Written" --ignore-matching-lines="SISCone"  test-script-output.txt test-script-output-orig.txt`
+
+grep -v -e '#' -e 'SISCone' test-script-output.txt > output1.tmp
+grep -v -e '#' -e 'SISCone' test-script-output-orig.txt > output2.tmp
+DIFF=`diff output1.tmp output2.tmp`
+diff output1.tmp output2.tmp > output.tmp
+rm output1.tmp output2.tmp
+
+#diff --ignore-matching-lines="release" --ignore-matching-lines="Written" --ignore-matching-lines="SISCone" test-script-output.txt test-script-output-orig.txt > output.tmp
+#DIFF=`diff --ignore-matching-lines="release" --ignore-matching-lines="Written" --ignore-matching-lines="SISCone"  test-script-output.txt test-script-output-orig.txt`
+
 if [[ -n $DIFF ]]; then 
   cat output.tmp
   exit 1;

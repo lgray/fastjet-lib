@@ -32,6 +32,13 @@
 #ifndef __FJCLUSTERSEQUENCE_HH__
 #define __FJCLUSTERSEQUENCE_HH__
 
+
+#ifndef __BACKWARD_WARNING_V1__
+#define __BACKWARD_WARNING_V1__
+#warning This file includes at least one deprecated FastJet header from v1. \
+All fastjet components (including plugins) should now be accessed by including fastjet/...
+#endif // __BACKWARD_WARNING_V1__
+
 #include "fastjet/ClusterSequence.hh"
 
 

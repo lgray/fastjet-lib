@@ -1,3 +1,12 @@
+2007-11-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/FjPseudoJet.hh: 
+	* include/FjClusterSequence.hh: 
+	  added obscolescence warning
+
+	* put version number over to 2.2-beta1-devel (-beta ensures it
+	  comes alphabetically before 2.2.0)
+	
 2007-11-08  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* plugins/(PxCone|CDFCones|SISCone)/...Plugin.hh:

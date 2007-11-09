@@ -82,8 +82,13 @@ echo -----------------------------------------------------------
 echo "Comparing output from these runs (test-script-output.txt) "
 echo "to the expected output (test-script-output-orig.txt)"
 echo -----------------------------------------------------------
-diff  test-script-output.txt  test-script-output-orig.txt > $OUTPUT
-DIFF=`diff  test-script-output.txt  test-script-output-orig.txt`
+grep -v -e '#' -e 'SISCone' test-script-output.txt > output1.tmp
+grep -v -e '#' -e 'SISCone' test-script-output-orig.txt > output2.tmp
+#diff --ignore-matching-lines="#" --ignore-matching-lines=SISCone test-script-output.txt  test-script-output-orig.txt > $OUTPUT
+#DIFF=`diff --ignore-matching-lines="#" --ignore-matching-lines=SISCone test-script-output.txt  test-script-output-orig.txt`
+diff output1.tmp output2.tmp > $OUTPUT
+DIFF=`diff output1.tmp output2.tmp`
+rm output1.tmp output2.tmp
 if [[ $DIFF ]]; then cat $OUTPUT
 else 
 echo Results are identical
