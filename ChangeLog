@@ -1,5 +1,11 @@
 2007-11-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* src/Makefile.am: 
+	  added missing Makefile.alt to EXTAR_DIST
+
+	* plugins/PxCone/Makefile.am: 
+	  added missing pxcone.h to EXTRA_DIST
+
 	* test-compare.sh: 
 	  fixed bug causing it to fail when build takes place in a
 	  separate directory.

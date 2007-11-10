@@ -6,5 +6,5 @@ libPxConePlugin_la_SOURCES = pxcone.f PxConePlugin.cc
 
 include_HEADERS=PxConePlugin.hh
 
-EXTRA_DIST = makefile.static
+EXTRA_DIST = makefile.static pxcone.h
 
