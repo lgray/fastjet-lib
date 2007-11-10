@@ -8,7 +8,8 @@
 %%  . document the cluster history structures?
 %%  
 
-\documentclass[12pt]{article}
+\documentclass[12pt,a4]{article}
+
 
 \usepackage{a4wide}
 \usepackage{xspace}
@@ -19,7 +20,35 @@
 \addtolength{\textwidth}{2cm}
 \addtolength{\oddsidemargin}{-1cm}
 \addtolength{\textheight}{2cm}
-\addtolength{\topmargin}{-1cm}
+\addtolength{\topmargin}{-2cm}
+
+\usepackage{color}
+\definecolor{comment}{rgb}{0,0.3,0}
+\definecolor{identifier}{rgb}{0.0,0,0.3}
+\usepackage{listings}
+\lstset{language=C++}
+\lstset{
+  columns=flexible,
+  basicstyle=\tt,
+  keywordstyle=,
+  identifierstyle=\color{black},
+  commentstyle=\tt\color{comment},
+  mathescape=true,
+  escapebegin=\color{comment},
+  showstringspaces=false,
+  keepspaces=true
+}
+
+%% \lstset{% general command to set parameter(s)
+%%   columns=fullflexible
+%%   basicstyle=\tt, % print whole listing small
+%%   keywordstyle=\color{black},
+%%   % underlined bold black keywords
+%%   identifierstyle=, % nothing happens
+%%   commentstyle=\color{comment}, % white comments
+%%   stringstyle=\ttfamily, % typewriter type for strings
+%%   showstringspaces=false} % no special string spaces
+
 
 \parskip 3pt
 
@@ -36,10 +65,16 @@
 \newcommand{\eg}{{\it e.g.}\ }
 
 \title{FastJet 2.2 user manual}
-\author{Matteo Cacciari and Gavin P. Salam\\
-  LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\Universit\'e
-  Denis Diderot -- Paris 7, CNRS UMR 7589
+\author{Matteo Cacciari, Gavin P. Salam\\
+  \normalsize
+  LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\
+  \normalsize
+  Universit\'e Denis Diderot -- Paris 7, CNRS UMR 7589\medskip\\
+  Gregory Soyez\\
+  \normalsize
+  Brookhaven National Laboratory, Upton, NY, USA.
 }
+
 \date{}
 
 \begin{document}
@@ -79,12 +114,13 @@ the fastjet interface using a ``plugin'' facility.
 
 The implementation of the inclusive Cambridge algorithm and of jet
 areas are new features of version~2 of \fastjet; other changes include
-a new interface (the old one will be retained), and new algorithmic
-strategies that can provide a factor of two improvement in speed for
-events whose number $N$ of particles $\sim 10^4$. Choices of
-recombination schemes and plugins are new features of version 2.1.
-Version 2.2 introduces a broader set of area measures and
-the anti-$k_t$ algorithm~\cite{antikt}.
+a new interface,\footnote{The old one though retained through v2 is
+  deprecated and will be removed in v3} and new algorithmic strategies
+that can provide a factor of two improvement in speed for events whose
+number $N$ of particles $\sim 10^4$. Choices of recombination schemes
+and plugins are new features of version 2.1.  Version 2.2 introduces a
+broader set of area measures and the anti-$k_t$
+algorithm~\cite{antikt}.
 %
 % We anticipate that the \fastjet facilities may also be made available
 % at a later date with a more developed interface as part of the planned
@@ -99,14 +135,20 @@ JetClu and MidPoint cone jet algorithms (all infrared unsafe), as well as
 the recent Seedless Infrared-Safe Cone (SISCone) jet
 algorithm~\cite{SISCone}.
 
-There are a range of variants possible for the both the $k_t$ and
-Cambridge jet algorithms. For the $k_t$ jet algorithm, \fastjet implements
-the so-called $\Delta R$ distance measure (as recommended in
-\cite{RunII-jet-physics}) with various recombination schemes. It has
-both exclusive \cite{ktexcl} and inclusive modes \cite{ktincl}, the
-latter currently being in more widespread use, though the exclusive
-mode has physical advantages in certain cases.  We provide access to
-both modes.
+The current implementation of the above algorithms is restricted to
+the so-called $\Delta R$ distance measure (recommended in
+\cite{RunII-jet-physics}), with a choice of recombination schemes. The
+$k_t$ algorithm has both exclusive \cite{ktexcl} and inclusive modes
+\cite{ktincl}, the latter currently being in more widespread use,
+though the exclusive mode has physical advantages in certain cases.
+
+%% There are a range of variants possible for the above jet algorithms.
+%% For the $k_t$ jet algorithm, \fastjet implements the so-called $\Delta
+%% R$ distance measure (as recommended in \cite{RunII-jet-physics}) with
+%% various recombination schemes. It has both exclusive \cite{ktexcl} and
+%% inclusive modes \cite{ktincl}, the latter currently being in more
+%% widespread use, though the exclusive mode has physical advantages in
+%% certain cases.  We provide access to both modes.
 
 %......................................................................
 \subsection[$k_t$ jet algorithm]{$\boldsymbol{k_t}$ jet algorithm}
@@ -140,7 +182,8 @@ exclusive mode $R$ is commonly set to $1$.
 %......................................................................
 \subsection{Cambridge/Aachen jet algorithm}
 Currently the Cambridge/Aachen jet algorithm is provided only in an
-inclusive version, whose formulation is identical to that of the $k_t$
+inclusive version~\cite{CamWobisch}, whose formulation is identical to
+that of the $k_t$ 
 jet algorithm, except as regards the distance measures, which are:
 \begin{subequations}
   \label{eq:dij_cam}
@@ -173,7 +216,7 @@ measures which are now given by
 While being a sequential recombination algorithm like $k_t$ and
 Cambridge/Aachen, the anti-$k_t$ algorithm behaves in some sense like a
 `perfect' cone algorithm, in that its hard jets are exactly
-conical~\cite{antikt}.
+circular on the $y$-$\phi$ cylinder~\cite{antikt}.
 
 %......................................................................
 \subsection{Recombination schemes}
@@ -222,11 +265,11 @@ below.
 
 All classes are contained in the \ttt{fastjet} namespace. For basic
 usage, the user is exposed to three main classes:
-\begin{verbatim}
+\begin{lstlisting}
   class fastjet::PseudoJet;
   class fastjet::JetDefinition;
   class fastjet::ClusterSequence;
-\end{verbatim}
+\end{lstlisting}
 \ttt{fastjet::PseudoJet} provides a jet object with a four-momentum and some
 internal indices to situate it in the context of a jet-clustering
 sequence. \ttt{fastjet::ClusterSequence} is the class that carries out
@@ -247,10 +290,10 @@ alternative jet algorithms and jet-area determination were introduced.
 All jets, as well as input particles to the clustering (optionally)
 are \ttt{fastjet::PseudoJet} objects.  They can be created using one of the
 following constructors
-\begin{verbatim}
+\begin{lstlisting}
   fastjet::PseudoJet (double px, double py, double pz, double  E);
   template<class T> fastjet::PseudoJet (const T & some_lorentz_vector);
-\end{verbatim}
+\end{lstlisting}
 where the second form allows the initialisation to be obtained from
 any class \ttt{T} that allows subscripting to return the components of
 the momentum (running from $0\ldots3$ in the order $p_x,p_y,p_z,E$),
@@ -261,14 +304,15 @@ for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
   \clhep).}
 %
 It includes the following member functions for accessing the components
-\begin{verbatim}
+{
+\begin{lstlisting}
   double E()        const ; // returns the energy component
   double e()        const ; // returns the energy component
   double px()       const ; // returns the x momentum component
   double py()       const ; // returns the y momentum component
   double pz()       const ; // returns the z momentum component
-  double phi()      const ; // returns the azimuthal angle in range 0--2pi
-  double phi_std()  const ; // returns the azimuthal angle in range -pi--pi
+  double phi()      const ; // returns the azimuthal angle in range $0\ldots2\pi$
+  double phi_std()  const ; // returns the azimuthal angle in range $-\pi\ldots\pi$
   double rap()      const ; // returns the rapidity
   double rapidity() const ; // returns the rapidity
   double pseudorapidity() const ; // returns the pseudo-rapidity
@@ -277,8 +321,8 @@ It includes the following member functions for accessing the components
   double perp2()    const ; // returns the squared transverse momentum
   double perp()     const ; // returns the transverse momentum
   double m2()       const ; // returns squared invariant mass
-  double m()        const ; // returns invariant mass (-sqrt(-m2()) if m2() < 0)
-  double mperp2()   const ; // returns the squared transverse mass = kt^2+m^2
+  double m()        const ; // returns invariant mass ($-\sqrt{-m^2}$ if $m^2 < 0$)
+  double mperp2()   const ; // returns the squared transverse mass = $k_t^2+m^2$
   double mperp()    const ; // returns the transverse mass
   double operator[] (int i) const; // returns component i
   double operator() (int i) const; // returns component i
@@ -286,25 +330,36 @@ It includes the following member functions for accessing the components
   /// return a valarray containing the four-momentum (components 0--2
   /// are 3-momentum, component 3 is energy).
   valarray<double> four_mom() const;
-\end{verbatim}
+\end{lstlisting}}
 It also allows the user to set and access an index, in case the user
 wishes to keep track of the identity of a \ttt{fastjet::PseudoJet} object
-\begin{verbatim}
+\begin{lstlisting}
   /// set the user_index, intended to allow the user to label the object
   void set_user_index(const int index);
 
   /// return the user_index
   int user_index() const ;
-\end{verbatim}
-Finally the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} are defined, with
-the former acting on pairs of \ttt{PseudoJet}s and the latter acting
-on a \ttt{PseudoJet} and a \ttt{double} coefficient. Analgous
+\end{lstlisting}
+A \verb:PseudoJet: can be reset with
+\begin{lstlisting}
+  /// reset the 4-momentum according to the supplied components and
+  /// put the user and history indices back to their default values
+  inline void reset(double px, double py, double pz, double E);
+\end{lstlisting}
+with and similarly taking as argument a templated
+\verb:some_lorentz_vector: or a \verb:PseudoJet: (in the latter case,
+the user and internal indices are inherited).
+
+Finally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are defined, with
+\ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and the \ttt{*},
+\ttt{/} acting 
+on a \ttt{PseudoJet} and a \ttt{double} coefficient. Analagous
 \ttt{+=}, etc., operators, are also defined.
 
 
 We also provide routines for taking an unsorted vector of
 \ttt{fastjet::PseudoJet}s and returning a sorted vector,
-\begin{verbatim}
+\begin{lstlisting}
   /// return a vector of jets sorted into decreasing transverse momentum
   vector<fastjet::PseudoJet> sorted_by_pt(const vector<fastjet::PseudoJet> & jets);
   
@@ -313,7 +368,7 @@ We also provide routines for taking an unsorted vector of
   
   /// return a vector of jets sorted into decreasing energy
   vector<fastjet::PseudoJet> sorted_by_E(const vector<fastjet::PseudoJet> & jets);
-\end{verbatim}
+\end{lstlisting}
 These will typically be used on the jets returned by
 \ttt{fastjet::ClusterSequence}.
 
@@ -326,18 +381,18 @@ of how to carry out the clustering. Its constructor is\footnote{The v.
   2.0 constructor, without the recombination scheme argument, still
   remains valid.}
 %
-\begin{verbatim}
+\begin{lstlisting}
   fastjet::JetDefinition(fastjet::JetFinder jet_finder = kt_algorithm,
                          double R = 1.0,
                          fastjet::RecombinationScheme recomb_scheme = E_scheme,
                          fastjet::Strategy strategy = Best);
-\end{verbatim}
+\end{lstlisting}
 %
 The jet algorithm is one of the entries of the \ttt{fastjet::JetFinder}
 \ttt{enum}: 
-\begin{verbatim}
+\begin{lstlisting}
   enum JetFinder {kt_algorithm, cambridge_algorithm};
-\end{verbatim}
+\end{lstlisting}
 \ttt{R} specifies the value of $R$ that appears in
 eqs.~(\ref{eq:dij},\ref{eq:dij_cam}). 
 %
@@ -386,7 +441,8 @@ potentially interesting values listed in table~\ref{tab:Strategies}:
     \end{tabular}
     \caption{The more interesting of the various algorithmic
       strategies for clustering. (For remaining strategies see
-      \ttt{JetDefinition.hh})}
+      \ttt{JetDefinition.hh} --- note however that strategies not
+      listed in the above table may disappear in future releases.)}
     \label{tab:Strategies}
   \end{center}
 \end{table}
@@ -414,9 +470,9 @@ and $R$, the optimal strategy may also depend on the event structure.
 
 A textual description of the jet definition can be obtained by a call
 to the member function
-\begin{verbatim}
+\begin{lstlisting}
   std::string description(); 
-\end{verbatim}
+\end{lstlisting}
 
 %......................................................................
 \subsection{fastjet::ClusterSequence}
@@ -425,11 +481,11 @@ to the member function
 To run the jet clustering, create a \texttt{fastjet::ClusterSequence}
 object,\footnote{The analogue of \ktjet's \ttt{KtEvent}.}  through the
 following constructor
-\begin{verbatim}
+\begin{lstlisting}
   template<class L> fastjet::ClusterSequence
                                   (const std::vector<L> & input_particles,
                                    const fastjet::JetDefinition & jet_def); 
-\end{verbatim}
+\end{lstlisting}
 where \ttt{input\_particles} is the vector of initial particles of any
 type (\ttt{fastjet::PseudoJet}, \ttt{HepLorentzVector}, etc.) that can be
 used to initialise a \ttt{fastjet::PseudoJet} and \ttt{jet\_def} contains
@@ -438,11 +494,11 @@ the full specification of the clustering (see Section
 
 If the user wishes to access inclusive jets, the following member
 function should be used
-\begin{verbatim}
+\begin{lstlisting}
   /// return a vector of all jets (in the sense of the inclusive
   /// algorithm) with pt >= ptmin. 
   vector<fastjet::PseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
-\end{verbatim}
+\end{lstlisting}
 where \texttt{ptmin} may be omitted (then implicitly taking value
 $0$).
 
@@ -452,7 +508,7 @@ There are two ways of accessing exclusive jets,\footnote{In contrast
   sequence is identical in the two cases.} one where one specifies
 $d_{cut}$, the other where one specifies that the clustering is taken
 to be stopped once it reaches the specified number of jets.
-\begin{verbatim}
+\begin{lstlisting}
   /// return a vector of all jets (in the sense of the exclusive
   /// algorithm) that would be obtained when running the algorithm
   /// with the given dcut.
@@ -461,7 +517,7 @@ to be stopped once it reaches the specified number of jets.
   /// return a vector of all jets when the event is clustered (in the
   /// exclusive sense) to exactly njets.
   vector<fastjet::PseudoJet> exclusive_jets (const int & njets) const;
-\end{verbatim}
+\end{lstlisting}
 Note that these two member functions have the same name, and the
 compiler selects the correct one based on the type of the arguments,
 as is standard in C++.
@@ -472,16 +528,16 @@ section~\ref{sec:fastjet::PseudoJet}.
 
 The user may also wish just to obtain information about the number of
 jets in the exclusive algorithm:
-\begin{verbatim}
+\begin{lstlisting}
   /// return the number of jets (in the sense of the exclusive
   /// algorithm) that would be obtained when running the algorithm
   /// with the given dcut.
   int n_exclusive_jets (const double & dcut) const;
-\end{verbatim}
+\end{lstlisting}
 Another common query is to establish the $d_{\min}$ value associated
 with merging from $n+1$ to $n$ jets. Two member functions are
 available for determining this:
-\begin{verbatim}
+\begin{lstlisting}
   /// return the dmin corresponding to the recombination that went from
   /// n+1 to n jets (sometimes known as d_{n n+1}).
   double exclusive_dmerge (const int & njets) const;
@@ -491,7 +547,7 @@ available for determining this:
   /// exclusive_dmerge, except in cases where the dmin do not increase
   /// monotonically.
   double exclusive_dmerge_max (const int & njets) const;
-\end{verbatim}
+\end{lstlisting}
 The first returns the $d_{\min}$  in going from $n+1$ to $n$ jets. 
 %
 Occasionally however the $d_{\min}$ value does not increase
@@ -507,13 +563,13 @@ value will return a final state with $n$ or fewer jets.
 
 Finally the user may obtain the constituent particles of a given jet,
 via
-\begin{verbatim}
+\begin{lstlisting}
   /// return a vector of the particles that make up jet
   vector<fastjet::PseudoJet> constituents (const fastjet::PseudoJet & jet);
-\end{verbatim}
+\end{lstlisting}
 Note that this is a member function of the \ttt{fastjet::ClusterSequence} and
-not of \url{fastjet::PseudoJet}, because jets are only meaningful when
-referred to a given \url{fastjet::ClusterSequence}.\footnote{This is a
+not of \verb|fastjet::PseudoJet|, because jets are only meaningful when
+referred to a given \verb|fastjet::ClusterSequence|.\footnote{This is a
   further respect in which the interface differs from that of
   \ttt{KtJet}.}
 %
@@ -525,7 +581,7 @@ a unique index for each of the original particles with the
 \paragraph{Subjet analysis.} Currently no dedicated subjet
 analysis is provided. It is however trivial (though non-optimal) to
 obtain a subjet analysis as follows:
-\begin{verbatim}
+\begin{lstlisting}
   // run clustering on vector<fastjet::PseudoJet> all_particles
   fastjet::ClusterSequence clust_seq(all_particles);
 
@@ -539,10 +595,10 @@ obtain a subjet analysis as follows:
   fastjet::ClusterSequence jet0_seq(jet0_constituents);
 
   // run whatever subjet analysis is of interest here on jet0_seq.
-\end{verbatim}
+\end{lstlisting}
 One can also make use of the following methods, which allow one to
 follow the merging sequence (and walk back through it):
-\begin{verbatim}
+\begin{lstlisting}
   /// if the jet has parents in the clustering, it returns true
   /// and sets parent1 and parent2 equal to them.
   ///
@@ -559,16 +615,16 @@ follow the merging sequence (and walk back through it):
   /// and give the partner, otherwise return false and set the
   /// partner to zero
   bool has_partner(const PseudoJet & jet, PseudoJet & partner) const;
-\end{verbatim}
+\end{lstlisting}
 
 \paragraph{Unclustered particles.}  User-supplied plugin jet algorithms
 (see section~\ref{sec:plugins}) may have the property that not all
 particles are clustered into jets. In such a case it can be useful to
 obtain the list of unclustered particles. This can be done as
 follows:
-\begin{verbatim}
+\begin{lstlisting}
   vector<fastjet::PseudoJet> unclustered = clust_seq.unclustered_particles();
-\end{verbatim}
+\end{lstlisting}
 
 %======================================================================
 \section{Example program}
@@ -581,7 +637,7 @@ for \ttt{KtJet}, in the file \ttt{example/ktjet\_example.cc}.
 
 A simplified version of the \fastjet example program is given below.
 
-\begin{verbatim}
+\begin{lstlisting}
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 using namespace std;
@@ -627,7 +683,7 @@ int main (int argc, char ** argv) {
            exclusive_jets[i].perp(), constituents.size());
   }
 }
-\end{verbatim}
+\end{lstlisting}
 
 
 %======================================================================
@@ -673,23 +729,24 @@ argument in addition to the list of particles and the
 
 It is worth noting that in the limit of very densely populated events,
 all area definitions tend to the same value~\cite{CSSAreas}. It might
-therefore be convenient to select a Voronoi area type, rather than an
-active one, when using areas for phenomenological tasks like pileup
-subtraction~\cite{cs}, as it is generally obtained in a much faster way.
+therefore be advantageous to select a Voronoi area type, rather than
+an active one, when using areas for phenomenological tasks like pileup
+subtraction~\cite{cs}, as it generally requires less CPU time to
+calculate.
 
 To summarise, in order to access the areas of the jets the user is exposed to two main
 classes:
-\begin{verbatim}
+\begin{lstlisting}
    class fastjet::AreaDefinition;
    class fastje::ClusterSequenceArea;
-\end{verbatim}
+\end{lstlisting}
 
 If jet areas are to be used to study the level of a diffuse noise which might be present
-in the event (like underlying event particles or pilup), a further specification, the
+in the event (like underlying event particles or pileup), a further specification, the
 phase space region over which to study such noise, will have to be given via the class
-\begin{verbatim}
+\begin{lstlisting}
    class fastjet::RangeDefinition;
-\end{verbatim}
+\end{lstlisting}
 These classes are described in detail below, and an example program is given in 
 section~\ref{sec:ex-prog-sub}.
 
@@ -698,15 +755,15 @@ section~\ref{sec:ex-prog-sub}.
 
 Area definitions are contained in \ttt{fastjet::AreaDefinition}
 class. Its two main constructors are:
-\begin{verbatim}
+\begin{lstlisting}
   fastjet::AreaDefinition(fastjet::AreaType area_type, 
                           fastjet::GhostedAreaSpec ghost_spec);
-\end{verbatim}
+\end{lstlisting}
 for the various active and passive areas (which all involve ghosts)
 and
-\begin{verbatim}
+\begin{lstlisting}
   fastjet::AreaDefinition(fastjet::VoronoiAreaSpec voronoi_spec);
-\end{verbatim}
+\end{lstlisting}
 for the Voronoi area. A default constructor exists, and provides an
 active area with a \ttt{ghost\_spec} that is suitable for a majority
 of area measurements with clustering algorithms and typical Tevatron
@@ -714,41 +771,41 @@ and LHC rapidity coverage.
 
 Information about the current \ttt{AreaDefinition} can be retrieved as
 follows:
-\begin{verbatim}
+\begin{lstlisting}
   /// return a description of the current area definition
   std::string description() const ;
 
   /// return info about the type of area being used by this defn
   AreaType area_type() const ;
 
-  /// return a reference to the active area spec
+  /// return a reference to the ghosted area spec (where relevant)
   const GhostedAreaSpec  & ghost_spec()  const ;
 
-  /// return a reference to the voronoi area spec
+  /// return a reference to the voronoi area spec (where relevant)
   const VoronoiAreaSpec & voronoi_spec() const ;
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{Ghosted Areas (active and passive)}
 \label{sec:ghosted-areas}
 
 There are two variants each of the active and passive areas, as
 defined by the \ttt{AreaType} \ttt{enum}:
-\begin{verbatim}
+\begin{lstlisting}
   enum fastjet::AreaType{ [...],
                           active_area, 
                           active_area_explicit_ghosts,
                           one_ghost_passive_area, 
                           passive_area, 
                           [...]};
-\end{verbatim}
+\end{lstlisting}
 The two active variants give identical results. The second one
-explicitly includes the ghosts as final particles returned to the
-user. The first of the passive variants explicitly runs through the
+explicitly includes the ghosts when the user requests the constituents
+of a jet. The first of the passive variants explicitly runs through the
 procedure mentioned above, \ie it clusters the events with one ghost
 at a time, and repeats this for very many ghosts. This can be quite
 slow, so we also provide the \ttt{passive\_area} option, which makes
 use of information specific to the jet algorithm in order to speed up the
-area determination.\footnote{This ability is provided for $k_t$,
+passive-area determination.\footnote{This ability is provided for $k_t$,
   Cambridge/Aachen, anti-$k_t$ and the SISCone plugin. In the case of
   $k_t$ it is actually a Voronoi area that is used, since this can be
   shown to be equivalent to the passive area~\cite{CSSAreas}. For
@@ -762,14 +819,14 @@ the ghosts.\footnote{Or accept a default --- which uses the default
   6$} %
 This is done via the class \ttt{fastjet::GhostedAreaSpec} whose
 constructor is
-\begin{verbatim}
+\begin{lstlisting}
   fastjet::GhostedAreaSpec(double ghost_maxrap, 
                            int    repeat        = 1,
                            double ghost_area    = 0.01, 
                            double grid_scatter  = 1.0, 
                            double kt_scatter    = 0.1,
                            double mean_ghost_kt = 1e-100);
-\end{verbatim}
+\end{lstlisting}
 The ghosts are distributed on a uniform grid in $y$ and $\phi$, with
 small random fluctuations to avoid degeneracies. The
 \ttt{ghost\_maxrap} defines the maximum rapidity up to which ghosts
@@ -804,7 +861,7 @@ transverse momentum; and \ttt{mean\_ghost\_kt} which is the average transverse
 momentum of the ghosts.
 
 Even after the initialisation, the parameters can be modified by
-\begin{verbatim}
+\begin{lstlisting}
   void set_ghost_area	 (double ) ;
   void set_ghost_etamax  (double ) ;
   void set_ghost_maxrap  (double ) ;
@@ -812,9 +869,9 @@ Even after the initialisation, the parameters can be modified by
   void set_kt_scatter	 (double ) ;
   void set_mean_ghost_kt (double ) ;
   void set_repeat	 (int	 ) ;
-\end{verbatim}
+\end{lstlisting}
 and information about the \ttt{GhostedAreaSpec} in use can be retrieved as follows:
-\begin{verbatim}
+\begin{lstlisting}
   /// for a summary
   std::string description() const;
 
@@ -825,7 +882,7 @@ and information about the \ttt{GhostedAreaSpec} in use can be retrieved as follo
   double kt_scatter    () const ;
   double mean_ghost_kt () const ;
   int	 repeat        () const ;
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{Voronoi Areas}
 \label{sec:voronoi-areas}
@@ -840,26 +897,30 @@ The jets' Voronoi areas can be obtained from
 \ttt{fastjet::ClusterSequenceArea} by passing
 the proper \ttt{fastjet::VoronoiAreaSpec} specification to
 \ttt{fastjet::AreaDefinition}. Its constuctors are
-\begin{verbatim}
+\begin{lstlisting}
   /// default constructor (effective_Rfact = 1)
   fastjet::VoronoiAreaSpec() ;
   
   /// constructor that allows you to set effective_Rfact
   fastjet::VoronoiAreaSpec(double effective_Rfact) ; 
-\end{verbatim}
+\end{lstlisting}
 The second constructor allows one to modify (by a multiplicative factor
 \ttt{effective\_Rfact}) the radius of the circle which is intersected
 with the Voronoi cells.
 
 Information about the specification in use is returned by
-\begin{verbatim}
+\begin{lstlisting}
   /// return the value of effective_Rfact
   double effective_Rfact() const ;
 
   /// return a textual description of the area definition.
   std::string description() const ;
-\end{verbatim}
+\end{lstlisting}
+The Voronoi areas are calculated with the help of Fortune's ($N \ln
+N$) Voronoi diagram generator for planar static point
+sets~\cite{Fortune}.
 
+%----------------------------------------------------------------------
 \subsection{fastjet::ClusterSequenceArea}
 
 This is the main class\footnote{  
@@ -874,9 +935,9 @@ made with \ttt{AreaDefinition}. The user might of course also use these
 classes directly.} to which the user is exposed 
 for accessing cluster sequences that include
 information about jet areas.  It is derived from
-\ttt{fastjet::ClusterSequenceAreaBase} (and the latter from
+\ttt{fastjet::ClusterSequenceAreaBase} (itself derived from
 \ttt{fastjet::ClusterSequence}) and includes the methods
-\begin{verbatim}
+\begin{lstlisting}
   /// return a reference to the area definition
   virtual const fastjet::AreaDefinition & area_def() const ; 
 
@@ -889,19 +950,27 @@ information about jet areas.  It is derived from
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
   ///
-  ///       \int drap d\phi PseudoJet("rap,phi,pt=one") *
-  ///                           * Theta("rap,phi inside jet boundary")
+  ///       $\int dy d\phi$ PseudoJet($y$,$\phi$,$p_t=1$) * $\Theta$("$y,\phi$ inside jet boundary")
   ///
-  /// where PseudoJet("rap,phi,pt=one") is a 4-vector with the given
-  /// rapidity (rap), azimuth (phi) and pt=1, while Theta("rap,phi
-  /// inside jet boundary") is a function that is 1 when rap,phi
-  /// define a direction inside the jet boundary and 0 otherwise.
+  /// where PseudoJet($y$,$\phi$,$p_t=1$) is a 4-vector with the given
+  /// rapidity ($y$), azimuth ($\phi$) and $p_t=1$, while $\Theta$("$y,\phi$ inside jet boundary")
+  /// is a function that is 1 when $y,\phi$ define a direction inside the
+  /// jet boundary and 0 otherwise.
   ///
   virtual fastjet::PseudoJet area_4vector(const PseudoJet & jet) const ;
-\end{verbatim}
+\end{lstlisting}
+When the \verb|AreaType| is \verb|active_area_explicit_ghosts|, one
+may additionally use the following function 
+\begin{lstlisting}
+  /// true if a jet is made exclusively of ghosts
+  virtual bool is_pure_ghost(const PseudoJet & jet) const;
+\end{lstlisting}
+to determine whether a jet is made purely of ghosts. Its argument can
+also be one of the constituents of a jet, in which case it will return
+\verb|true| if that constituent is a ghost.
 
-
-\subsubsection{Areas and background subtraction}
+%----------------------------------------------------------------------
+\subsection{Areas and background subtraction}
 
 Jet areas can be used to study the level of a randomly distributed
 diffuse background which might be present together with the hard event
@@ -911,40 +980,40 @@ also subtract it from the hard jets. This novel way of using jets to
 determine the noise level on an event-by-event basis is
 introduced and described in detail in~\cite{cs}.
 
-The \ttt{fastjet::RangeDefinition} class allows the user to set the rapidity-azimuth 
-range over which he wishes to study the areas of the jets. It has two
-constructors. The first is
-\begin{verbatim}
+The \ttt{fastjet::RangeDefinition} class allows the user to set the
+rapidity-azimuth range over which he/she wishes to study the areas of the
+jets. It has two constructors. The first is
+\begin{lstlisting}
   /// constructor for a range definition given by |y|<rapmax
   fastjet::RangeDefinition(double rapmax);
-\end{verbatim}
+\end{lstlisting}
 which defines a range inclusive in azimuth (0--2$\pi$), and bound by a
 maximum value for $\mathrm{abs}(y)$. Note that in the methods above (and below)
 a \ttt{RangeDefinition} instance instantiated by this constructor can
 simply be replaced by the double \ttt{rapmax}.
 The second constructor,
-\begin{verbatim}
+\begin{lstlisting}
   /// constructor for a range definition given by 
   /// rapmin <= y <= rapmax, phimin <= phi <= phimax
   fastjet::RangeDefinition(double rapmin, double rapmax, 
                            double phimin = 0.0, double phimax = twopi);
-\end{verbatim}
+\end{lstlisting}
 allows one to fully specify a rectangle in the rapidity-azimuth plane.
 
 \ttt{fastjet::RangeDefinition} contains four function functions,
-\begin{verbatim}
+\begin{lstlisting}
   /// return bool according to whether the jet is within the given range
   bool is_in_range(const PseudoJet & jet) const ;
 
   /// return bool according to whether the (rap,phi) point is within the given range
   virtual bool is_in_range(double rap, double phi) const ;
 
-  /// area of the range region
+  /// (scalar) area of the range region
   virtual double area() const ;
 
-  /// description of range
+  /// textual description of the range
   virtual std::string description() const ;
-\end{verbatim}
+\end{lstlisting}
 The virtual functions can be overloaded by the user in a derived class, where a
 different range definition can be specified. An example is given in
 Appendix~\ref{app:b}, which implements a circular range centred on a
@@ -953,32 +1022,32 @@ jet's axis.
 Once a range has been specified, the following methods, belonging  to
 the base class \ttt{ClusterSequenceAreaBase}, 
 are available for extracting the diffuse noise level and its fluctuations:
-\begin{verbatim}
+\begin{lstlisting}
   /// the median of (pt/area) for jets contained within range, 
   /// making use also of the info on n_empty_jets
   double median_pt_per_unit_area(const RangeDefinition & range) const;
 
-  /// the median of (pt/area_4vector) for jets contained within range
+  /// the median of (pt/area_4vector.perp()) for jets contained within range,
   /// making use also of the info on n_empty_jets
   double median_pt_per_unit_area_4vector(const RangeDefinition & range) const;
   
   /// the function that does the work for median_pt_per_unit_area and 
   /// median_pt_per_unit_area_4vector: 
-  /// - something_is_area_4vect = false -> use plain area
-  /// - something_is_area_4vect = true  -> use 4-vector area
+  /// - use_area_4vector = false -> use plain area
+  /// - use_area_4vector = true  -> use 4-vector area
   double median_pt_per_unit_something(
                  const & RangeDefinition range, bool use_area_4vector) const;
 
   /// using jets within range (and with 4-vector areas if
-  /// use_area_4vector), calculate the median pt/area, as well as an
+  /// use_area_4vector), calculate the median pt/area ($\rho$), as well as an
   /// "error" (uncertainty), which is defined as the 1-sigma
   /// half-width of the distribution of pt/A, obtained by looking for
-  /// the point below which we have (1-0.6827)/2 of the jets
-  /// (including empty jets).
+  /// the value $\sigma$ such which a fraction (1-0.6827)/2 of the jets
+  /// (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
   ///
-  /// The subtraction for a jet with uncorrected pt pt^U and area A is
+  /// The subtraction for a jet with uncorrected pt, $p_t^U$ and area A is
   ///
-  ///   pt^S = pt^U - median*A +- sigma*sqrt(A)
+  ///   $p_t^S = p_t^U\; -\; \rho A \;\pm\; \sigma \sqrt{A}$
   ///
   /// where the error is only that associated with the fluctuations
   /// in the noise and not that associated with the noise having 
@@ -989,38 +1058,41 @@ are available for extracting the diffuse noise level and its fluctuations:
                                 bool use_area_4vector,
                                 double & median, double & sigma,
                                 double & mean_area);
-
-  /// same as the full version of get_median_rho_and_error, but without
-  /// access to the mean_area
-  void get_median_rho_and_sigma(const RangeDefinition & range, 
-                                bool use_area_4vector,
-                                double & median, double & sigma);
-
-  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the given range.
+\end{lstlisting}
+A version exists also without the last argument.
+%%   /// same as the full version of get_median_rho_and_error, but without
+%%   /// access to the mean_area
+%%   void get_median_rho_and_sigma(const RangeDefinition & range, 
+%%                                 bool use_area_4vector,
+%%                                 double & median, double & sigma);
+There is also a routine for estimating rapidity-dependence densities,
+intended for example for heavy-ion events
+\begin{lstlisting}
+  /// fits a form pt_per_unit_area(y) = a + b*y$^2$ in the given range.
   /// exclude_above allows one to exclude large values of pt/area from fit. 
   /// use_area_4vector = true uses the 4vector areas.
   void parabolic_pt_per_unit_area(double & a, double & b, 
                                   const RangeDefinition & range,
                                   double exclude_above = -1.0, 
                                   bool use_area_4vector = false) const;
-\end{verbatim}
+\end{lstlisting}
 Note that more specialised methods for extracting the noise level might
 be present at the level of a specific class, e.g.
 \ttt{ClusterSequenceActiveArea}. At least some of them 
-should however be considered as obsolete, and might be removed in 
+should however be considered obsolete, and might be removed in 
 future releases of \ttt{FastJet}.
 
 Finally, the base class \ttt{ClusterSequenceAreaBase} contains virtual methods (usually
 overloaded by the derived classes) that deal with pure-ghost jets that might be formed
 when adding ghost particles to the events in order to calculate ghosted areas:
-\begin{verbatim}
-  /// true if a jet is made exclusively of ghosts
-  ///
-  /// NB: most area classes do not give any explicit ghost jets, but
-  /// some do, and they should replace this function with their own
-  /// version.
-  virtual bool is_pure_ghost(const PseudoJet & jet) const ;
-
+%%   /// true if a jet is made exclusively of ghosts
+%%   ///
+%%   /// NB: most area classes do not give any explicit ghost jets, but
+%%   /// some do, and they should replace this function with their own
+%%   /// version.
+%%   virtual bool is_pure_ghost(const PseudoJet & jet) const ;
+%% 
+\begin{lstlisting}
   /// return the total area, within range, that is free of jets
   virtual double empty_area(const RangeDefinition & range) const;
 
@@ -1028,7 +1100,13 @@ when adding ghost particles to the events in order to calculate ghosted areas:
   /// in the given range in an active area case.
   /// Note that the number returned is a double.
   virtual double n_empty_jets(const RangeDefinition & range) const;
-\end{verbatim}
+\end{lstlisting}
+With active area definitions these are calculated based on the
+observed number of pure ghost jets (and unclustered ghosts) in range;
+for Voronoi and passive and areas, they are calculated using the
+difference between the total range area and the area of the jets
+contained in the range, with the number of empty jets then being
+calculated based on the average jet area.
 
 \subsection{Example program with areas and subtraction}
 \label{sec:ex-prog-sub}
@@ -1038,7 +1116,7 @@ particles into jets, evaluates the median transverse momentum per unit
 area of the event (both for the standard area, and the alternative
 4-vector area), and performs the subtraction of the background noise
 from the hard jets.
-\begin{verbatim}
+\begin{lstlisting}
 #include "fastjet/ClusterSequenceArea.hh"
 
 namespace fj = fastjet;
@@ -1093,8 +1171,13 @@ int main (int argc, char ** argv) {
               pt_sub, jet_sub.perp());
     }
 }
-\end{verbatim}
-
+\end{lstlisting}
+Note that the above listing ignores the issue of cases where the
+transverse momentum to be subtracted is larger than the jet's $p_t$.
+This occurs when the jet is not really a true hard jet, but rather
+mostly composed of the background contamination.  In such cases, the
+subtraction should not be performed, and the jet should be instead be
+discarded.
 
 %----------------------------------------------------------------------
 % 
@@ -1119,14 +1202,14 @@ int main (int argc, char ** argv) {
 % the user must first create an object that specifies how to distribute
 % the ghosts. This is done via the class \ttt{fastjet::ActiveAreaSpec} 
 % whose constructor is
-% \begin{verbatim}
+% \begin{lstlisting}
 %   fastjet::ActiveAreaSpec(double ghost_maxrap, 
 %                           int    repeat = 1,
 %                           double ghost_area = 0.01, 
 %                           double grid_scatter = 1e-4, 
 %                           double kt_scatter = 0.1,
 %                           double mean_ghost_kt = 1e-100);
-% \end{verbatim}
+% \end{lstlisting}
 % \ttt{ghost\_maxrap} defines the maximum rapidity up to which ghosts
 % are generated --- typically jet areas will be reliable for jets up to
 % rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. The \ttt{ghost\_area}
@@ -1166,13 +1249,13 @@ int main (int argc, char ** argv) {
 % may create an object of this type in order to carry out a jet
 % clustering that also provides information on the areas of the jets.
 % Its constructor is
-% \begin{verbatim}
+% \begin{lstlisting}
 %   template<class L> fastjet::ClusterSequenceActiveArea
 %          (const std::vector<L> & pseudojets, 
 %           const fastjet::JetDefinition & jet_def,
 %           const fastjet::ActiveAreaSpec & area_spec,
 %           const bool & writeout_combinations = false) ;
-% \end{verbatim}
+% \end{lstlisting}
 % 
 % 
 % This class is derived from \ttt{fastjet::ClusterSequenceWithArea}. The
@@ -1196,7 +1279,7 @@ int main (int argc, char ** argv) {
 % their interfaces will change in a future release, and further
 % refinements may be added. It is also possible that their functionality
 % will be transferred to the base class.
-% \begin{verbatim}
+% \begin{lstlisting}
 %   /// enum providing a variety of tentative strategies for estimating
 %   /// the background (e.g. non-jet) activity in a highly populated event; the
 %   /// one that has been most extensively tested is median.
@@ -1219,7 +1302,7 @@ int main (int argc, char ** argv) {
 %                                   double raprange=-1.0,
 %                                   double exclude_above=-1.0,
 %                                   bool use_area_4_vector=false) const;
-% \end{verbatim}
+% \end{lstlisting}
 % \ttt{pt\_per\_unit\_area} can usually be used for high luminosity events with
 % pileup, while \url{parabolic_pt_per_unit_area} has been found to provide a
 % better description of the background (its transverse momentum per unit area
@@ -1282,12 +1365,15 @@ int main (int argc, char ** argv) {
 \section{Plugin jet algorithms}
 \label{sec:plugins}
 
-It can be useful to have a common interface for a range of jet algorithms
-beyond the $k_t$ and Cambridge algorithms, and it can also be useful
-to use the area-measurement tools for these other jet algorithms. In
-order to facilitate this, the \fastjet package provides a
-\emph{plugin} facility, allowing almost any other jet algorithm to be
-used within the same framework.
+It can be useful to have a common interface for a range of jet
+algorithms beyond the native ($k_t$, anti-$k_t$ and Cambridge/Aachen)
+algorithms, and it can also be useful to use the area-measurement
+tools for these other jet algorithms. In order to facilitate this, the
+\fastjet package provides a \emph{plugin} facility, allowing almost
+any other jet algorithm\footnote{Except those that perform $3\to2$
+  clusterings for which there is no unique mapping of particles into
+  jets (some particles are effectively shared among more than one
+  jet).} to be used within the same framework.
 
 %----------------------------------------------------------------------
 \subsection{Generic plugin use and construction}
@@ -1295,7 +1381,7 @@ used within the same framework.
 
 Any plugin is to be derived from the abstract base class
 \ttt{fastjet::JetDefinition::Plugin},
-\begin{verbatim}
+\begin{lstlisting}
   class JetDefinition::Plugin{
   public:
     /// return a textual description of the jet-definition implemented
@@ -1312,13 +1398,26 @@ Any plugin is to be derived from the abstract base class
   
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Plugin() {};
+
+    //------- ignore what follows for simple usage! ---------
+    /// return true if there is passive areas can be efficiently determined by
+    /// (a) setting the ghost_separation scale (see below)
+    /// (b) clustering with many ghosts with $p_t$ $\ll$ ghost_separation_scale
+    /// (c) counting how many ghosts end up in a given jet
+    virtual bool supports_ghosted_passive_areas() const {return false;}
+
+    /// set the ghost separation scale for passive area determinations
+    /// in future runs (NB: const, so should set internal mutable var)
+    virtual void set_ghost_separation_scale(double scale) const;
+    virtual double ghost_separation_scale() const {return 0.0;}
+
   };
-\end{verbatim}
+\end{lstlisting}
 A \ttt{JetDefinition} can be constructed by providing a pointer to a
 \ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
 can then be used identically to the normal \ttt{JetDefinition} objects
 used in the previous sections.
-\begin{verbatim}
+\begin{lstlisting}
    // have some plugin class derived from the Plugin base class
    class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
 
@@ -1329,7 +1428,7 @@ used in the previous sections.
 
    // then create ClusterSequence with the input particles and jet_def,
    // and use it to extract jets as usual
-\end{verbatim}
+\end{lstlisting}
 
 Any plugin class must define the \ttt{description} and
 \ttt{run\_clustering} member functions. The former just returns a
@@ -1337,7 +1436,7 @@ textual description of the jet algorithm and its options (e.g.\ radius,
 etc.), while the latter does the hard work of running the user's own
 jet algorithm and transferring the information to the
 \ttt{ClusterSequence} class. This is best illustrated with an example:
-\begin{verbatim}
+\begin{lstlisting}
 using namespace fastjet;
 
 void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) {
@@ -1351,7 +1450,7 @@ void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) {
   // particles
 
   // ...
-\end{verbatim}
+\end{lstlisting}
 Once the plugin has run its own clustering it must transfer the
 information back to the \ttt{clust\_seq}. This is done by recording
 mergings between pairs of particles or between a particle and the
@@ -1360,7 +1459,7 @@ vector, after the initial particles. Note though that the plugin is
 not allowed to modify \ttt{clust\_seq.jets()} itself. Instead it must
 tell \ttt{clust\_seq} what recombinations have occurred, via the
 following (\ttt{ClusterSequence} member) functions
-\begin{verbatim}
+\begin{lstlisting}
   /// record the fact that there has been a recombination between
   /// jets()[jet_i] and jets()[jet_k], with the specified dij, and
   /// return the index (newjet_k) allocated to the new jet, whose
@@ -1381,7 +1480,7 @@ following (\ttt{ClusterSequence} member) functions
   /// for inclusive jets, any iB recombination will returned to the user 
   /// as a jet.
   void plugin_record_iB_recombination(int jet_i, double diB);
-\end{verbatim}
+\end{lstlisting}
 These \ttt{dij} recombination functions return the index
 \ttt{newjet\_k} of the newly formed pseudojet. The plugin may need to
 keep track of this index in order to specify subsequent
@@ -1389,14 +1488,39 @@ recombinations.
 
 Certain (cone) jet algorithms do not perform pairwise clustering ---
 in these cases the plugin must invent a ficititious series of pairwise
-recombinations that leads to the same final jets.
+recombinations that leads to the same final jets. Such jet algorithms
+may also produce extra information that cannot be encoded in this way
+(for example a list of stable cones), but to which one may still want
+access. For this purpose, during \verb|run_clustering(...)|, the
+plugin may call the \verb|ClusterSequence| member function:
+\begin{lstlisting}
+  inline void plugin_associate_extras(std::auto_ptr<ClusterSequence::Extras> extras);
+\end{lstlisting}
+where \verb|ClusterSequence::Extras| is a dummy class  which the
+plugin should extend so as to provide the relevant information:
+\begin{lstlisting}
+  class ClusterSequence::Extras {
+  public:
+    virtual ~Extras() {}
+    virtual std::string description() const;
+  };
+\end{lstlisting}
+A method of \verb|ClusterSequence| then provides the user with access
+to the extra information:
+\begin{lstlisting}
+  /// returns a pointer to the extras object (may be null) const
+  Extras * extras() const;
+\end{lstlisting}
+The user should carry out a dynamic cast so as to convert the extras
+back to the specific plugin extras class, as illustrated later for
+SISCone.
 
 Example plugin jet algorithms that are provided with \fastjet are the
 \ttt{CDFMidPointPlugin} illustrated above and also a
 \ttt{CDFJetCluPlugin}. These interface code available at
 \cite{CDFCones}. The \ttt{PxConePlugin} interfaces the PxCone code
 \cite{PxCone}.  All three of these cone jet algorithms, though widely
-used, are infrared unsafe.
+used, are infrared or collinear unsafe (depending on the parameters).
 %
 The \ttt{SISConePlugin}, described in detail below,
 interfaces the infrared safe seedless cone algorithm of
@@ -1425,15 +1549,15 @@ The plugin library and include files are to be be found in the
 \verb:plugins/SISCone: directory, and the main header file is
 \verb:SISConePlugin.hh:. The \verb:SISConePlugin: class has a
 constructor with the following structure
-\begin{verbatim}
+\begin{lstlisting}
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
                  int    n_pass_max = 0,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
                  SISConePlugin::SplitMergeScale   
-                   split_merge_scale = SISConePlugin::SM_pttilde);
-\end{verbatim}
+                 split_merge_scale = SISConePlugin::SM_pttilde);
+\end{lstlisting}
 A cone centered at $y_c,\phi_c$ is stable if the sum of momenta of all
 particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
 \verb:cone_radius:^2$ has rapidity $y_c,\phi_c$.
@@ -1475,9 +1599,9 @@ parameter. This controls both the scale used for ordering the
 protojets during the split--merge step during the split--merge step,
 and also the scale used to measure the degree of overlap between
 protojets. While various options have been implemented, 
-\begin{verbatim}
+\begin{lstlisting}
   enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde };
-\end{verbatim}
+\end{lstlisting}
 we recommend using only the last of them $\tilde p_t = \sum_{i \in
   \mathrm{jet}}|p_{t,i}|$, which is also the default scale. The other
 scales are included only for historical comparison purposes: $p_t$
@@ -1489,7 +1613,7 @@ momentum and stems from the decay of two identical particles.
 
 
 An example of the use of the SISCone plugin would be as follows:
-\begin{verbatim}
+\begin{lstlisting}
   // define a generic plugin pointer
   fastjet::JetDefinition::Plugin * plugin;
 
@@ -1514,7 +1638,7 @@ An example of the use of the SISCone plugin would be as follows:
   // ClusterSequence objects that involve it, may you delete the 
   // plugin
   delete plugin;
-\end{verbatim}
+\end{lstlisting}
 Note that the it makes no sense to ask for exclusive jets from a
 SISCone based \verb:ClusterSequence:.
 
@@ -1528,22 +1652,22 @@ return the pass in which a jet was found.\footnote{Owing to the
   particle (by default, $-1$).} %
 The user may also obtain a list of the positions of original stable
 cones as follows:
-\begin{verbatim}
+\begin{lstlisting}
    const fastjet::SISConeExtras * extras = 
              dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
    vector<fastjet::PseudoJet> stable_cones(extras->stable_cones());
-\end{verbatim}
+\end{lstlisting}
 The stable cones are represented as four-momenta, for which only the
 rapidity and azimuth are meaningful. As for the jets, the
 \verb:user_index(): indicates the pass at which a given stable cone
 was found.
 
 Since SISCone is infrared safe, it may meaningfully be used also with
-the \verb:ClusterSequenceActiveArea: class. Note however that in that
+the \verb:ClusterSequenceArea: class. Note however that in that
 case ones loses the cone-specific information from the jets, because
 of the way \fastjet filters out the information relating to ghosts in
 the clustering. If the user needs both areas and cone-specific
-information, she/he should use the
+information, she/he may use the
 \verb:ClusterSequenceActiveAreaExplicitGhosts: class (for usage
 information, see the corresponding \verb:.hh: file). 
 
@@ -1560,27 +1684,40 @@ larger than for a normal QCD event with the same number of particles.
 We therefore recommend running with not too small a \verb:ghost_area:
 (e.g.\ $\sim 0.05$) and using $\verb:grid_scatter:=1$, which helps to
 reduce the number of stable cones (and correspondingly, the time and
-memory usage of the subsequent split--merge step).
+memory usage of the subsequent split--merge step). An alternative, which
+has been found to be acceptable in most situations, is to use a passive
+area, since this is relatively fast to calculate with SISCone.
 
 %======================================================================
 \section{Compilation notes}
 
-In order to access the \ttt{NlnN} strategy the library needs to be
-compiled with the Computational Geometry Algorithms Library \ttt{CGAL}
-\cite{CGAL}. 
+Compilation and installation make use of the standard
+\begin{verbatim}
+  % ./configure
+  % make
+  % make check
+  % make install
+\end{verbatim}
+procedure. Explanations of available options are given in the
+\ttt{INSTALL} file in the top directory.
 
-The user should first download \ttt{CGAL} from
-\url{http://www.cgal.org/} and then compile and install it. Under
-linux, she or he will have to ensure that an environment variable
-\ttt{CGAL\_MAKEFILE} points to the Makefile generated by \ttt{CGAL} at
-install time, containing various definitions of locations of include
-files. \ttt{CGAL} will encourage the user to set this variable during
-the install process.
+In order to access the \ttt{NlnN} strategy for the $k_t$ algorithm the
+library needs to be compiled with the Computational Geometry
+Algorithms Library \ttt{CGAL} \cite{CGAL}.\footnote{This same strategy
+  gives $N\ln N$ performance for Cambridge/Aachen and $N^{3/2}$
+  performance for anti-$k_t$ (whose sequence for jet clustering
+  triggers a worst-case scenario for the underlying computational
+  geometry methods.)}  At configure time the \verb|--enable-cgal|
+option may be used to specify that CGAL support should be included.
 
-The choice of whether or not CGAL will be used is made in the
-Makefile in the top directory of the distribution, through the value
-of the variable \ttt{USE\_CGAL} which should be either \ttt{yes} or
-\ttt{no}. For more details see the \ttt{INSTALL} file in the top directory.
+\ttt{CGAL} may be obtained in source form from
+\url{http://www.cgal.org/}. Under linux, after compilation and
+installation, the user will be encouraged to set an environment
+variable \ttt{CGAL\_MAKEFILE}, which points to the Makefile generated
+by \ttt{CGAL} at install time, which contains various definitions of
+locations of include files. The user may specify the location of this
+file to \fastjet either through the above environment variable, or
+with the \verb|--with-cgalmakefile=...| configuration option.
 
 
 The \ttt{NlnNCam} strategy does not require CGAL, since it is based on
@@ -1595,7 +1732,7 @@ We wish to thank Timothy Chan for helpful exchanges about the details
 of his dynamic closest pair algorithm. We thank Markus Wobisch and
 Andreas Oehler for comments on the documentation.
 
-We are grateful to Joey Huston and Mike Seymour for providing
+We are grateful to CDF, Joey Huston and Mike Seymour for providing
 permission to distribute their cone jet algorithm codes as plugins for
 fastjet. 
 
@@ -1607,7 +1744,7 @@ fastjet.
 
 If the user wishes to introduce a new recombination scheme, she may
 do so writing a class derived from \ttt{JetDefinition::Recombiner}:
-\begin{verbatim}
+\begin{lstlisting}
   class JetDefinition::Recombiner {
   public:
     /// return a textual description of the recombination scheme
@@ -1625,16 +1762,16 @@ do so writing a class derived from \ttt{JetDefinition::Recombiner}:
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Recombiner() {};
   };
-\end{verbatim}
+\end{lstlisting}
 A jet definition can then be constructed by providing a pointer to an
 object derived from \ttt{JetDefinition::Recombiner} instead of the
 \ttt{RecombinationScheme} index:
-\begin{verbatim}
+\begin{lstlisting}
   JetDefinition(JetFinder jet_finder, 
                 double R, 
                 const JetDefinition::Recombiner * recombiner,
                 Strategy strategy = Best);
-\end{verbatim}
+\end{lstlisting}
 The derived class \ttt{JetDefinition::DefaultRecombiner} is what is
 used internally to implement the various recombination schemes if an
 external \ttt{Recombiner} is not provided. It provides a useful
@@ -1654,13 +1791,13 @@ Note that this range definition will of course then lead to a different
 median $p_t$ per unit area for each jet. This choice of range can be
 used, for instance, in heavy ion collisions, where the background
 distribution is expected to be non uniform in rapidity and, in the case
-of non-central collisions, also in azimuth. Upon wisely choosing the
-distance $d$, using \ttt{CircularRange} will then allow one to use
+of non-central collisions, also in azimuth. With a wise choice for
+distance $d$, \ttt{CircularRange} will then allow one to use
 \ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}[\ttt{\_4vector}]\ttt{()} in such cases
 too, without having to resort to
 \ttt{ClusterSequenceArea::parabolic\_pt\_per\_unit\_area()}.
 
-\begin{verbatim}
+\begin{lstlisting}
 #include "fastjet/RangeDefinition.hh"
 class CircularRange : public fastjet::RangeDefinition {
 public:
@@ -1695,18 +1832,18 @@ public:
 private:
   double _distance,_rapjet,_phijet;  
 };
-\end{verbatim}
+\end{lstlisting}
 
 The user might also wish to overload the virtual function
 \ttt{RangeDefinition::area()}, rather than rely on the base class function to
 return the protected \ttt{\_total\_area} variable, set by the constructor.
 
 Finally, the protected function 
-\begin{verbatim}
+\begin{lstlisting}
   /// calculate, and set in _total_area, the area with a numerical test
   /// takes a reasonable time with rapmax = 10, npoints = 100
   void _numerical_total_area(double rapmax, int npoints) ;
-\end{verbatim}
+\end{lstlisting}
 is also provided by the \ttt{RangeDefinition} base class, and can be called by
 the constructor of the derived class. It allows one to
 calculate numerically the area of a given range, in case it changes
@@ -1798,7 +1935,14 @@ hep-ex/0005012.
 
 \bibitem{CSSAreas} M.~Cacciari,  G.~P.~Salam and G.~Soyez, LPTHE-07-02, in preparation.
 
-\bibitem{cs} M.~Cacciari,  G.~P.~Salam, LPTHE-07-01, in preparation.
+\bibitem{cs}
+  M.~Cacciari and G.~P.~Salam,
+  %``Pileup subtraction using jet areas,''
+  arXiv:0707.1378 [hep-ph].
+  %%CITATION = ARXIV:0707.1378;%%
+
+
+
 
 \bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
 
@@ -1822,6 +1966,10 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   hep-ph/0610012.
   %%CITATION = HEP-PH 0610012;%%
 
+\bibitem{Fortune}
+  S.~Fortune,
+  %''A sweepline algorithm for Voronoi diagrams,''
+  Algorithmica {\bf 2} (1987) 1.
 
 \bibitem{CGAL}
 %Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
