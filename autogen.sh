@@ -4,6 +4,13 @@
 # NB: you are advised to have recent versions of autoconf, libtool and
 # automake; if you run into problems; first download and compile all
 # the recent versions of the autotools programs, and then try again...
+#
+# Earliest version that have been found to work are:
+#   automake: 1.9.2
+#   autoconf: 2.59
+#   libtool:  1.5.6
+# (i.e. SLC4 on lxplus)
+#
 
 srcdir=`dirname $0`
 PKG_NAME="FastJet"
