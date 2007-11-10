@@ -1,15 +1,16 @@
-EXTRA_DIST = test-plugins.sh run_jet_finder.hh makefile.static
+#EXTRA_DIST = test-plugins.sh run_jet_finder.hh makefile.static
+EXTRA_DIST = run_jet_finder.hh makefile.static
 
 noinst_PROGRAMS = many_algs_example
 many_algs_example_SOURCES = run_jet_finder.cc many_algs_example.cc 
-many_algs_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include
+many_algs_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include -I../../include
 many_algs_example_LDADD = ../../src/libfastjet.la ${CGAL_LIBS}
 
 # add SISCone-related parts
 if BUILD_PLUGIN_SISCONE
 noinst_PROGRAMS += siscone_example
 siscone_example_SOURCES = run_jet_finder.cc siscone_example.cc
-siscone_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include -I${srcdir}/../SISCone
+siscone_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include  -I../../include -I${srcdir}/../SISCone
 siscone_example_LDADD = ../../src/libfastjet.la ${CGAL_LIBS} ../SISCone/libSISConePlugin.la ../SISCone/siscone/siscone/libsiscone.la
 
 many_algs_example_CXXFLAGS += -I${srcdir}/../SISCone
@@ -20,7 +21,7 @@ endif
 if BUILD_PLUGIN_CDFCONES
 noinst_PROGRAMS += cdfmidpoint_example
 cdfmidpoint_example_SOURCES = run_jet_finder.cc cdfmidpoint_example.cc
-cdfmidpoint_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include -I${srcdir}/../CDFCones
+cdfmidpoint_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include  -I../../include -I${srcdir}/../CDFCones
 cdfmidpoint_example_LDADD = ../../src/libfastjet.la ${CGAL_LIBS} ../CDFCones/libCDFConesPlugin.la ../CDFCones/CDFcode/libCDFcode.la
 
 many_algs_example_CXXFLAGS += -I${srcdir}/../CDFCones
@@ -31,7 +32,7 @@ endif
 if BUILD_PLUGIN_PXCONE
 noinst_PROGRAMS += pxcone_example
 pxcone_example_SOURCES = run_jet_finder.cc pxcone_example.cc
-pxcone_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include -I${srcdir}/../PxCone
+pxcone_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include  -I../../include -I${srcdir}/../PxCone
 pxcone_example_LDADD = ../../src/libfastjet.la ${CGAL_LIBS} ../PxCone/libPxConePlugin.la ${FLIBS}
 
 many_algs_example_CXXFLAGS += -I${srcdir}/../PxCone

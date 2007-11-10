@@ -94,7 +94,7 @@ Remarks:
   (with the specified options)
 
 ======================================================================
-OLD (NON-STANDARD) BUILD SYSTEM
+OLD (NON-AUTOTOOLS) BUILD SYSTEM
 ======================================================================
 ------------
 Quick method
@@ -102,7 +102,7 @@ Quick method
 
 Run the following to build FastJet and its plugins and to test them.
 
-./test-script.sh
+./test-static.sh
 
 ------------------
 Longer description

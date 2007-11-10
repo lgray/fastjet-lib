@@ -5,11 +5,21 @@ Release Notes for fastjet
 Changes from v2.2beta0 to v2.2beta1
 ===================================
 
-- switched to autotools for compmilation and installation
+- switched to autotools for compmilation and installation;
 
-- plugins include files are now to be accessed as
+- old build procedure available for back with files called
+  makefile.static  (make -f makefile.static); 
+
+  test-script.sh has been renamed test-static.sh and builds and 
+  tests using the old procedure.
+
+- plugins include files are now to be accessed with fastjet/ in 
+  front of them, i.e.
   #include "fastjet/SISConePlugin.hh"
-  (previously the fastjet/ was not there).
+
+  For backwards compatibility, the old access method will continue
+  to work throughout v2.x, i.e.
+  #include "SISConePlugin.hh"
 
 - added PseudoJet::reset(...) functions to reset the contents of a
   PseudoJet.
@@ -17,7 +27,7 @@ Changes from v2.2beta0 to v2.2beta1
 - added fastjet_version_string()
 
 - added a function PtYPhiM(...) that returns a PseudoJet with the
-  given py, rapidity , phi and mass
+  given py, rapidity , phi and mass.  Defined in PseudoJet.hh
 
 - added a directory fortran_wrapper/ to illustrate how to access
   fastjet from fortran

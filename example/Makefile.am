@@ -3,7 +3,8 @@
 
 SUBDIRS = data root
 EXTRA_DIST = Makefile.alt ktjet_example.cc ktjet_timing.cc CmdLine.hh\
-	test-example.sh test-areas.sh makefile.static
+	makefile.static
+#	test-example.sh test-areas.sh makefile.static
 
 noinst_PROGRAMS = fastjet_example fastjet_example_v1_interface\
 	fastjet_areas fastjet_subtraction\

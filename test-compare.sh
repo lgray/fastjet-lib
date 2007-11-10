@@ -73,7 +73,7 @@ echo -----------------------------------------------------------
 # 1. get the installed plugins
 #    and remove the unwanted lines in the original output
 pluins_grep_opts=""
-cp test-script-output-orig.txt output_orig.tmp
+cp ${srcdir}/test-script-output-orig.txt output_orig.tmp
 if [[ -n `grep "define ENABLE_PLUGIN_PXCONE" include/fastjet/config.h` ]]; then
     tested_plugins=${tested_plugins}"PxCone "
 else

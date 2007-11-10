@@ -26,7 +26,8 @@ libfastjet.a: $(OBJS)
 	./genconfig.sh
 
 install: libfastjet.a
-	cp -p libfastjet.a ../lib/
+	../install-sh libfastjet.a ../lib/libfastjet.a
+#	cp -p libfastjet.a ../lib/
 
 clean:
 	rm -f $(OBJS) libfastjet.a

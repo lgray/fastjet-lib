@@ -1,3 +1,29 @@
+2007-11-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* test-compare.sh: 
+	  fixed bug causing it to fail when build takes place in a
+	  separate directory.
+
+	* test-static.sh:  *** RENAMED FROM *** test-script.sh
+	  modified it so that it uses test-compare.sh for carrying out the
+	  tests.
+
+	* src/makefile.static: 
+	  adapted it so that it uses install-sh for the installation in
+	  lib/ (works around issue with absent lib/ directory in the
+	  distribution) 
+
+	* Makefile.am: 
+	  included test-script.sh in EXTRA_DIST
+	
+	* example/Makefile.am: 
+	  removed test-*.sh from EXTRA_DIST (since the scripts have been removed)
+
+	* plugins/usage_examples/Makefile.am: 
+	  removed test-*.sh from EXTRA_DIST (since the scripts have been removed)
+	  added -I../../include so as to get the
+	  ../../include/fastjet/config.h when building in a separate directory.
+	
 2007-11-09  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* test-compare.sh:
