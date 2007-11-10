@@ -13,6 +13,8 @@ High priority
 Medium priority
 ---------------
 
+- finish implementing gen-kt
+
 - decide whether to copy jets for the diB step. If so, pay attention
   to
   * parents(...), child(), partner()
@@ -25,6 +27,8 @@ Medium priority
 - sort out error in active area with jetclu (valgrind shouts a lot,
   programs die)? [may be resolved -- check?]
 
+- write a function that produces a list of references?
+
 - v3: Think about making ClusterSequence actually just point to an 
   implementation class that does all the work; then both
   ClusterSequence and all the PseudoJets could point to it through a
@@ -35,6 +39,7 @@ Medium priority
 ----
 Done
 ----
+- moved to autotools
 - fix bug in reconstruction of areas from hosted sequences (* Done *)
 - move doc over to new area approach
 - fix build problem for plugin subdirectories on macs (copy SISCone 

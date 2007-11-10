@@ -1,5 +1,21 @@
 2007-11-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+        Summary of places where tests carried out in past few days:
+        
+        name     |  system    | tarball v autoconf+automake | conf
+        -------------------------------------------------------------
+        ramses   | OSX 10.3   | t + a 2.61+1.10 (DIY)       | ??
+        tycho    | FC 7       | a 2.61+1.10                 | cp
+        bison(me)| Ubun 7.04  | a 2.61+1.9.6                | cps
+        bison(me)| cygwin     | a ???                       | p?(s?)
+        lxplus   | SLC4       | t + a 2.59+1.9.2            | ps
+        zetes    | SLC4?      | t                           | ps
+        lpnui    | SLC3       | t                           | ps
+        
+        The "conf" column indicates which of cgal, pxcone and shared were enabled,
+        when I can remember... Lowest libtool: 1.5.6
+	
+	
 	* plugins/PxCone/Makefile.am: 
 	  added missing pxcone.h to EXTRA_DIST
 
