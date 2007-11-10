@@ -15,4 +15,4 @@ libfastjet_la_SOURCES = DnnPlane.cc\
 	BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc\
 	RangeDefinition.cc
 
-EXTRA_DIST = makefile.static genconfig.sh Makefile.alt
+EXTRA_DIST = makefile.static genconfig.sh

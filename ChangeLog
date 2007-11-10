@@ -1,8 +1,5 @@
 2007-11-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* src/Makefile.am: 
-	  added missing Makefile.alt to EXTAR_DIST
-
 	* plugins/PxCone/Makefile.am: 
 	  added missing pxcone.h to EXTRA_DIST
 
@@ -24,7 +21,7 @@
 	
 	* example/Makefile.am: 
 	  removed test-*.sh from EXTRA_DIST (since the scripts have been removed)
-
+	
 	* plugins/usage_examples/Makefile.am: 
 	  removed test-*.sh from EXTRA_DIST (since the scripts have been removed)
 	  added -I../../include so as to get the
