@@ -1409,7 +1409,7 @@ Any plugin is to be derived from the abstract base class
     /// set the ghost separation scale for passive area determinations
     /// in future runs (NB: const, so should set internal mutable var)
     virtual void set_ghost_separation_scale(double scale) const;
-    virtual double ghost_separation_scale() const {return 0.0;}
+    virtual double ghost_separation_scale() const;
 
   };
 \end{lstlisting}
