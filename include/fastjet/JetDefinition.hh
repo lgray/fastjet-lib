@@ -227,6 +227,7 @@ public:
 
   // return information about the definition...
   JetFinder jet_finder  () const {return _jet_finder  ;}
+  JetAlgorithm jet_algorithm  () const {return _jet_finder  ;}
   double    R           () const {return _Rparam      ;}
   // a general purpose extra parameter, whose meaning depends on
   // the algorithm, and may often be unused.

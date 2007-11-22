@@ -110,7 +110,37 @@ public:
     return _area_base->is_pure_ghost(jet);
   }
 
+  /// overload version of what's in the ClusterSequenceAreaBase class, which 
+  /// additionally checks compatibility between "range" and region in which
+  /// ghosts are thrown.
+  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+                                        bool use_area_4vector,
+                                        double & median, double & sigma,
+                                        double & mean_area) const {
+    _warn_if_range_unsuitable(range);
+    ClusterSequenceAreaBase::get_median_rho_and_sigma(range, use_area_4vector,
+                                                      median, sigma, mean_area);
+  }
+
+  /// overload version of what's in the ClusterSequenceAreaBase class, which 
+  /// additionally checks compatibility between "range" and region in which
+  /// ghosts are thrown.
+  virtual void parabolic_pt_per_unit_area(double & a, double & b, 
+                                          const RangeDefinition & range, 
+                                          double exclude_above=-1.0, 
+                                          bool use_area_4vector=false) const {
+    _warn_if_range_unsuitable(range);
+    ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
+                                a,b,range, exclude_above, use_area_4vector);
+  }
+
+
 private:
+  
+  /// print a warning if the range is unsuitable for the current
+  /// calculation of the area (e.g. because ghosts do not extend
+  /// far enough).
+  void _warn_if_range_unsuitable(const RangeDefinition & range) const;
 
   template<class L> void initialize_and_run_cswa (
                                  const std::vector<L> & pseudojets, 
@@ -118,10 +148,11 @@ private:
 
   std::auto_ptr<ClusterSequenceAreaBase> _area_base;
   AreaDefinition _area_def;
+  static LimitedWarning _range_warnings;
+
 };
 
 //----------------------------------------------------------------------
-//template<class L> ClusterSequenceArea::ClusterSequenceArea
 template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
            const std::vector<L> & pseudojets, 
            const JetDefinition  & jet_def)

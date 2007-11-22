@@ -121,14 +121,6 @@ public:
   double median_pt_per_unit_something(
                     const RangeDefinition & range, bool use_area_4vector) const;
 
-  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range "range". 
-  /// exclude_above allows one to exclude large values of pt/area from fit. 
-  /// use_area_4vector = true uses the 4vector areas.
-  void parabolic_pt_per_unit_area(double & a, double & b, 
-                                  const RangeDefinition & range, 
-                                  double exclude_above=-1.0, 
-			          bool use_area_4vector=false) const;
-
   /// using jets withing range (and with 4-vector areas if
   /// use_area_4vector), calculate the median pt/area, as well as an
   /// "error" (uncertainty), which is defined as the 1-sigma
@@ -145,24 +137,36 @@ public:
   /// caused changes in the hard-particle content of the jet.
   ///
   /// (NB: subtraction may also be done with 4-vector area of course)
-  void get_median_rho_and_sigma(const RangeDefinition & range, 
-                                bool use_area_4vector,
-                                double & median, double & sigma,
-                                double & mean_area);
+  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+                                        bool use_area_4vector,
+                                        double & median, double & sigma,
+                                        double & mean_area) const;
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area
   void get_median_rho_and_sigma(const RangeDefinition & range, 
                                 bool use_area_4vector,
-                                double & median, double & sigma) {
+                                double & median, double & sigma) const {
     double mean_area;
     get_median_rho_and_sigma(range,  use_area_4vector,
                              median,  sigma, mean_area);
   }
   
+
+  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range "range". 
+  /// exclude_above allows one to exclude large values of pt/area from fit. 
+  /// use_area_4vector = true uses the 4vector areas.
+  virtual void parabolic_pt_per_unit_area(double & a, double & b, 
+                                          const RangeDefinition & range, 
+                                          double exclude_above=-1.0, 
+                                          bool use_area_4vector=false) const;
+
   
 
-  /// return a subtracted jet, using area_4vector, given rho
+  /// return a subtracted jet, using area_4vector, given rho; note
+  /// that this is potentially inefficient if repeatedly used for many
+  /// different jets, because rho will be recalculated each time
+  /// around.
   PseudoJet subtracted_jet(const PseudoJet & jet,
                            const double rho) const;
 
@@ -175,7 +179,9 @@ public:
                        const double rho,
 	               bool use_area_4vector=false) const;
 
-  /// return the subtracted pt
+  /// return the subtracted pt; note that this is
+  /// potentially inefficient if repeatedly used for many different
+  /// jets, because rho will be recalculated each time around.
   double subtracted_pt(const PseudoJet & jet,
                        const RangeDefinition & range,
 	               bool use_area_4vector=false) const;

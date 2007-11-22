@@ -9,7 +9,7 @@ libfastjet_la_SOURCES = DnnPlane.cc\
 	ClusterSequence_Delaunay.cc ClusterSequence_DumbN3.cc\
 	ClusterSequence_CP2DChan.cc ClosestPair2D.cc MinHeap.cc\
 	ClusterSequenceAreaBase.cc ClusterSequenceActiveAreaExplicitGhosts.cc\
-	GhostedAreaSpec.cc ClusterSequenceActiveArea.cc\
+	ClusterSequenceArea.cc GhostedAreaSpec.cc ClusterSequenceActiveArea.cc\
 	Voronoi.cc ClusterSequenceVoronoiArea.cc\
 	ClusterSequencePassiveArea.cc ClusterSequence1GhostPassiveArea.cc\
 	BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc\

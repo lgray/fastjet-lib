@@ -1,5 +1,34 @@
 2007-11-22  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
+        Tidying up in anticipation of 2.3-beta0 release; in addition to
+	what's mentioned below, various bits of old commented code
+	removed.
+	
+	* include/fastjet/JetDefinition.hh    
+	  introduced jet_algorithm() (does same as jet_finder());
+	
+	* src/ClusterSequenceArea.cc:  *** ADDED *** +.hh
+	* src/ClusterSequenceAreaBase.cc:  + .hh
+
+	  set get_median_rho_and_sigma (and parabolic...) to be virtual,
+	  overloaded it in ClusterSequenceArea so as to check that if
+	  ghosts were used they're over a suitably large rapidity range.
+
+	* src/ClusterSequenceAreaBase.cc: 
+	  removed explicit code for median_pt_per_unit_something -- it now
+	  just calls get_median_rho_and_sigma and returns the median;
+	  tested that results are identical!
+
+	* include/fastjet/RangeDefinition.hh: 
+	  modified comment for _numerical_total_area; added
+	  virtual get_rap_limits() to find out what rapidity limits the
+	  range has. Mentioned it in the documentation too.
+	
+	* src/ClusterSequenceActiveArea.cc (_initialise_AA): 
+	* [and elsewhere]
+	  removed commented lines with old "maxrap" interface for setting
+	  range when finding median etc.	
+	
 	* configure.ac: 
 	  switched version number to 2.3-beta0
 

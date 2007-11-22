@@ -62,21 +62,11 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   // add momenta for ghosts
   for (int irap = -_nrap; irap <= _nrap; irap++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
-      // // include random offsets for all quantities
-      // double phi = (iphi+0.5) * _dphi + _dphi*rand()*_grid_scatter/RAND_MAX;
-      // double rap = irap * _drap + _drap*rand()*_grid_scatter/RAND_MAX;
-      // //double phi = (iphi+0.5) * _dphi* + rand()*_grid_scatter/RAND_MAX;
-      // //double rap = irap * _drap + rand()*_grid_scatter/RAND_MAX;
-      // double kt = _mean_ghost_kt*(1+rand()*_kt_scatter/RAND_MAX);
      
       // include random offsets for all quantities
       double phi = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
       double rap = irap * _drap + _drap*(_our_rand()-0.5)*_grid_scatter;
-      //double phi = (iphi+0.5) * _dphi* + _our_rand()*_grid_scatter;
-      //double rap = irap * _drap + _our_rand()*_grid_scatter;
       double kt = _mean_ghost_kt*(1+(_our_rand()-0.5)*_kt_scatter);
-
-
 
       double pminus = kt*exp(-rap);
       double pplus  = kt*exp(+rap);

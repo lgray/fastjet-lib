@@ -64,7 +64,7 @@
 \newcommand{\ie}{{\it i.e.}\ }
 \newcommand{\eg}{{\it e.g.}\ }
 
-\title{FastJet 2.2 user manual}
+\title{FastJet 2.3 user manual}
 \author{Matteo Cacciari, Gavin P. Salam\\
   \normalsize
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\
@@ -1011,6 +1011,9 @@ allows one to fully specify a rectangle in the rapidity-azimuth plane.
   /// (scalar) area of the range region
   virtual double area() const ;
 
+  /// return the minimal and maximal rapidity of this range
+  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const;
+
   /// textual description of the range
   virtual std::string description() const ;
 \end{lstlisting}
@@ -1178,6 +1181,32 @@ This occurs when the jet is not really a true hard jet, but rather
 mostly composed of the background contamination.  In such cases, the
 subtraction should not be performed, and the jet should be instead be
 discarded.
+
+For convenience, the above operations are pre-packaged together with a
+certain number of safety checks (in particular if the subtracted
+transverse momentum is too large, routines that return a jet, set all
+of its components to zero):
+\begin{lstlisting}
+  /// return a subtracted jet, using area_4vector, given rho; note
+  /// that this is potentially inefficient if repeatedly used for many
+  /// different jets, because rho will be recalculated each time around.
+  PseudoJet subtracted_jet(const PseudoJet & jet, const double rho) const;
+
+  /// return a subtracted jet, using area_4vector
+  PseudoJet subtracted_jet(const PseudoJet & jet,
+                           const RangeDefinition & range) const;
+
+  /// return the subtracted pt, given rho
+  double subtracted_pt(const PseudoJet & jet, const double rho,
+	               bool use_area_4vector=false) const;
+
+  /// return the subtracted pt; note that this is
+  /// potentially inefficient if repeatedly used for many different
+  /// jets, because rho will be recalculated each time around.
+  double subtracted_pt(const PseudoJet & jet, const RangeDefinition & range,
+	               bool use_area_4vector=false) const;
+\end{lstlisting}
+
 
 %----------------------------------------------------------------------
 % 
@@ -1793,7 +1822,8 @@ used, for instance, in heavy ion collisions, where the background
 distribution is expected to be non uniform in rapidity and, in the case
 of non-central collisions, also in azimuth. With a wise choice for
 distance $d$, \ttt{CircularRange} will then allow one to use
-\ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}[\ttt{\_4vector}]\ttt{()} in such cases
+\ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}\ttt{()} (or the
+4-vector version) in such cases
 too, without having to resort to
 \ttt{ClusterSequenceArea::parabolic\_pt\_per\_unit\_area()}.
 
@@ -1829,6 +1859,12 @@ public:
                       deltaphi*deltaphi <= _distance*_distance );
      return inrange; }
 
+  /// return the minimal and maximal rapidity of this range
+  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const {
+    rapmin = _rapjet - _distance;
+    rapmax = _rapjet + _distance;
+  }
+
 private:
   double _distance,_rapjet,_phijet;  
 };
@@ -1840,8 +1876,10 @@ return the protected \ttt{\_total\_area} variable, set by the constructor.
 
 Finally, the protected function 
 \begin{lstlisting}
-  /// calculate, and set in _total_area, the area with a numerical test
-  /// takes a reasonable time with rapmax = 10, npoints = 100
+  /// calculate, and set  _total_area, by calculating which of points on 
+  /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
+  /// in the range; it takes a reasonable time with rapmax = 10,
+  /// npoints = 100.
   void _numerical_total_area(double rapmax, int npoints) ;
 \end{lstlisting}
 is also provided by the \ttt{RangeDefinition} base class, and can be called by

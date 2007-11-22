@@ -88,6 +88,13 @@ public:
               phi >= _phimin &&
               phi <= _phimax );
   }
+
+  /// return the minimal and maximal rapidity of this range; remember to 
+  /// replace this if you write a derived class with more complex ranges;
+  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const {
+    rapmin = _rapmin;
+    rapmax = _rapmax;
+  }
   
   /// area of the range region
   virtual inline double area() const { return _total_area; }
@@ -103,8 +110,10 @@ public:
 protected:
   double _total_area;
 
-  /// calculate, and set in _total_area, the area with a numerical test
-  /// takes a reasonable time with rapmax = 10, npoints = 100
+  /// calculate, and set  _total_area, by calculating which of points on 
+  /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
+  /// in the range; it takes a reasonable time with rapmax = 10,
+  /// npoints = 100.
   void _numerical_total_area(double rapmax, int npoints) ;
 
 private:
