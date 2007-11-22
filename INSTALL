@@ -77,8 +77,9 @@ option, you can use --enable-foo=no or --disable-foo
 
 Note for SVN users
 ------------------
-If you download a subversion copy of FastJet, you first need to
-generate all configuration files. This is done by using
+If you download a subversion copy of FastJet (currently restricted to
+the developers), you first need to generate all configuration
+files. This is done by using
 
 % autoreconf --install
 % ./configure [configure option]

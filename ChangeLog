@@ -1,3 +1,11 @@
+2007-11-22  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
+
+	* configure.ac: 
+	  switched version number to 2.3-beta0
+
+	* plugins/SISCone/
+	  put siscone onto tagged version 1.3.0
+	
 2007-11-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
         Summary of places where tests carried out in past few days:
