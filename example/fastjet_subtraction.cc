@@ -102,7 +102,7 @@ int main (int argc, char ** argv) {
   }
   
   
-  // create an object that represents your choice of jet finder and 
+  // create an object that represents your choice of jet algorithm and 
   // the associated parameters
   double R = 0.7;
   fastjet::Strategy strategy = fastjet::Best;
@@ -181,6 +181,7 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
   // area, make sure that your ghosts go up at least to \sim range+R).
   double range = 5.0;
   double median_pt_per_area = clust_seq.median_pt_per_unit_area(range);
+  double median_pt_per_area4vector = clust_seq.median_pt_per_unit_area_4vector(range);
 
   printf(" ijet     rap     phi        Pt    area  Pt corr  (rap corr phi corr Pt corr)ext\n");
   for (size_t j = 0; j < jets.size(); j++) {
@@ -193,7 +194,7 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
 
     // "extended" correction
     fastjet::PseudoJet sub_4vect = 
-                       median_pt_per_area*clust_seq.area_4vector(jets[j]);
+                       median_pt_per_area4vector*clust_seq.area_4vector(jets[j]);
     if (sub_4vect.perp2() >= jets[j].perp2() || 
 	sub_4vect.E()     >= jets[j].E()) {
       // if the correction is too large, set the jet to zero
@@ -213,7 +214,8 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
   }
 
   cout << endl;
-  cout << "median pt_over_area = " << median_pt_per_area << endl << endl;
+  cout << "median pt_over_area = " << median_pt_per_area << endl;
+  cout << "median pt_over_area4vector = " << median_pt_per_area4vector << endl << endl;
 
 
 }

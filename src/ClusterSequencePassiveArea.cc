@@ -45,7 +45,7 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
 		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations) {
 
-  if (jet_def.jet_finder() == kt_algorithm) {
+  if (jet_def.jet_algorithm() == kt_algorithm) {
     // first run the passive area
     ClusterSequenceVoronoiArea csva(_jets,jet_def,VoronoiAreaSpec(1.0));
     // now set up and transfer relevant information    
@@ -61,7 +61,7 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
       }
     }
 
-  } else if (jet_def.jet_finder() == cambridge_algorithm) {
+  } else if (jet_def.jet_algorithm() == cambridge_algorithm) {
     // run a variant of the cambridge algorithm that has been hacked
     // to deal with passive areas
     JetDefinition tmp_jet_def = jet_def;
@@ -70,11 +70,11 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
     _initialise_and_run_AA(tmp_jet_def, area_spec, writeout_combinations);
     _jet_def = jet_def;
 
-  } else if (jet_def.jet_finder() == antikt_algorithm) {
+  } else if (jet_def.jet_algorithm() == antikt_algorithm) {
     // for the antikt algorithm, passive and active are identical
     _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
 
-  } else if (jet_def.jet_finder() == plugin_algorithm &&
+  } else if (jet_def.jet_algorithm() == plugin_algorithm &&
              jet_def.plugin()->supports_ghosted_passive_areas()) {
     // for some plugin algorithms, one can "prime" the algorithm with information
     // about the ghost scale, and then an "AA" run will actually give a passive
@@ -95,7 +95,7 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
 //----------------------------------------------------------------------
 // dispatch to most relevant empty area calculation...
 double ClusterSequencePassiveArea::empty_area (const RangeDefinition & range) const {
-  if (jet_def().jet_finder() == kt_algorithm) {
+  if (jet_def().jet_algorithm() == kt_algorithm) {
     // run the naive algorithm
     return ClusterSequenceAreaBase::empty_area(range);
   } else {

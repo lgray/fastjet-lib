@@ -121,11 +121,11 @@ int main (int argc, char ** argv) {
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
-  fj::JetFinder jet_finder;
+  fj::JetAlgorithm jet_algorithm;
   if (cmdline.present("-cam")) {
-    jet_finder = fj::cambridge_algorithm;
+    jet_algorithm = fj::cambridge_algorithm;
   } else {
-    jet_finder = fj::kt_algorithm;
+    jet_algorithm = fj::kt_algorithm;
   }
 
   if (!cmdline.all_options_used()) {cerr << 
@@ -195,7 +195,7 @@ int main (int argc, char ** argv) {
     }
   }
   
-  fj::JetDefinition jet_def(jet_finder, ktR, strategy);
+  fj::JetDefinition jet_def(jet_algorithm, ktR, strategy);
 
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     fj::ClusterSequence clust_seq(jets,jet_def,write);

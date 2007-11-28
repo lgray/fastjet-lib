@@ -58,7 +58,7 @@
 ///   -incl ptmin   output of all inclusive jets with pt > ptmin is obtained
 ///                 with the -incl option.
 ///
-///   -r            sets the radius of the jet finder (default = 1.0)
+///   -r            sets the radius of the jet algorithm (default = 1.0)
 ///
 ///   -excld dcut   output of all exclusive jets as obtained in a clustering
 ///                 with dcut
@@ -78,9 +78,9 @@
 ///                 up to the dcut which is the minimum squared
 ///                 distance between any pair of jets.
 ///
-///   -pxcone       switch to the PxCone jet finder
+///   -pxcone       switch to the PxCone jet algorithm
 /// 
-///   -siscone       switch to the SISCone jet finder (seedless cones)
+///   -siscone       switch to the SISCone jet algorithm (seedless cones)
 ///
 ///   -midpoint     switch to CDF's midpoint code
 ///

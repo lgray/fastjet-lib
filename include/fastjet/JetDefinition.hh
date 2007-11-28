@@ -78,7 +78,7 @@ enum Strategy {
 
 //======================================================================
 /// the various families of jet-clustering algorithm
-enum JetFinder {
+enum JetAlgorithm {
   /// the longitudinally invariant kt algorithm
   kt_algorithm=0,
   /// the longitudinally invariant variant of the cambridge algorithm
@@ -102,9 +102,9 @@ enum JetFinder {
   plugin_algorithm = 99
 };
 
-/// provide standard Les Houches nomenclature (algorithm is general
-/// recipe without the parameters)
-typedef JetFinder JetAlgorithm;
+/// make standard Les Houches nomenclature JetAlgorithm (algorithm is general
+/// recipe without the parameters) backward-compatible with old JetFinder
+typedef JetAlgorithm JetFinder;
 
 /// provide other possible names for the Cambridge/Aachen algorithm?
 const JetAlgorithm aachen_algorithm = cambridge_algorithm;
@@ -166,14 +166,14 @@ public:
   /// constructor to fully specify a jet-definition (together
   /// with information about how algorithically to run it). 
   ///
-  JetDefinition(JetFinder jet_finder, 
+  JetDefinition(JetAlgorithm jet_algorithm, 
                 double R, 
                 Strategy strategy,
                 RecombinationScheme recomb_scheme = E_scheme) :
-    _jet_finder(jet_finder), _Rparam(R), _strategy(strategy) {
+    _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
     // the largest sensible value for R
     assert(_Rparam <= 0.5*pi);
-    assert(_jet_finder != plugin_algorithm &&
+    assert(_jet_algorithm != plugin_algorithm &&
            _strategy   != plugin_strategy);
     _plugin = NULL;
     set_recombination_scheme(recomb_scheme);
@@ -183,22 +183,22 @@ public:
   /// constructor with alternative ordering or arguments -- note that
   /// we have not provided a default jet finder, to avoid ambiguous
   /// JetDefinition() constructor.
-  JetDefinition(JetFinder jet_finder = kt_algorithm, 
+  JetDefinition(JetAlgorithm jet_algorithm = kt_algorithm, 
                 double R = 1.0, 
                 RecombinationScheme recomb_scheme = E_scheme,
                 Strategy strategy = Best) {
-    *this = JetDefinition(jet_finder, R, strategy, recomb_scheme);
+    *this = JetDefinition(jet_algorithm, R, strategy, recomb_scheme);
   }
 
 
   /// constructor in a form that allows the user to provide a pointer
   /// to an external recombiner class (which must remain valid for the
   /// life of the JetDefinition object).
-  JetDefinition(JetFinder jet_finder, 
+  JetDefinition(JetAlgorithm jet_algorithm, 
                 double R, 
                 const Recombiner * recombiner,
                 Strategy strategy = Best) {
-    *this = JetDefinition(jet_finder, R, strategy, external_scheme);
+    *this = JetDefinition(jet_algorithm, R, strategy, external_scheme);
     _recombiner = recombiner;
   }
 
@@ -209,7 +209,7 @@ public:
     _plugin = plugin;
     _strategy = plugin_strategy;
     _Rparam = _plugin->R();
-    _jet_finder = plugin_algorithm;
+    _jet_algorithm = plugin_algorithm;
     set_recombination_scheme(E_scheme);
   }
 
@@ -225,9 +225,10 @@ public:
   /// return a pointer to the plugin 
   const Plugin * plugin() const {return _plugin;};
 
-  // return information about the definition...
-  JetFinder jet_finder  () const {return _jet_finder  ;}
-  JetAlgorithm jet_algorithm  () const {return _jet_finder  ;}
+  /// return information about the definition...
+  JetAlgorithm jet_algorithm  () const {return _jet_algorithm  ;}
+  /// same as above for backward compatibility
+  JetAlgorithm jet_finder     () const {return _jet_algorithm  ;}
   double    R           () const {return _Rparam      ;}
   // a general purpose extra parameter, whose meaning depends on
   // the algorithm, and may often be unused.
@@ -237,7 +238,9 @@ public:
     return _default_recombiner.scheme();}
 
   /// (re)set the jet finder
-  void set_jet_finder(JetFinder njf) {_jet_finder = njf;}
+  void set_jet_algorithm(JetAlgorithm njf) {_jet_algorithm = njf;}
+  /// same as above for backward compatibility
+  void set_jet_finder(JetAlgorithm njf)    {_jet_algorithm = njf;}
   /// (re)set the general purpose extra parameter
   void set_extra_param(double xtra_param) {_extra_param = xtra_param;}
 
@@ -347,7 +350,7 @@ public:
 private:
 
 
-  JetFinder _jet_finder;
+  JetAlgorithm _jet_algorithm;
   double    _Rparam;
   double    _extra_param ; ///< parameter whose meaning varies according to context
   Strategy  _strategy  ;

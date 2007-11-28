@@ -1,3 +1,45 @@
+2007-11-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * src/ClusterSequenceAreaBase.cc [+.hh] :
+          * fixed comment of subtracted_jet()
+          * added the methods subtracted_jets() which
+            return a vector of PseudoJet by acting on inclusive_jets()
+
+        * added fortran wrapper to TODO list
+
+        * typo-fixing in documentation
+
+        * include/fastjet/JetDefinition.hh
+          include/fastjet/ClusterSequence.hh [.cc]
+	  Replaced JetFinder by JetAlgorithm, and (_)jet_finder
+	  by (_)jet_algorithm, in keeping with Les Houches convention.
+	  Also replaced accordingly _default_jet_finder and the jet_finder()
+	  method.
+	  Backward compatibility is assured at the user-level by a 
+	  typedef and by doubling functions containing the word "jet_finder"
+         
+	  NB. There is one exception: _default_jet_finder and _jet_finder
+	  were protected variables of ClusterSequence: the replacement
+	  will break derived classes using them. They should be replaced
+	  everywhere by "_default_jet_algorithm" and "_jet_algorithm"
+
+        * src/ClusterSequenceAreaBase.cc
+	  src/ClusterSequencePassiveArea.cc
+	  src/JetDefinition.cc
+	  replaced jet_finder() by jet_algorithm()
+
+        * example/fastjet_subtraction.cc
+	  median rho is now calculated using ...per_unit_area_4vector
+	  when used in 4-vector subtraction along with area_4vector
+	  
+	* example/fastjet_subtraction.cc
+	          fastjet_areas.cc
+		  fastjet_example.cc
+		  fastjet_timing.cc
+		  fastjet_timing_plugin.cc
+          replaced "finder" with "algorithm"
+	  
+	    
 2007-11-22  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
         Tidying up in anticipation of 2.3-beta0 release; in addition to

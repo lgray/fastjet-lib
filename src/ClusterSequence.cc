@@ -44,7 +44,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 //// initialised static member has to go in the .cc code
-JetFinder ClusterSequence::_default_jet_finder = kt_algorithm;
+JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
 //
 
 
@@ -54,7 +54,7 @@ void ClusterSequence::_initialise_and_run (
 				  const Strategy & strategy,
 				  const bool & writeout_combinations) {
 
-  JetDefinition jet_def(_default_jet_finder, R, strategy);
+  JetDefinition jet_def(_default_jet_algorithm, R, strategy);
   _initialise_and_run(jet_def, writeout_combinations);
 }
 
@@ -72,7 +72,7 @@ void ClusterSequence::_initialise_and_run (
   _fill_initial_history();
 
   // run the plugin if that's what's decreed
-  if (_jet_finder == plugin_algorithm) {
+  if (_jet_algorithm == plugin_algorithm) {
     _plugin_activated = true;
     _jet_def.plugin()->run_clustering( (*this) );
     _plugin_activated = false;
@@ -88,7 +88,7 @@ void ClusterSequence::_initialise_and_run (
   if (_strategy == Best) {
     int N = _jets.size();
     if (N > 6200/pow(_Rparam,2.0) 
-	&& jet_def.jet_finder() == cambridge_algorithm) {
+	&& jet_def.jet_algorithm() == cambridge_algorithm) {
       _strategy = NlnNCam;}
     else
 #ifndef DROP_CGAL
@@ -188,7 +188,7 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def,
   _jet_def = jet_def;
   
   _writeout_combinations = writeout_combinations;
-  _jet_finder = jet_def.jet_finder();
+  _jet_algorithm = jet_def.jet_algorithm();
   _Rparam = jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
   _strategy = jet_def.strategy();
 
@@ -268,12 +268,12 @@ string ClusterSequence::strategy_string ()  const {
 
 double ClusterSequence::jet_scale_for_algorithm(
 				  const PseudoJet & jet) const {
-  if (_jet_finder == kt_algorithm)             {return jet.kt2();}
-  else if (_jet_finder == cambridge_algorithm) {return 1.0;}
-  else if (_jet_finder == antikt_algorithm) {
+  if (_jet_algorithm == kt_algorithm)             {return jet.kt2();}
+  else if (_jet_algorithm == cambridge_algorithm) {return 1.0;}
+  else if (_jet_algorithm == antikt_algorithm) {
     double kt2=jet.kt2();
     return kt2 > 1e-300 ? 1.0/kt2 : 1e300;
-  } else if (_jet_finder == cambridge_for_passive_algorithm) {
+  } else if (_jet_algorithm == cambridge_for_passive_algorithm) {
     double kt2 = jet.kt2();
     double lim = _jet_def.extra_param();
     if (kt2 < lim*lim && kt2 != 0.0) {
@@ -297,7 +297,7 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
   _R2                      = from_seq._R2                     ;
   _invR2                   = from_seq._invR2                  ;
   _strategy                = from_seq._strategy               ;
-  _jet_finder              = from_seq._jet_finder             ;
+  _jet_algorithm           = from_seq._jet_algorithm          ;
   _plugin_activated        = from_seq._plugin_activated       ;
 
   // the data
@@ -330,7 +330,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
   double dcut = ptmin*ptmin;
   int i = _history.size() - 1; // last jet
   vector<PseudoJet> jets;
-  if (_jet_finder == kt_algorithm) {
+  if (_jet_algorithm == kt_algorithm) {
     while (i >= 0) {
       // with our specific definition of dij and diB (i.e. R appears only in 
       // dij), then dij==diB is the same as the jet.perp2() and we can exploit
@@ -342,7 +342,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
 	jets.push_back(_jets[_history[parent1].jetp_index]);}
       i--;
     }
-  } else if (_jet_finder == cambridge_algorithm) {
+  } else if (_jet_algorithm == cambridge_algorithm) {
     while (i >= 0) {
       // inclusive jets are all at end of clustering sequence in the
       // Cambridge algorithm -- so if we find a non-exclusive jet, then
@@ -353,9 +353,9 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       if (jet.perp2() >= dcut) {jets.push_back(jet);}
       i--;
     }
-  } else if (_jet_finder == plugin_algorithm 
-             || _jet_finder == antikt_algorithm
-             || _jet_finder == cambridge_for_passive_algorithm) {
+  } else if (_jet_algorithm == plugin_algorithm 
+             || _jet_algorithm == antikt_algorithm
+             || _jet_algorithm == cambridge_for_passive_algorithm) {
     // for inclusive jets with a plugin algorithm, we make no
     // assumptions about anything (relation of dij to momenta,
     // ordering of the dij, etc.)
@@ -409,7 +409,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
   assert (njets <= _initial_n);
 
   // provide a warning when extracting exclusive jets 
-  if (_jet_def.jet_finder() != kt_algorithm && _n_exclusive_warnings < 5) {
+  if (_jet_def.jet_algorithm() != kt_algorithm && _n_exclusive_warnings < 5) {
     _n_exclusive_warnings++;
     cerr << "FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care." << endl;
   }

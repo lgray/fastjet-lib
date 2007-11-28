@@ -38,20 +38,20 @@ using namespace std;
 
 string JetDefinition::description() const {
   ostringstream name;
-  if (jet_finder() == plugin_algorithm) {
+  if (jet_algorithm() == plugin_algorithm) {
     return plugin()->description();
-  } else if (jet_finder() == kt_algorithm) {
+  } else if (jet_algorithm() == kt_algorithm) {
     name << "Longitudinally invariant kt algorithm with R = " << R();
     name << " and " << recombiner()->description();
-  } else if (jet_finder() == cambridge_algorithm) {
+  } else if (jet_algorithm() == cambridge_algorithm) {
     name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
 	 << R() ;
     name << " and " << recombiner()->description();
-  } else if (jet_finder() == antikt_algorithm) {
+  } else if (jet_algorithm() == antikt_algorithm) {
     name << "Longitudinally invariant anti-kt algorithm with R = " 
 	 << R() ;
     name << " and " << recombiner()->description();
-  } else if (jet_finder() == cambridge_for_passive_algorithm) {
+  } else if (jet_algorithm() == cambridge_for_passive_algorithm) {
     name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
 	 << R() << "and a special hack whereby particles with kt < " 
          << extra_param() << "are treated as passive ghosts";

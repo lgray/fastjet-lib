@@ -29,16 +29,14 @@
 //ENDHEADER
 
 
-// NB: to do at some point
-//     - add += and *= operators
-
 #ifndef __FASTJET_PSEUDOJET_HH__
 #define __FASTJET_PSEUDOJET_HH__
 
 #include<valarray>
 #include<vector>
 #include<cassert>
-#include <cmath>
+#include<cmath>
+#include<iostream>
 #include "fastjet/internal/numconsts.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -52,6 +50,7 @@ const double MaxRap = 1e5;
 /// Class to contain pseudojets, including minimal information of use to
 /// to jet-clustering routines.
 class PseudoJet {
+
  public:
   PseudoJet() {};
   /// construct a pseudojet from explicit components

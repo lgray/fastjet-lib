@@ -133,7 +133,12 @@ onto the external jet algorithms.
 Plugins are included for the fortran PxCone code and for the CDF C++
 JetClu and MidPoint cone jet algorithms (all infrared unsafe), as well as
 the recent Seedless Infrared-Safe Cone (SISCone) jet
-algorithm~\cite{SISCone}.
+algorithm~\cite{SISCone}. 
+Version 2.3 includes the new version 1.3.0 of SISCone,
+a wrapper to \fastjet 
+allowing one to run SISCone from a Fortran program, 
+and provides automated build tools,
+as well as a number of minor improvements.
 
 The current implementation of the above algorithms is restricted to
 the so-called $\Delta R$ distance measure (recommended in
@@ -346,14 +351,14 @@ A \verb:PseudoJet: can be reset with
   /// put the user and history indices back to their default values
   inline void reset(double px, double py, double pz, double E);
 \end{lstlisting}
-with and similarly taking as argument a templated
+and similarly taking as argument a templated
 \verb:some_lorentz_vector: or a \verb:PseudoJet: (in the latter case,
 the user and internal indices are inherited).
 
 Finally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are defined, with
 \ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and \ttt{*},
 \ttt{/} acting 
-on a \ttt{PseudoJet} and a \ttt{double} coefficient. Analagous
+on a \ttt{PseudoJet} and a \ttt{double} coefficient. Analogous
 \ttt{+=}, etc., operators, are also defined.
 
 
@@ -382,16 +387,22 @@ of how to carry out the clustering. Its constructor is\footnote{The v.
   remains valid.}
 %
 \begin{lstlisting}
-  fastjet::JetDefinition(fastjet::JetFinder jet_finder = kt_algorithm,
+  fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm = kt_algorithm,
                          double R = 1.0,
                          fastjet::RecombinationScheme recomb_scheme = E_scheme,
                          fastjet::Strategy strategy = Best);
 \end{lstlisting}
 %
-The jet algorithm is one of the entries of the \ttt{fastjet::JetFinder}
-\ttt{enum}: 
+The jet algorithm is one of the entries of the \ttt{fastjet::JetAlgorithm}
+\ttt{enum}\footnote{The \ttt{JetAlgorithm} name replaces the old \ttt{JetFinder}
+one, in keeping with the Les Houches convention. Backward compatibility is
+assured at the user level by a typedef and a doubling of the methods names.
+Backward compatibility (with versions < 2.3) is however broken for 
+user-written derived classes of \ttt{ClusterSequence}, as the protected 
+variables \ttt{\_default\_jet\_finder} and  \ttt{\_jet\_finder} have been 
+replaced by \ttt{\_default\_jet\_algorithm} and \ttt{\_jet\_algorithm}.}: 
 \begin{lstlisting}
-  enum JetFinder {kt_algorithm, cambridge_algorithm};
+  enum JetAlgorithm {kt_algorithm, cambridge_algorithm, antikt_algorithm};
 \end{lstlisting}
 \ttt{R} specifies the value of $R$ that appears in
 eqs.~(\ref{eq:dij},\ref{eq:dij_cam}). 
@@ -738,7 +749,7 @@ To summarise, in order to access the areas of the jets the user is exposed to tw
 classes:
 \begin{lstlisting}
    class fastjet::AreaDefinition;
-   class fastje::ClusterSequenceArea;
+   class fastjet::ClusterSequenceArea;
 \end{lstlisting}
 
 If jet areas are to be used to study the level of a diffuse noise which might be present
@@ -988,9 +999,14 @@ jets. It has two constructors. The first is
   fastjet::RangeDefinition(double rapmax);
 \end{lstlisting}
 which defines a range inclusive in azimuth (0--2$\pi$), and bound by a
-maximum value for $\mathrm{abs}(y)$. Note that in the methods above (and below)
-a \ttt{RangeDefinition} instance instantiated by this constructor can
-simply be replaced by the double \ttt{rapmax}.
+maximum value for $\mathrm{abs}(y)$. 
+% Not true if a second method with identical arguments but a double
+% with different meaning in place of RangeDefinition exists!!
+% so better not to suggest dangerous habits.
+%
+%Note that in the methods above (and below)
+%a \ttt{RangeDefinition} instance instantiated by this constructor can
+%simply be replaced by the double \ttt{rapmax}.
 The second constructor,
 \begin{lstlisting}
   /// constructor for a range definition given by 
@@ -1000,7 +1016,7 @@ The second constructor,
 \end{lstlisting}
 allows one to fully specify a rectangle in the rapidity-azimuth plane.
 
-\ttt{fastjet::RangeDefinition} contains four function functions,
+\ttt{fastjet::RangeDefinition} contains
 \begin{lstlisting}
   /// return bool according to whether the jet is within the given range
   bool is_in_range(const PseudoJet & jet) const ;
@@ -1185,14 +1201,30 @@ discarded.
 For convenience, the above operations are pre-packaged together with a
 certain number of safety checks (in particular if the subtracted
 transverse momentum is too large, routines that return a jet, set all
-of its components to zero):
+of its components to zero. Methods that are given a \ttt{RangeDefinition} object 
+in input, and therefore calculate $\rho$ themselves, do it according to 
+\ttt{area\_4vector}, unless a further input flag is present and \ttt{false}):
 \begin{lstlisting}
-  /// return a subtracted jet, using area_4vector, given rho; note
-  /// that this is potentially inefficient if repeatedly used for many
-  /// different jets, because rho will be recalculated each time around.
+  /// return a vector of all subtracted jets, using area_4vector, given rho.
+  /// Only inclusive_jets above ptmin are subtracted and returned.
+  /// The ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+  /// i.e. not necessarily ordered in pt once subtracted
+  std::vector<PseudoJet> subtracted_jets(const double rho,
+                                         const double ptmin=0.0) const;
+
+  /// return a vector of subtracted jets, using area_4vector.
+  /// Only inclusive_jets above ptmin are subtracted and returned.
+  /// The ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+  /// i.e. not necessarily ordered in pt once subtracted
+  std::vector<PseudoJet> subtracted_jets(const RangeDefinition & range, 
+                                         const double ptmin=0.0) const;
+
+  /// return a subtracted jet, using area_4vector, given rho
   PseudoJet subtracted_jet(const PseudoJet & jet, const double rho) const;
 
-  /// return a subtracted jet, using area_4vector
+  /// return a subtracted jet, using area_4vector;  note
+  /// that this is potentially inefficient if repeatedly used for many
+  /// different jets, because rho will be recalculated each time around.
   PseudoJet subtracted_jet(const PseudoJet & jet,
                            const RangeDefinition & range) const;
 
@@ -1796,7 +1828,7 @@ A jet definition can then be constructed by providing a pointer to an
 object derived from \ttt{JetDefinition::Recombiner} instead of the
 \ttt{RecombinationScheme} index:
 \begin{lstlisting}
-  JetDefinition(JetFinder jet_finder, 
+  JetDefinition(JetAlgorithm jet_algorithm, 
                 double R, 
                 const JetDefinition::Recombiner * recombiner,
                 Strategy strategy = Best);
@@ -1814,13 +1846,13 @@ background momentum level can be defined by the user by writing a new
 class derived from \ttt{fastjet::RangeDefinition}. The following example
 defines a range which is centred on a given jet axis (as opposed to
 covering a fixed, given region in the rapidity-azimuth plane), and
-extends up to a distance $d$ from the jet. 
+extends up to a distance $d$ from the axis of thejet. 
 
-Note that this range definition will of course then lead to a different
+Such a range definition will of course lead to a different
 median $p_t$ per unit area for each jet. This choice of range can be
 used, for instance, in heavy ion collisions, where the background
 distribution is expected to be non uniform in rapidity and, in the case
-of non-central collisions, also in azimuth. With a wise choice for
+of non-central collisions, also in azimuth. With a wise choice for the
 distance $d$, \ttt{CircularRange} will then allow one to use
 \ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}\ttt{()} (or the
 4-vector version) in such cases

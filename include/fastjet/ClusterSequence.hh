@@ -247,7 +247,9 @@ public:
   /// set the default (static) jet finder across all current and future
   /// ClusterSequence objects -- deprecated and obsolescent (i.e. may be
   /// suppressed in a future release).
-  static void set_jet_finder (JetFinder jet_finder) {_default_jet_finder = jet_finder;}
+  static void set_jet_algorithm (JetAlgorithm jet_algorithm) {_default_jet_algorithm = jet_algorithm;}
+  /// same as above for backward compatibility
+  static void set_jet_finder (JetAlgorithm jet_algorithm)    {_default_jet_algorithm = jet_algorithm;}
 
 
   /// a single element in the clustering history (see vector _history
@@ -335,7 +337,7 @@ public:
   void transfer_from_sequence(ClusterSequence & from_seq);
 
 protected:
-  static JetFinder _default_jet_finder;
+  static JetAlgorithm _default_jet_algorithm;
   JetDefinition _jet_def;
 
   /// returns true if the jet has a history index contained within
@@ -358,7 +360,7 @@ protected:
 
   /// This is an alternative routine for initialising and running the
   /// clustering, provided for legacy purposes. The jet finder is that
-  /// specified in the static member _default_jet_finder.
+  /// specified in the static member _default_jet_algorithm.
   void _initialise_and_run (const double & R,
 			    const Strategy & strategy,
 			    const bool & writeout_combinations);
@@ -399,7 +401,7 @@ protected:
   int  _initial_n;
   double _Rparam, _R2, _invR2;
   Strategy    _strategy;
-  JetFinder   _jet_finder;
+  JetAlgorithm  _jet_algorithm;
 
  private:
 

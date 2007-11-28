@@ -192,7 +192,7 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
 /// size 2pi+2R in phi.
 void ClusterSequence::_CP2DChan_cluster_2pi2R () {
 
-  if (_jet_finder != cambridge_algorithm) throw Error("CP2DChan clustering method called for a jet-finder that is not the cambridge algorithm");
+  if (_jet_algorithm != cambridge_algorithm) throw Error("CP2DChan clustering method called for a jet-finder that is not the cambridge algorithm");
 
   // run the clustering with mirror copies kept such that only things
   // within _Rparam of a border are mirrored
@@ -222,7 +222,7 @@ void ClusterSequence::_CP2DChan_cluster_2piMultD () {
 /// a 4pi variant of the closest pair clustering
 void ClusterSequence::_CP2DChan_cluster () {
 
-  if (_jet_finder != cambridge_algorithm) throw Error("_CP2DChan_cluster called for a jet-finder that is not the cambridge algorithm");
+  if (_jet_algorithm != cambridge_algorithm) throw Error("_CP2DChan_cluster called for a jet-finder that is not the cambridge algorithm");
 
   unsigned int n = _jets.size();
 

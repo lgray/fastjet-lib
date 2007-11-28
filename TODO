@@ -13,6 +13,8 @@ High priority
 Medium priority
 ---------------
 
+- write Fortran wrapper for all algorithms?
+
 - finish implementing gen-kt
 
 - get stable-cone pass number from the SISCone extras variable.

@@ -108,7 +108,7 @@ public:
 }
 
 protected:
-  double _total_area;
+  double _total_area;  // total area of specified range
 
   /// calculate, and set  _total_area, by calculating which of points on 
   /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained

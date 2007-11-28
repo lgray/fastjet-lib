@@ -204,6 +204,36 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
 }
 
 
+/// return a vector of all subtracted jets, using area_4vector, given rho.
+/// Only inclusive_jets above ptmin are subtracted and returned.
+/// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+/// i.e. not necessarily ordered in pt once subtracted
+vector<PseudoJet> ClusterSequenceAreaBase::subtracted_jets(const double rho,
+                                                           const double ptmin) 
+                                                           const {
+  vector<PseudoJet> sub_jets;
+  vector<PseudoJet> jets = sorted_by_pt((*this).inclusive_jets(ptmin));
+  for (int i=0; i<jets.size(); i++) {
+     PseudoJet sub_jet = subtracted_jet(jets[i],rho);
+     sub_jets.push_back(sub_jet);
+  }
+  return sub_jets;
+}
+
+/// return a vector of subtracted jets, using area_4vector.
+/// Only inclusive_jets above ptmin are subtracted and returned.
+/// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+/// i.e. not necessarily ordered in pt once subtracted
+vector<PseudoJet> ClusterSequenceAreaBase::subtracted_jets(
+                                                 const RangeDefinition & range, 
+						 const double ptmin)
+						 const {
+  cout << range.description() << endl;
+  double rho = median_pt_per_unit_area_4vector(range);
+  cout << "rho = " << rho << endl;
+  return subtracted_jets(rho,ptmin);
+}
+
 
 /// return a subtracted jet, using area_4vector, given rho
 PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
@@ -260,9 +290,9 @@ double ClusterSequenceAreaBase::subtracted_pt(const PseudoJet & jet,
 
 /// check the jet algorithm is suitable (and if not issue a warning)
 void ClusterSequenceAreaBase::_check_jet_alg_good_for_median() const {
-  if (jet_def().jet_finder() != kt_algorithm
-      && jet_def().jet_finder() != cambridge_algorithm
-      && jet_def().jet_finder() !=  cambridge_for_passive_algorithm) {
+  if (jet_def().jet_algorithm() != kt_algorithm
+      && jet_def().jet_algorithm() != cambridge_algorithm
+      && jet_def().jet_algorithm() !=  cambridge_for_passive_algorithm) {
     _warnings.warn("ClusterSequenceAreaBase: jet_def being used may not be suitable for estimating diffuse backgrounds (good options are kt, cam)");
   }
 }

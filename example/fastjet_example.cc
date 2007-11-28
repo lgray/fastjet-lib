@@ -64,7 +64,7 @@ int main (int argc, char ** argv) {
     input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
   }
   
-  // create an object that represents your choice of jet finder and 
+  // create an object that represents your choice of jet algorithm and 
   // the associated parameters
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;

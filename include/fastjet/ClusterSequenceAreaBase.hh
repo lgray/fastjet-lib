@@ -161,16 +161,29 @@ public:
                                           double exclude_above=-1.0, 
                                           bool use_area_4vector=false) const;
 
-  
 
-  /// return a subtracted jet, using area_4vector, given rho; note
-  /// that this is potentially inefficient if repeatedly used for many
-  /// different jets, because rho will be recalculated each time
-  /// around.
+  /// return a vector of all subtracted jets, using area_4vector, given rho.
+  /// Only inclusive_jets above ptmin are subtracted and returned.
+  /// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+  /// i.e. not necessarily ordered in pt once subtracted
+  std::vector<PseudoJet> subtracted_jets(const double rho,
+                                         const double ptmin=0.0) const;
+
+  /// return a vector of subtracted jets, using area_4vector.
+  /// Only inclusive_jets above ptmin are subtracted and returned.
+  /// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+  /// i.e. not necessarily ordered in pt once subtracted
+  std::vector<PseudoJet> subtracted_jets(const RangeDefinition & range, 
+                                         const double ptmin=0.0) const;
+
+  /// return a subtracted jet, using area_4vector, given rho
   PseudoJet subtracted_jet(const PseudoJet & jet,
                            const double rho) const;
 
-  /// return a subtracted jet, using area_4vector
+  /// return a subtracted jet, using area_4vector; note
+  /// that this is potentially inefficient if repeatedly used for many
+  /// different jets, because rho will be recalculated each time
+  /// around.
   PseudoJet subtracted_jet(const PseudoJet & jet,
                            const RangeDefinition & range) const;
 

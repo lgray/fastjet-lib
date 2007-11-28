@@ -223,6 +223,7 @@ void PseudoJet::operator-=(const PseudoJet & other_jet) {
   _finish_init(); // we need to recalculate phi,rap,kt2
 }
 
+
 //----------------------------------------------------------------------
 /// transform this jet (given in the rest frame of prest) into a jet
 /// in the lab frame;
