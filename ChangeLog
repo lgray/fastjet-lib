@@ -3,7 +3,7 @@
         * src/ClusterSequenceAreaBase.cc [+.hh] :
           * fixed comment of subtracted_jet()
           * added the methods subtracted_jets() which
-            return a vector of PseudoJet by acting on inclusive_jets()
+            returns a vector of PseudoJet by acting on inclusive_jets()
 
         * added fortran wrapper to TODO list
 
@@ -18,7 +18,7 @@
 	  Backward compatibility is assured at the user-level by a 
 	  typedef and by doubling functions containing the word "jet_finder"
          
-	  NB. There is one exception: _default_jet_finder and _jet_finder
+	  NB. THERE IS ONE EXCEPTION: _default_jet_finder and _jet_finder
 	  were protected variables of ClusterSequence: the replacement
 	  will break derived classes using them. They should be replaced
 	  everywhere by "_default_jet_algorithm" and "_jet_algorithm"
