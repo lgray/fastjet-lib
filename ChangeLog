@@ -1,3 +1,21 @@
+2007-11-29  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * src/ClusterSequenceAreaBase.cc 
+	  very minor fix to subtracted_jets() (use of int in loop was
+	  giving a warning, *this was useless, eliminated debugging comments)
+
+        * src/ClusterSequence.cc 
+          Updated the banner (PLB + anti-kt)
+
+        * configure.ac 
+          Version number moved to 2.3-beta0 (from 2.3-beta0-devel)
+	  
+	* INSTALL
+	  - single line version for compiling and linking external program  
+	  - replaced output example vith version 2.3-beta0 (only the banner
+	    changes)
+	    
+	    
 2007-11-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc [+.hh] :

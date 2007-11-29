@@ -59,8 +59,8 @@ As well as installing the libraries and headers, "make install" also
 installs ${prefix}/bin/fastjet-config; assuming this is in your path,
 then you can compile a program that uses fastjet as follows
 
-% g++ `fastjet-config --cxxflags` myprog.cc -c -o myprog.o
-% g++ myprog.o -o myprog `fastjet-config --libs --plugins` 
+% g++ myprog.cc `fastjet-config --cxxflags` \
+                `fastjet-config --libs --plugins` -o myprog
 
 the --plugins option is only needed if you want access to plugins!
 If shared libraries are built, they will be used by default. You can
@@ -154,20 +154,22 @@ To run the example program cd to the example directory and do
   make -f makefile.static fastjet_example
   ./fastjet_example < data/single-event.dat
 
-The output should be 
+The output (without CGAL) should be 
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-#---------------------------------------------------------------------
-#                       FastJet release 2.1.0
-#            Written by Matteo Cacciari and Gavin Salam
-#            http://www.lpthe.jussieu.fr/~salam/fastjet
-#
-# Longitudinally invariant Kt Jet clustering, using the fast geometric
-# algorithms of hep-ph/0512210 (please cite this if you use FastJet)
-# This package makes use of the CGAL library: http://www.cgal.org/
-# This package incorporates T.Chan's closest-pair algorithm, Proc. 13th
-# ACM-SIAM Symposium on Discrete Algorithms, pp.472-473, 2002
-#---------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                      FastJet release 2.3-beta0
+#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+#              http://www.lpthe.jussieu.fr/~salam/fastjet                  
+#                                                                          
+# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+# clustering using fast geometric algorithms, with area measures and optional
+# external jet-finder plugins.                                          
+# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+#                                                                          
+# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code .
+#-------------------------------------------------------------------------
 Ran Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
 Strategy adopted by FastJet was N2Tiled
 
@@ -229,7 +231,7 @@ fastjet_subtraction
 	at high luminosity at the LHC of a Z boson, an hypotetical Z', 
 	or a dijet event with a ptmin = 100 GeV are in example/data/
  
-fastjet_example_v1_interface.cc
+fastjet_example_v1_interface
         same as fastjet_example, but using the (now deprecated) interface
 	of FastJet v1.0. It still compiles correctly with v2.0, backward
 	compatibility having been ensured.

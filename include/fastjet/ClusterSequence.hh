@@ -175,6 +175,9 @@ class ClusterSequence {
   void print_jets_for_root(const std::vector<PseudoJet> & jets, 
                            std::ostream & ostr = std::cout) const;
 
+// Not yet. Perhaps in a future release.
+//   /// print out all inclusive jets with pt > ptmin
+//   virtual void print_jets (const double & ptmin=0.0) const;
 
   /// add on to subjet_vector the subjets of jet (for internal use mainly)
   void add_constituents (const PseudoJet & jet, 

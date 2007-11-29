@@ -212,8 +212,8 @@ vector<PseudoJet> ClusterSequenceAreaBase::subtracted_jets(const double rho,
                                                            const double ptmin) 
                                                            const {
   vector<PseudoJet> sub_jets;
-  vector<PseudoJet> jets = sorted_by_pt((*this).inclusive_jets(ptmin));
-  for (int i=0; i<jets.size(); i++) {
+  vector<PseudoJet> jets = sorted_by_pt(inclusive_jets(ptmin));
+  for (unsigned i=0; i<jets.size(); i++) {
      PseudoJet sub_jet = subtracted_jet(jets[i],rho);
      sub_jets.push_back(sub_jet);
   }
@@ -228,9 +228,7 @@ vector<PseudoJet> ClusterSequenceAreaBase::subtracted_jets(
                                                  const RangeDefinition & range, 
 						 const double ptmin)
 						 const {
-  cout << range.description() << endl;
   double rho = median_pt_per_unit_area_4vector(range);
-  cout << "rho = " << rho << endl;
   return subtracted_jets(rho,ptmin);
 }
 

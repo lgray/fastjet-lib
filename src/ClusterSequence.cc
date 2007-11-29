@@ -163,9 +163,10 @@ void ClusterSequence::_print_banner() {
   cout << "#            Written by M. Cacciari, G.P. Salam and G. Soyez            \n"; 
   cout << "#              http://www.lpthe.jussieu.fr/~salam/fastjet		   \n"; 
   cout << "#								      	   \n";
-  cout << "# Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering\n";
-  cout << "# using fast geometric algorithms, with area measures and optional external\n";
-  cout << "# jet-finder plugins. Please cite hep-ph/0512210 if you use this code.\n";
+  cout << "# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  \n";
+  cout << "# clustering using fast geometric algorithms, with area measures and optional\n";
+  cout << "# external jet-finder plugins.                                          \n";
+  cout << "# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.\n";
   cout << "#								      	   \n";
   cout << "# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM \n";
   cout << "# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code " ;
@@ -636,6 +637,17 @@ void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets,
   }
 }
 
+// Not yet. Perhaps in a future release
+// //----------------------------------------------------------------------
+// // print out all inclusive jets with pt > ptmin
+// void ClusterSequence::print_jets (const double & ptmin) const{
+//     vector<PseudoJet> jets = sorted_by_pt(inclusive_jets(ptmin));
+// 
+//     for (size_t j = 0; j < jets.size(); j++) {
+//        printf("%5u %7.3f %7.3f %9.3f\n",
+//        j,jets[j].rap(),jets[j].phi(),jets[j].perp());
+//     }
+// }
 
 //----------------------------------------------------------------------
 /// returns a vector of size n_particles() which indicates, for 
