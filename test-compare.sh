@@ -74,6 +74,7 @@ echo -----------------------------------------------------------
 #    and remove the unwanted lines in the original output
 pluins_grep_opts=""
 cp ${srcdir}/test-script-output-orig.txt output_orig.tmp
+chmod u+w output_orig.tmp
 if [[ -n `grep "define ENABLE_PLUGIN_PXCONE" include/fastjet/config.h` ]]; then
     tested_plugins=${tested_plugins}"PxCone "
 else
@@ -116,4 +117,5 @@ if [[ -n $DIFF ]]; then
 else
   echo Results are identical
   rm test-script-output.tmp
+  rm test-script-output.txt
 fi
