@@ -1,3 +1,7 @@
+2007-12-03  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
+
+	* TAGGED the 2.3-beta0 release
+
 2007-11-30  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* include/fastjet/Makefile.am: remove config.h from the list of
@@ -11,7 +15,6 @@
 	  ckeck in case it succeeds (also required for make distcheck to
 	  work.)
 
-	
 2007-11-29  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc 
