@@ -86,16 +86,21 @@ public:
   /// in their name) the parameter "range" allows one to exclude a
   /// subset of the jets for the background estimation, those that
   /// have pt/area > median(pt/area)*range.
+  ///
+  /// NB: This call is OBSOLETE; use media_pt_per_unit_area from the
+  //      ClusterSequenceAreaBase class instead
   double pt_per_unit_area(mean_pt_strategies strat=median, 
                           double range=2.0 ) const;
 
-  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
-  /// abs(y)<raprange (for negative raprange, it defaults to
-  /// _safe_rap_for_area).
-  void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
-				  double exclude_above=-1.0, 
-				  bool use_area_4vector=false ) const;
-
+  // following code removed -- now dealt with by AreaBase class (and
+  // this definition here conflicts with it).
+//   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range
+//   /// abs(y)<raprange (for negative raprange, it defaults to
+//   /// _safe_rap_for_area).
+//   void parabolic_pt_per_unit_area(double & a,double & b, double raprange=-1.0,
+// 				  double exclude_above=-1.0, 
+// 				  bool use_area_4vector=false ) const;
+// 
   /// rewrite the empty area from the parent class, so as to use
   /// all info at our disposal
   /// return the total area, in the given y-phi range, that consists of ghost

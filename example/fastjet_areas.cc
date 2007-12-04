@@ -90,11 +90,16 @@ int main (int argc, char ** argv) {
   bool use_voronoi = false;
   if (!use_voronoi) {
     double ghost_etamax = 7.0;
-    int    active_area_repeats = 1;
-    //double ghost_area    = 0.01;
-    //int    active_area_repeats = 100;
     double ghost_area    = 0.05;
-    //area_def = fastjet::GhostedAreaSpec(ghost_etamax, active_area_repeats, 
+    int    active_area_repeats = 1;
+    // alternative settings for more precision:
+    // reducing ghost area gives better sensitivity to the exact edges of the jet
+    //double ghost_area    = 0.01;
+    // increasing the repeats is useful in sparse events
+    //int    active_area_repeats = 100; 
+
+    // now create the object that holds info about ghosts, and from that
+    // get an area definition
     fastjet::GhostedAreaSpec ghost_spec(ghost_etamax, active_area_repeats, 
                                         ghost_area);
     area_def = fastjet::AreaDefinition(fastjet::passive_area,ghost_spec);
@@ -106,12 +111,15 @@ int main (int argc, char ** argv) {
   // run the jet clustering with the above jet definition
   fastjet::ClusterSequenceArea clust_seq(input_particles, 
                                              jet_def, area_def);
-  // run the jet clustering with the above jet definition
+  // you can also run the individual area classes directly
   //fastjet::ClusterSequencePassiveArea clust_seq(input_particles, jet_def, 
-  //                                              area_def.active_spec());
+  //                                              area_def.ghost_spec());
 
-  //cout << clust_seq.empty_area(4.0) << endl;
-  //cout << clust_seq.n_empty_jets(4.0) << endl;
+  // you may want to find out how much area in a given range (|y|<range)
+  // is empty of real jets (or corresponds to pure "ghost" jets).
+  //double range = 4.0;
+  //cout << clust_seq.empty_area(range) << endl;
+  //cout << clust_seq.n_empty_jets(range) << endl;
 
   // tell the user what was done
   cout << "Jet definition was: " << jet_def.description() << endl;

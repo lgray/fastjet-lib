@@ -1,3 +1,20 @@
+2007-12-04  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac
+	  moved version number over to 2.3-beta1-devel
+
+	* NEWS
+	  renamed 2.2-beta1 -> 2.3-beta0
+	 
+	* ClusterSequenceActiveArea.cc|hh
+	  Commented out the parabolic_pt_per_unit_area function, since it
+	  is provided by the AreaBase class. This should also avoid the
+	  compilation warning about the base class function being hidden.
+
+	* example/fastjet_areas.cc: 
+	  added more explicit comments about some of the alternatives that
+	  are currently commented out.
+
 2007-12-03  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 
 	* TAGGED the 2.3-beta0 release

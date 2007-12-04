@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Changes from v2.2beta0 to v2.2beta1
+Changes from v2.2beta0 to v2.3-beta0
 ===================================
 
 - switched to autotools for compmilation and installation;

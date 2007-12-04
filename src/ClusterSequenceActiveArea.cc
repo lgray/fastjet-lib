@@ -377,62 +377,63 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
 }
 
 
-//----------------------------------------------------------------------
-// fit a parabola to pt/area as a function of rapidity, using the
-// formulae of CCN28-36 (which actually fits f = a+b*x^2)
-void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
-       double & a, double & b, double raprange, double exclude_above,
-       bool use_area_4vector) const {
-  
-  double this_raprange;
-  if (raprange <= 0) {this_raprange = _safe_rap_for_area;}
-  else {this_raprange = raprange;}
-
-  int n=0;
-  int n_excluded = 0;
-  double mean_f=0, mean_x2=0, mean_x4=0, mean_fx2=0; 
-
-  vector<PseudoJet> incl_jets = inclusive_jets();
-
-  for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (abs(incl_jets[i].rap()) < this_raprange) {
-      double this_area;
-      if ( use_area_4vector ) {
-          this_area = area_4vector(incl_jets[i]).perp();     
-      } else {
-          this_area = area(incl_jets[i]);
-      }
-      double f = incl_jets[i].perp()/this_area;
-      if (exclude_above <= 0.0 || f < exclude_above) {
-	double x = incl_jets[i].rap(); double x2 = x*x;
-	mean_f   += f;
-	mean_x2  += x2;
-	mean_x4  += x2*x2;
-	mean_fx2 += f*x2;
-	n++;
-      } else {
-	n_excluded++;
-      }
-    }
-  }
-
-  if (n <= 1) {
-    // meaningful results require at least two jets inside the
-    // area -- mind you if there are empty jets we should be in 
-    // any case doing something special...
-    a = 0.0;
-    b = 0.0;
-  } else {
-    mean_f   /= n;
-    mean_x2  /= n;
-    mean_x4  /= n;
-    mean_fx2 /= n;
-    
-    b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
-    a = mean_f - b*mean_x2;
-  }
-  //cerr << "n_excluded = "<< n_excluded << endl;
-}
+// The following functionality is now provided by the base class
+// //----------------------------------------------------------------------
+// // fit a parabola to pt/area as a function of rapidity, using the
+// // formulae of CCN28-36 (which actually fits f = a+b*x^2)
+// void ClusterSequenceActiveArea::parabolic_pt_per_unit_area(
+//        double & a, double & b, double raprange, double exclude_above,
+//        bool use_area_4vector) const {
+//   
+//   double this_raprange;
+//   if (raprange <= 0) {this_raprange = _safe_rap_for_area;}
+//   else {this_raprange = raprange;}
+// 
+//   int n=0;
+//   int n_excluded = 0;
+//   double mean_f=0, mean_x2=0, mean_x4=0, mean_fx2=0; 
+// 
+//   vector<PseudoJet> incl_jets = inclusive_jets();
+// 
+//   for (unsigned i = 0; i < incl_jets.size(); i++) {
+//     if (abs(incl_jets[i].rap()) < this_raprange) {
+//       double this_area;
+//       if ( use_area_4vector ) {
+//           this_area = area_4vector(incl_jets[i]).perp();     
+//       } else {
+//           this_area = area(incl_jets[i]);
+//       }
+//       double f = incl_jets[i].perp()/this_area;
+//       if (exclude_above <= 0.0 || f < exclude_above) {
+// 	double x = incl_jets[i].rap(); double x2 = x*x;
+// 	mean_f   += f;
+// 	mean_x2  += x2;
+// 	mean_x4  += x2*x2;
+// 	mean_fx2 += f*x2;
+// 	n++;
+//       } else {
+// 	n_excluded++;
+//       }
+//     }
+//   }
+// 
+//   if (n <= 1) {
+//     // meaningful results require at least two jets inside the
+//     // area -- mind you if there are empty jets we should be in 
+//     // any case doing something special...
+//     a = 0.0;
+//     b = 0.0;
+//   } else {
+//     mean_f   /= n;
+//     mean_x2  /= n;
+//     mean_x4  /= n;
+//     mean_fx2 /= n;
+//     
+//     b = (mean_f*mean_x2 - mean_fx2)/(mean_x2*mean_x2 - mean_x4);
+//     a = mean_f - b*mean_x2;
+//   }
+//   //cerr << "n_excluded = "<< n_excluded << endl;
+// }
 
 
 //----------------------------------------------------------------------
