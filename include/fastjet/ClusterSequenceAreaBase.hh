@@ -144,7 +144,7 @@ public:
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area
-  void get_median_rho_and_sigma(const RangeDefinition & range, 
+  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
                                 bool use_area_4vector,
                                 double & median, double & sigma) const {
     double mean_area;

@@ -122,6 +122,18 @@ public:
                                                       median, sigma, mean_area);
   }
 
+  /// overload version of what's in the ClusterSequenceAreaBase class,
+  /// which actually just does the same thing as the base version (but
+  /// since we've overridden the 5-argument version above, we have to
+  /// override the 4-argument version too.
+  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+                                        bool use_area_4vector,
+                                        double & median, double & sigma) const {
+    ClusterSequenceAreaBase::get_median_rho_and_sigma(range,use_area_4vector,
+                                                      median,sigma);
+  }
+
+
   /// overload version of what's in the ClusterSequenceAreaBase class, which 
   /// additionally checks compatibility between "range" and region in which
   /// ghosts are thrown.

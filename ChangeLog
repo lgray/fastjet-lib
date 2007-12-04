@@ -1,3 +1,13 @@
+2007-12-04  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
+
+	* include/fastjet/ClusterSequenceArea.hh: 
+	* include/fastjet/ClusterSequenceAreaBase.hh: 
+	  made 4-argument get_median_rho_and_sigma virtual, and added a
+	  4-argument overridden version to ClusterSequenceArea; this was
+	  necessary because when you redefine one version with a given
+	  name, then you need to explicitly override all other versions
+	  with the same name.
+
 2007-12-04  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* configure.ac
