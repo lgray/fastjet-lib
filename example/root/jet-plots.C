@@ -167,7 +167,7 @@ void showjets (const char * filename, const char * label = 0) {
   Float_t x1=0.63, y1=0.875, x2=0.95, y2=0.925;
    
   JetHist * jets = new JetHist(filename);
-  jets->stack.Draw("lego1");
+  jets->stack.Draw("lego1"); // cyl does not work with 5.16
   if (label != 0) {
     pl.DrawPaveLabel(x1,y1,x2,y2,label,"brNDC");
   }
