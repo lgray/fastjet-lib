@@ -1,3 +1,8 @@
+2007-12-11  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/root/jet-plots.C: 
+	  minor fix to get it working with modern (5.16) version of root. 
+
 2007-12-04  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 
 	* include/fastjet/ClusterSequenceArea.hh: 

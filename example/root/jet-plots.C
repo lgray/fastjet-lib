@@ -11,6 +11,7 @@
 #include<sstream>
 #include<cstdlib>
 
+#include "TROOT.h"
 #include "TCanvas.h"
 #include "TH2.h"
 #include "THStack.h"
