@@ -1,3 +1,8 @@
+2007-12-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* Makefile.am: 
+	  added Doxyfile to EXTRA_DIST
+
 2007-12-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/root/jet-plots.C: 

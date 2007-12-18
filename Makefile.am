@@ -12,4 +12,4 @@ TESTS = test-compare.sh
 ACLOCAL_AMFLAGS = -I m4
 
 # additional files we need in the distribution
-EXTRA_DIST = test-compare.sh makefile.static test-static.sh test-script-output-orig.txt
+EXTRA_DIST = test-compare.sh makefile.static test-static.sh test-script-output-orig.txt Doxyfile
