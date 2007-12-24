@@ -2,6 +2,46 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Summary of changes from v2.1.0 (previous stable release) to v2.3.0
+===================================
+
+- added the anti-kt algorithm (LPTHE-07-03), which is sequential
+  recombination algorithm that gives conical jets.
+
+- Added Passive and Voronoi areas, and new common class for accessing
+  all types of areas, ClusterSequenceArea.
+
+- switched to autotools for compilation and installation:
+     ./configure --prefix=... 
+     make
+     make check      [optional]
+     make install
+
+  NB: users should no longer include fastjet-2.x.y/Makefile
+  when building their own programs, and instead should use
+    g++ -c file.cc `fastjet-config --cxxflags`
+    g++ file.o `fastjet-config --libs --plugins` 
+
+- plugins include files are now to be accessed with fastjet/ in 
+  front of them, i.e.
+    #include "fastjet/SISConePlugin.hh"
+  A simple #include "SISConePlugin.hh" is now obsolete but will
+  continue to work through 2.x
+
+- Added RangeDefinition class to provide more flexibility in UE/pileup
+  estimation.
+
+- New facilities for navigating the cluster sequence (has_parents,
+  has_child and has_partner members of ClusterSequence)
+
+- other bug fixes and small enhancements (including SISCone-1.3.0,
+  improvements to plugin facilities).
+
+See individual beta-releases below for more information, as well as
+the ChangeLog.
+
+
+======================================================================
 Changes from v2.2beta0 to v2.3-beta0
 ===================================
 

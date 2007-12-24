@@ -1,3 +1,8 @@
+2007-12-24  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* NEWS: 
+	  added information summarising 2.1 -> 2.3
+
 2007-12-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* Makefile.am: 
