@@ -5,7 +5,7 @@ Release Notes for fastjet
 Summary of changes from v2.1.0 (previous stable release) to v2.3.0
 ===================================
 
-- added the anti-kt algorithm (LPTHE-07-03), which is sequential
+- added the anti-kt algorithm (LPTHE-07-03), which is a sequential
   recombination algorithm that gives conical jets.
 
 - Added Passive and Voronoi areas, and new common class for accessing
@@ -22,7 +22,7 @@ Summary of changes from v2.1.0 (previous stable release) to v2.3.0
     g++ -c file.cc `fastjet-config --cxxflags`
     g++ file.o `fastjet-config --libs --plugins` 
 
-- plugins include files are now to be accessed with fastjet/ in 
+- plugin include files are now to be accessed with fastjet/ in 
   front of them, i.e.
     #include "fastjet/SISConePlugin.hh"
   A simple #include "SISConePlugin.hh" is now obsolete but will
@@ -45,7 +45,7 @@ the ChangeLog.
 Changes from v2.2beta0 to v2.3-beta0
 ===================================
 
-- switched to autotools for compmilation and installation;
+- switched to autotools for compilation and installation;
 
 - old build procedure available for back with files called
   makefile.static  (make -f makefile.static); 

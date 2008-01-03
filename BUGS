@@ -1,0 +1,22 @@
+Known bugs
+----------
+
+. the CGAL N ln N methods cannot handle coincident points. Events with
+  more than one particle having identical rapidity,phi values should be 
+  clustered with an alternative strategy. If this poses a severe
+  issue to someone, it will be fixed.
+
+. The Voronoi area evaluation (=Passive for the kt algorithm), is
+  known to crash on events in which the momenta lie on a exact grid in
+  rapidity,phi (i.e. a calorimeter). An unsatisfactory workaround is
+  to slightly displace input momenta away from the exact grid.
+  Work is in progress to address this issue.
+
+. The CDF Midpoint algorithm runs extremely slowly when compiled with
+  optimization. By default optimization is turned on for all
+  algorithms, and the current build system has yet to be adapted to
+  turn off optimization specifically for the midpoint algorithm. If
+  this issue is relevant to you, recompile the
+  plugins/CDFCones/CDFcode/MidPointAlgorithm.cc file manually without
+  optimization.
+
