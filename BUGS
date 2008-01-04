@@ -20,3 +20,36 @@ Known bugs
   plugins/CDFCones/CDFcode/MidPointAlgorithm.cc file manually without
   optimization.
 
+. Compilation issues have been reported under windows with the VC7.1
+  compiler. Currently we do not have access to such a machine, and are
+  awaiting further details in order to resolve this.
+
+----------------------------------------------------------------------
+Other issues to be aware of
+---------------------------
+
+. Some algorithms can have ambiguities in the clustering steps and we
+  do not guarantee that different internal clustering strategies (or
+  different fastjet versions) will always resolve the ambiguities
+  identically. This issue doesn't arise with normal particle inputs.
+
+  However:
+
+  - Pythia sometimes produces massive particles with pt=0; phi is then
+    ill-defined, while the rapidity is finite and we make no
+    guarantees about how we treat it.
+
+  - inputs that lie on a perfect grid in rapidity-phi (e.g. one
+    interpretation of a calorimeter) cause many interparticle
+    distances to be identical. In the kt, Cambridge/Aachen and anti-kt
+    algorithms, many dij can therefore also be identical. The choice
+    of which dij to take is then ambiguous and what fastjet actually
+    does may depend on: the compiler, the machine architecture
+    (because of rounding errors), the fastjet version.
+
+    Physically this issue should not change the jets
+    much. Nevertheless, one might choose to break any degeneracy
+    explicity, e.g. using information from the location of energy
+    deposits in each calorimeter tower, so that the inputs are not on
+    a perfect grid.
+

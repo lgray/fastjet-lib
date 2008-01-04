@@ -1,3 +1,9 @@
+2008-01-04  Gavin Salam  <salam@bison>
+
+	* BUGS: 
+	  added remark about pt=0 and ambiguities in clustering inputs on
+	  a perfect y-phi grid + VC7.1 compilation.
+
 -----------------------------------------------
 released 2.3.0 on 2008-01-03
 -----------------------------------------------	
