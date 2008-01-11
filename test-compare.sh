@@ -90,7 +90,7 @@ fi
 if [[ -n `grep "define ENABLE_PLUGIN_SISCONE" include/fastjet/config.h` ]]; then
     tested_plugins=${tested_plugins}"SISCone "
 else
-    grep -v -e'^sisone:' output_orig.tmp > output_orig_tmp.tmp
+    grep -v -e'^siscone:' output_orig.tmp > output_orig_tmp.tmp
     mv output_orig_tmp.tmp output_orig.tmp
 fi
 

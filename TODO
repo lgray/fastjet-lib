@@ -2,12 +2,12 @@
 High priority
 -------------
 
-- clean up doc on new areas methods
-
 - understand and then fix segmentation violation in
   bug-examples/voronoi-square-problem related to Voronoi diagrams of
   certain sets of points on a square grid.
 
+- fix midpoint speed issue
+- fix windows compilation
 
 ---------------
 Medium priority

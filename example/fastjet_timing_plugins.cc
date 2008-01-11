@@ -211,7 +211,7 @@ int main (int argc, char ** argv) {
     if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
     jet_def = fj::JetDefinition(plugin);
 #else  // ENABLE_PLUGIN_SISCONE
-    cerr << "jetclu requested, but not available for this compilation" << endl;
+    cerr << "siscone requested, but not available for this compilation" << endl;
 #endif // ENABLE_PLUGIN_SISCONE
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
@@ -370,6 +370,7 @@ int main (int argc, char ** argv) {
     }
 
 
+#ifdef ENABLE_PLUGIN_SISCONE
     // provide some complementary information for SISCone 
     if (show_cones) {
       const fj::SISConeExtras * extras = 
@@ -386,7 +387,7 @@ int main (int argc, char ** argv) {
       //}
       }
     }
+#endif // ENABLE_PLUGIN_SISCONE
   } // irepeat
-
   } // iev
 }

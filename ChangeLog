@@ -1,3 +1,18 @@
+2008-01-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* TODO: 
+	  updated this a little
+
+	* test-compare.sh: 
+	  fixed typo that caused make check failure when siscone is disabled
+
+	* example/fastjet_timing_plugins.cc: 
+	  bug-fix in conditional compilation to keep things to work when
+	  siscone is disabled.
+
+	* configure.ac: 
+	  switched over to 2.3.1-devel
+
 2008-01-04  Gavin Salam  <salam@bison>
 
 	* BUGS: 
