@@ -2,7 +2,7 @@
 
         * plugins/SISCone/siscone
 	  switched this back over to the SISCone trunk, in preparation for
-	  Belyaev's bug fixes
+	  Belyaev's bug fixes.
 	
 	* regression-tests/2008-01-14-midpoint-jetclu.res: *** ADDED ***
 	  results of test to make sure new Midpoint and Jetclu code gives
