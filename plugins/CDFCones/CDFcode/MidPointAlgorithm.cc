@@ -59,6 +59,7 @@ void MidPointAlgorithm::findStableConesFromMidPoints(std::vector<PhysicsTower>& 
 void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, double startPt,
 				    std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones, bool reduceConeSize)
 {
+  int nround = 0; // GPS
   int nIterations = 0;
   bool keepJet = true;
   Cluster trialCone;
@@ -78,6 +79,7 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
       double dR = sqrt(dRapidity*dRapidity + dPhi*dPhi);
       if(dR < iterationConeRadius)
 	trialCone.addTower(*towerIter);
+      nround++; // GPS
     }
     if(!trialCone.size())   // Empty cone?
       keepJet = false;
@@ -112,6 +114,7 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
     if(!identical)
       stableCones.push_back(trialCone);
   }
+  std::cout << nround << std::endl; // GPS
 }
 
 void MidPointAlgorithm::addClustersToPairs(std::vector<int>& testPair, std::vector< std::vector<int> >& pairs,
