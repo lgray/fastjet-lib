@@ -4,8 +4,6 @@
 #include <iostream>
 #include <cmath>
 
-const double cdf_mp_tol = 1e-10;
-
 void MidPointAlgorithm::findStableConesFromSeeds(std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones)
 {
   bool reduceConeSize = true;
@@ -61,7 +59,6 @@ void MidPointAlgorithm::findStableConesFromMidPoints(std::vector<PhysicsTower>& 
 void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, double startPt,
 				    std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones, bool reduceConeSize)
 {
-  int nround = 0; // GPS
   int nIterations = 0;
   bool keepJet = true;
   Cluster trialCone;
@@ -83,16 +80,15 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
       double dPhi      = fabs(towerIter->fourVector.phi() - startPhi);
       if(dPhi > M_PI)
 	dPhi = 2*M_PI - dPhi;
-      double dR = sqrt(dRapidity*dRapidity + dPhi*dPhi);
+      double dR2 = (dRapidity*dRapidity + dPhi*dPhi);
       // now check add to trial cone and check 
-      bool tower_in = (dR < iterationConeRadius);
+      bool tower_in = (dR2 < iterationConeRadius*iterationConeRadius);
       int index = towerIter-towers.begin();
       cone_like_previous &= (tower_in == towers_in[index]);
       towers_in[index] = tower_in;
       if (tower_in) trialCone.addTower(*towerIter);
       //  (dR < iterationConeRadius)
       // trialCone.addTower(*towerIter);
-      nround++; // GPS
     }
     if(!trialCone.size())   // Empty cone?
       keepJet = false;
@@ -104,11 +100,7 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
 	// Do we have a stable cone?
 	//if(endRapidity == startRapidity && endPhi == startPhi && endPt == startPt){
 	if(cone_like_previous){
-	//if(abs(endRapidity-startRapidity) < cdf_mp_tol &&
-	//   abs(endPhi - startPhi) < cdf_mp_tol && 
-	//   abs(endPt - startPt) < cdf_mp_tol * endPt) {
 	  // If cone size is reduced, then do one more iteration.
-	  //std::cout  << "nIterations" << nIterations << std::endl;
 	  nIterations = _maxIterations;
 	  if(!reduceConeSize)
 	    nIterations++;
@@ -132,7 +124,6 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
     if(!identical)
       stableCones.push_back(trialCone);
   }
-  //std::cout << nround << " " << towers.size() << " " << nIterations << std::endl; // GPS
 }
 
 void MidPointAlgorithm::addClustersToPairs(std::vector<int>& testPair, std::vector< std::vector<int> >& pairs,
