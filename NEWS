@@ -2,6 +2,19 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Summary of changes from v2.3.0 -> v2.3.1 (bug fix release) IN PROGRESS
+===================================
+
+IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS
+
+- fixed a major speed issue for the CDFMidPoint plugin (on 32-bit
+  architectures) that had arisen subsequent to the switch to autotools
+  (and its optimization flags). Also fixed other inefficiences in that
+  code. Results should remain identical.
+
+- fixed some typos that caused checks to fail if siscone was disabled.
+
+======================================================================
 Summary of changes from v2.1.0 (previous stable release) to v2.3.0
 ===================================
 
@@ -47,7 +60,7 @@ Changes from v2.2beta0 to v2.3-beta0
 
 - switched to autotools for compilation and installation;
 
-- old build procedure available for back with files called
+- old build procedure still available for now, with files called
   makefile.static  (make -f makefile.static); 
 
   test-script.sh has been renamed test-static.sh and builds and 

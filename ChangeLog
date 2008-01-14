@@ -1,5 +1,9 @@
 2008-01-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+        * plugins/SISCone/siscone
+	  switched this back over to the SISCone trunk, in preparation for
+	  Belyaev's bug fixes
+	
 	* regression-tests/2008-01-14-midpoint-jetclu.res: *** ADDED ***
 	  results of test to make sure new Midpoint and Jetclu code gives
 	  identical jets.
@@ -36,7 +40,7 @@
 	  fixed typo that caused make check failure when siscone is disabled
 
 	* example/fastjet_timing_plugins.cc: 
-	  bug-fix in conditional compilation to keep things to work when
+	  bug-fix in conditional compilation to get things to still work when
 	  siscone is disabled.
 
 	* configure.ac: 
