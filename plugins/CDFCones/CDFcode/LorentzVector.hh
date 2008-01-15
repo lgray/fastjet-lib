@@ -5,66 +5,43 @@
 
 class LorentzVector
 {
-private:
-  double _px,_py,_pz,_E;
-  mutable double phi_store, rap_store ;
-  const static double bad_val = -1e100;
-
  public:
 
-  LorentzVector(): _px(0), _py(0), _pz(0), _E(0), phi_store(bad_val), rap_store(bad_val) {}
-  LorentzVector(double p1, double p2, double p3, double p0): _px(p1), _py(p2), _pz(p3), _E(p0), phi_store(bad_val), rap_store(bad_val)  {}
-  LorentzVector(const LorentzVector& p): _px(p._px), _py(p._py), _pz(p._pz), _E(p._E), phi_store(bad_val), rap_store(bad_val)  {}
+  double px,py,pz,E;
 
-  double px()   const {return _px;}
-  double py()   const {return _py;}
-  double pz()   const {return _pz;}
-  double E ()   const {return _E;}
-
-  double p()   const {return sqrt(_px*_px + _py*_py + _pz*_pz);}
-  double pt()  const {return sqrt(_px*_px + _py*_py);}
-  double mt()  const {return sqrt((_E-_pz)*(_E+_pz));}
-  //double y()   const {return 0.5*log((_E + _pz)/(_E - _pz));}
-  double Et()  const {return _E/p()*pt();}
-  double eta() const {return 0.5*log((p() + _pz)/(p() - _pz));}
+  LorentzVector(): px(0), py(0), pz(0), E(0) {}
+  LorentzVector(double p1, double p2, double p3, double p0): px(p1), py(p2), pz(p3), E(p0) {}
+  LorentzVector(const LorentzVector& p): px(p.px), py(p.py), pz(p.pz), E(p.E) {}
+  double p()   const {return sqrt(px*px + py*py + pz*pz);}
+  double pt()  const {return sqrt(px*px + py*py);}
+  double mt()  const {return sqrt((E-pz)*(E+pz));}
+  double y()   const {return 0.5*log((E + pz)/(E - pz));}
+  double Et()  const {return E/p()*pt();}
+  double eta() const {return 0.5*log((p() + pz)/(p() - pz));}
   double phi() const
   {
-    if (phi_store == bad_val) calc_phi_rap();
-    return phi_store;
-    // double r = atan2(_py,_px);
-    // if(r < 0)
-    //   r += 2*M_PI;
-    // return r;
-  }
-  double y()   const {
-    if (phi_store == bad_val) calc_phi_rap();
-    return rap_store;
+    double r = atan2(py,px);
+    if(r < 0)
+      r += 2*M_PI;
+    return r;
   }
   void add(LorentzVector v)
   {
-    _px += v._px;
-    _py += v._py;
-    _pz += v._pz;
-    _E  += v._E;
-    phi_store = bad_val;
+    px += v.px;
+    py += v.py;
+    pz += v.pz;
+    E  += v.E;
   }
   void subtract(LorentzVector v)
   {
-    _px -= v._px;
-    _py -= v._py;
-    _pz -= v._pz;
-    _E  -= v._E;
-    phi_store = bad_val;
+    px -= v.px;
+    py -= v.py;
+    pz -= v.pz;
+    E  -= v.E;
   }
   bool isEqual(LorentzVector v)
   {
-    return _px == v._px && _py == v._py && _pz == v._pz && _E == v._E;
-  }
-
-  void calc_phi_rap() const {
-    phi_store = atan2(_py,_px);
-    if(phi_store < 0) phi_store += 2*M_PI;
-    rap_store = 0.5*log((_E + _pz)/(_E - _pz));
+    return px == v.px && py == v.py && pz == v.pz && E == v.E;
   }
 };
 

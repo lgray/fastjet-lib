@@ -34,10 +34,8 @@ print "Nev used:       $nev\n";
 #$alg{'cam'}     = "-cam";
 #$alg{'siscone0'} = "-siscone -npass 0";
 #$alg{'siscone0ptmin5'} = "-siscone -npass 0 -sisptmin 5";
-#$alg{'siscone1'} = "-siscone -npass 1";
+$alg{'siscone1'} = "-siscone -npass 1";
 #$alg{'antikt'} = "-antikt";
-$alg{'midpoint'} = "-midpoint";
-$alg{'jetclu'} = "-jetclu";
 
 
 $strategy{"cam"}="-04:-03:-02:-01:+02:+03:+04:+00:+12:+13:+14";
@@ -46,8 +44,6 @@ $strategy{"siscone"}="00";  # dummy strategy -- unused
 $strategy{"siscone1"}="00";  # dummy strategy -- unused
 $strategy{'siscone0ptmin5'} = "00";   # dummy strategy -- unused
 $strategy{'antikt'} = $strategy{"kt"};
-$strategy{'midpoint'} = "00";
-$strategy{'jetclu'}   = "00";
 
 # the following prevents trivial differences in the textual description
 # of the algorithm from modifying the results

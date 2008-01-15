@@ -8,29 +8,6 @@
 	  results of test to make sure new Midpoint and Jetclu code gives
 	  identical jets.
 
-	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc (MidPointAlgorithm::iterateCone): 
-	  modified the procedure that checks if a cone is stable: migrated
-	  it from a check on the values of y,phi,pt to a check based on
-	  which particles are in/out of the cone. Also replaced a
-	  sqrt-based distance comparison with one that looks at the
-	  squared distances. 
-
-	  Together with the caching below this gives a quite noticeable
-	  speed improvement and eliminates the issue of optimization
-	  causing a big slow-down on 32 bit architectures (equality tests
-	  on double-prec values for y,phi,pt, in stable-cone check, were
-	  comparing 64 bit stored results with 80 bit in-register
-	  results).
-
-	* plugins/CDFCones/CDFcode/LorentzVector.hh (class LorentzVector):
-	  cached calculation of y, phi to speed up iteration in the
-	  midpoint iterations; to do so safely, had to make 4-momentum
-	  components private. Added E() method in order to have access to
-	  E() needed in JetCluPlugin.
-
-	* plugins/CDFCones/CDFJetCluPlugin.cc: 
-	  adapated this to the new form of the CDF LorentzVector.hh class.
-
 2008-01-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* TODO: 

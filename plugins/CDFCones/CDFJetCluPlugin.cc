@@ -102,14 +102,14 @@ void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   for(int iCDFjets = jets.size()-1; iCDFjets >= 0; iCDFjets--) {
     const vector<PhysicsTower> & tower_list = jets[iCDFjets].towerList;
-    int jet_k = jetmap[tower_list[0].fourVector.E()];
+    int jet_k = jetmap[tower_list[0].fourVector.E];
   
     int ntow = int(tower_list.size());
     for (int itow = 1; itow < ntow; itow++) {
       int jet_i = jet_k;
       // retrieve our misappropriated index for the jet
       //int jet_j = tower_list[itow].calTower.iEta;
-      int jet_j = jetmap[tower_list[itow].fourVector.E()];
+      int jet_j = jetmap[tower_list[itow].fourVector.E];
       // do a fake recombination step with dij=0
       double dij = 0.0;
       // JetClu does E-scheme recombination so we can stick with the

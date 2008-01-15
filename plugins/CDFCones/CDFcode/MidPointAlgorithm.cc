@@ -65,12 +65,7 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
   double iterationConeRadius = _coneRadius;
   if(reduceConeSize)
     iterationConeRadius *= sqrt(_coneAreaFraction);
-  // GPS addition: safe stopping
-  std::vector<bool> towers_in(towers.size(), false);
-  bool cone_like_previous; // to see if cone changes through iteration
-
   while(nIterations++ < _maxIterations + 1 && keepJet){
-    cone_like_previous = true; // by default no change
     trialCone.clear();
     // Find particles which should go in the cone.
     if(nIterations == _maxIterations + 1)
@@ -80,15 +75,9 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
       double dPhi      = fabs(towerIter->fourVector.phi() - startPhi);
       if(dPhi > M_PI)
 	dPhi = 2*M_PI - dPhi;
-      double dR2 = (dRapidity*dRapidity + dPhi*dPhi);
-      // now check add to trial cone and check 
-      bool tower_in = (dR2 < iterationConeRadius*iterationConeRadius);
-      int index = towerIter-towers.begin();
-      cone_like_previous &= (tower_in == towers_in[index]);
-      towers_in[index] = tower_in;
-      if (tower_in) trialCone.addTower(*towerIter);
-      //  (dR < iterationConeRadius)
-      // trialCone.addTower(*towerIter);
+      double dR = sqrt(dRapidity*dRapidity + dPhi*dPhi);
+      if(dR < iterationConeRadius)
+	trialCone.addTower(*towerIter);
     }
     if(!trialCone.size())   // Empty cone?
       keepJet = false;
@@ -98,8 +87,7 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
 	double endPhi      = trialCone.fourVector.phi();
 	double endPt       = trialCone.fourVector.pt();
 	// Do we have a stable cone?
-	//if(endRapidity == startRapidity && endPhi == startPhi && endPt == startPt){
-	if(cone_like_previous){
+	if(endRapidity == startRapidity && endPhi == startPhi && endPt == startPt){
 	  // If cone size is reduced, then do one more iteration.
 	  nIterations = _maxIterations;
 	  if(!reduceConeSize)
