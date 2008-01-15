@@ -7,10 +7,9 @@ Summary of changes from v2.3.0 -> v2.3.1 (bug fix release) IN PROGRESS
 
 IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS
 
-- fixed a major speed issue for the CDFMidPoint plugin (on 32-bit
-  architectures) that had arisen subsequent to the switch to autotools
-  (and its optimization flags). Also fixed other inefficiences in that
-  code. Results should remain identical.
+- fixed a speed issue for the CDFMidPoint plugin, on 32-bit
+  architectures, that had arisen subsequent to the switch to autotools
+  with its common optimization settings.
 
 - fixed some typos that caused checks to fail if siscone was disabled.
 

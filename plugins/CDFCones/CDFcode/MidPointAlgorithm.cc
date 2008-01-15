@@ -56,7 +56,7 @@ void MidPointAlgorithm::findStableConesFromMidPoints(std::vector<PhysicsTower>& 
 }
 
 
-void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, double startPt,
+void MidPointAlgorithm::iterateCone(volatile double startRapidity, volatile double startPhi, volatile double startPt,
 				    std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones, bool reduceConeSize)
 {
   int nIterations = 0;
@@ -83,9 +83,9 @@ void MidPointAlgorithm::iterateCone(double startRapidity, double startPhi, doubl
       keepJet = false;
     else{
       if(nIterations <= _maxIterations){
-	double endRapidity = trialCone.fourVector.y();
-	double endPhi      = trialCone.fourVector.phi();
-	double endPt       = trialCone.fourVector.pt();
+	volatile double endRapidity = trialCone.fourVector.y();
+	volatile double endPhi      = trialCone.fourVector.phi();
+	volatile double endPt       = trialCone.fourVector.pt();
 	// Do we have a stable cone?
 	if(endRapidity == startRapidity && endPhi == startPhi && endPt == startPt){
 	  // If cone size is reduced, then do one more iteration.
