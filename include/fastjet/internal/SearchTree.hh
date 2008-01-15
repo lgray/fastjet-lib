@@ -61,8 +61,8 @@ public:
 
   /// remove the node corresponding to node_index from the search tree
   void remove(unsigned node_index);
-  void remove(SearchTree::Node * node);
-  void remove(SearchTree::circulator & circ);
+  void remove(typename SearchTree::Node * node);
+  void remove(typename SearchTree::circulator & circ);
 
   /// insert the supplied value into the tree and return a pointer to
   /// the relevant SearchTreeNode.
@@ -161,7 +161,7 @@ public:
 };
 
 //----------------------------------------------------------------------
-template<class T> void SearchTree<T>::Node::reset_parents_link_to_me(SearchTree<T>::Node * XX) {
+template<class T> void SearchTree<T>::Node::reset_parents_link_to_me(typename SearchTree<T>::Node * XX) {
   if (parent == NULL) {return;}
   if (parent->right == this) {parent->right = XX;}
   else {parent->left = XX;}
@@ -440,7 +440,7 @@ template<class T> void SearchTree<T>::remove(circulator & circ) {
 //----------------------------------------------------------------------
 // Useful reference for this:
 //   http://en.wikipedia.org/wiki/Binary_search_tree#Deletion
-template<class T> void SearchTree<T>::remove(SearchTree<T>::Node * node) {
+template<class T> void SearchTree<T>::remove(typename SearchTree<T>::Node * node) {
 
   // we don't remove things from the tree if we've reached the last
   // elements... (is this wise?)
@@ -610,9 +610,9 @@ template<class T> void SearchTree<T>::verify_structure() {
 
 //----------------------------------------------------------------------
 template<class T> void SearchTree<T>::verify_structure_recursive(
-		      const SearchTree<T>::Node * element, 
-		      const SearchTree<T>::Node * left_limit,
-		      const SearchTree<T>::Node * right_limit)  const {
+		      const typename SearchTree<T>::Node * element, 
+		      const typename SearchTree<T>::Node * left_limit,
+		      const typename SearchTree<T>::Node * right_limit)  const {
 
   assert(!(element->value < left_limit->value));
   assert(!(right_limit->value < element->value));
@@ -675,7 +675,7 @@ template<class T> void SearchTree<T>::verify_structure_linear() const {
 
 
 //----------------------------------------------------------------------
-template<class T> typename SearchTree<T>::Node * SearchTree<T>::_find_predecessor(const SearchTree<T>::Node * node) {
+template<class T> typename SearchTree<T>::Node * SearchTree<T>::_find_predecessor(const typename SearchTree<T>::Node * node) {
 
   typename SearchTree<T>::Node * newnode;
   if (node->left != NULL) {

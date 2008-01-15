@@ -61,32 +61,34 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   int mode = 2;
 
   int    ntrak = clust_seq.jets().size(), itkdm = 4;
-  double ptrak[ntrak][4];
+  double *ptrak = new double[ntrak*4+1];
   for (int i = 0; i < ntrak; i++) {
-    ptrak[i][0] = clust_seq.jets()[i].px();
-    ptrak[i][1] = clust_seq.jets()[i].py();
-    ptrak[i][2] = clust_seq.jets()[i].pz();
-    ptrak[i][3] = clust_seq.jets()[i].E();
+    ptrak[4*i+0] = clust_seq.jets()[i].px();
+    ptrak[4*i+1] = clust_seq.jets()[i].py();
+    ptrak[4*i+2] = clust_seq.jets()[i].pz();
+    ptrak[4*i+3] = clust_seq.jets()[i].E();
   }  
 
   // max number of allowed jets
   int mxjet = ntrak;
   int njet;
-  double pjet[mxjet][5];
-  int    ipass[ntrak], ijmul[mxjet], ierr;
+  double *pjet  = new double[mxjet*5+1];
+  int    *ipass = new int[ntrak+1];
+  int    *ijmul = new int[mxjet+1];
+  int ierr;
 
   // run pxcone
   pxcone(
     mode   ,    // 1=>e+e-, 2=>hadron-hadron
     ntrak  ,    // Number of particles
     itkdm  ,    // First dimension of PTRAK array: 
-    &(ptrak[0][0])  ,    // Array of particle 4-momenta (Px,Py,Pz,E)
+    ptrak  ,    // Array of particle 4-momenta (Px,Py,Pz,E)
     cone_radius()  ,    // Cone size (half angle) in radians
     min_jet_energy() ,    // Minimum Jet energy (GeV)
     overlap_threshold()  ,    // Maximum fraction of overlap energy in a jet
     mxjet  ,    // Maximum possible number of jets
     njet   ,    // Number of jets found
-    &(pjet[0][0]),       // 5-vectors of jets
+    pjet ,       // 5-vectors of jets
     ipass,      // Particle k belongs to jet number IPASS(k)-1
                 // IPASS = -1 if not assosciated to a jet
     ijmul,      // Jet i contains IJMUL[i] particles
@@ -127,8 +129,8 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
         // put in pxcone's momentum for the last recombination so that the
         // final inclusive jet corresponds exactly to PXCONE's
         clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, 
-                                PseudoJet(pjet[ipxjet][0],pjet[ipxjet][1],
-                                          pjet[ipxjet][2],pjet[ipxjet][3]),
+                                PseudoJet(pjet[5*ipxjet+0],pjet[5*ipxjet+1],
+                                          pjet[5*ipxjet+2],pjet[5*ipxjet+3]),
                                                  jet_k);
       }
     }
@@ -152,6 +154,11 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   //  cout << ourjet->perp() << " " << ourjet->rap() << endl;
   //}
   ////cout << endl;
+
+  delete[] ptrak;
+  delete[] ipass;
+  delete[] ijmul;
+  delete[] pjet;
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

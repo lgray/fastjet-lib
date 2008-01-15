@@ -33,6 +33,7 @@
 
 
 #include "fastjet/ClusterSequenceAreaBase.hh"
+#include <algorithm>
 
 FASTJET_BEGIN_NAMESPACE
 

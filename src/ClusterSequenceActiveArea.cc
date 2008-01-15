@@ -35,6 +35,9 @@
 #include<iostream>
 #include<vector>
 #include<sstream>
+#include<algorithm>
+#include<cmath>
+#include<valarray>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -150,8 +153,10 @@ void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_sp
   _average_area  /= area_spec.repeat();
   _average_area2 /= area_spec.repeat();
   if (area_spec.repeat() > 1) {
-    _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/
-                          (area_spec.repeat()-1));
+    // the VC compiler complains if one puts everything on a single line.
+    // An alternative solution would be to use -1.0 (+single line)
+    const double tmp = area_spec.repeat()-1;
+    _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/tmp);
   } else {
     _average_area2 = 0.0;
   }

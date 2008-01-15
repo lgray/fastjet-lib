@@ -6,7 +6,12 @@
 // ovlim
 
 extern "C" {
-  void pxcone_(
+#ifdef WIN32
+  void _stdcall PXCONE 
+#else
+  void          pxcone_
+#endif
+  (
     const int    &  mode   ,    // 1=>e+e-, 2=>hadron-hadron
     const int    &  ntrak  ,    // Number of particles
     const int    &  itkdm  ,    // First dimension of PTRAK array: 
@@ -23,4 +28,9 @@ extern "C" {
           int    &  ierr        // = 0 if all is OK ;   = -1 otherwise
     );
 }
+
+#ifdef WIN32
+#define pxcone PXCONE
+#else
 #define pxcone pxcone_
+#endif

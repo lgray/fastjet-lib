@@ -35,6 +35,7 @@
 #include <ostream>
 #include <iterator>
 #include <cmath>
+#include <limits>
 
 using namespace std;
 
@@ -220,16 +221,16 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 
   // add extreme cases:
   double max_extend = 2*max(maxrap-minrap+4*_effective_R, twopi+8*_effective_R);
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap)-max_extend, M_PI));
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap)+max_extend, M_PI));
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap), M_PI-max_extend));
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap), M_PI+max_extend));
+  voronoi_particles.push_back(Point(0.5*(minrap+maxrap)-max_extend, pi));
+  voronoi_particles.push_back(Point(0.5*(minrap+maxrap)+max_extend, pi));
+  voronoi_particles.push_back(Point(0.5*(minrap+maxrap), pi-max_extend));
+  voronoi_particles.push_back(Point(0.5*(minrap+maxrap), pi+max_extend));
 
   // Build the VD
   VoronoiDiagramGenerator vdg;
   vdg.generateVoronoi(&voronoi_particles, 
 		      0.5*(minrap+maxrap)-max_extend, 0.5*(minrap+maxrap)+max_extend,
-		      M_PI-max_extend, M_PI+max_extend);
+		      pi-max_extend, pi+max_extend);
 
   vdg.resetIterator();
   GraphEdge *e=NULL;

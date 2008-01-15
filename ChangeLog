@@ -1,3 +1,32 @@
+2008-01-15  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* plugins/PxCone/pxcone.h:
+	  fix name conventions for VC compilation
+
+	* plugins/CDFCones/CDFcode/LorentzVector.hh (M_PI): 
+	* plugins/CDFCones/CDFcode/Centroid.hh (M_PI): 
+	* plugins/CDFCones/CDFcode/CalTower.hh (M_PI): 
+	  added a definition of M_PI in case not already defined (VC compilation)
+
+	* include/fastjet/internal/SearchTree.hh: 
+	  added 'typename' where required (VC compilation)
+
+	* src/ClusterSequenceVoronoiArea.cc: 
+	  - added the limis header (VC compilation)
+	  - replaced M_PI by pi (defined in fastjet/internal/numconsts.hh)
+
+	* src/ClusterSequenceActiveArea.cc:
+	  - added the algorithm, cmath and valarray headers (VC compilation)
+	  - fixed a type/operator confusion in
+	    ClusterSequenceActiveArea::_postprocess_AA (VC compilation)
+
+	* src/PseudoJet.cc: 
+	* src/ClusterSequence_TiledN2.cc: 
+	* src/ClusterSequenceAreaBase.cc: 
+	* src/ClosestPair2D.cc:
+	  added the algorithm header (VC compilation)
+	
+
 2008-01-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc (MidPointAlgorithm::iterateCone): 

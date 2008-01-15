@@ -36,6 +36,7 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
+#include<algorithm>
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/MinHeap.hh"

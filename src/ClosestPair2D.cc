@@ -33,6 +33,7 @@
 #include<limits>
 #include<iostream>
 #include<iomanip>
+#include<algorithm>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
