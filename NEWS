@@ -7,6 +7,9 @@ Summary of changes from v2.3.0 -> v2.3.1 (bug fix release) IN PROGRESS
 
 IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS
 
+- included fixes proposed by Belyaev for compilation on windows with
+  VC 7.1
+
 - fixed a speed issue for the CDFMidPoint plugin, on 32-bit
   architectures, that had arisen subsequent to the switch to autotools
   with its common optimization settings.
