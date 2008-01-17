@@ -1,3 +1,9 @@
+2008-01-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/genconfig.sh (configfile): 
+	  can now take a first argument to generate a file of whatever
+	  name user likes.
+
 2008-01-15  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* plugins/PxCone/pxcone.h:

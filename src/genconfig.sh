@@ -2,7 +2,9 @@
 # Script for generating a minimal config.h file independently of automake
 # It must contain a version string, and what else?
 
-configfile=../include/fastjet/config.h
+configfile=${1:-../include/fastjet/config.h}
+echo Generating $configfile
+exit
 
 packname=`grep '^ *AC_INIT' ../configure.ac | sed -e 's/AC_INIT(//' -e 's/\[//g' -e 's/\]//g' -e 's/)//'`
 
