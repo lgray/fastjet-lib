@@ -2,6 +2,8 @@
 High priority
 -------------
 
+- e+e-, DIS
+
 - understand and then fix segmentation violation in
   bug-examples/voronoi-square-problem related to Voronoi diagrams of
   certain sets of points on a square grid.
@@ -18,8 +20,6 @@ Medium priority
 - finish implementing gen-kt
 
 - get stable-cone pass number from the SISCone extras variable.
-
-- e+e-, DIS
 
 - sort out error in passive area with jetclu (calling function that
   should not be called)?
