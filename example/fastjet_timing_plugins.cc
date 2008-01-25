@@ -326,6 +326,8 @@ int main (int argc, char ** argv) {
       }
       if (rootfile != "") {
         ofstream ostr(rootfile.c_str());
+        ostr << "# " << cmdline.command_line() << endl;
+        ostr << "# output for root" << endl;
         clust_seq.print_jets_for_root(jets,ostr);
       }
 
