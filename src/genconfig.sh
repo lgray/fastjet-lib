@@ -4,7 +4,7 @@
 
 configfile=${1:-../include/fastjet/config.h}
 echo Generating $configfile
-exit
+#exit
 
 packname=`grep '^ *AC_INIT' ../configure.ac | sed -e 's/AC_INIT(//' -e 's/\[//g' -e 's/\]//g' -e 's/)//'`
 
