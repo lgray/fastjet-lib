@@ -1,6 +1,8 @@
 -------------
 For 2.3.1
 -------------
+- enable dynamic libraries by default?
+
 GREGORY:
 - config.h -> config.auto.h (generated), config.win.h config.h (static)
 - make check should verify config.win.h
