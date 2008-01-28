@@ -1,0 +1,22 @@
+CHECKLIST for releasing fastjet
+-------------------------------
+
+this file will at some point contain the checklist to be carried out
+before each release. If you make a release, update the X.Y.Z numbers
+to indicate you carried out the operation.
+
+X.Y.Z  ensure NEWS is up to date
+
+X.Y.Z  make check [how do we deal with various config options?]
+
+X.Y.Z  make distcheck
+
+X.Y.Z  tag
+
+X.Y.Z  copy distribution to web
+X.Y.Z  run doxygen, copy to web
+X.Y.Z  compile manual, give it current version number
+X.Y.Z  update main web page & menu
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       

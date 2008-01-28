@@ -1,3 +1,16 @@
+2008-01-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/SISCone/fastjet/SISConePlugin.hh: 
+	  added note about recommended value for overlap_threshold
+	  different from the default.
+	
+	* Doxyfile: 
+	  updated this to reflect new plugin header locations
+	
+	* CHECKLIST: 
+	  added this to indicate what's needed for a release
+	  
+
 2008-01-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/genconfig.sh (configfile): 

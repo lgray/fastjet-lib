@@ -1625,8 +1625,13 @@ particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
 %
 The \verb:overlap_threshold: is the fraction of overlapping momentum
 above which two protojets are merged in a Tevatron Run~II type
-\cite{RunII-jet-physics} split--merge procedure.  The radius and
-overlap parameters are a common feature of most modern cone
+\cite{RunII-jet-physics} split--merge procedure.\footnote{Though its
+  default value is 0.5 (retained for backwards compatibility of the
+  interface) we strongly recommend using a higher value, e.g.\ 0.75,
+  especially in high-noise environments, in order to disfavour the
+  production of monster jets through repeated merge operations. } % 
+The
+radius and overlap parameters are a common feature of most modern cone
 algorithms. Because some event particles are not to be found in any
 stable cone \cite{EHT}, SISCone can carry out multiple stable-cone
 search passes (as advocated in \cite{TeV4LHC}): in each pass one

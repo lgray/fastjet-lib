@@ -88,7 +88,13 @@ public:
   };
 
 
-  /// Constructor for the SISCone Plugin class
+  /// Constructor for the SISCone Plugin class.  
+  ///
+  /// Note: though the default value here for the overlap_threshold is
+  /// 0.5 (for backwards compatibility), there is a strong
+  /// recommendation to use a higher value, e.g. 0.75, especially in
+  /// environments with a substantial amount of underlying event or
+  /// pileup.
   SISConePlugin (double cone_radius,
                  double overlap_threshold = 0.5,
                  int    n_pass_max = 0,

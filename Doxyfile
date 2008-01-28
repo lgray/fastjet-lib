@@ -450,7 +450,12 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = src/ include/ include/fastjet include/fastjet/internal  example/ plugins/SISCone plugins/PxCone plugins/CDFCones plugins/usage_examples
+INPUT                  = src/ include/ include/fastjet include/fastjet/internal \
+		         example/ \
+                         plugins/SISCone plugins/SISCone/fastjet   \
+                         plugins/PxCone plugins/PxCone/fastjet     \
+                         plugins/CDFCones plugins/CDFCones/fastjet \
+                         plugins/usage_examples
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
