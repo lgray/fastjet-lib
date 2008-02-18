@@ -1,3 +1,10 @@
+2008-02-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * src/ClusterSequenceAreaBase.cc:
+	  in subtracted_jet(), copied cluster_hist_index from original
+	  jet to sub_jet, so that one can then directly analyse sub_jet 
+	  (for instance in terms of its constituents)
+
 2008-01-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/SISCone/fastjet/SISConePlugin.hh: 
