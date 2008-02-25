@@ -464,7 +464,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
 /// return the dmin corresponding to the recombination that went from
 /// n+1 to n jets
 double ClusterSequence::exclusive_dmerge (const int & njets) const {
-  assert(njets > 0);
+  assert(njets >= 0);
   if (njets >= _initial_n) {return 0.0;}
   return _history[2*_initial_n-njets-1].dij;
 }
@@ -476,7 +476,7 @@ double ClusterSequence::exclusive_dmerge (const int & njets) const {
 /// exclusive_dmerge, except in cases where the dmin do not increase
 /// monotonically.
 double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
-  assert(njets > 0);
+  assert(njets >= 0);
   if (njets >= _initial_n) {return 0.0;}
   return _history[2*_initial_n-njets-1].max_dij_so_far;
 }

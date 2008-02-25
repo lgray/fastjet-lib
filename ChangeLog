@@ -1,3 +1,10 @@
+2008-02-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	  in exclusive_dmerge(njets) and exclusive_dmerge_max(njets),
+	  fixed assert(njets > _initial_n)  to njets >= _initial_n;
+	  Bug reported by Piergiulio Lenzi <lenzip@fi.infn.it>.
+
 2008-02-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc:
