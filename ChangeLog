@@ -1,3 +1,10 @@
+2008-02-28  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * src/ClusterSequenceAreaBase.cc:
+          Revisited part of the change made on 2008-02-18: subtracted 
+          jets with unphysical momentum now also get a valid index
+          
+
 2008-02-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 
@@ -5,12 +12,15 @@
 	  fixed assert(njets > _initial_n)  to njets >= _initial_n;
 	  Bug reported by Piergiulio Lenzi <lenzip@fi.infn.it>.
 
+
 2008-02-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc:
 	  in subtracted_jet(), copied cluster_hist_index from original
 	  jet to sub_jet, so that one can then directly analyse sub_jet 
-	  (for instance in terms of its constituents)
+	  (for instance in terms of its constituents). Feature request
+          by Juan Rojo
+                
 
 2008-01-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
