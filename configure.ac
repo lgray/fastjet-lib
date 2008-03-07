@@ -28,7 +28,8 @@ AC_PREFIX_DEFAULT(/usr/local)
 dnl set default compilation and link flags
 dnl note that those can be changed by the user at configure-time
 dnl so we use CXXFLAGS and not AM_CXXFLAGS
-CXXFLAGS=" -O3 -Wall -I../include "
+CXXFLAGS=" -O3 -Wall "
+AM_CXXFLAGS=" -I../include "
 CGAL_CPPFLAGS=""
 CGAL_LIBS=""
 
@@ -39,7 +40,7 @@ AC_ARG_ENABLE(debug,
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
-   CXXFLAGS=${CXXFLAGS}" -g "
+   AM_CXXFLAGS=${AM_CXXFLAGS}" -g "
 fi
 
 dnl don't build the shared lib by default
