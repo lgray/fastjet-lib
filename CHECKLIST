@@ -11,6 +11,8 @@ X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config
 
 X.Y.Z  ensure NEWS is up to date
 
+X.Y.Z  make sure siscone points to a tag, not trunk
+
 X.Y.Z  make check [how do we deal with various config options?]
 
 X.Y.Z  make distcheck
@@ -31,11 +33,11 @@ checklist for 2.3.1
 -------------------
 2.3.1  checked cygwin and it works there
 
-X.Y.Z  check static make procedure
+2.3.1  make sure version number in configure.ac is correct
 
-X.Y.Z  look at TODO
+2.3.1  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
 
-X.Y.Z  ensure NEWS is up to date
+2.3.1  ensure NEWS is up to date
 
 X.Y.Z  make check [how do we deal with various config options?]
 
@@ -50,3 +52,4 @@ X.Y.Z  update main web page & menu
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
+
