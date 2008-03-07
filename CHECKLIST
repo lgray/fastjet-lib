@@ -48,7 +48,7 @@ checklist for 2.3.1
 2.3.1  compile manual, give it current version number
 2.3.1  update main web page & menu
 
-X.Y.Z  tag
+2.3.1  tag
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
