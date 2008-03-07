@@ -16,7 +16,9 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   ClusterSequenceActiveAreaExplicitGhosts.hh\
   ClusterSequence1GhostPassiveArea.hh\
   ClusterSequencePassiveArea.hh\
-  ClusterSequenceVoronoiArea.hh
+  ClusterSequenceVoronoiArea.hh\
+  config_win.h\
+  config.h
 
 
 

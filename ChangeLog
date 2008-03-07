@@ -1,3 +1,19 @@
+2008-03-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* configure.ac
+	* test-compare.sh
+	* src/genconfig.sh
+	* src/makefile.static
+	* include/fastjet/config.h         *** ADDED ***
+	* include/fastjet/config_win.h     *** ADDED ***
+
+	  Moved to a structure of config_auto.h (with autotools and unix
+	  static makefiles), and  config_win.h (under windows). 
+	  The config.h file now detects the system and includes the
+	  appropriate one
+
+	  
+	
 2008-02-28  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc:

@@ -44,7 +44,23 @@
 # Note: in the original script, parts related to the plugins
 #       are prefixed by <tag>:
 
+#======================================================================
+# first check that the windows include file has the correct
+# version number. Strictly speaking not something that 
+# should be done in make check, but should help guarantee
+# that we do not release a copy with the wrong windows version 
+# number
+packname=`grep '^ *AC_INIT' configure.ac | sed -e 's/AC_INIT(//' -e 's/\[//g' -e 's/\]//g' -e 's/)//'`
+packver=`echo $packname | sed 's/.*,//g'`
+winver=`grep VERSION include/fastjet/config_win.h | sed 's/.*VERSION *"//' | sed 's/"//'`
+if [[ $winver != $packver ]]; then
+  echo "ERROR: config_win.h version number not compatible with true version number"
+  exit 1
+fi
 
+
+#======================================================================
+# now run the real tests
 echo -----------------------------------------------------------
 echo "Running 'fastjet_example < data/single_event.dat'"
 echo -----------------------------------------------------------
@@ -75,19 +91,19 @@ echo -----------------------------------------------------------
 pluins_grep_opts=""
 cp ${srcdir}/test-script-output-orig.txt output_orig.tmp
 chmod u+w output_orig.tmp
-if [[ -n `grep "define ENABLE_PLUGIN_PXCONE" include/fastjet/config.h` ]]; then
+if [[ -n `grep "define ENABLE_PLUGIN_PXCONE" include/fastjet/config_auto.h` ]]; then
     tested_plugins=${tested_plugins}"PxCone "
 else
     grep -v -e'^pxcone:' output_orig.tmp > output_orig_tmp.tmp
     mv output_orig_tmp.tmp output_orig.tmp
 fi
-if [[ -n `grep "define ENABLE_PLUGIN_CDFCONES" include/fastjet/config.h` ]]; then
+if [[ -n `grep "define ENABLE_PLUGIN_CDFCONES" include/fastjet/config_auto.h` ]]; then
     tested_plugins=${tested_plugins}"CDFMidPoint "
 else
     grep -v -e'^cdfmp:' output_orig.tmp > output_orig_tmp.tmp
     mv output_orig_tmp.tmp output_orig.tmp
 fi
-if [[ -n `grep "define ENABLE_PLUGIN_SISCONE" include/fastjet/config.h` ]]; then
+if [[ -n `grep "define ENABLE_PLUGIN_SISCONE" include/fastjet/config_auto.h` ]]; then
     tested_plugins=${tested_plugins}"SISCone "
 else
     grep -v -e'^siscone:' output_orig.tmp > output_orig_tmp.tmp

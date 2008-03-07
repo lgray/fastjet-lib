@@ -21,8 +21,8 @@ libfastjet.a: $(OBJS)
 	ar cru libfastjet.a $(OBJS)
 	ranlib libfastjet.a
 
-# generate the config.h file
-../include/fastjet/config.h: ../configure.ac genconfig.sh
+# generate the config_auto.h file
+../include/fastjet/config_auto.h: ../configure.ac genconfig.sh
 	./genconfig.sh
 
 install: libfastjet.a
@@ -68,6 +68,7 @@ ClusterSequence.o: ../include/fastjet/ClusterSequence.hh
 ClusterSequence.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
 ClusterSequence.o: ../include/fastjet/JetDefinition.hh
 ClusterSequence.o: ../include/fastjet/version.hh ../include/fastjet/config.h
+ClusterSequence.o: ../include/fastjet/config_auto.h
 PseudoJet.o: ../include/fastjet/Error.hh ../include/fastjet/internal/base.hh
 PseudoJet.o: ../include/fastjet/PseudoJet.hh
 PseudoJet.o: ../include/fastjet/internal/numconsts.hh
@@ -248,3 +249,24 @@ RangeDefinition.o: ../include/fastjet/RangeDefinition.hh
 RangeDefinition.o: ../include/fastjet/PseudoJet.hh
 RangeDefinition.o: ../include/fastjet/internal/numconsts.hh
 RangeDefinition.o: ../include/fastjet/internal/base.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequenceArea.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequenceAreaBase.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequence.hh
+ClusterSequenceArea.o: ../include/fastjet/internal/DynamicNearestNeighbours.hh
+ClusterSequenceArea.o: ../include/fastjet/internal/numconsts.hh
+ClusterSequenceArea.o: ../include/fastjet/internal/base.hh
+ClusterSequenceArea.o: ../include/fastjet/PseudoJet.hh
+ClusterSequenceArea.o: ../include/fastjet/Error.hh
+ClusterSequenceArea.o: ../include/fastjet/JetDefinition.hh
+ClusterSequenceArea.o: ../include/fastjet/internal/LimitedWarning.hh
+ClusterSequenceArea.o: ../include/fastjet/RangeDefinition.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequenceActiveArea.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+ClusterSequenceArea.o: ../include/fastjet/GhostedAreaSpec.hh
+ClusterSequenceArea.o: ../include/fastjet/internal/BasicRandom.hh
+ClusterSequenceArea.o: ../include/fastjet/ActiveAreaSpec.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequenceWithArea.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequencePassiveArea.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
+ClusterSequenceArea.o: ../include/fastjet/ClusterSequenceVoronoiArea.hh
+ClusterSequenceArea.o: ../include/fastjet/AreaDefinition.hh

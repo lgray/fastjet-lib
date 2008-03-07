@@ -5,6 +5,36 @@ this file will at some point contain the checklist to be carried out
 before each release. If you make a release, update the X.Y.Z numbers
 to indicate you carried out the operation.
 
+X.Y.Z  make sure version number in configure.ac is correct
+
+X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+
+X.Y.Z  ensure NEWS is up to date
+
+X.Y.Z  make check [how do we deal with various config options?]
+
+X.Y.Z  make distcheck
+
+X.Y.Z  tag
+
+X.Y.Z  copy distribution to web
+X.Y.Z  run doxygen, copy to web
+X.Y.Z  compile manual, give it current version number
+X.Y.Z  update main web page & menu
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+
+----------------------------------------------------------------------
+checklist for 2.3.1
+-------------------
+2.3.1  checked cygwin and it works there
+
+X.Y.Z  check static make procedure
+
+X.Y.Z  look at TODO
+
 X.Y.Z  ensure NEWS is up to date
 
 X.Y.Z  make check [how do we deal with various config options?]

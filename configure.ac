@@ -3,7 +3,7 @@ AC_CONFIG_SRCDIR([src/JetDefinition.cc])
 AM_INIT_AUTOMAKE
 
 dnl uncomment the following line if you want to use autoheader
-AM_CONFIG_HEADER(include/fastjet/config.h:config.h.in)
+AM_CONFIG_HEADER(include/fastjet/config_auto.h:config.h.in)
 dnl and also uncomment the call to autoheader in autogen.sh
 
 dnl check autoconf version

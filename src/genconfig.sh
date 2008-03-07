@@ -2,7 +2,7 @@
 # Script for generating a minimal config.h file independently of automake
 # It must contain a version string, and what else?
 
-configfile=${1:-../include/fastjet/config.h}
+configfile=${1:-../include/fastjet/config_auto.h}
 echo Generating $configfile
 #exit
 

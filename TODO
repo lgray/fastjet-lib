@@ -1,15 +1,20 @@
 -------------
 For 2.3.1
 -------------
-- enable dynamic libraries by default?
 
 GREGORY:
 - config.h -> config.auto.h (generated), config.win.h config.h (static)
-- make check should verify config.win.h
+- make check should verify config.win.h is present and has right
+  version number
 - add mention of this to install
 
 GAVIN:
 - check cygwin
+
+-------------
+For 2.4
+-------------
+- enable dynamic libraries by default?
 
 
 -------------
