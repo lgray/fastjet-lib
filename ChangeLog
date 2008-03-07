@@ -12,8 +12,6 @@
 	  The config.h file now detects the system and includes the
 	  appropriate one
 
-	  
-	
 2008-02-28  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc:
@@ -25,7 +23,7 @@
 
 	* src/ClusterSequence.cc: 
 	  in exclusive_dmerge(njets) and exclusive_dmerge_max(njets),
-	  fixed assert(njets > _initial_n)  to njets >= _initial_n;
+	  fixed assert(njets > 0)  to njets >= 0;
 	  Bug reported by Piergiulio Lenzi <lenzip@fi.infn.it>.
 
 
