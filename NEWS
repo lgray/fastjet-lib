@@ -2,19 +2,20 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Summary of changes from v2.3.0 -> v2.3.1 (bug fix release) IN PROGRESS
-===================================
+Summary of changes from v2.3.0 -> v2.3.1 (bug fix release)
+==========================================================
 
-IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS IN PROGRESS
+- Fixed compilation issues under windows VC7.1 (reported by
+  I. Belyaev); also included SISCone 1.3.1 with similar fixes.
 
-- included fixes proposed by Belyaev for compilation on windows with
-  VC 7.1
+- Fixed speed issue under optimized compilation of CDF MidPoint plugin
+  for 32 bit architectures that had arisen subsequent to the switch to
+  autotools with its common optimization settings.
 
-- fixed a speed issue for the CDFMidPoint plugin, on 32-bit
-  architectures, that had arisen subsequent to the switch to autotools
-  with its common optimization settings.
+- Fixed "make check" failure with the --disable-siscone option.
 
-- fixed some typos that caused checks to fail if siscone was disabled.
+- Fixed crash in exclusive_dmerge(njets) for njets=0 (reported by P. Lenzi)
+
 
 ======================================================================
 Summary of changes from v2.1.0 (previous stable release) to v2.3.0
