@@ -27,6 +27,7 @@ X.Y.Z  tag
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
+X.Y.Z  change version number in configure.ac
 
 ----------------------------------------------------------------------
 checklist for 2.3.1
@@ -50,6 +51,7 @@ checklist for 2.3.1
 
 2.3.1  tag
 
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+2.3.1  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
+2.3.1  change version number in configure.ac
