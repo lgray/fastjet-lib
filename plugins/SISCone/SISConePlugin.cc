@@ -38,6 +38,10 @@ string SISConePlugin::description () const {
   desc << "caching turned "      << (caching() ? on : off);
   desc << ", SM stop scale = "     << _split_merge_stopping_scale;
 
+  // add a note to the description if we use the pt-weighted splitting
+  if (_use_pt_weighted_splitting){
+    desc << ", using pt-weighted splitting";
+  }
 
   // create a fake siscone object so that we can find out more about it
   Csiscone siscone;
@@ -106,6 +110,8 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // ghosts into the stable-cone search (not relevant)
   siscone->stable_cone_soft_pt2_cutoff = ghost_separation_scale()
                                          * ghost_separation_scale();
+  // set the type of splitting we want (default=std one, true->pt-weighted split)
+  siscone->set_pt_weighted_splitting(_use_pt_weighted_splitting);
 
   if (new_siscone) {
     // transfer fastjet initial particles into the siscone type

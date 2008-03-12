@@ -109,7 +109,8 @@ public:
     _caching               (caching),             
     _split_merge_scale     (split_merge_scale),
     _split_merge_stopping_scale (split_merge_stopping_scale),
-    _ghost_sep_scale       (0.0) {}
+    _ghost_sep_scale       (0.0),
+    _use_pt_weighted_splitting  (false) {}
 
   /// Backwards compatible constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,
@@ -124,7 +125,8 @@ public:
     _protojet_ptmin        (protojet_ptmin),
     _caching               (caching),             
     _split_merge_scale     (split_merge_on_transverse_mass ? SM_mt : SM_pttilde),
-    _ghost_sep_scale       (0.0)  {}
+    _ghost_sep_scale       (0.0),
+    _use_pt_weighted_splitting  (false) {}
   
   /// backwards compatible constructor for the SISCone Plugin class
   /// (avoid using this in future).
@@ -138,7 +140,8 @@ public:
     _protojet_ptmin        (0.0),
     _caching               (caching),
     _split_merge_scale     (SM_mt),
-    _ghost_sep_scale       (0.0) {}
+    _ghost_sep_scale       (0.0),
+    _use_pt_weighted_splitting  (false) {}
 
   /// copy constructor
   SISConePlugin (const SISConePlugin & plugin) {
@@ -191,6 +194,12 @@ public:
   /// set_split_merge_stopping_scale(...) for description)
   double split_merge_stopping_scale() {return _split_merge_stopping_scale;}
 
+  /// indicates whether the split-merge orders on transverse mass or not.
+  /// retained for backwards compatibility with 2.1.0b3
+  bool split_merge_use_pt_weighted_splitting() const {return _use_pt_weighted_splitting;}
+  void set_split_merge_use_pt_weighted_splitting(bool val) {
+    _use_pt_weighted_splitting = val;}
+
   /// indicates whether caching is turned on or not.
   bool caching() const {return _caching ;}
 
@@ -224,6 +233,7 @@ private:
   double _split_merge_stopping_scale;
 
   mutable double _ghost_sep_scale;
+  bool _use_pt_weighted_splitting;
 
   // variables for caching the results and the input
   static std::auto_ptr<SISConePlugin          > stored_plugin;
