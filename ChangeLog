@@ -3,7 +3,7 @@
 	* did svnmerge.py uninit on the D0ILConePlugin branch
 	 
 	* merged the D0ILConePlugin Branch, which provides the D0 Run II
-	  Cone, geh genkt algorithm, and a full set of subjet tools (still
+	  Cone, the genkt algorithm, and a full set of subjet tools (still
 	  to be tested in part?)
 
 ============== MERGE OF D0ILConePlugin Branch =====================
