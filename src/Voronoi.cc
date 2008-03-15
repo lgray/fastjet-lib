@@ -57,6 +57,8 @@
 #include <stdio.h>
 #include "fastjet/internal/Voronoi.hh"
 
+using namespace std;
+
 FASTJET_BEGIN_NAMESPACE
 
 VoronoiDiagramGenerator::VoronoiDiagramGenerator(){

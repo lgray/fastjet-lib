@@ -1,5 +1,15 @@
 2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
-         
+
+        * src/Voronoi.cc
+        * plugins/SISCone/siscone
+        * include/fastjet/ClusterSequence1GhostPassiveArea.hh
+        * include/fastjet/ClusterSequencePassiveArea.hh
+        * include/fastjet/ClusterSequenceActiveArea.hh
+        * include/fastjet/internal/Voronoi.hh
+	  got rid of using namespace std in the headers
+	
+2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
 	* did svnmerge.py uninit on the D0ILConePlugin branch
 	 
 	* merged the D0ILConePlugin Branch, which provides the D0 Run II

@@ -67,7 +67,7 @@
 #define le 0
 #define re 1
 
-using namespace std;
+//using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -196,7 +196,7 @@ public:
   VoronoiDiagramGenerator();
   ~VoronoiDiagramGenerator();
 
-  bool generateVoronoi(vector<Point> *_parent_sites,
+  bool generateVoronoi(std::vector<Point> *_parent_sites,
 		       double minX, double maxX, double minY, double maxY, 
 		       double minDist=0);
 
@@ -213,7 +213,7 @@ public:
     return true;
   }
   
-  vector<Point> *parent_sites;
+  std::vector<Point> *parent_sites;
   int n_parent_sites;
 
 private:

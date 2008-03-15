@@ -47,7 +47,7 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-using namespace std;
+//using namespace std;
 
 /// Class that behaves essentially like ClusterSequence except
 /// that it also provides access to the area of a jet (which
@@ -136,12 +136,12 @@ protected:
 
   /// transfer areas from the ClusterSequenceActiveAreaExplicitGhosts
   /// object into our internal area bookkeeping...
-  void _transfer_areas(const vector<int> & unique_hist_order, 
+  void _transfer_areas(const std::vector<int> & unique_hist_order, 
                        const ClusterSequenceActiveAreaExplicitGhosts & );
 
   /// child classes benefit from having these at their disposal
-  valarray<double> _average_area, _average_area2;
-  valarray<PseudoJet> _average_area_4vector;
+  std::valarray<double> _average_area, _average_area2;
+  std::valarray<PseudoJet> _average_area_4vector;
 
   /// returns true if there are any particles whose transverse momentum
   /// if so low that there's a risk of the ghosts having modified the
@@ -162,12 +162,12 @@ private:
   /// routine for extracting the tree in an order that will be independent
   /// of any degeneracies in the recombination sequence that don't
   /// affect the composition of the final jets
-  void _extract_tree(vector<int> &) const;
+  void _extract_tree(std::vector<int> &) const;
   /// do the part of the extraction associated with pos, working
   /// through its children and their parents
-  void _extract_tree_children(int pos, valarray<bool> &, const valarray<int> &, vector<int> &) const;
+  void _extract_tree_children(int pos, std::valarray<bool> &, const std::valarray<int> &, std::vector<int> &) const;
   /// do the part of the extraction associated with the parents of pos.
-  void _extract_tree_parents (int pos, valarray<bool> &, const valarray<int> &,  vector<int> &) const;
+  void _extract_tree_parents (int pos, std::valarray<bool> &, const std::valarray<int> &,  std::vector<int> &) const;
 
   /// check if two jets have the same momentum to within the
   /// tolerance (and if pt's are not the same we're forgiving and

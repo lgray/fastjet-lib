@@ -40,7 +40,7 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-using namespace std;
+//using namespace std;
 
 /// Class that behaves essentially like ClusterSequence except
 /// that it also provides access to the area of a jet (which
