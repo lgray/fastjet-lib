@@ -1,5 +1,12 @@
 2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* initialised svnmerge.py on
+	  svn+ssh://tycho/ada1/lpthe/salam/svn/fastjet/branches/fastjet-release-devel-D0ILConePlugin 
+
+	
+	  
+2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
 	* doc/fastjet-doc.tex (subsection[$k_t$ jet algorithm]): 
 	  added refs separately to inclusive and exclusive when describing
 	  jet-alg (subsequent to mails from Piergiulio Lenzi who was
