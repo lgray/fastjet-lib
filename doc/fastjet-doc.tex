@@ -158,7 +158,8 @@ though the exclusive mode has physical advantages in certain cases.
 %......................................................................
 \subsection[$k_t$ jet algorithm]{$\boldsymbol{k_t}$ jet algorithm}
 The definition of the inclusive $k_t$ jet algorithm that is coded is as
-follows:
+follows (and corresponds to \cite{ktincl}, modulo small changes of
+notation): 
 \begin{itemize}
 \item[1.] For each pair of particles $i$, $j$ work out the $k_t$
   distance 
@@ -178,7 +179,8 @@ follows:
   a final jet and remove it from the list.
 \item[3.] Repeat from step 1 until no particles are left.
 \end{itemize}
-The exclusive jet algorithm is similar except that (a) when a $d_{iB}$
+The exclusive longitudinally invariant $k_t$ jet algorithm
+\cite{ktexcl} is similar except that (a) when a $d_{iB}$ 
 is the smallest value, that particle is considered to become part of
 the beam jet (i.e.\ is discarded) and (b) clustering is stopped when
 all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. In the

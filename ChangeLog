@@ -1,3 +1,10 @@
+2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex (subsection[$k_t$ jet algorithm]): 
+	  added refs separately to inclusive and exclusive when describing
+	  jet-alg (subsequent to mails from Piergiulio Lenzi who was
+	  having trouble understanding what was happening).
+	
 2008-03-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* configure.ac: 
@@ -27,7 +34,6 @@ released 2.3.1 on 2008-03-07
           Revisited part of the change made on 2008-02-18: subtracted 
           jets with unphysical momentum now also get a valid index
           
-
 2008-02-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 
