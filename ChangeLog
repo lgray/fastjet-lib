@@ -1,5 +1,7 @@
 2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
-
+         
+	* did svnmerge.py uninit on the D0ILConePlugin branch
+	 
 	* merged the D0ILConePlugin Branch, which provides the D0 Run II
 	  Cone, geh genkt algorithm, and a full set of subjet tools (still
 	  to be tested in part?)
