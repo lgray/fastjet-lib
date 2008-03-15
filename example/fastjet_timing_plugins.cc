@@ -110,6 +110,9 @@
 #ifdef ENABLE_PLUGIN_PXCONE
 #include "fastjet/PxConePlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_D0RUNIICONE
+#include "fastjet/D0RunIIConePlugin.hh"
+#endif 
 
 using namespace std;
 
@@ -119,7 +122,13 @@ namespace fj = fastjet;
 
 inline double pow2(const double x) {return x*x;}
 
-/// a program to test and time the kt algorithm as implemented in fastjet
+// pretty print the jets and their subjets
+void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
+                         const vector<fj::PseudoJet> & jets, double dcut);
+
+
+/// a program to test and time a range of algorithms as implemented or
+/// wrapped in fastjet
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
@@ -138,6 +147,7 @@ int main (int argc, char ** argv) {
   double inclkt = cmdline.double_val("-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
+  double subdcut = cmdline.double_val("-subdcut",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e305);
   bool   show_constituents = cmdline.present("-const");
   bool   massless = cmdline.present("-massless");
@@ -163,6 +173,9 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
   } else if (cmdline.present("-antikt")) {
     jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, strategy);
+  } else if (cmdline.present("-genkt")) {
+    double p = cmdline.value<double>("-genkt");
+    jet_def = fj::JetDefinition(fj::genkt_algorithm, ktR, p, fj::E_scheme, strategy);
   } else if (cmdline.present("-midpoint")) {
 #ifdef ENABLE_PLUGIN_CDFCONES
     typedef fj::CDFMidPointPlugin MPPlug; // for brevity
@@ -213,6 +226,12 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_SISCONE
     cerr << "siscone requested, but not available for this compilation" << endl;
 #endif // ENABLE_PLUGIN_SISCONE
+  } else if (cmdline.present("-d0runiicone")) {
+#ifdef ENABLE_PLUGIN_D0RUNIICONE
+    jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR));
+#else  // ENABLE_PLUGIN_D0RUNIICONE
+    cerr << "D0RunIICone requested, but not available for this compilation" << endl;
+#endif // ENABLE_PLUGIN_D0RUNIICONE
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }
@@ -353,6 +372,11 @@ int main (int argc, char ** argv) {
       }
     }
 
+    // have the option of printing out the subjets (at scale dcut) of
+    // each inclusive jet
+    if (subdcut >= 0.0) {
+      print_jets_and_sub(clust_seq, clust_seq.inclusive_jets(), subdcut);
+    }
     
     // useful for testing that recombination sequences are unique
     if (unique_write) {
@@ -393,3 +417,88 @@ int main (int argc, char ** argv) {
   } // irepeat
   } // iev
 }
+
+
+
+
+//------ HELPER ROUTINES -----------------------------------------------
+/// print a single jet
+void print_jet (const fj::ClusterSequence & clust_seq, 
+                const fj::PseudoJet & jet) {
+  int n_constituents = clust_seq.constituents(jet).size();
+  printf("%15.8f %15.8f %15.8f %8u\n",
+         jet.rap(), jet.phi(), jet.perp(), n_constituents);
+}
+
+//----- SUBJETS --------------------------------------------------------
+/// a function that pretty prints a list of jets and the subjets for each
+/// one
+void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
+                         const vector<fj::PseudoJet> & jets, double dcut) {
+
+  // sort jets into increasing pt
+  vector<fj::PseudoJet> sorted_jets = sorted_by_pt(jets);  
+
+  // label the columns
+  printf("Printing jets and their subjets with subdcut = %10.5f\n",dcut);
+  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", 
+	 "phi", "pt", "n constituents");
+
+  // have various kinds of subjet finding, to test consistency among them
+  enum SubType {internal, newclust_dcut, newclust_R};
+  SubType subtype = internal;
+  //SubType subtype = newclust_dcut;
+
+  // print out the details for each jet
+  for (unsigned int i = 0; i < sorted_jets.size(); i++) {
+    // if jet pt^2 < dcut with kt alg, then some methods of
+    // getting subjets will return nothing -- so skip the jet
+    if (clust_seq.jet_def().jet_algorithm() == fj::kt_algorithm 
+        && sorted_jets[i].perp2() < dcut) continue;
+
+    printf("%5u       ",i);
+    print_jet(clust_seq, sorted_jets[i]);
+    vector<fj::PseudoJet> subjets;
+    fj::ClusterSequence * cspoint;
+    if (subtype == internal) {
+      cspoint = &clust_seq;
+      subjets = clust_seq.exclusive_subjets(sorted_jets[i], dcut);
+      //subjets = clust_seq.exclusive_subjets(sorted_jets[i], 5);
+      //double dd = clust_seq.exclusive_subdmerge_max(sorted_jets[i], 3);
+      //subjets = clust_seq.exclusive_subjets(sorted_jets[i], dd*1.0000001);
+    } else if (subtype == newclust_dcut) {
+      cspoint = new fj::ClusterSequence(clust_seq.constituents(sorted_jets[i]),
+                                        clust_seq.jet_def());
+      subjets = cspoint->exclusive_jets(dcut);
+      //subjets = cspoint->exclusive_jets(int(min(5U,cspoint->n_particles())));
+    } else if (subtype == newclust_R) {
+      assert(clust_seq.jet_def().jet_algorithm() == fj::cambridge_algorithm);
+      fj::JetDefinition subjd(clust_seq.jet_def().jet_algorithm(), 
+                              clust_seq.jet_def().R()*sqrt(dcut));
+      cspoint = new fj::ClusterSequence(clust_seq.constituents(sorted_jets[i]),
+                                        subjd);
+      subjets = cspoint->inclusive_jets();
+    } else {
+      cerr << "unrecognized subtype for subjet finding" << endl;
+      exit(-1);
+    }
+
+    subjets = sorted_by_pt(subjets);
+    for (unsigned int j = 0; j < subjets.size(); j++) {
+      printf("    -sub-%02u ",j);
+      print_jet(*cspoint, subjets[j]);
+    }
+
+    if (cspoint != &clust_seq) delete cspoint;
+
+    //fj::ClusterSequence subseq(clust_seq.constituents(sorted_jets[i]),
+    //                          fj::JetDefinition(fj::cambridge_algorithm, 0.4));
+    //vector<fj::PseudoJet> subjets = sorted_by_pt(subseq.inclusive_jets());
+    //for (unsigned int j = 0; j < subjets.size(); j++) {
+    //  printf("    -sub-%02u ",j);
+    //  print_jet(subseq, subjets[j]);
+    //}
+  }
+
+}
+

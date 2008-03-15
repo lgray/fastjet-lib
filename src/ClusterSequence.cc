@@ -38,6 +38,7 @@
 #include<cstdlib>
 #include<cassert>
 #include<string>
+#include<set>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -274,6 +275,11 @@ double ClusterSequence::jet_scale_for_algorithm(
   else if (_jet_algorithm == antikt_algorithm) {
     double kt2=jet.kt2();
     return kt2 > 1e-300 ? 1.0/kt2 : 1e300;
+  } else if (_jet_algorithm == genkt_algorithm) {
+    double kt2 = jet.kt2();
+    double p   = jet_def().extra_param();
+    if (p <= 0 && kt2 < 1e-300) kt2 = 1e-300; // dodgy safety check
+    return pow(kt2, p);
   } else if (_jet_algorithm == cambridge_for_passive_algorithm) {
     double kt2 = jet.kt2();
     double lim = _jet_def.extra_param();
@@ -356,6 +362,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
     }
   } else if (_jet_algorithm == plugin_algorithm 
              || _jet_algorithm == antikt_algorithm
+             || _jet_algorithm == genkt_algorithm
              || _jet_algorithm == cambridge_for_passive_algorithm) {
     // for inclusive jets with a plugin algorithm, we make no
     // assumptions about anything (relation of dij to momenta,
@@ -481,6 +488,138 @@ double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
   return _history[2*_initial_n-njets-1].max_dij_so_far;
 }
 
+
+//----------------------------------------------------------------------
+/// return a vector of all subjets of the current jet (in the sense
+/// of the exclusive algorithm) that would be obtained when running
+/// the algorithm with the given dcut.
+std::vector<PseudoJet> ClusterSequence::exclusive_subjets 
+   (const PseudoJet & jet, const double & dcut) const {
+
+  set<const history_element*> subhist;
+
+  // get the set of history elements that correspond to subjets at
+  // scale dcut
+  get_subhist_set(subhist, jet, dcut, 0);
+
+  // now transfer this into a sequence of jets
+  vector<PseudoJet> subjets;
+  subjets.reserve(subhist.size());
+  for (set<const history_element*>::iterator elem = subhist.begin(); 
+       elem != subhist.end(); elem++) {
+    subjets.push_back(_jets[(*elem)->jetp_index]);
+  }
+  return subjets;
+}
+
+//----------------------------------------------------------------------
+/// return the size of exclusive_subjets(...); still n ln n with same
+/// coefficient, but marginally more efficient than manually taking
+/// exclusive_subjets.size()
+int ClusterSequence::n_exclusive_subjets(const PseudoJet & jet, 
+                        const double & dcut) const {
+  set<const history_element*> subhist;
+  // get the set of history elements that correspond to subjets at
+  // scale dcut
+  get_subhist_set(subhist, jet, dcut, 0);
+  return subhist.size();
+}
+
+//----------------------------------------------------------------------
+/// return the list of subjets obtained by unclustering the supplied
+/// jet down to n subjets (or all constituents if there are fewer
+/// than n).
+std::vector<PseudoJet> ClusterSequence::exclusive_subjets 
+   (const PseudoJet & jet, int n) const {
+
+  set<const history_element*> subhist;
+
+  // get the set of history elements that correspond to subjets at
+  // scale dcut
+  get_subhist_set(subhist, jet, -1.0, n);
+
+  // now transfer this into a sequence of jets
+  vector<PseudoJet> subjets;
+  subjets.reserve(subhist.size());
+  for (set<const history_element*>::iterator elem = subhist.begin(); 
+       elem != subhist.end(); elem++) {
+    subjets.push_back(_jets[(*elem)->jetp_index]);
+  }
+  return subjets;
+}
+
+
+//----------------------------------------------------------------------
+/// return the dij that was present in the merging nsub+1 -> nsub 
+/// subjets inside this jet.
+double ClusterSequence::exclusive_subdmerge(const PseudoJet & jet, int nsub) const {
+  set<const history_element*> subhist;
+
+  // get the set of history elements that correspond to subjets at
+  // scale dcut
+  get_subhist_set(subhist, jet, -1.0, nsub);
+  
+  set<const history_element*>::iterator highest = subhist.end();
+  highest--;
+  return (*highest)->dij;
+}
+
+
+//----------------------------------------------------------------------
+/// return the maximum dij that occurred in the whole event at the
+/// stage that the nsub+1 -> nsub merge of subjets occurred inside 
+/// this jet.
+double ClusterSequence::exclusive_subdmerge_max(const PseudoJet & jet, int nsub) const {
+
+  set<const history_element*> subhist;
+
+  // get the set of history elements that correspond to subjets at
+  // scale dcut
+  get_subhist_set(subhist, jet, -1.0, nsub);
+  
+  set<const history_element*>::iterator highest = subhist.end();
+  highest--;
+  return (*highest)->max_dij_so_far;
+}
+
+
+
+//----------------------------------------------------------------------
+/// return a set of pointers to history entries corresponding to the
+/// subjets of this jet; one stops going working down through the
+/// subjets either when 
+///   - there is no further to go
+///   - one has found maxjet entries
+///   - max_dij_so_far <= dcut
+void ClusterSequence::get_subhist_set(set<const history_element*> & subhist,
+                                     const  PseudoJet & jet, 
+                                     double dcut, int maxjet) const {
+  subhist.clear();
+  subhist.insert(&(_history[jet.cluster_hist_index()]));
+
+  // establish the set of jets that are relevant
+  int njet = 1;
+  while (true) {
+    // first find out if we need to probe deeper into jet.
+    // Get history element closest to end of sequence
+    set<const history_element*>::iterator highest = subhist.end();
+    assert (highest != subhist.begin()); 
+    highest--;
+    const history_element* elem = *highest;
+    // make sure we haven't got too many jets
+    if (njet == maxjet) break;
+    // make sure it has parents
+    if (elem->parent1 < 0)            break;
+    // make sure that we still resolve it at scale dcut
+    if (elem->max_dij_so_far <= dcut) break;
+
+    // then do so: replace "highest" with its two parents
+    subhist.erase(highest);
+    subhist.insert(&(_history[elem->parent1]));
+    subhist.insert(&(_history[elem->parent2]));
+    njet++;
+  }
+}
 
 //----------------------------------------------------------------------
 // work through the object's history until

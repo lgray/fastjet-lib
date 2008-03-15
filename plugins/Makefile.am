@@ -8,8 +8,11 @@ endif
 if BUILD_PLUGIN_PXCONE
 SUBDIRS += PxCone
 endif
+if BUILD_PLUGIN_D0RUNIICONE
+SUBDIRS += D0RunIICone
+endif
 SUBDIRS += usage_examples
 
-DIST_SUBDIRS = SISCone CDFCones PxCone usage_examples
+DIST_SUBDIRS = SISCone CDFCones PxCone D0RunIICone usage_examples
 
 EXTRA_DIST = makefile.static

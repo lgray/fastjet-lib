@@ -109,11 +109,17 @@ else
     grep -v -e'^siscone:' output_orig.tmp > output_orig_tmp.tmp
     mv output_orig_tmp.tmp output_orig.tmp
 fi
+if [[ -n `grep "define ENABLE_PLUGIN_D0RUNIICONE" include/fastjet/config_auto.h` ]]; then
+    tested_plugins=${tested_plugins}"D0RunIICone "
+else
+    grep -v -e'^d0runiicone:' output_orig.tmp > output_orig_tmp.tmp
+    mv output_orig_tmp.tmp output_orig.tmp
+fi
 
 # 2. clear the orig output
 #     (i)  avoid line with '#' or 'SISCone' in them
 #     (ii) remove the plugins tags
-grep -v -e '#' -e 'SISCone' output_orig.tmp | sed -e "s/^pxcone://g" -e "s/^siscone://g" -e "s/^cdfmp://g" > output_orig.tmp.tmp
+grep -v -e '#' -e 'SISCone' output_orig.tmp | sed -e "s/^pxcone://g" -e "s/^siscone://g" -e "s/^cdfmp://g" -e "s/^d0runiicone://g" > output_orig.tmp.tmp
 mv output_orig.tmp.tmp output_orig.tmp
 
 # 2. clean the 'make check' output

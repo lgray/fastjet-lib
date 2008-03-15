@@ -51,6 +51,10 @@ string JetDefinition::description() const {
     name << "Longitudinally invariant anti-kt algorithm with R = " 
 	 << R() ;
     name << " and " << recombiner()->description();
+  } else if (jet_algorithm() == genkt_algorithm) {
+    name << "Longitudinally invariant generalised kt algorithm with R = " 
+	 << R() << ", p = " << extra_param();
+    name << " and " << recombiner()->description();
   } else if (jet_algorithm() == cambridge_for_passive_algorithm) {
     name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
 	 << R() << "and a special hack whereby particles with kt < " 

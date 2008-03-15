@@ -60,7 +60,7 @@
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
-\newcommand{\order}[1]{\left(#1\right)}
+\newcommand{\order}[1]{{\cal O}\left(#1\right)}
 \newcommand{\ie}{{\it i.e.}\ }
 \newcommand{\eg}{{\it e.g.}\ }
 
@@ -215,15 +215,34 @@ distance measure.
 This new algorithm, introduced and studied in~\cite{antikt}, is defined
 exactly like the standard $k_t$ algorithm, except for the distance
 measures which are now given by
-  \begin{eqnarray*}
+\begin{subequations}
+  \begin{eqnarray}
     \label{eq:dij_antikt}
     &&d_{ij} = \min(1/k_{ti}^2,1/{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2 \, , \\
     &&d_{iB} = 1/k_{ti}^2 \, .
-  \end{eqnarray*}
+  \end{eqnarray}
+\end{subequations}
 While being a sequential recombination algorithm like $k_t$ and
 Cambridge/Aachen, the anti-$k_t$ algorithm behaves in some sense like a
 `perfect' cone algorithm, in that its hard jets are exactly
 circular on the $y$-$\phi$ cylinder~\cite{antikt}.
+
+%......................................................................
+\subsection[Generalised-$k_t$ jet algorithm]{Generalised $\boldsymbol{k_t}$ jet algorithm}
+
+The ``generalised $k_t$'' algorithm again follows the same procedure,
+but depends on an additional continuous parameter $p$, with has the
+following distance measure:
+\begin{subequations}
+  \begin{eqnarray}
+    \label{eq:dij_antikt}
+    &&d_{ij} = \min(k_{ti}^{2p},k_{tj}^{2p}) \, \Delta R_{ij}^2 / R^2 \, , \\
+    &&d_{iB} = k_{ti}^{2p} \, .
+  \end{eqnarray}
+\end{subequations}
+For specific values of $p$, it reduces to one or other of the
+algorithms list above, $k_t$ ($p=1$), Cambridge/Aachen ($p=0$) and
+anti-$k_t$ ($p=-1$). 
 
 %......................................................................
 \subsection{Recombination schemes}
@@ -396,15 +415,16 @@ of how to carry out the clustering. Its constructor is\footnote{The v.
 \end{lstlisting}
 %
 The jet algorithm is one of the entries of the \ttt{fastjet::JetAlgorithm}
-\ttt{enum}\footnote{The \ttt{JetAlgorithm} name replaces the old \ttt{JetFinder}
+\ttt{enum}\footnote{As of v2.3, the \ttt{JetAlgorithm} name replaces the old \ttt{JetFinder}
 one, in keeping with the Les Houches convention. Backward compatibility is
 assured at the user level by a typedef and a doubling of the methods names.
-Backward compatibility (with versions < 2.3) is however broken for 
+Backward compatibility (with versions $<$ 2.3) is however broken for 
 user-written derived classes of \ttt{ClusterSequence}, as the protected 
 variables \ttt{\_default\_jet\_finder} and  \ttt{\_jet\_finder} have been 
 replaced by \ttt{\_default\_jet\_algorithm} and \ttt{\_jet\_algorithm}.}: 
 \begin{lstlisting}
-  enum JetAlgorithm {kt_algorithm, cambridge_algorithm, antikt_algorithm};
+  enum JetAlgorithm {kt_algorithm, cambridge_algorithm,
+                     antikt_algorithm, genkt_algorithm};
 \end{lstlisting}
 \ttt{R} specifies the value of $R$ that appears in
 eqs.~(\ref{eq:dij},\ref{eq:dij_cam}). 
@@ -429,6 +449,19 @@ chosen.
     (as defined in section~\ref{sec:recomb_schemes}).}
   \label{tab:RecombSchemes}
 \end{table}
+
+For the generalised $k_t$ algorithm an extra parameter is needed, and
+the following constructor should then be used
+%
+\begin{lstlisting}
+  fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm,
+                         double R,
+                         double p,
+                         fastjet::RecombinationScheme recomb_scheme = E_scheme,
+                         fastjet::Strategy strategy = Best);
+\end{lstlisting}
+%
+If the earlier constructor is used, then $p$ is set to 0.
 
 The strategy selects the algorithmic strategy to use while clustering
 and is an \texttt{enum} of type \texttt{fastjet::Strategy} with
@@ -460,12 +493,20 @@ potentially interesting values listed in table~\ref{tab:Strategies}:
   \end{center}
 \end{table}
 %
-All strategies apply equally well to the $k_t$, anti-$k_t$ and Cambridge jet
-algorithms, except \ttt{NlnNCam}, which being based on a
+All strategies apply equally well to the any of the internally
+implemented jet algorithms, except \ttt{NlnNCam}, which being based on a
 computational geometry algorithm for dynamic maintenance of closest
 pairs \cite{Chan} (rather than the more involved nearest neighbour
 graph), is suitable only for the Cambridge algorithm whose distance
-measure is purely geometrical.
+measure is purely geometrical. 
+%
+Note that $N \ln N$ performance of the \texttt{NlnN} strategy is an
+\emph{expected} result, and while it holds in practice for the $k_t$
+and Cambridge algorithms, for anti-$k_t$ and generalised-$k_t$ with
+$p<0$, hub-and-spoke (bicycle-wheel!) type configurations emerge
+dynamically during the clustering and these break the conditions
+needed for the expected result to hold (this however has a significant
+impact only for $N \gtrsim 10^5$).
 
 If \texttt{strategy} is omitted then the \texttt{Best} option is set.
 Note that the $N$ ranges quoted above for which a given strategy is
@@ -591,24 +632,42 @@ particles provided to \ttt{fastjet::ClusterSequence} she or he should have set
 a unique index for each of the original particles with the
 \ttt{fastjet::PseudoJet::set\_user\_index} function.
 
-\paragraph{Subjet analysis.} Currently no dedicated subjet
-analysis is provided. It is however trivial (though non-optimal) to
-obtain a subjet analysis as follows:
+\paragraph{Subjet analysis.} To obtain the set of subjets at a specific
+$d_{\mathrm{cut}}$ scale inside a given jet, one may use the following
+\ttt{ClusterSequence} member function:
 \begin{lstlisting}
-  // run clustering on vector<fastjet::PseudoJet> all_particles
-  fastjet::ClusterSequence clust_seq(all_particles);
-
-  // get the exclusive jets with the event viewed as two hard jets
-  vector<fastjet::PseudoJet> jets = clust_seq.exclusive_jets(2);
-
-  // get the constituents of the first of these jets
-  vector<fastjet::PseudoJet> jet0_constituents = clust_seq.constituents(jets[0]);
-
-  // now rerun the jet clustering on jet0_constituents
-  fastjet::ClusterSequence jet0_seq(jet0_constituents);
-
-  // run whatever subjet analysis is of interest here on jet0_seq.
+  /// return a vector of all subjets of the current jet (in the sense
+  /// of the exclusive algorithm) that would be obtained when running
+  /// the algorithm with the given dcut. 
+  std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
+                                            const double & dcut) const;
 \end{lstlisting}
+If $m$ jets are found, this takes a time $\order{m \ln m}$ (owing to
+the internal use of a priority queue). Alternatively one may obtain
+the jet's constituents, cluster them separately and then carry out an
+\ttt{exclusive\_jets} analysis on the resulting \ttt{ClusterSequence}.
+The results should be identical. This second method is mandatory if
+one wishes to identify subjets with an algorithm that differs from the
+one used to find the original jets.
+
+%% Currently no dedicated subjet
+%% analysis is provided. It is however trivial (though non-optimal) to
+%% obtain a subjet analysis as follows:
+%% \begin{lstlisting}
+%%   // run clustering on vector<fastjet::PseudoJet> all_particles
+%%   fastjet::ClusterSequence clust_seq(all_particles);
+%% 
+%%   // get the exclusive jets with the event viewed as two hard jets
+%%   vector<fastjet::PseudoJet> jets = clust_seq.exclusive_jets(2);
+%% 
+%%   // get the constituents of the first of these jets
+%%   vector<fastjet::PseudoJet> jet0_constituents = clust_seq.constituents(jets[0]);
+%% 
+%%   // now rerun the jet clustering on jet0_constituents
+%%   fastjet::ClusterSequence jet0_seq(jet0_constituents);
+%% 
+%%   // run whatever subjet analysis is of interest here on jet0_seq.
+%% \end{lstlisting}
 One can also make use of the following methods, which allow one to
 follow the merging sequence (and walk back through it):
 \begin{lstlisting}

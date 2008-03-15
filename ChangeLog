@@ -1,5 +1,112 @@
 2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* merged the D0ILConePlugin Branch, which provides the D0 Run II
+	  Cone, geh genkt algorithm, and a full set of subjet tools (still
+	  to be tested in part?)
+
+============== MERGE OF D0ILConePlugin Branch =====================
+	
+2008-01-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc: 
+	  changed position of a #ifdef ENABLE_PLUGIN_SISCONE so that when 
+	  we merge it doesn't logically conflict with a parallel change in
+  	  the trunk).
+
+2007-12-29  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence.cc: 
+	  added a full set of subjet functions, in analogy with what's
+	  available for normal exclusive jets. Not yet documented
+	
+2007-12-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex
+	  documented genkt and subjet work; 
+
+	  NB: MORE FUNCTIONALITY (SPLIT TO N JETS, ETC.) NEEDED 
+	  FOR THE SUBJET WORK.
+
+	* include/fastjet/JetDefinition.hh: 
+	* src/JetDefinition.cc: 
+	* src/ClusterSequence.cc: 
+	  Got genkt working.
+
+	* example/fastjet_timing_plugins.cc:
+	  added option (-subdcut) for carrying out subjet analysis on
+	  every jet; various methods are programmed internally, and the
+	  subjet analysis was checked by making sure that for each method,
+
+	  ./fastjet_timing_plugins -nev 1000 -cam -subdcut 0.25 \
+	       < ~/work/fastjet/data/Pythia-PtMin50-TeV-1000ev.dat
+ 
+	  gave identical results (similarly also for kt). This validates
+	  the ClustSequence::exclusive_subjets(...) routine.
+
+	  Also added -doruniicone option.
+	
+	* plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh: 
+	  added default values for min_jet_Et and split_ratio, such that
+	  the algorithm can be called with just the cone radius and it
+	  will correspond to what is used by D0.
+
+	* example/fastjet_subjets.cc: 
+	  added some explicit subjet analysis
+
+	* src/ClusterSequence.cc: 
+	  corrected a couple of bugs in exclusive_subjets
+
+2007-12-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/ClusterSequence.hh: 
+	  added the exclusive_subjets(jet,dcut) routine to find out 
+	  about the subjets at scale (dcut) inside a given jet
+
+          -----------------------------------------------------	
+	* from revision 989 onwards, add subjet analysis
+          -----------------------------------------------------	
+
+2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc: 
+	  fixed compilation bug when siscone is disabled
+
+	* plugins/usage_examples/many_algs_example.cc: 
+	* test-script-output-orig.txt: 
+	* test-compare.sh
+	  modified these so that D0 cone is tested as well + fixed bug
+	  in check when siscone is disabled
+
+	* [various]/Makefile.am
+	* configure.ac
+	  added compilation of D0 code & plugins
+	
+	* plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh:  *** ADDED ***
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc:  *** ADDED ***
+
+	  added these both, modified the D0RunIICone to get easy access to
+	  jet constituents, and tested that it gives correct answers on
+	  sample event sent by Lars Sonnenschein.
+
+	* plugins/D0RunIICone/ *** ADDED ***
+	  - put in untarred version of D0RunIIcone/
+	  - copied main pieces into top directory
+	  - made modifications for compilation
+	  - added index entry to HepEntity
+	  
+	
+2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+          -----------------------------------------------------	
+	* on branch (from revision 981) for adding D0 cone...
+          -----------------------------------------------------	
+
+============== END OF MERGE OF D0ILConePlugin Branch =====================
+	
+	
+2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
 	* initialised svnmerge.py on
 	  svn+ssh://tycho/ada1/lpthe/salam/svn/fastjet/branches/fastjet-release-devel-D0ILConePlugin 
 
@@ -160,6 +267,7 @@ released 2.3.0 on 2008-01-03
 
 	* Makefile.am: 
 	  added Doxyfile to EXTRA_DIST
+
 
 2007-12-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 

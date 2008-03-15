@@ -91,6 +91,7 @@ enum JetAlgorithm {
   /// like the k_t but with distance measures 
   ///       dij = min(kti^{2p},ktj^{2p}) Delta R_{ij}^2 / R^2
   ///       diB = 1/kti^{2p}
+  /// where p = extra_param()
   genkt_algorithm=3, 
   /// a version of cambridge with a special distance measure for particles
   /// whose pt is < extra_param()
@@ -177,6 +178,7 @@ public:
            _strategy   != plugin_strategy);
     _plugin = NULL;
     set_recombination_scheme(recomb_scheme);
+    set_extra_param(0.0); // make sure it's defined
   }
   
 
@@ -191,6 +193,17 @@ public:
   }
 
 
+  /// constructor that allows also the extra parameter to be set
+  JetDefinition(JetAlgorithm jet_algorithm, 
+                double R, 
+                double xtra_param,
+                RecombinationScheme recomb_scheme = E_scheme,
+                Strategy strategy = Best) {
+    *this = JetDefinition(jet_algorithm, R, strategy, recomb_scheme);
+    set_extra_param(xtra_param);
+  }
+
+
   /// constructor in a form that allows the user to provide a pointer
   /// to an external recombiner class (which must remain valid for the
   /// life of the JetDefinition object).
@@ -200,6 +213,18 @@ public:
                 Strategy strategy = Best) {
     *this = JetDefinition(jet_algorithm, R, strategy, external_scheme);
     _recombiner = recombiner;
+  }
+
+  /// constructor allowing the extra parameter to be set and a pointer to
+  /// a recombiner
+  JetDefinition(JetAlgorithm jet_algorithm, 
+                double R, 
+                double xtra_param,
+                const Recombiner * recombiner,
+                Strategy strategy = Best) {
+    *this = JetDefinition(jet_algorithm, R, strategy, external_scheme);
+    _recombiner = recombiner;
+    set_extra_param(xtra_param);
   }
 
   /// constructor based on a pointer to a user's plugin; the object

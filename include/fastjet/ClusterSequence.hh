@@ -54,6 +54,7 @@
 #include<cassert>
 #include<iostream>
 #include<string>
+#include<set>
 #include<cmath> // needed to get double std::abs(double)
 #include "fastjet/Error.hh"
 #include "fastjet/JetDefinition.hh"
@@ -127,6 +128,47 @@ class ClusterSequence {
   /// monotonically.
   double exclusive_dmerge_max (const int & njets) const;
 
+  //int n_exclusive_jets (const PseudoJet & jet, const double & dcut) const;
+
+  /// return a vector of all subjets of the current jet (in the sense
+  /// of the exclusive algorithm) that would be obtained when running
+  /// the algorithm with the given dcut. 
+  ///
+  /// Time taken is O(m ln m), where m is the number of subjets that
+  /// are found. If m gets to be of order of the total number of
+  /// constituents in the jet, this could be substantially slower than
+  /// just getting that list of constituents.
+  std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
+                                            const double & dcut) const;
+
+  /// return the size of exclusive_subjets(...); still n ln n with same
+  /// coefficient, but marginally more efficient than manually taking
+  /// exclusive_subjets.size()
+  int n_exclusive_subjets(const PseudoJet & jet, 
+                          const double & dcut) const;
+
+  /// return the list of subjets obtained by unclustering the supplied
+  /// jet down to n subjets (or all constituents if there are fewer
+  /// than n).
+  ///
+  /// requires n ln n time
+  std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
+                                            int nsub) const;
+
+  /// return the dij that was present in the merging nsub+1 -> nsub 
+  /// subjets inside this jet.
+  double exclusive_subdmerge(const PseudoJet & jet, int nsub) const;
+
+  /// return the maximum dij that occurred in the whole event at the
+  /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
+  /// this jet.
+  double exclusive_subdmerge_max(const PseudoJet & jet, int nsub) const;
+
+  //std::vector<PseudoJet> exclusive_jets (const PseudoJet & jet, 
+  //                                       const int & njets) const;
+  //double exclusive_dmerge (const PseudoJet & jet, const int & njets) const;
+
+
   /// returns true iff the object is included in the jet. 
   ///
   /// NB: this is only sensible if the object is already registered
@@ -160,6 +202,7 @@ class ClusterSequence {
   /// partner to zero
   bool has_partner(const PseudoJet & jet, PseudoJet & partner) const;
 
+  
   /// return a vector of the particles that make up jet
   std::vector<PseudoJet> constituents (const PseudoJet & jet) const;
 
@@ -179,7 +222,7 @@ class ClusterSequence {
 //   /// print out all inclusive jets with pt > ptmin
 //   virtual void print_jets (const double & ptmin=0.0) const;
 
-  /// add on to subjet_vector the subjets of jet (for internal use mainly)
+  /// add on to subjet_vector the constituents of jet (for internal use mainly)
   void add_constituents (const PseudoJet & jet, 
 			 std::vector<PseudoJet> & subjet_vector) const;
 
@@ -399,6 +442,17 @@ protected:
   /// _history[i].jetp_index indicates where to look in the _jets
   /// vector to get the physical PseudoJet.
   std::vector<history_element> _history;
+
+  /// set subhist to be a set pointers to history entries corresponding to the
+  /// subjets of this jet; one stops going working down through the
+  /// subjets either when 
+  ///   - there is no further to go
+  ///   - one has found maxjet entries
+  ///   - max_dij_so_far <= dcut
+  /// By setting maxjet=0 one can use just dcut; by setting dcut<0
+  /// one can use jet maxjet
+  void get_subhist_set(std::set<const history_element*> & subhist,
+                       const  PseudoJet & jet, double dcut, int maxjet) const;
 
   bool _writeout_combinations;
   int  _initial_n;

@@ -41,6 +41,10 @@ The full list of possible options can be obtained with ./configure
     --enable-cdfcones         (default=yes)
 		    enables the CDFJetClu and CDFMidPoint plugins
 
+    --enable-d0runiicone      (default=no)
+                    enables the D0RunIICone (also known as
+                    ILConeAlgorithm within D0)
+
     --enable-pxcone           (default=no)
 		    enables the PxCone plugin (note this is in f77,
                     and so you may have to deal with C++/f77

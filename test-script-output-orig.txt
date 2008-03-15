@@ -152,6 +152,21 @@ siscone:    9      3.05762711      5.47097964      5.08623145       15
 siscone:
 siscone:0 particles unclustered
 siscone:
+d0runiicone:Ran D0 Run II Improved Legacy (midpoint) cone jet algorithm, with cone_radius = 0.7, min_jet_Et = 8, split_ratio = 0.5
+d0runiicone:Printing inclusive jets with pt > 5 GeV
+d0runiicone:---------------------------------------
+d0runiicone:jet #        rapidity             phi              pt  n constituents
+d0runiicone:    0     -0.86713954      2.90515650    983.27961921       34
+d0runiicone:    1      0.22053464      6.03070306    900.82278173       33
+d0runiicone:    2     -1.17103708      6.07159548     69.71050689       34
+d0runiicone:    3      0.38531052      0.63069316     14.05493791       16
+d0runiicone:    4     -2.32711337      1.00947550     12.16855751       19
+d0runiicone:    5     -1.63742088      4.01894081      7.60023410        7
+d0runiicone:    6     -4.34114427      1.35326901      7.49706069       17
+d0runiicone:    7     -1.17471965      0.75616236      7.28161784       12
+d0runiicone:
+d0runiicone:182 particles unclustered
+d0runiicone:
 Ran Longitudinally invariant kt algorithm with R = 0.7 and E scheme recombination
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------

@@ -2,6 +2,15 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
+Summary of changes from v2.3.1 -> v2.4-devel
+==========================================================
+
+- added D0RunIICone plugin [--enable-d0runiicone]
+- added implementation of genkt algorithm 
+- added a full set of subjet functions (in analogy with normal excl jets)
+
+
+======================================================================
 Summary of changes from v2.3.0 -> v2.3.1 (bug fix release)
 ==========================================================
 

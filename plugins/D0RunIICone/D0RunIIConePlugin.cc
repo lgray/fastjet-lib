@@ -1,0 +1,122 @@
+//STARTHEADER
+// $Id$
+//
+// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+#include "fastjet/D0RunIIConePlugin.hh"
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/Error.hh"
+#include <sstream>
+
+// D0 stuff
+#include <list>
+#include "ILConeAlgorithm.hpp"
+#include "HepEntity.h"
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+using namespace std;
+
+string D0RunIIConePlugin::description () const {
+  ostringstream desc;
+  
+  desc << "D0 Run II Improved Legacy (midpoint) cone jet algorithm, with ";
+  desc << "cone_radius = "        << cone_radius        () << ", "
+       << "min_jet_Et = "         << min_jet_Et         () << ", " 
+       << "split_ratio = "        << split_ratio        ();
+
+  return desc.str();
+}
+
+
+void D0RunIIConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+ 
+  // create the entities needed by the D0 code
+  vector<HepEntity> entities(clust_seq.jets().size());
+  list<const HepEntity * > ensemble;
+  for (unsigned i = 0; i < clust_seq.jets().size(); i++) {
+    entities[i].Fill(clust_seq.jets()[i].E(),
+                     clust_seq.jets()[i].px(),
+                     clust_seq.jets()[i].py(),
+                     clust_seq.jets()[i].pz(),
+                     i);
+    // use only the particles that do not have infinite rapidity
+    if (abs(entities[i].pz) < entities[i].E) {
+      ensemble.push_back(& (entities[i]));
+    }
+  }
+
+  // prepare the D0 algorithm
+  ILConeAlgorithm<HepEntity> 
+    ilegac(cone_radius(), 
+           min_jet_Et(), 
+           split_ratio(),
+	   far_ratio(), 
+           Et_min_ratio(), 
+           kill_duplicate(), 
+           duplicate_dR(), 
+	   duplicate_dPT(), 
+           search_factor(), 
+           pT_min_leading_protojet(), 
+	   pT_min_second_protojet(), 
+           merge_max(), 
+           pT_min_nomerge());
+
+  // run the algorithm
+  float Item_ET_Threshold = 0.;
+  list<HepEntity> jets;
+  ilegac.makeClusters(jets, ensemble, Item_ET_Threshold);
+
+  // now transfer the information about the jets into the
+  // FastJet structure
+  for(int i = ilegac.ilcv.size()-1; i >= 0; i--) {
+    
+    std::list<const HepEntity*> tlist = ilegac.ilcv[i].LItems();
+    std::list<const HepEntity*>::iterator tk;
+    
+    // get first particle in list
+    tk = tlist.begin();
+    int jet_k = (*tk)->index;
+    // now merge with remaining particles in list
+    tk++;
+    for (; tk != tlist.end(); tk++) {
+      int jet_i = jet_k;
+      int jet_j = (*tk)->index;
+      // do a fake recombination step with dij=0
+      double dij = 0.0;
+      clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
+    }
+
+    // NB: put a sensible looking d_iB just to be nice...
+    double d_iB = clust_seq.jets()[jet_k].perp2();
+    clust_seq.plugin_record_iB_recombination(jet_k, d_iB);
+
+  }
+}
+
+FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

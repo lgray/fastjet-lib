@@ -51,6 +51,10 @@ if BUILD_PLUGIN_PXCONE
 fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/PxCone
 fastjet_timing_plugins_LDADD += ../plugins/PxCone/libPxConePlugin.la ${FLIBS}
 endif
+if BUILD_PLUGIN_D0RUNIICONE
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/D0RunIICone
+fastjet_timing_plugins_LDADD += ../plugins/D0RunIICone/libD0RunIIConePlugin.la ${FLIBS}
+endif
 
 #TESTS_ENVIRONMENT = $(SHELL)
 #TESTS = test-example.sh test-areas.sh

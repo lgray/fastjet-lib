@@ -149,6 +149,22 @@ fi
 AC_CONFIG_FILES( plugins/PxCone/Makefile plugins/PxCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
 
+
+dnl D0RunIICone
+AC_ARG_ENABLE(d0runiicone,
+	[  --enable-d0runiicone        enables the D0RunIICone plugin (default=no)],
+	[ENABLE_D0RUNIICONE="$enableval"],
+	[ENABLE_D0RUNIICONE="no"])
+if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_D0RUNIICONE, [], [The D0RunIICone plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lD0RunIIConePlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libD0RunIIConePlugin.a "${FLIBS}
+fi
+AC_CONFIG_FILES( plugins/D0RunIICone/Makefile plugins/D0RunIICone/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_D0RUNIICONE, test x$ENABLE_D0RUNIICONE = xyes)
+
+
 AC_SUBST(CONFIG_LIBS_PLUGINS)
 AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
 

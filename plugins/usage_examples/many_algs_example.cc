@@ -52,6 +52,9 @@
 #ifdef ENABLE_PLUGIN_PXCONE
 #  include "fastjet/PxConePlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_D0RUNIICONE
+#  include "fastjet/D0RunIIConePlugin.hh"
+#endif
 
 #include<vector>
 #include<iostream>
@@ -67,28 +70,22 @@ int main(int argc, char** argv) {
   
   // we will have four jet definitions, and the first two will be
   // plugins
-  vector<fastjet::JetDefinition> jet_defs(6);
-  vector<fastjet::JetDefinition::Plugin *> plugins(3);
+  vector<fastjet::JetDefinition> jet_defs;
+  vector<fastjet::JetDefinition::Plugin *> plugins;
 
   // common parameters
   double jet_radius = 0.7;
   //double jet_radius = 1.0;
   double overlap_threshold = 0.5;
 
-  vector<fastjet::JetDefinition>::const_iterator 
-    jet_def_begin = jet_defs.begin();
-
   // set up a pxcone jet definition (if wanted -- requires f77, and you
   // should compile the pxcone plugin (not there by default))
 #ifdef ENABLE_PLUGIN_PXCONE
   double min_jet_energy = 5.0;
   bool   E_scheme_jets = false;
-  plugins[0] = new fastjet::PxConePlugin (jet_radius, min_jet_energy, 
-                                         overlap_threshold, E_scheme_jets);
-  jet_defs[0] = fastjet::JetDefinition(plugins[0]);
-#else
-  plugins[0] = NULL;
-  //jet_def_begin++; // skip first jet def
+  plugins.push_back( new fastjet::PxConePlugin (jet_radius, min_jet_energy, 
+                                        overlap_threshold, E_scheme_jets));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif // ENABLE_PLUGIN_PXCONE
 
 
@@ -99,44 +96,45 @@ int main(int argc, char** argv) {
   double cone_area_fraction = 1.0;
   int    max_pair_size = 2;
   int    max_iterations = 100;
-  plugins[1] = new fastjet::CDFMidPointPlugin (seed_threshold, jet_radius, 
+  plugins.push_back(new fastjet::CDFMidPointPlugin(seed_threshold, jet_radius, 
                                           cone_area_fraction, max_pair_size,
-                                          max_iterations, overlap_threshold);
-  jet_defs[1] = fastjet::JetDefinition(plugins[1]);
-#else
-  plugins[1] = NULL;
+                                          max_iterations, overlap_threshold));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif
 
   // set up a siscone jet definition
 #ifdef ENABLE_PLUGIN_SISCONE
   int npass = 0;               // do infinite number of passes
   double protojet_ptmin = 0.0; // use all protojets
-  plugins[2] = new fastjet::SISConePlugin (jet_radius, overlap_threshold, 
-                                           npass, protojet_ptmin);
-  jet_defs[2] = fastjet::JetDefinition(plugins[2]);
-#else
-  plugins[2] = NULL;
+  plugins.push_back(new fastjet::SISConePlugin (jet_radius, overlap_threshold, 
+                                                npass, protojet_ptmin));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif
 
+  // set up a siscone jet definition
+#ifdef ENABLE_PLUGIN_D0RUNIICONE
+  double min_jet_Et = 8.0; // 
+  plugins.push_back(new fastjet::D0RunIIConePlugin (jet_radius, min_jet_Et, 
+                                              overlap_threshold));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_D0RUNIICONE
+
   // set up kt and cam/aachen definitions
-  jet_defs[3] = fastjet::JetDefinition(fastjet::kt_algorithm, jet_radius);
-  jet_defs[4] = fastjet::JetDefinition(fastjet::cambridge_algorithm, 
-                                       jet_radius);
-  jet_defs[5] = fastjet::JetDefinition(fastjet::antikt_algorithm, 
-                                       jet_radius);
+  jet_defs.push_back(fastjet::JetDefinition(fastjet::kt_algorithm, jet_radius));
+  jet_defs.push_back(fastjet::JetDefinition(fastjet::cambridge_algorithm, 
+                                            jet_radius));
+  jet_defs.push_back(fastjet::JetDefinition(fastjet::antikt_algorithm, 
+                                            jet_radius));
 
   // call the example jet-finding routine with each of jet definitions
-  int index=0;
-  for (vector<fastjet::JetDefinition>::const_iterator jd_it = jet_def_begin;
+  for (vector<fastjet::JetDefinition>::const_iterator jd_it = jet_defs.begin();
        jd_it != jet_defs.end(); jd_it++) {
-    // only run if the plugin is available
-    if ((index>=3) || (plugins[index] != NULL))
-      run_jet_finder(input_particles, *jd_it);
-    index++;
+    run_jet_finder(input_particles, *jd_it);
   }
 
   // clean up plugin memory.
-  if (plugins[0] != NULL) delete plugins[0]; // pxcone may not be defined
-  if (plugins[1] != NULL) delete plugins[1]; // cdfcones may not be defined
-  if (plugins[2] != NULL) delete plugins[2]; // siscone may not be defined
+  for (vector<fastjet::JetDefinition>::const_iterator jd_it = jet_defs.begin();
+       jd_it != jet_defs.end(); jd_it++) {
+    if (jd_it->plugin() != NULL) delete jd_it->plugin();
+  }
 }
