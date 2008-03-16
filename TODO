@@ -1,4 +1,10 @@
 -------------
+For 2.4
+-------------
+- enable dynamic libraries by default?
+- add "version()" info to doc
+
+-------------
 For 2.3.1
 -------------
 
@@ -10,11 +16,6 @@ GREGORY:
 
 GAVIN:
 - check cygwin
-
--------------
-For 2.4
--------------
-- enable dynamic libraries by default?
 
 
 -------------
