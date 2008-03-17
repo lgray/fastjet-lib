@@ -465,7 +465,7 @@ If the earlier constructor is used, then $p$ is set to 0.
 
 The strategy selects the algorithmic strategy to use while clustering
 and is an \texttt{enum} of type \texttt{fastjet::Strategy} with
-potentially interesting values listed in table~\ref{tab:Strategies}:
+potentially interesting values listed in table~\ref{tab:Strategies}.
 %
 \begin{table}
   \begin{center}
@@ -493,20 +493,43 @@ potentially interesting values listed in table~\ref{tab:Strategies}:
   \end{center}
 \end{table}
 %
-All strategies apply equally well to the any of the internally
-implemented jet algorithms, except \ttt{NlnNCam}, which being based on a
-computational geometry algorithm for dynamic maintenance of closest
-pairs \cite{Chan} (rather than the more involved nearest neighbour
-graph), is suitable only for the Cambridge algorithm whose distance
-measure is purely geometrical. 
+Nearly all strategies are based on the factorisation of energy and
+geometrical distance components of the $d_{ij}$
+measure~\cite{fastjet}. In particular they involve the dynamic
+maintenance of a nearest-neighbour graph for the geometrical
+distances.  They apply equally well to any of the internally
+implemented jet algorithms.
 %
-Note that $N \ln N$ performance of the \texttt{NlnN} strategy is an
-\emph{expected} result, and while it holds in practice for the $k_t$
-and Cambridge algorithms, for anti-$k_t$ and generalised-$k_t$ with
-$p<0$, hub-and-spoke (bicycle-wheel!) type configurations emerge
-dynamically during the clustering and these break the conditions
-needed for the expected result to hold (this however has a significant
-impact only for $N \gtrsim 10^5$).
+The one exception is \ttt{NlnNCam}, which is based on a computational
+geometry algorithm for dynamic maintenance of closest pairs
+\cite{Chan} (rather than the more involved nearest neighbour graph),
+and is suitable only for the Cambridge algorithm whose distance
+measure is purely geometrical.
+
+The \texttt{N2Plain} strategy uses a ``nearest-neighbour heuristic''
+\cite{Anderberg} approach to maintaining the geometrical
+nearest-neighbour graph; \texttt{N2Tiled} tiles the $y-\phi$ cylinder
+to limit the set of points over which nearest-neighbours are searched
+for,%
+\footnote{Tiling is a textbook approach in computational geometry,
+  where it is often referred to as bucketing. It has been used also in
+  certain cone jet algorithms, notably at trigger level and in
+  \cite{Sonnenschein}.} %
+and \texttt{N2MinHeapTiled} differs only in that it uses an $N\ln N$
+(rather than $N^2$) data structure for maintaining in order the subset
+of the $d_{ij}$ that involves nearest neighbours.
+%
+The \texttt{NlnN} strategy uses CGAL's Delaunay Triangulation
+\cite{CGAL} for the maintenance of the nearest-neighbour graph.
+%
+Note that $N \ln N$ performance of is an \emph{expected} result, and
+it holds in practice for the $k_t$ and Cambridge algorithms, while for
+anti-$k_t$ and generalised-$k_t$ with $p<0$, hub-and-spoke
+(bicycle-wheel!) type configurations emerge dynamically during the
+clustering and these break the conditions needed for the expected
+result to hold (this however has a significant impact only for $N
+\gtrsim 10^5$).
+
 
 If \texttt{strategy} is omitted then the \texttt{Best} option is set.
 Note that the $N$ ranges quoted above for which a given strategy is
@@ -2069,6 +2092,28 @@ hep-ex/0005012.
   in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
   p.~472 (2002).
 
+
+\bibitem{Anderberg}
+  M.~R.~Anderberg, 
+  Cluster Analysis for Applications,
+  (Number 19 in Probability and Mathematical Statistics, Academic
+  Press, New York, 1973).
+
+
+\bibitem{Sonnenschein}
+  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
+  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
+
+\bibitem{CGAL}
+%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
+A.~Fabri {\it et al.},
+%On the design of CGAL a computational geometry algorithms library
+Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
+%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
+J.-D.~Boissonnat {\it et al.},
+% Triangulations in CGAL
+Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
+
 \bibitem{CSSAreas} M.~Cacciari,  G.~P.~Salam and G.~Soyez, LPTHE-07-02, in preparation.
 
 \bibitem{cs}
@@ -2076,6 +2121,11 @@ hep-ex/0005012.
   %``Pileup subtraction using jet areas,''
   arXiv:0707.1378 [hep-ph].
   %%CITATION = ARXIV:0707.1378;%%
+
+\bibitem{Fortune}
+  S.~Fortune,
+  %''A sweepline algorithm for Voronoi diagrams,''
+  Algorithmica {\bf 2} (1987) 1.
 
 
 
@@ -2102,25 +2152,7 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   hep-ph/0610012.
   %%CITATION = HEP-PH 0610012;%%
 
-\bibitem{Fortune}
-  S.~Fortune,
-  %''A sweepline algorithm for Voronoi diagrams,''
-  Algorithmica {\bf 2} (1987) 1.
-
-\bibitem{CGAL}
-%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
-A.~Fabri {\it et al.},
-%On the design of CGAL a computational geometry algorithms library
-Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
-%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
-J.-D.~Boissonnat {\it et al.},
-% Triangulations in CGAL
-Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
-
-
 \end{thebibliography}
-
-
 
 
 
