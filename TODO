@@ -3,6 +3,14 @@ For 2.4
 -------------
 - enable dynamic libraries by default?
 - add "version()" info to doc
+- default f=0.75 for cones:
+   a. change th edefault f to 0.75 in ctor
+   b. add a ctor where f is not specified that prints a warning
+   c. add a note in NEWS
+   d. add a note in the doc (where?)
+   e. add a note on the webpage
+   f. add a note at the end of ./configure
+  this has to be done for all the cone algs + internally in SISCone
 
 -------------
 For 2.3.1
