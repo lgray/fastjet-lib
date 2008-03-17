@@ -49,7 +49,7 @@ string SISConePlugin::description () const {
     desc << ", and (IR unsafe) merge_indentical_protocones=true" ;
   }
 
-  desc << ", SISCone code v" << VERSION;
+  desc << ", SISCone code v" << siscone_version();
 
   return desc.str();
 }
