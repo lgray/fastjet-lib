@@ -13,6 +13,9 @@ dnl check basic types
 AC_CHECK_TYPE(int)
 AC_CHECK_TYPE(long)
 
+dnl if the user has not set CXXFLAGS, then set our own default
+test "x${CXXFLAGS+set}" = xset || CXXFLAGS="-O3 -Wall"
+
 dnl check useful programs
 AC_PROG_CXX
 AC_PROG_INSTALL
@@ -28,7 +31,6 @@ AC_PREFIX_DEFAULT(/usr/local)
 dnl set default compilation and link flags
 dnl note that those can be changed by the user at configure-time
 dnl so we use CXXFLAGS and not AM_CXXFLAGS
-CXXFLAGS=" -O3 -Wall "
 AM_CXXFLAGS=" -I../include "
 CGAL_CPPFLAGS=""
 CGAL_LIBS=""

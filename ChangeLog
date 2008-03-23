@@ -1,5 +1,9 @@
 2008-03-23  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* configure.ac: 
+	  fix CXXFLAGS in such a way as to allow the user to set their own
+	  default. 
+
 	* include/fastjet/ClusterSequenceArea.hh (class ClusterSequenceArea): 
           added some missing Doxygen comments to this class
 	
