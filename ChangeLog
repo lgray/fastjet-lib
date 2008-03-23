@@ -1,3 +1,8 @@
+2008-03-23  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequenceArea.hh (class ClusterSequenceArea): 
+          added some missing Doxygen comments to this class
+	
 2008-03-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
         * src/Voronoi.cc

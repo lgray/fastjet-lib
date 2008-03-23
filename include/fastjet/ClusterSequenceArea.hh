@@ -40,8 +40,15 @@
 
 FASTJET_BEGIN_NAMESPACE
 
+/// General class for user to obtain ClusterSequence with additional
+/// area information.
+///
+/// Based on the area_def, it automatically dispatches the work to the
+/// appropriate actual ClusterSequenceAreaBase-derived-class to do the
+/// real work.
 class ClusterSequenceArea : public ClusterSequenceAreaBase {
 public:
+  /// main constructor
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
@@ -49,6 +56,7 @@ public:
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 
+  /// constructor with a GhostedAreaSpec
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
@@ -56,6 +64,7 @@ public:
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 
+  /// constructor with a VoronoiAreaSpec
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
