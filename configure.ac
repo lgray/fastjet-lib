@@ -14,7 +14,7 @@ AC_CHECK_TYPE(int)
 AC_CHECK_TYPE(long)
 
 dnl if the user has not set CXXFLAGS, then set our own default
-test "x${CXXFLAGS+set}" = xset || CXXFLAGS="-O3 -Wall"
+test "x${CXXFLAGS+yes}" = xyes || CXXFLAGS="-O3 -Wall"
 
 dnl check useful programs
 AC_PROG_CXX
