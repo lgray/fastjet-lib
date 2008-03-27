@@ -42,7 +42,7 @@ AC_ARG_ENABLE(debug,
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
-   AM_CXXFLAGS=${AM_CXXFLAGS}" -g "
+   AM_CXXFLAGS=${AM_CXXFLAGS}"-g "
 fi
 
 dnl don't build the shared lib by default
@@ -86,7 +86,7 @@ dnl enable
 AC_PROG_LIBTOOL
 
 dnl substitutions
-AM_CXXFLAGS="$CONFIG_CXXFLAGS"
+AM_CXXFLAGS=${AM_CXXFLAGS}"$CONFIG_CXXFLAGS"
 dnl AM_LIBS="$CONFIG_LIBS"
 AC_SUBST(AM_CXXFLAGS)
 AC_SUBST(CONFIG_LIBS)
