@@ -713,13 +713,23 @@ void ClusterSequenceActiveArea::_transfer_areas(
     }
   }
 
-  _average_area  += our_areas; 
-  _average_area2 += our_areas*our_areas; 
+  /*
+   * WARNING:
+   *   _average_area has explicitly been sized initially to 2*jets().size()
+   *   which can be bigger than our_areas (of size _history.size()
+   *   if there are some unclustered particles. 
+   *   So we must take care about boundaries
+   */
+
+  for (unsigned int area_index = 0; area_index<our_areas.size(); area_index++){
+    _average_area[area_index]  += our_areas[area_index]; 
+    _average_area2[area_index] += our_areas[area_index]*our_areas[area_index]; 
+  }
 
   //_average_area_4vector += our_area_4vectors;
   // Use the proper recombination scheme when averaging the area_4vectors
   // over multiple ghost runs (i.e. the repeat stage);
-  for (unsigned i = 0; i < _average_area_4vector.size(); i++) {
+  for (unsigned i = 0; i < our_area_4vectors.size(); i++) {
     _jet_def.recombiner()->plus_equal(_average_area_4vector[i],
                                        our_area_4vectors[i]);
   }

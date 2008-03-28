@@ -1,3 +1,8 @@
+2008-03-28  Gregory Soyez  <g.soyez@ulg.ac.be>
+
+	* src/ClusterSequenceActiveArea.cc (ClusterSequenceActiveArea::_transfer_areas): 
+	  fixed array-size issue when there are unclustered particles.
+
 2008-03-26  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* configure.ac:
