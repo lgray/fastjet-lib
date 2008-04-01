@@ -186,7 +186,7 @@ public:
   int ELrefcnt;
   char ELpm;
   Site *vertex;
-  double ystar;
+  volatile double ystar;
   Halfedge *PQnext;
 };
 

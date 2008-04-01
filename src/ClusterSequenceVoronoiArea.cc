@@ -33,6 +33,7 @@
 #include <list>
 #include <cassert>
 #include <ostream>
+#include <fstream>
 #include <iterator>
 #include <cmath>
 #include <limits>
@@ -219,7 +220,7 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 
   assert(n_added > 0);
 
-  // add extreme cases:
+  // add extreme cases (corner particles):
   double max_extend = 2*max(maxrap-minrap+4*_effective_R, twopi+8*_effective_R);
   voronoi_particles.push_back(Point(0.5*(minrap+maxrap)-max_extend, pi));
   voronoi_particles.push_back(Point(0.5*(minrap+maxrap)+max_extend, pi));
@@ -240,24 +241,25 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 
   while(vdg.getNext(&e)){
     v_index = e->point1;
-    if (v_index<n_added){
+    if (v_index<n_added){ // this removes the corner particles
       p_index = voronoi_indices[v_index];
-      if (p_index!=-1){
+      if (p_index!=-1){   // this removes the copies
 	jet = jet_begin+voronoi_indices[v_index];
 	_areas[p_index]+=
 	  edge_circle_intersection(voronoi_particles[v_index], *e);
       }
     }
     v_index = e->point2;
-    if (v_index<n_added){
+    if (v_index<n_added){ // this removes the corner particles
       p_index = voronoi_indices[v_index];
-      if (p_index!=-1){
+      if (p_index!=-1){   // this removes the copies
 	jet = jet_begin+voronoi_indices[v_index];
 	_areas[p_index]+=
 	  edge_circle_intersection(voronoi_particles[v_index], *e);
       }
     }
   }
+
 
 }
 

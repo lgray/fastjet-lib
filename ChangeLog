@@ -1,3 +1,22 @@
+2008-04-01  Gregory SOYEZ  <soyez@tycho.lpthe.jussieu.fr>
+
+	* src/Voronoi.{hh,cc}
+	  BUGS: 
+	  declared some variables as volatile.
+	  Those were subject to "==" tests which lead to segmentation
+	  faults when the registers did not have the same precision as a
+	  regular double.
+
+	  This closes the following bug:
+	  . The Voronoi area evaluation (=Passive for the kt algorithm), is
+	    known to crash on events in which the momenta lie on a exact grid in
+	    rapidity,phi (i.e. a calorimeter). An unsatisfactory workaround is
+	    to slightly displace input momenta away from the exact grid.
+	    Work is in progress to address this issue.
+
+
+	* src/ClusterSequenceVoronoiArea.cc (VAC::VoronoiAreaCalc): added bits of comments
+
 2008-03-28  Gregory Soyez  <g.soyez@ulg.ac.be>
 
 	* src/ClusterSequenceActiveArea.cc (ClusterSequenceActiveArea::_transfer_areas): 
