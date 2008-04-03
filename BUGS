@@ -6,18 +6,6 @@ Known bugs
   clustered with an alternative strategy. If this poses a severe
   issue to someone, it will be fixed.
 
-. The CDF Midpoint algorithm runs extremely slowly when compiled with
-  optimization. By default optimization is turned on for all
-  algorithms, and the current build system has yet to be adapted to
-  turn off optimization specifically for the midpoint algorithm. If
-  this issue is relevant to you, recompile the
-  plugins/CDFCones/CDFcode/MidPointAlgorithm.cc file manually without
-  optimization.
-
-. Compilation issues have been reported under windows with the VC7.1
-  compiler. Currently we do not have access to such a machine, and are
-  awaiting further details in order to resolve this.
-
 ----------------------------------------------------------------------
 Other issues to be aware of
 ---------------------------
@@ -46,4 +34,15 @@ Other issues to be aware of
     explicity, e.g. using information from the location of energy
     deposits in each calorimeter tower, so that the inputs are not on
     a perfect grid.
+
+----------------------------------------------------------------------
+Probably solved
+---------------
+
+. Compilation issues have been reported under windows with the VC7.1
+  compiler. We have incorporated fixes proposed by Ivan Belyaev for
+  this, but do not have access to an appropriate machine to test it
+  ourselves. (NB: it in any case works with cygwin).
+
+
 

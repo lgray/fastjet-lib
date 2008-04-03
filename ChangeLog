@@ -1,3 +1,8 @@
+2008-04-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* BUGS:
+	  updated this file to reflect current status
+
 2008-04-01  Gregory SOYEZ  <soyez@tycho.lpthe.jussieu.fr>
 
 	* src/Voronoi.{hh,cc}
