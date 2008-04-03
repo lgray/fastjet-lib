@@ -3,6 +3,8 @@ For 2.4
 -------------
 - enable dynamic libraries by default?
 - add "version()" info to doc
+- document error meaningless on AAEG.
+
 - default f=0.75 for cones:
    a. change th edefault f to 0.75 in ctor
    b. add a ctor where f is not specified that prints a warning
@@ -11,19 +13,6 @@ For 2.4
    e. add a note on the webpage
    f. add a note at the end of ./configure
   this has to be done for all the cone algs + internally in SISCone
-
--------------
-For 2.3.1
--------------
-
-GREGORY:
-- config.h -> config.auto.h (generated), config.win.h config.h (static)
-- make check should verify config.win.h is present and has right
-  version number
-- add mention of this to install
-
-GAVIN:
-- check cygwin
 
 
 -------------
