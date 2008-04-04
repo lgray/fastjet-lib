@@ -371,6 +371,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       i--;
     }
   } else if (_jet_algorithm == plugin_algorithm 
+             || _jet_algorithm == ee_kt_algorithm
              || _jet_algorithm == antikt_algorithm
              || _jet_algorithm == genkt_algorithm
              || _jet_algorithm == cambridge_for_passive_algorithm) {
@@ -385,7 +386,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       }
       i--;
     }
-  } else {throw Error("Unrecognized jet algorithm");}
+  } else {throw Error("cs::inclusive_jets(...): Unrecognized jet algorithm");}
   return jets;
 }
 

@@ -59,8 +59,11 @@ string JetDefinition::description() const {
     name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
 	 << R() << "and a special hack whereby particles with kt < " 
          << extra_param() << "are treated as passive ghosts";
+  } else if (jet_algorithm() == ee_kt_algorithm) {
+    name << "e+e- kt algorithm with R = " << R();
+    name << " and " << recombiner()->description();
   } else {
-    throw Error("Unrecognized jet_finder");
+    throw Error("JetDefinition::description(): unrecognized jet_finder");
   }
   return name.str();
 }

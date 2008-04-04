@@ -62,11 +62,17 @@ int main (int argc, char ** argv) {
     jets.push_back(p);
   }
   
-
   // set KtEvent flags
-  int type  = 4; // PP
-  int angle = 2; // delta R
-  int recom = 1; // E
+  int type, angle, recom;
+  if (cmdline.present("-eekt")) {
+    type  = 1; // e+e-
+    angle = 1; // angular
+    recom = 1; // E
+  } else {
+    type  = 4; // PP
+    angle = 2; // delta R
+    recom = 1; // E
+  }
   //double rparameter = 1.0;
 
   for (int i = 0; i < repeat ; i++) {
@@ -118,8 +124,10 @@ int main (int argc, char ** argv) {
       vector<KtJet::KtLorentzVector> jets = ev.getJetsPt();
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
       for (size_t j = 0; j < jets.size(); j++) {
+        double phi = jets[j].phi();
+        if (phi < 0) phi += fastjet::twopi;
 	printf("%5u %15.8f %15.8f %15.8f\n",j,
-	       jets[j].rapidity(),jets[j].phi(),jets[j].perp());
+	       jets[j].rapidity(),phi,jets[j].perp());
       }
     }
 

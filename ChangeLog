@@ -1,5 +1,21 @@
 2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr> later
 
+	****  TESTS CARRIED OUT ****
+
+	  tested 1000 events from ../data/Pythia-PtMin1000-LHC-1000ev.dat
+	  between fastjet_timing_plugins and ktjet_timing with dcut = 10
+	  and dcut = 2000; both give identical results.
+
+          Commands used were:
+	    ./ktjet_timing -eekt -nev 1000 -excld 2000 < ../../data/Pythia-PtMin1000-LHC-1000ev.dat 
+	    ./fastjet_timing_plugins -eekt -R 2.0 -nev 1000 -excld 2000 < ....
+
+          NB: R > sqrt(2) is mandatory within the current interface
+	
+	* example/fastjet_timing_plugins.cc: 
+	* example/ktjet_timing.cc: 
+	  added e+e- kt run options to these programs
+
 	* include/fastjet/ClusterSequence.hh: 
 	* src/ClusterSequence_N2.cc: 
 	* src/ClusterSequence.cc: 
@@ -11,16 +27,12 @@
 	  Added the EEBriefJet type, together with minimal functions, so
 	  as to get a form of the e+e- algorithm.
 
-
 	* include/fastjet/PseudoJet.hh
 	  added the modp2() member function which returns the squared
 	  modulus of the 3-vector part of the PseudoJet
 
-
 	* include/fastjet/JetDefinition.hh
 	  added the ee_kt_algorithm;
-
-          **** 	NONE OF THIS HAS BEEN TESTED PROPERLY YET !!! *******
 	
 2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr> earlier
 

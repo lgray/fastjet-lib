@@ -177,7 +177,7 @@ public:
                 RecombinationScheme recomb_scheme = E_scheme) :
     _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
     // the largest sensible value for R
-    assert(_Rparam <= 0.5*pi);
+    if (jet_algorithm != ee_kt_algorithm) assert(_Rparam <= 0.5*pi);
     assert(_jet_algorithm != plugin_algorithm &&
            _strategy   != plugin_strategy);
     _plugin = NULL;

@@ -171,6 +171,7 @@ int main (int argc, char ** argv) {
   fj::JetDefinition jet_def;
   if (cmdline.present("-cam")) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
+    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
   } else if (cmdline.present("-antikt")) {
     jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, strategy);
   } else if (cmdline.present("-genkt")) {
@@ -232,6 +233,8 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_D0RUNIICONE
     cerr << "D0RunIICone requested, but not available for this compilation" << endl;
 #endif // ENABLE_PLUGIN_D0RUNIICONE
+  } else if (cmdline.present("-eekt")) {
+    jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }

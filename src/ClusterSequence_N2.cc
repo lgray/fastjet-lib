@@ -198,7 +198,7 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
 
   double E = _jets[_jets_index].E();
   jetA->kt2  = E*E; // replaces energy; might one day become more general
-  double norm = sqrt(_jets[_jets_index].modp2());
+  double norm = _jets[_jets_index].modp2();
   if (norm > 0) {
     norm = 1.0/sqrt(norm);
     jetA->nx = norm * _jets[_jets_index].px();
@@ -220,9 +220,17 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
 template<> double ClusterSequence::_bj_dist(
                 const EEBriefJet * const jeta, 
                 const EEBriefJet * const jetb) const {
-  return 1.0 - jeta->nx*jetb->nx
-             - jeta->ny*jetb->ny
-             - jeta->nz*jetb->nz;
+  double dist = 1.0 
+    - jeta->nx*jetb->nx
+    - jeta->ny*jetb->ny
+    - jeta->nz*jetb->nz;
+  dist *= 2; // distance is _2_*min(Ei^2,Ej^2)*(1-cos theta)
+  //cout << "Dist = " << dist << ": " 
+  //     << jeta->nx << " "
+  //     << jeta->ny << " "
+  //     << jeta->nz << " "
+  //     <<endl;
+  return dist;
 }
 
 
