@@ -88,15 +88,17 @@ public:
   };
 
 
-  /// Constructor for the SISCone Plugin class.  
+  /// Main constructor for the SISCone Plugin class.  
   ///
-  /// Note: though the default value here for the overlap_threshold is
-  /// 0.5 (for backwards compatibility), there is a strong
-  /// recommendation to use a higher value, e.g. 0.75, especially in
-  /// environments with a substantial amount of underlying event or
-  /// pileup.
+  /// Note: wrt version prior to 2.4 this constructor differs in that a 
+  /// the default value has been removed for overlap_threshold. The
+  /// former has been removed because the old default of 0.5 was found
+  /// to be unsuitable in high-noise environments; so the user should
+  /// now explicitly think about the value for this -- we recommend
+  /// 0.75.
+  ///
   SISConePlugin (double cone_radius,
-                 double overlap_threshold = 0.5,
+                 double overlap_threshold,
                  int    n_pass_max = 0,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
@@ -111,6 +113,8 @@ public:
     _split_merge_stopping_scale (split_merge_stopping_scale),
     _ghost_sep_scale       (0.0),
     _use_pt_weighted_splitting  (false) {}
+
+
 
   /// Backwards compatible constructor for the SISCone Plugin class
   SISConePlugin (double cone_radius,

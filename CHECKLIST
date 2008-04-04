@@ -27,7 +27,36 @@ X.Y.Z  tag
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
+
+----------------------------------------------------------------------
+checklist for 2.3.2
+-------------------
+2.3.2  change version number in configure.ac
+
+2.3.2  make sure version number in configure.ac is correct
+
+2.3.2  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+
+2.3.2  ensure NEWS is up to date
+
+2.3.2  make sure siscone points to a tag, not trunk
+
+2.3.2  make check [how do we deal with various config options?]
+
+2.3.2  make distcheck
+
+2.3.2  copy distribution to web
+2.3.2  run doxygen, copy to web
+2.3.2  compile manual, give it current version number
+2.3.2  update main web page & menu
+
+2.3.2  tag
+
+2.3.2  DID NOT send mail to: fastjet-announce@projects.hepforge.org
+       DID NOT subject: FastJet release X.Y.Z       
+
 X.Y.Z  change version number in configure.ac
+
 
 ----------------------------------------------------------------------
 checklist for 2.3.1

@@ -119,8 +119,14 @@ public:
     _sm_scale           (sm_scale)             {}
 
   /// a compact constructor
+  ///
+  /// NB: as of version 2.4, the default value for the
+  /// overlap_threshold threshold has been removed, to avoid
+  /// misleading people into using the value of 0.5 without thinking,
+  /// which is known to have adverse effects in high-noise
+  /// environments. A recommended value is 0.75.
   CDFMidPointPlugin (double   cone_radius, 
-		     double   overlap_threshold = 0.5, 
+		     double   overlap_threshold,// = 0.5, 
 		     double   seed_threshold = 1.0,	     
 		     double   cone_area_fraction = 1.0) : 
     _seed_threshold     (seed_threshold     ),    

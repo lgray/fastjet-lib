@@ -2,14 +2,34 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Summary of changes from v2.3.1 -> v2.4-devel
+Summary of changes from v2.3.2 -> v2.4-devel
 ==========================================================
 
 - added implementation of genkt algorithm 
 - added a full set of subjet functions (in analogy with normal excl jets)
 - added D0RunIICone plugin [--enable-d0runiicone]
-- fixed a bug for active areas on algorithms that don't cluster all particles
-- small fixes to auto-tools build procedure
+- removed default value of 0.5 for overlap_threshold in
+  CDFMidPointPlugin and SISConePlugin constructors
+  *** may break backwards compatibility ***
+
+=======================================================================
+Summary of changes from v2.3.1 -> v2.3.2 (bug fix release): 03 Apr 2008
+==========================================================
+
+- fixes to propagation of CXXFLAGS through the build chain
+
+- small change in Voronoi area code to fix crashes on regular
+  (calorimeter) layouts of momenta
+
+- small change in active areas code to fix crashes on algorithms that
+  do not cluster all particles
+
+- eliminated "using namespace std" that had accidentally been left in
+  certain area header files
+
+- incorporation of SISCone 1.3.2 with fixes for inappropriate public
+  symbols and to build framework
+
 
 ======================================================================
 Summary of changes from v2.3.0 -> v2.3.1 (bug fix release)

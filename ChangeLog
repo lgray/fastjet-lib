@@ -1,3 +1,21 @@
+2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* plugins/CDFCones/fastjet/CDFMidPointPlugin.hh: 
+	* plugins/SISCone/fastjet/SISConePlugin.hh: 
+	  removed the default value for the overlap_threshold (was 0.5 and
+	  this caused physics problems in the past; 0.75 is recommended).
+
+2008-04-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* NEWS: 
+	  updated NEWS to reflect changes made on the 2.3.2-devel bug-fix
+	  branch
+
+-----------------------------------------------
+released 2.3.2 on 2008-04-03
+it contains a subset of what is listed below
+-----------------------------------------------	
+
 2008-04-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* BUGS:
