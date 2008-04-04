@@ -78,6 +78,15 @@ void ClusterSequence::_initialise_and_run (
     _jet_def.plugin()->run_clustering( (*this) );
     _plugin_activated = false;
     return;
+  } else if (_jet_algorithm == ee_kt_algorithm) {
+    // ignore requested strategy
+    _strategy = N2Plain;
+    // this is used to renormalise the dij to get a "standard" form
+    // and our convention in e+e- will be different from that
+    // in long.inv case; NB: _invR2 name should be changed -> _renorm_dij?
+    _invR2 = 1.0;
+    _simple_N2_cluster<EEBriefJet>();
+    return;
   }
 
 
@@ -119,7 +128,8 @@ void ClusterSequence::_initialise_and_run (
   } else if (_strategy == N2PoorTiled) {
     this->_tiled_N2_cluster();
   } else if (_strategy == N2Plain) {
-    this->_simple_N2_cluster();
+    // BriefJet provides standard long.invariant kt alg.
+    this->_simple_N2_cluster<BriefJet>();
   } else if (_strategy == N2MinHeapTiled) {
     this->_minheap_faster_tiled_N2_cluster();
   } else if (_strategy == NlnNCam4pi) {

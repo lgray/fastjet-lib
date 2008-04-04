@@ -467,7 +467,8 @@ protected:
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();
-  void _simple_N2_cluster ();
+  //void _simple_N2_cluster ();
+  template<class BJ> void _simple_N2_cluster ();
   void _tiled_N2_cluster ();
   void _faster_tiled_N2_cluster ();
 
@@ -527,6 +528,8 @@ protected:
     BriefJet * NN;
     int        _jets_index;
   };
+
+
   /// structure analogous to BriefJet, but with the extra information
   /// needed for dealing with tiles
   class TiledJet {
@@ -644,8 +647,21 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles);
 
 
-};
+  //----------------------------------------------------------------------
+  /// fundamental structure for e+e- clustering
+  struct EEBriefJet {
+    double NN_dist;  // obligatorily present
+    double kt2;      // obligatorily present == E^2 in general
+    EEBriefJet * NN; // must be present too
+    int    _jets_index; // must also be present!
+    //...........................................................
+    double nx, ny, nz;  // our internal storage for fast distance calcs
+  };
 
+  /// to help instantiation
+  void _dummy_N2_cluster_instantiation();
+
+};
 
 
 //**********************************************************************
@@ -797,7 +813,6 @@ template <class J> inline void ClusterSequence::_bj_set_NN_crosscheck(J * const 
   jet->NN = NN;
   jet->NN_dist = NN_dist;
 }
-
 
 
 

@@ -45,18 +45,25 @@ using namespace std;
 //----------------------------------------------------------------------
 /// Order(N^2) clustering 
 ///
-void ClusterSequence::_simple_N2_cluster() {
+/// Works for any class BJ that satisfies certain minimal 
+/// requirements (which are ...?)
+///
+/// - need to have _bj_set_jetinfo
+/// - need to have _bj_dist
+/// - should contain members kt2 (=energy^2), NN, NN_dist, _jets_index
+
+template<class BJ> void ClusterSequence::_simple_N2_cluster() {
   int n = _jets.size();
-  BriefJet * briefjets = new BriefJet[n];
-  BriefJet * jetA = briefjets, * jetB;
+  BJ * briefjets = new BJ[n];
+  BJ * jetA = briefjets, * jetB;
   
   // initialise the basic jet info 
   for (int i = 0; i< n; i++) {
     _bj_set_jetinfo(jetA, i);
     jetA++; // move on to next entry of briefjets
   }
-  BriefJet * tail = jetA; // a semaphore for the end of briefjets
-  BriefJet * head = briefjets; // a nicer way of naming start
+  BJ * tail = jetA; // a semaphore for the end of briefjets
+  BJ * head = briefjets; // a nicer way of naming start
 
   // now initialise the NN distances: jetA will run from 1..n-1; and
   // jetB from 0..jetA-1
@@ -139,7 +146,7 @@ void ClusterSequence::_simple_N2_cluster() {
     //     perhaps save a few percent (usually avoid one if inside loop),
     //     but will not do it for now because on laptop fluctuations are
     //     too large to reliably measure a few percent difference...
-    for (BriefJet * jetI = head; jetI != tail; jetI++) {
+    for (BJ * jetI = head; jetI != tail; jetI++) {
       // see if jetI had jetA or jetB as a NN -- if so recalculate the NN
       if (jetI->NN == jetA || jetI->NN == jetB) {
 	_bj_set_NN_nocross(jetI, head, tail);
@@ -176,6 +183,56 @@ void ClusterSequence::_simple_N2_cluster() {
   // final cleaning up;
   delete[] diJ;
   delete[] briefjets;
+}
+
+//*************************************************************************
+//
+//                             THINGS FOR E+E-
+//
+//*************************************************************************
+
+
+//----------------------------------------------------------------------
+template<> inline void ClusterSequence::_bj_set_jetinfo(
+                           EEBriefJet * const jetA, const int _jets_index) const {
+
+  double E = _jets[_jets_index].E();
+  jetA->kt2  = E*E; // replaces energy; might one day become more general
+  double norm = sqrt(_jets[_jets_index].modp2());
+  if (norm > 0) {
+    norm = 1.0/sqrt(norm);
+    jetA->nx = norm * _jets[_jets_index].px();
+    jetA->ny = norm * _jets[_jets_index].py();
+    jetA->nz = norm * _jets[_jets_index].pz();
+  } else {
+    jetA->nx = 0.0;
+    jetA->ny = 0.0;
+    jetA->nz = 1.0;
+  }
+  jetA->_jets_index = _jets_index;
+  // initialise NN info as well
+  jetA->NN_dist = _R2;
+  jetA->NN      = NULL;
+}
+
+//----------------------------------------------------------------------
+// returns the angular distance between the two jets
+template<> double ClusterSequence::_bj_dist(
+                const EEBriefJet * const jeta, 
+                const EEBriefJet * const jetb) const {
+  return 1.0 - jeta->nx*jetb->nx
+             - jeta->ny*jetb->ny
+             - jeta->nz*jetb->nz;
+}
+
+
+//----------------------------------------------------------------------
+/// Force instantiation of desired versions of _simple_N2_cluster
+///
+/// This is not very elegant...
+void ClusterSequence::_dummy_N2_cluster_instantiation() {
+  _simple_N2_cluster<BriefJet>();
+  _simple_N2_cluster<EEBriefJet>();
 }
 
 FASTJET_END_NAMESPACE

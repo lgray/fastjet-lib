@@ -1,4 +1,28 @@
-2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr>
+2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr> later
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_N2.cc: 
+	* src/ClusterSequence.cc: 
+
+          modifications so that the _simple_N2_cluster() routine becomes a
+	  template, whose action depends on specific type of BriefJet with
+	  which it is called.
+
+	  Added the EEBriefJet type, together with minimal functions, so
+	  as to get a form of the e+e- algorithm.
+
+
+	* include/fastjet/PseudoJet.hh
+	  added the modp2() member function which returns the squared
+	  modulus of the 3-vector part of the PseudoJet
+
+
+	* include/fastjet/JetDefinition.hh
+	  added the ee_kt_algorithm;
+
+          **** 	NONE OF THIS HAS BEEN TESTED PROPERLY YET !!! *******
+	
+2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr> earlier
 
 	* plugins/CDFCones/fastjet/CDFMidPointPlugin.hh: 
 	* plugins/SISCone/fastjet/SISConePlugin.hh: 

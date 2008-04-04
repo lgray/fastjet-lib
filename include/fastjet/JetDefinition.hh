@@ -99,6 +99,10 @@ enum JetAlgorithm {
   /// a version of genkt with a special distance measure for particles
   /// whose pt is < extra_param() [relevant for passive areas when p<=0]
   genkt_for_passive_algorithm=13, 
+  //.................................................................
+  /// the e+e- kt algorithm (use with R > sqrt(2)!)
+  ee_kt_algorithm=50,
+  //.................................................................
   /// any plugin algorithm supplied by the user
   plugin_algorithm = 99
 };

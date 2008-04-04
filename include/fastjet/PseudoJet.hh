@@ -106,10 +106,13 @@ class PseudoJet {
   /// returns the invariant mass 
   /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
   inline double  m() const;    
+  /// return px^2+py^2+pz^2
+  inline double modp2() const {return _px*_px+_py*_py+_pz*_pz;}
   /// returns component i, where X==0, Y==1, Z==2, E==3
   double operator () (int i) const ; 
   /// returns component i, where X==0, Y==1, Z==2, E==3
   inline double operator [] (int i) const { return (*this)(i); }; // this too
+
 
   // taken from CLHEP
   enum { X=0, Y=1, Z=2, T=3, NUM_COORDINATES=4, SIZE=NUM_COORDINATES };
