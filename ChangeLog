@@ -1,3 +1,9 @@
+2008-04-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* mksnapshot.sh: 
+	  added this script for creating snapshots, numbered both with
+	  date and revision number
+
 2008-04-04  Gavin SALAM  <salam@lpthe.jussieu.fr> later
 
 	****  TESTS CARRIED OUT ****
