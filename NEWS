@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 ======================================================================
-Summary of changes from v2.3.2 -> v2.4-devel
+Summary of changes from v2.3.X -> v2.4-devel
 ==========================================================
 
 - added implementation of genkt algorithm 
@@ -11,6 +11,14 @@ Summary of changes from v2.3.2 -> v2.4-devel
 - removed default value of 0.5 for overlap_threshold in
   CDFMidPointPlugin and SISConePlugin constructors
   *** may break backwards compatibility ***
+
+=======================================================================
+Summary of changes from v2.3.2 -> v2.3.3 (bug fix release): 28 Apr 2008
+==========================================================
+
+- fixed missing installation of .../config_auto.h
+
+- fixed missing typename in .../SearchTree.hh
 
 =======================================================================
 Summary of changes from v2.3.1 -> v2.3.2 (bug fix release): 03 Apr 2008

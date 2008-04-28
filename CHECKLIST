@@ -18,8 +18,9 @@ X.Y.Z  make check [how do we deal with various config options?]
 X.Y.Z  make distcheck
 
 X.Y.Z  copy distribution to web
-X.Y.Z  run doxygen, copy to web
+X.Y.Z  update doxygen version number, run doxygen, copy to web
 X.Y.Z  compile manual, give it current version number
+X.Y.Z. copy manual to web
 X.Y.Z  update main web page & menu
 
 X.Y.Z  tag
@@ -27,6 +28,32 @@ X.Y.Z  tag
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
+
+
+----------------------------------------------------------------------
+checklist for 2.3.3
+-------------------
+2.3.3  make sure version number in configure.ac is correct
+
+2.3.3  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+
+2.3.3  ensure NEWS is up to date
+
+2.3.3  make sure siscone points to a tag, not trunk
+
+2.3.3  make check [how do we deal with various config options?]
+
+2.3.3  make distcheck
+
+2.3.3  copy distribution to web
+2.3.3  run doxygen, copy to web
+2.3.3  compile manual, give it current version number
+2.3.3  update main web page & menu
+
+2.3.3  tag
+
+2.3.3  NO! send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
 
 ----------------------------------------------------------------------
 checklist for 2.3.2
