@@ -1,7 +1,10 @@
 2008-04-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/internal/SearchTree.hh: 
+	  added a missing typename (pointed out by Belyaev).
+
 	* include/fastjet/Makefile.am (fastjetinclude_HEADERS): 
-	  added config_auto.h which was not being installed
+	  added config_auto.h which was not being installed.
 
 2008-04-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
 

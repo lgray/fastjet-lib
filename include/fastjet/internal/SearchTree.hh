@@ -699,7 +699,7 @@ template<class T> typename SearchTree<T>::Node * SearchTree<T>::_find_predecesso
 
 
 //----------------------------------------------------------------------
-template<class T> typename SearchTree<T>::Node * SearchTree<T>::_find_successor(const SearchTree<T>::Node * node) {
+template<class T> typename SearchTree<T>::Node * SearchTree<T>::_find_successor(const typename SearchTree<T>::Node * node) {
 
   typename SearchTree<T>::Node * newnode;
   if (node->right != NULL) {
