@@ -29,6 +29,7 @@ $baserep = 700;
 #@strategy = (3,4);
 #@strategy = (-4,-3,-1,2,12);
 #@strategy = (1);
+@strategy = (2001);
 #@strategy = (12);
 #@strategy = (102);
 #@strategy = (-3,-1,0,2,10,11,102);
@@ -38,7 +39,7 @@ $baserep = 700;
 #@strategy = (102);
 #@strategy = (2);
 # for cones
-@strategy = (204);
+#@strategy = (204);
 #@strategy = (1,204,203,101,201,202,212);
 #@strategy = (204);
 #@strategy = (11,102);
@@ -99,11 +100,14 @@ print OUT "# strategy = ",$strategy,"\n";
 
 $maxj = 100;
 $algo = "";
+# allow for other seq.rec. algs
+if (int($strategy/1000) == 1) {$algo = "-cam";     $strategy -= 1000;}
+if (int($strategy/1000) == 2) {$algo = "-antikt" ; $strategy -= 2000; print "HELLO\n"}
 #if ( $strategy >= 2 )  {$maxcomb = 500;}
 #if ( $strategy >= 2 )  {$maxcomb = 9999;}
 #if ( $strategy >= 2 )  {$maxcomb = 4000;}
-#if ( $strategy >= 1 )  {$maxcomb = 700;}
-if ( $strategy >= 1 )  {$maxcomb = 200;}
+if ( $strategy >= 1 )  {$maxcomb = 700;}
+#if ( $strategy >= 1 )  {$maxcomb = 200;}
 if ( $strategy <= -1 ) {$maxcomb = 150;}
 if ( $strategy <= -3 ) {$maxcomb = 270;}
 if ( $strategy == 0 )  {$maxcomb = 13;}
