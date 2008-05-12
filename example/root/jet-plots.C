@@ -24,13 +24,13 @@ using namespace std;
 
 class JetHist {
 private:
-  vector<TH2F *> _jets;
-  TH2F * _background;
+  vector<TH2D *> _jets;
+  TH2D * _background;
 public:
   JetHist(const string & filename, double etamax=6.0, int nbins=40);
   ~JetHist();
   THStack stack;
-  TH2F * jet(int i) {return i>= 0 ? _jets[i] : _background;}
+  TH2D * jet(int i) {return i>= 0 ? _jets[i] : _background;}
 };
 
 // get jet "histograms" from filename which is expected to be made of repeated
@@ -51,9 +51,9 @@ JetHist::JetHist (const string & filename, double etamax, int nbins) {
   // construct a histogram for the background to the jets
   ostringstream bname;
   bname << filename <<"-background";
-  _background = new TH2F(bname.str().c_str(),bname.str().c_str(),
+  _background = new TH2D(bname.str().c_str(),bname.str().c_str(),
   			 2*nbins,-etamax,etamax,nbins,0.0,phimax);
-  //_background = new TH2F(bname.str().c_str(),bname.str().c_str(),
+  //_background = new TH2D(bname.str().c_str(),bname.str().c_str(),
   //			 2*nbins,-etamax,etamax,2,0.0,phimax);
   _background->SetFillColor(kWhite);
   // these were supposed to have labelled the axes, but it doesn't work.
@@ -66,7 +66,7 @@ JetHist::JetHist (const string & filename, double etamax, int nbins) {
     if (line.substr(0,1) != " ") {continue;} // all interesting lines start with space?
     ostringstream name;
     name << filename<<"-jet-"<< _jets.size();
-    TH2F * hist = new TH2F(name.str().c_str(),name.str().c_str(),
+    TH2D * hist = new TH2D(name.str().c_str(),name.str().c_str(),
 			   2*nbins,-etamax,etamax,nbins,0.0,phimax);
     int    i;
     double eta, phi, pt;

@@ -1,3 +1,27 @@
+2008-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/root/jet-plots.C: 
+	  changed histograms to doubles so that ghosting gives visible
+	  results. 
+
+	* src/ClusterSequence.cc (ClusterSequence::print_jets_for_root): 
+	* include/fastjet/ClusterSequence.hh: 
+
+          added alternative interface for print_jets_for_root, which takes
+	  filename and optional comment
+
+	* include/fastjet/ClusterSequence.hh: 
+
+          *** COULD BREAK COMPILED LIBRARIES?? ***
+
+	  added virtual ~ClusterSequence () {} destructor; necessary in
+	  order to get deletion of pointers to generic ClusterSequence type
+	  objects working correctly (e.g. ClusterSequence *, that points to
+	  a ClusterSequenceArea).
+
+	  Leaving this out originally was related to the fact that we did
+	  not originally forsee derived classes from ClusterSequence.
+	
 2008-04-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/internal/SearchTree.hh: 
