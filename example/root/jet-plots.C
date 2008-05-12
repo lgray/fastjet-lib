@@ -10,6 +10,7 @@
 #include<iostream>
 #include<sstream>
 #include<cstdlib>
+#include "TLatex.h"
 
 #include "TROOT.h"
 #include "TCanvas.h"
@@ -26,12 +27,21 @@ class JetHist {
 private:
   vector<TH2D *> _jets;
   TH2D * _background;
+  string _comment;
 public:
-  JetHist(const string & filename, double etamax=6.0, int nbins=40);
+  static double default_etamax;
+  static int    default_nbins;
+
+  JetHist(const string & filename, double etamax=default_etamax, int nbins=default_nbins);
   ~JetHist();
+  string comment() {return _comment;}
   THStack stack;
   TH2D * jet(int i) {return i>= 0 ? _jets[i] : _background;}
+
 };
+
+double JetHist::default_etamax = 6.0;
+int    JetHist::default_nbins  = 40; // y: 2*nbins; phi: nbins
 
 // get jet "histograms" from filename which is expected to be made of repeated
 // blocks as follows:
@@ -63,7 +73,13 @@ JetHist::JetHist (const string & filename, double etamax, int nbins) {
   stack.Add(_background);
 
   while (getline(file,line)) {
-    if (line.substr(0,1) != " ") {continue;} // all interesting lines start with space?
+    if (line.substr(0,1) != " ") { // all interesting lines start with space?
+      // extract a comment if there is one
+      if (line.substr(0,2) == "# ") {
+	_comment = line.substr(2,line.length()-2);
+      }
+      continue;
+    } 
     ostringstream name;
     name << filename<<"-jet-"<< _jets.size();
     TH2D * hist = new TH2D(name.str().c_str(),name.str().c_str(),
@@ -145,7 +161,7 @@ void set_default_colours(TCanvas * lego) {
 //----------------------------------------------------------------------
 /// show the jets contained in filename (as produced by
 /// ClusterSequence::print_jets_for_root()), with an optional label
-void showjets (const char * filename, const char * label = 0) {
+TCanvas * showjets (const char * filename, const char * label = 0) {
 
   // display the various 2-d drawing options
   gROOT->Reset();
@@ -164,17 +180,32 @@ void showjets (const char * filename, const char * label = 0) {
   set_default_colours(lego);
 
   TPaveLabel pl;
-  Float_t x1=0.63, y1=0.875, x2=0.95, y2=0.925;
    
   JetHist * jets = new JetHist(filename);
   jets->stack.Draw("lego1"); // cyl does not work with 5.16
   if (label != 0) {
+    Float_t x1=0.63, y1=0.875, x2=0.95, y2=0.925;
     pl.DrawPaveLabel(x1,y1,x2,y2,label,"brNDC");
+  } else if (jets->comment() != "") {
+    Float_t x1=0.15, y1=0.875, x2=0.95, y2=0.925;
+    pl.DrawPaveLabel(x1,y1,x2,y2,jets->comment().c_str(),"brNDC");
   }
+
+  // normal histogram labels not working, so draw them by hand
+  TLatex l;
+  l.SetTextAlign(22);
+  l.SetTextSize(0.05);
+  //l.DrawLatex(0.0,0.85,"anti-k_{t}, R=1");
+
+  l.SetTextSize(0.04);
+  l.DrawLatex(0.20,-0.98,"y");
+  l.SetTextAlign(32);
+  l.DrawLatex(-0.7,0.8,"p_{t} [GeV]");
+  l.DrawLatex(-0.6,-0.78,"#phi");
 
   // do not delete jets -- otherwise you lose everything!;
 
-  return;
+  return lego;
   ///
   lego->Update();
 }

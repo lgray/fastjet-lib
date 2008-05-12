@@ -1,9 +1,16 @@
 2008-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/root/jet-plots.C: 
-	  changed histograms to doubles so that ghosting gives visible
-	  results. 
+	  - changed histograms to doubles so that ghosting gives visible results. 
+          - JetHist::default_etamax and default_nbins can now be set
+            by user
 
+	  - showjets now plots labels on axes
+	  - it reads a comment from the file and uses it as a label
+	    if none is supplied
+          - it returns a pointer to the canvas, for user's subsequent
+	    manipulation
+	
 	* src/ClusterSequence.cc (ClusterSequence::print_jets_for_root): 
 	* include/fastjet/ClusterSequence.hh: 
 
