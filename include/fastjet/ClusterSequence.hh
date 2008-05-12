@@ -94,6 +94,9 @@ class ClusterSequence {
 				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations = false);
 
+  // virtual ClusterSequence destructor, in case any derived class
+  // thinks of needing a destructor at some point
+  virtual ~ClusterSequence () {}
 
   // NB: in the routines that follow, for extracting lists of jets, a
   //     list structure might be more efficient, if sometimes a little
@@ -217,6 +220,12 @@ class ClusterSequence {
   /// ... [i.e. above repeated]
   void print_jets_for_root(const std::vector<PseudoJet> & jets, 
                            std::ostream & ostr = std::cout) const;
+
+  /// print jets for root to the file labelled filename, with an
+  /// optional comment at the beginning
+  void print_jets_for_root(const std::vector<PseudoJet> & jets, 
+                           const std::string & filename,
+			   const std::string & comment = "") const;
 
 // Not yet. Perhaps in a future release.
 //   /// print out all inclusive jets with pt > ptmin

@@ -34,6 +34,7 @@
 #include "fastjet/version.hh" // stores the current version number
 #include<iostream>
 #include<sstream>
+#include<fstream>
 #include<cmath>
 #include<cstdlib>
 #include<cassert>
@@ -786,6 +787,15 @@ void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets,
     ostr << "#END" << endl;
   }
 }
+
+void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets, 
+					  const std::string & filename,
+					  const std::string & comment ) const {
+  std::ofstream ostr(filename.c_str());
+  if (comment != "") ostr << "# " << comment << endl;
+  print_jets_for_root(jets, ostr);
+}
+
 
 // Not yet. Perhaps in a future release
 // //----------------------------------------------------------------------
