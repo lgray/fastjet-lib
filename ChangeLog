@@ -1,3 +1,8 @@
+2008-05-14  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * include/fastjet/CircularRange.hh ADDED
+          added derived class for circular range
+	  
 2008-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/root/jet-plots.C: 
