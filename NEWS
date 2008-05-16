@@ -5,6 +5,8 @@ Release Notes for fastjet
 Summary of changes from v2.3.X -> v2.4-devel
 ==========================================================
 
+- added first implementation of e+e- kt algorithm (ee_kt_algorithm,
+  MUST be used with R>=sqrt(2) -- interface may yet evolve)
 - added implementation of genkt algorithm 
 - added a full set of subjet functions (in analogy with normal excl jets)
 - added D0RunIICone plugin [--enable-d0runiicone]

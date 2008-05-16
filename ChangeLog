@@ -1,3 +1,8 @@
+2008-05-16  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* NEWS: 
+	  updated this to reflect main current changes
+
 2008-05-14  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * include/fastjet/CircularRange.hh ADDED
@@ -34,6 +39,11 @@
 	  Leaving this out originally was related to the fact that we did
 	  not originally forsee derived classes from ClusterSequence.
 	
+-----------------------------------------------
+released 2.3.3 on 2008-04-28
+it contains bug fixes from below
+-----------------------------------------------	
+
 2008-04-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/internal/SearchTree.hh: 

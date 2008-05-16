@@ -26,4 +26,10 @@ svn revert configure.ac
 # and tell the user you have a result
 echo "**************************************************"
 echo "Have produced the file(s):"
-ls -l *$extralabel*.tar.gz
+$filename=`ls -rt *$extralabel*.tar.gz | tail -1`
+$filebase=`echo $filename | sed 's/.tar.gz//'`
+echo Now run 
+echo mv -v $filename '~'salam/www/fastjet/repository/snapshots/
+echo svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/snapshots/$filebase -m \'tagged $filebase snapshot\'
+echo \# edit '~'salam/www/fastjet/snapshots.html
+#mv -v *$extralabel*.tar.gz ~salam/www/fastjet/repository/snapshots/
