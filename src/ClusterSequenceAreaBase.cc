@@ -49,10 +49,26 @@ LimitedWarning ClusterSequenceAreaBase::_warnings;
 /// Calculate this as (range area) - \sum_{i in range} A_i
 ///
 double ClusterSequenceAreaBase::empty_area(const RangeDefinition & range) const {
+  return empty_area_from_jets(inclusive_jets(0.0), range);
+  // double empty = range.area();
+  // vector<PseudoJet> incl_jets(inclusive_jets(0.0));
+  // for (unsigned i = 0; i < incl_jets.size(); i++) {
+  //   if (range.is_in_range(incl_jets[i])) empty -= area(incl_jets[i]);
+  // }
+  // return empty;
+}
+
+//----------------------------------------------------------------------
+/// return the total area, within range, that is free of jets.
+/// 
+/// Calculate this as (range area) - \sum_{i in range} A_i
+///
+double ClusterSequenceAreaBase::empty_area_from_jets(
+                      const std::vector<PseudoJet> & all_jets,
+                      const RangeDefinition & range) const {
   double empty = range.area();
-  vector<PseudoJet> incl_jets(inclusive_jets(0.0));
-  for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (range.is_in_range(incl_jets[i])) empty -= area(incl_jets[i]);
+  for (unsigned i = 0; i < all_jets.size(); i++) {
+    if (range.is_in_range(all_jets[i])) empty -= area(all_jets[i]);
   }
   return empty;
 }
@@ -136,27 +152,37 @@ void ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
 
 
 
-
 void ClusterSequenceAreaBase::get_median_rho_and_sigma(
             const RangeDefinition & range, bool use_area_4vector,
             double & median, double & sigma, double & mean_area) const {
 
+  vector<PseudoJet> incl_jets = inclusive_jets();
+  get_median_rho_and_sigma(incl_jets, range, use_area_4vector,
+			   median, sigma, mean_area, true);
+}
+
+
+void ClusterSequenceAreaBase::get_median_rho_and_sigma(
+            const vector<PseudoJet> & all_jets,
+            const RangeDefinition & range, bool use_area_4vector,
+            double & median, double & sigma, double & mean_area,
+	    bool all_are_incl) const {
+
   _check_jet_alg_good_for_median();
 
   vector<double> pt_over_areas;
-  vector<PseudoJet> incl_jets = inclusive_jets();
   double total_area  = 0.0;
   double total_njets = 0;
 
-  for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (range.is_in_range(incl_jets[i])) {
+  for (unsigned i = 0; i < all_jets.size(); i++) {
+    if (range.is_in_range(all_jets[i])) {
       double this_area;
       if (use_area_4vector) {
-          this_area = area_4vector(incl_jets[i]).perp();
+          this_area = area_4vector(all_jets[i]).perp();
       } else {
-          this_area = area(incl_jets[i]);
+          this_area = area(all_jets[i]);
       }
-      pt_over_areas.push_back(incl_jets[i].perp()/this_area);
+      pt_over_areas.push_back(all_jets[i].perp()/this_area);
       total_area  += this_area;
       total_njets += 1.0;
     }
@@ -172,7 +198,7 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   
   // get median (pt/area) [this is the "old" median definition. It considers
   // only the "real" jets in calculating the median, i.e. excluding the
-  // only-ghost ones]
+  // only-ghost ones; it will be supplemented with more info below]
   sort(pt_over_areas.begin(), pt_over_areas.end());
 
   // now get the median & error, accounting for empty jets
@@ -180,9 +206,19 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   double posn[2] = {0.5, (1.0-0.6827)/2.0};
   double res[2];
   
-  double n_empty = n_empty_jets(range);
+  double n_empty, empty_a;
+  if (all_are_incl) {
+    empty_a = empty_area(range);
+    n_empty = n_empty_jets(range);
+  } else {
+    empty_a = empty_area_from_jets(all_jets, range);
+    mean_area = total_area / total_njets; // temporary value
+    n_empty   = empty_a / mean_area;
+  }
+  //cout << "*** tot_area = " << total_area << ", empty_a = " << empty_a << endl;
+  //cout << "*** n_empty = " << n_empty << ", ntotal =  " << total_njets << endl;
   total_njets += n_empty;
-  total_area  += empty_area(range);
+  total_area  += empty_a;
 
   for (int i = 0; i < 2; i++) {
     double nj_median_pos = 

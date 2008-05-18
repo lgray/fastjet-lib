@@ -93,8 +93,14 @@ public:
     return false;
   }
 
-  /// return the total area, within range, that is free of jets
+  /// return the total area, within range, that is free of jets, in
+  /// general based on the inclusive jets
   virtual double empty_area(const RangeDefinition & range) const;
+
+  /// return the total area, within range, that is free of jets, based 
+  /// on the supplied all_jets
+  double empty_area_from_jets(const std::vector<PseudoJet> & all_jets,
+			      const RangeDefinition & range) const;
 
   /// return something similar to the number of pure ghost jets
   /// in the given range in an active area case.
@@ -141,6 +147,28 @@ public:
                                         bool use_area_4vector,
                                         double & median, double & sigma,
                                         double & mean_area) const;
+
+  /// a more advanced version of get_median_rho_and_sigma, which allows
+  /// one to use any "view" of the event containing all jets (so that, 
+  /// e.g. one might use Cam on a different resolution scale without
+  /// have to rerun the algorithm).
+  ///
+  /// By default it will assume that "all" are not inclusive jets, 
+  /// so that in dealing with empty area it has to calculate
+  /// the number of empty jets based on the empty area and the
+  /// the observed <area> of jets rather than a surmised area
+  ///
+  /// Note that for small effective radii, this can cause problems
+  /// because the harder jets get an area >> <ghost-jet-area>
+  /// and so the estimate comes out all wrong. In these situations
+  /// it is highly advisable to use an area with explicit ghosts, since
+  /// then the "empty" jets are actually visible.
+  virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
+					const RangeDefinition & range, 
+                                        bool use_area_4vector,
+                                        double & median, double & sigma,
+                                        double & mean_area,
+					bool all_are_incl = false) const;
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area

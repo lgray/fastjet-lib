@@ -122,13 +122,16 @@ public:
   /// overload version of what's in the ClusterSequenceAreaBase class, which 
   /// additionally checks compatibility between "range" and region in which
   /// ghosts are thrown.
-  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+  virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
+					const RangeDefinition & range, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
-                                        double & mean_area) const {
+                                        double & mean_area,
+					bool all_are_incl = false) const {
     _warn_if_range_unsuitable(range);
-    ClusterSequenceAreaBase::get_median_rho_and_sigma(range, use_area_4vector,
-                                                      median, sigma, mean_area);
+    ClusterSequenceAreaBase::get_median_rho_and_sigma(
+                                 all_jets, range, use_area_4vector,
+				 median, sigma, mean_area, all_are_incl);
   }
 
   /// overload version of what's in the ClusterSequenceAreaBase class,
@@ -140,6 +143,18 @@ public:
                                         double & median, double & sigma) const {
     ClusterSequenceAreaBase::get_median_rho_and_sigma(range,use_area_4vector,
                                                       median,sigma);
+  }
+
+  /// overload version of what's in the ClusterSequenceAreaBase class,
+  /// which actually just does the same thing as the base version (but
+  /// since we've overridden the multi-argument version above, we have to
+  /// override the 5-argument version too.
+  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+                                        bool use_area_4vector,
+                                        double & median, double & sigma,
+					double & mean_area) const {
+    ClusterSequenceAreaBase::get_median_rho_and_sigma(range,use_area_4vector,
+                                                      median,sigma, mean_area);
   }
 
 

@@ -19,22 +19,15 @@ For 2.4
 High priority
 -------------
 
-- e+e-, DIS
-
-- understand and then fix segmentation violation in
-  bug-examples/voronoi-square-problem related to Voronoi diagrams of
-  certain sets of points on a square grid.
-
-- fix midpoint speed issue
-- fix windows compilation
+- finish testing e+e- kt, and sort out interface
+- implement jade class? [find out about license for CP software]
+- DIS?
 
 ---------------
 Medium priority
 ---------------
 
 - write Fortran wrapper for all algorithms?
-
-- finish implementing gen-kt
 
 - get stable-cone pass number from the SISCone extras variable.
 
@@ -62,9 +55,20 @@ Medium priority
 ----
 Done
 ----
+2.3.x
 - moved to autotools
 - fix bug in reconstruction of areas from hosted sequences (* Done *)
 - move doc over to new area approach
 - fix build problem for plugin subdirectories on macs (copy SISCone 
   sub-dir structure)
+- fix midpoint speed issue
+- fix windows compilation
+- understand and then fix segmentation violation in
+  bug-examples/voronoi-square-problem related to Voronoi diagrams of
+  certain sets of points on a square grid.
+
+2.4-devel
+- finish implementing gen-kt
+- first version of kt
+
 

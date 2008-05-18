@@ -1,3 +1,28 @@
+2008-05-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceAreaBase.cc: 
+	* include/fastjet/ClusterSequenceArea.hh: 
+	* include/fastjet/ClusterSequenceAreaBase.hh: 
+
+	  Added an extra version of get_median_rho_and_sigma which takes
+	  an explicit list of jets and calculates the median from that ---
+	  intended to help easily consider multiple R values within the
+	  C/A algorithm. Also added empty_area_from_jets()
+
+	  NB: "gmrs" also takes an extra argument to indicate
+	  whether the supplied jets are inclusive or not (affects
+	  assumptions it makes in calculating number of empty jets)
+
+	  NB2: when playing these games, the estimate of the number of
+	  empty jets is very hard to get in "plain" area classes for
+	  non-inclusive jets. Currently it's done by estimating the
+	  empty_area and dividing this by the mean_area of the non-empty
+	  jets; however there are situations where this procedure becomes
+	  dodgy (still to be understood why)...
+	
+	* TODO: 
+	  updated this to reflect the current status of things
+
 2008-05-16  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* NEWS: 
