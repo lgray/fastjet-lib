@@ -50,6 +50,9 @@ JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
 //
 
 
+// destructor that does nothing
+ClusterSequence::~ClusterSequence () {}
+
 //----------------------------------------------------------------------
 void ClusterSequence::_initialise_and_run (
 				  const double & R,

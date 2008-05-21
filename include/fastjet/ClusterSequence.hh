@@ -96,7 +96,7 @@ class ClusterSequence {
 
   // virtual ClusterSequence destructor, in case any derived class
   // thinks of needing a destructor at some point
-  virtual ~ClusterSequence () {}
+  virtual ~ClusterSequence (); //{}
 
   // NB: in the routines that follow, for extracting lists of jets, a
   //     list structure might be more efficient, if sometimes a little

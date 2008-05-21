@@ -19,6 +19,7 @@ For 2.4
 High priority
 -------------
 
+- sort out issue in tiled strategies for small R (large memory use)
 - finish testing e+e- kt, and sort out interface
 - implement jade class? [find out about license for CP software]
 - DIS?

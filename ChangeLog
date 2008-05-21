@@ -1,3 +1,11 @@
+2008-05-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence.cc: 
+
+	  Rather than have an inline virtual destructor, moved it into
+	  the .cc file (no particular reason)
+	
 2008-05-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequenceAreaBase.cc: 
