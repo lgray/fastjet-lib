@@ -159,6 +159,10 @@ class PseudoJet {
   inline double squared_distance(const PseudoJet & other) const {
     return plain_distance(other);}
 
+  /// returns other.phi() - this.phi(), constrained to be in 
+  /// range -pi .. pi
+  double delta_phi_to(const PseudoJet & other) const;
+
   //// this seemed to compile except if it was used
   //friend inline double 
   //  kt_distance(const PseudoJet & jet1, const PseudoJet & jet2) { 

@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
 
   // set up a siscone jet definition
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
-  double min_jet_Et = 8.0; // 
+  double min_jet_Et = 6.0; // earlier D0 analyses used 8 GeV
   plugins.push_back(new fastjet::D0RunIIConePlugin (jet_radius, min_jet_Et, 
                                               overlap_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));

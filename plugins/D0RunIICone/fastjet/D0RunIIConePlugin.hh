@@ -62,8 +62,10 @@ public:
   ///
   ///  - the cone_radius has the usual meaning
   ///
-  ///  - the min_jet_Et causes cones to be discarded at if at any iteration they 
-  ///    have pt <  Et_min_ratio * min_jet_Et. Default: min_jet_Et = 8.0 GeV
+  ///  - the min_jet_Et causes cones to be discarded at if at any
+  ///    iteration they have pt < Et_min_ratio * min_jet_Et. Two
+  ///    values have been used by D0 for min_jet_Et: 8 GeV in earlier
+  ///    Run II publicatinos, 6 GeV in later publications
   ///
   ///  - split_ratio is equivalent to the overlap threshold during the split/merge step. 
   ///    Default: 0.5.
@@ -72,7 +74,7 @@ public:
   /// is to correspond to the one actually used by D0.
   //
   D0RunIIConePlugin (double cone_radius, 
-                     double min_jet_Et  = _DEFAULT_min_jet_Et, 
+                     double min_jet_Et , 
                      double split_ratio = _DEFAULT_split_ratio) :
     _cone_radius            (cone_radius            ),
     _min_jet_Et             (min_jet_Et             ),
@@ -138,7 +140,6 @@ private:
 
   // here are the default parameters for the D0 Run II Cone algorithm
   //const static double _cone_radius ;//= 0.5;
-  const static double _DEFAULT_min_jet_Et              = 8.0;
   const static double _DEFAULT_split_ratio             = 0.5; // overlap threshold
   const static double _DEFAULT_far_ratio               = 0.5;
   const static double _DEFAULT_Et_min_ratio            = 0.5;

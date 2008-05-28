@@ -1,3 +1,27 @@
+2008-05-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+
+	* plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh: 
+
+	  Following discussions with Christophe Royon and Lars
+	  Sonnenschein, removed the default value for the min_jet_Et in the
+	  D0RunIIConePlugin, since two different values have been used
+	  over the years.
+
+	* test-script-output-orig.txt: 
+	* example/fastjet_timing_plugins.cc: 
+	* plugins/usage_examples/many_algs_example.cc: 
+	  updated these to use min_jet_Et to 6 GeV (was 8) for the
+	  d0runiicone 
+	
+2008-05-23  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc: 
+	* include/fastjet/PseudoJet.hh: 
+
+	  Added a delta_phi_to(...) member function to calculte phi
+	  distance to another PseudoJet
+	
 2008-05-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

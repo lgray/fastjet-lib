@@ -320,6 +320,16 @@ double PseudoJet::plain_distance(const PseudoJet & other) const {
 }
 
 //----------------------------------------------------------------------
+/// returns other.phi() - this.phi(), i.e. the phi distance to
+/// other, constrained to be in range -pi .. pi
+double PseudoJet::delta_phi_to(const PseudoJet & other) const {
+  double dphi = abs(other._phi - _phi);
+  if (dphi >  pi) dphi -= twopi;
+  if (dphi < -pi) dphi += twopi;
+  return dphi;
+}
+
+//----------------------------------------------------------------------
 // sort the indices so that values[indices[0..n-1]] is sorted
 // into increasing order 
 void sort_indices(vector<int> & indices, 

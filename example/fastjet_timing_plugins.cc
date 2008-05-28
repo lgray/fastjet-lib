@@ -229,7 +229,8 @@ int main (int argc, char ** argv) {
 #endif // ENABLE_PLUGIN_SISCONE
   } else if (cmdline.present("-d0runiicone")) {
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
-    jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR));
+    double min_jet_Et = 6.0; // was 8 GeV in earlier work
+    jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR,min_jet_Et));
 #else  // ENABLE_PLUGIN_D0RUNIICONE
     cerr << "D0RunIICone requested, but not available for this compilation" << endl;
 #endif // ENABLE_PLUGIN_D0RUNIICONE
