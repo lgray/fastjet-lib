@@ -151,7 +151,6 @@ fi
 AC_CONFIG_FILES( plugins/PxCone/Makefile plugins/PxCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
 
-
 dnl D0RunIICone
 AC_ARG_ENABLE(d0runiicone,
 	[  --enable-d0runiicone        enables the D0RunIICone plugin (default=no)],
@@ -165,6 +164,20 @@ if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
 fi
 AC_CONFIG_FILES( plugins/D0RunIICone/Makefile plugins/D0RunIICone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_D0RUNIICONE, test x$ENABLE_D0RUNIICONE = xyes)
+
+dnl NestedAlgs
+AC_ARG_ENABLE(nestedalgs,
+	[  --enable-nestedalgs        enables the NestedAlgs plugin (default=yes)],
+	[ENABLE_NESTEDALGS="$enableval"],
+	[ENABLE_NESTEDALGS="yes"])
+if [[ "x$ENABLE_NESTEDALGS" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_NESTEDALGS, [], [The NestedAlgs plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lNestedAlgsPlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libNestedAlgsPlugin.a "
+fi
+AC_CONFIG_FILES( plugins/NestedAlgs/Makefile plugins/NestedAlgs/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_NESTEDALGS, test x$ENABLE_NESTEDALGS = xyes)
 
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)

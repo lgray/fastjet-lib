@@ -11,8 +11,11 @@ endif
 if BUILD_PLUGIN_D0RUNIICONE
 SUBDIRS += D0RunIICone
 endif
+if BUILD_PLUGIN_NESTEDALGS
+SUBDIRS += NestedAlgs
+endif
 SUBDIRS += usage_examples
 
-DIST_SUBDIRS = SISCone CDFCones PxCone D0RunIICone usage_examples
+DIST_SUBDIRS = SISCone CDFCones PxCone D0RunIICone NestedAlgs usage_examples
 
 EXTRA_DIST = makefile.static
