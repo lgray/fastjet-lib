@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: ClusterSequence_DumbN3.cc 293 2006-08-17 19:38:38Z salam $
+// $Id$
 //
 // Copyright (c) 2007-2008, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
