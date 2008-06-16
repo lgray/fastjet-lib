@@ -236,6 +236,10 @@ int main (int argc, char ** argv) {
 #endif // ENABLE_PLUGIN_D0RUNIICONE
   } else if (cmdline.present("-eekt")) {
     jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
+  } else if (cmdline.present("-eegenkt")) {
+    double p = cmdline.value<double>("-eegenkt");
+    jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, 
+				fj::E_scheme, strategy);
   } else {
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }

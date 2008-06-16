@@ -102,6 +102,8 @@ enum JetAlgorithm {
   //.................................................................
   /// the e+e- kt algorithm (use with R > sqrt(2)!)
   ee_kt_algorithm=50,
+  /// the e+e- genkt algorithm
+  ee_genkt_algorithm=53,
   //.................................................................
   /// any plugin algorithm supplied by the user
   plugin_algorithm = 99

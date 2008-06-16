@@ -62,6 +62,10 @@ string JetDefinition::description() const {
   } else if (jet_algorithm() == ee_kt_algorithm) {
     name << "e+e- kt algorithm with R = " << R();
     name << " and " << recombiner()->description();
+  } else if (jet_algorithm() == ee_genkt_algorithm) {
+    name << "e+e- generalised kt algorithm with R = " 
+	 << R() << ", p = " << extra_param();
+    name << " and " << recombiner()->description();
   } else {
     throw Error("JetDefinition::description(): unrecognized jet_finder");
   }

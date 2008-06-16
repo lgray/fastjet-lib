@@ -1,3 +1,14 @@
+2008-06-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/JetDefinition.hh (enum JetAlgorithm): 
+	* src/JetDefinition.cc (JetDefinition::description): 
+	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run, inclusive_jets): 
+	* src/ClusterSequence_N2.cc (ClusterSequence::_bj_set_jetinfo<EEBriefJet>):
+
+	  added support for the ee_genkt_algorithm [should double check
+	  ee_kt (some mods may have affected it, though quick tests done)
+	  and check genkt more extensively [e.g. with spherical plots?]
+
 2008-05-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 

@@ -197,7 +197,20 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
                            EEBriefJet * const jetA, const int _jets_index) const {
 
   double E = _jets[_jets_index].E();
-  jetA->kt2  = E*E; // replaces energy; might one day become more general
+  double scale = E*E; // the default energy scale for the kt alg
+  double p  = jet_def().extra_param(); // in case we're ee_genkt
+  switch (_jet_algorithm) {
+  case ee_kt_algorithm:
+    break; // leave scale as E*E
+  case ee_genkt_algorithm:
+    if (p <= 0 && scale < 1e-300) scale = 1e-300; // same dodgy safety as genkt
+    scale = pow(scale,p);
+    break;
+  default:
+    throw Error("Unrecognised jet algorithm");
+  }
+  jetA->kt2  = scale; // "kt2" might one day be renamed as "scale" or some such
+
   double norm = _jets[_jets_index].modp2();
   if (norm > 0) {
     norm = 1.0/sqrt(norm);

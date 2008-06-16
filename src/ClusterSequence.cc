@@ -82,7 +82,8 @@ void ClusterSequence::_initialise_and_run (
     _jet_def.plugin()->run_clustering( (*this) );
     _plugin_activated = false;
     return;
-  } else if (_jet_algorithm == ee_kt_algorithm) {
+  } else if (_jet_algorithm == ee_kt_algorithm ||
+	     _jet_algorithm == ee_genkt_algorithm) {
     // ignore requested strategy
     _strategy = N2Plain;
     // this is used to renormalise the dij to get a "standard" form
@@ -300,7 +301,7 @@ double ClusterSequence::jet_scale_for_algorithm(
     if (kt2 < lim*lim && kt2 != 0.0) {
       return 1.0/kt2;
     } else {return 1.0;}
-  } else {throw Error("Unrecognised jet finder");}
+  } else {throw Error("Unrecognised jet algorithm");}
 }
 
 
@@ -378,6 +379,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
              || _jet_algorithm == ee_kt_algorithm
              || _jet_algorithm == antikt_algorithm
              || _jet_algorithm == genkt_algorithm
+             || _jet_algorithm == ee_genkt_algorithm
              || _jet_algorithm == cambridge_for_passive_algorithm) {
     // for inclusive jets with a plugin algorithm, we make no
     // assumptions about anything (relation of dij to momenta,
