@@ -9,6 +9,21 @@
 	  ee_kt (some mods may have affected it, though quick tests done)
 	  and check genkt more extensively [e.g. with spherical plots?]
 
+2008-06-02  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* plugins/NestedAlgs/NestedAlgsPlugin.cc: 
+	  Added a new plugin which does the clustering by applying
+	  successively a set of algorithms.
+	  The usage simply goes as follows
+	    list<JetDefinition> jet_list;
+	    // add here the list of algs you want (the first one
+	    // you want to be applied goes first) to 'jet_list' 
+	    JetDefinition jet_def = new NestedAlg(jet_list);
+	    ClusterSequence(particle_list, jet_def);
+	  As for the other plugins, NestedAlgs can be enabled or
+	  disabled at configure-time using --enable-nestedalgs or
+	  --disable-nestedalgs (enabled by default).
+	
 2008-05-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 
