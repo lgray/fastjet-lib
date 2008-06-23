@@ -36,6 +36,35 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
+//----------------------------------------------------------------------
+// [NB: implementation was getting complex, so in 2.4-devel moved it
+//  from .hh to .cc]
+JetDefinition::JetDefinition(JetAlgorithm jet_algorithm, 
+			     double R, 
+			     Strategy strategy,
+			     RecombinationScheme recomb_scheme) :
+  _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
+
+  // set R parameter or ensure its sensibleness, as appropriate
+  if (jet_algorithm == ee_kt_algorithm) {
+    _Rparam = 4.0; // introduce a fictional R that ensures that
+                   // our clustering sequence will not produce
+                   // "beam" jets except when only a single particle remains.
+                   // Any value > 2 would have done here
+  } else if (jet_algorithm != ee_genkt_algorithm) {
+    assert(_Rparam <= 0.5*pi);
+  }
+
+  // make sure the strategy requested is sensible
+  assert (_strategy  != plugin_strategy);
+
+  _plugin = NULL;
+  set_recombination_scheme(recomb_scheme);
+  set_extra_param(0.0); // make sure it's defined
+}
+
+
+//----------------------------------------------------------------------
 string JetDefinition::description() const {
   ostringstream name;
   if (jet_algorithm() == plugin_algorithm) {
@@ -60,8 +89,8 @@ string JetDefinition::description() const {
 	 << R() << "and a special hack whereby particles with kt < " 
          << extra_param() << "are treated as passive ghosts";
   } else if (jet_algorithm() == ee_kt_algorithm) {
-    name << "e+e- kt algorithm with R = " << R();
-    name << " and " << recombiner()->description();
+    name << "e+e- kt (Durham) algorithm (NB: no R)";
+    name << " with " << recombiner()->description();
   } else if (jet_algorithm() == ee_genkt_algorithm) {
     name << "e+e- generalised kt algorithm with R = " 
 	 << R() << ", p = " << extra_param();

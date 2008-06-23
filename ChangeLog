@@ -1,3 +1,44 @@
+2008-06-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+
+	* doc/fastjet-doc.tex: 
+	  updated the documentation to contain information about the e+e-
+	  algorithms; added note on accessing version info; 
+
+	* src/ClusterSequence.cc: 
+	  removed warning about exclusive jets for the ee_kt alg. 
+
+	  Added test of ee_kt R value. 
+
+	  Arranged distance-measure normalisations such that dij has 1/R^2
+	  for ee_gen_kt, but not for ee_kt (the former matches on directly
+	  to gen_kt, the latter onto the usual e+e- convention).
+
+	* include/fastjet/JetDefinition.hh: 
+	* src/JetDefinition.cc (JetDefinition::JetDefinition): 
+
+          moved the code for the constructor into the .cc file; 
+
+	  For the ee_kt_algorithm, set the R value explicitly (R=4), to
+	  avoid the user getting something that isn't the original kt
+	  algorithm without realising. Also removed the mention of $R$ in
+	  the description.
+
+	  NB: functionality of R for this alg can be obtained with
+	  ee_genkt. 
+
+
+2008-06-19  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+
+	* TESTING:
+	  ran basic tests on behaviour of eegenkt for a set of simple
+	  events; checked that eegenkt with p=1 gives same as eekt (for
+	  R=2); and rechecked once again against original KtJet. 
+
+	* include/fastjet/JetDefinition.hh: 
+	  removed inappropriate restriction on R for eegenkt.
+
 2008-06-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/JetDefinition.hh (enum JetAlgorithm): 

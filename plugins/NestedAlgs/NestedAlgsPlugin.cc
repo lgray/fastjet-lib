@@ -59,7 +59,8 @@ void NestedAlgsPlugin::run_clustering(ClusterSequence & clust_seq) const {
   momenta = clust_seq.jets();
   unsigned int step_n = momenta.size();
 
-  // initialise the conversion table
+  // initialise the conversion table, which works as follows
+  // conversion_table[step_cs_jet_index] = main_cs_jet_index
   vector<unsigned int> conversion_table(2*step_n);
   vector<unsigned int> new_conversion_table;
   for (unsigned int i=0;i<step_n;i++)
@@ -69,7 +70,7 @@ void NestedAlgsPlugin::run_clustering(ClusterSequence & clust_seq) const {
   // for each alg in the list, 
   //  - do the clustering,
   //  - copy the history into the main one
-  //  - update the list of momenta and the index consersion table
+  //  - update the list of momenta and the index conversion table
   list<JetDefinition>::const_iterator it = algs.begin();
 
   while (it!=algs.end()){

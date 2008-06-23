@@ -112,25 +112,11 @@ template<class BJ> void ClusterSequence::_simple_N2_cluster() {
       int nn; // new jet index
       _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);
 
-      //OBS // get the two history indices
-      //OBS int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      //OBS int hist_b = _jets[jetB->_jets_index].cluster_hist_index();
-      //OBS // create the recombined jet
-      //OBS _jets.push_back(_jets[jetA->_jets_index] + _jets[jetB->_jets_index]);
-      //OBS int nn = _jets.size() - 1;
-      //OBS _jets[nn].set_cluster_hist_index(history_location);
-      //OBS // update history
-      //OBS _add_step_to_history(history_location, 
-      //OBS   		   min(hist_a,hist_b),max(hist_a,hist_b),
-      //OBS 			   nn, diJ_min);
       // what was jetB will now become the new jet
       _bj_set_jetinfo(jetB, nn);
     } else {
       // jet-beam recombination
       _do_iB_recombination_step(jetA->_jets_index, diJ_min);
-      //OBS // get the hist_index
-      //OBS int hist_a = _jets[jetA->_jets_index].cluster_hist_index();
-      //OBS _add_step_to_history(history_location,hist_a,BeamJet,Invalid,diJ_min); 
     }
 
     // now update our nearest neighbour info and diJ table
@@ -201,7 +187,10 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
   double p  = jet_def().extra_param(); // in case we're ee_genkt
   switch (_jet_algorithm) {
   case ee_kt_algorithm:
-    break; // leave scale as E*E
+    assert(_Rparam > 2.0); // force this to be true! [not best place, but works]
+    // recall that _invR2 is artificially set to 1 for this alg
+    // so that we automatically have dij = scale * 2(1-cos theta_ij)
+    break; 
   case ee_genkt_algorithm:
     if (p <= 0 && scale < 1e-300) scale = 1e-300; // same dodgy safety as genkt
     scale = pow(scale,p);

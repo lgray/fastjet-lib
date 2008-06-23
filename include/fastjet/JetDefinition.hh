@@ -100,9 +100,9 @@ enum JetAlgorithm {
   /// whose pt is < extra_param() [relevant for passive areas when p<=0]
   genkt_for_passive_algorithm=13, 
   //.................................................................
-  /// the e+e- kt algorithm (use with R > sqrt(2)!)
+  /// the e+e- kt algorithm
   ee_kt_algorithm=50,
-  /// the e+e- genkt algorithm
+  /// the e+e- genkt algorithm  (R > 2 and p=1 gives ee_kt)
   ee_genkt_algorithm=53,
   //.................................................................
   /// any plugin algorithm supplied by the user
@@ -173,19 +173,23 @@ public:
   /// constructor to fully specify a jet-definition (together
   /// with information about how algorithically to run it). 
   ///
+  /// the ordering of arguments here is old and deprecated (except
+  /// as the common constructor for internal use)
   JetDefinition(JetAlgorithm jet_algorithm, 
                 double R, 
                 Strategy strategy,
-                RecombinationScheme recomb_scheme = E_scheme) :
-    _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
-    // the largest sensible value for R
-    if (jet_algorithm != ee_kt_algorithm) assert(_Rparam <= 0.5*pi);
-    assert(_jet_algorithm != plugin_algorithm &&
-           _strategy   != plugin_strategy);
-    _plugin = NULL;
-    set_recombination_scheme(recomb_scheme);
-    set_extra_param(0.0); // make sure it's defined
-  }
+                RecombinationScheme recomb_scheme = E_scheme);
+// :
+//    _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
+//    // the largest sensible value for R
+//    if (jet_algorithm != ee_kt_algorithm &&
+//	jet_algorithm != ee_genkt_algorithm) assert(_Rparam <= 0.5*pi);
+//    assert(_jet_algorithm != plugin_algorithm &&
+//           _strategy   != plugin_strategy);
+//    _plugin = NULL;
+//    set_recombination_scheme(recomb_scheme);
+//    set_extra_param(0.0); // make sure it's defined
+//  }
   
 
   /// constructor with alternative ordering or arguments -- note that

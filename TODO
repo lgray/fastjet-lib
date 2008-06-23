@@ -2,8 +2,8 @@
 For 2.4
 -------------
 - enable dynamic libraries by default?
-- add "version()" info to doc
-- document error meaningless on AAEG.
+- add "version()" info to doc            [done: MC & GS: check you're happy!]
+- document error meaningless on AAEG.    [done]
 
 - default f=0.75 for cones:
    a. change th edefault f to 0.75 in ctor
@@ -46,12 +46,16 @@ Medium priority
   * ??? area transfer ???
   * anything highlighted with RETHINK-IF-CHANGE-NUMBERING
 
+- alternatively change the types of jet & cluster index to separate
+  types to reduce the likelihood of problems arising.
+
 - v3: Think about making ClusterSequence actually just point to an 
   implementation class that does all the work; then both
   ClusterSequence and all the PseudoJets could point to it through a
   reference counting pointer -- this would allow one (e.g.) to get the
   constituents of a jet without manually going via the
   ClusterSequence.
+
 
 ----
 Done

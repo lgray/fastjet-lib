@@ -76,9 +76,11 @@ void ClusterSequence::_initialise_and_run (
   // currently in _jets)
   _fill_initial_history();
 
-  // run the plugin if that's what's decreed
+  // ----- deal with special cases: plugins & e+e- ------
   if (_jet_algorithm == plugin_algorithm) {
+    // allows plugin_xyz() functions to modify cluster sequence
     _plugin_activated = true;
+    // let the plugin do its work here
     _jet_def.plugin()->run_clustering( (*this) );
     _plugin_activated = false;
     return;
@@ -86,10 +88,15 @@ void ClusterSequence::_initialise_and_run (
 	     _jet_algorithm == ee_genkt_algorithm) {
     // ignore requested strategy
     _strategy = N2Plain;
-    // this is used to renormalise the dij to get a "standard" form
-    // and our convention in e+e- will be different from that
-    // in long.inv case; NB: _invR2 name should be changed -> _renorm_dij?
-    _invR2 = 1.0;
+    if (_jet_algorithm == ee_kt_algorithm) {
+      // make sure that R is large enough so that "beam" recomb only
+      // occurs when a single particle is left
+      assert(_Rparam > 2.0); 
+      // this is used to renormalise the dij to get a "standard" form
+      // and our convention in e+e- will be different from that
+      // in long.inv case; NB: _invR2 name should be changed -> _renorm_dij?
+      _invR2 = 1.0;
+    }
     _simple_N2_cluster<EEBriefJet>();
     return;
   }
@@ -433,8 +440,11 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
   // were particles in the first place.
   assert (njets <= _initial_n);
 
-  // provide a warning when extracting exclusive jets 
-  if (_jet_def.jet_algorithm() != kt_algorithm && _n_exclusive_warnings < 5) {
+  // provide a warning when extracting exclusive jets for algorithms 
+  // other than the pp and e+e- kt.
+  if (_jet_def.jet_algorithm() != kt_algorithm &&
+      _jet_def.jet_algorithm() != ee_kt_algorithm &&
+      _n_exclusive_warnings < 5) {
     _n_exclusive_warnings++;
     cerr << "FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care." << endl;
   }

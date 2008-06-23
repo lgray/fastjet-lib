@@ -63,6 +63,7 @@
 \newcommand{\order}[1]{{\cal O}\left(#1\right)}
 \newcommand{\ie}{{\it i.e.}\ }
 \newcommand{\eg}{{\it e.g.}\ }
+\newcommand{\ee}{e^+e^-}
 
 \title{FastJet 2.4 [deve] user manual}
 \author{Matteo Cacciari, Gavin P. Salam\\
@@ -201,11 +202,16 @@ jet algorithm, except as regards the distance measures, which are:
 \end{subequations}
 Attempting to extract exclusive jets from the Cambridge/Aachen with a
 $d_{cut}$ parameter simply provides the set of jets obtained up to the
-point where all $d_{ij},d_{iB} > d_{cut}$. The true exclusive
-formulation of the Cambridge algorithm~\cite{CamOrig} instead makes
-use an auxiliary ($k_t$) distance measure and `freezes' pseudojets
-whose recombination would involve too large a value of the auxiliary
-distance measure.
+point where all $d_{ij},d_{iB} > d_{cut}$. Having clustered with some
+given $R$, this can actually be an effective way of viewing the event
+at a smaller radius, $R_{eff} = \sqrt{d_{cut}} R$, thus allowing a
+single event to be viewed at a continuous range of $R_{eff}$ within a
+single clustering.
+
+We note that the true exclusive formulation of the Cambridge
+algorithm~\cite{CamOrig} instead makes use an auxiliary ($k_t$)
+distance measure and `freezes' pseudojets whose recombination would
+involve too large a value of the auxiliary distance measure.
 
 %\comment{Say something about meaning of exclusive case here?}
 
@@ -216,8 +222,8 @@ This new algorithm, introduced and studied in~\cite{antikt}, is defined
 exactly like the standard $k_t$ algorithm, except for the distance
 measures which are now given by
 \begin{subequations}
-  \begin{eqnarray}
     \label{eq:dij_antikt}
+  \begin{eqnarray}
     &&d_{ij} = \min(1/k_{ti}^2,1/{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2 \, , \\
     &&d_{iB} = 1/k_{ti}^2 \, .
   \end{eqnarray}
@@ -229,13 +235,14 @@ circular on the $y$-$\phi$ cylinder~\cite{antikt}.
 
 %......................................................................
 \subsection[Generalised-$k_t$ jet algorithm]{Generalised $\boldsymbol{k_t}$ jet algorithm}
+\label{sec:genkt}
 
 The ``generalised $k_t$'' algorithm again follows the same procedure,
 but depends on an additional continuous parameter $p$, with has the
 following distance measure:
 \begin{subequations}
+  \label{eq:dij_genkt}
   \begin{eqnarray}
-    \label{eq:dij_antikt}
     &&d_{ij} = \min(k_{ti}^{2p},k_{tj}^{2p}) \, \Delta R_{ij}^2 / R^2 \, , \\
     &&d_{iB} = k_{ti}^{2p} \, .
   \end{eqnarray}
@@ -245,11 +252,52 @@ algorithms list above, $k_t$ ($p=1$), Cambridge/Aachen ($p=0$) and
 anti-$k_t$ ($p=-1$). 
 
 %......................................................................
-\subsection{$e^+e^-$ algorithms}
+\subsection{Generalised $\boldsymbol{k_t}$ algorithm for
+  $\boldsymbol{e^+e^-}$ collisions}
 \label{sec:ee-algs}
 
 FastJet also provides native implementations of clustering algorithms
-in spherical coordinates (specifically for $e^+e^-$ collisions)...
+in spherical coordinates (specifically for $e^+e^-$ collisions) along
+the lines of the original $k_t$ algorithms~\cite{eekt}, but extended
+in analogy with the generalised $pp$ algorithm of~\cite{antikt} and
+section \ref{sec:genkt}. We define the two following distances:
+\begin{subequations}
+  \label{eq:dij_eegenkt}
+\begin{align}
+  d_{ij} &= \min(E_i^{2p}, E_j^{2p}) \frac{2(1- \cos \theta_{ij})}{R^2}\,,\\
+  d_{iB} &= E_i^{2p}\,,
+\end{align}
+\end{subequations}
+for a general value of $p$ and $R$. At a given stage of the clustering
+sequence, if a $d_{ij}$ is smallest then $i$ and $j$ are recombined,
+while if a $d_{iB}$ is smallest then $i$ is called an ``inclusive
+jet''. 
+
+For $R > 2$, the $d_{iB}$ will be smallest only if the event
+consists of a single particle, and thus with the additional choice of
+$p=1$ the clustering sequence will correspond to that of the $e^+e^-$
+$k_t$ algorithm~\cite{eekt}, often referred to also as the Durham
+algorithm, which has a single distance:
+\begin{align}
+  \label{eq:dij_eekt}
+  d_{ij} &= 2 \min(E_i^{2p}, E_j^{2p}) (1- \cos \theta_{ij})\,.
+\end{align}
+Note the difference in normalisation between the $d_{ij}$ in
+eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact in neither
+case have we normalised to the total energy $Q$ in the event, contrary
+to the convention adopted originally in~\cite{eekt} (where the
+distance measure was called $y_{ij}$).
+
+For values of $R \le 2$ in eq.~(\ref{eq:dij_eegenkt}), the generalised
+$e^+e^-$ $k_t$ algorithm behaves in analogy the $pp$ algorithms: when
+an object is at an angle $\theta_{iX} >\arccos (1 - R^2/2)$ from all
+other objects $X$ then it forms an inclusive jet.
+%
+With the choice $p=-1$ this provides a simple, infrared and collinear
+safe way of obtaining a cone-like algorithm for $e^+e^-$ collisions,
+since hard well-separated jets have a circular profile on the $3$D
+sphere, with opening half-angle $\arccos (1 - R^2/2)$.
+
 
 %......................................................................
 \subsection{Recombination schemes}
@@ -261,7 +309,10 @@ specify how to combine the momenta. The simplest procedure
 a standard in~\cite{RunII-jet-physics}, and is the default option in
 FastJet. 
 
-Other schemes provided by earlier $k_t$-clustering implementations
+
+
+\paragraph{Other schemes for $\boldsymbol{pp}$ collisions.} Other
+schemes provided by earlier $k_t$-clustering implementations
 \cite{KtJet} are the $p_t$, $p_t^2$, $E_t$ and $E_t^2$ schemes. They
 all incorporate a `preprocessing' stage to make the initial momenta
 massless (rescaling the energy to be equal to the 3-momentum for the
@@ -284,6 +335,9 @@ paragraph are not invariant under longitudinal boosts. We therefore
 also introduce boost-invariant $p_t$ and $p_t^2$ schemes, which are
 identical to the normal $p_t$ and $p_t^2$ schemes, except that they
 omit the preprocessing stage.
+
+\paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
+\comment{Still to be written} 
 
 Finally, alternative user-defined recombination schemes can be
 introduced as described in Appendix~\ref{app:a}.
@@ -431,10 +485,17 @@ variables \ttt{\_default\_jet\_finder} and  \ttt{\_jet\_finder} have been
 replaced by \ttt{\_default\_jet\_algorithm} and \ttt{\_jet\_algorithm}.}: 
 \begin{lstlisting}
   enum JetAlgorithm {kt_algorithm, cambridge_algorithm,
-                     antikt_algorithm, genkt_algorithm};
+                     antikt_algorithm, genkt_algorithm,
+                     ee_kt_algorithm, ee_genkt_algorithm, ...};
 \end{lstlisting}
+where the $\ldots$ represent additional values that are present for
+internal or testing purposes.
+%
 \ttt{R} specifies the value of $R$ that appears in
-eqs.~(\ref{eq:dij},\ref{eq:dij_cam}). 
+eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{eq:dij_eegenkt}).
+%
+If the user chooses the \ttt{ee\_kt\_algorithm} (Durham), then the $R$
+value is ignored since that algorithm has no such parameter.
 %
 The recombination scheme should be one of those listed in
 table~\ref{tab:RecombSchemes}. If it is omitted the $E$-scheme is
@@ -457,8 +518,8 @@ chosen.
   \label{tab:RecombSchemes}
 \end{table}
 
-For the generalised $k_t$ algorithm an extra parameter is needed, and
-the following constructor should then be used
+For the generalised $k_t$ algorithm and its $e^+e^-$ version an extra
+parameter is needed, and the following constructor should then be used
 %
 \begin{lstlisting}
   fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm,
@@ -493,9 +554,13 @@ potentially interesting values listed in table~\ref{tab:Strategies}.
       $N$ and $R$\\\hline 
     \end{tabular}
     \caption{The more interesting of the various algorithmic
-      strategies for clustering. (For remaining strategies see
+      strategies for clustering. Other strategies are given
       \ttt{JetDefinition.hh} --- note however that strategies not
-      listed in the above table may disappear in future releases.)}
+      listed in the above table may disappear in future releases.
+      %
+      For jet algorithms with spherical distance measures (those whose
+      name starts with ``\ttt{ee\_}''), only the \ttt{N2Plain} strategy is
+      available.  }
     \label{tab:Strategies}
   \end{center}
 \end{table}
@@ -728,6 +793,30 @@ follows:
   vector<fastjet::PseudoJet> unclustered = clust_seq.unclustered_particles();
 \end{lstlisting}
 
+%----------------------------------------------------------------------
+\subsection{Version information}
+\label{sec:version-information}
+
+Information on the version of FastJet that is being run can be
+obtained by making a call to 
+\begin{lstlisting}
+  std::string fastjet::fastjet_version_string();
+\end{lstlisting}
+(defined in \ttt{fastjet/JetDefinition.hh}).  
+%
+In line with recommendations for other programs in high-energy
+physics, the user may wish to include this information in publications
+and plots so as to facilitate reproducibility of the
+jet-finding.\footnote{While we devote significant effort to ensuring
+  that all versions of FastJet give identical, correct results, we are
+  obviously not able to completely guarantee the absence of bugs that
+  might have an effect on the jet finding. }
+%
+We recommend also that the main elements of the
+\ttt{jet\_def.description()} be provided, together with citations to
+the original article that defines the algorithm, as well as to the
+FastJet paper~\cite{fastjet}.
+
 %======================================================================
 \section{Example program}
 
@@ -948,13 +1037,18 @@ area determination several times, the number of times being specified
 by the \ttt{repeat} variable. For hadron-level events a value of
 $5$ is sufficient to give jet areas that are determined to within a
 few percent. In practice it is usually satisfactory even to set
-\ttt{repeat}$=1$ and this is the default since it runs faster. For
+\ttt{repeat}~$=1$ and this is the default since it runs faster. For
 events with a dense distribution of true 
 particles, there is no degeneracy in the ghost clustering and there is
-no need at all to use \ttt{repeat}$>1$.
+no need at all to use \ttt{repeat}~$>1$.
 %
 If \ttt{repeat} $ > 1$, a statistical uncertainty on the area, given by
 $\sigma/\sqrt{\ttt{repeat}-1}$, is provided for each jet.
+%
+Note that the \ttt{repeat} value is ignored (\ie taken to be 1) for
+\ttt{active\_area\_explicit\_ghosts} and meaningless for the passive
+area in the $k_t$ algorithm, which just calculates the Voronoi area
+discussed below (since they are identical).
 
 Other variables that the user may wish to set are: \ttt{grid\_scatter}
 and \ttt{kt\_scatter}, which  are fractional random fluctuations of the
@@ -1006,9 +1100,11 @@ the proper \ttt{fastjet::VoronoiAreaSpec} specification to
   /// constructor that allows you to set effective_Rfact
   fastjet::VoronoiAreaSpec(double effective_Rfact) ; 
 \end{lstlisting}
-The second constructor allows one to modify (by a multiplicative factor
-\ttt{effective\_Rfact}) the radius of the circle which is intersected
-with the Voronoi cells.
+The second constructor allows one to modify (by a multiplicative
+factor \ttt{effective\_Rfact}) the radius of the circle which is
+intersected with the Voronoi cells. With $\ttt{effective\_Rfact} = 1$,
+for the $k_t$ algorithm, the Voronoi area is equivalent to the passive
+area.
 
 Information about the specification in use is returned by
 \begin{lstlisting}
@@ -1047,7 +1143,8 @@ information about jet areas.  It is derived from
   virtual double area (const fastjet::PseudoJet & jet) const ;
 
   /// return the error (uncertainty) associated with the determination
-  /// of the area of the jet;
+  /// of the area of the jet; returns 0 when the repeat value = 1, and
+  /// also for the active_area_explicit_ghosts and certain passive areas
   virtual double area_error (const fastjet::PseudoJet & jet) const ;
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
@@ -1844,6 +1941,31 @@ reduce the number of stable cones (and correspondingly, the time and
 memory usage of the subsequent split--merge step). An alternative, which
 has been found to be acceptable in most situations, is to use a passive
 area, since this is relatively fast to calculate with SISCone.
+
+%----------------------------------------------------------------------
+\subsection{Summary of algorithms}
+\label{sec:summary-algorithms}
+
+\begin{tabular}{lr|l|c|c|c|c}
+  \multicolumn{7}{c}{Native algorithms}\\\hline
+  alg.                   &  &  \ttt{JetAlgorithm}        & proc.    & params & speed & mem.
+  \\\hline                                                           
+  Long.\ inv.\ $k_t$ &\cite{} & \ttt{kt\_algorithm} & pp            & $R$    &  $N \ln N$ & $N$ \\
+  Cambridge/Aachen &\cite{} & \ttt{cambridge\_algorithm} & pp       & $R$    &  $N \ln N$ & $N$\\
+  anti-$k_t$ &\cite{} & \ttt{antikt\_algorithm} & pp                & $R$    &  $Nn^{1/2}$ & $N$ \\
+  generalised $k_t$ &\cite{} & \ttt{genkt\_algorithm} & pp          & $R,p$  &  $N \ln N$ -- $Nn^{1/2}$ & $N$
+  \\ \hline                                                          
+  $e^+e^-$ $k_t$ &\cite{} & \ttt{ee\_kt\_algorithm} & $\ee$         & $-$    &  $N^2$ & $N$ \\
+  $e^+e^-$ gen-$k_t$ &\cite{} & \ttt{ee\_genkt\_algorithm} & $\ee$  & $R,p$  &  $N^2$ & $N$ \\
+\end{tabular}
+
+
+\begin{tabular}{lr|c|c|c|c}
+  \multicolumn{6}{c}{Plugin algorithms}\\\hline
+  alg.                   &          & proc.    & params & speed & mem.\\
+  SISConePlugin & \cite{} & pp & $R,f,\ldots$ & $N n \ln n$ & $N^2$
+  \\\hline                                                           
+\end{tabular}
 
 %======================================================================
 \section{Compilation notes}

@@ -5,14 +5,32 @@ Release Notes for fastjet
 Summary of changes from v2.3.X -> v2.4-devel
 ==========================================================
 
-- added first implementation of e+e- kt algorithm (ee_kt_algorithm,
-  MUST be used with R>=sqrt(2) -- interface may yet evolve)
-- added implementation of genkt algorithm 
-- added a full set of subjet functions (in analogy with normal excl jets)
-- added D0RunIICone plugin [--enable-d0runiicone]
+new jet algorithms
+------------------
+- added an implementation of the e+e- kt algorithm (ee_kt_algorithm),
+
+- added implementation of generalised kt algorithm (genkt_algorithm)
+
+- added implementation of generalised kt algorithm for e+e-
+  (ee_genkt_algorithm); this notably also provides access to an e+e-
+  form of the anti-kt algorithm, which gives conical jets
+
+- added D0RunIICone plugin [--enable-d0runiicone at configure time]
+
+- added NestedAlgs plugin for daisy-chaining multiple jet definitions
+  [still under testing; API may change]
+
+new functionality
+-----------------
+- added a full set of subjet functions (in analogy with normal excl
+  jets)
+
+interface modifications
+-----------------------
 - removed default value of 0.5 for overlap_threshold in
   CDFMidPointPlugin and SISConePlugin constructors
   *** may break backwards compatibility ***
+
 
 =======================================================================
 Summary of changes from v2.3.2 -> v2.3.3 (bug fix release): 28 Apr 2008
