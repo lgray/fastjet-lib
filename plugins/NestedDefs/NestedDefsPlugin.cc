@@ -33,7 +33,7 @@
 
 // fastjet stuff
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/NestedAlgsPlugin.hh"
+#include "fastjet/NestedDefsPlugin.hh"
 
 // other stuff
 #include <vector>
