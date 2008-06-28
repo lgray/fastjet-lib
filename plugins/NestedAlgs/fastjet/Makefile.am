@@ -1,2 +1,2 @@
 fastjetincludedir=$(includedir)/fastjet
-fastjetinclude_HEADERS = NestedAlgsPlugin.hh
+fastjetinclude_HEADERS = NestedDefsPlugin.hh
