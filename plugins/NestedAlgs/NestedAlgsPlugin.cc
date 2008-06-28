@@ -28,6 +28,9 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
+// TODO
+// ? Maybe one could provide additional recomb. dists as an "extra".;
+
 // fastjet stuff
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/NestedAlgsPlugin.hh"
@@ -40,19 +43,19 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-string NestedAlgsPlugin::description () const {
+string NestedDefsPlugin::description () const {
   ostringstream desc;
   
-  desc << "NestedAlgs: successive application of " ;
+  desc << "NestedDefs: successive application of " ;
   unsigned int i=1;
-  for (list<JetDefinition>::const_iterator it=algs.begin();it!=algs.end();it++){
-    desc << "Alg. " << i++ << " [" << it->description() << "] - ";
+  for (list<JetDefinition>::const_iterator it=defs.begin();it!=defs.end();it++){
+    desc << "Definition " << i++ << " [" << it->description() << "] - ";
   }
 
   return desc.str();
 }
 
-void NestedAlgsPlugin::run_clustering(ClusterSequence & clust_seq) const {
+void NestedDefsPlugin::run_clustering(ClusterSequence & clust_seq) const {
   vector<PseudoJet> momenta;
 
   // build the initial list of particles
@@ -67,15 +70,19 @@ void NestedAlgsPlugin::run_clustering(ClusterSequence & clust_seq) const {
     conversion_table[i]=i;
 
   // Now the steps go as follows:
-  // for each alg in the list, 
+  // for each definition in the list, 
   //  - do the clustering,
   //  - copy the history into the main one
   //  - update the list of momenta and the index conversion table
-  list<JetDefinition>::const_iterator it = algs.begin();
+  list<JetDefinition>::const_iterator def_iterator = defs.begin();
+  unsigned int def_index=0;
+  bool last_def=false;
 
-  while (it!=algs.end()){
+  while (def_iterator!=defs.end()){
+    last_def = (def_index == (defs.size()-1));
+
     // do the clustering
-    ClusterSequence step_cs(momenta, *it);
+    ClusterSequence step_cs(momenta, *def_iterator);
 
     // clear the momenta as we shall fill them again
     momenta.clear();
@@ -87,53 +94,57 @@ void NestedAlgsPlugin::run_clustering(ClusterSequence & clust_seq) const {
     // copy the history
     // note that we skip the initial steps which are just the 
     // declaration of the particles.
-    vector<ClusterSequence::history_element>::const_iterator hist_it = step_history.begin();
+    vector<ClusterSequence::history_element>::const_iterator 
+      hist_iterator = step_history.begin();
+
     for (unsigned int i=step_n;i!=0;i--)
-      hist_it++;
-    while (hist_it != step_history.end()){
+      hist_iterator++;
+
+    while (hist_iterator != step_history.end()){
       // check if it is a recombination with the beam or a simple recombination
-      if (hist_it->parent2 == ClusterSequence::BeamJet){
+      if (hist_iterator->parent2 == ClusterSequence::BeamJet){
 	// save this jet for future clustering
-	unsigned int jet_index = step_cs.history()[hist_it->parent1].jetp_index;
-	momenta.push_back(step_cs.jets()[jet_index]);
-	new_conversion_table.push_back(conversion_table[jet_index]);
+	// unless we've reached the last def in which case, record the clustering
+	unsigned int step_jet_index = step_cs.history()[hist_iterator->parent1].jetp_index;
+	if (last_def){
+	  clust_seq.plugin_record_iB_recombination(conversion_table[step_jet_index], 
+						   hist_iterator->dij);
+	} else {
+	  momenta.push_back(step_cs.jets()[step_jet_index]);
+	  new_conversion_table.push_back(conversion_table[step_jet_index]);
+	}
       } else {
 	// record combination
-	unsigned int jet1_index = step_cs.history()[hist_it->parent1].jetp_index;
-	unsigned int jet2_index = step_cs.history()[hist_it->parent2].jetp_index;
-	PseudoJet newjet = step_cs.jets()[hist_it->jetp_index];
+	// note that we set the recombination distance to 0 except for the last alg
+	unsigned int step_jet1_index = step_cs.history()[hist_iterator->parent1].jetp_index;
+	unsigned int step_jet2_index = step_cs.history()[hist_iterator->parent2].jetp_index;
+	PseudoJet newjet = step_cs.jets()[hist_iterator->jetp_index];
 	int jet_k;
-	clust_seq.plugin_record_ij_recombination(conversion_table[jet1_index], 
-						 conversion_table[jet2_index],
-						 hist_it->dij, newjet, jet_k);
+	clust_seq.plugin_record_ij_recombination(conversion_table[step_jet1_index], 
+						 conversion_table[step_jet2_index],
+						 last_def ? hist_iterator->dij : 0.0,
+						 newjet, jet_k);
 
 	// save info in the conversion table for tracking purposes
-	conversion_table[hist_it->jetp_index]=jet_k;
+	conversion_table[hist_iterator->jetp_index]=jet_k;
       }
 
       // go to the next history element
-      hist_it++;
+      hist_iterator++;
     }
 
     // finalise this step:
     //  - update nr of particles
     //  - update conversion table
     step_n = momenta.size();
-    for (int i=0;i<step_n;i++)
+    for (unsigned int i=0;i<step_n;i++)
       conversion_table[i] = new_conversion_table[i];
 
     // go to the next alg
-    it++;
+    def_index++;
+    def_iterator++;
   }
 
-  // now all the algs have been applied, we can recombine the remaining 
-  // particles with the beam to make them jets.
-  // the position of the momenta in the main "jets()" vector
-  // are encoded in the conversion_table so we know where they are
-  double Rlast=R();
-  for (int i=0;i<step_n;i++){
-    clust_seq.plugin_record_iB_recombination(conversion_table[i], Rlast);
-  }
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

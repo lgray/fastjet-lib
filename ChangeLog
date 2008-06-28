@@ -1,5 +1,19 @@
-2008-06-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+2008-06-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* plugins/NestedAlgs/fastjet/NestedAlgsPlugin.hh
+	  plugins/NestedAlgs/NestedAlgsPlugin.cc: 
+	  - rename NestedAlgs in NestedDefs
+	  - internally, call 'algorithms' 'definitions', for consistency
+	  - do not put the last alg. recomb at the end but at the moment
+	    they appear.
+	  - keep the dij, diB for the last def; and set all others to
+	    zero? That way people can run sub-jet tools on the last
+	    jet-def without worrying about strange conflicts with the
+	    previous dij's which have a different meaning.
+      	  - do some renaming of the internal variables for readability
+
+
+2008-06-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex: 
 	  updated the documentation to contain information about the e+e-
@@ -30,7 +44,6 @@
 
 2008-06-19  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-
 	* TESTING:
 	  ran basic tests on behaviour of eegenkt for a set of simple
 	  events; checked that eegenkt with p=1 gives same as eekt (for
@@ -38,6 +51,7 @@
 
 	* include/fastjet/JetDefinition.hh: 
 	  removed inappropriate restriction on R for eegenkt.
+
 
 2008-06-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 

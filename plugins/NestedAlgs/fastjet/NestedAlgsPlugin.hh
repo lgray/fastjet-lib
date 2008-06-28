@@ -49,16 +49,16 @@ class PseudoJet;
 /// particles to the first algorithm and then, successively feeding the 
 /// output to the next algorithm in the list.
 //
-class NestedAlgsPlugin : public JetDefinition::Plugin {
+class NestedDefsPlugin : public JetDefinition::Plugin {
 public:
-  /// Main constructor for the NestedAlgs Plugin class.  
+  /// Main constructor for the NestedDefs Plugin class.  
   ///
   /// The argument is an initialised list of jet algorithms
-  NestedAlgsPlugin (std::list<JetDefinition> &_algs) :
-    algs(_algs){}
+  NestedDefsPlugin (std::list<JetDefinition> &_defs) :
+    defs(_defs){}
 
   /// copy constructor
-  NestedAlgsPlugin (const NestedAlgsPlugin & plugin) {
+  NestedDefsPlugin (const NestedDefsPlugin & plugin) {
     *this = plugin;
   }
 
@@ -67,10 +67,10 @@ public:
   virtual void run_clustering(ClusterSequence &) const;
   /// the plugin mechanism's standard way of accessing the jet radius
   /// here we return the R of the last alg in the list
-  virtual double R() const {return algs.rbegin()->R();}
+  virtual double R() const {return defs.rbegin()->R();}
 
 private:
-  std::list<JetDefinition> algs;
+  std::list<JetDefinition> defs;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
