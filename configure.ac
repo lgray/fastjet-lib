@@ -64,7 +64,7 @@ dnl Note that CGAL compilation flags are considered as required
 dnl so we do store them in "AM_CXXFLAGS"
 CONFIG_CXXFLAGS=""
 AC_ARG_ENABLE(cgal,
-	[  --enable-cgal    enables link with the CGAL library (default=no)],
+	[  --enable-cgal           enables link with the CGAL library (default=no)],
 	[ENABLE_CGAL_FLAG="$enableval"],
 	[ENABLE_CGAL_FLAG="no"])
 dnl if asked for, check if the CGAL library can be used
@@ -109,7 +109,7 @@ CONFIG_LIBS_PLUGINS_STATIC=""
 
 dnl SISCone
 AC_ARG_ENABLE(siscone,
-	[  --enable-siscone       enables the SISCone plugin (default=yes)],
+	[  --enable-siscone        enables the SISCone plugin (default=yes)],
 	[ENABLE_SISCONE="$enableval"],
 	[ENABLE_SISCONE="yes"])
 if [[ "x$ENABLE_SISCONE" == "xyes" ]] ; then
@@ -123,7 +123,7 @@ AM_CONDITIONAL(BUILD_PLUGIN_SISCONE, test x$ENABLE_SISCONE = xyes)
 
 dnl CDFCones
 AC_ARG_ENABLE(cdfcones,
-	[  --enable-cdfcones      enables the CDFJetClu and CDFMidPoint plugins (default=yes)],
+	[  --enable-cdfcones       enables the CDFJetClu and CDFMidPoint plugins (default=yes)],
 	[ENABLE_CDFCONES="$enableval"],
 	[ENABLE_CDFCONES="yes"])
 if [[ "x$ENABLE_CDFCONES" == "xyes" ]] ; then
@@ -137,7 +137,7 @@ AM_CONDITIONAL(BUILD_PLUGIN_CDFCONES, test x$ENABLE_CDFCONES = xyes)
 
 dnl PxCone
 AC_ARG_ENABLE(pxcone,
-	[  --enable-pxcone        enables the PxCone plugin (default=no)],
+	[  --enable-pxcone         enables the PxCone plugin (default=no)],
 	[ENABLE_PXCONE="$enableval"],
 	[ENABLE_PXCONE="no"])
 if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
@@ -153,7 +153,7 @@ AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
 
 dnl D0RunIICone
 AC_ARG_ENABLE(d0runiicone,
-	[  --enable-d0runiicone        enables the D0RunIICone plugin (default=no)],
+	[  --enable-d0runiicone    enables the D0RunIICone plugin (default=no)],
 	[ENABLE_D0RUNIICONE="$enableval"],
 	[ENABLE_D0RUNIICONE="no"])
 if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
@@ -165,19 +165,19 @@ fi
 AC_CONFIG_FILES( plugins/D0RunIICone/Makefile plugins/D0RunIICone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_D0RUNIICONE, test x$ENABLE_D0RUNIICONE = xyes)
 
-dnl NestedAlgs
-AC_ARG_ENABLE(nestedalgs,
-	[  --enable-nestedalgs        enables the NestedAlgs plugin (default=yes)],
-	[ENABLE_NESTEDALGS="$enableval"],
-	[ENABLE_NESTEDALGS="yes"])
-if [[ "x$ENABLE_NESTEDALGS" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_NESTEDALGS, [], [The NestedAlgs plugin is enabled])
+dnl NestedDefs
+AC_ARG_ENABLE(nesteddefs,
+	[  --enable-nesteddefs     enables the NestedDefs plugin (default=yes)],
+	[ENABLE_NESTEDDEFS="$enableval"],
+	[ENABLE_NESTEDDEFS="yes"])
+if [[ "x$ENABLE_NESTEDDEFS" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_NESTEDDEFS, [], [The NestedDefs plugin is enabled])
    dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lNestedAlgsPlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libNestedAlgsPlugin.a "
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lNestedDefsPlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libNestedDefsPlugin.a "
 fi
-AC_CONFIG_FILES( plugins/NestedAlgs/Makefile plugins/NestedAlgs/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_NESTEDALGS, test x$ENABLE_NESTEDALGS = xyes)
+AC_CONFIG_FILES( plugins/NestedDefs/Makefile plugins/NestedDefs/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_NESTEDDEFS, test x$ENABLE_NESTEDDEFS = xyes)
 
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)
