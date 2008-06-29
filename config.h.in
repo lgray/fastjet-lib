@@ -6,8 +6,8 @@
 /* The D0RunIICone plugin is enabled */
 #undef ENABLE_PLUGIN_D0RUNIICONE
 
-/* The NEstedAlgs plugin is enabled */
-#undef ENABLE_PLUGIN_NESTEDALGS
+/* The NestedDefs plugin is enabled */
+#undef ENABLE_PLUGIN_NESTEDDEFS
 
 /* The PxCone plugin is enabled */
 #undef ENABLE_PLUGIN_PXCONE
