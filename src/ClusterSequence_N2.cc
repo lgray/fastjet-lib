@@ -190,6 +190,7 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
     assert(_Rparam > 2.0); // force this to be true! [not best place, but works]
     // recall that _invR2 is artificially set to 1 for this alg
     // so that we automatically have dij = scale * 2(1-cos theta_ij)
+    // Normally, _Rparam should be automatically set to 4 from JetDefinition
     break; 
   case ee_genkt_algorithm:
     if (p <= 0 && scale < 1e-300) scale = 1e-300; // same dodgy safety as genkt

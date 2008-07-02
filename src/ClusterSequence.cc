@@ -91,6 +91,7 @@ void ClusterSequence::_initialise_and_run (
     if (_jet_algorithm == ee_kt_algorithm) {
       // make sure that R is large enough so that "beam" recomb only
       // occurs when a single particle is left
+      // Normally, this should be automatically set to 4 from JetDefinition
       assert(_Rparam > 2.0); 
       // this is used to renormalise the dij to get a "standard" form
       // and our convention in e+e- will be different from that
