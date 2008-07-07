@@ -1,3 +1,12 @@
+2008-07-07  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* plugins/SISCone/SISConeSphericalPlugin.cc: 
+	  plugins/SISCone/fastjet/SISConeSphericalPlugin.hh: 
+	  added a plugin for the spherical version of SISCone.
+	  It is named SISConeSplericalPlugin and included in 
+	  the same plugin library as the main plugin
+	
+
 2008-06-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* plugins/NestedAlgs/fastjet/NestedAlgsPlugin.hh

@@ -1,2 +1,2 @@
 fastjetincludedir=$(includedir)/fastjet
-fastjetinclude_HEADERS = SISConePlugin.hh
+fastjetinclude_HEADERS = SISConePlugin.hh SISConeSphericalPlugin.hh
