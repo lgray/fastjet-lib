@@ -114,8 +114,8 @@ AC_ARG_ENABLE(siscone,
 	[ENABLE_SISCONE="yes"])
 if [[ "x$ENABLE_SISCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_SISCONE, [], [The SISCone plugin is enabled])
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lSISConePlugin -lsiscone"
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libSISConePlugin.a \${installationdir}/lib/libsiscone.a"
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lSISConePlugin -lsiscone -lsiscone_spherical"
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libSISConePlugin.a \${installationdir}/lib/libsiscone.a \${installationdir}/lib/libsiscone_spherical.a"
 fi
 AC_CONFIG_SUBDIRS(plugins/SISCone/siscone)
 AC_CONFIG_FILES( plugins/SISCone/Makefile plugins/SISCone/fastjet/Makefile )

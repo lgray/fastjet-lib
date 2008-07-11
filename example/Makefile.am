@@ -25,7 +25,7 @@ fastjet_areas_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I
 fastjet_areas_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
 if BUILD_PLUGIN_SISCONE
 fastjet_areas_CXXFLAGS += -I${srcdir}/../plugins/SISCone
-fastjet_areas_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone/siscone/siscone/libsiscone.la
+fastjet_areas_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone/siscone/siscone/libsiscone.la ../plugins/SISCone/siscone/siscone/spherical/libsiscone_spherical.la
 endif
 
 fastjet_subtraction_SOURCES = fastjet_subtraction.cc
@@ -41,7 +41,7 @@ fastjet_timing_plugins_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-v
 fastjet_timing_plugins_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
 if BUILD_PLUGIN_SISCONE
 fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/SISCone
-fastjet_timing_plugins_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone/siscone/siscone/libsiscone.la
+fastjet_timing_plugins_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone/siscone/siscone/libsiscone.la ../plugins/SISCone/siscone/siscone/spherical/libsiscone_spherical.la
 endif
 if BUILD_PLUGIN_CDFCONES
 fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/CDFCones
