@@ -5,6 +5,7 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   ClusterSequence.hh\
   Error.hh\
   RangeDefinition.hh\
+  CircularRange.hh\
   version.hh\
   AreaDefinition.hh\
   ActiveAreaSpec.hh\
