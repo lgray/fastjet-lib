@@ -34,6 +34,7 @@
 
 #include "fastjet/RangeDefinition.hh"
 
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 class CircularRange : public fastjet::RangeDefinition {
 public:
@@ -82,5 +83,7 @@ private:
   double _distance,_rapjet,_phijet;
 
 };
+
+FASTJET_END_NAMESPACE
 
 #endif // __FASTJET_CIRCULARRANGE_HH__

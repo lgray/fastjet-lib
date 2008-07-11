@@ -1,3 +1,9 @@
+2008-07-11  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * fixed CircularRange.hh (wrong filenme and missing fastjet 
+          namespace)   
+
+
 2008-07-07  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* plugins/SISCone/SISConeSphericalPlugin.cc: 
