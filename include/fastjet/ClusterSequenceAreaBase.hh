@@ -183,6 +183,7 @@ public:
 
   /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range "range". 
   /// exclude_above allows one to exclude large values of pt/area from fit. 
+  ///               (if negative, the cut is discarded)
   /// use_area_4vector = true uses the 4vector areas.
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
                                           const RangeDefinition & range, 

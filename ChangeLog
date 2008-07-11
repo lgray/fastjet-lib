@@ -1,5 +1,10 @@
 2008-07-11  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* include/fastjet/ClusterSequenceAreaBase.hh:
+	  added a comment to notice that putting a negative
+	  value for 'exclude_above' means the cut is discarded
+	  (in parabolic_pt_per_unit_area).
+
 	* configure.ac (ENABLE_PLUGIN_SISCONE)
           examples/Makefile.am
           plugins/usage_examples/Makefile.am:
