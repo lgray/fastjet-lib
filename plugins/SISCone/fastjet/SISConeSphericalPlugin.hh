@@ -21,11 +21,31 @@ class PseudoJet;
 
 //----------------------------------------------------------------------
 //
-/// SISConePlugin is a plugin for fastjet (v2.1 upwards) that provides
-/// an interface to the seedless infrared safe cone jet finder by
-/// Gregory Soyez and Gavin Salam.
+/// SISConeSphericalPlugin is a plugin for fastjet (v2.1 upwards) that
+/// provides an interface to the seedless infrared safe cone jet
+/// finder by Gregory Soyez and Gavin Salam.
 ///
-/// This is the version of SISCone using spherical coordinates
+/// This is the version of SISCone using spherical coordinates. Compared
+/// to the original cylindrical version:
+///
+///  - Particles are within a cone if their opening angle relative to the
+///    centre of the cone is less than R
+///
+///  - The split-merge step uses the total energy in the protojet as the
+///    ordering and overlap-measure variable
+///
+///  - The IR safety of the split-merge step is _not_ guaranteed for
+///    events consisting of two back-to-back identical heavy particles
+///    that decay. This is because of potential degeneracies in the
+///    ordering for the split-merge step. 
+///
+///    For moderate values of R the problem should not be too severe
+///    (or may even be absent for some values of the overlap
+///    parameter), however the user should be aware of the issue.
+///
+///    The default split-merge scale may change at a later date to
+///    resolve this issue.
+///
 ///
 /// SISCone uses geometrical techniques to exhaustively consider all
 /// possible distinct cones. It then finds out which ones are stable
@@ -56,7 +76,7 @@ class PseudoJet;
 ///
 /// - if "caching" is turned on then the last event clustered by
 ///   siscone is stored -- if the current event is identical and the
-///   cone_radius and n_pass_mass are identical, then the only part of
+///   cone_radius and n_pass_max are identical, then the only part of
 ///   the clustering that needs to be rerun is the split-merge part,
 ///   leading to significant speed gains; there is a small (O(N) storage
 ///   and speed) penalty for caching, so it should be kept off
@@ -69,7 +89,9 @@ class PseudoJet;
 /// currently work for jets that consist of a single particle.
 ///
 /// For further information on the details of the algorithm see the
-/// SISCone paper; for documentation about the implementation, see the
+/// SISCone paper, arXiv:0704.0292 [JHEP 0705:086,2007].
+///
+/// For documentation about the implementation, see the
 /// siscone/doc/html/index.html file.
 //
 class SISConeSphericalPlugin : public JetDefinition::Plugin {
@@ -83,19 +105,13 @@ public:
                         SM_mt,     ///< transverse mass (E-scheme), IR safe except
                                    ///< in decays of two identical narrow heavy particles
                         SM_pttilde, ///< pt-scheme pt = \sum_{i in jet} |p_{ti}|, should
-                                   ///< be IR safe in all cases
-                        SM_E ///< energy
+                                    ///< be IR safe in all cases
+                        SM_E       ///< energy
   };
 
 
-  /// Main constructor for the SISCone Plugin class.  
+  /// Main constructor for the SISConeSpherical Plugin class.  
   ///
-  /// Note: wrt version prior to 2.4 this constructor differs in that a 
-  /// the default value has been removed for overlap_threshold. The
-  /// former has been removed because the old default of 0.5 was found
-  /// to be unsuitable in high-noise environments; so the user should
-  /// now explicitly think about the value for this -- we recommend
-  /// 0.75.
   ///
   SISConeSphericalPlugin (double cone_radius,
 			  double overlap_threshold,
@@ -161,7 +177,7 @@ public:
   /// set_split_merge_stopping_scale(...) for description)
   double split_merge_stopping_scale() {return _split_merge_stopping_scale;}
 
-  /// indicate if te splittings are done using the anti-kt distance
+  /// indicate if the splittings are done using the anti-kt distance
   bool split_merge_use_E_weighted_splitting() const {return _use_E_weighted_splitting;}
   void set_split_merge_use_E_weighted_splitting(bool val) {
     _use_E_weighted_splitting = val;}

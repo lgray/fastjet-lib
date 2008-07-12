@@ -15,9 +15,12 @@ new jet algorithms
   (ee_genkt_algorithm); this notably also provides access to an e+e-
   form of the anti-kt algorithm, which gives conical jets
 
+- added SISConeSphericalPlugin [enabled by default] for SISCone in
+  e+e- and other spherical environments.
+
 - added D0RunIICone plugin [--enable-d0runiicone at configure time]
 
-- added NestedAlgs plugin for daisy-chaining multiple jet definitions
+- added NestedDefs plugin for daisy-chaining multiple jet definitions
   [still under testing; API may change]
 
 new functionality

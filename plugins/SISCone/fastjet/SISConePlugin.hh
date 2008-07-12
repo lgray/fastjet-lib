@@ -70,7 +70,9 @@ class PseudoJet;
 /// currently work for jets that consist of a single particle.
 ///
 /// For further information on the details of the algorithm see the
-/// SISCone paper; for documentation about the implementation, see the
+/// SISCone paper, arXiv:0704.0292 [JHEP 0705:086,2007].
+///
+/// For documentation about the implementation, see the
 /// siscone/doc/html/index.html file.
 //
 class SISConePlugin : public JetDefinition::Plugin {

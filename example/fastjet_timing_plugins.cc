@@ -81,6 +81,7 @@
 ///   -pxcone       switch to the PxCone jet algorithm
 /// 
 ///   -siscone       switch to the SISCone jet algorithm (seedless cones)
+///   -sisconespheri switch to the Spherical SISCone jet algorithm (seedless cones)
 ///
 ///   -midpoint     switch to CDF's midpoint code
 ///
@@ -102,6 +103,7 @@
 
 #ifdef ENABLE_PLUGIN_SISCONE
 #include "fastjet/SISConePlugin.hh"
+#include "fastjet/SISConeSphericalPlugin.hh"
 #endif
 #ifdef ENABLE_PLUGIN_CDFCONES
 #include "fastjet/CDFMidPointPlugin.hh"
@@ -213,17 +215,27 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_CDFCONES
     cerr << "jetclu requested, but not available for this compilation" << endl;
 #endif // ENABLE_PLUGIN_CDFCONES
-  } else if (cmdline.present("-siscone")) {
+  } else if (cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
 #ifdef ENABLE_PLUGIN_SISCONE
     typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",0);
-    double sisptmin = cmdline.value("-sisptmin",0.0);
-    SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass,sisptmin);
-    if (cmdline.present("-sm-pt")) plugin->set_split_merge_scale(SISPlug::SM_pt);
-    if (cmdline.present("-sm-mt")) plugin->set_split_merge_scale(SISPlug::SM_mt);
-    if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
-    if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
-    jet_def = fj::JetDefinition(plugin);
+    if (cmdline.present("-siscone")) {
+      double sisptmin = cmdline.value("-sisptmin",0.0);
+      SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass,sisptmin);
+      if (cmdline.present("-sm-pt")) plugin->set_split_merge_scale(SISPlug::SM_pt);
+      if (cmdline.present("-sm-mt")) plugin->set_split_merge_scale(SISPlug::SM_mt);
+      if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
+      if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
+      jet_def = fj::JetDefinition(plugin);
+    } else {
+      double sisEmin = cmdline.value("-sisEmin",0.0);
+      fj::SISConeSphericalPlugin * plugin = 
+	new fj::SISConeSphericalPlugin(ktR, overlap_threshold,npass,sisEmin);
+      if (cmdline.present("-ghost-sep")) {
+	plugin->set_ghost_separation_scale(cmdline.value<double>("-ghost-sep"));
+      }
+      jet_def = fj::JetDefinition(plugin);
+    }
 #else  // ENABLE_PLUGIN_SISCONE
     cerr << "siscone requested, but not available for this compilation" << endl;
 #endif // ENABLE_PLUGIN_SISCONE
@@ -301,7 +313,7 @@ int main (int argc, char ** argv) {
       for (int ieta = -neta; ieta<neta+1; ieta++) {
 	double phi = (iphi+0.5) * (fj::twopi/nphi) + rand()*0.001/RAND_MAX;
 	double eta = ieta * (10.0/neta)  + rand()*0.001/RAND_MAX;
-	kt = 0.0000001*(1+rand()*0.1/RAND_MAX);
+	kt = 1e-20*(1+rand()*0.1/RAND_MAX);
 	double pminus = kt*exp(-eta);
 	double pplus  = kt*exp(+eta);
 	double px = kt*sin(phi);
