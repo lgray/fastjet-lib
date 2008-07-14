@@ -390,6 +390,14 @@ vector<PseudoJet> sorted_by_E(const vector<PseudoJet> & jets) {
   return objects_sorted_by_values(jets, energies);
 }
 
+//----------------------------------------------------------------------
+/// return a vector of jets sorted into increasing pz
+vector<PseudoJet> sorted_by_pz(const vector<PseudoJet> & jets) {
+  vector<double> pz(jets.size());
+  for (size_t i = 0; i < jets.size(); i++) {pz[i] = jets[i].pz();}
+  return objects_sorted_by_values(jets, pz);
+}
+
 
 FASTJET_END_NAMESPACE
 

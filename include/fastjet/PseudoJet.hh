@@ -238,6 +238,9 @@ std::vector<PseudoJet> sorted_by_rapidity(const std::vector<PseudoJet> & jets);
 /// return a vector of jets sorted into decreasing energy
 std::vector<PseudoJet> sorted_by_E(const std::vector<PseudoJet> & jets);
 
+/// return a vector of jets sorted into increasing pz
+std::vector<PseudoJet> sorted_by_pz(const std::vector<PseudoJet> & jets);
+
 //----------------------------------------------------------------------
 // some code to help sorting
 

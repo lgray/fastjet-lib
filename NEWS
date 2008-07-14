@@ -18,6 +18,11 @@ new jet algorithms
 - added SISConeSphericalPlugin [enabled by default] for SISCone in
   e+e- and other spherical environments.
 
+  *** NB ***: R in ee_genkt and SISConeSpherical have the same meaning
+              only for small R -- at large R they differ. For
+              SISConeSpherical R is the cone opening half-angle in
+              radians; for ee_genkt R^2 relates to 2(1-\cos\theta)
+
 - added D0RunIICone plugin [--enable-d0runiicone at configure time]
 
 - added NestedDefs plugin for daisy-chaining multiple jet definitions
