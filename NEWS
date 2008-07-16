@@ -14,14 +14,26 @@ new jet algorithms
 - added implementation of generalised kt algorithm for e+e-
   (ee_genkt_algorithm); this notably also provides access to an e+e-
   form of the anti-kt algorithm, which gives conical jets
+  
+                          !!! WARNING !!!
+  There are currently IR safety issues with the ee_antikt_algorithm
+  with R>sqrt(2). You should use it with care.  We hope to be able to
+  fix this as soon as possible.
+  
 
 - added SISConeSphericalPlugin [enabled by default] for SISCone in
   e+e- and other spherical environments.
 
-  *** NB ***: R in ee_genkt and SISConeSpherical have the same meaning
-              only for small R -- at large R they differ. For
-              SISConeSpherical R is the cone opening half-angle in
-              radians; for ee_genkt R^2 relates to 2(1-\cos\theta)
+                          !!! WARNING !!!
+  * Split-merge currently uses protojet energy as the ordering
+    variable. This suffers from IR unsafety for (decayed) back-to-back
+    jets with identical energies. We hope to find a better-behaved
+    split-merge ordering variable in a near future.
+  * R in ee_genkt and SISConeSpherical have the same meaning only for
+    small R -- at large R they differ. For SISConeSpherical R is the
+    cone opening half-angle in radians; for ee_genkt R^2 relates to
+    2(1-\cos\theta)
+
 
 - added D0RunIICone plugin [--enable-d0runiicone at configure time]
 
