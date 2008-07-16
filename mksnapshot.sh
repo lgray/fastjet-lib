@@ -17,11 +17,17 @@ extralabel=`date +"%Y%m%d"`-rev$rev
 echo $extralabel
 sed -i 's/\(AC_INIT.*\)])/\1-'$extralabel'])/' configure.ac
 
+# now make sure the windows config file is consistent
+pushd src
+./genconfig.sh ../include/fastjet/config_win.h
+popd
+
 # now make and test the distribution 
 make -j2 distcheck 
 
 # and put the configure file back to where it was
 svn revert configure.ac
+svn revert include/fastjet/config_win.h
 
 # and tell the user you have a result
 echo "**************************************************"

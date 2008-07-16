@@ -1,3 +1,9 @@
+2008-07-16  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* mksnapshot.sh: 
+          included fix for ensuring the windows include file is correct in
+	  the snapshot.
+	
 2008-07-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc: 
