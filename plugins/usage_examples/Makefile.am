@@ -39,7 +39,7 @@ many_algs_example_CXXFLAGS += -I${srcdir}/../PxCone
 many_algs_example_LDADD += ../PxCone/libPxConePlugin.la ${FLIBS}
 endif
 
-# add CDFCones-related parts
+# add D0RunIICones-related parts
 if BUILD_PLUGIN_D0RUNIICONE
 many_algs_example_CXXFLAGS += -I${srcdir}/../D0RunIICone
 many_algs_example_LDADD += ../D0RunIICone/libD0RunIIConePlugin.la
