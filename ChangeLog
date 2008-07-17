@@ -1,3 +1,11 @@
+2008-07-17  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/Makefile.am (nodist_fastjetinclude_HEADERS): 
+	  config_auto.h removed from the package distribution as it 
+	  may conflict with the configure-generated one when building
+	  in a separate directory.
+	
+
 2008-07-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* mksnapshot.sh: 
