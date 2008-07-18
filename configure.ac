@@ -30,8 +30,7 @@ AC_PREFIX_DEFAULT(/usr/local)
 
 dnl set default compilation and link flags
 dnl note that those can be changed by the user at configure-time
-dnl so we use CXXFLAGS and not AM_CXXFLAGS
-AM_CXXFLAGS=" -I../include "
+dnl AM_CXXFLAGS=" -I../include "
 CGAL_CPPFLAGS=""
 CGAL_LIBS=""
 

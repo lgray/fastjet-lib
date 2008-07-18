@@ -1,3 +1,9 @@
+2008-07-18  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* configure.ac: 
+	  removed the unnecessary -I../included flag from AM_CXXFLAGS
+	
+
 2008-07-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* example/CmdLine.cc: 
