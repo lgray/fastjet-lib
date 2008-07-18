@@ -1,3 +1,12 @@
+2008-07-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* example/CmdLine.cc: 
+	* example/CmdLine.hh: 
+
+	  put in a missing "const" & included cstdlib in the .cc (for
+	  access to exit)
+	
+	
 2008-07-17  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/Makefile.am (nodist_fastjetinclude_HEADERS): 
