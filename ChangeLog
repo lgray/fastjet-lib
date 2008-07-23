@@ -1,5 +1,10 @@
 2008-07-23  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* example/Makefile.am,
+	  plugins/usage_examples/Makefile.am: 
+	  adapted the compilation flags to use the new version of the
+	  plugin (requires inclusion of the SISCone headers)
+
 	* plugins/SISCone/fastjet/SISConeBasePlugin.hh,
 	  plugins/SISCone/fastjet/SISConePlugin.hh,
 	  plugins/SISCone/fastjet/SISConeSphericalPlugin.hh,

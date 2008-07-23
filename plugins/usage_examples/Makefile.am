@@ -10,10 +10,10 @@ many_algs_example_LDADD = ../../src/libfastjet.la ${CGAL_LIBS}
 if BUILD_PLUGIN_SISCONE
 noinst_PROGRAMS += siscone_example
 siscone_example_SOURCES = run_jet_finder.cc siscone_example.cc
-siscone_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include  -I../../include -I${srcdir}/../SISCone
+siscone_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../../include  -I../../include -I${srcdir}/../SISCone -I${srcdir}/../SISCone/siscone
 siscone_example_LDADD = ../../src/libfastjet.la ${CGAL_LIBS} ../SISCone/libSISConePlugin.la ../SISCone/siscone/siscone/libsiscone.la  ../SISCone/siscone/siscone/spherical/libsiscone_spherical.la 
 
-many_algs_example_CXXFLAGS += -I${srcdir}/../SISCone
+many_algs_example_CXXFLAGS += -I${srcdir}/../SISCone -I${srcdir}/../SISCone/siscone
 many_algs_example_LDADD += ../SISCone/libSISConePlugin.la ../SISCone/siscone/siscone/libsiscone.la ../SISCone/siscone/siscone/spherical/libsiscone_spherical.la
 endif
 
