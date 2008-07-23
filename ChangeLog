@@ -1,5 +1,9 @@
 2008-07-23  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* NEWS: 
+	  updated the warnings about IR safety of the spherical
+	  implementation of SISCone
+
 	* example/Makefile.am,
 	  plugins/usage_examples/Makefile.am: 
 	  adapted the compilation flags to use the new version of the

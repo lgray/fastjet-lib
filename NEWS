@@ -25,14 +25,12 @@ new jet algorithms
   e+e- and other spherical environments.
 
                           !!! WARNING !!!
-  * Split-merge currently uses protojet energy as the ordering
-    variable. This suffers from IR unsafety for (decayed) back-to-back
-    jets with identical energies. We hope to find a better-behaved
-    split-merge ordering variable in a near future.
   * R in ee_genkt and SISConeSpherical have the same meaning only for
     small R -- at large R they differ. For SISConeSpherical R is the
     cone opening half-angle in radians; for ee_genkt R^2 relates to
     2(1-\cos\theta)
+  * Full final tests regarding infrared-and-collinear safety are 
+    still in progress. 
 
 
 - added D0RunIICone plugin [--enable-d0runiicone at configure time]
