@@ -1,3 +1,14 @@
+2008-07-23  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh,
+	  plugins/SISCone/fastjet/SISConePlugin.hh,
+	  plugins/SISCone/fastjet/SISConeSphericalPlugin.hh,
+	  plugins/SISCone/SISConePlugin.cc,
+	  plugins/SISCone/SISConeSphericalPlugin.cc: 
+	  Added a template plugin and made the two current plugins 
+	  derive from it.
+	
+
 2008-07-18  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* configure.ac: 

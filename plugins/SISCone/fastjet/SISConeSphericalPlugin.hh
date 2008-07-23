@@ -1,23 +1,22 @@
 #ifndef __SISCONESPHERICALPLUGIN_HH__
 #define __SISCONESPHERICALPLUGIN_HH__
 
-#include "fastjet/JetDefinition.hh"
-#include "fastjet/ClusterSequence.hh" // needed for the extras we define
-#include <vector>
-#include <memory>
-#include <cmath>
+#include "SISConeBasePlugin.hh"
 
-// put a forward declaration to the Csiscone class to avoid having to
-// include the siscone headers here
-namespace siscone_spherical {
-  class CSphsiscone;
-}
+#include "siscone/spherical/siscone.h"
+#include "siscone/spherical/momentum.h"
+
+//// put a forward declaration to the Csiscone class to avoid having to
+//// include the siscone headers here
+//namespace siscone_spherical {
+//  class CSphsiscone;
+//}
 
 // questionable whether this should be in fastjet namespace or not...
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-// another forward declaration to reduce includes
-class PseudoJet;
+/// shortcut for converting siscone CSphmomentum into PseudoJet
+template<> PseudoJet::PseudoJet(const siscone_spherical::CSphmomentum & four_vector);
 
 //----------------------------------------------------------------------
 //
@@ -94,19 +93,13 @@ class PseudoJet;
 /// For documentation about the implementation, see the
 /// siscone/doc/html/index.html file.
 //
-class SISConeSphericalPlugin : public JetDefinition::Plugin {
+class SISConeSphericalPlugin : public SISConeBasePlugin<siscone_spherical::CSphsiscone, siscone_spherical::CSphmomentum, siscone_spherical::CSphjet> {
 public:
 
   /// enum for the different split-merge scale choices;
   /// Note that order _must_ be the same as in siscone
-  enum SplitMergeScale {SM_pt,     ///< transverse momentum (E-scheme), IR unsafe
-                        SM_Et,     ///< transverse energy (E-scheme), not long. boost invariant
-                                   ///< original run-II choice [may not be implemented]
-                        SM_mt,     ///< transverse mass (E-scheme), IR safe except
-                                   ///< in decays of two identical narrow heavy particles
-                        SM_pttilde, ///< pt-scheme pt = \sum_{i in jet} |p_{ti}|, should
-                                    ///< be IR safe in all cases
-                        SM_E       ///< energy
+  enum SplitMergeScale {SM_E,        ///< Energy (IR unsafe with momentum conservation)
+			SM_Etilde    ///< sum_{i \in jet} E_i [1+sin^2(theta_iJ)]
   };
 
 
@@ -118,35 +111,18 @@ public:
 			  int    n_pass_max = 0,
 			  double protojet_Emin = 0.0, 
 			  bool   caching = false,
-			  SplitMergeScale  split_merge_scale = SM_E,
-			  double split_merge_stopping_scale = 0.0) :
-    _cone_radius           (cone_radius       ),
-    _overlap_threshold     (overlap_threshold ),
-    _n_pass_max            (n_pass_max ), 
-    _protojet_Emin         (protojet_Emin),
-    _caching               (caching),             
-    _split_merge_scale     (split_merge_scale),
-    _split_merge_stopping_scale (split_merge_stopping_scale),
-    _ghost_sep_scale       (0.0),
-    _use_E_weighted_splitting  (false) {}
-
-
-
-  /// copy constructor
-  SISConeSphericalPlugin (const SISConeSphericalPlugin & plugin) {
-    *this = plugin;
+			  SplitMergeScale  split_merge_scale = SM_Etilde,
+			  double split_merge_stopping_scale = 0.0){
+    _cone_radius           =cone_radius;
+    _overlap_threshold     =overlap_threshold;
+    _n_pass_max            =n_pass_max;
+    _protojet_Emin         =protojet_Emin;
+    _caching               =caching;        
+    _split_merge_scale     =split_merge_scale;
+    _split_merge_stopping_scale = split_merge_stopping_scale;
+    _ghost_sep_scale       = 0.0;
+    _use_E_weighted_splitting = false;
   }
-
-  /// the cone radius
-  double cone_radius        () const {return _cone_radius        ;}
-
-  /// Fraction of overlap energy in a jet above which jets are merged
-  /// and below which jets are split.
-  double overlap_threshold  () const {return _overlap_threshold  ;}
-
-  /// the maximum number of passes of stable-cone searching (<=0 is same
-  /// as infinity).
-  int n_pass_max  () const {return _n_pass_max  ;}
 
   /// minimum energy for a protojet to be considered in the split-merge step
   /// of the algorithm
@@ -164,101 +140,34 @@ public:
   /// sets scale used in split-merge
   void set_split_merge_scale(SplitMergeScale sms) {_split_merge_scale = sms;}
 
-  /// set the "split_merge_stopping_scale": if the scale variable for
-  /// all protojets is below this, then stop the split-merge procedure
-  /// and keep only those jets found so far. This is useful in
-  /// determination of areas of hard jets because it can be used to
-  /// avoid running the split-merging on the pure ghost-part of the
-  /// event.
-  void set_split_merge_stopping_scale(double scale) {
-    _split_merge_stopping_scale = scale;}
-
-  /// return the value of the split_merge_stopping_scale (see
-  /// set_split_merge_stopping_scale(...) for description)
-  double split_merge_stopping_scale() {return _split_merge_stopping_scale;}
-
   /// indicate if the splittings are done using the anti-kt distance
   bool split_merge_use_E_weighted_splitting() const {return _use_E_weighted_splitting;}
   void set_split_merge_use_E_weighted_splitting(bool val) {
     _use_E_weighted_splitting = val;}
 
-  /// indicates whether caching is turned on or not.
-  bool caching() const {return _caching ;}
-
   // the things that are required by base class
   virtual std::string description () const;
-  virtual void run_clustering(ClusterSequence &) const;
-  /// the plugin mechanism's standard way of accessing the jet radius
-  virtual double R() const {return cone_radius();}
 
-  /// return true since there is specific support for the measurement
-  /// of passive areas, in the sense that areas determined from all
-  /// particles below the ghost separation scale will be a passive
-  /// area. 
+  /// overload the default as we don't provide support 
+  /// for passive areas.
   virtual bool supports_ghosted_passive_areas() const {return true;}
   
-  /// set the ghost separation scale for passive area determinations
-  /// _just_ in the next run (strictly speaking that makes the routine
-  /// a non const, so related internal info must be stored as a mutable)
-  virtual void set_ghost_separation_scale(double scale) const {
-    _ghost_sep_scale = scale;
-  }
+protected:
+  virtual void set_clustering_parameters(ClusterSequence & clust_seq, siscone_spherical::CSphsiscone *siscone) const;
+  virtual void run_siscone_clustering(ClusterSequence & clust_seq, siscone_spherical::CSphsiscone *siscone,
+				      std::vector<siscone_spherical::CSphmomentum> siscone_momenta) const;
+  virtual void rerun_siscone_clustering(ClusterSequence & clust_seq, siscone_spherical::CSphsiscone *siscone) const;
 
-  virtual double ghost_separation_scale() const {return _ghost_sep_scale;}
+  virtual void reset_stored_plugin() const;
 
 private:
-  double _cone_radius, _overlap_threshold;
-  int    _n_pass_max;
   double _protojet_Emin;
-  bool   _caching;//, _split_merge_on_transverse_mass;
   SplitMergeScale _split_merge_scale;
-  double _split_merge_stopping_scale;
-
-  mutable double _ghost_sep_scale;
   bool _use_E_weighted_splitting;
-
-  // variables for caching the results and the input
-  static std::auto_ptr<SISConeSphericalPlugin        > stored_plugin;
-  static std::auto_ptr<std::vector<PseudoJet>        > stored_particles;
-  static std::auto_ptr<siscone_spherical::CSphsiscone> stored_siscone;
-
 };
 
-
-
-//======================================================================
-/// Class that provides extra information about a SISCone clustering
-class SISConeSphericalExtras : public ClusterSequence::Extras {
-public:
-  /// returns a reference to the vector of stable cones (aka protocones)
-  const std::vector<PseudoJet> & stable_cones() const {return _protocones;}
-
-  /// an old name for getting the vector of stable cones (aka protocones)
-  const std::vector<PseudoJet> & protocones() const {return _protocones;}
-
-
-  /// access to the siscone jet def plugin (more convenient than
-  /// getting it from the original jet definition, because here it's
-  /// directly of the right type (rather than the base type)
-  const SISConeSphericalPlugin * jet_def_plugin() const {return _jet_def_plugin;}
-
-  /// return a brief summary of the contents of the extras object
-  /// (specifically, the number of protocones.
-  std::string description() const;
-
-  /// return the smallest difference in squared distance encountered
-  /// during splitting between a particle and two overlapping
-  /// protojets.
-  inline double most_ambiguous_split() const {return _most_ambiguous_split;}
-
-private:
-  std::vector<PseudoJet> _protocones;
-  const SISConeSphericalPlugin * _jet_def_plugin;
-  double                _most_ambiguous_split;
-  // let us be written to by SISConeSphericalPlugin
-  friend class SISConeSphericalPlugin;
-};
-
+/// a shortname for the associated extras
+typedef SISConeBaseExtras<siscone_spherical::CSphsiscone, siscone_spherical::CSphmomentum, siscone_spherical::CSphjet> SISConeSphericalExtras;
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
 
