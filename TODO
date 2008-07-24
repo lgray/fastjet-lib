@@ -1,6 +1,8 @@
 -------------
 For 2.4
 -------------
+- add JetDefinition constructor without R
+- sort out e+e- R across different algorithms
 - enable dynamic libraries by default?
 - add "version()" info to doc            [done: MC & GS: check you're happy!]
 - document error meaningless on AAEG.    [done]

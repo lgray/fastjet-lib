@@ -16,9 +16,15 @@ new jet algorithms
   form of the anti-kt algorithm, which gives conical jets
   
                           !!! WARNING !!!
-  There are currently IR safety issues with the ee_antikt_algorithm
-  with R>sqrt(2). You should use it with care.  We hope to be able to
-  fix this as soon as possible.
+
+  The ee_antikt_algorithm has known IR safety issues for R>sqrt(2) 
+  (i.e. opening angle > 90 degrees) for events corresponding to
+  threshold production of two identical narrow-width particles
+  (e.g. ficititious e+e- -> WW with both W's at rest and with
+  identical masses), a consequence of degeneracies between the
+  clustering distances from the decay-products from the two W's. 
+
+  We recommend that for such events, you use only R < sqrt(2).
   
 
 - added SISConeSphericalPlugin [enabled by default] for SISCone in
