@@ -280,9 +280,10 @@ PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
     sub_jet = jet - rho*area4vect;
   } else { sub_jet = PseudoJet(0.0,0.0,0.0,0.0); }
   
-  // make sure the subtracted jet has the same index 
+  // make sure the subtracted jet has the same index (cluster and user)
   // (i.e. "looks like") the original jet
   sub_jet.set_cluster_hist_index(jet.cluster_hist_index());
+  sub_jet.set_user_index(jet.user_index());
   
   return sub_jet;
 }
