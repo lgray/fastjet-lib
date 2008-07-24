@@ -17,14 +17,17 @@ new jet algorithms
   
                           !!! WARNING !!!
 
-  The ee_antikt_algorithm has known IR safety issues for R>sqrt(2) 
-  (i.e. opening angle > 90 degrees) for events corresponding to
-  threshold production of two identical narrow-width particles
-  (e.g. ficititious e+e- -> WW with both W's at rest and with
-  identical masses), a consequence of degeneracies between the
-  clustering distances from the decay-products from the two W's. 
+  The ee_antikt_algorithm is known to be IR unsafe at large values of
+  R for events with 2 (or more) identical massive particles at rest
+  that then decay. This is a consequence of a degeneracy that such
+  configurations introduce in the clustering sequence.
 
-  We recommend that for such events, you use only R < sqrt(2).
+  In most real life situations any resulting IR divergence will be
+  regularised (above Lambda_QCD) by the width and finite 3-momenta of
+  the massive particles. Note that in about 10^6 test events, the
+  issue has only been observed for R > 1.1.
+
+  [NUMBERS TO BE UPDATED; THESE NOTES TO BE MOVED TO THE MANUAL]
   
 
 - added SISConeSphericalPlugin [enabled by default] for SISCone in
