@@ -17,7 +17,7 @@ new jet algorithms
   
                           !!! WARNING !!!
 
-  The ee_antikt_algorithm is known to be IR unsafe at large values of
+  The ee_antikt_algorithm is known to be IR unsafe at larger values of
   R for events with 2 (or more) identical massive particles at rest
   that then decay. This is a consequence of a degeneracy that such
   configurations introduce in the clustering sequence.
