@@ -1,3 +1,10 @@
+2008-07-24  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * src/ClusterSequenceAreaBase.cc
+          Added copy of user_index over to subtracted jet
+          in subtracted_jet() [previously fogotten]
+
+
 2008-07-23  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* NEWS: 
