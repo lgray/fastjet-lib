@@ -24,7 +24,10 @@ High priority
 - sort out issue in tiled strategies for small R (large memory use)
 - finish testing e+e- kt, and sort out interface
 - implement jade class? [find out about license for CP software]
+- get CMS and ATLAS cones as plugins
+- sort out the constructors for ranges of algorithms
 - DIS?
+- auto FAQ?
 
 ---------------
 Medium priority
@@ -77,5 +80,3 @@ Done
 2.4-devel
 - finish implementing gen-kt
 - first version of kt
-
-
