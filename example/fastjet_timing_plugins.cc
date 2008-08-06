@@ -436,6 +436,11 @@ int main (int argc, char ** argv) {
 #endif // ENABLE_PLUGIN_SISCONE
   } // irepeat
   } // iev
+
+  // if we've instantiated a plugin, delete it
+  if (jet_def.strategy()==fj::plugin_strategy){
+    delete jet_def.plugin();
+  }
 }
 
 

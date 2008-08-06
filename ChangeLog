@@ -1,3 +1,9 @@
+2008-08-06  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* example/fastjet_timing_plugins.cc (main): 
+	  when appropriate, delete the plugin at the end of the execution.
+	
+
 2008-07-24  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequenceAreaBase.cc
