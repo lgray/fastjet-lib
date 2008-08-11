@@ -16,6 +16,8 @@ For 2.4
    f. add a note at the end of ./configure
   this has to be done for all the cone algs + internally in SISCone
 
+- add ghosts over asymmetric range of rapidity 
+  [for Roman Kogler roman.kogler@desy.de]
 
 -------------
 High priority
