@@ -89,6 +89,7 @@
 ///
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/GhostedAreaSpec.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -305,24 +306,31 @@ int main (int argc, char ** argv) {
   // in eta,phi so as to allow one to reconstruct the area that is associated
   // with each jet.
   if (add_dense_coverage) {
-    srand(2);
-    int nphi = 60;
-    int neta = 100;
-    double kt = 1e-1;
-    for (int iphi = 0; iphi<nphi; iphi++) {
-      for (int ieta = -neta; ieta<neta+1; ieta++) {
-	double phi = (iphi+0.5) * (fj::twopi/nphi) + rand()*0.001/RAND_MAX;
-	double eta = ieta * (10.0/neta)  + rand()*0.001/RAND_MAX;
-	kt = 1e-20*(1+rand()*0.1/RAND_MAX);
-	double pminus = kt*exp(-eta);
-	double pplus  = kt*exp(+eta);
-	double px = kt*sin(phi);
-	double py = kt*cos(phi);
-	//cout << kt<<" "<<eta<<" "<<phi<<"\n";
-	fj::PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
-	jets.push_back(mom);
-      }
-    }
+    fj::GhostedAreaSpec ghosted_area_spec(5.0);
+    //fj::GhostedAreaSpec ghosted_area_spec(-2.0,4.0); // asymmetric range
+    // for plots, reduce the scatter default of 1, to avoid "holes"
+    // in the subsequent calorimeter view
+    ghosted_area_spec.set_grid_scatter(0.5); 
+    ghosted_area_spec.add_ghosts(jets);
+    //----- old code ------------------
+    // srand(2);
+    // int nphi = 60;
+    // int neta = 100;
+    // double kt = 1e-1;
+    // for (int iphi = 0; iphi<nphi; iphi++) {
+    //   for (int ieta = -neta; ieta<neta+1; ieta++) {
+    // 	double phi = (iphi+0.5) * (fj::twopi/nphi) + rand()*0.001/RAND_MAX;
+    // 	double eta = ieta * (10.0/neta)  + rand()*0.001/RAND_MAX;
+    // 	kt = 1e-20*(1+rand()*0.1/RAND_MAX);
+    // 	double pminus = kt*exp(-eta);
+    // 	double pplus  = kt*exp(+eta);
+    // 	double px = kt*sin(phi);
+    // 	double py = kt*cos(phi);
+    // 	//cout << kt<<" "<<eta<<" "<<phi<<"\n";
+    // 	fj::PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
+    // 	jets.push_back(mom);
+    //   }
+    // }
   }
   
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {

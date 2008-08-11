@@ -65,7 +65,8 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
      
       // include random offsets for all quantities
       double phi = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
-      double rap = irap * _drap + _drap*(_our_rand()-0.5)*_grid_scatter;
+      double rap = irap * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
+	                                                 + _ghost_rap_offset ;
       double kt = _mean_ghost_kt*(1+(_our_rand()-0.5)*_kt_scatter);
 
       double pminus = kt*exp(-rap);

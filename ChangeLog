@@ -1,3 +1,19 @@
+2008-08-11  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/GhostedAreaSpec.hh (class GhostedAreaSpec): 
+	* src/GhostedAreaSpec.cc (GhostedAreaSpec::add_ghosts): 
+
+	  added constructor and implementation for asymmetric ghost range
+	  (different min & max rapidities), following request by Roman
+	  Kogler <roman.kogler@desy.de> (H1 is asym in rap).
+
+	* example/fastjet_timing_plugins.cc: 	
+
+	  dense coverage switched over to using GhostedAreaSpec (will
+	  change root pictures relative to earlier), used also for testing
+	  the new asymmetric range of ghosts.
+
+	
 2008-08-06  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* example/fastjet_timing_plugins.cc (main): 

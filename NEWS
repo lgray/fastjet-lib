@@ -63,7 +63,10 @@ new jet algorithms
 new functionality
 -----------------
 - added a full set of subjet functions (in analogy with normal excl
-  jets)
+  jets on the whole cluster sequence)
+
+- introduced constructor for GhostedAreaSpec with asymmetric rapidity
+  ranges.
 
 interface modifications
 -----------------------

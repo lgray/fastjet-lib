@@ -59,6 +59,7 @@ class GhostedAreaSpec {
 public:
   /// default constructor
   GhostedAreaSpec(): _ghost_maxrap (gas::def_ghost_maxrap), 
+		     _ghost_rap_offset(0.0),
                     _repeat       (gas::def_repeat), 
                     _ghost_area   (gas::def_ghost_area), 
                     _grid_scatter (gas::def_grid_scatter), 
@@ -75,6 +76,25 @@ public:
                           double mean_ghost_kt = gas::def_mean_ghost_kt
                           ): 
     _ghost_maxrap(ghost_maxrap), 
+    _ghost_rap_offset(0.0),
+    _repeat(repeat), 
+    _ghost_area(ghost_area), 
+    _grid_scatter(grid_scatter),  
+    _kt_scatter(kt_scatter), 
+    _mean_ghost_kt(mean_ghost_kt),
+    _actual_ghost_area(-1.0) {_initialize();};
+
+  /// explicit constructor
+  explicit GhostedAreaSpec(double ghost_minrap, 
+			   double ghost_maxrap, 
+                           int    repeat        = gas::def_repeat,
+                           double ghost_area    = gas::def_ghost_area,   
+                           double grid_scatter  = gas::def_grid_scatter, 
+                           double kt_scatter    = gas::def_kt_scatter,   
+                           double mean_ghost_kt = gas::def_mean_ghost_kt
+                          ): 
+    _ghost_maxrap    (0.5*(ghost_maxrap - ghost_minrap)), 
+    _ghost_rap_offset(0.5*(ghost_maxrap + ghost_minrap)),
     _repeat(repeat), 
     _ghost_area(ghost_area), 
     _grid_scatter(grid_scatter),  
@@ -147,6 +167,7 @@ private:
   
   // quantities that determine nature and distribution of ghosts
   double _ghost_maxrap;
+  double _ghost_rap_offset;
   int    _repeat      ;
   double _ghost_area   ;  
   double _grid_scatter;
