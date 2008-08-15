@@ -5,9 +5,11 @@ this file will at some point contain the checklist to be carried out
 before each release. If you make a release, update the X.Y.Z numbers
 to indicate you carried out the operation.
 
+
 X.Y.Z  make sure version number in configure.ac is correct
 
 X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+X.Y.Z  update doxygen version number
 
 X.Y.Z  ensure NEWS is up to date
 
@@ -18,15 +20,43 @@ X.Y.Z  make check [how do we deal with various config options?]
 X.Y.Z  make distcheck
 
 X.Y.Z  copy distribution to web
-X.Y.Z  update doxygen version number, run doxygen, copy to web
 X.Y.Z  compile manual, give it current version number
-X.Y.Z. copy manual to web
+X.Y.Z  copy manual to web
+X.Y.Z  run doxygen, copy to web
 X.Y.Z  update main web page & menu
 
 X.Y.Z  tag
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
+
+
+
+----------------------------------------------------------------------
+checklist for 2.3.4
+-------------------
+2.3.4  make sure version number in configure.ac is correct
+
+2.3.4  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+
+2.3.4  ensure NEWS is up to date
+
+2.3.4  make sure siscone points to a tag, not trunk
+
+2.3.4  make check [how do we deal with various config options?]
+
+2.3.4  make distcheck
+
+2.3.4  copy distribution to web
+2.3.4  update doxygen version number, run doxygen, copy to web
+2.3.4  compile manual, give it current version number [* just linked *]
+2.3.4  copy manual to web
+2.3.4  update main web page & menu
+
+2.3.4  tag
+
+[2.3.4-not-done  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       ]
 
 
 

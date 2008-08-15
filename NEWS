@@ -76,6 +76,16 @@ interface modifications
 
 
 =======================================================================
+Summary of changes from v2.3.3 -> v2.3.4 (bug fix release): 15 Aug 2008
+==========================================================
+
+- fixed infinite-loop bug in JetClu plugin on certain rare events
+
+- fixed compatibility issues of certain example programs with g++-4.3
+
+- incorporated SISCone 1.3.3 with similar g++-4.3 fixes
+
+=======================================================================
 Summary of changes from v2.3.2 -> v2.3.3 (bug fix release): 28 Apr 2008
 ==========================================================
 

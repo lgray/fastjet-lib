@@ -1,3 +1,8 @@
+-----------------------------------------------
+released 2.3.4 on 2008-08-15
+it contains jetclu & "exit" bug fixes from below + siscone 1.3.3
+-----------------------------------------------	
+
 2008-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/CDFCones/CDFJetCluPlugin.cc: 
