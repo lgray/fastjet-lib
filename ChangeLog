@@ -1,3 +1,15 @@
+2008-08-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/CDFCones/CDFJetCluPlugin.cc: 
+	  switched over to the use of PhysicsTower::fjindex for
+	  bookkeeping a jet's contents (rather than a map, which had led
+	  to a bug report by James Monk).
+	
+	* plugins/CDFCones/CDFcode/PhysicsTower.hh (class PhysicsTower):
+	  add fjindex member variable to this class to allow bookkeeping
+	  needed by the JetClu plugin.
+
+
 2008-08-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/GhostedAreaSpec.hh (class GhostedAreaSpec): 

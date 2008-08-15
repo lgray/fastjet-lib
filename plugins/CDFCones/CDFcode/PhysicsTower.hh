@@ -11,12 +11,12 @@ class PhysicsTower
   LorentzVector fourVector;
   CalTower calTower;
 
-  PhysicsTower(): fourVector(LorentzVector()), calTower(CalTower()) {}
-  PhysicsTower(LorentzVector v, CalTower c): fourVector(v), calTower(c) {}
-  PhysicsTower(const PhysicsTower& p): fourVector(p.fourVector), calTower(p.calTower) {}
+  PhysicsTower(): fourVector(LorentzVector()), calTower(CalTower()), fjindex(-1) {}
+  PhysicsTower(LorentzVector v, CalTower c): fourVector(v), calTower(c), fjindex(-1) {}
+  PhysicsTower(const PhysicsTower& p): fourVector(p.fourVector), calTower(p.calTower), fjindex(p.fjindex) {}
   PhysicsTower(CalTower c):
-    fourVector(LorentzVector(c.Et*cos(c.phi),c.Et*sin(c.phi),c.Et*sinh(c.eta),c.Et*cosh(c.eta))), calTower(c) {}
-  PhysicsTower(LorentzVector v): fourVector(v), calTower(CalTower(v.Et(),v.eta(),v.phi())) {}
+    fourVector(LorentzVector(c.Et*cos(c.phi),c.Et*sin(c.phi),c.Et*sinh(c.eta),c.Et*cosh(c.eta))), calTower(c), fjindex(-1) {}
+  PhysicsTower(LorentzVector v): fourVector(v), calTower(CalTower(v.Et(),v.eta(),v.phi())), fjindex(-1) {}
   double Et()   const {return calTower.Et;}
   double eta()  const {return calTower.eta;}
   double phi()  const {return calTower.phi;}
@@ -26,6 +26,8 @@ class PhysicsTower
   {
     return fourVector.isEqual(p.fourVector) && calTower.isEqual(p.calTower);
   }
+  /// addition by GPS (2008-08-15) for tracking within fastjet
+  int fjindex;
 };
 
 #endif

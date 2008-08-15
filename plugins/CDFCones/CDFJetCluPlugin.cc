@@ -31,6 +31,7 @@
 #include "fastjet/CDFJetCluPlugin.hh"
 #include "fastjet/ClusterSequence.hh"
 #include <sstream>
+#include <cassert>
 
 // CDF stuff
 #include "JetCluAlgorithm.hh"
@@ -63,18 +64,16 @@ void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
   towers.reserve(clust_seq.jets().size());
 
   // create a map to identify jets (actually just the input particles)...
-  map<double,int> jetmap;
+  //map<double,int> jetmap;
 
   for (unsigned i = 0; i < clust_seq.jets().size(); i++) {
     PseudoJet particle(clust_seq.jets()[i]);
-    _insert_unique(particle, jetmap);
+    //_insert_unique(particle, jetmap);
     LorentzVector fourvect(particle.px(), particle.py(),
 			   particle.pz(), particle.E());
     PhysicsTower tower(fourvect);
-    // cannot use MidPoint trick of misusing one of the indices for
-    // tracking, since the JetClu implementation _does_ seem to make
-    // use of these indices 
-    //tower.calTower.iEta = i;
+    // add tracking information for later
+    tower.fjindex = i;
     towers.push_back(tower);
   }
 
@@ -102,14 +101,20 @@ void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   for(int iCDFjets = jets.size()-1; iCDFjets >= 0; iCDFjets--) {
     const vector<PhysicsTower> & tower_list = jets[iCDFjets].towerList;
-    int jet_k = jetmap[tower_list[0].fourVector.E];
+    //int jet_k = jetmap[tower_list[0].fourVector.E];
+    int jet_k = tower_list[0].fjindex;
   
     int ntow = int(tower_list.size());
     for (int itow = 1; itow < ntow; itow++) {
       int jet_i = jet_k;
       // retrieve our misappropriated index for the jet
-      //int jet_j = tower_list[itow].calTower.iEta;
-      int jet_j = jetmap[tower_list[itow].fourVector.E];
+      int jet_j;
+      jet_j = tower_list[itow].fjindex;
+      //int alt_jet_j = jetmap[tower_list[itow].fourVector.E];
+      //assert(jet_j == alt_jet_j);
+      //cout << jet_j << endl;
+      // safety check
+      assert (jet_j >= 0 && jet_j < int(towers.size()));
       // do a fake recombination step with dij=0
       double dij = 0.0;
       // JetClu does E-scheme recombination so we can stick with the
@@ -147,19 +152,21 @@ void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
 }
 
 
-void CDFJetCluPlugin::_insert_unique(PseudoJet & jet, 
-                                     map<double,int> & jetmap) const {
-  while (jetmap.find(jet.E()) != jetmap.end()) {
-    // deal with cases where something else has the same energy, and
-    // also with situation where that energy is zero.
-    if (jet.E() != 0.0) {
-      jet *= 1.0+1e-12;
-    } else {
-      jet += PseudoJet(0.0,0.0,0.0,1e-300);
-    }
-  }
-  jetmap[jet.E()] = jet.cluster_hist_index();
-}
+//// following code should now be obsolete since addition of 
+//// index to the physics tower in the CDF code
+// void CDFJetCluPlugin::_insert_unique(PseudoJet & jet, 
+//                                      map<double,int> & jetmap) const {
+//   while (jetmap.find(jet.E()) != jetmap.end()) {
+//     // deal with cases where something else has the same energy, and
+//     // also with situation where that energy is zero.
+//     if (jet.E() != 0.0) {
+//       jet *= 1.0+1e-12;
+//     } else {
+//       jet += PseudoJet(0.0,0.0,0.0,1e-300);
+//     }
+//   }
+//   jetmap[jet.E()] = jet.cluster_hist_index();
+// }
 
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
