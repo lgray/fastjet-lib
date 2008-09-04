@@ -12,6 +12,8 @@
 	  active areas with repeat > 1, will throw fastjet::Error(...);
 	  users should catch this if they want to continue running.
 
+	  tested on 1k events against unmodified jetclu plugin in 2.3.4
+
 -----------------------------------------------
 released 2.3.4 on 2008-08-15
 it contains jetclu & "exit" bug fixes from below + siscone 1.3.3
