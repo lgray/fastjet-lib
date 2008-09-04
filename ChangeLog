@@ -1,3 +1,17 @@
+2008-09-04  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* plugins/CDFCones/CDFJetCluPlugin.cc: 
+	  in transfer part of plugin, sorted the constituents of a jet (into
+ 	  ascending fjindex), to work around the problem that JetClu may
+	  return constiuents in different orders when soft ghost-particles
+	  are added.
+
+	  Note: JetClu seems to be IR unsafe (at the 10^{-4} level in toy
+	  events) even when the seed threshold is non-zero. The frequence
+	  is higher in real events and means that passive areas, and
+	  active areas with repeat > 1, will throw fastjet::Error(...);
+	  users should catch this if they want to continue running.
+
 -----------------------------------------------
 released 2.3.4 on 2008-08-15
 it contains jetclu & "exit" bug fixes from below + siscone 1.3.3
