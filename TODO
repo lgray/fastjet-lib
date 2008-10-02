@@ -1,7 +1,8 @@
 -------------
 For 2.4
 -------------
-- add JetDefinition constructor without R
+- add JetDefinition constructor without R [why????]
+- Sort out zero-particle case [avoid crash, check many places this enters]
 - sort out e+e- R across different algorithms
 - enable dynamic libraries by default?
 - add "version()" info to doc            [done: MC & GS: check you're happy!]
@@ -16,7 +17,7 @@ For 2.4
    f. add a note at the end of ./configure
   this has to be done for all the cone algs + internally in SISCone
 
-- add ghosts over asymmetric range of rapidity 
+- add ghosts over asymmetric range of rapidity  [done]
   [for Roman Kogler roman.kogler@desy.de]
 
 -------------
