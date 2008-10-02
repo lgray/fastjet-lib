@@ -3,6 +3,7 @@ For 2.4
 -------------
 - add JetDefinition constructor without R [why????]
 - Sort out zero-particle case [avoid crash, check many places this enters]
+  [+ add constructor without particles]; [Requests by Andy Buckley]
 - sort out e+e- R across different algorithms
 - enable dynamic libraries by default?
 - add "version()" info to doc            [done: MC & GS: check you're happy!]
