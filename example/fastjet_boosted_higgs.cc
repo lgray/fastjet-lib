@@ -1,7 +1,7 @@
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+// Copyright (c) 2005-2008, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -43,8 +43,8 @@
 // arXiv:0806.0848 in searching for boosted tops (without b-tag
 // assumptions).
 
-// Compile it with: make fastjet_higgs_decomp
-// run it with    : ./fastjet_higgs_decomp < data/HZ-event-Hmass115.dat
+// Compile it with: make fastjet_boosted_higgs
+// run it with    : ./fastjet_boosted_higgs < data/HZ-event-Hmass115.dat
 //
 //----------------------------------------------------------------------
 

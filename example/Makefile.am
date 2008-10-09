@@ -8,7 +8,7 @@ EXTRA_DIST = Makefile.alt ktjet_example.cc ktjet_timing.cc CmdLine.hh\
 
 noinst_PROGRAMS = fastjet_example fastjet_example_v1_interface\
 	fastjet_areas fastjet_subtraction\
-	fastjet_timing fastjet_timing_plugins fastjet_subjets fastjet_higgs_decomp
+	fastjet_timing fastjet_timing_plugins fastjet_subjets fastjet_boosted_higgs
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -36,9 +36,9 @@ fastjet_subjets_SOURCES = fastjet_subjets.cc
 fastjet_subjets_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
 fastjet_subjets_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
 
-fastjet_higgs_decomp_SOURCES = fastjet_higgs_decomp.cc
-fastjet_higgs_decomp_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
-fastjet_higgs_decomp_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
+fastjet_boosted_higgs_SOURCES = fastjet_boosted_higgs.cc
+fastjet_boosted_higgs_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
+fastjet_boosted_higgs_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
 
 fastjet_timing_SOURCES = fastjet_timing.cc CmdLine.cc
 fastjet_timing_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include

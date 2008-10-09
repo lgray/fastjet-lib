@@ -1,6 +1,6 @@
 2008-10-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* example/fastjet_higgs_decomp.cc:     *** ADDED ***
+	* example/fastjet_boosted_higgs.cc:     *** ADDED ***
 	* example/data/HZ-event-Hmass115.dat:  *** ADDED ***
 	* example/Makefile.am: 
 	* example/data/Makefile.am: 
