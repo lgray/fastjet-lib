@@ -38,10 +38,11 @@
 //  - following the decomposition of a jet into pieces
 //  - following information on a b-tag through the jet
 //
-// This kind of functionality was used in arXiv:0802.2470 for boosted
-// Higgs searches, and related functionality was used in
-// arXiv:0806.0848 in searching for boosted tops (without b-tag
-// assumptions).
+// This kind of functionality was used in arXiv:0802.2470
+// (Butterworth, Davison, Rubin & Salam) for boosted Higgs searches,
+// and related functionality was used in arXiv:0806.0848 (Kaplan,
+// Rehermann, Schwartz & Tweedie) in searching for boosted tops
+// (without b-tag assumptions).
 
 // Compile it with: make fastjet_boosted_higgs
 // run it with    : ./fastjet_boosted_higgs < data/HZ-event-Hmass115.dat
@@ -207,7 +208,7 @@ int main (int argc, char ** argv) {
     cout << " " << filtered_total << endl;
 
   } else {
-    cout << "Did not find suitable pair of subjets: " << endl;
+    cout << "Did not find suitable hard substructure in this event." << endl;
   }
 }
 
