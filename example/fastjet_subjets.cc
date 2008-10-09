@@ -30,14 +30,14 @@
 
 
 //----------------------------------------------------------------------
-// fastjet example program. 
+// fastjet example program to show how to access subjets;
+// 
+// See also fastjet_higgs_decomp.cc to see the use of subjets for
+// identifying boosted higgs (and other objects)
 //
-// Compile it with: make fastjet_example
-// run it with    : ./fastjet_example < data/single-event.dat
+// Compile it with: make fastjet_subjets
+// run it with    : ./fastjet_subjets < data/single-event.dat
 //
-// People who are familiar with the ktjet package are encouraged to
-// compare this file to the ktjet_example.cc program which does the
-// same thing in the ktjet framework.
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
@@ -101,7 +101,8 @@ int main (int argc, char ** argv) {
   double dcut_cam = pow(smallR/R,2);
 
   // print them out
-  cout << "Printing inclusive jets with pt > "<< ptmin<<" GeV\n";
+  cout << "Printing inclusive jets (R = "<<R<<") with pt > "<< ptmin<<" GeV\n";
+  cout << "and their subjets with smallR = " << smallR << "\n";
   cout << "---------------------------------------\n";
   print_jets_and_sub(cam_seq, inclusive_jets, dcut_cam);
   cout << endl;
@@ -161,13 +162,6 @@ void print_jets_and_sub (const fj::ClusterSequence & clust_seq,
       printf("    -sub-%02u ",j);
       print_jet(clust_seq, subjets[j]);
     }
-    //fj::ClusterSequence subseq(clust_seq.constituents(sorted_jets[i]),
-    //                          fj::JetDefinition(fj::cambridge_algorithm, 0.4));
-    //vector<fj::PseudoJet> subjets = sorted_by_pt(subseq.inclusive_jets());
-    //for (unsigned int j = 0; j < subjets.size(); j++) {
-    //  printf("    -sub-%02u ",j);
-    //  print_jet(subseq, subjets[j]);
-    //}
   }
 
 }

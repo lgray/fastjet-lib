@@ -8,7 +8,7 @@ EXTRA_DIST = Makefile.alt ktjet_example.cc ktjet_timing.cc CmdLine.hh\
 
 noinst_PROGRAMS = fastjet_example fastjet_example_v1_interface\
 	fastjet_areas fastjet_subtraction\
-	fastjet_timing fastjet_timing_plugins
+	fastjet_timing fastjet_timing_plugins fastjet_subjets
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -31,6 +31,10 @@ endif
 fastjet_subtraction_SOURCES = fastjet_subtraction.cc
 fastjet_subtraction_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
 fastjet_subtraction_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
+
+fastjet_subjets_SOURCES = fastjet_subjets.cc
+fastjet_subjets_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
+fastjet_subjets_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
 
 fastjet_timing_SOURCES = fastjet_timing.cc CmdLine.cc
 fastjet_timing_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
