@@ -66,7 +66,7 @@ public:
   /// return description of range
   virtual inline std::string description() const {
     std::ostringstream ostr;
-    ostr << "Range: within distance "<< _distance << " of given jet or point." ;
+    ostr << "CircularRange: within distance "<< _distance << " of given jet or point." ;
     return ostr.str(); }
   
   /// return bool according to whether (rap,phi) is in range
