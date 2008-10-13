@@ -54,6 +54,11 @@ public:
 		_rapjet = rap;
 		_phijet = phi;
 		_total_area = fastjet::pi*_distance*_distance;  }
+
+  /// initialise CircularRange with just the radius parameter
+  CircularRange(double distance) {
+                _distance = distance;
+		_total_area = fastjet::pi*_distance*_distance;  }
   
   /// destructor
   virtual ~CircularRange() {}
@@ -80,7 +85,7 @@ public:
      rapmax = _rapjet + _distance; }
 
 private:
-  double _distance,_rapjet,_phijet;
+  double _distance;
 
 };
 

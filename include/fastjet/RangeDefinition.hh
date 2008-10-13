@@ -73,6 +73,17 @@ public:
 		     _phimax = phimax;
 		     _total_area = (_rapmax - _rapmin)*(_phimax - _phimin); }
 
+  /// place the range on the jet position
+  inline void place(const PseudoJet & jet) {
+    _rapjet = jet.rap();
+    _phijet = jet.phi(); 
+  }
+
+  /// place the range on the rap-phi position
+  inline void place(const double & rap, const double & phi) {
+    _rapjet = rap;
+    _phijet = phi;
+  }
 
   /// return bool according to whether the jet is within the given range
   inline bool is_in_range(const PseudoJet & jet) const {
@@ -116,6 +127,8 @@ protected:
   /// npoints = 100.
   void _numerical_total_area(double rapmax, int npoints) ;
 
+  double _rapjet,_phijet; // jet position, for derived ranges placed on jets
+  
 private:
   double _rapmin,_rapmax,_phimin,_phimax;
 
