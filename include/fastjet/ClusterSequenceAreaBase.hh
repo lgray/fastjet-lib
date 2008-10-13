@@ -190,19 +190,6 @@ public:
                                           double exclude_above=-1.0, 
                                           bool use_area_4vector=false) const;
 
-
-  /// Uses the "in range" constituents of the jets (as opposed to the jets themselves)
-  /// to calculate rho as the ratio of the sum of the momenta of the constituents
-  /// divided by the total area of the range. 
-  /// NB1. This is supposed to be used only in very dense events (i.e. heavy ions)
-  ///      where the empty area is supposed to be zero.
-  /// NB2. The range should be a local one around a jet, to avoid including other
-  ///      hard jets or a different level of background.
-  /// NB3. A scalar sum should normally be used, as the range can be large.
-  double naive_rho(const RangeDefinition & range, 
-                   bool use_area_4vector=false) const;
-  
-
   /// return a vector of all subtracted jets, using area_4vector, given rho.
   /// Only inclusive_jets above ptmin are subtracted and returned.
   /// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
