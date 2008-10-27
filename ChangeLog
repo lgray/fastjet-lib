@@ -1,3 +1,9 @@
+2008-10-27  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	  updated docs for jets() and history() so that they provide
+	  slightly more information.
+
 2008-10-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_boosted_higgs.cc:     *** ADDED ***

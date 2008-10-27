@@ -341,15 +341,35 @@ public:
 
   enum JetType {Invalid=-3, InexistentParent = -2, BeamJet = -1};
 
-  /// allow the user to access the jets in this raw manner (needed
+  /// allow the user to access the internally stored _jets() array,
+  /// which contains both the initial particles and the various
+  /// intermediate and final stages of recombination.
+  ///
+  /// The first n_particles() entries are the original particles,
+  /// in the order in which they were supplied to the ClusterSequence
+  /// constructor. It can be useful to access them for example when
+  /// examining whether a given input object is part of a specific
+  /// jet, via the objects_in_jet(...) member function (which only takes
+  /// PseudoJets that are registered in the ClusterSequence).
+  ///
+  /// One of the other (internal uses) is related to the fact
   /// because we don't seem to be able to access protected elements of
   /// the class for an object that is not "this" (at least in case where
   /// "this" is of a slightly different kind from the object, both
   /// derived from ClusterSequence).
   const std::vector<PseudoJet> & jets()    const;
 
-  /// allow the user to access the history in this raw manner (see
-  /// above for motivation).
+  /// allow the user to access the raw internal history.
+  ///
+  /// This is present (as for jets()) in part so that protected
+  /// derived classes can access this information about other
+  /// ClusterSequences.
+  ///
+  /// A user who wishes to follow the details of the ClusterSequence
+  /// can also make use of this information (and should consult the
+  /// history_element documentation for more information), but should
+  /// be aware that these internal structures may evolve in future
+  /// FastJet versions.
   const std::vector<history_element> & history() const;
 
   /// returns the number of particles that were provided to the
