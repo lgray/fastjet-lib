@@ -103,6 +103,9 @@ public:
   /// (i.e. hist_ix < 0), then the result is false.
   bool is_pure_ghost(int history_index) const;
 
+  /// this class does have explicit ghosts
+  virtual bool has_explicit_ghosts() const {return true;}
+
   /// return the total area, up to |y|<maxrap, that consists of
   /// unclustered ghosts
   virtual double empty_area(const RangeDefinition & range) const;

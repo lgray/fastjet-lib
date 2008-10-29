@@ -119,6 +119,12 @@ public:
     return _area_base->is_pure_ghost(jet);
   }
 
+  /// true if this ClusterSequence has explicit ghosts
+  virtual bool has_explicit_ghosts() const {
+    return _area_base->has_explicit_ghosts();
+  }
+  
+
   /// overload version of what's in the ClusterSequenceAreaBase class, which 
   /// additionally checks compatibility between "range" and region in which
   /// ghosts are thrown.

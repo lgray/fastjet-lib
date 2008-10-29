@@ -1,9 +1,31 @@
-2008-10-27  Gavin SALAM  <salam@lpthe.jussieu.fr>
+2008-10-29  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo 
 
-	* include/fastjet/ClusterSequence.hh: 
-	  updated docs for jets() and history() so that they provide
-	  slightly more information.
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh: 
+	* include/fastjet/ClusterSequenceAreaBase.hh: 
+	* include/fastjet/ClusterSequenceArea.hh: 
 
+	  added a virtual function has_explicit_ghosts(), which returns
+	  true if the clusterSequence has explicit ghosts within the jets.
+
+	* src/ClusterSequenceArea.cc: 
+	  
+	  if has_explicit_ghosts() is true, then don't bother with fancy
+	  estimations of empty_area in
+	  get_median_rho_and_sigma(...). Instead set it to zero, and
+	  assume that the corresponding information is provided by the
+	  pure ghost jets.
+
+          NB: the empty_area(range) routine also returns zero if
+	  has_explicit_ghosts(); the empty_area(jets, range) does not, on
+	  the grounds that the user may have deliberately passed some
+	  incomplete set of jets within the range.
+	
+2008-10-27  Matteo 
+
+	* src/ClusterSequence.cc: 
+	
+	  updated banner link to www.fastjet.fr
+	
 2008-10-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_boosted_higgs.cc:     *** ADDED ***

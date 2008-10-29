@@ -48,14 +48,14 @@ LimitedWarning ClusterSequenceAreaBase::_warnings;
 /// 
 /// Calculate this as (range area) - \sum_{i in range} A_i
 ///
+/// for ClusterSequences with explicit ghosts, assume that there will
+/// never be any empty area, i.e. it is always filled in by pure
+/// ghosts jets. This holds for seq.rec. algorithms
 double ClusterSequenceAreaBase::empty_area(const RangeDefinition & range) const {
-  return empty_area_from_jets(inclusive_jets(0.0), range);
-  // double empty = range.area();
-  // vector<PseudoJet> incl_jets(inclusive_jets(0.0));
-  // for (unsigned i = 0; i < incl_jets.size(); i++) {
-  //   if (range.is_in_range(incl_jets[i])) empty -= area(incl_jets[i]);
-  // }
-  // return empty;
+
+  if (has_explicit_ghosts()) {return 0.0;}
+  else { return empty_area_from_jets(inclusive_jets(0.0), range);}
+
 }
 
 //----------------------------------------------------------------------
@@ -66,6 +66,7 @@ double ClusterSequenceAreaBase::empty_area(const RangeDefinition & range) const 
 double ClusterSequenceAreaBase::empty_area_from_jets(
                       const std::vector<PseudoJet> & all_jets,
                       const RangeDefinition & range) const {
+
   double empty = range.area();
   for (unsigned i = 0; i < all_jets.size(); i++) {
     if (range.is_in_range(all_jets[i])) empty -= area(all_jets[i]);
@@ -207,7 +208,10 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   double res[2];
   
   double n_empty, empty_a;
-  if (all_are_incl) {
+  if (has_explicit_ghosts()) {
+    empty_a = 0.0;
+    n_empty = 0;
+  } else if (all_are_incl) {
     empty_a = empty_area(range);
     n_empty = n_empty_jets(range);
   } else {

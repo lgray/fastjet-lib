@@ -93,6 +93,15 @@ public:
     return false;
   }
 
+  /// returns true if ghosts are explicitly included within 
+  /// jets for this ClusterSequence; 
+  ///
+  /// Derived classes that do include explicit ghosts should provide
+  /// an alternative version of this routine and set it properly.
+  virtual bool has_explicit_ghosts() const {
+    return false;
+  }
+
   /// return the total area, within range, that is free of jets, in
   /// general based on the inclusive jets
   virtual double empty_area(const RangeDefinition & range) const;
