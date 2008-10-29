@@ -185,7 +185,7 @@ void ClusterSequence::_print_banner() {
   cout << "#--------------------------------------------------------------------------\n";
   cout << "#                      FastJet release " << fastjet_version << endl;
   cout << "#            Written by M. Cacciari, G.P. Salam and G. Soyez            \n"; 
-  cout << "#              http://www.lpthe.jussieu.fr/~salam/fastjet		   \n"; 
+  cout << "#                         http://www.fastjet.fr                         \n"; 
   cout << "#								      	   \n";
   cout << "# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  \n";
   cout << "# clustering using fast geometric algorithms, with area measures and optional\n";
