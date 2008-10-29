@@ -25,6 +25,15 @@
 	* src/ClusterSequence.cc: 
 	
 	  updated banner link to www.fastjet.fr
+
+2008-10-13  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * include/fastjet/RangeDefinition.hh
+          Added method place_at(jet) and place_at(rap,phi), to be used by
+          derived local ranges to place the range at a jet's position,
+          after having defined the range only once with just its
+          geometrical parameters. Moved _rapjet and _phijet from
+          private to protected. Correspondingly modified CircularRange.hh
 	
 2008-10-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
@@ -1364,7 +1373,7 @@ released 2.3.0 on 2008-01-03
 2007-10-17  Gregory Soyez  <g.soyez@ulg.ac.be>
 	* BRANCHED (REVISION 889) -> svn/fastjet/branches/fastjet-release-autoconf
 	  for autoconf related work
-÷	
+?
 2007-10-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc: 
