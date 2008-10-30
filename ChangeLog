@@ -1,5 +1,10 @@
 2008-10-30  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/nightly-check.pl: *** ADDED ***
+
+	  started work on this script for running a full swathe of regular
+	  checks
+
 	* regression-tests/test-all-algs.pl: *** ADDED ***
 	  
 	  script to help test correctness of fastjet, by running many algs
