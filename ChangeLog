@@ -1,3 +1,8 @@
+2008-10-30  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * include/fastjet/RangeDefinition.hh:
+	  replaced methods place_at() and place() with set_position()
+
 2008-10-29  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo 
 
 	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh: 
@@ -20,7 +25,7 @@
 	  the grounds that the user may have deliberately passed some
 	  incomplete set of jets within the range.
 	
-2008-10-27  Matteo 
+2008-10-27  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 
 	

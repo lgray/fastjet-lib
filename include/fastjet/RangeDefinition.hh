@@ -74,13 +74,13 @@ public:
 		     _total_area = (_rapmax - _rapmin)*(_phimax - _phimin); }
 
   /// place the range on the jet position
-  inline void place_at(const PseudoJet & jet) {
+  inline void set_position(const PseudoJet & jet) {
     _rapjet = jet.rap();
     _phijet = jet.phi(); 
   }
 
   /// place the range on the rap-phi position
-  inline void place(const double & rap, const double & phi) {
+  inline void set_position(const double & rap, const double & phi) {
     _rapjet = rap;
     _phijet = phi;
   }
