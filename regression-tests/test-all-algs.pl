@@ -81,7 +81,7 @@ foreach $strat (@strat) {
   # get the command line
   ($algsp = $alg) =~ s/:/ /g;
   if ($strat ne "") {$strat = "-strategy $strat"}
-  $cmdline = "example/fastjet_timing_plugins -$algsp $strat -R $R $out -nev $nev 2>\&1 < $dataFile";
+  $cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1 < $dataFile";
   $strat =~ s/.*y /s/; # we'll need this in a clean form later
   $res = `$cmdline`;
 
@@ -174,6 +174,19 @@ sub setDefaults {
      "kt"  => "1:-4:-3:-1:2",
      "cam" => "1:-4:-3:-1:2:12",
     );
+
+  # find out which executable to use based on what's locally
+  # available, and failing that based on where we are
+  if (-x "fastjet_timing_plugins") {
+    $execName = getcwd."/fastjet_timing_plugins"
+  } elsif (-x "example/fastjet_timing_plugins") {
+    $execName = getcwd."/example/fastjet_timing_plugins"
+  } else {
+    $execName  =  getcwd."/$0";
+    $execName  =~ s/regression-tests.*//;
+    $execName .=  "example/fastjet_timing_plugins";
+  }
+  print "Using $execName\n\n";
 
   $defstrat = "";
 
