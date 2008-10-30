@@ -1,5 +1,6 @@
 #!/bin/bash
-# Script for testing whether everything works!
+# Script for testing whether everything works with the old (pre 2.3) build 
+# framework. This compiles things and runs a few tests.
 
 # Usage
 # ./test-script.sh [-c] [-j2]

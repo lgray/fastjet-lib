@@ -1,3 +1,14 @@
+2008-10-30  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* test-all-algs.pl: *** ADDED ***
+	  
+	  script to help test correctness of fastjet, by running many algs
+	  and, for each, comparing checksum of numerical part of results
+	  to a previously stored checksum.
+
+	* example/fastjet_timing_plugins.cc: 
+	  various small changes to ease test-all-algs.pl behaviour
+
 2008-10-30  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * include/fastjet/RangeDefinition.hh:

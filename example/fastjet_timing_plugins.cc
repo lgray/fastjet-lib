@@ -172,7 +172,8 @@ int main (int argc, char ** argv) {
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
   fj::JetDefinition jet_def;
-  if (cmdline.present("-cam")) {
+  string is_unavailable=" requested, but not available for this compilation";
+  if (cmdline.present("-cam") || cmdline.present("-CA")) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
   } else if (cmdline.present("-antikt")) {
@@ -197,7 +198,7 @@ int main (int argc, char ** argv) {
                                       max_iterations, overlap_threshold,
                                       sm_scale));
 #else  // ENABLE_PLUGIN_CDFCONES
-    cerr << "midpoint requested, but not available for this compilation" << endl;
+    cerr << "midpoint"+is_unavailable << endl;
 #endif // ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-pxcone")) {
 #ifdef ENABLE_PLUGIN_PXCONE
@@ -206,7 +207,7 @@ int main (int argc, char ** argv) {
                                       ktR, min_jet_energy,
                                       overlap_threshold));
 #else  // ENABLE_PLUGIN_PXCONE
-    cerr << "pxcone requested, but not available for this compilation" << endl;
+    cerr << "pxcone"+is_unavailable << endl;
     exit(-1);
 #endif // ENABLE_PLUGIN_PXCONE
   } else if (cmdline.present("-jetclu")) {
@@ -214,7 +215,7 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
 #else  // ENABLE_PLUGIN_CDFCONES
-    cerr << "jetclu requested, but not available for this compilation" << endl;
+    cerr << "jetclu"+is_unavailable << endl;
 #endif // ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
 #ifdef ENABLE_PLUGIN_SISCONE
@@ -238,14 +239,14 @@ int main (int argc, char ** argv) {
       jet_def = fj::JetDefinition(plugin);
     }
 #else  // ENABLE_PLUGIN_SISCONE
-    cerr << "siscone requested, but not available for this compilation" << endl;
+    cerr << "siscone"+is_unavailable << endl;
 #endif // ENABLE_PLUGIN_SISCONE
   } else if (cmdline.present("-d0runiicone")) {
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
     double min_jet_Et = 6.0; // was 8 GeV in earlier work
     jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR,min_jet_Et));
 #else  // ENABLE_PLUGIN_D0RUNIICONE
-    cerr << "D0RunIICone requested, but not available for this compilation" << endl;
+    cerr << "D0RunIICone"+is_unavailable << endl;
 #endif // ENABLE_PLUGIN_D0RUNIICONE
   } else if (cmdline.present("-eekt")) {
     jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
@@ -254,6 +255,7 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, 
 				fj::E_scheme, strategy);
   } else {
+    bool dummy = cmdline.present("-kt"); // kt is default, but allow user to specify it too
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }
 
@@ -334,6 +336,7 @@ int main (int argc, char ** argv) {
   }
   
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
+    try {
     fj::ClusterSequence clust_seq(jets,jet_def,write);
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
@@ -442,6 +445,12 @@ int main (int argc, char ** argv) {
       }
     }
 #endif // ENABLE_PLUGIN_SISCONE
+  } // try
+  catch (fastjet::Error fjerr) {
+    cout << "Caught fastjet error, exiting gracefully" << endl;
+    exit(0);
+  }
+
   } // irepeat
   } // iev
 

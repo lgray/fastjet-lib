@@ -31,7 +31,6 @@ High priority
 - get CMS and ATLAS cones as plugins
 - sort out the constructors for ranges of algorithms
 - DIS?
-- auto FAQ?
 
 ---------------
 Medium priority
@@ -65,6 +64,7 @@ Medium priority
   constituents of a jet without manually going via the
   ClusterSequence.
 
+- auto FAQ restructured?
 
 ----
 Done
