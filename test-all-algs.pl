@@ -192,6 +192,7 @@ sub setDefaults {
 #======================================================================
 sub setRefResults {
   %refResults = (
+  # 1 ev results
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,d0runiicone,R0.60" => "722f70cbb66fd5a5ee2a8a7733649daf",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,kt,R0.60" => "cca70ee3afa680bf574d94ccd6d48185",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,cam,R0.60" => "e3632acedd6516ed9c8eccfe515154dc",
@@ -203,7 +204,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,eekt,R0.60" => "8caea0f93458e54c5418b757793c50d2",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,eegenkt:0,R0.60" => "2308c88202e0b0087c256c8a65efb5ce",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,eegenkt:-1,R0.60" => "21753b7bab26ddb06f75b8eb7b1d3024",
-  #
+  # 10 ev results
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,genkt:0.5,R0.60" => "f3befadd9c96dab695310b994dc5cda5",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,eekt,R0.60" => "1ab6f607fc1acec7c4aa337307347ea0",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,kt,R0.60"           =>    "d0b1a74bdcdcb9d18b8a129fb4789baa"  ,
@@ -215,7 +216,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,d0runiicone,R0.60" => "f60a1928e1b584078611a257100a99a6",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:0,R0.60" => "e77d363d2ea067bd62d98e7b62bba772",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:-1,R0.60" => "aec87012ed66823e2f30862f57307d93",
-  #
+  # 100 ev results
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,kt,R0.60" => "15b23d6d954c796682214d598f526f6a",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,cam,R0.60" => "9530ca5b1e1680bd2da6714fa42a13a6",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,antikt,R0.60" => "66bb86601eaf4daa50aa601af175e8a3",
@@ -227,7 +228,18 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,eekt,R0.60" => "7388d3917738969fb7fdf518af0dca78",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,eegenkt:0,R0.60" => "c210893596b56046573c60603e4a3e5b",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,eegenkt:-1,R0.60" => "905525747cad0344b6826514cd4cc618"
-  #
+  # 1000 ev results
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,kt,R0.60" => "ae0b4d26e5244cfb551d41097fad3543",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,cam,R0.60" => "ed14ae31b5ebd2df39dafae3f800040f",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,antikt,R0.60" => "d4a7e6146a9856e5be1cf67d59e1ee44",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,genkt:0.5,R0.60" => "22b8a8f3126f7b11d9f42cfe3bc20d73",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,siscone:-f:0.75,R0.60" => "e2333f97f0b69d858ec33ee8537882bf",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,siscone:-f:0.50,R0.60" => "65f5ca86e1db411f55892831ca6aad0b",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,jetclu,R0.60" => "57ff3c751ab1d2f82673cd28fdb9e991",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eekt,R0.60" => "59fe2638f8df87a48bda2b8d1490034e",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:0,R0.60" => "48cb5d5a8a5f636d07569745e5be29e4",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:-1,R0.60" => "e54ecd5d535f2f3d7ddffc1bfd43462c",
 );
 
   %refResultsOrig = %refResults;
