@@ -30,6 +30,11 @@
 #
 #  -newperl          similar, but only for things that we don't yet have
 #
+# Full (non-md5) results of a 1000 event run are to be found in
+# the (non svn) directory
+#
+#     ~salam/work/fastjet/validation-ref-2008-10-30
+#
 #
 # Known issues:
 # -------------
