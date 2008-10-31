@@ -92,7 +92,7 @@ while (1) {
   #--- configure -----------------
   system("mkdir build/");
   chdir "build";
-  &message("* running configure\n");
+  &message("* running configure $configOpts\n");
   ($distDir=$tarName) =~ s/.tar.gz//;
   $config=`../$distDir/configure $configOpts --prefix=$tmpDir/inst 2>&1`;
   if ($config =~ /error[: ]/i || $?) {
