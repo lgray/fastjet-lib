@@ -162,7 +162,7 @@ while (1) {
 if ($fail) {
   &message("Failed on $fail\n\nDetailed message is:\n------------------");
   &message($failDetails);
-  $mailSubject='fastjet nightly: FAILED on $fail';
+  $mailSubject='fastjet nightly: FAILED on '.$fail;
 } else {
   &message("\nAll tests passed\n");
   $mailSubject='fastjet nightly: all OK';
