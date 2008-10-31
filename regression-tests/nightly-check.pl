@@ -1,6 +1,10 @@
 #!/usr/bin/perl -w
 #
 # script to help us perform a nightly check of fastjet
+#
+# -mail sends mail, otherwise, verbose output
+#
+#
 
 # Items are
 #   - svn update
@@ -11,17 +15,35 @@
 #   - make check
 #   - regression-tests/test-all-algs.pl -nev 1000
 
+# NB: $? is command status (non-zero with error)
+
 use Cwd;
+use English;
+$OUTPUT_AUTOFLUSH = 1;
+
+# things to configure
+$mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl.gov'; #  g@gavin.fr 
+$configOpts="--enable-cgal --enable-d0runiicone";
+$nevTestAll=1000;
+$mail=0;
+
+# process command-line
+while ($arg = shift @ARGV) {
+  if ($arg eq "-mail") {$mail = 1;}
+  else {die "Unrecognized argument: $arg";}
+}
 
 $origDir=getcwd();
 $fail="";
 $failDetails="";
-$verbose = 1;
 $allMessages = "";
+$verbose = !$mail;
+#$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
 while (1) {
 
   #--- make tmpDir -------------------------------------------------------
+  $tmpDir = "$origDir/tmp-nightly";
   $tmpDir = "$origDir/tmp-".$$;
   &message("* making tmp directory $tmpDir\n");
   if (-e $tmpDir || ! (mkdir $tmpDir)) {
@@ -45,12 +67,89 @@ while (1) {
   }
 
   #--- make dist ------------------------------------------------------
-  &message("* running make dist\n");
+  &message("* running make dist");
   $makedist=`make dist 2>&1`;
-  if ($makedist =~ / error[: ]/i) {
+  if ($makedist =~ / error[: ]/i || $makedist !~ />(.*?tar.gz)/) {
     $fail = "make dist";
     $failDetails = $makedist;
+    &message("\n");
     last;
+  } else {
+    $tarName = $1;
+    &message(" -> $tarName\n");
+  }
+
+  #--- untar -----------------
+  &message("* untarring in tmp dir\n");
+  chdir $tmpDir;
+  $untar=`tar zxvf $origDir/$tarName`;
+  if ($?) {
+    $fail = "untar";
+    $failDetails = $untar;
+    last;
+  }
+
+  #--- configure -----------------
+  system("mkdir build/");
+  chdir "build";
+  &message("* running configure\n");
+  ($distDir=$tarName) =~ s/.tar.gz//;
+  $config=`../$distDir/configure $configOpts --prefix=$tmpDir/inst 2>&1`;
+  if ($config =~ /error[: ]/i || $?) {
+    $fail = "configure";
+    $failDetails = $config;
+    last;
+  }
+
+
+  #--- run make -------------------
+  &message("* running make\n");
+  $make=`make -j2 2>&1`;
+  if ($make =~ /error[: ]/i || $?) {
+    $fail = "make";
+    $failDetails = $make;
+    last;
+  }
+
+  #--- run make check -------------------
+  &message("* running make check\n");
+  $makecheck=`make check 2>&1`;
+  if ($makecheck =~ /error[: ]/i || $?) {
+    $fail = "make check";
+    $failDetails = $makecheck;
+    last;
+  }
+  
+  #--- run make install -------------------
+  &message("* running make install\n");
+  $makeinstall=`make install 2>&1`;
+  if ($makeinstall =~ /error[: ]/i || $?) {
+    $fail = "make install";
+    $failDetails = $makeinstall;
+    last;
+  }
+
+  #--- do external compilation -------------------
+  chdir "../";
+  &message("* compiling fastjet_timing_plugins externally\n");
+  $compile=`g++ -O -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc \`inst/bin/fastjet-config --cxxflags\` \`inst/bin/fastjet-config --libs --plugins\` -o fastjet_timing_plugins 2>&1`;
+  if ($compile =~ /error[: ]/i || $?) {
+    $fail = "external compilation";
+    $failDetails = $compile;
+    last;
+  }
+
+  #--- do test-all-algs -------------------
+  &message("* testing all algs\n");
+  # use the original test-all-algs.pl prog, since it isn't distributed
+  # in the tarball
+  $testall=`../regression-tests/test-all-algs.pl -nev $nevTestAll`;
+  if ($testall =~ /BAD/i || $?) {
+    $fail = "testing all algs";
+    $failDetails = $testall;
+    last;
+  } else {
+    &message($testall);
   }
 
 
@@ -59,14 +158,22 @@ while (1) {
 }
 
 
+#-- mention where failure might arise
 if ($fail) {
-  print "Failed on $fail\n\nDetailed message is:\n------------------";
-  print $failDetails;
-  
+  &message("Failed on $fail\n\nDetailed message is:\n------------------");
+  &message($failDetails);
+  $mailSubject='fastjet nightly: FAILED on $fail';
 } else {
-  print "\nAll tests passed\n";
+  &message("\nAll tests passed\n");
+  $mailSubject='fastjet nightly: all OK';
 }
 
+# send mail if relevant
+if ($mail) {
+  open (MAIL, "|mail -s '$mailSubject' $mailAddr") || die "could not open pipe for mail message";
+  print MAIL $allMessages;
+  close MAIL;
+}
 
 # clean up
 if ($tmpDir) { 

@@ -1,3 +1,9 @@
+2008-10-31  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  finished a first version of this, with a fairly complete set of
+	  checks.
+
 2008-10-30  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: *** ADDED ***
