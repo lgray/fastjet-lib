@@ -156,6 +156,7 @@ int main (int argc, char ** argv) {
   bool   massless = cmdline.present("-massless");
   int  nev     = cmdline.int_val("-nev",1);
   bool add_dense_coverage = cmdline.present("-dense");
+  double ghost_maxrap = cmdline.value("-ghost-maxrap",5.0);
 
   bool show_cones = cmdline.present("-cones"); // only works for siscone
 
@@ -174,7 +175,6 @@ int main (int argc, char ** argv) {
   fj::JetDefinition jet_def;
   string is_unavailable=" requested, but not available for this compilation";
   if (cmdline.present("-cam") || cmdline.present("-CA")) {
-    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
   } else if (cmdline.present("-antikt")) {
     jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, strategy);
@@ -308,7 +308,7 @@ int main (int argc, char ** argv) {
   // in eta,phi so as to allow one to reconstruct the area that is associated
   // with each jet.
   if (add_dense_coverage) {
-    fj::GhostedAreaSpec ghosted_area_spec(5.0);
+    fj::GhostedAreaSpec ghosted_area_spec(ghost_maxrap);
     //fj::GhostedAreaSpec ghosted_area_spec(-2.0,4.0); // asymmetric range
     // for plots, reduce the scatter default of 1, to avoid "holes"
     // in the subsequent calorimeter view
