@@ -14,6 +14,7 @@ endif
 if BUILD_PLUGIN_NESTEDDEFS
 SUBDIRS += NestedDefs
 endif
+# end plugin section -- do not modify this line
 SUBDIRS += usage_examples
 
 DIST_SUBDIRS = SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
