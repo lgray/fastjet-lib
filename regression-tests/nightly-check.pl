@@ -45,6 +45,8 @@ while (1) {
   #--- make tmpDir -------------------------------------------------------
   $tmpDir = "$origDir/tmp-nightly";
   $tmpDir = "$origDir/tmp-".$$;
+  $uname = `uname -a`; chomp $uname;
+  &message("* running on $uname\n");
   &message("* making tmp directory $tmpDir\n");
   if (-e $tmpDir || ! (mkdir $tmpDir)) {
     $fail = "* creating tmp directory";
@@ -165,7 +167,11 @@ if ($fail) {
   $mailSubject='fastjet nightly: FAILED on '.$fail;
 } else {
   &message("\nAll tests passed\n");
-  $mailSubject='fastjet nightly: all OK';
+  # try to get more info about test results
+  @unavail = split("unavailable",$testall);
+  @areOK   = split("OK",$testall);
+  $mailSubject='fastjet nightly: ',($#areOK+1),' OK';
+  if ($#unavail >= 0) {$mailSubject .= ", ",($#unavail+1)}
 }
 
 # send mail if relevant
