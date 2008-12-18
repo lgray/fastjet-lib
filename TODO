@@ -1,6 +1,7 @@
 -------------
 For 2.4
 -------------
+- Sort out phi component of Range...
 - add JetDefinition constructor without R [why????]
 - Sort out zero-particle case [avoid crash, check many places this enters]
   [+ add constructor without particles]; [Requests by Andy Buckley]
@@ -21,6 +22,9 @@ For 2.4
 - add ghosts over asymmetric range of rapidity  [done]
   [for Roman Kogler roman.kogler@desy.de]
 
+
+
+
 -------------
 High priority
 -------------
@@ -35,6 +39,8 @@ High priority
 ---------------
 Medium priority
 ---------------
+
+- figure out what to do about RangeDefinition's phi
 
 - write Fortran wrapper for all algorithms?
 

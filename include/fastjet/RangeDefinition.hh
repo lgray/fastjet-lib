@@ -67,6 +67,7 @@ public:
                      assert ( rapmin < rapmax);
                      assert ( phimin < phimax);
                      assert ( phimin >= 0.0 );
+                     assert ( phimax <= twopi+1e-10 );
                      _rapmax = rapmax;
 		     _rapmin = rapmin;
 		     _phimin = phimin;

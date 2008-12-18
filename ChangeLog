@@ -1,3 +1,13 @@
+2008-12-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  adding a little more info to output
+
+2008-11-17  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/RangeDefinition.hh: 
+	  added a check that phimax <= twopi in constructor
+
 2008-10-31  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
