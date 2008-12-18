@@ -170,8 +170,8 @@ if ($fail) {
   # try to get more info about test results
   @unavail = split("unavailable",$testall);
   @areOK   = split("OK",$testall);
-  $mailSubject='fastjet nightly: ',($#areOK+1),' OK';
-  if ($#unavail >= 0) {$mailSubject .= ", ",($#unavail+1)}
+  $mailSubject='fastjet nightly: '.sprintf("%d",$#areOK+1).' OK';
+  if ($#unavail >= 0) {$mailSubject .= ", ".sprintf("%d",$#unavail+1)}
 }
 
 # send mail if relevant
