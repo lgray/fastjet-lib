@@ -42,6 +42,53 @@
 # format of floating points numbers (e.g. for jet pts, etc.)]
 # (or if the compiler changes this)
 #
+#
+# Adding algorithms:
+# ------------------
+#
+# - make sure that "-newalg" (or whatever it's called) runs the new
+#   algorithm in fastjet_timing_plugins. 
+#
+# - run "./test-all-algs.pl -alg newalg -nev {1|10|100|1000} -newperl"
+#
+#   Extra options can be given too: "newalg:-y:0.8" will run
+#   fastjet_timing_plugins with options "-newalg -y 0.8".
+#
+#   the {1|10|100|1000} means you should carry out separate runs with
+#   1, 10, 100, 1000 events, so as to get the checksums for each.
+#
+#   Each time you'll get a line of perl that is to be added to the
+#   initialisation of the %refResults hash (in setRefResults()).
+#
+# - now rerun the command above, and check that the algorithm is
+#   labelled "OK" on each run
+#
+# - run "./test-all-algs.pl -alg newalg -nev 1000 -deposit SOME-DIRECTORY" 
+#
+#   that will place the raw results in SOME-DIRECTORY (I use
+#   ~salam/work/fastjet/validation-ref-2008-10-30 -- ideally  everything
+#   end up in the same place)
+#
+# - add "newalg" to the @algs array in setDefaults()
+#
+# - if you want things to be tested in the nightly build, make sure
+#   the new algorithm is actually compiled -- i.e. add the appropriate
+#   configure options to $configOpts in nightly-check.pl
+#
+# - commit and then run nightly-check.pl (nightly-check.pl
+#   deliberately fails on uncommitted directories -- to avoid giving
+#   results based on something not actually in the repository)
+#
+# - The next automatic run of nightly-check.pl will use an old
+#   nightly-check.pl script (it runs the script from a special
+#   directory and the script does the update only after starting...)
+#   and so your new algorithm won't necessarily be configured (it will
+#   then be labelled as unavailable -- or NA in the subject line).
+#
+#   It's only the following night that things will reach
+#   "equilibrium".
+#
+#
 # $Id$
 # ----------------------------------------------------------------------
 use Digest::MD5 qw(md5 md5_hex md5_base64);

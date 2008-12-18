@@ -1,5 +1,8 @@
 2008-12-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/test-all-algs.pl: 
+	  added documentation on how to add a new algorithm.
+
 	* regression-tests/nightly-check.pl: 
 	  adding a little more info to output
 
