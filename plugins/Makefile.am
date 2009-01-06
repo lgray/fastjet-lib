@@ -14,9 +14,12 @@ endif
 if BUILD_PLUGIN_NESTEDDEFS
 SUBDIRS += NestedDefs
 endif
+if BUILD_PLUGIN_TRACKJET
+SUBDIRS += TrackJet
+endif
 # end plugin section -- do not modify this line
 SUBDIRS += usage_examples
 
-DIST_SUBDIRS = SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
+DIST_SUBDIRS = TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
 
 EXTRA_DIST = makefile.static

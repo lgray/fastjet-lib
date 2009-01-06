@@ -36,8 +36,8 @@ CGAL_LIBS=""
 
 dnl if the debug flag is set, build with -g
 dnl default is "yes"
-AC_ARG_ENABLE(debug, 
-	[  --enable-debug      Turn on debug compiler information],
+AC_ARG_ENABLE(debug,
+	[  --enable-debug         Turn on debug compiler information],
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
@@ -63,9 +63,9 @@ dnl Note that CGAL compilation flags are considered as required
 dnl so we do store them in "AM_CXXFLAGS"
 CONFIG_CXXFLAGS=""
 AC_ARG_ENABLE(cgal,
-	[  --enable-cgal           enables link with the CGAL library (default=no)],
-	[ENABLE_CGAL_FLAG="$enableval"],
-	[ENABLE_CGAL_FLAG="no"])
+       [  --enable-cgal           enables link with the CGAL library (default=no)],
+       [ENABLE_CGAL_FLAG="$enableval"],
+       [ENABLE_CGAL_FLAG="no"])
 dnl if asked for, check if the CGAL library can be used
 if [[ "$ENABLE_CGAL_FLAG" == "yes" ]] ; then
    ACX_CHECK_CGAL
@@ -81,7 +81,7 @@ fi
 AC_SUBST(CGAL_CPPFLAGS)
 AC_SUBST(CGAL_LIBS)
 
-dnl enable 
+dnl enable libtool
 AC_PROG_LIBTOOL
 
 dnl substitutions
@@ -95,7 +95,7 @@ AC_SUBST(PACKAGE_VERSION)
 AC_SUBST(HAS_SHARED)
 
 dnl----------------
-dnl plugins output
+dnl plugin section
 dnl each plugin can be enabled or disabled (default is SISCone and CDFCones)
 dnl We also define a ENABLED_PLUGIN_<name> in config.h when plugin
 dnl <name> is enabled
@@ -107,10 +107,11 @@ CONFIG_LIBS_PLUGINS=""
 CONFIG_LIBS_PLUGINS_STATIC=""
 
 dnl SISCone
+AC_MSG_CHECKING([whether to build plugin SISCone])
 AC_ARG_ENABLE(siscone,
-	[  --enable-siscone        enables the SISCone plugin (default=yes)],
-	[ENABLE_SISCONE="$enableval"],
-	[ENABLE_SISCONE="yes"])
+       [  --enable-siscone        enables the SISCone plugin (default=yes)],
+       [ENABLE_SISCONE="$enableval"],
+       [ENABLE_SISCONE="yes"])
 if [[ "x$ENABLE_SISCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_SISCONE, [], [The SISCone plugin is enabled])
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lSISConePlugin -lsiscone -lsiscone_spherical"
@@ -119,26 +120,29 @@ fi
 AC_CONFIG_SUBDIRS(plugins/SISCone/siscone)
 AC_CONFIG_FILES( plugins/SISCone/Makefile plugins/SISCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_SISCONE, test x$ENABLE_SISCONE = xyes)
+AC_MSG_RESULT($ENABLE_SISCONE)
 
 dnl CDFCones
+AC_MSG_CHECKING([whether to build plugin CDFCones])
 AC_ARG_ENABLE(cdfcones,
-	[  --enable-cdfcones       enables the CDFJetClu and CDFMidPoint plugins (default=yes)],
-	[ENABLE_CDFCONES="$enableval"],
-	[ENABLE_CDFCONES="yes"])
+       [  --enable-cdfcones       enables the CDFJetClu and CDFMidPoint plugins (default=yes)],
+       [ENABLE_CDFCONES="$enableval"],
+       [ENABLE_CDFCONES="yes"])
 if [[ "x$ENABLE_CDFCONES" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_CDFCONES, [], [The CDFJetClu and CDFMidPoint plugins are enabled])
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lCDFConesPlugin"
    CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libCDFConesPlugin.a"
 fi
-AC_CONFIG_FILES(plugins/CDFCones/Makefile plugins/CDFCones/CDFcode/Makefile\
-                plugins/CDFCones/fastjet/Makefile )
+AC_CONFIG_FILES(plugins/CDFCones/Makefile plugins/CDFCones/CDFcode/Makefile plugins/CDFCones/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_CDFCONES, test x$ENABLE_CDFCONES = xyes)
+AC_MSG_RESULT($ENABLE_CDFCONES)
 
 dnl PxCone
+AC_MSG_CHECKING([whether to build plugin PxCone])
 AC_ARG_ENABLE(pxcone,
-	[  --enable-pxcone         enables the PxCone plugin (default=no)],
-	[ENABLE_PXCONE="$enableval"],
-	[ENABLE_PXCONE="no"])
+       [  --enable-pxcone         enables the PxCone plugin (default=no)],
+       [ENABLE_PXCONE="$enableval"],
+       [ENABLE_PXCONE="no"])
 if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_PXCONE, [], [The PxCone plugin is enabled])
    dnl set up the fortran compiler and libs
@@ -149,26 +153,30 @@ if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
 fi
 AC_CONFIG_FILES( plugins/PxCone/Makefile plugins/PxCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
+AC_MSG_RESULT($ENABLE_PXCONE)
 
 dnl D0RunIICone
+AC_MSG_CHECKING([whether to build plugin D0RunIICone])
 AC_ARG_ENABLE(d0runiicone,
-	[  --enable-d0runiicone    enables the D0RunIICone plugin (default=no)],
-	[ENABLE_D0RUNIICONE="$enableval"],
-	[ENABLE_D0RUNIICONE="no"])
+       [  --enable-d0runiicone    enables the D0RunIICone plugin (default=no)],
+       [ENABLE_D0RUNIICONE="$enableval"],
+       [ENABLE_D0RUNIICONE="no"])
 if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_D0RUNIICONE, [], [The D0RunIICone plugin is enabled])
    dnl set up the libs
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lD0RunIIConePlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libD0RunIIConePlugin.a "${FLIBS}
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libD0RunIIConePlugin.a "
 fi
 AC_CONFIG_FILES( plugins/D0RunIICone/Makefile plugins/D0RunIICone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_D0RUNIICONE, test x$ENABLE_D0RUNIICONE = xyes)
+AC_MSG_RESULT($ENABLE_D0RUNIICONE)
 
 dnl NestedDefs
+AC_MSG_CHECKING([whether to build plugin NestedDefs])
 AC_ARG_ENABLE(nesteddefs,
-	[  --enable-nesteddefs     enables the NestedDefs plugin (default=yes)],
-	[ENABLE_NESTEDDEFS="$enableval"],
-	[ENABLE_NESTEDDEFS="yes"])
+       [  --enable-nesteddefs     enables the NestedDefs plugin (default=yes)],
+       [ENABLE_NESTEDDEFS="$enableval"],
+       [ENABLE_NESTEDDEFS="yes"])
 if [[ "x$ENABLE_NESTEDDEFS" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_NESTEDDEFS, [], [The NestedDefs plugin is enabled])
    dnl set up the libs
@@ -177,7 +185,25 @@ if [[ "x$ENABLE_NESTEDDEFS" == "xyes" ]] ; then
 fi
 AC_CONFIG_FILES( plugins/NestedDefs/Makefile plugins/NestedDefs/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_NESTEDDEFS, test x$ENABLE_NESTEDDEFS = xyes)
+AC_MSG_RESULT($ENABLE_NESTEDDEFS)
 
+dnl TrackJet
+AC_MSG_CHECKING([whether to build plugin TrackJet])
+AC_ARG_ENABLE(trackjet,
+       [  --enable-trackjet       enables the TrackJet plugin (default=no)],
+       [ENABLE_TRACKJET="$enableval"],
+       [ENABLE_TRACKJET="no"])
+if [[ "x$ENABLE_TRACKJET" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_TRACKJET, [], [The TrackJet plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lTrackJetPlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libTrackJetPlugin.a "
+fi
+AC_CONFIG_FILES( plugins/TrackJet/Makefile plugins/TrackJet/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_TRACKJET, test x$ENABLE_TRACKJET = xyes)
+AC_MSG_RESULT($ENABLE_TRACKJET)
+
+dnl end of plugin section --- don't modify this line
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)
 AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
@@ -208,8 +234,7 @@ dnl----------------------
 dnl main library outputs
 dnl----------------------
 
-AC_CONFIG_FILES( Makefile src/Makefile include/Makefile \
-		 include/fastjet/Makefile include/fastjet/internal/Makefile )
+AC_CONFIG_FILES( Makefile src/Makefile include/Makefile include/fastjet/Makefile include/fastjet/internal/Makefile )
 
 AC_OUTPUT
 
@@ -220,5 +245,3 @@ echo " When using the FastJet library, you can retrieve  "
 echo " compilation and link flags using fastjet-config.  "
 echo " Type 'fastjet-config --help' for more information "
 echo "---------------------------------------------------"
-
-

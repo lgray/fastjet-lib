@@ -64,5 +64,12 @@ fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/D0RunIICone
 fastjet_timing_plugins_LDADD += ../plugins/D0RunIICone/libD0RunIIConePlugin.la ${FLIBS}
 endif
 
+if BUILD_PLUGIN_TRACKJET
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/TrackJet
+fastjet_timing_plugins_LDADD += ../plugins/TrackJet/libTrackJetPlugin.la
+endif
+
+# add entries for other plugins here
+
 #TESTS_ENVIRONMENT = $(SHELL)
 #TESTS = test-example.sh test-areas.sh

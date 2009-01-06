@@ -1,3 +1,11 @@
+2009-01-05  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* plugins/TrackJet/TrackJetPlugin.cc: 
+	  released the TrackJet plugin.
+	  Adapted many_algs_examples, fastjet_timing_plugins and
+	  all build scripts accordingly
+	
+
 2008-12-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl: 

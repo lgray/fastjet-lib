@@ -45,6 +45,13 @@ many_algs_example_CXXFLAGS += -I${srcdir}/../D0RunIICone
 many_algs_example_LDADD += ../D0RunIICone/libD0RunIIConePlugin.la
 endif
 
+# add TrackJet-related parts
+if BUILD_PLUGIN_TRACKJET
+many_algs_example_CXXFLAGS += -I${srcdir}/../TrackJet
+many_algs_example_LDADD += ../TrackJet/libTrackJetPlugin.la
+endif
+
+# add entries for other plugins here
 
 #TEST_ENVIRONMENT = $(SHELL)
 #TESTS = test-plugins.sh

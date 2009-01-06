@@ -55,6 +55,10 @@
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
 #  include "fastjet/D0RunIIConePlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_TRACKJET
+#include "fastjet/TrackJetPlugin.hh"
+#endif
+// end of the plugin list (don't modify this line)
 
 #include<vector>
 #include<iostream>
@@ -111,13 +115,20 @@ int main(int argc, char** argv) {
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif
 
-  // set up a siscone jet definition
+  // set up a d0runiicone jet definition
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
   double min_jet_Et = 6.0; // earlier D0 analyses used 8 GeV
   plugins.push_back(new fastjet::D0RunIIConePlugin (jet_radius, min_jet_Et, 
                                               overlap_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif // ENABLE_PLUGIN_D0RUNIICONE
+
+  // set up a trackjet
+#ifdef ENABLE_PLUGIN_TRACKJET
+  plugins.push_back(new fastjet::TrackJetPlugin(jet_radius));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_TRACKJET
+  // end of the plugins instantiation (don't modify this line)
 
   // set up kt and cam/aachen definitions
   jet_defs.push_back(fastjet::JetDefinition(fastjet::kt_algorithm, jet_radius));

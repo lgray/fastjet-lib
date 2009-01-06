@@ -78,6 +78,8 @@
 ///                 up to the dcut which is the minimum squared
 ///                 distance between any pair of jets.
 ///
+///  plugins (don't delete this line)
+///
 ///   -pxcone       switch to the PxCone jet algorithm
 /// 
 ///   -siscone       switch to the SISCone jet algorithm (seedless cones)
@@ -87,6 +89,10 @@
 ///
 ///   -jetclu       switch to CDF's jetclu code
 ///
+///   -trackjet     switch to the TrackJet plugin
+///
+///  end of plugins (don't delete this line)
+
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/GhostedAreaSpec.hh"
@@ -102,6 +108,7 @@
 // get info on how fastjet was configured
 #include "fastjet/config.h"
 
+// include the installed plugins (don't delete this line)
 #ifdef ENABLE_PLUGIN_SISCONE
 #include "fastjet/SISConePlugin.hh"
 #include "fastjet/SISConeSphericalPlugin.hh"
@@ -116,6 +123,10 @@
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
 #include "fastjet/D0RunIIConePlugin.hh"
 #endif 
+#ifdef ENABLE_PLUGIN_TRACKJET
+#include "fastjet/TrackJetPlugin.hh"
+#endif
+// end of installed plugins inclusion (don't delete this line)
 
 using namespace std;
 
@@ -181,6 +192,8 @@ int main (int argc, char ** argv) {
   } else if (cmdline.present("-genkt")) {
     double p = cmdline.value<double>("-genkt");
     jet_def = fj::JetDefinition(fj::genkt_algorithm, ktR, p, fj::E_scheme, strategy);
+
+// checking if one asks to run a plugin (don't delete this line)
   } else if (cmdline.present("-midpoint")) {
 #ifdef ENABLE_PLUGIN_CDFCONES
     typedef fj::CDFMidPointPlugin MPPlug; // for brevity
@@ -248,6 +261,13 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_D0RUNIICONE
     cerr << "D0RunIICone"+is_unavailable << endl;
 #endif // ENABLE_PLUGIN_D0RUNIICONE
+  } else if (cmdline.present("-trackjet")) {
+#ifdef ENABLE_PLUGIN_TRACKJET
+    jet_def = fj::JetDefinition(new fj::TrackJetPlugin(ktR));
+#else  // ENABLE_PLUGIN_TRACKJET
+    cerr << "TrackJet"+is_unavailable << endl;
+#endif // ENABLE_PLUGIN_TRACKJET
+// end of checking if one asks to run a plugin (don't delete this line)
   } else if (cmdline.present("-eekt")) {
     jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
   } else if (cmdline.present("-eegenkt")) {
