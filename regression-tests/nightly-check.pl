@@ -23,7 +23,7 @@ $OUTPUT_AUTOFLUSH = 1;
 
 # things to configure
 $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl.gov'; #  g@gavin.fr 
-$configOpts="--enable-cgal --enable-d0runiicone";
+$configOpts="--enable-cgal --enable-d0runiicone --enable-trackjet";
 $nevTestAll=1000;
 $mail=0;
 

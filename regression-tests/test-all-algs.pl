@@ -218,7 +218,7 @@ sub setDefaults {
   $dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
 
   @algs = ("kt", "cam", "antikt", "genkt:0.5", "siscone:-f:0.75","siscone:-f:0.50",  "jetclu", "pxcone",
-           "d0runiicone", "eekt", "eegenkt:0",  "eegenkt:-1");
+           "d0runiicone", "eekt", "eegenkt:0",  "eegenkt:-1", "trackjet");
 
   # for some algorithms we have multiple strategies to test
   %strategies = 
@@ -269,6 +269,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,eekt,R0.60" => "8caea0f93458e54c5418b757793c50d2",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,eegenkt:0,R0.60" => "2308c88202e0b0087c256c8a65efb5ce",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,eegenkt:-1,R0.60" => "21753b7bab26ddb06f75b8eb7b1d3024",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1,trackjet,R0.60" => "144b09c5042300633e2f687e16ffc17a",
   # 10 ev results
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,genkt:0.5,R0.60" => "f3befadd9c96dab695310b994dc5cda5",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,eekt,R0.60" => "1ab6f607fc1acec7c4aa337307347ea0",
@@ -281,6 +282,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,d0runiicone,R0.60" => "f60a1928e1b584078611a257100a99a6",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:0,R0.60" => "e77d363d2ea067bd62d98e7b62bba772",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:-1,R0.60" => "aec87012ed66823e2f30862f57307d93",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev10,trackjet,R0.60" => "c6bbf392b1a1712256f260d7aeb52267",
   # 100 ev results
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,kt,R0.60" => "15b23d6d954c796682214d598f526f6a",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,cam,R0.60" => "9530ca5b1e1680bd2da6714fa42a13a6",
@@ -293,6 +295,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,eekt,R0.60" => "7388d3917738969fb7fdf518af0dca78",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,eegenkt:0,R0.60" => "c210893596b56046573c60603e4a3e5b",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,eegenkt:-1,R0.60" => "905525747cad0344b6826514cd4cc618",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev100,trackjet,R0.60" => "bc388ed856a9f20ce6336201ce8f6afa",
   # 1000 ev results
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,kt,R0.60" => "ae0b4d26e5244cfb551d41097fad3543",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,cam,R0.60" => "ed14ae31b5ebd2df39dafae3f800040f",
@@ -304,7 +307,8 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eekt,R0.60" => "59fe2638f8df87a48bda2b8d1490034e",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:0,R0.60" => "48cb5d5a8a5f636d07569745e5be29e4",
-  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:-1,R0.60" => "e54ecd5d535f2f3d7ddffc1bfd43462c"
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:-1,R0.60" => "e54ecd5d535f2f3d7ddffc1bfd43462c",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,trackjet,R0.60" => "865e8763a52f63e43bb5ac781a8087f1"
 );
 
   %refResultsOrig = %refResults;
