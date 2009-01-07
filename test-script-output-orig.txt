@@ -167,6 +167,19 @@ d0runiicone:    7     -1.17471965      0.75616236      7.28161784       12
 d0runiicone:
 d0runiicone:150 particles unclustered
 d0runiicone:
+trackjet:Ran TrackJet algorithm with R = 0.7
+trackjet:Printing inclusive jets with pt > 5 GeV
+trackjet:---------------------------------------
+trackjet:jet #        rapidity             phi              pt  n constituents
+trackjet:    0     -0.86720060      2.90514996    983.52166328       34
+trackjet:    1      0.22101213      6.03328725    905.22742853       38
+trackjet:    2     -1.17242666      6.11484953     74.18667950       38
+trackjet:    3      0.46628814      0.77285279     11.10204690       12
+trackjet:    4     -2.55929997      1.18380753      8.49356677       12
+trackjet:    5     -1.69873765      4.01961767      7.75067955        7
+trackjet:
+trackjet:0 particles unclustered
+trackjet:
 Ran Longitudinally invariant kt algorithm with R = 0.7 and E scheme recombination
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
