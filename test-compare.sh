@@ -121,6 +121,7 @@ else
     grep -v -e'^trackjet:' output_orig.tmp > output_orig_tmp.tmp
     mv output_orig_tmp.tmp output_orig.tmp
 fi
+# end of plugin list (don't modify this line)
 
 # 2. clear the orig output
 #     (i)  avoid line with '#' or 'SISCone' in them
@@ -128,16 +129,16 @@ fi
 grep -v -e '#' -e 'SISCone' output_orig.tmp | sed -e "s/^pxcone://g" -e "s/^siscone://g" -e "s/^cdfmp://g" -e "s/^d0runiicone://g" -e "s/^trackjet://g" > output_orig.tmp.tmp
 mv output_orig.tmp.tmp output_orig.tmp
 
-# 2. clean the 'make check' output
+# 3. clean the 'make check' output
 grep -v 'CGAL' output.tmp > test-script-output.txt
 grep -v -e '#' -e 'SISCone' test-script-output.txt > output.tmp
 
-# 3. perform the diff
+# 4. perform the diff
 DIFF=`diff output.tmp output_orig.tmp`
 diff output.tmp output_orig.tmp > test-script-output.tmp
 rm output.tmp output_orig.tmp
 
-# 4. show result
+# 5. show result
 echo "Tested plugins: "${tested_plugins}
 if [[ -n $DIFF ]]; then 
   cat test-script-output.tmp
