@@ -161,6 +161,7 @@ int main (int argc, char ** argv) {
   double inclkt = cmdline.double_val("-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
+  bool   get_all_dij   = cmdline.present("-get-all-dij");
   double subdcut = cmdline.double_val("-subdcut",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e305);
   bool   show_constituents = cmdline.present("-const");
@@ -356,10 +357,11 @@ int main (int argc, char ** argv) {
   }
   
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
+    int nparticles = jets.size();
     try {
     fj::ClusterSequence clust_seq(jets,jet_def,write);
     if (irepeat != 0) {continue;}
-    cout << "iev "<<iev<< ": number of particles = "<< jets.size() << endl;
+    cout << "iev "<<iev<< ": number of particles = "<< nparticles << endl;
     cout << "strategy used =  "<< clust_seq.strategy_string()<< endl;
     cout << "Algorithm: " << jet_def.description() << " (" << fj::fastjet_version_string() << ")" << endl;
 
@@ -404,13 +406,13 @@ int main (int argc, char ** argv) {
     }
 
     if (excln > 0) {
-      vector<fj::PseudoJet> jets = sorted_by_E(clust_seq.exclusive_jets(excln));
+      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets(excln));
  
       cout << "Printing "<<excln<<" exclusive jets\n";
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",
 	       //j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
-	       j,jets[j].rap(),jets[j].phi(),jets[j].kt2());
+	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
       }
     }
 
@@ -419,7 +421,14 @@ int main (int argc, char ** argv) {
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",
-	       j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
+	       //j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
+	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
+      }
+    }
+
+    if (get_all_dij) {
+      for (int i = nparticles-1; i > 0; i--) {
+        printf("d for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq.exclusive_dmerge(i));
       }
     }
 

@@ -1,3 +1,21 @@
+2009-01-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* example/ktjet_timing.cc: 
+	  added -get-all-dij option to print out the full list of dij
+	
+	* example/fastjet_timing_plugins.cc: 
+	  added -get-all-dij option to print out the full list of dij
+	  + fixed up up output on -excld (removed squared pt)
+	  
+	  Ran tests on 1k events 
+
+	./fastjet_timing_plugins -nev 1000 -eekt -get-all-dij < ../../data/Pythia-PtMin1000-LHC-1000ev.dat | grep '^d for'
+	./ktjet_timing           -nev 1000 -eekt -get-all-dij < ../../data/Pythia-PtMin1000-LHC-1000ev.dat | grep '^d for'
+
+	  and it passed it fine (modulo some small rounding error issues
+	  here and there.
+	
+	
 2009-01-05  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* plugins/TrackJet/TrackJetPlugin.cc: 

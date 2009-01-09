@@ -37,6 +37,8 @@ int main (int argc, char ** argv) {
   double excld  = cmdline.double_val("-excld",-1.0);
   int  nev     = cmdline.int_val("-nev",1);
   bool   massless = cmdline.present("-massless");
+  bool   get_all_dij   = cmdline.present("-get-all-dij");
+
 
   for (int iev = 0; iev < nev; iev++) {
   vector<KtJet::KtLorentzVector> jets;
@@ -64,14 +66,17 @@ int main (int argc, char ** argv) {
   
   // set KtEvent flags
   int type, angle, recom;
+  ostringstream info;
   if (cmdline.present("-eekt")) {
     type  = 1; // e+e-
     angle = 1; // angular
     recom = 1; // E
+    info << "Algorithm: KtJet e+e- kt algorithm" ;
   } else {
     type  = 4; // PP
     angle = 2; // delta R
     recom = 1; // E
+    info << "Algorithm: KtJet (long.inv.) with R = " << ktR ;
   }
   //double rparameter = 1.0;
 
@@ -80,8 +85,9 @@ int main (int argc, char ** argv) {
     KtJet::KtEvent ev(jets,type,angle,recom,ktR);
 
     if (i!=0) {continue;}
-    cout << "Number of particles = "<< jets.size() << endl;
-    cout << "Algorithm: KtJet (long.inv.) with R = " << ktR << endl;
+    int nparticles = jets.size();
+    cout << "Number of particles = "<< nparticles << endl;
+    cout << info.str() << endl;
 
     // Print out the number of final state jets
     //std::cout << "Number of final state jets: " << ev.getNJets() << std::endl;
@@ -114,8 +120,10 @@ int main (int argc, char ** argv) {
       vector<KtJet::KtLorentzVector> jets = ev.getJetsPt();
       cout << "Printing "<<excln<<" exclusive jets\n";
       for (size_t j = 0; j < jets.size(); j++) {
+        double phi = jets[j].phi();
+        if (phi < 0) phi += fastjet::twopi;
 	printf("%5u %15.8f %15.8f %15.8f\n",j,
-	       jets[j].rapidity(),jets[j].phi(),jets[j].perp());
+	       jets[j].rapidity(),phi,jets[j].perp());
       }
     }
 
@@ -131,6 +139,11 @@ int main (int argc, char ** argv) {
       }
     }
 
+    if (get_all_dij) {
+      for (int i = nparticles-1; i > 0; i--) {
+        printf("d for n = %4d -> %4d is %14.5e\n", i+1, i, ev.getDMerge(i));
+      }
+    }
 
   }
 
