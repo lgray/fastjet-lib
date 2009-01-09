@@ -66,13 +66,14 @@ public:
                   double phimin = 0.0, double phimax = twopi) {
                      assert ( rapmin < rapmax);
                      assert ( phimin < phimax);
-                     assert ( phimin >= 0.0 );
-                     assert ( phimax <= twopi+1e-10 );
+                     assert ( phimin > -twopi );
+                     assert ( phimax < 2*twopi);
                      _rapmax = rapmax;
 		     _rapmin = rapmin;
 		     _phimin = phimin;
 		     _phimax = phimax;
-		     _total_area = (_rapmax - _rapmin)*(_phimax - _phimin); }
+		     _total_area = (_rapmax - _rapmin)*(_phimax - _phimin);
+                     _phispan = _phimax-_phimin; }
 
   /// place the range on the jet position
   inline void set_position(const PseudoJet & jet) {
@@ -95,10 +96,12 @@ public:
   
   /// return bool according to whether a (rap,phi) point is in range
   virtual inline bool is_in_range(double rap, double phi) const {
-    return  ( rap >= _rapmin && 
-              rap <= _rapmax &&
-              phi >= _phimin &&
-              phi <= _phimax );
+    double dphi=phi-_phimin;
+    if (dphi >= twopi) dphi -= twopi;
+    if (dphi < 0)      dphi += twopi;
+    return  ( rap  >= _rapmin && 
+	      rap  <= _rapmax &&
+	      dphi <  _phispan );
   }
 
   /// return the minimal and maximal rapidity of this range; remember to 
@@ -131,7 +134,7 @@ protected:
   double _rapjet,_phijet; // jet position, for derived ranges placed on jets
   
 private:
-  double _rapmin,_rapmax,_phimin,_phimax;
+  double _rapmin,_rapmax,_phimin,_phimax,_phispan;
 
 };
 

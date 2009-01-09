@@ -1,3 +1,9 @@
+2009-01-09  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/RangeDefinition.hh (class RangeDefinition): 
+	  sorted out the issue of periodicity for generic phi ranges.
+	
+
 2009-01-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl (setRefResults): 
