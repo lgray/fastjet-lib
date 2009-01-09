@@ -65,7 +65,7 @@
 \newcommand{\eg}{{\it e.g.}\ }
 \newcommand{\ee}{e^+e^-}
 
-\title{FastJet 2.4 [deve] user manual}
+\title{FastJet 2.4 [devel] user manual}
 \author{Matteo Cacciari, Gavin P. Salam\\
   \normalsize
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\
@@ -264,7 +264,8 @@ section \ref{sec:genkt}. We define the two following distances:
 \begin{subequations}
   \label{eq:dij_eegenkt}
 \begin{align}
-  d_{ij} &= \min(E_i^{2p}, E_j^{2p}) \frac{2(1- \cos \theta_{ij})}{R^2}\,,\\
+  d_{ij} &= \min(E_i^{2p}, E_j^{2p}) \frac{(1- \cos
+    \theta_{ij})}{(1-\cos R)}\,,\\
   d_{iB} &= E_i^{2p}\,,
 \end{align}
 \end{subequations}
@@ -273,7 +274,18 @@ sequence, if a $d_{ij}$ is smallest then $i$ and $j$ are recombined,
 while if a $d_{iB}$ is smallest then $i$ is called an ``inclusive
 jet''. 
 
-For $R > 2$, the $d_{iB}$ will be smallest only if the event
+For values of $R \le \pi$ in eq.~(\ref{eq:dij_eegenkt}), the
+generalised $e^+e^-$ $k_t$ algorithm behaves in analogy with the $pp$
+algorithms: when an object is at an angle $\theta_{iX} > R$ from all
+other objects $X$ then it forms an inclusive jet.
+%
+With the choice $p=-1$ this provides a simple, infrared and collinear
+safe way of obtaining a cone-like algorithm for $e^+e^-$ collisions,
+since hard well-separated jets have a circular profile on the $3$D
+sphere, with opening half-angle $R$.
+
+If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
+then the $d_{iB}$ will be smallest only if the event
 consists of a single particle, and thus with the additional choice of
 $p=1$ the clustering sequence will correspond to that of the $e^+e^-$
 $k_t$ algorithm~\cite{eekt}, often referred to also as the Durham
@@ -288,15 +300,6 @@ case have we normalised to the total energy $Q$ in the event, contrary
 to the convention adopted originally in~\cite{eekt} (where the
 distance measure was called $y_{ij}$).
 
-For values of $R \le 2$ in eq.~(\ref{eq:dij_eegenkt}), the generalised
-$e^+e^-$ $k_t$ algorithm behaves in analogy the $pp$ algorithms: when
-an object is at an angle $\theta_{iX} >\arccos (1 - R^2/2)$ from all
-other objects $X$ then it forms an inclusive jet.
-%
-With the choice $p=-1$ this provides a simple, infrared and collinear
-safe way of obtaining a cone-like algorithm for $e^+e^-$ collisions,
-since hard well-separated jets have a circular profile on the $3$D
-sphere, with opening half-angle $\arccos (1 - R^2/2)$.
 
 
 %......................................................................
@@ -337,10 +340,11 @@ identical to the normal $p_t$ and $p_t^2$ schemes, except that they
 omit the preprocessing stage.
 
 \paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
-\comment{Still to be written} 
+On request, we may in the future provide dedicated schemes for $\ee$
+collisions.
 
-Finally, alternative user-defined recombination schemes can be
-introduced as described in Appendix~\ref{app:a}.
+\paragraph{User-defined schemes.} The user may define their own,
+custom recombination schemes, as described in Appendix~\ref{app:a}.
 
 %----------------------------------------------------------------------
 \section{Jet-finding interface}
@@ -2211,6 +2215,13 @@ G.~C.~Blazey {\it et al.},
 hep-ex/0005012.
 %%CITATION = HEP-EX 0005012;%%
 
+\bibitem{eekt}
+  S.~Catani, Y.~L.~Dokshitzer, M.~Olsson, G.~Turnock and B.~R.~Webber,
+  %``New clustering algorithm for multi - jet cross-sections in e+ e-
+  %annihilation,''
+  Phys.\ Lett.\ B {\bf 269}, 432 (1991);
+
+
 \bibitem{KtJet}
   \url{http://hepforge.cedar.ac.uk/ktjet/};
   J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
@@ -2290,6 +2301,7 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Tevatron-for-LHC report of the QCD working group,''
   hep-ph/0610012.
   %%CITATION = HEP-PH 0610012;%%
+
 
 \end{thebibliography}
 

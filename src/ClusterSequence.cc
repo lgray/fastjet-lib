@@ -97,6 +97,13 @@ void ClusterSequence::_initialise_and_run (
       // and our convention in e+e- will be different from that
       // in long.inv case; NB: _invR2 name should be changed -> _renorm_dij?
       _invR2 = 1.0;
+    } else {
+      // as of 2009-01-09, choose R to be an angular distance, in
+      // radians.  since the algorithm uses 2(1-cos(theta)) as its
+      // squared angular measure, make sure that the _R2 is defined
+      // in a similar way.
+      _R2    = 2 * ( 1.0 - cos(_Rparam) );
+      _invR2 = 1.0/_R2;
     }
     _simple_N2_cluster<EEBriefJet>();
     return;

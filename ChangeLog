@@ -1,5 +1,14 @@
 2009-01-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/test-all-algs.pl (setRefResults): 
+	* doc/fastjet-doc.tex
+	* src/ClusterSequence.cc: 
+
+          switched R in eegenkt to be in radians, not
+	  sqrt(2(1-\cos\theta))!! Updated docs and regression tests also,
+	  and deposited test results in in usual place, 
+	  ~salam/work/fastjet/validation-ref-2008-10-30
+	
 	* example/ktjet_timing.cc: 
 	  added -get-all-dij option to print out the full list of dij
 	
