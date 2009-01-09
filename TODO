@@ -1,27 +1,37 @@
 -------------
 For 2.4
 -------------
-- Sort out phi component of Range...
-- add JetDefinition constructor without R [for e+e- case]
-- Sort out zero-particle case [avoid crash, check many places this enters]
-  [+ add constructor without particles]; [Requests by Andy Buckley]
-- sort out e+e- R across different algorithms
-- enable dynamic libraries by default?
-- add "version()" info to doc            [done: MC & GS: check you're happy!]
-- document error meaningless on AAEG.    [done]
+-        Sort out phi component of Range...
+-        add JetDefinition constructor without R [for e+e- case]
+-        Sort out zero-particle case [avoid crash, check many places this enters]
+         [+ add constructor without particles]; [Requests by Andy Buckley]
+-        enable dynamic libraries by default?
+- [done] add "version()" info to doc            [Gregory: check you're happy!]
+- [done] document error meaningless on AAEG.    
+- [done] sort out e+e- R across different algorithms 
+- [done] finish testing e+e- kt                 
+-        sort out interface for  e+e- kt + make sure documented
+- [done] add ghosts over asymmetric range of rapidity [for Roman Kogler roman.kogler@desy.de]
+-        sort out issue in tiled strategies for small R (large memory use)
+
+-        figure out what to do about RangeDefinition's phi
+
 
 - default f=0.75 for cones:
-   a. change th edefault f to 0.75 in ctor
-   b. add a ctor where f is not specified that prints a warning
+   a. change th edefault f to 0.75 in ctor                       [NO]
+   b. add a ctor where f is not specified that prints a warning  [NO]
    c. add a note in NEWS
    d. add a note in the doc (where?)
    e. add a note on the webpage
    f. add a note at the end of ./configure
-  this has to be done for all the cone algs + internally in SISCone
+  this has to be done for all the cone algs + internally in SISCone  [CHECK]
 
-- add ghosts over asymmetric range of rapidity  [done]
-  [for Roman Kogler roman.kogler@desy.de]
 
+
+-------------
+For 2.5
+-------------
+- rethink RangeDefinition hierarchy?
 
 
 
@@ -29,8 +39,6 @@ For 2.4
 High priority
 -------------
 
-- sort out issue in tiled strategies for small R (large memory use)
-- finish testing e+e- kt, and sort out interface
 - implement jade class? [find out about license for CP software]
 - get CMS and ATLAS cones as plugins
 - sort out the constructors for ranges of algorithms
@@ -40,7 +48,6 @@ High priority
 Medium priority
 ---------------
 
-- figure out what to do about RangeDefinition's phi
 
 - write Fortran wrapper for all algorithms?
 
@@ -87,6 +94,3 @@ Done
   bug-examples/voronoi-square-problem related to Voronoi diagrams of
   certain sets of points on a square grid.
 
-2.4-devel
-- finish implementing gen-kt
-- first version of kt
