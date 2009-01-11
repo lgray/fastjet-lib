@@ -211,7 +211,7 @@ case $found_query in
 	if test "x$use_shared" = "xno" && test "x@HAS_SHARED@" = "xyes" ; then
 	    libs_string=$libs_string" @prefix@/lib/libfastjet.a"
 	else
-	    libs_string=$libs_string" -L@prefix@/lib -lfastjet"
+	    libs_string=$libs_string" -Wl,--rpath,@prefix@/lib -L@prefix@/lib -lfastjet"
 	fi
 	libs_string=$libs_string
 	if test "x$plugins_included" = "xyes" ; then
