@@ -55,7 +55,8 @@ public:
 		     _rapmin = -rapmax;
 		     _phimin = 0.0;
 		     _phimax = twopi;
-		     _total_area = 2.0*rapmax*twopi; }
+		     _total_area = 2.0*rapmax*twopi;
+                     _phispan = _phimax-_phimin; }
   
   /// destructor does nothing
   virtual ~RangeDefinition() {}
@@ -72,7 +73,10 @@ public:
 		     _rapmin = rapmin;
 		     _phimin = phimin;
 		     _phimax = phimax;
-		     _total_area = (_rapmax - _rapmin)*(_phimax - _phimin);
+		     if (_phimax-_phimin > twopi)
+		       _total_area = (_rapmax - _rapmin)*twopi;
+		     else
+		       _total_area = (_rapmax - _rapmin)*(_phimax - _phimin);
                      _phispan = _phimax-_phimin; }
 
   /// place the range on the jet position

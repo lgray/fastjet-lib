@@ -1,3 +1,9 @@
+2009-01-11  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/RangeDefinition.hh (class RangeDefinition):  
+	  - initialised _phispan in the default constructor
+	  - bound the phi range to twopi in the computation of total_area
+
 2009-01-09  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/RangeDefinition.hh (class RangeDefinition): 
