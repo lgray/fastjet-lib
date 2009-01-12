@@ -1,3 +1,9 @@
+2009-01-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  added --enable-shared, to test that Gregory's new option works
+	  fine (probably want a manual test anyway...)
+
 2009-01-11  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/RangeDefinition.hh (class RangeDefinition):  
