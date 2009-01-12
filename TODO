@@ -2,6 +2,7 @@
 For 2.4
 -------------
 - [done] Sort out phi component of Range...
+-        test phi component of range
 -        add JetDefinition constructor without R [for e+e- case]
 -        Sort out zero-particle case [avoid crash, check many places this enters]
          [+ add constructor without particles]; [Requests by Andy Buckley]
@@ -15,6 +16,7 @@ For 2.4
 -        sort out issue in tiled strategies for small R (large memory use)
 
 - [done] figure out what to do about RangeDefinition's phi
+-        test new shared-lib options
 
 
 - default f=0.75 for cones:
