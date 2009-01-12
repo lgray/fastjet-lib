@@ -122,7 +122,8 @@ void ClusterSequence::_initialise_and_run (
       _strategy = NlnNCam;}
     else
 #ifndef DROP_CGAL
-    if (N > 16000/pow(_Rparam,1.15)) {
+      if ((N > 16000/pow(_Rparam,1.15) && jet_def.jet_algorithm() != antikt_algorithm)
+        || N > 35000/pow(_Rparam,1.15)) {
       _strategy = NlnN; }   
     else                    
 #endif  // DROP_CGAL

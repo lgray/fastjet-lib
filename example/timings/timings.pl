@@ -28,8 +28,9 @@ $baserep = 700;
 #@strategy = (-3,-1,2);
 #@strategy = (3,4);
 #@strategy = (-4,-3,-1,2,12);
+#@strategy = (1);
+#@strategy = (1001,1012,996,2001,2012,1996);
 @strategy = (1);
-#@strategy = (1001);
 #@strategy = (12);
 #@strategy = (102);
 #@strategy = (-3,-1,0,2,10,11,102);
@@ -101,8 +102,8 @@ print OUT "# strategy = ",$strategy,"\n";
 $maxj = 100;
 $algo = "";
 # allow for other seq.rec. algs
-if (int($strategy/1000) == 1) {$algo = "-cam";     $strategy -= 1000;}
-if (int($strategy/1000) == 2) {$algo = "-antikt" ; $strategy -= 2000; print "HELLO\n"}
+if (int($strategy/1000+0.5) == 1) {$algo = "-cam";     $strategy -= 1000;}
+if (int($strategy/1000+0.5) == 2) {$algo = "-antikt" ; $strategy -= 2000; print "HELLO\n"}
 #if ( $strategy >= 2 )  {$maxcomb = 500;}
 #if ( $strategy >= 2 )  {$maxcomb = 9999;}
 #if ( $strategy >= 2 )  {$maxcomb = 4000;}

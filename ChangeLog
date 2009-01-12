@@ -1,5 +1,10 @@
 2009-01-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
+	  changed the transition N for the anti-kt algorithm to
+	  35000/R^1.15 (based only on R=0.7)
+	
+
 	* regression-tests/nightly-check.pl: 
 	  added --enable-shared, to test that Gregory's new option works
 	  fine (probably want a manual test anyway...)
