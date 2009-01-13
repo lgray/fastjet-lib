@@ -2,7 +2,7 @@
 For 2.4
 -------------
 - [done] Sort out phi component of Range...
--        test phi component of range
+- [done] test phi component of range
 -        add JetDefinition constructor without R [for e+e- case]
 -        Sort out zero-particle case [avoid crash, check many places this enters]
          [+ add constructor without particles]; [Requests by Andy Buckley]
@@ -16,7 +16,8 @@ For 2.4
 -        sort out issue in tiled strategies for small R (large memory use)
 
 - [done] figure out what to do about RangeDefinition's phi
--        test new shared-lib options
+- [done] test new shared-lib options
+-        get stable-cone pass number from the SISCone extras variable.
 
 
 - default f=0.75 for cones:
@@ -33,27 +34,25 @@ For 2.4
 -------------
 For 2.5
 -------------
-- rethink RangeDefinition hierarchy?
-
+-        rethink RangeDefinition hierarchy, including set_position(...),
+         addition of (circular, donut) local ranges, etc.
+-        versioning of library names (like libfastjet-2.5.2.so)?
+-        CMS and ATLAS cones as plugins
+-        maybe e+e- Jade?
 
 
 -------------
 High priority
 -------------
 
-- implement jade class? [find out about license for CP software]
-- get CMS and ATLAS cones as plugins
-- sort out the constructors for ranges of algorithms
+- sort out the constructors for sequences of algorithms
 - DIS?
 
 ---------------
 Medium priority
 ---------------
 
-
 - write Fortran wrapper for all algorithms?
-
-- get stable-cone pass number from the SISCone extras variable.
 
 - sort out error in passive area with jetclu (calling function that
   should not be called)?
@@ -79,7 +78,8 @@ Medium priority
   constituents of a jet without manually going via the
   ClusterSequence.
 
-- auto FAQ restructured?
+- auto FAQ restructured [i.e. rewrite the javascript a little 
+  so it's easier to add questions]?
 
 ----
 Done

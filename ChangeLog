@@ -1,3 +1,9 @@
+2009-01-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* include/fastjet/RangeDefinition.hh: 
+	  removed set_position and associated variables (will go back in
+	  -> 2.5)
+
 2009-01-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* test-compare.sh 
