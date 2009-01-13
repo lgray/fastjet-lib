@@ -44,8 +44,8 @@ if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}"-g "
 fi
 
-dnl don't build the shared lib by default
-AM_DISABLE_SHARED
+dnl build the shared lib by default
+dnl AM_DISABLE_SHARED
 HAS_SHARED=${enable_shared}
 
 dnl-----------------

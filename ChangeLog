@@ -1,3 +1,10 @@
+2009-01-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* configure.ac: 
+	  switched shared libs to enabled by default 
+	  note that the static libs are also built. 
+
+
 2009-01-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* src/ClusterSequence.cc: 
