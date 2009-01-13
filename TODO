@@ -4,8 +4,8 @@ For 2.4
 - [done] Sort out phi component of Range...
 - [done] test phi component of range
 -        add JetDefinition constructor without R [for e+e- case]
--        Sort out zero-particle case [avoid crash, check many places this enters]
-         [+ add constructor without particles]; [Requests by Andy Buckley]
+- [done] Sort out zero-particle case
+         [+ add constructor without particles]; [Requests by Andy Buckley; maybe not?]
 -        enable dynamic libraries by default?   [GS: I'd be for it]
 - [done] add "version()" info to doc            [Gregory: check you're happy! I'd have put FastJet 2.4devel, wo the []]
 - [done] document error meaningless on AAEG.    
@@ -18,7 +18,9 @@ For 2.4
 - [done] figure out what to do about RangeDefinition's phi
 - [done] test new shared-lib options
 -        get stable-cone pass number from the SISCone extras variable.
-
+-        add/verify manual entry about compilation
+-        check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
+-        update NEWS!!!
 
 - default f=0.75 for cones:
    a. change th edefault f to 0.75 in ctor                       [NO]

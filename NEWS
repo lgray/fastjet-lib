@@ -74,6 +74,11 @@ interface modifications
   CDFMidPointPlugin and SISConePlugin constructors
   *** may break backwards compatibility ***
 
+other modifications
+-----------------------
+- removed restriction fastjet throws exception on empty events
+
+
 
 =======================================================================
 Summary of changes from v2.3.3 -> v2.3.4 (bug fix release): 15 Aug 2008

@@ -1,5 +1,13 @@
 2009-01-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* src/ClusterSequence.cc: 
+	* src/ClusterSequenceVoronoiArea.cc: 
+	* src/ClusterSequenceActiveArea.cc: 
+
+	  made modifications to allow zero-particle events to work
+	  fine. Tested various areas, as well as plain runs, including
+	  plugins (or at least SISCone).
+	
 	* src/ClusterSequence_TiledN2.cc: 
 	  added a lower limit on the tile size to avoid huge memory use
 	  with tiny jet radii.

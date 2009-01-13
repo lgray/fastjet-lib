@@ -76,6 +76,9 @@ void ClusterSequence::_initialise_and_run (
   // currently in _jets)
   _fill_initial_history();
 
+  // don't run anything if the event is empty
+  if (n_particles() == 0) return;
+
   // ----- deal with special cases: plugins & e+e- ------
   if (_jet_algorithm == plugin_algorithm) {
     // allows plugin_xyz() functions to modify cluster sequence
@@ -235,7 +238,7 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def,
 // initialise the history in a standard way
 void ClusterSequence::_fill_initial_history () {
 
-  if (_jets.size() == 0) {throw Error("Cannot run jet-finder on empty event");}
+  //if (_jets.size() == 0) {throw Error("Cannot run jet-finder on empty event");}
 
   // reserve sufficient space for everything
   _jets.reserve(_jets.size()*2);

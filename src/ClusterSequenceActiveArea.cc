@@ -479,10 +479,14 @@ void ClusterSequenceActiveArea::_transfer_ghost_free_history(
   const vector<history_element> & gs_history  = ghosted_seq.history();
   vector<int> gs2self_hist_map(gs_history.size());
 
+  // first transfer info about strategy used (which isn't necessarily
+  // always the one that got asked for...)
+  _strategy = ghosted_seq.strategy_used();
+
   // work our way through to first non-trivial combination
   unsigned igs = 0;
   unsigned iself = 0;
-  while (gs_history[igs].parent1 == InexistentParent) {
+  while (igs < gs_history.size() && gs_history[igs].parent1 == InexistentParent) {
     // record correspondence 
     if (!ghosted_seq.is_pure_ghost(igs)) {
       gs2self_hist_map[igs] = iself++; 
@@ -496,6 +500,12 @@ void ClusterSequenceActiveArea::_transfer_ghost_free_history(
   // what we already have in terms of initial jets
   assert(iself == _history.size());
 
+  // if there was no clustering in this event (e.g. SISCone passive
+  // area with zero input particles, or with a pt cut on stable cones
+  // that kills all jets), then don't bother with the rest (which
+  // would crash!)
+  if (igs == gs_history.size()) return;
+  
   // now actually transfer things
   do  {
     // if we are a pure ghost, then go on to next round
@@ -543,9 +553,6 @@ void ClusterSequenceActiveArea::_transfer_ghost_free_history(
     }
   } while (++igs < gs_history.size());
 
-  // finally transfer info about strategy used (which isn't necessarily
-  // always the one that got asked for...)
-  _strategy = ghosted_seq.strategy_used();
 }
 
 //----------------------------------------------------------------------

@@ -218,7 +218,9 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
     n_tot++;
   }
 
-  assert(n_added > 0);
+  // allow for 0-particle case in graceful way
+  if (n_added == 0) return;
+  // assert(n_added > 0); // old (pre 2.4) non-graceful exit
 
   // add extreme cases (corner particles):
   double max_extend = 2*max(maxrap-minrap+4*_effective_R, twopi+8*_effective_R);

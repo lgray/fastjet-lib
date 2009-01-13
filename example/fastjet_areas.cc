@@ -83,7 +83,7 @@ int main (int argc, char ** argv) {
   fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
   //fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, Rparam, strategy);
   //fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, Rparam, strategy);
-  //fastjet::JetDefinition jet_def(new fastjet::SISConePlugin(1.0));
+  //fastjet::JetDefinition jet_def(new fastjet::SISConePlugin(Rparam,0.75));
 
   // create an object that specifies how we to define the area
   fastjet::AreaDefinition area_def;
@@ -103,6 +103,7 @@ int main (int argc, char ** argv) {
     fastjet::GhostedAreaSpec ghost_spec(ghost_etamax, active_area_repeats, 
                                         ghost_area);
     area_def = fastjet::AreaDefinition(fastjet::passive_area,ghost_spec);
+    //area_def = fastjet::AreaDefinition(fastjet::active_area,ghost_spec);
   } else {
     double effective_Rfact = 1.0;
     area_def = fastjet::VoronoiAreaSpec(effective_Rfact);
