@@ -153,7 +153,7 @@ int main (int argc, char ** argv) {
   fj::PseudoJet this_jet = jets[0], parent1, parent2;
   bool had_parents;
 
-  while (had_parents = cs.has_parents(this_jet,parent1,parent2)) {
+  while ((had_parents = cs.has_parents(this_jet,parent1,parent2))) {
     // make parent1 the more massive jet
     if (parent1.m() < parent2.m()) swap(parent1,parent2);
     //

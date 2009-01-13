@@ -13,7 +13,7 @@ For 2.4
 - [done] finish testing e+e- kt                 
 -        sort out interface for  e+e- kt + make sure documented
 - [done] add ghosts over asymmetric range of rapidity [for Roman Kogler roman.kogler@desy.de]
--        sort out issue in tiled strategies for small R (large memory use)
+- [done] sort out issue in tiled strategies for small R (large memory use)
 
 - [done] figure out what to do about RangeDefinition's phi
 - [done] test new shared-lib options
@@ -39,7 +39,7 @@ For 2.5
 -        versioning of library names (like libfastjet-2.5.2.so)?
 -        CMS and ATLAS cones as plugins
 -        maybe e+e- Jade?
-
+-        more sophisticated upper limit on number of tiles in tiled strategies?
 
 -------------
 High priority

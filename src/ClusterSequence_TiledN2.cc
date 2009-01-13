@@ -85,9 +85,11 @@ void ClusterSequence::_bj_remove_from_tiles(TiledJet * const jet) {
 ///
 void ClusterSequence::_initialise_tiles() {
 
-  // first decide tile sizes
-  _tile_size_eta = _Rparam;
-  _n_tiles_phi   = int(floor(twopi/_Rparam));
+  // first decide tile sizes (with a lower bound to avoid huge memory use with
+  // very small R)
+  double default_size = max(0.1,_Rparam);
+  _tile_size_eta = default_size;
+  _n_tiles_phi   = int(floor(twopi/default_size));
   _tile_size_phi = twopi / _n_tiles_phi; // >= _Rparam and fits in 2pi
 
   // always include zero rapidity in the tiling region

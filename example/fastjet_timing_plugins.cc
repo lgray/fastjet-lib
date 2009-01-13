@@ -166,8 +166,8 @@ int main (int argc, char ** argv) {
   double etamax = cmdline.double_val("-etamax",1.0e305);
   bool   show_constituents = cmdline.present("-const");
   bool   massless = cmdline.present("-massless");
-  int  nev     = cmdline.int_val("-nev",1);
-  bool add_dense_coverage = cmdline.present("-dense");
+  int    nev     = cmdline.int_val("-nev",1);
+  bool   add_dense_coverage = cmdline.present("-dense");
   double ghost_maxrap = cmdline.value("-ghost-maxrap",5.0);
 
   bool show_cones = cmdline.present("-cones"); // only works for siscone
@@ -276,7 +276,7 @@ int main (int argc, char ** argv) {
     jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, 
 				fj::E_scheme, strategy);
   } else {
-    bool dummy = cmdline.present("-kt"); // kt is default, but allow user to specify it too
+    cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
   }
 

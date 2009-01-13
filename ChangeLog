@@ -1,5 +1,9 @@
 2009-01-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* src/ClusterSequence_TiledN2.cc: 
+	  added a lower limit on the tile size to avoid huge memory use
+	  with tiny jet radii.
+
 	* include/fastjet/RangeDefinition.hh: 
 	  removed set_position and associated variables (will go back in
 	  -> 2.5)
