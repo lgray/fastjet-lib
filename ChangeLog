@@ -1,3 +1,10 @@
+2009-01-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* test-compare.sh 
+	  test-script-output-orig.txt: 
+	  used now fastjet_timings_plugin rather than many_algs_examples
+	  to test the output of each installed algorithm/plugin.
+
 2009-01-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 

@@ -1,48 +1,35 @@
 #!/bin/bash
 
-# Note on the structure of the output file, its original version we have
-# to compare with and te comparison itself:
+# This file aims at comparing the output of the different algorithms 
+# with the benchmark results stored in test-algorithms-orig.dat
 #
-# orig output looks as follows:
-#  FastJet banner
-#  jets from k_t example
-#  FastJet banner
-#  Output from the area example (k_t clustering)
-#    This ends with 'Number of unclustered particles: 0'
-#  FastJet banner
-#  jets from CDF midpoint
-#    Ending with '138 particles unclustered' and a blank line
-#  jets from SISCone
-#    Ending with '0 particles unclustered' and a blank line
-#  jets from k_t
-#    Ending with '0 particles unclustered' and a blank line
-#  jets from cam
-#    Ending with '0 particles unclustered' and a blank line
-#  jets from antikt
-#    Ending with '0 particles unclustered' and a blank line
+# To do that, we'll follow the following recipe:
+#   - get the list of available algorithms
+#     Note that at the same time, we'll build the info to clear the 
+#     original output later on
+#   - run the various algorithms using fastjet_timing_plugins
+#     send the output to a tmp file
+#   - clear orig and tmp files
+#   - compare them
 # 
-# This script output will have the form
-#  FastJet banner
-#  jets from k_t example
-#  FastJet banner
-#  Output from the area example (k_t clustering)
-#    This ends with 'Number of unclustered particles: 0'
-#  FastJet banner
-#  jets from PxCone        (IF PxCone ENABLED)
-#    Ending with '??? particles unclustered' and a blank line
-#  jets from CDF midpoint  (IF CDF MidPoint ENABLED)
-#    Ending with '??? particles unclustered' and a blank line
-#  jets from SISCone       (IF SISCone ENABLED)
-#    Ending with '??? particles unclustered' and a blank line
-#  jets from k_t
-#    Ending with '??? particles unclustered' and a blank line
-#  jets from cam
-#    Ending with '??? particles unclustered' and a blank line
-#  jets from antikt
-#    Ending with '??? particles unclustered' and a blank line
-#
-# Note: in the original script, parts related to the plugins
-#       are prefixed by <tag>:
+# Specific notes:
+#   - Tested algorithms: 
+#       kt, cam, antikt, ee_kt, ee_cam, ee_antikt,
+#       siscone, siscone_spheri, jetclu, midpoint, pxcone,
+#       d0runiicone, trackjet
+#   - What needs to be cleared in the orig file:
+#       the lines starting with "<alg>:" for the algorithms
+#       that won't be used
+#   - What needs to be cleared in the test file:
+#       . all comment lined starting with '#'
+#   - For native algs, we'll fix the strategy so that the output 
+#     matches (Best could be dangerous in case CGAL gets used)
+#   - additional things tested: the output of fastjet_example and
+#     fastjet_areas that will be placed at the beginning of the file
+# 
+# TODO:
+#   - add genkt, ee_kt, ee_genkt
+#   - vary parameters
 
 #======================================================================
 # first check that the windows include file has the correct
@@ -61,82 +48,78 @@ fi
 
 #======================================================================
 # now run the real tests
+if test -z ${srcdir}; then
+    echo "setting srcdir to ."
+    srcdir="."
+fi
+
+# first build the list of algs to run
+echo -----------------------------------------------------------
+echo "Checking which algorithms are available for testing"
+echo -----------------------------------------------------------
+tested_algs="kt cam antikt "
+untested_algs=""
+
+echo "^#" > clear_patterns.orig
+echo "CGAL" >> clear_patterns.orig
+echo "SISCone" >> clear_patterns.orig  # avoids problems w version numbers
+cp clear_patterns.orig clear_patterns.tmp
+echo ":#" >> clear_patterns.orig
+
+# note: algs specified as alg:name mean that 'name' has to be checked for the 
+#       availability of 'alg'
+for plugin_tag in siscone sisconespheri:siscone jetclu:cdfcones midpoint:cdfcones pxcone d0runiicone trackjet ; do
+    plugin=${plugin_tag%%:*}
+    tag=${plugin_tag##*:}
+
+    tag_upper=`echo ${tag} | tr a-z A-Z`
+
+    if [[ -n `grep "define ENABLE_PLUGIN_${tag_upper}" include/fastjet/config_auto.h` ]]; then
+	tested_algs=${tested_algs}" "${plugin}
+    else
+	untested_algs=${untested_algs}" "${plugin}
+	echo "^${plugin}:" >> clear_patterns.orig
+    fi
+done
+
+# build the output to be compared wityh the original one
+## for regenerating the orig output: echo "blahblahthiswillneverhappen" > clear_patterns.tmp
 echo -----------------------------------------------------------
 echo "Running 'fastjet_example < data/single_event.dat'"
 echo -----------------------------------------------------------
-example/fastjet_example < ${srcdir}/example/data/single-event.dat > output.tmp
+example/fastjet_example < ${srcdir}/example/data/single-event.dat | grep -v -E -f clear_patterns.tmp > output.tmp
 
 echo
 echo -----------------------------------------------------------
 echo "Running 'fastjet_areas < data/single_event.dat'"
 echo -----------------------------------------------------------
-example/fastjet_areas < ${srcdir}/example/data/single-event.dat >> output.tmp
+example/fastjet_areas < ${srcdir}/example/data/single-event.dat | grep -v -E -f clear_patterns.tmp >> output.tmp
 
-echo
+# run the algorithms to be tested
 echo -----------------------------------------------------------
-echo "Running 'many_algs_example < data/single_event.dat'"
+echo "Running 'fastjet_timing_plugins -incl 5.0 < data/single_event.dat' on all algs"
+echo "  tested  : "${tested_algs}
+echo "  untested:" ${untested_algs}
 echo -----------------------------------------------------------
-plugins/usage_examples/many_algs_example < ${srcdir}/example/data/single-event.dat >> output.tmp
+for alg in ${tested_algs}; do
+    example/fastjet_timing_plugins -${alg} -incl 5.0 -strategy -3 < ${srcdir}/example/data/single-event.dat \
+      | grep -v -E -f clear_patterns.tmp \
+      | awk "{if (\$2 == \"exclusive\"){ exit;}; print \"${alg}:\"\$0}"  >> output.tmp
+done
+## for regenerating the orig output: cp output.tmp test-script-output-orig.txt
 
 echo
 echo -----------------------------------------------------------
 echo "Comparing output from these runs (test-script-output.txt) "
 echo "to the expected output (test-script-output-orig.txt)"
 echo -----------------------------------------------------------
-
-# we need cleaning before that:
-###############################
-# 1. get the installed plugins
-#    and remove the unwanted lines in the original output
-pluins_grep_opts=""
-cp ${srcdir}/test-script-output-orig.txt output_orig.tmp
-chmod u+w output_orig.tmp
-if [[ -n `grep "define ENABLE_PLUGIN_PXCONE" include/fastjet/config_auto.h` ]]; then
-    tested_plugins=${tested_plugins}"PxCone "
-else
-    grep -v -e'^pxcone:' output_orig.tmp > output_orig_tmp.tmp
-    mv output_orig_tmp.tmp output_orig.tmp
-fi
-if [[ -n `grep "define ENABLE_PLUGIN_CDFCONES" include/fastjet/config_auto.h` ]]; then
-    tested_plugins=${tested_plugins}"CDFMidPoint "
-else
-    grep -v -e'^cdfmp:' output_orig.tmp > output_orig_tmp.tmp
-    mv output_orig_tmp.tmp output_orig.tmp
-fi
-if [[ -n `grep "define ENABLE_PLUGIN_SISCONE" include/fastjet/config_auto.h` ]]; then
-    tested_plugins=${tested_plugins}"SISCone "
-else
-    grep -v -e'^siscone:' output_orig.tmp > output_orig_tmp.tmp
-    mv output_orig_tmp.tmp output_orig.tmp
-fi
-if [[ -n `grep "define ENABLE_PLUGIN_D0RUNIICONE" include/fastjet/config_auto.h` ]]; then
-    tested_plugins=${tested_plugins}"D0RunIICone "
-else
-    grep -v -e'^d0runiicone:' output_orig.tmp > output_orig_tmp.tmp
-    mv output_orig_tmp.tmp output_orig.tmp
-fi
-if [[ -n `grep "define ENABLE_PLUGIN_TRACKJET" include/fastjet/config_auto.h` ]]; then
-    tested_plugins=${tested_plugins}"TrackJet "
-else
-    grep -v -e'^trackjet:' output_orig.tmp > output_orig_tmp.tmp
-    mv output_orig_tmp.tmp output_orig.tmp
-fi
-# end of plugin list (don't modify this line)
-
-# 2. clear the orig output
-#     (i)  avoid line with '#' or 'SISCone' in them
-#     (ii) remove the plugins tags
-grep -v -e '#' -e 'SISCone' output_orig.tmp | sed -e "s/^pxcone://g" -e "s/^siscone://g" -e "s/^cdfmp://g" -e "s/^d0runiicone://g" -e "s/^trackjet://g" > output_orig.tmp.tmp
-mv output_orig.tmp.tmp output_orig.tmp
-
-# 3. clean the 'make check' output
-grep -v 'CGAL' output.tmp > test-script-output.txt
-grep -v -e '#' -e 'SISCone' test-script-output.txt > output.tmp
+# clear the original output for comment lines and untested algorithms
+grep -v -E -f clear_patterns.orig  test-script-output-orig.txt >  output_orig.tmp
 
 # 4. perform the diff
 DIFF=`diff output.tmp output_orig.tmp`
 diff output.tmp output_orig.tmp > test-script-output.tmp
-rm output.tmp output_orig.tmp
+# rm output.tmp output_orig.tmp
 
 # 5. show result
 echo "Tested plugins: "${tested_plugins}
@@ -145,6 +128,8 @@ if [[ -n $DIFF ]]; then
   exit 1;
 else
   echo Results are identical
+
   rm test-script-output.tmp
-  rm test-script-output.txt
+  rm clear_patterns.orig
+  rm clear_patterns.tmp
 fi
