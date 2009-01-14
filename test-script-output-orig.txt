@@ -89,6 +89,51 @@ kt:# and CGAL: http://www.cgal.org/.
 kt:#-------------------------------------------------------------------------
 kt:iev 0: number of particles = 354
 kt:strategy used =  N2Tiled
+kt:Algorithm: Longitudinally invariant kt algorithm with R = 0.4 and E scheme recombination (FastJet version 2.4-devel)
+kt:    0     -0.86683693      2.90514309    982.62071600
+kt:    1      0.22030557      6.02962766    897.75337343
+kt:    2     -1.17908533      6.08124171     67.60290125
+kt:    3      0.24229023      0.30654370      8.88399867
+kt:    4      0.34826413      0.90550241      5.22951332
+kt:#--------------------------------------------------------------------------
+kt:#                      FastJet release 2.4-devel
+kt:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+kt:#                         http://www.fastjet.fr                         
+kt:#								      	   
+kt:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+kt:# clustering using fast geometric algorithms, with area measures and optional
+kt:# external jet-finder plugins.                                          
+kt:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+kt:#								      	   
+kt:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+kt:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+kt:# and CGAL: http://www.cgal.org/.
+kt:#-------------------------------------------------------------------------
+kt:iev 0: number of particles = 354
+kt:strategy used =  N2Tiled
+kt:Algorithm: Longitudinally invariant kt algorithm with R = 0.7 and E scheme recombination (FastJet version 2.4-devel)
+kt:    0     -0.86730713      2.90511470    983.38727662
+kt:    1      0.22086793      6.02950080    898.49716062
+kt:    2     -1.16895522      6.11108803     73.85281431
+kt:    3      0.36257181      0.54763129     16.65531147
+kt:    4     -2.46859216      1.03398974      7.98755167
+kt:    5     -1.63742088      4.01894081      7.60023410
+kt:#--------------------------------------------------------------------------
+kt:#                      FastJet release 2.4-devel
+kt:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+kt:#                         http://www.fastjet.fr                         
+kt:#								      	   
+kt:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+kt:# clustering using fast geometric algorithms, with area measures and optional
+kt:# external jet-finder plugins.                                          
+kt:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+kt:#								      	   
+kt:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+kt:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+kt:# and CGAL: http://www.cgal.org/.
+kt:#-------------------------------------------------------------------------
+kt:iev 0: number of particles = 354
+kt:strategy used =  N2Tiled
 kt:Algorithm: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination (FastJet version 2.4-devel)
 kt:    0     -0.86730713      2.90511470    983.38727662
 kt:    1      0.22380471      6.04226446    910.28808604
@@ -99,6 +144,51 @@ kt:    5     -1.71897064      4.01955399      8.16413672
 kt:    6     -4.71909257      4.09173629      5.57326514
 kt:    7      3.42713139      5.74362063      5.17254118
 kt:    8     -4.83615264      2.20502275      5.02711586
+cam:#--------------------------------------------------------------------------
+cam:#                      FastJet release 2.4-devel
+cam:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+cam:#                         http://www.fastjet.fr                         
+cam:#								      	   
+cam:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+cam:# clustering using fast geometric algorithms, with area measures and optional
+cam:# external jet-finder plugins.                                          
+cam:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+cam:#								      	   
+cam:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+cam:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+cam:# and CGAL: http://www.cgal.org/.
+cam:#-------------------------------------------------------------------------
+cam:iev 0: number of particles = 354
+cam:strategy used =  N2Tiled
+cam:Algorithm: Longitudinally invariant Cambridge/Aachen algorithm with R = 0.4 and E scheme recombination (FastJet version 2.4-devel)
+cam:    0     -0.86742752      2.90533849    981.29404154
+cam:    1      0.22162020      6.02948874    893.72986032
+cam:    2     -1.18373969      6.08211191     66.83769630
+cam:    3      0.24229023      0.30654370      8.88399867
+cam:    4      0.34826413      0.90550241      5.22951332
+cam:#--------------------------------------------------------------------------
+cam:#                      FastJet release 2.4-devel
+cam:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+cam:#                         http://www.fastjet.fr                         
+cam:#								      	   
+cam:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+cam:# clustering using fast geometric algorithms, with area measures and optional
+cam:# external jet-finder plugins.                                          
+cam:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+cam:#								      	   
+cam:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+cam:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+cam:# and CGAL: http://www.cgal.org/.
+cam:#-------------------------------------------------------------------------
+cam:iev 0: number of particles = 354
+cam:strategy used =  N2Tiled
+cam:Algorithm: Longitudinally invariant Cambridge/Aachen algorithm with R = 0.7 and E scheme recombination (FastJet version 2.4-devel)
+cam:    0     -0.86730713      2.90511470    983.38727662
+cam:    1      0.22086793      6.02950080    898.49716062
+cam:    2     -1.16399356      6.11976501     73.21177254
+cam:    3      0.36257181      0.54763129     16.65531147
+cam:    4     -2.46859216      1.03398974      7.98755167
+cam:    5     -1.63742088      4.01894081      7.60023410
 cam:#--------------------------------------------------------------------------
 cam:#                      FastJet release 2.4-devel
 cam:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
@@ -139,6 +229,51 @@ antikt:# and CGAL: http://www.cgal.org/.
 antikt:#-------------------------------------------------------------------------
 antikt:iev 0: number of particles = 354
 antikt:strategy used =  N2Tiled
+antikt:Algorithm: Longitudinally invariant anti-kt algorithm with R = 0.4 and E scheme recombination (FastJet version 2.4-devel)
+antikt:    0     -0.86748501      2.90530809    981.15729251
+antikt:    1      0.22203222      6.02990513    895.42612230
+antikt:    2     -1.19073366      6.10283910     63.37420652
+antikt:    3      0.43211695      0.77338735      9.34631586
+antikt:    4     -0.94343365      5.73794142      5.72893220
+antikt:#--------------------------------------------------------------------------
+antikt:#                      FastJet release 2.4-devel
+antikt:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+antikt:#                         http://www.fastjet.fr                         
+antikt:#								      	   
+antikt:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+antikt:# clustering using fast geometric algorithms, with area measures and optional
+antikt:# external jet-finder plugins.                                          
+antikt:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+antikt:#								      	   
+antikt:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+antikt:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+antikt:# and CGAL: http://www.cgal.org/.
+antikt:#-------------------------------------------------------------------------
+antikt:iev 0: number of particles = 354
+antikt:strategy used =  N2Tiled
+antikt:Algorithm: Longitudinally invariant anti-kt algorithm with R = 0.7 and E scheme recombination (FastJet version 2.4-devel)
+antikt:    0     -0.86713954      2.90515650    983.27961921
+antikt:    1      0.22089580      6.03313616    904.16761389
+antikt:    2     -1.16717122      6.08565211     71.03697265
+antikt:    3      0.42935634      0.74543134     10.45328748
+antikt:    4     -2.37033734      1.10516914     10.44846237
+antikt:    5     -1.63742088      4.01894081      7.60023410
+antikt:#--------------------------------------------------------------------------
+antikt:#                      FastJet release 2.4-devel
+antikt:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+antikt:#                         http://www.fastjet.fr                         
+antikt:#								      	   
+antikt:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+antikt:# clustering using fast geometric algorithms, with area measures and optional
+antikt:# external jet-finder plugins.                                          
+antikt:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+antikt:#								      	   
+antikt:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+antikt:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+antikt:# and CGAL: http://www.cgal.org/.
+antikt:#-------------------------------------------------------------------------
+antikt:iev 0: number of particles = 354
+antikt:strategy used =  N2Tiled
 antikt:Algorithm: Longitudinally invariant anti-kt algorithm with R = 1 and E scheme recombination (FastJet version 2.4-devel)
 antikt:    0     -0.86730713      2.90511470    983.38727662
 antikt:    1      0.21948180      6.03486732    908.09787495
@@ -151,16 +286,61 @@ antikt:    7     -4.02639226      0.92060213      5.19744903
 antikt:    8      3.42713139      5.74362063      5.17254118
 genkt,1.0:#--------------------------------------------------------------------------
 genkt,1.0:#                      FastJet release 2.4-devel
-genkt,1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-genkt,1.0:#                         http://www.fastjet.fr
-genkt,1.0:#
-genkt,1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+genkt,1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,1.0:#                         http://www.fastjet.fr                         
+genkt,1.0:#								      	   
+genkt,1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 genkt,1.0:# clustering using fast geometric algorithms, with area measures and optional
-genkt,1.0:# external jet-finder plugins.
+genkt,1.0:# external jet-finder plugins.                                          
 genkt,1.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-genkt,1.0:#
-genkt,1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-genkt,1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+genkt,1.0:#								      	   
+genkt,1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+genkt,1.0:# and CGAL: http://www.cgal.org/.
+genkt,1.0:#-------------------------------------------------------------------------
+genkt,1.0:iev 0: number of particles = 354
+genkt,1.0:strategy used =  N2Tiled
+genkt,1.0:Algorithm: Longitudinally invariant generalised kt algorithm with R = 0.4, p = 1 and E scheme recombination (FastJet version 2.4-devel)
+genkt,1.0:    0     -0.86683693      2.90514309    982.62071600
+genkt,1.0:    1      0.22030557      6.02962766    897.75337343
+genkt,1.0:    2     -1.17908533      6.08124171     67.60290125
+genkt,1.0:    3      0.24229023      0.30654370      8.88399867
+genkt,1.0:    4      0.34826413      0.90550241      5.22951332
+genkt,1.0:#--------------------------------------------------------------------------
+genkt,1.0:#                      FastJet release 2.4-devel
+genkt,1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,1.0:#                         http://www.fastjet.fr                         
+genkt,1.0:#								      	   
+genkt,1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+genkt,1.0:# clustering using fast geometric algorithms, with area measures and optional
+genkt,1.0:# external jet-finder plugins.                                          
+genkt,1.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+genkt,1.0:#								      	   
+genkt,1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+genkt,1.0:# and CGAL: http://www.cgal.org/.
+genkt,1.0:#-------------------------------------------------------------------------
+genkt,1.0:iev 0: number of particles = 354
+genkt,1.0:strategy used =  N2Tiled
+genkt,1.0:Algorithm: Longitudinally invariant generalised kt algorithm with R = 0.7, p = 1 and E scheme recombination (FastJet version 2.4-devel)
+genkt,1.0:    0     -0.86730713      2.90511470    983.38727662
+genkt,1.0:    1      0.22086793      6.02950080    898.49716062
+genkt,1.0:    2     -1.16895522      6.11108803     73.85281431
+genkt,1.0:    3      0.36257181      0.54763129     16.65531147
+genkt,1.0:    4     -2.46859216      1.03398974      7.98755167
+genkt,1.0:    5     -1.63742088      4.01894081      7.60023410
+genkt,1.0:#--------------------------------------------------------------------------
+genkt,1.0:#                      FastJet release 2.4-devel
+genkt,1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,1.0:#                         http://www.fastjet.fr                         
+genkt,1.0:#								      	   
+genkt,1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+genkt,1.0:# clustering using fast geometric algorithms, with area measures and optional
+genkt,1.0:# external jet-finder plugins.                                          
+genkt,1.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+genkt,1.0:#								      	   
+genkt,1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 genkt,1.0:# and CGAL: http://www.cgal.org/.
 genkt,1.0:#-------------------------------------------------------------------------
 genkt,1.0:iev 0: number of particles = 354
@@ -177,16 +357,61 @@ genkt,1.0:    7      3.42713139      5.74362063      5.17254118
 genkt,1.0:    8     -4.83615264      2.20502275      5.02711586
 genkt,0.0:#--------------------------------------------------------------------------
 genkt,0.0:#                      FastJet release 2.4-devel
-genkt,0.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-genkt,0.0:#                         http://www.fastjet.fr
-genkt,0.0:#
-genkt,0.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+genkt,0.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,0.0:#                         http://www.fastjet.fr                         
+genkt,0.0:#								      	   
+genkt,0.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 genkt,0.0:# clustering using fast geometric algorithms, with area measures and optional
-genkt,0.0:# external jet-finder plugins.
+genkt,0.0:# external jet-finder plugins.                                          
 genkt,0.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-genkt,0.0:#
-genkt,0.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-genkt,0.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+genkt,0.0:#								      	   
+genkt,0.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,0.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+genkt,0.0:# and CGAL: http://www.cgal.org/.
+genkt,0.0:#-------------------------------------------------------------------------
+genkt,0.0:iev 0: number of particles = 354
+genkt,0.0:strategy used =  N2Tiled
+genkt,0.0:Algorithm: Longitudinally invariant generalised kt algorithm with R = 0.4, p = 0 and E scheme recombination (FastJet version 2.4-devel)
+genkt,0.0:    0     -0.86742752      2.90533849    981.29404154
+genkt,0.0:    1      0.22162020      6.02948874    893.72986032
+genkt,0.0:    2     -1.18373969      6.08211191     66.83769630
+genkt,0.0:    3      0.24229023      0.30654370      8.88399867
+genkt,0.0:    4      0.34826413      0.90550241      5.22951332
+genkt,0.0:#--------------------------------------------------------------------------
+genkt,0.0:#                      FastJet release 2.4-devel
+genkt,0.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,0.0:#                         http://www.fastjet.fr                         
+genkt,0.0:#								      	   
+genkt,0.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+genkt,0.0:# clustering using fast geometric algorithms, with area measures and optional
+genkt,0.0:# external jet-finder plugins.                                          
+genkt,0.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+genkt,0.0:#								      	   
+genkt,0.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,0.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+genkt,0.0:# and CGAL: http://www.cgal.org/.
+genkt,0.0:#-------------------------------------------------------------------------
+genkt,0.0:iev 0: number of particles = 354
+genkt,0.0:strategy used =  N2Tiled
+genkt,0.0:Algorithm: Longitudinally invariant generalised kt algorithm with R = 0.7, p = 0 and E scheme recombination (FastJet version 2.4-devel)
+genkt,0.0:    0     -0.86730713      2.90511470    983.38727662
+genkt,0.0:    1      0.22086793      6.02950080    898.49716062
+genkt,0.0:    2     -1.16399356      6.11976501     73.21177254
+genkt,0.0:    3      0.36257181      0.54763129     16.65531147
+genkt,0.0:    4     -2.46859216      1.03398974      7.98755167
+genkt,0.0:    5     -1.63742088      4.01894081      7.60023410
+genkt,0.0:#--------------------------------------------------------------------------
+genkt,0.0:#                      FastJet release 2.4-devel
+genkt,0.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,0.0:#                         http://www.fastjet.fr                         
+genkt,0.0:#								      	   
+genkt,0.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+genkt,0.0:# clustering using fast geometric algorithms, with area measures and optional
+genkt,0.0:# external jet-finder plugins.                                          
+genkt,0.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+genkt,0.0:#								      	   
+genkt,0.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,0.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 genkt,0.0:# and CGAL: http://www.cgal.org/.
 genkt,0.0:#-------------------------------------------------------------------------
 genkt,0.0:iev 0: number of particles = 354
@@ -201,16 +426,61 @@ genkt,0.0:    5     -4.35831860      1.46681053      5.69380677
 genkt,0.0:    6     -4.73515490      4.12552482      5.47453961
 genkt,-1.0:#--------------------------------------------------------------------------
 genkt,-1.0:#                      FastJet release 2.4-devel
-genkt,-1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-genkt,-1.0:#                         http://www.fastjet.fr
-genkt,-1.0:#
-genkt,-1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+genkt,-1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,-1.0:#                         http://www.fastjet.fr                         
+genkt,-1.0:#								      	   
+genkt,-1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 genkt,-1.0:# clustering using fast geometric algorithms, with area measures and optional
-genkt,-1.0:# external jet-finder plugins.
+genkt,-1.0:# external jet-finder plugins.                                          
 genkt,-1.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-genkt,-1.0:#
-genkt,-1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-genkt,-1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+genkt,-1.0:#								      	   
+genkt,-1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,-1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+genkt,-1.0:# and CGAL: http://www.cgal.org/.
+genkt,-1.0:#-------------------------------------------------------------------------
+genkt,-1.0:iev 0: number of particles = 354
+genkt,-1.0:strategy used =  N2Tiled
+genkt,-1.0:Algorithm: Longitudinally invariant generalised kt algorithm with R = 0.4, p = -1 and E scheme recombination (FastJet version 2.4-devel)
+genkt,-1.0:    0     -0.86748501      2.90530809    981.15729251
+genkt,-1.0:    1      0.22203222      6.02990513    895.42612230
+genkt,-1.0:    2     -1.19073366      6.10283910     63.37420652
+genkt,-1.0:    3      0.43211695      0.77338735      9.34631586
+genkt,-1.0:    4     -0.94343365      5.73794142      5.72893220
+genkt,-1.0:#--------------------------------------------------------------------------
+genkt,-1.0:#                      FastJet release 2.4-devel
+genkt,-1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,-1.0:#                         http://www.fastjet.fr                         
+genkt,-1.0:#								      	   
+genkt,-1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+genkt,-1.0:# clustering using fast geometric algorithms, with area measures and optional
+genkt,-1.0:# external jet-finder plugins.                                          
+genkt,-1.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+genkt,-1.0:#								      	   
+genkt,-1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,-1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+genkt,-1.0:# and CGAL: http://www.cgal.org/.
+genkt,-1.0:#-------------------------------------------------------------------------
+genkt,-1.0:iev 0: number of particles = 354
+genkt,-1.0:strategy used =  N2Tiled
+genkt,-1.0:Algorithm: Longitudinally invariant generalised kt algorithm with R = 0.7, p = -1 and E scheme recombination (FastJet version 2.4-devel)
+genkt,-1.0:    0     -0.86713954      2.90515650    983.27961921
+genkt,-1.0:    1      0.22089580      6.03313616    904.16761389
+genkt,-1.0:    2     -1.16717122      6.08565211     71.03697265
+genkt,-1.0:    3      0.42935634      0.74543134     10.45328748
+genkt,-1.0:    4     -2.37033734      1.10516914     10.44846237
+genkt,-1.0:    5     -1.63742088      4.01894081      7.60023410
+genkt,-1.0:#--------------------------------------------------------------------------
+genkt,-1.0:#                      FastJet release 2.4-devel
+genkt,-1.0:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+genkt,-1.0:#                         http://www.fastjet.fr                         
+genkt,-1.0:#								      	   
+genkt,-1.0:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+genkt,-1.0:# clustering using fast geometric algorithms, with area measures and optional
+genkt,-1.0:# external jet-finder plugins.                                          
+genkt,-1.0:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+genkt,-1.0:#								      	   
+genkt,-1.0:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+genkt,-1.0:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 genkt,-1.0:# and CGAL: http://www.cgal.org/.
 genkt,-1.0:#-------------------------------------------------------------------------
 genkt,-1.0:iev 0: number of particles = 354
@@ -227,16 +497,76 @@ genkt,-1.0:    7     -4.02639226      0.92060213      5.19744903
 genkt,-1.0:    8      3.42713139      5.74362063      5.17254118
 eekt,-excld,2.0@single-ee-event.dat:#--------------------------------------------------------------------------
 eekt,-excld,2.0@single-ee-event.dat:#                      FastJet release 2.4-devel
-eekt,-excld,2.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-eekt,-excld,2.0@single-ee-event.dat:#                         http://www.fastjet.fr
-eekt,-excld,2.0@single-ee-event.dat:#
-eekt,-excld,2.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eekt,-excld,2.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eekt,-excld,2.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eekt,-excld,2.0@single-ee-event.dat:#								      	   
+eekt,-excld,2.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 eekt,-excld,2.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
-eekt,-excld,2.0@single-ee-event.dat:# external jet-finder plugins.
+eekt,-excld,2.0@single-ee-event.dat:# external jet-finder plugins.                                          
 eekt,-excld,2.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-eekt,-excld,2.0@single-ee-event.dat:#
-eekt,-excld,2.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-eekt,-excld,2.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eekt,-excld,2.0@single-ee-event.dat:#								      	   
+eekt,-excld,2.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eekt,-excld,2.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eekt,-excld,2.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eekt,-excld,2.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eekt,-excld,2.0@single-ee-event.dat:iev 0: number of particles = 70
+eekt,-excld,2.0@single-ee-event.dat:strategy used =  N2Plain
+eekt,-excld,2.0@single-ee-event.dat:Algorithm: e+e- kt (Durham) algorithm (NB: no R) with E scheme recombination (FastJet version 2.4-devel)
+eekt,-excld,2.0@single-ee-event.dat:Printing exclusive jets for d = 2
+eekt,-excld,2.0@single-ee-event.dat:    0     -1.22150412      2.39649854     14.21270699
+eekt,-excld,2.0@single-ee-event.dat:    1      1.68333725      4.63827816      5.63673066
+eekt,-excld,2.0@single-ee-event.dat:    2     -1.07510047      0.35697622      4.22163607
+eekt,-excld,2.0@single-ee-event.dat:    3     -0.76624776      0.08702256      4.00732584
+eekt,-excld,2.0@single-ee-event.dat:    4     -1.06606066      5.21191642      2.62681159
+eekt,-excld,2.0@single-ee-event.dat:    5      0.34619074      4.01601036      2.45234973
+eekt,-excld,2.0@single-ee-event.dat:    6     -0.24312424      5.20032689      2.43734935
+eekt,-excld,2.0@single-ee-event.dat:    7      0.70363507      5.09946070      2.36547018
+eekt,-excld,2.0@single-ee-event.dat:    8     -0.94345541      1.63983885      2.33583146
+eekt,-excld,2.0@single-ee-event.dat:    9      0.40124462      5.74574295      1.91326623
+eekt,-excld,2.0@single-ee-event.dat:   10      0.62622111      1.49184299      1.76817740
+eekt,-excld,2.0@single-ee-event.dat:   11      2.28506952      3.92187983      0.59974796
+eekt,-excld,2.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eekt,-excld,2.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eekt,-excld,2.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eekt,-excld,2.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eekt,-excld,2.0@single-ee-event.dat:#								      	   
+eekt,-excld,2.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eekt,-excld,2.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eekt,-excld,2.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eekt,-excld,2.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eekt,-excld,2.0@single-ee-event.dat:#								      	   
+eekt,-excld,2.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eekt,-excld,2.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eekt,-excld,2.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eekt,-excld,2.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eekt,-excld,2.0@single-ee-event.dat:iev 0: number of particles = 70
+eekt,-excld,2.0@single-ee-event.dat:strategy used =  N2Plain
+eekt,-excld,2.0@single-ee-event.dat:Algorithm: e+e- kt (Durham) algorithm (NB: no R) with E scheme recombination (FastJet version 2.4-devel)
+eekt,-excld,2.0@single-ee-event.dat:Printing exclusive jets for d = 2
+eekt,-excld,2.0@single-ee-event.dat:    0     -1.22150412      2.39649854     14.21270699
+eekt,-excld,2.0@single-ee-event.dat:    1      1.68333725      4.63827816      5.63673066
+eekt,-excld,2.0@single-ee-event.dat:    2     -1.07510047      0.35697622      4.22163607
+eekt,-excld,2.0@single-ee-event.dat:    3     -0.76624776      0.08702256      4.00732584
+eekt,-excld,2.0@single-ee-event.dat:    4     -1.06606066      5.21191642      2.62681159
+eekt,-excld,2.0@single-ee-event.dat:    5      0.34619074      4.01601036      2.45234973
+eekt,-excld,2.0@single-ee-event.dat:    6     -0.24312424      5.20032689      2.43734935
+eekt,-excld,2.0@single-ee-event.dat:    7      0.70363507      5.09946070      2.36547018
+eekt,-excld,2.0@single-ee-event.dat:    8     -0.94345541      1.63983885      2.33583146
+eekt,-excld,2.0@single-ee-event.dat:    9      0.40124462      5.74574295      1.91326623
+eekt,-excld,2.0@single-ee-event.dat:   10      0.62622111      1.49184299      1.76817740
+eekt,-excld,2.0@single-ee-event.dat:   11      2.28506952      3.92187983      0.59974796
+eekt,-excld,2.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eekt,-excld,2.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eekt,-excld,2.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eekt,-excld,2.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eekt,-excld,2.0@single-ee-event.dat:#								      	   
+eekt,-excld,2.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eekt,-excld,2.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eekt,-excld,2.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eekt,-excld,2.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eekt,-excld,2.0@single-ee-event.dat:#								      	   
+eekt,-excld,2.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eekt,-excld,2.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 eekt,-excld,2.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
 eekt,-excld,2.0@single-ee-event.dat:#-------------------------------------------------------------------------
 eekt,-excld,2.0@single-ee-event.dat:iev 0: number of particles = 70
@@ -257,16 +587,56 @@ eekt,-excld,2.0@single-ee-event.dat:   10      0.62622111      1.49184299      1
 eekt,-excld,2.0@single-ee-event.dat:   11      2.28506952      3.92187983      0.59974796
 eegenkt,1.0@single-ee-event.dat:#--------------------------------------------------------------------------
 eegenkt,1.0@single-ee-event.dat:#                      FastJet release 2.4-devel
-eegenkt,1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-eegenkt,1.0@single-ee-event.dat:#                         http://www.fastjet.fr
-eegenkt,1.0@single-ee-event.dat:#
-eegenkt,1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eegenkt,1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,1.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,1.0@single-ee-event.dat:#								      	   
+eegenkt,1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 eegenkt,1.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
-eegenkt,1.0@single-ee-event.dat:# external jet-finder plugins.
+eegenkt,1.0@single-ee-event.dat:# external jet-finder plugins.                                          
 eegenkt,1.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-eegenkt,1.0@single-ee-event.dat:#
-eegenkt,1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-eegenkt,1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eegenkt,1.0@single-ee-event.dat:#								      	   
+eegenkt,1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eegenkt,1.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eegenkt,1.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eegenkt,1.0@single-ee-event.dat:iev 0: number of particles = 70
+eegenkt,1.0@single-ee-event.dat:strategy used =  N2Plain
+eegenkt,1.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 0.4, p = 1 and E scheme recombination (FastJet version 2.4-devel)
+eegenkt,1.0@single-ee-event.dat:    0     -1.22150412      2.39649854     14.21270699
+eegenkt,1.0@single-ee-event.dat:    1     -0.94953614      0.21436466      7.94058670
+eegenkt,1.0@single-ee-event.dat:    2      1.97193031      4.56500862      6.47277309
+eegenkt,1.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eegenkt,1.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eegenkt,1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,1.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,1.0@single-ee-event.dat:#								      	   
+eegenkt,1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eegenkt,1.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eegenkt,1.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eegenkt,1.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eegenkt,1.0@single-ee-event.dat:#								      	   
+eegenkt,1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eegenkt,1.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eegenkt,1.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eegenkt,1.0@single-ee-event.dat:iev 0: number of particles = 70
+eegenkt,1.0@single-ee-event.dat:strategy used =  N2Plain
+eegenkt,1.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 0.7, p = 1 and E scheme recombination (FastJet version 2.4-devel)
+eegenkt,1.0@single-ee-event.dat:    0     -1.17795492      2.29605689     15.99176640
+eegenkt,1.0@single-ee-event.dat:    1     -0.92137700      0.22553614      8.15416598
+eegenkt,1.0@single-ee-event.dat:    2      1.90644767      4.57368836      6.10176939
+eegenkt,1.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eegenkt,1.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eegenkt,1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,1.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,1.0@single-ee-event.dat:#								      	   
+eegenkt,1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eegenkt,1.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eegenkt,1.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eegenkt,1.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eegenkt,1.0@single-ee-event.dat:#								      	   
+eegenkt,1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 eegenkt,1.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
 eegenkt,1.0@single-ee-event.dat:#-------------------------------------------------------------------------
 eegenkt,1.0@single-ee-event.dat:iev 0: number of particles = 70
@@ -277,16 +647,56 @@ eegenkt,1.0@single-ee-event.dat:    1     -0.81824592      6.03383660     10.678
 eegenkt,1.0@single-ee-event.dat:    2      1.21959918      4.74016372      9.33541936
 eegenkt,0.0@single-ee-event.dat:#--------------------------------------------------------------------------
 eegenkt,0.0@single-ee-event.dat:#                      FastJet release 2.4-devel
-eegenkt,0.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-eegenkt,0.0@single-ee-event.dat:#                         http://www.fastjet.fr
-eegenkt,0.0@single-ee-event.dat:#
-eegenkt,0.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eegenkt,0.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,0.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,0.0@single-ee-event.dat:#								      	   
+eegenkt,0.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 eegenkt,0.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
-eegenkt,0.0@single-ee-event.dat:# external jet-finder plugins.
+eegenkt,0.0@single-ee-event.dat:# external jet-finder plugins.                                          
 eegenkt,0.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-eegenkt,0.0@single-ee-event.dat:#
-eegenkt,0.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-eegenkt,0.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eegenkt,0.0@single-ee-event.dat:#								      	   
+eegenkt,0.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,0.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eegenkt,0.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eegenkt,0.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eegenkt,0.0@single-ee-event.dat:iev 0: number of particles = 70
+eegenkt,0.0@single-ee-event.dat:strategy used =  N2Plain
+eegenkt,0.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 0.4, p = 0 and E scheme recombination (FastJet version 2.4-devel)
+eegenkt,0.0@single-ee-event.dat:    0     -1.22694222      2.38711385     14.16022477
+eegenkt,0.0@single-ee-event.dat:    1     -0.99307165      0.22488000      7.30836173
+eegenkt,0.0@single-ee-event.dat:    2      2.02021308      4.59022375      6.02017520
+eegenkt,0.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eegenkt,0.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eegenkt,0.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,0.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,0.0@single-ee-event.dat:#								      	   
+eegenkt,0.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eegenkt,0.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eegenkt,0.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eegenkt,0.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eegenkt,0.0@single-ee-event.dat:#								      	   
+eegenkt,0.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,0.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eegenkt,0.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eegenkt,0.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eegenkt,0.0@single-ee-event.dat:iev 0: number of particles = 70
+eegenkt,0.0@single-ee-event.dat:strategy used =  N2Plain
+eegenkt,0.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 0.7, p = 0 and E scheme recombination (FastJet version 2.4-devel)
+eegenkt,0.0@single-ee-event.dat:    0     -1.18199080      2.28743458     15.95284744
+eegenkt,0.0@single-ee-event.dat:    1     -0.94953342      0.21436416      7.94058199
+eegenkt,0.0@single-ee-event.dat:    2      1.97193031      4.56500862      6.47277309
+eegenkt,0.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eegenkt,0.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eegenkt,0.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,0.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,0.0@single-ee-event.dat:#								      	   
+eegenkt,0.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eegenkt,0.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eegenkt,0.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eegenkt,0.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eegenkt,0.0@single-ee-event.dat:#								      	   
+eegenkt,0.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,0.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 eegenkt,0.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
 eegenkt,0.0@single-ee-event.dat:#-------------------------------------------------------------------------
 eegenkt,0.0@single-ee-event.dat:iev 0: number of particles = 70
@@ -297,16 +707,56 @@ eegenkt,0.0@single-ee-event.dat:    1      1.28902515      4.72150781     11.779
 eegenkt,0.0@single-ee-event.dat:    2     -0.87226190      6.08000690     10.33564630
 eegenkt,-1.0@single-ee-event.dat:#--------------------------------------------------------------------------
 eegenkt,-1.0@single-ee-event.dat:#                      FastJet release 2.4-devel
-eegenkt,-1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
-eegenkt,-1.0@single-ee-event.dat:#                         http://www.fastjet.fr
-eegenkt,-1.0@single-ee-event.dat:#
-eegenkt,-1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eegenkt,-1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,-1.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,-1.0@single-ee-event.dat:#								      	   
+eegenkt,-1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 eegenkt,-1.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
-eegenkt,-1.0@single-ee-event.dat:# external jet-finder plugins.
+eegenkt,-1.0@single-ee-event.dat:# external jet-finder plugins.                                          
 eegenkt,-1.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-eegenkt,-1.0@single-ee-event.dat:#
-eegenkt,-1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-eegenkt,-1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eegenkt,-1.0@single-ee-event.dat:#								      	   
+eegenkt,-1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,-1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eegenkt,-1.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eegenkt,-1.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eegenkt,-1.0@single-ee-event.dat:iev 0: number of particles = 70
+eegenkt,-1.0@single-ee-event.dat:strategy used =  N2Plain
+eegenkt,-1.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 0.4, p = -1 and E scheme recombination (FastJet version 2.4-devel)
+eegenkt,-1.0@single-ee-event.dat:    0     -1.19543313      2.32344257     15.60037852
+eegenkt,-1.0@single-ee-event.dat:    1     -0.99307165      0.22488000      7.30836173
+eegenkt,-1.0@single-ee-event.dat:    2      2.02021308      4.59022375      6.02017520
+eegenkt,-1.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eegenkt,-1.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eegenkt,-1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,-1.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,-1.0@single-ee-event.dat:#								      	   
+eegenkt,-1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eegenkt,-1.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eegenkt,-1.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eegenkt,-1.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eegenkt,-1.0@single-ee-event.dat:#								      	   
+eegenkt,-1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,-1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+eegenkt,-1.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eegenkt,-1.0@single-ee-event.dat:#-------------------------------------------------------------------------
+eegenkt,-1.0@single-ee-event.dat:iev 0: number of particles = 70
+eegenkt,-1.0@single-ee-event.dat:strategy used =  N2Plain
+eegenkt,-1.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 0.7, p = -1 and E scheme recombination (FastJet version 2.4-devel)
+eegenkt,-1.0@single-ee-event.dat:    0     -1.18199080      2.28743458     15.95284744
+eegenkt,-1.0@single-ee-event.dat:    1     -0.98111808      6.25293147      9.25200965
+eegenkt,-1.0@single-ee-event.dat:    2      1.78611445      4.67566255      7.54525630
+eegenkt,-1.0@single-ee-event.dat:#--------------------------------------------------------------------------
+eegenkt,-1.0@single-ee-event.dat:#                      FastJet release 2.4-devel
+eegenkt,-1.0@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+eegenkt,-1.0@single-ee-event.dat:#                         http://www.fastjet.fr                         
+eegenkt,-1.0@single-ee-event.dat:#								      	   
+eegenkt,-1.0@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+eegenkt,-1.0@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eegenkt,-1.0@single-ee-event.dat:# external jet-finder plugins.                                          
+eegenkt,-1.0@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eegenkt,-1.0@single-ee-event.dat:#								      	   
+eegenkt,-1.0@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+eegenkt,-1.0@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 eegenkt,-1.0@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
 eegenkt,-1.0@single-ee-event.dat:#-------------------------------------------------------------------------
 eegenkt,-1.0@single-ee-event.dat:iev 0: number of particles = 70
@@ -314,6 +764,83 @@ eegenkt,-1.0@single-ee-event.dat:strategy used =  N2Plain
 eegenkt,-1.0@single-ee-event.dat:Algorithm: e+e- generalised kt algorithm with R = 1, p = -1 and E scheme recombination (FastJet version 2.4-devel)
 eegenkt,-1.0@single-ee-event.dat:    0     -1.11870406      1.76013619     11.90214033
 eegenkt,-1.0@single-ee-event.dat:    1      1.41005352      4.70257869     10.29280353
+siscone:#--------------------------------------------------------------------------
+siscone:#                      FastJet release 2.4-devel
+siscone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+siscone:#                         http://www.fastjet.fr                         
+siscone:#								      	   
+siscone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+siscone:# clustering using fast geometric algorithms, with area measures and optional
+siscone:# external jet-finder plugins.                                          
+siscone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+siscone:#								      	   
+siscone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+siscone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+siscone:# and CGAL: http://www.cgal.org/.
+siscone:#-------------------------------------------------------------------------
+siscone:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+siscone:#                    SISCone   version 1.4.0-devel                 o
+siscone:#              http://projects.hepforge.org/siscone                o
+siscone:#                                                                  o
+siscone:# This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
+siscone:# SISCone was written by Gavin Salam and Gregory Soyez             o
+siscone:# It is released under the terms of the GNU General Public License o
+siscone:#                                                                  o
+siscone:# A description of the algorithm is available in the publication   o
+siscone:# JHEP 05 (2007) 086 [arXiv:0704.0292 (hep-ph)].                   o
+siscone:# Please cite it if you use SISCone.                               o
+siscone:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+siscone:
+siscone:iev 0: number of particles = 354
+siscone:strategy used =  plugin strategy
+siscone:Algorithm: SISCone jet algorithm with cone_radius = 0.4, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off, SM stop scale = 0, SISCone code v1.4.0-devel (FastJet version 2.4-devel)
+siscone:    0     -0.86748501      2.90530809    981.15729251
+siscone:    1      0.22193323      6.02933229    893.95404678
+siscone:    2     -1.18652024      6.09503198     64.71983681
+siscone:    3      0.34574960      0.53650228     15.93057348
+siscone:    4     -1.63118707      4.01902795      7.50472376
+siscone:    5     -1.81638218      1.49573705      7.39892400
+siscone:    6     -2.46321531      0.99184686      7.38470952
+siscone:#--------------------------------------------------------------------------
+siscone:#                      FastJet release 2.4-devel
+siscone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+siscone:#                         http://www.fastjet.fr                         
+siscone:#								      	   
+siscone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+siscone:# clustering using fast geometric algorithms, with area measures and optional
+siscone:# external jet-finder plugins.                                          
+siscone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+siscone:#								      	   
+siscone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+siscone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+siscone:# and CGAL: http://www.cgal.org/.
+siscone:#-------------------------------------------------------------------------
+siscone:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+siscone:#                    SISCone   version 1.4.0-devel                 o
+siscone:#              http://projects.hepforge.org/siscone                o
+siscone:#                                                                  o
+siscone:# This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
+siscone:# SISCone was written by Gavin Salam and Gregory Soyez             o
+siscone:# It is released under the terms of the GNU General Public License o
+siscone:#                                                                  o
+siscone:# A description of the algorithm is available in the publication   o
+siscone:# JHEP 05 (2007) 086 [arXiv:0704.0292 (hep-ph)].                   o
+siscone:# Please cite it if you use SISCone.                               o
+siscone:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+siscone:
+siscone:iev 0: number of particles = 354
+siscone:strategy used =  plugin strategy
+siscone:Algorithm: SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_ptmin = 0, split-merge uses pttilde (scalar sum of pt's), caching turned off, SM stop scale = 0, SISCone code v1.4.0-devel (FastJet version 2.4-devel)
+siscone:    0     -0.86714193      2.90515552    983.27462334
+siscone:    1      0.22023682      6.03068706    900.44146316
+siscone:    2     -1.17103708      6.07159548     69.71050689
+siscone:    3      0.37165751      0.63216516     13.74566752
+siscone:    4     -1.63118707      4.01902795      7.50472376
+siscone:    5     -2.55310918      0.78265712      7.37305192
+siscone:    6     -1.78661758      1.23402802      7.33778407
+siscone:    7     -4.17998158      1.25436280      6.66642290
+siscone:    8     -1.08952371      0.51673395      5.14752491
+siscone:    9      3.05762711      5.47097964      5.08623145
 siscone:#--------------------------------------------------------------------------
 siscone:#                      FastJet release 2.4-devel
 siscone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
@@ -385,11 +912,136 @@ sisconespheri:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 sisconespheri:
 sisconespheri:iev 0: number of particles = 354
 sisconespheri:strategy used =  plugin strategy
+sisconespheri:Algorithm: Spherical SISCone jet algorithm with cone_radius = 0.4, overlap_threshold = 0.5, n_pass_max = 0, protojet_Emin = 0, split-merge uses Etilde (sum of E.[1+sin^2(theta_{i,jet})]), caching turned off, SM stop scale = 0, SISCone code v1.4.0-devel (FastJet version 2.4-devel)
+sisconespheri:    0     -0.86726067      2.90525286    982.99627104
+sisconespheri:    1      0.22193323      6.02933229    893.95404678
+sisconespheri:    2     -1.18512689      6.11595502     71.59942318
+sisconespheri:    3      0.34574960      0.53650228     15.93057348
+sisconespheri:    4     -3.96443683      1.44203175     11.12400797
+sisconespheri:    5      4.44621798      4.70394278      8.95485151
+sisconespheri:    6     -0.33052372      6.06122576      5.17656400
+sisconespheri:#--------------------------------------------------------------------------
+sisconespheri:#                      FastJet release 2.4-devel
+sisconespheri:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+sisconespheri:#                         http://www.fastjet.fr                         
+sisconespheri:#								      	   
+sisconespheri:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+sisconespheri:# clustering using fast geometric algorithms, with area measures and optional
+sisconespheri:# external jet-finder plugins.                                          
+sisconespheri:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+sisconespheri:#								      	   
+sisconespheri:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+sisconespheri:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+sisconespheri:# and CGAL: http://www.cgal.org/.
+sisconespheri:#-------------------------------------------------------------------------
+sisconespheri:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+sisconespheri:#                    SISCone   version 1.4.0-devel                 o
+sisconespheri:#              http://projects.hepforge.org/siscone                o
+sisconespheri:#                                                                  o
+sisconespheri:# This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
+sisconespheri:# SISCone was written by Gavin Salam and Gregory Soyez             o
+sisconespheri:# It is released under the terms of the GNU General Public License o
+sisconespheri:#                                                                  o
+sisconespheri:#            !!!             WARNING            !!!                o
+sisconespheri:#    This is the version of SISCone using spherical coordinates    o
+sisconespheri:#                                                                  o
+sisconespheri:# A description of the algorithm is available in the publication   o
+sisconespheri:# JHEP 05 (2007) 086 [arXiv:0704.0292 (hep-ph)].                   o
+sisconespheri:# Please cite it if you use SISCone.                               o
+sisconespheri:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+sisconespheri:
+sisconespheri:iev 0: number of particles = 354
+sisconespheri:strategy used =  plugin strategy
+sisconespheri:Algorithm: Spherical SISCone jet algorithm with cone_radius = 0.7, overlap_threshold = 0.5, n_pass_max = 0, protojet_Emin = 0, split-merge uses Etilde (sum of E.[1+sin^2(theta_{i,jet})]), caching turned off, SM stop scale = 0, SISCone code v1.4.0-devel (FastJet version 2.4-devel)
+sisconespheri:    0     -1.70297563      2.88867928    914.99458696
+sisconespheri:    1      0.22074322      6.03050829    900.95112396
+sisconespheri:    2      0.41708066      0.65033075     14.87245493
+sisconespheri:    3      4.20445119      4.78314426      9.28349197
+sisconespheri:    4     -0.82430030      5.89126710      5.40801682
+sisconespheri:#--------------------------------------------------------------------------
+sisconespheri:#                      FastJet release 2.4-devel
+sisconespheri:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+sisconespheri:#                         http://www.fastjet.fr                         
+sisconespheri:#								      	   
+sisconespheri:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+sisconespheri:# clustering using fast geometric algorithms, with area measures and optional
+sisconespheri:# external jet-finder plugins.                                          
+sisconespheri:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+sisconespheri:#								      	   
+sisconespheri:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+sisconespheri:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+sisconespheri:# and CGAL: http://www.cgal.org/.
+sisconespheri:#-------------------------------------------------------------------------
+sisconespheri:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+sisconespheri:#                    SISCone   version 1.4.0-devel                 o
+sisconespheri:#              http://projects.hepforge.org/siscone                o
+sisconespheri:#                                                                  o
+sisconespheri:# This is SISCone: the Seedless Infrared Safe Cone Jet Algorithm   o
+sisconespheri:# SISCone was written by Gavin Salam and Gregory Soyez             o
+sisconespheri:# It is released under the terms of the GNU General Public License o
+sisconespheri:#                                                                  o
+sisconespheri:#            !!!             WARNING            !!!                o
+sisconespheri:#    This is the version of SISCone using spherical coordinates    o
+sisconespheri:#                                                                  o
+sisconespheri:# A description of the algorithm is available in the publication   o
+sisconespheri:# JHEP 05 (2007) 086 [arXiv:0704.0292 (hep-ph)].                   o
+sisconespheri:# Please cite it if you use SISCone.                               o
+sisconespheri:#ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+sisconespheri:
+sisconespheri:iev 0: number of particles = 354
+sisconespheri:strategy used =  plugin strategy
 sisconespheri:Algorithm: Spherical SISCone jet algorithm with cone_radius = 1, overlap_threshold = 0.5, n_pass_max = 0, protojet_Emin = 0, split-merge uses Etilde (sum of E.[1+sin^2(theta_{i,jet})]), caching turned off, SM stop scale = 0, SISCone code v1.4.0-devel (FastJet version 2.4-devel)
 sisconespheri:    0     -1.70104735      2.88962920    911.85305070
 sisconespheri:    1      0.22058741      6.03672159    909.37538602
 sisconespheri:    2      4.08066474      4.80028752      8.99529811
 sisconespheri:    3      0.26715514      0.93623474      5.91714493
+jetclu:#--------------------------------------------------------------------------
+jetclu:#                      FastJet release 2.4-devel
+jetclu:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+jetclu:#                         http://www.fastjet.fr                         
+jetclu:#								      	   
+jetclu:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+jetclu:# clustering using fast geometric algorithms, with area measures and optional
+jetclu:# external jet-finder plugins.                                          
+jetclu:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+jetclu:#								      	   
+jetclu:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+jetclu:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+jetclu:# and CGAL: http://www.cgal.org/.
+jetclu:#-------------------------------------------------------------------------
+jetclu:iev 0: number of particles = 354
+jetclu:strategy used =  plugin strategy
+jetclu:Algorithm: CDF JetClu jet algorithm with seed_threshold = 1, cone_radius = 0.4, adjacency_cut = 2, max_iterations = 100, iratch = 1, overlap_threshold = 0.5 (FastJet version 2.4-devel)
+jetclu:    0     -0.86701302      2.90521012    982.20561641
+jetclu:    1      0.22037096      6.03013895    896.56895386
+jetclu:    2     -1.17222488      6.07475883     68.35693025
+jetclu:    3      0.35094229      0.53406770     15.67179772
+jetclu:    4     -1.71938196      4.03506179      6.49839970
+jetclu:    5     -2.40988723      1.37884320      5.06164062
+jetclu:#--------------------------------------------------------------------------
+jetclu:#                      FastJet release 2.4-devel
+jetclu:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+jetclu:#                         http://www.fastjet.fr                         
+jetclu:#								      	   
+jetclu:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+jetclu:# clustering using fast geometric algorithms, with area measures and optional
+jetclu:# external jet-finder plugins.                                          
+jetclu:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+jetclu:#								      	   
+jetclu:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+jetclu:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+jetclu:# and CGAL: http://www.cgal.org/.
+jetclu:#-------------------------------------------------------------------------
+jetclu:iev 0: number of particles = 354
+jetclu:strategy used =  plugin strategy
+jetclu:Algorithm: CDF JetClu jet algorithm with seed_threshold = 1, cone_radius = 0.7, adjacency_cut = 2, max_iterations = 100, iratch = 1, overlap_threshold = 0.5 (FastJet version 2.4-devel)
+jetclu:    0     -0.86713954      2.90515650    983.27961921
+jetclu:    1      0.22053464      6.03070306    900.82278173
+jetclu:    2     -1.16960761      6.07635455     69.40714572
+jetclu:    3      0.38531052      0.63069316     14.05493791
+jetclu:    4     -2.41955917      1.10300909      9.63070251
+jetclu:    5     -1.24427678      0.80574507      7.71450946
+jetclu:    6     -1.63742088      4.01894081      7.60023410
 jetclu:#--------------------------------------------------------------------------
 jetclu:#                      FastJet release 2.4-devel
 jetclu:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
@@ -428,6 +1080,55 @@ midpoint:# and CGAL: http://www.cgal.org/.
 midpoint:#-------------------------------------------------------------------------
 midpoint:iev 0: number of particles = 354
 midpoint:strategy used =  plugin strategy
+midpoint:Algorithm: CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.4, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt (FastJet version 2.4-devel)
+midpoint:    0     -0.86748501      2.90530809    981.15729251
+midpoint:    1      0.22193323      6.02933229    893.95404678
+midpoint:    2     -1.18652024      6.09503198     64.71983681
+midpoint:    3      0.34574960      0.53650228     15.93057348
+midpoint:    4     -2.57881012      1.12067937      6.46586674
+midpoint:    5     -1.71325313      4.03540436      6.40291266
+midpoint:#--------------------------------------------------------------------------
+midpoint:#                      FastJet release 2.4-devel
+midpoint:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+midpoint:#                         http://www.fastjet.fr                         
+midpoint:#								      	   
+midpoint:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+midpoint:# clustering using fast geometric algorithms, with area measures and optional
+midpoint:# external jet-finder plugins.                                          
+midpoint:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+midpoint:#								      	   
+midpoint:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+midpoint:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+midpoint:# and CGAL: http://www.cgal.org/.
+midpoint:#-------------------------------------------------------------------------
+midpoint:iev 0: number of particles = 354
+midpoint:strategy used =  plugin strategy
+midpoint:Algorithm: CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 0.7, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt (FastJet version 2.4-devel)
+midpoint:    0     -0.86713954      2.90515650    983.27961921
+midpoint:    1      0.22053464      6.03070306    900.82278173
+midpoint:    2     -1.16480804      6.10889882     73.04424913
+midpoint:    3      0.38531052      0.63069316     14.05493791
+midpoint:    4     -2.46859216      1.03398974      7.98755167
+midpoint:    5     -1.63742088      4.01894081      7.60023410
+midpoint:    6     -4.46837491      1.59433725      6.25736018
+midpoint:    7      5.80617398      3.83189179      5.90687330
+midpoint:    8     -1.61554117      1.35182622      5.50772100
+midpoint:#--------------------------------------------------------------------------
+midpoint:#                      FastJet release 2.4-devel
+midpoint:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+midpoint:#                         http://www.fastjet.fr                         
+midpoint:#								      	   
+midpoint:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+midpoint:# clustering using fast geometric algorithms, with area measures and optional
+midpoint:# external jet-finder plugins.                                          
+midpoint:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+midpoint:#								      	   
+midpoint:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+midpoint:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+midpoint:# and CGAL: http://www.cgal.org/.
+midpoint:#-------------------------------------------------------------------------
+midpoint:iev 0: number of particles = 354
+midpoint:strategy used =  plugin strategy
 midpoint:Algorithm: CDF MidPoint jet algorithm, with seed_threshold = 1, cone_radius = 1, cone_area_fraction = 1, max_pair_size = 2, max_iterations = 100, overlap_threshold  = 0.5, split-merge uses pt (FastJet version 2.4-devel)
 midpoint:    0     -0.86730713      2.90511470    983.38727662
 midpoint:    1      0.22137401      6.03515762    906.44139699
@@ -438,6 +1139,76 @@ midpoint:    5     -4.39495614      1.24229461      8.10072287
 midpoint:    6      5.74614140      3.68528880      6.78616969
 midpoint:    7      1.79196592      4.73021636      5.85804125
 midpoint:    8     -4.72579855      4.31742687      5.69445851
+pxcone:#--------------------------------------------------------------------------
+pxcone:#                      FastJet release 2.4-devel
+pxcone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+pxcone:#                         http://www.fastjet.fr                         
+pxcone:#								      	   
+pxcone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+pxcone:# clustering using fast geometric algorithms, with area measures and optional
+pxcone:# external jet-finder plugins.                                          
+pxcone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+pxcone:#								      	   
+pxcone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+pxcone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+pxcone:# and CGAL: http://www.cgal.org/.
+pxcone:#-------------------------------------------------------------------------
+pxcone:iev 0: number of particles = 354
+pxcone:strategy used =  plugin strategy
+pxcone:Algorithm: PxCone jet algorithm with cone_radius = 0.4, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0 (NB: non-standard version of PxCone, containing small bug fixes by Gavin Salam) (FastJet version 2.4-devel)
+pxcone:
+pxcone:  *********** PXCONE: Cone Jet-finder ***********
+pxcone:     Written by Luis Del Pozo of OPAL
+pxcone:     Modified for eta-phi by Mike Seymour
+pxcone:     Includes bug fixes by Wobisch, Salam
+pxcone:    Cone Size R =  0.40   Radians
+pxcone:    Min Jet energy Epsilon =  5.00  GeV
+pxcone:    Overlap fraction parameter =  0.50
+pxcone:     PXCONE is not a supported product and is
+pxcone:     is provided for comparative purposes only
+pxcone:  ***********************************************
+pxcone:
+pxcone:    0     -0.86752807      2.90530606    981.33156775
+pxcone:    1      0.22196159      6.03016163    895.04182077
+pxcone:    2     -1.18855471      6.09478758     64.99885389
+pxcone:    3      0.41880429      0.63797150     12.97680182
+pxcone:    4     -1.79345842      4.03552343      6.64303594
+pxcone:    5     -2.58599384      1.16057965      6.14684857
+pxcone:#--------------------------------------------------------------------------
+pxcone:#                      FastJet release 2.4-devel
+pxcone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+pxcone:#                         http://www.fastjet.fr                         
+pxcone:#								      	   
+pxcone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+pxcone:# clustering using fast geometric algorithms, with area measures and optional
+pxcone:# external jet-finder plugins.                                          
+pxcone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+pxcone:#								      	   
+pxcone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+pxcone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+pxcone:# and CGAL: http://www.cgal.org/.
+pxcone:#-------------------------------------------------------------------------
+pxcone:iev 0: number of particles = 354
+pxcone:strategy used =  plugin strategy
+pxcone:Algorithm: PxCone jet algorithm with cone_radius = 0.7, min_jet_energy = 5, overlap_threshold  = 0.5, E_scheme_jets  = 0 (NB: non-standard version of PxCone, containing small bug fixes by Gavin Salam) (FastJet version 2.4-devel)
+pxcone:
+pxcone:  *********** PXCONE: Cone Jet-finder ***********
+pxcone:     Written by Luis Del Pozo of OPAL
+pxcone:     Modified for eta-phi by Mike Seymour
+pxcone:     Includes bug fixes by Wobisch, Salam
+pxcone:    Cone Size R =  0.70   Radians
+pxcone:    Min Jet energy Epsilon =  5.00  GeV
+pxcone:    Overlap fraction parameter =  0.50
+pxcone:     PXCONE is not a supported product and is
+pxcone:     is provided for comparative purposes only
+pxcone:  ***********************************************
+pxcone:
+pxcone:    0     -0.86720060      2.90514996    983.52166328
+pxcone:    1      0.22063360      6.03064288    901.07011563
+pxcone:    2     -1.17242666      6.11484953     74.18667950
+pxcone:    3      0.39761584      0.62576016     14.62451610
+pxcone:    4     -2.29795205      1.11790085     12.14285478
+pxcone:    5     -1.69873765      4.01961767      7.75067955
 pxcone:#--------------------------------------------------------------------------
 pxcone:#                      FastJet release 2.4-devel
 pxcone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
@@ -492,6 +1263,53 @@ d0runiicone:# and CGAL: http://www.cgal.org/.
 d0runiicone:#-------------------------------------------------------------------------
 d0runiicone:iev 0: number of particles = 354
 d0runiicone:strategy used =  plugin strategy
+d0runiicone:Algorithm: D0 Run II Improved Legacy (midpoint) cone jet algorithm, with cone_radius = 0.4, min_jet_Et = 6, split_ratio = 0.5 (FastJet version 2.4-devel)
+d0runiicone:    0     -0.86748501      2.90530809    981.15729251
+d0runiicone:    1      0.22193323      6.02933229    893.95404678
+d0runiicone:    2     -1.18652024      6.09503198     64.71983681
+d0runiicone:    3      0.34574960      0.53650228     15.93057348
+d0runiicone:    4     -1.71325313      4.03540436      6.40291266
+d0runiicone:#--------------------------------------------------------------------------
+d0runiicone:#                      FastJet release 2.4-devel
+d0runiicone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+d0runiicone:#                         http://www.fastjet.fr                         
+d0runiicone:#								      	   
+d0runiicone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+d0runiicone:# clustering using fast geometric algorithms, with area measures and optional
+d0runiicone:# external jet-finder plugins.                                          
+d0runiicone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+d0runiicone:#								      	   
+d0runiicone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+d0runiicone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+d0runiicone:# and CGAL: http://www.cgal.org/.
+d0runiicone:#-------------------------------------------------------------------------
+d0runiicone:iev 0: number of particles = 354
+d0runiicone:strategy used =  plugin strategy
+d0runiicone:Algorithm: D0 Run II Improved Legacy (midpoint) cone jet algorithm, with cone_radius = 0.7, min_jet_Et = 6, split_ratio = 0.5 (FastJet version 2.4-devel)
+d0runiicone:    0     -0.86713954      2.90515650    983.27961921
+d0runiicone:    1      0.22053464      6.03070306    900.82278173
+d0runiicone:    2     -1.17103708      6.07159548     69.71050689
+d0runiicone:    3      0.38531052      0.63069316     14.05493791
+d0runiicone:    4     -2.33839876      0.93148746     12.41157474
+d0runiicone:    5     -1.63742088      4.01894081      7.60023410
+d0runiicone:    6     -4.34114427      1.35326901      7.49706069
+d0runiicone:    7     -1.17471965      0.75616236      7.28161784
+d0runiicone:#--------------------------------------------------------------------------
+d0runiicone:#                      FastJet release 2.4-devel
+d0runiicone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+d0runiicone:#                         http://www.fastjet.fr                         
+d0runiicone:#								      	   
+d0runiicone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+d0runiicone:# clustering using fast geometric algorithms, with area measures and optional
+d0runiicone:# external jet-finder plugins.                                          
+d0runiicone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+d0runiicone:#								      	   
+d0runiicone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+d0runiicone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+d0runiicone:# and CGAL: http://www.cgal.org/.
+d0runiicone:#-------------------------------------------------------------------------
+d0runiicone:iev 0: number of particles = 354
+d0runiicone:strategy used =  plugin strategy
 d0runiicone:Algorithm: D0 Run II Improved Legacy (midpoint) cone jet algorithm, with cone_radius = 1, min_jet_Et = 6, split_ratio = 0.5 (FastJet version 2.4-devel)
 d0runiicone:    0     -0.86730713      2.90511470    983.38727662
 d0runiicone:    1      0.22116370      6.03528626    906.17411212
@@ -503,6 +1321,51 @@ d0runiicone:    6     -4.38569975      1.24794107      8.21097734
 d0runiicone:    7      0.92405331      4.02576467      6.10582983
 d0runiicone:    8     -4.70711511      4.23008630      6.05274002
 d0runiicone:    9      5.47124478      3.88348649      5.75220082
+trackjet:#--------------------------------------------------------------------------
+trackjet:#                      FastJet release 2.4-devel
+trackjet:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+trackjet:#                         http://www.fastjet.fr                         
+trackjet:#								      	   
+trackjet:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+trackjet:# clustering using fast geometric algorithms, with area measures and optional
+trackjet:# external jet-finder plugins.                                          
+trackjet:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+trackjet:#								      	   
+trackjet:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+trackjet:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+trackjet:# and CGAL: http://www.cgal.org/.
+trackjet:#-------------------------------------------------------------------------
+trackjet:iev 0: number of particles = 354
+trackjet:strategy used =  plugin strategy
+trackjet:Algorithm: TrackJet algorithm with R = 0.4 (FastJet version 2.4-devel)
+trackjet:    0     -0.86752807      2.90530606    981.33156775
+trackjet:    1      0.22196159      6.03016163    895.04182077
+trackjet:    2     -1.19271307      6.10272885     63.56333484
+trackjet:    3      0.48025274      0.74649482      9.37207502
+trackjet:    4     -0.94645721      5.73806308      5.74554631
+trackjet:#--------------------------------------------------------------------------
+trackjet:#                      FastJet release 2.4-devel
+trackjet:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
+trackjet:#                         http://www.fastjet.fr                         
+trackjet:#								      	   
+trackjet:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
+trackjet:# clustering using fast geometric algorithms, with area measures and optional
+trackjet:# external jet-finder plugins.                                          
+trackjet:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+trackjet:#								      	   
+trackjet:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
+trackjet:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
+trackjet:# and CGAL: http://www.cgal.org/.
+trackjet:#-------------------------------------------------------------------------
+trackjet:iev 0: number of particles = 354
+trackjet:strategy used =  plugin strategy
+trackjet:Algorithm: TrackJet algorithm with R = 0.7 (FastJet version 2.4-devel)
+trackjet:    0     -0.86720060      2.90514996    983.52166328
+trackjet:    1      0.22101213      6.03328725    905.22742853
+trackjet:    2     -1.17242666      6.11484953     74.18667950
+trackjet:    3      0.46628814      0.77285279     11.10204690
+trackjet:    4     -2.55929997      1.18380753      8.49356677
+trackjet:    5     -1.69873765      4.01961767      7.75067955
 trackjet:#--------------------------------------------------------------------------
 trackjet:#                      FastJet release 2.4-devel
 trackjet:#            Written by M. Cacciari, G.P. Salam and G. Soyez            

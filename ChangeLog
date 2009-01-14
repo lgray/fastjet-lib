@@ -23,7 +23,10 @@
 	  added options to specify additional params
 	  added options to specify another event
 	  added genkt, eekt and eegenkt
+	  
+	  added multiple values of R
 	
+
 	* configure.ac: 
 	  even though they're enabled by default, AM_ENABLE_SHARED has to
 	  be called so that ${enable_shared} is set to 'yes' instead of ''

@@ -45,9 +45,6 @@
 #     important: only the name of teh file has to be specified
 #                and it has to be in example/data/
 # 
-# TODO:
-#   - add genkt, ee_kt, ee_genkt
-#   - vary parameters
 
 
 # if srcdir is not defined, set it to .
@@ -82,6 +79,8 @@ echo "Checking which algorithms are available for testing"
 echo -----------------------------------------------------------
 tested_algs="kt cam antikt genkt,1.0 genkt,0.0 genkt,-1.0 eekt,-excld,2.0@single-ee-event.dat eegenkt,1.0@single-ee-event.dat eegenkt,0.0@single-ee-event.dat eegenkt,-1.0@single-ee-event.dat"
 untested_algs=""
+
+Rvalues="0.4 0.7 1.0"
 
 echo "^#" > clear_patterns.orig
 echo "version" >> clear_patterns.orig
@@ -125,6 +124,7 @@ echo -----------------------------------------------------------
 echo "Running 'fastjet_timing_plugins -incl 5.0 < data/single_event.dat' on all algs"
 echo "  tested  : "${tested_algs}
 echo "  untested:" ${untested_algs}
+echo "  R values: "${Rvalues}
 echo -----------------------------------------------------------
 for alg in ${tested_algs}; do
     # check if we have to run on a separate event
@@ -138,10 +138,12 @@ for alg in ${tested_algs}; do
 
     # additional parameters for 'fastjet_timing_plugins' can be specified using ',' to separate them.
     # we thus have to replace ',' by ' ' when we run fastjet_timing_plugins
-    example/fastjet_timing_plugins -${alg_part//,/ } -incl 5.0 < ${srcdir}/example/data/${event_part} \
-      | grep -v -E -f clear_patterns.tmp \
-      | awk "{print \"${alg}:\"\$0}"  >> output.tmp
+    for R in ${Rvalues}; do
+	example/fastjet_timing_plugins -${alg_part//,/ } -incl 5.0 -r ${R} < ${srcdir}/example/data/${event_part} \
+	    | grep -v -E -f clear_patterns.tmp \
+	    | awk "{print \"${alg}:\"\$0}"  >> output.tmp
     ##      | awk "{if (\$2 == \"exclusive\"){ exit;}; print \"${alg}:\"\$0}"  >> output.tmp
+    done
 done
 ## for regenerating the orig output: cp output.tmp test-script-output-orig.txt
 
