@@ -31,15 +31,25 @@
 #   - add genkt, ee_kt, ee_genkt
 #   - vary parameters
 
+
+# if srcdir is not defined, set it to .
+# this allows to run outside of make check
+if test -z ${srcdir}; then
+    echo "setting srcdir to ."
+    srcdir="."
+fi
+
+
+
 #======================================================================
 # first check that the windows include file has the correct
 # version number. Strictly speaking not something that 
 # should be done in make check, but should help guarantee
 # that we do not release a copy with the wrong windows version 
 # number
-packname=`grep '^ *AC_INIT' configure.ac | sed -e 's/AC_INIT(//' -e 's/\[//g' -e 's/\]//g' -e 's/)//'`
+packname=`grep '^ *AC_INIT' ${srcdir}/configure.ac | sed -e 's/AC_INIT(//' -e 's/\[//g' -e 's/\]//g' -e 's/)//'`
 packver=`echo $packname | sed 's/.*,//g'`
-winver=`grep VERSION include/fastjet/config_win.h | sed 's/.*VERSION *"//' | sed 's/"//'`
+winver=`grep VERSION ${srcdir}/include/fastjet/config_win.h | sed 's/.*VERSION *"//' | sed 's/"//'`
 if [[ $winver != $packver ]]; then
   echo "ERROR: config_win.h version number not compatible with true version number"
   exit 1
@@ -48,11 +58,6 @@ fi
 
 #======================================================================
 # now run the real tests
-if test -z ${srcdir}; then
-    echo "setting srcdir to ."
-    srcdir="."
-fi
-
 # first build the list of algs to run
 echo -----------------------------------------------------------
 echo "Checking which algorithms are available for testing"
@@ -114,12 +119,12 @@ echo "Comparing output from these runs (test-script-output.txt) "
 echo "to the expected output (test-script-output-orig.txt)"
 echo -----------------------------------------------------------
 # clear the original output for comment lines and untested algorithms
-grep -v -E -f clear_patterns.orig  test-script-output-orig.txt >  output_orig.tmp
+grep -v -E -f clear_patterns.orig  ${srcdir}/test-script-output-orig.txt >  output_orig.tmp
 
 # 4. perform the diff
 DIFF=`diff output.tmp output_orig.tmp`
 diff output.tmp output_orig.tmp > test-script-output.tmp
-# rm output.tmp output_orig.tmp
+rm output.tmp output_orig.tmp
 
 # 5. show result
 echo "Tested plugins: "${tested_plugins}

@@ -1,3 +1,10 @@
+2009-01-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* test-compare.sh:
+	  - dealt with a missing ${srcdir}
+	  - cleaned a bit more the output
+	
+
 2009-01-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* configure.ac: 
