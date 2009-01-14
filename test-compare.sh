@@ -18,14 +18,32 @@
 #       siscone, siscone_spheri, jetclu, midpoint, pxcone,
 #       d0runiicone, trackjet
 #   - What needs to be cleared in the orig file:
-#       the lines starting with "<alg>:" for the algorithms
-#       that won't be used
+#       . the lines starting with "<alg>:" for the algorithms
+#         that won't be used
+#       . the lines starting with #
+#       . the lines containing "version" (version number)
+#       . the lines containing "strategy" (strategy night differ)
+#       . the lines containing ":#" (comments for the used algs)
+#       . the lines containing "SISCone" (version number)
+#       . the lines containing "CGAL" (not necessarily available)
 #   - What needs to be cleared in the test file:
 #       . all comment lined starting with '#'
+#       . the lines containing "version" (version number)
+#       . the lines containing "strategy" (strategy night differ)
+#       . the lines containing "SISCone" (version number)
+#       . the lines containing "CGAL" (not necessarily available)
 #   - For native algs, we'll fix the strategy so that the output 
 #     matches (Best could be dangerous in case CGAL gets used)
 #   - additional things tested: the output of fastjet_example and
 #     fastjet_areas that will be placed at the beginning of the file
+#   - for algs that are not in the plugin <Alg>Plugin, specify an 
+#     additional tag using
+#        <alg>:<plugin_name>
+#   - additional parameters for 'fastjet_timing_plugins' can be 
+#     specified using ',' to separate them
+#   - another event file can be specified using @<eventfile>
+#     important: only the name of teh file has to be specified
+#                and it has to be in example/data/
 # 
 # TODO:
 #   - add genkt, ee_kt, ee_genkt
@@ -62,10 +80,12 @@ fi
 echo -----------------------------------------------------------
 echo "Checking which algorithms are available for testing"
 echo -----------------------------------------------------------
-tested_algs="kt cam antikt "
+tested_algs="kt cam antikt genkt,1.0 genkt,0.0 genkt,-1.0 eekt,-excld,2.0@single-ee-event.dat eegenkt,1.0@single-ee-event.dat eegenkt,0.0@single-ee-event.dat eegenkt,-1.0@single-ee-event.dat"
 untested_algs=""
 
 echo "^#" > clear_patterns.orig
+echo "version" >> clear_patterns.orig
+echo "strategy" >> clear_patterns.orig
 echo "CGAL" >> clear_patterns.orig
 echo "SISCone" >> clear_patterns.orig  # avoids problems w version numbers
 cp clear_patterns.orig clear_patterns.tmp
@@ -107,9 +127,21 @@ echo "  tested  : "${tested_algs}
 echo "  untested:" ${untested_algs}
 echo -----------------------------------------------------------
 for alg in ${tested_algs}; do
-    example/fastjet_timing_plugins -${alg} -incl 5.0 -strategy -3 < ${srcdir}/example/data/single-event.dat \
+    # check if we have to run on a separate event
+    # Note that this is specified using @<event_file>
+    alg_part=${alg%%@*}
+    if [ "${#alg}" -eq "${#alg_part}" ]; then
+	event_part="single-event.dat"
+    else
+	event_part=${alg##*@}
+    fi
+
+    # additional parameters for 'fastjet_timing_plugins' can be specified using ',' to separate them.
+    # we thus have to replace ',' by ' ' when we run fastjet_timing_plugins
+    example/fastjet_timing_plugins -${alg_part//,/ } -incl 5.0 < ${srcdir}/example/data/${event_part} \
       | grep -v -E -f clear_patterns.tmp \
-      | awk "{if (\$2 == \"exclusive\"){ exit;}; print \"${alg}:\"\$0}"  >> output.tmp
+      | awk "{print \"${alg}:\"\$0}"  >> output.tmp
+    ##      | awk "{if (\$2 == \"exclusive\"){ exit;}; print \"${alg}:\"\$0}"  >> output.tmp
 done
 ## for regenerating the orig output: cp output.tmp test-script-output-orig.txt
 
