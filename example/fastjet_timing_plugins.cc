@@ -73,11 +73,26 @@
 ///                 "unique_history_order" (useful for verifying consistency
 ///                 between different clustering strategies).
 ///
+///   -kt           switch to the longitudinally invariant kt algorithm
+///                 Note: this is the default one.
+///
 ///   -cam          switch to the inclusive Cambridge/Aachen algorithm --
 ///                 note that the option -excld dcut provides a clustering
 ///                 up to the dcut which is the minimum squared
 ///                 distance between any pair of jets.
 ///
+///   -antikt       switch to the anti-kt clustering algorithm
+///
+///   -genkt        switch to the genkt algorithm
+///                 you can provide the parameter of the alg as an argument to 
+///                 -genkt (1 by default)
+///                 
+///   -eekt         switch to the e+e- kt algorithm
+///
+///   -eegenkt      switch to the genkt algorithm
+///                 you can provide the parameter of the alg as an argument to 
+///                 -ee_genkt (1 by default)
+///                 
 ///  plugins (don't delete this line)
 ///
 ///   -pxcone       switch to the PxCone jet algorithm
@@ -88,6 +103,8 @@
 ///   -midpoint     switch to CDF's midpoint code
 ///
 ///   -jetclu       switch to CDF's jetclu code
+///
+///   -d0runiicone  switch to D0's run II midpoint cone
 ///
 ///   -trackjet     switch to the TrackJet plugin
 ///
@@ -193,6 +210,12 @@ int main (int argc, char ** argv) {
   } else if (cmdline.present("-genkt")) {
     double p = cmdline.value<double>("-genkt");
     jet_def = fj::JetDefinition(fj::genkt_algorithm, ktR, p, fj::E_scheme, strategy);
+  } else if (cmdline.present("-eekt")) {
+    jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
+  } else if (cmdline.present("-eegenkt")) {
+    double p = cmdline.value<double>("-eegenkt");
+    jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, 
+				fj::E_scheme, strategy);
 
 // checking if one asks to run a plugin (don't delete this line)
   } else if (cmdline.present("-midpoint")) {
@@ -269,12 +292,6 @@ int main (int argc, char ** argv) {
     cerr << "TrackJet"+is_unavailable << endl;
 #endif // ENABLE_PLUGIN_TRACKJET
 // end of checking if one asks to run a plugin (don't delete this line)
-  } else if (cmdline.present("-eekt")) {
-    jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
-  } else if (cmdline.present("-eegenkt")) {
-    double p = cmdline.value<double>("-eegenkt");
-    jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, 
-				fj::E_scheme, strategy);
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]
     jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
