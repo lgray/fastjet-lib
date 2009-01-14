@@ -1,5 +1,10 @@
 2009-01-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* configure.ac: 
+	  even though they're enabled by default, AM_ENABLE_SHARED has to
+	  be called so that ${enable_shared} is set to 'yes' instead of ''
+	
+
 	* test-compare.sh:
 	  - dealt with a missing ${srcdir}
 	  - cleaned a bit more the output

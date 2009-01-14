@@ -45,7 +45,9 @@ if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
 fi
 
 dnl build the shared lib by default
-dnl AM_DISABLE_SHARED
+dnl even though they're enabled by default, AM_ENABLE_SHARED has to
+dnl be called so that ${enable_shared} is set to 'yes' instead of ''
+AM_ENABLE_SHARED
 HAS_SHARED=${enable_shared}
 
 dnl-----------------
