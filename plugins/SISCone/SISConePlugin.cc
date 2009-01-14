@@ -45,6 +45,10 @@ string SISConePlugin::description () const {
     desc << ", using pt-weighted splitting";
   }
 
+  if (_use_jet_def_recombiner){
+    desc << ", using jet-definition's own recombiner";
+  }
+
   // create a fake siscone object so that we can find out more about it
   Csiscone siscone;
   if (siscone.merge_identical_protocones) {

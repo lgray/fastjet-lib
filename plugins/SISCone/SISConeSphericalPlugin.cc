@@ -41,7 +41,11 @@ string SISConeSphericalPlugin::description () const {
 
   // add a note to the description if we use the pt-weighted splitting
   if (_use_E_weighted_splitting){
-    desc << ", using pt-weighted splitting";
+    desc << ", using E-weighted splitting";
+  }
+
+  if (_use_jet_def_recombiner){
+    desc << ", using jet-definition's own recombiner";
   }
 
   // create a fake siscone object so that we can find out more about it

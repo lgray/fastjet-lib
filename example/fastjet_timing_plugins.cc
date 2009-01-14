@@ -265,6 +265,8 @@ int main (int argc, char ** argv) {
       if (cmdline.present("-sm-mt")) plugin->set_split_merge_scale(SISPlug::SM_mt);
       if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
       if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
+      // cause it to use the jet-definition's own recombiner
+      plugin->set_use_jet_def_recombiner(true);
       jet_def = fj::JetDefinition(plugin);
     } else {
       double sisEmin = cmdline.value("-sisEmin",0.0);
@@ -488,6 +490,18 @@ int main (int argc, char ** argv) {
                i,stable_cones[i].rap(),stable_cones[i].phi(),
                stable_cones[i].perp() );
       //}
+      }
+      
+      // also show passes for jets
+      vector<fj::PseudoJet> sisjets = clust_seq.inclusive_jets();
+      printf("\n%15s %15s %15s %12s %8s %8s\n","rap","phi","pt","user-index","pass","nconst");
+      for (unsigned i = 0; i < sisjets.size(); i++) {
+        printf("%15.8f %15.8f %15.8f %12d %8d %8d\n",
+               sisjets[i].rap(), sisjets[i].phi(), sisjets[i].perp(), 
+	       sisjets[i].user_index(), extras->pass(sisjets[i]),
+	       clust_seq.constituents(sisjets[i]).size()
+	       );
+	
       }
     }
 #endif // ENABLE_PLUGIN_SISCONE

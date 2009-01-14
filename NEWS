@@ -74,6 +74,11 @@ interface modifications
   CDFMidPointPlugin and SISConePlugin constructors
   *** may break backwards compatibility ***
 
+- in SISCone, new way of accessing the information about pass at which
+  a jet was found (old method retained for 2.4, but deprecated)
+  
+
+
 other modifications
 -----------------------
 - removed restriction fastjet throws exception on empty events

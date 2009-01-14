@@ -1,3 +1,22 @@
+2009-01-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex (subsection{SISCone Plugin}): 
+	* plugins/SISCone/SISConePlugin.cc (SISConePlugin::description): 
+	* plugins/SISCone/SISConeSphericalPlugin.cc (SISConeSphericalPlugin::description): 
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh: 
+
+	  extras now contains a function int pass(jet), which returns the
+	  pass of the jet; 
+
+	  added function to set, query the use of the jet-definition's own
+	  recombiner (which then overrides the presence of the pass in the
+	  jets' user-index).
+
+	  documented the whole lot.
+
+	* example/fastjet_timing_plugins.cc: 
+	  -cones also prints out passes of jets, user-index, etc.
+
 2009-01-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* test-compare.sh: 

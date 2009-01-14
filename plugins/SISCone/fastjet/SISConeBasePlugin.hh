@@ -39,6 +39,7 @@ class SISConeBasePlugin : public JetDefinition::Plugin {
 public:
   /// default ctor
   SISConeBasePlugin (){
+    _use_jet_def_recombiner = false;
   }
 
   /// copy constructor
@@ -69,6 +70,12 @@ public:
   /// return the value of the split_merge_stopping_scale (see
   /// set_split_merge_stopping_scale(...) for description)
   double split_merge_stopping_scale() {return _split_merge_stopping_scale;}
+
+  /// allow the user to decide if one uses the jet_def's own recombination scheme
+  void set_use_jet_def_recombiner(bool choice) {_use_jet_def_recombiner = choice;}
+
+  /// indicate if the jet_def's recombination scheme is being used
+  bool use_jet_def_recombiner() const {return _use_jet_def_recombiner;}
 
   /// indicates whether caching is turned on or not.
   bool caching() const {return _caching ;}
@@ -104,10 +111,12 @@ public:
     return _ghost_sep_scale;
   }
 
+protected:
   double _cone_radius, _overlap_threshold;
   int    _n_pass_max;
   bool   _caching;//, _split_merge_on_transverse_mass;
   double _split_merge_stopping_scale;
+  bool   _use_jet_def_recombiner;
 
   mutable double _ghost_sep_scale;
 
@@ -139,12 +148,20 @@ public:
 template <typename Main, typename Momentum, typename Jet>
 class SISConeBaseExtras : public ClusterSequence::Extras {
 public:
+
+  /// constructor
+  //  it just initialises the pass information 
+  SISConeBaseExtras(int nparticles) : _pass(nparticles*2,-1) {}
+
   /// returns a reference to the vector of stable cones (aka protocones)
   const std::vector<PseudoJet> & stable_cones() const {return _protocones;}
 
   /// an old name for getting the vector of stable cones (aka protocones)
   const std::vector<PseudoJet> & protocones() const {return _protocones;}
 
+  /// return the # of the pass at which a given jet was found; will
+  /// return -1 if the pass is invalid
+  int pass(const PseudoJet & jet) const {return _pass[jet.cluster_hist_index()];}
 
   /// access to the siscone jet def plugin (more convenient than
   /// getting it from the original jet definition, because here it's
@@ -162,6 +179,7 @@ public:
 
 private:
   std::vector<PseudoJet> _protocones;
+  std::vector<int>       _pass;
   const SISConeBasePlugin<Main, Momentum, Jet> * _jet_def_plugin;
   double                _most_ambiguous_split;
   // let us be written to by SISConePlugin
@@ -246,9 +264,11 @@ void SISConeBasePlugin<SIS, Mom, Jet>::run_clustering(ClusterSequence & clust_se
     rerun_siscone_clustering(clust_seq, siscone);    
   }
 
-
   // extract the jets [in reverse order -- to get nice ordering in pt at end]
   int njet = siscone->jets.size();
+
+  // allocate space for the extras object
+  SISConeBaseExtras<SIS, Mom, Jet> * extras = new SISConeBaseExtras<SIS, Mom, Jet>(n);
 
   for (int ijet = njet-1; ijet >= 0; ijet--) {
     const Jet & jet = siscone->jets[ijet]; // shorthand
@@ -265,23 +285,29 @@ void SISConeBasePlugin<SIS, Mom, Jet>::run_clustering(ClusterSequence & clust_se
       // and merge them (with a fake dij)
       double dij = 0.0;
 
-      // create the new jet by hand so that we can adjust its user index
-      PseudoJet newjet = clust_seq.jets()[jet_i] + clust_seq.jets()[jet_j];
+      if (_use_jet_def_recombiner) {
+	clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
+      } else {
+	// create the new jet by hand so that we can adjust its user index
+	PseudoJet newjet = clust_seq.jets()[jet_i] + clust_seq.jets()[jet_j];
+	// set the user index to be the pass in which the jet was discovered
+	newjet.set_user_index(jet.pass);
+	clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, newjet, jet_k);
+      }
 
-      // set the user index to be the pass in which the jet was discovered
-      newjet.set_user_index(jet.pass);
-        
-      clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, newjet, jet_k);
     }
+
     // we have merged all the jet's particles into a single object, so now
     // "declare" it to be a beam (inclusive) jet.
     // [NB: put a sensible looking d_iB just to be nice...]
     double d_iB = clust_seq.jets()[jet_k].perp2();
     clust_seq.plugin_record_iB_recombination(jet_k, d_iB);
+
+    // now record the pass of the jet in the extras object
+    extras->_pass[clust_seq.jets()[jet_k].cluster_hist_index()] = jet.pass;
   }
 
   // now copy the list of protocones into an "extras" objects
-  SISConeBaseExtras<SIS, Mom, Jet> * extras = new SISConeBaseExtras<SIS, Mom, Jet>;
   for (unsigned ipass = 0; ipass < siscone->protocones_list.size(); ipass++) {
     for (unsigned ipc = 0; ipc < siscone->protocones_list[ipass].size(); ipc++) {
       //double rap = siscone->protocones_list[ipass][ipc].eta;

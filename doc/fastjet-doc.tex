@@ -135,11 +135,12 @@ Plugins are included for the fortran PxCone code and for the CDF C++
 JetClu and MidPoint cone jet algorithms (all infrared unsafe), as well as
 the recent Seedless Infrared-Safe Cone (SISCone) jet
 algorithm~\cite{SISCone}. 
-Version 2.3 includes the new version 1.3.0 of SISCone,
+Version 2.4 includes the new version 1.4.0 of SISCone, \comment{UPDATE
+THIS BIT}
 a wrapper to \fastjet 
 allowing one to run SISCone from a Fortran program, 
 and provides automated build tools,
-as well as a number of minor improvements.
+as well as a number of minor improvements. 
 
 The current implementation of the above algorithms is restricted to
 the so-called $\Delta R$ distance measure (recommended in
@@ -1872,8 +1873,8 @@ momentum and stems from the decay of two identical particles.
 
 An example of the use of the SISCone plugin would be as follows:
 \begin{lstlisting}
-  // define a generic plugin pointer
-  fastjet::JetDefinition::Plugin * plugin;
+  // define a SISCone plugin pointer
+  fastjet::SISConePlugin * plugin;
 
   // allocate a new plugin for SISCone
   double cone_radius = 0.7;
@@ -1901,24 +1902,58 @@ Note that the it makes no sense to ask for exclusive jets from a
 SISCone based \verb:ClusterSequence:.
 
 Some extra output information is appropriate for a cone algorithm that
-is not of relevance in clustering algorithms. Accordingly SISCone
-`misappropriates' the \verb:user_index(): of the jets, using it to
-return the pass in which a jet was found.\footnote{Owing to the
-  current internal representation of jets in \fastjet, this does not
-  work for jets consisting of a single particle --- the user index of
-  the jet is then just the user index originally attributed to that
-  particle (by default, $-1$).} %
-The user may also obtain a list of the positions of original stable
-cones as follows:
+is not of relevance in clustering algorithms, through the
+\verb:extras: resource,
 \begin{lstlisting}
    const fastjet::SISConeExtras * extras = 
              dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
+\end{lstlisting}
+To determine the pass at which a given jet was found, one does the
+following
+\begin{lstlisting}
+   int pass = extras->pass(jet);
+\end{lstlisting}
+%
+The user may also obtain a list of the positions of original stable
+cones as follows:
+\begin{lstlisting}
    vector<fastjet::PseudoJet> stable_cones(extras->stable_cones());
 \end{lstlisting}
 The stable cones are represented as four-momenta, for which only the
-rapidity and azimuth are meaningful. As for the jets, the
-\verb:user_index(): indicates the pass at which a given stable cone
-was found.
+rapidity and azimuth are meaningful. The \verb:user_index(): indicates
+the pass at which a given stable cone was found.
+
+In the current version of SISCone, the \verb:user_index(): of a jet
+also corresponds to the pass at which it was found, however this
+manner of accessing the pass for a jet is \emph{deprecated} (for
+reasons related to the internal representation of jets, it fails for
+single-particle jets). It is retained in version 2.4 for backwards
+compatibility, but will be removed at some stage in the future.
+
+SISCone uses $E$-scheme recombination internally and also for
+constructing the final jets from the list of constituents. 
+%
+For the latter task, the user may instead instruct SISCone to use the
+jet-definition's own recombiner, with the command
+\begin{lstlisting}
+   plugin->set_use_jet_def_recombiner(true);
+\end{lstlisting}
+In this case the \verb:user_index(): no longer contains the
+information about the pass.
+
+
+
+%% the pass of a jet may is currently
+%% also contained in 
+%% 
+%% To determine the pass of a 
+%% 
+%% %
+%% \footnote{Owing to the
+%%   current internal representation of jets in \fastjet, this does not
+%%   work for jets consisting of a single particle --- the user index of
+%%   the jet is then just the user index originally attributed to that
+%%   particle (by default, $-1$).} %
 
 Since SISCone is infrared safe, it may meaningfully be used also with
 the \verb:ClusterSequenceArea: class. Note however that in that
@@ -1933,7 +1968,7 @@ A final remark concerns speed and memory requirements: as mentioned
 above, SISCone takes $\order{N^2 \ln N}$ time to find jets, and the
 memory use is $\order{N^2}$; taking $N=10^3$ as a reference point, it
 runs in a few tenths of a second, making it about 100 times slower
-than \fastjet.
+than native \fastjet algorithms.
 %
 These are `expected' results, i.e.\ valid for a suitably random set of
 particles. In area determinations, the ghost particles are anything
@@ -2013,11 +2048,17 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 
 We wish to thank Timothy Chan for helpful exchanges about the details
 of his dynamic closest pair algorithm. We thank Markus Wobisch and
-Andreas Oehler for comments on the documentation.
+Andreas Oehler for comments on the documentation, and Sebastian Sapeta
+for bug reports and testing of beta-version of the code.
+
+%% Who else
+%% Belyaev for windows compilation
+%% ????
 
 We are grateful to CDF, Joey Huston and Mike Seymour for providing
 permission to distribute their cone jet algorithm codes as plugins for
 fastjet. 
+
 
 \appendix
 
