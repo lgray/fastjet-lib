@@ -8,4 +8,5 @@ EXTRA_DIST = Pythia-PtMin1000-LHC-10ev.dat             \
              cone-sm-pt-problem-ev1.dat		       \
              cone-sm-pt-problem-ev2.dat		       \
 	     HZ-event-Hmass115.dat                     \
+             single-ee-event.dat                       \
              single-event.dat                          
