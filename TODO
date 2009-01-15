@@ -18,6 +18,7 @@ For 2.4
 - [done] figure out what to do about RangeDefinition's phi
 - [done] test new shared-lib options
 - [done] get stable-cone pass number from the SISCone extras variable + document
+-        put version number into code somehow???
 -        provide way for plugins to tell jet-def they use its recomb scheme (for description)
 -        add/verify manual entry about compilation
 -        check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
