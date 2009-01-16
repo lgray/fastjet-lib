@@ -138,22 +138,8 @@ private:
   int    _merge_max              ; // =10000; 
   double _pT_min_nomerge         ; // =0.;
 
-//   // here are the default parameters for the D0 Run II Cone algorithm
-//   //const static double _cone_radius ;//= 0.5;
-//   const static double _DEFAULT_split_ratio             = 0.5; // overlap threshold
-//   const static double _DEFAULT_far_ratio               = 0.5;
-//   const static double _DEFAULT_Et_min_ratio            = 0.5;
-//   const static bool   _DEFAULT_kill_duplicate          = true;
-//   const static double _DEFAULT_duplicate_dR            = 0.005; 
-//   const static double _DEFAULT_duplicate_dPT           = 0.01; 
-//   const static double _DEFAULT_search_factor           = 1.0; 
-//   const static double _DEFAULT_pT_min_leading_protojet = 0.; 
-//   const static double _DEFAULT_pT_min_second_protojet  = 0.;
-//   const static int    _DEFAULT_merge_max               = 10000; 
-//   const static double _DEFAULT_pT_min_nomerge          = 0.;
-
-  // here are the default parameters for the D0 Run II Cone algorithm
-  //const static double _cone_radius ;//= 0.5;
+  // here are the variables for the default parameters of the D0 Run II Cone algorithm.
+  // They are set in the .cc file 
   const static double _DEFAULT_split_ratio             ;// = 0.5  ; // overlap threshold
   const static double _DEFAULT_far_ratio               ;// = 0.5  ;
   const static double _DEFAULT_Et_min_ratio            ;// = 0.5  ;
