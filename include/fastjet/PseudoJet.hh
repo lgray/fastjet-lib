@@ -108,6 +108,11 @@ class PseudoJet {
   inline double  m() const;    
   /// return px^2+py^2+pz^2
   inline double modp2() const {return _px*_px+_py*_py+_pz*_pz;}
+  /// return the transverse energy
+  inline double Et() const {return (_kt2==0) ? 0.0 : _E/sqrt(1.0+_pz*_pz/_kt2);}
+  /// return the transverse energy squared
+  inline double Et2() const {return (_kt2==0) ? 0.0 : _E*_E/(1.0+_pz*_pz/_kt2);}
+
   /// returns component i, where X==0, Y==1, Z==2, E==3
   double operator () (int i) const ; 
   /// returns component i, where X==0, Y==1, Z==2, E==3

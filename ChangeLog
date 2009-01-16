@@ -1,3 +1,9 @@
+2009-01-15  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/PseudoJet.hh (class PseudoJet): 
+	  added Et() and Et2() to compute the transverse energy
+	
+
 2009-01-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* test-compare.sh: 
