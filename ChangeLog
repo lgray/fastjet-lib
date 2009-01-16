@@ -1,5 +1,9 @@
 2009-01-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* test-compare.sh: 
+	  fixed problem with pxcone mixing f77/c++ output order according
+	  to system, which caused problems in make check
+
 	* plugins/D0RunIICone/D0RunIIConePlugin.cc: 
 	  Attempt to sort out compilation problem on a mac
 

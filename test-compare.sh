@@ -82,13 +82,15 @@ untested_algs=""
 
 Rvalues="0.4 0.7 1.0"
 
-echo "^#" > clear_patterns.orig
+echo ":#"      >  clear_patterns.orig
+echo "^#"      >> clear_patterns.orig
 echo "version" >> clear_patterns.orig
 echo "strategy" >> clear_patterns.orig
 echo "CGAL" >> clear_patterns.orig
 echo "SISCone" >> clear_patterns.orig  # avoids problems w version numbers
+echo "pxcone: +[a-zA-Z*]" >> clear_patterns.orig   # special treatment for PxCone whose fortran output
+echo "pxcone: *$"         >> clear_patterns.orig   # occurs in non-predicatble position (flushing issue)
 cp clear_patterns.orig clear_patterns.tmp
-echo ":#" >> clear_patterns.orig
 
 # note: algs specified as alg:name mean that 'name' has to be checked for the 
 #       availability of 'alg'
@@ -140,8 +142,9 @@ for alg in ${tested_algs}; do
     # we thus have to replace ',' by ' ' when we run fastjet_timing_plugins
     for R in ${Rvalues}; do
 	example/fastjet_timing_plugins -${alg_part//,/ } -incl 5.0 -r ${R} < ${srcdir}/example/data/${event_part} \
+	    | awk "{print \"${alg}:\"\$0}"  \
 	    | grep -v -E -f clear_patterns.tmp \
-	    | awk "{print \"${alg}:\"\$0}"  >> output.tmp
+            >> output.tmp
     ##      | awk "{if (\$2 == \"exclusive\"){ exit;}; print \"${alg}:\"\$0}"  >> output.tmp
     done
 done
@@ -158,7 +161,6 @@ grep -v -E -f clear_patterns.orig  ${srcdir}/test-script-output-orig.txt >  outp
 # 4. perform the diff
 DIFF=`diff output.tmp output_orig.tmp`
 diff output.tmp output_orig.tmp > test-script-output.tmp
-rm output.tmp output_orig.tmp
 
 # 5. show result
 echo "Tested plugins: "${tested_plugins}
@@ -171,4 +173,5 @@ else
   rm test-script-output.tmp
   rm clear_patterns.orig
   rm clear_patterns.tmp
+  rm output.tmp output_orig.tmp
 fi
