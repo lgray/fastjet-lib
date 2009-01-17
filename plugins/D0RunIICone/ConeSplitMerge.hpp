@@ -39,6 +39,12 @@
 
 //using namespace D0RunIIconeJets_CONEJETINFO;
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
+
 //
 // this class is used to order ProtoJets by decreasing ET and seed ET
 template <class Item>
@@ -299,4 +305,9 @@ void ConeSplitMerge<Item>::split_merge(std::vector<ProtoJet<Item> >& jcv,
   } // while
 }
 ///////////////////////////////////////////////////////////////////////////////
+
+}  // namespace d0
+
+FASTJET_END_NAMESPACE
+
 #endif

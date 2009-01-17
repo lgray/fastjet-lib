@@ -5,6 +5,12 @@
 #include "Cluster.hh"
 #include <vector>
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class MidPointAlgorithm
 {
  public:
@@ -52,5 +58,8 @@ class MidPointAlgorithm
 
 };
 
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif

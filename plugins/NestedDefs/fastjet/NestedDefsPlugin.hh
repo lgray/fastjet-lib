@@ -54,8 +54,8 @@ public:
   /// Main constructor for the NestedDefs Plugin class.  
   ///
   /// The argument is an initialised list of jet algorithms
-  NestedDefsPlugin (std::list<JetDefinition> &_defs) :
-    defs(_defs){}
+  NestedDefsPlugin (std::list<JetDefinition> &defs) :
+    _defs(defs){}
 
   /// copy constructor
   NestedDefsPlugin (const NestedDefsPlugin & plugin) {
@@ -67,10 +67,10 @@ public:
   virtual void run_clustering(ClusterSequence &) const;
   /// the plugin mechanism's standard way of accessing the jet radius
   /// here we return the R of the last alg in the list
-  virtual double R() const {return defs.rbegin()->R();}
+  virtual double R() const {return _defs.rbegin()->R();}
 
 private:
-  std::list<JetDefinition> defs;
+  std::list<JetDefinition> _defs;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

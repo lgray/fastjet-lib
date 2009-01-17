@@ -41,6 +41,7 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
+using namespace d0;
 
 const double D0RunIIConePlugin::_DEFAULT_split_ratio              = 0.5  ; // overlap threshold
 const double D0RunIIConePlugin::_DEFAULT_far_ratio                = 0.5  ;

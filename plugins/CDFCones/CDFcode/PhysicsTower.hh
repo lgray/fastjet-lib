@@ -4,6 +4,12 @@
 #include "LorentzVector.hh"
 #include "CalTower.hh"
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class PhysicsTower
 {
  public:
@@ -29,5 +35,9 @@ class PhysicsTower
   /// addition by GPS (2008-08-15) for tracking within fastjet
   int fjindex;
 };
+
+} // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif

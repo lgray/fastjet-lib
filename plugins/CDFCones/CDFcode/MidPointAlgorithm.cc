@@ -4,6 +4,12 @@
 #include <iostream>
 #include <cmath>
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 void MidPointAlgorithm::findStableConesFromSeeds(std::vector<PhysicsTower>& towers, std::vector<Cluster>& stableCones)
 {
   bool reduceConeSize = true;
@@ -310,4 +316,6 @@ void MidPointAlgorithm::run(std::vector<PhysicsTower>& towers, std::vector<Clust
   }
 }
 
+}  // namespace cdf
 
+FASTJET_END_NAMESPACE

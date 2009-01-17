@@ -23,6 +23,12 @@
 
 #include "inline_maths.h" //ls
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
+
 using namespace inline_maths;
 using namespace D0RunIIconeJets_CONEJETINFO;
 
@@ -194,4 +200,9 @@ inline const std::list<const Item*>& ProtoJet<Item>::LItems() const{
   return _LItems;
 }
 ///////////////////////////////////////////////////////////////////////////////
+
+}  // namespace d0
+
+FASTJET_END_NAMESPACE
+
 #endif

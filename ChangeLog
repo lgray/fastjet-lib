@@ -1,5 +1,18 @@
 2009-01-16  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* for each plugin, put everything under the namespace 
+	    fastjet::<plugin_name>
+	  to avoid any conflict with other codes
+	
+	
+	* plugins/TrackJet/fastjet/TrackJetPlugin.hh 
+	  plugins/TrackJet/TrackJetPlugin.cc 
+	  plugins/NestedDefs/fastjet/NestedDefsPlugin.hh
+	  plugins/NestedDefs/NestedDefsPlugin.cc: 
+          aligned with previous naming conventions (i.e. used _var for
+	  private vars)
+	
+
 	* test-compare.sh:
 	  extended the check down to pt=0 (instead of only jets with pt>5)
 

@@ -2,6 +2,12 @@
 #include "ILConeAlgorithm.hpp"
 #include "HepEntity.h"
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
+
 using namespace std;
 
 int main() {
@@ -89,3 +95,8 @@ int main() {
   return 0;
 
 }
+
+}  // namespace d0
+
+
+FASTJET_END_NAMESPACE

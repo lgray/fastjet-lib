@@ -48,7 +48,7 @@ string NestedDefsPlugin::description () const {
   
   desc << "NestedDefs: successive application of " ;
   unsigned int i=1;
-  for (list<JetDefinition>::const_iterator it=defs.begin();it!=defs.end();it++){
+  for (list<JetDefinition>::const_iterator it=_defs.begin();it!=_defs.end();it++){
     desc << "Definition " << i++ << " [" << it->description() << "] - ";
   }
 
@@ -74,12 +74,12 @@ void NestedDefsPlugin::run_clustering(ClusterSequence & clust_seq) const {
   //  - do the clustering,
   //  - copy the history into the main one
   //  - update the list of momenta and the index conversion table
-  list<JetDefinition>::const_iterator def_iterator = defs.begin();
+  list<JetDefinition>::const_iterator def_iterator = _defs.begin();
   unsigned int def_index=0;
   bool last_def=false;
 
-  while (def_iterator!=defs.end()){
-    last_def = (def_index == (defs.size()-1));
+  while (def_iterator!=_defs.end()){
+    last_def = (def_index == (_defs.size()-1));
 
     // do the clustering
     ClusterSequence step_cs(momenta, *def_iterator);

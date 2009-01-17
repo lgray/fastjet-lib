@@ -3,6 +3,12 @@
 
 #include "inline_maths.h"
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
+
 //Author: Lars Sonnenschein 28/Mar/2007
 //This is an example class fulfilling the minimal requirements needed by the
 //D0 RunII cone jet algorithm implementation, which is an inlined template class
@@ -85,5 +91,10 @@ class HepEntity {
 
 };
 //end of class HepEntity;
+
+
+}  // namespace d0
+
+FASTJET_END_NAMESPACE
 
 #endif

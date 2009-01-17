@@ -7,6 +7,12 @@
 #define M_PI  3.141592653589793238462643383279502884197 
 #endif
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class Centroid
 {
  public:
@@ -53,5 +59,9 @@ class Centroid
     return Et == c.Et && eta == c.eta && phi == c.phi;
   }
 };
+
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif

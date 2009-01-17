@@ -3,6 +3,12 @@
 
 #include "Cluster.hh"
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class ClusterFourVectorEtGreater
 {
  public:
@@ -47,5 +53,9 @@ class ClusterPtTildeGreater
     return c1.pt_tilde > c2.pt_tilde;
   }
 };
+
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif

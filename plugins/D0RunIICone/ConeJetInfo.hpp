@@ -17,6 +17,11 @@
 
 //#define CONEJET_SPLITMERGE_MOD 100
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
 
 namespace D0RunIIconeJets_CONEJETINFO {
 
@@ -51,6 +56,10 @@ private:
 };
 
 }
+
+}  // namespace d0
+
+FASTJET_END_NAMESPACE
 
 #endif
 

@@ -4,6 +4,12 @@
 #include <algorithm>
 #include <cmath>
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 void JetCluAlgorithm::makeSeedTowers(std::vector<PhysicsTower>& towers, std::vector<Cluster>& seedTowers)
 {
   for(int iEta = 4; iEta < 48; iEta++){
@@ -287,3 +293,7 @@ void JetCluAlgorithm::run(std::vector<PhysicsTower>& towers, std::vector<Cluster
   findStableCones(preClusters,towers,stableCones);
   splitAndMerge(stableCones,jets);
 }
+
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE

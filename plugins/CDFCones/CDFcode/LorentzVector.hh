@@ -7,6 +7,12 @@
 #define M_PI  3.141592653589793238462643383279502884197 
 #endif
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class LorentzVector
 {
  public:
@@ -48,5 +54,9 @@ class LorentzVector
     return px == v.px && py == v.py && pz == v.pz && E == v.E;
   }
 };
+
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif

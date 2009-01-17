@@ -5,6 +5,12 @@
 #include "Cluster.hh"
 #include <vector>
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class JetCluAlgorithm
 {
  private:
@@ -38,5 +44,9 @@ class JetCluAlgorithm
   void splitAndMerge(std::vector<Cluster>& stableCones, std::vector<Cluster>& jets);
   void run(std::vector<PhysicsTower>& towers, std::vector<Cluster>& jets);
 };
+
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif

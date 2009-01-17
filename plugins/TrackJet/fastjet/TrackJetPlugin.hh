@@ -58,13 +58,13 @@ public:
   ///                                    track into a the jet
   /// Both recombiners are defaulted to pt_scheme recomb as for the Rivet
   /// implementation.
-  TrackJetPlugin (double _radius, 
+  TrackJetPlugin (double radius, 
 		  RecombinationScheme jet_recombination_scheme=pt_scheme, 
 		  RecombinationScheme track_recombination_scheme=pt_scheme){
-    radius  = _radius;
-    radius2 = radius*radius;
-    jet_recombiner = JetDefinition::DefaultRecombiner(jet_recombination_scheme);
-    track_recombiner = JetDefinition::DefaultRecombiner(track_recombination_scheme);
+    _radius  = radius;
+    _radius2 = radius*radius;
+    _jet_recombiner = JetDefinition::DefaultRecombiner(jet_recombination_scheme);
+    _track_recombiner = JetDefinition::DefaultRecombiner(track_recombination_scheme);
   }
 
   /// copy constructor
@@ -78,13 +78,13 @@ public:
 
   /// the plugin mechanism's standard way of accessing the jet radius
   /// here we return the R of the last alg in the list
-  virtual double R() const {return radius;}
+  virtual double R() const {return _radius;}
 
 private:
-  double radius, radius2;
+  double _radius, _radius2;
 
-  JetDefinition::DefaultRecombiner jet_recombiner;
-  JetDefinition::DefaultRecombiner track_recombiner;
+  JetDefinition::DefaultRecombiner _jet_recombiner;
+  JetDefinition::DefaultRecombiner _track_recombiner;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

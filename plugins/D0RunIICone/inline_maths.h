@@ -3,6 +3,11 @@
 
 #include <cerrno>
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
 
 namespace inline_maths {
 
@@ -56,6 +61,8 @@ inline double y(double E, double pz) {
 } //end usename inline_maths
 
 
+}  // namespace d0
 
+FASTJET_END_NAMESPACE
 
 #endif

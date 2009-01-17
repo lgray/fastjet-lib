@@ -59,6 +59,11 @@
 #include "inline_maths.h"
 
 ///////////////////////////////////////////////////////////////////////////////
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace d0{
 
 using namespace inline_maths;
 
@@ -554,6 +559,11 @@ makeClusters(
     }
   }
 }
+
+}  // namespace d0
+
+FASTJET_END_NAMESPACE
+
 #endif
 
 

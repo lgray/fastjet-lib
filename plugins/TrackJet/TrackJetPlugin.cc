@@ -42,8 +42,8 @@ using namespace std;
 
 class TrackJetParticlePtr{
 public:
-  TrackJetParticlePtr(int _index, double _perp2)
-    :  index(_index), perp2(_perp2){}
+  TrackJetParticlePtr(int i_index, double i_perp2)
+    :  index(i_index), perp2(i_perp2){}
 
   int index;
   double perp2;
@@ -81,10 +81,10 @@ void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
   vector<PseudoJet> tuned_tracks = clust_seq.jets();
   for (vector<PseudoJet>::iterator pit = tuned_particles.begin();
        pit != tuned_particles.end(); pit++)
-    jet_recombiner.preprocess(*pit);
+    _jet_recombiner.preprocess(*pit);
   for (vector<PseudoJet>::iterator pit = tuned_tracks.begin();
        pit != tuned_tracks.end(); pit++)
-    track_recombiner.preprocess(*pit);
+    _track_recombiner.preprocess(*pit);
 
 
   // we'll just need the particle indices for what follows
@@ -114,12 +114,12 @@ void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
       // check if the particle is within a distance R of the jet
       double distance2 = current_track.plain_distance(current_particle_track);
-      if (distance2 <= radius2){
+      if (distance2 <= _radius2){
 	// add the particle to the jet
 	PseudoJet new_track;
 	PseudoJet new_jet;
-	jet_recombiner.recombine(current_jet, current_particle, new_jet);
-	track_recombiner.recombine(current_track, current_particle_track, new_track);
+	_jet_recombiner.recombine(current_jet, current_particle, new_jet);
+	_track_recombiner.recombine(current_track, current_particle_track, new_track);
 
 	int new_jet_index;
 	clust_seq.plugin_record_ij_recombination(current_jet_index, *index_it, distance2, new_jet, new_jet_index);
@@ -140,7 +140,7 @@ void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
     }
 
     // now we have a final jet, so cluster it with the beam
-    clust_seq.plugin_record_iB_recombination(current_jet_index, radius2);
+    clust_seq.plugin_record_iB_recombination(current_jet_index, _radius2);
   }
     
 }

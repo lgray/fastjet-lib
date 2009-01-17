@@ -6,6 +6,12 @@
 #include "Centroid.hh"
 #include <vector>
 
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
+
+namespace cdf{
+
 class Cluster
 {
  public:
@@ -49,5 +55,9 @@ class Cluster
   }
   int size(){return towerList.size();}
 };
+
+}  // namespace cdf
+
+FASTJET_END_NAMESPACE
 
 #endif
