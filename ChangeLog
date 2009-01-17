@@ -1,9 +1,9 @@
-2009-01-15  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+2009-01-16  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
-	* include/fastjet/PseudoJet.hh (class PseudoJet): 
-	  added Et() and Et2() to compute the transverse energy
+	* test-compare.sh:
+	  extended the check down to pt=0 (instead of only jets with pt>5)
+
 	
-
 2009-01-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* test-compare.sh: 
@@ -12,6 +12,13 @@
 
 	* plugins/D0RunIICone/D0RunIIConePlugin.cc: 
 	  Attempt to sort out compilation problem on a mac
+
+
+2009-01-15  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/PseudoJet.hh (class PseudoJet): 
+	  added Et() and Et2() to compute the transverse energy
+	
 
 2009-01-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 

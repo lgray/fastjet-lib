@@ -81,6 +81,7 @@ tested_algs="kt cam antikt genkt,1.0 genkt,0.0 genkt,-1.0 eekt,-excld,2.0@single
 untested_algs=""
 
 Rvalues="0.4 0.7 1.0"
+extra_args="-incl 0.0"
 
 echo ":#"      >  clear_patterns.orig
 echo "^#"      >> clear_patterns.orig
@@ -141,7 +142,7 @@ for alg in ${tested_algs}; do
     # additional parameters for 'fastjet_timing_plugins' can be specified using ',' to separate them.
     # we thus have to replace ',' by ' ' when we run fastjet_timing_plugins
     for R in ${Rvalues}; do
-	example/fastjet_timing_plugins -${alg_part//,/ } -incl 5.0 -r ${R} < ${srcdir}/example/data/${event_part} \
+	example/fastjet_timing_plugins -${alg_part//,/ } ${extra_args} -r ${R} < ${srcdir}/example/data/${event_part} \
 	    | awk "{print \"${alg}:\"\$0}"  \
 	    | grep -v -E -f clear_patterns.tmp \
             >> output.tmp
