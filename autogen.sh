@@ -34,7 +34,7 @@ LIBTOOLIZE=libtoolize
       echo "in /usr/bin. If you see this message, they are not."
       echo ""
       echo "The GNU version can be retrieved from http://ftp.gnu.org/gnu/libtool/."
-      echo "If they are (re)installed installed from sources in a different location, "
+      echo "If they are (re)installed from sources in a different location,"
       echo "autogen.sh should then be modified accordingly."
       exit
    fi
