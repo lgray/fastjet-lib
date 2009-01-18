@@ -23,10 +23,24 @@ LIBTOOLIZE=libtoolize
 
 # change executable names when running on Macs
 # if test x`uname` = xDarwin; then
-# #if [[ `uname` == "Darwin" ]]; then
-#   LIBTOOL=glibtool
-#   LIBTOOLIZE=glibtoolize
-# fi
+ if [[ `uname` == "Darwin" ]]; then
+   if [[ `whereis glibtool` == "glibtool:" ]]; then
+      echo ""
+      echo "On Mac OSX, the GNU libtool and libtoolize scripts, renamed"
+      echo "glibtol and glibtoolize respectively by Apple to avoid"
+      echo "conflict with Apple-provided libtool, should be used."
+      echo ""
+      echo "They should be already installed, together with Apple developer tools,"
+      echo "in /usr/bin. If you see this message, they are not."
+      echo ""
+      echo "The GNU version can be retrieved from http://ftp.gnu.org/gnu/libtool/."
+      echo "If they are (re)installed installed from sources in a different location, "
+      echo "autogen.sh should then be modified accordingly."
+      exit
+   fi
+   LIBTOOL=glibtool
+   LIBTOOLIZE=glibtoolize
+ fi
 
 # check that all utilities needed by configure.ac are present
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
