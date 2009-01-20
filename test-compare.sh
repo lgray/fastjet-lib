@@ -124,7 +124,7 @@ example/fastjet_areas < ${srcdir}/example/data/single-event.dat | grep -v -E -f 
 
 # run the algorithms to be tested
 echo -----------------------------------------------------------
-echo "Running 'fastjet_timing_plugins -incl 5.0 < data/single_event.dat' on all algs"
+echo "Running 'fastjet_timing_plugins "${extra_args}" < data/single_event.dat' on all algs"
 echo "  tested  : "${tested_algs}
 echo "  untested:" ${untested_algs}
 echo "  R values: "${Rvalues}
