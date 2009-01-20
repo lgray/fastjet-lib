@@ -93,6 +93,7 @@
 %----------------------------------------------------------------------
 \newpage
 \tableofcontents
+\newpage
 
 %----------------------------------------------------------------------
 \section{Introduction}
@@ -157,195 +158,75 @@ though the exclusive mode has physical advantages in certain cases.
 %% widespread use, though the exclusive mode has physical advantages in
 %% certain cases.  We provide access to both modes.
 
-%......................................................................
-\subsection[$k_t$ jet algorithm]{$\boldsymbol{k_t}$ jet algorithm}
-The definition of the inclusive $k_t$ jet algorithm that is coded is as
-follows (and corresponds to \cite{ktincl}, modulo small changes of
-notation): 
+\section{Quickstart guide}
+
+For the impatient, the \fastjet package can be set up and run as follows.
+
 \begin{itemize}
-\item[1.] For each pair of particles $i$, $j$ work out the $k_t$
-  distance 
-  \begin{equation}
-    \label{eq:dij}
-    d_{ij} = \min(k_{ti}^2,{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2
-  \end{equation}
-  with $\Delta R_{ij}^2 = (y_i-y_j)^2 + (\phi_i-\phi_j)^2$,
-  where $k_{ti}$, $y_i$ and $\phi_i$ are the transverse momentum,
-  rapidity and azimuth of particle $i$ and $R$ is a jet-radius
-  parameter usually taken of order $1$; for each parton $i$ also work
-  out the beam distance $d_{iB} = k_{ti}^2$.
-\item[2.] Find the minimum $d_{\min}$ of all the $d_{ij},d_{iB}$. If
-  $d_{\min}$ is a $d_{ij}$ merge particles $i$ and $j$ into a single
-  particle, summing their four-momenta (this is $E$-scheme
-  recombination); if it is a $d_{iB}$ then declare particle $i$ to be
-  a final jet and remove it from the list.
-\item[3.] Repeat from step 1 until no particles are left.
+\item Download the code and the unpack it
+\begin{verbatim}
+ wget http://www.lpthe.jussieu.fr/~salam/fastjet/repo/fastjet-X.Y.Z.tar.gz 
+ tar zxvf fastjet-X.Y.Z.tar.gz<br>
+ cd fastjet-X.Y.Z/
+\end{verbatim}
+
+\item Compile and install (choose your own preferred prefix), and when 
+you're done go back to the original directory
+\begin{verbatim}
+ ./configure --prefix=$PWD/../fastjet-install
+ make
+ make check
+ make install
+ cd ..
+\end{verbatim}
+
+\item
+Now paste the following piece of code into a file called \tt{short-example.cc}
+\begin{lstlisting}
+#include "fastjet/ClusterSequence.hh"
+#include <iostream>
+using namespace fastjet;
+using namespace std;
+
+int main () {
+  vector<PseudoJet> particles;
+  // an event with two particles:    px py pz    E
+  particles.push_back( PseudoJet( 100.0, 0, 0, 100.0) );
+  particles.push_back( PseudoJet(-100.0, 0, 0, 100.0) );
+
+  // choose a jet definition
+  double R = 0.7;
+  JetDefinition jet_def(kt_algorithm, R);
+
+  // run the clustering, extract the jets
+  ClusterSequence cs(particles, jet_def);
+  vector<PseudoJet> jets = cs.inclusive_jets();
+
+  // print the jets</span>
+  cout <<   "        pt y phi" << endl;
+  for (unsigned i = 0; i < jets.size(); i++) {
+    cout << "jet " << i << ": "<< jets[i].perp() << " " 
+                   << jets[i].rap() << " " << jets[i].phi() << endl;
+  }
+}
+\end{lstlisting}
+
+\item Then compile and run it with
+\begin{verbatim}
+ g++ short-example.cc -o short-example \
+     `fastjet-install/bin/fastjet-config --cxxflags` \
+     `fastjet-install/bin/fastjet-config --libs`
+\end{verbatim}
 \end{itemize}
-The exclusive longitudinally invariant $k_t$ jet algorithm
-\cite{ktexcl} is similar except that (a) when a $d_{iB}$ 
-is the smallest value, that particle is considered to become part of
-the beam jet (i.e.\ is discarded) and (b) clustering is stopped when
-all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. In the
-exclusive mode $R$ is commonly set to $1$.
-
-%......................................................................
-\subsection{Cambridge/Aachen jet algorithm}
-Currently the Cambridge/Aachen jet algorithm is provided only in an
-inclusive version~\cite{CamWobisch}, whose formulation is identical to
-that of the $k_t$ 
-jet algorithm, except as regards the distance measures, which are:
-\begin{subequations}
-  \label{eq:dij_cam}
-  \begin{align}
-    d_{ij} &= \Delta R_{ij}^2 / R^2\,,\\
-    d_{iB} &= 1\,.
-  \end{align}
-\end{subequations}
-Attempting to extract exclusive jets from the Cambridge/Aachen with a
-$d_{cut}$ parameter simply provides the set of jets obtained up to the
-point where all $d_{ij},d_{iB} > d_{cut}$. Having clustered with some
-given $R$, this can actually be an effective way of viewing the event
-at a smaller radius, $R_{eff} = \sqrt{d_{cut}} R$, thus allowing a
-single event to be viewed at a continuous range of $R_{eff}$ within a
-single clustering.
-
-We note that the true exclusive formulation of the Cambridge
-algorithm~\cite{CamOrig} instead makes use an auxiliary ($k_t$)
-distance measure and `freezes' pseudojets whose recombination would
-involve too large a value of the auxiliary distance measure.
-
-%\comment{Say something about meaning of exclusive case here?}
+\noindent
+The output will consist of a banner, followed by the lines
+\begin{verbatim}
+        pt y phi
+jet 0: 100 0 3.14159
+jet 1: 100 0 0
+\end{verbatim}
 
 
-%......................................................................
-\subsection[Anti-$k_t$ jet algorithm]{Anti-$\boldsymbol{k_t}$ jet algorithm}
-This new algorithm, introduced and studied in~\cite{antikt}, is defined
-exactly like the standard $k_t$ algorithm, except for the distance
-measures which are now given by
-\begin{subequations}
-    \label{eq:dij_antikt}
-  \begin{eqnarray}
-    &&d_{ij} = \min(1/k_{ti}^2,1/{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2 \, , \\
-    &&d_{iB} = 1/k_{ti}^2 \, .
-  \end{eqnarray}
-\end{subequations}
-While being a sequential recombination algorithm like $k_t$ and
-Cambridge/Aachen, the anti-$k_t$ algorithm behaves in some sense like a
-`perfect' cone algorithm, in that its hard jets are exactly
-circular on the $y$-$\phi$ cylinder~\cite{antikt}.
-
-%......................................................................
-\subsection[Generalised-$k_t$ jet algorithm]{Generalised $\boldsymbol{k_t}$ jet algorithm}
-\label{sec:genkt}
-
-The ``generalised $k_t$'' algorithm again follows the same procedure,
-but depends on an additional continuous parameter $p$, with has the
-following distance measure:
-\begin{subequations}
-  \label{eq:dij_genkt}
-  \begin{eqnarray}
-    &&d_{ij} = \min(k_{ti}^{2p},k_{tj}^{2p}) \, \Delta R_{ij}^2 / R^2 \, , \\
-    &&d_{iB} = k_{ti}^{2p} \, .
-  \end{eqnarray}
-\end{subequations}
-For specific values of $p$, it reduces to one or other of the
-algorithms list above, $k_t$ ($p=1$), Cambridge/Aachen ($p=0$) and
-anti-$k_t$ ($p=-1$). 
-
-%......................................................................
-\subsection{Generalised $\boldsymbol{k_t}$ algorithm for
-  $\boldsymbol{e^+e^-}$ collisions}
-\label{sec:ee-algs}
-
-FastJet also provides native implementations of clustering algorithms
-in spherical coordinates (specifically for $e^+e^-$ collisions) along
-the lines of the original $k_t$ algorithms~\cite{eekt}, but extended
-in analogy with the generalised $pp$ algorithm of~\cite{antikt} and
-section \ref{sec:genkt}. We define the two following distances:
-\begin{subequations}
-  \label{eq:dij_eegenkt}
-\begin{align}
-  d_{ij} &= \min(E_i^{2p}, E_j^{2p}) \frac{(1- \cos
-    \theta_{ij})}{(1-\cos R)}\,,\\
-  d_{iB} &= E_i^{2p}\,,
-\end{align}
-\end{subequations}
-for a general value of $p$ and $R$. At a given stage of the clustering
-sequence, if a $d_{ij}$ is smallest then $i$ and $j$ are recombined,
-while if a $d_{iB}$ is smallest then $i$ is called an ``inclusive
-jet''. 
-
-For values of $R \le \pi$ in eq.~(\ref{eq:dij_eegenkt}), the
-generalised $e^+e^-$ $k_t$ algorithm behaves in analogy with the $pp$
-algorithms: when an object is at an angle $\theta_{iX} > R$ from all
-other objects $X$ then it forms an inclusive jet.
-%
-With the choice $p=-1$ this provides a simple, infrared and collinear
-safe way of obtaining a cone-like algorithm for $e^+e^-$ collisions,
-since hard well-separated jets have a circular profile on the $3$D
-sphere, with opening half-angle $R$.
-
-If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
-then the $d_{iB}$ will be smallest only if the event
-consists of a single particle, and thus with the additional choice of
-$p=1$ the clustering sequence will correspond to that of the $e^+e^-$
-$k_t$ algorithm~\cite{eekt}, often referred to also as the Durham
-algorithm, which has a single distance:
-\begin{align}
-  \label{eq:dij_eekt}
-  d_{ij} &= 2 \min(E_i^{2p}, E_j^{2p}) (1- \cos \theta_{ij})\,.
-\end{align}
-Note the difference in normalisation between the $d_{ij}$ in
-eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact in neither
-case have we normalised to the total energy $Q$ in the event, contrary
-to the convention adopted originally in~\cite{eekt} (where the
-distance measure was called $y_{ij}$).
-
-
-
-%......................................................................
-\subsection{Recombination schemes}
-\label{sec:recomb_schemes}
-
-When merging particles in step 2 of the clustering procedure, one must
-specify how to combine the momenta. The simplest procedure
-($E$-scheme) simply adds the four-vectors. This has been advocated as
-a standard in~\cite{RunII-jet-physics}, and is the default option in
-FastJet. 
-
-
-
-\paragraph{Other schemes for $\boldsymbol{pp}$ collisions.} Other
-schemes provided by earlier $k_t$-clustering implementations
-\cite{KtJet} are the $p_t$, $p_t^2$, $E_t$ and $E_t^2$ schemes. They
-all incorporate a `preprocessing' stage to make the initial momenta
-massless (rescaling the energy to be equal to the 3-momentum for the
-$p_t$ and $p_t^2$ schemes, rescaling to the 3-momentum to be equal to
-the energy in the $E_t$ and $E_t^2$ schemes). Then for all schemes the
-recombination $p_r$ of $p_i$ and $p_j$ is a massless 4-vector
-satisfying
-\begin{subequations}
-  \begin{align}
-    p_{t,r} &= p_{t,i} + p_{t,j}\,,\\
-    \phi_r &= (w_i \phi_i + w_j \phi_j)/(w_i + w_j)\,,\\
-    y_r &= (w_i y_i + w_j y_j)/(w_i + w_j)\,,
-  \end{align}
-\end{subequations}
-where $w_i$ is $p_{t,i}$ for the $p_t$ and $E_t$ schemes, and is
-$p_{t,i}^2$ for the $p_t^2$ and $E_t^2$ schemes. 
-
-Note that for massive particles the schemes defined in the previous
-paragraph are not invariant under longitudinal boosts. We therefore
-also introduce boost-invariant $p_t$ and $p_t^2$ schemes, which are
-identical to the normal $p_t$ and $p_t^2$ schemes, except that they
-omit the preprocessing stage.
-
-\paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
-On request, we may in the future provide dedicated schemes for $\ee$
-collisions.
-
-\paragraph{User-defined schemes.} The user may define their own,
-custom recombination schemes, as described in Appendix~\ref{app:a}.
 
 %----------------------------------------------------------------------
 \section{Jet-finding interface}
@@ -880,6 +761,202 @@ int main (int argc, char ** argv) {
   }
 }
 \end{lstlisting}
+
+
+\section{\fastjet native jet algorithms}
+
+%......................................................................
+\subsection[$k_t$ jet algorithm]{$\boldsymbol{k_t}$ jet algorithm}
+The definition of the inclusive $k_t$ jet algorithm that is coded is as
+follows (and corresponds to \cite{ktincl}, modulo small changes of
+notation): 
+\begin{itemize}
+\item[1.] For each pair of particles $i$, $j$ work out the $k_t$
+  distance 
+  \begin{equation}
+    \label{eq:dij}
+    d_{ij} = \min(k_{ti}^2,{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2
+  \end{equation}
+  with $\Delta R_{ij}^2 = (y_i-y_j)^2 + (\phi_i-\phi_j)^2$,
+  where $k_{ti}$, $y_i$ and $\phi_i$ are the transverse momentum,
+  rapidity and azimuth of particle $i$ and $R$ is a jet-radius
+  parameter usually taken of order $1$; for each parton $i$ also work
+  out the beam distance $d_{iB} = k_{ti}^2$.
+\item[2.] Find the minimum $d_{\min}$ of all the $d_{ij},d_{iB}$. If
+  $d_{\min}$ is a $d_{ij}$ merge particles $i$ and $j$ into a single
+  particle, summing their four-momenta (this is $E$-scheme
+  recombination); if it is a $d_{iB}$ then declare particle $i$ to be
+  a final jet and remove it from the list.
+\item[3.] Repeat from step 1 until no particles are left.
+\end{itemize}
+The exclusive longitudinally invariant $k_t$ jet algorithm
+\cite{ktexcl} is similar except that (a) when a $d_{iB}$ 
+is the smallest value, that particle is considered to become part of
+the beam jet (i.e.\ is discarded) and (b) clustering is stopped when
+all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. In the
+exclusive mode $R$ is commonly set to $1$.
+
+%......................................................................
+\subsection{Cambridge/Aachen jet algorithm}
+Currently the Cambridge/Aachen jet algorithm is provided only in an
+inclusive version~\cite{CamWobisch}, whose formulation is identical to
+that of the $k_t$ 
+jet algorithm, except as regards the distance measures, which are:
+\begin{subequations}
+  \label{eq:dij_cam}
+  \begin{align}
+    d_{ij} &= \Delta R_{ij}^2 / R^2\,,\\
+    d_{iB} &= 1\,.
+  \end{align}
+\end{subequations}
+Attempting to extract exclusive jets from the Cambridge/Aachen with a
+$d_{cut}$ parameter simply provides the set of jets obtained up to the
+point where all $d_{ij},d_{iB} > d_{cut}$. Having clustered with some
+given $R$, this can actually be an effective way of viewing the event
+at a smaller radius, $R_{eff} = \sqrt{d_{cut}} R$, thus allowing a
+single event to be viewed at a continuous range of $R_{eff}$ within a
+single clustering.
+
+We note that the true exclusive formulation of the Cambridge
+algorithm~\cite{CamOrig} instead makes use an auxiliary ($k_t$)
+distance measure and `freezes' pseudojets whose recombination would
+involve too large a value of the auxiliary distance measure.
+
+%\comment{Say something about meaning of exclusive case here?}
+
+
+%......................................................................
+\subsection[Anti-$k_t$ jet algorithm]{Anti-$\boldsymbol{k_t}$ jet algorithm}
+This new algorithm, introduced and studied in~\cite{antikt}, is defined
+exactly like the standard $k_t$ algorithm, except for the distance
+measures which are now given by
+\begin{subequations}
+    \label{eq:dij_antikt}
+  \begin{eqnarray}
+    &&d_{ij} = \min(1/k_{ti}^2,1/{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2 \, , \\
+    &&d_{iB} = 1/k_{ti}^2 \, .
+  \end{eqnarray}
+\end{subequations}
+While being a sequential recombination algorithm like $k_t$ and
+Cambridge/Aachen, the anti-$k_t$ algorithm behaves in some sense like a
+`perfect' cone algorithm, in that its hard jets are exactly
+circular on the $y$-$\phi$ cylinder~\cite{antikt}.
+
+%......................................................................
+\subsection[Generalised-$k_t$ jet algorithm]{Generalised $\boldsymbol{k_t}$ jet algorithm}
+\label{sec:genkt}
+
+The ``generalised $k_t$'' algorithm again follows the same procedure,
+but depends on an additional continuous parameter $p$, with has the
+following distance measure:
+\begin{subequations}
+  \label{eq:dij_genkt}
+  \begin{eqnarray}
+    &&d_{ij} = \min(k_{ti}^{2p},k_{tj}^{2p}) \, \Delta R_{ij}^2 / R^2 \, , \\
+    &&d_{iB} = k_{ti}^{2p} \, .
+  \end{eqnarray}
+\end{subequations}
+For specific values of $p$, it reduces to one or other of the
+algorithms list above, $k_t$ ($p=1$), Cambridge/Aachen ($p=0$) and
+anti-$k_t$ ($p=-1$). 
+
+%......................................................................
+\subsection[Generalised $k_t$ algorithm for $e^+e^-$ collisions]
+{Generalised $\boldsymbol{k_t}$ algorithm for $\boldsymbol{e^+e^-}$ collisions}
+\label{sec:ee-algs}
+
+FastJet also provides native implementations of clustering algorithms
+in spherical coordinates (specifically for $e^+e^-$ collisions) along
+the lines of the original $k_t$ algorithms~\cite{eekt}, but extended
+in analogy with the generalised $pp$ algorithm of~\cite{antikt} and
+section \ref{sec:genkt}. We define the two following distances:
+\begin{subequations}
+  \label{eq:dij_eegenkt}
+\begin{align}
+  d_{ij} &= \min(E_i^{2p}, E_j^{2p}) \frac{(1- \cos
+    \theta_{ij})}{(1-\cos R)}\,,\\
+  d_{iB} &= E_i^{2p}\,,
+\end{align}
+\end{subequations}
+for a general value of $p$ and $R$. At a given stage of the clustering
+sequence, if a $d_{ij}$ is smallest then $i$ and $j$ are recombined,
+while if a $d_{iB}$ is smallest then $i$ is called an ``inclusive
+jet''. 
+
+For values of $R \le \pi$ in eq.~(\ref{eq:dij_eegenkt}), the
+generalised $e^+e^-$ $k_t$ algorithm behaves in analogy with the $pp$
+algorithms: when an object is at an angle $\theta_{iX} > R$ from all
+other objects $X$ then it forms an inclusive jet.
+%
+With the choice $p=-1$ this provides a simple, infrared and collinear
+safe way of obtaining a cone-like algorithm for $e^+e^-$ collisions,
+since hard well-separated jets have a circular profile on the $3$D
+sphere, with opening half-angle $R$.
+
+If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
+then the $d_{iB}$ will be smallest only if the event
+consists of a single particle, and thus with the additional choice of
+$p=1$ the clustering sequence will correspond to that of the $e^+e^-$
+$k_t$ algorithm~\cite{eekt}, often referred to also as the Durham
+algorithm, which has a single distance:
+\begin{align}
+  \label{eq:dij_eekt}
+  d_{ij} &= 2 \min(E_i^{2p}, E_j^{2p}) (1- \cos \theta_{ij})\,.
+\end{align}
+Note the difference in normalisation between the $d_{ij}$ in
+eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact in neither
+case have we normalised to the total energy $Q$ in the event, contrary
+to the convention adopted originally in~\cite{eekt} (where the
+distance measure was called $y_{ij}$).
+
+
+
+%......................................................................
+\subsection{Recombination schemes}
+\label{sec:recomb_schemes}
+
+When merging particles in step 2 of the clustering procedure, one must
+specify how to combine the momenta. The simplest procedure
+($E$-scheme) simply adds the four-vectors. This has been advocated as
+a standard in~\cite{RunII-jet-physics}, and is the default option in
+FastJet. 
+
+
+
+\paragraph{Other schemes for $\boldsymbol{pp}$ collisions.} Other
+schemes provided by earlier $k_t$-clustering implementations
+\cite{KtJet} are the $p_t$, $p_t^2$, $E_t$ and $E_t^2$ schemes. They
+all incorporate a `preprocessing' stage to make the initial momenta
+massless (rescaling the energy to be equal to the 3-momentum for the
+$p_t$ and $p_t^2$ schemes, rescaling to the 3-momentum to be equal to
+the energy in the $E_t$ and $E_t^2$ schemes). Then for all schemes the
+recombination $p_r$ of $p_i$ and $p_j$ is a massless 4-vector
+satisfying
+\begin{subequations}
+  \begin{align}
+    p_{t,r} &= p_{t,i} + p_{t,j}\,,\\
+    \phi_r &= (w_i \phi_i + w_j \phi_j)/(w_i + w_j)\,,\\
+    y_r &= (w_i y_i + w_j y_j)/(w_i + w_j)\,,
+  \end{align}
+\end{subequations}
+where $w_i$ is $p_{t,i}$ for the $p_t$ and $E_t$ schemes, and is
+$p_{t,i}^2$ for the $p_t^2$ and $E_t^2$ schemes. 
+
+Note that for massive particles the schemes defined in the previous
+paragraph are not invariant under longitudinal boosts. We therefore
+also introduce boost-invariant $p_t$ and $p_t^2$ schemes, which are
+identical to the normal $p_t$ and $p_t^2$ schemes, except that they
+omit the preprocessing stage.
+
+\paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
+On request, we may in the future provide dedicated schemes for $\ee$
+collisions.
+
+\paragraph{User-defined schemes.} The user may define their own,
+custom recombination schemes, as described in Appendix~\ref{app:a}.
+
+
+
 
 
 %======================================================================
