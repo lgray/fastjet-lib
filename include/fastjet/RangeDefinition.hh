@@ -80,13 +80,16 @@ public:
 		       _total_area = (_rapmax - _rapmin)*(_phimax - _phimin);
                      _phispan = _phimax-_phimin; }
 
-  /// tell if the range is localizable (i.e. local or fixed}
-  virtual inline bool is_localizable() { return false; }
+  /// returns true if the range is localizable (i.e. set_position is
+  /// meant to do something meaningful). 
+  ///
+  /// This version of the class is not localizable and so it returns
+  /// false.
+  ///
+  /// For localizable classes override this function with a function
+  /// that returns true
+  virtual inline bool is_localizable() const { return false; }
 
-  /// place the range on the jet position
-  inline void set_position(const PseudoJet & jet) {
-     set_position(jet.rap(),jet.phi());
-  }
 
   /// place the range on the rap-phi position
   ///
@@ -95,14 +98,20 @@ public:
   ///
   /// DON'T NECESSARILY COUNT ON IT IN THE FUTURE EITHER???
   inline void set_position(const double & rap, const double & phi) {
-     _rapjet = rap;
-     _phijet = phi;
-     if (! is_localizable() ) { 
-        std::ostringstream err;
-        err << description() << 
-	    "\n This range is not localizable. set_position() should not be used on it.";         
-        throw fastjet::Error(err.str()); 
+     if (! is_localizable() ) {
+       std::ostringstream err;
+       err << description() << 
+         "\nThis range is not localizable. set_position() should not be used on it.";         
+       throw fastjet::Error(err.str()); 
+     } else {
+       _rapjet = rap;
+       _phijet = phi;
      }
+  }
+
+  /// place the range on the jet position
+  inline void set_position(const PseudoJet & jet) {
+     set_position(jet.rap(),jet.phi());
   }
 
   /// return bool according to whether the jet is within the given range
