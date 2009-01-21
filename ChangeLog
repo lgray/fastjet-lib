@@ -1,3 +1,10 @@
+2009-01-21  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+        
+        * include/fastjet/RangeDefinition.hh and CircularRange.hh
+          Reinstated set_position(), added is_localizable() to base
+          class (RangeDefinition) and derived one (CircularRange)
+
+
 2009-01-16  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* for each plugin, put everything under the namespace 

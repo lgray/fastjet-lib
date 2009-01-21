@@ -32,6 +32,7 @@
 #define __FASTJET_RANGEDEFINITION_HH__
 
 #include "fastjet/PseudoJet.hh"
+#include "fastjet/Error.hh"
 #include<sstream>
 #include<iostream>
 #include<string>
@@ -79,11 +80,13 @@ public:
 		       _total_area = (_rapmax - _rapmin)*(_phimax - _phimin);
                      _phispan = _phimax-_phimin; }
 
-  // /// place the range on the jet position
-  // inline void set_position(const PseudoJet & jet) {
-  //   _rapjet = jet.rap();
-  //   _phijet = jet.phi(); 
-  // }
+  /// tell if the range is localizable (i.e. local or fixed}
+  virtual inline bool is_localizable() { return false; }
+
+  /// place the range on the jet position
+  inline void set_position(const PseudoJet & jet) {
+     set_position(jet.rap(),jet.phi());
+  }
 
   /// place the range on the rap-phi position
   ///
@@ -91,10 +94,16 @@ public:
   /// TO FACILITATE DERIVED CLASSES
   ///
   /// DON'T NECESSARILY COUNT ON IT IN THE FUTURE EITHER???
-  // inline void set_position(const double & rap, const double & phi) {
-  //   _rapjet = rap;
-  //   _phijet = phi;
-  // }
+  inline void set_position(const double & rap, const double & phi) {
+     _rapjet = rap;
+     _phijet = phi;
+     if (! is_localizable() ) { 
+        std::ostringstream err;
+        err << description() << 
+	    "\n This range is not localizable. set_position() should not be used on it.";         
+        throw fastjet::Error(err.str()); 
+     }
+  }
 
   /// return bool according to whether the jet is within the given range
   inline bool is_in_range(const PseudoJet & jet) const {
@@ -139,8 +148,7 @@ protected:
   /// in the range; it takes a reasonable time with rapmax = 10,
   /// npoints = 100.
   void _numerical_total_area(double rapmax, int npoints) ;
-
-  // double _rapjet,_phijet; // jet position, for derived ranges placed on jets
+  double _rapjet,_phijet; // jet position. only used in localizable derived classes
   
 private:
   double _rapmin,_rapmax,_phimin,_phimax,_phispan;

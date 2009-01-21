@@ -68,6 +68,9 @@ public:
     std::ostringstream ostr;
     ostr << "CircularRange: within distance "<< _distance << " of given jet or point." ;
     return ostr.str(); }
+
+  /// tell if the range is localizable (i.e. local or fixed}
+  virtual inline bool is_localizable() { return true; }
   
   /// return bool according to whether (rap,phi) is in range
   virtual inline bool is_in_range(double rap, double phi) const {
