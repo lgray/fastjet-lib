@@ -355,8 +355,8 @@ of how to carry out the clustering. Its constructor is\footnote{The v.
   remains valid.}
 %
 \begin{lstlisting}
-  fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm = kt_algorithm,
-                         double R = 1.0,
+  fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm,
+                         double R,
                          fastjet::RecombinationScheme recomb_scheme = E_scheme,
                          fastjet::Strategy strategy = Best);
 \end{lstlisting}
@@ -380,9 +380,6 @@ internal or testing purposes.
 \ttt{R} specifies the value of $R$ that appears in
 eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{eq:dij_eegenkt}).
 %
-If the user chooses the \ttt{ee\_kt\_algorithm} (Durham), then the $R$
-value is ignored since that algorithm has no such parameter.
-%
 The recombination scheme should be one of those listed in
 table~\ref{tab:RecombSchemes}. If it is omitted the $E$-scheme is
 chosen.
@@ -404,8 +401,17 @@ chosen.
   \label{tab:RecombSchemes}
 \end{table}
 
-For the generalised $k_t$ algorithm and its $e^+e^-$ version an extra
-parameter is needed, and the following constructor should then be used
+For one algorihm, \verb:ee_kt_algorithm:, there is no $R$ parameter,
+so the constructor is to be called without the \verb:R: argument:
+\begin{lstlisting}
+  fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm,
+                         fastjet::RecombinationScheme recomb_scheme = E_scheme,
+                         fastjet::Strategy strategy = Best);
+\end{lstlisting}
+%
+For the generalised $k_t$ algorithm and its $e^+e^-$ version, one
+requires $R$ and an extra
+parameter $p$, and the following constructor should then be used
 %
 \begin{lstlisting}
   fastjet::JetDefinition(fastjet::JetAlgorithm jet_algorithm,
@@ -415,7 +421,14 @@ parameter is needed, and the following constructor should then be used
                          fastjet::Strategy strategy = Best);
 \end{lstlisting}
 %
-If the earlier constructor is used, then $p$ is set to 0.
+If the user calls a constructor with the incorrect number of arguments
+for the requested jet algorithm, a \verb!fastjet::Error()! exception
+will be thrown with an explanatory message.
+
+The default constructor for \verb:JetDefinition: provides the $k_t$
+algorithm with $R=1$; the default constructor is there for programming
+convenience and should not be taken to constitute a default
+recommendation for physics analyses.
 
 The strategy selects the algorithmic strategy to use while clustering
 and is an \texttt{enum} of type \texttt{fastjet::Strategy} with

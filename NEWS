@@ -76,7 +76,9 @@ interface modifications
 
 - in SISCone, new way of accessing the information about pass at which
   a jet was found (old method retained for 2.4, but deprecated)
-  
+
+- a JetDefinition(jet_alg) constructor, without an R value, is no
+  longer legal, except when jet_alg is ee_kt_algorithm (it has no R).
 
 
 other modifications

@@ -17,7 +17,8 @@ For 2.4
 - [done] test new shared-lib options
 - [done] get stable-cone pass number from the SISCone extras variable + document
 - [done] add JetDefinition constructor without R [for e+e- case]
--        make sure interface for  e+e- kt, etc., is documented
+- [done] make sure interface for  e+e- kt, etc., is documented
+-        add --enable-all-plugins and --enable-all-cxx-plugins
 -        put version number into code somehow???
 -        provide way for plugins to tell jet-def they use its recomb scheme (for description)
 -        add/verify manual entry about compilation
