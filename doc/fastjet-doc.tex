@@ -158,7 +158,7 @@ though the exclusive mode has physical advantages in certain cases.
 %% widespread use, though the exclusive mode has physical advantages in
 %% certain cases.  We provide access to both modes.
 
-\section{Quickstart guide}
+\section{Quick-start guide}
 
 For the impatient, the \fastjet package can be set up and run as follows.
 
@@ -173,7 +173,7 @@ For the impatient, the \fastjet package can be set up and run as follows.
 \item Compile and install (choose your own preferred prefix), and when 
 you're done go back to the original directory
 \begin{verbatim}
- ./configure --prefix=$PWD/../fastjet-install
+ ./configure --prefix=`pwd`/../fastjet-install
  make
  make check
  make install
@@ -1887,7 +1887,7 @@ constructor with the following structure
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
                  SISConePlugin::SplitMergeScale   
-                 split_merge_scale = SISConePlugin::SM_pttilde);
+                                split_merge_scale = SISConePlugin::SM_pttilde);
 \end{lstlisting}
 A cone centered at $y_c,\phi_c$ is stable if the sum of momenta of all
 particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <

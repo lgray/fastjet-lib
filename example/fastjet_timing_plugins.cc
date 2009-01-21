@@ -198,24 +198,26 @@ int main (int argc, char ** argv) {
   // for printing jets to a file for reading by root
   string rootfile = cmdline.value<string>("-root","");
 
+  // out default scheme is the E_scheme
+  fj::RecombinationScheme scheme = fj::E_scheme;
+
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
   fj::JetDefinition jet_def;
   string is_unavailable=" requested, but not available for this compilation";
   if (cmdline.present("-cam") || cmdline.present("-CA")) {
-    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, strategy);
+    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, scheme, strategy);
   } else if (cmdline.present("-antikt")) {
-    jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, strategy);
+    jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, scheme, strategy);
   } else if (cmdline.present("-genkt")) {
     double p = cmdline.value<double>("-genkt");
-    jet_def = fj::JetDefinition(fj::genkt_algorithm, ktR, p, fj::E_scheme, strategy);
+    jet_def = fj::JetDefinition(fj::genkt_algorithm, ktR, p, scheme, strategy);
   } else if (cmdline.present("-eekt")) {
-    jet_def = fj::JetDefinition(fj::ee_kt_algorithm, ktR, strategy);
+    jet_def = fj::JetDefinition(fj::ee_kt_algorithm);
   } else if (cmdline.present("-eegenkt")) {
     double p = cmdline.value<double>("-eegenkt");
-    jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, 
-				fj::E_scheme, strategy);
+    jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, scheme, strategy);
 
 // checking if one asks to run a plugin (don't delete this line)
   } else if (cmdline.present("-midpoint")) {

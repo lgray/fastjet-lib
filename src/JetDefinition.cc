@@ -42,7 +42,8 @@ using namespace std;
 JetDefinition::JetDefinition(JetAlgorithm jet_algorithm, 
 			     double R, 
 			     Strategy strategy,
-			     RecombinationScheme recomb_scheme) :
+			     RecombinationScheme recomb_scheme,
+                             int nparameters) :
   _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
 
   // set R parameter or ensure its sensibleness, as appropriate
@@ -54,6 +55,27 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
   } else if (jet_algorithm != ee_genkt_algorithm) {
     assert(_Rparam <= 0.5*pi);
   }
+
+  // cross-check the number of parameters that were declared in setting up the
+  // algorithm (passed internally from the public constructors)
+  ostringstream oss;
+  switch (jet_algorithm) {
+  case ee_kt_algorithm:
+    if (nparameters != 0) oss << "ee_kt_algorithm should be constructed with 0 parameters but was called with " 
+                              << nparameters << " parameter(s)\n";
+    break;
+  case genkt_algorithm: 
+  case ee_genkt_algorithm: 
+    if (nparameters != 2) oss << "(ee_)genkt_algorithm should be constructed with 2 parameters but was called with " 
+                              << nparameters << " parameter(s)\n";
+    break;
+  default:
+    if (nparameters != 1)
+    oss << "The jet algorithm you requested ("
+        << jet_algorithm << ") should be constructed with 1 parameter but was called with " 
+        << nparameters << " parameter(s)\n";
+  }
+  if (oss.str() != "") throw Error(oss.str()); 
 
   // make sure the strategy requested is sensible
   assert (_strategy  != plugin_strategy);

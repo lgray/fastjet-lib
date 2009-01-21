@@ -170,46 +170,35 @@ public:
   // extend these facilities
   class Recombiner;
 
-  /// constructor to fully specify a jet-definition (together
-  /// with information about how algorithically to run it). 
-  ///
-  /// the ordering of arguments here is old and deprecated (except
-  /// as the common constructor for internal use)
-  JetDefinition(JetAlgorithm jet_algorithm, 
-                double R, 
-                Strategy strategy,
-                RecombinationScheme recomb_scheme = E_scheme);
-// :
-//    _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
-//    // the largest sensible value for R
-//    if (jet_algorithm != ee_kt_algorithm &&
-//	jet_algorithm != ee_genkt_algorithm) assert(_Rparam <= 0.5*pi);
-//    assert(_jet_algorithm != plugin_algorithm &&
-//           _strategy   != plugin_strategy);
-//    _plugin = NULL;
-//    set_recombination_scheme(recomb_scheme);
-//    set_extra_param(0.0); // make sure it's defined
-//  }
   
 
   /// constructor with alternative ordering or arguments -- note that
   /// we have not provided a default jet finder, to avoid ambiguous
   /// JetDefinition() constructor.
-  JetDefinition(JetAlgorithm jet_algorithm = kt_algorithm, 
-                double R = 1.0, 
+  JetDefinition(JetAlgorithm jet_algorithm, 
+                double R, 
                 RecombinationScheme recomb_scheme = E_scheme,
                 Strategy strategy = Best) {
-    *this = JetDefinition(jet_algorithm, R, strategy, recomb_scheme);
+    *this = JetDefinition(jet_algorithm, R, strategy, recomb_scheme, 1);
   }
 
+  /// constructor for algorithms that have no free parameters
+  /// (e.g. ee_kt_algorithm)
+  JetDefinition(JetAlgorithm jet_algorithm, 
+                RecombinationScheme recomb_scheme = E_scheme,
+                Strategy strategy = Best) {
+    double dummyR = 0.0;
+    *this = JetDefinition(jet_algorithm, dummyR, strategy, recomb_scheme, 0);
+  }
 
-  /// constructor that allows also the extra parameter to be set
+  /// constructor for algorithms that require R + one extra parameter to be set 
+  /// (the gen-kt series for example)
   JetDefinition(JetAlgorithm jet_algorithm, 
                 double R, 
                 double xtra_param,
                 RecombinationScheme recomb_scheme = E_scheme,
                 Strategy strategy = Best) {
-    *this = JetDefinition(jet_algorithm, R, strategy, recomb_scheme);
+    *this = JetDefinition(jet_algorithm, R, strategy, recomb_scheme, 2);
     set_extra_param(xtra_param);
   }
 
@@ -221,7 +210,17 @@ public:
                 double R, 
                 const Recombiner * recombiner,
                 Strategy strategy = Best) {
-    *this = JetDefinition(jet_algorithm, R, strategy, external_scheme);
+    *this = JetDefinition(jet_algorithm, R, external_scheme, strategy);
+    _recombiner = recombiner;
+  }
+
+
+  /// constructor for case with 0 parameters (ee_kt_algorithm) and
+  /// and external recombiner
+  JetDefinition(JetAlgorithm jet_algorithm, 
+                const Recombiner * recombiner,
+                Strategy strategy = Best) {
+    *this = JetDefinition(jet_algorithm, external_scheme, strategy);
     _recombiner = recombiner;
   }
 
@@ -232,9 +231,14 @@ public:
                 double xtra_param,
                 const Recombiner * recombiner,
                 Strategy strategy = Best) {
-    *this = JetDefinition(jet_algorithm, R, strategy, external_scheme);
+    *this = JetDefinition(jet_algorithm, R, external_scheme, strategy);
     _recombiner = recombiner;
     set_extra_param(xtra_param);
+  }
+
+  /// a default constructor
+  JetDefinition() {
+    *this = JetDefinition(kt_algorithm, 1.0);
   }
 
   /// constructor based on a pointer to a user's plugin; the object
@@ -247,6 +251,30 @@ public:
     _jet_algorithm = plugin_algorithm;
     set_recombination_scheme(E_scheme);
   }
+
+
+  /// constructor to fully specify a jet-definition (together with
+  /// information about how algorithically to run it).
+  ///
+  /// the ordering of arguments here is old and deprecated (except
+  /// as the common constructor for internal use)
+  JetDefinition(JetAlgorithm jet_algorithm, 
+                double R, 
+                Strategy strategy,
+                RecombinationScheme recomb_scheme = E_scheme,
+                int nparameters = 1);
+// :
+//    _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
+//    // the largest sensible value for R
+//    if (jet_algorithm != ee_kt_algorithm &&
+//	jet_algorithm != ee_genkt_algorithm) assert(_Rparam <= 0.5*pi);
+//    assert(_jet_algorithm != plugin_algorithm &&
+//           _strategy   != plugin_strategy);
+//    _plugin = NULL;
+//    set_recombination_scheme(recomb_scheme);
+//    set_extra_param(0.0); // make sure it's defined
+//  }
+
 
   /// set the recombination scheme to the one provided
   void set_recombination_scheme(RecombinationScheme);

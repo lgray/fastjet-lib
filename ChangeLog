@@ -26,6 +26,19 @@
 	
 2009-01-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* example/fastjet_timing_plugins.cc: 
+	  adapted this to use modern forms of constructors
+
+	* include/fastjet/JetDefinition.hh: 
+	* src/JetDefinition.cc: 
+	  put in a constructor without R (for eekt) and a default
+	  constructor, as well as a check that the jet algorithm has been
+	  constructed with the right number of parameters.
+
+	  *** BACKWARDS COMPATIBILITY BREAK ***
+	      CALLING USUAL PP JET ALGS WITH NO R NOW
+	      GIVES A RUN-TIME ERROR.
+	
 	* test-compare.sh: 
 	  fixed problem with pxcone mixing f77/c++ output order according
 	  to system, which caused problems in make check
