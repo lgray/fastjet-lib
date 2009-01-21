@@ -107,7 +107,7 @@ class PseudoJet {
   /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
   inline double  m() const;    
   /// return px^2+py^2+pz^2
-  inline double modp2() const {return _px*_px+_py*_py+_pz*_pz;}
+  inline double modp2() const {return _kt2+_pz*_pz;}
   /// return the transverse energy
   inline double Et() const {return (_kt2==0) ? 0.0 : _E/sqrt(1.0+_pz*_pz/_kt2);}
   /// return the transverse energy squared
