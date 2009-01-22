@@ -5,7 +5,7 @@ For 2.4
 - [done] test phi component of range
 - [done] Sort out zero-particle case
   [no]   [+ add constructor without particles]; [Requests by Andy Buckley]
--        enable dynamic libraries by default?   [GS: I'd be for it]
+- [done] enable dynamic libraries by default?   [GS: I'd be for it]
 - [done] add "version()" info to doc            [Gregory: check you're happy! I'd have put FastJet 2.4devel, wo the []]
 - [done] document error meaningless on AAEG.    
 - [done] sort out e+e- R across different algorithms 
@@ -18,11 +18,15 @@ For 2.4
 - [done] get stable-cone pass number from the SISCone extras variable + document
 - [done] add JetDefinition constructor without R [for e+e- case]
 - [done] make sure interface for  e+e- kt, etc., is documented
--        add --enable-all-plugins and --enable-all-cxx-plugins
+-        add ATLAS and CMS cones to release?
+-        add --enable-all-plugins and --enable-all-cxx-plugins?
+-        document how to remove hard jets in get_median_rho_and_sigma()
+-        think the ranges through and implement/document them
 -        put version number into code somehow???
 -        provide way for plugins to tell jet-def they use its recomb scheme (for description)
 -        add/verify manual entry about compilation
 -        check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
+-        update abstract of manual
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 
