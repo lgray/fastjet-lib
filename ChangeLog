@@ -1,3 +1,8 @@
+2009-01-26  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* Doxyfile: 
+	  updated to avoid warnings with doxygen 1.5.7
+
 2009-01-23  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* experimental/coding-guidelines.txt:   *** ADDED ***
