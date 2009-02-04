@@ -41,6 +41,11 @@ For 2.4
    f. add a note at the end of ./configure
   this has to be done for all the cone algs + internally in SISCone  [CHECK]
 
+TWO MAJOR QUESTIONS FOR PSEUDOJET:
+- do lazy phi, etc. calculation? (i.e. initialze only first time used)
+  [one would have to check speed impact and correctness [e.g. refs to
+   _phi, _rap]]
+- add a pointer to the cluster sequence to allow one to get parents, etc.
 
 
 -------------
