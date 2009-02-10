@@ -70,14 +70,14 @@ class PseudoJet {
   inline double pz()  const {return _pz;}
 
   /// returns phi (in the range 0..2pi)
-  inline const double phi() const {return phi_02pi();}
+  inline double phi() const {return phi_02pi();}
 
   /// returns phi in the range -pi..pi
-  inline const double phi_std()  const {
+  inline double phi_std()  const {
     return _phi > pi ? _phi-twopi : _phi;}
 
   /// returns phi in the range 0..2pi
-  inline const double phi_02pi() const {return _phi;}
+  inline double phi_02pi() const {return _phi;}
 
   /// returns the rapidity or some large value when the rapidity
   /// is infinite
@@ -132,12 +132,12 @@ class PseudoJet {
 
   /// return the cluster_hist_index, intended to be used by clustering
   /// routines.
-  inline const int & cluster_hist_index() const {return _cluster_hist_index;}
+  inline int cluster_hist_index() const {return _cluster_hist_index;}
   /// set the cluster_hist_index, intended to be used by clustering routines.
   inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;}
 
   /// alternative name for cluster_hist_index() [perhaps more meaningful]
-  inline const int cluster_sequence_history_index() const {
+  inline int cluster_sequence_history_index() const {
     return cluster_hist_index();}
   /// alternative name for set_cluster_hist_index(...) [perhaps more
   /// meaningful]
@@ -146,7 +146,7 @@ class PseudoJet {
 
 
   /// return the user_index, intended to allow the user to "add" information
-  inline const int & user_index() const {return _user_index;}
+  inline int user_index() const {return _user_index;}
   /// set the user_index, intended to allow the user to "add" information
   inline void set_user_index(const int index) {_user_index = index;}
 
