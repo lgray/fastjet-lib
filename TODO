@@ -18,19 +18,22 @@ For 2.4
 - [done] get stable-cone pass number from the SISCone extras variable + document
 - [done] add JetDefinition constructor without R [for e+e- case]
 - [done] make sure interface for  e+e- kt, etc., is documented
--        support for CGAL-3.4???
--        add ATLAS and CMS cones to release?
--        add --enable-all-plugins and --enable-all-cxx-plugins?
--        document how to remove hard jets in get_median_rho_and_sigma()
--        think the ranges through and implement/document them
+-        support for CGAL-3.4???                                [TEST IT]
+-        add ATLAS and CMS cones to release?    [YES, AS BETA + CHECK DEFAULTS]
+-        add JADE                               [YES, home-made; plugin?]
+                      [how???]
+-        add --enable-all-plugins and --enable-all-cxx-plugins? [GS will look]
+-        deprecated: file, manual, FAQ?
+-        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
+-        Document CircularRange. Check documentation of RangeDefinition
 -        put version number into code somehow???
--        provide way for plugins to tell jet-def they use its recomb scheme (for description)
 -        add/verify manual entry about compilation
 -        check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
 -        update abstract of manual
 -        figure what to do about acknowledgements in manual?
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
+-        rename this file as RoadMap
 
 - default f=0.75 for cones:
    a. change th edefault f to 0.75 in ctor                       [NO]
@@ -42,10 +45,6 @@ For 2.4
   this has to be done for all the cone algs + internally in SISCone  [CHECK]
 
 TWO MAJOR QUESTIONS FOR PSEUDOJET:
-- do lazy phi, etc. calculation? (i.e. initialze only first time used)
-  [one would have to check speed impact and correctness [e.g. refs to
-   _phi, _rap]]
-- add a pointer to the cluster sequence to allow one to get parents, etc.
 
 
 -------------
@@ -54,9 +53,24 @@ For 2.5
 -        rethink RangeDefinition hierarchy, including set_position(...),
          addition of (circular, donut) local ranges, etc.
 -        versioning of library names (like libfastjet-2.5.2.so)?
--        CMS and ATLAS cones as plugins
--        maybe e+e- Jade?
+-        BkgdDef & BkgdMeasures (including removal of selected jets)
+-        Full code for general distance measure
 -        more sophisticated upper limit on number of tiles in tiled strategies?
+-        provide way for plugins to tell jet-def they use its recomb scheme (for description)
+
+[maybe 3.0]
+- do lazy phi, etc. calculation? (i.e. initialze only first time used)
+  [one would have to check speed impact and correctness [e.g. refs to
+   _phi, _rap]]
+- add a pointer to the cluster sequence to allow one to get parents, etc.
+
+-------------
+For 3.0
+-------------
+-        smart pointers
+-        full tools suite
+-        CPC
+
 
 -------------
 High priority
