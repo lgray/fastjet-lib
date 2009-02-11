@@ -298,6 +298,51 @@ class ClusterSequence {
   /// returns a pointer to the extras object (may be null)
   const Extras * extras() const {return _extras.get();}
 
+  /// allows a plugin to run a templated clustering (nearest-neighbour heuristic)
+  ///
+  /// This has N^2 behaviour on "good" distance, but a worst case behaviour
+  /// of N^3 (and many algs trigger the worst case behaviour)
+  ///
+  /// 
+  /// For more details on how this works, see GenBriefJet below
+  template<class GBJ> void plugin_simple_N2_cluster () {
+    assert(plugin_activated());
+    _simple_N2_cluster<GBJ>;
+  }
+
+  //----------------------------------------------------------------------
+  /// class to help with a generic clustering sequence
+  class GenBriefJet {
+  public:
+    /// function that initialises the GenBriefJet given a PseudoJet.
+    ///
+    /// In a derived class, this member has a responsability to call
+    ///
+    ///  - set_scale_squared
+    ///  - set_geom_iB 
+    ///
+    /// The clustering will be performed by finding the minimum of
+    ///
+    ///   diB = scale_squared[i] * geom_iB * _invR2
+    ///   dij = min(scale_squared[i],scale_squared[j]) * geom_ij * _invR2
+    ///
+    virtual void init(const PseudoJet & jet) = 0;
+    
+    /// Returns the "geometric" part of distance between this jet
+    /// and jet_j
+    virtual double geom_ij(const GenBriefJet * jet_j) const = 0;
+
+    void set_scale_squared(double scale_squared) {kt2 = scale_squared;}
+    void set_geom_iB(double diB) {NN_dist = diB; NN = NULL;}
+    
+  public: // formally public: but users should think of it as private!
+    double NN_dist;  // dij
+    double kt2;      // squared scale
+    GenBriefJet * NN; // pointer to nearest neighbour
+    int    _jets_index; // index of this jet
+  };
+
+
 public:
   /// set the default (static) jet finder across all current and future
   /// ClusterSequence objects -- deprecated and obsolescent (i.e. may be
@@ -411,6 +456,7 @@ public:
   /// from there.
   void transfer_from_sequence(ClusterSequence & from_seq);
 
+
 protected:
   static JetAlgorithm _default_jet_algorithm;
   JetDefinition _jet_def;
@@ -488,6 +534,7 @@ protected:
   double _Rparam, _R2, _invR2;
   Strategy    _strategy;
   JetAlgorithm  _jet_algorithm;
+
 
  private:
 
