@@ -18,9 +18,11 @@ For 2.4
 - [done] get stable-cone pass number from the SISCone extras variable + document
 - [done] add JetDefinition constructor without R [for e+e- case]
 - [done] make sure interface for  e+e- kt, etc., is documented
+- [done] moved v1 example out of the way
 -        support for CGAL-3.4???                                [TEST IT]
 -        add ATLAS and CMS cones to release?    [YES, AS BETA + CHECK DEFAULTS]
--        add JADE                               [YES, home-made; plugin?]
+-        add JADE                               [in experimental & tested]
+-        add EECambridge                        [in experimental]
                       [how???]
 -        add --enable-all-plugins and --enable-all-cxx-plugins? [GS will look]
 -        deprecated: file, manual, FAQ?

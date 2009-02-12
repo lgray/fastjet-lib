@@ -1,5 +1,10 @@
 2009-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* example/fastjet_example_v1_interface.cc -> example/graveyard
+	* example/Makefile.am: 
+	  moved fastjet_example_v1_interface into the graveyard (no
+	  longer 
+	
 	* example/fastjet_timing_plugins.cc: 
 	  tried to improve documentation of various options and added
 	  -excly; -ee-print for printing jets in terms of px,py,pz,E; 	

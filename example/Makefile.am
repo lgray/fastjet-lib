@@ -16,10 +16,6 @@ fastjet_example_SOURCES = fastjet_example.cc
 fastjet_example_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
 fastjet_example_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
 
-fastjet_example_v1_interface_SOURCES = fastjet_example_v1_interface.cc
-fastjet_example_v1_interface_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
-fastjet_example_v1_interface_LDADD = ../src//libfastjet.la ${CGAL_LIBS}
-
 fastjet_areas_SOURCES = fastjet_areas.cc
 fastjet_areas_CXXFLAGS = ${AM_CXXFLAGS} ${CGAL_CPPFLAGS} -Woverloaded-virtual -I${srcdir}/../include
 fastjet_areas_LDADD = ../src/libfastjet.la ${CGAL_LIBS}
