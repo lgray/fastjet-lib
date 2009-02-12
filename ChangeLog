@@ -1,3 +1,10 @@
+2009-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence.cc (ClusterSequence::_fill_initial_history): 
+	  added Q() to return total energy in the event (relevant for e+e-)
+
+	
 2009-02-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/internal/ClusterSequence_N2.icc: *** ADDED ***

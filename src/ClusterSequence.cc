@@ -244,6 +244,8 @@ void ClusterSequence::_fill_initial_history () {
   _jets.reserve(_jets.size()*2);
   _history.reserve(_jets.size()*2);
 
+  _Q = 0;
+
   for (int i = 0; i < static_cast<int>(_jets.size()) ; i++) {
     history_element element;
     element.parent1 = InexistentParent;
@@ -260,6 +262,9 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
+
+    // determine the total energy in the event
+    _Q += _jets[i];
   }
   _initial_n = _jets.size();
 }

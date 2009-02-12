@@ -95,7 +95,9 @@ template<class BJ> void ClusterSequence::_simple_N2_cluster() {
     // do the recombination between A and B
     history_location++;
     jetA = & briefjets[diJ_min_jet];
-    jetB = jetA->NN;
+    // GPS mod 2009-02-11
+    //jetB = jetA->NN;
+    jetB = static_cast<BJ *>(jetA->NN);
     // put the normalisation back in
     diJ_min *= _invR2; 
     if (jetB != NULL) {
@@ -111,6 +113,7 @@ template<class BJ> void ClusterSequence::_simple_N2_cluster() {
 
       // what was jetB will now become the new jet
       _bj_set_jetinfo(jetB, nn);
+
     } else {
       // jet-beam recombination
       _do_iB_recombination_step(jetA->_jets_index, diJ_min);
@@ -179,15 +182,15 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
   jetA->_jets_index = _jets_index;
 
 }
-
-
-//----------------------------------------------------------------------
-// returns the distance between two GenBriefJets
-template<> double ClusterSequence::_bj_dist(
-                const GenBriefJet * const jeta, 
-                const GenBriefJet * const jetb) const {
-  return jeta->geom_ij(jetb);
-}
+// 
+// 
+// //----------------------------------------------------------------------
+// // returns the distance between two GenBriefJets
+// template<> double ClusterSequence::_bj_dist(
+//                 const GenBriefJet * const jeta, 
+//                 const GenBriefJet * const jetb) const {
+//   return jeta->geom_ij(jetb);
+// }
 
 FASTJET_END_NAMESPACE
 

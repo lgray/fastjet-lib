@@ -171,6 +171,10 @@ class ClusterSequence {
   //                                       const int & njets) const;
   //double exclusive_dmerge (const PseudoJet & jet, const int & njets) const;
 
+  /// returns the sum of all energies in the event (relevant mainly for e+e-)
+  double Q() {return _Q;}
+  /// return Q()^2
+  double Q2() {return _Q*_Q;}
 
   /// returns true iff the object is included in the jet. 
   ///
@@ -307,7 +311,7 @@ class ClusterSequence {
   /// For more details on how this works, see GenBriefJet below
   template<class GBJ> void plugin_simple_N2_cluster () {
     assert(plugin_activated());
-    _simple_N2_cluster<GBJ>;
+    _simple_N2_cluster<GBJ>();
   }
 
   //----------------------------------------------------------------------
@@ -532,6 +536,7 @@ protected:
   bool _writeout_combinations;
   int  _initial_n;
   double _Rparam, _R2, _invR2;
+  double _Q;
   Strategy    _strategy;
   JetAlgorithm  _jet_algorithm;
 
