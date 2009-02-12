@@ -49,22 +49,36 @@
 /// where the clustering can be repeated to aid timing and multiple
 /// events can be combined to get to larger multiplicities. Some options:
 ///
-///   -strategy N   indicate stratgey from the enum FjStrategy (see
-///                 FjClusterSequence.hh).
+/// Options for reading
+/// -------------------
 ///
-///   -combine nev  for combining multiple events from the data file in order
-///                 to get to large multiplicities.
+///   -nev     n    number of events to run
+///
+///   -combine n    for combining multiple events from the data file in order
+///                 to get a single high-multipicity event to run.
+///
+///   -massless     read in only the 3-momenta and deduce energies assuming
+///                 that particles are massless
+///
+///   -dense        adds dense ghost coverage
+///
+///   -repeat n     repeats each event n times
+///
+/// Output Options
+/// --------------
 ///
 ///   -incl ptmin   output of all inclusive jets with pt > ptmin is obtained
 ///                 with the -incl option.
 ///
-///   -r            sets the radius of the jet algorithm (default = 1.0)
-///
 ///   -excld dcut   output of all exclusive jets as obtained in a clustering
 ///                 with dcut
 ///
-///   -massless     read in only the 3-momenta and deduce energies assuming
-///                 that particles are massless
+///   -excly ycut   output of all exclusive jets as obtained in a clustering
+///                 with ycut
+///
+///   -excln n      output of clustering to n exclusive jets
+///
+///   -const        show jet constituents (works with excl jets)
 ///
 ///   -write        for writing out detailed clustering sequence (valuable
 ///                 for testing purposes)
@@ -73,6 +87,13 @@
 ///                 "unique_history_order" (useful for verifying consistency
 ///                 between different clustering strategies).
 ///
+///   -root file    sends output to file that can be read in with the script in
+///                 root/ so as to show a lego-plot of the event
+///
+///   -cones        show extra info about internal steps for SISCone
+///
+/// Algorithms
+/// ----------
 ///   -kt           switch to the longitudinally invariant kt algorithm
 ///                 Note: this is the default one.
 ///
@@ -93,7 +114,7 @@
 ///                 you can provide the parameter of the alg as an argument to 
 ///                 -ee_genkt (1 by default)
 ///                 
-///  plugins (don't delete this line)
+/// plugins (don't delete this line)
 ///
 ///   -pxcone       switch to the PxCone jet algorithm
 /// 
@@ -109,6 +130,21 @@
 ///   -trackjet     switch to the TrackJet plugin
 ///
 ///  end of plugins (don't delete this line)
+///
+///
+/// Options for running algs
+/// ------------------------
+///
+///   -r            sets the radius of the jet algorithm (default = 1.0)
+///
+///   -overlap | -f sets the overlap fraction in cone algs with split-merge
+///
+///   -seed         sets the seed threshold
+///
+///   -strategy N   indicate stratgey from the enum fastjet::Strategy (see
+///                 fastjet/JetDefinition.hh).
+///
+
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
@@ -157,7 +193,6 @@ inline double pow2(const double x) {return x*x;}
 void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
                          const vector<fj::PseudoJet> & jets, double dcut);
 
-
 /// a program to test and time a range of algorithms as implemented or
 /// wrapped in fastjet
 int main (int argc, char ** argv) {
@@ -178,6 +213,7 @@ int main (int argc, char ** argv) {
   double inclkt = cmdline.double_val("-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
+  double excly  = cmdline.double_val("-excly",-1.0);
   bool   get_all_dij   = cmdline.present("-get-all-dij");
   double subdcut = cmdline.double_val("-subdcut",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e305);
@@ -432,7 +468,6 @@ int main (int argc, char ** argv) {
       cout << "Printing "<<excln<<" exclusive jets\n";
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",
-	       //j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
 	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
       }
     }
@@ -442,7 +477,15 @@ int main (int argc, char ** argv) {
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",
-	       //j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
+	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
+      }
+    }
+
+    if (excly > 0.0) {
+      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets_ycut(excly));
+      cout << "Printing exclusive jets for ycut = "<<excly<<"\n";
+      for (size_t j = 0; j < jets.size(); j++) {
+	printf("%5u %15.8f %15.8f %15.8f\n",
 	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
       }
     }

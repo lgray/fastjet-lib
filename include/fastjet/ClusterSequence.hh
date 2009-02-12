@@ -131,6 +131,23 @@ class ClusterSequence {
   /// monotonically.
   double exclusive_dmerge_max (const int & njets) const;
 
+  /// return the ymin corresponding to the recombination that went from
+  /// n+1 to n jets (sometimes known as y_{n n+1}).
+  double exclusive_ymerge (int njets) const {return exclusive_dmerge(njets) / Q2();}
+
+  /// same as exclusive_dmerge_max, but normalised to squared total energy
+  double exclusive_ymerge_max (int njets) const {return exclusive_ymerge_max(njets)/Q2();}
+
+  /// the number of exclusive jets at the given ycut
+  int n_exclusive_jets_ycut (double ycut) const {return n_exclusive_jets(ycut*Q2());}
+
+  /// the exclusive jets obtained at the given ycut
+  std::vector<PseudoJet> exclusive_jets_ycut (double ycut) const {
+    int njets = n_exclusive_jets_ycut(ycut);
+    return exclusive_jets(njets);
+  }
+
+
   //int n_exclusive_jets (const PseudoJet & jet, const double & dcut) const;
 
   /// return a vector of all subjets of the current jet (in the sense
@@ -172,9 +189,9 @@ class ClusterSequence {
   //double exclusive_dmerge (const PseudoJet & jet, const int & njets) const;
 
   /// returns the sum of all energies in the event (relevant mainly for e+e-)
-  double Q() {return _Q;}
+  double Q() const {return _Q;}
   /// return Q()^2
-  double Q2() {return _Q*_Q;}
+  double Q2() const {return _Q*_Q;}
 
   /// returns true iff the object is included in the jet. 
   ///
