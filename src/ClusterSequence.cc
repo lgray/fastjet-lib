@@ -264,7 +264,7 @@ void ClusterSequence::_fill_initial_history () {
     _jets[i].set_cluster_hist_index(i);
 
     // determine the total energy in the event
-    _Q += _jets[i];
+    _Q += _jets[i].E();
   }
   _initial_n = _jets.size();
 }
