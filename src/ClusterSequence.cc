@@ -102,10 +102,17 @@ void ClusterSequence::_initialise_and_run (
       _invR2 = 1.0;
     } else {
       // as of 2009-01-09, choose R to be an angular distance, in
-      // radians.  since the algorithm uses 2(1-cos(theta)) as its
+      // radians.  Since the algorithm uses 2(1-cos(theta)) as its
       // squared angular measure, make sure that the _R2 is defined
       // in a similar way.
-      _R2    = 2 * ( 1.0 - cos(_Rparam) );
+      if (_Rparam > pi) {
+	// choose a value that ensures that back-toback particles will
+	//always recombine 
+	//_R2 = 4.0000000000001;
+	_R2 = 2 * ( 3.0 + cos(_Rparam) );
+      } else {
+	_R2    = 2 * ( 1.0 - cos(_Rparam) );
+      }
       _invR2 = 1.0/_R2;
     }
     _simple_N2_cluster<EEBriefJet>();

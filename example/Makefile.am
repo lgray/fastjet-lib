@@ -6,7 +6,7 @@ EXTRA_DIST = Makefile.alt ktjet_example.cc ktjet_timing.cc CmdLine.hh\
 	makefile.static
 #	test-example.sh test-areas.sh makefile.static
 
-noinst_PROGRAMS = fastjet_example fastjet_example_v1_interface\
+noinst_PROGRAMS = fastjet_example\
 	fastjet_areas fastjet_subtraction\
 	fastjet_timing fastjet_timing_plugins fastjet_subjets fastjet_boosted_higgs
 

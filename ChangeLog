@@ -1,5 +1,9 @@
 2009-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
+	  arranged for ee algos with an R value to behave sensibly when
+	  R > pi (i.e. last pair of particles gets recombined into one).
+
 	* example/fastjet_example_v1_interface.cc -> example/graveyard
 	* example/Makefile.am: 
 	  moved fastjet_example_v1_interface into the graveyard (no

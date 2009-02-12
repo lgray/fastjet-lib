@@ -22,7 +22,7 @@ For 2.4
 -        support for CGAL-3.4???                                [TEST IT]
 -        add ATLAS and CMS cones to release?    [YES, AS BETA + CHECK DEFAULTS]
 -        add JADE                               [in experimental & tested]
--        add EECambridge                        [in experimental]
+-        add EECambridge                        [in experimental & tested]
                       [how???]
 -        add --enable-all-plugins and --enable-all-cxx-plugins? [GS will look]
 -        deprecated: file, manual, FAQ?
@@ -36,6 +36,7 @@ For 2.4
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap
+-        made sure svn property keyword ID is set on all files
 
 - default f=0.75 for cones:
    a. change th edefault f to 0.75 in ctor                       [NO]
