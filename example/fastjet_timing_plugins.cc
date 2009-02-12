@@ -78,6 +78,11 @@
 ///
 ///   -excln n      output of clustering to n exclusive jets
 ///
+///   -ee-print     print things as px,py,pz,E
+///
+///   -get-all-dij  print out all dij values
+///   -get-all-yij  print out all yij values
+///
 ///   -const        show jet constituents (works with excl jets)
 ///
 ///   -write        for writing out detailed clustering sequence (valuable
@@ -193,6 +198,17 @@ inline double pow2(const double x) {return x*x;}
 void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
                          const vector<fj::PseudoJet> & jets, double dcut);
 
+/// sort and pretty print jets, with exact behaviour depending on 
+/// whether ee_print is true or not
+bool ee_print = false;
+void print_jets(const vector<fj::PseudoJet> & jets, const fj::ClusterSequence & cs, bool show_const = false);
+
+void is_unavailable(const string & algname) {
+  cerr << algname << " requested, but not available for this compilation";
+  exit(-1);
+}
+
+
 /// a program to test and time a range of algorithms as implemented or
 /// wrapped in fastjet
 int main (int argc, char ** argv) {
@@ -214,7 +230,9 @@ int main (int argc, char ** argv) {
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
   double excly  = cmdline.double_val("-excly",-1.0);
+  ee_print = cmdline.present("-ee-print");
   bool   get_all_dij   = cmdline.present("-get-all-dij");
+  bool   get_all_yij   = cmdline.present("-get-all-yij");
   double subdcut = cmdline.double_val("-subdcut",-1.0);
   double etamax = cmdline.double_val("-etamax",1.0e305);
   bool   show_constituents = cmdline.present("-const");
@@ -241,7 +259,6 @@ int main (int argc, char ** argv) {
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
   fj::JetDefinition jet_def;
-  string is_unavailable=" requested, but not available for this compilation";
   if (cmdline.present("-cam") || cmdline.present("-CA")) {
     jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, scheme, strategy);
   } else if (cmdline.present("-antikt")) {
@@ -273,7 +290,7 @@ int main (int argc, char ** argv) {
                                       max_iterations, overlap_threshold,
                                       sm_scale));
 #else  // ENABLE_PLUGIN_CDFCONES
-    cerr << "midpoint"+is_unavailable << endl;
+    is_unavailable("midpoint");
 #endif // ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-pxcone")) {
 #ifdef ENABLE_PLUGIN_PXCONE
@@ -282,15 +299,14 @@ int main (int argc, char ** argv) {
                                       ktR, min_jet_energy,
                                       overlap_threshold));
 #else  // ENABLE_PLUGIN_PXCONE
-    cerr << "pxcone"+is_unavailable << endl;
-    exit(-1);
+    is_unavailable("pxcone");
 #endif // ENABLE_PLUGIN_PXCONE
   } else if (cmdline.present("-jetclu")) {
 #ifdef ENABLE_PLUGIN_CDFCONES
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
 #else  // ENABLE_PLUGIN_CDFCONES
-    cerr << "jetclu"+is_unavailable << endl;
+    is_unavailable("pxcone");
 #endif // ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
 #ifdef ENABLE_PLUGIN_SISCONE
@@ -316,20 +332,20 @@ int main (int argc, char ** argv) {
       jet_def = fj::JetDefinition(plugin);
     }
 #else  // ENABLE_PLUGIN_SISCONE
-    cerr << "siscone"+is_unavailable << endl;
+    is_unavailable("siscone");
 #endif // ENABLE_PLUGIN_SISCONE
   } else if (cmdline.present("-d0runiicone")) {
 #ifdef ENABLE_PLUGIN_D0RUNIICONE
     double min_jet_Et = 6.0; // was 8 GeV in earlier work
     jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR,min_jet_Et));
 #else  // ENABLE_PLUGIN_D0RUNIICONE
-    cerr << "D0RunIICone"+is_unavailable << endl;
+    is_unavailable("D0RunIICone");
 #endif // ENABLE_PLUGIN_D0RUNIICONE
   } else if (cmdline.present("-trackjet")) {
 #ifdef ENABLE_PLUGIN_TRACKJET
     jet_def = fj::JetDefinition(new fj::TrackJetPlugin(ktR));
 #else  // ENABLE_PLUGIN_TRACKJET
-    cerr << "TrackJet"+is_unavailable << endl;
+    is_unavailable("TrackJet");
 #endif // ENABLE_PLUGIN_TRACKJET
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
@@ -425,34 +441,7 @@ int main (int argc, char ** argv) {
     // now provide some nice output...
     if (inclkt >= 0.0) {
       vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
-      for (size_t j = 0; j < jets.size(); j++) {
-	//printf("%5u %15.8f %15.8f %15.8e\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
-	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
-	if (show_constituents) {
-	  vector<fj::PseudoJet> const_jets = clust_seq.constituents(jets[j]);
-	  for (size_t k = 0; k < const_jets.size(); k++) {
-	    printf("        jet%03u %15.8f %15.8f %15.8f\n",j,const_jets[k].rap(),
-		   const_jets[k].phi(),sqrt(const_jets[k].kt2()));
-	  }
-	  cout << "\n\n";
-	}
-        // family tests
-        //fj::PseudoJet parent1, parent2;
-        //bool has_parents = clust_seq.has_parents(jets[j],parent1,parent2);
-        //if (has_parents) {
-        //  cout << "parent pt's: " << parent1.perp() << " " << parent2.perp() <<endl;
-        //  fj::PseudoJet child_from1, child_from2;
-        //  clust_seq.has_child(parent1, child_from1);
-        //  clust_seq.has_child(parent2, child_from2);
-        //  cout << "parents' children pt: " << child_from1.perp() << " " << child_from2.perp() << endl;
-        //  fj::PseudoJet partner_from1, partner_from2;
-        //  clust_seq.has_partner(parent1, partner_from1);
-        //  clust_seq.has_partner(parent2, partner_from2);
-        //  cout << "parents' partners' pt: " << partner_from1.perp() << " " << partner_from2.perp() << endl;
-        //} else {
-        //  cout << "has no parents" << endl;
-        //}
-      }
+      print_jets(jets, clust_seq, show_constituents);
       if (rootfile != "") {
         ofstream ostr(rootfile.c_str());
         ostr << "# " << cmdline.command_line() << endl;
@@ -463,36 +452,28 @@ int main (int argc, char ** argv) {
     }
 
     if (excln > 0) {
-      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets(excln));
- 
       cout << "Printing "<<excln<<" exclusive jets\n";
-      for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8f\n",
-	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
-      }
+      print_jets(clust_seq.exclusive_jets(excln), clust_seq, show_constituents);
     }
 
     if (excld > 0.0) {
-      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets(excld));
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
-      for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8f\n",
-	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
-      }
+      print_jets(clust_seq.exclusive_jets(excld), clust_seq, show_constituents);
     }
 
     if (excly > 0.0) {
-      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.exclusive_jets_ycut(excly));
       cout << "Printing exclusive jets for ycut = "<<excly<<"\n";
-      for (size_t j = 0; j < jets.size(); j++) {
-	printf("%5u %15.8f %15.8f %15.8f\n",
-	       j,jets[j].rap(),jets[j].phi(),jets[j].perp());
-      }
+      print_jets(clust_seq.exclusive_jets_ycut(excly), clust_seq, show_constituents);
     }
 
     if (get_all_dij) {
-      for (int i = nparticles-1; i > 0; i--) {
+      for (int i = nparticles-1; i >= 0; i--) {
         printf("d for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq.exclusive_dmerge(i));
+      }
+    }
+    if (get_all_yij) {
+      for (int i = nparticles-1; i >= 0; i--) {
+        printf("y for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq.exclusive_ymerge(i));
       }
     }
 
@@ -576,6 +557,45 @@ void print_jet (const fj::ClusterSequence & clust_seq,
   printf("%15.8f %15.8f %15.8f %8u\n",
          jet.rap(), jet.phi(), jet.perp(), n_constituents);
 }
+
+
+//----------------------------------------------------------------------
+void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence & cs, bool show_constituents) {
+  vector<fj::PseudoJet> jets;
+  if (ee_print) {
+    jets = sorted_by_E(jets_in);
+    for (size_t j = 0; j < jets.size(); j++) {
+      printf("%5u %15.8f %15.8f %15.8f %15.8f\n",
+	     j,jets[j].px(),jets[j].py(),jets[j].pz(),jets[j].E());
+      if (show_constituents) {
+	vector<fj::PseudoJet> const_jets = cs.constituents(jets[j]);
+	for (size_t k = 0; k < const_jets.size(); k++) {
+	  printf("        jet%03u %15.8f %15.8f %15.8f %15.8f\n",j,const_jets[k].px(),
+		 const_jets[k].py(),const_jets[k].pz(),const_jets[k].E());
+	}
+	cout << "\n\n";
+    }
+
+    }
+  } else {
+    jets = sorted_by_pt(jets_in);
+    for (size_t j = 0; j < jets.size(); j++) {
+      printf("%5u %15.8f %15.8f %15.8f\n",
+	     j,jets[j].rap(),jets[j].phi(),jets[j].perp());
+
+      if (show_constituents) {
+	vector<fj::PseudoJet> const_jets = cs.constituents(jets[j]);
+	for (size_t k = 0; k < const_jets.size(); k++) {
+	  printf("        jet%03u %15.8f %15.8f %15.8f\n",j,const_jets[k].rap(),
+		 const_jets[k].phi(),sqrt(const_jets[k].kt2()));
+	}
+	cout << "\n\n";
+      }
+    }
+  }
+
+}
+
 
 //----- SUBJETS --------------------------------------------------------
 /// a function that pretty prints a list of jets and the subjets for each

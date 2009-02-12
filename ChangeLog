@@ -1,8 +1,10 @@
 2009-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_timing_plugins.cc: 
-	  tried to improve documentation of various options and added -excly
-
+	  tried to improve documentation of various options and added
+	  -excly; -ee-print for printing jets in terms of px,py,pz,E; 	
+	  common output file for a range of jet output options.
+	
 	* include/fastjet/ClusterSequence.hh: 
 
 	  added exclusive_ymerge, exclusive_ymerge_max,
