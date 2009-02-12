@@ -1,5 +1,8 @@
 2009-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* moved  plugins/Jade/NNH.hh -> fastjet/include/NNH.hh
+	  so as to make it available to other algorithms too
+	
 	* include/fastjet/ClusterSequence.hh: 
 	* src/ClusterSequence.cc (ClusterSequence::_fill_initial_history): 
 	  added Q() to return total energy in the event (relevant for e+e-)
