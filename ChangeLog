@@ -1,3 +1,20 @@
+2009-02-12  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* m4/CGAL.m4: added support for CGAL 3.4 (and cleaned)
+	  A Makefile can still be provided using the
+	  --with-cgalmakefile=...  option, so backward compatibility is
+	  not broken. On top of that, a path to an installation of CGAL
+	  can be specified using --with-cgal-directory=PATH in which case
+	  the headers and lib will be searched in PATH/include and
+	  PATH/lib respectively. Finally, if no argument (except
+	  --eanble-cgal) are specified, CGAL is searched in standard
+	  locations.
+	
+	* makefile.static: added support for CGAL 3.4
+	  this is done in line with CGAL.m4 by allowing the specification
+	  of a CGAL_DIRECTORY instead of the CGAL_MAKEFILE variable.
+	  
+
 2009-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
