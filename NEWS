@@ -5,16 +5,60 @@ Release Notes for fastjet
 Summary of changes from v2.3.X -> v2.4-devel
 ==========================================================
 
-new jet algorithms
-------------------
+
+New pp algorithms
+-----------------
+
+- added implementation of generalised kt algorithm (genkt_algorithm) for pp
+- added D0RunIICone plugin [--enable-d0runiicone at configure time]
+- added ATLASCone Plugin
+- added CMSIterativeCone Plugin
+- added TrackJet Plugin (used by CDF in UE studies)
+
+Introduction of e+e- algorithms
+-------------------------------
+
 - added an implementation of the e+e- kt algorithm (ee_kt_algorithm),
+- added JadePlugin for the e+e- Jade algorithm
+- added EECambridgePlugin for the (original) e+e- Cambridge algorithm
+- added SISConeSphericalPlugin [enabled by default] for SISCone in
+  e+e- and other spherical environments.
+- native implementation of generalised kt algorithm for e+e- (ee_genkt_algorithm)
+  [also provides access to e+e- form of anti-kt alg, conical jets on a sphere]
 
-- added implementation of generalised kt algorithm (genkt_algorithm)
+Meta-algorithms
+----------------
 
-- added implementation of generalised kt algorithm for e+e-
-  (ee_genkt_algorithm); this notably also provides access to an e+e-
-  form of the anti-kt algorithm, which gives conical jets
-  
+- added NestedDefs plugin for daisy-chaining multiple jet definitions
+  [still under testing; API may change in the future]
+
+new functionality
+-----------------
+- added subjet functions for viewing jet at particular dcut, etc.
+- added access to exclusive jets based on ycut as well as dcut (for e+e-)
+- added support for asymmetric rapidity ranges in GhostedAreaSpec
+
+interface modifications
+-----------------------
+- removed default value of 0.5 for overlap_threshold in
+  CDFMidPointPlugin and SISConePlugin constructors
+  *** may break backwards compatibility ***
+
+- in SISCone, new way of accessing the information about pass at which
+  a jet was found (old method retained for 2.4, but deprecated)
+
+- a JetDefinition(jet_alg) constructor, without an R value, is no
+  longer legal, except when jet_alg is ee_kt_algorithm (it has no R).
+
+
+other modifications
+-----------------------
+- removed restriction that fastjet throws exception on empty events
+
+
+notes
+-----
+
                           !!! WARNING !!!
 
   The ee_antikt_algorithm is known to be IR unsafe at larger values of
@@ -29,10 +73,6 @@ new jet algorithms
 
   [NUMBERS TO BE UPDATED; THESE NOTES TO BE MOVED TO THE MANUAL]
   
-
-- added SISConeSphericalPlugin [enabled by default] for SISCone in
-  e+e- and other spherical environments.
-
                           !!! WARNINGS !!!
 
   * Concerning IR safety, the same comment as for the
@@ -53,37 +93,6 @@ new jet algorithms
 
   * Full final tests regarding infrared-and-collinear safety are 
     still in progress. 
-
-
-- added D0RunIICone plugin [--enable-d0runiicone at configure time]
-
-- added NestedDefs plugin for daisy-chaining multiple jet definitions
-  [still under testing; API may change]
-
-new functionality
------------------
-- added a full set of subjet functions (in analogy with normal excl
-  jets on the whole cluster sequence)
-
-- introduced constructor for GhostedAreaSpec with asymmetric rapidity
-  ranges.
-
-interface modifications
------------------------
-- removed default value of 0.5 for overlap_threshold in
-  CDFMidPointPlugin and SISConePlugin constructors
-  *** may break backwards compatibility ***
-
-- in SISCone, new way of accessing the information about pass at which
-  a jet was found (old method retained for 2.4, but deprecated)
-
-- a JetDefinition(jet_alg) constructor, without an R value, is no
-  longer legal, except when jet_alg is ee_kt_algorithm (it has no R).
-
-
-other modifications
------------------------
-- removed restriction fastjet throws exception on empty events
 
 
 
