@@ -350,7 +350,11 @@ These will typically be used on the jets returned by
 \label{sec:fastjet::JetDefinition}
 
 The class \ttt{fastjet::JetDefinition} contains a full specification
-of how to carry out the clustering. Its constructor is\footnote{The v.
+of how to carry out the clustering. According to the Les Houches convention 
+detailed in~\cite{Buttar:2008jx}, a `jet definition' should include the 
+jet algorithm name, its parameters (often the radius $R$) and the 
+recombination scheme.
+Its constructor is\footnote{The v.
   2.0 constructor, without the recombination scheme argument, still
   remains valid.}
 %
@@ -1274,6 +1278,8 @@ also subtract it from the hard jets. This way of using jets to
 determine the noise level on an event-by-event basis was
 introduced and described in~\cite{cs}.
 
+\subsubsection{Fixed range}
+
 The \ttt{fastjet::RangeDefinition} class allows the user to set the
 rapidity-azimuth range over which he/she wishes to study the areas of the
 jets. It has two constructors. The first is
@@ -1316,10 +1322,58 @@ allows one to fully specify a rectangle in the rapidity-azimuth plane.
   /// textual description of the range
   virtual std::string description() const ;
 \end{lstlisting}
-The virtual functions can be overloaded by the user in a derived class, where a
-different range definition can be specified. An example is given in
-Appendix~\ref{app:b}, which implements a circular range centred on a
-jet's axis.
+
+\subsubsection{Local Ranges}
+
+The virtual functions above can be overloaded by the user in a derived class, where a
+different range definition can be specified. An example can be found in 
+\ttt{CircularRange.hh}, which implements a circular range centred on a
+jet's axis. Its constructors are
+\begin{lstlisting}
+  /// initialise CircularRange with a jet
+  fastjet::CircularRange(const fastjet::PseudoJet & jet, double distance) ;
+  /// initialise CircularRange with a (rap,phi) point
+  fastjet::CircularRange(double rap, double phi, double distance) ;
+  /// initialise CircularRange with just the radius parameter
+  fastjet::CircularRange(double distance) ;
+\end{lstlisting}
+
+
+This {\sl local} range makes use of two further methods.
+First, it overrides 
+\begin{lstlisting}
+  /// For localizable classes override this function with a function
+  /// that returns true
+  virtual inline bool is_localizable() const ;
+\end{lstlisting}
+to return \ttt{true} and, second, it can use
+\begin{lstlisting}
+  /// place the range on the rap-phi position
+  inline void set_position(const double & rap, const double & phi) ;
+  /// place the range on the jet position
+  inline void set_position(const PseudoJet & jet) ;
+\end{lstlisting}
+to actually place the range in the desired position.
+
+
+% The user might also wish to overload the virtual function
+% \ttt{RangeDefinition::area()}, rather than rely on the base class function to
+% return the protected \ttt{\_total\_area} variable, set by the constructor.
+% 
+% Finally, the protected function 
+% \begin{lstlisting}
+%   /// calculate, and set  _total_area, by calculating which of points on 
+%   /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
+%   /// in the range; it takes a reasonable time with rapmax = 10,
+%   /// npoints = 100.
+%   void _numerical_total_area(double rapmax, int npoints) ;
+% \end{lstlisting}
+% is also provided by the \ttt{RangeDefinition} base class, and can be called by
+% the constructor of the derived class. It allows one to
+% calculate numerically the area of a given range, in case it changes
+% dynamically (for instance, if a circular range centred on a jet is intersected
+% with a rigid boundary in rapidity and/or azimuth).
+\subsubsection{Background subtraction}
 
 Once a range has been specified, the following methods, belonging  to
 the base class \ttt{ClusterSequenceAreaBase}, 
@@ -1367,6 +1421,7 @@ A version exists also without the last argument.
 %%   void get_median_rho_and_sigma(const RangeDefinition & range, 
 %%                                 bool use_area_4vector,
 %%                                 double & median, double & sigma);
+
 There is also a routine for estimating rapidity-dependence densities,
 intended for example for heavy-ion events
 \begin{lstlisting}
@@ -1378,6 +1433,20 @@ intended for example for heavy-ion events
                                   double exclude_above = -1.0, 
                                   bool use_area_4vector = false) const;
 \end{lstlisting}
+However, a better alternative is probably to use a {\sl local} range definition, 
+like the \ttt{circularRange} mentioned above.
+It defines a range which is centred on a given jet axis (as opposed to
+covering a fixed, given region in the rapidity-azimuth plane), and
+extends up to a distance $d$ from the axis of thejet. 
+Such a range definition will of course lead to a different
+median $p_t$ per unit area for each jet. It is useful whenever 
+the background
+distribution is expected to be non uniform in rapidity and, for instance 
+in the case
+of non-central collisions, also in azimuth. With a wise choice for the
+distance $d$, \ttt{CircularRange} will then allow one to use
+\ttt{ClusterSequenceArea::get\_median\_rho\_and\_sigma}\ttt{()} ona jet-by-jet basis.
+
 Note that more specialised methods for extracting the noise level might
 be present at the level of a specific class, e.g.
 \ttt{ClusterSequenceActiveArea}. At least some of them 
@@ -2191,87 +2260,87 @@ used internally to implement the various recombination schemes if an
 external \ttt{Recombiner} is not provided. It provides a useful
 example of how to implement a new \ttt{Recombiner} class.
 
-\section{External Range Definitions}
-\label{app:b}
-
-The range within which to average over jets in order to determine a
-background momentum level can be defined by the user by writing a new
-class derived from \ttt{fastjet::RangeDefinition}. The following example
-defines a range which is centred on a given jet axis (as opposed to
-covering a fixed, given region in the rapidity-azimuth plane), and
-extends up to a distance $d$ from the axis of thejet. 
-
-Such a range definition will of course lead to a different
-median $p_t$ per unit area for each jet. This choice of range can be
-used, for instance, in heavy ion collisions, where the background
-distribution is expected to be non uniform in rapidity and, in the case
-of non-central collisions, also in azimuth. With a wise choice for the
-distance $d$, \ttt{CircularRange} will then allow one to use
-\ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}\ttt{()} (or the
-4-vector version) in such cases
-too, without having to resort to
-\ttt{ClusterSequenceArea::parabolic\_pt\_per\_unit\_area()}.
-
-\begin{lstlisting}
-#include "fastjet/RangeDefinition.hh"
-class CircularRange : public fastjet::RangeDefinition {
-public:
-  /// constructor
-  CircularRange() {}
-  
-  CircularRange(const fastjet::PseudoJet & jet, double distance) {
-                _distance = distance;
-                _rapjet = jet.rap();
-                _phijet = jet.phi();
-                _total_area = fastjet::pi*_distance*_distance; }
-  
-  /// destructor
-  virtual ~CircularRange() {}
-  
-  /// return description of range
-  virtual inline std::string description() const {
-    std::ostringstream ostr;
-    ostr << "Range: within distance "<< _distance << " of given jet." ;
-    return ostr.str(); }
-  
-  /// return bool according to whether (rap,phi) point is in range
-  virtual inline bool is_in_range(double rap, double phi) const {
-     double pi = fastjet::pi;
-     double deltaphi = _phijet - phi;
-     if ( deltaphi > pi) { deltaphi -= 2.*pi; }
-     else if ( deltaphi < -pi) { deltaphi += 2.*pi; }
-     bool inrange = ( (rap-_rapjet)*(rap-_rapjet) +
-                      deltaphi*deltaphi <= _distance*_distance );
-     return inrange; }
-
-  /// return the minimal and maximal rapidity of this range
-  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const {
-    rapmin = _rapjet - _distance;
-    rapmax = _rapjet + _distance;
-  }
-
-private:
-  double _distance,_rapjet,_phijet;  
-};
-\end{lstlisting}
-
-The user might also wish to overload the virtual function
-\ttt{RangeDefinition::area()}, rather than rely on the base class function to
-return the protected \ttt{\_total\_area} variable, set by the constructor.
-
-Finally, the protected function 
-\begin{lstlisting}
-  /// calculate, and set  _total_area, by calculating which of points on 
-  /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
-  /// in the range; it takes a reasonable time with rapmax = 10,
-  /// npoints = 100.
-  void _numerical_total_area(double rapmax, int npoints) ;
-\end{lstlisting}
-is also provided by the \ttt{RangeDefinition} base class, and can be called by
-the constructor of the derived class. It allows one to
-calculate numerically the area of a given range, in case it changes
-dynamically (for instance, if a circular range centred on a jet is intersected
-with a rigid boundary in rapidity and/or azimuth).
+% \section{External Range Definitions}
+% \label{app:b}
+% 
+% The range within which to average over jets in order to determine a
+% background momentum level can be defined by the user by writing a new
+% class derived from \ttt{fastjet::RangeDefinition}. The following example
+% defines a range which is centred on a given jet axis (as opposed to
+% covering a fixed, given region in the rapidity-azimuth plane), and
+% extends up to a distance $d$ from the axis of thejet. 
+% 
+% Such a range definition will of course lead to a different
+% median $p_t$ per unit area for each jet. This choice of range can be
+% used, for instance, in heavy ion collisions, where the background
+% distribution is expected to be non uniform in rapidity and, in the case
+% of non-central collisions, also in azimuth. With a wise choice for the
+% distance $d$, \ttt{CircularRange} will then allow one to use
+% \ttt{ClusterSequenceArea::median\_pt\_per\_unit\_area}\ttt{()} (or the
+% 4-vector version) in such cases
+% too, without having to resort to
+% \ttt{ClusterSequenceArea::parabolic\_pt\_per\_unit\_area()}.
+% 
+% \begin{lstlisting}
+% #include "fastjet/RangeDefinition.hh"
+% class CircularRange : public fastjet::RangeDefinition {
+% public:
+%   /// constructor
+%   CircularRange() {}
+%   
+%   CircularRange(const fastjet::PseudoJet & jet, double distance) {
+%                 _distance = distance;
+%                 _rapjet = jet.rap();
+%                 _phijet = jet.phi();
+%                 _total_area = fastjet::pi*_distance*_distance; }
+%   
+%   /// destructor
+%   virtual ~CircularRange() {}
+%   
+%   /// return description of range
+%   virtual inline std::string description() const {
+%     std::ostringstream ostr;
+%     ostr << "Range: within distance "<< _distance << " of given jet." ;
+%     return ostr.str(); }
+%   
+%   /// return bool according to whether (rap,phi) point is in range
+%   virtual inline bool is_in_range(double rap, double phi) const {
+%      double pi = fastjet::pi;
+%      double deltaphi = _phijet - phi;
+%      if ( deltaphi > pi) { deltaphi -= 2.*pi; }
+%      else if ( deltaphi < -pi) { deltaphi += 2.*pi; }
+%      bool inrange = ( (rap-_rapjet)*(rap-_rapjet) +
+%                       deltaphi*deltaphi <= _distance*_distance );
+%      return inrange; }
+% 
+%   /// return the minimal and maximal rapidity of this range
+%   virtual inline void get_rap_limits(double & rapmin, double & rapmax) const {
+%     rapmin = _rapjet - _distance;
+%     rapmax = _rapjet + _distance;
+%   }
+% 
+% private:
+%   double _distance,_rapjet,_phijet;  
+% };
+% \end{lstlisting}
+% 
+% The user might also wish to overload the virtual function
+% \ttt{RangeDefinition::area()}, rather than rely on the base class function to
+% return the protected \ttt{\_total\_area} variable, set by the constructor.
+% 
+% Finally, the protected function 
+% \begin{lstlisting}
+%   /// calculate, and set  _total_area, by calculating which of points on 
+%   /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
+%   /// in the range; it takes a reasonable time with rapmax = 10,
+%   /// npoints = 100.
+%   void _numerical_total_area(double rapmax, int npoints) ;
+% \end{lstlisting}
+% is also provided by the \ttt{RangeDefinition} base class, and can be called by
+% the constructor of the derived class. It allows one to
+% calculate numerically the area of a given range, in case it changes
+% dynamically (for instance, if a circular range centred on a jet is intersected
+% with a rigid boundary in rapidity and/or azimuth).
 
 %======================================================================
 \begin{thebibliography}{99}
@@ -2360,6 +2429,15 @@ hep-ex/0005012.
   Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
   [hep-ph/0210022].
   %%CITATION = HEP-PH 0210022;%%
+
+%\cite{Buttar:2008jx}
+\bibitem{Buttar:2008jx}
+  C.~Buttar {\it et al.},
+  %``Standard Model Handles and Candles Working Group: Tools and Jets Summary
+  %Report,''
+  arXiv:0803.0678 [hep-ph].
+  %%CITATION = ARXIV:0803.0678;%%
+
 
 \bibitem{Chan}
   T.~M.~Chan,
