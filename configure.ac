@@ -14,7 +14,7 @@ AC_CHECK_TYPE(int)
 AC_CHECK_TYPE(long)
 
 dnl if the user has not set CXXFLAGS, then set our own default
-test "x${CXXFLAGS+yes}" = xyes || CXXFLAGS="-O3 -Wall"
+test "x${CXXFLAGS+yes}" == "xyes" || CXXFLAGS="-O3 -Wall"
 
 dnl check useful programs
 AC_PROG_CXX
@@ -69,14 +69,14 @@ AC_ARG_ENABLE(cgal,
        [ENABLE_CGAL_FLAG="$enableval"],
        [ENABLE_CGAL_FLAG="no"])
 dnl if asked for, check if the CGAL library can be used
-if [[ "$ENABLE_CGAL_FLAG" == "yes" ]] ; then
-   ACX_CHECK_CGAL
+if [[ "x${ENABLE_CGAL_FLAG}" == "xyes" ]] ; then
+   ACX_CHECK_CGAL([],[ENABLE_CGAL_FLAG="no"])
 fi
 
 dnl update compilation/link flags for the CGAL lib
 if [[ "x$ENABLE_CGAL_FLAG" == "xyes" ]] ; then
    CONFIG_CXXFLAGS=${CONFIG_CXXFLAGS}" $CGAL_CPPFLAGS "
-   CONFIG_LIBS=${CONFIG_LIBS}" $CGAL_LIBS "
+   CONFIG_LIBS=${CONFIG_LIBS}" $CGAL_LDFLAGS $CGAL_LIBS "
 else
    CONFIG_CXXFLAGS=${CONFIG_CXXFLAGS}" -DDROP_CGAL "
 fi
