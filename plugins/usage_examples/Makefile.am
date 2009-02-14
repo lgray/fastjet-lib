@@ -51,6 +51,18 @@ many_algs_example_CXXFLAGS += -I${srcdir}/../TrackJet
 many_algs_example_LDADD += ../TrackJet/libTrackJetPlugin.la
 endif
 
+# add ATLASCone-related parts
+if BUILD_PLUGIN_ATLASCONE
+many_algs_example_CXXFLAGS += -I${srcdir}/../ATLASCone
+many_algs_example_LDADD += ../ATLASCone/libATLASConePlugin.la
+endif
+
+# add EECambridge-related parts
+if BUILD_PLUGIN_EECAMBRIDGE
+many_algs_example_CXXFLAGS += -I${srcdir}/../EECambridge
+many_algs_example_LDADD += ../EECambridge/libEECambridgePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TEST_ENVIRONMENT = $(SHELL)

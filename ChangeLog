@@ -1,3 +1,25 @@
+2009-02-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* example/fastjet_timing_plugins.cc (main): 
+	  added a -ycut comand-line argument
+
+	* plugin/EECambridge: *** ADDED ***
+	  Added a plugin for the e+e- Cambridge algorithm.
+	  Default: enabled.
+	  This plugin takes ycut as a parameter.
+
+	* plugins/ATLASCone: *** ADDED ***
+	  Added a plugin for the e+e- Cambridge algorithm.
+	  Default: enabled.
+	  This plugin takes as a parameter a cone radius, a seed
+	    threshold (2.0 GeV by default) and an overlap
+	    threshold (default:0.5). See the header file for a comment on
+	    the default values.
+
+	  This plugin is derived from the SpartyJet implementation of the
+	  ATLAS cone algorithm.
+	
+
 2009-02-12  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* m4/CGAL.m4: added support for CGAL 3.4 (and cleaned)

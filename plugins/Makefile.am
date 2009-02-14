@@ -17,9 +17,15 @@ endif
 if BUILD_PLUGIN_TRACKJET
 SUBDIRS += TrackJet
 endif
+if BUILD_PLUGIN_ATLASCONE
+SUBDIRS += ATLASCone
+endif
+if BUILD_PLUGIN_EECAMBRIDGE
+SUBDIRS += EECambridge
+endif
 # end plugin section -- do not modify this line
 SUBDIRS += usage_examples
 
-DIST_SUBDIRS = TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
+DIST_SUBDIRS = EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
 
 EXTRA_DIST = makefile.static

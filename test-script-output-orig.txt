@@ -3510,3 +3510,189 @@ trackjet:   43     -5.86524701      1.15128325      0.06002593
 trackjet:   44     -7.97463517      4.56435207      0.05045971
 trackjet:   45      5.85112968      0.82301781      0.02209625
 trackjet:   46     -9.48923228      4.87533276      0.01126329
+atlascone:#--------------------------------------------------------------------------
+atlascone:#                      FastJet release 2.4-devel
+atlascone:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+atlascone:#                         http://www.fastjet.fr
+atlascone:#
+atlascone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+atlascone:# clustering using fast geometric algorithms, with area measures and optional
+atlascone:# external jet-finder plugins.
+atlascone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+atlascone:#
+atlascone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+atlascone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+atlascone:# and CGAL: http://www.cgal.org/.
+atlascone:#-------------------------------------------------------------------------
+atlascone:iev 0: number of particles = 354
+atlascone:strategy used =  plugin strategy
+atlascone:Algorithm: ATLASCone plugin (FastJet version 2.4-devel)
+atlascone:    0     -0.86748501      2.90530809    981.15729251
+atlascone:    1      0.22194635      6.03015358    894.86349408
+atlascone:    2     -1.19073366      6.10283910     63.37420652
+atlascone:    3      0.43582146      0.75473602      9.77983897
+atlascone:    4     -1.11143718      0.49003133      4.71953385
+atlascone:    5     -2.43442103      1.36980264      4.71348205
+atlascone:    6     -1.64294249      4.13706421      4.50441446
+atlascone:#--------------------------------------------------------------------------
+atlascone:#                      FastJet release 2.4-devel
+atlascone:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+atlascone:#                         http://www.fastjet.fr
+atlascone:#
+atlascone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+atlascone:# clustering using fast geometric algorithms, with area measures and optional
+atlascone:# external jet-finder plugins.
+atlascone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+atlascone:#
+atlascone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+atlascone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+atlascone:# and CGAL: http://www.cgal.org/.
+atlascone:#-------------------------------------------------------------------------
+atlascone:iev 0: number of particles = 354
+atlascone:strategy used =  plugin strategy
+atlascone:Algorithm: ATLASCone plugin (FastJet version 2.4-devel)
+atlascone:    0     -0.86713954      2.90515650    983.27961921
+atlascone:    1      0.22053090      6.03063634    900.68329985
+atlascone:    2     -1.16361171      6.11306612     72.67956112
+atlascone:    3      0.38333701      0.62578490     14.19007406
+atlascone:    4     -2.49084195      1.18466588      8.15419593
+atlascone:    5     -1.71938196      4.03506179      6.49839970
+atlascone:#--------------------------------------------------------------------------
+atlascone:#                      FastJet release 2.4-devel
+atlascone:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+atlascone:#                         http://www.fastjet.fr
+atlascone:#
+atlascone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+atlascone:# clustering using fast geometric algorithms, with area measures and optional
+atlascone:# external jet-finder plugins.
+atlascone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+atlascone:#
+atlascone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+atlascone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+atlascone:# and CGAL: http://www.cgal.org/.
+atlascone:#-------------------------------------------------------------------------
+atlascone:iev 0: number of particles = 354
+atlascone:strategy used =  plugin strategy
+atlascone:Algorithm: ATLASCone plugin (FastJet version 2.4-devel)
+atlascone:    0     -0.86713954      2.90515650    983.27961921
+atlascone:    1      0.22137401      6.03515762    906.44139699
+atlascone:    2     -1.16601802      6.10941975     74.17814632
+atlascone:    3     -2.25797492      1.21679431     13.16911073
+atlascone:    4     -1.72135558      3.91871676      8.64801111
+eecambridge@single-ee-event.dat:#--------------------------------------------------------------------------
+eecambridge@single-ee-event.dat:#                      FastJet release 2.4-devel
+eecambridge@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+eecambridge@single-ee-event.dat:#                         http://www.fastjet.fr
+eecambridge@single-ee-event.dat:#
+eecambridge@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eecambridge@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eecambridge@single-ee-event.dat:# external jet-finder plugins.
+eecambridge@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eecambridge@single-ee-event.dat:#
+eecambridge@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+eecambridge@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eecambridge@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eecambridge@single-ee-event.dat:#-------------------------------------------------------------------------
+eecambridge@single-ee-event.dat:iev 0: number of particles = 70
+eecambridge@single-ee-event.dat:strategy used =  plugin strategy
+eecambridge@single-ee-event.dat:Algorithm: EECambridge plugin with ycut = 0.08 (FastJet version 2.4-devel)
+eecambridge@single-ee-event.dat:    0      1.20533914      4.80278108      9.55011959
+eecambridge@single-ee-event.dat:    1     -1.03078489      1.66118842      9.55011959
+eecambridge@single-ee-event.dat:#--------------------------------------------------------------------------
+eecambridge@single-ee-event.dat:#                      FastJet release 2.4-devel
+eecambridge@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+eecambridge@single-ee-event.dat:#                         http://www.fastjet.fr
+eecambridge@single-ee-event.dat:#
+eecambridge@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eecambridge@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eecambridge@single-ee-event.dat:# external jet-finder plugins.
+eecambridge@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eecambridge@single-ee-event.dat:#
+eecambridge@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+eecambridge@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eecambridge@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eecambridge@single-ee-event.dat:#-------------------------------------------------------------------------
+eecambridge@single-ee-event.dat:iev 0: number of particles = 70
+eecambridge@single-ee-event.dat:strategy used =  plugin strategy
+eecambridge@single-ee-event.dat:Algorithm: EECambridge plugin with ycut = 0.08 (FastJet version 2.4-devel)
+eecambridge@single-ee-event.dat:    0      1.20533914      4.80278108      9.55011959
+eecambridge@single-ee-event.dat:    1     -1.03078489      1.66118842      9.55011959
+eecambridge@single-ee-event.dat:#--------------------------------------------------------------------------
+eecambridge@single-ee-event.dat:#                      FastJet release 2.4-devel
+eecambridge@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+eecambridge@single-ee-event.dat:#                         http://www.fastjet.fr
+eecambridge@single-ee-event.dat:#
+eecambridge@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eecambridge@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eecambridge@single-ee-event.dat:# external jet-finder plugins.
+eecambridge@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eecambridge@single-ee-event.dat:#
+eecambridge@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+eecambridge@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eecambridge@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eecambridge@single-ee-event.dat:#-------------------------------------------------------------------------
+eecambridge@single-ee-event.dat:iev 0: number of particles = 70
+eecambridge@single-ee-event.dat:strategy used =  plugin strategy
+eecambridge@single-ee-event.dat:Algorithm: EECambridge plugin with ycut = 0.08 (FastJet version 2.4-devel)
+eecambridge@single-ee-event.dat:    0      1.20533914      4.80278108      9.55011959
+eecambridge@single-ee-event.dat:    1     -1.03078489      1.66118842      9.55011959
+eecambridge,-ycut,0.01@single-ee-event.dat:#--------------------------------------------------------------------------
+eecambridge,-ycut,0.01@single-ee-event.dat:#                      FastJet release 2.4-devel
+eecambridge,-ycut,0.01@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+eecambridge,-ycut,0.01@single-ee-event.dat:#                         http://www.fastjet.fr
+eecambridge,-ycut,0.01@single-ee-event.dat:#
+eecambridge,-ycut,0.01@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eecambridge,-ycut,0.01@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eecambridge,-ycut,0.01@single-ee-event.dat:# external jet-finder plugins.
+eecambridge,-ycut,0.01@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eecambridge,-ycut,0.01@single-ee-event.dat:#
+eecambridge,-ycut,0.01@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+eecambridge,-ycut,0.01@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eecambridge,-ycut,0.01@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eecambridge,-ycut,0.01@single-ee-event.dat:#-------------------------------------------------------------------------
+eecambridge,-ycut,0.01@single-ee-event.dat:iev 0: number of particles = 70
+eecambridge,-ycut,0.01@single-ee-event.dat:strategy used =  plugin strategy
+eecambridge,-ycut,0.01@single-ee-event.dat:Algorithm: EECambridge plugin with ycut = 0.01 (FastJet version 2.4-devel)
+eecambridge,-ycut,0.01@single-ee-event.dat:    0     -1.15170682      2.32911879     15.97361000
+eecambridge,-ycut,0.01@single-ee-event.dat:    1     -0.87226190      6.08000690     10.33564630
+eecambridge,-ycut,0.01@single-ee-event.dat:    2      1.20533914      4.80278108      9.55011959
+eecambridge,-ycut,0.01@single-ee-event.dat:#--------------------------------------------------------------------------
+eecambridge,-ycut,0.01@single-ee-event.dat:#                      FastJet release 2.4-devel
+eecambridge,-ycut,0.01@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+eecambridge,-ycut,0.01@single-ee-event.dat:#                         http://www.fastjet.fr
+eecambridge,-ycut,0.01@single-ee-event.dat:#
+eecambridge,-ycut,0.01@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eecambridge,-ycut,0.01@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eecambridge,-ycut,0.01@single-ee-event.dat:# external jet-finder plugins.
+eecambridge,-ycut,0.01@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eecambridge,-ycut,0.01@single-ee-event.dat:#
+eecambridge,-ycut,0.01@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+eecambridge,-ycut,0.01@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eecambridge,-ycut,0.01@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eecambridge,-ycut,0.01@single-ee-event.dat:#-------------------------------------------------------------------------
+eecambridge,-ycut,0.01@single-ee-event.dat:iev 0: number of particles = 70
+eecambridge,-ycut,0.01@single-ee-event.dat:strategy used =  plugin strategy
+eecambridge,-ycut,0.01@single-ee-event.dat:Algorithm: EECambridge plugin with ycut = 0.01 (FastJet version 2.4-devel)
+eecambridge,-ycut,0.01@single-ee-event.dat:    0     -1.15170682      2.32911879     15.97361000
+eecambridge,-ycut,0.01@single-ee-event.dat:    1     -0.87226190      6.08000690     10.33564630
+eecambridge,-ycut,0.01@single-ee-event.dat:    2      1.20533914      4.80278108      9.55011959
+eecambridge,-ycut,0.01@single-ee-event.dat:#--------------------------------------------------------------------------
+eecambridge,-ycut,0.01@single-ee-event.dat:#                      FastJet release 2.4-devel
+eecambridge,-ycut,0.01@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+eecambridge,-ycut,0.01@single-ee-event.dat:#                         http://www.fastjet.fr
+eecambridge,-ycut,0.01@single-ee-event.dat:#
+eecambridge,-ycut,0.01@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+eecambridge,-ycut,0.01@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+eecambridge,-ycut,0.01@single-ee-event.dat:# external jet-finder plugins.
+eecambridge,-ycut,0.01@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+eecambridge,-ycut,0.01@single-ee-event.dat:#
+eecambridge,-ycut,0.01@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+eecambridge,-ycut,0.01@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+eecambridge,-ycut,0.01@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+eecambridge,-ycut,0.01@single-ee-event.dat:#-------------------------------------------------------------------------
+eecambridge,-ycut,0.01@single-ee-event.dat:iev 0: number of particles = 70
+eecambridge,-ycut,0.01@single-ee-event.dat:strategy used =  plugin strategy
+eecambridge,-ycut,0.01@single-ee-event.dat:Algorithm: EECambridge plugin with ycut = 0.01 (FastJet version 2.4-devel)
+eecambridge,-ycut,0.01@single-ee-event.dat:    0     -1.15170682      2.32911879     15.97361000
+eecambridge,-ycut,0.01@single-ee-event.dat:    1     -0.87226190      6.08000690     10.33564630
+eecambridge,-ycut,0.01@single-ee-event.dat:    2      1.20533914      4.80278108      9.55011959

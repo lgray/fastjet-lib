@@ -58,6 +58,12 @@
 #ifdef ENABLE_PLUGIN_TRACKJET
 #include "fastjet/TrackJetPlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_ATLASCONE
+#include "fastjet/ATLASConePlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+#include "fastjet/EECambridgePlugin.hh"
+#endif
 // end of the plugin list (don't modify this line)
 
 #include<vector>
@@ -128,6 +134,17 @@ int main(int argc, char** argv) {
   plugins.push_back(new fastjet::TrackJetPlugin(jet_radius));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif // ENABLE_PLUGIN_TRACKJET
+  // set up a atlascone
+#ifdef ENABLE_PLUGIN_ATLASCONE
+  plugins.push_back(new fastjet::ATLASConePlugin(jet_radius));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_ATLASCONE
+  // set up a eecambridge
+#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+  double ycut = 0.08;
+  plugins.push_back(new fastjet::EECambridgePlugin(ycut));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_EECAMBRIDGE
   // end of the plugins instantiation (don't modify this line)
 
   // set up kt and cam/aachen definitions

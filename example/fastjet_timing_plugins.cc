@@ -134,6 +134,10 @@
 ///
 ///   -trackjet     switch to the TrackJet plugin
 ///
+///   -atlascone     switch to the ATLASCone plugin
+///
+///   -eecambridge     switch to the EECambridge plugin
+///
 ///  end of plugins (don't delete this line)
 ///
 ///
@@ -183,6 +187,12 @@
 #endif 
 #ifdef ENABLE_PLUGIN_TRACKJET
 #include "fastjet/TrackJetPlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_ATLASCONE
+#include "fastjet/ATLASConePlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+#include "fastjet/EECambridgePlugin.hh"
 #endif
 // end of installed plugins inclusion (don't delete this line)
 
@@ -248,6 +258,9 @@ int main (int argc, char ** argv) {
   double overlap_threshold = cmdline.double_val("-overlap",0.5);
   overlap_threshold = cmdline.double_val("-f",overlap_threshold); 
   double seed_threshold = cmdline.double_val("-seed",1.0);
+
+  // for ee algorithms, allow to specify ycut
+  double ycut = cmdline.double_val("-ycut",0.08);
 
   // for printing jets to a file for reading by root
   string rootfile = cmdline.value<string>("-root","");
@@ -347,6 +360,18 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_TRACKJET
     is_unavailable("TrackJet");
 #endif // ENABLE_PLUGIN_TRACKJET
+  } else if (cmdline.present("-atlascone")) {
+#ifdef ENABLE_PLUGIN_ATLASCONE
+    jet_def = fj::JetDefinition(new fj::ATLASConePlugin(ktR));
+#else  // ENABLE_PLUGIN_ATLASCONE
+    is_unavailable("ATLASCone");
+#endif // ENABLE_PLUGIN_ATLASCONE
+  } else if (cmdline.present("-eecambridge")) {
+#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+    jet_def = fj::JetDefinition(new fj::EECambridgePlugin(ycut));
+#else  // ENABLE_PLUGIN_EECAMBRIDGE
+    is_unavailable("EECambridge");
+#endif // ENABLE_PLUGIN_EECAMBRIDGE
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]

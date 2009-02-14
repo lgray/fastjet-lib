@@ -65,6 +65,16 @@ fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/TrackJet
 fastjet_timing_plugins_LDADD += ../plugins/TrackJet/libTrackJetPlugin.la
 endif
 
+if BUILD_PLUGIN_ATLASCONE
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/ATLASCone
+fastjet_timing_plugins_LDADD += ../plugins/ATLASCone/libATLASConePlugin.la
+endif
+
+if BUILD_PLUGIN_EECAMBRIDGE
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/EECambridge
+fastjet_timing_plugins_LDADD += ../plugins/EECambridge/libEECambridgePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TESTS_ENVIRONMENT = $(SHELL)
