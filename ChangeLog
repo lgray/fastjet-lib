@@ -10,7 +10,7 @@
 
 	* plugins/ATLASCone: *** ADDED ***
 	  Added a plugin for the e+e- Cambridge algorithm.
-	  Default: enabled.
+	  Default: disabled.
 	  This plugin takes as a parameter a cone radius, a seed
 	    threshold (2.0 GeV by default) and an overlap
 	    threshold (default:0.5). See the header file for a comment on
