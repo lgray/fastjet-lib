@@ -1,10 +1,16 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* The ATLASCone plugin is enabled */
+#undef ENABLE_PLUGIN_ATLASCONE
+
 /* The CDFJetClu and CDFMidPoint plugins are enabled */
 #undef ENABLE_PLUGIN_CDFCONES
 
 /* The D0RunIICone plugin is enabled */
 #undef ENABLE_PLUGIN_D0RUNIICONE
+
+/* The EECambridge plugin is enabled */
+#undef ENABLE_PLUGIN_EECAMBRIDGE
 
 /* The NestedDefs plugin is enabled */
 #undef ENABLE_PLUGIN_NESTEDDEFS
