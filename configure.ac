@@ -205,6 +205,38 @@ AC_CONFIG_FILES( plugins/TrackJet/Makefile plugins/TrackJet/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_TRACKJET, test x$ENABLE_TRACKJET = xyes)
 AC_MSG_RESULT($ENABLE_TRACKJET)
 
+dnl ATLASCone
+AC_MSG_CHECKING([whether to build plugin ATLASCone])
+AC_ARG_ENABLE(atlascone,
+       [  --enable-atlascone       enables the ATLASCone plugin (default=no)],
+       [ENABLE_ATLASCONE="$enableval"],
+       [ENABLE_ATLASCONE="no"])
+if [[ "x$ENABLE_ATLASCONE" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_ATLASCONE, [], [The ATLASCone plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lATLASConePlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libATLASConePlugin.a "
+fi
+AC_CONFIG_FILES( plugins/ATLASCone/Makefile plugins/ATLASCone/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_ATLASCONE, test x$ENABLE_ATLASCONE = xyes)
+AC_MSG_RESULT($ENABLE_ATLASCONE)
+
+dnl EECambridge
+AC_MSG_CHECKING([whether to build plugin EECambridge])
+AC_ARG_ENABLE(eecambridge,
+       [  --enable-eecambridge       enables the EECambridge plugin (default=yes)],
+       [ENABLE_EECAMBRIDGE="$enableval"],
+       [ENABLE_EECAMBRIDGE="yes"])
+if [[ "x$ENABLE_EECAMBRIDGE" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_EECAMBRIDGE, [], [The EECambridge plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lEECambridgePlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libEECambridgePlugin.a "
+fi
+AC_CONFIG_FILES( plugins/EECambridge/Makefile plugins/EECambridge/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_EECAMBRIDGE, test x$ENABLE_EECAMBRIDGE = xyes)
+AC_MSG_RESULT($ENABLE_EECAMBRIDGE)
+
 dnl end of plugin section --- don't modify this line
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)
