@@ -32,13 +32,15 @@ Meta-algorithms
 - added NestedDefs plugin for daisy-chaining multiple jet definitions
   [still under testing; API may change in the future]
 
-new functionality
+New functionality
 -----------------
 - added subjet functions for viewing jet at particular dcut, etc.
 - added access to exclusive jets based on ycut as well as dcut (for e+e-)
 - added support for asymmetric rapidity ranges in GhostedAreaSpec
+- added class fastjet::NNH to help users implement algorithms with
+  user-chosen distance measure (see JadePlugin for an example)
 
-interface modifications
+Interface modifications
 -----------------------
 - removed default value of 0.5 for overlap_threshold in
   CDFMidPointPlugin and SISConePlugin constructors

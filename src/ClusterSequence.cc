@@ -106,8 +106,8 @@ void ClusterSequence::_initialise_and_run (
       // squared angular measure, make sure that the _R2 is defined
       // in a similar way.
       if (_Rparam > pi) {
-	// choose a value that ensures that back-toback particles will
-	//always recombine 
+	// choose a value that ensures that back-to-back particles will
+	// always recombine 
 	//_R2 = 4.0000000000001;
 	_R2 = 2 * ( 3.0 + cos(_Rparam) );
       } else {
