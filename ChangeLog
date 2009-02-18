@@ -1,3 +1,10 @@
+2009-02-18  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* m4/CGAL.m4: put the resulting info on CGAL compilation
+	  requirements into CGAL_xyz variables rather than the global
+	  vars.
+
+
 2009-02-18  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/NNH.hh: 
@@ -16,6 +23,7 @@
 	  The original NNH<BJ> continues to work without the Info in the
 	  constructors/initialisation calls.
 	
+
 2009-02-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* example/fastjet_timing_plugins.cc (main): 

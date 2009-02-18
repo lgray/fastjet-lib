@@ -122,20 +122,28 @@ if test "$acx_cgal_found" == no; then
     save_CXXFLAGS="$CXXFLAGS"
     save_CPPFLAGS="$CPPFLAGS"
 
+    CGAL_CXXFLAGS=""
+    CGAL_CPPFLAGS=""
+    CGAL_LDFLAGS=""
+    CGAL_LIBS=""
+
     dnl check if a directory has bene specified
     dnl in that case, we need to add a -I and -L arg to CXXFLAGS and LDFLAGS
     dnl Note that the headers will be searched fo in ${cgaldir}/include
     dnl and the libs in ${cgaldir}/libs
     if test \! -z "$with_cgaldir"; then
         AC_MSG_CHECKING(CGAL in ${with_cgaldir})
-	LDFLAGS="${LDFLAGS} -L${with_cgaldir}/lib"
+	LDFLAGS="${LDFLAGS} -L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
 	CXXFLAGS="${CXXFLAGS} -I${with_cgaldir}/include -frounding-math"
 	CPPFLAGS="${CPPFLAGS} -I${with_cgaldir}/include -frounding-math"
 
-	CGAL_CPPFLAGS="-I${with_cgaldir}/lib"
-	CGAL_CXXFLAGS="-I${with_cgaldir}/lib"
-	CGAL_LDFLAGS="-L${with_cgaldir}/lib"
+	CGAL_CPPFLAGS="-I${with_cgaldir}/include"
+	CGAL_CXXFLAGS="-I${with_cgaldir}/include"
+	CGAL_LIBS="-L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
     fi
+
+    CXXFLAGS=${CXXFLAGS}" -frounding-math"
+    CPPFLAGS=${CPPFLAGS}" -frounding-math"
 
     dnl search the CGAL headers
     dnl
@@ -159,7 +167,7 @@ if test "$acx_cgal_found" == no; then
 	CGAL_CXXFLAGS="${CGAL_CXXFLAGS} -frounding-math"
 	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
 	if test "$cgal_have_lib" == yes; then
-	    CGAL_LIBS="-lCGAL"
+	    CGAL_LIBS=${CGAL_LIBS}" -lCGAL"
 	    dnl AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="$CGAL_LIBS -lmpfr"])
 	    dnl AC_CHECK_LIB(gmp, main, [CGAL_LIBS="$CGAL_LIBS -lgmp"])
 	    dnl AC_CHECK_LIB(gmpxx, main, [CGAL_LIBS="$CGAL_LIBS -lgmpxx"])
@@ -171,12 +179,12 @@ if test "$acx_cgal_found" == no; then
     fi 
 
     dnl if the lib has not been found, reset the saved vars to their original values
-    if test "$acx_cgal_found" == no; then 
-       LIBS="$save_LIBS"
-       LDFLAGS="$save_LDFLAGS"
-       CXXFLAGS="$save_CXXFLAGS"
-       CPPFLAGS="$save_CPPFLAGS"
+    LIBS="$save_LIBS"
+    LDFLAGS="$save_LDFLAGS"
+    CXXFLAGS="$save_CXXFLAGS"
+    CPPFLAGS="$save_CPPFLAGS"
 
+    if test "$acx_cgal_found" == no; then 
        CGAL_CPPFLAGS=""
        CGAL_CXXFLAGS=""
        CGAL_LDFLAGS=""
