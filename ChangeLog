@@ -1,3 +1,21 @@
+2009-02-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/NNH.hh: 
+	  modified this so that one can now also use NNH<BJ,Info> where
+	  Info is an information class. One then uses the constructor
+	  
+              NNH<BJ,Info>(const vector<PseudoJet> & particles, Info * info)
+     
+	  and the briefjets get initialised via the call
+	
+	      BJ->init(const PseudoJet & jet, Info * info)
+
+	  if you want to make sure that info does get modified, use
+	  NNH<BJ, const Info>. 
+
+	  The original NNH<BJ> continues to work without the Info in the
+	  constructors/initialisation calls.
+	
 2009-02-13  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* example/fastjet_timing_plugins.cc (main): 

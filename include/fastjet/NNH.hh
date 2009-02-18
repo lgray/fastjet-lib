@@ -36,6 +36,27 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// dummy class, used as a default template argument
+class _NoInfo {};
+
+/// template that will help initialise a BJ with a PseudoJet and extra information
+template<class I> class NNHInfo {
+public:
+  NNHInfo()         : _info(NULL) {}
+  NNHInfo(I * info) : _info(info) {}
+  template<class NNBJ> void init_jet(NNBJ * briefjet, const fastjet::PseudoJet & jet, int index) { briefjet->init(jet, index, _info);}
+private:
+  I * _info;
+};
+
+/// Specialisation of NNHInfo for cases where there is no extra info
+template<> class NNHInfo<_NoInfo>  {
+public:
+  NNHInfo()               {}
+  NNHInfo(_NoInfo * info) {}
+  template<class NNBJ> void init_jet(NNBJ * briefjet, const fastjet::PseudoJet & jet, int index) { briefjet->init(jet, index);}
+};
+
 
 //----------------------------------------------------------------------
 /// Class to help solve closest pair problems with generic interparticle
@@ -47,13 +68,24 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// to efficient calculate interparticle distances and particle-beam
 /// distances.
 ///
-/// For the NNH class to function, BJ must also provide three member functions
+/// This class can be used with or without an extra "Information" template, 
+//// i.e. NNB<BJ> or NNH<BJ,I>
+/// 
+/// For the NNH<BJ> class to function in the case, BJ must provide three member functions
 ///  
 ///  - void   BJ::init(const PseudoJet & jet);       // initialise with a PseudoJet
 ///  - double BJ::distance(const BJ * other_bj_jet); // distance between this and other_bj_jet
 ///  - double BJ::beam_distance()                  ; // distance to the beam
 ///
-/// For an example of how the NNH class is used, see the Jade (and
+/// For the NNH<BJ,I> version to function, the BJ::init(...) member
+/// must accept an extra argument
+///
+///  - void   BJ::init(const PseudoJet & jet, I * info);   // initialise with a PseudoJet + info
+///
+/// where info might be a pointer to a class that contains, e.g., information
+/// about R, or other parameters of the jet algorithm 
+///
+/// For an example of how the NNH<BJ> class is used, see the Jade (and
 /// EECambridge) plugins
 ///
 /// NB: the NNH algorithm is expected N^2, but has a worst case of
@@ -63,13 +95,20 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// current class is already significantly faster than standard N^3
 /// implementations.
 ///
-template<class BJ> class NNH {
+///
+/// Implementation note: this class derives from NNHInfo, which deals
+/// with storing any information that 
+
+template<class BJ, class I = _NoInfo> class NNH : public NNHInfo<I> {
 public:
 
   /// constructor with an initial set of jets (which will be assigned indices
   /// 0 ... jets.size()-1
-  NNH(const std::vector<PseudoJet> & jets);
+  NNH(const std::vector<PseudoJet> & jets) {start(jets);}
+  NNH(const std::vector<PseudoJet> & jets, I * info) : NNHInfo<I>(info) {start(jets);}
   
+  void start(const std::vector<PseudoJet> & jets);
+
   /// return the dij_min and indices iA, iB, for the corresponding jets.
   /// If iB < 0 then iA recombines with the beam
   double dij_min(int & iA, int & iB);
@@ -116,6 +155,13 @@ private:
   public:
     void init(const PseudoJet & jet, int index) {
       BJ::init(jet);
+      other_init(index);
+    }
+    void init(const PseudoJet & jet, int index, I * info) {
+      BJ::init(jet, info);
+      other_init(index);
+    }
+    void other_init(int index) {
       _index = index;
       NN_dist = BJ::beam_distance();
       NN = NULL;
@@ -133,10 +179,8 @@ private:
 
 
 
-
-
 //----------------------------------------------------------------------
-template<class BJ> NNH<BJ>::NNH(const std::vector<PseudoJet> & jets) {
+template<class BJ, class I> void NNH<BJ,I>::start(const std::vector<PseudoJet> & jets) {
   n = jets.size();
   briefjets = new NNBJ[n];
   where_is.resize(2*n);
@@ -145,7 +189,8 @@ template<class BJ> NNH<BJ>::NNH(const std::vector<PseudoJet> & jets) {
   
   // initialise the basic jet info 
   for (int i = 0; i< n; i++) {
-    jetA->init(jets[i], i);
+    //jetA->init(jets[i], i);
+    init_jet(jetA, jets[i], i);
     where_is[i] = jetA;
     jetA++; // move on to next entry of briefjets
   }
@@ -165,7 +210,7 @@ template<class BJ> NNH<BJ>::NNH(const std::vector<PseudoJet> & jets) {
 
 
 //----------------------------------------------------------------------
-template<class BJ> double NNH<BJ>::dij_min(int & iA, int & iB) {
+template<class BJ, class I> double NNH<BJ,I>::dij_min(int & iA, int & iB) {
   // find the minimum of the diJ on this round
   double diJ_min = briefjets[0].NN_dist;
   int diJ_min_jet = 0;
@@ -187,7 +232,7 @@ template<class BJ> double NNH<BJ>::dij_min(int & iA, int & iB) {
 
 //----------------------------------------------------------------------
 // remove jetA from the list
-template<class BJ> void NNH<BJ>::remove_jet(int iA) {
+template<class BJ, class I> void NNH<BJ,I>::remove_jet(int iA) {
   NNBJ * jetA = where_is[iA];
   // now update our nearest neighbour info and diJ table
   // first reduce size of table
@@ -208,7 +253,7 @@ template<class BJ> void NNH<BJ>::remove_jet(int iA) {
 
 
 //----------------------------------------------------------------------
-template<class BJ> void NNH<BJ>::merge_jets(int iA, int iB, 
+template<class BJ, class I> void NNH<BJ,I>::merge_jets(int iA, int iB, 
 					const PseudoJet & jet, int index) {
 
   NNBJ * jetA = where_is[iA];
@@ -221,7 +266,8 @@ template<class BJ> void NNH<BJ>::merge_jets(int iA, int iB,
   if (jetA < jetB) swap(jetA,jetB);
 
   // initialise jetB based on the new jet
-  jetB->init(jet, index);
+  //jetB->init(jet, index);
+  init_jet(jetB, jet, index);
   // and record its position (making sure we have the space)
   if (index >= int(where_is.size())) where_is.resize(2*index);
   where_is[jetB->index()] = jetB;
@@ -264,7 +310,7 @@ template<class BJ> void NNH<BJ>::merge_jets(int iA, int iB,
 
 //----------------------------------------------------------------------
 // this function assumes that jet is not contained within begin...end
-template <class BJ> void NNH<BJ>::set_NN_crosscheck(NNBJ * jet, 
+template <class BJ, class I> void NNH<BJ,I>::set_NN_crosscheck(NNBJ * jet, 
 		    NNBJ * begin, NNBJ * end) {
   double NN_dist = jet->beam_distance();
   NNBJ * NN      = NULL;
@@ -287,7 +333,7 @@ template <class BJ> void NNH<BJ>::set_NN_crosscheck(NNBJ * jet,
 //----------------------------------------------------------------------
 // set the NN for jet without checking whether in the process you might
 // have discovered a new nearest neighbour for another jet
-template <class BJ>  void NNH<BJ>::set_NN_nocross(
+template <class BJ, class I>  void NNH<BJ,I>::set_NN_nocross(
                  NNBJ * jet, NNBJ * begin, NNBJ * end) {
   double NN_dist = jet->beam_distance();
   NNBJ * NN      = NULL;
