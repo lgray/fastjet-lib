@@ -108,12 +108,93 @@ AC_CONFIG_FILES( plugins/Makefile plugins/usage_examples/Makefile )
 CONFIG_LIBS_PLUGINS=""
 CONFIG_LIBS_PLUGINS_STATIC=""
 
+dnl deal with a couple of arguments to allow a whole bunch of plugins at a time
+
+dnl default plugin settings
+DEFAULT_ENABLE_SISCONE="yes"
+DEFAULT_ENABLE_CDFCONES="yes"
+DEFAULT_ENABLE_PXCONE="no"
+DEFAULT_ENABLE_D0RUNIICONE="no"
+DEFAULT_ENABLE_NESTEDDEFS="yes"
+DEFAULT_ENABLE_TRACKJET="no"
+DEFAULT_ENABLE_ATLASCONE="no"
+DEFAULT_ENABLE_EECAMBRIDGE="yes"
+
+dnl Allow to enable all the plugins at a go
+dnl Note: we do actually only change the default values, so that it allows for things like
+dnl          ./configure --enable-allplugins --disable-pxcone
+dnl       will enable everything but PxCone
+dnl Note: --disable-allplugins is automatically defined by autoconf
+dnl       Therefore, we implement it so as it does what it is supposed to do i.e. disable
+dnl       all the plugins. Again, --disable-allplugins --enable-siscone shall work and
+dnl       just enable the SISCone plugin
+AC_MSG_CHECKING([whether to build all plugins])
+AC_ARG_ENABLE(allplugins,
+       [  --enable-allplugins     enables all the FastJet plugins (default=no)],
+       [ENABLE_ALLPLUGINS="$enableval"],
+       [ENABLE_ALLPLUGINS="not set"])
+if [[ "x$ENABLE_ALLPLUGINS" == "xyes" ]] ; then
+       DEFAULT_ENABLE_SISCONE="yes"
+       DEFAULT_ENABLE_CDFCONES="yes"
+       DEFAULT_ENABLE_PXCONE="yes"
+       DEFAULT_ENABLE_D0RUNIICONE="yes"
+       DEFAULT_ENABLE_NESTEDDEFS="yes"
+       DEFAULT_ENABLE_TRACKJET="yes"
+       DEFAULT_ENABLE_ATLASCONE="yes"
+       DEFAULT_ENABLE_EECAMBRIDGE="yes" 
+fi
+if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
+       DEFAULT_ENABLE_SISCONE="no"
+       DEFAULT_ENABLE_CDFCONES="no"
+       DEFAULT_ENABLE_PXCONE="no"
+       DEFAULT_ENABLE_D0RUNIICONE="no"
+       DEFAULT_ENABLE_NESTEDDEFS="no"
+       DEFAULT_ENABLE_TRACKJET="no"
+       DEFAULT_ENABLE_ATLASCONE="no"
+       DEFAULT_ENABLE_EECAMBRIDGE="no" 
+fi
+AC_MSG_RESULT($ENABLE_ALLPLUGINS)
+
+dnl Allow to enable all the CXX plugins at a go
+dnl Note: we do actually only change the default values, so that it allows for things like
+dnl          ./configure --enable-allcxxplugins --disable-cdfcones
+dnl       will enable everything but PxCone
+dnl Note: --disable-allplugins is automatically defined by autoconf
+dnl       Therefore, we implement it so as it does what it is supposed to do i.e. disable
+dnl       all the plugins. Again, --disable-allcxxplugins --enable-siscone shall work and
+dnl       just enable the SISCone plugin
+AC_MSG_CHECKING([whether to build all CXX plugins])
+AC_ARG_ENABLE(allcxxplugins,
+       [  --enable-allcxxplugins  enables all the CXX FastJet plugins (default=no)],
+       [ENABLE_ALLCXXPLUGINS="$enableval"],
+       [ENABLE_ALLCXXPLUGINS="not set"])
+if [[ "x$ENABLE_ALLCXXPLUGINS" == "xyes" ]] ; then
+       DEFAULT_ENABLE_SISCONE="yes"
+       DEFAULT_ENABLE_CDFCONES="yes"
+       DEFAULT_ENABLE_D0RUNIICONE="yes"
+       DEFAULT_ENABLE_NESTEDDEFS="yes"
+       DEFAULT_ENABLE_TRACKJET="yes"
+       DEFAULT_ENABLE_ATLASCONE="yes"
+       DEFAULT_ENABLE_EECAMBRIDGE="yes" 
+fi
+if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
+       DEFAULT_ENABLE_SISCONE="no"
+       DEFAULT_ENABLE_CDFCONES="no"
+       DEFAULT_ENABLE_D0RUNIICONE="no"
+       DEFAULT_ENABLE_NESTEDDEFS="no"
+       DEFAULT_ENABLE_TRACKJET="no"
+       DEFAULT_ENABLE_ATLASCONE="no"
+       DEFAULT_ENABLE_EECAMBRIDGE="no" 
+fi
+AC_MSG_RESULT($ENABLE_ALLCXXPLUGINS)
+
+
 dnl SISCone
 AC_MSG_CHECKING([whether to build plugin SISCone])
 AC_ARG_ENABLE(siscone,
        [  --enable-siscone        enables the SISCone plugin (default=yes)],
        [ENABLE_SISCONE="$enableval"],
-       [ENABLE_SISCONE="yes"])
+       [ENABLE_SISCONE="$DEFAULT_ENABLE_SISCONE"])
 if [[ "x$ENABLE_SISCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_SISCONE, [], [The SISCone plugin is enabled])
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lSISConePlugin -lsiscone -lsiscone_spherical"
@@ -129,7 +210,7 @@ AC_MSG_CHECKING([whether to build plugin CDFCones])
 AC_ARG_ENABLE(cdfcones,
        [  --enable-cdfcones       enables the CDFJetClu and CDFMidPoint plugins (default=yes)],
        [ENABLE_CDFCONES="$enableval"],
-       [ENABLE_CDFCONES="yes"])
+       [ENABLE_CDFCONES="$DEFAULT_ENABLE_CDFCONES"])
 if [[ "x$ENABLE_CDFCONES" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_CDFCONES, [], [The CDFJetClu and CDFMidPoint plugins are enabled])
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lCDFConesPlugin"
@@ -144,7 +225,7 @@ AC_MSG_CHECKING([whether to build plugin PxCone])
 AC_ARG_ENABLE(pxcone,
        [  --enable-pxcone         enables the PxCone plugin (default=no)],
        [ENABLE_PXCONE="$enableval"],
-       [ENABLE_PXCONE="no"])
+       [ENABLE_PXCONE="$DEFAULT_ENABLE_PXCONE"])
 if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_PXCONE, [], [The PxCone plugin is enabled])
    dnl set up the fortran compiler and libs
@@ -162,7 +243,7 @@ AC_MSG_CHECKING([whether to build plugin D0RunIICone])
 AC_ARG_ENABLE(d0runiicone,
        [  --enable-d0runiicone    enables the D0RunIICone plugin (default=no)],
        [ENABLE_D0RUNIICONE="$enableval"],
-       [ENABLE_D0RUNIICONE="no"])
+       [ENABLE_D0RUNIICONE="$DEFAULT_ENABLE_D0RUNIICONE"])
 if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_D0RUNIICONE, [], [The D0RunIICone plugin is enabled])
    dnl set up the libs
@@ -178,7 +259,7 @@ AC_MSG_CHECKING([whether to build plugin NestedDefs])
 AC_ARG_ENABLE(nesteddefs,
        [  --enable-nesteddefs     enables the NestedDefs plugin (default=yes)],
        [ENABLE_NESTEDDEFS="$enableval"],
-       [ENABLE_NESTEDDEFS="yes"])
+       [ENABLE_NESTEDDEFS="$DEFAULT_ENABLE_NESTEDDEFS"])
 if [[ "x$ENABLE_NESTEDDEFS" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_NESTEDDEFS, [], [The NestedDefs plugin is enabled])
    dnl set up the libs
@@ -194,7 +275,7 @@ AC_MSG_CHECKING([whether to build plugin TrackJet])
 AC_ARG_ENABLE(trackjet,
        [  --enable-trackjet       enables the TrackJet plugin (default=no)],
        [ENABLE_TRACKJET="$enableval"],
-       [ENABLE_TRACKJET="no"])
+       [ENABLE_TRACKJET="$DEFAULT_ENABLE_TRACKJET"])
 if [[ "x$ENABLE_TRACKJET" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_TRACKJET, [], [The TrackJet plugin is enabled])
    dnl set up the libs
@@ -210,7 +291,7 @@ AC_MSG_CHECKING([whether to build plugin ATLASCone])
 AC_ARG_ENABLE(atlascone,
        [  --enable-atlascone       enables the ATLASCone plugin (default=no)],
        [ENABLE_ATLASCONE="$enableval"],
-       [ENABLE_ATLASCONE="no"])
+       [ENABLE_ATLASCONE="$DEFAULT_ENABLE_ATLASCONE"])
 if [[ "x$ENABLE_ATLASCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_ATLASCONE, [], [The ATLASCone plugin is enabled])
    dnl set up the libs
@@ -226,7 +307,7 @@ AC_MSG_CHECKING([whether to build plugin EECambridge])
 AC_ARG_ENABLE(eecambridge,
        [  --enable-eecambridge       enables the EECambridge plugin (default=yes)],
        [ENABLE_EECAMBRIDGE="$enableval"],
-       [ENABLE_EECAMBRIDGE="yes"])
+       [ENABLE_EECAMBRIDGE="$DEFAULT_ENABLE_EECAMBRIDGE"])
 if [[ "x$ENABLE_EECAMBRIDGE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_EECAMBRIDGE, [], [The EECambridge plugin is enabled])
    dnl set up the libs

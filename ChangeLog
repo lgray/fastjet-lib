@@ -1,3 +1,21 @@
+2009-03-02  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* configure.ac: 
+	  Added options --enable-allplugins and --enable-allcxxplugins
+	  Allow to enable all the (CXX) plugins at a go.
+	
+	  We do actually only change the set of default values, so
+	  combinations like
+            ./configure --enable-allplugins --disable-pxcone
+	  will enable everything but PxCone
+	
+	  On top of that, --disable-all(cxx)plugins is automatically
+	  defined by autoconf Therefore, we implement it so as it does
+	  what it is supposed to do i.e. disable all the plugins. Again,
+	  --disable-allplugins --enable-siscone will work and just enable
+	  the SISCone plugin
+
+
 2009-02-18  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* m4/CGAL.m4: put the resulting info on CGAL compilation
