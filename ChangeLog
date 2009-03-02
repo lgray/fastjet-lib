@@ -1,3 +1,8 @@
+2009-03-02  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl: 
+	  fixed commented entry for d0runiicone with 10events
+
 2009-03-02  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* configure.ac: 

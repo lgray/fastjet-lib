@@ -312,7 +312,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,siscone:-f:0.50,R0.60"=>    "2a88c96f6410bf721bdfc48046ac9be1",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,jetclu,R0.60"       =>    "49a43a2db9fe715b47b4e80daacf8edc",
   # ee algs ran on pp events
-  #"Pythia-PtMin50-LHC-1000ev.dat,nev10,d0runiicone,R0.60" => "f60a1928e1b584078611a257100a99a6",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev10,d0runiicone,R0.60" => "f60a1928e1b584078611a257100a99a6",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:0,R0.60" => "2c95f0f347a3ba4b35255ffc20da13d5",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:-1,R0.60" => "07aec8542d7687e0465958d3f2e5e86e",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,eekt,R0.60" => "7e8b864013f28ee0f4d8cbebe79abbd3",
