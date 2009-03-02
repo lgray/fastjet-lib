@@ -19,21 +19,35 @@ The full list of possible options can be obtained with ./configure
 		    ${prefix}/lib while the headers will be placed in
 		    ${prefix}/include/fastjet
 
-   --enable-shared  enable contruction of shared libraries
+   --disable-static
+   --disable-shared disable contruction of static/shared 
+                    libraries (by default both enabled)
 
    --enable-cgal    enable use of CGAL libraries, which are needed 
                     for the N ln N version of the k_t algorithm and
                     N^{3/2} version of anti-k_t; relevant mainly if you
                     expect to have N>15000.
 
+   --with-cgaldir=directory
+                    For CGAL >= 3.4 tells it where to look for CGAL, if
+                    it's not in a standard place.
+
    --with-cgalmakefile=makefile
-                    specify location of CGAL Makefile (which contains
-                    info on correct compilation flags when using
-                    CGAL).  In the absence of this flag, the
-                    environment variable $(CGAL_MAKEFILE) will be used
-                    to locate the CGAL Makefile. If this is absent too,
-		    the default location (/usr/share/cgal/cgal.mk) is 
-		    used.
+
+                    For CGAL <= 3.3.x specify location of CGAL
+                    Makefile (which contains info on correct
+                    compilation flags when using CGAL).  In the
+                    absence of this flag, the environment variable
+                    $(CGAL_MAKEFILE) will be used to locate the CGAL
+                    Makefile. If this is absent too, the default
+                    location (/usr/share/cgal/cgal.mk) is used.
+
+    --enable-allcxxplugins
+                    enable all C++ plugins, but not the Fortran ones
+
+    --enable-alllugins
+                    enable all plugins, including the Fortran ones
+                    (PxCone). 
 
     --enable-siscone          (default=yes)
                     enables the SISCone plugin
@@ -49,6 +63,9 @@ The full list of possible options can be obtained with ./configure
 		    enables the PxCone plugin (note this is in f77,
                     and so you may have to deal with C++/f77
                     compatibility issues)
+
+    etc.            many more plugins available: --help option lists
+                    them
 
 Then compile and install:
 
