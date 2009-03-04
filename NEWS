@@ -12,14 +12,12 @@ New pp algorithms
 - added implementation of generalised kt algorithm (genkt_algorithm) for pp
 - added D0RunIICone plugin [--enable-d0runiicone at configure time]
 - added ATLASCone Plugin
-- added CMSIterativeCone Plugin
 - added TrackJet Plugin (used by CDF in UE studies)
 
 Introduction of e+e- algorithms
 -------------------------------
 
 - added an implementation of the e+e- kt algorithm (ee_kt_algorithm),
-- added JadePlugin for the e+e- Jade algorithm
 - added EECambridgePlugin for the (original) e+e- Cambridge algorithm
 - added SISConeSphericalPlugin [enabled by default] for SISCone in
   e+e- and other spherical environments.
@@ -56,6 +54,12 @@ Interface modifications
 other modifications
 -----------------------
 - removed restriction that fastjet throws exception on empty events
+
+
+Still to come
+-------------
+- add JadePlugin for the e+e- Jade algorithm
+- add CMSIterativeCone Plugin
 
 
 notes
