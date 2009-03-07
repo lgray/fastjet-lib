@@ -24,7 +24,7 @@ $OUTPUT_AUTOFLUSH = 1;
 # things to configure
 $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl.gov'; #  g@gavin.fr 
 #$configOpts="--enable-cgal --enable-d0runiicone --enable-trackjet";
-$configOpts="--enable-shared --enable-cgal --enable-d0runiicone --enable-trackjet --enable-atlascone";
+$configOpts="--enable-shared --enable-cgal --enable-d0runiicone --enable-trackjet --enable-atlascone --enable-jade";
 $nevTestAll=1000;
 $mail=0;
 
@@ -56,18 +56,18 @@ while (1) {
     last;
   }
 
-  #--- svn update --------------------------------------------------------
-  &message("* running svn update\n");
-  $svnup=`svn update 2>&1`;
-  if ($svnup =~ /external .. revision [0-9]/i && 
-      ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
-      $svnup !~ /conflict/i) {
-    # all is OK, do nothing
-  } else {
-    $fail = "svn update";
-    $failDetails = $svnup;
-    last;
-  }
+  ###--- svn update --------------------------------------------------------
+  ##&message("* running svn update\n");
+  ##$svnup=`svn update 2>&1`;
+  ##if ($svnup =~ /external .. revision [0-9]/i && 
+  ##    ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
+  ##    $svnup !~ /conflict/i) {
+  ##  # all is OK, do nothing
+  ##} else {
+  ##  $fail = "svn update";
+  ##  $failDetails = $svnup;
+  ##  last;
+  ##}
 
   #--- make dist ------------------------------------------------------
   &message("* running make dist");
