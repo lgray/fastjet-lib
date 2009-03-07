@@ -75,6 +75,11 @@ fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/EECambridge
 fastjet_timing_plugins_LDADD += ../plugins/EECambridge/libEECambridgePlugin.la
 endif
 
+if BUILD_PLUGIN_JADE
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/Jade
+fastjet_timing_plugins_LDADD += ../plugins/Jade/libJadePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TESTS_ENVIRONMENT = $(SHELL)

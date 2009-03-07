@@ -64,6 +64,9 @@
 #ifdef ENABLE_PLUGIN_EECAMBRIDGE
 #include "fastjet/EECambridgePlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_JADE
+#include "fastjet/JadePlugin.hh"
+#endif
 // end of the plugin list (don't modify this line)
 
 #include<vector>
@@ -145,6 +148,11 @@ int main(int argc, char** argv) {
   plugins.push_back(new fastjet::EECambridgePlugin(ycut));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif // ENABLE_PLUGIN_EECAMBRIDGE
+  // set up a jade
+#ifdef ENABLE_PLUGIN_JADE
+  plugins.push_back(new fastjet::JadePlugin());
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_JADE
   // end of the plugins instantiation (don't modify this line)
 
   // set up kt and cam/aachen definitions

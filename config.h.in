@@ -12,6 +12,9 @@
 /* The EECambridge plugin is enabled */
 #undef ENABLE_PLUGIN_EECAMBRIDGE
 
+/* The Jade plugin is enabled */
+#undef ENABLE_PLUGIN_JADE
+
 /* The NestedDefs plugin is enabled */
 #undef ENABLE_PLUGIN_NESTEDDEFS
 
@@ -56,10 +59,6 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
-
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
-#undef LT_OBJDIR
 
 /* Name of package */
 #undef PACKAGE

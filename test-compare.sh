@@ -95,7 +95,7 @@ cp clear_patterns.orig clear_patterns.tmp
 
 # note: algs specified as alg:name mean that 'name' has to be checked for the 
 #       availability of 'alg'
-for plugin_tag in siscone sisconespheri:siscone jetclu:cdfcones midpoint:cdfcones pxcone d0runiicone trackjet atlascone eecambridge@single-ee-event.dat:eecambridge eecambridge,-ycut,0.01@single-ee-event.dat:eecambridge ; do
+for plugin_tag in siscone sisconespheri:siscone jetclu:cdfcones midpoint:cdfcones pxcone d0runiicone trackjet atlascone eecambridge@single-ee-event.dat:eecambridge eecambridge,-ycut,0.01@single-ee-event.dat:eecambridge jade,-excly,0.01@single-ee-event.dat:jade ; do
     plugin=${plugin_tag%%:*}
     tag=${plugin_tag##*:}
 
@@ -142,10 +142,10 @@ for alg in ${tested_algs}; do
     # additional parameters for 'fastjet_timing_plugins' can be specified using ',' to separate them.
     # we thus have to replace ',' by ' ' when we run fastjet_timing_plugins
     for R in ${Rvalues}; do
-	example/fastjet_timing_plugins -${alg_part//,/ } ${extra_args} -r ${R} < ${srcdir}/example/data/${event_part} \
+	example/fastjet_timing_plugins -${alg_part//,/ } ${extra_args} -r ${R} < ${srcdir}/example/data/${event_part} 2>&1 \
 	    | awk "{print \"${alg}:\"\$0}"  \
 	    | grep -v -E -f clear_patterns.tmp \
-            >> output.tmp
+            >> output.tmp 
     ##      | awk "{if (\$2 == \"exclusive\"){ exit;}; print \"${alg}:\"\$0}"  >> output.tmp
     done
 done

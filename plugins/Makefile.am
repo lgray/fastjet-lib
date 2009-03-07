@@ -23,9 +23,12 @@ endif
 if BUILD_PLUGIN_EECAMBRIDGE
 SUBDIRS += EECambridge
 endif
+if BUILD_PLUGIN_JADE
+SUBDIRS += Jade
+endif
 # end plugin section -- do not modify this line
 SUBDIRS += usage_examples
 
-DIST_SUBDIRS = EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
+DIST_SUBDIRS = Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
 
 EXTRA_DIST = makefile.static

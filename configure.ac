@@ -119,6 +119,7 @@ DEFAULT_ENABLE_NESTEDDEFS="yes"
 DEFAULT_ENABLE_TRACKJET="no"
 DEFAULT_ENABLE_ATLASCONE="no"
 DEFAULT_ENABLE_EECAMBRIDGE="yes"
+DEFAULT_ENABLE_JADE="yes"
 
 dnl Allow to enable all the plugins at a go
 dnl Note: we do actually only change the default values, so that it allows for things like
@@ -142,6 +143,7 @@ if [[ "x$ENABLE_ALLPLUGINS" == "xyes" ]] ; then
        DEFAULT_ENABLE_TRACKJET="yes"
        DEFAULT_ENABLE_ATLASCONE="yes"
        DEFAULT_ENABLE_EECAMBRIDGE="yes" 
+       DEFAULT_ENABLE_JADE="yes"
 fi
 if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
        DEFAULT_ENABLE_SISCONE="no"
@@ -152,6 +154,7 @@ if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
        DEFAULT_ENABLE_TRACKJET="no"
        DEFAULT_ENABLE_ATLASCONE="no"
        DEFAULT_ENABLE_EECAMBRIDGE="no" 
+       DEFAULT_ENABLE_JADE="no"
 fi
 AC_MSG_RESULT($ENABLE_ALLPLUGINS)
 
@@ -176,6 +179,7 @@ if [[ "x$ENABLE_ALLCXXPLUGINS" == "xyes" ]] ; then
        DEFAULT_ENABLE_TRACKJET="yes"
        DEFAULT_ENABLE_ATLASCONE="yes"
        DEFAULT_ENABLE_EECAMBRIDGE="yes" 
+       DEFAULT_ENABLE_JADE="yes"
 fi
 if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
        DEFAULT_ENABLE_SISCONE="no"
@@ -185,6 +189,7 @@ if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
        DEFAULT_ENABLE_TRACKJET="no"
        DEFAULT_ENABLE_ATLASCONE="no"
        DEFAULT_ENABLE_EECAMBRIDGE="no" 
+       DEFAULT_ENABLE_JADE="no"
 fi
 AC_MSG_RESULT($ENABLE_ALLCXXPLUGINS)
 
@@ -317,6 +322,22 @@ fi
 AC_CONFIG_FILES( plugins/EECambridge/Makefile plugins/EECambridge/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_EECAMBRIDGE, test x$ENABLE_EECAMBRIDGE = xyes)
 AC_MSG_RESULT($ENABLE_EECAMBRIDGE)
+
+dnl Jade
+AC_MSG_CHECKING([whether to build plugin Jade])
+AC_ARG_ENABLE(jade,
+       [  --enable-jade       enables the Jade plugin (default=yes)],
+       [ENABLE_JADE="$enableval"],
+       [ENABLE_JADE="$DEFAULT_ENABLE_JADE"])
+if [[ "x$ENABLE_JADE" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_JADE, [], [The Jade plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lJadePlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libJadePlugin.a "
+fi
+AC_CONFIG_FILES( plugins/Jade/Makefile plugins/Jade/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_JADE, test x$ENABLE_JADE = xyes)
+AC_MSG_RESULT($ENABLE_JADE)
 
 dnl end of plugin section --- don't modify this line
 

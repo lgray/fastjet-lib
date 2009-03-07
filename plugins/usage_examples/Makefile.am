@@ -63,6 +63,12 @@ many_algs_example_CXXFLAGS += -I${srcdir}/../EECambridge
 many_algs_example_LDADD += ../EECambridge/libEECambridgePlugin.la
 endif
 
+# add Jade-related parts
+if BUILD_PLUGIN_JADE
+many_algs_example_CXXFLAGS += -I${srcdir}/../Jade
+many_algs_example_LDADD += ../Jade/libJadePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TEST_ENVIRONMENT = $(SHELL)

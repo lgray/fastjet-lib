@@ -3696,3 +3696,75 @@ eecambridge,-ycut,0.01@single-ee-event.dat:Algorithm: EECambridge plugin with yc
 eecambridge,-ycut,0.01@single-ee-event.dat:    0     -1.15170682      2.32911879     15.97361000
 eecambridge,-ycut,0.01@single-ee-event.dat:    1     -0.87226190      6.08000690     10.33564630
 eecambridge,-ycut,0.01@single-ee-event.dat:    2      1.20533914      4.80278108      9.55011959
+jade,-excly,0.01@single-ee-event.dat:#--------------------------------------------------------------------------
+jade,-excly,0.01@single-ee-event.dat:#                      FastJet release 2.4-devel
+jade,-excly,0.01@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+jade,-excly,0.01@single-ee-event.dat:#                         http://www.fastjet.fr
+jade,-excly,0.01@single-ee-event.dat:#
+jade,-excly,0.01@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+jade,-excly,0.01@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+jade,-excly,0.01@single-ee-event.dat:# external jet-finder plugins.
+jade,-excly,0.01@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+jade,-excly,0.01@single-ee-event.dat:#
+jade,-excly,0.01@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+jade,-excly,0.01@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+jade,-excly,0.01@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+jade,-excly,0.01@single-ee-event.dat:#-------------------------------------------------------------------------
+jade,-excly,0.01@single-ee-event.dat:iev 0: number of particles = 70
+jade,-excly,0.01@single-ee-event.dat:strategy used =  plugin strategy
+jade,-excly,0.01@single-ee-event.dat:Algorithm: e+e- JADE algorithm plugin (FastJet version 2.4-devel)
+jade,-excly,0.01@single-ee-event.dat:    0      0.00000000      4.71238926      0.00000000
+jade,-excly,0.01@single-ee-event.dat:Printing exclusive jets for ycut = 0.01
+jade,-excly,0.01@single-ee-event.dat:FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care.
+jade,-excly,0.01@single-ee-event.dat:    0     -1.17795492      2.29605689     15.99176640
+jade,-excly,0.01@single-ee-event.dat:    1      1.01976731      4.78234332     11.40383611
+jade,-excly,0.01@single-ee-event.dat:    2     -0.79247455      6.08579095     10.38698316
+jade,-excly,0.01@single-ee-event.dat:    3      1.64554902      1.82426319      1.49364667
+jade,-excly,0.01@single-ee-event.dat:#--------------------------------------------------------------------------
+jade,-excly,0.01@single-ee-event.dat:#                      FastJet release 2.4-devel
+jade,-excly,0.01@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+jade,-excly,0.01@single-ee-event.dat:#                         http://www.fastjet.fr
+jade,-excly,0.01@single-ee-event.dat:#
+jade,-excly,0.01@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+jade,-excly,0.01@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+jade,-excly,0.01@single-ee-event.dat:# external jet-finder plugins.
+jade,-excly,0.01@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+jade,-excly,0.01@single-ee-event.dat:#
+jade,-excly,0.01@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+jade,-excly,0.01@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+jade,-excly,0.01@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+jade,-excly,0.01@single-ee-event.dat:#-------------------------------------------------------------------------
+jade,-excly,0.01@single-ee-event.dat:iev 0: number of particles = 70
+jade,-excly,0.01@single-ee-event.dat:strategy used =  plugin strategy
+jade,-excly,0.01@single-ee-event.dat:Algorithm: e+e- JADE algorithm plugin (FastJet version 2.4-devel)
+jade,-excly,0.01@single-ee-event.dat:    0      0.00000000      4.71238926      0.00000000
+jade,-excly,0.01@single-ee-event.dat:Printing exclusive jets for ycut = 0.01
+jade,-excly,0.01@single-ee-event.dat:FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care.
+jade,-excly,0.01@single-ee-event.dat:    0     -1.17795492      2.29605689     15.99176640
+jade,-excly,0.01@single-ee-event.dat:    1      1.01976731      4.78234332     11.40383611
+jade,-excly,0.01@single-ee-event.dat:    2     -0.79247455      6.08579095     10.38698316
+jade,-excly,0.01@single-ee-event.dat:    3      1.64554902      1.82426319      1.49364667
+jade,-excly,0.01@single-ee-event.dat:#--------------------------------------------------------------------------
+jade,-excly,0.01@single-ee-event.dat:#                      FastJet release 2.4-devel
+jade,-excly,0.01@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+jade,-excly,0.01@single-ee-event.dat:#                         http://www.fastjet.fr
+jade,-excly,0.01@single-ee-event.dat:#
+jade,-excly,0.01@single-ee-event.dat:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+jade,-excly,0.01@single-ee-event.dat:# clustering using fast geometric algorithms, with area measures and optional
+jade,-excly,0.01@single-ee-event.dat:# external jet-finder plugins.
+jade,-excly,0.01@single-ee-event.dat:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+jade,-excly,0.01@single-ee-event.dat:#
+jade,-excly,0.01@single-ee-event.dat:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+jade,-excly,0.01@single-ee-event.dat:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+jade,-excly,0.01@single-ee-event.dat:# and CGAL: http://www.cgal.org/.
+jade,-excly,0.01@single-ee-event.dat:#-------------------------------------------------------------------------
+jade,-excly,0.01@single-ee-event.dat:iev 0: number of particles = 70
+jade,-excly,0.01@single-ee-event.dat:strategy used =  plugin strategy
+jade,-excly,0.01@single-ee-event.dat:Algorithm: e+e- JADE algorithm plugin (FastJet version 2.4-devel)
+jade,-excly,0.01@single-ee-event.dat:    0      0.00000000      4.71238926      0.00000000
+jade,-excly,0.01@single-ee-event.dat:Printing exclusive jets for ycut = 0.01
+jade,-excly,0.01@single-ee-event.dat:FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care.
+jade,-excly,0.01@single-ee-event.dat:    0     -1.17795492      2.29605689     15.99176640
+jade,-excly,0.01@single-ee-event.dat:    1      1.01976731      4.78234332     11.40383611
+jade,-excly,0.01@single-ee-event.dat:    2     -0.79247455      6.08579095     10.38698316
+jade,-excly,0.01@single-ee-event.dat:    3      1.64554902      1.82426319      1.49364667

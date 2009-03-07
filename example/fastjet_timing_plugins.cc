@@ -138,6 +138,8 @@
 ///
 ///   -eecambridge     switch to the EECambridge plugin
 ///
+///   -jade     switch to the Jade plugin
+///
 ///  end of plugins (don't delete this line)
 ///
 ///
@@ -193,6 +195,9 @@
 #endif
 #ifdef ENABLE_PLUGIN_EECAMBRIDGE
 #include "fastjet/EECambridgePlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_JADE
+#include "fastjet/JadePlugin.hh"
 #endif
 // end of installed plugins inclusion (don't delete this line)
 
@@ -372,6 +377,12 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_EECAMBRIDGE
     is_unavailable("EECambridge");
 #endif // ENABLE_PLUGIN_EECAMBRIDGE
+  } else if (cmdline.present("-jade")) {
+#ifdef ENABLE_PLUGIN_JADE
+    jet_def = fj::JetDefinition(new fj::JadePlugin());
+#else  // ENABLE_PLUGIN_JADE
+    is_unavailable("Jade");
+#endif // ENABLE_PLUGIN_JADE
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]
