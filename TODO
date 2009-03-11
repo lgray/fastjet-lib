@@ -20,15 +20,15 @@ For 2.4
 - [done] make sure interface for  e+e- kt, etc., is documented
 - [done] moved v1 example out of the way
 - [done] add --enable-allplugins and --enable-allcxxplugins?
+- [done] made sure svn property keyword ID is set on all files
 - [done] support for CGAL-3.4
 - [done] add ATLAS                              
--        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
 - [done] add JADE 
 - [done] add EECambridge   
+-        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
 -        deprecated: file, manual, FAQ?
 -        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
 -        Document CircularRange. Check documentation of RangeDefinition
--        put version number into code somehow???
 -        add/verify manual entry about compilation
 -        check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
 -        update abstract of manual
@@ -36,7 +36,6 @@ For 2.4
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap
--        made sure svn property keyword ID is set on all files
 
 - default f=0.75 for cones:
    a. change th edefault f to 0.75 in ctor                       [NO]
@@ -53,6 +52,7 @@ TWO MAJOR QUESTIONS FOR PSEUDOJET:
 -------------
 For 2.5
 -------------
+-        put version number into code somehow???
 -        rethink RangeDefinition hierarchy, including set_position(...),
          addition of (circular, donut) local ranges, etc.
 -        versioning of library names (like libfastjet-2.5.2.so)?
