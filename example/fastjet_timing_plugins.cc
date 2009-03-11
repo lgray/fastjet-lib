@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: fastjet_timing.cc 293 2006-08-17 19:38:38Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //

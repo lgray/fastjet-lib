@@ -2,7 +2,7 @@
 #define __NNH_HH__
 
 //STARTHEADER
-// $Id: ClusterSequence.cc 1429 2009-02-12 16:41:55Z salam $
+// $Id$
 //
 // Copyright (c) 2009, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //

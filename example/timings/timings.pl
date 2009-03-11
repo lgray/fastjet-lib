@@ -17,6 +17,9 @@ $baserep = 700;
 # 100          -> ktjet   
 # 101, 102     -> JetClu , MidPoint
 #
+# 100X         -> cambridge series
+# 200X         -> antikt series
+
 # 201, 202     -> plugins for JetClu and MidPoint
 # 203          -> plugin for pxcone
 # 204          -> plugin for siscone
@@ -24,13 +27,14 @@ $baserep = 700;
 #############################################
 
 # set of strategies to run
+@strategy  = (1,-4,-3,2,101);
 #@strategy = (-2,-1,0,2,10);
 #@strategy = (-3,-1,2);
 #@strategy = (3,4);
 #@strategy = (-4,-3,-1,2,12);
 #@strategy = (1);
 #@strategy = (1001,1012,996,2001,2012,1996);
-@strategy = (1);
+#@strategy = (1);
 #@strategy = (12);
 #@strategy = (102);
 #@strategy = (-3,-1,0,2,10,11,102);

@@ -1,3 +1,8 @@
+2009-03-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* set svn:keywords to be "Id" on a bunch of files where this was
+	  missing 
+
 2009-03-07  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* plugins/Jade:                      *** ADDED *** 

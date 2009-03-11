@@ -23,6 +23,7 @@ Introduction of e+e- algorithms
   e+e- and other spherical environments.
 - native implementation of generalised kt algorithm for e+e- (ee_genkt_algorithm)
   [also provides access to e+e- form of anti-kt alg, conical jets on a sphere]
+- added JadePlugin for the e+e- Jade algorithm
 
 Meta-algorithms
 ----------------
@@ -58,7 +59,6 @@ other modifications
 
 Still to come
 -------------
-- add JadePlugin for the e+e- Jade algorithm
 - add CMSIterativeCone Plugin
 
 

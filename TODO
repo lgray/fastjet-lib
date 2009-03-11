@@ -20,10 +20,11 @@ For 2.4
 - [done] make sure interface for  e+e- kt, etc., is documented
 - [done] moved v1 example out of the way
 - [done] add --enable-allplugins and --enable-allcxxplugins?
--        support for CGAL-3.4???                                [TEST IT]
--        add ATLAS and CMS cones to release?    [YES, AS BETA + CHECK DEFAULTS]
--        add JADE                               [in experimental & tested]
--        add EECambridge                        [in experimental & tested]
+- [done] support for CGAL-3.4
+- [done] add ATLAS                              
+-        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
+- [done] add JADE 
+- [done] add EECambridge   
 -        deprecated: file, manual, FAQ?
 -        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
 -        Document CircularRange. Check documentation of RangeDefinition

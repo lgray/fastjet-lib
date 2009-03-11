@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: pxcone_example.cc 380 2006-12-07 09:25:46Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
 //

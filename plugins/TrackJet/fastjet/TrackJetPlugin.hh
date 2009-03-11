@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: TrackJetPlugin.hh 1240 2008-06-28 18:43:47Z soyez $
+// $Id$
 //
 // Copyright (c) 2007-2008, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
