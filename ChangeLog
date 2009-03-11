@@ -1,5 +1,11 @@
 2009-03-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/nightly-check.pl: 
+	  switched over to using CGAL 3.4.
+
+	* plugins/CDFCones/fastjet/CDFJetCluPlugin.hh: 
+	  removed default overlap for jetclu...
+
 	* set svn:keywords to be "Id" on a bunch of files where this was
 	  missing 
 

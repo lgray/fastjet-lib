@@ -45,7 +45,7 @@ class CDFJetCluPlugin : public JetDefinition::Plugin {
 public:
   /// a compact constructor
   CDFJetCluPlugin (double   cone_radius, 
-		   double   overlap_threshold = 0.5, 
+		   double   overlap_threshold, 
 		   double   seed_threshold = 1.0,
 		   int      iratch = 1) : 
     _seed_threshold    ( seed_threshold    ),    

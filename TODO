@@ -25,14 +25,14 @@ For 2.4
 - [done] add ATLAS                              
 - [done] add JADE 
 - [done] add EECambridge   
+- [done] documentation in manual of all the plugins
+- [done] add/verify manual entry about compilation
+- [done] check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
+- [done] update abstract of manual
+- [1/2]  figure what to do about acknowledgements in manual?
 -        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
--        deprecated: file, manual, FAQ?
 -        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
 -        Document CircularRange. Check documentation of RangeDefinition
--        add/verify manual entry about compilation
--        check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
--        update abstract of manual
--        figure what to do about acknowledgements in manual?
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap
@@ -52,6 +52,9 @@ TWO MAJOR QUESTIONS FOR PSEUDOJET:
 -------------
 For 2.5
 -------------
+-        list of deprecated functions: file, manual, FAQ?
+-        rethink the manual seriously?
+-        plugins should "know" whether they support other recombination schemes
 -        put version number into code somehow???
 -        rethink RangeDefinition hierarchy, including set_position(...),
          addition of (circular, donut) local ranges, etc.

@@ -1,13 +1,16 @@
 %%
 %% TO DO:
 %%
+%%
 %%  . maybe overload the exclusive routines by allowing access
 %%    interfaces such as exclusive_jets(jet, dcut) to find the
 %%    subjets of jet.
 %% 
 %%  . document the cluster history structures?
 %%  
-
+%%  . refs for trackjet and other plugins?
+%%
+%%  . issue of recomb. schemes and plugins.
 \documentclass[12pt,a4]{article}
 
 
@@ -64,6 +67,7 @@
 \newcommand{\ie}{{\it i.e.}\ }
 \newcommand{\eg}{{\it e.g.}\ }
 \newcommand{\ee}{e^+e^-}
+\newcommand{\Dzero}{D0\!\!\!/\xspace}
 
 \title{FastJet 2.4 [devel] user manual}
 \author{Matteo Cacciari, Gavin P. Salam\\
@@ -82,12 +86,18 @@
 \maketitle
 
 \begin{abstract}
-  FastJet provides fast ($N\ln N, N^2$) implementations of the
-  longitudinally invariant $k_t$, anti-$k_t$ and  Cambridge/Aachen jet 
-  algorithms, based in part on tools and methods from the Computational Geometry
-  community. It also provides ways of determining jet areas. Other jet
-  algorithms can be accessed from the FastJet interface using a plugin
-  mechanism.
+  \fastjet provides fast ($N\ln N, N^2$) implementations of the
+  longitudinally invariant $k_t$, anti-$k_t$ and Cambridge/Aachen jet
+  algorithms for $pp$ collisions, based in part on tools and methods
+  from the Computational Geometry community, as well as a native
+  implementation of the $\ee$ $k_t$ algorithm.
+  %
+  Further jet algorithms, including most of the other commonly used
+  $pp$ and $\ee$ algorithms, can be accessed from the FastJet
+  interface using a plugin mechanism.
+  %
+  \fastjet also provides ways of determining jet areas.
+  % 
 \end{abstract}
 
 %----------------------------------------------------------------------
@@ -202,7 +212,7 @@ int main () {
   ClusterSequence cs(particles, jet_def);
   vector<PseudoJet> jets = cs.inclusive_jets();
 
-  // print the jets</span>
+  // print the jets
   cout <<   "        pt y phi" << endl;
   for (unsigned i = 0; i < jets.size(); i++) {
     cout << "jet " << i << ": "<< jets[i].perp() << " " 
@@ -612,6 +622,17 @@ provided --- using a $d_{cut}$ below its return value is guaranteed to
 provide a final state with more than $n$ jets, while using a larger
 value will return a final state with $n$ or fewer jets.
 
+For $\ee$ collisions, where it is usual to refer to $y_{ij} =
+d_{ij}/Q^2$ ($Q$ is the total (visible) energy) \fastjet provides the
+following methods:
+\begin{lstlisting}
+  double exclusive_ymerge (int njets);
+  double exclusive_ymerge_max (int njets);
+  int n_exclusive_jets_ycut (double ycut);
+  std::vector<PseudoJet> exclusive_jets_ycut (double ycut);
+\end{lstlisting}
+which are relevant for use with the $\ee$ $k_t$ algorithm and with the
+Jade plugin (section~\ref{sec:ee-jade}).
 
 Finally the user may obtain the constituent particles of a given jet,
 via
@@ -700,7 +721,7 @@ follows:
 \subsection{Version information}
 \label{sec:version-information}
 
-Information on the version of FastJet that is being run can be
+Information on the version of \fastjet that is being run can be
 obtained by making a call to 
 \begin{lstlisting}
   std::string fastjet::fastjet_version_string();
@@ -711,14 +732,14 @@ In line with recommendations for other programs in high-energy
 physics, the user may wish to include this information in publications
 and plots so as to facilitate reproducibility of the
 jet-finding.\footnote{While we devote significant effort to ensuring
-  that all versions of FastJet give identical, correct results, we are
+  that all versions of \fastjet give identical, correct results, we are
   obviously not able to completely guarantee the absence of bugs that
   might have an effect on the jet finding. }
 %
 We recommend also that the main elements of the
 \ttt{jet\_def.description()} be provided, together with citations to
 the original article that defines the algorithm, as well as to the
-FastJet paper~\cite{fastjet}.
+\fastjet paper~\cite{fastjet}.
 
 %======================================================================
 \section{Example program}
@@ -882,7 +903,7 @@ anti-$k_t$ ($p=-1$).
 {Generalised $\boldsymbol{k_t}$ algorithm for $\boldsymbol{e^+e^-}$ collisions}
 \label{sec:ee-algs}
 
-FastJet also provides native implementations of clustering algorithms
+\fastjet also provides native implementations of clustering algorithms
 in spherical coordinates (specifically for $e^+e^-$ collisions) along
 the lines of the original $k_t$ algorithms~\cite{eekt}, but extended
 in analogy with the generalised $pp$ algorithm of~\cite{antikt} and
@@ -936,7 +957,7 @@ When merging particles in step 2 of the clustering procedure, one must
 specify how to combine the momenta. The simplest procedure
 ($E$-scheme) simply adds the four-vectors. This has been advocated as
 a standard in~\cite{RunII-jet-physics}, and is the default option in
-FastJet. 
+\fastjet. 
 
 
 
@@ -2140,30 +2161,280 @@ memory usage of the subsequent split--merge step). An alternative, which
 has been found to be acceptable in most situations, is to use a passive
 area, since this is relatively fast to calculate with SISCone.
 
+
 %----------------------------------------------------------------------
-\subsection{Summary of algorithms}
-\label{sec:summary-algorithms}
+\subsection{Other plugins for $pp$ }
+\label{sec:other-pp-plugins}
 
-\begin{tabular}{lr|l|c|c|c|c}
-  \multicolumn{7}{c}{Native algorithms}\\\hline
-  alg.                   &  &  \ttt{JetAlgorithm}        & proc.    & params & speed & mem.
-  \\\hline                                                           
-  Long.\ inv.\ $k_t$ &\cite{} & \ttt{kt\_algorithm} & pp            & $R$    &  $N \ln N$ & $N$ \\
-  Cambridge/Aachen &\cite{} & \ttt{cambridge\_algorithm} & pp       & $R$    &  $N \ln N$ & $N$\\
-  anti-$k_t$ &\cite{} & \ttt{antikt\_algorithm} & pp                & $R$    &  $Nn^{1/2}$ & $N$ \\
-  generalised $k_t$ &\cite{} & \ttt{genkt\_algorithm} & pp          & $R,p$  &  $N \ln N$ -- $Nn^{1/2}$ & $N$
-  \\ \hline                                                          
-  $e^+e^-$ $k_t$ &\cite{} & \ttt{ee\_kt\_algorithm} & $\ee$         & $-$    &  $N^2$ & $N$ \\
-  $e^+e^-$ gen-$k_t$ &\cite{} & \ttt{ee\_genkt\_algorithm} & $\ee$  & $R,p$  &  $N^2$ & $N$ \\
-\end{tabular}
+Not all plugins are enabled by default in \fastjet. At configuration
+time \verb:./configure.sh --help: will indicate which ones get enabled
+by default. To enable all plugins, run \verb|configure| with the
+argument \verb|--enable-allplugins|, while to enable all but PxCone
+(which requires fortran, and can introduce link-time issues) use
+\verb|--enable-allcxxplugins|.
+
+As of \fastjet version 2.4, this section is partially incomplete (in
+particular it misses many references). This will hopefully evolve for
+future versions.
+
+All plugins are in the \verb:fastjet: namespace. Below we show the
+file that needs to be included and the constructor for each plugin. 
+
+Except where stated, the usual way to access jets from these plugins
+is through \verb|ClusterSequence::inclusive_jets()|.
+
+\subsubsection{CDF Midpoint.} 
+One of the two algorithms used by CDF in Run~II of the Tevatron, based
+on \cite{RunII-jet-physics}. It is a midpoint-type iterative cone with
+a split--merge step.
+%
+\begin{lstlisting}
+  #include ``fastjet/CDFCones.hh''
+  ///...
+  CDFMidPointPlugin(double R, 
+                    double overlap_threshold,
+                    double seed_threshold = 1.0, 
+                    double cone_area_fraction = 1.0);
+\end{lstlisting}
+The overlap threshold ($f$) used by CDF is usually $0.5$, the seed
+threshold is $1$\,GeV and in most measurements the cone area fraction
+is $1$. With an area fraction $< 1$ this becomes the searchcone
+algorithm of \cite{EHT}.
+
+Further control over the plugin can be obtained by consulting the
+header file.
+
+The underlying code for this algorithm was taken from a webpage
+provided by Joey Huston (with minor modifications to ensure reasonable
+run times with optimising compilers for 32-bit intel processors ---
+these modifications do not affect the final jets).
+
+\subsubsection{CDF JetClu.}
+The other algorithm used by CDF during Run~II, as well as their main
+algorithm during Run~I.
+\begin{lstlisting}
+  #include ``fastjet/CDFCones.hh''
+  ///...
+  CDFJetCluPlugin (double   cone_radius, 
+		   double   overlap_threshold, 
+		   double   seed_threshold = 1.0,
+		   int      iratch = 1);
+\end{lstlisting}
+This is an iterative cone with split-merge and optional ``ratcheting''
+if \verb|iratch == 1| (particles that appear in one iteration fo a
+cone are retained in future iterations).
+
+Further control over the plugin can be obtained by consulting the
+header file.
+
+The underlying code for this algorithm was taken from a webpage
+provided by Joey Huston.
+
+\subsubsection{\Dzero Run II cone}
+%
+The main algorithm used by \Dzero in Run~II of the Tevatron, which is
+a midpoint type iterative cone with split-merge.
+\begin{lstlisting}
+  #include ``fastjet/D0RunIIConePlugin.hh''
+  ///...
+  D0RunIIConePlugin (double R, 
+                     double min_jet_Et , 
+                     double split_ratio = 0.5);
+\end{lstlisting}
+Instead of a seed threshold, the algorithm places a cut on the minimum
+$E_t$ of the cones during iteration (related to \verb|min_jet_Et|).
+%
+The \verb|split_ratio| is the same as the overlap threshold in other
+split-merge based algorithms.
+%
+It is the \fastjet authors' understanding that two values have been
+used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
+6\,GeV (in more recent publications).
+
+The underlying code for this algorithm was provided by
+Lars Sonnenschein.
+
+\subsubsection{ATLAS iterative cone}
+%
+The (iterative) cone (with split-merge) algorithm used by ATLAS during
+the preparation for the LHC. 
+\begin{lstlisting}
+  #include ``fastjet/AtlasConePlugin.hh''
+  ///...
+  ATLASConePlugin (double R, 
+                   double seedPt = 2.0, 
+                   double f = 0.5);
+\end{lstlisting}
+$f$ is the overlap threshold
+
+The underlying code for this algorithm was extracted from SpartyJet.
 
 
-\begin{tabular}{lr|c|c|c|c}
-  \multicolumn{6}{c}{Plugin algorithms}\\\hline
-  alg.                   &          & proc.    & params & speed & mem.\\
-  SISConePlugin & \cite{} & pp & $R,f,\ldots$ & $N n \ln n$ & $N^2$
-  \\\hline                                                           
-\end{tabular}
+\subsubsection{PxCone}
+A fortran plugin for the PxCone algorithm, which is an iterative cone
+with midpoints and a split-drop procedure
+\begin{lstlisting}
+  #include ``fastjet/PxConePlugin.hh''
+  ///...
+  PxConePlugin (double  cone_radius      , 
+		double  min_jet_energy = 5.0  , 
+		double  overlap_threshold = 0.5,
+                bool    E_scheme_jets = false); 
+\end{lstlisting}
+with a threshold on the minimum cone transverse energy if it is to be
+included in the split-drop stage. 
+%
+If \verb|E_scheme_jets| is true then the plugin applies an $E$-scheme
+recombination to provide the momenta of the final jets (by default an
+$E_t$ type recombination scheme is used).
+
+The base code for this plugin is written in Fortran and, on some
+systems, problems have been reported at the link stage due to mixing
+Fortran and C++.
+%
+The Fortran code has been modified by the \fastjet authors to provide
+the same jets regardless of the order of the input particles.
+%
+This involved a small modification of the midpoint procedure, which
+can have a minor effect on the final jets and should make the algorithm
+correspond to the description of \cite{Seymour:2006vv}.
+
+The underlying code for this algorithm was taken from a google search
+for PxCone!
+
+
+\subsubsection{TrackJet}
+%
+This algorithm has been used at the Tevatron for identifying jets from
+charged-particle tracks in underlying-event studies (a citation is
+needed here!).
+%
+\begin{lstlisting}
+  #include ``fastjet/TrackJetPlugin.hh''
+  ///...
+  TrackJetPlugin (double radius, 
+		  RecombinationScheme jet_recombination_scheme=pt_scheme, 
+		  RecombinationScheme track_recombination_scheme=pt_scheme);
+\end{lstlisting}
+Two recombination schemes are involved: the first one indicates how
+momenta are recombined to provide the final jets (once particle-jet
+assignments are known), the second one indicates how momenta are
+combined in the procedure that constructs the jets.
+
+The underlying code for this algorithm was written by the \fastjet
+authors, based on code extracts provided by Lars Sonnenschein.
+
+
+%----------------------------------------------------------------------
+\subsection{Other plugins for $e^+e^-$}
+\label{sec:other-ee-plugins}
+
+%......................................................................
+\subsubsection{Cambridge algorithm}
+\label{sec:ee-cam}
+The original $\ee$ cambridge~\cite{CamOrig} algorithm is provided as a plugin:
+\begin{lstlisting}
+  #include ``fastjet/EECambridgePlugin.hh''
+  ///...
+  EECambridgePlugin (double ycut);
+\end{lstlisting}
+This algorithms performs sequential recombination of the pair of
+particles that is closest in angle, except when $y_{ij} =
+\frac{2\min(E_i^2,E_j^2)}{Q^2}(1-\cos\theta) > y_{cut}$, in which case
+the less energetic of $i$ and $j$ is labelled a jet, and the other
+member of the pair remains free to cluster.
+
+To access the jets, the user should use the \verb|inclusive_jets()|,
+\ie as they would for the majority of the $pp$ algorithms.
+
+The underlying code for this algorithm was written by the \fastjet
+authors.
+
+%......................................................................
+\subsubsection{Jade algorithm}
+\label{sec:ee-jade}
+The JADE algorithm~\cite{Bartel:1986ua,Bethke:1988zc}, a sequential
+recombination algorithm with distance measure $d_{ij} = 2E_i E_j
+(1-\cos\theta)$, is available through
+\begin{lstlisting}
+  #include ``fastjet/JadePlugin.hh''
+  ///...
+  JadePlugin ();
+\end{lstlisting}
+To access the jets at a given $y_{cut} = d_{cut}/Q^2$, the user 
+should call \verb|ClusterSequence::exclusive_jets_ycut(double ycut)|.
+
+Note: the JADE algorithm has been used with various recombination
+schemes. The current plugin will use whatever recombination scheme the
+user specifies with for the jet definition. The default $E$-scheme is
+what was used in the original JADE publication \cite{Bartel:1986ua}.
+%
+To modify the recombination scheme, the user may first construct the
+jet definition and then use either of 
+\begin{lstlisting}
+  void JetDefinition::set_recombination_scheme(RecombinationScheme recomb_scheme);
+  void JetDefinition::set_recombiner(const Recombiner * recomb)
+\end{lstlisting}
+(cf.~sections~\ref{sec:recomb_schemes},\ref{app:a}) to modify the
+recombination scheme.
+
+The underlying code for this algorithm was written by the \fastjet
+authors.
+
+
+
+%----------------------------------------------------------------------
+\subsection{Building new sequential recombination algorithms}
+\label{sec:new-seq-rec}
+
+To enable users to more easily build plugins for new sequential
+recombination algorithms, fastjet also provides a class \verb|NNH|,
+which provides users with access to an implementation of the
+nearest-neighbour heuristic for establishing and maintaining
+information about the closest pair of objects in a dynamic set of
+objects (see \cite{EppsteinHierarchical} for an introduction to this
+and other generic algorithms).
+%
+In good cases this allows one to construct clustering that runs in
+$N^2$ time, though its worst case can be as bad as $N^3$.
+%
+It is a templated class and the template argument should be a class
+that stores the minimal information for each jet so as to be able to
+calculate interjet distances.
+%
+It underlies the implementations of the Jade and $\ee$ Cambridge
+plugins.
+%
+The interested user should consult those codes for more information,
+as well as the header for the NNH class.
+
+
+
+
+%% %----------------------------------------------------------------------
+%% \subsection{Summary of algorithms}
+%% \label{sec:summary-algorithms}
+%% 
+%% \begin{tabular}{lr|l|c|c|c|c}
+%%   \multicolumn{7}{c}{Native algorithms}\\\hline
+%%   alg.                   &  &  \ttt{JetAlgorithm}        & proc.    & params & speed & mem.
+%%   \\\hline                                                           
+%%   Long.\ inv.\ $k_t$ &\cite{} & \ttt{kt\_algorithm} & pp            & $R$    &  $N \ln N$ & $N$ \\
+%%   Cambridge/Aachen &\cite{} & \ttt{cambridge\_algorithm} & pp       & $R$    &  $N \ln N$ & $N$\\
+%%   anti-$k_t$ &\cite{} & \ttt{antikt\_algorithm} & pp                & $R$    &  $Nn^{1/2}$ & $N$ \\
+%%   generalised $k_t$ &\cite{} & \ttt{genkt\_algorithm} & pp          & $R,p$  &  $N \ln N$ -- $Nn^{1/2}$ & $N$
+%%   \\ \hline                                                          
+%%   $e^+e^-$ $k_t$ &\cite{} & \ttt{ee\_kt\_algorithm} & $\ee$         & $-$    &  $N^2$ & $N$ \\
+%%   $e^+e^-$ gen-$k_t$ &\cite{} & \ttt{ee\_genkt\_algorithm} & $\ee$  & $R,p$  &  $N^2$ & $N$ \\
+%% \end{tabular}
+%% 
+%% 
+%% \begin{tabular}{lr|c|c|c|c}
+%%   \multicolumn{6}{c}{Plugin algorithms}\\\hline
+%%   alg.                   &          & proc.    & params & speed & mem.\\
+%%   SISConePlugin & \cite{} & pp & $R,f,\ldots$ & $N n \ln n$ & $N^2$
+%%   \\\hline                                                           
+%% \end{tabular}
 
 %======================================================================
 \section{Compilation notes}
@@ -2206,21 +2477,23 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 
 
 
+
 %======================================================================
 \section*{Acknowledgements}
 
 We wish to thank Timothy Chan for helpful exchanges about the details
 of his dynamic closest pair algorithm. We thank Markus Wobisch and
 Andreas Oehler for comments on the documentation, and Sebastian Sapeta
-for bug reports and testing of beta-version of the code.
+for bug reports and testing of beta-version of the code, as well as to
+Juan Rojo for discussions related to various features of the code.
 
 %% Who else
 %% Belyaev for windows compilation
 %% ????
 
-We are grateful to CDF, Joey Huston and Mike Seymour for providing
-permission to distribute their cone jet algorithm codes as plugins for
-fastjet. 
+We are grateful to CDF, Joey Huston, Lars Sonnenschein and Mike
+Seymour for providing permission to distribute their cone jet
+algorithm codes as plugins for fastjet.
 
 
 \appendix
@@ -2515,6 +2788,34 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   hep-ph/0610012.
   %%CITATION = HEP-PH 0610012;%%
 
+\bibitem{EppsteinHierarchical}
+  %%David Eppstein
+  D.~Eppstein
+  %``Fast hierarchical clustering and other applications of dynamic
+  %closest pairs,''
+  J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
+
+\bibitem{Seymour:2006vv}
+  M.~H.~Seymour and C.~Tevlin,
+  %``A comparison of two different jet algorithms for the top mass
+  %reconstruction at the LHC,''
+  JHEP {\bf 0611} (2006) 052
+  [arXiv:hep-ph/0609100].
+  %%CITATION = JHEPA,0611,052;%%
+
+\bibitem{Bartel:1986ua}
+  W.~Bartel {\it et al.}  [JADE Collaboration],
+  %``Experimental Studies On Multi - Jet Production In E+ E- Annihilation At
+  %Petra Energies,''
+  Z.\ Phys.\ C {\bf 33} (1986) 23; 
+  %%CITATION = ZEPYA,C33,23;%%
+
+\bibitem{Bethke:1988zc}
+  S.~Bethke {\it et al.}  [JADE Collaboration],
+  %``Experimental Investigation Of The Energy Dependence Of The Strong Coupling
+  %Strength,''
+  Phys.\ Lett.\ B {\bf 213} (1988) 235.
+  %%CITATION = PHLTA,B213,235;%%
 
 \end{thebibliography}
 
