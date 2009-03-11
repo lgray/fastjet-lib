@@ -42,7 +42,7 @@ New functionality
 Interface modifications
 -----------------------
 - removed default value of 0.5 for overlap_threshold in
-  CDFMidPointPlugin and SISConePlugin constructors
+  CDFMidPointPlugin, CDFJetCluPlugin and SISConePlugin constructors
   *** may break backwards compatibility ***
 
 - in SISCone, new way of accessing the information about pass at which
@@ -60,45 +60,6 @@ other modifications
 Still to come
 -------------
 - add CMSIterativeCone Plugin
-
-
-notes
------
-
-                          !!! WARNING !!!
-
-  The ee_antikt_algorithm is known to be IR unsafe at larger values of
-  R for events with 2 (or more) identical massive particles at rest
-  that then decay. This is a consequence of a degeneracy that such
-  configurations introduce in the clustering sequence.
-
-  In most real life situations any resulting IR divergence will be
-  regularised (above Lambda_QCD) by the width and finite 3-momenta of
-  the massive particles. Note that in about 10^6 test events, the
-  issue has only been observed for R > 1.1.
-
-  [NUMBERS TO BE UPDATED; THESE NOTES TO BE MOVED TO THE MANUAL]
-  
-                          !!! WARNINGS !!!
-
-  * Concerning IR safety, the same comment as for the
-    ee_antikt_algorithm holds: there is a known IR unsafety at large
-    values of R for events with 2 (or more) identical massive
-    particles at rest that then decay. This is a consequence of a
-    degeneracy that such configurations introduce in the ordering of
-    protojets at the beginning of the split-merge. 
-
-    Again, in real life situations any resulting IR divergence will be
-    regularised (above Lambda_QCD) by the width and finite 3-momenta
-    of the massive particles.
-
-  * R in ee_genkt and SISConeSpherical have the same meaning only for
-    small R -- at large R they differ. For SISConeSpherical R is the
-    cone opening half-angle in radians; for ee_genkt R^2 relates to
-    2(1-\cos\theta)
-
-  * Full final tests regarding infrared-and-collinear safety are 
-    still in progress. 
 
 
 
