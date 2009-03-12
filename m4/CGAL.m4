@@ -115,6 +115,13 @@ dnl we check if we can get the arguments ourselves. This method leave the option
 dnl a CGAL directory using the --with-cgaldir directive
 dnl If no dir are specified, CGLA will be searched in standard places
 if test "$acx_cgal_found" == no; then
+   dnl check support for -frounding-math for the C++ compiler
+   ADDITIONAL_CGAL_FLAGS=""
+   AC_LANG_PUSH(C++)
+   AX_CHECK_COMPILER_FLAGS([-frounding-math],[ADDITIONAL_CGAL_FLAGS=${ADDITIONAL_CGAL_FLAGS}" -frounding-math"])
+   AC_LANG_POP(C++)
+
+
     dnl First check if an installation dir has been supplied.
     dnl The current flags have to be saved temporarily
     save_LIBS="$LIBS"
@@ -134,16 +141,16 @@ if test "$acx_cgal_found" == no; then
     if test \! -z "$with_cgaldir"; then
         AC_MSG_CHECKING(CGAL in ${with_cgaldir})
 	LDFLAGS="${LDFLAGS} -L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
-	CXXFLAGS="${CXXFLAGS} -I${with_cgaldir}/include -frounding-math"
-	CPPFLAGS="${CPPFLAGS} -I${with_cgaldir}/include -frounding-math"
+	CXXFLAGS="${CXXFLAGS} -I${with_cgaldir}/include $ADDITIONAL_CGAL_FLAGS"
+	CPPFLAGS="${CPPFLAGS} -I${with_cgaldir}/include $ADDITIONAL_CGAL_FLAGS"
 
 	CGAL_CPPFLAGS="-I${with_cgaldir}/include"
 	CGAL_CXXFLAGS="-I${with_cgaldir}/include"
 	CGAL_LIBS="-L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
     fi
 
-    CXXFLAGS=${CXXFLAGS}" -frounding-math"
-    CPPFLAGS=${CPPFLAGS}" -frounding-math"
+    CXXFLAGS=${CXXFLAGS}" $ADDITIONAL_CGAL_FLAGS"
+    CPPFLAGS=${CPPFLAGS}" $ADDITIONAL_CGAL_FLAGS"
 
     dnl search the CGAL headers
     dnl
@@ -163,8 +170,8 @@ if test "$acx_cgal_found" == no; then
 
     dnl if the headers have been found, check for the libs
     if test "$cgal_have_header" == yes; then
-	CGAL_CPPFLAGS="${CGAL_CPPFLAGS} -frounding-math"
-	CGAL_CXXFLAGS="${CGAL_CXXFLAGS} -frounding-math"
+	CGAL_CPPFLAGS="${CGAL_CPPFLAGS} $ADDITIONAL_CGAL_FLAGS"
+	CGAL_CXXFLAGS="${CGAL_CXXFLAGS} $ADDITIONAL_CGAL_FLAGS"
 	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
 	if test "$cgal_have_lib" == yes; then
 	    CGAL_LIBS=${CGAL_LIBS}" -lCGAL"

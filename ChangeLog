@@ -1,3 +1,11 @@
+2009-03-11  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* m4/CGAL.m4
+	  m4/compiler_flags.m4:             *** ADDED ***
+	  check if the compiler supports -frounding-math
+	  (for the moment, just discard it if it's not supported)
+	
+
 2009-03-11  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
