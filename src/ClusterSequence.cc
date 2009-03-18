@@ -894,7 +894,10 @@ void ClusterSequence::add_constituents (
   if (parent1 == InexistentParent) {
     // It is an original particle (labelled by its parent having value
     // InexistentParent), therefore add it on to the subjet vector
-    subjet_vector.push_back(jet);
+    // Note: we add the initial particle and not simply 'jet' so that
+    //       calling add_constituents with a subtracted jet containing
+    //       only one particle will work.
+    subjet_vector.push_back(_jets[i]);
     return;
   } 
 

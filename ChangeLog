@@ -1,3 +1,11 @@
+2009-03-18  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* src/ClusterSequence.cc (ClusterSequence::add_constituents): 
+	  When the jet is made of a single particle, add explicitly that
+	  particled instead of the given 'jet'. This ensures that calling
+	  add_constituents with a subtracted jet containing only one
+	  particle will work.    
+
 2009-03-11  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* m4/CGAL.m4
