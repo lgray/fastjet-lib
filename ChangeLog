@@ -1,3 +1,9 @@
+2009-03-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc (main): 
+	  move root printout in with main jet printout (so you can get
+	  root even for exclusive jets)
+
 2009-03-18  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* src/ClusterSequence.cc (ClusterSequence::add_constituents): 

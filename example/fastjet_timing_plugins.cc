@@ -213,6 +213,9 @@ inline double pow2(const double x) {return x*x;}
 void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
                          const vector<fj::PseudoJet> & jets, double dcut);
 
+string rootfile;
+CmdLine * cmdline_p;
+
 /// sort and pretty print jets, with exact behaviour depending on 
 /// whether ee_print is true or not
 bool ee_print = false;
@@ -229,6 +232,7 @@ void is_unavailable(const string & algname) {
 int main (int argc, char ** argv) {
 
   CmdLine cmdline(argc,argv);
+  cmdline_p = &cmdline;
   // allow the use to specify the fj::Strategy either through the
   // -clever or the -strategy options (both will take numerical
   // values); the latter will override the former.
@@ -268,7 +272,7 @@ int main (int argc, char ** argv) {
   double ycut = cmdline.double_val("-ycut",0.08);
 
   // for printing jets to a file for reading by root
-  string rootfile = cmdline.value<string>("-root","");
+  rootfile = cmdline.value<string>("-root","");
 
   // out default scheme is the E_scheme
   fj::RecombinationScheme scheme = fj::E_scheme;
@@ -478,12 +482,6 @@ int main (int argc, char ** argv) {
     if (inclkt >= 0.0) {
       vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
       print_jets(jets, clust_seq, show_constituents);
-      if (rootfile != "") {
-        ofstream ostr(rootfile.c_str());
-        ostr << "# " << cmdline.command_line() << endl;
-        ostr << "# output for root" << endl;
-        clust_seq.print_jets_for_root(jets,ostr);
-      }
 
     }
 
@@ -628,6 +626,13 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence
 	cout << "\n\n";
       }
     }
+  }
+
+  if (rootfile != "") {
+    ofstream ostr(rootfile.c_str());
+    ostr << "# " << cmdline_p->command_line() << endl;
+    ostr << "# output for root" << endl;
+    cs.print_jets_for_root(jets,ostr);
   }
 
 }
