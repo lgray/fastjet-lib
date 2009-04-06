@@ -1361,21 +1361,24 @@ jet's axis. Its constructors are
 
 
 This {\sl local} range makes use of two further methods.
-First, it overrides 
+First, it overrides a virtual function already present in \ttt{RangeDefinition}
 \begin{lstlisting}
   /// For localizable classes override this function with a function
   /// that returns true
   virtual inline bool is_localizable() const ;
 \end{lstlisting}
-to return \ttt{true} and, second, it can use
+to return \ttt{true}. This causes the two following functions (present
+but disabled in the base class) to be enabled:
 \begin{lstlisting}
   /// place the range on the rap-phi position
-  inline void set_position(const double & rap, const double & phi) ;
+  inline void set_position(const double & rap, const double & phi);
   /// place the range on the jet position
-  inline void set_position(const PseudoJet & jet) ;
+  inline void set_position(const PseudoJet & jet);
 \end{lstlisting}
-to actually place the range in the desired position.
+They allow one to place an existing local range at the supplied position.
 
+Note: we expect the interface for ranges to evolve significantly in
+releases subsequent to 2.4.
 
 % The user might also wish to overload the virtual function
 % \ttt{RangeDefinition::area()}, rather than rely on the base class function to

@@ -33,13 +33,14 @@
 #define __FASTJET_CIRCULARRANGE_HH__
 
 #include "fastjet/RangeDefinition.hh"
+#include "fastjet/Error.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 class CircularRange : public fastjet::RangeDefinition {
 public:
   /// constructor
-  CircularRange() {}
+  CircularRange() {_set_invalid_rapphi();}
   
   /// initialise CircularRange with a jet
   CircularRange(const fastjet::PseudoJet & jet, double distance) {
@@ -57,6 +58,7 @@ public:
 
   /// initialise CircularRange with just the radius parameter
   CircularRange(double distance) {
+                _set_invalid_rapphi();
                 _distance = distance;
 		_total_area = fastjet::pi*_distance*_distance;  }
   
@@ -75,10 +77,12 @@ public:
   
   /// return bool according to whether (rap,phi) is in range
   virtual inline bool is_in_range(double rap, double phi) const {
-     double pi = fastjet::pi;
+     if (! _rapphi_are_valid()) {
+       throw Error("Circular range used without a center having being defined (use set_position())");
+     }
      double deltaphi = _phijet - phi;
-     if ( deltaphi > pi) { deltaphi -= 2.*pi; }
-     else if ( deltaphi < -pi) { deltaphi += 2.*pi; }
+     if ( deltaphi > pi) { deltaphi -= twopi; }
+     else if ( deltaphi < -pi) { deltaphi += twopi; }
      bool inrange = ( (rap-_rapjet)*(rap-_rapjet) +
                 deltaphi*deltaphi <= _distance*_distance );
      return inrange; }
@@ -90,6 +94,13 @@ public:
 
 private:
   double _distance;
+
+  /// value for phi that marks it as invalid
+  const static double _invalid_phi = -1000.0;
+  /// set internal phi so as to mark things as invalid
+  void _set_invalid_rapphi() {_phijet = _invalid_phi;}
+  /// true if rap,phi are valid (tests only phi)
+  bool _rapphi_are_valid() const {return _phijet != _invalid_phi;}
 
 };
 

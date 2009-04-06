@@ -29,10 +29,10 @@ For 2.4
 - [done] add/verify manual entry about compilation
 - [done] check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
 - [done] update abstract of manual
+- [done] Document CircularRange. Check documentation of RangeDefinition
 - [1/2]  figure what to do about acknowledgements in manual?
 -        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
 -        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
--        Document CircularRange. Check documentation of RangeDefinition
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap
@@ -58,6 +58,7 @@ For 2.5
 -        put version number into code somehow???
 -        rethink RangeDefinition hierarchy, including set_position(...),
          addition of (circular, donut) local ranges, etc.
+-        docs for new ranges (including mention of post-2.4 evolution)
 -        versioning of library names (like libfastjet-2.5.2.so)?
 -        BkgdDef & BkgdMeasures (including removal of selected jets)
 -        Full code for general distance measure
