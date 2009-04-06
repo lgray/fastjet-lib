@@ -151,7 +151,11 @@ public:
   /// in the noise and not that associated with the noise having 
   /// caused changes in the hard-particle content of the jet.
   ///
-  /// (NB: subtraction may also be done with 4-vector area of course)
+  /// NB: subtraction may also be done with 4-vector area of course,
+  /// and this is recommended for jets with larger values of R, as
+  /// long as rho has also been determined with a 4-vector area;
+  /// using a scalar area causes one to neglect terms of relative
+  /// order $R^2/8$ in the jet $p_t$.
   virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
@@ -177,7 +181,7 @@ public:
                                         bool use_area_4vector,
                                         double & median, double & sigma,
                                         double & mean_area,
-					bool all_are_incl = false) const;
+					bool all_are_inclusive = false) const;
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area

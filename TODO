@@ -30,6 +30,7 @@ For 2.4
 - [done] check manual (zero particles, rangeDef[incl. asym rap range],e+e-, )
 - [done] update abstract of manual
 - [done] Document CircularRange. Check documentation of RangeDefinition
+- [done] documented in manual how to remove hard jets in get_median_rho_and_sigma()
 - [1/2]  figure what to do about acknowledgements in manual?
 -        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
 -        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
@@ -52,6 +53,8 @@ TWO MAJOR QUESTIONS FOR PSEUDOJET:
 -------------
 For 2.5
 -------------
+-        ability to select only certain jets (e.g. in range, not pure
+         ghost) from inclusive_jets????
 -        list of deprecated functions: file, manual, FAQ?
 -        rethink the manual seriously?
 -        plugins should "know" whether they support other recombination schemes

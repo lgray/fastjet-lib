@@ -209,12 +209,21 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   
   double n_empty, empty_a;
   if (has_explicit_ghosts()) {
+    // NB: the following lines of code are potentially incorrect in cases
+    //     where there are unclustered particles (empty_area would do a better job,
+    //     at least for active areas). This is not an issue with kt or C/A, or other
+    //     algorithms that cluster all particles (and the median estimation should in 
+    //     any case only be done with kt or C/A!)
     empty_a = 0.0;
     n_empty = 0;
   } else if (all_are_incl) {
+    // the default case
     empty_a = empty_area(range);
     n_empty = n_empty_jets(range);
   } else {
+    // this one is intended to be used when e.g. one runs C/A, then looks at its
+    // exclusive jets in order to get an effective smaller R value, and passes those
+    // to this routine.
     empty_a = empty_area_from_jets(all_jets, range);
     mean_area = total_area / total_njets; // temporary value
     n_empty   = empty_a / mean_area;

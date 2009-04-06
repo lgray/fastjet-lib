@@ -1433,20 +1433,68 @@ are available for extracting the diffuse noise level and its fluctuations:
   /// in the noise and not that associated with the noise having 
   /// caused changes in the hard-particle content of the jet.
   ///
-  /// (NB: subtraction may also be done with 4-vector area of course)
+  /// NB: subtraction may also be done with 4-vector area of course,
+  /// and this is recommended for jets with larger values of R, as
+  /// long as rho has also been determined with a 4-vector area;
+  /// using a scalar area causes one to neglect terms of relative
+  /// order $R^2/8$ in the jet $p_t$.
   void get_median_rho_and_sigma(const RangeDefinition & range, 
                                 bool use_area_4vector,
                                 double & median, double & sigma,
                                 double & mean_area);
 \end{lstlisting}
 A version exists also without the last argument.
+
+A final version that is present allows one to calculate the median
+based on an explicit li:st of jets, rather than the cluster-sequence's
+\ttt{inclusive\_jets()} 
+\begin{lstlisting}
+  virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
+					const RangeDefinition & range, 
+                                        bool use_area_4vector,
+                                        double & median, double & sigma,
+                                        double & mean_area,
+					bool all_are_inclusive = false) const;
+\end{lstlisting}
+There are at least two ways this might be used. One is if you want to
+exclude (say) some number of hardest jets from the estimate of $\rho$:
+\begin{lstlisting}
+  // get list of jets
+  vector<PseudoJet> all_jets = sorted_by_pt(cs.inclusive_jets());
+  // remove the two hardest jets (you might do this more efficiently...)
+  all_jets.erase(all_jets.begin(), all_jets.begin()+2);
+  // Get rho based on all but the two hardest jets.
+  // The last argument MUST be set to true unless you are using explicit ghosts
+  cs.get_median_rho_and_sigma(all_jets, range, true, median, sigma,  mean_area, true);
+\end{lstlisting}
+Another way it might be used is if you have the Cambridge/Aachen
+algorithm at some $R$ value and wish to determine $\rho$ based on the
+jets it would provide at a different jet radius, $R' < R$ (without rerunning the
+clustering):
+\begin{lstlisting}
+  // get list of jets at smaller $R'$ value
+  vector<PseudoJet> all_jets = cs.exclusive_jets(pow($R'/R$,2)));
+  // The last argument MUST be set to false unless you are using explicit ghosts
+  cs.get_median_rho_and_sigma(all_jets, range, true, median, sigma,  mean_area, false);
+\end{lstlisting}
+This is useful, for example, if you wish to determine $\rho$ at a
+series of different angular resolutions $R'$. It \emph{only} works for
+the Cambridge/Aachen algorithm.
+
+Note: the \ttt{all\_are\_inclusive} argument relates to \fastjet's
+internal mechanism for dealing with empty area. The treatment of empty
+area is much more robust if the area is based on explicit ghosts
+(\verb|active_area_explicit_ghosts|). Its use of strongly recommended
+for the above applications (in which case the value of
+\ttt{all\_are\_inclusive} becomes irrelevant).
+
 %%   /// same as the full version of get_median_rho_and_error, but without
 %%   /// access to the mean_area
 %%   void get_median_rho_and_sigma(const RangeDefinition & range, 
 %%                                 bool use_area_4vector,
 %%                                 double & median, double & sigma);
 
-There is also a routine for estimating rapidity-dependence densities,
+There is also a routine for estimating rapidity-dependent densities,
 intended for example for heavy-ion events
 \begin{lstlisting}
   /// fits a form pt_per_unit_area(y) = a + b*y$^2$ in the given range.
@@ -1457,19 +1505,27 @@ intended for example for heavy-ion events
                                   double exclude_above = -1.0, 
                                   bool use_area_4vector = false) const;
 \end{lstlisting}
-However, a better alternative is probably to use a {\sl local} range definition, 
-like the \ttt{circularRange} mentioned above.
-It defines a range which is centred on a given jet axis (as opposed to
-covering a fixed, given region in the rapidity-azimuth plane), and
-extends up to a distance $d$ from the axis of thejet. 
+This method is now considered \emph{deprecated} (it is too sensitive
+to contamination from hard jets).
+%
+An alternative is to use a {\sl local} range definition, 
+like the \ttt{CircularRange} mentioned above.
+%% It defines a range which is centred on a given jet axis (as opposed to
+%% covering a fixed, given region in the rapidity-azimuth plane), and
+%% extends up to a distance $d$ from the axis of thejet. 
 Such a range definition will of course lead to a different
-median $p_t$ per unit area for each jet. It is useful whenever 
-the background
-distribution is expected to be non uniform in rapidity and, for instance 
-in the case
-of non-central collisions, also in azimuth. With a wise choice for the
+median $\rho$ according to where the range is placed. 
+%
+It is useful whenever the background distribution is expected to be
+non uniform in rapidity and, for instance in the case of non-central
+collisions, also in azimuth.
+%
+With a wise choice for the
 distance $d$, \ttt{CircularRange} will then allow one to use
-\ttt{ClusterSequenceArea::get\_median\_rho\_and\_sigma}\ttt{()} ona jet-by-jet basis.
+\ttt{ClusterSequenceArea::get\_median\_rho\_and\_sigma}\ttt{()} on a jet-by-jet basis.
+%
+One can similarly also use a plain RangeDefinition in a limited
+rapidity and/or azimuth region.
 
 Note that more specialised methods for extracting the noise level might
 be present at the level of a specific class, e.g.

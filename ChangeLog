@@ -1,8 +1,14 @@
 2009-04-06  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
-	* doc/fastjet-doc.tex (subsubsection{Local Ranges}): 
-	  sorted out a few details here and there...
-
+	* src/ClusterSequenceAreaBase.cc: 
+	* include/fastjet/ClusterSequenceAreaBase.hh: 
+	  changes to comments
+	
+	* doc/fastjet-doc.tex: 
+	  sorted out a few details here and there about local ranges, and
+	  added info on running with hard jets excluded.
+       
+	
 	* include/fastjet/CircularRange.hh: 
 	  added check that a center has been properly defined
 
