@@ -33,7 +33,6 @@ For 2.4
 - [done] documented in manual how to remove hard jets in get_median_rho_and_sigma()
 - [1/2]  figure what to do about acknowledgements in manual?
 -        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
--        FAQ entry: how to remove hard jets in get_median_rho_and_sigma()
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap
@@ -46,6 +45,10 @@ For 2.4
    e. add a note on the webpage
    f. add a note at the end of ./configure
   this has to be done for all the cone algs + internally in SISCone  [CHECK]
+
+
+Cancelled:
+- [NO]    FAQ entry: how to remove hard jets in get_median_rho_and_sigma() [does not fit]
 
 TWO MAJOR QUESTIONS FOR PSEUDOJET:
 
