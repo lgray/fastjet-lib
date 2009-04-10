@@ -1,3 +1,8 @@
+2009-04-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* m4/CGAL.m4: 
+	  updated comments to make it clearer what goes with 3.3.x v. 3.4.
+
 2009-04-06  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* src/ClusterSequenceAreaBase.cc: 
