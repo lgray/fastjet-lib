@@ -33,6 +33,7 @@ For 2.4
 - [done] documented in manual how to remove hard jets in get_median_rho_and_sigma()
 - [1/2]  figure what to do about acknowledgements in manual?
 -        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
+-        uncomment CMS cone in docs & sort out validation words
 -        update NEWS!!!
 -        mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap

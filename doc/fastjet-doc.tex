@@ -69,7 +69,7 @@
 \newcommand{\ee}{e^+e^-}
 \newcommand{\Dzero}{D0\!\!\!/\xspace}
 
-\title{FastJet 2.4 [devel] user manual}
+\title{FastJet 2.4 user manual}
 \author{Matteo Cacciari, Gavin P. Salam\\
   \normalsize
   LPTHE, Universit\'e Pierre et Marie Curie -- Paris 6, \\
@@ -2326,7 +2326,23 @@ the preparation for the LHC.
 \end{lstlisting}
 $f$ is the overlap threshold
 
-The underlying code for this algorithm was extracted from SpartyJet.
+The underlying code for this algorithm was extracted from SpartyJet \cite{SpartyJet}.
+
+%% \subsubsection{CMS iterative cone}
+%% %
+%% The (iterative) cone (with progressive removal) algorithm used by CMS during
+%% the preparation for the LHC. 
+%% \begin{lstlisting}
+%%   #include ``fastjet/CMSIterativeConePlugin.hh''
+%%   ///...
+%%   CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
+%% \end{lstlisting}
+%% 
+%% 
+%% The underlying code for this algorithm was extracted from the CMSSW
+%% web site, with certain small service routines having been rewritten by
+%% the FastJet authors. 
+%% %% SOME WORDS ABOUT VALIDATION
 
 
 \subsubsection{PxCone}
@@ -2876,6 +2892,8 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   Phys.\ Lett.\ B {\bf 213} (1988) 235.
   %%CITATION = PHLTA,B213,235;%%
 
+\bibitem{SpartyJet} P.A.~Delsart, K.~Geerlings and J.~Huston, SpartyJet,
+  \url{http://www.pa.msu.edu/~huston/SpartyJet/SpartyJet.html}
 \end{thebibliography}
 
 
