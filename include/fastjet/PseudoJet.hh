@@ -225,6 +225,10 @@ PseudoJet operator*(double, const PseudoJet &);
 PseudoJet operator*(const PseudoJet &, double);
 PseudoJet operator/(const PseudoJet &, double);
 
+inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
+  return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();
+}
+
 /// returns true if the momenta of the two input jets are identical
 bool have_same_momentum(const PseudoJet &, const PseudoJet &);
 

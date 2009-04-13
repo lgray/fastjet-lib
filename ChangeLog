@@ -1,3 +1,8 @@
+2009-04-13  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh (dot_product): 
+	  added dot_product binary operator...
+
 2009-04-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* m4/CGAL.m4: 
