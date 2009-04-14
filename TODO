@@ -34,8 +34,9 @@ For 2.4
 - [1/2]  figure what to do about acknowledgements in manual?
 -        add CMS cones to release?                  [YES, AS BETA + CHECK DEFAULTS]
 -        uncomment CMS cone in docs & sort out validation words
--        update NEWS!!!
--        mention backwards compat breaks (NEWS, web-pages)
+-        add CMS to NEWS and all releases and to main web page
+- [done] update NEWS!!!
+- [done] mention backwards compat breaks (NEWS, web-pages)
 -        rename this file as RoadMap
 
 - default f=0.75 for cones:
