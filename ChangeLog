@@ -1,5 +1,9 @@
 2009-04-16  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh: 
+	  Switched back to an implementation without templates
+	  (we're now using virtual function overloading)
+
 	* plugins/CMSIterativeCone/fastjet/CMSIterativeConePlugin.hh:
 	  Added a plugin for the CMS iterative cone
 	  (see plugins/CMSIterativeCone/README for details)

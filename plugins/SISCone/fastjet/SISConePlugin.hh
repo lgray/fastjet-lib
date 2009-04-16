@@ -3,22 +3,13 @@
 
 #include "SISConeBasePlugin.hh"
 
-#include "siscone/siscone.h"
-#include "siscone/momentum.h"
+// forward declaration of the siscone classes we'll need
+namespace siscone{
+  class Csiscone;
+};
 
-// put a forward declaration to the Csiscone class to avoid having to
-// include the siscone headers here
-//namespace siscone {
-//  class Csiscone;
-//  class Cmomentum;
-//  class Cjet;
-//}
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
-
-/// shortcut for converting siscone Cmomentum into PseudoJet
-template<> PseudoJet::PseudoJet(const siscone::Cmomentum & four_vector);
-
 
 //----------------------------------------------------------------------
 //
@@ -57,8 +48,7 @@ template<> PseudoJet::PseudoJet(const siscone::Cmomentum & four_vector);
 ///   siscone is stored -- if the current event is identical and the
 ///   cone_radius and n_pass_mass are identical, then the only part of
 ///   the clustering that needs to be rerun is the split-merge part,
-///   leading to significant speed gains; there is a small (O(N) storage
-///   and speed) penalty for caching, so it should be kept off
+///   leading to significant speed gains; there is a small (O(N) storage///   and speed) penalty for caching, so it should be kept off
 ///   (default) if only a single overlap_threshold is used.
 ///
 /// The final jets can be accessed by requestion the
@@ -73,7 +63,7 @@ template<> PseudoJet::PseudoJet(const siscone::Cmomentum & four_vector);
 /// For documentation about the implementation, see the
 /// siscone/doc/html/index.html file.
 //
-class SISConePlugin : public SISConeBasePlugin<siscone::Csiscone, siscone::Cmomentum, siscone::Cjet>{
+class SISConePlugin : public SISConeBasePlugin{
 public:
 
   /// enum for the different split-merge scale choices;
@@ -177,13 +167,9 @@ public:
 
   // the things that are required by base class
   virtual std::string description () const;
+  virtual void run_clustering(ClusterSequence &) const ;
 
 protected:
-  virtual void set_clustering_parameters(ClusterSequence & clust_seq, siscone::Csiscone *siscone) const;
-  virtual void run_siscone_clustering(ClusterSequence & clust_seq, siscone::Csiscone *siscone,
-				      std::vector<siscone::Cmomentum> siscone_momenta) const;
-  virtual void rerun_siscone_clustering(ClusterSequence & clust_seq, siscone::Csiscone *siscone) const;
-
   virtual void reset_stored_plugin() const;
 
 private:
@@ -192,11 +178,34 @@ private:
 
   bool _use_pt_weighted_splitting;
 
+  // part needed for the cache 
+  // variables for caching the results and the input
+  static std::auto_ptr<SISConePlugin          > stored_plugin;
+  static std::auto_ptr<std::vector<PseudoJet> > stored_particles;
+  static std::auto_ptr<siscone::Csiscone      > stored_siscone;
 };
 
 
-/// a shortname for the associated extras
-typedef SISConeBaseExtras<siscone::Csiscone, siscone::Cmomentum, siscone::Cjet> SISConeExtras;
+//======================================================================
+/// Class that provides extra information about a SISCone clustering
+class SISConeExtras : public SISConeBaseExtras {
+public:
+  /// constructor
+  //  it just initialises the pass information 
+  SISConeExtras(int nparticles)
+    : SISConeBaseExtras(nparticles){}
+
+  /// access to the siscone jet def plugin (more convenient than
+  /// getting it from the original jet definition, because here it's
+  /// directly of the right type (rather than the base type)
+  const SISConePlugin* jet_def_plugin() const {
+    return dynamic_cast<const SISConePlugin*>(_jet_def_plugin);
+  }
+
+private:
+  // let us be written to by SISConePlugin
+  friend class SISConePlugin;
+};
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
 

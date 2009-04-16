@@ -3,20 +3,13 @@
 
 #include "SISConeBasePlugin.hh"
 
-#include "siscone/spherical/siscone.h"
-#include "siscone/spherical/momentum.h"
-
-//// put a forward declaration to the Csiscone class to avoid having to
-//// include the siscone headers here
-//namespace siscone_spherical {
-//  class CSphsiscone;
-//}
+// forward declaration of the siscone classes we'll need
+namespace siscone_spherical{
+  class CSphsiscone;
+};
 
 // questionable whether this should be in fastjet namespace or not...
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
-
-/// shortcut for converting siscone CSphmomentum into PseudoJet
-template<> PseudoJet::PseudoJet(const siscone_spherical::CSphmomentum & four_vector);
 
 //----------------------------------------------------------------------
 //
@@ -93,7 +86,7 @@ template<> PseudoJet::PseudoJet(const siscone_spherical::CSphmomentum & four_vec
 /// For documentation about the implementation, see the
 /// siscone/doc/html/index.html file.
 //
-class SISConeSphericalPlugin : public SISConeBasePlugin<siscone_spherical::CSphsiscone, siscone_spherical::CSphmomentum, siscone_spherical::CSphjet> {
+class SISConeSphericalPlugin : public SISConeBasePlugin{
 public:
 
   /// enum for the different split-merge scale choices;
@@ -145,29 +138,49 @@ public:
   void set_split_merge_use_E_weighted_splitting(bool val) {
     _use_E_weighted_splitting = val;}
 
-  // the things that are required by base class
-  virtual std::string description () const;
-
   /// overload the default as we don't provide support 
   /// for passive areas.
   virtual bool supports_ghosted_passive_areas() const {return true;}
   
-protected:
-  virtual void set_clustering_parameters(ClusterSequence & clust_seq, siscone_spherical::CSphsiscone *siscone) const;
-  virtual void run_siscone_clustering(ClusterSequence & clust_seq, siscone_spherical::CSphsiscone *siscone,
-				      std::vector<siscone_spherical::CSphmomentum> siscone_momenta) const;
-  virtual void rerun_siscone_clustering(ClusterSequence & clust_seq, siscone_spherical::CSphsiscone *siscone) const;
+  // the things that are required by base class
+  virtual std::string description () const;
+  virtual void run_clustering(ClusterSequence &) const ;
 
+protected:
   virtual void reset_stored_plugin() const;
 
 private:
   double _protojet_Emin;
   SplitMergeScale _split_merge_scale;
   bool _use_E_weighted_splitting;
+
+  // part needed for the cache 
+  // variables for caching the results and the input
+  static std::auto_ptr<SISConeSphericalPlugin        > stored_plugin;
+  static std::auto_ptr<std::vector<PseudoJet>        > stored_particles;
+  static std::auto_ptr<siscone_spherical::CSphsiscone> stored_siscone;
 };
 
-/// a shortname for the associated extras
-typedef SISConeBaseExtras<siscone_spherical::CSphsiscone, siscone_spherical::CSphmomentum, siscone_spherical::CSphjet> SISConeSphericalExtras;
+//======================================================================
+/// Class that provides extra information about a SISCone clustering
+class SISConeSphericalExtras : public SISConeBaseExtras {
+public:
+  /// constructor
+  //  it just initialises the pass information 
+  SISConeSphericalExtras(int nparticles)
+    : SISConeBaseExtras(nparticles){}
+
+  /// access to the siscone jet def plugin (more convenient than
+  /// getting it from the original jet definition, because here it's
+  /// directly of the right type (rather than the base type)
+  const SISConeSphericalPlugin* jet_def_plugin() const {
+    return dynamic_cast<const SISConeSphericalPlugin*>(_jet_def_plugin);
+  }
+
+private:
+  // let us be written to by SISConePlugin
+  friend class SISConeSphericalPlugin;
+};
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
 
