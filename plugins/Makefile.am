@@ -26,9 +26,12 @@ endif
 if BUILD_PLUGIN_JADE
 SUBDIRS += Jade
 endif
+if BUILD_PLUGIN_CMSITERATIVECONE
+SUBDIRS += CMSIterativeCone
+endif
 # end plugin section -- do not modify this line
 SUBDIRS += usage_examples
 
-DIST_SUBDIRS = Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
+DIST_SUBDIRS = CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
 
 EXTRA_DIST = makefile.static

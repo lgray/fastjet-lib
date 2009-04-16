@@ -140,6 +140,8 @@
 ///
 ///   -jade     switch to the Jade plugin
 ///
+///   -cmsiterativecone     switch to the CMSIterativeCone plugin
+///
 ///  end of plugins (don't delete this line)
 ///
 ///
@@ -198,6 +200,9 @@
 #endif
 #ifdef ENABLE_PLUGIN_JADE
 #include "fastjet/JadePlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+#include "fastjet/CMSIterativeConePlugin.hh"
 #endif
 // end of installed plugins inclusion (don't delete this line)
 
@@ -387,6 +392,12 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_JADE
     is_unavailable("Jade");
 #endif // ENABLE_PLUGIN_JADE
+  } else if (cmdline.present("-cmsiterativecone")) {
+#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+    jet_def = fj::JetDefinition(new fj::CMSIterativeConePlugin(ktR,seed_threshold));
+#else  // ENABLE_PLUGIN_CMSITERATIVECONE
+    is_unavailable("CMSIterativeCone");
+#endif // ENABLE_PLUGIN_CMSITERATIVECONE
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]

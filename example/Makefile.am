@@ -80,6 +80,11 @@ fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/Jade
 fastjet_timing_plugins_LDADD += ../plugins/Jade/libJadePlugin.la
 endif
 
+if BUILD_PLUGIN_CMSITERATIVECONE
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/CMSIterativeCone
+fastjet_timing_plugins_LDADD += ../plugins/CMSIterativeCone/libCMSIterativeConePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TESTS_ENVIRONMENT = $(SHELL)

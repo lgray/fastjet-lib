@@ -67,6 +67,9 @@
 #ifdef ENABLE_PLUGIN_JADE
 #include "fastjet/JadePlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+#include "fastjet/CMSIterativeConePlugin.hh"
+#endif
 // end of the plugin list (don't modify this line)
 
 #include<vector>
@@ -153,6 +156,12 @@ int main(int argc, char** argv) {
   plugins.push_back(new fastjet::JadePlugin());
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif // ENABLE_PLUGIN_JADE
+  // set up a cmsiterativecone
+#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+  double cms_seed_threshold = 1.0;
+  plugins.push_back(new fastjet::CMSIterativeConePlugin(jet_radius, cms_seed_threshold));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_CMSITERATIVECONE
   // end of the plugins instantiation (don't modify this line)
 
   // set up kt and cam/aachen definitions

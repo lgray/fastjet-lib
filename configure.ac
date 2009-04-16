@@ -118,6 +118,7 @@ DEFAULT_ENABLE_D0RUNIICONE="no"
 DEFAULT_ENABLE_NESTEDDEFS="yes"
 DEFAULT_ENABLE_TRACKJET="no"
 DEFAULT_ENABLE_ATLASCONE="no"
+DEFAULT_ENABLE_CMSITERATIVECONE="no"
 DEFAULT_ENABLE_EECAMBRIDGE="yes"
 DEFAULT_ENABLE_JADE="yes"
 
@@ -142,6 +143,7 @@ if [[ "x$ENABLE_ALLPLUGINS" == "xyes" ]] ; then
        DEFAULT_ENABLE_NESTEDDEFS="yes"
        DEFAULT_ENABLE_TRACKJET="yes"
        DEFAULT_ENABLE_ATLASCONE="yes"
+       DEFAULT_ENABLE_CMSITERATIVECONE="yes"
        DEFAULT_ENABLE_EECAMBRIDGE="yes" 
        DEFAULT_ENABLE_JADE="yes"
 fi
@@ -153,6 +155,7 @@ if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
        DEFAULT_ENABLE_NESTEDDEFS="no"
        DEFAULT_ENABLE_TRACKJET="no"
        DEFAULT_ENABLE_ATLASCONE="no"
+       DEFAULT_ENABLE_CMSITERATIVECONE="no"
        DEFAULT_ENABLE_EECAMBRIDGE="no" 
        DEFAULT_ENABLE_JADE="no"
 fi
@@ -178,6 +181,7 @@ if [[ "x$ENABLE_ALLCXXPLUGINS" == "xyes" ]] ; then
        DEFAULT_ENABLE_NESTEDDEFS="yes"
        DEFAULT_ENABLE_TRACKJET="yes"
        DEFAULT_ENABLE_ATLASCONE="yes"
+       DEFAULT_ENABLE_CMSITERATIVECONE="yes"
        DEFAULT_ENABLE_EECAMBRIDGE="yes" 
        DEFAULT_ENABLE_JADE="yes"
 fi
@@ -188,6 +192,7 @@ if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
        DEFAULT_ENABLE_NESTEDDEFS="no"
        DEFAULT_ENABLE_TRACKJET="no"
        DEFAULT_ENABLE_ATLASCONE="no"
+       DEFAULT_ENABLE_CMSITERATIVECONE="no"
        DEFAULT_ENABLE_EECAMBRIDGE="no" 
        DEFAULT_ENABLE_JADE="no"
 fi
@@ -306,6 +311,22 @@ fi
 AC_CONFIG_FILES( plugins/ATLASCone/Makefile plugins/ATLASCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_ATLASCONE, test x$ENABLE_ATLASCONE = xyes)
 AC_MSG_RESULT($ENABLE_ATLASCONE)
+
+dnl CMSIterativeCone
+AC_MSG_CHECKING([whether to build plugin CMSIterativeCone])
+AC_ARG_ENABLE(cmsiterativecone,
+       [  --enable-cmsiterativecone       enables the CMSIterativeCone plugin (default=no)],
+       [ENABLE_CMSITERATIVECONE="$enableval"],
+       [ENABLE_CMSITERATIVECONE="$DEFAULT_ENABLE_CMSITERATIVECONE"])
+if [[ "x$ENABLE_CMSITERATIVECONE" == "xyes" ]] ; then
+   AC_DEFINE(ENABLE_PLUGIN_CMSITERATIVECONE, [], [The CMSIterativeCone plugin is enabled])
+   dnl set up the libs
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lCMSIterativeConePlugin "
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libCMSIterativeConePlugin.a "
+fi
+AC_CONFIG_FILES( plugins/CMSIterativeCone/Makefile plugins/CMSIterativeCone/fastjet/Makefile )
+AM_CONDITIONAL(BUILD_PLUGIN_CMSITERATIVECONE, test x$ENABLE_CMSITERATIVECONE = xyes)
+AC_MSG_RESULT($ENABLE_CMSITERATIVECONE)
 
 dnl EECambridge
 AC_MSG_CHECKING([whether to build plugin EECambridge])

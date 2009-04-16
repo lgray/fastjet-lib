@@ -6,6 +6,9 @@
 /* The CDFJetClu and CDFMidPoint plugins are enabled */
 #undef ENABLE_PLUGIN_CDFCONES
 
+/* The CMSIterativeCone plugin is enabled */
+#undef ENABLE_PLUGIN_CMSITERATIVECONE
+
 /* The D0RunIICone plugin is enabled */
 #undef ENABLE_PLUGIN_D0RUNIICONE
 

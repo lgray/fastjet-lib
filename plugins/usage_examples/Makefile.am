@@ -69,6 +69,12 @@ many_algs_example_CXXFLAGS += -I${srcdir}/../Jade
 many_algs_example_LDADD += ../Jade/libJadePlugin.la
 endif
 
+# add CMSIterativeCone-related parts
+if BUILD_PLUGIN_CMSITERATIVECONE
+many_algs_example_CXXFLAGS += -I${srcdir}/../CMSIterativeCone
+many_algs_example_LDADD += ../CMSIterativeCone/libCMSIterativeConePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TEST_ENVIRONMENT = $(SHELL)

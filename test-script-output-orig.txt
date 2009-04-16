@@ -3579,6 +3579,131 @@ atlascone:    1      0.22137401      6.03515762    906.44139699
 atlascone:    2     -1.16601802      6.10941975     74.17814632
 atlascone:    3     -2.25797492      1.21679431     13.16911073
 atlascone:    4     -1.72135558      3.91871676      8.64801111
+cmsiterativecone:#--------------------------------------------------------------------------
+cmsiterativecone:#                      FastJet release 2.4-devel
+cmsiterativecone:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+cmsiterativecone:#                         http://www.fastjet.fr
+cmsiterativecone:#
+cmsiterativecone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+cmsiterativecone:# clustering using fast geometric algorithms, with area measures and optional
+cmsiterativecone:# external jet-finder plugins.
+cmsiterativecone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+cmsiterativecone:#
+cmsiterativecone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+cmsiterativecone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+cmsiterativecone:# and CGAL: http://www.cgal.org/.
+cmsiterativecone:#-------------------------------------------------------------------------
+cmsiterativecone:iev 0: number of particles = 354
+cmsiterativecone:strategy used =  plugin strategy
+cmsiterativecone:Algorithm: CMSIterativeCone plugin (FastJet version 2.4-devel)
+cmsiterativecone:    0     -0.86748501      2.90530809    981.15729251
+cmsiterativecone:    1      0.22194635      6.03015358    894.86349408
+cmsiterativecone:    2     -1.19073366      6.10283910     63.37420652
+cmsiterativecone:    3      0.45863413      0.74691237      9.22793916
+cmsiterativecone:    4     -0.94343365      5.73794142      5.72893220
+cmsiterativecone:    5     -1.11143718      0.49003133      4.71953385
+cmsiterativecone:    6     -2.43442103      1.36980264      4.71348205
+cmsiterativecone:    7      0.20545520      0.35698008      4.60875126
+cmsiterativecone:    8     -1.64294249      4.13706421      4.50441446
+cmsiterativecone:    9     -0.11630008      6.24162452      4.25433054
+cmsiterativecone:   10     -2.56549692      0.84878570      2.95919083
+cmsiterativecone:   11     -2.50805993      6.26480864      2.86899153
+cmsiterativecone:   12     -1.55168716      1.18751879      2.56636065
+cmsiterativecone:   13     -4.84794387      3.93481144      2.52366253
+cmsiterativecone:   14     -4.72645349      1.71293309      2.33372450
+cmsiterativecone:   15     -1.87655762      3.81150728      2.06888089
+cmsiterativecone:   16      8.12777070      4.50033593      1.65339912
+cmsiterativecone:   17     -2.03004782      0.68656051      1.64420492
+cmsiterativecone:   18     -4.24567615      1.13070663      1.56772423
+cmsiterativecone:   19      3.61834479      5.09397697      1.56474502
+cmsiterativecone:   20     -4.65674844      6.23837318      1.48944272
+cmsiterativecone:   21     -0.45119418      2.79496388      1.47236467
+cmsiterativecone:   22      5.76250669      3.59085916      1.46715405
+cmsiterativecone:   23     -4.47175148      4.54371501      1.41165455
+cmsiterativecone:   24      0.40534042      3.69495045      1.26881151
+cmsiterativecone:   25      4.94988636      4.36120223      1.26261444
+cmsiterativecone:   26     -4.76086205      2.29603389      1.20420200
+cmsiterativecone:   27      2.45321496      4.80987689      1.18477647
+cmsiterativecone:   28     -4.29246512      0.36267683      1.16652244
+cmsiterativecone:   29      5.83349277      4.31085344      1.15482500
+cmsiterativecone:   30     -1.12427361      3.92422371      1.10764361
+cmsiterativecone:   31      2.98963399      5.74122296      1.09461974
+cmsiterativecone:   32      6.76652121      3.05170242      1.06182081
+cmsiterativecone:   33     -0.13319344      3.64778702      1.05346959
+cmsiterativecone:#--------------------------------------------------------------------------
+cmsiterativecone:#                      FastJet release 2.4-devel
+cmsiterativecone:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+cmsiterativecone:#                         http://www.fastjet.fr
+cmsiterativecone:#
+cmsiterativecone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+cmsiterativecone:# clustering using fast geometric algorithms, with area measures and optional
+cmsiterativecone:# external jet-finder plugins.
+cmsiterativecone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+cmsiterativecone:#
+cmsiterativecone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+cmsiterativecone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+cmsiterativecone:# and CGAL: http://www.cgal.org/.
+cmsiterativecone:#-------------------------------------------------------------------------
+cmsiterativecone:iev 0: number of particles = 354
+cmsiterativecone:strategy used =  plugin strategy
+cmsiterativecone:Algorithm: CMSIterativeCone plugin (FastJet version 2.4-devel)
+cmsiterativecone:    0     -0.86713954      2.90515650    983.27961921
+cmsiterativecone:    1      0.22089580      6.03313616    904.16761389
+cmsiterativecone:    2     -1.16361171      6.11306612     72.67956112
+cmsiterativecone:    3      0.41598393      0.74610714     10.30219107
+cmsiterativecone:    4     -2.49084195      1.18466588      8.15419593
+cmsiterativecone:    5     -1.63742088      4.01894081      7.60023410
+cmsiterativecone:    6     -4.40495231      1.44878490      5.18723365
+cmsiterativecone:    7     -1.70545433      0.95190347      4.50535069
+cmsiterativecone:    8     -2.49858360      6.20468987      3.44557740
+cmsiterativecone:    9     -4.88336595      4.08001538      3.31609472
+cmsiterativecone:   10      2.63174529      5.81712762      3.17950978
+cmsiterativecone:   11      2.11102490      4.81231342      2.72863245
+cmsiterativecone:   12     -4.47515985      0.13381720      2.60184918
+cmsiterativecone:   13      0.21090666      3.67744153      2.50086160
+cmsiterativecone:   14      3.68806210      5.21991244      2.23461061
+cmsiterativecone:   15      5.29002013      4.47179131      2.21966348
+cmsiterativecone:   16     -4.77967341      2.46444895      2.20701636
+cmsiterativecone:   17     -4.41798380      4.61221042      1.87675852
+cmsiterativecone:   18      8.12777070      4.50033593      1.65339912
+cmsiterativecone:   19      6.44846894      3.24197956      1.64643717
+cmsiterativecone:   20      5.69498870      3.60247086      1.63515227
+cmsiterativecone:   21      4.93668383      4.31841484      1.07670707
+cmsiterativecone:#--------------------------------------------------------------------------
+cmsiterativecone:#                      FastJet release 2.4-devel
+cmsiterativecone:#            Written by M. Cacciari, G.P. Salam and G. Soyez
+cmsiterativecone:#                         http://www.fastjet.fr
+cmsiterativecone:#
+cmsiterativecone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen
+cmsiterativecone:# clustering using fast geometric algorithms, with area measures and optional
+cmsiterativecone:# external jet-finder plugins.
+cmsiterativecone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+cmsiterativecone:#
+cmsiterativecone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+cmsiterativecone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
+cmsiterativecone:# and CGAL: http://www.cgal.org/.
+cmsiterativecone:#-------------------------------------------------------------------------
+cmsiterativecone:iev 0: number of particles = 354
+cmsiterativecone:strategy used =  plugin strategy
+cmsiterativecone:Algorithm: CMSIterativeCone plugin (FastJet version 2.4-devel)
+cmsiterativecone:    0     -0.86713954      2.90515650    983.27961921
+cmsiterativecone:    1      0.21948180      6.03486732    908.09787495
+cmsiterativecone:    2     -1.17794450      6.11473757     72.54685671
+cmsiterativecone:    3     -2.21135433      1.23463827     13.56720356
+cmsiterativecone:    4     -1.72135558      3.91871676      8.64801111
+cmsiterativecone:    5      0.50917492      0.88055560      8.62446713
+cmsiterativecone:    6     -4.26036406      1.20793335      7.04697159
+cmsiterativecone:    7     -4.78070272      4.14633980      4.98690435
+cmsiterativecone:    8      1.98981910      5.04336353      4.77888037
+cmsiterativecone:    9      3.44188804      5.70976232      4.51491147
+cmsiterativecone:   10      5.63730631      3.53258478      3.71346176
+cmsiterativecone:   11     -2.61815422      6.24861263      3.57732875
+cmsiterativecone:   12      0.36701702      3.70077886      3.16943147
+cmsiterativecone:   13     -4.59681328      2.65910209      3.06566565
+cmsiterativecone:   14     -4.61593182      5.75308586      2.80249629
+cmsiterativecone:   15      6.59084777      3.06882696      2.19644051
+cmsiterativecone:   16      4.89319381      4.56024731      2.08744965
+cmsiterativecone:   17      8.12157221      4.53217471      1.69349505
 eecambridge@single-ee-event.dat:#--------------------------------------------------------------------------
 eecambridge@single-ee-event.dat:#                      FastJet release 2.4-devel
 eecambridge@single-ee-event.dat:#            Written by M. Cacciari, G.P. Salam and G. Soyez
