@@ -238,7 +238,7 @@ sub setDefaults {
 
   @algs = ("kt", "cam", "antikt", "genkt:0.5", "siscone:-f:0.75","siscone:-f:0.50",  "jetclu", "pxcone",
            "d0runiicone", "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
-	   "trackjet", "atlascone", "cmsiteraticevone", "jade:-excly:0.01");
+	   "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01");
 
   # for some algorithms we have multiple strategies to test
   %strategies = 
