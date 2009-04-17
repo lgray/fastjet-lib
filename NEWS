@@ -65,7 +65,7 @@ Configure modifications
 -----------------------
 - added --enable-allplugins and --enable-allcxxplugins options, to
   avoid having to specify a long list of individual plugins
-- shared libraries have been enabled by default
+- shared libraries are now enabled by default
 
 Bugs fixed
 ----------
