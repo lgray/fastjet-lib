@@ -33,7 +33,6 @@ The full list of possible options can be obtained with ./configure
                     it's not in a standard place.
 
    --with-cgalmakefile=makefile
-
                     For CGAL <= 3.3.x specify location of CGAL
                     Makefile (which contains info on correct
                     compilation flags when using CGAL).  In the
@@ -42,10 +41,10 @@ The full list of possible options can be obtained with ./configure
                     Makefile. If this is absent too, the default
                     location (/usr/share/cgal/cgal.mk) is used.
 
-    --enable-allcxxplugins
+    --enable-allcxxplugins    (default=no)
                     enable all C++ plugins, but not the Fortran ones
 
-    --enable-alllugins
+    --enable-alllugins        (default=no)
                     enable all plugins, including the Fortran ones
                     (PxCone). 
 
