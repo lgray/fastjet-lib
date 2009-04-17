@@ -48,7 +48,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   siscone is stored -- if the current event is identical and the
 ///   cone_radius and n_pass_mass are identical, then the only part of
 ///   the clustering that needs to be rerun is the split-merge part,
-///   leading to significant speed gains; there is a small (O(N) storage///   and speed) penalty for caching, so it should be kept off
+///   leading to significant speed gains; there is a small (O(N) storage
+///   and speed) penalty for caching, so it should be kept off
 ///   (default) if only a single overlap_threshold is used.
 ///
 /// The final jets can be accessed by requestion the

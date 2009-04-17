@@ -2328,21 +2328,31 @@ $f$ is the overlap threshold
 
 The underlying code for this algorithm was extracted from SpartyJet \cite{SpartyJet}.
 
-%% \subsubsection{CMS iterative cone}
-%% %
-%% The (iterative) cone (with progressive removal) algorithm used by CMS during
-%% the preparation for the LHC. 
-%% \begin{lstlisting}
-%%   #include ``fastjet/CMSIterativeConePlugin.hh''
-%%   ///...
-%%   CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
-%% \end{lstlisting}
-%% 
-%% 
-%% The underlying code for this algorithm was extracted from the CMSSW
-%% web site, with certain small service routines having been rewritten by
-%% the FastJet authors. 
-%% %% SOME WORDS ABOUT VALIDATION
+\subsubsection{CMS iterative cone}
+%
+The (iterative) cone (with progressive removal) algorithm used by CMS during
+the preparation for the LHC. 
+\begin{lstlisting}
+  #include ``fastjet/CMSIterativeConePlugin.hh''
+  ///...
+  CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
+\end{lstlisting}
+
+
+The underlying code for this algorithm was extracted from the CMSSW
+web site, with certain small service routines having been rewritten by
+the FastJet authors. 
+%
+The resulting code was validated by clustering 1000 events with the
+original version of the CMS software and comparing the output to the
+clustering performed with the FastJet plugin. 
+%
+The jet contents were identical in all cases. However the jet momenta
+differed at a relative precision level of $10^{-7}$, related to the
+use of single-precision arithmetic at some internal stage of the CMS
+software (while the FastJet version is in double precision).
+
+%% SOME WORDS ABOUT VALIDATION
 
 
 \subsubsection{PxCone}
@@ -2568,7 +2578,8 @@ Juan Rojo for discussions related to various features of the code.
 
 We are grateful to CDF, Joey Huston, Lars Sonnenschein and Mike
 Seymour for providing permission to distribute their cone jet
-algorithm codes as plugins for fastjet.
+algorithm codes as plugins for fastjet and to Salvatore Rappaccio for
+assistance in validating the CMS cone.
 
 
 \appendix
