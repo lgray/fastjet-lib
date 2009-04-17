@@ -1,9 +1,9 @@
 Release Notes for fastjet
 -------------------------
 
-======================================================================
-Summary of changes from v2.3.X -> v2.4-devel
-==========================================================
+=======================================================
+Summary of changes from v2.3.X -> v2.4.0: 17 April 2009
+=======================================================
 
 
 New pp algorithms
@@ -76,7 +76,8 @@ Other modifications
 - added support for CGAL 3.4 (for non-standard locations, specify
   --with-cgaldir at configure time)
 - removed restriction that fastjet throws exception on empty events
-
+- added an example that illustrates the use of subjet techniques for
+  a boosted Higgs->b+bbar search
 
 Still to come
 -------------

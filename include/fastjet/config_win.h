@@ -1,5 +1,5 @@
-#define PACKAGE_STRING  "FastJet 2.4-devel"
-#define PACKAGE_VERSION  "2.4-devel"
+#define PACKAGE_STRING  "FastJet 2.4.0"
+#define PACKAGE_VERSION  "2.4.0"
 
 /* The CDFJetClu and CDFMidPoint plugins are enabled by default*/
 #define ENABLE_PLUGIN_CDFCONES 

@@ -6,21 +6,60 @@ before each release. If you make a release, update the X.Y.Z numbers
 to indicate you carried out the operation.
 
 
+
+----------------------------------------------------------------------
+checklist for X.Y.Z (make a copy before editing!)
+-------------------
 X.Y.Z  make sure version number in configure.ac is correct
 
 X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
 X.Y.Z  update doxygen version number
+X.Y.Z  version number in manual
 
 X.Y.Z  ensure NEWS is up to date
 
 X.Y.Z  make sure siscone points to a tag, not trunk
 
-X.Y.Z  make check [how do we deal with various config options?]
+X.Y.Z  make check 
 
 X.Y.Z  make distcheck
 
+X.Y.Z  rerun the nightly check
+
 X.Y.Z  copy distribution to web
-X.Y.Z  compile manual, give it current version number
+X.Y.Z  compile manual
+X.Y.Z  copy manual to web
+X.Y.Z  run doxygen, copy to web
+X.Y.Z  update main web page & menu
+
+X.Y.Z  tag
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+
+
+----------------------------------------------------------------------
+checklist for 2.4.0
+-------------------
+2.4.0  make sure version number in configure.ac is correct
+
+2.4.0  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+2.4.0  update doxygen version number
+2.4.0  version number in manual
+
+2.4.0  ensure NEWS is up to date
+
+2.4.0  make sure siscone points to a tag, not trunk
+
+2.4.0  make check 
+
+X.Y.Z  make distcheck
+
+X.Y.Z  rerun the nightly check
+
+X.Y.Z  copy distribution to web
+X.Y.Z  compile manual
 X.Y.Z  copy manual to web
 X.Y.Z  run doxygen, copy to web
 X.Y.Z  update main web page & menu
