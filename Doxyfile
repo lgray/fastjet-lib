@@ -452,9 +452,16 @@ WARN_LOGFILE           =
 
 INPUT                  = src/ include/ include/fastjet include/fastjet/internal \
 		         example/ \
+                         plugins/ATLASCone plugins/ATLASCone/fastjet \
+                         plugins/CMSIterativeCone plugins/CMSIterativeCone/fastjet \
+                         plugins/CDFCones plugins/CDFCones/fastjet \
+                         plugins/D0RunIICone plugins/D0RunIICone/fastjet \
+                         plugins/EECambridge plugins/EECambridge/fastjet \
+                         plugins/Jade plugins/Jade/fastjet \
+                         plugins/NestedDefs plugins/NestedDefs/fastjet \
                          plugins/SISCone plugins/SISCone/fastjet   \
                          plugins/PxCone plugins/PxCone/fastjet     \
-                         plugins/CDFCones plugins/CDFCones/fastjet \
+                         plugins/TrackJet plugins/TrackJet/fastjet \
                          plugins/usage_examples
 
 # If the value of the INPUT tag contains directories, you can use the 

@@ -13,7 +13,7 @@ checklist for X.Y.Z (make a copy before editing!)
 X.Y.Z  make sure version number in configure.ac is correct
 
 X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-X.Y.Z  update doxygen version number
+X.Y.Z  update doxygen version number + check dirs are declared for new plugins
 X.Y.Z  version number in manual
 
 X.Y.Z  ensure NEWS is up to date
@@ -32,10 +32,11 @@ X.Y.Z  copy distribution to web
 X.Y.Z  compile manual
 X.Y.Z  copy manual to web
 X.Y.Z  run doxygen, copy to web
-X.Y.Z  update main web page & menu
+X.Y.Z  update main web page & menu in devel area
 
-X.Y.Z  make sure it's committed with the CHECKLIST
 X.Y.Z  tag
+X.Y.Z  update main web-page area
+X.Y.Z  make sure it's committed with the CHECKLIST
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
@@ -48,7 +49,7 @@ checklist for 2.4.0
 2.4.0  make sure version number in configure.ac is correct
 
 2.4.0  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-2.4.0  update doxygen version number
+2.4.0  update doxygen version number + check dirs are declared for new plugins
 2.4.0  version number in manual
 
 2.4.0  ensure NEWS is up to date
@@ -59,18 +60,19 @@ checklist for 2.4.0
 
 2.4.0  make distcheck
 
-X.Y.Z  make sure it's committed
+2.4.0  make sure it's committed
 
 X.Y.Z  rerun the nightly check
 
-X.Y.Z  copy distribution to web
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web
-X.Y.Z  run doxygen, copy to web
-X.Y.Z  update main web page & menu
+2.4.0  copy distribution to web
+2.4.0  compile manual
+2.4.0  copy manual to web
+2.4.0  run doxygen, copy to web
+2.4.0  update main web page & menu
 
-X.Y.Z  make sure it's committed with the CHECKLIST
 X.Y.Z  tag
+X.Y.Z  update main web-page area
+X.Y.Z  make sure it's committed with the CHECKLIST
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
