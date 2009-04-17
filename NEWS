@@ -64,8 +64,9 @@ Interface modifications
 Configure modifications
 -----------------------
 - added --enable-allplugins and --enable-allcxxplugins options, to
-  avoid having to specify a long list of individual plugins.
-  
+  avoid having to specify a long list of individual plugins
+- shared libraries have been enabled by default
+
 Bugs fixed
 ----------
 - fixed missing support for periodicity in azimuth in RangeDefinition
