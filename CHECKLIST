@@ -36,10 +36,11 @@ X.Y.Z  update main web page & menu in devel area
 
 X.Y.Z  tag
 X.Y.Z  update main web-page area
-X.Y.Z  make sure it's committed with the CHECKLIST
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
+
+X.Y.Z  make sure it's committed with the CHECKLIST
 
 
 
@@ -62,7 +63,7 @@ checklist for 2.4.0
 
 2.4.0  make sure it's committed
 
-X.Y.Z  rerun the nightly check
+2.4.0  rerun the nightly check
 
 2.4.0  copy distribution to web
 2.4.0  compile manual
@@ -70,12 +71,13 @@ X.Y.Z  rerun the nightly check
 2.4.0  run doxygen, copy to web
 2.4.0  update main web page & menu
 
-X.Y.Z  tag
-X.Y.Z  update main web-page area
-X.Y.Z  make sure it's committed with the CHECKLIST
+2.4.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+2.4.0  update main web-page area
 
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+2.4.0  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
+
+2.4.0  make sure it's committed with the CHECKLIST
 
 
 
