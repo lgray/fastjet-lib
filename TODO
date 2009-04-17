@@ -4,9 +4,8 @@ For 2.4
 - [done] Sort out phi component of Range...
 - [done] test phi component of range
 - [done] Sort out zero-particle case
-  [no]   [+ add constructor without particles]; [Requests by Andy Buckley]
-- [done] enable dynamic libraries by default?   [GS: I'd be for it]
-- [done] add "version()" info to doc            [Gregory: check you're happy! I'd have put FastJet 2.4devel, wo the []]
+- [done] enable dynamic libraries by default?   
+- [done] add "version()" info to doc            
 - [done] document error meaningless on AAEG.    
 - [done] sort out e+e- R across different algorithms 
 - [done] finish testing e+e- kt                 
