@@ -91,6 +91,7 @@ echo "CGAL" >> clear_patterns.orig
 echo "SISCone" >> clear_patterns.orig  # avoids problems w version numbers
 echo "pxcone: +[a-zA-Z*]" >> clear_patterns.orig   # special treatment for PxCone whose fortran output
 echo "pxcone: *$"         >> clear_patterns.orig   # occurs in non-predicatble position (flushing issue)
+echo "WARNING"            >> clear_patterns.orig   # occurs in non-predicatble position (flushing issue)
 cp clear_patterns.orig clear_patterns.tmp
 
 # note: algs specified as alg:name mean that 'name' has to be checked for the 

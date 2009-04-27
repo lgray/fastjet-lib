@@ -464,14 +464,14 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
   // were particles in the first place.
   assert (njets <= _initial_n);
 
-  // provide a warning when extracting exclusive jets for algorithms 
-  // other than the pp and e+e- kt.
-  if (_jet_def.jet_algorithm() != kt_algorithm &&
-      _jet_def.jet_algorithm() != ee_kt_algorithm &&
-      _n_exclusive_warnings < 5) {
-    _n_exclusive_warnings++;
-    cerr << "FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care." << endl;
-  }
+  //DEPRECATED: // provide a warning when extracting exclusive jets for algorithms 
+  //DEPRECATED: // other than the pp and e+e- kt.
+  //DEPRECATED: if (_jet_def.jet_algorithm() != kt_algorithm &&
+  //DEPRECATED:     _jet_def.jet_algorithm() != ee_kt_algorithm &&
+  //DEPRECATED:     _n_exclusive_warnings < 5) {
+  //DEPRECATED:   _n_exclusive_warnings++;
+  //DEPRECATED:   cerr << "FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care." << endl;
+  //DEPRECATED: }
 
 
   // calculate the point where we have to stop the clustering.

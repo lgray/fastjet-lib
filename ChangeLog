@@ -1,3 +1,14 @@
+2009-04-27  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* test-compare.sh:
+	  discard lines with "WARNING" (occurs in non=predictable
+	  positions due to flushing issues)
+
+	* src/ClusterSequence.cc:
+	  removed the WARNING previously given when extracting exclusive
+	  jets for algorithms other than pp and e+e- kt
+
+	
 2009-04-16  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* plugins/SISCone/fastjet/SISConeBasePlugin.hh: 
