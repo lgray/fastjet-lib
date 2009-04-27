@@ -1,5 +1,8 @@
 2009-04-27  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* configure.ac: 
+	  switched version number to 2.4.1-devel
+
 	* test-compare.sh:
 	  discard lines with "WARNING" (occurs in non=predictable
 	  positions due to flushing issues)
