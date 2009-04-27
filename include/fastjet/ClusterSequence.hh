@@ -189,9 +189,9 @@ class ClusterSequence {
   //double exclusive_dmerge (const PseudoJet & jet, const int & njets) const;
 
   /// returns the sum of all energies in the event (relevant mainly for e+e-)
-  double Q() const {return _Q;}
+  double Q() const {return _Qtot;}
   /// return Q()^2
-  double Q2() const {return _Q*_Q;}
+  double Q2() const {return _Qtot*_Qtot;}
 
   /// returns true iff the object is included in the jet. 
   ///
@@ -553,7 +553,7 @@ protected:
   bool _writeout_combinations;
   int  _initial_n;
   double _Rparam, _R2, _invR2;
-  double _Q;
+  double _Qtot;
   Strategy    _strategy;
   JetAlgorithm  _jet_algorithm;
 
