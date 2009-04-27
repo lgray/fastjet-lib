@@ -406,6 +406,11 @@ public:
     virtual void set_ghost_separation_scale(double scale) const;
     virtual double ghost_separation_scale() const {return 0.0;}
 
+    /// if this returns false then a warning will be given
+    /// whenever the user requests "exclusive" jets from the
+    /// cluster sequence
+    virtual bool exclusive_sequence_meaningful() const {return false;}
+
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Plugin() {};
   };

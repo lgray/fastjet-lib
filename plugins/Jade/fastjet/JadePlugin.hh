@@ -91,6 +91,10 @@ public:
   /// does not make sense for this algorithm!
   virtual double R() const {return 1.0;}
 
+  /// avoid the warning whenever the user requests "exclusive" jets
+  /// from the cluster sequence
+  virtual bool exclusive_sequence_meaningful() const {return true;}
+
 private:
 
 };

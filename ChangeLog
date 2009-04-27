@@ -1,6 +1,20 @@
 2009-04-27  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* src/ClusterSequence.cc:
+	  restored the warning about dangerous request for exclusive 
+	  jets (removed earlier today) with a more reasonnable
+	  list of algorithms for which no warnings are given.
+
+	* include/fastjet/JetDefinition.hh: 
+	  plugins/Jade/fastjet/JadePlugin.hh: 
+	  plugins/EECambridge/fastjet/EECambridgePlugin.hh: 
+	  added a 'exclusive_seqence_meaningful' member allowing to know
+	  if a plugin gives meaningful exclusive jets (default=false). 
+	  Set to true in Jade and EECambrigde.
+	
 	* configure.ac: 
+	  include/fastjet/config_win.h:
+	  DoxyFile:
 	  switched version number to 2.4.1-devel
 
 	* test-compare.sh:
