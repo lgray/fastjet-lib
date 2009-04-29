@@ -122,6 +122,9 @@ public:
   /// clustering sequence
   bool has_dangerous_particles() const {return _has_dangerous_particles;}
 
+  /// get the area of the ghosts
+  double ghost_area(){return _ghost_area;}
+
 private:
 
   int    _n_ghosts;

@@ -1,3 +1,10 @@
+2009-04-29  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh (ClusterSequenceAreaBase): 
+	  added a ghost_area() method to get the info about the ghost area
+	  used with this clusterSequence
+
+	
 2009-04-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 
