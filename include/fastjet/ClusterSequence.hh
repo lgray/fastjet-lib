@@ -756,9 +756,14 @@ protected:
     double nx, ny, nz;  // our internal storage for fast distance calcs
   };
 
-  /// to help instantiation
-  void _dummy_N2_cluster_instantiation();
+  /// to help instantiation (fj 2.4.0; did not quite work on gcc 33 and os x 10.3?)
+  //void _dummy_N2_cluster_instantiation();
 
+
+  /// to avoid issues with template instantiation (OS X 10.3, gcc 3.3)
+  void _simple_N2_cluster_BriefJet();
+  /// to avoid issues with template instantiation (OS X 10.3, gcc 3.3)
+  void _simple_N2_cluster_EEBriefJet();
 };
 
 

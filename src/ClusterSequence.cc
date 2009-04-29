@@ -115,7 +115,8 @@ void ClusterSequence::_initialise_and_run (
       }
       _invR2 = 1.0/_R2;
     }
-    _simple_N2_cluster<EEBriefJet>();
+    //_simple_N2_cluster<EEBriefJet>();
+    _simple_N2_cluster_EEBriefJet();
     return;
   }
 
@@ -160,7 +161,8 @@ void ClusterSequence::_initialise_and_run (
     this->_tiled_N2_cluster();
   } else if (_strategy == N2Plain) {
     // BriefJet provides standard long.invariant kt alg.
-    this->_simple_N2_cluster<BriefJet>();
+    //this->_simple_N2_cluster<BriefJet>();
+    this->_simple_N2_cluster_BriefJet();
   } else if (_strategy == N2MinHeapTiled) {
     this->_minheap_faster_tiled_N2_cluster();
   } else if (_strategy == NlnNCam4pi) {

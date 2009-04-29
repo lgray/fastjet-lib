@@ -1,3 +1,16 @@
+2009-04-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	* src/ClusterSequence_N2.cc: 
+	* include/fastjet/ClusterSequence.hh: 
+
+	  replaced void ClusterSequence::_dummy_N2_cluster_instantiation()
+	  (dummy instantiation of template to make it available elsewhere)
+	  with _simple_N2_cluster_BriefJet() and
+	  _simple_N2_cluster_EEBriefJet() (they are to be called and
+	  should directly run the template).
+
+	
 2009-04-27  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* src/ClusterSequence.cc:

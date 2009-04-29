@@ -110,15 +110,26 @@ template<> double ClusterSequence::_bj_dist(
 
 
 
-
-//----------------------------------------------------------------------
-/// Force instantiation of desired versions of _simple_N2_cluster
-///
-/// This is not very elegant...
-void ClusterSequence::_dummy_N2_cluster_instantiation() {
+// get explicit copies of the two N2 cluster cases we need
+// plain BriefJet
+void ClusterSequence::_simple_N2_cluster_BriefJet() {  
   _simple_N2_cluster<BriefJet>();
+}
+
+
+// e+e- BriefJet
+void ClusterSequence::_simple_N2_cluster_EEBriefJet() {  
   _simple_N2_cluster<EEBriefJet>();
 }
+
+// //----------------------------------------------------------------------
+// /// Force instantiation of desired versions of _simple_N2_cluster
+// ///
+// /// This is not very elegant...
+// void ClusterSequence::_dummy_N2_cluster_instantiation() {
+//   _simple_N2_cluster<BriefJet>();
+//   _simple_N2_cluster<EEBriefJet>();
+// }
 
 FASTJET_END_NAMESPACE
 
