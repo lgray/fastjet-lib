@@ -123,7 +123,7 @@ public:
   bool has_dangerous_particles() const {return _has_dangerous_particles;}
 
   /// get the area of the ghosts
-  double ghost_area(){return _ghost_area;}
+  double ghost_area() const{return _ghost_area;}
 
 private:
 
