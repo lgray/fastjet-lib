@@ -1294,10 +1294,24 @@ also be one of the constituents of a jet, in which case it will return
 Jet areas can be used to study the level of a randomly distributed
 diffuse background which might be present together with the hard event
 of interest. After selecting a phase space region over which to analyse
-the jets, one can determine the average level of the background, and
-also subtract it from the hard jets. This way of using jets to
+the jets, one can determine the average level $rho$ (transverse momentum per
+unit area) of the background, 
+and also subtract it from the hard jets. This way of using jets to
 determine the noise level on an event-by-event basis was
 introduced and described in~\cite{cs}.
+
+Note that we recommend that you use only the $k_t$ or Cambridge/Aachen 
+algorithms for calculating the UE/pileup density $\rho$. In fact, it is important to
+avoid algorithms with extreme behaviours for the areas. In particular one
+should not use anti-$k_t$ (which has many jets with near-zero area) or
+SISCone (which can have jets with near-zero area, as well as monster jets
+with huge areas if the overlap parameter $f$ is too small). In contrast the
+$k_t$ and Cambridge/Aachen algorithms are suitable. 
+
+Once $\rho$ has been determined using $k_t$ or Cambridge/Aachen (and an appropriate
+value of $R$, typically of order 0.4--0.6, see~\cite{cs} for more details), its
+value can then be used for UE/pileup subtraction in an analysis using any jet 
+algorithm.
 
 \subsubsection{Fixed range}
 
