@@ -1,5 +1,8 @@
 2009-05-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/nightly-check.pl: 
+	  removed the --enabled-shared option in the configure; 
+
 	* moved siscone back over to the trunk...
 
 2009-04-29  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
