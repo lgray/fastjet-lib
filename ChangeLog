@@ -1,10 +1,13 @@
+2009-05-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* moved siscone back over to the trunk...
+
 2009-04-29  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh (ClusterSequenceAreaBase): 
 	  added a ghost_area() method to get the info about the ghost area
 	  used with this clusterSequence
 
-	
 2009-04-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 
