@@ -57,18 +57,18 @@ while (1) {
     last;
   }
 
-  ###--- svn update --------------------------------------------------------
-  ##&message("* running svn update\n");
-  ##$svnup=`svn update 2>&1`;
-  ##if ($svnup =~ /external .. revision [0-9]/i && 
-  ##    ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
-  ##    $svnup !~ /conflict/i) {
-  ##  # all is OK, do nothing
-  ##} else {
-  ##  $fail = "svn update";
-  ##  $failDetails = $svnup;
-  ##  last;
-  ##}
+  #--- svn update --------------------------------------------------------
+  &message("* running svn update\n");
+  $svnup=`svn update 2>&1`;
+  if ($svnup =~ /external .. revision [0-9]/i && 
+      ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
+      $svnup !~ /conflict/i) {
+    # all is OK, do nothing
+  } else {
+    $fail = "svn update";
+    $failDetails = $svnup;
+    last;
+  }
 
   #--- make dist ------------------------------------------------------
   &message("* running make dist");

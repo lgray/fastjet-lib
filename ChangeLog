@@ -1,3 +1,8 @@
+2009-05-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  put back the svn update lines.
+
 2009-05-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
