@@ -1,3 +1,13 @@
+2009-05-08  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * fastjet-2.4.0/example/fastjet_example.cc
+          fastjet-2.4.0/example/fastjet_subjets.cc
+          fastjet-2.4.0/example/fastjet_timing.cc
+          fastjet-2.4.0/include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
+          fastjet-2.4.0/plugins/usage_examples/run_jet_finder.cc
+          added #include <cstdio> for compatibility with g++-4.4
+          (pointed out by <peter.elmer@cern.ch>
+
 2009-05-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
