@@ -5,7 +5,7 @@
 # -mail sends mail, otherwise, verbose output
 #
 #
-
+#----------------------------------------------------------------------
 # Items are
 #   - svn update
 #   - make dist
@@ -14,7 +14,20 @@
 #   - make
 #   - make check
 #   - regression-tests/test-all-algs.pl -nev 1000
-
+#
+#----------------------------------------------------------------------
+# Future options:
+#   - include various other configures (with/without shared libs, cgal, etc.)
+#   - include different compilers
+#     [e.g. /ada1/lpthe/cacciari/local/bin/g++-4.4]
+#   - and try it out on macs too?
+#
+# What should the architecture be? Call this program with options?
+# This program calls others if you ask for specific cases?
+#
+#----------------------------------------------------------------------
+# Reminder notes:
+#
 # NB: $? is command status (non-zero with error)
 
 use Cwd;

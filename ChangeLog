@@ -1,3 +1,8 @@
+2009-05-08  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  added some comments for how this might evolve in future
+
 2009-05-08  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * fastjet-2.4.0/example/fastjet_example.cc
