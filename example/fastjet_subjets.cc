@@ -44,6 +44,7 @@
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
+#include <cstdio>
 
 using namespace std;
 

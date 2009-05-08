@@ -37,6 +37,7 @@
 #include "fastjet/internal/LimitedWarning.hh"
 #include<iostream>
 #include<vector>
+#include <cstdio>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

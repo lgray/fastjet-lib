@@ -82,6 +82,7 @@
 #include<sstream>
 #include<valarray>
 #include<vector>
+#include <cstdio>
 #include <cstdlib>
 #include<cstddef> // for size_t
 #include "CmdLine.hh"
