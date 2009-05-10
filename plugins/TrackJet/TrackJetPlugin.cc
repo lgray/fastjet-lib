@@ -33,6 +33,9 @@
 #include "fastjet/TrackJetPlugin.hh"
 
 // other stuff
+#include <list>
+#include <memory>
+#include <cmath>
 #include <vector>
 #include <sstream>
 

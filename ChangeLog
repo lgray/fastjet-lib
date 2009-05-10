@@ -1,3 +1,18 @@
+2009-05-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh: 
+	* plugins/ATLASCone/ATLASConePlugin.cc: 
+	  added R,seedPt,f to description + removed extraneous headers
+
+	* plugins/TrackJet/fastjet/TrackJetPlugin.hh: 
+	* plugins/TrackJet/TrackJetPlugin.cc: 
+	  moved some headers out of .hh into .cc
+
+	* plugins/CMSIterativeCone/fastjet/CMSIterativeConePlugin.hh: 
+	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc
+	  fixed description so that it includes the radius and seed
+	  threshold + removed extraneous headers.
+
 2009-05-08  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 

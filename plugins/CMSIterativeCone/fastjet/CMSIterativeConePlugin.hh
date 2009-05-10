@@ -32,7 +32,6 @@
 #define __CMSITERATIVECONEPLUGIN_HH__
 
 #include "fastjet/JetDefinition.hh"
-#include "fastjet/ClusterSequence.hh"
 
 // questionable whether this should be in fastjet namespace or not...
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh

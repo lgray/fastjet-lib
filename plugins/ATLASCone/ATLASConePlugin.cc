@@ -47,7 +47,9 @@ using namespace std;
 
 string ATLASConePlugin::description () const {
   ostringstream desc;
-  desc << "ATLASCone plugin";
+  desc << "ATLASCone plugin with R = "<< _radius 
+       << ", seed threshold = " << _seedPt
+       << ", overlap threshold f = " << _f;
   return desc.str();
 }
 

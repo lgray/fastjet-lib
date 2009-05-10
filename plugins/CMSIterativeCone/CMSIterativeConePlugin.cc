@@ -67,7 +67,7 @@ T deltaR2 (T eta1, T phi1, T eta2, T phi2) {
 
 string CMSIterativeConePlugin::description () const {
   ostringstream desc;
-  desc << "CMSIterativeCone plugin";
+  desc << "CMSIterativeCone plugin with R = " << theConeRadius << " and seed threshold = " << theSeedThreshold;
   return desc.str();
 }
 
