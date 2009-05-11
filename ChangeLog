@@ -1,3 +1,16 @@
+2009-05-10  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* configure.ac:
+	  - specified the tar-ustar option for automake. This solves a
+	    problem with filenames of length larger than 99 that were not
+	    included in the distribution.
+	  - moved F77 to FC (and related) so that gfortran is
+	    automatically detected if available.	
+	  - added a bunch of comments regarding the recommendation to use
+	    AC_CONFIG_MACRO_DIR([m4]) in the latest libtool
+	    versions. Nothing is done (and justified!)
+	
+	
 2009-05-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh: 

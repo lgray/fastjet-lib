@@ -1,6 +1,6 @@
 AC_INIT([FastJet],[2.4.1-devel])
 AC_CONFIG_SRCDIR([src/JetDefinition.cc])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE(tar-ustar)
 
 dnl uncomment the following line if you want to use autoheader
 AM_CONFIG_HEADER(include/fastjet/config_auto.h:config.h.in)
@@ -8,6 +8,17 @@ dnl and also uncomment the call to autoheader in autogen.sh
 
 dnl check autoconf version
 AC_PREREQ(2.57)
+
+dnl load our M4 macro directory
+dnl  - this is recommended by latest versions of libtoolize
+dnl  - this is equivalent to adding ACLOCAL_AMFLAGS = -I m4 in Makefile.am
+dnl  - the libtoolize manpage says that for the moment it's more 
+dnl    portable to keep using ACLOCAL_AMFLAGS.
+dnl  - the autoconf manual mentions that since we use 'aclocal -I m4'
+dnl    we need ACLOCAL_AMFLAGS anyway
+dnl as a consequence, we don't use AC_CONFIG_MACRO_DIR for the moment
+dnl Question: is it compatible with older versions of libtool?
+dnl   AC_CONFIG_MACRO_DIR([m4])
 
 dnl check basic types
 AC_CHECK_TYPE(int)
@@ -239,8 +250,29 @@ AC_ARG_ENABLE(pxcone,
 if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_PXCONE, [], [The PxCone plugin is enabled])
    dnl set up the fortran compiler and libs
-   AC_PROG_F77
-   AC_F77_LIBRARY_LDFLAGS
+   if test "x$FCFLAGS" == "x"; then
+      FCFLAGS="-O2"
+   fi	
+   # AC_PROG_F77
+   # AC_F77_LIBRARY_LDFLAGS
+    ## Try to respect users' Fortran compiler variables
+   if test "x$FC" == "x"; then
+      if test "x$F77" != "x"; then
+      	 FC="$F77"
+      fi
+   fi
+   AC_PROG_FC
+   AC_FC_LIBRARY_LDFLAGS
+   F77=$FC
+   AM_FFLAGS=$AM_FCFLAGS
+   FFLAGS="$FFLAGS $FCFLAGS"
+   FLIBS="$FLIBS $FCLIBS"
+   AC_SUBST(FCFLAGS)
+   AC_SUBST(FFLAGS)
+   AC_SUBST(FLIBS)
+   AC_SUBST(F77)
+   AC_SUBST(AM_FFLAGS)
+   AC_SUBST(AM_FCFLAGS)
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lPxConePlugin "${FLIBS}
    CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libPxConePlugin.a "${FLIBS}
 fi
