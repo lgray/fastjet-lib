@@ -1,7 +1,7 @@
 # shared library
 
 lib_LTLIBRARIES = libfastjet.la
-libfastjet_la_CXXFLAGS = ${AM_CXXFLAGS} -I${srcdir}/../include
+libfastjet_la_CXXFLAGS = $(AM_CXXFLAGS) -I$(srcdir)/../include
 libfastjet_la_SOURCES = DnnPlane.cc\
 	Dnn4piCylinder.cc Dnn3piCylinder.cc Dnn2piCylinder.cc\
 	ClusterSequence.cc PseudoJet.cc\

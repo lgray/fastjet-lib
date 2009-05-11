@@ -1,5 +1,16 @@
 2009-05-10  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* src/Makefile.am, example/Makefile.am,
+	  plugins/usage_examples/Makefile.am,
+	  plugins/D0RunIICone/Makefile.am, plugins/SISCone/Makefile.am,
+	  plugins/Jade/Makefile.am, plugins/CDFCones/CDFcode/Makefile.am,
+	  plugins/CDFCones/Makefile.am, plugins/NestedDefs/Makefile.am,
+	  plugins/CMSIterativeCone/Makefile.am,
+	  plugins/TrackJet/Makefile.am, plugins/EECambridge/Makefile.am,
+	  plugins/ATLASCone/Makefile.am, plugins/PxCone/Makefile.am,
+	  include/fastjet/internal/Makefile.am:
+	  replaced a bunch of ${VAR} by $(VAR)
+	
 	* configure.ac:
 	  - specified the tar-ustar option for automake. This solves a
 	    problem with filenames of length larger than 99 that were not
