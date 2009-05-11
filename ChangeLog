@@ -1,5 +1,8 @@
 2009-05-10  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* autogen.sh: 
+	  fixed a sh script problem (replaced [[ "x"=="y" ]] w [ "x"="y" ])
+
 	* src/Makefile.am, example/Makefile.am,
 	  plugins/usage_examples/Makefile.am,
 	  plugins/D0RunIICone/Makefile.am, plugins/SISCone/Makefile.am,

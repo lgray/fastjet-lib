@@ -23,8 +23,8 @@ LIBTOOLIZE=libtoolize
 
 # change executable names when running on Macs
 # if test x`uname` = xDarwin; then
- if [[ `uname` == "Darwin" ]]; then
-   if [[ `whereis glibtool` == "glibtool:" ]]; then
+ if [ `uname` = "Darwin" ]; then
+   if [ `whereis glibtool` = "glibtool:" ]; then
       echo ""
       echo "On Mac OSX, the GNU libtool and libtoolize scripts, renamed"
       echo "glibtol and glibtoolize respectively by Apple to avoid"
