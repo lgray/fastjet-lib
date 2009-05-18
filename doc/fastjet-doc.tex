@@ -2246,15 +2246,30 @@ argument \verb|--enable-allplugins|, while to enable all but PxCone
 (which requires fortran, and can introduce link-time issues) use
 \verb|--enable-allcxxplugins|.
 
-As of \fastjet version 2.4, this section is partially incomplete (in
-particular it misses many references). This will hopefully evolve for
-future versions.
-
 All plugins are in the \verb:fastjet: namespace. Below we show the
 file that needs to be included and the constructor for each plugin. 
 
 Except where stated, the usual way to access jets from these plugins
 is through \verb|ClusterSequence::inclusive_jets()|.
+
+Most of the algorithms listed below are either infrared (IR) or
+collinear unsafe. The details are indicated for each algorithm as
+follows: IR$_{n+1}$ means that the hard jets may be modified if, to an
+ensemble of $n$ hard particles in a common neighbourhood, one adds a
+single soft particle; Coll$_{n+1}$ means that for $n$ hard particles
+in a common neighbourhood, the collinear splitting of one of them may
+modify the hard jets.
+%
+The \fastjet authors (and numerous theory-experiment accords) advise
+against the use IR and collinear safe jet algorithms.  Interfaces to
+these algorithms have been provided mainly for legacy comparison
+purposes.
+
+As of \fastjet version 2.4, this section is partially incomplete (in
+particular it misses many references). This will hopefully evolve for
+future versions.
+
+
 
 \subsubsection{CDF Midpoint.} 
 One of the two algorithms used by CDF in Run~II of the Tevatron, based
@@ -2282,6 +2297,11 @@ provided by Joey Huston (with minor modifications to ensure reasonable
 run times with optimising compilers for 32-bit intel processors ---
 these modifications do not affect the final jets).
 
+Note: this algorithm is IR$_{3+1}$ unsafe (in the limit of zero seed
+threshold~\cite{SISCone}; with \verb:cone_area_fraction:$\neq 1$ it
+becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}). It is to be deprecated for
+new experimental or theoretical analyses.
+
 \subsubsection{CDF JetClu.}
 The other algorithm used by CDF during Run~II, as well as their main
 algorithm during Run~I.
@@ -2303,6 +2323,16 @@ header file.
 The underlying code for this algorithm was taken from a webpage
 provided by Joey Huston.
 
+Note: this algorithm is IR$_{2+1}$ unsafe (and some IR unsafety
+persists with non-zero seed threshold). It is to be deprecated for new
+experimental or theoretical analyses.
+%
+Note also that the underlying implementation groups particles ogether
+into calorimeter towers (with CDF-type geometry) before running the
+jet algorithm. 
+
+
+
 \subsubsection{\Dzero Run II cone}
 %
 The main algorithm used by \Dzero in Run~II of the Tevatron, which is
@@ -2311,7 +2341,7 @@ a midpoint type iterative cone with split-merge.
   #include ``fastjet/D0RunIIConePlugin.hh''
   ///...
   D0RunIIConePlugin (double R, 
-                     double min_jet_Et , 
+                     double min_jet_Et, 
                      double split_ratio = 0.5);
 \end{lstlisting}
 Instead of a seed threshold, the algorithm places a cut on the minimum
@@ -2327,6 +2357,10 @@ used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
 The underlying code for this algorithm was provided by
 Lars Sonnenschein.
 
+Note: this algorithm is IR$_{3+1}$ unsafe (IR$_{2+1}$ for jets with
+energy too close to \verb:min_jet_Et:). It is to be deprecated for new
+experimental or theoretical analyses.
+
 \subsubsection{ATLAS iterative cone}
 %
 The (iterative) cone (with split-merge) algorithm used by ATLAS during
@@ -2341,6 +2375,10 @@ the preparation for the LHC.
 $f$ is the overlap threshold
 
 The underlying code for this algorithm was extracted from SpartyJet \cite{SpartyJet}.
+
+Note: this algorithm is IR$_{2+1}$ unsafe (in the limit of zero seed
+threshold). It is to be deprecated for new experimental or theoretical
+analyses.
 
 \subsubsection{CMS iterative cone}
 %
@@ -2366,7 +2404,10 @@ differed at a relative precision level of $10^{-7}$, related to the
 use of single-precision arithmetic at some internal stage of the CMS
 software (while the FastJet version is in double precision).
 
-%% SOME WORDS ABOUT VALIDATION
+
+Note: this algorithm is Coll$_{3+1}$ unsafe~\cite{antikt}. It is to be
+deprecated for new experimental or theoretical analyses.
+
 
 
 \subsubsection{PxCone}
@@ -2401,6 +2442,9 @@ correspond to the description of \cite{Seymour:2006vv}.
 The underlying code for this algorithm was taken from a google search
 for PxCone!
 
+Note: this algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
+new experimental or theoretical analyses.
+
 
 \subsubsection{TrackJet}
 %
@@ -2421,7 +2465,12 @@ assignments are known), the second one indicates how momenta are
 combined in the procedure that constructs the jets.
 
 The underlying code for this algorithm was written by the \fastjet
-authors, based on code extracts provided by Lars Sonnenschein.
+authors, based on code extracts from the Rivet implementation, written
+by Andy Buckley with input from Manuel Bahr and Rick Field.
+
+% provided by Lars Sonnenschein.
+Note: this algorithm is believed to be Coll$_{3+1}$ unsafe. It is to
+be deprecated for new experimental or theoretical analyses.
 
 
 %----------------------------------------------------------------------
@@ -2919,6 +2968,16 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
 
 \bibitem{SpartyJet} P.A.~Delsart, K.~Geerlings and J.~Huston, SpartyJet,
   \url{http://www.pa.msu.edu/~huston/SpartyJet/SpartyJet.html}
+
+\bibitem{Huth:1990mi}
+  J.~E.~Huth {\it et al.},
+  % ``Toward a standardization of jet definitions,''
+  % 
+  FNAL-C-90-249-E, published in the proceedings of the 1990 Summer
+  Study on High Energy Physics, Research Directions for the Decade,
+  Snowmass, Colorado, June 25 -- July 13, 1990.
+  %%CITATION = FNAL-C-90-249-E;%%
+
 \end{thebibliography}
 
 
