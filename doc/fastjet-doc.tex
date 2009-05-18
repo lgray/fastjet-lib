@@ -19,7 +19,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
-\usepackage{hyperref}
+\usepackage[breaklinks=true]{hyperref}
+%\usepackage[colorlinks=true]{hyperref}
 \addtolength{\textwidth}{2cm}
 \addtolength{\oddsidemargin}{-1cm}
 \addtolength{\textheight}{2cm}
@@ -2317,6 +2318,8 @@ algorithm during Run~I.
 This is an iterative cone with split-merge and optional ``ratcheting''
 if \verb|iratch == 1| (particles that appear in one iteration fo a
 cone are retained in future iterations).
+%
+The overlap threshold is usually set to 0.75 in CDF analyses.
 
 Further control over the plugin can be obtained by consulting the
 header file.
@@ -2349,7 +2352,7 @@ Instead of a seed threshold, the algorithm places a cut on the minimum
 $E_t$ of the cones during iteration (related to \verb|min_jet_Et|).
 %
 The \verb|split_ratio| is the same as the overlap threshold in other
-split-merge based algorithms.
+split-merge based algorithms (\Dzero usually use 0.5).
 %
 It is the \fastjet authors' understanding that two values have been
 used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
@@ -2644,7 +2647,9 @@ We are grateful to CDF, Joey Huston, Lars Sonnenschein and Mike
 Seymour for providing permission to distribute their cone jet
 algorithm codes as plugins for fastjet and to Salvatore Rappaccio for
 assistance in validating the CMS cone.
-
+%
+We thank Andy Buckley for numerous comments on the documentation and
+build system.
 
 \appendix
 
