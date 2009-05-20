@@ -1,1 +1,1 @@
-EXTRA_DIST = Makefile.alt fastjetsiscone.cc siscone_example.f
+EXTRA_DIST = README Makefile.alt fastjetfortran.cc fastjet_fortran_example.f

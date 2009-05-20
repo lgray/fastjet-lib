@@ -38,6 +38,7 @@ using namespace std;
 extern "C" {   
 
 // f77 interface to SISCone (via fastjet)
+// [see below for the interface to kt, Cam/Aachen & kt]
 //
 // Corresponds to the following Fortran subroutine
 // interface structure:
@@ -94,6 +95,68 @@ void fastjetsiscone_(const double * p, const int & npart,
 
     // clean up
     delete plugin;
+    
+   }
+
+
+
+// f77 interface to the pp sequential recombination algorithms:
+// inclusive kt, Cambridge/Aachen and anti-kt algorithms
+//
+// Corresponds to the following Fortran subroutine
+// interface structure:
+//
+//   SUBROUTINE FASTJETPPSEQREC(P,NPART,IALG,R,F77JETS,NJETS)
+//   DOUBLE PRECISION P(4,*), R, F, F77JETS(4,*)
+//   INTEGER          NPART, IALG, NJETS
+// 
+// where on input
+//
+//   P        the input particle 4-momenta
+//   NPART    the number of input momenta
+//   IALG     the choice of algorithm (0=kt, 1=Cam/Aachen, 2=anti-kt)
+//   R        the radius parameter
+//
+// and on output 
+//
+//   F77JETS  the output jet momenta (whose second dim should be >= NPART)
+//            sorted in order of decreasing p_t.
+//   NJETS    the number of output jets 
+//
+void fastjetppseqrec_(const double * p, const int & npart,                   
+                      const int & ialg, const double & R,                    
+                      double * f77jets, int & njets) {
+
+    // transfer p[4*ipart+0..3] -> input_particles[i]
+    vector<fj::PseudoJet> input_particles;   
+    for (int i=0; i<npart; i++) {
+      valarray<double> mom(4); // mom[0..3]
+      for (int j=0;j<=3; j++) {
+         mom[j] = *(p++);
+      }
+      fj::PseudoJet psjet(mom);
+      input_particles.push_back(psjet);    
+    }
+    
+    // prepare jet def and run fastjet
+    assert(ialg >= 0 && ialg <= 2);
+    fj::JetDefinition jet_def(fj::JetAlgorithm(ialg), R);
+    
+    // perform clustering
+    fj::ClusterSequence cs(input_particles, jet_def);
+    // extract jets (pt-ordered)
+    vector<fj::PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
+    njets = jets.size();
+
+    // transfer jets -> f77jets[4*ijet+0..3]
+    for (int i=0; i<njets; i++) {
+      for (int j=0;j<=3; j++) {
+        *f77jets = jets[i][j];
+        f77jets++;
+      } 
+    }
+
+    // clean up
     
    }
 }

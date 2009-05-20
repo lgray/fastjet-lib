@@ -1,3 +1,11 @@
+2009-05-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/fastjetsiscone.cc: *** DELETED ***
+	* fortran_wrapper/fastjetfortran.cc: *** ADDED ***
+	* fortran_wrapper/fastjet_fortran_example.f: (was siscone_example.f)	
+	
+	  extended the wrappers to have some seq.rec. pp algorithms as well
+	
 2009-05-10  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* autogen.sh: 
