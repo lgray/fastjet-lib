@@ -614,6 +614,8 @@ std::vector<PseudoJet> ClusterSequence::exclusive_subjets
 //----------------------------------------------------------------------
 /// return the dij that was present in the merging nsub+1 -> nsub 
 /// subjets inside this jet.
+/// 
+/// If the jet has nsub or fewer constituents, it will return 0.
 double ClusterSequence::exclusive_subdmerge(const PseudoJet & jet, int nsub) const {
   set<const history_element*> subhist;
 
@@ -623,6 +625,8 @@ double ClusterSequence::exclusive_subdmerge(const PseudoJet & jet, int nsub) con
   
   set<const history_element*>::iterator highest = subhist.end();
   highest--;
+  /// will be zero if nconst <= nsub, since highest will be an original 
+  /// particle have zero dij
   return (*highest)->dij;
 }
 
@@ -631,6 +635,8 @@ double ClusterSequence::exclusive_subdmerge(const PseudoJet & jet, int nsub) con
 /// return the maximum dij that occurred in the whole event at the
 /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
 /// this jet.
+///
+/// If the jet has nsub or fewer constituents, it will return 0.
 double ClusterSequence::exclusive_subdmerge_max(const PseudoJet & jet, int nsub) const {
 
   set<const history_element*> subhist;
@@ -641,6 +647,8 @@ double ClusterSequence::exclusive_subdmerge_max(const PseudoJet & jet, int nsub)
   
   set<const history_element*>::iterator highest = subhist.end();
   highest--;
+  /// will be zero if nconst <= nsub, since highest will be an original 
+  /// particle have zero dij
   return (*highest)->max_dij_so_far;
 }
 

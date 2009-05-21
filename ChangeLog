@@ -1,3 +1,11 @@
+2009-05-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc (print_jets_and_sub): 
+	  expanded output on the -subdcut flag.
+
+	* src/ClusterSequence.cc (ClusterSequence::exclusive_subdmerge_max): 
+	  added some comments about output (zero) when nsub >= number of constituents
+	
 2009-05-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* fortran_wrapper/fastjetsiscone.cc: *** DELETED ***

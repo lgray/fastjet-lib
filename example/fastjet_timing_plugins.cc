@@ -683,7 +683,9 @@ void print_jets_and_sub (fj::ClusterSequence & clust_seq,
       cspoint = &clust_seq;
       subjets = clust_seq.exclusive_subjets(sorted_jets[i], dcut);
       //subjets = clust_seq.exclusive_subjets(sorted_jets[i], 5);
-      //double dd = clust_seq.exclusive_subdmerge_max(sorted_jets[i], 3);
+      double ddnp1 = clust_seq.exclusive_subdmerge_max(sorted_jets[i], subjets.size());
+      double ddn = clust_seq.exclusive_subdmerge_max(sorted_jets[i], subjets.size()-1);
+      cout << "     for " << ddnp1 << " < d < " << ddn << " one has " << endl;
       //subjets = clust_seq.exclusive_subjets(sorted_jets[i], dd*1.0000001);
     } else if (subtype == newclust_dcut) {
       cspoint = new fj::ClusterSequence(clust_seq.constituents(sorted_jets[i]),
