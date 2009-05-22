@@ -148,19 +148,25 @@ Plugins are included for the fortran PxCone code and for the CDF C++
 JetClu and MidPoint cone jet algorithms (all infrared unsafe), as well as
 the recent Seedless Infrared-Safe Cone (SISCone) jet
 algorithm~\cite{SISCone}. 
-Version 2.4 includes the new version 1.4.0 of SISCone, \comment{UPDATE
-THIS BIT}
-a wrapper to \fastjet 
-allowing one to run SISCone from a Fortran program, 
-and provides automated build tools,
-as well as a number of minor improvements. 
+%
+Version 2.3 introduced a new build system (GNU autotools), a
+broader range of areas and tools to help navigate the ClusterSequence
+%
+Version 2.4 includes the new version 2.0 of SISCone, as well as
+plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone and a
+range of $e^+e^-$ algorithms, and also further tools to help
+investigate jet substructure.
+%
+There is also a wrapper to \fastjet 
+allowing one to run SISCone and iterfrom a Fortran program, 
 
-The current implementation of the above algorithms is restricted to
+The current implementation of the $pp$ sequential-recombinaion
+algorithms is restricted to 
 the so-called $\Delta R$ distance measure (recommended in
 \cite{RunII-jet-physics}), with a choice of recombination schemes. The
 $k_t$ algorithm has both exclusive \cite{ktexcl} and inclusive modes
 \cite{ktincl}, the latter currently being in more widespread use,
-though the exclusive mode has physical advantages in certain cases.
+though the exclusive mode may have physical advantages in certain cases.
 
 %% There are a range of variants possible for the above jet algorithms.
 %% For the $k_t$ jet algorithm, \fastjet implements the so-called $\Delta
