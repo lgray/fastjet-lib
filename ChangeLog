@@ -1,5 +1,9 @@
 2009-05-25  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* fastjet-config.in (Usage): 
+	  added support for a --rpath and a --runpath option to
+	  fastjet-config
+
 	* configure.ac: 
 	  . switched back to static libs by default
 	  . check if the compiler/linker supports -Wl,-enable-new-dtags
