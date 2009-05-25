@@ -52,14 +52,14 @@ using namespace std;
 /// global routine for running active area
 void ClusterSequenceActiveArea::_initialise_and_run_AA (
 		const JetDefinition & jet_def,
-		const GhostedAreaSpec & area_spec,
+		const GhostedAreaSpec & ghost_spec,
 		const bool & writeout_combinations) {
 
   bool continue_running;
-  _initialise_AA(jet_def,  area_spec, writeout_combinations, continue_running);
+  _initialise_AA(jet_def,  ghost_spec, writeout_combinations, continue_running);
   if (continue_running) {
-    _run_AA(area_spec);
-    _postprocess_AA(area_spec);
+    _run_AA(ghost_spec);
+    _postprocess_AA(ghost_spec);
   }
 }
 
@@ -76,19 +76,19 @@ void ClusterSequenceActiveArea::_resize_and_zero_AA () {
 //---------------------------------a-------------------------------------
 void ClusterSequenceActiveArea::_initialise_AA (
 		const JetDefinition & jet_def,
-		const GhostedAreaSpec & area_spec,
+		const GhostedAreaSpec & ghost_spec,
 		const bool & writeout_combinations,
                 bool & continue_running) 
 {
 
   // store this for future use
-  _area_spec_repeat = area_spec.repeat();
+  _ghost_spec_repeat = ghost_spec.repeat();
 
   // make sure placeholders are there & zeroed
   _resize_and_zero_AA();
      
   // for future reference...
-  _maxrap_for_area = area_spec.ghost_maxrap();
+  _maxrap_for_area = ghost_spec.ghost_maxrap();
   _safe_rap_for_area = _maxrap_for_area - jet_def.R();
 
   // Make sure we'll have at least one repetition -- then we can
@@ -98,7 +98,7 @@ void ClusterSequenceActiveArea::_initialise_AA (
   //
   // NB: all decanting and filling of initial history will then
   // be carried out by base-class routine
-  if (area_spec.repeat() <= 0) {
+  if (ghost_spec.repeat() <= 0) {
     _initialise_and_run(jet_def, writeout_combinations);
     continue_running = false;
     return;
@@ -119,7 +119,7 @@ void ClusterSequenceActiveArea::_initialise_AA (
 
 
 //----------------------------------------------------------------------
-void ClusterSequenceActiveArea::_run_AA (const GhostedAreaSpec & area_spec) {
+void ClusterSequenceActiveArea::_run_AA (const GhostedAreaSpec & ghost_spec) {
   // record the input jets as they are currently
   vector<PseudoJet> input_jets(_jets);
 
@@ -127,10 +127,10 @@ void ClusterSequenceActiveArea::_run_AA (const GhostedAreaSpec & area_spec) {
   vector<int> unique_tree;
 
   // run the clustering multiple times so as to get areas of all the jets
-  for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
+  for (int irepeat = 0; irepeat < ghost_spec.repeat(); irepeat++) {
 
     ClusterSequenceActiveAreaExplicitGhosts clust_seq(input_jets, 
-                                                      jet_def(), area_spec);
+                                                      jet_def(), ghost_spec);
 
     _has_dangerous_particles |= clust_seq.has_dangerous_particles();
     if (irepeat == 0) {
@@ -149,29 +149,29 @@ void ClusterSequenceActiveArea::_run_AA (const GhostedAreaSpec & area_spec) {
 
 //----------------------------------------------------------------------
 /// run the postprocessing for the active area (and derived classes)
-void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_spec) {
-  _average_area  /= area_spec.repeat();
-  _average_area2 /= area_spec.repeat();
-  if (area_spec.repeat() > 1) {
+void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & ghost_spec) {
+  _average_area  /= ghost_spec.repeat();
+  _average_area2 /= ghost_spec.repeat();
+  if (ghost_spec.repeat() > 1) {
     // the VC compiler complains if one puts everything on a single line.
     // An alternative solution would be to use -1.0 (+single line)
-    const double tmp = area_spec.repeat()-1;
+    const double tmp = ghost_spec.repeat()-1;
     _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/tmp);
   } else {
     _average_area2 = 0.0;
   }
 
-  _non_jet_area  /= area_spec.repeat();
-  _non_jet_area2 /= area_spec.repeat();
+  _non_jet_area  /= ghost_spec.repeat();
+  _non_jet_area2 /= ghost_spec.repeat();
   _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
-			 area_spec.repeat());
-  _non_jet_number /= area_spec.repeat();
+			 ghost_spec.repeat());
+  _non_jet_number /= ghost_spec.repeat();
 
   // following bizarre way of writing things is related to 
   // poverty of operations on PseudoJet objects (as well as some confusion
   // in one or two places)
   for (unsigned i = 0; i < _average_area_4vector.size(); i++) {
-    _average_area_4vector[i] = (1.0/area_spec.repeat()) * _average_area_4vector[i];
+    _average_area_4vector[i] = (1.0/ghost_spec.repeat()) * _average_area_4vector[i];
   }
   //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
 }
@@ -180,12 +180,12 @@ void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_sp
 // //----------------------------------------------------------------------
 // void ClusterSequenceActiveArea::_initialise_and_run_AA (
 // 		const JetDefinition & jet_def,
-// 		const GhostedAreaSpec & area_spec,
+// 		const GhostedAreaSpec & ghost_spec,
 // 		const bool & writeout_combinations) 
 // {
 // 
 //   // store this for future use
-//   _area_spec_repeat = area_spec.repeat();
+//   _ghost_spec_repeat = ghost_spec.repeat();
 // 
 //   // initialize our local area information
 //   _average_area.resize(2*_jets.size());  _average_area  = 0.0;
@@ -195,7 +195,7 @@ void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_sp
 //   _non_jet_area = 0.0; _non_jet_area2 = 0.0; _non_jet_number=0.0;
 //      
 //   // for future reference...
-//   _maxrap_for_area = area_spec.ghost_maxrap();
+//   _maxrap_for_area = ghost_spec.ghost_maxrap();
 //   _safe_rap_for_area = _maxrap_for_area - jet_def.R();
 // 
 //   // Make sure we'll have at least one repetition -- then we can
@@ -205,7 +205,7 @@ void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_sp
 //   //
 //   // NB: all decanting and filling of initial history will then
 //   // be carried out by base-class routine
-//   if (area_spec.repeat() <= 0) {
+//   if (ghost_spec.repeat() <= 0) {
 //     _initialise_and_run(jet_def, writeout_combinations);
 //     return;
 //   }
@@ -227,10 +227,10 @@ void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_sp
 //   
 // 
 //   // run the clustering multiple times so as to get areas of all the jets
-//   for (int irepeat = 0; irepeat < area_spec.repeat(); irepeat++) {
+//   for (int irepeat = 0; irepeat < ghost_spec.repeat(); irepeat++) {
 // 
 //     ClusterSequenceActiveAreaExplicitGhosts clust_seq(input_jets, 
-//                                                       jet_def, area_spec);
+//                                                       jet_def, ghost_spec);
 // 
 //     if (irepeat == 0) {
 //       // take the non-ghost part of the history and put into our own
@@ -244,26 +244,26 @@ void ClusterSequenceActiveArea::_postprocess_AA (const GhostedAreaSpec & area_sp
 //     _transfer_areas(unique_tree, clust_seq);
 //   }
 //   
-//   _average_area  /= area_spec.repeat();
-//   _average_area2 /= area_spec.repeat();
-//   if (area_spec.repeat() > 1) {
+//   _average_area  /= ghost_spec.repeat();
+//   _average_area2 /= ghost_spec.repeat();
+//   if (ghost_spec.repeat() > 1) {
 //     _average_area2 = sqrt(abs(_average_area2 - _average_area*_average_area)/
-//                           (area_spec.repeat()-1));
+//                           (ghost_spec.repeat()-1));
 //   } else {
 //     _average_area2 = 0.0;
 //   }
 // 
-//   _non_jet_area  /= area_spec.repeat();
-//   _non_jet_area2 /= area_spec.repeat();
+//   _non_jet_area  /= ghost_spec.repeat();
+//   _non_jet_area2 /= ghost_spec.repeat();
 //   _non_jet_area2  = sqrt(abs(_non_jet_area2 - _non_jet_area*_non_jet_area)/
-// 			 area_spec.repeat());
-//   _non_jet_number /= area_spec.repeat();
+// 			 ghost_spec.repeat());
+//   _non_jet_number /= ghost_spec.repeat();
 // 
 //   // following bizarre way of writing things is related to 
 //   // poverty of operations on PseudoJet objects (as well as some confusion
 //   // in one or two places)
 //   for (unsigned i = 0; i < _average_area_4vector.size(); i++) {
-//     _average_area_4vector[i] = (1.0/area_spec.repeat()) * _average_area_4vector[i];
+//     _average_area_4vector[i] = (1.0/ghost_spec.repeat()) * _average_area_4vector[i];
 //   }
 //   //cerr << "Non-jet area = " << _non_jet_area << " +- " << _non_jet_area2<<endl;
 // 
@@ -456,7 +456,7 @@ double ClusterSequenceActiveArea::empty_area(const RangeDefinition & range) cons
       empty += _unclustered_ghosts[i].area;
     }
   }
-  empty /= _area_spec_repeat;
+  empty /= _ghost_spec_repeat;
   return empty;
 }
 
@@ -466,7 +466,7 @@ double ClusterSequenceActiveArea::n_empty_jets(const RangeDefinition & range) co
   for (unsigned  i = 0; i < _ghost_jets.size(); i++) {
     if (range.is_in_range(_ghost_jets[i])) inrange++;
   }
-  inrange /= _area_spec_repeat;
+  inrange /= _ghost_spec_repeat;
   return inrange;
 }
 

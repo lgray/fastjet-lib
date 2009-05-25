@@ -44,10 +44,10 @@ LimitedWarning ClustSeqActAreaEG::_warnings;
 //----------------------------------------------------------------------
 ///
 void ClustSeqActAreaEG::_add_ghosts (
-			 const GhostedAreaSpec & area_spec) {
+			 const GhostedAreaSpec & ghost_spec) {
 
   // add the ghosts to the jets
-  area_spec.add_ghosts(_jets);
+  ghost_spec.add_ghosts(_jets);
 
   // now add labelling...
   for (unsigned i = _initial_hard_n; i < _jets.size(); i++) {
@@ -55,9 +55,9 @@ void ClustSeqActAreaEG::_add_ghosts (
     _is_pure_ghost.push_back(true);
   }
 
-  // and record some info from the area_spec
-  _ghost_area = area_spec.actual_ghost_area();
-  _n_ghosts   = area_spec.n_ghosts();
+  // and record some info from the ghost_spec
+  _ghost_area = ghost_spec.actual_ghost_area();
+  _n_ghosts   = ghost_spec.n_ghosts();
 }
 
 

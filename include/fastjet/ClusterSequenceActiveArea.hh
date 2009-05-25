@@ -63,7 +63,7 @@ public:
   template<class L> ClusterSequenceActiveArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const GhostedAreaSpec & area_spec,
+	  const GhostedAreaSpec & ghost_spec,
 	  const bool & writeout_combinations = false) ;
 
   virtual double area (const PseudoJet & jet) const {
@@ -114,18 +114,18 @@ public:
 protected:
   void _resize_and_zero_AA ();
   void _initialise_AA(const JetDefinition & jet_def,
-                      const GhostedAreaSpec & area_spec,
+                      const GhostedAreaSpec & ghost_spec,
                       const bool & writeout_combinations,
                       bool & continue_running);
 
-  void _run_AA(const GhostedAreaSpec & area_spec);
+  void _run_AA(const GhostedAreaSpec & ghost_spec);
 
-  void _postprocess_AA(const GhostedAreaSpec & area_spec);
+  void _postprocess_AA(const GhostedAreaSpec & ghost_spec);
 
   /// does the initialisation and running specific to the active
   /// areas class
   void _initialise_and_run_AA (const JetDefinition & jet_def,
-                               const GhostedAreaSpec & area_spec,
+                               const GhostedAreaSpec & ghost_spec,
                                const bool & writeout_combinations = false);
 
   /// transfer the history (and jet-momenta) from clust_seq to our
@@ -184,7 +184,7 @@ private:
   //const static int _max_seed_warnings = 10;
 
   // record the number of repeats
-  int _area_spec_repeat;
+  int _ghost_spec_repeat;
 
   /// a class for our internal storage of ghost jets
   class GhostJet : public PseudoJet {
@@ -203,14 +203,14 @@ private:
 template<class L> ClusterSequenceActiveArea::ClusterSequenceActiveArea 
 (const std::vector<L> & pseudojets, 
  const JetDefinition & jet_def,
- const GhostedAreaSpec & area_spec,
+ const GhostedAreaSpec & ghost_spec,
  const bool & writeout_combinations) {
 
   // transfer the initial jets (type L) into our own array
   _transfer_input_jets(pseudojets);
 
   // run the clustering for active areas
-  _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
+  _initialise_and_run_AA(jet_def, ghost_spec, writeout_combinations);
 
 }
 

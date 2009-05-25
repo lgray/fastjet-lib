@@ -60,7 +60,7 @@ public:
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const GhostedAreaSpec & area_spec)   : _area_def(area_spec){
+	  const GhostedAreaSpec & ghost_spec)   : _area_def(ghost_spec){
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 
@@ -68,7 +68,7 @@ public:
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
 	  const JetDefinition & jet_def,
-	  const VoronoiAreaSpec & area_spec)   : _area_def(area_spec){
+	  const VoronoiAreaSpec & voronoi_spec)   : _area_def(voronoi_spec){
     initialize_and_run_cswa(pseudojets, jet_def);
   }
 

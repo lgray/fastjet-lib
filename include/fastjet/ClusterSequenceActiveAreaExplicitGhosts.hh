@@ -54,11 +54,11 @@ public:
   template<class L> ClusterSequenceActiveAreaExplicitGhosts
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const GhostedAreaSpec & area_spec,
+	  const GhostedAreaSpec & ghost_spec,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
            std::vector<L> * ghosts = NULL;
-	   _initialise(pseudojets,jet_def,&area_spec,ghosts,0.0,
+	   _initialise(pseudojets,jet_def,&ghost_spec,ghosts,0.0,
                        writeout_combinations); }
 
   template<class L> ClusterSequenceActiveAreaExplicitGhosts
@@ -68,8 +68,8 @@ public:
           double ghost_area,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
-           const GhostedAreaSpec * area_spec = NULL;
-	   _initialise(pseudojets,jet_def,area_spec,&ghosts,ghost_area,
+           const GhostedAreaSpec * ghost_spec = NULL;
+	   _initialise(pseudojets,jet_def,ghost_spec,&ghosts,ghost_area,
                        writeout_combinations); }
 
 
@@ -77,7 +77,7 @@ public:
   template<class L> void _initialise
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const GhostedAreaSpec * area_spec,
+	  const GhostedAreaSpec * ghost_spec,
 	  const std::vector<L> * ghosts,
 	  double                 ghost_area,
 	  const bool & writeout_combinations); 
@@ -147,7 +147,7 @@ private:
 
   /// adds the "ghost" momenta, which will be used to estimate
   /// the jet area
-  void _add_ghosts(const GhostedAreaSpec & area_spec); 
+  void _add_ghosts(const GhostedAreaSpec & ghost_spec); 
 
   /// another way of adding ghosts
   template<class L> void _add_ghosts (
@@ -168,7 +168,7 @@ private:
 template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
          (const std::vector<L> & pseudojets, 
           const JetDefinition & jet_def,
-	  const GhostedAreaSpec * area_spec,
+	  const GhostedAreaSpec * ghost_spec,
 	  const std::vector<L> * ghosts,
 	  double                 ghost_area,
 	  const bool & writeout_combinations) {
@@ -187,8 +187,8 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
 
   _initial_hard_n = _jets.size();
 
-  if (area_spec != NULL) {
-    _add_ghosts(*area_spec);
+  if (ghost_spec != NULL) {
+    _add_ghosts(*ghost_spec);
   } else {
     _add_ghosts(*ghosts, ghost_area);
   }

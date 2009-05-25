@@ -1,5 +1,15 @@
 2009-05-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/ClusterSequenceArea.hh: 
+	* include/fastjet/ClusterSequenceActiveArea.hh: 
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh: 
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc: 
+	* src/ClusterSequenceActiveArea.cc: 
+
+	  renamed area_spec -> ghost_spec, in a few places where they
+	  won't affect users (but this helps readability)
+	
+
 	* fortran_wrapper/fastjetfortran.cc: 
 	* fortran_wrapper/fastjet_fortran_example.f: 
 
