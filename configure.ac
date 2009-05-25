@@ -58,7 +58,10 @@ fi
 dnl build the shared lib by default
 dnl even though they're enabled by default, AM_ENABLE_SHARED has to
 dnl be called so that ${enable_shared} is set to 'yes' instead of ''
-AM_ENABLE_SHARED
+dnl AM_ENABLE_SHARED
+dnl
+dnl DISABLE SHARED LIBS !!!!!!!
+AM_DISABLE_SHARED
 HAS_SHARED=${enable_shared}
 
 dnl-----------------
@@ -94,13 +97,29 @@ fi
 AC_SUBST(CGAL_CPPFLAGS)
 AC_SUBST(CGAL_LIBS)
 
-dnl enable libtool
-AC_PROG_LIBTOOL
+dnl check if the linker supports --enable-new-dtags
+AC_MSG_CHECKING([if $CC supports -Wl,--enable-new-dtags flag])
+SAVE_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="-Werror -Wl,--enable-new-dtags"
+AC_LANG_PUSH(C++)
+AC_LINK_IFELSE([int main(void){ return 0;}],[ac_enable_new_dtags_ok=yes],[ac_enable_new_dtags_ok=no])
+AC_LANG_POP(C++)
+CXXFLAGS="$SAVE_CCCFLAGS"
+AC_MSG_RESULT([$ac_enable_new_dtags_ok])
+HAS_RUNPATH_SUPPORT="no"
+CONFIG_RUNPATH_FLAGS=""
+if test x"$ac_enable_new_dtags_ok" = x"yes"; then
+   HAS_RUNPATH_SUPPORT="yes"
+   CONFIG_RUNPATH_FLAGS="-Wl,--enable-new-dtags"
+fi
+AC_SUBST(HAS_RUNPATH_SUPPORT)
+AC_SUBST(CONFIG_RUNPATH_FLAGS)
 
 dnl substitutions
 AM_CXXFLAGS=${AM_CXXFLAGS}"$CONFIG_CXXFLAGS"
 dnl AM_LIBS="$CONFIG_LIBS"
 AC_SUBST(AM_CXXFLAGS)
+dnl AC_SUBST(CONFIG_CXXFLAGS)
 AC_SUBST(CONFIG_LIBS)
 
 dnl create the substitutions variables for the configuration script
@@ -396,6 +415,9 @@ dnl end of plugin section --- don't modify this line
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)
 AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
+
+dnl enable libtool
+AC_PROG_LIBTOOL
 
 dnl---------------------------------
 dnl make sure examples dir is there
