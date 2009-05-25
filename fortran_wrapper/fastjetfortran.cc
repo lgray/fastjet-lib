@@ -37,7 +37,7 @@ using namespace std;
 
 extern "C" {   
 
-// f77 interface to SISCone (via fastjet)
+// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
 // [see below for the interface to kt, Cam/Aachen & kt]
 //
 // Corresponds to the following Fortran subroutine
@@ -100,22 +100,24 @@ void fastjetsiscone_(const double * p, const int & npart,
 
 
 
-// f77 interface to the pp sequential recombination algorithms:
-// inclusive kt, Cambridge/Aachen and anti-kt algorithms
+// f77 interface to the pp generalised-kt (sequential recombination)
+// algorithms, as defined in arXiv.org:0802.1189, which includes
+// kt, Cambridge/Aachen and anti-kt as special cases.
 //
 // Corresponds to the following Fortran subroutine
 // interface structure:
 //
-//   SUBROUTINE FASTJETPPSEQREC(P,NPART,IALG,R,F77JETS,NJETS)
-//   DOUBLE PRECISION P(4,*), R, F, F77JETS(4,*)
-//   INTEGER          NPART, IALG, NJETS
+//   SUBROUTINE FASTJETPPSEQREC(P,NPART,R,PALG,F77JETS,NJETS)
+//   DOUBLE PRECISION P(4,*), R, PALG, F, F77JETS(4,*)
+//   INTEGER          NPART, NJETS
 // 
 // where on input
 //
 //   P        the input particle 4-momenta
 //   NPART    the number of input momenta
-//   IALG     the choice of algorithm (0=kt, 1=Cam/Aachen, 2=anti-kt)
 //   R        the radius parameter
+//   PALG     the power for the generalised kt alg 
+//            (1.0=kt, 0.0=C/A,  -1.0 = anti-kt)
 //
 // and on output 
 //
@@ -123,9 +125,14 @@ void fastjetsiscone_(const double * p, const int & npart,
 //            sorted in order of decreasing p_t.
 //   NJETS    the number of output jets 
 //
-void fastjetppseqrec_(const double * p, const int & npart,                   
-                      const int & ialg, const double & R,                    
-                      double * f77jets, int & njets) {
+// For the values of PALG that correspond to "standard" cases (1.0=kt,
+// 0.0=C/A, -1.0 = anti-kt) this routine actually calls the direct
+// implementation of those algorithms, whereas for other values of
+// PALG it calls the generalised kt implementation.
+//
+void fastjetppgenkt_(const double * p, const int & npart,                   
+                     const double & R, const double & palg,
+                     double * f77jets, int & njets) {
 
     // transfer p[4*ipart+0..3] -> input_particles[i]
     vector<fj::PseudoJet> input_particles;   
@@ -139,8 +146,17 @@ void fastjetppseqrec_(const double * p, const int & npart,
     }
     
     // prepare jet def and run fastjet
-    assert(ialg >= 0 && ialg <= 2);
-    fj::JetDefinition jet_def(fj::JetAlgorithm(ialg), R);
+    fj::JetDefinition jet_def;
+    if (palg == 1.0) {
+      jet_def = fj::JetDefinition(fj::kt_algorithm, R);
+    }  else if (palg == 0.0) {
+      jet_def = fj::JetDefinition(fj::cambridge_algorithm, R);
+    }  else if (palg == -1.0) {
+      jet_def = fj::JetDefinition(fj::antikt_algorithm, R);
+    } else {
+      jet_def = fj::JetDefinition(fj::genkt_algorithm, R, palg);
+    }
+
     
     // perform clustering
     fj::ClusterSequence cs(input_particles, jet_def);

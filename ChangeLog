@@ -1,3 +1,12 @@
+2009-05-25  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/fastjetfortran.cc: 
+	* fortran_wrapper/fastjet_fortran_example.f: 
+
+	  changed interface so that we have generalised kt
+	  (fastjetppgenkt_) as the main way of accessing the
+	  seq.rec. algorithms.
+
 2009-05-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_timing_plugins.cc (print_jets_and_sub): 

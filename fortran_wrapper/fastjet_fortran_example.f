@@ -17,9 +17,9 @@ C
       integer n
       parameter (n = 1000)
       integer i,j
-      double precision p(4,n), R, f    
+      double precision p(4,n), R, f, palg    
       double precision jets(4,n)         
-      integer ialg, npart, njets ! < n        
+      integer npart, njets ! < n        
 c ... fill in p (NB, energy is p(4,i))
       do i=1,n
          read(*,*,end=500) p(1,i),p(2,i),p(3,i),p(4,i)
@@ -28,18 +28,18 @@ c ... fill in p (NB, energy is p(4,i))
  500  npart = i-1
 
       R = 0.7
-      f = 0.5  ! 0.75 is probably a better choice
+      f = 0.75
 c.....run the clustering with SISCone
       call fastjetsiscone(p,npart,R,f,jets,njets)   ! ... now you have the jets
-c.....or with a pp sequential recombination alg
-c      ialg = 0 ! 0=kt, 1=Cam/Aachen, 2=anti-kt
-c      call fastjetppseqrec(p,npart,ialg,R,jets,njets)   ! ... now you have the jets
+c.....or with a pp generalised-kt sequential recombination alg
+c      palg = 1d0 ! 1.0d0 = kt, 0.0d0 = Cam/Aachen, -1.0d0 = anti-kt
+c      call fastjetppgenkt(p,npart,R,palg,jets,njets)   ! ... now you have the jets
 
 
 c.....write out all inclusive jets, in order of decreasing pt
       write(*,*) '      px         py          pz         E         pT'
       do i=1,njets
-         write(*,*) (jets(j,i), j=1,4), sqrt(jets(1,i)**2+jets(2,i)**2)
+         write(*,*) i,(jets(j,i),j=1,4), sqrt(jets(1,i)**2+jets(2,i)**2)
       enddo
             
       end
