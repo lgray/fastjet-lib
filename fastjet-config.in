@@ -44,7 +44,7 @@ or flags (optional):
                libraries are installed to the runpath (ELF systens
                only). This avoids having to set LD_LIBRARY_PATH at
                runtime when using shared libs in a non standard
-               location.
+               location but gives priority to an existing LD_LIBRARY_PATH.
 
   --rpath      adds a -rpath argument at link-time that points to the
                directory where FastJet libraries are installed. This
@@ -138,7 +138,7 @@ write_error()
 #  - we then check for extra arguments and return the requested info
 #####################################################################
 # useful lists of arguments
-arg_query_list="version prefix help cxxflags libs"
+arg_query_list="version prefix help" # cxxflags libs
 arg_yesno_list="shared plugins"
 
 # default behaviour for parameters
@@ -149,6 +149,8 @@ add_runpath="no"
 
 # no query found initially
 found_query="no"
+found_flags="no"
+found_libs="no"
 
 # browse arguments
 for arg do
@@ -176,10 +178,41 @@ for arg do
 		    ;;
 	    esac
 	    ;;
+	--cxxflags)
+	    # we've found a query, make sure we don't already have one
+	    # except if it is --libs
+	    if [[ "x$found_query" != "xno" && "x$found_query" != "xlibs" ]]; then
+		write_error "--cxxflags cannot be used with --$found_query"
+	    fi
+
+	    # update found_query 
+	    # note: for the "big case" later, don't overwrite it if libs are already asked for
+	    found_flags="yes"
+	    if [ "x$found_query" != "xlibs" ]; then
+		found_query="cxxflags"
+	    fi	    
+	    ;;
+	--libs)
+	    # we've found a query, make sure we don't already have one
+	    # except if it is --cxxflags
+	    if [[ "x$found_query" != "xno" && "x$found_query" != "xcxxflags" ]]; then
+		write_error "--libs cannot be used with --$found_query"
+	    fi
+
+	    # update found_query 
+	    found_libs="yes"
+	    found_query="libs"
+	    ;;
 	--*)
 	    arg_name=`option_name $arg`
 	    if is_in_list $arg_name $arg_query_list ; then
 		# we've found a query, make sure we don't already have one
+		if [ "x$found_flags" != "xno" ] ; then
+		    write_error "--$arg_name cannot be used with --cxxflags"
+		fi
+		if [ "x$found_libs" != "xno" ] ; then
+		    write_error "--$arg_name cannot be used with --libs"
+		fi
 		if [ "x$found_query" != "xno" ] ; then
 		    write_error "You can only make one query at a time"
 		fi
@@ -270,6 +303,10 @@ case $found_query in
 	    fi
 
 	fi
-	echo $libs_string
+	if [ "x$found_flags" = "xyes" ] ; then
+	    echo -I@prefix@/include @AM_CXXFLAGS@ $libs_string
+	else
+	    echo $libs_string
+	fi
 	;;
 esac

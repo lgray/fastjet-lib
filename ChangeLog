@@ -2,7 +2,7 @@
 
 	* fastjet-config.in:
 	  fixed a typo with the runpath argument
-	
+	  allows to use --cxxflags and --libs at the same time
 
 2009-05-26  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
