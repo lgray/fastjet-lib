@@ -1,4 +1,6 @@
-for 2.4.1 release:
+For 2.4.1 release:
 
-- 
-- 
+- check that we've sorted out all mails about 2.4.1 
+
+- try and get nightly check to run multiple sets of config flags?
+

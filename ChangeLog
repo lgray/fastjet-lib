@@ -1,3 +1,15 @@
+2009-05-26  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  made it possible to have several set of configure/link/nev
+	  options within a single run (e.g. to test out-of-the box
+	  running, as well as a configure with full set of algs).
+
+	  Current tests include:
+	  - out-of-the-box
+          - all cxx plugins + CGAL
+	  - shared enabled, static disabled, wtih --runpath
+	
 2009-05-26  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* fastjet-config.in:

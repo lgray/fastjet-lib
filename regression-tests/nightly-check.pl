@@ -38,11 +38,20 @@ $OUTPUT_AUTOFLUSH = 1;
 $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl.gov'; #  g@gavin.fr 
 #$configOpts="--enable-cgal --enable-d0runiicone --enable-trackjet";
 #$configOpts="--enable-shared --enable-cgal --enable-d0runiicone --enable-trackjet --enable-atlascone --enable-jade";
-$configOpts="--enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}." --enable-allcxxplugins";
-$nevTestAll=1000;
-$mail=0;
+
+# $configOpts="--enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}." --enable-allcxxplugins";
+# $fjlibOpts="";
+# $nevTestAll=1000;
+
+@setups = ();
+# for each setup we put in the config options, the special link-time flags, and the number of events
+push @setups, ["", "", 10]; # out of the box
+push @setups, ["--enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}." --enable-allcxxplugins", "", 1000]; # with CGAL & all plugins
+push @setups, ["--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
+
 
 # process command-line
+$mail=0;
 while ($arg = shift @ARGV) {
   if ($arg eq "-mail") {$mail = 1;}
   else {die "Unrecognized argument: $arg";}
@@ -52,13 +61,14 @@ $origDir=getcwd();
 $fail="";
 $failDetails="";
 $allMessages = "";
+$tmpDir = "";
 $verbose = !$mail;
 #$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
-while (1) {
+MAIN: while (1) {
 
   #--- make tmpDir -------------------------------------------------------
-  $tmpDir = "$origDir/tmp-nightly";
+  #$tmpDir = "$origDir/tmp-nightly";
   $tmpDir = "$origDir/tmp-".$$;
   $uname = `uname -a`; chomp $uname;
   &message("* running on $uname\n");
@@ -96,79 +106,11 @@ while (1) {
     &message(" -> $tarName\n");
   }
 
-  #--- untar -----------------
-  &message("* untarring in tmp dir\n");
-  chdir $tmpDir;
-  $untar=`tar zxvf $origDir/$tarName`;
-  if ($?) {
-    $fail = "untar";
-    $failDetails = $untar;
-    last;
+  # now run the rest
+  for ($i = 0; $i <= $#setups; $i++) {
+    &build_and_check($setups[$i][0], $setups[$i][1], $setups[$i][2]) || last MAIN;
   }
-
-  #--- configure -----------------
-  system("mkdir build/");
-  chdir "build";
-  &message("* running configure $configOpts\n");
-  ($distDir=$tarName) =~ s/.tar.gz//;
-  $config=`../$distDir/configure $configOpts --prefix=$tmpDir/inst 2>&1`;
-  if ($config =~ /error[: ]/i || $?) {
-    $fail = "configure";
-    $failDetails = $config;
-    last;
-  }
-
-
-  #--- run make -------------------
-  &message("* running make\n");
-  $make=`make -j2 2>&1`;
-  if ($make =~ /error[: ]/i || $?) {
-    $fail = "make";
-    $failDetails = $make;
-    last;
-  }
-
-  #--- run make check -------------------
-  &message("* running make check\n");
-  $makecheck=`make check 2>&1`;
-  if ($makecheck =~ /error[: ]/i || $?) {
-    $fail = "make check";
-    $failDetails = $makecheck;
-    last;
-  }
-  
-  #--- run make install -------------------
-  &message("* running make install\n");
-  $makeinstall=`make install 2>&1`;
-  if ($makeinstall =~ /error[: ]/i || $?) {
-    $fail = "make install";
-    $failDetails = $makeinstall;
-    last;
-  }
-
-  #--- do external compilation -------------------
-  chdir "../";
-  &message("* compiling fastjet_timing_plugins externally\n");
-  $compile=`g++ -O -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc \`inst/bin/fastjet-config --cxxflags\` \`inst/bin/fastjet-config --libs --plugins\` -o fastjet_timing_plugins 2>&1`;
-  if ($compile =~ /error[: ]/i || $?) {
-    $fail = "external compilation";
-    $failDetails = $compile;
-    last;
-  }
-
-  #--- do test-all-algs -------------------
-  &message("* testing all algs\n");
-  # use the original test-all-algs.pl prog, since it isn't distributed
-  # in the tarball
-  $testall=`../regression-tests/test-all-algs.pl -nev $nevTestAll`;
-  if ($testall =~ /BAD/i || $?) {
-    $fail = "testing all algs";
-    $failDetails = $testall;
-    last;
-  } else {
-    &message($testall);
-  }
-
+  #&build_and_check($configOpts, $fjlibOpts, $nevTestAll) || last;
 
   # now just exit
   last;
@@ -203,8 +145,103 @@ if ($tmpDir) {
 };
 
 
+#======================================================================
 sub message ($) {
   (my $msg) = @_;
   $allMessages .= $msg;
   if ($verbose) {print $msg;}
+}
+
+
+#======================================================================
+#
+# Untars, configures, compiles, does a link with an example program, and runs
+# it to check that the output is correct
+#
+# - $config:       the configure-time flags
+# - $link:         flags passed to fastjet-config at link time
+# - $nev:          number of events to actually test
+#
+sub build_and_check($$$) {
+  my ($config,$link,$nev) = @_;
+
+  #--- clean up from previous invocation --
+  if (-e "build/") {
+    &message("\n* removing everything from the tmp dir\n");
+    system("rm -rf *");
+  }
+
+  #--- untar -----------------
+  &message("* untarring in tmp dir\n");
+  chdir $tmpDir;
+  $untar=`tar zxvf $origDir/$tarName`;
+  if ($?) {
+    $fail = "untar";
+    $failDetails = $untar;
+    return 0;
+  }
+
+  #--- configure -----------------
+  system("mkdir build/");
+  chdir "build";
+  &message("* running configure $config --prefix=$tmpDir/inst\n");
+  ($distDir=$tarName) =~ s/.tar.gz//;
+  $config=`../$distDir/configure $config --prefix=$tmpDir/inst 2>&1`;
+  if ($config =~ /error[: ]/i || $?) {
+    $fail = "configure";
+    $failDetails = $config;
+    return 0;
+  }
+
+  #--- run make -------------------
+  &message("* running make\n");
+  $make=`make -j2 2>&1`;
+  if ($make =~ /error[: ]/i || $?) {
+    $fail = "make";
+    $failDetails = $make;
+    return 0;
+  }
+
+  #--- run make check -------------------
+  &message("* running make check\n");
+  $makecheck=`make check 2>&1`;
+  if ($makecheck =~ /error[: ]/i || $?) {
+    $fail = "make check";
+    $failDetails = $makecheck;
+    return 0;
+  }
+  
+  #--- run make install -------------------
+  &message("* running make install\n");
+  $makeinstall=`make install 2>&1`;
+  if ($makeinstall =~ /error[: ]/i || $?) {
+    $fail = "make install";
+    $failDetails = $makeinstall;
+    return 0;
+  }
+
+  #--- do external compilation -------------------
+  chdir "../";
+  &message("* compiling fastjet_timing_plugins externally (with fastjet-config ... $link)\n");
+  $compile=`g++ -O -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $link\` -o fastjet_timing_plugins 2>&1`;
+  if ($compile =~ /error[: ]/i || $?) {
+    $fail = "external compilation";
+    $failDetails = $compile;
+    return 0;
+  }
+
+  #--- do test-all-algs -------------------
+  &message("* testing all algs\n");
+  # use the original test-all-algs.pl prog, since it isn't distributed
+  # in the tarball
+  $testall=`../regression-tests/test-all-algs.pl -nev $nev`;
+  if ($testall =~ /BAD/i || $?) {
+    $fail = "testing all algs";
+    $failDetails = $testall;
+    return 0;
+  } else {
+    &message($testall);
+  }
+
+  return 1;
 }
