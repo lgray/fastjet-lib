@@ -17,6 +17,8 @@
 #  -nev NEV          sets the number of events to use (default = ???)
 #
 #  -alg ALGNAME      sets the alg name and all parameters other than R
+#                    [things separated by a : become separated by a space
+#                    in the final command]
 #
 #  -R   R            sets R
 #
