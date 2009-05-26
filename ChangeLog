@@ -9,7 +9,8 @@
 	* configure.ac: 
 	  following Gregory's suggestion, fixed a typo related to
   	  temporary CXXFLAGS (this solves a problem on testing some
-	  algs). 
+	  algs, which seems to have been related to marginally different
+ 	  handling of floating point operations). 
 
 2009-05-25  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
