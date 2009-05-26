@@ -1,3 +1,9 @@
+2009-05-26  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* fastjet-config.in:
+	  fixed a typo with the runpath argument
+	
+
 2009-05-26  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* configure.ac: 
