@@ -245,7 +245,7 @@ case $found_query in
 	    libs_string="-Wl,-rpath,@prefix@/lib "$libs_string
 	fi
 	if test "x$add_runpath" = "xyes" ; then
-	    libs_string="@CONFIG_RUNPATH_FLAG@ -Wl,-rpath,@prefix@/lib "$libs_string
+	    libs_string="@CONFIG_RUNPATH_FLAGS@ -Wl,-rpath,@prefix@/lib "$libs_string
 	fi
 	if test "x$plugins_included" = "xyes" ; then
 	    if test "x$use_shared" = "xno" && test "x@HAS_SHARED@" = "xyes" ; then
