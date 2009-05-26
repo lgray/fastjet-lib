@@ -24,7 +24,8 @@ Usage:
   fastjet-config [--help] [--version] [--prefix] [--cxxflags] [--libs]
       [--shared[=yes|no]] [--plugins[=yes|no]] [--rpath] [--runpath]
 
-The arguments can be either queries (one of those must be present):
+The arguments can be either queries (one must be present):
+
   --help       prints this message and exits
   --version    prints FastJet version and exits
   --prefix     get the FastJet installation directory
@@ -32,14 +33,26 @@ The arguments can be either queries (one of those must be present):
   --libs       returns the flags to pass to the linker
 
 or flags (optional):
+
   --shared     controls whether you want to use the static or shared lib
                (default=yes)
+
   --plugins    controls whether you also want to link the FastJet plugins
                (default=no)
-  --runpath    adds the directory where FastJet libraries are installed to
-               the runpath (ELF systens only)
-  --rpath      adds a -rpath argument at link-time that points to the 
-               directory where FastJet libraries are installed
+
+  --runpath    at link-time, adds info about the directory where FastJet
+               libraries are installed to the runpath (ELF systens
+               only). This avoids having to set LD_LIBRARY_PATH at
+               runtime when using shared libs in a non standard
+               location.
+
+  --rpath      adds a -rpath argument at link-time that points to the
+               directory where FastJet libraries are installed. This
+               avoid having to set LD_LIBRARY_PATH at runtime when
+               using shared libs in a non standard location (but may
+               cause the program to inadvertently pick up other shared
+               libraries that happen to be in the FastJet installation
+               directory).
 
 EOF
 else
@@ -50,7 +63,8 @@ Usage:
   fastjet-config [--help] [--version] [--prefix] [--cxxflags] [--libs]
       [--plugins[=yes|no]]
 
-The arguments can be either queries (one of those must be present):
+The arguments can be either queries (one must be present):
+
   --help       prints this message and exits
   --version    prints FastJet version and exits
   --prefix     get the FastJet installation directory
@@ -58,6 +72,7 @@ The arguments can be either queries (one of those must be present):
   --libs       returns the flags to pass to the linker
 
 or flags (optional):
+
   --plugins    controls whether you also want to link the FastJet plugins
                (default=no)
 
