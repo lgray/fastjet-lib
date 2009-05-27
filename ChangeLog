@@ -1,3 +1,10 @@
+2009-05-27  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  added facility for running some of the tests on remote hosts,
+	  and included a bunch of remote runs by default.  Also set up a
+	  fairly long series of combinations that will be tested...
+
 2009-05-26  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
