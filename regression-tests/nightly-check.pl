@@ -22,10 +22,15 @@
 #
 #----------------------------------------------------------------------
 # Future options:
+#
 #   - include an "executive summary" either at the end (screen)
 #     or the beginning (mail), at least when things are OK.
+#     E.g.: host, options, #OK, #unavail
 #
 #   - include info on svn revision, and directory status?
+#
+#   - on svn update, check if nightly-check.pl has changed,
+#     and if so, rerun
 #
 #----------------------------------------------------------------------
 # Reminder notes:
