@@ -48,7 +48,7 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 push @setups, ["", "", 10]; # out of the box
 push @setups, ["--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 push @setups, ["--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
-push @setups, ["--enable-allcxxplugins --enable-shared", "--static", 10]; # with static libs even though shared are built
+push @setups, ["--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 
 
 # process command-line
@@ -132,6 +132,12 @@ if ($fail) {
   if ($#unavail >= 0) {$mailSubject .= ", ".sprintf("%d",$#unavail)." NA"}
 }
 
+# clean up
+if ($tmpDir && !$fail) { 
+  &message("* removing $tmpDir\n");
+  system("rm -rf $tmpDir")
+};
+
 # send mail if relevant
 if ($mail) {
   open (MAIL, "|mail -s '$mailSubject' $mailAddr") || die "could not open pipe for mail message";
@@ -139,11 +145,6 @@ if ($mail) {
   close MAIL;
 }
 
-# clean up
-if ($tmpDir) { 
-  &message("* removing $tmpDir\n");
-  system("rm -rf $tmpDir")
-};
 
 
 #======================================================================
