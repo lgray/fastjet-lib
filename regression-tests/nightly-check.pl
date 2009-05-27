@@ -46,8 +46,9 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 @setups = ();
 # for each setup we put in the config options, the special link-time flags, and the number of events
 push @setups, ["", "", 10]; # out of the box
-push @setups, ["--enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}." --enable-allcxxplugins", "", 1000]; # with CGAL & all plugins
+push @setups, ["--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 push @setups, ["--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
+push @setups, ["--enable-allcxxplugins --enable-shared", "--static", 10]; # with static libs even though shared are built
 
 
 # process command-line
@@ -235,7 +236,7 @@ sub build_and_check($$$) {
   # use the original test-all-algs.pl prog, since it isn't distributed
   # in the tarball
   $testall=`../regression-tests/test-all-algs.pl -nev $nev`;
-  if ($testall =~ /BAD/i || $?) {
+  if ($testall =~ /\sBAD/i || $?) {
     $fail = "testing all algs";
     $failDetails = $testall;
     return 0;
