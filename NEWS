@@ -2,6 +2,43 @@ Release Notes for fastjet
 -------------------------
 
 =======================================================
+Summary of changes from v2.4.0 -> v2.4.1:  A DATE GOES HERE!!!!!!!!!!!!*****************
+=======================================================
+
+- Turned off shared libraries by default. If you installed
+  2.4.0 with a default configure and don't plan to explicitly enable
+  shared libraries in 2.4.1, then either
+
+  (a) go to the directory where you did the 2.4.0 build and
+      run "make uninstall"
+
+  OR 
+
+  (b) go to the directory where you have installed the fastjet
+      libaries and run
+
+       rm -f  libATLASConePlugin.so* \
+              libCDFConesPlugin.so* \
+              libCMSIterativeConePlugin.so* \
+              libD0RunIIConePlugin.so* \
+              libEECambridgePlugin.so* \
+              libfastjet.so* \
+              libJadePlugin.so* \
+              libNestedDefsPlugin.so* \
+              libSISConePlugin.so* \
+              libsiscone.so* \
+              libsiscone_spherical.so* \
+              libTrackJetPlugin.so*
+
+- Added --runpath and --rpath to fastjet-config (for linux only,
+  provides link-time options that help ensure that shared libraries
+  are found at run time, without a need for LD_LIBRARY_PATH)
+
+- Added a fortran wrapper for pp sequential recombination algorithms
+- Fixed gcc 4.4 compatibility issues
+- Fixed platform-dependent failures in make check
+
+=======================================================
 Summary of changes from v2.3.X -> v2.4.0: 17 April 2009
 =======================================================
 
