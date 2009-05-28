@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 =======================================================
-Summary of changes from v2.4.0 -> v2.4.1:  28 May 2009
+Summary of changes from v2.4.0 -> v2.4.1:  XX May 2009 *********** FIX THE DATE *********
 =======================================================
 
 Fixes to the build system
@@ -13,7 +13,7 @@ Fixes to the build system
 - Fixed a problem on Mac OS X with the arguments provided by
   "fastjet-config --libs" (--rpath versus -rpath).
 - fastjet-config has new optional arguments (--rpath=no, --runpath)
-  related to finding shared libraries at runtime on linus; 
+  related to finding shared libraries at runtime on linux; 
   run fastjet-config without any arguments for more info.
 - fastjet-config can now take --cxxflags and --libs in a single invocation
 - Various other small mods (better fortran support, standardisation, ...)
@@ -24,8 +24,8 @@ Also
 - Added a fortran wrapper for pp sequential recombination algorithms
 - Fixed issue in median rho estimation when some jets have zero area
 - Expanded descriptions that are returned by ATLAS/TrackJet/CMS plugins
-- Warnings about use of exclusive jets are no longer given for
-  Cam/Aachen and certain e+e- algorithms
+- Warnings are no longer given when using exclusive jets with
+  Cam/Aachen and certain e+e- algorithms (these warnings were misleading)
 
 
 =======================================================
