@@ -93,6 +93,7 @@ $mail=0;
 $tmpDir="";
 $remote=0;
 $command=$0;
+$commandArgs=join(" ",@ARGV);
 $origDir=getcwd();
 $tarName="";
 while ($arg = shift @ARGV) {
@@ -125,9 +126,9 @@ MAIN: while (1) {
     $tmpDir = "$origDir/tmp-".$$;
     &message("* making tmp directory $tmpDir\n");
     if (-e $tmpDir || ! (mkdir $tmpDir)) {
+      $tmpDir = "";
       $fail = "* creating tmp directory";
       $failDetails = "$tmpDir already exists or could not be created; stopping";
-      $tmpDir = "";
       last;
     }
 
@@ -137,6 +138,15 @@ MAIN: while (1) {
     if ($svnup =~ /external .. revision [0-9]/i && 
         ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
         $svnup !~ /conflict/i) {
+      # check if we had a merge -- in that case using this script is dangerous, so tell 
+      # user?
+      if ($svnup =~ /^G..*nightly-check.pl/m) {&fail("svn update merged nightly-check.pl", $svnup);}
+      # if the script was just updated, then rerun ourselves
+      if ($svnup =~ /^M..*nightly-check.pl/m) {
+        &message("* nightly-check.pl has been updated, rerunning");
+        system("$command $commandArgs");
+        last;
+      }
       # all is OK, do nothing
     } else {
       $fail = "svn update";
@@ -212,40 +222,52 @@ MAIN: while (1) {
   last;
 }
 
+&finish();
 
-#-- mention where failure might arise
-if ($fail) {
-  &message("Failed on $fail\n\nDetailed message is:\n------------------\n");
-  &message($failDetails);
-  &message("\n--------------- END OF FAILURE MESSAGE ---------------\n");
-  $mailSubject='fastjet nightly: FAILED on '.$fail;
-} elsif (!$remote) {
-  &message("\nAll tests passed\n");
-  # try to get more info about test results
-  @unavail = split("unavailable",$allMessages);
-  @areOK   = split("OK",$allMessages);
-  $mailSubject='fastjet nightly: '.sprintf("%d",$#areOK).' OK';
-  if ($#unavail >= 0) {$mailSubject .= ", ".sprintf("%d",$#unavail)." NA"}
+
+
+#======================================================================
+sub finish () {
+  #-- mention where failure might arise
+  if ($fail) {
+    &message("Failed on $fail\n\nDetailed message is:\n------------------\n");
+    &message($failDetails);
+    &message("\n--------------- END OF FAILURE MESSAGE ---------------\n");
+    $mailSubject='fastjet nightly: FAILED on '.$fail;
+  } elsif (!$remote) {
+    &message("\nAll tests passed\n");
+    # try to get more info about test results
+    @unavail = split("unavailable",$allMessages);
+    @areOK   = split("OK",$allMessages);
+    $mailSubject='fastjet nightly: '.sprintf("%d",$#areOK).' OK';
+    if ($#unavail >= 0) {$mailSubject .= ", ".sprintf("%d",$#unavail)." NA"}
+  }
+  
+  # clean up
+  if ($tmpDir && !$fail && !$remote) { 
+    &message("* removing $tmpDir\n");
+    system("rm -rf $tmpDir")
+  };
+  
+  # send mail if relevant, or deposit a message for the program that called us
+  if ($mail) {
+    open (MAIL, "|mail -s '$mailSubject' $mailAddr") || die "could not open pipe for mail message";
+    print MAIL $allMessages;
+    close MAIL;
+  } elsif ($remote) {
+    open (MSG, "> $tmpDir/messages") || die "Remote host could not write to $tmpDir/messages";
+    print MSG $allMessages;
+    close MSG;
+  }
+  exit;
 }
 
-# clean up
-if ($tmpDir && !$fail && !$remote) { 
-  &message("* removing $tmpDir\n");
-  system("rm -rf $tmpDir")
-};
 
-# send mail if relevant, or deposit a message for the program that called us
-if ($mail) {
-  open (MAIL, "|mail -s '$mailSubject' $mailAddr") || die "could not open pipe for mail message";
-  print MAIL $allMessages;
-  close MAIL;
-} elsif ($remote) {
-  open (MSG, "> $tmpDir/messages") || die "Remote host could not write to $tmpDir/messages";
-  print MSG $allMessages;
-  close MSG;
+#======================================================================
+sub fail($$) {
+  ($fail, $failDetails) = @_;
+  &finish();
 }
-
-
 
 #======================================================================
 sub message ($) {
