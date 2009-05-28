@@ -2,41 +2,31 @@ Release Notes for fastjet
 -------------------------
 
 =======================================================
-Summary of changes from v2.4.0 -> v2.4.1:  A DATE GOES HERE!!!!!!!!!!!!*****************
+Summary of changes from v2.4.0 -> v2.4.1:  28 May 2009
 =======================================================
 
-- Turned off shared libraries by default. If you installed
-  2.4.0 with a default configure and don't plan to explicitly enable
-  shared libraries in 2.4.1, then either
-
-  (a) go to the directory where you did the 2.4.0 build and
-      run "make uninstall"
-
-  OR 
-
-  (b) go to the directory where you have installed the fastjet
-      libaries and run
-
-       rm -f  libATLASConePlugin.so* \
-              libCDFConesPlugin.so* \
-              libCMSIterativeConePlugin.so* \
-              libD0RunIIConePlugin.so* \
-              libEECambridgePlugin.so* \
-              libfastjet.so* \
-              libJadePlugin.so* \
-              libNestedDefsPlugin.so* \
-              libSISConePlugin.so* \
-              libsiscone.so* \
-              libsiscone_spherical.so* \
-              libTrackJetPlugin.so*
-
-- Added --runpath and --rpath to fastjet-config (for linux only,
-  provides link-time options that help ensure that shared libraries
-  are found at run time, without a need for LD_LIBRARY_PATH)
-
-- Added a fortran wrapper for pp sequential recombination algorithms
-- Fixed gcc 4.4 compatibility issues
+Fixes to the build system
+-------------------------
+- Included SISCone 2.0.1 (shared libs now enabled by default in both FastJet & SISCone)
 - Fixed platform-dependent failures in make check
+- Fixed gcc 4.4 compatibility issues (missing headers)
+- Fixed a problem on Mac OS X with the arguments provided by
+  "fastjet-config --libs" (--rpath versus -rpath).
+- fastjet-config has new optional arguments (--rpath=no, --runpath)
+  related to finding shared libraries at runtime on linus; 
+  run fastjet-config without any arguments for more info.
+- fastjet-config can now take --cxxflags and --libs in a single invocation
+- Various other small mods (better fortran support, standardisation, ...)
+  [thanks to Andy Buckley for suggestions]
+
+Also
+----
+- Added a fortran wrapper for pp sequential recombination algorithms
+- Fixed issue in median rho estimation when some jets have zero area
+- Expanded descriptions that are returned by ATLAS/TrackJet/CMS plugins
+- Warnings about use of exclusive jets are no longer given for
+  Cam/Aachen and certain e+e- algorithms
+
 
 =======================================================
 Summary of changes from v2.3.X -> v2.4.0: 17 April 2009

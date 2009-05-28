@@ -51,7 +51,7 @@
 	    --shared=no to fastjet-config. The rpath can be removed using
 	    --rpath=no or turned into a runpath using --runpath (ELF
 	    platforms only)
-	  . set a CONFIG_CXXFLAGS variable that allows to specify the
+	  . set a CONFIG_CXXFLAGS variable that allows one to specify the
 	    compilation arguments in fastjet-config independently of the
 	    ones used to compile fastjet.
 	
@@ -78,7 +78,7 @@
 
 	* fastjet-config.in:
 	  fixed a typo with the runpath argument
-	  allows to use --cxxflags and --libs at the same time
+	  allows use of --cxxflags and --libs at the same time
 
 2009-05-26  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
@@ -153,7 +153,7 @@
 	* configure.ac:
 	  - specified the tar-ustar option for automake. This solves a
 	    problem with filenames of length larger than 99 that were not
-	    included in the distribution.
+	    included in the distribution under Ubuntu.
 	  - moved F77 to FC (and related) so that gfortran is
 	    automatically detected if available.	
 	  - added a bunch of comments regarding the recommendation to use
@@ -183,11 +183,11 @@
 
 2009-05-08  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
-        * fastjet-2.4.0/example/fastjet_example.cc
-          fastjet-2.4.0/example/fastjet_subjets.cc
-          fastjet-2.4.0/example/fastjet_timing.cc
-          fastjet-2.4.0/include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh
-          fastjet-2.4.0/plugins/usage_examples/run_jet_finder.cc
+	* example/fastjet_example.cc:
+	* example/fastjet_subjets.cc:
+	* example/fastjet_timing.cc:
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh:
+	* plugins/usage_examples/run_jet_finder.cc:
           added #include <cstdio> for compatibility with g++-4.4
           (pointed out by <peter.elmer@cern.ch>
 
@@ -230,8 +230,8 @@
 	  list of algorithms for which no warnings are given.
 
 	* include/fastjet/JetDefinition.hh: 
-	  plugins/Jade/fastjet/JadePlugin.hh: 
-	  plugins/EECambridge/fastjet/EECambridgePlugin.hh: 
+	* plugins/Jade/fastjet/JadePlugin.hh: 
+	* plugins/EECambridge/fastjet/EECambridgePlugin.hh: 
 	  added a 'exclusive_seqence_meaningful' member allowing to know
 	  if a plugin gives meaningful exclusive jets (default=false). 
 	  Set to true in Jade and EECambrigde.
@@ -242,7 +242,7 @@
 	  switched version number to 2.4.1-devel
 
 	* test-compare.sh:
-	  discard lines with "WARNING" (occurs in non=predictable
+	  discard lines with "WARNING" (occurs in non-predictable
 	  positions due to flushing issues)
 
 	* src/ClusterSequence.cc:

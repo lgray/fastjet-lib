@@ -34,7 +34,47 @@ X.Y.Z  copy manual to web
 X.Y.Z  run doxygen, copy to web
 X.Y.Z  update main web page & menu in devel area
 
-X.Y.Z  tag
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  update main web-page area
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+X.Y.Z  make sure it's committed with the CHECKLIST
+
+X.Y.Z  check everything is OK
+X.Y.Z  reset the SISCone link to the trunk
+X.Y.Z  move the versino number to X.Y.(Z+1)-devel
+
+
+----------------------------------------------------------------------
+checklist for 2.4.1 (make a copy before editing!)
+-------------------
+X.Y.Z  make sure version number in configure.ac is correct
+
+X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+X.Y.Z  update doxygen version number + check dirs are declared for new plugins
+X.Y.Z  version number in manual
+
+X.Y.Z  ensure NEWS is up to date
+
+X.Y.Z  make sure siscone points to a tag, not trunk
+
+X.Y.Z  make check 
+
+X.Y.Z  make distcheck
+
+X.Y.Z  make sure it's committed
+
+X.Y.Z  rerun the nightly check
+
+X.Y.Z  copy distribution to web
+X.Y.Z  compile manual
+X.Y.Z  copy manual to web
+X.Y.Z  run doxygen, copy to web
+X.Y.Z  update main web page & menu in devel area
+
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
 X.Y.Z  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
