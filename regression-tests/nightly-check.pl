@@ -2,7 +2,8 @@
 #
 # Script to help us perform a nightly check of fastjet
 #
-# -mail sends mail, otherwise output goes to screen
+#    -mail      sends mail, otherwise output goes to screen
+#    -verbose   output goes to screen even if we also ask for mail
 #
 # Various other options provide access to internals for running checks
 # on remote hosts. The set of configurations that are run is given in
@@ -90,11 +91,13 @@ $command=$0;
 $commandArgs=join(" ",@ARGV);
 $origDir=getcwd();
 $tarName="";
+$verbose="";
 while ($arg = shift @ARGV) {
   if ($arg eq "-mail")   {$mail = 1;}
-  elsif ($arg eq "-remote") {$tmpDir  = shift @ARGV; $remote=1;}
-  elsif ($arg eq "-tar")    {$tarName = shift @ARGV;}
-  elsif ($arg eq "-orig")   {
+  elsif ($arg eq "-remote")  {$tmpDir  = shift @ARGV; $remote=1;}
+  elsif ($arg eq "-tar")     {$tarName = shift @ARGV;}
+  elsif ($arg eq "-verbose") {$verbose = 1;}
+  elsif ($arg eq "-orig")    {
     $origDir = shift @ARGV;
   }
   else {die "Unrecognized argument: $arg";}
@@ -106,7 +109,7 @@ $origDir=~ s/^\/misc//;
 $fail="";
 $failDetails="";
 $allMessages = "";
-$verbose = ! ($mail || $remote);
+$verbose = $verbose || (! ($mail || $remote));
 #$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
 $uname = `uname -a`; chomp $uname;
@@ -177,18 +180,12 @@ MAIN: while (1) {
         $ssh =~ s/^.*in the future\n//mg;   # because karnak's time is wrong
         $ssh =~ s/^.*slocate.db.*\n//mg;    # because zetes has out of date locate
         $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
-        if ($ssh || $?) {
-          $fail = "connection to $setups[$i][0]";
-          $failDetails = $ssh;
-          last MAIN;
-        }
+        if ($ssh || $?) {&fail("connection to $setups[$i][0]", $ssh);}
 
         # collect the results
         $results=`cat $tmpDir/messages 2>&1`;
         if (!$results || $results =~ /Failed/ || $?) {
-          $fail = "execution on remote host";
-          $failDetails = $results;
-          last MAIN;
+          &fail("execution on remote host", $results);
         } else {
           &message($results);
         }
