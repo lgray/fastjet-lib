@@ -1,3 +1,10 @@
+2009-05-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  simplified output of fail messages;
+	  now if update changes the nightly check, then it reruns itself;
+	  it should now also output a summary message about what it's done
+
 2009-05-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh (ClusterSequenceAreaBase): 

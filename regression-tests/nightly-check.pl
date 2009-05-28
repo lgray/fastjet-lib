@@ -68,7 +68,7 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 
 
 
-# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
+push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
 push @setups, ["","", "", 10]; # out of the box
 # push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 # push @setups, ["","--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
@@ -107,8 +107,10 @@ while ($arg = shift @ARGV) {
 $origDir=~ s/^\/misc//; 
 
 $fail="";
-$failDetails="";
+$failDetails = "";
 $allMessages = "";
+$summary = "";
+$testall = "";
 $verbose = $verbose || (! ($mail || $remote));
 #$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
@@ -136,7 +138,7 @@ MAIN: while (1) {
         ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
         $svnup !~ /conflict/i) {
       # check if we had a merge -- in that case using this script is dangerous, so tell 
-      # user?
+      # user
       if ($svnup =~ /^G..*nightly-check.pl/m) {&fail("svn update merged nightly-check.pl", $svnup);}
       # if the script was just updated, then rerun ourselves
       if ($svnup =~ /^U..*nightly-check.pl/m) {
@@ -146,9 +148,7 @@ MAIN: while (1) {
       }
       # all is OK, do nothing
     } else {
-      $fail = "svn update";
-      $failDetails = $svnup;
-      last;
+      &fail("svn update", $svnup);
     }
 
     #--- make dist ------------------------------------------------------
@@ -166,6 +166,11 @@ MAIN: while (1) {
 
     # now run the rest, either remotely, or from setups array, or from a setup file
     for ($i = 0; $i <= $#setups; $i++) {
+      $summary .= "Running ".($setups[$i][0] ? "on ".$setups[$i][0] : "locally").":
+   config: $setups[$i][1]
+   link:   $setups[$i][2]
+   nev:    $setups[$i][3]
+";
       if ($setups[$i][0]) {
         # run test on a remote host 
         &message("* transferring execution to remote host $setups[$i][0]\n");
@@ -189,14 +194,16 @@ MAIN: while (1) {
         } else {
           &message($results);
         }
-
+        $summary .= "   status: ".&OKUnavail($results)."\n\n";
       } else {
 
         # run the test locally
         &build_and_check($setups[$i][1], $setups[$i][2], $setups[$i][3]) || last MAIN;
+        $summary .= "   status: ".&OKUnavail($testall)."\n\n";
 
       }
     }
+      
   } else {
     # remote case, in which tmpDir is already there
     # read the instructions
@@ -219,6 +226,9 @@ MAIN: while (1) {
 
 #======================================================================
 sub finish () {
+  $summary =
+"SUMMARY
+-------\n".$summary;
   #-- mention where failure might arise
   if ($fail) {
     &message("Failed on $fail\n\nDetailed message is:\n------------------\n");
@@ -228,21 +238,19 @@ sub finish () {
   } elsif (!$remote) {
     &message("\nAll tests passed\n");
     # try to get more info about test results
-    @unavail = split("unavailable",$allMessages);
-    @areOK   = split("OK",$allMessages);
-    $mailSubject='fastjet nightly: '.sprintf("%d",$#areOK).' OK';
-    if ($#unavail >= 0) {$mailSubject .= ", ".sprintf("%d",$#unavail)." NA"}
+    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages);
   }
-  
+
   # clean up
   if ($tmpDir && !$fail && !$remote) { 
     &message("* removing $tmpDir\n");
     system("rm -rf $tmpDir")
   };
-  
+
   # send mail if relevant, or deposit a message for the program that called us
   if ($mail) {
     open (MAIL, "|mail -s '$mailSubject' $mailAddr") || die "could not open pipe for mail message";
+    print MAIL $summary."\n\n";
     print MAIL $allMessages;
     close MAIL;
   } elsif ($remote) {
@@ -250,13 +258,17 @@ sub finish () {
     print MSG $allMessages;
     close MSG;
   }
-  exit;
+
+  if ($verbose && !$remote) {
+    print "\n\n".$summary;
+  }
 }
 
 
 #======================================================================
 sub fail($$) {
   ($fail, $failDetails) = @_;
+  $summary .= "   FAILED";
   &finish();
 }
 
@@ -267,6 +279,19 @@ sub message ($) {
   if ($verbose) {print $msg;}
 }
 
+
+#======================================================================
+# given an output string provide, an message containing # of OK / 
+# unavailable options.
+sub OKUnavail ($) {
+  my ($input) = @_;
+  my $output;
+  @unavail = split("unavailable",$input);
+  @areOK   = split("OK",$input);
+  $output=sprintf("%d",$#areOK).' OK';
+  if ($#unavail >= 0) {$output .= ", ".sprintf("%d",$#unavail)." NA"}
+  return $output;
+}
 
 #======================================================================
 #
