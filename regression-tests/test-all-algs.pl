@@ -233,9 +233,15 @@ sub fullName {
 #======================================================================
 sub setDefaults {
 
-  $gavinHome = `echo ~salam`;
-  chomp $gavinHome;
-  $dataDir="$gavinHome/work/fastjet/data";
+  $username=`whoami`;
+  chomp $username;
+  if (( $username eq "greg") || ($username eq "soyez")){
+      $dataDir="~/diska/jets/fastjet/data";
+  } else {
+      $gavinHome = `echo ~salam`;
+      chomp $gavinHome;
+      $dataDir="$gavinHome/work/fastjet/data";
+  }
   $dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
 
   # for the e+e- algorithms, use an e+e- event file
@@ -292,6 +298,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,siscone:-f:0.75,R0.60" => "2d517cc2b23aad18c4afc8b58f99d842",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,siscone:-f:0.50,R0.60" => "54fd76a24330cf77658ebba9371ad8c5",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1,jetclu,R0.60" => "05781404302f156dac9171e37bc09d44",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1,pxcone,R0.60" => "c39185086e8ad3e35d13d32f2d03c41a",
   # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1,eekt,R0.60" => "8caea0f93458e54c5418b757793c50d2",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1,eegenkt:0,R0.60" => "d1d52a0e1b45b11590cab257c5af5152",
@@ -318,8 +325,9 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,siscone:-f:0.75,R0.60"=>    "5a1463f29a19fd368cc2821edc39f99b",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,siscone:-f:0.50,R0.60"=>    "2a88c96f6410bf721bdfc48046ac9be1",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,jetclu,R0.60"       =>    "49a43a2db9fe715b47b4e80daacf8edc",
-  # ee algs ran on pp events
+  "Pythia-PtMin50-LHC-1000ev.dat,nev10,pxcone,R0.60" => "f25494f08feb0b4398d45e6b2bf60b0a",
   "Pythia-PtMin50-LHC-1000ev.dat,nev10,d0runiicone,R0.60" => "f60a1928e1b584078611a257100a99a6",
+  # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:0,R0.60" => "2c95f0f347a3ba4b35255ffc20da13d5",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev10,eegenkt:-1,R0.60" => "07aec8542d7687e0465958d3f2e5e86e",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,eekt,R0.60" => "7e8b864013f28ee0f4d8cbebe79abbd3",
@@ -343,6 +351,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,siscone:-f:0.75,R0.60" => "8a6cb5d7533dcd8553fefb9dbe38e344",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,siscone:-f:0.50,R0.60" => "ba6fdee02d2fb12d6d49267c428190b9",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,jetclu,R0.60" => "8948d26cacb802bf5e2e6c1cf89dabff",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev100,pxcone,R0.60" => "a3781182e4a363725b0929023dc27628",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,d0runiicone,R0.60" => "a7430e1528ffcf20b3098959c7aa257d",
   # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev100,eekt,R0.60" => "7388d3917738969fb7fdf518af0dca78",
@@ -369,6 +378,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,siscone:-f:0.75,R0.60" => "e2333f97f0b69d858ec33ee8537882bf",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,siscone:-f:0.50,R0.60" => "65f5ca86e1db411f55892831ca6aad0b",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,jetclu,R0.60" => "57ff3c751ab1d2f82673cd28fdb9e991",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,pxcone,R0.60" => "a15a20876c52578b9b4b07a96b67a13a",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
   # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,eekt,R0.60" => "59fe2638f8df87a48bda2b8d1490034e",

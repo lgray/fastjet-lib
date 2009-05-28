@@ -1,5 +1,8 @@
 2009-05-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* regression-tests/test-all-algs.pl (setRefResults): 
+	  added checksums for PxCone
+
 	* src/ClusterSequenceAreaBase.cc (get_median_rho_and_sigma),
 	  include/fastjet/ClusterSequenceAreaBase.hh:
 	  disregarded jets with 0 area in the computation of the median
