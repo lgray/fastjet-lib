@@ -58,10 +58,11 @@ fi
 dnl build the shared lib by default
 dnl even though they're enabled by default, AM_ENABLE_SHARED has to
 dnl be called so that ${enable_shared} is set to 'yes' instead of ''
-dnl AM_ENABLE_SHARED
+AM_ENABLE_SHARED
 dnl
-dnl DISABLE SHARED LIBS !!!!!!!
-AM_DISABLE_SHARED
+dnl comment the previous line and uncomment this one if you want shared 
+dnl libs to be disabled by default
+dnl AM_DISABLE_SHARED
 HAS_SHARED=${enable_shared}
 
 dnl-----------------
@@ -70,6 +71,7 @@ dnl ----------------
 
 dnl math lib
 AC_CHECK_LIB(m, cos)
+CONFIG_CXXFLAGS=""
 CONFIG_LIBS=" -lm "
 
 dnl deal with the CGAL library
@@ -77,7 +79,6 @@ dnl first check if the user wants to use CGAL
 dnl default value is "no"
 dnl Note that CGAL compilation flags are considered as required
 dnl so we do store them in "AM_CXXFLAGS"
-CONFIG_CXXFLAGS=""
 AC_ARG_ENABLE(cgal,
        [  --enable-cgal           enables link with the CGAL library (default=no)],
        [ENABLE_CGAL_FLAG="$enableval"],
@@ -89,10 +90,11 @@ fi
 
 dnl update compilation/link flags for the CGAL lib
 if [[ "x$ENABLE_CGAL_FLAG" == "xyes" ]] ; then
-   CONFIG_CXXFLAGS=${CONFIG_CXXFLAGS}" $CGAL_CPPFLAGS "
+   AM_CXXFLAGS=${AM_CXXFLAGS}" $CGAL_CPPFLAGS "
    CONFIG_LIBS=${CONFIG_LIBS}" $CGAL_LDFLAGS $CGAL_LIBS "
 else
-   CONFIG_CXXFLAGS=${CONFIG_CXXFLAGS}" -DDROP_CGAL "
+   AM_CXXFLAGS=${AM_CXXFLAGS}" -DDROP_CGAL "
+dnl   CONFIG_CXXFLAGS=${CONFIG_CXXFLAGS}" -DDROP_CGAL "
 fi
 AC_SUBST(CGAL_CPPFLAGS)
 AC_SUBST(CGAL_LIBS)
@@ -116,10 +118,8 @@ AC_SUBST(HAS_RUNPATH_SUPPORT)
 AC_SUBST(CONFIG_RUNPATH_FLAGS)
 
 dnl substitutions
-AM_CXXFLAGS=${AM_CXXFLAGS}"$CONFIG_CXXFLAGS"
-dnl AM_LIBS="$CONFIG_LIBS"
 AC_SUBST(AM_CXXFLAGS)
-dnl AC_SUBST(CONFIG_CXXFLAGS)
+AC_SUBST(CONFIG_CXXFLAGS)
 AC_SUBST(CONFIG_LIBS)
 
 dnl create the substitutions variables for the configuration script
