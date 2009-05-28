@@ -141,6 +141,7 @@ foreach $strat (@strat) {
   $cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1 < $localdataFile";
   $strat =~ s/.*y /s/; # we'll need this in a clean form later
   $res = `$cmdline`;
+  $error = $?;
 
   # process the results into some decent form
   if ($res eq "" ) {
@@ -156,7 +157,9 @@ foreach $strat (@strat) {
 
   # now generate output
   $name = &fullName($alg);
-  if (exists($refResults{$name}) && $sum ne "unavailable") {
+  if ($error) {
+    $OK = "*** BAD (crash?) ***"
+  } elsif (exists($refResults{$name}) && $sum ne "unavailable") {
     $OK = ($sum eq $refResults{$name}) ? "OK" : "*** BAD ***";
   } else { 
     $OK = "-";

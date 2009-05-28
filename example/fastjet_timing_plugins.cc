@@ -228,7 +228,7 @@ void print_jets(const vector<fj::PseudoJet> & jets, const fj::ClusterSequence & 
 
 void is_unavailable(const string & algname) {
   cerr << algname << " requested, but not available for this compilation";
-  exit(-1);
+  exit(0);
 }
 
 

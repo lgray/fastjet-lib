@@ -68,15 +68,18 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 
 
 
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
 push @setups, ["","", "", 10]; # out of the box
-# push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
-# push @setups, ["","--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
-# push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
-# push @setups, ["zetes", "", "", 10]; # out of the box on zetes (SLC4, gcc 3.4.6, 64 bit)
-# push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
-# push @setups, ["karnak","--enable-allcxxplugins --enable-shared", "", 10]; # full monty on karnak
-# push @setups, ["hercule","--enable-allcxxplugins", "", 10]; # hercule: standard machine, 64 bits
+push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
+push @setups, ["","--enable-allcxxplugins --disable-shared", "--runpath", 10]; # with dynlibs
+push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
+push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 10]; # with the intel compiler
+push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
+push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
+push @setups, ["karnak","--enable-allcxxplugins", "", 10]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
+push @setups, ["hercule","--enable-allcxxplugins", "", 10]; # hercule: standard machine, 64 bits
 
 
 
@@ -93,11 +96,12 @@ $origDir=getcwd();
 $tarName="";
 $verbose="";
 while ($arg = shift @ARGV) {
-  if ($arg eq "-mail")   {$mail = 1;}
-  elsif ($arg eq "-remote")  {$tmpDir  = shift @ARGV; $remote=1;}
-  elsif ($arg eq "-tar")     {$tarName = shift @ARGV;}
-  elsif ($arg eq "-verbose") {$verbose = 1;}
-  elsif ($arg eq "-orig")    {
+  if ($arg eq "-mail")         {$mail = 1;}
+  elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr="salam@lpthe.jussieu.fr";}
+  elsif ($arg eq "-remote")    {$tmpDir  = shift @ARGV; $remote=1;}
+  elsif ($arg eq "-tar")       {$tarName = shift @ARGV;}
+  elsif ($arg eq "-verbose")   {$verbose = 1;}
+  elsif ($arg eq "-orig")      {
     $origDir = shift @ARGV;
   }
   else {die "Unrecognized argument: $arg";}
@@ -114,8 +118,6 @@ $testall = "";
 $verbose = $verbose || (! ($mail || $remote));
 #$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
-$uname = `uname -a`; chomp $uname;
-&message("* running on $uname\n");
 
 MAIN: while (1) {
 
@@ -268,7 +270,7 @@ sub finish () {
 #======================================================================
 sub fail($$) {
   ($fail, $failDetails) = @_;
-  $summary .= "   FAILED";
+  $summary .= "   FAILED on $fail\n";
   &finish();
 }
 
@@ -305,11 +307,6 @@ sub OKUnavail ($) {
 sub build_and_check($$$) {
   my ($config,$link,$nev) = @_;
 
-  # $cxx = "g++";
-  # # special compilers are deduced from the configure flag
-  # if ($config =~ /CXX=([^\s]+)/) { $cxx = $1; }
-  # &message("* compiling fastjet_timing_plugins externally (with $cxx, fastjet-config ... $link)\n");
-
   chdir $tmpDir;
 
   #--- clean up from previous invocation --
@@ -317,6 +314,15 @@ sub build_and_check($$$) {
     &message("\n* removing everything from the tmp dir\n");
     system("rm -rf *");
   }
+
+  $uname = `uname -a`; chomp $uname;
+  &message("* running on $uname\n");
+
+  $cxx = "g++";
+  # special compilers are deduced from the configure flag
+  if ($config=~ /CXX=([^\s]+)/) { $cxx = $1; }
+  $compiler = `$cxx --version 2>&1 | head -1`; chomp $compiler;
+  &message("* c++ compiler: $cxx, $compiler\n");
 
   #--- untar -----------------
   &message("* untarring $origDir/$tarName in tmp dir\n");
@@ -342,7 +348,9 @@ sub build_and_check($$$) {
   #--- run make -------------------
   &message("* running make\n");
   $make=`make -j2 2>&1`;
-  if ($make =~ /error[: ]/i || $?) {
+  # be careful about how we check for errors in case we trigger
+  # intel warnings
+  if ($make =~ /^[Ee]rror[: ]/ || $make =~ / [Ee]rror[: ]/ || $?) {
     $fail = "make";
     $failDetails = $make;
     return 0;
@@ -368,9 +376,6 @@ sub build_and_check($$$) {
 
   #--- do external compilation -------------------
   chdir "../";
-  $cxx = "g++";
-  # special compilers are deduced from the configure flag
-  if ($config=~ /CXX=([^\s]+)/) { $cxx = $1; }
   &message("* compiling fastjet_timing_plugins externally (with $cxx, fastjet-config ... $link)\n");
   $compile=`$cxx -O -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $link\` -o fastjet_timing_plugins 2>&1`;
   if ($compile =~ /error[: ]/i || $?) {
