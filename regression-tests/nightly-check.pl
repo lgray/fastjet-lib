@@ -74,12 +74,6 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 
 
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
-
-# $cxx = "g++";
-# # special compilers are deduced from the configure flag
-# if ($setups[0][1]=~ /CXX=([^\s]+)/) { $cxx = $1; }
-# print "$cxx\n";exit;
-
 # push @setups, ["","", "", 10]; # out of the box
 # push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 # push @setups, ["","--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
