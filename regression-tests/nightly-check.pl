@@ -51,12 +51,6 @@ $OUTPUT_AUTOFLUSH = 1;
 
 # things to configure
 $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl.gov'; #  g@gavin.fr 
-#$configOpts="--enable-cgal --enable-d0runiicone --enable-trackjet";
-#$configOpts="--enable-shared --enable-cgal --enable-d0runiicone --enable-trackjet --enable-atlascone --enable-jade";
-
-# $configOpts="--enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}." --enable-allcxxplugins";
-# $fjlibOpts="";
-# $nevTestAll=1000;
 
 @setups = ();
 # for each setup we put the host ("" is current host), the config
