@@ -55,7 +55,8 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 
 @setups = ();
 # for each setup we put the host ("" is current host), the config
-# options, the special link-time flags, and the number of events
+# options, the special link-time arguments to fastjet-config, and the
+# number of events
 #
 # The things we want to test are:
 #
@@ -65,9 +66,8 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 # - shared/static issues (depending on current defaults)
 # - cgal
 # - at least one run with 10^3 events
+# - at least one run with pxcone
 
-
-#push @setups, ["hercule","--enable-pxcone --disable-allplugins --enable-cgal FC=/usr/bin/gfortran --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 
 push @setups, ["","", "", 10]; # out of the box
 push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
@@ -81,10 +81,6 @@ push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # fu
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
 push @setups, ["hercule","--enable-allcxxplugins", "", 10]; # hercule: standard machine, 64 bits
-
-
-
-# /Volumes/Lacie/cacciari/local/bin/g++-4.4
 
 
 # process command-line
