@@ -96,8 +96,8 @@ $origDir=getcwd();
 $tarName="";
 $verbose="";
 while ($arg = shift @ARGV) {
-  if ($arg eq "-mail")         {$mail = 1;}
-  elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr="salam@lpthe.jussieu.fr";}
+  if    ($arg eq "-mail")      {$mail = 1;}
+  elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr='salam@lpthe.jussieu.fr';}
   elsif ($arg eq "-remote")    {$tmpDir  = shift @ARGV; $remote=1;}
   elsif ($arg eq "-tar")       {$tarName = shift @ARGV;}
   elsif ($arg eq "-verbose")   {$verbose = 1;}
