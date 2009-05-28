@@ -378,6 +378,8 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,siscone:-f:0.75,R0.60" => "e2333f97f0b69d858ec33ee8537882bf",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,siscone:-f:0.50,R0.60" => "65f5ca86e1db411f55892831ca6aad0b",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,jetclu,R0.60" => "57ff3c751ab1d2f82673cd28fdb9e991",
+  # pxcone differs between 32/64 bit machines (and compilers?); the answer here is
+  # for a 64 bit gfortran
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,pxcone,R0.60" => "a15a20876c52578b9b4b07a96b67a13a",
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
   # ee algs ran on pp events

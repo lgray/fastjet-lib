@@ -67,10 +67,11 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 # - at least one run with 10^3 events
 
 
+#push @setups, ["hercule","--enable-pxcone --disable-allplugins --enable-cgal FC=/usr/bin/gfortran --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 
 push @setups, ["","", "", 10]; # out of the box
 push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
-push @setups, ["","--enable-allcxxplugins --disable-shared", "--runpath", 10]; # with dynlibs
+push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 10]; # with the intel compiler
 push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
@@ -128,9 +129,7 @@ MAIN: while (1) {
     &message("* making tmp directory $tmpDir\n");
     if (-e $tmpDir || ! (mkdir $tmpDir)) {
       $tmpDir = "";
-      $fail = "* creating tmp directory";
-      $failDetails = "$tmpDir already exists or could not be created; stopping";
-      last;
+      &fail("* creating tmp directory","$tmpDir already exists or could not be created; stopping");
     }
 
     #--- svn update --------------------------------------------------------
@@ -157,10 +156,8 @@ MAIN: while (1) {
     &message("* running make dist");
     $makedist=`make dist 2>&1`;
     if ($makedist =~ / error[: ]/i || $makedist !~ />(.*?tar.gz)/) {
-      $fail = "make dist";
-      $failDetails = $makedist;
       &message("\n");
-      last;
+      &fail ("make dist", $makedist);
     } else {
       $tarName = $1;
       &message(" -> $tarName\n");
@@ -168,11 +165,6 @@ MAIN: while (1) {
 
     # now run the rest, either remotely, or from setups array, or from a setup file
     for ($i = 0; $i <= $#setups; $i++) {
-      $summary .= "Running ".($setups[$i][0] ? "on ".$setups[$i][0] : "locally").":
-   config: $setups[$i][1]
-   link:   $setups[$i][2]
-   nev:    $setups[$i][3]
-";
       if ($setups[$i][0]) {
         # run test on a remote host 
         &message("* transferring execution to remote host $setups[$i][0]\n");
@@ -185,23 +177,22 @@ MAIN: while (1) {
         # connect to remote host and run there
         $ssh=`ssh $setups[$i][0] $origDir/$command -remote $tmpDir -orig $origDir -tar $tarName 2>&1`;
         $ssh =~ s/^.*in the future\n//mg;   # because karnak's time is wrong
-        $ssh =~ s/^.*slocate.db.*\n//mg;    # because zetes has out of date locate
+        $ssh =~ s/^.*slocate.db.*\n//mg;    # because zetes has out-of-date locate
         $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
         if ($ssh || $?) {&fail("connection to $setups[$i][0]", $ssh);}
 
         # collect the results
-        $results=`cat $tmpDir/messages 2>&1`;
+        $results  = `cat $tmpDir/messages 2>&1`;
+        $summary .= `cat $tmpDir/summary 2>&1`;
         if (!$results || $results =~ /Failed/ || $?) {
           &fail("execution on remote host", $results);
         } else {
           &message($results);
         }
-        $summary .= "   status: ".&OKUnavail($results)."\n\n";
       } else {
 
         # run the test locally
         &build_and_check($setups[$i][1], $setups[$i][2], $setups[$i][3]) || last MAIN;
-        $summary .= "   status: ".&OKUnavail($testall)."\n\n";
 
       }
     }
@@ -228,9 +219,7 @@ MAIN: while (1) {
 
 #======================================================================
 sub finish () {
-  $summary =
-"SUMMARY
--------\n".$summary;
+  if (!$remote) {$summary = "SUMMARY\n-------\n".$summary;}
   #-- mention where failure might arise
   if ($fail) {
     &message("Failed on $fail\n\nDetailed message is:\n------------------\n");
@@ -259,11 +248,16 @@ sub finish () {
     open (MSG, "> $tmpDir/messages") || die "Remote host could not write to $tmpDir/messages";
     print MSG $allMessages;
     close MSG;
+    open (SUM, "> $tmpDir/summary") || die "Remote host could not write to $tmpDir/summary";
+    print SUM $summary;
+    close SUM;
   }
 
   if ($verbose && !$remote) {
     print "\n\n".$summary;
   }
+  
+  exit;
 }
 
 
@@ -307,6 +301,21 @@ sub OKUnavail ($) {
 sub build_and_check($$$) {
   my ($config,$link,$nev) = @_;
 
+  # get info about the compiler
+  $cxx = "g++";
+  # special compilers are deduced from the configure flag
+  if ($config=~ /CXX=([^\s]+)/) { $cxx = $1; }
+  $compiler = `$cxx --version 2>&1 | head -1`; chomp $compiler;
+
+  # start constructing the summary
+  ($host = `uname -n`) =~ s/\..*//; chomp($host);
+  $shortuname = `uname -sm`; chomp($shortuname);
+  $summary .= "Running on $host: $shortuname, $compiler
+   config: $config
+   tests:  link($link), nev($nev)
+";
+
+
   chdir $tmpDir;
 
   #--- clean up from previous invocation --
@@ -315,22 +324,18 @@ sub build_and_check($$$) {
     system("rm -rf *");
   }
 
+  # some detailed info about the system
   $uname = `uname -a`; chomp $uname;
   &message("* running on $uname\n");
-
-  $cxx = "g++";
-  # special compilers are deduced from the configure flag
-  if ($config=~ /CXX=([^\s]+)/) { $cxx = $1; }
-  $compiler = `$cxx --version 2>&1 | head -1`; chomp $compiler;
   &message("* c++ compiler: $cxx, $compiler\n");
+
+  
 
   #--- untar -----------------
   &message("* untarring $origDir/$tarName in tmp dir\n");
   $untar=`tar zxvf $origDir/$tarName`;
   if ($?) {
-    $fail = "untar";
-    $failDetails = $untar;
-    return 0;
+    &fail("untar",$untar);
   }
 
   #--- configure -----------------
@@ -340,10 +345,17 @@ sub build_and_check($$$) {
   ($distDir=$tarName) =~ s/.tar.gz//;
   $configOut=`../$distDir/configure $config --prefix=$tmpDir/inst 2>&1`;
   if ($configOut =~ /error[: ]/i || $?) {
-    $fail = "configure";
-    $failDetails = $configOut;
-    return 0;
+    &fail("configure",$configOut);
   }
+
+  # figure out the f77 compiler too
+  $fcompiler="";
+  if (`cat Makefile` =~ /^F77 = (.*)$/m) {
+    $fcompiler = $1;
+    $fcompiler .= ", ".`$fcompiler --version 2>&1 | head -1`;
+    chomp $fcompiler;
+  }
+  &message("* f77 compiler: $fcompiler\n");
 
   #--- run make -------------------
   &message("* running make\n");
@@ -351,27 +363,21 @@ sub build_and_check($$$) {
   # be careful about how we check for errors in case we trigger
   # intel warnings
   if ($make =~ /^[Ee]rror[: ]/ || $make =~ / [Ee]rror[: ]/ || $?) {
-    $fail = "make";
-    $failDetails = $make;
-    return 0;
+    &fail("make",$make);
   }
 
   #--- run make check -------------------
   &message("* running make check\n");
   $makecheck=`make check 2>&1`;
   if ($makecheck =~ /error[: ]/i || $?) {
-    $fail = "make check";
-    $failDetails = $makecheck;
-    return 0;
+    &fail("make check",$makecheck);
   }
   
   #--- run make install -------------------
   &message("* running make install\n");
   $makeinstall=`make install 2>&1`;
   if ($makeinstall =~ /error[: ]/i || $?) {
-    $fail = "make install";
-    $failDetails = $makeinstall;
-    return 0;
+    &fail("make install",$makeinstall);
   }
 
   #--- do external compilation -------------------
@@ -379,9 +385,7 @@ sub build_and_check($$$) {
   &message("* compiling fastjet_timing_plugins externally (with $cxx, fastjet-config ... $link)\n");
   $compile=`$cxx -O -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $link\` -o fastjet_timing_plugins 2>&1`;
   if ($compile =~ /error[: ]/i || $?) {
-    $fail = "external compilation";
-    $failDetails = $compile;
-    return 0;
+    &fail("external compilation",$compile);
   }
 
   #--- do test-all-algs -------------------
@@ -389,10 +393,9 @@ sub build_and_check($$$) {
   # use the original test-all-algs.pl prog, since it isn't distributed
   # in the tarball
   $testall=`../regression-tests/test-all-algs.pl -nev $nev`;
+  $summary .= "   status: ".&OKUnavail($testall)."\n\n";
   if ($testall =~ /\sBAD/i || $testall !~ /OK/ || $?) {
-    $fail = "testing all algs";
-    $failDetails = $testall;
-    return 0;
+    &fail("testing all algs",$testall);
   } else {
     &message($testall);
   }
