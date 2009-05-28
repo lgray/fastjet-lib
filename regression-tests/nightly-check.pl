@@ -67,10 +67,10 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 
 
 
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
+# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
 push @setups, ["","", "", 10]; # out of the box
-push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
- push @setups, ["","--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
+# push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
+# push @setups, ["","--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
 # push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 # push @setups, ["zetes", "", "", 10]; # out of the box on zetes (SLC4, gcc 3.4.6, 64 bit)
 # push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
@@ -137,7 +137,7 @@ MAIN: while (1) {
       if ($svnup =~ /^G..*nightly-check.pl/m) {&fail("svn update merged nightly-check.pl", $svnup);}
       # if the script was just updated, then rerun ourselves
       if ($svnup =~ /^U..*nightly-check.pl/m) {
-        &message("* nightly-check.pl has been updated, rerunning");
+        &message("* nightly-check.pl has been updated, rerunning\n\n");
         system("$command $commandArgs");
         last;
       }
