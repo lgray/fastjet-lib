@@ -16,6 +16,9 @@
 
 2009-05-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* configure.ac:
+	  moved the test for Fortran at a more flexible and nice-looking place.
+
 	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh (ClusterSequenceAreaBase): 
 	  commented out ghost_area()
 

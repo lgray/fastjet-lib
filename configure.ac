@@ -269,31 +269,8 @@ AC_ARG_ENABLE(pxcone,
 if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    AC_DEFINE(ENABLE_PLUGIN_PXCONE, [], [The PxCone plugin is enabled])
    dnl set up the fortran compiler and libs
-   if test "x$FCFLAGS" == "x"; then
-      FCFLAGS="-O2"
-   fi	
-   # AC_PROG_F77
-   # AC_F77_LIBRARY_LDFLAGS
-    ## Try to respect users' Fortran compiler variables
-   if test "x$FC" == "x"; then
-      if test "x$F77" != "x"; then
-      	 FC="$F77"
-      fi
-   fi
-   AC_PROG_FC
-   AC_FC_LIBRARY_LDFLAGS
-   F77=$FC
-   AM_FFLAGS=$AM_FCFLAGS
-   FFLAGS="$FFLAGS $FCFLAGS"
-   FLIBS="$FLIBS $FCLIBS"
-   AC_SUBST(FCFLAGS)
-   AC_SUBST(FFLAGS)
-   AC_SUBST(FLIBS)
-   AC_SUBST(F77)
-   AC_SUBST(AM_FFLAGS)
-   AC_SUBST(AM_FCFLAGS)
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lPxConePlugin "${FLIBS}
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libPxConePlugin.a "${FLIBS}
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lPxConePlugin"
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libPxConePlugin.a"
 fi
 AC_CONFIG_FILES( plugins/PxCone/Makefile plugins/PxCone/fastjet/Makefile )
 AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
@@ -415,6 +392,37 @@ dnl end of plugin section --- don't modify this line
 
 AC_SUBST(CONFIG_LIBS_PLUGINS)
 AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
+
+dnl add Fortran flags if any plugin that needs it is enabled
+if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
+   dnl set up the fortran compiler and libs
+   if test "x$FCFLAGS" == "x"; then
+      FCFLAGS="-O2"
+   fi	
+   # AC_PROG_F77
+   # AC_F77_LIBRARY_LDFLAGS
+    ## Try to respect users' Fortran compiler variables
+   if test "x$FC" == "x"; then
+      if test "x$F77" != "x"; then
+      	 FC="$F77"
+      fi
+   fi
+   AC_PROG_FC
+   AC_FC_LIBRARY_LDFLAGS
+   F77=$FC
+   AM_FFLAGS=$AM_FCFLAGS
+   FFLAGS="$FFLAGS $FCFLAGS"
+   FLIBS="$FLIBS $FCLIBS"
+   AC_SUBST(FCFLAGS)
+   AC_SUBST(FFLAGS)
+   AC_SUBST(FLIBS)
+   AC_SUBST(F77)
+   AC_SUBST(AM_FFLAGS)
+   AC_SUBST(AM_FCFLAGS)
+
+   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" "${FLIBS}
+   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" "${FLIBS}
+fi
 
 dnl enable libtool
 AC_PROG_LIBTOOL
