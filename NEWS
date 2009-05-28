@@ -7,8 +7,8 @@ Summary of changes from v2.4.0 -> v2.4.1:  XX May 2009 *********** FIX THE DATE 
 
 Fixes to the build system
 -------------------------
-- Included SISCone 2.0.1 (shared libs now enabled by default in both
-  FastJet & SISCone and other small fixes)
+- Included SISCone 2.0.1 (shared libs now enabled by default in
+  SISCone too, and other small fixes)
 - Fixed platform-dependent failures in make check
 - Fixed gcc 4.4 compatibility issues (missing headers)
 - Fixed a problem on Mac OS X with the arguments provided by
