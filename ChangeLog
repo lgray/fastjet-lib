@@ -1,5 +1,9 @@
 2009-05-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* autogen.sh: 
+	  ensured that recursion for creation of configure files is only
+	  inside the plugin directory (e.g. no $srcdir/tmp-* directories)
+
 	* regression-tests/nightly-check.pl: 
 	  simplified output of fail messages;
 	  now if update changes the nightly check, then it reruns itself;

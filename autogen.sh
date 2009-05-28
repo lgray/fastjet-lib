@@ -111,7 +111,7 @@ xlc )
 esac
 
 # recursively generate configure & makefile.in for all configure.ac found
-for coin in `find $srcdir -name configure.ac -print`
+for coin in $srcdir `find $srcdir/plugins -name configure.ac -print`
 do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
