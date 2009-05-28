@@ -42,6 +42,7 @@ using namespace std;
 
 /// allow for warnings
 LimitedWarning ClusterSequenceAreaBase::_warnings;
+LimitedWarning ClusterSequenceAreaBase::_warnings_zero_area;
 
 //----------------------------------------------------------------------
 /// return the total area, within range, that is free of jets.
@@ -183,7 +184,13 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
       } else {
           this_area = area(all_jets[i]);
       }
-      pt_over_areas.push_back(all_jets[i].perp()/this_area);
+
+      if (this_area>0) {
+	pt_over_areas.push_back(all_jets[i].perp()/this_area);
+      } else {
+	_warnings_zero_area.warn("ClusterSequenceAreaBase::get_median_rho_and_sigma(...): discarded jet with zero area. Zero-area jets may be due to (i) too large a ghost area (ii) a jet being outside the ghost range (iii) the computation not being done using an appropriate algorithm (kt;C/A).");
+      }
+
       total_area  += this_area;
       total_njets += 1.0;
     }

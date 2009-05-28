@@ -1,9 +1,18 @@
+2009-05-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* src/ClusterSequenceAreaBase.cc (get_median_rho_and_sigma),
+	  include/fastjet/ClusterSequenceAreaBase.hh:
+	  disregarded jets with 0 area in the computation of the median
+	  rho and sigma. Added a warning wheh a 0-area jet is
+	  encountered.
+	
+
 2009-05-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_timing_plugins.cc: 
 	* regression-tests/test-all-algs.pl: 
 	  inexistent algs no longer crash, and real crashes are now reported
-	  by test-all-algs as *** BAD (crash) *** 
+	  by test-all-algs as *** BAD (crash) ***
 	
 	* autogen.sh: 
 	  ensured that recursion for creation of configure files is only
