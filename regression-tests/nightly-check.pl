@@ -68,7 +68,7 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl
 
 
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
-# push @setups, ["","", "", 10]; # out of the box
+ push @setups, ["","", "", 10]; # out of the box
 # push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 # push @setups, ["","--enable-allcxxplugins --enable-shared --disable-static", "--runpath", 10]; # with dynlibs
 # push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
