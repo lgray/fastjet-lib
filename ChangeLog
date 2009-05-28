@@ -1,5 +1,9 @@
 2009-05-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
+	* configure.ac: 
+	  if CGAL is explicitly requested and not found (or not functional),
+	  return an error (and exit)
+
 	* regression-tests/test-all-algs.pl (setRefResults): 
 	  added checksums for PxCone
 

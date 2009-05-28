@@ -85,7 +85,9 @@ AC_ARG_ENABLE(cgal,
        [ENABLE_CGAL_FLAG="no"])
 dnl if asked for, check if the CGAL library can be used
 if [[ "x${ENABLE_CGAL_FLAG}" == "xyes" ]] ; then
-   ACX_CHECK_CGAL([],[ENABLE_CGAL_FLAG="no"])
+   dnl if the search for CGAL has been explicitly asked and not found, return an error
+   dnl ACX_CHECK_CGAL([],[ENABLE_CGAL_FLAG="no"])
+   ACX_CHECK_CGAL([],AC_MSG_ERROR([CGAL explicitly requested and not found or not functional]))
 fi
 
 dnl update compilation/link flags for the CGAL lib
