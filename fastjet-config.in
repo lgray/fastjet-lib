@@ -316,7 +316,7 @@ case $found_query in
 
 	fi
 	if [ "x$found_flags" = "xyes" ] ; then
-	    echo -I@prefix@/include @AM_CXXFLAGS@ $libs_string
+	    echo -I@prefix@/include @CONFIG_CXXFLAGS@ $libs_string
 	else
 	    echo $libs_string
 	fi

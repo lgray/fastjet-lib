@@ -1,3 +1,10 @@
+2009-05-29  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* fastjet-config.in:
+	  fixed the returned compilation flags for
+	  fastjet-config --cxxflags --libs
+	
+
 2009-05-28  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* configure.ac: 
