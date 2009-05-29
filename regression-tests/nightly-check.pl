@@ -24,14 +24,16 @@
 #----------------------------------------------------------------------
 # Future options:
 #
-#   - include an "executive summary" either at the end (screen)
-#     or the beginning (mail), at least when things are OK.
-#     E.g.: host, options, #OK, #unavail
+#   - do a build in situ
 #
-#   - include info on svn revision, and directory status?
+#   - try fastjet-config with --cxxflags and --libs in separate invocations
 #
-#   - on svn update, check if nightly-check.pl has changed,
-#     and if so, rerun
+#   - add tests of things like areas, subjets (goes in fastjet_timing_plugins.cc)?
+#
+# For implementing "options", what one might do is add an optional
+# hash entry to the setups, e.g. {BuildInSitu => 1}; then for
+# transferring this between machines, use the "Storable" perl
+# module.
 #
 #----------------------------------------------------------------------
 # Reminder notes:
@@ -113,12 +115,14 @@ $allMessages = "";
 $summary = "";
 $testall = "";
 $verbose = $verbose || (! ($mail || $remote));
+$svnrev = "";
+$date = "";
 #$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
 
 MAIN: while (1) {
 
-  if (!$tmpDir) {
+  if (!$remote) {
     #--- make tmpDir -------------------------------------------------------
     #$tmpDir = "$origDir/tmp-nightly";
     $tmpDir = "$origDir/tmp-".$$;
@@ -147,6 +151,21 @@ MAIN: while (1) {
     } else {
       &fail("svn update", $svnup);
     }
+    if (($svninfo = `svn info`) =~ /^Revision: ([0-9]+)/m) {
+      $svnrev = $1;
+      &message("* svn revision: $svnrev\n");
+    } else {
+      &fail("getting svn revision",$svninfo);
+    }
+    $svnstatus=`svn status | grep -v -e \'^\\\?\' -e \'Performing status\' -e \'^X\' -e \'^\$\'`;
+    if ($?) {
+      &fail("svn status",$svnstatus)
+    } else {
+      &message("* svn status:\n".$svnstatus);
+    }
+    # some useful stuff for the summary
+    $date=`date`; chomp($date);
+    $summary .= "SUMMARY: $date, svn revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
 
     #--- make dist ------------------------------------------------------
     &message("* running make dist");
@@ -215,7 +234,7 @@ MAIN: while (1) {
 
 #======================================================================
 sub finish () {
-  if (!$remote) {$summary = "SUMMARY\n-------\n".$summary;}
+  #if (!$remote) {$summary = "SUMMARY\n-------\n".$summary;}
   #-- mention where failure might arise
   if ($fail) {
     &message("Failed on $fail\n\nDetailed message is:\n------------------\n");
