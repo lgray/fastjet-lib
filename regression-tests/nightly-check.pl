@@ -157,7 +157,9 @@ MAIN: while (1) {
     } else {
       &fail("getting svn revision",$svninfo);
     }
-    $svnstatus=`svn status | grep -v -e \'^\\\?\' -e \'Performing status\' -e \'^X\' -e \'^\$\'`;
+    $svnstatus=`svn status`;
+    $svnstatus =~ s/^(\?|X|Performing status).*\n//mg;
+    $svnstatus =~ s/^\n//mg;
     if ($?) {
       &fail("svn status",$svnstatus)
     } else {
