@@ -50,15 +50,15 @@ X.Y.Z  move the versino number to X.Y.(Z+1)-devel
 ----------------------------------------------------------------------
 checklist for 2.4.1 (make a copy before editing!)
 -------------------
-X.Y.Z  make sure version number in configure.ac is correct
+2.4.1  make sure version number in configure.ac is correct
 
-X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-X.Y.Z  update doxygen version number + check dirs are declared for new plugins
-X.Y.Z  version number in manual
+2.4.1  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+2.4.1  update doxygen version number + check dirs are declared for new plugins
+2.4.1  version number in manual
 
-X.Y.Z  ensure NEWS is up to date
+2.4.1  ensure NEWS is up to date
 
-X.Y.Z  make sure siscone points to a tag, not trunk
+2.4.1  make sure siscone points to a tag, not trunk
 
 X.Y.Z  make check 
 

@@ -14,8 +14,8 @@ Fixes to the build system
 - Fixed a problem on Mac OS X with the arguments provided by
   "fastjet-config --libs" (--rpath versus -rpath).
 - fastjet-config has new optional arguments (--rpath=no, --runpath)
-  related to finding shared libraries at runtime on linux; 
-  run fastjet-config without any arguments for more info.
+  related to finding shared libraries at runtime on linux. 
+  Run fastjet-config without any arguments for more info.
   To instead use static libraries, either configure with the
   --disable-shared option, or use fastjet-config with the --shared=no option.
 - fastjet-config can now take --cxxflags and --libs in a single invocation
