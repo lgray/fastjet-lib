@@ -9,16 +9,18 @@ Fixes to the build system
 -------------------------
 - Included SISCone 2.0.1 (shared libs now enabled by default in
   SISCone too, and other small fixes)
-- Fixed platform-dependent failures in make check
+- Fixed platform-dependent failures during make check
 - Fixed gcc 4.4 compatibility issues (missing headers)
 - Fixed a problem on Mac OS X with the arguments provided by
   "fastjet-config --libs" (--rpath versus -rpath).
 - fastjet-config has new optional arguments (--rpath=no, --runpath)
   related to finding shared libraries at runtime on linux; 
   run fastjet-config without any arguments for more info.
+  To instead use static libraries, either configure with the
+  --disable-shared option, or use fastjet-config with the --shared=no option.
 - fastjet-config can now take --cxxflags and --libs in a single invocation
 - Various other small mods (better fortran support, standardisation, ...)
-  [thanks to Andy Buckley for suggestions]
+  [thanks to Andy Buckley and David Grellscheid for suggestions]
 
 Also
 ----
@@ -26,8 +28,8 @@ Also
 - Fixed issue in median rho estimation when some jets have zero area
 - Expanded descriptions that are returned by ATLAS/TrackJet/CMS plugins
 - Warnings are no longer given when using exclusive jets with
-  Cam/Aachen and certain e+e- algorithms (these warnings were misleading)
-
+  Cam/Aachen and certain e+e- algorithms (the warnings were misleading)
+- Small fixes to the manual
 
 =======================================================
 Summary of changes from v2.3.X -> v2.4.0: 17 April 2009
