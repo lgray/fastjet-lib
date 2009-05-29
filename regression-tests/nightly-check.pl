@@ -2,8 +2,10 @@
 #
 # Script to help us perform a nightly check of fastjet
 #
-#    -mail      sends mail, otherwise output goes to screen
-#    -verbose   output goes to screen even if we also ask for mail
+#    -mail        sends mail to all authors, otherwise output goes to screen
+#    -mailgavin   sends mail to just gavin
+#    -verbose     output goes to screen even if we also ask for mail
+#    -only index  runs only the setup corresponding to the index that's requested
 #
 # Various other options provide access to internals for running checks
 # on remote hosts. The set of configurations that are run is given in
@@ -94,15 +96,17 @@ $commandArgs=join(" ",@ARGV);
 $origDir=getcwd();
 $tarName="";
 $verbose="";
+$only="";
 while ($arg = shift @ARGV) {
   if    ($arg eq "-mail")      {$mail = 1;}
   elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr='salam@lpthe.jussieu.fr';}
+  elsif ($arg eq "-verbose")   {$verbose = 1;}
+  elsif ($arg eq "-only")      {$only = shift @ARGV;}
+  # the following args are only for internal treatment of execution
+  # on remote hosts
   elsif ($arg eq "-remote")    {$tmpDir  = shift @ARGV; $remote=1;}
   elsif ($arg eq "-tar")       {$tarName = shift @ARGV;}
-  elsif ($arg eq "-verbose")   {$verbose = 1;}
-  elsif ($arg eq "-orig")      {
-    $origDir = shift @ARGV;
-  }
+  elsif ($arg eq "-orig")      {$origDir = shift @ARGV;}
   else {die "Unrecognized argument: $arg";}
 }
 
@@ -182,6 +186,7 @@ MAIN: while (1) {
 
     # now run the rest, either remotely, or from setups array, or from a setup file
     for ($i = 0; $i <= $#setups; $i++) {
+      if ($only ne "" && $only != $i) {next;}
       if ($setups[$i][0]) {
         # run test on a remote host 
         &message("* transferring execution to remote host $setups[$i][0]\n");

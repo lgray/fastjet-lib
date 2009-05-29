@@ -30,8 +30,8 @@ X.Y.Z  rerun the nightly check
 
 X.Y.Z  copy distribution to web
 X.Y.Z  compile manual
-X.Y.Z  copy manual to web
-X.Y.Z  run doxygen, copy to web
+X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+X.Y.Z  run doxygen, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
 X.Y.Z  update main web page & menu in devel area
 
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
@@ -44,7 +44,7 @@ X.Y.Z  make sure it's committed with the CHECKLIST
 
 X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
-X.Y.Z  move the versino number to X.Y.(Z+1)-devel
+X.Y.Z  move the version number to X.Y.(Z+1)-devel
 
 
 ----------------------------------------------------------------------
@@ -60,7 +60,7 @@ checklist for 2.4.1 (make a copy before editing!)
 
 2.4.1  make sure siscone points to a tag, not trunk
 
-X.Y.Z  make check 
+2.4.1  make check 
 
 X.Y.Z  make distcheck
 
@@ -69,10 +69,10 @@ X.Y.Z  make sure it's committed
 X.Y.Z  rerun the nightly check
 
 X.Y.Z  copy distribution to web
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web
-X.Y.Z  run doxygen, copy to web
-X.Y.Z  update main web page & menu in devel area
+2.4.1  compile manual
+2.4.1  copy manual to web
+2.4.1  run doxygen, copy to web
+2.4.1  update main web page & menu in devel area
 
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
 X.Y.Z  update main web-page area
