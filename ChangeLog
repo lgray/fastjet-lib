@@ -1,5 +1,10 @@
 2009-05-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* moved SISCone back to trunk
+	* switched to version 2.4.2-devel
+
+2009-05-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
 	* configure.ac: 
 	  switched to version 2.4.1
 
