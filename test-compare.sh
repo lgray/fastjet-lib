@@ -70,6 +70,23 @@ if [[ $winver != $packver ]]; then
   exit 1
 fi
 
+#======================================================================
+# check that 
+#    fastjet-config --cxxflags --libs
+# returns the same as
+#    fastjet-config --cxxflags; fastjet-config --libs
+arguments_full=`./fastjet-config --cxxflags --libs | sed 's/\n/ /'`
+arguments_flags=`./fastjet-config --cxxflags | sed 's/\n/ /'`
+arguments_libs=`./fastjet-config --libs | sed 's/\n/ /'`
+arguments_recon=${arguments_flags}" "${arguments_libs}
+if [[ "$arguments_full" != "$arguments_recon" ]]; then
+  echo "ERROR: fastjet-config --cxxflags --libs does not combine fastjet-config --cxxflags and fastjet-config --libs"
+  echo "  fastjet-config --cxxflags       : "$arguments_flags
+  echo "  fastjet-config --libs           : "$arguments_libs
+  echo "  fastjet-config --cxxflags --libs: "$arguments_full
+  exit 1
+fi
+
 
 #======================================================================
 # now run the real tests
