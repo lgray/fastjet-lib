@@ -19,6 +19,7 @@ Fixes to the build system
   To instead use static libraries, either configure with the
   --disable-shared option, or use fastjet-config with the --shared=no option.
 - fastjet-config can now take --cxxflags and --libs in a single invocation
+- With --cxxflags, fastjet-config now returns the minimal required set of arguments 
 - Various other small mods (better fortran support, standardisation, ...)
   [thanks to Andy Buckley and David Grellscheid for suggestions]
 
