@@ -62,7 +62,7 @@ checklist for 2.4.1
 
 2.4.1  make check 
 
-X.Y.Z  make distcheck
+2.4.1  make distcheck
 
 X.Y.Z  make sure it's committed
 

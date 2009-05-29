@@ -1,11 +1,11 @@
 2009-05-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
-	* regression-tests/nightly-check.pl: 
-	  added -only XX option for running just the test with index XX
-	
 	* configure.ac: 
 	  switched to version 2.4.1
 
+	* regression-tests/nightly-check.pl: 
+	  added -only XX option for running just the test with index XX
+	
 	* fastjet-config.in: 
 	  ensured that --rpath=no removes the RPATH that is there with CGAL.
 
