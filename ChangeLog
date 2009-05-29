@@ -1,3 +1,11 @@
+2009-05-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* configure.ac: 
+	  switched to version 2.4.1
+
+	* fastjet-config.in: 
+	  ensured that --rpath=no removes the RPATH that is there with CGAL.
+
 2009-05-29  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* fastjet-config.in:

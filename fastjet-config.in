@@ -303,6 +303,9 @@ case $found_query in
 	fi
 	if test "x$add_rpath" = "xyes" ; then
 	    libs_string="-Wl,-rpath,@prefix@/lib "$libs_string
+        else
+            # GPS 2009-05-29: remove any left over -Wl, e.g. related to CGAL.
+            libs_string=`echo $libs_string | sed 's/-Wl,-rpath[^ ]*//'`
 	fi
 	if test "x$add_runpath" = "xyes" ; then
 	    libs_string="@CONFIG_RUNPATH_FLAGS@ -Wl,-rpath,@prefix@/lib "$libs_string
