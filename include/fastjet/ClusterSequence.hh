@@ -136,7 +136,7 @@ class ClusterSequence {
   double exclusive_ymerge (int njets) const {return exclusive_dmerge(njets) / Q2();}
 
   /// same as exclusive_dmerge_max, but normalised to squared total energy
-  double exclusive_ymerge_max (int njets) const {return exclusive_ymerge_max(njets)/Q2();}
+  double exclusive_ymerge_max (int njets) const {return exclusive_dmerge_max(njets)/Q2();}
 
   /// the number of exclusive jets at the given ycut
   int n_exclusive_jets_ycut (double ycut) const {return n_exclusive_jets(ycut*Q2());}

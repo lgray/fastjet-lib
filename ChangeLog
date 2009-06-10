@@ -1,3 +1,9 @@
+2009-06-10  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/ClusterSequence.hh (ClusterSequence): 
+	  fixed bug in exclusive_ymerge_max which was calling itself
+	  rather than exclusive_dmerge_max. (Reported by Frank Siegert)
+
 2009-05-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* moved SISCone back to trunk
