@@ -1,3 +1,10 @@
+2009-06-12  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc (run_clustering):
+	  explicitly discard empty jets (those sometimes come out of the
+	  D0 code when the min_jet_Et parameter is set to 0.  This was
+	  creating a segmentation fault (reported by Andy Buckley).
+
 2009-06-10  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/ClusterSequence.hh (ClusterSequence): 

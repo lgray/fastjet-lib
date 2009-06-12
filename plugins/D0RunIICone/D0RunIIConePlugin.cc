@@ -115,6 +115,13 @@ void D0RunIIConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     
     // get first particle in list
     tk = tlist.begin();
+
+    // if there is no particle, just discard it
+    // Note: this unexpected behaviour has been observed when the
+    //       min_jet_Et parameter was set to 0
+    if (tk==tlist.end())
+      continue;
+
     int jet_k = (*tk)->index;
     // now merge with remaining particles in list
     tk++;
