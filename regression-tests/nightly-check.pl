@@ -78,7 +78,10 @@ push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CG
 push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 10]; # with the intel compiler
-push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
+# GPS 2009-07-03: zetes is currently down.
+#push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
+# maintain a check with gxx-3.4
+push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10]; # with gxx-3.4
 push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","--enable-allcxxplugins", "", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
