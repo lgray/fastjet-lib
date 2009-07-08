@@ -1,3 +1,8 @@
+2009-07-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* Doxyfile: 
+	  changed image format over to png.
+
 2009-07-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
