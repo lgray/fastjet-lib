@@ -1,3 +1,9 @@
+2009-10-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceActiveArea.cc
+	(ClusterSequenceActiveArea::_throw_unless_jets_have_same_perp_or_E): 
+	  in error message, added reference to FAQ for explanations.
+
 2009-07-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* Doxyfile: 

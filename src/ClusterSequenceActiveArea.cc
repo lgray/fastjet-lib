@@ -757,7 +757,7 @@ void ClusterSequenceActiveArea::_throw_unless_jets_have_same_perp_or_E(
       tolerance*max(jet.perp2(),refjet.perp2())
       && abs(jet.E()-refjet.E()) > tolerance*max(jet.E(),refjet.E())) {
     ostringstream ostr;
-    ostr << "Could not match clustering sequence for an inclusive/exclusive jet when reconstructing areas" << endl;
+    ostr << "Could not match clustering sequence for an inclusive/exclusive jet when reconstructing areas. See FAQ for possible explanations." << endl;
     ostr << "  Ref-Jet: "
          << refjet.px() << " " 
          << refjet.py() << " " 
