@@ -65,7 +65,7 @@ public:
 ///
 /// It is templated with a BJ (brief jet) class --- BJ should
 /// basically cache the minimal amount of information that is needed
-/// to efficient calculate interparticle distances and particle-beam
+/// to efficiently calculate interparticle distances and particle-beam
 /// distances.
 ///
 /// This class can be used with or without an extra "Information" template, 
@@ -97,7 +97,7 @@ public:
 ///
 ///
 /// Implementation note: this class derives from NNHInfo, which deals
-/// with storing any information that 
+/// with storing any global information that is needed during the clustering
 
 template<class BJ, class I = _NoInfo> class NNH : public NNHInfo<I> {
 public:
