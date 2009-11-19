@@ -2,6 +2,13 @@ Release Notes for fastjet
 -------------------------
 
 =======================================================
+Summary of changes from v2.4.1 -> v2.4.2:  SOME DATE
+=======================================================
+- exclusive_ymerge_max(...) was not working; now fixed
+- the D0RunIIConePlugin gave segfaults for some parameters; now fixed
+- commented some orphan code that was generating compilation warnings
+
+=======================================================
 Summary of changes from v2.4.0 -> v2.4.1:  29 May 2009
 =======================================================
 

@@ -2,8 +2,10 @@
 
 	* include/fastjet/internal/ClusterSequence_N2.icc: 
 	* include/fastjet/ClusterSequence.hh (ClusterSequence): 
+
 	  commented all bits of code related to GenBriefJet, which is not
-	  used. 
+	  used (following reports from Andy Buckley about missing virtual
+	  destructor in that code).
 
 2009-10-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
@@ -19,7 +21,7 @@
 2009-07-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
-	  removed zetes from mightly check because it's down and added a
+	  removed zetes from nightly check because it's down and added a
 	  separate check on toth with gcc-3.4.
 
 2009-06-12  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
