@@ -331,37 +331,37 @@ class ClusterSequence {
     _simple_N2_cluster<GBJ>();
   }
 
-  //----------------------------------------------------------------------
-  /// class to help with a generic clustering sequence
-  class GenBriefJet {
-  public:
-    /// function that initialises the GenBriefJet given a PseudoJet.
-    ///
-    /// In a derived class, this member has a responsability to call
-    ///
-    ///  - set_scale_squared
-    ///  - set_geom_iB 
-    ///
-    /// The clustering will be performed by finding the minimum of
-    ///
-    ///   diB = scale_squared[i] * geom_iB * _invR2
-    ///   dij = min(scale_squared[i],scale_squared[j]) * geom_ij * _invR2
-    ///
-    virtual void init(const PseudoJet & jet) = 0;
-    
-    /// Returns the "geometric" part of distance between this jet
-    /// and jet_j
-    virtual double geom_ij(const GenBriefJet * jet_j) const = 0;
-
-    void set_scale_squared(double scale_squared) {kt2 = scale_squared;}
-    void set_geom_iB(double diB) {NN_dist = diB; NN = NULL;}
-    
-  public: // formally public: but users should think of it as private!
-    double NN_dist;  // dij
-    double kt2;      // squared scale
-    GenBriefJet * NN; // pointer to nearest neighbour
-    int    _jets_index; // index of this jet
-  };
+//   //----------------------------------------------------------------------
+//   /// class to help with a generic clustering sequence
+//   class GenBriefJet {
+//   public:
+//     /// function that initialises the GenBriefJet given a PseudoJet.
+//     ///
+//     /// In a derived class, this member has a responsability to call
+//     ///
+//     ///  - set_scale_squared
+//     ///  - set_geom_iB 
+//     ///
+//     /// The clustering will be performed by finding the minimum of
+//     ///
+//     ///   diB = scale_squared[i] * geom_iB * _invR2
+//     ///   dij = min(scale_squared[i],scale_squared[j]) * geom_ij * _invR2
+//     ///
+//     virtual void init(const PseudoJet & jet) = 0;
+//     
+//     /// Returns the "geometric" part of distance between this jet
+//     /// and jet_j
+//     virtual double geom_ij(const GenBriefJet * jet_j) const = 0;
+// 
+//     void set_scale_squared(double scale_squared) {kt2 = scale_squared;}
+//     void set_geom_iB(double diB) {NN_dist = diB; NN = NULL;}
+//     
+//   public: // formally public: but users should think of it as private!
+//     double NN_dist;  // dij
+//     double kt2;      // squared scale
+//     GenBriefJet * NN; // pointer to nearest neighbour
+//     int    _jets_index; // index of this jet
+//   };
 
 
 public:

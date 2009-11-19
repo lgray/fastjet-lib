@@ -173,15 +173,15 @@ template<class BJ> void ClusterSequence::_simple_N2_cluster() {
 
 
 
-//----------------------------------------------------------------------
-// initialises a GenBriefJet
-template<> inline void ClusterSequence::_bj_set_jetinfo(
-                           GenBriefJet * const jetA, const int _jets_index) const {
-
-  jetA->init(_jets[_jets_index]);
-  jetA->_jets_index = _jets_index;
-
-}
+// //----------------------------------------------------------------------
+// // initialises a GenBriefJet
+// template<> inline void ClusterSequence::_bj_set_jetinfo(
+//                            GenBriefJet * const jetA, const int _jets_index) const {
+// 
+//   jetA->init(_jets[_jets_index]);
+//   jetA->_jets_index = _jets_index;
+// 
+// }
 // 
 // 
 // //----------------------------------------------------------------------
