@@ -191,6 +191,7 @@ private:
   std::auto_ptr<ClusterSequenceAreaBase> _area_base;
   AreaDefinition _area_def;
   static LimitedWarning _range_warnings;
+  static LimitedWarning _explicit_ghosts_repeats_warnings;
 
 };
 
@@ -208,6 +209,8 @@ template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
                                                    _area_def.ghost_spec());
     break;
   case active_area_explicit_ghosts:
+    if (_area_def.ghost_spec().repeat() != 1) 
+      _explicit_ghosts_repeats_warnings.warn("Requested active area with explicit ghosts with repeat != 1; only 1 set of ghosts will be used");
     _area_base_ptr = new ClusterSequenceActiveAreaExplicitGhosts(pseudojets, 
                                                    jet_def, 
                                                    _area_def.ghost_spec());

@@ -1,3 +1,9 @@
+2010-01-19  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequenceArea.hh (initialize_and_run_cswa): 
+	* src/ClusterSequenceArea.cc: 
+	  added warning when using explicit ghosts with repeat=1.
+	
 2009-11-19  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/internal/ClusterSequence_N2.icc: 
