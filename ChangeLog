@@ -2,7 +2,7 @@
 
 	* include/fastjet/ClusterSequenceArea.hh (initialize_and_run_cswa): 
 	* src/ClusterSequenceArea.cc: 
-	  added warning when using explicit ghosts with repeat=1.
+	  added warning when using explicit ghosts with repeat!=1.
 	
 2009-11-19  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
