@@ -1,5 +1,14 @@
 2010-01-19  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/test-all-algs.pl: 
+	  allow for compressed data files. Added commented use of 10k
+	  file. That was generated in same way as the default 1k file, but
+	  does not currently give identical results for 1k events. Needs
+	  further investigation between making it our new default file.
+
+	  DISABLED testing of D0RunIICone temporarily, given the 64 bit
+	  issues.
+
 	* include/fastjet/ClusterSequenceArea.hh (initialize_and_run_cswa): 
 	* src/ClusterSequenceArea.cc: 
 	  added warning when using explicit ghosts with repeat!=1.

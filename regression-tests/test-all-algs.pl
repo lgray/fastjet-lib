@@ -138,7 +138,13 @@ foreach $strat (@strat) {
   # get the command line
   ($algsp = $alg) =~ s/:/ /g;
   if ($strat ne "") {$strat = "-strategy $strat"}
-  $cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1 < $localdataFile";
+  #$cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1 < $localdataFile";
+  $cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1";
+  if ($localdataFile =~ /\.gz$/) {
+    $cmdline = "zcat $localdataFile | $cmdline";
+  } else {
+    $cmdline = "$cmdline < $localdataFile ";
+  }
   $strat =~ s/.*y /s/; # we'll need this in a clean form later
   $res = `$cmdline`;
   $error = $?;
@@ -243,13 +249,16 @@ sub setDefaults {
       $dataDir="$gavinHome/work/fastjet/data";
   }
   $dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
+  #$dataFile="$dataDir/Pythia-PtMin50-LHC-10kev.dat.gz";
 
   # for the e+e- algorithms, use an e+e- event file
   $eedataFile="$dataDir/Pythia_Q1000_Zprime1000_nev1000.dat";
 
   @algs = ("kt", "cam", "antikt", "genkt:0.5", "siscone:-f:0.75","siscone:-f:0.50",  "jetclu", "pxcone",
-           "d0runiicone", "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
+           # "d0runiicone", GPS removed temporarily 2010-01-19 
+	   "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
 	   "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01");
+
 
   # for some algorithms we have multiple strategies to test
   %strategies = 
