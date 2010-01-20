@@ -55,7 +55,7 @@ use English;
 $OUTPUT_AUTOFLUSH = 1;
 
 # things to configure
-$mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr gsoyez@quark.phy.bnl.gov'; #  g@gavin.fr 
+$mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g@gavin.fr 
 
 @setups = ();
 # for each setup we put the host ("" is current host), the config
@@ -375,12 +375,12 @@ sub build_and_check($$$) {
 
   # figure out the f77 compiler too
   $fcompiler="";
-  if (`cat Makefile` =~ /^F77 = (.*)$/m) {
-    $fcompiler = $1;
+  if (`cat Makefile` =~ /^F(77|C) = ([^\s]+)$/m) {
+    $fcompiler = $2;
     $fcompiler .= ", ".`$fcompiler --version 2>&1 | head -1`;
     chomp $fcompiler;
   }
-  &message("* f77 compiler: $fcompiler\n");
+  &message("* fortran compiler: $fcompiler\n");
 
   #--- run make -------------------
   &message("* running make\n");

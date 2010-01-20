@@ -1,3 +1,9 @@
+2010-01-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl (build_and_check): 
+	  sorted out problems related to the output of fortran compiler
+	  info. 
+
 2010-01-19  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl: 
