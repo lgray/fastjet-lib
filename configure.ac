@@ -128,6 +128,9 @@ dnl create the substitutions variables for the configuration script
 AC_SUBST(PACKAGE_VERSION)
 AC_SUBST(HAS_SHARED)
 
+dnl enable libtool
+AC_PROG_LIBTOOL
+
 dnl----------------
 dnl plugin section
 dnl each plugin can be enabled or disabled (default is SISCone and CDFCones)
@@ -425,9 +428,6 @@ if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" "${FLIBS}
    CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" "${FLIBS}
 fi
-
-dnl enable libtool
-AC_PROG_LIBTOOL
 
 dnl---------------------------------
 dnl make sure examples dir is there
