@@ -87,7 +87,7 @@ push @setups, ["karnak","--enable-allcxxplugins", "", 10]; # full monty on karna
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
-push @setups, ["hercule","--enable-allcxxplugins", "", 10]; # hercule: standard machine, 64 bits
+push @setups, ["tycho","--enable-allcxxplugins", "", 10]; # tycho: standard machine, 32 bits
 
 
 # process command-line

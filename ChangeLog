@@ -2,7 +2,8 @@
 
 	* regression-tests/nightly-check.pl (build_and_check): 
 	  sorted out problems related to the output of fortran compiler
-	  info. 
+	  info. Put some tests onto tycho (32 bits).
+	  
 
 2010-01-19  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
