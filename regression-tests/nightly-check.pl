@@ -82,7 +82,7 @@ push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 
 #push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 # maintain a check with gxx-3.4
 push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10]; # with gxx-3.4
-push @setups, ["karnak","FC=gfortran-4.4", "", 10]; # out of the box on karnak (OS X 10.5)
+push @setups, ["karnak","FC=/usr/local/bin/gfortran-4.4", "", 10]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","--enable-allcxxplugins", "", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
