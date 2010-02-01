@@ -361,7 +361,10 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,siscone:-f:0.50,R0.60" => "ba6fdee02d2fb12d6d49267c428190b9",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,jetclu,R0.60" => "8948d26cacb802bf5e2e6c1cf89dabff",
   "Pythia-PtMin50-LHC-1000ev.dat,nev100,pxcone,R0.60" => "a3781182e4a363725b0929023dc27628",
-  "Pythia-PtMin50-LHC-1000ev.dat,nev100,d0runiicone,R0.60" => "a7430e1528ffcf20b3098959c7aa257d",
+  # result before addition of -fno-inline on 32 bit machines
+  #"Pythia-PtMin50-LHC-1000ev.dat,nev100,d0runiicone,R0.60" => "a7430e1528ffcf20b3098959c7aa257d",
+  # result with inclusion of that (should be consistent across 32 and 64 bits)
+  "Pythia-PtMin50-LHC-1000ev.dat,nev100,d0runiicone,R0.60" => "7058932e29b3979f4159a384a880770b",
   # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev100,eekt,R0.60" => "7388d3917738969fb7fdf518af0dca78",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev100,eegenkt:0,R0.60" => "f4c2804090331b997a1f4fe1ea10ee61",
@@ -390,7 +393,10 @@ sub setRefResults {
   # pxcone differs between 32/64 bit machines (and compilers?); the answer here is
   # for a 64 bit gfortran
   "Pythia-PtMin50-LHC-1000ev.dat,nev1000,pxcone,R0.60" => "a15a20876c52578b9b4b07a96b67a13a",
-  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
+  # result before addition of -fno-inline on 32 bit machines
+  #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
+  # result with inclusion of that (should be consistent across 32 and 64 bits)
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "722f70cbb66fd5a5ee2a8a7733649daf",
   # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,eekt,R0.60" => "59fe2638f8df87a48bda2b8d1490034e",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:0,R0.60" => "f282981b9ff8e2db65fa0dd7aa1e9e44",

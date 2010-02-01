@@ -1,3 +1,12 @@
+2010-02-01  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl: 
+
+	  updated checksum values for 100 and 1000 events on d0runiicone,
+	  following Gregory's inclusion of -fno-inline as a default
+	  compiler flag (eliminates certain damaging optimisations under
+	  32 bits). 
+
 2010-01-20  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* configure.ac:
