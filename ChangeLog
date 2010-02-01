@@ -7,6 +7,24 @@
 	  compiler flag (eliminates certain damaging optimisations under
 	  32 bits). 
 
+2010-02-01  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* plugins/D0RunIICone/Makefile.am (libD0RunIIConePlugin_la_CXXFLAGS): 
+	* configure.ac: 
+	  added the -fno-inline option when building the D0 cone
+	  plugin. This is meant to solve a bug related to the optimisation
+	  of the D0 code on some platforms (apparently gcc4 on 32-bit
+	  systems).
+	  Notes: - if -fno-inline is not supported, disable optimisation
+	           by using -O0
+	         - if the user explicitly specifies CXXFLAGS on the
+	           command line, these will prevail. As a noticeable
+	           example, if the compiler does not support -fno-inline
+	           and the used specifies CXXFLAGS="-g -O2", the -O2 will
+	           prevail over the -O0,
+
+	  Arranged a series of minor typos to clean the code.
+	
 2010-01-20  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* configure.ac:
