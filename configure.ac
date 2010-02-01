@@ -25,13 +25,21 @@ AC_CHECK_TYPE(int)
 AC_CHECK_TYPE(long)
 
 dnl if the user has not set CXXFLAGS, then set our own default
-test "x${CXXFLAGS+yes}" == "xyes" || CXXFLAGS="-O3 -Wall"
+USE_CUSTOM_FLAGS="yes"
+if [[ "x$CXXFLAGS" == "x" ]]; then
+   CXXFLAGS="-O3 -Wall"
+   USE_CUSTOM_FLAGS="no"
+fi
+
+# test "x${CXXFLAGS+yes}" == "xyes" || CXXFLAGS="-O3 -Wall"
 
 dnl check useful programs
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
+
+AM_CXXFLAGS=""
 
 dnl check standard C headers
 AC_STDC_HEADERS
@@ -52,7 +60,7 @@ AC_ARG_ENABLE(debug,
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
-   AM_CXXFLAGS=${AM_CXXFLAGS}"-g "
+   AM_CXXFLAGS=${AM_CXXFLAGS}" -g "
 fi
 
 dnl build the shared lib by default
@@ -67,7 +75,7 @@ HAS_SHARED=${enable_shared}
 
 dnl-----------------
 dnl check libraries
-dnl ----------------
+dnl-----------------
 
 dnl math lib
 AC_CHECK_LIB(m, cos)
@@ -102,7 +110,7 @@ AC_SUBST(CGAL_CPPFLAGS)
 AC_SUBST(CGAL_LIBS)
 
 dnl check if the linker supports --enable-new-dtags
-AC_MSG_CHECKING([if $CC supports -Wl,--enable-new-dtags flag])
+AC_MSG_CHECKING([if $CXX supports -Wl,--enable-new-dtags flag])
 SAVE_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="-Werror -Wl,--enable-new-dtags"
 AC_LANG_PUSH(C++)
@@ -112,7 +120,8 @@ CXXFLAGS="$SAVE_CXXFLAGS"
 AC_MSG_RESULT([$ac_enable_new_dtags_ok])
 HAS_RUNPATH_SUPPORT="no"
 CONFIG_RUNPATH_FLAGS=""
-if test x"$ac_enable_new_dtags_ok" = x"yes"; then
+dnl if test x"$ac_enable_new_dtags_ok" = x"yes"; then
+if [[ "x${ac_enable_new_dtags_ok}" == "xyes" ]]; then
    HAS_RUNPATH_SUPPORT="yes"
    CONFIG_RUNPATH_FLAGS="-Wl,--enable-new-dtags"
 fi
@@ -427,6 +436,49 @@ if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
 
    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" "${FLIBS}
    CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" "${FLIBS}
+fi
+
+dnl-------------------------------------------------------------------
+dnl be a bit clearer and use only AM_CXXFLAGS
+dnl WARNING: this it totally unnecessary! Except for the D0 plugin:
+dnl          since the CXXFLAGS are placed after the AM_CXXFLAGS in
+dnl          the command line, a potential -O0 would be spoiled by
+dnl          the -O3 in CXXFLAGS. By putting  CXXFLAGS in AM_CXXFLAGS
+dnl          we have a better control on the order
+dnl------------------------------------------------------------------
+if [[ "x$USE_CUSTOM_FLAGS" == "xno" ]]; then
+   AM_CXXFLAGS=${CXXFLAGS}" "${AM_CXXFLAGS}
+   CXXFLAGS=""
+fi
+
+
+dnl------------------------------------------------------------------
+dnl there is a problem with optimisation of the D0 code.
+dnl One of the solutions to this issue is to disble inlie functions
+dnl We ony do that if the compiler supports the option, otherwise, 
+dnl we disable optimisation for that plugin
+dnl------------------------------------------------------------------
+if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
+   # check if the compiler supports -fno-inline
+   AC_MSG_CHECKING([if $CXX supports -fno-inline])
+   SAVE_CXXFLAGS="$CXXFLAGS"
+   CXXFLAGS="-Werror -fno-inline"
+   AC_LANG_PUSH(C++)
+   AC_LINK_IFELSE([int main(void){ return 0;}],[ac_support_no_inline=yes],[ac_support_no_inline=no])
+   AC_LANG_POP(C++)
+   CXXFLAGS="$SAVE_CXXFLAGS"
+   AC_MSG_RESULT([$ac_support_no_inline])
+   D0_CXXFLAGS=""
+
+   dnl if test x"$ac_enable_new_dtags_ok" = x"yes"; then
+   if [[ "x${ac_support_no_inline}" == "xyes" ]]; then
+      D0_CXXFLAGS=${AM_CXXFLAGS}" -fno-inline"
+   else
+      # in case of multiple -O options, the last one prevails
+      D0_CXXFLAGS=${AM_CXXFLAGS}" -O0"
+   fi
+   
+   AC_SUBST(D0_CXXFLAGS)
 fi
 
 dnl---------------------------------
