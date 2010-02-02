@@ -77,18 +77,18 @@ push @setups, ["","", "", 10]; # out of the box
 push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
-push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 10]; # with the intel compiler
+push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 1000]; # with the intel compiler
 # GPS 2009-07-03: zetes is currently down.
 #push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 # maintain a check with gxx-3.4
 push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10]; # with gxx-3.4
 #push @setups, ["karnak","FC=/usr/local/bin/gfortran-4.4", "", 10]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
-push @setups, ["karnak","--enable-allcxxplugins", "", 10]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
-push @setups, ["tycho","--enable-allcxxplugins", "", 10]; # tycho: standard machine, 32 bits
+push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard machine, 32 bits
 
 
 # process command-line

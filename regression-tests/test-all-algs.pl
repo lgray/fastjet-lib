@@ -255,7 +255,7 @@ sub setDefaults {
   $eedataFile="$dataDir/Pythia_Q1000_Zprime1000_nev1000.dat";
 
   @algs = ("kt", "cam", "antikt", "genkt:0.5", "siscone:-f:0.75","siscone:-f:0.50",  "jetclu", "pxcone",
-           # "d0runiicone", GPS removed temporarily 2010-01-19 
+            "d0runiicone", #GPS removed 2010-01-19, replace 2010-02-02
 	   "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
 	   "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01");
 
@@ -396,7 +396,7 @@ sub setRefResults {
   # result before addition of -fno-inline on 32 bit machines
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "8687da1a072268000a5c0d132fb37596",
   # result with inclusion of that (should be consistent across 32 and 64 bits)
-  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "722f70cbb66fd5a5ee2a8a7733649daf",
+  "Pythia-PtMin50-LHC-1000ev.dat,nev1000,d0runiicone,R0.60" => "26796bd9e42aa4b2ccae678074714613",
   # ee algs ran on pp events
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,eekt,R0.60" => "59fe2638f8df87a48bda2b8d1490034e",
   #"Pythia-PtMin50-LHC-1000ev.dat,nev1000,eegenkt:0,R0.60" => "f282981b9ff8e2db65fa0dd7aa1e9e44",

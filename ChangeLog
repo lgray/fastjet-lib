@@ -1,3 +1,16 @@
+2010-02-02  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  switched to 1000 event tests on tycho (32bit), karnak (mac 64
+	  bit) and on pallas with intel compiler.
+
+	* regression-tests/test-all-algs.pl:
+
+	  Put D0RunIICone back with the default tests.
+	
+	  updated 1000 event d0runiicone checksum again following earlier
+ 	  wrong cut and paste.
+
 2010-02-01  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl: 
