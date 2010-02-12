@@ -332,7 +332,7 @@ public:
 
     /// routine called to preprocess each input jet (to make all input
     /// jets compatible with the scheme requirements (e.g. massless).
-    virtual void preprocess(PseudoJet & p) const {};
+    virtual void preprocess(PseudoJet & ) const {};
     
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Recombiner() {};

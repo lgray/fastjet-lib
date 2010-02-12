@@ -64,11 +64,11 @@ public:
 
   /// return the area associated with the given jet; this base class
   /// returns 0.
-  virtual double area       (const PseudoJet & jet) const {return 0.0;}
+  virtual double area       (const PseudoJet & ) const {return 0.0;}
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of this jet; this base class returns 0.
-  virtual double area_error (const PseudoJet & jet) const {return 0.0;}
+  virtual double area_error (const PseudoJet & ) const {return 0.0;}
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
   ///
@@ -81,7 +81,7 @@ public:
   /// define a direction inside the jet boundary and 0 otherwise.
   ///
   /// This base class returns a null 4-vector.
-  virtual PseudoJet area_4vector(const PseudoJet & jet) const {
+  virtual PseudoJet area_4vector(const PseudoJet & ) const {
     return PseudoJet(0.0,0.0,0.0,0.0);}
 
   /// true if a jet is made exclusively of ghosts
@@ -89,7 +89,7 @@ public:
   /// NB: most area classes do not give any explicit ghost jets, but
   /// some do, and they should replace this function with their own
   /// version.
-  virtual bool is_pure_ghost(const PseudoJet & jet) const {
+  virtual bool is_pure_ghost(const PseudoJet & ) const {
     return false;
   }
 

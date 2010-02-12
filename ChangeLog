@@ -1,3 +1,13 @@
+2010-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/JetDefinition.hh: 
+	* include/fastjet/ClusterSequenceAreaBase.hh: 
+
+	  removed explicit names for arguments in preprocess(jet) and a number
+	  of CSAB default implementations that were not actually using
+	  their arguments. This should resolve an issue of warnings reported
+	  by LHCb.
+	
 2010-02-02  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
