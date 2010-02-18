@@ -219,6 +219,8 @@ void ClusterSequence::_print_banner() {
 #endif  // DROP_CGAL
   cout << ".\n";
   cout << "#-------------------------------------------------------------------------\n";
+  // make sure we really have the output done.
+  cout.flush();
 }
 
 //----------------------------------------------------------------------
