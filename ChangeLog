@@ -1,7 +1,8 @@
 2010-02-18  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_print_banner): 
-	  added a "flush" to the output.
+	  added a "flush" to the output (to avoid problems in case the
+	  application is separately writing to /dev/stdout)
 
 2010-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
