@@ -1,5 +1,11 @@
 2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* configure.ac: 
+	* CHECKLIST: 
+          release of 2.4.2 carried out; switched over to 2.4.3-devel
+	
+2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
 	* regression-tests/nightly-check.pl: 
 	  added a test with --enable-monolithic
 
