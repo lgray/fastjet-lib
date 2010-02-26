@@ -241,7 +241,7 @@ sub setDefaults {
 
   $username=`whoami`;
   chomp $username;
-  if (( $username eq "greg") || ($username eq "soyez")){
+  if ( $username eq "greg"){
       $dataDir="~/diska/jets/fastjet/data";
   } else {
       $gavinHome = `echo ~salam`;

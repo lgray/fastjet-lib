@@ -24,7 +24,9 @@ dnl check basic types
 AC_CHECK_TYPE(int)
 AC_CHECK_TYPE(long)
 
+dnl-------------------------------------------------------------------
 dnl if the user has not set CXXFLAGS, then set our own default
+dnl-------------------------------------------------------------------
 USE_CUSTOM_FLAGS="yes"
 if [[ "x$CXXFLAGS" == "x" ]]; then
    CXXFLAGS="-O3 -Wall"
@@ -33,7 +35,9 @@ fi
 
 # test "x${CXXFLAGS+yes}" == "xyes" || CXXFLAGS="-O3 -Wall"
 
+dnl-------------------------------------------------------------------
 dnl check useful programs
+dnl-------------------------------------------------------------------
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -47,12 +51,18 @@ AC_STDC_HEADERS
 dnl set the default destination directory
 AC_PREFIX_DEFAULT(/usr/local)
 
-dnl set default compilation and link flags
-dnl note that those can be changed by the user at configure-time
-dnl AM_CXXFLAGS=" -I../include "
-CGAL_CPPFLAGS=""
-CGAL_LIBS=""
+dnl-------------------------------------------------------------------
+dnl initialize compilation and link flags to set in fastjet-config
+dnl-------------------------------------------------------------------
+CONFIG_CXXFLAGS=""
+CONFIG_RUNPATH_FLAGS=""
+CONFIG_LIBS=""
+CONFIG_LIBS_PLUGINS=""
+CONFIG_LIBS_PLUGINS_STATIC=""
 
+dnl-------------------------------------------------------------------
+dnl deal with debug option
+dnl-------------------------------------------------------------------
 dnl if the debug flag is set, build with -g
 dnl default is "yes"
 AC_ARG_ENABLE(debug,
@@ -63,6 +73,9 @@ if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" -g "
 fi
 
+dnl-------------------------------------------------------------------
+dnl deal with the choice of shared/static libs
+dnl-------------------------------------------------------------------
 dnl build the shared lib by default
 dnl even though they're enabled by default, AM_ENABLE_SHARED has to
 dnl be called so that ${enable_shared} is set to 'yes' instead of ''
@@ -73,16 +86,21 @@ dnl libs to be disabled by default
 dnl AM_DISABLE_SHARED
 HAS_SHARED=${enable_shared}
 
-dnl-----------------
-dnl check libraries
-dnl-----------------
 
+dnl-------------------------------------------------------------------
+dnl check libraries
+dnl-------------------------------------------------------------------
 dnl math lib
 AC_CHECK_LIB(m, cos)
 CONFIG_CXXFLAGS=""
-CONFIG_LIBS=" -lm "
+CONFIG_LIBS=${CONFIG_LIBS}" -lm "
 
-dnl deal with the CGAL library
+dnl-------------------------------------------------------------------
+dnl deal with CGAL
+dnl-------------------------------------------------------------------
+CGAL_CPPFLAGS=""
+CGAL_LIBS=""
+
 dnl first check if the user wants to use CGAL
 dnl default value is "no"
 dnl Note that CGAL compilation flags are considered as required
@@ -109,7 +127,9 @@ fi
 AC_SUBST(CGAL_CPPFLAGS)
 AC_SUBST(CGAL_LIBS)
 
-dnl check if the linker supports --enable-new-dtags
+dnl-------------------------------------------------------------------
+dnl check if the linker supports --enable-new-dtags (rpath-related)
+dnl-------------------------------------------------------------------
 AC_MSG_CHECKING([if $CXX supports -Wl,--enable-new-dtags flag])
 SAVE_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="-Werror -Wl,--enable-new-dtags"
@@ -130,292 +150,99 @@ AC_SUBST(CONFIG_RUNPATH_FLAGS)
 
 dnl substitutions
 AC_SUBST(AM_CXXFLAGS)
-AC_SUBST(CONFIG_CXXFLAGS)
-AC_SUBST(CONFIG_LIBS)
 
 dnl create the substitutions variables for the configuration script
 AC_SUBST(PACKAGE_VERSION)
 AC_SUBST(HAS_SHARED)
 
-dnl enable libtool
-AC_PROG_LIBTOOL
-
-dnl----------------
+dnl-------------------------------------------------------------------
 dnl plugin section
-dnl each plugin can be enabled or disabled (default is SISCone and CDFCones)
+dnl
+dnl each plugin can be enabled or disabled
 dnl We also define a ENABLED_PLUGIN_<name> in config.h when plugin
 dnl <name> is enabled
 dnl WARNING: for make dist reasons all Makefiles MUST be created
-dnl----------------
+dnl
+dnl See m4/plugins.m4 to see what is enabled by default
+dnl-------------------------------------------------------------------
 dnl general
 AC_CONFIG_FILES( plugins/Makefile plugins/usage_examples/Makefile )
 CONFIG_LIBS_PLUGINS=""
 CONFIG_LIBS_PLUGINS_STATIC=""
 
 dnl deal with a couple of arguments to allow a whole bunch of plugins at a time
+ACX_INIT_PLUGINS
+ACX_CHECK_ALLPLUGINS
+ACX_CHECK_ALLCXXPLUGINS
 
-dnl default plugin settings
-DEFAULT_ENABLE_SISCONE="yes"
-DEFAULT_ENABLE_CDFCONES="yes"
-DEFAULT_ENABLE_PXCONE="no"
-DEFAULT_ENABLE_D0RUNIICONE="no"
-DEFAULT_ENABLE_NESTEDDEFS="yes"
-DEFAULT_ENABLE_TRACKJET="no"
-DEFAULT_ENABLE_ATLASCONE="no"
-DEFAULT_ENABLE_CMSITERATIVECONE="no"
-DEFAULT_ENABLE_EECAMBRIDGE="yes"
-DEFAULT_ENABLE_JADE="yes"
+dnl initialise the list of allowed plugins
+dnl This is meant to enable fastjet-config --list-plugins
+LIST_ALL_PLUGINS=""
 
-dnl Allow to enable all the plugins at a go
-dnl Note: we do actually only change the default values, so that it allows for things like
-dnl          ./configure --enable-allplugins --disable-pxcone
-dnl       will enable everything but PxCone
-dnl Note: --disable-allplugins is automatically defined by autoconf
-dnl       Therefore, we implement it so as it does what it is supposed to do i.e. disable
-dnl       all the plugins. Again, --disable-allplugins --enable-siscone shall work and
-dnl       just enable the SISCone plugin
-AC_MSG_CHECKING([whether to build all plugins])
-AC_ARG_ENABLE(allplugins,
-       [  --enable-allplugins     enables all the FastJet plugins (default=no)],
-       [ENABLE_ALLPLUGINS="$enableval"],
-       [ENABLE_ALLPLUGINS="not set"])
-if [[ "x$ENABLE_ALLPLUGINS" == "xyes" ]] ; then
-       DEFAULT_ENABLE_SISCONE="yes"
-       DEFAULT_ENABLE_CDFCONES="yes"
-       DEFAULT_ENABLE_PXCONE="yes"
-       DEFAULT_ENABLE_D0RUNIICONE="yes"
-       DEFAULT_ENABLE_NESTEDDEFS="yes"
-       DEFAULT_ENABLE_TRACKJET="yes"
-       DEFAULT_ENABLE_ATLASCONE="yes"
-       DEFAULT_ENABLE_CMSITERATIVECONE="yes"
-       DEFAULT_ENABLE_EECAMBRIDGE="yes" 
-       DEFAULT_ENABLE_JADE="yes"
+dnl allow to build all plugins in the same lib
+AC_ARG_ENABLE(monolithic,
+[  --enable-monolithic  Build all the (compiled) plugins in a single lib],
+[case "${enableval}" in
+  yes) monolithic=true ;;
+  no)  monolithic=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-monolithic) ;;
+esac],[monolithic=false])
+AM_CONDITIONAL(MONOLITHIC_PLUGINS, test x$monolithic = xtrue)
+if [[ "x$monolithic" == "xtrue" ]] ; then
+   CONFIG_LIBS_PLUGINS=" -lfastjetplugins "
+   CONFIG_LIBS_PLUGINS_STATIC=" \${installationdir}/lib/libfastjetplugins.a "
 fi
-if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
-       DEFAULT_ENABLE_SISCONE="no"
-       DEFAULT_ENABLE_CDFCONES="no"
-       DEFAULT_ENABLE_PXCONE="no"
-       DEFAULT_ENABLE_D0RUNIICONE="no"
-       DEFAULT_ENABLE_NESTEDDEFS="no"
-       DEFAULT_ENABLE_TRACKJET="no"
-       DEFAULT_ENABLE_ATLASCONE="no"
-       DEFAULT_ENABLE_CMSITERATIVECONE="no"
-       DEFAULT_ENABLE_EECAMBRIDGE="no" 
-       DEFAULT_ENABLE_JADE="no"
-fi
-AC_MSG_RESULT($ENABLE_ALLPLUGINS)
-
-dnl Allow to enable all the CXX plugins at a go
-dnl Note: we do actually only change the default values, so that it allows for things like
-dnl          ./configure --enable-allcxxplugins --disable-cdfcones
-dnl       will enable everything but PxCone
-dnl Note: --disable-allplugins is automatically defined by autoconf
-dnl       Therefore, we implement it so as it does what it is supposed to do i.e. disable
-dnl       all the plugins. Again, --disable-allcxxplugins --enable-siscone shall work and
-dnl       just enable the SISCone plugin
-AC_MSG_CHECKING([whether to build all CXX plugins])
-AC_ARG_ENABLE(allcxxplugins,
-       [  --enable-allcxxplugins  enables all the CXX FastJet plugins (default=no)],
-       [ENABLE_ALLCXXPLUGINS="$enableval"],
-       [ENABLE_ALLCXXPLUGINS="not set"])
-if [[ "x$ENABLE_ALLCXXPLUGINS" == "xyes" ]] ; then
-       DEFAULT_ENABLE_SISCONE="yes"
-       DEFAULT_ENABLE_CDFCONES="yes"
-       DEFAULT_ENABLE_D0RUNIICONE="yes"
-       DEFAULT_ENABLE_NESTEDDEFS="yes"
-       DEFAULT_ENABLE_TRACKJET="yes"
-       DEFAULT_ENABLE_ATLASCONE="yes"
-       DEFAULT_ENABLE_CMSITERATIVECONE="yes"
-       DEFAULT_ENABLE_EECAMBRIDGE="yes" 
-       DEFAULT_ENABLE_JADE="yes"
-fi
-if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
-       DEFAULT_ENABLE_SISCONE="no"
-       DEFAULT_ENABLE_CDFCONES="no"
-       DEFAULT_ENABLE_D0RUNIICONE="no"
-       DEFAULT_ENABLE_NESTEDDEFS="no"
-       DEFAULT_ENABLE_TRACKJET="no"
-       DEFAULT_ENABLE_ATLASCONE="no"
-       DEFAULT_ENABLE_CMSITERATIVECONE="no"
-       DEFAULT_ENABLE_EECAMBRIDGE="no" 
-       DEFAULT_ENABLE_JADE="no"
-fi
-AC_MSG_RESULT($ENABLE_ALLCXXPLUGINS)
-
 
 dnl SISCone
-AC_MSG_CHECKING([whether to build plugin SISCone])
-AC_ARG_ENABLE(siscone,
-       [  --enable-siscone        enables the SISCone plugin (default=yes)],
-       [ENABLE_SISCONE="$enableval"],
-       [ENABLE_SISCONE="$DEFAULT_ENABLE_SISCONE"])
-if [[ "x$ENABLE_SISCONE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_SISCONE, [], [The SISCone plugin is enabled])
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lSISConePlugin -lsiscone -lsiscone_spherical"
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libSISConePlugin.a \${installationdir}/lib/libsiscone.a \${installationdir}/lib/libsiscone_spherical.a"
-fi
+ACX_CHECK_PLUGIN(SISCone, siscone, SISCONE, yes,
+	         [CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lsiscone -lsiscone_spherical"
+                  CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libsiscone.a \${installationdir}/lib/libsiscone_spherical.a"])
 AC_CONFIG_SUBDIRS(plugins/SISCone/siscone)
-AC_CONFIG_FILES( plugins/SISCone/Makefile plugins/SISCone/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_SISCONE, test x$ENABLE_SISCONE = xyes)
-AC_MSG_RESULT($ENABLE_SISCONE)
 
 dnl CDFCones
-AC_MSG_CHECKING([whether to build plugin CDFCones])
-AC_ARG_ENABLE(cdfcones,
-       [  --enable-cdfcones       enables the CDFJetClu and CDFMidPoint plugins (default=yes)],
-       [ENABLE_CDFCONES="$enableval"],
-       [ENABLE_CDFCONES="$DEFAULT_ENABLE_CDFCONES"])
-if [[ "x$ENABLE_CDFCONES" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_CDFCONES, [], [The CDFJetClu and CDFMidPoint plugins are enabled])
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lCDFConesPlugin"
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libCDFConesPlugin.a"
-fi
-AC_CONFIG_FILES(plugins/CDFCones/Makefile plugins/CDFCones/CDFcode/Makefile plugins/CDFCones/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_CDFCONES, test x$ENABLE_CDFCONES = xyes)
-AC_MSG_RESULT($ENABLE_CDFCONES)
+ACX_CHECK_PLUGIN(CDFCones, cdfcones, CDFCONES, yes)
+AC_CONFIG_FILES(plugins/CDFCones/CDFcode/Makefile)
 
 dnl PxCone
-AC_MSG_CHECKING([whether to build plugin PxCone])
-AC_ARG_ENABLE(pxcone,
-       [  --enable-pxcone         enables the PxCone plugin (default=no)],
-       [ENABLE_PXCONE="$enableval"],
-       [ENABLE_PXCONE="$DEFAULT_ENABLE_PXCONE"])
-if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_PXCONE, [], [The PxCone plugin is enabled])
-   dnl set up the fortran compiler and libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lPxConePlugin"
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libPxConePlugin.a"
-fi
-AC_CONFIG_FILES( plugins/PxCone/Makefile plugins/PxCone/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_PXCONE, test x$ENABLE_PXCONE = xyes)
-AC_MSG_RESULT($ENABLE_PXCONE)
+ACX_CHECK_PLUGIN(PxCone, pxcone, PXCONE, no)
 
 dnl D0RunIICone
-AC_MSG_CHECKING([whether to build plugin D0RunIICone])
-AC_ARG_ENABLE(d0runiicone,
-       [  --enable-d0runiicone    enables the D0RunIICone plugin (default=no)],
-       [ENABLE_D0RUNIICONE="$enableval"],
-       [ENABLE_D0RUNIICONE="$DEFAULT_ENABLE_D0RUNIICONE"])
-if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_D0RUNIICONE, [], [The D0RunIICone plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lD0RunIIConePlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libD0RunIIConePlugin.a "
-fi
-AC_CONFIG_FILES( plugins/D0RunIICone/Makefile plugins/D0RunIICone/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_D0RUNIICONE, test x$ENABLE_D0RUNIICONE = xyes)
-AC_MSG_RESULT($ENABLE_D0RUNIICONE)
+ACX_CHECK_PLUGIN(D0RunIICone, d0runiicone, D0RUNIICONE, no)
 
 dnl NestedDefs
-AC_MSG_CHECKING([whether to build plugin NestedDefs])
-AC_ARG_ENABLE(nesteddefs,
-       [  --enable-nesteddefs     enables the NestedDefs plugin (default=yes)],
-       [ENABLE_NESTEDDEFS="$enableval"],
-       [ENABLE_NESTEDDEFS="$DEFAULT_ENABLE_NESTEDDEFS"])
-if [[ "x$ENABLE_NESTEDDEFS" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_NESTEDDEFS, [], [The NestedDefs plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lNestedDefsPlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libNestedDefsPlugin.a "
-fi
-AC_CONFIG_FILES( plugins/NestedDefs/Makefile plugins/NestedDefs/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_NESTEDDEFS, test x$ENABLE_NESTEDDEFS = xyes)
-AC_MSG_RESULT($ENABLE_NESTEDDEFS)
+ACX_CHECK_PLUGIN(NestedDefs, nesteddefs, NESTEDDEFS, yes)
 
 dnl TrackJet
-AC_MSG_CHECKING([whether to build plugin TrackJet])
-AC_ARG_ENABLE(trackjet,
-       [  --enable-trackjet       enables the TrackJet plugin (default=no)],
-       [ENABLE_TRACKJET="$enableval"],
-       [ENABLE_TRACKJET="$DEFAULT_ENABLE_TRACKJET"])
-if [[ "x$ENABLE_TRACKJET" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_TRACKJET, [], [The TrackJet plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lTrackJetPlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libTrackJetPlugin.a "
-fi
-AC_CONFIG_FILES( plugins/TrackJet/Makefile plugins/TrackJet/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_TRACKJET, test x$ENABLE_TRACKJET = xyes)
-AC_MSG_RESULT($ENABLE_TRACKJET)
+ACX_CHECK_PLUGIN(TrackJet, trackjet, TRACKJET, no)
 
 dnl ATLASCone
-AC_MSG_CHECKING([whether to build plugin ATLASCone])
-AC_ARG_ENABLE(atlascone,
-       [  --enable-atlascone       enables the ATLASCone plugin (default=no)],
-       [ENABLE_ATLASCONE="$enableval"],
-       [ENABLE_ATLASCONE="$DEFAULT_ENABLE_ATLASCONE"])
-if [[ "x$ENABLE_ATLASCONE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_ATLASCONE, [], [The ATLASCone plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lATLASConePlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libATLASConePlugin.a "
-fi
-AC_CONFIG_FILES( plugins/ATLASCone/Makefile plugins/ATLASCone/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_ATLASCONE, test x$ENABLE_ATLASCONE = xyes)
-AC_MSG_RESULT($ENABLE_ATLASCONE)
+ACX_CHECK_PLUGIN(ATLASCone, atlascone, ATLASCONE, no)
 
 dnl CMSIterativeCone
-AC_MSG_CHECKING([whether to build plugin CMSIterativeCone])
-AC_ARG_ENABLE(cmsiterativecone,
-       [  --enable-cmsiterativecone       enables the CMSIterativeCone plugin (default=no)],
-       [ENABLE_CMSITERATIVECONE="$enableval"],
-       [ENABLE_CMSITERATIVECONE="$DEFAULT_ENABLE_CMSITERATIVECONE"])
-if [[ "x$ENABLE_CMSITERATIVECONE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_CMSITERATIVECONE, [], [The CMSIterativeCone plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lCMSIterativeConePlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libCMSIterativeConePlugin.a "
-fi
-AC_CONFIG_FILES( plugins/CMSIterativeCone/Makefile plugins/CMSIterativeCone/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_CMSITERATIVECONE, test x$ENABLE_CMSITERATIVECONE = xyes)
-AC_MSG_RESULT($ENABLE_CMSITERATIVECONE)
+ACX_CHECK_PLUGIN(CMSIterativeCone, cmsiterativecone, CMSITERATIVECONE, no)
 
 dnl EECambridge
-AC_MSG_CHECKING([whether to build plugin EECambridge])
-AC_ARG_ENABLE(eecambridge,
-       [  --enable-eecambridge       enables the EECambridge plugin (default=yes)],
-       [ENABLE_EECAMBRIDGE="$enableval"],
-       [ENABLE_EECAMBRIDGE="$DEFAULT_ENABLE_EECAMBRIDGE"])
-if [[ "x$ENABLE_EECAMBRIDGE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_EECAMBRIDGE, [], [The EECambridge plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lEECambridgePlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libEECambridgePlugin.a "
-fi
-AC_CONFIG_FILES( plugins/EECambridge/Makefile plugins/EECambridge/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_EECAMBRIDGE, test x$ENABLE_EECAMBRIDGE = xyes)
-AC_MSG_RESULT($ENABLE_EECAMBRIDGE)
+ACX_CHECK_PLUGIN(EECambridge, eecambridge, EECAMBRIDGE, yes)
 
 dnl Jade
-AC_MSG_CHECKING([whether to build plugin Jade])
-AC_ARG_ENABLE(jade,
-       [  --enable-jade       enables the Jade plugin (default=yes)],
-       [ENABLE_JADE="$enableval"],
-       [ENABLE_JADE="$DEFAULT_ENABLE_JADE"])
-if [[ "x$ENABLE_JADE" == "xyes" ]] ; then
-   AC_DEFINE(ENABLE_PLUGIN_JADE, [], [The Jade plugin is enabled])
-   dnl set up the libs
-   CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lJadePlugin "
-   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libJadePlugin.a "
-fi
-AC_CONFIG_FILES( plugins/Jade/Makefile plugins/Jade/fastjet/Makefile )
-AM_CONDITIONAL(BUILD_PLUGIN_JADE, test x$ENABLE_JADE = xyes)
-AC_MSG_RESULT($ENABLE_JADE)
+ACX_CHECK_PLUGIN(Jade, jade, JADE, yes)
 
 dnl end of plugin section --- don't modify this line
 
-AC_SUBST(CONFIG_LIBS_PLUGINS)
-AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
+dnl-------------------------------------------------------------------
+dnl enable libtool (has to be done after the previous lib checks!)
+dnl-------------------------------------------------------------------
+AC_PROG_LIBTOOL
 
+dnl-------------------------------------------------------------------
 dnl add Fortran flags if any plugin that needs it is enabled
+dnl-------------------------------------------------------------------
 if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
    dnl set up the fortran compiler and libs
    if test "x$FCFLAGS" == "x"; then
       FCFLAGS="-O2"
-   fi	
-   # AC_PROG_F77
-   # AC_F77_LIBRARY_LDFLAGS
-    ## Try to respect users' Fortran compiler variables
+   fi
+   ## Try to respect users' Fortran compiler variables
    if test "x$FC" == "x"; then
       if test "x$F77" != "x"; then
       	 FC="$F77"
@@ -481,34 +308,45 @@ if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
    AC_SUBST(D0_CXXFLAGS)
 fi
 
-dnl---------------------------------
+dnl-------------------------------------------------------------------
+dnl substitutions useful to know what we have to do in fastjet-config
+dnl-------------------------------------------------------------------
+AC_SUBST(CONFIG_LIBS_PLUGINS)
+AC_SUBST(CONFIG_LIBS_PLUGINS_STATIC)
+AC_SUBST(CONFIG_CXXFLAGS)
+AC_SUBST(CONFIG_LIBS)
+AC_SUBST(CONFIG_RUNPATH_FLAGS)
+AC_SUBST(LIST_ALL_PLUGINS)
+
+dnl-------------------------------------------------------------------
 dnl make sure examples dir is there
-dnl---------------------------------
+dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( example/Makefile example/data/Makefile example/root/Makefile )
 
-dnl---------------------------------
+dnl-------------------------------------------------------------------
 dnl and the documentation
-dnl---------------------------------
+dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( doc/Makefile )
 
-dnl----------------------
+dnl-------------------------------------------------------------------
 dnl configuration script
-dnl----------------------
-
+dnl-------------------------------------------------------------------
 AC_CONFIG_FILES([fastjet-config:fastjet-config.in], [chmod u+x fastjet-config])
 
-dnl-----------------------
+dnl-------------------------------------------------------------------
 dnl sample fortran wrapper
-dnl-----------------------
+dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( fortran_wrapper/Makefile )
 
 
-dnl----------------------
+dnl-------------------------------------------------------------------
 dnl main library outputs
-dnl----------------------
-
+dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( Makefile src/Makefile include/Makefile include/fastjet/Makefile include/fastjet/internal/Makefile )
 
+dnl-------------------------------------------------------------------
+dnl finish with a nice message
+dnl-------------------------------------------------------------------
 AC_OUTPUT
 
 echo "---------------------------------------------------"

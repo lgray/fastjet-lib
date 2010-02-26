@@ -23,12 +23,13 @@ This is FastJet @VERSION@ configuration tool.
 Usage:
   fastjet-config [--help] [--version] [--prefix] [--cxxflags] [--libs]
       [--shared[=yes|no]] [--plugins[=yes|no]] [--rpath[=yes|no]] [--runpath]
+      [--list-plugins]
 
 The arguments can be either queries (one must be present):
 
   --help       prints this message and exits
   --version    prints FastJet version and exits
-  --prefix     get the FastJet installation directory
+  --prefix     gets the FastJet installation directory
   --cxxflags   returns the compilation flags to be used with C++ programs
   --libs       returns the flags to pass to the linker
 
@@ -55,6 +56,8 @@ or flags (optional):
                runtime when using shared libs in a non standard
                location but gives priority to an existing LD_LIBRARY_PATH.
 
+  --list-plugins  list all the available plugins
+
 EOF
 else
   cat 1>&2 <<EOF
@@ -62,7 +65,7 @@ else
 This is FastJet @VERSION@ configuration tool.
 Usage:
   fastjet-config [--help] [--version] [--prefix] [--cxxflags] [--libs]
-      [--plugins[=yes|no]]
+      [--plugins[=yes|no]] [--list-plugins]
 
 The arguments can be either queries (one must be present):
 
@@ -76,6 +79,8 @@ or flags (optional):
 
   --plugins    controls whether you also want to link the FastJet plugins
                (default=no)
+
+  --list-plugins  list all the available plugins
 
 EOF
 fi
@@ -139,7 +144,7 @@ write_error()
 #  - we then check for extra arguments and return the requested info
 #####################################################################
 # useful lists of arguments
-arg_query_list="version prefix help" # cxxflags libs
+arg_query_list="version prefix list_plugins help" # cxxflags libs
 arg_yesno_list="shared plugins rpath"
 
 # default behaviour for parameters
@@ -323,5 +328,10 @@ case $found_query in
 	else
 	    echo $libs_string
 	fi
+	;;
+    list_plugins)
+	echo "Available plugins: "
+	echo -n "  "
+	echo @LIST_ALL_PLUGINS@ | sed -e "s/ /\n  /g"
 	;;
 esac

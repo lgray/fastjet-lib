@@ -1,8 +1,41 @@
+2010-02-26  Gregory Soyez  <soyez@cern.ch>
+
+	* Merged changes from the devel-monolithic-2.4.2 branch
+	  (see the log for 2010-02-12 for details)
+
 2010-02-18  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_print_banner): 
 	  added a "flush" to the output (to avoid problems in case the
 	  application is separately writing to /dev/stdout)
+
+2010-02-12  Gregory Soyez  <soyez@cern.ch>
+
+	* m4/plugin.m4:
+	* configure.ac:
+	  added a list of macros to handle the plugin configure options
+	  modified the configure script accordingly
+
+	* fastjet-config.in:
+	* configure.ac:
+	  added a --list-plugins option to fastjet-config that lists the
+	  available plugins
+
+        * configure.ac
+          plugins/Makefile.am:
+          plugins/SISCone/Makefile.am:
+          plugins/CDFCones/Makefile.am:
+          plugins/PxCone/Makefile.am:
+          plugins/D0RunIICone/Makefile.am:
+          plugins/NestedDefs/Makefile.am:
+          plugins/TrackJet/Makefile.am:
+          plugins/ATLASCone/Makefile.am:
+          plugins/EECambridge/Makefile.am:
+          plugins/Jade/Makefile.am:
+          plugins/CMSIterativeCone/Makefile.am:
+          added the --enable-monolithic option (off by default for the
+          moment) that allows to build all the plugins in a single lib:
+          libfastjetplugins.{a,so}
 
 2010-02-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 

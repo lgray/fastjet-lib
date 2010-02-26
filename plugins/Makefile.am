@@ -1,4 +1,5 @@
-SUBDIRS = .
+SUBDIRS = 
+
 if BUILD_PLUGIN_SISCONE
 SUBDIRS += SISCone
 endif
@@ -30,7 +31,45 @@ if BUILD_PLUGIN_CMSITERATIVECONE
 SUBDIRS += CMSIterativeCone
 endif
 # end plugin section -- do not modify this line
-SUBDIRS += usage_examples
+
+SUBDIRS += . usage_examples
+
+if MONOLITHIC_PLUGINS
+lib_LTLIBRARIES = libfastjetplugins.la
+libfastjetplugins_la_SOURCES=
+nodist_EXTRA_libfastjetplugins_la_SOURCES = dummy.cc
+libfastjetplugins_la_LIBADD =
+if BUILD_PLUGIN_SISCONE
+libfastjetplugins_la_LIBADD += SISCone/libSISConePlugin.la
+endif
+if BUILD_PLUGIN_CDFCONES
+libfastjetplugins_la_LIBADD += CDFCones/libCDFConesPlugin.la
+endif
+if BUILD_PLUGIN_PXCONE
+libfastjetplugins_la_LIBADD += PxCone/libPxConePlugin.la
+endif
+if BUILD_PLUGIN_D0RUNIICONE
+libfastjetplugins_la_LIBADD += D0RunIICone/libD0RunIIConePlugin.la
+endif
+if BUILD_PLUGIN_NESTEDDEFS
+libfastjetplugins_la_LIBADD += NestedDefs/libNestedDefsPlugin.la
+endif
+if BUILD_PLUGIN_TRACKJET
+libfastjetplugins_la_LIBADD += TrackJet/libTrackJetPlugin.la
+endif
+if BUILD_PLUGIN_ATLASCONE
+libfastjetplugins_la_LIBADD += ATLASCone/libATLASConePlugin.la
+endif
+if BUILD_PLUGIN_EECAMBRIDGE
+libfastjetplugins_la_LIBADD += EECambridge/libEECambridgePlugin.la
+endif
+if BUILD_PLUGIN_JADE
+libfastjetplugins_la_LIBADD += Jade/libJadePlugin.la
+endif
+if BUILD_PLUGIN_CMSITERATIVECONE
+libfastjetplugins_la_LIBADD += CMSIterativeCone/libCMSIterativeConePlugin.la
+endif
+endif
 
 DIST_SUBDIRS = CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
 
