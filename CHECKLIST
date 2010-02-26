@@ -56,20 +56,19 @@ checklist for 2.4.2
 2.4.2  update doxygen version number + check dirs are declared for new plugins
 2.4.2  version number in manual
 
-X.Y.Z  ensure NEWS is up to date (and has the corect release date!)
+2.4.2  ensure NEWS is up to date (and has the corect release date!)
 
-X.Y.Z  make sure siscone points to a tag, not trunk
+2.4.2  make sure siscone points to a tag, not trunk
 
-X.Y.Z  make check 
+2.4.2  make check 
 
-X.Y.Z  make distcheck
+2.4.2  make distcheck
 
-X.Y.Z  make sure it's committed
+2.4.2  make sure it's committed
 
 X.Y.Z  rerun the nightly check
 
 2.4.2  tested with CGAL 3.5.1 and it's OK
-?.?.?  new build mods
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
