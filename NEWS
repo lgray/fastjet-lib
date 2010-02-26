@@ -1,12 +1,16 @@
 Release Notes for fastjet
 -------------------------
 
-=======================================================
-Summary of changes from v2.4.1 -> v2.4.2:  SOME DATE
-=======================================================
+===========================================================
+Summary of changes from v2.4.1 -> v2.4.2:  26 February 2010
+===========================================================
 - exclusive_ymerge_max(...) was not working; now fixed
 - the D0RunIIConePlugin gave segfaults for some parameters; now fixed
-- commented some orphan code that was generating compilation warnings
+- the D0RunIIConePlugin gave different results on 32/64 bit machines;
+  optimisation flags now changed just for D0 code so that 32 bit gives same
+  results as 64 bit. 
+- changes to configure.ac to better handle fortran compiler checks
+- removed some orphan/redundant code that was generating compilation warnings
 
 =======================================================
 Summary of changes from v2.4.0 -> v2.4.1:  29 May 2009
