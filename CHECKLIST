@@ -55,6 +55,7 @@ checklist for 2.4.2
 2.4.2  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
 2.4.2  update doxygen version number + check dirs are declared for new plugins
 2.4.2  version number in manual
+2.4.2  tested with CGAL 3.5.1 and it's OK
 
 2.4.2  ensure NEWS is up to date (and has the corect release date!)
 
@@ -66,23 +67,21 @@ checklist for 2.4.2
 
 2.4.2  make sure it's committed
 
-X.Y.Z  rerun the nightly check
+2.4.2 IN PROGRESS  rerun the nightly check
 
-2.4.2  tested with CGAL 3.5.1 and it's OK
+2.4.2  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+2.4.2  compile manual
+2.4.2  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+2.4.2  run doxygen, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+2.4.2  update main web page & menu in devel area
 
-X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  run doxygen, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
-X.Y.Z  update main web page & menu in devel area
+2.4.2  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+2.4.2  update main web-page area
 
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
-X.Y.Z  update main web-page area
+NOT    send mail to: fastjet-announce@projects.hepforge.org
+DONE   subject: FastJet release X.Y.Z       
 
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
-       subject: FastJet release X.Y.Z       
-
-X.Y.Z  make sure it's committed with the CHECKLIST
+2.4.2  make sure it's committed with the CHECKLIST
 
 X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
