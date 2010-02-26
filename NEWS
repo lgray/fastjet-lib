@@ -11,6 +11,9 @@ Summary of changes from v2.4.1 -> v2.4.2:  26 February 2010
   results as 64 bit. 
 - changes to configure.ac to better handle fortran compiler checks
 - removed some orphan/redundant code that was generating compilation warnings
+- added an "--enable-monolithic" option to ./configure which causes
+  all plugins to be placed in a single library (except SISCone)
+- added a "--list-plugins" option to fastjet-config
 
 =======================================================
 Summary of changes from v2.4.0 -> v2.4.1:  29 May 2009

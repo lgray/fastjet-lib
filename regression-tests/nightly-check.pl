@@ -76,6 +76,7 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g
 push @setups, ["","", "", 10]; # out of the box
 push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
 push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
+push @setups, ["","--enable-allplugins --enable-monolithic", "", 10]; # with static libs, and pxcone
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 1000]; # with the intel compiler
 # GPS 2009-07-03: zetes is currently down.

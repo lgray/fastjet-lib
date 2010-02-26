@@ -1,3 +1,8 @@
+2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  added a test with --enable-monolithic
+
 2010-02-26  Gregory Soyez  <soyez@cern.ch>
 
 	* Merged changes from the devel-monolithic-2.4.2 branch
