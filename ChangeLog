@@ -1,9 +1,25 @@
+2010-03-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJet.hh:
+
+	  phi and rapidity are now no longer cached on construction of the
+	  PseudoJet. Instead _phi is set to a nonsense value (-100), and
+	  both _phi and _rap are calculated the first time that phi() or
+	  rap() is requested.
+
+
+*****************************************************
+	Start of work towards FJ 2.5
+*****************************************************
+
+
 2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* configure.ac: 
 	* CHECKLIST: 
           release of 2.4.2 carried out; switched over to 2.5-devel
-	
+
 2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 

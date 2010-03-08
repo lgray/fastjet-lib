@@ -63,6 +63,12 @@ PseudoJet::PseudoJet(const double px, const double py, const double pz, const do
 /// do standard end of initialisation
 void PseudoJet::_finish_init () {
   _kt2 = this->px()*this->px() + this->py()*this->py();
+  _phi = pseudojet_invalid_phi;
+}
+
+//----------------------------------------------------------------------
+void PseudoJet::_set_rap_phi() const {
+
   if (_kt2 == 0.0) {
     _phi = 0.0; } 
   else {
@@ -88,15 +94,6 @@ void PseudoJet::_finish_init () {
     if (_pz > 0) {_rap = - _rap;}
   }
 
-  //// original determination 
-  //if (this->E() != abs(this->pz())) {
-  //  _rap = 0.5*log((this->E() + this->pz())/(this->E() - this->pz()));
-  //    } else {
-  //  // Overlapping points can give problems. Let's lift the degeneracy
-  //  // in case of multiple 0-pT points (can be found at parton-level)
-  //  double MaxRapHere = MaxRap + abs(this->pz());
-  //  if (this->pz() >= 0.0) {_rap = MaxRapHere;} else {_rap = -MaxRapHere;}
-  //}
 }
 
 
@@ -302,9 +299,9 @@ PseudoJet PtYPhiM(double pt, double y, double phi, double m) {
 double PseudoJet::kt_distance(const PseudoJet & other) const {
   //double distance = min(this->kt2(), other.kt2());
   double distance = min(_kt2, other._kt2);
-  double dphi = abs(_phi - other._phi);
+  double dphi = abs(phi() - other.phi());
   if (dphi > pi) {dphi = twopi - dphi;}
-  double drap = _rap - other._rap;
+  double drap = rap() - other.rap();
   distance = distance * (dphi*dphi + drap*drap);
   return distance;
 }
@@ -313,9 +310,9 @@ double PseudoJet::kt_distance(const PseudoJet & other) const {
 //----------------------------------------------------------------------
 // return squared cylinder (eta-phi) distance between this jet and another one
 double PseudoJet::plain_distance(const PseudoJet & other) const {
-  double dphi = abs(_phi - other._phi);
+  double dphi = abs(phi() - other.phi());
   if (dphi > pi) {dphi = twopi - dphi;}
-  double drap = _rap - other._rap;
+  double drap = rap() - other.rap();
   return (dphi*dphi + drap*drap);
 }
 
@@ -323,7 +320,7 @@ double PseudoJet::plain_distance(const PseudoJet & other) const {
 /// returns other.phi() - this.phi(), i.e. the phi distance to
 /// other, constrained to be in range -pi .. pi
 double PseudoJet::delta_phi_to(const PseudoJet & other) const {
-  double dphi = abs(other._phi - _phi);
+  double dphi = abs(other.phi() - phi());
   if (dphi >  pi) dphi -= twopi;
   if (dphi < -pi) dphi += twopi;
   return dphi;

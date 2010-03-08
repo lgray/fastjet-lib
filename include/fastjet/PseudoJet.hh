@@ -47,11 +47,15 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// for some partons, giving rapidity=infinity. KtJet fails in those cases.
 const double MaxRap = 1e5;
 
+/// default value for phi, meaning it (and rapidity) have yet to be calculated) 
+const double pseudojet_invalid_phi = -100.0;
+
 /// Class to contain pseudojets, including minimal information of use to
 /// to jet-clustering routines.
 class PseudoJet {
 
  public:
+  /// default constructor leaves PseudoJet unusable
   PseudoJet() {};
   /// construct a pseudojet from explicit components
   PseudoJet(const double px, const double py, const double pz, const double E);
@@ -74,17 +78,24 @@ class PseudoJet {
 
   /// returns phi in the range -pi..pi
   inline double phi_std()  const {
+    _ensure_valid_rap_phi();
     return _phi > pi ? _phi-twopi : _phi;}
 
   /// returns phi in the range 0..2pi
-  inline double phi_02pi() const {return _phi;}
+  inline double phi_02pi() const {
+    _ensure_valid_rap_phi();
+    return _phi;
+  }
 
   /// returns the rapidity or some large value when the rapidity
   /// is infinite
-  inline double rap() const {return _rap;}
+  inline double rap() const {
+    _ensure_valid_rap_phi();
+    return _rap;
+  }
 
   /// the same as rap()
-  inline double rapidity() const {return _rap;} // like CLHEP
+  inline double rapidity() const {return rap();} // like CLHEP
 
   /// returns the pseudo-rapidity or some large value when the
   /// rapidity is infinite
@@ -205,14 +216,23 @@ class PseudoJet {
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;
-  double _phi, _rap, _kt2; 
+  mutable double _phi, _rap;
+  double _kt2; 
   int    _cluster_hist_index, _user_index;
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
   /// set the indices to default values
   void _reset_indices();
 
-  //vertex_type * vertex0, vertex1;
+  /// ensure that the internal values for rapidity and phi 
+  /// correspond to 4-momentum structure
+  inline void _ensure_valid_rap_phi() const {
+    if (_phi == pseudojet_invalid_phi) _set_rap_phi();
+  }
+
+  /// set cached rapidity and phi values
+  void _set_rap_phi() const;
+
 };
 
 
