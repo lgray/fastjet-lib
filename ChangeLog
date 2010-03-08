@@ -1,3 +1,9 @@
+2010-03-08  Gregory Soyez  <soyez@cern.ch>
+
+	* include/fastjet/smart_ptr.hh (smart_ptr):
+	  added a template class to handle smart pointer (see description
+	  in the header)
+
 2010-03-08  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* m4/CGAL.m4:
