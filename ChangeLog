@@ -1,3 +1,10 @@
+2010-03-08  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* m4/CGAL.m4:
+	  force the use of C++ language for the AC_CHECK_LIB test.
+	  In that case, arguments passed through CXXFLAGS are used
+	  automatically without having to set them again in CFLAGS.
+
 2010-03-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc:
@@ -12,7 +19,6 @@
 *****************************************************
 	Start of work towards FJ 2.5
 *****************************************************
-
 
 2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 

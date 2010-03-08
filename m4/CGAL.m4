@@ -172,7 +172,9 @@ if test "$acx_cgal_found" == no; then
     if test "$cgal_have_header" == yes; then
 	CGAL_CPPFLAGS="${CGAL_CPPFLAGS} $ADDITIONAL_CGAL_FLAGS"
 	CGAL_CXXFLAGS="${CGAL_CXXFLAGS} $ADDITIONAL_CGAL_FLAGS"
+	AC_LANG_PUSH(C++)
 	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
+	AC_LANG_POP(C++)
 	if test "$cgal_have_lib" == yes; then
 	    CGAL_LIBS=${CGAL_LIBS}" -lCGAL"
 	    dnl AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="$CGAL_LIBS -lmpfr"])
