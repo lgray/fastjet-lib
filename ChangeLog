@@ -1,14 +1,18 @@
 2010-03-09  Gregory Soyez  <soyez@cern.ch>
 
 	* include/fastjet/SharedPtr.hh (SharedPtr): 
+	  Start getting closer to the boost implementation... 
+
+	* include/fastjet/SharedPtr.hh (SharedPtr): 
 	  replaced the previous smart_ptr with a new SharedPtr:
-	   - more generic implrmentation rather than sth tuned for a
+	   - more generic implementation rather than sth tuned for a
 	     specific situation
 	   - removed the owner part (to be dealt with in an intermediate
 	     class
 	   - manage the object it's pointing to (i.e. deletes it when
 	     counts==0)
 	   - used standard fastjet coding conventions
+
 
 2010-03-08  Gregory Soyez  <soyez@cern.ch>
 

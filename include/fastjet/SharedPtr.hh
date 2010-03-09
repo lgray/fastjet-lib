@@ -41,92 +41,152 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 template<class T>
 class SharedPtr{
 public:
+  /// forward declaration of the counting container
+  class __SharedCountingPtr;
+
   /// default ctor
-  SharedPtr(){
-    // initialise things so that the dtor behaves nicely
-    _counts = NULL;  // makes sure we don't decrease the count when deleted
-    _ptr    = NULL;  // makes sure () returns NULL
-  }
+  SharedPtr() : _ptr(NULL){}
   
   /// initialise with the main data
   /// \param  t  : the object we want a smart pointer to
-  SharedPtr(T* ptr){
-    _ptr = new (T*);
-    *_ptr = ptr;
+  template<class Y> explicit SharedPtr(Y* ptr){
+    _ptr = new __SharedCountingPtr(ptr);
+  }
+  
+  /// overload the copy ctor so that it updates count
+  /// \param  share : the object we want to copy
+  SharedPtr(SharedPtr const & share) : _ptr(NULL){
+    reset(share);
+  }
     
-    _counts = new unsigned int;
-    *_counts = 1;
-  }
-  
   /// overload the copy ctor so that it updates count
   /// \param  share : the object we want to copy
-  SharedPtr(const SharedPtr<T> &share){
-    copy(share);
+  template<class Y> SharedPtr(SharedPtr<Y> const & share) : _ptr(NULL){
+    reset(share);
   }
-  
-  /// overload the copy ctor so that it updates count
-  /// \param  share : the object we want to copy
-  SharedPtr(SharedPtr<T> &share){
-    copy(share);
-  }
-  
-  /// overload the = operator so that it updates count
-  /// \param  share : the object we want to copy
-  SharedPtr<T> operator=(const SharedPtr<T> &share){
-    copy(share);
-    return *this;
-  }
-  
-  /// overload the = operator so that it updates count
-  /// \param  share : the object we want to copy
-  SharedPtr<T> operator=(SharedPtr<T> &share){
-    copy(share);
-    return *this;
-  }
-  
-  /// do a smart copy
-  /// \param  share : the object we want to copy
-  void copy(const SharedPtr<T> &share){
-    _ptr = share.get_ptr();
-    _counts = share.get_counts();
-    (*_counts)++;
-  }
-  
+    
   /// default dtor
   ~SharedPtr(){
     // make sure the object has been allocated
-    if (_counts != NULL){
-      (*_counts)--;
+    if (_ptr==NULL) return;
+
+    // decrease the count
+    (*_ptr)--;
+      
+    // if no one else is using it, free the allocated memory
+    if (_ptr->use_count()==0)
+      delete _ptr; // that automatically deletes the object itself
+  }
+
+  /// do a smart copy
+  /// \param  share : the object we want to copy
+  /// Q? Do we need a non-template<Y> version as for the ctor and the assignment?
+  template<class Y> void reset(SharedPtr<Y> const & share){
+    // if we already are pointing to sth, be sure to decrease its count
+    if (_ptr!=NULL){
+      // in the specific case where we're having the same
+      // share,reset() has actually no effect. However if *this is the
+      // only instance still alive (implying share==*this) bringing
+      // the count down to 0 and deleting the object will not have the
+      // expected effect. So we just avoid that situation explicitly
+      if (_ptr == share.get()) return;
+    
+      // decrease the count
+      (*_ptr)--;
       
       // if no one else is using it, free the allocated memory
-      if ((*_counts)==0){
-	// we need to delete the object itself
-	delete *_ptr;
-	delete _ptr;
-	delete _counts;
-      }
+      if (_ptr->use_count()==0)
+    	delete _ptr; // that automatically deletes the object itself
     }
+
+    // Watch out: if share is empty, construct an empty shared_ptr
+
+    // copy the container
+    _ptr = share.get();  // Note: automatically set it to NULL if share is empty
+
+    if (_ptr!=NULL)
+      (*_ptr)++;
+  }
+  
+  /// overload the = operator so that it updates count
+  /// \param  share : the object we want to copy
+  SharedPtr& operator=(SharedPtr const & share){
+    reset(share);
+    return *this;
+  }
+  
+  /// overload the = operator so that it updates count
+  /// \param  share : the object we want to copy
+  template<class Y> SharedPtr& operator=(SharedPtr<Y> const & share){
+    reset(share);
+    return *this;
   }
   
   // return the pointer we're pointing to  
   T* operator ()() const{
-    return *_ptr; // automatically returns NULL when out-of-scope
+    if (_ptr==NULL) return NULL;
+    return _ptr->get(); // automatically returns NULL when out-of-scope
   }
   
-  // return the common T**
-  T** get_ptr() const{
-    return _ptr; // automatically returns NULL when out-of-scope
+  // return the common container
+  inline __SharedCountingPtr* get() const{
+    return _ptr;
   }
 
-  // return the common T**
-  unsigned int* get_counts() const{
-    return _counts; // automatically returns NULL when out-of-scope
+  // return the number of counts
+  inline unsigned int use_count() const{
+    if (_ptr==NULL) return 0;
+    return _ptr->use_count(); // automatically returns NULL when out-of-scope
   }
   
+  /**
+   * A reference-counting pointer
+   *
+   * This is implemented as a container for that pointer together with
+   * reference counting.
+   * The pointer is deleted when the number of counts goes to 0;
+   */
+  class __SharedCountingPtr{
+  public:
+    /// default ctor
+    __SharedCountingPtr() : _ptr(NULL), _count(10){}
+    
+    /// ctor with initialisation
+    template<class Y> explicit __SharedCountingPtr(Y* ptr) : _ptr(ptr), _count(1){}
+    
+    /// default dtor
+    ~__SharedCountingPtr(){ 
+      // force the deletion of the object we keep track of
+      if (_ptr!=NULL){ delete _ptr;}
+    }
+
+    /// return a pointer to the object
+    inline T* get() const {return _ptr;}
+
+    /// return the count
+    inline unsigned int use_count() const {return _count;}
+
+    /// postfix incrementation
+    inline unsigned int operator++(int unused){return _count++;}
+
+    /// postfix decrementation
+    inline unsigned int operator--(int unused){return _count--;}
+
+    /// prefix incrementation
+    inline unsigned int operator++(){return ++_count;}
+
+    /// prefix decrementation
+    inline unsigned int operator--(){return --_count;}
+
 private:
+  private:
+    T *_ptr;              ///< the pointer we're counting the references to
+    unsigned int _count;  ///< the number of references
+  };
+
+
   // the real info
-  T** _ptr;
-  unsigned int *_counts;
+  __SharedCountingPtr *_ptr;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
