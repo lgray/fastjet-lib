@@ -1,5 +1,5 @@
-#ifndef __SMART_PTR_HH__
-#define __SMART_PTR_HH__
+#ifndef __FASTJET_SHARED_PTR_HH__
+#define __FASTJET_SHARED_PTR_HH__
 
 //STARTHEADER
 // $Id$
@@ -36,113 +36,99 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /**
- * template class for a smart pointer with initialisation from an owner
- *
- * The smart pointer is first allocated from pointer of the same
- * type. One can then make copies of it pointing to the same parent
- * object. When the initial object goes out of scope, the internal
- * pointer is set to NULL.
- * 
- * Notes: 
- *  - the parent object remains free of its destiny, i.e. it is not
- *    deleted when the smart pointer that owns it is deleted.    
- *  - there is no transfer of ownership implemented so far. An option
- *    to do it would be to have add a pointer to a smart_ptr<T> *
- *    pointing to the owner (it is a bit redundant with the T **ptr but
- *    the latter is needed at least one in any case), transfer of
- *    ownership could then be done by setting the previous ownership's
- *    owner flag to false and switching the owner to
- *    "this". Alternatively one can have a smatr_ptr<T> ** common to
- *    all the copies and test it against 'this', which would allow to
- *    get rid of the "owner" variable.
+ * basically a reimplementation of C++0x shared pointers (or boost's)
  */
 template<class T>
-class smart_ptr{
+class SharedPtr{
 public:
   /// default ctor
-  smart_ptr(){
+  SharedPtr(){
     // initialise things so that the dtor behaves nicely
-    counts = NULL;  // makes sure we don't decrease the count when deleted
-    ptr    = NULL;  // makes sure () returns NULL
-    owner  = false; // avoids spurious delete on exit
+    _counts = NULL;  // makes sure we don't decrease the count when deleted
+    _ptr    = NULL;  // makes sure () returns NULL
   }
   
   /// initialise with the main data
   /// \param  t  : the object we want a smart pointer to
-  smart_ptr(T* t){
-    ptr = new (T*);
-    *ptr = t;
+  SharedPtr(T* ptr){
+    _ptr = new (T*);
+    *_ptr = ptr;
     
-    counts = new unsigned int;
-    *counts = 1;
-    
-    owner = true;
+    _counts = new unsigned int;
+    *_counts = 1;
   }
   
   /// overload the copy ctor so that it updates count
   /// \param  share : the object we want to copy
-  smart_ptr(const smart_ptr<T> &share){
+  SharedPtr(const SharedPtr<T> &share){
     copy(share);
   }
-
+  
   /// overload the copy ctor so that it updates count
   /// \param  share : the object we want to copy
-  smart_ptr(smart_ptr<T> &share){
+  SharedPtr(SharedPtr<T> &share){
     copy(share);
   }
-
+  
   /// overload the = operator so that it updates count
   /// \param  share : the object we want to copy
-  smart_ptr<T> operator=(const smart_ptr<T> &share){
+  SharedPtr<T> operator=(const SharedPtr<T> &share){
     copy(share);
     return *this;
   }
   
   /// overload the = operator so that it updates count
   /// \param  share : the object we want to copy
-  smart_ptr<T> operator=(smart_ptr<T> &share){
+  SharedPtr<T> operator=(SharedPtr<T> &share){
     copy(share);
     return *this;
   }
   
   /// do a smart copy
   /// \param  share : the object we want to copy
-  void copy(const smart_ptr<T> &share){
-    ptr = share.ptr;
-    counts = share.counts;
-    
-    owner = false; 
-    (*counts)++;
+  void copy(const SharedPtr<T> &share){
+    _ptr = share.get_ptr();
+    _counts = share.get_counts();
+    (*_counts)++;
   }
   
   /// default dtor
-  ~smart_ptr(){
-    // if we're destroying the owner, set the data pointer to NULL
-    if (owner)
-      *ptr = NULL;
-    
+  ~SharedPtr(){
     // make sure the object has been allocated
-    if (counts != NULL){
-      (*counts)--;
+    if (_counts != NULL){
+      (*_counts)--;
       
       // if no one else is using it, free the allocated memory
-      if ((*counts)==0){
-	delete ptr;
-	delete counts;
+      if ((*_counts)==0){
+	// we need to delete the object itself
+	delete *_ptr;
+	delete _ptr;
+	delete _counts;
       }
     }
   }
   
-  T* operator ()(){
-    return *ptr; // automatically returns NULL when out-of-scope
+  // return the pointer we're pointing to  
+  T* operator ()() const{
+    return *_ptr; // automatically returns NULL when out-of-scope
   }
   
+  // return the common T**
+  T** get_ptr() const{
+    return _ptr; // automatically returns NULL when out-of-scope
+  }
+
+  // return the common T**
+  unsigned int* get_counts() const{
+    return _counts; // automatically returns NULL when out-of-scope
+  }
+  
+private:
   // the real info
-  T** ptr;
-  unsigned int *counts;
-  bool owner;
+  T** _ptr;
+  unsigned int *_counts;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
-#endif   // __SMART_PTR_HH__
+#endif   // __FASTJET_SHARED_PTR_HH__
