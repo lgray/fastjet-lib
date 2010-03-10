@@ -162,11 +162,14 @@ public:
   }
 
   /// another way of getting the stored pointer
+  // GPS: why two ways? One is better (so we don't accidentally use
+  // something that won't be available in bost/tr1/etc.)
   inline T* get_pointer() const{
     return get();
   }
 
   /// return the common container
+  // GPS: make this private? _get_container()?
   inline __SharedCountingPtr* get_container() const{
     return _ptr;
   }
@@ -205,7 +208,7 @@ public:
   class __SharedCountingPtr{
   public:
     /// default ctor
-    __SharedCountingPtr() : _ptr(NULL), _count(10){}
+    __SharedCountingPtr() : _ptr(NULL), _count(0){}
     
     /// ctor with initialisation
     template<class Y> explicit __SharedCountingPtr(Y* ptr) : _ptr(ptr), _count(1){}
