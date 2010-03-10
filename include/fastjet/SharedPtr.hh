@@ -102,7 +102,7 @@ public:
       // only instance still alive (implying share==*this) bringing
       // the count down to 0 and deleting the object will not have the
       // expected effect. So we just avoid that situation explicitly
-      if (_ptr == share.get_container()) return;
+      if (_ptr == share._get_container()) return;
     
       _decrease_count();
     }
@@ -110,7 +110,7 @@ public:
     // Watch out: if share is empty, construct an empty shared_ptr
     
     // copy the container
-    _ptr = share.get_container();  // Note: automatically set it to NULL if share is empty
+    _ptr = share._get_container();  // Note: automatically set it to NULL if share is empty
     
     if (_ptr!=NULL)
       (*_ptr)++;
@@ -159,19 +159,6 @@ public:
   inline T* get() const{
     if (_ptr==NULL) return NULL;
     return _ptr->get();
-  }
-
-  /// another way of getting the stored pointer
-  // GPS: why two ways? One is better (so we don't accidentally use
-  // something that won't be available in bost/tr1/etc.)
-  inline T* get_pointer() const{
-    return get();
-  }
-
-  /// return the common container
-  // GPS: make this private? _get_container()?
-  inline __SharedCountingPtr* get_container() const{
-    return _ptr;
   }
 
   /// check if the instance is unique
@@ -243,7 +230,10 @@ public:
   };
 
 private:
-  //friend class SharedPtr;
+  /// return the common container
+  inline __SharedCountingPtr* _get_container() const{
+    return _ptr;
+  }
 
   /// decrease the pointer count and support deletion
   /// Warning: we don't test that the pointer is allocated

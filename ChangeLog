@@ -1,6 +1,10 @@
 2010-03-10  Gregory Soyez  <soyez@cern.ch>
 
 	* include/fastjet/SharedPtr.hh:
+          removed internal get_pointer() (use get() instead), made
+	  get_container() private (_get_container())
+
+	* include/fastjet/SharedPtr.hh:
 	  Apart from a few things like
 	   - the support for deleter/allocator
 	   - the initialisation from a weak_ptr or auto_ptr
