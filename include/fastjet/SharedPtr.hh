@@ -64,20 +64,33 @@ public:
   template<class Y> SharedPtr(SharedPtr<Y> const & share) : _ptr(NULL){
     reset(share);
   }
-    
+
   /// default dtor
   ~SharedPtr(){
     // make sure the object has been allocated
     if (_ptr==NULL) return;
 
-    // decrease the count
-    (*_ptr)--;
-      
-    // if no one else is using it, free the allocated memory
-    if (_ptr->use_count()==0)
-      delete _ptr; // that automatically deletes the object itself
+    _decrease_count();
   }
 
+  /// reset the pointer to default value (NULL)
+  void reset(){
+    // // if we already are pointing to sth, be sure to decrease its count
+    // if (_ptr!=NULL) _decrease_count();
+    // _ptr = NULL;
+    SharedPtr().swap(*this);
+  }
+  
+  /// reset from a pointer
+  template<class Y> void reset(Y * ptr){
+    // // if we already are pointing to sth, be sure to decrease its count
+    // if (_ptr!=NULL) _decrease_count();
+    // 
+    // _ptr = new __SharedCountingPtr(ptr);
+    SharedPtr(ptr).swap(*this);
+  }
+
+  // not part of the standard
   /// do a smart copy
   /// \param  share : the object we want to copy
   /// Q? Do we need a non-template<Y> version as for the ctor and the assignment?
@@ -89,21 +102,16 @@ public:
       // only instance still alive (implying share==*this) bringing
       // the count down to 0 and deleting the object will not have the
       // expected effect. So we just avoid that situation explicitly
-      if (_ptr == share.get()) return;
+      if (_ptr == share.get_container()) return;
     
-      // decrease the count
-      (*_ptr)--;
-      
-      // if no one else is using it, free the allocated memory
-      if (_ptr->use_count()==0)
-    	delete _ptr; // that automatically deletes the object itself
+      _decrease_count();
     }
-
+    
     // Watch out: if share is empty, construct an empty shared_ptr
-
+    
     // copy the container
-    _ptr = share.get();  // Note: automatically set it to NULL if share is empty
-
+    _ptr = share.get_container();  // Note: automatically set it to NULL if share is empty
+    
     if (_ptr!=NULL)
       (*_ptr)++;
   }
@@ -122,23 +130,71 @@ public:
     return *this;
   }
   
-  // return the pointer we're pointing to  
+  /// return the pointer we're pointing to  
   T* operator ()() const{
     if (_ptr==NULL) return NULL;
     return _ptr->get(); // automatically returns NULL when out-of-scope
   }
   
-  // return the common container
-  inline __SharedCountingPtr* get() const{
+  /// indirection, get a reference to the stored pointer
+  ///
+  /// !!! WATCH OUT
+  /// It fails the requirement that the stored pointer must no be NULL!!
+  /// So you need explicitly to check the validity in your code
+  inline T& operator*() const{
+    return *(_ptr->get());
+  }
+
+  /// indirection, get the stored pointer
+  ///
+  /// !!! WATCH OUT
+  /// It fails the requirement that the stored pointer must no be NULL!!
+  /// So you need explicitly to check the validity in your code
+  inline T* operator->() const{
+    if (_ptr==NULL) return NULL;
+    return _ptr->get();
+  }  
+
+  /// get the stored pointer
+  inline T* get() const{
+    if (_ptr==NULL) return NULL;
+    return _ptr->get();
+  }
+
+  /// another way of getting the stored pointer
+  inline T* get_pointer() const{
+    return get();
+  }
+
+  /// return the common container
+  inline __SharedCountingPtr* get_container() const{
     return _ptr;
   }
 
-  // return the number of counts
-  inline unsigned int use_count() const{
+  /// check if the instance is unique
+  inline bool unique() const{
+    return (use_count()==1);
+  }
+
+  /// return the number of counts
+  inline long use_count() const{
     if (_ptr==NULL) return 0;
     return _ptr->use_count(); // automatically returns NULL when out-of-scope
   }
-  
+
+  /// conversion to bool
+  /// This will allow you to use the indirection nicely
+  inline operator bool() const{
+    return (get()!=NULL);
+  }
+
+  /// exchange the content of teh two pointers
+  inline void swap(SharedPtr & share){
+    __SharedCountingPtr* share_container = share._ptr;
+    share._ptr = _ptr;
+    _ptr = share_container;
+  }
+
   /**
    * A reference-counting pointer
    *
@@ -164,30 +220,74 @@ public:
     inline T* get() const {return _ptr;}
 
     /// return the count
-    inline unsigned int use_count() const {return _count;}
+    inline long use_count() const {return _count;}
 
     /// postfix incrementation
-    inline unsigned int operator++(int unused){return _count++;}
+    inline long operator++(int unused){return _count++;}
 
     /// postfix decrementation
-    inline unsigned int operator--(int unused){return _count--;}
+    inline long operator--(int unused){return _count--;}
 
     /// prefix incrementation
-    inline unsigned int operator++(){return ++_count;}
+    inline long operator++(){return ++_count;}
 
     /// prefix decrementation
-    inline unsigned int operator--(){return --_count;}
+    inline long operator--(){return --_count;}
 
-private:
   private:
     T *_ptr;              ///< the pointer we're counting the references to
-    unsigned int _count;  ///< the number of references
+    long _count;  ///< the number of references
   };
 
+private:
+  //friend class SharedPtr;
+
+  /// decrease the pointer count and support deletion
+  /// Warning: we don't test that the pointer is allocated
+  void _decrease_count(){
+    // decrease the count
+    (*_ptr)--;
+    
+    // if no one else is using it, free the allocated memory
+    if (_ptr->use_count()==0)
+      delete _ptr; // that automatically deletes the object itself
+  }
 
   // the real info
   __SharedCountingPtr *_ptr;
 };
+
+
+/// comparison: equality
+template<class T,class U>
+inline bool operator==(SharedPtr<T> const & t, SharedPtr<U> const & u){
+  return t.get() == u.get();
+}
+
+/// comparison: difference
+template<class T,class U>
+inline bool operator!=(SharedPtr<T> const & t, SharedPtr<U> const & u){
+  return t.get() != u.get();
+}
+
+/// comparison: orgering
+template<class T,class U>
+inline bool operator<(SharedPtr<T> const & t, SharedPtr<U> const & u){
+  return t.get() < u.get();
+}
+
+/// swapping
+template<class T>
+inline void swap(SharedPtr<T> & a, SharedPtr<T> & b){
+  return a.swap(b);
+}
+
+/// getting the pointer
+template<class T>
+inline T* get_pointer(SharedPtr<T> const & t){
+  return t.get();
+}
+
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 

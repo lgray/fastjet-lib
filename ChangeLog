@@ -1,9 +1,26 @@
+2010-03-10  Gregory Soyez  <soyez@cern.ch>
+
+	* include/fastjet/SharedPtr.hh:
+	  Apart from a few things like
+	   - the support for deleter/allocator
+	   - the initialisation from a weak_ptr or auto_ptr
+	   - the {static,const,dynamic}_pointer_cast
+	  the implementation seems to match teh standard.
+
+	  Note, *_pointer_casts would require the constructor
+	    template<class Y>
+	    SharedPtr(SharedPtr<Y> & share, T * ptr);
+	  which stores T but shares the counter with 'share'
+	  This would probably require a __SharedCounter detached
+	  from __SharedCounterPtr, so we postpone it for the moment
+
+
 2010-03-09  Gregory Soyez  <soyez@cern.ch>
 
-	* include/fastjet/SharedPtr.hh (SharedPtr): 
-	  Start getting closer to the boost implementation... 
+	* include/fastjet/SharedPtr.hh (SharedPtr):
+	  Start getting closer to the boost implementation...
 
-	* include/fastjet/SharedPtr.hh (SharedPtr): 
+	* include/fastjet/SharedPtr.hh (SharedPtr):
 	  replaced the previous smart_ptr with a new SharedPtr:
 	   - more generic implementation rather than sth tuned for a
 	     specific situation
