@@ -1,3 +1,8 @@
+2010-03-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	  removed the commented (unused) GenBriefJet code.
+
 2010-03-10  Gregory Soyez  <soyez@cern.ch>
 
 	* include/fastjet/SharedPtr.hh:
