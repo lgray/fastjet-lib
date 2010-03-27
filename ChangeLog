@@ -39,6 +39,10 @@
 	     counts==0)
 	   - used standard fastjet coding conventions
 
+2010-03-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/smart_ptr.hh: 
+	  added an operator*
 
 2010-03-08  Gregory Soyez  <soyez@cern.ch>
 
