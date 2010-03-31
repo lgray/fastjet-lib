@@ -189,9 +189,10 @@ void fastjetppgenkt_(const double * p, const int & npart,
 /// constituent_indices, with nconstituents entries, with the indices
 /// of the constituents that belong to that jet (which will be in the
 /// range 1...npart)
-void fastjetconstituents_(const int ijet, 
+void fastjetconstituents_(const int & ijet, 
    	                  int * constituent_indices, int & nconstituents) {
   assert(cs.get() != 0);
+  cout << ijet << " " << jets.size() << endl;
   assert(ijet > 0 && ijet <= jets.size());
 
   vector<PseudoJet> constituents = cs->constituents(jets[ijet-1]);

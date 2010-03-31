@@ -1,5 +1,8 @@
 2010-03-31  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* example/fastjet_timing_plugins.cc (print_jets):
+	  output constituent index as well.
+
 	* fortran_wrapper/fastjetfortran_v2.cc:  *** COPIED from fastjetfortran.cc ***
 
           an attempt at version 2 of the fortran wrapper, which
@@ -7,6 +10,15 @@
 	  constituents; tested that jet results are the same as for the
 	  original version of the fortran wrapper
 	
+	* fortran_wrapper/fastjet_fortran_example.cc:
+	  adapted it to show constituents (v2 feature)
+
+	* fortran_wrapper/Makefile.alt:
+	  now uses _v2
+
+	* fortran_wrapper/Makefile.am (EXTRA_DIST):
+	  added fastjetfortran_v2.cc
+
 2010-03-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

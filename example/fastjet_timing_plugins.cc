@@ -631,8 +631,8 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence
       if (show_constituents) {
 	vector<fj::PseudoJet> const_jets = cs.constituents(jets[j]);
 	for (size_t k = 0; k < const_jets.size(); k++) {
-	  printf("        jet%03u %15.8f %15.8f %15.8f\n",j,const_jets[k].rap(),
-		 const_jets[k].phi(),sqrt(const_jets[k].kt2()));
+	  printf("        jet%03u %15.8f %15.8f %15.8f %5d\n",j,const_jets[k].rap(),
+		 const_jets[k].phi(),sqrt(const_jets[k].kt2()), const_jets[k].cluster_hist_index());
 	}
 	cout << "\n\n";
       }
