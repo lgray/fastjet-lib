@@ -18,7 +18,7 @@ C
       parameter (n = 1000)
       integer i,j
       double precision p(4,n), R, f, palg    
-      double precision jets(4,n)         
+      double precision jets(4,n), constituents
       integer npart, njets ! < n        
 c ... fill in p (NB, energy is p(4,i))
       do i=1,n

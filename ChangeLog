@@ -1,3 +1,12 @@
+2010-03-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/fastjetfortran_v2.cc:  *** COPIED from fastjetfortran.cc ***
+
+          an attempt at version 2 of the fortran wrapper, which
+	  centralises some of the housekeeping calls and adds access to
+	  constituents; tested that jet results are the same as for the
+	  original version of the fortran wrapper
+	
 2010-03-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 
