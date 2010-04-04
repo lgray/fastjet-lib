@@ -71,7 +71,8 @@ public:
 /// This class can be used with or without an extra "Information" template, 
 //// i.e. NNB<BJ> or NNH<BJ,I>
 /// 
-/// For the NNH<BJ> class to function in the case, BJ must provide three member functions
+/// For the NNH<BJ> version of the class to function, BJ must provide 
+/// three member functions
 ///  
 ///  - void   BJ::init(const PseudoJet & jet);       // initialise with a PseudoJet
 ///  - double BJ::distance(const BJ * other_bj_jet); // distance between this and other_bj_jet
