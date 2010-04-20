@@ -202,7 +202,7 @@ public:
     return (get()!=NULL);
   }
 
-  /// exchange the content of teh two pointers
+  /// exchange the content of the two pointers
   inline void swap(SharedPtr & share){
     __SharedCountingPtr* share_container = share._ptr;
     share._ptr = _ptr;
