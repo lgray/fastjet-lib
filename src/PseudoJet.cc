@@ -361,7 +361,7 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 // ClusterSequence
 bool PseudoJet::has_partner(PseudoJet &partner) const{
   if (! has_associated_cluster_sequence()){
-    partner=PseudoJet();
+    partner=PseudoJet(0.0,0.0,0.0,0.0);
     return false;
   }
 
@@ -377,7 +377,7 @@ bool PseudoJet::has_partner(PseudoJet &partner) const{
 // ClusterSequence, with the child set to 0
 bool PseudoJet::has_child(PseudoJet &child) const{
   if (! has_associated_cluster_sequence()){
-    child = PseudoJet();
+    child = PseudoJet(0.0,0.0,0.0,0.0);
     return false;
   }
 
@@ -392,8 +392,11 @@ bool PseudoJet::has_child(PseudoJet &child) const{
 // false is also returned if this PseudoJet has no parent
 // ClusterSequence
 bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
-  if (! has_associated_cluster_sequence()) return false;
-
+  if (! has_associated_cluster_sequence()){
+    parent1 = PseudoJet(0.0,0.0,0.0,0.0);
+    parent2 = PseudoJet(0.0,0.0,0.0,0.0);
+    return false;
+  }
   return _associated_csw->cs()->has_parents(*this, parent1, parent2);
 }
 
@@ -472,7 +475,7 @@ double PseudoJet::area_error() const{
 // return the jet 4-vector area
 // 0 is returned if there is no support for area in the associated CS
 PseudoJet PseudoJet::area_4vector() const{
-  if (! has_associated_cluster_sequence()) return PseudoJet();
+  if (! has_associated_cluster_sequence()) return PseudoJet(0.0,0.0,0.0,0.0);
   const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
   if (csab==NULL) return PseudoJet();
 

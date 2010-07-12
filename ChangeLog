@@ -1,5 +1,9 @@
 2010-07-12  Gregory Soyez  <soyez@cern.ch>
 
+	* src/PseudoJet.cc:
+	  used a ctor with initialisation for returning 0 PJs when the CSW
+	  is not available.
+
 	* include/fastjet/PseudoJet.hh, src/PseudoJet.cc:
 	  added support to acces the area properties.
 
