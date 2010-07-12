@@ -1,3 +1,13 @@
+2010-07-12  Gregory Soyez  <soyez@cern.ch>
+
+	* src/ClusterSequence.cc (ClusterSequence):
+	  bug fixed: made sure that _wrapper_to_this "exists" before
+	  setting its internal CS pointer to NULL
+
+	* src/PseudoJet.cc (has_parent_cluster_sequence):
+	  simplified the test
+
+
 2010-07-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* ISSUES: *** ADDED ***

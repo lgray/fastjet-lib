@@ -54,7 +54,7 @@ JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
 ClusterSequence::~ClusterSequence () {
   // set the pointer in the wrapper to this object to NULL to say that
   // we're going out of scope
-  _wrapper_to_this->_cs = NULL;
+  if (_wrapper_to_this()) _wrapper_to_this->_cs = NULL;
 
 }
 

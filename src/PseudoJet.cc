@@ -32,6 +32,7 @@
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
+//#include "fastjet/ClusterSequenceAreaBase.hh"
 #include<valarray>
 #include<iostream>
 #include<sstream>
@@ -339,7 +340,7 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
 bool PseudoJet::has_parent_cluster_sequence() const{
-  return (_parent_cs()) && (_parent_cs.get()!=NULL) && (_parent_cs->is_alive());
+  return (_parent_cs()) && (_parent_cs->is_alive());
 }
 
 //----------------------------------------------------------------------
@@ -430,6 +431,57 @@ vector<PseudoJet> PseudoJet::constituents() const{
 
   return _parent_cs->cs()->constituents(*this);
 }
+
+
+// //----------------------------------------------------------------------
+// // the following ones require a computation of the area in the
+// // parent ClusterSequence (See ClusterSequenceAreaBase for details)
+// 
+// 
+// //------------------------------------------------------------------
+// // return the jet (scalar) area
+// // 0 is returned if there is no support for area in the parent CS
+// double PseudoJet::area() const{
+//   if (! has_parent_cluster_sequence()) return 0.0;
+//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
+//   if (csab==NULL) return 0.0;
+// 
+//   return csab->area(*this);
+// }
+// 
+// //----------------------------------------------------------------------
+// // return the error (uncertainty) associated with the determination
+// // of the area of this jet
+// // 0 is returned if there is no support for area in the parent CS
+// double PseudoJet::area_error() const{
+//   if (! has_parent_cluster_sequence()) return 0.0;
+//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
+//   if (csab==NULL) return 0.0;
+// 
+//   return csab->area_error(*this);
+// }
+// 
+// //----------------------------------------------------------------------
+// // return the jet 4-vector area
+// // 0 is returned if there is no support for area in the parent CS
+// PseudoJet PseudoJet::area_4vector() const{
+//   if (! has_parent_cluster_sequence()) return PseudoJet();
+//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
+//   if (csab==NULL) return PseudoJet();
+// 
+//   return csab->area_4vector(*this);
+// }
+// 
+// //----------------------------------------------------------------------
+// // true if this jet is made exclusively of ghosts
+// // false is returned if there is no support for area in the parent CS
+// bool PseudoJet::is_pure_ghost() const{
+//   if (! has_parent_cluster_sequence()) return false;
+//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
+//   if (csab==NULL) return false;
+// 
+//   return csab->is_pure_ghost(*this);
+// }
 
 
 //----------------------------------------------------------------------
