@@ -347,7 +347,7 @@ void ClusterSequence::_tiled_N2_cluster() {
       // the larger of them == newtail then that ends up being jetA and 
       // the new jet that is added as jetB is inserted in a position that
       // has a future!
-      if (jetA < jetB) {swap(jetA,jetB);}
+      if (jetA < jetB) {std::swap(jetA,jetB);}
 
       int nn; // new jet index
       _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);
@@ -602,7 +602,7 @@ void ClusterSequence::_faster_tiled_N2_cluster() {
       // the larger of them == newtail then that ends up being jetA and 
       // the new jet that is added as jetB is inserted in a position that
       // has a future!
-      if (jetA < jetB) {swap(jetA,jetB);}
+      if (jetA < jetB) {std::swap(jetA,jetB);}
 
       int nn; // new jet index
       _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);
@@ -817,7 +817,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
       // the larger of them == newtail then that ends up being jetA and 
       // the new jet that is added as jetB is inserted in a position that
       // has a future!
-      if (jetA < jetB) {swap(jetA,jetB);}
+      if (jetA < jetB) {std::swap(jetA,jetB);}
 
       int nn; // new jet index
       _do_ij_recombination_step(jetA->_jets_index, jetB->_jets_index, diJ_min, nn);

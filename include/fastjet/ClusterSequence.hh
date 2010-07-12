@@ -58,8 +58,31 @@
 #include<cmath> // needed to get double std::abs(double)
 #include "fastjet/Error.hh"
 #include "fastjet/JetDefinition.hh"
+#include "fastjet/SharedPtr.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+// forward declaration
+//class ClusterSequence;
+
+/// \class ClusterSequenceWrapper
+///
+/// A wrapper class that hold a pointer to a ClusterSequence object
+/// It has ClusterSequence as a friend class so that only
+/// ClusterSequence can change its availability status
+class ClusterSequenceWrapper{
+public:
+  ClusterSequenceWrapper() : _cs(NULL){};
+  ClusterSequenceWrapper(ClusterSequence *cs) : _cs(cs){};
+
+  ClusterSequence *cs(){ return _cs;}
+  bool is_alive(){ return (_cs != NULL);}
+
+  friend class ClusterSequence;
+
+private:
+  ClusterSequence *_cs;
+};
 
 
 /// deals with clustering
@@ -525,6 +548,7 @@ protected:
   Strategy    _strategy;
   JetAlgorithm  _jet_algorithm;
 
+  SharedPtr<ClusterSequenceWrapper> _wrapper_to_this;
 
  private:
 
@@ -548,6 +572,9 @@ protected:
   void _CP2DChan_cluster_2piMultD ();
   void _CP2DChan_limited_cluster(double D);
   void _do_Cambridge_inclusive_jets();
+
+  // NSqrtN method for C/A
+  void _fast_NsqrtN_cluster();
 
   void _add_step_to_history(const int & step_number, const int & parent1, 
 			       const int & parent2, const int & jetp_index,

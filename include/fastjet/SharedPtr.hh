@@ -32,6 +32,7 @@
 //ENDHEADER
 
 #include "fastjet/internal/base.hh"
+#include <cstdlib>  // for NULL!!!
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

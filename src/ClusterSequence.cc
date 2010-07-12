@@ -51,7 +51,12 @@ JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
 
 
 // destructor that does nothing
-ClusterSequence::~ClusterSequence () {}
+ClusterSequence::~ClusterSequence () {
+  // set the pointer in the wrapper to this object to NULL to say that
+  // we're going out of scope
+  _wrapper_to_this->_cs = NULL;
+
+}
 
 //----------------------------------------------------------------------
 void ClusterSequence::_initialise_and_run (
@@ -241,7 +246,9 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def,
 
   // disallow interference from the plugin
   _plugin_activated = false;
-  
+
+  // initialised the wrapper to the current CS
+  _wrapper_to_this.reset(new ClusterSequenceWrapper(this));
 }
 
 
@@ -273,6 +280,7 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
+    _jets[i]._parent_cs.reset(_wrapper_to_this);
 
     // determine the total energy in the event
     _Qtot += _jets[i].E();
@@ -736,7 +744,7 @@ bool ClusterSequence::has_parents(const PseudoJet & jet, PseudoJet & parent1,
     parent1 = _jets[_history[hist.parent1].jetp_index];
     parent2 = _jets[_history[hist.parent2].jetp_index];
     // order the parents in decreasing pt
-    if (parent1.perp2() < parent2.perp2()) swap(parent1,parent2);
+    if (parent1.perp2() < parent2.perp2()) std::swap(parent1,parent2);
     return true;
   }
 }
@@ -961,6 +969,7 @@ void ClusterSequence::_add_step_to_history (
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
     _jets[jetp_index].set_cluster_hist_index(local_step);
+    _jets[jetp_index]._parent_cs.reset(_wrapper_to_this);
   }
 
   if (_writeout_combinations) {
@@ -1060,7 +1069,7 @@ void ClusterSequence::_extract_tree_parents(
     // one containing the smaller "lowest_constituent"
     if (parent1 >= 0 && parent2 >= 0) {
       if (lowest_constituent[parent1] > lowest_constituent[parent2]) 
-	swap(parent1, parent2);
+	std::swap(parent1, parent2);
     }
     // then actually run through the parents to extract the constituents...
     if (parent1 >= 0 && !extracted[parent1]) 

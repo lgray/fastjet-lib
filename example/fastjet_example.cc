@@ -117,7 +117,8 @@ void print_jets (const fastjet::ClusterSequence & clust_seq,
   
   // print out the details for each jet
   for (unsigned int i = 0; i < sorted_jets.size(); i++) {
-    int n_constituents = clust_seq.constituents(sorted_jets[i]).size();
+    //int n_constituents = clust_seq.constituents(sorted_jets[i]).size();
+    int n_constituents = sorted_jets[i].constituents().size();
     printf("%5u %15.8f %15.8f %15.8f %8u\n",
 	   i, sorted_jets[i].rap(), sorted_jets[i].phi(),
 	   sorted_jets[i].perp(), n_constituents);

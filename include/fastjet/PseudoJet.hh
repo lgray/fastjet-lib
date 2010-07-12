@@ -38,10 +38,15 @@
 #include<cmath>
 #include<iostream>
 #include "fastjet/internal/numconsts.hh"
+#include "fastjet/SharedPtr.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //using namespace std;
+
+// forward declaration of the ClusterSequenceWrapper
+class ClusterSequenceWrapper;
+class ClusterSequence;
 
 /// Used to protect against parton-level events where pt can be zero
 /// for some partons, giving rapidity=infinity. KtJet fails in those cases.
@@ -213,12 +218,69 @@ class PseudoJet {
           some_four_vector[2], some_four_vector[3]);
   }
 
+  //-------------------------------------------------
+  // methods that depend on a parent ClusterSequence
+  //-------------------------------------------------
+
+  /// check whether this PseudoJet has an associated parent
+  /// ClusterSequence
+  bool has_parent_cluster_sequence() const;
+
+  /// get a (const) pointer to the parent ClusterSequence (NULL if not
+  /// existent)
+  const ClusterSequence* parent_cluster_sequence() const;
+
+  /// check if it has been recombined with another PseudoJet in which
+  /// case, return its partner through the argument. Otherwise,
+  /// 'partner' is set to 0.
+  ///
+  /// false is also returned if this PseudoJet has no parent
+  /// ClusterSequence
+  bool has_partner(PseudoJet &partner) const;
+
+  /// check if it has been recombined with another PseudoJet in which
+  /// case, return its child through the argument. Otherwise, 'child'
+  /// is set to 0.
+  /// 
+  /// false is also returned if this PseudoJet has no parent
+  /// ClusterSequence, with the child set to 0
+  bool has_child(PseudoJet &child) const;
+
+  /// check if it is the product of a recombination, in which case
+  /// return the 2 parents through the 'parent1' and 'parent2'
+  /// arguments. Otherwise, set these to 0.
+  ///
+  /// false is also returned if this PseudoJet has no parent
+  /// ClusterSequence
+  bool has_parents(PseudoJet &parent1, PseudoJet &parent2) const;
+
+  /// check if the current PseudoJet contains the one passed as
+  /// argument.
+  ///
+  /// false is also returned if this PseudoJet has no parent
+  /// ClusterSequence.
+  bool contains(const PseudoJet &constituent) const;
+
+  /// check if the current PseudoJet is contained the one passed as
+  /// argument.
+  ///
+  /// false is also returned if this PseudoJet has no parent
+  /// ClusterSequence
+  bool is_inside(const PseudoJet &jet) const;
+
+  /// retrieve the constituents. An empty set is returned of there is
+  /// no parent ClusterSequence
+  std::vector<PseudoJet> constituents() const;
+
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;
   mutable double _phi, _rap;
   double _kt2; 
   int    _cluster_hist_index, _user_index;
+
+  SharedPtr<ClusterSequenceWrapper> _parent_cs;
+
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
   /// set the indices to default values
@@ -233,6 +295,7 @@ class PseudoJet {
   /// set cached rapidity and phi values
   void _set_rap_phi() const;
 
+  friend class ClusterSequence;
 };
 
 

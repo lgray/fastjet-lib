@@ -31,6 +31,7 @@
 
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 #include<valarray>
 #include<iostream>
 #include<sstream>
@@ -325,6 +326,119 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
   if (dphi < -pi) dphi += twopi;
   return dphi;
 }
+
+
+//----------------------------------------------------------------------
+//
+// The following methods access the parent cluster sequence (if any)
+//
+//----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+// check whether this PseudoJet has an associated parent
+// ClusterSequence
+bool PseudoJet::has_parent_cluster_sequence() const{
+  return (_parent_cs()) && (_parent_cs.get()!=NULL) && (_parent_cs->is_alive());
+}
+
+//----------------------------------------------------------------------
+// get a (const) pointer to the parent ClusterSequence (NULL if not
+// existent)
+const ClusterSequence* PseudoJet::parent_cluster_sequence() const{
+  if (! has_parent_cluster_sequence()) return NULL;
+
+  return _parent_cs->cs();
+}
+
+//----------------------------------------------------------------------
+// check if it has been recombined with another PseudoJet in which
+// case, return its partner through the argument. Otherwise,
+// 'partner' is set to 0.
+//
+// false is also returned if this PseudoJet has no parent
+// ClusterSequence
+bool PseudoJet::has_partner(PseudoJet &partner) const{
+  if (! has_parent_cluster_sequence()){
+    partner=PseudoJet();
+    return false;
+  }
+
+  return _parent_cs->cs()->has_partner(*this, partner);
+}
+
+//----------------------------------------------------------------------
+// check if it has been recombined with another PseudoJet in which
+// case, return its child through the argument. Otherwise, 'child'
+// is set to 0.
+// 
+// false is also returned if this PseudoJet has no parent
+// ClusterSequence, with the child set to 0
+bool PseudoJet::has_child(PseudoJet &child) const{
+  if (! has_parent_cluster_sequence()){
+    child = PseudoJet();
+    return false;
+  }
+
+  return _parent_cs->cs()->has_child(*this, child);
+}
+
+//----------------------------------------------------------------------
+// check if it is the product of a recombination, in which case
+// return the 2 parents through the 'parent1' and 'parent2'
+// arguments. Otherwise, set these to 0.
+//
+// false is also returned if this PseudoJet has no parent
+// ClusterSequence
+bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
+  if (! has_parent_cluster_sequence()) return false;
+
+  return _parent_cs->cs()->has_parents(*this, parent1, parent2);
+}
+
+//----------------------------------------------------------------------
+// check if the current PseudoJet contains the one passed as
+// argument
+//
+// false is also returned if this PseudoJet has no parent
+// ClusterSequence.
+bool PseudoJet::contains(const PseudoJet &constituent) const{
+  if (! has_parent_cluster_sequence()) return false;
+
+  return _parent_cs->cs()->object_in_jet(constituent, *this);
+}
+
+//----------------------------------------------------------------------
+// check if the current PseudoJet is contained the one passed as
+// argument
+//
+// false is also returned if this PseudoJet has no parent
+// ClusterSequence
+bool PseudoJet::is_inside(const PseudoJet &jet) const{
+  if (! has_parent_cluster_sequence()) return false;
+
+  return _parent_cs->cs()->object_in_jet(*this, jet);
+}
+
+
+//----------------------------------------------------------------------
+// retrieve the constituents. An empty set is returned of there is
+// no parent ClusterSequence
+vector<PseudoJet> PseudoJet::constituents() const{
+  // I think that the second check can be skipped
+  if (! has_parent_cluster_sequence()) return vector<PseudoJet>();
+
+  return _parent_cs->cs()->constituents(*this);
+}
+
+
+//----------------------------------------------------------------------
+//
+// end of the methods accessing the parent Cluster Sequence
+//
+//----------------------------------------------------------------------
+
+
 
 //----------------------------------------------------------------------
 // sort the indices so that values[indices[0..n-1]] is sorted

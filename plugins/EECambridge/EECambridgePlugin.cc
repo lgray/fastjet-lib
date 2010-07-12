@@ -96,7 +96,7 @@ void EECambridgePlugin::run_clustering(ClusterSequence & cs) const {
       dij = 2 * vij * scale * scale;
       if (dij > Q2 * ycut()) {
 	// we'll call the softer partner a "beam" jet
-	if (cs.jets()[i].E() > cs.jets()[j].E()) swap(i,j);
+	if (cs.jets()[i].E() > cs.jets()[j].E()) std::swap(i,j);
 	j = -1;
       }
     } else {

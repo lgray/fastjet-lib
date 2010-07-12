@@ -264,7 +264,7 @@ template<class BJ, class I> void NNH<BJ,I>::merge_jets(int iA, int iB,
   // the larger of them == newtail then that ends up being jetA and 
   // the new jet that is added as jetB is inserted in a position that
   // has a future!
-  if (jetA < jetB) swap(jetA,jetB);
+  if (jetA < jetB) std::swap(jetA,jetB);
 
   // initialise jetB based on the new jet
   //jetB->init(jet, index);
