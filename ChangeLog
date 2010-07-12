@@ -1,5 +1,23 @@
 2010-07-12  Gregory Soyez  <soyez@cern.ch>
 
+	* include/fastjet/PseudoJet.hh, src/PseudoJet.cc:
+	  added support to acces the area properties.
+
+	* src/ClusterSequence.cc, include/fastjet/ClusterSequence.hh:
+	  added a 'transfer_ownership' flag to CS::transfer_from_sequence
+	  (true by default.) That way, the CS associated to the jets of
+	  the CS is the new one.
+
+	* src/PseudoJet.cc, include/fastjet/PseudoJet.hh,
+	  src/ClusterSequence.hh:
+	  . replaced _parent_cs by _associated_csw and likewise changes in
+	    the varisou methods.
+	  . added a PseudoJet::set_associated_csw. That allows to remove
+	    the friendship to CS in PJ.
+	  . moved CSWrapper to PseudoJet (avoids incomplete type warnings)
+
+2010-07-12  Gregory Soyez  <soyez@cern.ch>
+
 	* src/ClusterSequence.cc (ClusterSequence):
 	  bug fixed: made sure that _wrapper_to_this "exists" before
 	  setting its internal CS pointer to NULL

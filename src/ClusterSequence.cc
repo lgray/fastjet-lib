@@ -232,7 +232,6 @@ void ClusterSequence::_print_banner() {
 // transfer all relevant info into internal variables
 void ClusterSequence::_decant_options(const JetDefinition & jet_def,
                                       const bool & writeout_combinations) {
-
   // let the user know what's going on
   _print_banner();
 
@@ -280,7 +279,7 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
-    _jets[i]._parent_cs = _wrapper_to_this;
+    _jets[i].set_associated_csw(_wrapper_to_this);
 
     // determine the total energy in the event
     _Qtot += _jets[i].E();
@@ -352,7 +351,7 @@ double ClusterSequence::jet_scale_for_algorithm(
 /// transfer the sequence contained in other_seq into our own;
 /// any plugin "extras" contained in the from_seq will be lost
 /// from there.
-void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
+void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq, bool transfer_ownership) {
 
   // the metadata
   _jet_def                 = from_seq._jet_def                ;
@@ -371,6 +370,14 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
   // the following transferse ownership of the extras from the from_seq
   _extras   = from_seq._extras;
 
+  // transfer of ownership
+  if (transfer_ownership){
+    // make sure we have an initialised wrapper. If not, initialise it
+    if (! _wrapper_to_this()) _wrapper_to_this.reset(new ClusterSequenceWrapper(this));
+  
+    for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
+      jit->set_associated_csw(_wrapper_to_this);
+  }
 }
 
 //----------------------------------------------------------------------
@@ -969,7 +976,7 @@ void ClusterSequence::_add_step_to_history (
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
     _jets[jetp_index].set_cluster_hist_index(local_step);
-    _jets[jetp_index]._parent_cs = _wrapper_to_this;
+    _jets[jetp_index].set_associated_csw(_wrapper_to_this);
   }
 
   if (_writeout_combinations) {

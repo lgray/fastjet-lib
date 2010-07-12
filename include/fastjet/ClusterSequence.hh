@@ -65,27 +65,6 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // forward declaration
 //class ClusterSequence;
 
-/// \class ClusterSequenceWrapper
-///
-/// A wrapper class that hold a pointer to a ClusterSequence object
-/// It has ClusterSequence as a friend class so that only
-/// ClusterSequence can change its availability status
-class ClusterSequenceWrapper{
-public:
-  ClusterSequenceWrapper() : _cs(NULL){};
-  ClusterSequenceWrapper(ClusterSequence *cs) : _cs(cs){};
-
-  const ClusterSequence * cs() const { return _cs;}
-  ClusterSequence * non_const_cs() const { return _cs;}
-  bool is_alive() const { return (_cs != NULL);}
-
-  friend class ClusterSequence;
-
-private:
-  ClusterSequence * _cs;
-};
-
-
 /// deals with clustering
 class ClusterSequence {
 
@@ -467,7 +446,11 @@ public:
   /// transfer the sequence contained in other_seq into our own;
   /// any plugin "extras" contained in the from_seq will be lost
   /// from there.
-  void transfer_from_sequence(ClusterSequence & from_seq);
+  ///
+  /// The ownership transfer also sets the pointers ClusterSequence
+  /// pointers of the PseudoJets in the history to point to this
+  /// ClusterSequence (true by default)
+  void transfer_from_sequence(ClusterSequence & from_seq, bool transfer_ownership=true);
 
 
 protected:

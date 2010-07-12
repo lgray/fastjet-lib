@@ -160,6 +160,9 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
     double area     = clust_seq.area(jets[j]);
     double area_error = clust_seq.area_error(jets[j]);
 
+    //double area       = jets[j].area();
+    //double area_error = jets[j].area_error();
+
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f\n",j,jets[j].rap(),
 	   jets[j].phi(),jets[j].perp(), area, area_error);
   }

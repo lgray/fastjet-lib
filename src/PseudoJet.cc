@@ -32,7 +32,7 @@
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
-//#include "fastjet/ClusterSequenceAreaBase.hh"
+#include "fastjet/ClusterSequenceAreaBase.hh"
 #include<valarray>
 #include<iostream>
 #include<sstream>
@@ -331,7 +331,7 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 
 //----------------------------------------------------------------------
 //
-// The following methods access the parent cluster sequence (if any)
+// The following methods access the associated cluster sequence (if any)
 //
 //----------------------------------------------------------------------
 
@@ -339,17 +339,17 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 //----------------------------------------------------------------------
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
-bool PseudoJet::has_parent_cluster_sequence() const{
-  return (_parent_cs()) && (_parent_cs->is_alive());
+bool PseudoJet::has_associated_cluster_sequence() const{
+  return (_associated_csw()) && (_associated_csw->is_alive());
 }
 
 //----------------------------------------------------------------------
-// get a (const) pointer to the parent ClusterSequence (NULL if not
-// existent)
-const ClusterSequence* PseudoJet::parent_cluster_sequence() const{
-  if (! has_parent_cluster_sequence()) return NULL;
+// get a (const) pointer to the associated ClusterSequence (NULL if
+// inexistent)
+const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
+  if (! has_associated_cluster_sequence()) return NULL;
 
-  return _parent_cs->cs();
+  return _associated_csw->cs();
 }
 
 //----------------------------------------------------------------------
@@ -357,15 +357,15 @@ const ClusterSequence* PseudoJet::parent_cluster_sequence() const{
 // case, return its partner through the argument. Otherwise,
 // 'partner' is set to 0.
 //
-// false is also returned if this PseudoJet has no parent
+// false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::has_partner(PseudoJet &partner) const{
-  if (! has_parent_cluster_sequence()){
+  if (! has_associated_cluster_sequence()){
     partner=PseudoJet();
     return false;
   }
 
-  return _parent_cs->cs()->has_partner(*this, partner);
+  return _associated_csw->cs()->has_partner(*this, partner);
 }
 
 //----------------------------------------------------------------------
@@ -373,15 +373,15 @@ bool PseudoJet::has_partner(PseudoJet &partner) const{
 // case, return its child through the argument. Otherwise, 'child'
 // is set to 0.
 // 
-// false is also returned if this PseudoJet has no parent
+// false is also returned if this PseudoJet has no associated
 // ClusterSequence, with the child set to 0
 bool PseudoJet::has_child(PseudoJet &child) const{
-  if (! has_parent_cluster_sequence()){
+  if (! has_associated_cluster_sequence()){
     child = PseudoJet();
     return false;
   }
 
-  return _parent_cs->cs()->has_child(*this, child);
+  return _associated_csw->cs()->has_child(*this, child);
 }
 
 //----------------------------------------------------------------------
@@ -392,101 +392,108 @@ bool PseudoJet::has_child(PseudoJet &child) const{
 // false is also returned if this PseudoJet has no parent
 // ClusterSequence
 bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
-  if (! has_parent_cluster_sequence()) return false;
+  if (! has_associated_cluster_sequence()) return false;
 
-  return _parent_cs->cs()->has_parents(*this, parent1, parent2);
+  return _associated_csw->cs()->has_parents(*this, parent1, parent2);
 }
 
 //----------------------------------------------------------------------
 // check if the current PseudoJet contains the one passed as
 // argument
 //
-// false is also returned if this PseudoJet has no parent
+// false is also returned if this PseudoJet has no associated
 // ClusterSequence.
 bool PseudoJet::contains(const PseudoJet &constituent) const{
-  if (! has_parent_cluster_sequence()) return false;
+  if (! has_associated_cluster_sequence()) return false;
 
-  return _parent_cs->cs()->object_in_jet(constituent, *this);
+  return _associated_csw->cs()->object_in_jet(constituent, *this);
 }
 
 //----------------------------------------------------------------------
 // check if the current PseudoJet is contained the one passed as
 // argument
 //
-// false is also returned if this PseudoJet has no parent
+// false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::is_inside(const PseudoJet &jet) const{
-  if (! has_parent_cluster_sequence()) return false;
+  if (! has_associated_cluster_sequence()) return false;
 
-  return _parent_cs->cs()->object_in_jet(*this, jet);
+  return _associated_csw->cs()->object_in_jet(*this, jet);
 }
 
 
 //----------------------------------------------------------------------
-// retrieve the constituents. An empty set is returned of there is
-// no parent ClusterSequence
+// retrieve the constituents. An empty set is returned if there is
+// no associated ClusterSequence
 vector<PseudoJet> PseudoJet::constituents() const{
   // I think that the second check can be skipped
-  if (! has_parent_cluster_sequence()) return vector<PseudoJet>();
+  if (! has_associated_cluster_sequence()) return vector<PseudoJet>();
 
-  return _parent_cs->cs()->constituents(*this);
+  return _associated_csw->cs()->constituents(*this);
 }
 
 
-// //----------------------------------------------------------------------
-// // the following ones require a computation of the area in the
-// // parent ClusterSequence (See ClusterSequenceAreaBase for details)
-// 
-// 
-// //------------------------------------------------------------------
-// // return the jet (scalar) area
-// // 0 is returned if there is no support for area in the parent CS
-// double PseudoJet::area() const{
-//   if (! has_parent_cluster_sequence()) return 0.0;
-//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
-//   if (csab==NULL) return 0.0;
-// 
-//   return csab->area(*this);
-// }
-// 
-// //----------------------------------------------------------------------
-// // return the error (uncertainty) associated with the determination
-// // of the area of this jet
-// // 0 is returned if there is no support for area in the parent CS
-// double PseudoJet::area_error() const{
-//   if (! has_parent_cluster_sequence()) return 0.0;
-//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
-//   if (csab==NULL) return 0.0;
-// 
-//   return csab->area_error(*this);
-// }
-// 
-// //----------------------------------------------------------------------
-// // return the jet 4-vector area
-// // 0 is returned if there is no support for area in the parent CS
-// PseudoJet PseudoJet::area_4vector() const{
-//   if (! has_parent_cluster_sequence()) return PseudoJet();
-//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
-//   if (csab==NULL) return PseudoJet();
-// 
-//   return csab->area_4vector(*this);
-// }
-// 
-// //----------------------------------------------------------------------
-// // true if this jet is made exclusively of ghosts
-// // false is returned if there is no support for area in the parent CS
-// bool PseudoJet::is_pure_ghost() const{
-//   if (! has_parent_cluster_sequence()) return false;
-//   ClusterSequenceAreaBase *csab = dynamic_cast<ClusterSequenceAreaBase*>(_parent_cs->cs());
-//   if (csab==NULL) return false;
-// 
-//   return csab->is_pure_ghost(*this);
-// }
+//----------------------------------------------------------------------
+// the following ones require a computation of the area in the
+// associated ClusterSequence (See ClusterSequenceAreaBase for details)
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+// check if it has a defined area
+bool PseudoJet::has_area() const{
+  if (! has_associated_cluster_sequence()) return false;
+  return (dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs()) != NULL);
+}
+
+//----------------------------------------------------------------------
+// return the jet (scalar) area
+// 0 is returned if there is no support for area in the associated CS
+double PseudoJet::area() const{
+  if (! has_associated_cluster_sequence()) return 0.0;
+  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
+  if (csab==NULL) return 0.0;
+
+  return csab->area(*this);
+}
+
+//----------------------------------------------------------------------
+// return the error (uncertainty) associated with the determination
+// of the area of this jet
+// 0 is returned if there is no support for area in the associated CS
+double PseudoJet::area_error() const{
+  if (! has_associated_cluster_sequence()) return 0.0;
+  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
+  if (csab==NULL) return 0.0;
+
+  return csab->area_error(*this);
+}
+
+//----------------------------------------------------------------------
+// return the jet 4-vector area
+// 0 is returned if there is no support for area in the associated CS
+PseudoJet PseudoJet::area_4vector() const{
+  if (! has_associated_cluster_sequence()) return PseudoJet();
+  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
+  if (csab==NULL) return PseudoJet();
+
+  return csab->area_4vector(*this);
+}
+
+//----------------------------------------------------------------------
+// true if this jet is made exclusively of ghosts
+// false is returned if there is no support for area in the associated CS
+bool PseudoJet::is_pure_ghost() const{
+  if (! has_associated_cluster_sequence()) return false;
+  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
+  if (csab==NULL) return false;
+
+  return csab->is_pure_ghost(*this);
+}
 
 
 //----------------------------------------------------------------------
 //
-// end of the methods accessing the parent Cluster Sequence
+// end of the methods accessing the associated Cluster Sequence
 //
 //----------------------------------------------------------------------
 

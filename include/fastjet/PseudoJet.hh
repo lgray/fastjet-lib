@@ -44,9 +44,29 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //using namespace std;
 
-// forward declaration of the ClusterSequenceWrapper
-class ClusterSequenceWrapper;
 class ClusterSequence;
+
+// forward declaration of the ClusterSequenceWrapper
+/// \class ClusterSequenceWrapper
+///
+/// A wrapper class that hold a pointer to a ClusterSequence object
+/// It has ClusterSequence as a friend class so that only
+/// ClusterSequence can change its availability status
+class ClusterSequenceWrapper{
+public:
+  ClusterSequenceWrapper() : _cs(NULL){};
+  ClusterSequenceWrapper(ClusterSequence *cs) : _cs(cs){};
+
+  const ClusterSequence * cs() const { return _cs;}
+  ClusterSequence * non_const_cs() const { return _cs;}
+  bool is_alive() const { return (_cs != NULL);}
+
+  friend class ClusterSequence;
+
+private:
+  ClusterSequence * _cs;
+};
+
 
 /// Used to protect against parton-level events where pt can be zero
 /// for some partons, giving rapidity=infinity. KtJet fails in those cases.
@@ -222,13 +242,18 @@ class PseudoJet {
   // methods that depend on a parent ClusterSequence
   //-------------------------------------------------
 
+  /// set the associated csw
+  void set_associated_csw(SharedPtr<ClusterSequenceWrapper> &csw){
+    _associated_csw = csw;
+  }
+
   /// check whether this PseudoJet has an associated parent
   /// ClusterSequence
-  bool has_parent_cluster_sequence() const;
+  bool has_associated_cluster_sequence() const;
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
-  const ClusterSequence* parent_cluster_sequence() const;
+  const ClusterSequence* associated_cluster_sequence() const;
 
   /// check if it has been recombined with another PseudoJet in which
   /// case, return its partner through the argument. Otherwise,
@@ -272,6 +297,32 @@ class PseudoJet {
   /// no parent ClusterSequence
   std::vector<PseudoJet> constituents() const;
 
+
+  // the following ones require a computation of the area in the
+  // parent ClusterSequence (See ClusterSequenceAreaBase for details)
+  //------------------------------------------------------------------
+
+  /// check if it has a defined area
+  bool has_area() const;
+
+  /// return the jet (scalar) area
+  /// 0 is returned if there is no support for area in the parent CS
+  double area() const;
+
+  /// return the error (uncertainty) associated with the determination
+  /// of the area of this jet
+  /// 0 is returned if there is no support for area in the parent CS
+  double area_error() const;
+
+  /// return the jet 4-vector area
+  /// 0 is returned if there is no support for area in the parent CS
+  PseudoJet area_4vector() const;
+
+  /// true if this jet is made exclusively of ghosts
+  /// false is returned if there is no support for area in the parent CS
+  bool is_pure_ghost() const;
+
+
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;
@@ -279,7 +330,7 @@ class PseudoJet {
   double _kt2; 
   int    _cluster_hist_index, _user_index;
 
-  SharedPtr<ClusterSequenceWrapper> _parent_cs;
+  SharedPtr<ClusterSequenceWrapper> _associated_csw;
 
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
@@ -294,8 +345,6 @@ class PseudoJet {
 
   /// set cached rapidity and phi values
   void _set_rap_phi() const;
-
-  friend class ClusterSequence;
 };
 
 
