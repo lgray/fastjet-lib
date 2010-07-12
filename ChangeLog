@@ -1,8 +1,22 @@
+2010-07-12  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* ISSUES: *** ADDED ***
+	  some thoughts on structure of CSW use etc.
+
+	* include/fastjet/ClusterSequence.hh:
+	* include/fastjet/PseudoJet.hh:
+	  minor changes to coding style / comments.
+
+	* src/ClusterSequence.cc:
+	  changed const properties of CSWrapper
+
+	
+
 2010-07-12  Gregory Soyez  <soyez@cern.ch>
 
 	* src/ClusterSequence.cc, src/ClusterSequence_TiledN2.cc,
-	  plugins/EECambridge/EECambridgePlugin.cc, include/fastjet/NNH.hh,
-	  include/fastjet/internal/ClusterSequence_N2.icc:
+	* plugins/EECambridge/EECambridgePlugin.cc, include/fastjet/NNH.hh,
+	* include/fastjet/internal/ClusterSequence_N2.icc:
 	  SharedPointer adds an implementation of 'swap' in the fastjet
 	  namespace. For code inside 'namespace fastjet{...}', the
 	  std::swap() thus has to be specified explicitly (Note: if you just
@@ -18,7 +32,7 @@
 	  has_parents(), contains(), is_inside(), constituents()
 
 	* include/fastjet/PseudoJet.hh, include/fastjet/ClusterSequence.hh,
-	  src/ClusterSequence.cc:
+	* src/ClusterSequence.cc:
 	  added a ClusterSequenceWrapper class that contains a pointer to
 	  a ClusterSequence. Then, added a SharedPointer to such an object
 	  both in ClusterSequence and PseudoJet. All the PseudoJet's created

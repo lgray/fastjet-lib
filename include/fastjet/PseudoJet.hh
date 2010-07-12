@@ -226,8 +226,8 @@ class PseudoJet {
   /// ClusterSequence
   bool has_parent_cluster_sequence() const;
 
-  /// get a (const) pointer to the parent ClusterSequence (NULL if not
-  /// existent)
+  /// get a (const) pointer to the parent ClusterSequence (NULL if
+  /// inexistent)
   const ClusterSequence* parent_cluster_sequence() const;
 
   /// check if it has been recombined with another PseudoJet in which
@@ -268,7 +268,7 @@ class PseudoJet {
   /// ClusterSequence
   bool is_inside(const PseudoJet &jet) const;
 
-  /// retrieve the constituents. An empty set is returned of there is
+  /// retrieve the constituents. An empty set is returned if there is
   /// no parent ClusterSequence
   std::vector<PseudoJet> constituents() const;
 

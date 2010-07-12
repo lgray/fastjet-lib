@@ -50,7 +50,7 @@ JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
 //
 
 
-// destructor that does nothing
+// destructor that guarantees proper bookkeeping for the CS Wrapper
 ClusterSequence::~ClusterSequence () {
   // set the pointer in the wrapper to this object to NULL to say that
   // we're going out of scope
@@ -280,7 +280,7 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
-    _jets[i]._parent_cs.reset(_wrapper_to_this);
+    _jets[i]._parent_cs = _wrapper_to_this;
 
     // determine the total energy in the event
     _Qtot += _jets[i].E();
@@ -969,7 +969,7 @@ void ClusterSequence::_add_step_to_history (
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
     _jets[jetp_index].set_cluster_hist_index(local_step);
-    _jets[jetp_index]._parent_cs.reset(_wrapper_to_this);
+    _jets[jetp_index]._parent_cs = _wrapper_to_this;
   }
 
   if (_writeout_combinations) {
