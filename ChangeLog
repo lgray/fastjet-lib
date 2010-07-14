@@ -1,3 +1,10 @@
+2010-07-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* include/fastjet/PseudoJet.hh:
+	  added a virtual destructor; declared the methods that access the
+	  associated CS as virtual too (for inheritance purposes).
+	  Negligible speed impact; ~3-5% cost in memory.
+
 2010-07-12  Gregory Soyez  <soyez@cern.ch>
 
 	* src/PseudoJet.cc:

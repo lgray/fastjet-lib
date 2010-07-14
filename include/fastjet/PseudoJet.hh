@@ -87,6 +87,9 @@ class PseudoJet {
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
   template <class L> PseudoJet(const L & some_four_vector) ;
 
+  /// default (virtual) destructor
+  virtual ~PseudoJet(){};
+
   // first "const double &" says that result is a reference to the
   // stored value and that we will not change that stored value.
   //
@@ -261,7 +264,7 @@ class PseudoJet {
   ///
   /// false is also returned if this PseudoJet has no parent
   /// ClusterSequence
-  bool has_partner(PseudoJet &partner) const;
+  virtual bool has_partner(PseudoJet &partner) const;
 
   /// check if it has been recombined with another PseudoJet in which
   /// case, return its child through the argument. Otherwise, 'child'
@@ -269,7 +272,7 @@ class PseudoJet {
   /// 
   /// false is also returned if this PseudoJet has no parent
   /// ClusterSequence, with the child set to 0
-  bool has_child(PseudoJet &child) const;
+  virtual bool has_child(PseudoJet &child) const;
 
   /// check if it is the product of a recombination, in which case
   /// return the 2 parents through the 'parent1' and 'parent2'
@@ -277,25 +280,25 @@ class PseudoJet {
   ///
   /// false is also returned if this PseudoJet has no parent
   /// ClusterSequence
-  bool has_parents(PseudoJet &parent1, PseudoJet &parent2) const;
+  virtual bool has_parents(PseudoJet &parent1, PseudoJet &parent2) const;
 
   /// check if the current PseudoJet contains the one passed as
   /// argument.
   ///
   /// false is also returned if this PseudoJet has no parent
   /// ClusterSequence.
-  bool contains(const PseudoJet &constituent) const;
+  virtual bool contains(const PseudoJet &constituent) const;
 
   /// check if the current PseudoJet is contained the one passed as
   /// argument.
   ///
   /// false is also returned if this PseudoJet has no parent
   /// ClusterSequence
-  bool is_inside(const PseudoJet &jet) const;
+  virtual bool is_inside(const PseudoJet &jet) const;
 
   /// retrieve the constituents. An empty set is returned if there is
   /// no parent ClusterSequence
-  std::vector<PseudoJet> constituents() const;
+  virtual std::vector<PseudoJet> constituents() const;
 
 
   // the following ones require a computation of the area in the
@@ -303,24 +306,24 @@ class PseudoJet {
   //------------------------------------------------------------------
 
   /// check if it has a defined area
-  bool has_area() const;
+  virtual bool has_area() const;
 
   /// return the jet (scalar) area
   /// 0 is returned if there is no support for area in the parent CS
-  double area() const;
+  virtual double area() const;
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of this jet
   /// 0 is returned if there is no support for area in the parent CS
-  double area_error() const;
+  virtual double area_error() const;
 
   /// return the jet 4-vector area
   /// 0 is returned if there is no support for area in the parent CS
-  PseudoJet area_4vector() const;
+  virtual PseudoJet area_4vector() const;
 
   /// true if this jet is made exclusively of ghosts
   /// false is returned if there is no support for area in the parent CS
-  bool is_pure_ghost() const;
+  virtual bool is_pure_ghost() const;
 
 
  private: 
