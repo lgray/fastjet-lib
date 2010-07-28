@@ -426,7 +426,7 @@ bool PseudoJet::is_inside(const PseudoJet &jet) const{
 
 
 //----------------------------------------------------------------------
-// retrieve the constituents. An empty set is returned if there is
+// retrieve the constituents. An empty vector is returned if there is
 // no associated ClusterSequence
 vector<PseudoJet> PseudoJet::constituents() const{
   // I think that the second check can be skipped

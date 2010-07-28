@@ -90,11 +90,8 @@ class PseudoJet {
   /// default (virtual) destructor
   virtual ~PseudoJet(){};
 
-  // first "const double &" says that result is a reference to the
-  // stored value and that we will not change that stored value.
-  //
-  // second "const" says that "this" will not be modified by these
-  // functions.
+  /// @name Kinematic access functions
+  //\{
   inline double E()   const {return _E;}
   inline double e()   const {return _E;} // like CLHEP
   inline double px()  const {return _px;}
@@ -161,38 +158,6 @@ class PseudoJet {
   // taken from CLHEP
   enum { X=0, Y=1, Z=2, T=3, NUM_COORDINATES=4, SIZE=NUM_COORDINATES };
 
-
-  /// transform this jet (given in the rest frame of prest) into a jet
-  /// in the lab frame [NOT FULLY TESTED]
-  PseudoJet & boost(const PseudoJet & prest);
-  /// transform this jet (given in lab) into a jet in the rest
-  /// frame of prest  [NOT FULLY TESTED]
-  PseudoJet & unboost(const PseudoJet & prest);
-
-  /// return the cluster_hist_index, intended to be used by clustering
-  /// routines.
-  inline int cluster_hist_index() const {return _cluster_hist_index;}
-  /// set the cluster_hist_index, intended to be used by clustering routines.
-  inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;}
-
-  /// alternative name for cluster_hist_index() [perhaps more meaningful]
-  inline int cluster_sequence_history_index() const {
-    return cluster_hist_index();}
-  /// alternative name for set_cluster_hist_index(...) [perhaps more
-  /// meaningful]
-  inline void set_cluster_sequence_history_index(const int index) {
-    set_cluster_hist_index(index);}
-
-
-  /// return the user_index, intended to allow the user to "add" information
-  inline int user_index() const {return _user_index;}
-  /// set the user_index, intended to allow the user to "add" information
-  inline void set_user_index(const int index) {_user_index = index;}
-
-  /// return a valarray containing the four-momentum (components 0-2
-  /// are 3-mom, component 3 is energy).
-  std::valarray<double> four_mom() const;
-
   /// returns kt distance (R=1) between this jet and another
   double kt_distance(const PseudoJet & other) const;
 
@@ -215,6 +180,23 @@ class PseudoJet {
   /// returns distance between this jet and the beam
   inline double beam_distance() const {return _kt2;}
 
+  /// return a valarray containing the four-momentum (components 0-2
+  /// are 3-mom, component 3 is energy).
+  std::valarray<double> four_mom() const;
+
+  //\}  ------- end of kinematic access functions
+
+
+  //----------------------------------------------------------------------
+  /// @name Kinematic modification functions
+  //\{
+  //----------------------------------------------------------------------
+  /// transform this jet (given in the rest frame of prest) into a jet
+  /// in the lab frame [NOT FULLY TESTED]
+  PseudoJet & boost(const PseudoJet & prest);
+  /// transform this jet (given in lab) into a jet in the rest
+  /// frame of prest  [NOT FULLY TESTED]
+  PseudoJet & unboost(const PseudoJet & prest);
 
   void operator*=(double);
   void operator/=(double);
@@ -240,6 +222,31 @@ class PseudoJet {
     reset(some_four_vector[0], some_four_vector[1],
           some_four_vector[2], some_four_vector[3]);
   }
+
+  //\}
+  //--- end of kin mod functions --------------------------------------------
+
+  /// return the cluster_hist_index, intended to be used by clustering
+  /// routines.
+  inline int cluster_hist_index() const {return _cluster_hist_index;}
+  /// set the cluster_hist_index, intended to be used by clustering routines.
+  inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;}
+
+  /// alternative name for cluster_hist_index() [perhaps more meaningful]
+  inline int cluster_sequence_history_index() const {
+    return cluster_hist_index();}
+  /// alternative name for set_cluster_hist_index(...) [perhaps more
+  /// meaningful]
+  inline void set_cluster_sequence_history_index(const int index) {
+    set_cluster_hist_index(index);}
+
+
+  /// return the user_index, intended to allow the user to "add" information
+  inline int user_index() const {return _user_index;}
+  /// set the user_index, intended to allow the user to "add" information
+  inline void set_user_index(const int index) {_user_index = index;}
+
+
 
   //-------------------------------------------------
   // methods that depend on a parent ClusterSequence
@@ -296,7 +303,7 @@ class PseudoJet {
   /// ClusterSequence
   virtual bool is_inside(const PseudoJet &jet) const;
 
-  /// retrieve the constituents. An empty set is returned if there is
+  /// retrieve the constituents. An empty vector is returned if there is
   /// no parent ClusterSequence
   virtual std::vector<PseudoJet> constituents() const;
 

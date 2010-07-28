@@ -38,8 +38,30 @@
  * These pages provide automatically generated documentation for the 
  * FastJet package.
  * 
- * For further information and normal documentation, see the main <a
- * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
+   \section useful_classes The most useful classes
+
+   Many of the facilities of FastJet can be accessed through the three
+   following classes:
+
+   - PseudoJet: the basic class for holding the 4-momentum of a
+     particle or a jet.
+
+   - JetDefinition: the combination of a JetAlgorithm and its
+     associated parameters.
+
+   - ClusterSequence: constructed with a vector of input (PseudoJet)
+     particles and a JetDefinition, it computes and stores the
+     information on how the input particles are clustered into jets.
+
+   \section advanced_classes Selected more advanced classes
+
+   - ClusterSequenceArea: with the help of an AreaDefinition, provides
+     jets that also contain information about their area.
+
+   \section further_info Further information
+  
+   For further information and normal documentation, see the main <a
+   href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
  */
 //----------------------------------------------------------------------
 

@@ -1,3 +1,17 @@
+2010-07-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	  added more info in the \mainpage section
+
+	* include/fastjet/PseudoJet.hh: 
+	  starting to group some of the member functions; but not yet very
+	  successful. 
+
+2010-07-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* AUTHORS: 
+	  realised authors was very out of date, so updated it.
+
 2010-07-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/PseudoJet.hh:

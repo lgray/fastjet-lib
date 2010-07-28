@@ -1,10 +1,15 @@
-FastJet is written by 
-M. Cacciari and G.P. Salam with contributions from G. Soyez
+FastJet was written and is developed/maintained by 
+
+Matteo Cacciari,
+Gavin P. Salam
+Gregory Soyez
+
 see http://www.lpthe.jussieu.fr/~salam/fastjet
 
-Longitudinally invariant Kt, and inclusive Cambridge/Aachen clustering
-using fast geometric algorithms, with area measures and optional external
-jet-finder plugins. Please cite hep-ph/0512210 if you use this code.
+It provides longitudinally invariant Kt, and inclusive
+Cambridge/Aachen and anti-kt (etc.) clustering using fast geometric
+algorithms, with area measures and optional external jet-finder
+plugins. Please cite hep-ph/0512210 if you use this code. 
 
 This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
 Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
