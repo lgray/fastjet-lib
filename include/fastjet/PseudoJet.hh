@@ -80,6 +80,9 @@ const double pseudojet_invalid_phi = -100.0;
 class PseudoJet {
 
  public:
+  //----------------------------------------------------------------------
+  /// @name Constructors and destructor
+  //\{
   /// default constructor leaves PseudoJet unusable
   PseudoJet() {};
   /// construct a pseudojet from explicit components
@@ -89,9 +92,12 @@ class PseudoJet {
 
   /// default (virtual) destructor
   virtual ~PseudoJet(){};
+  //\} ---- end of constructors and destructors --------------------------
 
+  //----------------------------------------------------------------------
   /// @name Kinematic access functions
   //\{
+  //----------------------------------------------------------------------
   inline double E()   const {return _E;}
   inline double e()   const {return _E;} // like CLHEP
   inline double px()  const {return _px;}
@@ -155,8 +161,6 @@ class PseudoJet {
   inline double operator [] (int i) const { return (*this)(i); }; // this too
 
 
-  // taken from CLHEP
-  enum { X=0, Y=1, Z=2, T=3, NUM_COORDINATES=4, SIZE=NUM_COORDINATES };
 
   /// returns kt distance (R=1) between this jet and another
   double kt_distance(const PseudoJet & other) const;
@@ -185,6 +189,9 @@ class PseudoJet {
   std::valarray<double> four_mom() const;
 
   //\}  ------- end of kinematic access functions
+
+  // taken from CLHEP
+  enum { X=0, Y=1, Z=2, T=3, NUM_COORDINATES=4, SIZE=NUM_COORDINATES };
 
 
   //----------------------------------------------------------------------
@@ -223,47 +230,55 @@ class PseudoJet {
           some_four_vector[2], some_four_vector[3]);
   }
 
-  //\}
-  //--- end of kin mod functions --------------------------------------------
+  //\} --- end of kin mod functions ------------------------------------
 
-  /// return the cluster_hist_index, intended to be used by clustering
-  /// routines.
-  inline int cluster_hist_index() const {return _cluster_hist_index;}
-  /// set the cluster_hist_index, intended to be used by clustering routines.
-  inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;}
+  //----------------------------------------------------------------------
+  /// @name User index functions
+  ///
+  /// To allow the user to set and access an integer index which can
+  /// be exploited by the user to associate extra information with a
+  /// particle/jet (for example pdg id, or an indication of a
+  /// particle's origin within the user's analysis)
+  //
+  //\{
 
-  /// alternative name for cluster_hist_index() [perhaps more meaningful]
-  inline int cluster_sequence_history_index() const {
-    return cluster_hist_index();}
-  /// alternative name for set_cluster_hist_index(...) [perhaps more
-  /// meaningful]
-  inline void set_cluster_sequence_history_index(const int index) {
-    set_cluster_hist_index(index);}
-
-
-  /// return the user_index, intended to allow the user to "add" information
+  /// return the user_index, 
   inline int user_index() const {return _user_index;}
-  /// set the user_index, intended to allow the user to "add" information
+  /// set the user_index, intended to allow the user to add simple
+  /// identifying information to a particle/jet
   inline void set_user_index(const int index) {_user_index = index;}
 
+  //\} ----- end of use index functions ---------------------------------
 
 
-  //-------------------------------------------------
-  // methods that depend on a parent ClusterSequence
-  //-------------------------------------------------
 
-  /// set the associated csw
-  void set_associated_csw(SharedPtr<ClusterSequenceWrapper> &csw){
-    _associated_csw = csw;
-  }
 
-  /// check whether this PseudoJet has an associated parent
-  /// ClusterSequence
+
+  //-------------------------------------------------------------
+  /// @name Access to the associated ClusterSequence object.
+  ///
+  /// In addition to having kinematic information, jets may contain a
+  /// reference to an associated ClusterSequence (this is the case,
+  /// for example, if the jet has been returned by a ClusterSequence
+  /// member function).
+  //\{
+  //-------------------------------------------------------------
+  /// returns true if this PseudoJet has an associated ClusterSequence.
   bool has_associated_cluster_sequence() const;
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
+  //\}
+
+  //-------------------------------------------------------------
+  /// @name Methods for access to information about jet structure
+  ///
+  /// These allow access to jet constituents, and other jet
+  /// subtructure information. They only work if the jet is associated
+  /// with a ClusterSequence.
+  //-------------------------------------------------------------
+  //\{
 
   /// check if it has been recombined with another PseudoJet in which
   /// case, return its partner through the argument. Otherwise,
@@ -332,6 +347,34 @@ class PseudoJet {
   /// false is returned if there is no support for area in the parent CS
   virtual bool is_pure_ghost() const;
 
+  //\} --- end of jet structure -------------------------------------
+
+
+
+  //----------------------------------------------------------------------
+  /// @name Members mainly intended for internal use
+  //----------------------------------------------------------------------
+  //\{
+  /// return the cluster_hist_index, intended to be used by clustering
+  /// routines.
+  inline int cluster_hist_index() const {return _cluster_hist_index;}
+  /// set the cluster_hist_index, intended to be used by clustering routines.
+  inline void set_cluster_hist_index(const int index) {_cluster_hist_index = index;}
+
+  /// alternative name for cluster_hist_index() [perhaps more meaningful]
+  inline int cluster_sequence_history_index() const {
+    return cluster_hist_index();}
+  /// alternative name for set_cluster_hist_index(...) [perhaps more
+  /// meaningful]
+  inline void set_cluster_sequence_history_index(const int index) {
+    set_cluster_hist_index(index);}
+
+  /// set the associated csw
+  void set_associated_csw(SharedPtr<ClusterSequenceWrapper> &csw){
+    _associated_csw = csw;
+  }
+  //\} ---- end of internal use functions ---------------------------
+  
 
  private: 
   // NB: following order must be kept for things to behave sensibly...
