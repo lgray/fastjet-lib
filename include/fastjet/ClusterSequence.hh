@@ -469,7 +469,7 @@ public:
   /// any plugin "extras" contained in the from_seq will be lost
   /// from there.
   ///
-  /// The ownership transfer also sets the pointers ClusterSequence
+  /// If transfer_ownership is true, it also sets the ClusterSequence
   /// pointers of the PseudoJets in the history to point to this
   /// ClusterSequence (true by default)
   void transfer_from_sequence(ClusterSequence & from_seq, bool transfer_ownership=true);
