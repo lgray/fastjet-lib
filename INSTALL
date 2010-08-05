@@ -45,7 +45,7 @@ The full list of possible options can be obtained with ./configure
     --enable-allcxxplugins    (default=no)
                     enable all C++ plugins, but not the Fortran ones
 
-    --enable-allplugins        (default=no)
+    --enable-allplugins       (default=no)
                     enable all plugins, including the Fortran ones
                     (PxCone). 
 
