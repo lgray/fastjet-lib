@@ -370,8 +370,13 @@ class PseudoJet {
     set_cluster_hist_index(index);}
 
   /// set the associated csw
-  void set_associated_csw(SharedPtr<ClusterSequenceWrapper> &csw){
+  void set_associated_csw(const SharedPtr<ClusterSequenceWrapper> &csw){
     _associated_csw = csw;
+  }
+
+  /// return a copy of the ClusterSequenceWrapper
+  SharedPtr<ClusterSequenceWrapper> associated_csw() const {
+    return _associated_csw;
   }
   //\} ---- end of internal use functions ---------------------------
   
