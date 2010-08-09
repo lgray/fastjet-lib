@@ -34,7 +34,41 @@
 #include "fastjet/internal/base.hh"
 #include <cstdlib>  // for NULL!!!
 
+// for testing purposes, the following define makes it possible
+// for our SharedPtr simply to be derived from the STL TR1 one.
+// #define USETR1SHAREDPTR
+
+#ifdef USETR1SHAREDPTR
+#include <tr1/memory>
+#endif // USETR1SHAREDPTR
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+#ifdef USETR1SHAREDPTR
+
+// for testing purposes, it can be useful to replace our home-made
+// SharedPtr with the standard library one. Having a class derived
+// from the standard one is way of arranging for this to happen.
+// 
+// The other way of working this is a template class with an 
+// internal typedef (http://bytes.com/topic/c/answers/60312-typedef-template)
+// since templated typedefs don't work in standard C++
+template<class T>
+class SharedPtr : public std::tr1::shared_ptr<T> {
+public:
+  SharedPtr() : std::tr1::shared_ptr<T>() {}
+  SharedPtr(T * t) : std::tr1::shared_ptr<T>(t) {}
+  SharedPtr(const SharedPtr<T> & t) : std::tr1::shared_ptr<T>(t) {}
+  // for some reason operator() doesn't get inherited
+  inline operator bool() const {return (this->get()!=NULL);}
+  /// return the pointer we're pointing to  
+  T* operator ()() const{
+    return this->get(); // automatically returns NULL when out-of-scope
+  }
+};
+
+
+#else // USETR1SHAREDPTR
 
 /**
  * an implementation of C++0x shared pointers (or boost's)
@@ -306,6 +340,7 @@ inline T* get_pointer(SharedPtr<T> const & t){
   return t.get();
 }
 
+#endif // USETR1SHAREDPTR
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 

@@ -1,3 +1,14 @@
+2010-08-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	  _reset_indices now also resets the _associated_csw (mainly so
+	  that reset() does the expected thing).
+
+	* include/fastjet/SharedPtr.hh: 
+	  for testing purposes, added an option (if you define
+	  USETR1SHAREDPTR) in which SharedPtr basically wraps the STL TR1
+	  shared_ptr.
+
 2010-08-08  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequenceAreaBase.cc: 

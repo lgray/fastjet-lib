@@ -375,7 +375,7 @@ class PseudoJet {
   }
 
   /// return a copy of the ClusterSequenceWrapper
-  SharedPtr<ClusterSequenceWrapper> associated_csw() const {
+  const SharedPtr<ClusterSequenceWrapper> & associated_csw() const {
     return _associated_csw;
   }
   //\} ---- end of internal use functions ---------------------------
@@ -489,6 +489,7 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 inline void PseudoJet::_reset_indices() { 
   set_cluster_hist_index(-1);
   set_user_index(-1);
+  _associated_csw.reset();
 }
 
 //----------------------------------------------------------------------
