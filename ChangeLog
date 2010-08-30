@@ -1,3 +1,8 @@
+2010-08-30  Gregory Soyez  <soyez@cern.ch>
+
+	* INSTALL:
+	  Fixed default description of static/shared-lib build
+
 2010-08-09  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 
@@ -36,6 +41,7 @@
 	* AUTHORS: 
 	  realised authors was very out of date, so updated it.
 
+>>>>>>> .r1754
 2010-07-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/PseudoJet.hh:

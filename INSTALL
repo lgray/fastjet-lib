@@ -20,9 +20,12 @@ The full list of possible options can be obtained with ./configure
 		    ${prefix}/include/fastjet
 
    --disable-static
-   --enable-shared  disable/enable contruction of static/shared 
-                    libraries (static enabled by default, shared
-                    disabled)
+   --enable-static  disable/enable construction of static libraries
+                    (enabled by default)
+
+   --disable-shared
+   --enable-shared  disable/enable construction of shared libraries
+                    (enabled by default)
 
    --enable-cgal    enable use of CGAL libraries, which are needed 
                     for the N ln N version of the k_t algorithm and
