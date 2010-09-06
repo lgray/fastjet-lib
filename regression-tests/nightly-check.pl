@@ -57,6 +57,14 @@ $OUTPUT_AUTOFLUSH = 1;
 # things to configure
 $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g@gavin.fr 
 
+# the CGAL path
+#
+# GS: it was previously using Gavin's environment variable. Until he
+# updates it, we're temporarily going to use a fixed path pointing to
+# my installation. Niote that CGAL is curently only tested on 64-bit
+# systems, so I'll use the 64-bit build
+$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_install'
+
 @setups = ();
 # for each setup we put the host ("" is current host), the config
 # options, the special link-time arguments to fastjet-config, and the
@@ -74,9 +82,10 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g
 
 
 push @setups, ["","", "", 10]; # out of the box
-push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
+#push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
+push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000]; # with CGAL & all plugins
 push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
-push @setups, ["","--enable-allplugins --enable-monolithic", "", 10]; # with static libs, and pxcone
+push @setups, ["","--enable-allplugins --enable-monolithic", "", 10]; # test the monolithic build (all plugins in a single lib)
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 1000]; # with the intel compiler
 # GPS 2009-07-03: zetes is currently down.

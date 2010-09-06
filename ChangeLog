@@ -1,3 +1,9 @@
+2010-09-06  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* regression-tests/nightly-check.pl:
+	  pointed to a new installaion of CGAL (note: this could be done
+	  through the CGAL_DIR environment var as it was done before)
+
 2010-08-30  Gregory Soyez  <soyez@cern.ch>
 
 	* INSTALL:
@@ -42,6 +48,7 @@
 	  realised authors was very out of date, so updated it.
 
 >>>>>>> .r1754
+>>>>>>> .r1755
 2010-07-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/PseudoJet.hh:
