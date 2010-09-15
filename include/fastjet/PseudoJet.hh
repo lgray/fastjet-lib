@@ -39,34 +39,13 @@
 #include<iostream>
 #include "fastjet/internal/numconsts.hh"
 #include "fastjet/SharedPtr.hh"
+#include "fastjet/IsBase.hh"
+#include "fastjet/ClusterSequenceWrapper.hh"
+#include "fastjet/PseudoJetPlusInfoHandler.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //using namespace std;
-
-class ClusterSequence;
-
-// forward declaration of the ClusterSequenceWrapper
-/// \class ClusterSequenceWrapper
-///
-/// A wrapper class that hold a pointer to a ClusterSequence object
-/// It has ClusterSequence as a friend class so that only
-/// ClusterSequence can change its availability status
-class ClusterSequenceWrapper{
-public:
-  ClusterSequenceWrapper() : _cs(NULL){};
-  ClusterSequenceWrapper(ClusterSequence *cs) : _cs(cs){};
-
-  const ClusterSequence * cs() const { return _cs;}
-  ClusterSequence * non_const_cs() const { return _cs;}
-  bool is_alive() const { return (_cs != NULL);}
-
-  friend class ClusterSequence;
-
-private:
-  ClusterSequence * _cs;
-};
-
 
 /// Used to protect against parton-level events where pt can be zero
 /// for some partons, giving rapidity=infinity. KtJet fails in those cases.
@@ -250,9 +229,46 @@ class PseudoJet {
 
   //\} ----- end of use index functions ---------------------------------
 
+  //----------------------------------------------------------------------
+  /// @name Extra information types and functions
+  ///
+  /// Allows PseudoJet to carry extra info (as an object derived from
+  /// ExtraInfo).
+  /// See also the PseudoJetPlusInfo<TExtraInfo> class that should
+  /// make this easier.
+  //\{
 
+  /// \class ExtraInfo
+  /// a base class to hold extra information in PseudoJet
+  ///
+  /// This is a dummy class to hold extra information. The motivation
+  /// behind its existence is a safety procedure: we could symply hold
+  /// a generic pointer but this allows for clean destruction when
+  /// memory is released and this allows consistency checks at the
+  /// level of the end-user by using dynamic_cast instead of a
+  /// brute-force cast.
+  class ExtraInfo{
+  public:
+    // dummy ctor
+    ExtraInfo(){};
 
+    // dummy virtual dtor
+    // makes it polymorphic to allow for dynamic_cast
+    virtual ~ExtraInfo(){}; 
+  };
 
+  /// retrieve a pointer to the extra information
+  const ExtraInfo* extra_info() const{
+    if (!_extra_info()) return NULL;
+    return _extra_info.get();
+  }
+
+  /// retrieve a shared pointer to the extra information
+  SharedPtr<ExtraInfo> & extra_info_shared(){
+    return _extra_info;
+  }
+
+  // \} --- end of extra info functions ---------------------------------
 
   //-------------------------------------------------------------
   /// @name Access to the associated ClusterSequence object.
@@ -269,6 +285,9 @@ class PseudoJet {
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
+
+  /// get directly the (const) shared pointer to the parent ClusterSequence
+  SharedPtr<ClusterSequenceWrapper> & associated_cluster_sequence_shared();
   //\}
 
   //-------------------------------------------------------------
@@ -380,7 +399,6 @@ class PseudoJet {
   }
   //\} ---- end of internal use functions ---------------------------
   
-
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;
@@ -389,6 +407,7 @@ class PseudoJet {
   int    _cluster_hist_index, _user_index;
 
   SharedPtr<ClusterSequenceWrapper> _associated_csw;
+  SharedPtr<ExtraInfo> _extra_info;
 
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
@@ -474,14 +493,37 @@ private:
 // NB: do not know if it really needs to be inline, but when it wasn't
 //     linking failed with g++ (who knows what was wrong...)
 template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
-
+  // transfer the generic part
   _px = some_four_vector[0];
   _py = some_four_vector[1];
   _pz = some_four_vector[2];
   _E  = some_four_vector[3];
-  _finish_init();
-  // some default values for these two indices
-  _reset_indices();
+
+  // now check whether L is simply a class that implements
+  // some_fuor_vector[0--3] or actually is derived from PseudoJet and
+  // has extra information
+  PseudoJetPlusInfoHandler<L, IsBaseAndDerived<PseudoJet,L>::value> pjpi_handler(some_four_vector);
+
+  if (pjpi_handler() != NULL){
+    PseudoJet *pj = pjpi_handler();
+
+    // transfer the optional information
+    _cluster_hist_index = pj->cluster_hist_index();
+    _user_index = pj->user_index();
+
+    _associated_csw.reset(pj->associated_cluster_sequence_shared());
+
+    _kt2 = pj->perp2();
+    _phi = pj->phi();
+
+    // transfer the extra information
+    _extra_info.reset(pj->extra_info_shared());
+
+  } else {
+    _finish_init();
+    // some default values for these two indices
+    _reset_indices();
+  }
 }
 
 

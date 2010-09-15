@@ -1,7 +1,10 @@
 SUBDIRS = internal
 fastjetincludedir=$(includedir)/fastjet
 fastjetinclude_HEADERS= JetDefinition.hh\
+  PseudoJetPlusInfoHandler.hh\
+  ClusterSequenceWrapper.hh\
   PseudoJet.hh\
+  PseudoJetPlusInfo.hh\
   ClusterSequence.hh\
   Error.hh\
   RangeDefinition.hh\
@@ -20,6 +23,7 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   ClusterSequenceVoronoiArea.hh\
   NNH.hh\
   SharedPtr.hh\
+  IsBase.hh\
   config_win.h\
   config.h
 
