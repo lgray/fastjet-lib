@@ -1,8 +1,37 @@
 2010-09-15  Gregory Soyez  <soyez@cern.ch>
+
 	* include/fastjet/Makefile.am:
 	  added the new headers to the list of installed files
-	
-	* include/fastjet/IsBase.hh:   *** ADDED ***
+
+	* include/fastjet/PseudoJetPlusInfo.hh:          *** ADDED ***
+	  This is a generic template class that allows to build
+	  PseudoJet carrying extra information. You'd basically
+	  define a
+	    class MyExtraInfo : public PseudoJet::ExtraInfo{};
+	  then use
+	    PseudoJetPlusInfo<MyExtraInfo> instead of PseudoJet
+
+	  The implementation allows to copy from PseudoJetPlusInfo to
+	  PseudoJet without any loss of information (e.g. you can copy,
+	  element by element, a vector of PseudoetPlusInfo into a vector
+	  of PseudoJet and pass it to a ClusterSequence without loosing
+	  the original ExtraInfo).
+	  Memory is managed internally so you can easily use the extra
+	  information if you define your own recombiner.
+
+	* include/fastjet/PseudoJet.hh:
+	  added support to carry extra info.  It is stored as a shared
+	  pointer of a dummy type ExtraInfo. A generic extra information
+	  can be stored by deriving a class from ExtraInfo.
+
+	* include/fastjet/PseudoJetPlusInfoHandler.hh:   *** ADDED ***
+	  This class is a helper to allow to disantangle in the
+	    template<T> PseudoJet::PseudoJet(T &some_four_vector)
+	  between the situation where T just implements T[0--3] and
+	  the case where T is derived from PseudoJet (and thus may carry
+	  extra information)
+
+	* include/fastjet/IsBase.hh:                     *** ADDED ***
 	  added a class (mostly borrowed from TR1 and boost), that allows
 	  to check whether a given pair of typed are a based class and a
 	  class derived from it.
@@ -13,7 +42,7 @@
 	  reference to the shared pointer holding the
 	  ClusterSequenceWrapper
 
-	* include/fastjet/ClusterSequenceWrapper.hh:   *** ADDED ***
+	* include/fastjet/ClusterSequenceWrapper.hh:     *** ADDED ***
 	  moved the ClusterSequenceWrapper class in its own header
 
 2010-09-06  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
