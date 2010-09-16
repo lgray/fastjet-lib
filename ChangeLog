@@ -1,5 +1,8 @@
 2010-09-16  Gregory Soyez  <soyez@cern.ch>
 
+	* include/fastjet/PseudoJet.hh:
+	  removed the access to the shared ptr to the associated csw
+
 	* include/fastjet/internal/IsBase.hh:
 	  moved to the internal headers folder
 

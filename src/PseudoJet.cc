@@ -354,12 +354,6 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 
 
 //----------------------------------------------------------------------
-// get directly the (const) shared pointer to the parent ClusterSequence
-SharedPtr<ClusterSequenceWrapper> & PseudoJet::associated_cluster_sequence_shared(){
-  return _associated_csw;
-}
-
-//----------------------------------------------------------------------
 // check if it has been recombined with another PseudoJet in which
 // case, return its partner through the argument. Otherwise,
 // 'partner' is set to 0.

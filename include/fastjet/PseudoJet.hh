@@ -288,9 +288,6 @@ class PseudoJet {
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
-
-  /// get directly the (const) shared pointer to the parent ClusterSequence
-  SharedPtr<ClusterSequenceWrapper> & associated_cluster_sequence_shared();
   //\}
 
   //-------------------------------------------------------------
