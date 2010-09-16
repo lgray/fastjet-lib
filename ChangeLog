@@ -1,5 +1,12 @@
 2010-09-16  Gregory Soyez  <soyez@cern.ch>
 
+	* include/fastjet/internal/IsBase.hh:
+	  moved to the internal headers folder
+
+	* include/fastjet/internal/DerivedPseudoJetHelper.hh:
+	  renamed PseudoJetPlusInfoHandler into DerivedPseudoJetHelper
+	  plus moved it in the internal headers folder
+
 	* include/fastjet/ClusterSequenceWrapper.hh:
 	  placed things in the fastjet namespace
 

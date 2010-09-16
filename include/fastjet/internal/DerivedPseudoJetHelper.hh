@@ -28,11 +28,10 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __PSEUDOJET_PLUS_INFO_HANDLER_HH__
-#define __PSEUDOJET_PLUS_INFO_HANDLER_HH__
+#ifndef __DERIVED_PSEUDOJET_HELPER_HH__
+#define __DERIVED_PSEUDOJET_HELPER_HH__
 
 #include "fastjet/internal/numconsts.hh"
-#include "fastjet/ClusterSequenceWrapper.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -45,20 +44,23 @@ FASTJET_BEGIN_NAMESPACE
 // fwd declaration of PJ
 class PseudoJet;
 
-
-// \class PseudoJetPlusInfoHandler
-// the default handler that does not support extra info
-//
-// This template construct depends on a type and a boolean value.  we
-// shall implement a generic definition that is supposed to hold for a
-// type T that just has T[0--3] and, below, specialise it to the case
-// where T inherits from PseudoJet, thus giving access to more
-// information
+/// \if internal_doc
+/// @ingroup internal
+/// \class DerivedPseudoJetHelper
+/// Template helper to see if a class is derived from PseudoJet
+/// (default version)
+///
+/// This template construct depends on a type and a boolean value.  we
+/// shall implement a generic definition that is supposed to hold for a
+/// type T that just has T[0--3] and, below, specialise it to the case
+/// where T inherits from PseudoJet, thus giving access to more
+/// information
+/// \endif
 template<typename T, bool b>
-class PseudoJetPlusInfoHandler{
+class DerivedPseudoJetHelper{
 public:
   // ctor
-  PseudoJetPlusInfoHandler(const T &t){ _t = &t;};
+  DerivedPseudoJetHelper(const T &t){ _t = &t;};
 
   // conversion to PJ*
   PseudoJet * operator()(){
@@ -72,13 +74,16 @@ protected:
 };
 
 
-// specialisation for the case where T is derived from a PseudoJet
-// the default handler that does not support extra info
+/// \if internal_doc
+/// @ingroup internal
+/// specialisation for the case where T is derived from a PseudoJet
+/// the default handler that does not support extra info
+/// \endif
 template<typename T>
-class PseudoJetPlusInfoHandler<T, true>{
+class DerivedPseudoJetHelper<T, true>{
 public:
   // ctor
-  PseudoJetPlusInfoHandler(const T &t){ _t = &t;};
+  DerivedPseudoJetHelper(const T &t){ _t = &t;};
 
   // conversion to PJ*
   PseudoJet * operator()(){
@@ -94,4 +99,4 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif  // __PSEUDOJET_PLUS_INFO_HANDLER_HH__
+#endif  // __DERIVED_PSEUDOJET_HELPER_HH__

@@ -38,10 +38,10 @@
 #include<cmath>
 #include<iostream>
 #include "fastjet/internal/numconsts.hh"
+#include "fastjet/internal/IsBase.hh"
+#include "fastjet/internal/DerivedPseudoJetHelper.hh"
 #include "fastjet/SharedPtr.hh"
-#include "fastjet/IsBase.hh"
 #include "fastjet/ClusterSequenceWrapper.hh"
-#include "fastjet/PseudoJetPlusInfoHandler.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -503,10 +503,10 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
   // now check whether L is simply a class that implements
   // some_fuor_vector[0--3] or actually is derived from PseudoJet and
   // has extra information
-  PseudoJetPlusInfoHandler<L, IsBaseAndDerived<PseudoJet,L>::value> pjpi_handler(some_four_vector);
+  DerivedPseudoJetHelper<L, IsBaseAndDerived<PseudoJet,L>::value> dpj_helper(some_four_vector);
 
-  if (pjpi_handler() != NULL){
-    const PseudoJet *pj = pjpi_handler();
+  if (dpj_helper() != NULL){
+    const PseudoJet *pj = dpj_helper();
     reset(*pj);
   } else {
     reset(some_four_vector);
