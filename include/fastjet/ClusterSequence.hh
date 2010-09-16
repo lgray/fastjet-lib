@@ -33,35 +33,35 @@
 // here's where we put the main page for fastjet (as explained in the
 // Doxygen faq)
 //......................................................................
-/*! \mainpage FastJet code documentation
+/** \mainpage FastJet code documentation
  *
  * These pages provide automatically generated documentation for the 
  * FastJet package.
  * 
-   \section useful_classes The most useful classes
-
-   Many of the facilities of FastJet can be accessed through the three
-   following classes:
-
-   - PseudoJet: the basic class for holding the 4-momentum of a
-     particle or a jet.
-
-   - JetDefinition: the combination of a JetAlgorithm and its
-     associated parameters.
-
-   - ClusterSequence: constructed with a vector of input (PseudoJet)
-     particles and a JetDefinition, it computes and stores the
-     information on how the input particles are clustered into jets.
-
-   \section advanced_classes Selected more advanced classes
-
-   - ClusterSequenceArea: with the help of an AreaDefinition, provides
-     jets that also contain information about their area.
-
-   \section further_info Further information
-  
-   For further information and normal documentation, see the main <a
-   href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
+ * \section useful_classes The most useful classes
+ *
+ * Many of the facilities of FastJet can be accessed through the three
+ * following classes:
+ *
+ * - PseudoJet: the basic class for holding the 4-momentum of a
+ *   particle or a jet.
+ *
+ * - JetDefinition: the combination of a JetAlgorithm and its
+ *   associated parameters.
+ *
+ * - ClusterSequence: constructed with a vector of input (PseudoJet)
+ *   particles and a JetDefinition, it computes and stores the
+ *   information on how the input particles are clustered into jets.
+ *
+ * \section advanced_classes Selected more advanced classes
+ *
+ * - ClusterSequenceArea: with the help of an AreaDefinition, provides
+ *   jets that also contain information about their area.
+ *
+ * \section further_info Further information
+ *
+ * For further information and normal documentation, see the main <a
+ * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
  */
 //----------------------------------------------------------------------
 
@@ -87,6 +87,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // forward declaration
 //class ClusterSequence;
 
+/// @ingroup basic_classes
+/// \class ClusterSequence
 /// deals with clustering
 class ClusterSequence {
 
@@ -323,6 +325,10 @@ class ClusterSequence {
     _do_iB_recombination_step(jet_i, diB);
   }
 
+  /// @ingroup extra_info
+  /// \class Extras
+  /// base class to store extra information that plugins may provide
+  /// 
   /// a class intended to serve as a base in case a plugin needs to
   /// associate extra information with a ClusterSequence (see
   /// SISConePlugin.* for an example).
@@ -366,8 +372,11 @@ public:
   static void set_jet_finder (JetAlgorithm jet_algorithm)    {_default_jet_algorithm = jet_algorithm;}
 
 
-  /// a single element in the clustering history (see vector _history
-  /// below).
+  /// \ingroup extra_info
+  /// \struct history_element
+  /// a single element in the clustering history
+  /// 
+  /// (see vector _history below).
   struct history_element{
     int parent1; /// index in _history where first parent of this jet
                  /// was created (InexistentParent if this jet is an

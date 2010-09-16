@@ -49,10 +49,17 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //using namespace std;
 
+/// @ingroup sec_area_classes
+/// \class ClusterSequenceActiveArea
+/// Like ClusterSequence with computation of the active jet area
+///
 /// Class that behaves essentially like ClusterSequence except
 /// that it also provides access to the area of a jet (which
 /// will be a random quantity... Figure out what to do about seeds 
 /// later...)
+///
+/// This class should not be used directly. Rather use
+/// ClusterSequenceArea with the appropriate AreaDefinition
 class ClusterSequenceActiveArea : public ClusterSequenceAreaBase {
 public:
 

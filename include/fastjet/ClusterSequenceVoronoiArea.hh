@@ -39,10 +39,14 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/**
- * \class ClusterSequenceVoronoiArea
- * Handle the computation of Voronoi jet area.
- */
+/// @ingroup sec_area_classes
+/// \class ClusterSequenceVoronoiArea
+/// Like ClusterSequence with computation of the Voronoi jet area
+///
+/// Handle the computation of Voronoi jet area.
+///
+/// This class should not be used directly. Rather use
+/// ClusterSequenceArea with the appropriate AreaDefinition
 class ClusterSequenceVoronoiArea : public ClusterSequenceAreaBase {
 public:
   /// template ctor

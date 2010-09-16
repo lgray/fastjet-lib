@@ -37,4 +37,15 @@
 #define FASTJET_BEGIN_NAMESPACE namespace fastjet {
 #define FASTJET_END_NAMESPACE   }
 
+// define the doxygen groupd
+/// \defgroup basic_classes    Fundamental FastJet classes
+/// \defgroup area_classes     Area-related classes
+/// \defgroup sec_area_classes Secondary area-related classes
+/// \defgroup plugins          Plugins for non-native jet definitions
+/// \defgroup extra_info       Access to extra information
+/// \defgroup error_handling   Error handling
+/// \defgroup advanced_usage   Advanced usage
+/// \if internal_doc
+/// \defgroup internal
+/// \endif
 #endif // __FASTJET_FASTJET_BASE_HH__

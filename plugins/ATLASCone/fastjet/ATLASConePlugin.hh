@@ -45,9 +45,9 @@ class PseudoJet;
 
 //----------------------------------------------------------------------
 //
-/// ATLASConePlugin is a plugin for fastjet (v2.4 upwards)
-///
-
+/// @ingroup plugins
+/// \class ATLASConePlugin
+/// Implementation of the ATLAS Cone (plugin for fastjet v2.4 upwards)
 class ATLASConePlugin : public JetDefinition::Plugin {
 public:
   /// Main constructor for the ATLASCone Plugin class.

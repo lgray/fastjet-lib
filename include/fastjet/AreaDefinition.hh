@@ -38,6 +38,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
+/// @ingroup area_classes
+/// \class VoronoiAreaSpec
+/// Specification for the computation of the Voronoi jet area
+///
 /// class for holding a "Voronoi area" specification; an area will be
 /// assigned to each particle, which is the area of the intersection
 /// of the particle's Voronoi cell with a circle of radius
@@ -72,8 +76,9 @@ enum AreaType {invalid_area = -1,
 
 
 //----------------------------------------------------------------------
+/// @ingroup area_classes
+/// \class AreaDefinition
 /// class that holds a generic area definition
-///
 class AreaDefinition {
 public:
   

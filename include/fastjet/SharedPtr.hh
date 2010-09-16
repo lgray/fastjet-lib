@@ -46,13 +46,17 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 #ifdef USETR1SHAREDPTR
 
-// for testing purposes, it can be useful to replace our home-made
-// SharedPtr with the standard library one. Having a class derived
-// from the standard one is way of arranging for this to happen.
-// 
-// The other way of working this is a template class with an 
-// internal typedef (http://bytes.com/topic/c/answers/60312-typedef-template)
-// since templated typedefs don't work in standard C++
+/// @ingroup advanced_usage
+/// \class SharedPtr
+/// replaces our shared pointer with the TR1 one (for testing purpose)
+///
+/// for testing purposes, it can be useful to replace our home-made
+/// SharedPtr with the standard library one. Having a class derived
+/// from the standard one is way of arranging for this to happen.
+/// 
+/// The other way of working this is a template class with an 
+/// internal typedef (http://bytes.com/topic/c/answers/60312-typedef-template)
+/// since templated typedefs don't work in standard C++
 template<class T>
 class SharedPtr : public std::tr1::shared_ptr<T> {
 public:
@@ -71,6 +75,8 @@ public:
 #else // USETR1SHAREDPTR
 
 /**
+ * @ingroup advanced_usage
+ * \class SharedPtr
  * an implementation of C++0x shared pointers (or boost's)
  *
  * this class implements a smart pointer, based on the shared+ptr
@@ -245,11 +251,14 @@ public:
   }
 
   /**
+   * \if internal_doc
+   * \class __SharedCountingPtr
    * A reference-counting pointer
    *
    * This is implemented as a container for that pointer together with
    * reference counting.
    * The pointer is deleted when the number of counts goes to 0;
+   * \endif
    */
   class __SharedCountingPtr{
   public:

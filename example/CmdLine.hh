@@ -32,6 +32,9 @@
 #include<vector>
 using namespace std;
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class CmdLine
 /// Class designed to deal with command-line arguments in a fashion similar
 /// to what was done in f90 iolib.
 ///
@@ -46,7 +49,7 @@ using namespace std;
 /// Other question: dealing with list of options is rather common
 /// occurrence -- command-line arguments, but also card files; maybe one
 /// could somehow use base/derived classes to share common functionality? 
-///
+/// \endif
 class CmdLine {
   mutable map<string,int> __options;
   vector<string> __arguments;

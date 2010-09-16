@@ -36,9 +36,13 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// @ingroup advanced_usage
+/// \class _NoInfo
 /// dummy class, used as a default template argument
 class _NoInfo {};
 
+/// @ingroup advanced_usage
+/// \class NNHInfo
 /// template that will help initialise a BJ with a PseudoJet and extra information
 template<class I> class NNHInfo {
 public:
@@ -49,6 +53,7 @@ private:
   I * _info;
 };
 
+/// @ingroup advanced_usage
 /// Specialisation of NNHInfo for cases where there is no extra info
 template<> class NNHInfo<_NoInfo>  {
 public:
@@ -59,6 +64,11 @@ public:
 
 
 //----------------------------------------------------------------------
+/// @ingroup advanced_usage
+/// \class NNH
+/// Help solve closest pair problems with generic interparticle and
+/// beam distance.
+///
 /// Class to help solve closest pair problems with generic interparticle
 /// distances and a beam distance, using Anderberg's Nearest Neighbour
 /// Heuristic.
@@ -69,7 +79,7 @@ public:
 /// distances.
 ///
 /// This class can be used with or without an extra "Information" template, 
-//// i.e. NNB<BJ> or NNH<BJ,I>
+/// i.e. NNB<BJ> or NNH<BJ,I>
 /// 
 /// For the NNH<BJ> version of the class to function, BJ must provide 
 /// three member functions

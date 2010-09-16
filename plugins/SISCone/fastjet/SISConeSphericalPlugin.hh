@@ -13,6 +13,11 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
+/// @ingroup plugins
+/// \class SISConeSphericalPlugin
+/// Implementation of the spherical version of the SISCone algorithm
+/// (plugin for fastjet v2.1 upwards)
+///
 /// SISConeSphericalPlugin is a plugin for fastjet (v2.1 upwards) that
 /// provides an interface to the seedless infrared safe cone jet
 /// finder by Gregory Soyez and Gavin Salam.
@@ -162,6 +167,8 @@ private:
 };
 
 //======================================================================
+/// @ingroup extra_info
+/// \class SISConeSphericalExtras
 /// Class that provides extra information about a SISCone clustering
 class SISConeSphericalExtras : public SISConeBaseExtras {
 public:

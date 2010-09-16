@@ -40,9 +40,13 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class Dnn2piCylinder
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the surface of cylinder (using one 
 /// DnnPlane object spanning 0--2pi).
+/// \endif
 class Dnn2piCylinder : public DynamicNearestNeighbours {
  public:
   /// empty initaliser

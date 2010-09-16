@@ -72,8 +72,11 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /**
+ * \if internal_doc
+ * @ingroup internal
  * \class Point
  * class to handle a 2d point
+ * \endif
  */
 class Point{
 public:
@@ -122,8 +125,11 @@ inline double scalar_product(const Point &p1, const Point &p2){
 
 
 /**
+ * \if internal_doc
+ * @ingroup internal
  * \class GraphEdge
  * handle an edge of the Voronoi Diagram.
+ * \endif
  */
 class GraphEdge{
 public:
@@ -139,8 +145,11 @@ public:
 
 
 /**
+ * \if internal_doc
+ * @ingroup internal
  * \class Site
  * structure used both for particle sites and for vertices.
+ * \endif
  */
 class Site{
  public:
@@ -190,7 +199,14 @@ public:
   Halfedge *PQnext;
 };
 
-
+/**
+ * \if internal_doc
+ * @ingroup internal
+ * \class VoronoiDiagramGenerator
+ * Shane O'Sullivan C++ version of Stephan Fortune Voronoi diagram
+ * generator
+ * \endif
+ */
 class VoronoiDiagramGenerator{
 public:
   VoronoiDiagramGenerator();

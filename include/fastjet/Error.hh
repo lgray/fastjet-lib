@@ -39,6 +39,8 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// @ingroup error_handling
+/// \class Error
 /// class corresponding to errors that will be thrown by fastjet
 class Error {
 public:

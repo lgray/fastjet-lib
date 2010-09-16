@@ -44,6 +44,10 @@ class PseudoJet;
 
 //----------------------------------------------------------------------
 //
+/// @ingroup plugins
+/// \class NestedDefsPlugin
+/// Plugin to run multiple jet definitions successively (plugin for fastjet v2.4 upwards)
+///
 /// NestedAglsPlugin is a plugin for fastjet (v2.4 upwards) that, given
 /// a list of jet definitions, performs the clustering by feeding the 
 /// particles to the first algorithm and then, successively feeding the 

@@ -155,6 +155,8 @@ class ClusterSequence;
 
 
 //======================================================================
+/// @ingroup basic_classes
+/// \class JetDefinition
 /// class that is intended to hold a full definition of the jet
 /// clusterer
 class JetDefinition {
@@ -318,6 +320,8 @@ public:
 
 public:
   //======================================================================
+  /// @ingroup advanced_usage
+  /// \class Recombiner
   /// An abstract base class that will provide the recombination scheme
   /// facilities and/or allow a user to extend these facilities
   class Recombiner {
@@ -352,8 +356,14 @@ public:
   
   
   //======================================================================
+  /// @ingroup advanced_usage
+  /// \class DefaultRecombiner
   /// A class that will provide the recombination scheme facilities and/or
   /// allow a user to extend these facilities
+  ///
+  /// This class is derived from the (abstract) class Recombiner. It
+  /// simply "sums" PseudoJets using a specified recombination scheme
+  /// (E-scheme by default)
   class DefaultRecombiner : public Recombiner {
   public:
     DefaultRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 
@@ -376,8 +386,13 @@ public:
 
 
   //======================================================================
+  /// @ingroup advanced_usage
+  /// \class Plugin
   /// a class that allows a user to introduce their own "plugin" jet
   /// finder
+  ///
+  /// Note that all the plugins provided with FastJet are derived from
+  /// this class
   class Plugin{
   public:
     /// return a textual description of the jet-definition implemented

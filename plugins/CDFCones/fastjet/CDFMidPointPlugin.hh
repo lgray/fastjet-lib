@@ -39,6 +39,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
+/// @ingroup plugins
+/// \class CDFMidPointPlugin
+/// Implementation of the MidPoint algorithm from CDF (plugin for
+/// fastjet-v2.1 upwards)
+///
+/// A plugin for fastjet-v2.1 that provides an interface to the CDF
+/// midpoint algorithm
+///
 /// CDFMidPointPlugin is a plugin for fastjet (v2.1 upwards) that
 /// provides an interface to the CDF version of Run-II iterative cone
 /// algorithm with midpoint seeds (also known as the Iterative Legacy

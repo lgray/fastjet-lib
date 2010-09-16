@@ -39,6 +39,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
+/// @ingroup plugins
+/// \class D0RunIIConePlugin
+/// Implementation of the D0 Run II Cone (plugin for fastjet v2.1 upwards)
+/// 
 /// D0RunIIConePlugin is a plugin for fastjet (v2.1 upwards) that
 /// provides an interface to the D0 version of Run-II iterative cone
 /// algorithm with midpoint seeds (also known as the Iterative Legacy

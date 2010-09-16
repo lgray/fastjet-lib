@@ -1,3 +1,23 @@
+2010-09-16  Gregory Soyez  <soyez@cern.ch>
+
+	* include/fastjet/ClusterSequenceWrapper.hh:
+	  placed things in the fastjet namespace
+
+	* include/fastjet/PseudoJet.hh (PseudoJet):
+	  simplified the ctor with initialisation from a generic 4-vector
+
+	* Doxyfile and most of the headers,
+	  Doxyfile-devel                                 *** ADDED ***
+	  Doxygen documentation cleaning:
+	  - classified the classes into modules (see base.hh for the list)
+	  - added an internal tag (internal_doc) to allow removing
+	    classes from the public page
+	  - removed undocumented classes and private class members from
+	    the public doxygen doc.
+	  - added a Doxygen-devel file that (on top of the public/default
+	    doc) includes internal classes and private member.
+
+
 2010-09-15  Gregory Soyez  <soyez@cern.ch>
 
 	* include/fastjet/Makefile.am:

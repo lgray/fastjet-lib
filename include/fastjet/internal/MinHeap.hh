@@ -40,8 +40,12 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //======================================================================
+/// \if internal_doc
+/// @ingroup internal
+/// \class MinHeap
 /// A class which provides a "heap"-like structure that allows
 /// access to a the minimal value of a dynamically changing set of numbers
+/// \endif
 class MinHeap {
 public:
   /// construct a MinHeap from the vector of values, allowing future

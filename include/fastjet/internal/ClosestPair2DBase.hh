@@ -37,8 +37,12 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
+/// \if internal_doc
+/// @ingroup internal
+/// \class Coord2D
 /// class for representing 2d coordinates and carrying out some basic 
 /// operations on them
+/// \endif
 class Coord2D {
 public:
   double x, y;
@@ -79,7 +83,11 @@ public:
 
 
 //----------------------------------------------------------------------
+/// \if internal_doc
+/// @ingroup internal
+/// \class ClosestPair2DBase
 /// abstract base class for finding closest pairs in 2D
+/// \endif
 class ClosestPair2DBase {
 public:
   /// provides the IDs of the closest pair as well as the squared

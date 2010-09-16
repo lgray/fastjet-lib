@@ -54,6 +54,8 @@ const double MaxRap = 1e5;
 /// default value for phi, meaning it (and rapidity) have yet to be calculated) 
 const double pseudojet_invalid_phi = -100.0;
 
+/// @ingroup basic_classes
+/// \class PseudoJet
 /// Class to contain pseudojets, including minimal information of use to
 /// to jet-clustering routines.
 class PseudoJet {
@@ -238,6 +240,7 @@ class PseudoJet {
   /// make this easier.
   //\{
 
+  /// @ingroup extra_info
   /// \class ExtraInfo
   /// a base class to hold extra information in PseudoJet
   ///
@@ -474,7 +477,11 @@ void sort_indices(std::vector<int> & indices,
 template<class T> std::vector<T> objects_sorted_by_values(const std::vector<T> & objects, 
 					      const std::vector<double> & values);
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class IndexedSortHelper
 /// a class that helps us carry out indexed sorting.
+/// \endif
 class IndexedSortHelper {
 public:
   inline IndexedSortHelper (const std::vector<double> * reference_values) {
@@ -493,36 +500,16 @@ private:
 // NB: do not know if it really needs to be inline, but when it wasn't
 //     linking failed with g++ (who knows what was wrong...)
 template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
-  // transfer the generic part
-  _px = some_four_vector[0];
-  _py = some_four_vector[1];
-  _pz = some_four_vector[2];
-  _E  = some_four_vector[3];
-
   // now check whether L is simply a class that implements
   // some_fuor_vector[0--3] or actually is derived from PseudoJet and
   // has extra information
   PseudoJetPlusInfoHandler<L, IsBaseAndDerived<PseudoJet,L>::value> pjpi_handler(some_four_vector);
 
   if (pjpi_handler() != NULL){
-    PseudoJet *pj = pjpi_handler();
-
-    // transfer the optional information
-    _cluster_hist_index = pj->cluster_hist_index();
-    _user_index = pj->user_index();
-
-    _associated_csw.reset(pj->associated_cluster_sequence_shared());
-
-    _kt2 = pj->perp2();
-    _phi = pj->phi();
-
-    // transfer the extra information
-    _extra_info.reset(pj->extra_info_shared());
-
+    const PseudoJet *pj = pjpi_handler();
+    reset(*pj);
   } else {
-    _finish_init();
-    // some default values for these two indices
-    _reset_indices();
+    reset(some_four_vector);
   }
 }
 

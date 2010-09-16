@@ -41,8 +41,12 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
+/// \if internal_doc
+/// @ingroup internal
+/// \class ClosestPair2D
 /// concrete implementation for finding closest pairs in 2D -- will
 /// use Chan's (hopefully efficient) shuffle based structures
+/// \endif
 class ClosestPair2D : public ClosestPair2DBase {
 public:
   /// constructor from a vector of 2D positions -- number of objects
@@ -181,7 +185,11 @@ private:
 
 
 //----------------------------------------------------------------------
+/// \if internal_doc
+/// @ingroup internal
+/// \class ClosestPair2D::Point
 /// class for representing all info needed about a point
+/// \endif
 class ClosestPair2D::Point {
 public:
   /// the point's coordinates

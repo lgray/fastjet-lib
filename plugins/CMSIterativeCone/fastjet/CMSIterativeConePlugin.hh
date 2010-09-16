@@ -41,9 +41,10 @@ class PseudoJet;
 
 //----------------------------------------------------------------------
 //
-/// CMSIterativeConePlugin is a plugin for fastjet (v2.4 upwards)
-///
 
+/// @ingroup plugins
+/// \class CMSIterativeConePlugin
+/// Implementation of the CMS Iterative Cone (plugin for fastjet v2.4 upwards)
 class CMSIterativeConePlugin : public JetDefinition::Plugin {
 public:
   /// Main constructor for the CMSIterativeCone Plugin class.  

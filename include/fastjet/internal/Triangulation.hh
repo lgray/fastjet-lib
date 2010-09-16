@@ -42,8 +42,12 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// \if internal_doc
+/// @ingroup internal
+/// \struct K
 /// the basic geometrical kernel that lies at the base of all CGAL
 /// operations
+/// \endif
 #ifdef CGAL_SIMPLE_KERNEL
 struct K : CGAL::Simple_cartesian<double> {};
 #else
@@ -55,7 +59,11 @@ const int INFINITE_VERTEX=-1;
 const int NEW_VERTEX=-2;
 const double HUGE_DOUBLE=1e300;
 
+/// \if internal_doc
+/// @ingroup internal
+/// \struct InitialisedInt
 /// A class to provide an "int" with an initial value.
+/// \endif
 class InitialisedInt {
  private:
   int _val;

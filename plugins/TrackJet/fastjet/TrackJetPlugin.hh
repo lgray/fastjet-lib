@@ -40,6 +40,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class PseudoJet;
 
 //----------------------------------------------------------------------
+
+/// @ingroup plugins
+/// \class TrackJetPlugin
+/// Implementation of the TrackJet algorithm (plugin for fastjet v2.4 upwards)
 //
 class TrackJetPlugin : public JetDefinition::Plugin {
 public:

@@ -41,8 +41,11 @@ class ClusterSequence;
 
 //----------------------------------------------------------------------
 //
-/// EECambridgePlugin is a plugin for fastjet (v2.4 upwards)
+/// @ingroup plugins
+/// \class EECambridgePlugin
+/// Implementation of the e+e- Cambridge algorithm (plugin for fastjet v2.4 upwards)
 ///
+/// EECambridgePlugin is a plugin for fastjet (v2.4 upwards)
 /// It implements the Cambridge algorithm, as defined in 
 /// 
 /// Better jet clustering algorithms
@@ -53,7 +56,6 @@ class ClusterSequence;
 /// On construction one must supply a ycut value.
 ///
 /// To get the jets at the end call ClusterSequence::inclusive_jets();
-/// 
 class EECambridgePlugin : public JetDefinition::Plugin {
 public:
   /// Main constructor for the EECambridge Plugin class.  

@@ -39,8 +39,10 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// a plugin for fastjet-v2.1 that provides an interface to the CDF
-/// jetclu algorithm
+/// @ingroup plugins
+/// \class CDFJetCluPlugin
+/// Implementation of the JetClu algorithm from CDF (plugin for
+/// fastjet-v2.1 upwards)
 class CDFJetCluPlugin : public JetDefinition::Plugin {
 public:
   /// a compact constructor

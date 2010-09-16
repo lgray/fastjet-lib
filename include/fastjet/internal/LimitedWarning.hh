@@ -35,8 +35,12 @@
 #include<iostream>
 #include<string>
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class LimitedWarning
 /// class to provide facilities for giving warnings up to some maximum
 /// number of times
+/// \endif
 class LimitedWarning {
 public:
   

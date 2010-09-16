@@ -44,8 +44,12 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// Shortcut for dealing with eta-phi coordinates.
 //typedef std::pair<double,double> EtaPhi;
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class EtaPhi
 /// use a class instead of a pair so that phi can be sanitized
 /// and put into proper range on initialization.
+/// \endif
 class EtaPhi {
 public:
   double first, second;
@@ -59,8 +63,12 @@ public:
 
 };
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class DnnError
 /// class corresponding to errors that will be thrown by Dynamic
 /// Nearest Neighbours code
+/// \endif
 class DnnError {
 public:
   // constructors
@@ -75,6 +83,11 @@ private:
 };
 
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class DynamicNearestNeighbours
+/// Abstract base class for quick location of nearest neighbours in a set of
+/// points.
 ///
 /// Abstract base class for quick location of nearest neighbours in a set of
 /// points, with facilities for adding and removing points from the
@@ -86,6 +99,7 @@ private:
 /// nearest-neighbour location on different 2-d geometries and with
 /// various underlying data structures and algorithms.
 ///
+/// \endif
 class DynamicNearestNeighbours {
 
 public:

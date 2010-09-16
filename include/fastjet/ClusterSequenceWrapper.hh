@@ -32,17 +32,21 @@
 #ifndef __FASTJET_CLUSTER_SEQUENCE_WRAPPER_HH__
 #define __FASTJET_CLUSTER_SEQUENCE_WRAPPER_HH__
 
+#include "fastjet/internal/base.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 class ClusterSequence;
 
 // forward declaration of the ClusterSequenceWrapper
+/// \if internal_doc
+/// @ingroup internal
 /// \class ClusterSequenceWrapper
 ///
 /// A wrapper class that hold a pointer to a ClusterSequence object
 /// It has ClusterSequence as a friend class so that only
 /// ClusterSequence can change its availability status
+/// \endif
 class ClusterSequenceWrapper{
 public:
   ClusterSequenceWrapper() : _cs(NULL){};

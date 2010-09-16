@@ -41,10 +41,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
 //======================================================================
+/// \if internal_doc
+/// @ingroup internal
+/// \class SearchTree
+/// Efficient class for a search tree
+///
 /// This is the class for a search tree designed to be especially efficient
 /// when looking for successors and predecessors (to be used in Chan's
 /// CP algorithm). It has the requirement that the maximum size of the
 /// search tree must be known in advance.
+/// \endif
 template<class T> class SearchTree {
 public:
 
@@ -132,6 +138,11 @@ private:
 
 
 //======================================================================
+/// \if internal_doc
+/// @ingroup internal
+/// \class SearchTree::Node
+/// A node in the search tree
+/// \endif
 template<class T> class SearchTree<T>::Node{
 public:
   Node() {}; /// default constructor
@@ -170,6 +181,11 @@ template<class T> void SearchTree<T>::Node::reset_parents_link_to_me(typename Se
 
 
 //======================================================================
+/// \if internal_doc
+/// @ingroup internal
+/// \class SearchTree::circulator
+/// circulator for the search tree
+/// \endif
 template<class T> class SearchTree<T>::circulator{
 public:
 
@@ -227,6 +243,11 @@ private:
 
 
 //======================================================================
+/// \if internal_doc
+/// @ingroup internal
+/// \class SearchTree::const_circulator
+/// A const_circulator for the search tree
+/// \endif
 template<class T> class SearchTree<T>::const_circulator{
 public:
 

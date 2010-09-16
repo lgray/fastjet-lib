@@ -37,8 +37,10 @@
 
 FASTJET_BEGIN_NAMESPACE
 
+/// @ingroup area_classes
+/// \class ClusterSequenceAreaBase
 /// base class that sets interface for extensions of ClusterSequence
-/// that provide information about the area of each jet; 
+/// that provide information about the area of each jet
 ///
 /// the virtual functions here all return 0, since no area determination
 /// is implemented.

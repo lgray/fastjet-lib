@@ -42,10 +42,18 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //======================================================================
+/// @ingroup sec_area_classes
+/// \class ClusterSequenceActiveAreaExplicitGhosts
+/// Like ClusterSequence with computation of the active jet area with the
+/// addition of explicit ghosts
+///
 /// Class that behaves essentially like ClusterSequence except
 /// that it also provides access to the area of a jet (which
 /// will be a random quantity... Figure out what to do about seeds 
 /// later...)
+///
+/// This class should not be used directly. Rather use
+/// ClusterSequenceArea with the appropriate AreaDefinition
 class ClusterSequenceActiveAreaExplicitGhosts : 
   public ClusterSequenceAreaBase {
 public:

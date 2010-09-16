@@ -37,6 +37,7 @@
 FASTJET_BEGIN_NAMESPACE
 
 //-----------------------------------------------
+/// \ingroup extra_info
 /// \class PseudoJetPlusInfo
 /// a templated extension of PseudoJet that carries extra information
 ///

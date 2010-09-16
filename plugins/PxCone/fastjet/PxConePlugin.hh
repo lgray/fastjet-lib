@@ -39,6 +39,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
+/// @ingroup plugins
+/// \class PxConePlugin
+/// Implementation of the PxCone algorithm (plugin for fastjet v2.1 upwards)
+///
 /// PxConePlugin is a plugin for fastjet (v2.1 upwards) that provides
 /// an interface to the fortran pxcone iterative cone algorithm with
 /// midpoint seeds.
@@ -59,7 +63,6 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///
 /// The functionality of pxcone is described at 
 /// http://www.hep.man.ac.uk/u/wplano/ConeJet.ps
-///
 //
 //----------------------------------------------------------------------
 class PxConePlugin : public JetDefinition::Plugin {

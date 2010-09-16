@@ -40,8 +40,12 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class DnnPlane
 /// class derived from DynamicNearestNeighbours that provides an
 /// implementation for the Euclidean plane
+/// \endif
 class DnnPlane : public DynamicNearestNeighbours {
  public:
   /// empty initaliser

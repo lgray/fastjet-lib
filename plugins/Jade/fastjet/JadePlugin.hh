@@ -40,8 +40,11 @@ class ClusterSequence;
 
 //----------------------------------------------------------------------
 //
-/// JadePlugin is a plugin for fastjet (v2.4 upwards)
+/// @ingroup plugins
+/// \class JadePlugin
+/// Implementation of the e+e- Jade algorithm (plugin for fastjet v2.4 upwards)
 ///
+/// JadePlugin is a plugin for fastjet (v2.4 upwards)
 /// It implements the JADE algorithm, which is an e+e- sequential
 /// recombination algorithm with interparticle distance
 ///
@@ -71,7 +74,6 @@ class ClusterSequence;
 ///   vector<PseudoJet> jets = cluster_sequence.exclusive_jets_ycut(ycut);
 ///
 /// and related routines.
-///
 class JadePlugin : public JetDefinition::Plugin {
 public:
   /// Main constructor for the Jade Plugin class.  

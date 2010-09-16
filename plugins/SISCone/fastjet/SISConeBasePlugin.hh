@@ -14,6 +14,11 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
+/// \if internal_doc
+/// @ingroup internal
+/// \class SISConeBasePlugin
+/// Implementation of the SISCone algorithm, base class (plugin for fastjet v2.1 upwards)
+///
 /// SISConeBasePlugin is a plugin for fastjet (v2.1 upwards) that
 /// provides a base interface to SISCone-type cone jet finder by
 /// Gregory Soyez and Gavin Salam.
@@ -29,6 +34,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///
 /// For further details, see the derived plugins or
 /// http://projects.hepforge.com/siscone
+///
+/// \endif
 //
 class SISConeBasePlugin : public JetDefinition::Plugin {
 public:
@@ -123,9 +130,14 @@ protected:
 
 
 //======================================================================
+/// @ingroup extra_info
+/// \class SISConeBaseExtras
 /// Class that provides extra information about a SISCone clustering
-/// the only thing that needs to be done for thee derived classes
-/// is to define '_jet_def_plugin', implement
+///
+/// This is only the base class that the "regular" and "spherical"
+/// implementations of SISCone will have to overload. The only thing
+/// that needs to be done for the derived classes is to define
+/// '_jet_def_plugin', implement
 ///   jet_def_plugin();
 /// and add the corresponding plugin class as a friend
 class SISConeBaseExtras : public ClusterSequence::Extras {

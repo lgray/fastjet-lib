@@ -53,6 +53,10 @@ namespace gas {
 }
 
 //----------------------------------------------------------------------
+/// @ingroup area_classes
+/// \class GhostedAreaSpec
+/// Parameters to configure the computation of jet areas using ghosts
+///
 /// Class that defines the parameters that go into the measurement
 /// of active jet areas.
 class GhostedAreaSpec {

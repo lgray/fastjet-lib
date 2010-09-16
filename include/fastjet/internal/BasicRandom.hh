@@ -28,6 +28,11 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// \if internal_doc
+/// @ingroup internal
+/// \class BasicRandom
+/// Base class for random number generator of a generic value type
+/// \endif
 template<typename _Tp> class BasicRandom {
 public:
   typedef _Tp          value_type;
@@ -54,6 +59,11 @@ int __default_random_generator(int *__iseed);
 
 
 //   specializations
+
+/// \if internal_doc
+/// @ingroup internal
+/// template specialization (int) for the BasicRandom template class. 
+/// \endif
 template<>
 class BasicRandom<int>
 {
@@ -111,7 +121,10 @@ private:
 };
   
 
+/// \if internal_doc
+/// @ingroup internal
 /// template specialization (double) for the BasicRandom template class. 
+/// \endif
 template<> class BasicRandom<double> {
 public:
   typedef double       value_type;

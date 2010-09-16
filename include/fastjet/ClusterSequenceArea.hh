@@ -40,6 +40,8 @@
 
 FASTJET_BEGIN_NAMESPACE
 
+/// @ingroup area_classes
+/// \class ClusterSequenceArea
 /// General class for user to obtain ClusterSequence with additional
 /// area information.
 ///
