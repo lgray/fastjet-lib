@@ -54,6 +54,9 @@ const double MaxRap = 1e5;
 /// default value for phi, meaning it (and rapidity) have yet to be calculated) 
 const double pseudojet_invalid_phi = -100.0;
 
+// forward definition
+class ClusterSequenceAreaBase;
+
 /// @ingroup basic_classes
 /// \class PseudoJet
 /// Class to contain pseudojets, including minimal information of use to
@@ -303,43 +306,91 @@ class PseudoJet {
   /// case, return its partner through the argument. Otherwise,
   /// 'partner' is set to 0.
   ///
-  /// false is also returned if this PseudoJet has no parent
-  /// ClusterSequence
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
   virtual bool has_partner(PseudoJet &partner) const;
 
   /// check if it has been recombined with another PseudoJet in which
   /// case, return its child through the argument. Otherwise, 'child'
   /// is set to 0.
   /// 
-  /// false is also returned if this PseudoJet has no parent
-  /// ClusterSequence, with the child set to 0
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
   virtual bool has_child(PseudoJet &child) const;
 
   /// check if it is the product of a recombination, in which case
   /// return the 2 parents through the 'parent1' and 'parent2'
   /// arguments. Otherwise, set these to 0.
   ///
-  /// false is also returned if this PseudoJet has no parent
-  /// ClusterSequence
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
   virtual bool has_parents(PseudoJet &parent1, PseudoJet &parent2) const;
 
   /// check if the current PseudoJet contains the one passed as
   /// argument.
   ///
-  /// false is also returned if this PseudoJet has no parent
-  /// ClusterSequence.
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
   virtual bool contains(const PseudoJet &constituent) const;
 
   /// check if the current PseudoJet is contained the one passed as
   /// argument.
   ///
-  /// false is also returned if this PseudoJet has no parent
-  /// ClusterSequence
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
   virtual bool is_inside(const PseudoJet &jet) const;
 
-  /// retrieve the constituents. An empty vector is returned if there is
-  /// no parent ClusterSequence
+  /// retrieve the constituents. 
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
   virtual std::vector<PseudoJet> constituents() const;
+
+  /// return a vector of all subjets of the current jet (in the sense
+  /// of the exclusive algorithm) that would be obtained when running
+  /// the algorithm with the given dcut. 
+  ///
+  /// Time taken is O(m ln m), where m is the number of subjets that
+  /// are found. If m gets to be of order of the total number of
+  /// constituents in the jet, this could be substantially slower than
+  /// just getting that list of constituents.
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  std::vector<PseudoJet> exclusive_subjets (const double & dcut) const;
+
+  /// return the size of exclusive_subjets(...); still n ln n with same
+  /// coefficient, but marginally more efficient than manually taking
+  /// exclusive_subjets.size()
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  int n_exclusive_subjets(const double & dcut) const;
+
+  /// return the list of subjets obtained by unclustering the supplied
+  /// jet down to n subjets (or all constituents if there are fewer
+  /// than n).
+  ///
+  /// requires n ln n time
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  std::vector<PseudoJet> exclusive_subjets (int nsub) const;
+
+  /// return the dij that was present in the merging nsub+1 -> nsub 
+  /// subjets inside this jet.
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  double exclusive_subdmerge(int nsub) const;
+
+  /// return the maximum dij that occurred in the whole event at the
+  /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
+  /// this jet.
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  double exclusive_subdmerge_max(int nsub) const;
 
 
   // the following ones require a computation of the area in the
@@ -349,21 +400,21 @@ class PseudoJet {
   /// check if it has a defined area
   virtual bool has_area() const;
 
-  /// return the jet (scalar) area
-  /// 0 is returned if there is no support for area in the parent CS
+  /// return the jet (scalar) area.
+  /// throws an Error if there is no support for area in the parent CS
   virtual double area() const;
 
   /// return the error (uncertainty) associated with the determination
-  /// of the area of this jet
-  /// 0 is returned if there is no support for area in the parent CS
+  /// of the area of this jet.
+  /// throws an Error if there is no support for area in the parent CS
   virtual double area_error() const;
 
-  /// return the jet 4-vector area
-  /// 0 is returned if there is no support for area in the parent CS
+  /// return the jet 4-vector area.
+  /// throws an Error if there is no support for area in the parent CS
   virtual PseudoJet area_4vector() const;
 
-  /// true if this jet is made exclusively of ghosts
-  /// false is returned if there is no support for area in the parent CS
+  /// true if this jet is made exclusively of ghosts.
+  /// throws an Error if there is no support for area in the parent CS
   virtual bool is_pure_ghost() const;
 
   //\} --- end of jet structure -------------------------------------
@@ -397,6 +448,15 @@ class PseudoJet {
   const SharedPtr<ClusterSequenceWrapper> & associated_csw() const {
     return _associated_csw;
   }
+  
+  /// if the jet has a valid associated cluster sequence then return a
+  /// pointer to it; otherwise throw an error
+  const ClusterSequence * validated_cs() const;
+
+  /// if the jet has valid area information then return a pointer to
+  /// the associated ClusterSequenceAreaBase object; otherwise throw an error
+  const ClusterSequenceAreaBase * validated_csab() const;
+
   //\} ---- end of internal use functions ---------------------------
   
  private: 

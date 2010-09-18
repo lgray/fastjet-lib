@@ -2,7 +2,7 @@
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+// Copyright (c) 2005-2010, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -60,8 +60,7 @@
 using namespace std;
 
 // a declaration of a function that pretty prints a list of jets
-void print_jets (const fastjet::ClusterSequenceAreaBase &, 
-                 const vector<fastjet::PseudoJet> &);
+void print_jets (const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
@@ -135,7 +134,7 @@ int main (int argc, char ** argv) {
   // print them out
   cout << "Printing inclusive jets with pt > "<< ptmin<<" GeV\n";
   cout << "---------------------------------------\n";
-  print_jets(clust_seq, inclusive_jets);
+  print_jets(inclusive_jets);
   cout << endl;
 
   
@@ -148,8 +147,7 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets
-void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq, 
-		 const vector<fastjet::PseudoJet> & unsorted_jets) {
+void print_jets (const vector<fastjet::PseudoJet> & unsorted_jets) {
 
   // sort jets into increasing pt
   vector<fastjet::PseudoJet> jets = sorted_by_pt(unsorted_jets);  
@@ -157,11 +155,8 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
   printf(" ijet   rap      phi        Pt         area  +-   err\n");
   for (size_t j = 0; j < jets.size(); j++) {
 
-    double area     = clust_seq.area(jets[j]);
-    double area_error = clust_seq.area_error(jets[j]);
-
-    //double area       = jets[j].area();
-    //double area_error = jets[j].area_error();
+    double area       = jets[j].area();
+    double area_error = jets[j].area_error();
 
     printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f\n",j,jets[j].rap(),
 	   jets[j].phi(),jets[j].perp(), area, area_error);

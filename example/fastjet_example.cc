@@ -49,8 +49,7 @@
 using namespace std;
 
 // a declaration of a function that pretty prints a list of jets
-void print_jets (const fastjet::ClusterSequence &, 
-                 const vector<fastjet::PseudoJet> &);
+void print_jets (const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
@@ -87,7 +86,7 @@ int main (int argc, char ** argv) {
   // print them out
   cout << "Printing inclusive jets with pt > "<< ptmin<<" GeV\n";
   cout << "---------------------------------------\n";
-  print_jets(clust_seq, inclusive_jets);
+  print_jets(inclusive_jets);
   cout << endl;
 
   // extract the exclusive jets with dcut = 25 GeV^2 
@@ -97,7 +96,7 @@ int main (int argc, char ** argv) {
   // print them out
   cout << "Printing exclusive jets with dcut = "<< dcut<<" GeV^2\n";
   cout << "--------------------------------------------\n";
-  print_jets(clust_seq, exclusive_jets);
+  print_jets(exclusive_jets);
 
 
 }
@@ -105,8 +104,7 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets
-void print_jets (const fastjet::ClusterSequence & clust_seq, 
-		 const vector<fastjet::PseudoJet> & jets) {
+void print_jets (const vector<fastjet::PseudoJet> & jets) {
 
   // sort jets into increasing pt
   vector<fastjet::PseudoJet> sorted_jets = sorted_by_pt(jets);  
@@ -117,7 +115,9 @@ void print_jets (const fastjet::ClusterSequence & clust_seq,
   
   // print out the details for each jet
   for (unsigned int i = 0; i < sorted_jets.size(); i++) {
-    //int n_constituents = clust_seq.constituents(sorted_jets[i]).size();
+    // the following is not super efficient since it creates an
+    // intermediate constituents vector
+    cout << sorted_jets[i].area() << endl;
     int n_constituents = sorted_jets[i].constituents().size();
     printf("%5u %15.8f %15.8f %15.8f %8u\n",
 	   i, sorted_jets[i].rap(), sorted_jets[i].phi(),

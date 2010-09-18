@@ -354,6 +354,21 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 
 
 //----------------------------------------------------------------------
+// If there is a valid cluster sequence associated with this jet,
+// returns a pointer to it; otherwise throws an Error.
+//
+// Open question: should these errors be upgraded to classes of their
+// own so that they can be caught? [Maybe, but later]
+const ClusterSequence * PseudoJet::validated_cs() const {
+  if (!_associated_csw()) 
+    throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence.");
+  if (!_associated_csw->is_alive()) 
+    throw Error("you requested information about the internal structure of a jet, but its associated ClusterSequence has gone out of scope.");
+  return _associated_csw->cs();
+}
+
+
+//----------------------------------------------------------------------
 // check if it has been recombined with another PseudoJet in which
 // case, return its partner through the argument. Otherwise,
 // 'partner' is set to 0.
@@ -361,12 +376,7 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::has_partner(PseudoJet &partner) const{
-  if (! has_associated_cluster_sequence()){
-    partner=PseudoJet(0.0,0.0,0.0,0.0);
-    return false;
-  }
-
-  return _associated_csw->cs()->has_partner(*this, partner);
+  return validated_cs()->has_partner(*this, partner);
 }
 
 //----------------------------------------------------------------------
@@ -377,12 +387,7 @@ bool PseudoJet::has_partner(PseudoJet &partner) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence, with the child set to 0
 bool PseudoJet::has_child(PseudoJet &child) const{
-  if (! has_associated_cluster_sequence()){
-    child = PseudoJet(0.0,0.0,0.0,0.0);
-    return false;
-  }
-
-  return _associated_csw->cs()->has_child(*this, child);
+  return validated_cs()->has_child(*this, child);
 }
 
 //----------------------------------------------------------------------
@@ -393,12 +398,7 @@ bool PseudoJet::has_child(PseudoJet &child) const{
 // false is also returned if this PseudoJet has no parent
 // ClusterSequence
 bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
-  if (! has_associated_cluster_sequence()){
-    parent1 = PseudoJet(0.0,0.0,0.0,0.0);
-    parent2 = PseudoJet(0.0,0.0,0.0,0.0);
-    return false;
-  }
-  return _associated_csw->cs()->has_parents(*this, parent1, parent2);
+  return validated_cs()->has_parents(*this, parent1, parent2);
 }
 
 //----------------------------------------------------------------------
@@ -408,9 +408,7 @@ bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence.
 bool PseudoJet::contains(const PseudoJet &constituent) const{
-  if (! has_associated_cluster_sequence()) return false;
-
-  return _associated_csw->cs()->object_in_jet(constituent, *this);
+  return validated_cs()->object_in_jet(constituent, *this);
 }
 
 //----------------------------------------------------------------------
@@ -420,9 +418,7 @@ bool PseudoJet::contains(const PseudoJet &constituent) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::is_inside(const PseudoJet &jet) const{
-  if (! has_associated_cluster_sequence()) return false;
-
-  return _associated_csw->cs()->object_in_jet(*this, jet);
+  return validated_cs()->object_in_jet(*this, jet);
 }
 
 
@@ -430,17 +426,85 @@ bool PseudoJet::is_inside(const PseudoJet &jet) const{
 // retrieve the constituents. An empty vector is returned if there is
 // no associated ClusterSequence
 vector<PseudoJet> PseudoJet::constituents() const{
-  // I think that the second check can be skipped
-  if (! has_associated_cluster_sequence()) return vector<PseudoJet>();
-
-  return _associated_csw->cs()->constituents(*this);
+  return validated_cs()->constituents(*this);
 }
 
+
+//----------------------------------------------------------------------
+// return a vector of all subjets of the current jet (in the sense
+// of the exclusive algorithm) that would be obtained when running
+// the algorithm with the given dcut. 
+//
+// Time taken is O(m ln m), where m is the number of subjets that
+// are found. If m gets to be of order of the total number of
+// constituents in the jet, this could be substantially slower than
+// just getting that list of constituents.
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+std::vector<PseudoJet> PseudoJet::exclusive_subjets (const double & dcut) const {
+  return validated_cs()->exclusive_subjets(*this, dcut);
+}
+
+//----------------------------------------------------------------------
+// return the size of exclusive_subjets(...); still n ln n with same
+// coefficient, but marginally more efficient than manually taking
+// exclusive_subjets.size()
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+int PseudoJet::n_exclusive_subjets(const double & dcut) const {
+  return validated_cs()->n_exclusive_subjets(*this, dcut);
+}
+
+//----------------------------------------------------------------------
+// return the list of subjets obtained by unclustering the supplied
+// jet down to n subjets (or all constituents if there are fewer
+// than n).
+//
+// requires n ln n time
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+std::vector<PseudoJet> PseudoJet::exclusive_subjets (int nsub) const {
+  return validated_cs()->exclusive_subjets(*this, nsub);
+}
+
+//----------------------------------------------------------------------
+// return the dij that was present in the merging nsub+1 -> nsub 
+// subjets inside this jet.
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+double PseudoJet::exclusive_subdmerge(int nsub) const {
+  return validated_cs()->exclusive_subdmerge(*this, nsub);
+}
+
+//----------------------------------------------------------------------
+// return the maximum dij that occurred in the whole event at the
+// stage that the nsub+1 -> nsub merge of subjets occurred inside 
+// this jet.
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+double PseudoJet::exclusive_subdmerge_max(int nsub) const {
+  return validated_cs()->exclusive_subdmerge_max(*this, nsub);
+}
 
 //----------------------------------------------------------------------
 // the following ones require a computation of the area in the
 // associated ClusterSequence (See ClusterSequenceAreaBase for details)
 //----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+// if possible, return a valid ClusterSequenceAreaBase pointer; otherwise
+// throw an error
+const ClusterSequenceAreaBase * PseudoJet::validated_csab() const {
+  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(validated_cs());
+  if (csab == NULL) throw Error("you requested jet-area related information, but the PseudoJet does not have associated area information.");
+  return csab;
+}
+
 
 //----------------------------------------------------------------------
 // check if it has a defined area
@@ -450,54 +514,39 @@ bool PseudoJet::has_area() const{
 }
 
 //----------------------------------------------------------------------
-// return the jet (scalar) area
-// 0 is returned if there is no support for area in the associated CS
+// return the jet (scalar) area.
+// throw an Error if there is no support for area in the associated CS
 double PseudoJet::area() const{
-  if (! has_associated_cluster_sequence()) return 0.0;
-  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
-  if (csab==NULL) return 0.0;
-
-  return csab->area(*this);
+  return validated_csab()->area(*this);
 }
 
 //----------------------------------------------------------------------
 // return the error (uncertainty) associated with the determination
-// of the area of this jet
-// 0 is returned if there is no support for area in the associated CS
+// of the area of this jet.
+// throws an Error if there is no support for area in the associated CS
 double PseudoJet::area_error() const{
-  if (! has_associated_cluster_sequence()) return 0.0;
-  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
-  if (csab==NULL) return 0.0;
-
-  return csab->area_error(*this);
+  return validated_csab()->area_error(*this);
 }
 
 //----------------------------------------------------------------------
 // return the jet 4-vector area
-// 0 is returned if there is no support for area in the associated CS
+// throws an Error if there is no support for area in the associated CS
 PseudoJet PseudoJet::area_4vector() const{
-  if (! has_associated_cluster_sequence()) return PseudoJet(0.0,0.0,0.0,0.0);
-  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
-  if (csab==NULL) return PseudoJet();
-
-  return csab->area_4vector(*this);
+  return validated_csab()->area_4vector(*this);
 }
 
 //----------------------------------------------------------------------
 // true if this jet is made exclusively of ghosts
-// false is returned if there is no support for area in the associated CS
+// throws an Error if there is no support for area in the associated CS
 bool PseudoJet::is_pure_ghost() const{
-  if (! has_associated_cluster_sequence()) return false;
-  const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(_associated_csw->cs());
-  if (csab==NULL) return false;
-
-  return csab->is_pure_ghost(*this);
+  return validated_csab()->is_pure_ghost(*this);
 }
 
 
 //----------------------------------------------------------------------
 //
-// end of the methods accessing the associated Cluster Sequence
+// end of the methods accessing the information in the associated
+// Cluster Sequence
 //
 //----------------------------------------------------------------------
 
@@ -511,6 +560,8 @@ void sort_indices(vector<int> & indices,
   IndexedSortHelper index_sort_helper(&values);
   sort(indices.begin(), indices.end(), index_sort_helper);
 }
+
+
 
 //----------------------------------------------------------------------
 /// given a vector of values with a one-to-one correspondence with the

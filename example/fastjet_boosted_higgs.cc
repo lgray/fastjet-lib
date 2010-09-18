@@ -153,7 +153,7 @@ int main (int argc, char ** argv) {
   fj::PseudoJet this_jet = jets[0], parent1, parent2;
   bool had_parents;
 
-  while ((had_parents = cs.has_parents(this_jet,parent1,parent2))) {
+  while ((had_parents = this_jet.has_parents(parent1,parent2))) {
     // make parent1 the more massive jet
     if (parent1.m() < parent2.m()) swap(parent1,parent2);
     //
@@ -193,7 +193,7 @@ int main (int argc, char ** argv) {
 
     double   dcut  = pow(Rfilt/R,2);  // for C/A get a view at Rfilt by
 				    // using a dcut=(Rfilt/R)^2
-    vector<fj::PseudoJet> filt_subjets = sorted_by_pt(cs.exclusive_subjets(this_jet, dcut));
+    vector<fj::PseudoJet> filt_subjets = sorted_by_pt(this_jet.exclusive_subjets(dcut));
 
     // now print out the filtered jets and reconstruct total 
     // at the same time

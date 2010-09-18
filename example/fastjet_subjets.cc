@@ -54,16 +54,13 @@ namespace fj = fastjet;
 
 
 // a declaration of a function that pretty prints a list of jets
-void print_jets (const fj::ClusterSequence &, 
-                 const vector<fj::PseudoJet> &);
+void print_jets (const vector<fj::PseudoJet> &);
 
 // and this pretty prinst a single jet
-void print_jet (const fj::ClusterSequence & clust_seq, 
-                const fj::PseudoJet & jet);
+void print_jet (const fj::PseudoJet & jet);
 
 // pretty print the jets and their subjets
-void print_jets_and_sub (const fj::ClusterSequence & clust_seq, 
-                         const vector<fj::PseudoJet> & jets,
+void print_jets_and_sub (const vector<fj::PseudoJet> & jets,
                          double dcut);
 
 /// an example program showing how to use fastjet
@@ -105,7 +102,7 @@ int main (int argc, char ** argv) {
   cout << "Printing inclusive jets (R = "<<R<<") with pt > "<< ptmin<<" GeV\n";
   cout << "and their subjets with smallR = " << smallR << "\n";
   cout << "---------------------------------------\n";
-  print_jets_and_sub(cam_seq, inclusive_jets, dcut_cam);
+  print_jets_and_sub(inclusive_jets, dcut_cam);
   cout << endl;
 
 
@@ -113,7 +110,7 @@ int main (int argc, char ** argv) {
   vector<fj::PseudoJet> exclusive_jets = cam_seq.exclusive_jets(dcut_cam);
   cout << "Printing exclusive jets with dcut = "<< dcut_cam<<" \n";
   cout << "--------------------------------------------\n";
-  print_jets(cam_seq, exclusive_jets);
+  print_jets(exclusive_jets);
 
 
 }
@@ -121,8 +118,7 @@ int main (int argc, char ** argv) {
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets
-void print_jets (const fj::ClusterSequence & clust_seq, 
-		 const vector<fj::PseudoJet> & jets) {
+void print_jets (const vector<fj::PseudoJet> & jets) {
 
   // sort jets into increasing pt
   vector<fj::PseudoJet> sorted_jets = sorted_by_pt(jets);  
@@ -134,7 +130,7 @@ void print_jets (const fj::ClusterSequence & clust_seq,
   // print out the details for each jet
   for (unsigned int i = 0; i < sorted_jets.size(); i++) {
     printf("%5u ",i);
-    print_jet(clust_seq, sorted_jets[i]);
+    print_jet(sorted_jets[i]);
   }
 
 }
@@ -142,8 +138,7 @@ void print_jets (const fj::ClusterSequence & clust_seq,
 
 //----------------------------------------------------------------------
 /// a function that pretty prints a list of jets
-void print_jets_and_sub (const fj::ClusterSequence & clust_seq, 
-                         const vector<fj::PseudoJet> & jets,
+void print_jets_and_sub (const vector<fj::PseudoJet> & jets,
                          double dcut) {
 
   // sort jets into increasing pt
@@ -156,12 +151,11 @@ void print_jets_and_sub (const fj::ClusterSequence & clust_seq,
   // print out the details for each jet
   for (unsigned int i = 0; i < sorted_jets.size(); i++) {
     printf("%5u       ",i);
-    print_jet(clust_seq, sorted_jets[i]);
-    vector<fj::PseudoJet> subjets = 
-      sorted_by_pt(clust_seq.exclusive_subjets(sorted_jets[i], dcut));
+    print_jet(sorted_jets[i]);
+    vector<fj::PseudoJet> subjets = sorted_by_pt(sorted_jets[i].exclusive_subjets(dcut));
     for (unsigned int j = 0; j < subjets.size(); j++) {
       printf("    -sub-%02u ",j);
-      print_jet(clust_seq, subjets[j]);
+      print_jet(subjets[j]);
     }
   }
 
@@ -170,9 +164,8 @@ void print_jets_and_sub (const fj::ClusterSequence & clust_seq,
 
 //----------------------------------------------------------------------
 /// print a single jet
-void print_jet (const fj::ClusterSequence & clust_seq, 
-                const fj::PseudoJet & jet) {
-  int n_constituents = clust_seq.constituents(jet).size();
+void print_jet (const fj::PseudoJet & jet) {
+  int n_constituents = jet.constituents().size();
   printf("%15.8f %15.8f %15.8f %8u\n",
          jet.rap(), jet.phi(), jet.perp(), n_constituents);
 }

@@ -210,7 +210,7 @@ int main (int argc, char ** argv) {
       for (size_t j = 0; j < jets.size(); j++) {
 	printf("%5u %15.8f %15.8f %15.8f\n",j,jets[j].rap(),jets[j].phi(),sqrt(jets[j].kt2()));
 	if (show_constituents) {
-	  vector<fj::PseudoJet> const_jets = clust_seq.constituents(jets[j]);
+	  vector<fj::PseudoJet> const_jets = jets[j].constituents();
 	  for (size_t k = 0; k < const_jets.size(); k++) {
 	    printf("        jet%03u %15.8f %15.8f %15.8f\n",j,const_jets[k].rap(),
 		   const_jets[k].phi(),sqrt(const_jets[k].kt2()));

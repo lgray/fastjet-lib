@@ -187,14 +187,14 @@ void print_jets (const fastjet::ClusterSequenceAreaBase & clust_seq,
   for (size_t j = 0; j < jets.size(); j++) {
 
     // get area of each jet
-    double area     = clust_seq.area(jets[j]);
+    double area     = jets[j].area();
 
     // "standard" correction. Subtract only the Pt
     double pt_corr  = jets[j].perp() - area*median_pt_per_area;
 
     // "extended" correction
     fastjet::PseudoJet sub_4vect = 
-                       median_pt_per_area4vector*clust_seq.area_4vector(jets[j]);
+                       median_pt_per_area4vector*jets[j].area_4vector();
     if (sub_4vect.perp2() >= jets[j].perp2() || 
 	sub_4vect.E()     >= jets[j].E()) {
       // if the correction is too large, set the jet to zero

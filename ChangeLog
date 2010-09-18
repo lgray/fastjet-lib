@@ -1,3 +1,29 @@
+2010-09-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_example.cc: 
+	* example/fastjet_areas.cc: 
+	* example/fastjet_subjets.cc: 
+	* example/fastjet_boosted_higgs.cc: 
+	* example/fastjet_timing.cc: 
+	* example/fastjet_timing_plugins.cc: 
+	* example/fastjet_subtraction.cc: 
+
+	  switched these over to new form of access to jet
+	  information.
+
+	* src/PseudoJet.cc: 
+	* include/fastjet/PseudoJet.hh: 
+	  added the validated_cs() and validated_csab() methods (intended
+	  mainly for internal use), which return pointers to the associated
+	  ClusterSequence (and ClusterSequenceAreaBase) objects if
+	  possible, otherwise throw an error.
+
+	  All methods that provide information from the cluster sequence
+	  now go through these methods (and so throw errors when they
+	  can't return sensible information).
+
+	  Also added the exclusive_subjet (etc) series of methods
+
 2010-09-16  Gregory Soyez  <soyez@cern.ch>
 
 	* include/fastjet/PseudoJet.hh:

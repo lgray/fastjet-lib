@@ -215,8 +215,7 @@ namespace fj = fastjet;
 inline double pow2(const double x) {return x*x;}
 
 // pretty print the jets and their subjets
-void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
-                         const vector<fj::PseudoJet> & jets, double dcut);
+void print_jets_and_sub (const vector<fj::PseudoJet> & jets, double dcut);
 
 string rootfile;
 CmdLine * cmdline_p;
@@ -224,7 +223,7 @@ CmdLine * cmdline_p;
 /// sort and pretty print jets, with exact behaviour depending on 
 /// whether ee_print is true or not
 bool ee_print = false;
-void print_jets(const vector<fj::PseudoJet> & jets, const fj::ClusterSequence & cs, bool show_const = false);
+void print_jets(const vector<fj::PseudoJet> & jets, bool show_const = false);
 
 void is_unavailable(const string & algname) {
   cerr << algname << " requested, but not available for this compilation";
@@ -492,23 +491,23 @@ int main (int argc, char ** argv) {
     // now provide some nice output...
     if (inclkt >= 0.0) {
       vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
-      print_jets(jets, clust_seq, show_constituents);
+      print_jets(jets, show_constituents);
 
     }
 
     if (excln > 0) {
       cout << "Printing "<<excln<<" exclusive jets\n";
-      print_jets(clust_seq.exclusive_jets(excln), clust_seq, show_constituents);
+      print_jets(clust_seq.exclusive_jets(excln), show_constituents);
     }
 
     if (excld > 0.0) {
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
-      print_jets(clust_seq.exclusive_jets(excld), clust_seq, show_constituents);
+      print_jets(clust_seq.exclusive_jets(excld), show_constituents);
     }
 
     if (excly > 0.0) {
       cout << "Printing exclusive jets for ycut = "<<excly<<"\n";
-      print_jets(clust_seq.exclusive_jets_ycut(excly), clust_seq, show_constituents);
+      print_jets(clust_seq.exclusive_jets_ycut(excly), show_constituents);
     }
 
     if (get_all_dij) {
@@ -525,7 +524,7 @@ int main (int argc, char ** argv) {
     // have the option of printing out the subjets (at scale dcut) of
     // each inclusive jet
     if (subdcut >= 0.0) {
-      print_jets_and_sub(clust_seq, clust_seq.inclusive_jets(), subdcut);
+      print_jets_and_sub(clust_seq.inclusive_jets(), subdcut);
     }
     
     // useful for testing that recombination sequences are unique
@@ -596,16 +595,15 @@ int main (int argc, char ** argv) {
 
 //------ HELPER ROUTINES -----------------------------------------------
 /// print a single jet
-void print_jet (const fj::ClusterSequence & clust_seq, 
-                const fj::PseudoJet & jet) {
-  int n_constituents = clust_seq.constituents(jet).size();
+void print_jet (const fj::PseudoJet & jet) {
+  int n_constituents = jet.constituents().size();
   printf("%15.8f %15.8f %15.8f %8u\n",
          jet.rap(), jet.phi(), jet.perp(), n_constituents);
 }
 
 
 //----------------------------------------------------------------------
-void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence & cs, bool show_constituents) {
+void print_jets(const vector<fj::PseudoJet> & jets_in, bool show_constituents) {
   vector<fj::PseudoJet> jets;
   if (ee_print) {
     jets = sorted_by_E(jets_in);
@@ -613,7 +611,7 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence
       printf("%5u %15.8f %15.8f %15.8f %15.8f\n",
 	     j,jets[j].px(),jets[j].py(),jets[j].pz(),jets[j].E());
       if (show_constituents) {
-	vector<fj::PseudoJet> const_jets = cs.constituents(jets[j]);
+	vector<fj::PseudoJet> const_jets = jets[j].constituents();
 	for (size_t k = 0; k < const_jets.size(); k++) {
 	  printf("        jet%03u %15.8f %15.8f %15.8f %15.8f\n",j,const_jets[k].px(),
 		 const_jets[k].py(),const_jets[k].pz(),const_jets[k].E());
@@ -629,7 +627,7 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence
 	     j,jets[j].rap(),jets[j].phi(),jets[j].perp());
 
       if (show_constituents) {
-	vector<fj::PseudoJet> const_jets = cs.constituents(jets[j]);
+	vector<fj::PseudoJet> const_jets = jets[j].constituents();
 	for (size_t k = 0; k < const_jets.size(); k++) {
 	  printf("        jet%03u %15.8f %15.8f %15.8f %5d\n",j,const_jets[k].rap(),
 		 const_jets[k].phi(),sqrt(const_jets[k].kt2()), const_jets[k].cluster_hist_index());
@@ -643,7 +641,8 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence
     ofstream ostr(rootfile.c_str());
     ostr << "# " << cmdline_p->command_line() << endl;
     ostr << "# output for root" << endl;
-    cs.print_jets_for_root(jets,ostr);
+    assert(jets.size() > 0);
+    jets[0].validated_cs()->print_jets_for_root(jets,ostr);
   }
 
 }
@@ -652,8 +651,7 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, const fj::ClusterSequence
 //----- SUBJETS --------------------------------------------------------
 /// a function that pretty prints a list of jets and the subjets for each
 /// one
-void print_jets_and_sub (fj::ClusterSequence & clust_seq, 
-                         const vector<fj::PseudoJet> & jets, double dcut) {
+void print_jets_and_sub (const vector<fj::PseudoJet> & jets, double dcut) {
 
   // sort jets into increasing pt
   vector<fj::PseudoJet> sorted_jets = sorted_by_pt(jets);  
@@ -667,37 +665,37 @@ void print_jets_and_sub (fj::ClusterSequence & clust_seq,
   enum SubType {internal, newclust_dcut, newclust_R};
   SubType subtype = internal;
   //SubType subtype = newclust_dcut;
+  //SubType subtype = newclust_R;
 
   // print out the details for each jet
-  for (unsigned int i = 0; i < sorted_jets.size(); i++) {
+  //for (unsigned int i = 0; i < sorted_jets.size(); i++) {
+  for (vector<fj::PseudoJet>::const_iterator jet = sorted_jets.begin(); 
+       jet != sorted_jets.end(); jet++) {
+    const fj::JetDefinition & jet_def = jet->validated_cs()->jet_def();
+
     // if jet pt^2 < dcut with kt alg, then some methods of
     // getting subjets will return nothing -- so skip the jet
-    if (clust_seq.jet_def().jet_algorithm() == fj::kt_algorithm 
-        && sorted_jets[i].perp2() < dcut) continue;
+    if (jet_def.jet_algorithm() == fj::kt_algorithm 
+        && jet->perp2() < dcut) continue;
 
-    printf("%5u       ",i);
-    print_jet(clust_seq, sorted_jets[i]);
+
+    printf("%5u       ",jet - sorted_jets.begin());
+    print_jet(*jet);
     vector<fj::PseudoJet> subjets;
     fj::ClusterSequence * cspoint;
     if (subtype == internal) {
-      cspoint = &clust_seq;
-      subjets = clust_seq.exclusive_subjets(sorted_jets[i], dcut);
-      //subjets = clust_seq.exclusive_subjets(sorted_jets[i], 5);
-      double ddnp1 = clust_seq.exclusive_subdmerge_max(sorted_jets[i], subjets.size());
-      double ddn = clust_seq.exclusive_subdmerge_max(sorted_jets[i], subjets.size()-1);
+      cspoint = 0;
+      subjets = jet->exclusive_subjets(dcut);
+      double ddnp1 = jet->exclusive_subdmerge_max(subjets.size());
+      double ddn   = jet->exclusive_subdmerge_max(subjets.size()-1);
       cout << "     for " << ddnp1 << " < d < " << ddn << " one has " << endl;
-      //subjets = clust_seq.exclusive_subjets(sorted_jets[i], dd*1.0000001);
     } else if (subtype == newclust_dcut) {
-      cspoint = new fj::ClusterSequence(clust_seq.constituents(sorted_jets[i]),
-                                        clust_seq.jet_def());
+      cspoint = new fj::ClusterSequence(jet->constituents(), jet_def);
       subjets = cspoint->exclusive_jets(dcut);
-      //subjets = cspoint->exclusive_jets(int(min(5U,cspoint->n_particles())));
     } else if (subtype == newclust_R) {
-      assert(clust_seq.jet_def().jet_algorithm() == fj::cambridge_algorithm);
-      fj::JetDefinition subjd(clust_seq.jet_def().jet_algorithm(), 
-                              clust_seq.jet_def().R()*sqrt(dcut));
-      cspoint = new fj::ClusterSequence(clust_seq.constituents(sorted_jets[i]),
-                                        subjd);
+      assert(jet_def.jet_algorithm() == fj::cambridge_algorithm);
+      fj::JetDefinition subjd(jet_def.jet_algorithm(), jet_def.R()*sqrt(dcut));
+      cspoint = new fj::ClusterSequence(jet->constituents(), subjd);
       subjets = cspoint->inclusive_jets();
     } else {
       cerr << "unrecognized subtype for subjet finding" << endl;
@@ -707,10 +705,10 @@ void print_jets_and_sub (fj::ClusterSequence & clust_seq,
     subjets = sorted_by_pt(subjets);
     for (unsigned int j = 0; j < subjets.size(); j++) {
       printf("    -sub-%02u ",j);
-      print_jet(*cspoint, subjets[j]);
+      print_jet(subjets[j]);
     }
 
-    if (cspoint != &clust_seq) delete cspoint;
+    if (cspoint != 0) delete cspoint;
 
     //fj::ClusterSequence subseq(clust_seq.constituents(sorted_jets[i]),
     //                          fj::JetDefinition(fj::cambridge_algorithm, 0.4));
