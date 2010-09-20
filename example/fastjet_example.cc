@@ -117,7 +117,6 @@ void print_jets (const vector<fastjet::PseudoJet> & jets) {
   for (unsigned int i = 0; i < sorted_jets.size(); i++) {
     // the following is not super efficient since it creates an
     // intermediate constituents vector
-    cout << sorted_jets[i].area() << endl;
     int n_constituents = sorted_jets[i].constituents().size();
     printf("%5u %15.8f %15.8f %15.8f %8u\n",
 	   i, sorted_jets[i].rap(), sorted_jets[i].phi(),

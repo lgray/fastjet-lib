@@ -1,3 +1,10 @@
+2010-09-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_example.cc: 
+
+	  removed testing line accidentally left in (printing of
+	  unavailable areas) that caused the example program to fail.
+
 2010-09-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_example.cc: 
