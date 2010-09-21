@@ -1,3 +1,15 @@
+2010-09-21  Gregory Soyez  <soyez@cern.ch>
+
+	* include/fastjet/PseudoJet.hh:
+	  added a 'const' version of extra_info_shared()
+
+	* include/fastjet/PseudoJetPlusInfo.hh:
+	  - added a copy ctor from a "regular" PseudoJet. The extra
+	    information is copied from the PJ if available and of the
+	    correct format.
+	  - added a 'convert_to_vertor<T,U> that copies a vector of type
+	    U to a vector of type T (provided t=u works)
+
 2010-09-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_example.cc: 

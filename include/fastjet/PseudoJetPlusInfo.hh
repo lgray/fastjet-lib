@@ -33,6 +33,7 @@
 
 #include "fastjet/internal/numconsts.hh"
 #include "fastjet/PseudoJet.hh"
+#include <vector>
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -55,7 +56,7 @@ FASTJET_BEGIN_NAMESPACE
 template<typename TExtraInfo>
 class PseudoJetPlusInfo : public PseudoJet{
 public:
-  /// ctor with initialisation
+  /// ctor with full initialisation
   /// \param pj   the underlying PseudoJet
   /// \param ei   the extra information
   PseudoJetPlusInfo(const PseudoJet &pj, const TExtraInfo &ei) : PseudoJet(pj){
@@ -70,7 +71,36 @@ public:
       throw ("invalid extra_info for initialising PseudoJetPlusInfo");
     }
   }
+
+  /// copy ctor from PseudoJet
+  /// this version requires that the ExtraInfo pointer is dynamic-castable 
+  /// onto a pointer to TExtraInfo before making te copy
+  /// If no extra info is present, just discard it
+  PseudoJetPlusInfo(const PseudoJet &pj) : PseudoJet(pj){
+    const ExtraInfo * extra_info_ptr = pj.extra_info();
+    if (extra_info_ptr) {
+      if (dynamic_cast<const TExtraInfo*>(extra_info_ptr)) {
+	extra_info_shared().reset(pj.extra_info_shared());
+      } else {
+	throw("invalid extra_info in copy constructor for PseudoJetPlusInfo");
+      }
+    }
+  }
 };
+
+
+/// a helper to copy a vector of PseudoJet's into a vector of PseudoJetPlusInfo
+/// This should allow construct like
+///   vector<MyPseudoJet> jets
+///     = convert_to<MyPseudoJet>(sorted_by_pt(cs.inclusive_jets()));
+template<typename T, typename U>
+std::vector<T> convert_vector_to(const std::vector<U> & in){
+  std::vector<T> res;
+  copy(in.begin(), in.end(), back_inserter(res));
+  return res;
+}
+
+
 
 
 FASTJET_END_NAMESPACE

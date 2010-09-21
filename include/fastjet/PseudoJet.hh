@@ -274,6 +274,11 @@ class PseudoJet {
     return _extra_info;
   }
 
+  /// retrieve a shared pointer to the extra information
+  const SharedPtr<ExtraInfo> & extra_info_shared() const{
+    return _extra_info;
+  }
+
   // \} --- end of extra info functions ---------------------------------
 
   //-------------------------------------------------------------
