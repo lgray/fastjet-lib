@@ -86,6 +86,13 @@ public:
       }
     }
   }
+
+
+  /// retrieve a pointer to the extra information
+  const TExtraInfo* extra_info() const{
+    if (!extra_info_shared()()) return NULL;
+    return dynamic_cast<TExtraInfo*>(extra_info_shared().get());
+  }
 };
 
 

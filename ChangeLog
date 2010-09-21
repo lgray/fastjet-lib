@@ -1,5 +1,9 @@
 2010-09-21  Gregory Soyez  <soyez@cern.ch>
 
+	* include/fastjet/PseudoJetPlusInfo.hh:
+	  added PseudoJetPlusInfo::extra_info that already does the
+	  dynamic cast amd returns a pointer to TExtraInfo
+
 	* include/fastjet/PseudoJet.hh:
 	  added a 'const' version of extra_info_shared()
 
