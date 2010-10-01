@@ -1,3 +1,11 @@
+2010-10-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/fastjet_fortran_example.f: 
+	* fortran_wrapper/fastjetfortran_v2.cc: 
+	  added fastjetdmerge_(..) and fastjetdmergemax_(..) functions,
+	  requested by Stefano Frixione. Showed use of them in example
+	  program. 
+
 2010-09-21  Gregory Soyez  <soyez@cern.ch>
 
 	* include/fastjet/PseudoJetPlusInfo.hh:

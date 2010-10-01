@@ -19,6 +19,7 @@ C
       integer i,j
       double precision p(4,n), R, f, palg    
       double precision jets(4,n)
+      double precision fastjetdmerge
       integer constituents(n)
       integer npart, njets, nconst ! <= n
 c ... fill in p (NB, energy is p(4,i))
@@ -49,5 +50,13 @@ c.....write out indices of constituents of first jet
       i = 1;
       call fastjetconstituents(i, constituents, nconst)
       write(*,*) (constituents(i),i=1,nconst)
+
+c.....write out the last 5 dmerge values
+      write(*,*)
+      write(*,*) "dmerge values from last 5 steps"
+      do i=0,4
+         write(*,*) " dmerge from ",i+1," to ",i," = ", fastjetdmerge(i)
+      end do
+
       end
       

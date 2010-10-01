@@ -189,10 +189,18 @@ void fastjetppgenkt_(const double * p, const int & npart,
 /// constituent_indices, with nconstituents entries, with the indices
 /// of the constituents that belong to that jet (which will be in the
 /// range 1...npart)
+//
+// Corresponds to the following Fortran subroutine
+// interface structure:
+//
+//   SUBROUTINE FASTJETCONSTITUENTS(IJET,CONSTITUENT_INDICES,NCONSTITUENTS)
+//   INTEGER    IJET
+//   INTEGER    CONSTITUENT_INDICES(*)
+//   INTEGER    nconstituents
+//
 void fastjetconstituents_(const int & ijet, 
    	                  int * constituent_indices, int & nconstituents) {
   assert(cs.get() != 0);
-  cout << ijet << " " << jets.size() << endl;
   assert(ijet > 0 && ijet <= jets.size());
 
   vector<PseudoJet> constituents = cs->constituents(jets[ijet-1]);
@@ -202,5 +210,37 @@ void fastjetconstituents_(const int & ijet,
     constituent_indices[i] = constituents[i].cluster_hist_index()+1;
   }
 }
+
+
+/// return the dmin corresponding to the recombination that went from
+/// n+1 to n jets (sometimes known as d_{n n+1}).
+//
+// Corresponds to the following Fortran interface
+// 
+//   FUNCTION FASTJETDMERGE(N)
+//   DOUBLE PRECISION FASTJETDMERGE
+//   INTEGER N
+//   
+double fastjetdmerge_(const int & n) {
+  assert(cs.get() != 0);
+  return cs->exclusive_dmerge(n);
+}
+
+/// return the maximum of the dmin encountered during all recombinations 
+/// up to the one that led to an n-jet final state; identical to
+/// exclusive_dmerge, except in cases where the dmin do not increase
+/// monotonically.
+//
+// Corresponds to the following Fortran interface
+// 
+//   FUNCTION FASTJETDMERGEMAX(N)
+//   DOUBLE PRECISION FASTJETDMERGEMAX
+//   INTEGER N
+//   
+double fastjetdmergemax_(const int & n) {
+  assert(cs.get() != 0);
+  return cs->exclusive_dmerge_max(n);
+}
+
 
 }
