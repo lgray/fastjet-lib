@@ -1,3 +1,9 @@
+2010-10-04  Gavin Salam  <gsalam@lxplus242.cern.ch>
+
+	* autogen.sh: 
+	  added comments at start as a reminder of how to run this without
+	  getting configured in the process
+
 2010-10-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* fortran_wrapper/fastjet_fortran_example.f: 

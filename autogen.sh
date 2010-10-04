@@ -1,6 +1,13 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 #
+
+# This script automatically runs configure with whatever command-line
+# options are passed. If you don't like this, run it with
+#
+# NOCONFIGURE=true ./autogen.sh
+#
+#
 # NB: you are advised to have recent versions of autoconf, libtool and
 # automake; if you run into problems; first download and compile all
 # the recent versions of the autotools programs, and then try again...
