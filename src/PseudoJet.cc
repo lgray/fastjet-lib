@@ -550,6 +550,10 @@ bool PseudoJet::is_pure_ghost() const{
 //
 //----------------------------------------------------------------------
 
+//----------------------------------------------------------------------
+/// provide a meaningful error message for InexistentExtraInfo
+PseudoJet::InexistentExtraInfo::InexistentExtraInfo() : Error("you attempted to perform a dynamic cast of a PseudoJet's extra info, but the extra info pointer was null")
+{}
 
 
 //----------------------------------------------------------------------

@@ -1,3 +1,17 @@
+2010-10-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	* src/PseudoJet.cc: 
+	  added extra_info_cast<T>() member function to directly get a
+	  cast to the extra information in the form one needs.
+
+	  Throws a PseudoJet::InexistentExtraInfo error (new internal
+	  class, derived from Error).
+
+	* include/fastjet/Error.hh: 
+	  added a virtual destructor, so make life easier for when we want
+	  to produce derived classes for errors.
+
 2010-10-04  Gavin Salam  <gsalam@lxplus242.cern.ch>
 
 	* autogen.sh: 

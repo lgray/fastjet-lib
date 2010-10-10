@@ -41,11 +41,11 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup error_handling
 /// \class Error
-/// class corresponding to errors that will be thrown by fastjet
+/// base class corresponding to errors that will be thrown by fastjet
 class Error {
 public:
   // constructors
-  Error() {;};
+  Error() {}
   Error(const std::string & message) {
     _message = message; 
     if (_print_errors) std::cerr << "fastjet::Error: "<<message << std::endl;
@@ -55,6 +55,8 @@ public:
 
   static void set_print_errors(bool print_errors) {
     _print_errors = print_errors;};
+
+  virtual ~Error() {}
 
 private:
   std::string _message;

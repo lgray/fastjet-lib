@@ -41,6 +41,7 @@
 #include "fastjet/internal/IsBase.hh"
 #include "fastjet/internal/DerivedPseudoJetHelper.hh"
 #include "fastjet/SharedPtr.hh"
+#include "fastjet/Error.hh"
 #include "fastjet/ClusterSequenceWrapper.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -263,10 +264,28 @@ class PseudoJet {
     virtual ~ExtraInfo(){}; 
   };
 
+  /// error class to be thrown if accessing extra info when it doesn't
+  /// exist
+  class InexistentExtraInfo : public Error {
+  public:
+    InexistentExtraInfo();
+  };
+
   /// retrieve a pointer to the extra information
   const ExtraInfo* extra_info() const{
     if (!_extra_info()) return NULL;
     return _extra_info.get();
+  }
+
+  /// returns a reference to the dynamic cast conversion of extra_info
+  /// to type T.
+  ///
+  /// throws an InexistentExtraInfo() error if there is no extra info;
+  /// throws a std::bad_cast if the conversion doesn't work
+  template<class T>
+  const T & extra_info_cast() const{
+    if (_extra_info.get() == 0) throw InexistentExtraInfo();
+    return dynamic_cast<const T &>(* _extra_info.get());
   }
 
   /// retrieve a shared pointer to the extra information
