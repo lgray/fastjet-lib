@@ -1,3 +1,8 @@
+2010-10-13  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	  small fix (template class name) to get compilation working with gcc-3.4
+
 2010-10-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 

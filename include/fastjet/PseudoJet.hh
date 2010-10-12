@@ -278,14 +278,14 @@ class PseudoJet {
   }
 
   /// returns a reference to the dynamic cast conversion of extra_info
-  /// to type T.
+  /// to type L.
   ///
   /// throws an InexistentExtraInfo() error if there is no extra info;
   /// throws a std::bad_cast if the conversion doesn't work
-  template<class T>
-  const T & extra_info_cast() const{
+  template<class L>
+  const L & extra_info_cast() const{
     if (_extra_info.get() == 0) throw InexistentExtraInfo();
-    return dynamic_cast<const T &>(* _extra_info.get());
+    return dynamic_cast<const L &>(* _extra_info.get());
   }
 
   /// retrieve a shared pointer to the extra information
