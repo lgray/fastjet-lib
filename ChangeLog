@@ -1,5 +1,8 @@
 2010-10-13  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/nightly-check.pl: 
+	  temporary disabling of karnak (given nfs problems)
+
 	* include/fastjet/PseudoJet.hh: 
 	  small fix (template class name) to get compilation working with gcc-3.4
 
