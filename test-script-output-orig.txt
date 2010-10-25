@@ -3897,12 +3897,12 @@ d0runipre96cone:#---------------------------------------------------------------
 d0runipre96cone:#                      FastJet release 2.5-devel
 d0runipre96cone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
 d0runipre96cone:#                         http://www.fastjet.fr                         
-d0runipre96cone:#                                                                         
+d0runipre96cone:#                                                                          
 d0runipre96cone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 d0runipre96cone:# clustering using fast geometric algorithms, with area measures and optional
 d0runipre96cone:# external jet-finder plugins.                                          
 d0runipre96cone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-d0runipre96cone:#                                                                         
+d0runipre96cone:#                                                                          
 d0runipre96cone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 d0runipre96cone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 d0runipre96cone:# and CGAL: http://www.cgal.org/.
@@ -3910,20 +3910,20 @@ d0runipre96cone:#---------------------------------------------------------------
 d0runipre96cone:iev 0: number of particles = 354
 d0runipre96cone:strategy used =  plugin strategy
 d0runipre96cone:Algorithm: D0 Run I (pre 96) cone jet algorithm, with cone_radius = 0.4, min_jet_Et = 1, split_fraction = 0.5 (FastJet version 2.5-devel)
-d0runipre96cone:    0     -0.86748511      2.90531876    980.43978773
-d0runipre96cone:    1      0.22053458      6.03058454    896.54072044
-d0runipre96cone:    2     -1.18809166      6.09726790     63.30419998
-d0runipre96cone:    3      0.45580858      0.76634944      8.79310097
-d0runipre96cone:    4     -0.72862746      3.89445881      5.03117987
-d0runipre96cone:    5     -2.42584933      1.37979271      4.47882027
-d0runipre96cone:    6     -1.07802533      0.48889153      3.68951266
-d0runipre96cone:    7     -0.40414096      4.36544458      2.97786099
-d0runipre96cone:    8     -0.66536166      1.19804928      2.97531774
-d0runipre96cone:    9      0.16011024      3.67355584      2.32164097
-d0runipre96cone:   10      0.12190440      6.01686415      2.09941058
+d0runipre96cone:    0      0.86775190      2.90531721    980.62725819
+d0runipre96cone:    1      0.22227799      6.03060659    896.84256230
+d0runipre96cone:    2      1.19649517      6.09724046     63.61453985
+d0runipre96cone:    3      0.48660377      0.76063258      9.29901100
+d0runipre96cone:    4      1.81256084      3.89453920      5.10277555
+d0runipre96cone:    5      2.54401792      1.38016592      4.52139942
+d0runipre96cone:    6      1.17680363      0.48816263      3.85122861
+d0runipre96cone:    7      1.67503267      1.19839148      3.01986542
+d0runipre96cone:    8      1.79286017      4.36609748      3.00373614
+d0runipre96cone:    9      0.28600377      3.67351577      2.33783599
+d0runipre96cone:   10      2.87923426      6.01686415      2.17537443
 d0runipre96cone:   11     -2.03004782      0.68656051      1.64420492
-d0runipre96cone:   12     -0.18681175      1.25986053      1.60831483
-d0runipre96cone:   13      3.61834479      5.09397697      1.56474502
+d0runipre96cone:   12      1.01023459      1.25968547      1.61588684
+d0runipre96cone:   13      3.63719088      5.09398070      1.56804556
 d0runipre96cone:   14     -4.24143712      1.13471278      1.54134496
 d0runipre96cone:   15     -4.46556894      4.54188803      1.24447610
 d0runipre96cone:   16     -1.12427361      3.92422371      1.10764361
@@ -3932,12 +3932,12 @@ d0runipre96cone:#---------------------------------------------------------------
 d0runipre96cone:#                      FastJet release 2.5-devel
 d0runipre96cone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
 d0runipre96cone:#                         http://www.fastjet.fr                         
-d0runipre96cone:#                                                                         
+d0runipre96cone:#                                                                          
 d0runipre96cone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 d0runipre96cone:# clustering using fast geometric algorithms, with area measures and optional
 d0runipre96cone:# external jet-finder plugins.                                          
 d0runipre96cone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-d0runipre96cone:#                                                                         
+d0runipre96cone:#                                                                          
 d0runipre96cone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 d0runipre96cone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 d0runipre96cone:# and CGAL: http://www.cgal.org/.
@@ -3945,26 +3945,26 @@ d0runipre96cone:#---------------------------------------------------------------
 d0runipre96cone:iev 0: number of particles = 354
 d0runipre96cone:strategy used =  plugin strategy
 d0runipre96cone:Algorithm: D0 Run I (pre 96) cone jet algorithm, with cone_radius = 0.7, min_jet_Et = 1, split_fraction = 0.5 (FastJet version 2.5-devel)
-d0runipre96cone:    0     -0.86701276      2.90522070    981.48811061
-d0runipre96cone:    1      0.09450391      6.04655797    974.80693635
-d0runipre96cone:    2     -1.45609081      1.13962158     12.63008469
-d0runipre96cone:    3     -0.62426696      4.05061759      8.90026721
-d0runipre96cone:    4      0.01481290      6.00312477      5.32918774
-d0runipre96cone:    5      0.16011024      3.67355584      2.32164097
-d0runipre96cone:    6      3.68806210      5.21991244      2.23461061
-d0runipre96cone:    7     -4.16811939      1.12938069      2.11032978
-d0runipre96cone:    8     -2.20591388      2.49369100      2.00618223
+d0runipre96cone:    0      0.31442656      6.04700455    982.21475611
+d0runipre96cone:    1      0.86735186      2.90521916    981.67998513
+d0runipre96cone:    2      2.25637160      1.14034559     13.15697202
+d0runipre96cone:    3      1.76531937      4.05035265      9.21715754
+d0runipre96cone:    4      3.05177013      6.00189832      6.60083962
+d0runipre96cone:    5      0.28600377      3.67351577      2.33783599
+d0runipre96cone:    6      2.36737371      2.49361640      2.29692823
+d0runipre96cone:    7      3.73003820      5.21991439      2.27807113
+d0runipre96cone:    8      4.29431170      1.12938112      2.11058387
 d0runipre96cone:    9     -4.46556894      4.54188803      1.24447610
 d0runipre96cone:#--------------------------------------------------------------------------
 d0runipre96cone:#                      FastJet release 2.5-devel
 d0runipre96cone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
 d0runipre96cone:#                         http://www.fastjet.fr                         
-d0runipre96cone:#                                                                         
+d0runipre96cone:#                                                                          
 d0runipre96cone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 d0runipre96cone:# clustering using fast geometric algorithms, with area measures and optional
 d0runipre96cone:# external jet-finder plugins.                                          
 d0runipre96cone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-d0runipre96cone:#                                                                         
+d0runipre96cone:#                                                                          
 d0runipre96cone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 d0runipre96cone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 d0runipre96cone:# and CGAL: http://www.cgal.org/.
@@ -3972,22 +3972,22 @@ d0runipre96cone:#---------------------------------------------------------------
 d0runipre96cone:iev 0: number of particles = 354
 d0runipre96cone:strategy used =  plugin strategy
 d0runipre96cone:Algorithm: D0 Run I (pre 96) cone jet algorithm, with cone_radius = 1, min_jet_Et = 1, split_fraction = 0.5 (FastJet version 2.5-devel)
-d0runipre96cone:    0     -0.86488035      2.90613793    982.38181443
-d0runipre96cone:    1      0.10166166      6.03967607    968.67593273
-d0runipre96cone:    2     -0.46029062      0.65521867     15.98278359
-d0runipre96cone:    3     -0.71825180      3.88630674      9.51615565
-d0runipre96cone:    4     -0.07837727      4.98092130      3.29755066
-d0runipre96cone:    5     -4.02486371      1.03945746      2.75116055
+d0runipre96cone:    0      0.86710022      2.90614106    982.95530970
+d0runipre96cone:    1      0.30650371      6.03990470    971.97242657
+d0runipre96cone:    2      2.60136762      0.65399772     21.31670706
+d0runipre96cone:    3      2.07001326      3.88744463     12.15997920
+d0runipre96cone:    4      4.11526498      4.98092842      3.52255132
+d0runipre96cone:    5      4.16898340      1.03946344      2.78703023
 d0runicone:#--------------------------------------------------------------------------
 d0runicone:#                      FastJet release 2.5-devel
 d0runicone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
 d0runicone:#                         http://www.fastjet.fr                         
-d0runicone:#                                                                         
+d0runicone:#                                                                          
 d0runicone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 d0runicone:# clustering using fast geometric algorithms, with area measures and optional
 d0runicone:# external jet-finder plugins.                                          
 d0runicone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-d0runicone:#                                                                         
+d0runicone:#                                                                          
 d0runicone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 d0runicone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 d0runicone:# and CGAL: http://www.cgal.org/.
@@ -3995,20 +3995,20 @@ d0runicone:#--------------------------------------------------------------------
 d0runicone:iev 0: number of particles = 354
 d0runicone:strategy used =  plugin strategy
 d0runicone:Algorithm: D0 Run I cone jet algorithm, with cone_radius = 0.4, min_jet_Et = 1, split_fraction = 0.5 (FastJet version 2.5-devel)
-d0runicone:    0     -0.86748511      2.90531876    980.43978773
-d0runicone:    1      0.22053458      6.03058454    896.54072044
-d0runicone:    2     -1.18809166      6.09726790     63.30419998
-d0runicone:    3      0.45580858      0.76634944      8.79310097
-d0runicone:    4     -0.72862746      3.89445881      5.03117987
-d0runicone:    5     -2.42584933      1.37979271      4.47882027
-d0runicone:    6     -1.07802533      0.48889153      3.68951266
-d0runicone:    7     -0.40414096      4.36544458      2.97786099
-d0runicone:    8     -0.66536166      1.19804928      2.97531774
-d0runicone:    9      0.16011024      3.67355584      2.32164097
-d0runicone:   10      0.12190440      6.01686415      2.09941058
+d0runicone:    0      0.86752650      2.90531517    980.62725819
+d0runicone:    1      0.22221129      6.03061403    896.84256230
+d0runicone:    2      1.19016372      6.09699619     63.61453985
+d0runicone:    3      0.47620667      0.76041856      9.29901100
+d0runicone:    4      1.79234136      3.89458756      5.10277555
+d0runicone:    5      2.53184221      1.38005042      4.52139942
+d0runicone:    6      1.17610404      0.48815982      3.85122861
+d0runicone:    7      1.67246740      1.19837950      3.01986542
+d0runicone:    8      1.78683157      4.36622865      3.00373614
+d0runicone:    9      0.28344416      3.67351538      2.33783599
+d0runicone:   10      2.83343649      6.01671281      2.17537443
 d0runicone:   11     -2.03004782      0.68656051      1.64420492
-d0runicone:   12     -0.18681175      1.25986053      1.60831483
-d0runicone:   13      3.61834479      5.09397697      1.56474502
+d0runicone:   12      1.00954829      1.25968258      1.61588684
+d0runicone:   13      3.63134370      5.09401061      1.56804556
 d0runicone:   14     -4.24143712      1.13471278      1.54134496
 d0runicone:   15     -4.46556894      4.54188803      1.24447610
 d0runicone:   16     -1.12427361      3.92422371      1.10764361
@@ -4017,12 +4017,12 @@ d0runicone:#--------------------------------------------------------------------
 d0runicone:#                      FastJet release 2.5-devel
 d0runicone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
 d0runicone:#                         http://www.fastjet.fr                         
-d0runicone:#                                                                         
+d0runicone:#                                                                          
 d0runicone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 d0runicone:# clustering using fast geometric algorithms, with area measures and optional
 d0runicone:# external jet-finder plugins.                                          
 d0runicone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-d0runicone:#                                                                         
+d0runicone:#                                                                          
 d0runicone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 d0runicone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 d0runicone:# and CGAL: http://www.cgal.org/.
@@ -4030,26 +4030,26 @@ d0runicone:#--------------------------------------------------------------------
 d0runicone:iev 0: number of particles = 354
 d0runicone:strategy used =  plugin strategy
 d0runicone:Algorithm: D0 Run I cone jet algorithm, with cone_radius = 0.7, min_jet_Et = 1, split_fraction = 0.5 (FastJet version 2.5-devel)
-d0runicone:    0     -0.86701276      2.90522070    981.48811061
-d0runicone:    1      0.09450391      6.04655797    974.80693635
-d0runicone:    2     -1.45609081      1.13962158     12.63008469
-d0runicone:    3     -0.62426696      4.05061759      8.90026721
-d0runicone:    4      0.01481290      6.00312477      5.32918774
-d0runicone:    5      0.16011024      3.67355584      2.32164097
-d0runicone:    6      3.68806210      5.21991244      2.23461061
-d0runicone:    7     -4.16811939      1.12938069      2.11032978
-d0runicone:    8     -2.20591388      2.49369100      2.00618223
+d0runicone:    0      0.29379233      6.04895190    982.21475611
+d0runicone:    1      0.86706806      2.90521700    981.67998513
+d0runicone:    2      2.09602460      1.13857141     13.15697202
+d0runicone:    3      1.71081411      4.05185955      9.21715754
+d0runicone:    4      2.77181643      5.97614138      6.60083962
+d0runicone:    5      0.28344416      3.67351538      2.33783599
+d0runicone:    6      2.20859764      2.50205808      2.29692823
+d0runicone:    7      3.70266153      5.22066925      2.27807113
+d0runicone:    8      4.27480518      1.12938101      2.11058387
 d0runicone:    9     -4.46556894      4.54188803      1.24447610
 d0runicone:#--------------------------------------------------------------------------
 d0runicone:#                      FastJet release 2.5-devel
 d0runicone:#            Written by M. Cacciari, G.P. Salam and G. Soyez            
 d0runicone:#                         http://www.fastjet.fr                         
-d0runicone:#                                                                         
+d0runicone:#                                                                          
 d0runicone:# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
 d0runicone:# clustering using fast geometric algorithms, with area measures and optional
 d0runicone:# external jet-finder plugins.                                          
 d0runicone:# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
-d0runicone:#                                                                         
+d0runicone:#                                                                          
 d0runicone:# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
 d0runicone:# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
 d0runicone:# and CGAL: http://www.cgal.org/.
@@ -4057,9 +4057,9 @@ d0runicone:#--------------------------------------------------------------------
 d0runicone:iev 0: number of particles = 354
 d0runicone:strategy used =  plugin strategy
 d0runicone:Algorithm: D0 Run I cone jet algorithm, with cone_radius = 1, min_jet_Et = 1, split_fraction = 0.5 (FastJet version 2.5-devel)
-d0runicone:    0     -0.86488035      2.90613793    982.38181443
-d0runicone:    1      0.10166166      6.03967607    968.67593273
-d0runicone:    2     -0.46029062      0.65521867     15.98278359
-d0runicone:    3     -0.71825180      3.88630674      9.51615565
-d0runicone:    4     -0.07837727      4.98092130      3.29755066
-d0runicone:    5     -4.02486371      1.03945746      2.75116055
+d0runicone:    0      0.86647200      2.90415707    982.95530970
+d0runicone:    1      0.28839578      6.04046450    971.97242657
+d0runicone:    2      2.17575819      0.57639582     21.31670706
+d0runicone:    3      1.79211111      4.43304925     12.15997920
+d0runicone:    4      3.97439606      4.98086301      3.52255132
+d0runicone:    5      4.09544084      1.03863515      2.78703023
