@@ -114,6 +114,12 @@ void D0RunIBaseConePlugin::run_clustering_worker(ClusterSequence & clust_seq) co
     // get first particle in list
     tk = tlist.begin();
     int jet_k = (*tk)->index;
+
+    // GS addition: in order to use the proper recombination scheme
+    // used by D0 we need to keep track of the sum as a
+    // "HepEntityType"
+    HepEntityType jet_current_momentum = *(*tk);
+
     // now merge with remaining particles in list
     tk++;
     for (; tk != tlist.end(); tk++) {
@@ -121,7 +127,14 @@ void D0RunIBaseConePlugin::run_clustering_worker(ClusterSequence & clust_seq) co
       int jet_j = (*tk)->index;
       // do a fake recombination step with dij=0
       double dij = 0.0;
-      clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, jet_k);
+
+      // GS addition: find the new momentum and convert that into a
+      // pseudo-jet
+      jet_current_momentum.Add(**tk);
+      PseudoJet new_mom(jet_current_momentum.px(), jet_current_momentum.py(), 
+			jet_current_momentum.pz(), jet_current_momentum.E());
+
+      clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, new_mom, jet_k);
     }
     
     // NB: put a sensible looking d_iB just to be nice...

@@ -1,5 +1,9 @@
 2010-10-25  Gregory Soyez  <soyez@cern.ch>
 
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+	  carry info about the recombination from HepEntity to the Fastjet
+	  recombination
+
 	* plugins/D0RunICone/:                *** ADDED ***
 	  released a plugin for the D0 run I cone algorithms.
 	  (two versions: D0RunIpre96ConePlugin and D0RunIConePlugin
