@@ -121,26 +121,28 @@
 ///                 
 /// plugins (don't delete this line)
 ///
-///   -pxcone       switch to the PxCone jet algorithm
+///   -pxcone             switch to the PxCone jet algorithm
 /// 
-///   -siscone       switch to the SISCone jet algorithm (seedless cones)
-///   -sisconespheri switch to the Spherical SISCone jet algorithm (seedless cones)
+///   -siscone            switch to the SISCone jet algorithm (seedless cones)
+///   -sisconespheri      switch to the Spherical SISCone jet algorithm (seedless cones)
 ///
-///   -midpoint     switch to CDF's midpoint code
+///   -midpoint           switch to CDF's midpoint code
+///   -jetclu             switch to CDF's jetclu code
 ///
-///   -jetclu       switch to CDF's jetclu code
+///   -d0runipre96cone    switch to the D0RunIpre96Cone plugin
+///   -d0runicone         switch to the D0RunICone plugin
 ///
-///   -d0runiicone  switch to D0's run II midpoint cone
+///   -d0runiicone        switch to D0's run II midpoint cone
 ///
-///   -trackjet     switch to the TrackJet plugin
+///   -trackjet           switch to the TrackJet plugin
 ///
-///   -atlascone     switch to the ATLASCone plugin
+///   -atlascone          switch to the ATLASCone plugin
 ///
-///   -eecambridge     switch to the EECambridge plugin
+///   -eecambridge        switch to the EECambridge plugin
 ///
-///   -jade     switch to the Jade plugin
+///   -jade               switch to the Jade plugin
 ///
-///   -cmsiterativecone     switch to the CMSIterativeCone plugin
+///   -cmsiterativecone   switch to the CMSIterativeCone plugin
 ///
 ///  end of plugins (don't delete this line)
 ///
@@ -203,6 +205,10 @@
 #endif
 #ifdef ENABLE_PLUGIN_CMSITERATIVECONE
 #include "fastjet/CMSIterativeConePlugin.hh"
+#endif
+#ifdef ENABLE_PLUGIN_D0RUNICONE
+#include "fastjet/D0RunIpre96ConePlugin.hh"
+#include "fastjet/D0RunIConePlugin.hh"
 #endif
 // end of installed plugins inclusion (don't delete this line)
 
@@ -397,6 +403,18 @@ int main (int argc, char ** argv) {
 #else  // ENABLE_PLUGIN_CMSITERATIVECONE
     is_unavailable("CMSIterativeCone");
 #endif // ENABLE_PLUGIN_CMSITERATIVECONE
+  } else if (cmdline.present("-d0runipre96cone")) {
+#ifdef ENABLE_PLUGIN_D0RUNICONE
+    jet_def = fj::JetDefinition(new fj::D0RunIpre96ConePlugin(ktR, seed_threshold, overlap_threshold));
+#else  // ENABLE_PLUGIN_D0RUNICONE
+    is_unavailable("D0RunICone");
+#endif // ENABLE_PLUGIN_D0RUNICONE
+  } else if (cmdline.present("-d0runicone")) {
+#ifdef ENABLE_PLUGIN_D0RUNICONE
+    jet_def = fj::JetDefinition(new fj::D0RunIConePlugin(ktR, seed_threshold, overlap_threshold));
+#else  // ENABLE_PLUGIN_D0RUNICONE
+    is_unavailable("D0RunICone");
+#endif // ENABLE_PLUGIN_D0RUNICONE
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]

@@ -85,6 +85,11 @@ fastjet_timing_plugins_CXXFLAGS += -I$(srcdir)/../plugins/CMSIterativeCone
 fastjet_timing_plugins_LDADD += ../plugins/CMSIterativeCone/libCMSIterativeConePlugin.la
 endif
 
+if BUILD_PLUGIN_D0RUNICONE
+fastjet_timing_plugins_CXXFLAGS += -I${srcdir}/../plugins/D0RunICone
+fastjet_timing_plugins_LDADD += ../plugins/D0RunICone/libD0RunIConePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TESTS_ENVIRONMENT = $(SHELL)

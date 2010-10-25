@@ -75,6 +75,12 @@ many_algs_example_CXXFLAGS += -I$(srcdir)/../CMSIterativeCone
 many_algs_example_LDADD += ../CMSIterativeCone/libCMSIterativeConePlugin.la
 endif
 
+# add D0RunICone-related parts
+if BUILD_PLUGIN_D0RUNICONE
+many_algs_example_CXXFLAGS += -I${srcdir}/../D0RunICone
+many_algs_example_LDADD += ../D0RunICone/libD0RunIConePlugin.la
+endif
+
 # add entries for other plugins here
 
 #TEST_ENVIRONMENT = $(SHELL)

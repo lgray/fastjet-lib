@@ -70,6 +70,10 @@
 #ifdef ENABLE_PLUGIN_CMSITERATIVECONE
 #include "fastjet/CMSIterativeConePlugin.hh"
 #endif
+#ifdef ENABLE_PLUGIN_D0RUNICONE
+#include "fastjet/D0RunIpre96ConePlugin.hh"
+#include "fastjet/D0RunIConePlugin.hh"
+#endif
 // end of the plugin list (don't modify this line)
 
 #include<vector>
@@ -162,6 +166,14 @@ int main(int argc, char** argv) {
   plugins.push_back(new fastjet::CMSIterativeConePlugin(jet_radius, cms_seed_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
 #endif // ENABLE_PLUGIN_CMSITERATIVECONE
+  // set up a d0runicone
+#ifdef ENABLE_PLUGIN_D0RUNICONE
+  double d0runi_seed_threshold = 8.0;
+  plugins.push_back(new fastjet::D0RunIpre96ConePlugin(jet_radius, d0runi_seed_threshold));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+  plugins.push_back(new fastjet::D0RunIConePlugin(jet_radius, d0runi_seed_threshold));
+  jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
+#endif // ENABLE_PLUGIN_D0RUNICONE
   // end of the plugins instantiation (don't modify this line)
 
   // set up kt and cam/aachen definitions

@@ -227,6 +227,9 @@ ACX_CHECK_PLUGIN(EECambridge, eecambridge, EECAMBRIDGE, yes)
 dnl Jade
 ACX_CHECK_PLUGIN(Jade, jade, JADE, yes)
 
+dnl D0RunICone
+ACX_CHECK_PLUGIN(D0RunICone, d0runicone, D0RUNICONE, no)
+
 dnl end of plugin section --- don't modify this line
 
 dnl-------------------------------------------------------------------

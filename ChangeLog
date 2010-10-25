@@ -1,3 +1,12 @@
+2010-10-25  Gregory Soyez  <soyez@cern.ch>
+
+	* plugins/D0RunICone/:                *** ADDED ***
+	  released a plugin for the D0 run I cone algorithms.
+	  (two versions: D0RunIpre96ConePlugin and D0RunIConePlugin
+	   corresponding to the code used before an dafter 1996)
+	  Thanks to Lars Sonnenschein for providing the code
+
+
 2010-10-13  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 

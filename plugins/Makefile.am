@@ -30,6 +30,9 @@ endif
 if BUILD_PLUGIN_CMSITERATIVECONE
 SUBDIRS += CMSIterativeCone
 endif
+if BUILD_PLUGIN_D0RUNICONE
+SUBDIRS += D0RunICone
+endif
 # end plugin section -- do not modify this line
 
 SUBDIRS += . usage_examples
@@ -71,6 +74,6 @@ libfastjetplugins_la_LIBADD += CMSIterativeCone/libCMSIterativeConePlugin.la
 endif
 endif
 
-DIST_SUBDIRS = CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
+DIST_SUBDIRS = D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
 
 EXTRA_DIST = makefile.static
