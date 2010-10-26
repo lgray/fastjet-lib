@@ -1,3 +1,8 @@
+2010-10-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/GhostedAreaSpec.hh (class GhostedAreaSpec):
+	  changed comment for add_ghosts
+
 2010-10-25  Gregory Soyez  <soyez@cern.ch>
 
 	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:

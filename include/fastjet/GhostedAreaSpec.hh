@@ -157,7 +157,8 @@ public:
   /// for a summary
   std::string description() const;
 
-  /// push the ghost 4-momenta onto the back of the vector of PseudoJets
+  /// push a set of ghost 4-momenta onto the back of the vector of
+  /// PseudoJets
   void add_ghosts(std::vector<PseudoJet> & ) const;
 
   /// very deprecated public access to a random number 
