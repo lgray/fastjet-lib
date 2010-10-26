@@ -75,6 +75,7 @@ endif
 if BUILD_PLUGIN_D0RUNICONE
 libfastjetplugins_la_LIBADD += D0RunICone/libD0RunIConePlugin.la
 endif
+# end monolithic plugin section -- do not modify this line
 endif
 
 DIST_SUBDIRS = D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples

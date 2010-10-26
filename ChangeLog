@@ -1,3 +1,10 @@
+2010-10-26  Gregory Soyez  <soyez@cern.ch>
+
+	* m4/plugin.m4,
+	  plugins/Makefile.am:
+	  added comments for the automatic plugin release scripts.
+
+
 2010-10-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/GhostedAreaSpec.hh (class GhostedAreaSpec):

@@ -14,7 +14,9 @@ AC_DEFUN([ACX_INIT_PLUGINS],
     DEFAULT_ENABLE_EECAMBRIDGE="yes"
     DEFAULT_ENABLE_JADE="yes"
     DEFAULT_ENABLE_D0RUNICONE="no"
+    dnl end of default plugin settings --- don't modify this line
 
+    dnl declare the plugins for the config header
     AH_TEMPLATE(ENABLE_PLUGIN_SISCONE,          [checks if the SISCone plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_CDFCONES,         [checks if the CDFCones plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_PXCONE,           [checks if the PxCone plugin is enabled])
@@ -26,6 +28,7 @@ AC_DEFUN([ACX_INIT_PLUGINS],
     AH_TEMPLATE(ENABLE_PLUGIN_EECAMBRIDGE,      [checks if the EECambridge plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_JADE,             [checks if the Jade plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_D0RUNICONE,       [checks if the D0RunICone plugin is enabled])
+    dnl end of declare the plugins for the config header --- don't modify this line
 ])
 
 
@@ -45,6 +48,7 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
        	[ENABLE_ALLPLUGINS="$enableval"],
        	[ENABLE_ALLPLUGINS="not set"])
     if [[ "x$ENABLE_ALLPLUGINS" == "xyes" ]] ; then
+        dnl set all default plugin settings to yes
     	DEFAULT_ENABLE_SISCONE="yes"
     	DEFAULT_ENABLE_CDFCONES="yes"
     	DEFAULT_ENABLE_PXCONE="yes"
@@ -56,8 +60,10 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="yes" 
     	DEFAULT_ENABLE_JADE="yes"
 	DEFAULT_ENABLE_D0RUNICONE="yes"
+        dnl end of set all default plugin settings to yes --- don't modify this line
     fi
     if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
+        dnl set all default plugin settings to no
     	DEFAULT_ENABLE_SISCONE="no"
     	DEFAULT_ENABLE_CDFCONES="no"
     	DEFAULT_ENABLE_PXCONE="no"
@@ -69,6 +75,7 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="no" 
     	DEFAULT_ENABLE_JADE="no"
 	DEFAULT_ENABLE_D0RUNICONE="no"
+        dnl end of set all default plugin settings to no --- don't modify this line
     fi
     AC_MSG_RESULT($ENABLE_ALLPLUGINS)
 ])
@@ -90,6 +97,7 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	[ENABLE_ALLCXXPLUGINS="$enableval"],
     	[ENABLE_ALLCXXPLUGINS="not set"])
     if [[ "x$ENABLE_ALLCXXPLUGINS" == "xyes" ]] ; then
+        dnl set all default cxx plugin settings to yes
     	DEFAULT_ENABLE_SISCONE="yes"
     	DEFAULT_ENABLE_CDFCONES="yes"
     	DEFAULT_ENABLE_D0RUNIICONE="yes"
@@ -100,8 +108,10 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="yes" 
     	DEFAULT_ENABLE_JADE="yes"
 	DEFAULT_ENABLE_D0RUNICONE="yes"
+        dnl end of set all default cxx plugin settings to yes --- don't modify this line
     fi
     if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
+        dnl set all default cxx plugin settings to no
     	DEFAULT_ENABLE_SISCONE="no"
     	DEFAULT_ENABLE_CDFCONES="no"
     	DEFAULT_ENABLE_D0RUNIICONE="no"
@@ -112,6 +122,7 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="no" 
     	DEFAULT_ENABLE_JADE="no"
 	DEFAULT_ENABLE_D0RUNICONE="no"
+        dnl end of set all default cxx plugin settings to no --- don't modify this line
     fi
     AC_MSG_RESULT($ENABLE_ALLCXXPLUGINS)
 ])
