@@ -72,6 +72,9 @@ endif
 if BUILD_PLUGIN_CMSITERATIVECONE
 libfastjetplugins_la_LIBADD += CMSIterativeCone/libCMSIterativeConePlugin.la
 endif
+if BUILD_PLUGIN_D0RUNICONE
+libfastjetplugins_la_LIBADD += D0RunICone/libD0RunIConePlugin.la
+endif
 endif
 
 DIST_SUBDIRS = D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
