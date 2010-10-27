@@ -13,8 +13,8 @@ LDFLAGS += -L../lib -lfastjet
 CXXFLAGS += -Woverloaded-virtual
 
 # plugin includes here are temporary and subject to change...
-PLUGIN_INCLUDE = -I../plugins/CDFCones  -I../plugins/SISCone
-PLUGIN_LIBRARY = -L../plugins/CDFCones  -L../plugins/SISCone -lCDFConesPlugin  -lSISConePlugin
+PLUGIN_INCLUDE = -I../plugins/CDFCones -I../plugins/EECambridge -I../plugins/Jade -I../plugins/NestedDefs -I../plugins/SISCone
+PLUGIN_LIBRARY = -L../plugins/CDFCones -L../plugins/EECambridge -L../plugins/Jade -L../plugins/NestedDefs -L../plugins/SISCone -lCDFConesPlugin -lEECambridgePlugin -lJadePlugin -lNestedDefsPlugin -lSISConePlugin -L../plugins/SISCone/siscone/siscone -lsiscone -L../plugins/SISCone/siscone/siscone/spherical -lsiscone_spherical
 #PLUGIN77_INCLUDE = $(PLUGIN_INCLUDE) -I../plugins/PxCone
 #PLUGIN77_LIBRARY = $(PLUGIN_LIBRARY) -L../plugins/PxCone -lPxConePlugin  $(F77LIB)
 PLUGIN77_INCLUDE = $(PLUGIN_INCLUDE) 

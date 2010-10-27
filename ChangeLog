@@ -1,3 +1,13 @@
+2010-10-27  Gregory Soyez  <soyez@cern.ch>
+
+	* src/genconfig.sh:
+	* example/makefile.static:
+        * plugins/CDFCones/CDFcode/makefile.static:
+	* plugins/SISCone/makefile.static:
+	* plugins/makefile.static:
+	  aligned the static build of plugins to the default choices.
+	  + minor corrections to have the static build actually work!
+
 2010-10-26  Gregory Soyez  <soyez@cern.ch>
 
 	* m4/plugin.m4,

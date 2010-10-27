@@ -3,10 +3,13 @@
 
 include ../../../makefile.static
 
+# fastjet includes
+CXXFLAGS += -I../../../include
+
 # with gcc's midpoint can be a lot slower with optimization than without;
 # accordingly we have a special CXXFLAGS for the midpoint algorithm to 
 # eliminate any (de)optimization
-CXXFLAGSmidpoint = 
+CXXFLAGSmidpoint = -I../../../include
 
 all : libJetAlgs.a
 
