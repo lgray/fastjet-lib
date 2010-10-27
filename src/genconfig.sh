@@ -26,5 +26,7 @@ cat >> $configfile <<EOF
 
 /* The SISCone plugin is enabled by default*/
 #define ENABLE_PLUGIN_SISCONE 
+
+/* end of plugin section */
 EOF
 
