@@ -82,7 +82,7 @@
 	  - added a copy ctor from a "regular" PseudoJet. The extra
 	    information is copied from the PJ if available and of the
 	    correct format.
-	  - added a 'convert_to_vertor<T,U> that copies a vector of type
+	  - added a 'convert_to_vector<T,U> that copies a vector of type
 	    U to a vector of type T (provided t=u works)
 
 2010-09-20  Gavin Salam  <salam@lpthe.jussieu.fr>
@@ -244,8 +244,6 @@
 	* AUTHORS: 
 	  realised authors was very out of date, so updated it.
 
->>>>>>> .r1754
->>>>>>> .r1755
 2010-07-14  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* include/fastjet/PseudoJet.hh:
