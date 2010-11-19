@@ -52,8 +52,12 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
                    // our clustering sequence will not produce
                    // "beam" jets except when only a single particle remains.
                    // Any value > 2 would have done here
-  } else if (jet_algorithm != ee_genkt_algorithm) {
-    assert(_Rparam <= 0.5*pi);
+  } else {
+    // We maintain some limit on R because particles with pt=0, m=0
+    // can have rapidities O(10000) and one doesn't want the
+    // clustering to start including them as if their rapidities were
+    // physical.
+    assert ( R < 1000.0);
   }
 
   // cross-check the number of parameters that were declared in setting up the

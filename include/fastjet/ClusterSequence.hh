@@ -81,6 +81,8 @@
 #include "fastjet/Error.hh"
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/SharedPtr.hh"
+#include "fastjet/internal/LimitedWarning.hh"
+
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -285,7 +287,13 @@ class ClusterSequence {
 
   /// return the enum value of the strategy used to cluster the event
   inline Strategy strategy_used () const {return _strategy;}
-  std::string strategy_string () const;
+
+  /// return the name of the strategy used to cluster the event
+  std::string strategy_string () const {return strategy_string(_strategy);}
+
+  /// return the name of the strategy associated with the enum strategy_in
+  std::string strategy_string (Strategy strategy_in) const;
+
 
   /// return a reference to the jet definition
   const JetDefinition & jet_def() const {return _jet_def;}
@@ -625,6 +633,11 @@ protected:
   /// algorithm -- so that we don't print it out more than a few
   /// times.
   static int _n_exclusive_warnings;
+
+  /// the limited warning member for notification of user that 
+  /// their requested strategy has been overridden (usually because
+  /// they have R>2pi and not all strategies work then)
+  static LimitedWarning _changed_strategy_warning;
 
   //----------------------------------------------------------------------
   /// the fundamental structure which contains the minimal info about

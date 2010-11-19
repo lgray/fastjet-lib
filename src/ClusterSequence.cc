@@ -153,6 +153,32 @@ void ClusterSequence::_initialise_and_run (
     }
   }
 
+  // R >= 2pi is not supported by all clustering strategies owing to
+  // periodicity issues (a particle might cluster with itself). When
+  // R>=2pi, we therefore automatically switch to a strategy that is
+  // known to work.
+  if (_Rparam >= twopi) {
+    if (   _strategy == NlnN
+	|| _strategy == NlnN3pi
+	|| _strategy == NlnNCam
+	|| _strategy == NlnNCam2pi2R
+	|| _strategy == NlnNCam4pi) {
+#ifdef DROP_CGAL
+      _strategy = N2MinHeapTiled;
+#else
+      _strategy = NlnN4pi;
+#endif    
+    }
+    if (jet_def.strategy() != Best && _strategy != jet_def.strategy()) {
+      ostringstream oss;
+      oss << "Cluster strategy " << strategy_string(jet_def.strategy())
+	  << " automatically changed to " << strategy_string()
+	  << " because the former is not supported for R = " << _Rparam
+	  << " >= 2pi";
+      _changed_strategy_warning.warn(oss.str());
+    }
+  }
+
 
   // run the code containing the selected strategy
   if (_strategy == NlnN || _strategy == NlnN3pi 
@@ -291,9 +317,9 @@ void ClusterSequence::_fill_initial_history () {
 //----------------------------------------------------------------------
 // Return the component corresponding to the specified index.
 // taken from CLHEP
-string ClusterSequence::strategy_string ()  const {
+string ClusterSequence::strategy_string (Strategy strategy_in)  const {
   string strategy;
-  switch(_strategy) {
+  switch(strategy_in) {
   case NlnN:
     strategy = "NlnN"; break;
   case NlnN3pi:
@@ -1138,6 +1164,11 @@ void ClusterSequence::_do_iB_recombination_step(
 		       Invalid, diB);
 
 }
+
+
+// make sure the static member _changed_strategy_warning is defined. 
+LimitedWarning ClusterSequence::_changed_strategy_warning;
+
 
 FASTJET_END_NAMESPACE
 

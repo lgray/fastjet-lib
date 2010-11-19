@@ -62,10 +62,12 @@ class Dnn2piCylinder : public DynamicNearestNeighbours {
   /// becomes itself, because it is considered to be a distance 2pi
   /// away). For the kt-algorithm (e.g.) this is actually not a
   /// problem (the distance need only be accurate when it is less than
-  /// R), so we can tell the routine to ignore this problem --
-  /// alternatively the routine will crash if it detects it occurring
-  /// (only when finding the nearest neighbour index, not its
-  /// distance).
+  /// R, assuming R<2pi [not necessarily always the case as of
+  /// 2010-11-19, when we've removed the requirement R<pi/2 in the
+  /// JetDefinition constructor]), so we can tell the routine to
+  /// ignore this problem -- alternatively the routine will crash if
+  /// it detects it occurring (only when finding the nearest neighbour
+  /// index, not its distance).
   Dnn2piCylinder(const std::vector<EtaPhi> &,
 		 const bool & ignore_nearest_is_mirror = false,
 		 const bool & verbose = false );

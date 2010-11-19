@@ -60,16 +60,25 @@ enum Strategy {
   N3Dumb      =  0, 
   /// automatic selection of the best (based on N)
   Best        =  1, 
-  /// best of the NlnN variants -- best overall for N>10^4
+  /// best of the NlnN variants -- best overall for N>10^4.
+  /// (Does not work for R>=2pi)
   NlnN        =  2, 
-  /// legacy N ln N using 3pi coverage of cylinder
+  /// legacy N ln N using 3pi coverage of cylinder.
+  /// (Does not work for R>=2pi)
   NlnN3pi     =  3, 
   /// legacy N ln N using 4pi coverage of cylinder
   NlnN4pi     =  4,
   /// Chan's closest pair method (in a variant with 4pi coverage),
-  /// for use exclusively with the Cambridge algorithm
+  /// for use exclusively with the Cambridge algorithm.
+  /// (Does not work for R>=2pi)
   NlnNCam4pi   = 14,
+  /// Chan's closest pair method (in a variant with 2pi+2R coverage),
+  /// for use exclusively with the Cambridge algorithm.
+  /// (Does not work for R>=2pi)
   NlnNCam2pi2R = 13,
+  /// Chan's closest pair method (in a variant with 2pi+minimal extra
+  /// variant), for use exclusively with the Cambridge algorithm. 
+  /// (Does not work for R>=2pi)
   NlnNCam      = 12, // 2piMultD
   /// the plugin has been used...
   plugin_strategy = 999

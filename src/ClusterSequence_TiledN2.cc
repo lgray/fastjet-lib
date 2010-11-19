@@ -89,7 +89,10 @@ void ClusterSequence::_initialise_tiles() {
   // very small R)
   double default_size = max(0.1,_Rparam);
   _tile_size_eta = default_size;
-  _n_tiles_phi   = int(floor(twopi/default_size));
+  // it makes no sense to go below 3 tiles in phi -- 3 tiles is
+  // sufficient to make sure all pair-wise combinations up to pi in
+  // phi are possible
+  _n_tiles_phi   = max(3,int(floor(twopi/default_size)));
   _tile_size_phi = twopi / _n_tiles_phi; // >= _Rparam and fits in 2pi
 
   // always include zero rapidity in the tiling region

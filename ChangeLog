@@ -1,3 +1,30 @@
+2010-11-19  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/JetDefinition.hh (enum Strategy): 
+	  added comments indicating which strategies are non-functional
+	  for R>=2pi.
+	
+	* src/JetDefinition.cc: 
+	  replaced enforcement of R < pi/2 with R < 1000, now that we
+	  support all R values in ClusterSequence. The reason for
+	  maintaining some limit is that particles with pt=0, m=0 can have
+	  rapidities O(10000) and one doesn't want the clustering to start
+	  including them as if their rapidities were physical.
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
+	  set up automatic change of strategy when R>=2pi, to ensure that
+	  we run a strategy that will give correct answers.
+
+	* src/ClusterSequence_TiledN2.cc (ClusterSequence::_initialise_tiles): 
+	  set the minimum number of tiles in the phi direction to be 3, so
+	  that it works even for large values of R
+
+	* include/fastjet/internal/Dnn2piCylinder.hh: 
+	  just updated comments about periodicity in phi and the kt (etc.)
+	  algorithms
+
+
 2010-10-27  Gregory Soyez  <soyez@cern.ch>
 
 	* src/genconfig.sh:
