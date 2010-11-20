@@ -248,8 +248,8 @@ sub setDefaults {
       chomp $gavinHome;
       $dataDir="$gavinHome/work/fastjet/data";
   }
-  $dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
-  #$dataFile="$dataDir/Pythia-PtMin50-LHC-10kev.dat.gz";
+  #$dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
+  $dataFile="$dataDir/Pythia-PtMin50-LHC-10kev.dat.gz";
 
   # for the e+e- algorithms, use an e+e- event file
   $eedataFile="$dataDir/Pythia_Q1000_Zprime1000_nev1000.dat";

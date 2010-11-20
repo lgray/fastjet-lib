@@ -1,3 +1,13 @@
+2010-11-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl (setDefaults): 
+	  changed the default data file so as to increase the number of
+	  events that can be used for tests.
+
+	* include/fastjet/JetDefinition.hh: 
+	  clarified possible issues when using the pointer returned by
+	  recombiner().
+
 2010-11-19  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/JetDefinition.hh (enum Strategy): 

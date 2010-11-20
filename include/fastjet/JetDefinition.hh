@@ -318,8 +318,16 @@ public:
   /// (re)set the general purpose extra parameter
   void set_extra_param(double xtra_param) {_extra_param = xtra_param;}
 
-  /// return a pointer to the currently defined recombiner (it may
-  /// be the internal one)
+  /// return a pointer to the currently defined recombiner. 
+  ///
+  /// Warning: the pointer may be to an internal recombiner (for
+  /// default recombination schemes), in which case if the
+  /// JetDefinition becomes invalid (e.g. is deleted), the pointer
+  /// will then point to an object that no longer exists.
+  /// 
+  /// Note also that if you copy a JetDefinition with a default
+  /// recombination scheme, then the two copies will have distinct
+  /// recombiners, and return different recombiner() pointers.
   const Recombiner * recombiner() const {
     return _recombiner == 0 ? & _default_recombiner : _recombiner;}
 
