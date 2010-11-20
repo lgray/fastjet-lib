@@ -1,8 +1,13 @@
 2010-11-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* regression-tests/test-all-algs.pl (setDefaults): 
+	* regression-tests/test-all-algs.pl: 
 	  changed the default data file so as to increase the number of
 	  events that can be used for tests.
+	  
+	  switched checksum identifiers over to the new file name.
+
+	  Allowed both -strat and -strategy arguments, and also allowed
+	  them to take a colon-separated list of multiple strategies.
 
 	* include/fastjet/JetDefinition.hh: 
 	  clarified possible issues when using the pointer returned by
