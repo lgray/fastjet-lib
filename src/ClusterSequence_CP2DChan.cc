@@ -142,6 +142,7 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
     // do the recombination...
     int jet_i = jetIDs[cID1];
     int jet_j = jetIDs[cID2];
+    assert (jet_i != jet_j); // to catch issue of recombining with mirror point
     int newjet_k;
     _do_ij_recombination_step(jet_i, jet_j, distance2, newjet_k);
 
@@ -280,6 +281,7 @@ void ClusterSequence::_CP2DChan_cluster () {
     // do the recombination...
     int jet_i = jetIDs[cID1];
     int jet_j = jetIDs[cID2];
+    assert (jet_i != jet_j); // to catch issue of recombining with mirror point
     int newjet_k;
     _do_ij_recombination_step(jet_i, jet_j, distance2, newjet_k);
 

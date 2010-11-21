@@ -1,3 +1,13 @@
+2010-11-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl: 
+	  allowed -deposit option to create the deposit directoy.
+
+	* src/ClusterSequence_CP2DChan.cc: 
+	  added in assertions to make sure that we catch recombination
+	  with mirror points (will only occur if the CP2DChan routines
+	  mistakenly get called with R >= 2pi).
+
 2010-11-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl: 

@@ -186,6 +186,7 @@ foreach $strat (@strat) {
   if ($deposit && !exists($done{$name}) && $sum ne "unavailable") {
     $depfile = "$deposit/$name.res";
     print "          > $depfile\n";
+    if (! -e $deposit) {mkdir $deposit || die "Could not create directory $deposit";}
     open (DEP, "> $depfile") || die "Could not open $depfile";
     print DEP $res;
     close DEP;
