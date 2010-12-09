@@ -322,7 +322,7 @@ double PseudoJet::plain_distance(const PseudoJet & other) const {
 /// returns other.phi() - this.phi(), i.e. the phi distance to
 /// other, constrained to be in range -pi .. pi
 double PseudoJet::delta_phi_to(const PseudoJet & other) const {
-  double dphi = abs(other.phi() - phi());
+  double dphi = other.phi() - phi();
   if (dphi >  pi) dphi -= twopi;
   if (dphi < -pi) dphi += twopi;
   return dphi;

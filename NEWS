@@ -19,7 +19,8 @@ Summary of changes from v2.4.X -> v2.5/3.0 [@ SOME DATE]
 
 - Underlying 
  
-
+Bug fixes:
+- fixed issue with inconsistent returned sign in PseudoJet::delta_phi_to(...)
 
 ===========================================================
 Summary of changes from v2.4.1 -> v2.4.2:  26 February 2010

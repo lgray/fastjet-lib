@@ -1,3 +1,9 @@
+2010-12-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc (delta_phi_to): 
+	  fixed serious bug relating to sign of delta_phi_to (presence of
+	  abs internally, which made the sign of the result unreliable)
+
 2010-11-29  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
