@@ -14,10 +14,17 @@ C     $Id$
 C     
       program siscone_example
       implicit none
+c ... maximum number of particles
       integer n
       parameter (n = 1000)
       integer i,j
-      double precision p(4,n), R, f, palg    
+c ... momenta: first index is Lorentz index (1=px,2=py,3=pz,4=E),
+c ... second index indicates which particle it is 
+c ... [note, indices are inverted relative to convention in Pythia]
+      double precision p(4,n)
+c ... parameters of the jet algorithm
+      double precision  R, f, palg    
+c ... array to store the returned jets
       double precision jets(4,n)
       double precision fastjetdmerge
       integer constituents(n)

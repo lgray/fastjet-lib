@@ -1,3 +1,12 @@
+2010-12-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/fastjet_fortran_example.f: 
+	* fortran_wrapper/fastjetfortran_v2.cc: 
+
+	  Added a comment concerning the order of array indices in the
+	  fortran interface noting that it differs from the order in
+	  Pythia 6.
+
 2010-12-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl: 

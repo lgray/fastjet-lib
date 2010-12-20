@@ -101,6 +101,12 @@ extern "C" {
 //            sorted in order of decreasing p_t.
 //   NJETS    the number of output jets 
 //
+// NOTE: if you are interfacing fastjet to Pythia 6, Pythia stores its
+// momenta as a matrix of the form P(4000,5), whereas this fortran
+// interface to fastjet expects them as P(4,NPART), i.e. you must take
+// the transpose of the Pythia array and drop the fifth component
+// (particle mass).
+//
 void fastjetsiscone_(const double * p, const int & npart,                   
                      const double & R, const double & f,                   
                      double * f77jets, int & njets) {
@@ -152,6 +158,12 @@ void fastjetsiscone_(const double * p, const int & npart,
 // 0.0=C/A, -1.0 = anti-kt) this routine actually calls the direct
 // implementation of those algorithms, whereas for other values of
 // PALG it calls the generalised kt implementation.
+//
+// NOTE: if you are interfacing fastjet to Pythia 6, Pythia stores its
+// momenta as a matrix of the form P(4000,5), whereas this fortran
+// interface to fastjet expects them as P(4,NPART), i.e. you must take
+// the transpose of the Pythia array and drop the fifth component
+// (particle mass).
 //
 void fastjetppgenkt_(const double * p, const int & npart,                   
                      const double & R, const double & palg,
