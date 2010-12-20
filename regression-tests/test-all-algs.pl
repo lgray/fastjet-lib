@@ -142,7 +142,7 @@ foreach $strat (@strat) {
   #$cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1 < $localdataFile";
   $cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1";
   if ($localdataFile =~ /\.gz$/) {
-    $cmdline = "zcat $localdataFile | $cmdline";
+    $cmdline = "gunzip -c $localdataFile | $cmdline";
   } else {
     $cmdline = "$cmdline < $localdataFile ";
   }

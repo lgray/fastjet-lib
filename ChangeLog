@@ -1,3 +1,11 @@
+2010-12-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl: 
+	  replaced a zcat (causing problems on mac) with a gunzip -c
+
+	* regression-tests/nightly-check.pl: 
+	  re-enabled karnak
+
 2010-12-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc (delta_phi_to): 
