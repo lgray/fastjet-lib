@@ -1,5 +1,9 @@
 2011-01-25  Gregory Soyez  <soyez@cern.ch>
 
+	* Doxyfile:
+	  updated the file (v1.7.1)
+	  limited te dot-graph depth to a single inheritance
+
 	* include/fastjet/ClusterSequence.hh (ClusterSequence):
 	  reshaped the doxygen main page (restored links, added more links)
 
