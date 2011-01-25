@@ -588,6 +588,7 @@ INPUT                  = src/ include/ include/fastjet include/fastjet/internal 
                          plugins/CMSIterativeCone plugins/CMSIterativeCone/fastjet \
                          plugins/CDFCones plugins/CDFCones/fastjet \
                          plugins/D0RunIICone plugins/D0RunIICone/fastjet \
+                         plugins/D0RunICone plugins/D0RunICone/fastjet \
                          plugins/EECambridge plugins/EECambridge/fastjet \
                          plugins/Jade plugins/Jade/fastjet \
                          plugins/NestedDefs plugins/NestedDefs/fastjet \

@@ -42,8 +42,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// @ingroup plugins
 /// \class D0RunIConePlugin
 ///
-/// D0RunIConePlugin is a plugin for fastjet (v2.4 upwards) that
-/// provides an interface to the D0 version of Run-I cone algorithm 
+/// A plugin for fastjet (v2.4 upwards) that provides an interface to
+/// the D0 version of Run-I cone algorithm
 ///
 /// The D0 code has been taken from Lars Sonnenschein's web-space
 /// http://www-d0.fnal.gov/~sonne/D0RunIcone.tgz
@@ -52,11 +52,30 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// here has been modified by the FastJet authors, so as to provide
 /// access to the contents of the jets (as is necessary for the
 /// plugin). This does not modify the results of the clustering.
+///
+/// The difference between this algorithm and the post-1996 version
+/// relates to the way the final jet momenta are calculated. Details
+/// are to be found in FERMILAB-PUB-97-242-E.
 //
 //----------------------------------------------------------------------
 class D0RunIConePlugin : public D0RunIBaseConePlugin {
 public:
-  // ctor
+  /// The D0RunIConePlugin constructor, which sets the "free" parameters of the
+  /// algorithm:
+  ///
+  ///  \param CONErad is the cone radius
+  ///
+  ///  \param JETmne is a minimum ET requirement on every iteration
+  ///    (jet dropped if Et < JETmne * Et_min_ratio ).
+  ///    The value that has been used by D0 for JETmne: 8 GeV 
+  ///    (and Et_min_ratio is 0.5)
+  ///
+  ///  \param SPlifr is the shared Et fraction splitting threshold, and
+  ///    a value of 0.5 was usually used by D0
+  ///
+  /// The remaining parameters of the algorithm are not to be modified if the algorithm
+  /// is to correspond to the one actually used by D0.
+  ///
   D0RunIConePlugin (double CONrad, double JETmne , double SPLifr = _DEFAULT_SPLifr)
     : D0RunIBaseConePlugin(CONrad, JETmne , SPLifr){}
 

@@ -1,3 +1,21 @@
+2011-01-25  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex: 
+	  added documentation of D0 run I algorithm (and adapted the Run
+	  II doc to correspond)
+
+	* plugins/D0RunICone/fastjet/D0RunIBaseConePlugin.hh: 
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh:
+	* Doxyfile
+	* Doxyfile-devel
+
+	  updated comments to give more informative doxygen documentation
+	  and included the D0RunI plugins in the doxygen.
+
+	* NEWS
+	  working on making this accurate
+
 2011-01-25  Gregory Soyez  <soyez@cern.ch>
 
 	* Doxyfile:

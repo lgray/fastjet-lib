@@ -594,6 +594,8 @@ INPUT                  = src/ \
                          plugins/CMSIterativeCone/fastjet \
                          plugins/CDFCones \
                          plugins/CDFCones/fastjet \
+                         plugins/D0RunICone \
+                         plugins/D0RunICone/fastjet \
                          plugins/D0RunIICone \
                          plugins/D0RunIICone/fastjet \
                          plugins/EECambridge \

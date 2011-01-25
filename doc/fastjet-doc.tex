@@ -2312,7 +2312,7 @@ threshold~\cite{SISCone}; with \verb:cone_area_fraction:$\neq 1$ it
 becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}). It is to be deprecated for
 new experimental or theoretical analyses.
 
-\subsubsection{CDF JetClu.}
+\subsubsection{CDF JetClu}
 The other algorithm used by CDF during Run~II, as well as their main
 algorithm during Run~I.
 \begin{lstlisting}
@@ -2343,8 +2343,50 @@ Note also that the underlying implementation groups particles ogether
 into calorimeter towers (with CDF-type geometry) before running the
 jet algorithm. 
 
+%......................................................................
+\subsubsection{\Dzero Run I cone}
+
+The main algorithm used by \Dzero in Run~I of the Tevatron, which is
+an  iterative cone algorithm with a split-merge. It comes in two versions
+\begin{lstlisting}
+  #include ``fastjet/D0RunIpre96ConePlugin.hh''
+  ///...
+  D0RunIpre96ConePlugin (double R, 
+                         double min_jet_Et, 
+                         double split_ratio = 0.5);
+\end{lstlisting}
+and
+\begin{lstlisting}
+  #include ``fastjet/D0RunIConePlugin.hh''
+  ///...
+  D0RunIConePlugin (double R, 
+                    double min_jet_Et, 
+                    double split_ratio = 0.5);
+\end{lstlisting}
+corresponding to versions of the algorithm used respectively before
+and after 1996. They differ only in the way the jet momenta are
+calculated, as described in \cite{Abbott:1997fc}.
+
+Instead of the seed threshold used in the CDF cones, the
+algorithm places a cut on the minimum $E_t$ of the cones during
+iteration (related to \verb|min_jet_Et|).
+%
+The \verb|split_ratio| is the same as the overlap threshold in other
+split-merge based algorithms (\Dzero usually use 0.5).
+%
+It is the \fastjet authors' understanding that the value 
+used for \verb|min_jet_Et| was 8\,GeV.
+
+The underlying code for this algorithm was provided by
+Lars Sonnenschein.
 
 
+Note: this algorithm is IR$_{2+1}$ unsafe. It is recommended that it
+be used only for the purpose of comparison with Run~I data from
+\Dzero.
+
+
+%......................................................................
 \subsubsection{\Dzero Run II cone}
 %
 The main algorithm used by \Dzero in Run~II of the Tevatron, which is
@@ -2356,15 +2398,25 @@ a midpoint type iterative cone with split-merge.
                      double min_jet_Et, 
                      double split_ratio = 0.5);
 \end{lstlisting}
-Instead of a seed threshold, the algorithm places a cut on the minimum
+The parameters have the same meaning as in the \Dzero Run~I cone and,
+once again, instead of a seed threshold there is a cut on the minimum
 $E_t$ of the cones during iteration (related to \verb|min_jet_Et|).
-%
-The \verb|split_ratio| is the same as the overlap threshold in other
-split-merge based algorithms (\Dzero usually use 0.5).
 %
 It is the \fastjet authors' understanding that two values have been
 used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
 6\,GeV (in more recent publications).
+
+
+% Instead of the seed threshold used in the CDF Midpoint cone, the
+% algorithm places a cut on the minimum $E_t$ of the cones during
+% iteration (related to \verb|min_jet_Et|).
+% %
+% The \verb|split_ratio| is the same as the overlap threshold in other
+% split-merge based algorithms (\Dzero usually use 0.5).
+% %
+% It is the \fastjet authors' understanding that two values have been
+% used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
+% 6\,GeV (in more recent publications).
 
 The underlying code for this algorithm was provided by
 Lars Sonnenschein.
@@ -2373,6 +2425,7 @@ Note: this algorithm is IR$_{3+1}$ unsafe (IR$_{2+1}$ for jets with
 energy too close to \verb:min_jet_Et:). It is to be deprecated for new
 experimental or theoretical analyses.
 
+%......................................................................
 \subsubsection{ATLAS iterative cone}
 %
 The (iterative) cone (with split-merge) algorithm used by ATLAS during
@@ -2392,6 +2445,7 @@ Note: this algorithm is IR$_{2+1}$ unsafe (in the limit of zero seed
 threshold). It is to be deprecated for new experimental or theoretical
 analyses.
 
+%......................................................................
 \subsubsection{CMS iterative cone}
 %
 The (iterative) cone (with progressive removal) algorithm used by CMS during
@@ -2991,6 +3045,11 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   Study on High Energy Physics, Research Directions for the Decade,
   Snowmass, Colorado, June 25 -- July 13, 1990.
   %%CITATION = FNAL-C-90-249-E;%%
+
+\bibitem{Abbott:1997fc}
+  B.~Abbott {\it et al.} [D0 Collaboration],
+  %``Fixed cone jet definitions in D0 and R(sep),''
+  FERMILAB-PUB-97-242-E.
 
 \end{thebibliography}
 

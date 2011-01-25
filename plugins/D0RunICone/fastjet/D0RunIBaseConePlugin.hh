@@ -39,7 +39,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 //
-/// @ingroup plugins
+/// @ingroup internal
 /// \class D0RunIBaseConePlugin
 ///
 /// D0RunIConePlugin is a plugin for fastjet (v2.4 upwards) that
@@ -62,11 +62,16 @@ class D0RunIBaseConePlugin : public JetDefinition::Plugin {
 public:
   /// A D0RunIConePlugin constructor which sets the "free" parameters of the
   /// algorithm:
-  ///  - the CONErad is the cone radius
-  ///  - the JETmne is a minimum ET requirement on every iteration
-  ///    (jet dropped if Et < JETmne * Et_min_ratio .
-  ///    Value that has been used by D0 for JETmne: 8 GeV 
-  ///  - the SPlifr is the shared Et fraction splitting threshold
+  ///
+  ///  \param CONErad is the cone radius
+  ///
+  ///  \param JETmne is a minimum ET requirement on every iteration
+  ///    (jet dropped if Et < JETmne * Et_min_ratio ).
+  ///    The value that has been used by D0 for JETmne: 8 GeV 
+  ///    (and Et_min_ratio is 0.5)
+  ///
+  ///  \param SPlifr is the shared Et fraction splitting threshold, and
+  ///    a value of 0.5 was usually used by D0
   ///
   /// The remaining parameters of the algorithm are not to be modified if the algorithm
   /// is to correspond to the one actually used by D0.

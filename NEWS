@@ -5,22 +5,28 @@ Release Notes for fastjet
 Summary of changes from v2.4.X -> v2.5/3.0 [@ SOME DATE]
 ===========================================================
 
-[the text needs updating]
+New features:
 
-- PseudoJet knows what ClusterSequence it belongs to
+- Several extensions to PseudoJet
+  * it now knows what ClusterSequence it belongs to
+  * info about internals of jets can be accessed e.g. as jet->constituents()
+  * it now has a virtual destructor
+  * new facilities for associating user info with a jet (see PseudoJet::ExtraInfo)
+  * some of these features make use of a new SharedPtr class 
+    (intended mainly for advanced users)  
 
-- This allows for a whole range of functions like jet->constituents(),
-  etc. which are now the preferred way of accessing information about
-  jet details
+- New plugin for D0RunICone (code contributed by Lars Sonnenschein???)
 
-- PseudoJet has acquired a virtual destructor
+- R can now be taken larger than pi/2 for natively coded jet algorithms
 
-- Jets have now have SharedPtr<ExtraInfo> for storing more information 
+- Addition of a tools/ directory. 
+  * including a series of "Selector" tools
 
-- Underlying 
- 
 Bug fixes:
 - fixed issue with inconsistent returned sign in PseudoJet::delta_phi_to(...)
+
+
+WHAT DO WE DO ABOUT PseudoJetPlusInfo???
 
 ===========================================================
 Summary of changes from v2.4.1 -> v2.4.2:  26 February 2010
