@@ -65,8 +65,8 @@ typedef char (&__no_type) [2]; //< the no type
 // and the links therein
 //
 // WARNING: according to 'boost', this may have some
-//   issues with MSVC7.1. See their code for a
-//   workaround
+//   issues with MSVC7.1. See their code for a description
+//   of the workaround used below
 //---------------------------------------------------
 
 /// \if internal_doc
@@ -75,8 +75,12 @@ typedef char (&__no_type) [2]; //< the no type
 /// \endif
 template<typename B, typename D>
 struct __inheritance_helper{
+#if !((_MSC_VER !=0 ) && (_MSC_VER == 1310))   // MSVC 7.1
   template <typename T>
   static __yes_type check_sig(D const volatile *, T);
+#else
+  static __yes_type check_sig(D const volatile *, long);
+#endif
   static __no_type  check_sig(B const volatile *, int);
 };
 
@@ -93,6 +97,11 @@ struct __inheritance_helper{
 /// \endif
 template<typename B, typename D>
 struct IsBaseAndDerived{
+#if ((_MSC_FULL_VER != 0) && (_MSC_FULL_VER >= 140050000))
+#pragma warning(push)
+#pragma warning(disable:6334)
+#endif
+
 
   /// \if internal_doc
   /// a helper structure that will pick between a casting to B*const
@@ -102,12 +111,20 @@ struct IsBaseAndDerived{
   /// conversion rules
   /// \endif
   struct Host{
+#if !((_MSC_VER !=0 ) && (_MSC_VER == 1310))
     operator B const volatile *() const;
+#else
+    operator B const volatile * const&() const;
+#endif
     operator D const volatile *();
   };
 
   /// the boolean value being true if D is derived from B
   static const bool value = ((sizeof(B)!=0) && (sizeof(D)!=0) && (sizeof(__inheritance_helper<B,D>::check_sig(Host(), 0)) == sizeof(__yes_type)));
+
+#if ((_MSC_FULL_VER != 0) && (_MSC_FULL_VER >= 140050000))
+#pragma warning(pop)
+#endif
 };
 
 FASTJET_END_NAMESPACE

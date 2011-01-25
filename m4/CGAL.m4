@@ -20,6 +20,11 @@ acx_cgal_default_makefile=no
 AC_ARG_WITH(cgalmakefile,
             [AC_HELP_STRING([--with-cgalmakefile=makefile], [Use the following CGAL makefile (CGAL <= 3.3.x)])])
 
+dnl ckeck if a directory is specified for CGAL
+dnl Note: this is of no effect if a Makefile is used
+AC_ARG_WITH(cgaldir,
+            [AC_HELP_STRING([--with-cgaldir=dir], [Assume the given directory for CGAL (CGAL >= 3.4)])])
+
 dnl define CGAL_MAKEFILE to be 
 dnl  1. the value given to --with-cgalmakefile
 dnl  2. the environment var
@@ -32,7 +37,12 @@ case $with_cgalmakefile in
     yes | "")
         dnl check if a env. var is defined
 	if test x${CGAL_MAKEFILE} = x ; then
-	    CGAL_MAKEFILE="/usr/share/cgal/cgal.mk" 
+            # if no installation dir is explicitly specified, try a default makefile
+	    if test \! -z "$with_cgaldir"; then
+	        CGAL_MAKEFILE=""
+	    else 
+	        CGAL_MAKEFILE="/usr/share/cgal/cgal.mk" 
+	    fi
 	fi
 	acx_cgal_default_makefile=yes;
 	;;
@@ -40,11 +50,6 @@ case $with_cgalmakefile in
     -* | */* | *.a | *.so | *.so.* | *.o) CGAL_MAKEFILE="$with_cgalmakefile" ;;
     *) CGAL_MAKEFILE="$with_cgalmakefile" ;;
 esac
-
-dnl ckeck if a directory is specified for CGAL
-dnl Note: this is of no effect if a Makefile is used
-AC_ARG_WITH(cgaldir,
-            [AC_HELP_STRING([--with-cgaldir=dir], [Assume the given directory for CGAL (CGAL >= 3.4)])])
 
 dnl check for the presence of the CGAL Makefile
 dnl if present, get the compilation and linker flags there

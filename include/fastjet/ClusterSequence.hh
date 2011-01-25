@@ -29,9 +29,32 @@
 //ENDHEADER
 
 
+#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
+#define __FASTJET_CLUSTERSEQUENCE_HH__
+
+#include<vector>
+#include<map>
+#include "fastjet/internal/DynamicNearestNeighbours.hh"
+#include "fastjet/PseudoJet.hh"
+#include<memory>
+#include<cassert>
+#include<iostream>
+#include<string>
+#include<set>
+#include<cmath> // needed to get double std::abs(double)
+#include "fastjet/Error.hh"
+#include "fastjet/JetDefinition.hh"
+#include "fastjet/SharedPtr.hh"
+#include "fastjet/internal/LimitedWarning.hh"
+
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
 //----------------------------------------------------------------------
 // here's where we put the main page for fastjet (as explained in the
 // Doxygen faq)
+// We put in inside te fastjet namespace to have the links without
+// having to specify (fastjet::)
 //......................................................................
 /** \mainpage FastJet code documentation
  *
@@ -60,31 +83,16 @@
  *
  * \section further_info Further information
  *
- * For further information and normal documentation, see the main <a
+ * - selected classes ordered by topics can be found under the <a
+ * href="modules.html">modules</a> tab.
+ *
+ * - the complete list of classes is available under the  <a
+ * href="annotated.html">classes</a> tab.
+ * 
+ * - For further information and normal documentation, see the main <a
  * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
  */
 //----------------------------------------------------------------------
-
-#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
-#define __FASTJET_CLUSTERSEQUENCE_HH__
-
-#include<vector>
-#include<map>
-#include "fastjet/internal/DynamicNearestNeighbours.hh"
-#include "fastjet/PseudoJet.hh"
-#include<memory>
-#include<cassert>
-#include<iostream>
-#include<string>
-#include<set>
-#include<cmath> // needed to get double std::abs(double)
-#include "fastjet/Error.hh"
-#include "fastjet/JetDefinition.hh"
-#include "fastjet/SharedPtr.hh"
-#include "fastjet/internal/LimitedWarning.hh"
-
-
-FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // forward declaration
 //class ClusterSequence;

@@ -1,3 +1,24 @@
+2011-01-25  Gregory Soyez  <soyez@cern.ch>
+
+	* include/fastjet/ClusterSequence.hh (ClusterSequence):
+	  reshaped the doxygen main page (restored links, added more links)
+
+	* include/fastjet/internal/IsBase.hh:
+	  added the workarounds for MSVC
+
+	* m4/CGAL.m4:
+	  in case a CGAL directory is explicitly specified, skip the
+	  makefile test (previously, /usr/share/cgal/cgal.mk was
+	  tested anyway). This is safer in case both an "old" and a new
+	  installation coexist.
+
+	* configure.ac:
+	  slightly moved the "tools" section (right after the plugins)
+	  added a summary at the end of the run
+
+	* m4/plugin.m4:
+	  added AC_PLUGIN_SUMMARY to show what is enabled/disabled
+
 2011-01-25  Gavin Salam  <salam@lpthe.jussieu.fr> & Gregory
 
 

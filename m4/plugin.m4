@@ -168,3 +168,23 @@ AC_DEFUN([ACX_CHECK_PLUGIN],
 
     AC_MSG_RESULT(${ENABLE_$3})
 ])
+
+
+dnl PLUGIN_SUMMARY
+dnl show a brief summary of what is enabled and what is not
+AC_DEFUN([AC_PLUGIN_SUMMARY],
+[
+	dnl show the plugins summary
+	echo "  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}	  
+	echo "           Jade              "${ENABLE_JADE}		  
+	echo "           NestedDefs        "${ENABLE_NESTEDDEFS}	  
+	echo "           SISCone           "${ENABLE_SISCONE}	  
+	echo "           CDFCones          "${ENABLE_CDFCONES}	  
+	echo "           D0RunICone        "${ENABLE_D0RUNICONE}	  
+	echo "           D0RunIICone       "${ENABLE_D0RUNIICONE}	  
+	echo "           ATLASCone         "${ENABLE_ATLASCONE}	  
+	echo "           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE} 
+	echo "           PxCone            "${ENABLE_PXCONE}		  
+	echo "           TrackJet          "${ENABLE_TRACKJET}         
+	dnl end of show the plugins summary --- don't modify this line
+])

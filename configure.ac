@@ -183,12 +183,12 @@ dnl allow to build all plugins in the same lib
 AC_ARG_ENABLE(monolithic,
 [  --enable-monolithic  Build all the (compiled) plugins in a single lib],
 [case "${enableval}" in
-  yes) monolithic=true ;;
-  no)  monolithic=false ;;
+  yes) monolithic=yes ;;
+  no)  monolithic=no ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-monolithic) ;;
-esac],[monolithic=false])
-AM_CONDITIONAL(MONOLITHIC_PLUGINS, test x$monolithic = xtrue)
-if [[ "x$monolithic" == "xtrue" ]] ; then
+esac],[monolithic=no])
+AM_CONDITIONAL(MONOLITHIC_PLUGINS, test x$monolithic = xyes)
+if [[ "x$monolithic" == "xyes" ]] ; then
    CONFIG_LIBS_PLUGINS=" -lfastjetplugins "
    CONFIG_LIBS_PLUGINS_STATIC=" \${installationdir}/lib/libfastjetplugins.a "
 fi
@@ -322,6 +322,12 @@ AC_SUBST(CONFIG_RUNPATH_FLAGS)
 AC_SUBST(LIST_ALL_PLUGINS)
 
 dnl-------------------------------------------------------------------
+dnl tools section
+dnl-------------------------------------------------------------------
+AC_CONFIG_FILES( tools/Makefile tools/fastjet/Makefile tools/fastjet/tools/Makefile )
+
+
+dnl-------------------------------------------------------------------
 dnl make sure examples dir is there
 dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( example/Makefile example/data/Makefile example/root/Makefile )
@@ -348,15 +354,24 @@ dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( Makefile src/Makefile include/Makefile include/fastjet/Makefile include/fastjet/internal/Makefile )
 
 dnl-------------------------------------------------------------------
-dnl tools Makefiles
-dnl-------------------------------------------------------------------
-AC_CONFIG_FILES( tools/Makefile tools/fastjet/Makefile tools/fastjet/tools/Makefile )
-
-dnl-------------------------------------------------------------------
 dnl finish with a nice message
 dnl-------------------------------------------------------------------
 AC_OUTPUT
 
+dnl-------------------------------------------------------------------
+dnl give a nice summary of the config
+dnl-------------------------------------------------------------------
+echo ""
+echo "Configuration summary:"
+echo "----------------------"
+echo "  Installation directory     "${prefix}
+echo "  Shared libraries           "${enable_shared}
+echo "  Static libraries           "${enable_static}
+echo "  Debug flag                 "$ENABLE_DEBUG_FLAG
+echo "  CGAL support               "${ENABLE_CGAL_FLAG}
+AC_PLUGIN_SUMMARY
+echo "  Monolithic plugins lib     "$monolithic
+echo ""
 echo "---------------------------------------------------"
 echo "        IMPORTANT NOTICE TO FASTJET USERS          "
 echo "                                                   "
