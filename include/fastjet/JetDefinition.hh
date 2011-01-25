@@ -86,7 +86,8 @@ enum Strategy {
 
 
 //======================================================================
-/// \enum JetAlgorithm the various families of jet-clustering algorithm
+/// \enum JetAlgorithm
+/// the various families of jet-clustering algorithm
 enum JetAlgorithm {
   /// the longitudinally invariant kt algorithm
   kt_algorithm=0,

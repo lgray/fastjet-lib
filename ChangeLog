@@ -1,7 +1,14 @@
 2011-01-25  Gregory Soyez  <soyez@cern.ch>
 
+	* Doxyfile:
+	  remove alphabetical ordering of detailed descriptions
+
+	* include/fastjet/ClusterSequence.hh:
+	  added extra doc on the mainpage (links to enum,...)
+
 	* include/fastjet/internal/base.hh:
-	  added a "tool" module for the documentation
+	  added a "tool" module for the documentation;
+	  documented the fastjet namespace
 
 2011-01-25  Gavin Salam  <salam@lpthe.jussieu.fr>
 

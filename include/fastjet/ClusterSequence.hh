@@ -69,7 +69,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  * - PseudoJet: the basic class for holding the 4-momentum of a
  *   particle or a jet.
  *
- * - JetDefinition: the combination of a JetAlgorithm and its
+ * - JetDefinition: the combination of a 
+ * <a href="namespacefastjet.html#enum-members">JetAlgorithm</a> and its
  *   associated parameters.
  *
  * - ClusterSequence: constructed with a vector of input (PseudoJet)
@@ -83,11 +84,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  *
  * \section further_info Further information
  *
- * - selected classes ordered by topics can be found under the <a
+ * - Selected classes ordered by topics can be found under the <a
  * href="modules.html">modules</a> tab.
  *
- * - the complete list of classes is available under the  <a
+ * - The complete list of classes is available under the  <a
  * href="annotated.html">classes</a> tab.
+ * 
+ * - For non-class material (<a href="namespacefastjet.html#enum-members">enums</a>,
+ * <a href="namespacefastjet.html#typedef-members">typedefs</a>, 
+ * <a href="namespacefastjet.html#func-members">functions</a>), see the 
+ * <a href="namespacefastjet.html">fastjet namespace</a> documentation
  * 
  * - For further information and normal documentation, see the main <a
  * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.

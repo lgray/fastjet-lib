@@ -32,6 +32,11 @@
 #ifndef __FASTJET_FASTJET_BASE_HH__
 #define __FASTJET_FASTJET_BASE_HH__
 
+/// \namespace fastjet
+/// the FastJet namespace
+/// 
+/// all the fastjet-related material is put under that namespace
+
 // define this for easier readability (and obfuscation?) in
 // a range of places
 #define FASTJET_BEGIN_NAMESPACE namespace fastjet {
