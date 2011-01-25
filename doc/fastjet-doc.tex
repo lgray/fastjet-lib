@@ -71,7 +71,13 @@
 %\newcommand{\Dzero}{D0\!\!\!/\xspace}
 \newcommand{\Dzero}{D\O\xspace}
 
-\title{FastJet 2.4.2 user manual}
+% some things that crop up often
+\newcommand{\PseudoJet}{\ttt{PseudoJet}\xspace}
+\newcommand{\PJ}{\ttt{PseudoJet}\xspace}
+\newcommand{\ClusterSequence}{\ttt{ClusterSequence}\xspace}
+\newcommand{\CS}{\ttt{ClusterSequence}\xspace}
+
+\title{FastJet 3.0.0alpha1 user manual}
 \author{Matteo Cacciari,$^{1,2}$ Gavin P. Salam$^{1}$ and Gregory Soyez$^{3,4}$\\[10pt]
   \normalsize
   $^1$LPTHE, UPMC Univ.~Paris 6 and CNRS UMR 7589, Paris, France\\
@@ -199,6 +205,11 @@ you're done go back to the original directory
  make install
  cd ..
 \end{verbatim}
+If you copy and paste the above lines from one very widespread PDF
+viewer, you should note that the first line contains \emph{backquotes}
+not forward quotes but that your PDF viewer may nevertheless paste
+forward quotes, causing problems down the line (the issue arises again
+below). 
 
 \item
 Now paste the following piece of code into a file called \tt{short-example.cc}
@@ -644,80 +655,6 @@ following methods:
 which are relevant for use with the $\ee$ $k_t$ algorithm and with the
 Jade plugin (section~\ref{sec:ee-jade}).
 
-Finally the user may obtain the constituent particles of a given jet,
-via
-\begin{lstlisting}
-  /// return a vector of the particles that make up jet
-  vector<fastjet::PseudoJet> constituents (const fastjet::PseudoJet & jet);
-\end{lstlisting}
-Note that this is a member function of the \ttt{fastjet::ClusterSequence} and
-not of \verb|fastjet::PseudoJet|, because jets are only meaningful when
-referred to a given \verb|fastjet::ClusterSequence|.\footnote{This is a
-  further respect in which the interface differs from that of
-  \ttt{KtJet}.}
-%
-If the user wishes to identify the constituents with the original
-particles provided to \ttt{fastjet::ClusterSequence} she or he should have set
-a unique index for each of the original particles with the
-\ttt{fastjet::PseudoJet::set\_user\_index} function.
-
-\paragraph{Subjet analysis.} To obtain the set of subjets at a specific
-$d_{\mathrm{cut}}$ scale inside a given jet, one may use the following
-\ttt{ClusterSequence} member function:
-\begin{lstlisting}
-  /// return a vector of all subjets of the current jet (in the sense
-  /// of the exclusive algorithm) that would be obtained when running
-  /// the algorithm with the given dcut. 
-  std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
-                                            const double & dcut) const;
-\end{lstlisting}
-If $m$ jets are found, this takes a time $\order{m \ln m}$ (owing to
-the internal use of a priority queue). Alternatively one may obtain
-the jet's constituents, cluster them separately and then carry out an
-\ttt{exclusive\_jets} analysis on the resulting \ttt{ClusterSequence}.
-The results should be identical. This second method is mandatory if
-one wishes to identify subjets with an algorithm that differs from the
-one used to find the original jets.
-
-%% Currently no dedicated subjet
-%% analysis is provided. It is however trivial (though non-optimal) to
-%% obtain a subjet analysis as follows:
-%% \begin{lstlisting}
-%%   // run clustering on vector<fastjet::PseudoJet> all_particles
-%%   fastjet::ClusterSequence clust_seq(all_particles);
-%% 
-%%   // get the exclusive jets with the event viewed as two hard jets
-%%   vector<fastjet::PseudoJet> jets = clust_seq.exclusive_jets(2);
-%% 
-%%   // get the constituents of the first of these jets
-%%   vector<fastjet::PseudoJet> jet0_constituents = clust_seq.constituents(jets[0]);
-%% 
-%%   // now rerun the jet clustering on jet0_constituents
-%%   fastjet::ClusterSequence jet0_seq(jet0_constituents);
-%% 
-%%   // run whatever subjet analysis is of interest here on jet0_seq.
-%% \end{lstlisting}
-One can also make use of the following methods, which allow one to
-follow the merging sequence (and walk back through it):
-\begin{lstlisting}
-  /// if the jet has parents in the clustering, it returns true
-  /// and sets parent1 and parent2 equal to them.
-  ///
-  /// if it has no parents it returns false and sets parent1 and
-  /// parent2 to zero
-  bool has_parents(const PseudoJet & jet, PseudoJet & parent1, 
-                   PseudoJet & parent2) const;
-
-  /// if the jet has a child then return true and give the child jet
-  /// otherwise return false and set the child to zero
-  bool has_child(const PseudoJet & jet, PseudoJet & child) const;
-
-  /// if this jet has a child (and so a partner) return true
-  /// and give the partner, otherwise return false and set the
-  /// partner to zero
-  bool has_partner(const PseudoJet & jet, PseudoJet & partner) const;
-\end{lstlisting}
-
 \paragraph{Unclustered particles.}  User-supplied plugin jet algorithms
 (see section~\ref{sec:plugins}) may have the property that not all
 particles are clustered into jets. In such a case it can be useful to
@@ -727,6 +664,100 @@ follows:
   vector<fastjet::PseudoJet> unclustered = clust_seq.unclustered_particles();
 \end{lstlisting}
 
+%......................................................................
+\subsection{Constituents and substructure of jets}
+
+For any \PseudoJet that results from a clustering, the user can
+obtain information about its constituents, internal substructure,
+etc., through  member functions of the \PseudoJet
+class. \footnote{This is a new development in version 3 of
+  FastJet. In earlier versions, access to information about a jet's
+  contents had to be made through its \CS. Those forms of access,
+  though not documented here, will be retained throughout the 3.X
+  series.}
+
+\paragraph{Jet constituents}
+For example the constituents of a give \PseudoJet \verb|jet| can be
+obtained as
+\begin{lstlisting}
+  vector<fastjet::PseudoJet> constituents = jet.constituents();
+\end{lstlisting}
+%
+% Finally the user may obtain the constituent particles of a given jet,
+% via
+% \begin{lstlisting}
+%   /// return a vector of the particles that make up jet
+%   vector<fastjet::PseudoJet> constituents();
+% \end{lstlisting}
+% Note that this is a member function of the \ttt{fastjet::ClusterSequence} and
+% not of \verb|fastjet::PseudoJet|, because jets are only meaningful when
+% referred to a given \verb|fastjet::ClusterSequence|.\footnote{This is a
+%   further respect in which the interface differs from that of
+%   \ttt{KtJet}.}
+%
+Note that if the user wishes to identify these constituents with the
+original particles provided to \ttt{fastjet::ClusterSequence}, she or
+he should have set a unique index for each of the original particles
+with the \ttt{fastjet::PseudoJet::set\_user\_index} function.
+%
+Alternatively more detailed information can also be set through the
+\verb|extra_info| facilities of \PseudoJet. \comment{Put ref to place
+  where discussed}
+
+\paragraph{Subjet properties.} To obtain the set of subjets at a specific
+$d_{\mathrm{cut}}$ scale inside a given jet, one may use the following
+\PseudoJet member function:
+\begin{lstlisting}
+  /// return a vector of all subjets of the current jet (in the sense
+  /// of the exclusive algorithm) that would be obtained when running
+  /// the algorithm with the given dcut. 
+  std::vector<PseudoJet> exclusive_subjets (const double & dcut) const;
+\end{lstlisting}
+If $m$ jets are found, this takes a time $\order{m \ln m}$ (owing to
+the internal use of a priority queue). Alternatively one may obtain
+the jet's constituents, cluster them separately and then carry out an
+\ttt{exclusive\_jets} analysis on the resulting \ttt{ClusterSequence}.
+The results should be identical. This second method is mandatory if
+one wishes to identify subjets with an algorithm that differs from the
+one used to find the original jets.
+
+One can also make use of the following methods, which allow one to
+follow the merging sequence (and walk back through it):
+\begin{lstlisting}
+  /// if the jet has parents in the clustering, it returns true
+  /// and sets parent1 and parent2 equal to them.
+  ///
+  /// if it has no parents it returns false and sets parent1 and
+  /// parent2 to zero
+  bool has_parents(PseudoJet & parent1, PseudoJet & parent2) const;
+
+  /// if the jet has a child then return true and give the child jet
+  /// otherwise return false and set the child to zero
+  bool has_child(PseudoJet & child) const;
+
+  /// if this jet has a child (and so a partner) return true
+  /// and give the partner, otherwise return false and set the
+  /// partner to zero
+  bool has_partner(PseudoJet & partner) const;
+\end{lstlisting}
+
+If any of the above functions are used with a \PseudoJet that is not
+associated with a \ClusterSequence, an error will be thrown. 
+%
+Since the information about a jet's constituents is actually stored in
+the \CS and not in the jet itself, these methods will also throw an
+error if the \CS associated with the jet has gone out of scope, been
+deleted, or in any other way rendered invalid.
+%
+One can establish the status of a \PseudoJet's associated cluster
+sequence with the following enquiry functions:
+\begin{lstlisting}
+  // returns true if this PseudoJet has an associated (and valid) ClusterSequence.
+  bool has_associated_cluster_sequence() const;
+
+  // get a (const) pointer to the parent ClusterSequence (NULL if inexistent) 
+  const ClusterSequence* associated_cluster_sequence() const; 
+\end{lstlisting}
 %----------------------------------------------------------------------
 \subsection{Version information}
 \label{sec:version-information}
@@ -800,8 +831,7 @@ int main (int argc, char ** argv) {
   for (unsigned int i = 0; i < exclusive_jets.size(); i++) {
     // get constituents of the jet. NB this is through a member function 
     // of clust_seq because that is where the information is held.
-    vector<fastjet::PseudoJet> constituents = 
-                               clust_seq.constituents(exclusive_jets[i])
+    vector<fastjet::PseudoJet> constituents = exclusive_jets[i].constituents();
 
     printf("%5u %15.8f %15.8f %15.8f %8u\n",
            i, exclusive_jets[i].rap(), exclusive_jets[i].phi(),

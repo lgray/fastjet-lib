@@ -320,7 +320,8 @@ class PseudoJet {
   /// member function).
   //\{
   //-------------------------------------------------------------
-  /// returns true if this PseudoJet has an associated ClusterSequence.
+  /// returns true if this PseudoJet has an associated (and still
+  /// valid) ClusterSequence.
   bool has_associated_cluster_sequence() const;
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
