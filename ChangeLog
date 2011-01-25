@@ -1,5 +1,10 @@
 2011-01-25  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJet.hh:
+	  added a reset_extra_info(...) so that the user does not need to
+	  be aware of any details of the shared pointer (unless they do
+	  advanced things).
+
 	* doc/fastjet-doc.tex: 
 	  added documentation of D0 run I algorithm (and adapted the Run
 	  II doc to correspond)
