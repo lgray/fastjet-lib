@@ -348,6 +348,11 @@ dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( Makefile src/Makefile include/Makefile include/fastjet/Makefile include/fastjet/internal/Makefile )
 
 dnl-------------------------------------------------------------------
+dnl tools Makefiles
+dnl-------------------------------------------------------------------
+AC_CONFIG_FILES( tools/Makefile tools/fastjet/Makefile tools/fastjet/tools/Makefile )
+
+dnl-------------------------------------------------------------------
 dnl finish with a nice message
 dnl-------------------------------------------------------------------
 AC_OUTPUT

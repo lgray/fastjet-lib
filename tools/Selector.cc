@@ -1,0 +1,909 @@
+#include <sstream>
+#include "fastjet/tools/Selector.hh"
+#include <algorithm>
+
+using namespace std;
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+//----------------------------------------------------------------------
+// selector and workers for operators
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+/// helper for combining selectors with a logical not
+class SW_Not : public SelectorWorker {
+public:
+  /// ctor
+  SW_Not(const Selector & s) : _s(s) {}
+
+  /// return a copy of the current object
+  virtual SelectorWorker* copy(){ return new SW_Not(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure that the "pass" can be applied on both selectors
+    if (!applies_jet_by_jet())
+      throw Error("Cannot apply this selector worker to an individual jet");
+    
+    return ! _s.pass(jet);
+  } 
+
+  /// returns true if this can be applied jet by jet
+  virtual bool applies_jet_by_jet() const {return _s.applies_jet_by_jet();}
+
+  /// select the jets in the list that pass both selectors
+  virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // if we can apply the selector jet-by-jet, call the base selector
+    // that does exactly that
+    if (applies_jet_by_jet()){
+      SelectorWorker::terminator(jets);
+      return;
+    }
+
+    // check the effect of the selector we want to negate
+    vector<const PseudoJet *> s_jets = jets;
+    _s.worker()->terminator(s_jets);
+
+    // now apply the negation: all the jets that pass the base
+    // selector (i.e. are not NULL) have to be set to NULL
+    for (unsigned int i=0; i<s_jets.size(); i++){
+      if (s_jets[i]) jets[i] = NULL;
+    }
+  }
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "!(" << _s.description() << ")";
+    return ostr.str();
+  }
+
+  /// returns true is the worker can be relocated
+  virtual bool is_relocatable() const { return _s.is_relocatable();}
+
+protected:
+  Selector _s;
+};
+
+
+// logical not applied on a selector
+Selector operator!(const Selector & s) {
+  return Selector(new SW_Not(s));
+}
+
+
+//----------------------------------------------------------------------
+/// Base class for binary operators
+class SW_BinaryOperator: public SelectorWorker {
+public:
+  /// ctor
+  SW_BinaryOperator(const Selector & s1, const Selector & s2) : _s1(s1), _s2(s2) {
+    // stores info for more efficient access to the selector's properties
+
+    // we can apply jet by jet only if this is the case for both sub-selectors
+    _applies_jet_by_jet = _s1.applies_jet_by_jet() && _s2.applies_jet_by_jet();
+
+    // the selector is relocatable if any of the sub-selectors is
+    _is_relocatable = _s1.is_relocatable() || _s2.is_relocatable();
+
+    // we have a well-defined area provided the two objects have one
+    _has_area = _s1.has_area() && _s2.has_area();
+  }
+
+  /// returns true if this can be applied jet by jet
+  virtual bool applies_jet_by_jet() const {return _applies_jet_by_jet;}
+
+  /// returns true if this is relocatable
+  virtual bool is_relocatable() const{ 
+    return _is_relocatable;
+  }
+
+  /// performs the relocation
+  virtual void relocate(const PseudoJet &centre){
+    _s1.relocate(centre);
+    _s2.relocate(centre);
+  }
+
+  /// check if it has a finite area
+  virtual bool has_area() const { return _has_area;} 
+
+protected:
+  Selector _s1, _s2;
+  bool _applies_jet_by_jet;
+  bool _is_relocatable;
+  bool _has_area;
+};
+
+
+
+//----------------------------------------------------------------------
+/// helper for combining selectors with a logical and
+class SW_And: public SW_BinaryOperator {
+public:
+  /// ctor
+  SW_And(const Selector & s1, const Selector & s2) : SW_BinaryOperator(s1,s2){}
+
+  /// return a copy of this
+  virtual SelectorWorker* copy(){ return new SW_And(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure that the "pass" can be applied on both selectors
+    if (!applies_jet_by_jet())
+      throw Error("Cannot apply this selector worker to an individual jet");
+    
+    return _s1.pass(jet) && _s2.pass(jet);
+  }
+
+  /// select the jets in the list that pass both selectors
+  virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // if we can apply the selector jet-by-jet, call the base selector
+    // that does exactly that
+    if (applies_jet_by_jet()){
+      SelectorWorker::terminator(jets);
+      return;
+    }
+
+    // check the effect of the first selector
+    vector<const PseudoJet *> s1_jets = jets;
+    _s1.worker()->terminator(s1_jets);
+
+    // apply the second
+    _s2.worker()->terminator(jets);
+
+    // terminate the jets that wiuld be terminated by _s1
+    for (unsigned int i=0; i<jets.size(); i++){
+      if (! s1_jets[i]) jets[i] = NULL;
+    }
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+    double s1min, s1max, s2min, s2max;
+    _s1.get_rapidity_extent(s1min, s1max);
+    _s2.get_rapidity_extent(s2min, s2max);
+    rapmax = min(s1max, s2max);
+    rapmin = max(s1min, s2min);
+  }
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "(" << _s1.description() << " && " << _s2.description() << ")";
+    return ostr.str();
+  }
+};
+
+
+// logical and between two selectors
+Selector operator&&(const Selector & s1, const Selector & s2) {
+  return Selector(new SW_And(s1,s2));
+}
+
+
+
+//----------------------------------------------------------------------
+/// helper for combining selectors with a logical or
+class SW_Or: public SW_BinaryOperator {
+public:
+  /// ctor
+  SW_Or(const Selector & s1, const Selector & s2) : SW_BinaryOperator(s1,s2) {}
+
+  /// return a copy of this
+  virtual SelectorWorker* copy(){ return new SW_Or(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure that the "pass" can be applied on both selectors
+    if (!applies_jet_by_jet())
+      throw Error("Cannot apply this selector worker to an individual jet");
+    
+    return _s1.pass(jet) || _s2.pass(jet);
+  }
+
+  /// returns true if this can be applied jet by jet
+  virtual bool applies_jet_by_jet() const {
+    // watch out, even though it's the "OR" selector, to be applied jet
+    // by jet, both the base selectors need to be jet-by-jet-applicable,
+    // so the use of a && in the line below
+    return _s1.applies_jet_by_jet() && _s2.applies_jet_by_jet();
+  }
+
+  /// select the jets in the list that pass both selectors
+  virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // if we can apply the selector jet-by-jet, call the base selector
+    // that does exactly that
+    if (applies_jet_by_jet()){
+      SelectorWorker::terminator(jets);
+      return;
+    }
+
+    // check the effect of the first selector
+    vector<const PseudoJet *> s1_jets = jets;
+    _s1.worker()->terminator(s1_jets);
+
+    // apply the second
+    _s2.worker()->terminator(jets);
+
+    // resurrect any jet that has been terminated by the second one
+    // and not by the first one
+    for (unsigned int i=0; i<jets.size(); i++){
+      if (s1_jets[i]) jets[i] = s1_jets[i];
+    }
+  }
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "(" << _s1.description() << " || " << _s2.description() << ")";
+    return ostr.str();
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+    double s1min, s1max, s2min, s2max;
+    _s1.get_rapidity_extent(s1min, s1max);
+    _s2.get_rapidity_extent(s2min, s2max);
+    rapmax = max(s1max, s2max);
+    rapmin = min(s1min, s2min);
+  }
+};
+
+
+// logical or between two selectors
+Selector operator ||(const Selector & s1, const Selector & s2) {
+  return Selector(new SW_Or(s1,s2));
+}
+
+//----------------------------------------------------------------------
+/// helper for multiplying two selectors (in an operator-like way)
+class SW_Mult: public SW_And {
+public:
+  /// ctor
+  SW_Mult(const Selector & s1, const Selector & s2) : SW_And(s1,s2) {}
+
+  /// return a copy of this
+  virtual SelectorWorker* copy(){ return new SW_Mult(*this);}
+
+  /// select the jets in the list that pass both selectors
+  virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // if we can apply the selector jet-by-jet, call the base selector
+    // that does exactly that
+    if (applies_jet_by_jet()){
+      SelectorWorker::terminator(jets);
+      return;
+    }
+
+    // first apply _s2
+    _s2.worker()->terminator(jets);
+
+    // then apply _s1
+    _s1.worker()->terminator(jets);
+  }
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "(" << _s1.description() << " * " << _s2.description() << ")";
+    return ostr.str();
+  }
+};
+
+
+// logical and between two selectors
+Selector operator*(const Selector & s1, const Selector & s2) {
+  return Selector(new SW_Mult(s1,s2));
+}
+
+
+//----------------------------------------------------------------------
+// selector and workers for kinematic cuts
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+// a series of basic classes that allow easy implementations of
+// min, max and ranges on a quantity-to-be-defined
+
+// generic holder for a quantity
+class QuantityBase{
+public:
+  QuantityBase(double q) : _q(q){}
+  virtual double operator()(const PseudoJet & jet ) const =0;
+  virtual string description() const =0;
+  virtual double comparison_value() const {return _q;}
+  virtual double description_value() const {return comparison_value();}
+protected:
+  double _q;
+};  
+
+// generic holder for a squared quantity
+class QuantitySquareBase : public QuantityBase{
+public:
+  QuantitySquareBase(double sqrtq) : QuantityBase(sqrtq*sqrtq), _sqrtq(sqrtq){}
+  virtual double description_value() const {return _sqrtq;}
+protected:
+  double _sqrtq;
+};  
+
+// generic_quantity >= minimum
+template<typename QuantityType>
+class SW_QuantityMin : public SelectorWorker{
+public:
+  /// detfault ctor (initialises the pt cut)
+  SW_QuantityMin(double qmin) : _qmin(qmin) {}
+
+  /// returns true is the given object passes the selection pt cut
+  virtual bool pass(const PseudoJet & jet) const {return _qmin(jet) >= _qmin.comparison_value();}
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << _qmin.description() << " >= " << _qmin.description_value();
+    return ostr.str();
+  }
+
+protected:
+  QuantityType _qmin;     ///< the cut
+};
+
+
+// generic_quantity <= maximum
+template<typename QuantityType>
+class SW_QuantityMax : public SelectorWorker {
+public:
+  /// detfault ctor (initialises the pt cut)
+  SW_QuantityMax(double qmax) : _qmax(qmax) {}
+
+  /// returns true is the given object passes the selection pt cut
+  virtual bool pass(const PseudoJet & jet) const {return _qmax(jet) <= _qmax.comparison_value();}
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << _qmax.description() << " <= " << _qmax.description_value();
+    return ostr.str();
+  }
+
+protected:
+  QuantityType _qmax;   ///< the cut
+};
+
+
+// generic quantity in [minimum:maximum]
+template<typename QuantityType>
+class SW_QuantityRange : public SelectorWorker {
+public:
+  /// detfault ctor (initialises the pt cut)
+  SW_QuantityRange(double qmin, double qmax) : _qmin(qmin), _qmax(qmax) {}
+
+  /// returns true is the given object passes the selection pt cut
+  virtual bool pass(const PseudoJet & jet) const {
+    double q = _qmin(jet); // we could identically use _qmax
+    return (q >= _qmin.comparison_value()) && (q <= _qmax.comparison_value());
+  }
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << _qmin.description_value() << " <= " << _qmin.description() << " <= " << _qmax.description_value();
+    return ostr.str();
+  }
+
+protected:
+  QuantityType _qmin;   // the lower cut 
+  QuantityType _qmax;   // the upper cut
+};
+
+
+//----------------------------------------------------------------------
+/// helper class for selecting on pt
+class QuantityPt2 : public QuantitySquareBase{
+public:
+  QuantityPt2(double pt) : QuantitySquareBase(pt){}
+  virtual double operator()(const PseudoJet & jet ) const { return jet.perp2();}
+  virtual string description() const {return "pt";}
+};  
+
+// returns a selector for a minimum pt
+Selector SelectorPtMin(double ptmin) {
+  return Selector(new SW_QuantityMin<QuantityPt2>(ptmin));
+}
+
+// returns a selector for a maximum pt
+Selector SelectorPtMax(double ptmax) {
+  return Selector(new SW_QuantityMax<QuantityPt2>(ptmax));
+}
+
+// returns a selector for a pt range
+Selector SelectorPtRange(double ptmin, double ptmax) {
+  return Selector(new SW_QuantityRange<QuantityPt2>(ptmin, ptmax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper class for selecting on transverse energy
+class QuantityEt2 : public QuantitySquareBase{
+public:
+  QuantityEt2(double Et) : QuantitySquareBase(Et){}
+  virtual double operator()(const PseudoJet & jet ) const { return jet.Et2();}
+  virtual string description() const {return "Et";}
+};  
+
+// returns a selector for a minimum Et
+Selector SelectorEtMin(double Etmin) {
+  return Selector(new SW_QuantityMin<QuantityEt2>(Etmin*Etmin));
+}
+
+// returns a selector for a maximum Et
+Selector SelectorEtMax(double Etmax) {
+  return Selector(new SW_QuantityMax<QuantityEt2>(Etmax*Etmax));
+}
+
+// returns a selector for a Et range
+Selector SelectorEtRange(double Etmin, double Etmax) {
+  return Selector(new SW_QuantityRange<QuantityEt2>(Etmin*Etmin, Etmax*Etmax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper class for selecting on energy
+class QuantityE : public QuantityBase{
+public:
+  QuantityE(double E) : QuantityBase(E){}
+  virtual double operator()(const PseudoJet & jet ) const { return jet.E();}
+  virtual string description() const {return "E";}
+};  
+
+// returns a selector for a minimum E
+Selector SelectorEMin(double Emin) {
+  return Selector(new SW_QuantityMin<QuantityE>(Emin));
+}
+
+// returns a selector for a maximum E
+Selector SelectorEMax(double Emax) {
+  return Selector(new SW_QuantityMax<QuantityE>(Emax));
+}
+
+// returns a selector for a E range
+Selector SelectorERange(double Emin, double Emax) {
+  return Selector(new SW_QuantityRange<QuantityE>(Emin, Emax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper class for selecting on mass
+class QuantityM2 : public QuantitySquareBase{
+public:
+  QuantityM2(double m) : QuantitySquareBase(m){}
+  virtual double operator()(const PseudoJet & jet ) const { return jet.m2();}
+  virtual string description() const {return "m";}
+};  
+
+// returns a selector for a minimum m
+Selector SelectorMMin(double mmin) {
+  return Selector(new SW_QuantityMin<QuantityM2>(mmin*mmin));
+}
+
+// returns a selector for a maximum m
+Selector SelectorMMax(double mmax) {
+  return Selector(new SW_QuantityMax<QuantityM2>(mmax*mmax));
+}
+
+// returns a selector for a m range
+Selector SelectorMRange(double mmin, double mmax) {
+  return Selector(new SW_QuantityRange<QuantityM2>(mmin*mmin, mmax*mmax));
+}
+
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on rapidities: quantity
+class QuantityRap : public QuantityBase{
+public:
+  QuantityRap(double rap) : QuantityBase(rap){}
+  virtual double operator()(const PseudoJet & jet ) const { return jet.rap();}
+  virtual string description() const {return "rap";}
+};  
+
+
+/// helper for selecting on rapidities: min
+class SW_RapMin : public SW_QuantityMin<QuantityRap>{
+public:
+  SW_RapMin(double rapmin) : SW_QuantityMin<QuantityRap>(rapmin){}
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+    rapmax = std::numeric_limits<double>::max();     
+    rapmin = _qmin.comparison_value();
+  }
+};
+
+/// helper for selecting on rapidities: max
+class SW_RapMax : public SW_QuantityMax<QuantityRap>{
+public:
+  SW_RapMax(double rapmax) : SW_QuantityMax<QuantityRap>(rapmax){}
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+    rapmax = _qmax.comparison_value(); 
+    rapmin = -std::numeric_limits<double>::max();
+  }
+};
+
+/// helper for selecting on rapidities: range
+class SW_RapRange : public SW_QuantityRange<QuantityRap>{
+public:
+  SW_RapRange(double rapmin, double rapmax) : SW_QuantityRange<QuantityRap>(rapmin, rapmax){}
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+    rapmax = _qmax.comparison_value();      
+    rapmin = _qmin.comparison_value(); 
+  }
+  virtual bool has_area() const { return true;}   ///< it has a finite area
+  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
+  virtual double computable_area() const { 
+    return twopi * (_qmax.comparison_value()-_qmin.comparison_value());
+  }
+};
+
+// returns a selector for a minimum rapidity
+Selector SelectorRapMin(double rapmin) {
+  return Selector(new SW_RapMin(rapmin));
+}
+
+// returns a selector for a maximum rapidity
+Selector SelectorRapMax(double rapmax) {
+  return Selector(new SW_RapMax(rapmax));
+}
+
+// returns a selector for a rapidity range
+Selector SelectorRapRange(double rapmin, double rapmax) {
+  return Selector(new SW_RapRange(rapmin, rapmax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on |rapidities|
+class QuantityAbsRap : public QuantityBase{
+public:
+  QuantityAbsRap(double absrap) : QuantityBase(absrap){}
+  virtual double operator()(const PseudoJet & jet ) const { return abs(jet.rap());}
+  virtual string description() const {return "|rap|";}
+};  
+
+
+/// helper for selecting on |rapidities|: max
+class SW_AbsRapMax : public SW_QuantityMax<QuantityAbsRap>{
+public:
+  SW_AbsRapMax(double absrapmax) : SW_QuantityMax<QuantityAbsRap>(absrapmax){}
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+    rapmax =  _qmax.comparison_value(); 
+    rapmin = -_qmax.comparison_value();
+  }
+  virtual bool has_area() const { return true;}              ///< it has a finite area
+  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
+  virtual double computable_area() const { 
+    return twopi * 2 * _qmax.comparison_value();
+  }
+};
+
+/// helper for selecting on |rapidities|: max
+class SW_AbsRapRange : public SW_QuantityRange<QuantityAbsRap>{
+public:
+  SW_AbsRapRange(double absrapmin, double absrapmax) : SW_QuantityRange<QuantityAbsRap>(absrapmin, absrapmax){}
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+    rapmax =  _qmax.comparison_value(); 
+    rapmin = -_qmax.comparison_value();
+  }
+  virtual bool has_area() const { return true;}   ///< it has a finite area
+  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
+  virtual double computable_area() const { 
+    return twopi * 2 * (_qmax.comparison_value()-max(_qmin.comparison_value(),0.0)); // this shold handle properly absrapmin<0
+  }
+};
+
+// returns a selector for a minimum |rapidity|
+Selector SelectorAbsRapMin(double absrapmin) {
+  return Selector(new SW_QuantityMin<QuantityAbsRap>(absrapmin));
+}
+
+// returns a selector for a maximum |rapidity|
+Selector SelectorAbsRapMax(double absrapmax) {
+  return Selector(new SW_AbsRapMax(absrapmax));
+}
+
+// returns a selector for a |rapidity| range
+Selector SelectorAbsRapRange(double rapmin, double rapmax) {
+  return Selector(new SW_AbsRapRange(rapmin, rapmax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on pseudo-rapidities
+class QuantityEta : public QuantityBase{
+public:
+  QuantityEta(double eta) : QuantityBase(eta){}
+  virtual double operator()(const PseudoJet & jet ) const { return jet.eta();}
+  virtual string description() const {return "eta";}
+};  
+
+// returns a selector for a pseudo-minimum rapidity
+Selector SelectorEtaMin(double etamin) {
+  return Selector(new SW_QuantityMin<QuantityEta>(etamin));
+}
+
+// returns a selector for a pseudo-maximum rapidity
+Selector SelectorEtaMax(double etamax) {
+  return Selector(new SW_QuantityMax<QuantityEta>(etamax));
+}
+
+// returns a selector for a pseudo-rapidity range
+Selector SelectorEtaRange(double etamin, double etamax) {
+  return Selector(new SW_QuantityRange<QuantityEta>(etamin, etamax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on |pseudo-rapidities|
+class QuantityAbsEta : public QuantityBase{
+public:
+  QuantityAbsEta(double abseta) : QuantityBase(abseta){}
+  virtual double operator()(const PseudoJet & jet ) const { return abs(jet.eta());}
+  virtual string description() const {return "|eta|";}
+};  
+
+// returns a selector for a minimum |pseudo-rapidity|
+Selector SelectorAbsEtaMin(double absetamin) {
+  return Selector(new SW_QuantityMin<QuantityAbsEta>(absetamin));
+}
+
+// returns a selector for a maximum |pseudo-rapidity|
+Selector SelectorAbsEtaMax(double absetamax) {
+  return Selector(new SW_QuantityMax<QuantityAbsEta>(absetamax));
+}
+
+// returns a selector for a |pseudo-rapidity| range
+Selector SelectorAbsEtaRange(double absetamin, double absetamax) {
+  return Selector(new SW_QuantityRange<QuantityAbsEta>(absetamin, absetamax));
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on azimuthal angle
+///
+/// Note that the bounds have to be specified as min<max
+/// phimin has to be > -2pi
+/// phimax has to be <  4pi
+class SW_PhiRange : public SelectorWorker {
+public:
+  /// detfault ctor (initialises the pt cut)
+  SW_PhiRange(double phimin, double phimax) : _phimin(phimin), _phimax(phimax){
+    assert(_phimin<_phimax);
+    assert(_phimin>-twopi);
+    assert(_phimax<2*twopi);
+
+    _phispan = _phimax - _phimin;
+  }
+
+  /// returns true is the given object passes the selection pt cut
+  virtual bool pass(const PseudoJet & jet) const {
+    double dphi=jet.phi()-_phimin;
+    if (dphi >= twopi) dphi -= twopi;
+    if (dphi < 0)      dphi += twopi;
+    return (dphi <= _phispan);
+  }
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << _phimin << " <= phi <= " << _phimax;
+    return ostr.str();
+  }
+
+protected:
+  double _phimin;   // the lower cut 
+  double _phimax;   // the upper cut
+  double _phispan;  // the span of the range
+};
+
+
+// returns a selector for a phi range
+Selector SelectorPhiRange(double phimin, double phimax) {
+  return Selector(new SW_PhiRange(phimin, phimax));
+}
+
+
+
+//----------------------------------------------------------------------
+/// helper for selecting the n hardest jets
+class SW_NHardest : public SelectorWorker {
+public:
+  /// ctor with specification of the number of objects to keep
+  SW_NHardest(unsigned int n) : _n(n) {};
+
+  /// pass makes no sense here normally the parent selector will throw
+  /// an error but for internal use in the SW, we'll throw one from
+  /// here by security
+  virtual bool pass(const PseudoJet & jet) const {
+    if (!applies_jet_by_jet())
+      throw Error("Cannot apply this selector worker to an individual jet");
+    return false;
+  }
+
+  /// For each jet that does not pass the cuts, this routine sets the 
+  /// pointer to 0. 
+  virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // do we want to first chech if things are already ordered before
+    // going through the ordering process?
+
+    vector<double> minus_pt2(jets.size());
+    vector<unsigned int> indices(jets.size());
+
+    for (unsigned int i=0; i<jets.size(); i++){
+      indices[i] = i;
+
+      // we need to make sure that the object has not already been
+      // nullified.  Note that if we have less than _n jets, this
+      // whole n-hardest selection will not have any effect.
+      minus_pt2[i] = jets[i] ? -jets[i]->perp2() : 0.0;
+    }
+    
+    IndexedSortHelper sort_helper(& minus_pt2);
+    
+    partial_sort(indices.begin(), indices.begin()+_n, indices.end(), sort_helper);
+    
+    for (unsigned int i=_n; i<jets.size(); i++)
+      jets[indices[i]] = NULL;
+  }
+  
+  /// returns true if this can be applied jet by jet
+  virtual bool applies_jet_by_jet() const {return false;}
+  
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << _n << " hardest";
+    return ostr.str();
+  }
+  
+protected:
+  unsigned int _n;
+};
+
+
+// returns a selector for the n hardest jets
+Selector SelectorNHardest(unsigned int n) {
+  return Selector(new SW_NHardest(n));
+}
+
+
+
+//----------------------------------------------------------------------
+// selector and workers for geometric ranges
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+/// a generic class for objects that contain a position
+class SW_Relocatable : public SelectorWorker{
+public:
+  /// ctor
+  SW_Relocatable() : _is_initialised(false){};
+
+  /// returns true is the worker can be relocated
+  virtual bool is_relocatable() const { return true;}
+
+  /// performs the relocation
+  virtual void relocate(const PseudoJet &centre){
+    _is_initialised = true;
+    _centre = centre;
+  }
+
+protected:
+  PseudoJet _centre;
+  bool _is_initialised;
+};
+
+//----------------------------------------------------------------------
+/// helper for selecting on objects within a distance 'radius' of a reference
+class SW_Circle : public SW_Relocatable {
+public:
+  SW_Circle(const double &radius) : _radius2(radius*radius) {}
+
+  /// return a copy of the current object
+  virtual SelectorWorker* copy(){ return new SW_Circle(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorCircle (or any relocatable selector), you first have to call relocate()");
+    
+    return jet.squared_distance(_centre) <= _radius2;
+  } 
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "distance from the centre <= " << sqrt(_radius2);
+    return ostr.str();
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+    rapmax = _centre.rap()+sqrt(_radius2);
+    rapmin = _centre.rap()-sqrt(_radius2);
+  }
+
+  virtual bool has_area() const { return true;}   ///< it has a finite area
+  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
+  virtual double computable_area() const { 
+    return pi * _radius2;
+  }
+
+protected:
+  double _radius2;
+};
+
+
+// select on objets within a distance 'radius' of a variable location
+Selector SelectorCircle(const double & radius) {
+  return Selector(new SW_Circle(radius));
+}
+
+// select on objets with distance from the centre is between 'radius_in' and 'radius_out' 
+Selector SelectorDoughnut(const double & radius_in, const double & radius_out) {
+  return Selector(new SW_Circle(radius_out)) && !Selector(new SW_Circle(radius_in));
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on objects with rapidity within a distance 'delta' of a reference
+class SW_Strip : public SW_Relocatable {
+public:
+  SW_Strip(const double &delta) : _delta(delta) {}
+
+  /// return a copy of the current object
+  virtual SelectorWorker* copy(){ return new SW_Strip(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorCircle (or any relocatable selector), you first have to call relocate()");
+    
+    return abs(jet.rap()-_centre.rap()) <= _delta;
+  } 
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "|rap - rap_centre| <= " << _delta;
+    return ostr.str();
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+    rapmax = _centre.rap()+_delta;
+    rapmin = _centre.rap()-_delta;
+  }
+
+  virtual bool has_area() const { return true;}   ///< it has a finite area
+  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
+  virtual double computable_area() const { 
+    return twopi * 2 * _delta;
+  }
+
+protected:
+  double _delta;
+};
+
+
+// select on objets within a distance 'radius' of a variable location
+Selector SelectorStrip(const double & radius) {
+  return Selector(new SW_Strip(radius));
+}
+
+
+
+FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

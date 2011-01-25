@@ -1,5 +1,5 @@
 # redirect to subdirectories
-SUBDIRS = src include plugins example fortran_wrapper doc
+SUBDIRS = src include plugins tools example fortran_wrapper doc
 
 # install the fastjet-config script in the bin directory
 bin_SCRIPTS = fastjet-config
