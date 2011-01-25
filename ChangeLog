@@ -23,6 +23,12 @@
 
 2011-01-25  Gregory Soyez  <soyez@cern.ch>
 
+	* configure.ac:
+	  enables the monolithic build of plugins by default
+
+	* Doxyfile, Doxyfile-devel:
+	  fixed a missing \; updated the devel doc
+
 	* Doxyfile:
 	  updated the file (v1.7.1)
 	  limited te dot-graph depth to a single inheritance

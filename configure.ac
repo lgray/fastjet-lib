@@ -66,7 +66,7 @@ dnl-------------------------------------------------------------------
 dnl if the debug flag is set, build with -g
 dnl default is "yes"
 AC_ARG_ENABLE(debug,
-	[  --enable-debug         Turn on debug compiler information],
+	[  --enable-debug         Turn on debug compiler information [default=yes]],
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
@@ -106,7 +106,7 @@ dnl default value is "no"
 dnl Note that CGAL compilation flags are considered as required
 dnl so we do store them in "AM_CXXFLAGS"
 AC_ARG_ENABLE(cgal,
-       [  --enable-cgal           enables link with the CGAL library (default=no)],
+       [  --enable-cgal           enables link with the CGAL library [default=no]],
        [ENABLE_CGAL_FLAG="$enableval"],
        [ENABLE_CGAL_FLAG="no"])
 dnl if asked for, check if the CGAL library can be used
@@ -181,12 +181,12 @@ LIST_ALL_PLUGINS=""
 
 dnl allow to build all plugins in the same lib
 AC_ARG_ENABLE(monolithic,
-[  --enable-monolithic  Build all the (compiled) plugins in a single lib],
+[  --enable-monolithic  Build all the (compiled) plugins in a single lib [default=yes]],
 [case "${enableval}" in
   yes) monolithic=yes ;;
   no)  monolithic=no ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-monolithic) ;;
-esac],[monolithic=no])
+esac],[monolithic=yes])
 AM_CONDITIONAL(MONOLITHIC_PLUGINS, test x$monolithic = xyes)
 if [[ "x$monolithic" == "xyes" ]] ; then
    CONFIG_LIBS_PLUGINS=" -lfastjetplugins "
