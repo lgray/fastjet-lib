@@ -39,7 +39,14 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// @ingroup advanced_usage
+//----------------------------------------------------------------------
+/// @ingroup tools
+/// \class Selector
+/// class to help with jet selections
+class Selector;
+//----------------------------------------------------------------------
+
+/// @ingroup tools
 /// \class SelectorWorker
 /// default selector worker is an abstract virtual base class
 ///
@@ -121,9 +128,8 @@ public:
 };
 
 //----------------------------------------------------------------------
-/// @ingroup advanced_usage
-/// \class Selector
-/// class to help with jet selections
+// class Selector
+// class to help with jet selections
 class Selector{
 public:
   Selector() {}
@@ -322,9 +328,11 @@ Selector operator ||(const Selector & s1, const Selector & s2);
 Selector operator*(const Selector & s1, const Selector & s2);
 
 
+/// \addtogroup tools
+/// @{
+
 // selection with kinematic cuts
 //----------------------------------------------------------------------
-
 Selector SelectorPtMin(double ptmin);                    ///< select objects with pt >= ptmin
 Selector SelectorPtMax(double ptmax);                    ///< select objects with pt <= ptmax
 Selector SelectorPtRange(double ptmin, double ptmax);    ///< select objects with ptmin <= pt <= ptmax
@@ -369,6 +377,7 @@ Selector SelectorCircle(const double & radius); ///< select on objets within a d
 Selector SelectorDoughnut(const double & radius_in, const double & radius_out); ///< select on objets with distance from the centre is between 'radius_in' and 'radius_out' 
 Selector SelectorStrip(const double & radius); ///< select on objets within a distance 'radius' of a variable location
 
+/// @}
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 

@@ -42,6 +42,7 @@
 /// \defgroup area_classes     Area-related classes
 /// \defgroup sec_area_classes Secondary area-related classes
 /// \defgroup plugins          Plugins for non-native jet definitions
+/// \defgroup tools            FastJet tools
 /// \defgroup extra_info       Access to extra information
 /// \defgroup error_handling   Error handling
 /// \defgroup advanced_usage   Advanced usage
