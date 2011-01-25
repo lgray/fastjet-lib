@@ -1,5 +1,6 @@
 2011-01-25  Gavin Salam  <salam@lpthe.jussieu.fr> & Gregory
 
+
 	* tools/                                  *** ADDED ***
 	* tools/fastjet/			  *** ADDED ***
 	* tools/fastjet/tools			  *** ADDED ***
@@ -9,11 +10,13 @@
         * Makefile.am
         * configure.ac
 	* fastjet-config.in
+	* Doxyfile-devel: 
+	* Doxyfile: 
 
 	  Created a tools/ top-level directory, moved the Selector code in
 	  from the experimental area, arranged all the Makefiles so that
-	  it gets placed in libfastjettools and ensured thtat
-	  fastjet-config adds that library too.
+	  it gets placed in libfastjettools and ensured that
+	  fastjet-config adds that library too + Doxygen access.
 
 
 

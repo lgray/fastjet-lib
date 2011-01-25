@@ -451,6 +451,7 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = src/ include/ include/fastjet include/fastjet/internal \
+                         tools/ tools/fastjet/tools
 		         example/ \
                          plugins/ATLASCone plugins/ATLASCone/fastjet \
                          plugins/CMSIterativeCone plugins/CMSIterativeCone/fastjet \
