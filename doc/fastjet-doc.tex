@@ -1121,6 +1121,97 @@ In this combined selector, the right-hand selector is applied first,
 and then the left-hand selector is applied to the results of the
 right-hand selection.
 
+%......................................................................
+\subsection{Available selectors}
+
+A number of selectors have been implemented following the naming
+convention \ttt{Selector}{\it\{Var\}\{LimitType\}}. 
+%
+The {\it\{Var\}} indicates which variable is being cut on, and can be
+one of 
+\begin{lstlisting}
+       pt, Et, E, M, Rap, AbsRap, Eta, AbsEta
+\end{lstlisting}
+%\ttt{pt}, \ttt{Et}, \ttt{E}, \ttt{M}, \ttt{Rap}, \ttt{AbsRap}, \ttt{Eta}, \ttt{AbsEta}.
+%
+The {\it\{LimitType\}} indicates whether one places a lower-limit on
+the variable, an upper limit or a range, corresponding to the choices
+\begin{lstlisting}
+       Min, Max, Range
+\end{lstlisting}
+%
+A couple of examples are
+\begin{lstlisting}
+   SelectorPtMin(25.0)          // Selects $p_t>25\GeV$
+   SelectorRapRange(1.9,4.9)    // Selects $1.9<y<4.9$
+\end{lstlisting}
+Following a similar naming convention, there are also
+\ttt{SelectorPhiRange(}$\phi_{\min},\phi_{\max}$\ttt{)} and
+\ttt{SelectorRapPhiRange(}$y_{\min},y_{\max},\phi_{\min},\phi_{\max}$\ttt{)}.
+
+In addition there are also some \emph{relocatable} selectors. 
+%
+These have been developed in anticipation of usefulness for background
+estimation, where one wishes to select a fixed-shape (in $y,\phi$)
+neighbourhood of first one jet, then another jet, and so forth.
+%
+For example one can define 
+\begin{lstlisting}
+  Selector sel = SelectorCircle(1.0);
+\end{lstlisting}
+Then if one is interested in the subset of \ttt{jets} neighbourhood of
+\ttt{jet1}, one performs the following operations:
+\begin{lstlisting}
+  sel.relocate(jet1);
+  vector<PseudoJet> jets_near_jet1 = sel(jets);
+
+  sel.relocate(jet2);
+  vector<PseudoJet> jets_near_jet2 = sel(jets);
+\end{lstlisting}
+
+
+% \begin{lstlisting}
+%   SelectorPtMin(double ptmin);                    
+%   SelectorPtMax(double ptmax);                    
+%   SelectorPtRange(double ptmin, double ptmax);    
+%   
+%   SelectorEtMin(double Etmin);                   
+%   SelectorEtMax(double Etmax);                   
+%   SelectorEtRange(double Etmin, double Etmax);   
+%   
+%   SelectorEMin(double Emin);                      
+%   SelectorEMax(double Emax);                      
+%   SelectorERange(double Emin, double Emax);       
+%   
+%   SelectorMMin(double Mmin);                      
+%   SelectorMMax(double Mmax);                      
+%   SelectorMRange(double Mmin, double Mmax);       
+%   
+%   SelectorRapMin(double rapmin);                  
+%   SelectorRapMax(double rapmax);                  
+%   SelectorRapRange(double rapmin, double rapmax); 
+%   
+%   SelectorAbsRapMin(double absrapmin);                     
+%   SelectorAbsRapMax(double absrapmax);                     
+%   SelectorAbsRapRange(double absrapmin, double absrapmax); 
+%   
+%   SelectorEtaMin(double etamin);                 
+%   SelectorEtaMax(double etamax);                 
+%   SelectorEtaRange(double etamin, double etamax);
+%   
+%   SelectorAbsEtaMin(double absetamin);                     
+%   SelectorAbsEtaMax(double absetamax);                     
+%   SelectorAbsEtaRange(double absetamin, double absetamax); 
+%   
+%   SelectorPhiRange(double phimin, double phimax);
+%   SelectorRapPhiRange(double rapmin, double rapmax, double phimin, double phimax);
+% \end{lstlisting}
+
+
+
+%......................................................................
+\subsection{Advanced usage}
+
 
 \comment{to come}:
 \begin{itemize}

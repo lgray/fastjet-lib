@@ -246,11 +246,11 @@ public:
   }
 
   /// relocate the selector on a given PseudoJet
-  void relocate(const PseudoJet &centre){
+  const Selector & relocate(const PseudoJet &centre){
 
     // if the worker is not relocatable, do nothing 
     if (! validated_worker()->is_relocatable()){
-      return;
+      return *this;
     }
     
     // since this is a non-const operation, make sure we have a
@@ -258,6 +258,7 @@ public:
     _copy_worker_if_needed();
 
     _worker->relocate(centre);
+    return *this;
   }
 
 private:

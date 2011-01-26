@@ -1,3 +1,11 @@
+2011-01-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/Selector.hh:
+	  relocate now returns a const Selector & rather than void, so
+	  that one can write
+
+	     selector.relocate(jet_on_which_to_centre)(jets_to_select)
+
 2011-01-26  Gregory Soyez  <soyez@cern.ch> + Gavin
 
 	* tools/fastjet/tools/Selector.hh:
