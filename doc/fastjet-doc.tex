@@ -1104,7 +1104,7 @@ The design choice that we have made is that
   SelectorNHardest(2)    && SelectorAbsRapMax(2.5)
   SelectorAbsRapMax(2.5) && SelectorNHardest(2)
 \end{lstlisting}
-give identical results: in logical combinations of selector, each
+give identical results: in logical combinations of selectors, each
 constituent selector is applied independently to the ensemble of jets,
 and then a decision whether a jet passes is determined from the
 corresponding logical combination of each of the selectors'
@@ -1120,6 +1120,16 @@ instead use the \ttt{*} operator:
 In this combined selector, the right-hand selector is applied first,
 and then the left-hand selector is applied to the results of the
 right-hand selection.
+
+
+\comment{to come}:
+\begin{itemize}
+\item relocatable ones
+\item do we list all implemented selectors? (Selector{Type}{Var}),
+  plus some exceptions
+\item areas?
+\item do we tell users how to write their own Selectors
+\end{itemize}
 
 %======================================================================
 \section{Jet areas}
