@@ -13,11 +13,11 @@ noinst_PROGRAMS = fastjet_example\
 check_PROGRAMS = fastjet_example fastjet_areas
 
 fastjet_example_SOURCES = fastjet_example.cc
-fastjet_example_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_example_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_example_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 fastjet_areas_SOURCES = fastjet_areas.cc
-fastjet_areas_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_areas_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_areas_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 if BUILD_PLUGIN_SISCONE
 fastjet_areas_CXXFLAGS += -I$(srcdir)/../plugins/SISCone -I$(srcdir)/../plugins/SISCone/siscone
@@ -25,23 +25,23 @@ fastjet_areas_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone
 endif
 
 fastjet_subtraction_SOURCES = fastjet_subtraction.cc
-fastjet_subtraction_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_subtraction_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_subtraction_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 fastjet_subjets_SOURCES = fastjet_subjets.cc
-fastjet_subjets_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_subjets_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_subjets_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 fastjet_boosted_higgs_SOURCES = fastjet_boosted_higgs.cc
-fastjet_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_boosted_higgs_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 fastjet_timing_SOURCES = fastjet_timing.cc CmdLine.cc
-fastjet_timing_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_timing_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_timing_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 fastjet_timing_plugins_SOURCES = fastjet_timing_plugins.cc CmdLine.cc
-fastjet_timing_plugins_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -Woverloaded-virtual -I$(srcdir)/../include
+fastjet_timing_plugins_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_timing_plugins_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 if BUILD_PLUGIN_SISCONE
 fastjet_timing_plugins_CXXFLAGS += -I$(srcdir)/../plugins/SISCone -I$(srcdir)/../plugins/SISCone/siscone

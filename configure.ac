@@ -71,6 +71,21 @@ AC_ARG_ENABLE(debug,
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" -g "
+
+   dnl-------------------------------------------------------------------
+   dnl check if the compiler supports -Woverloaded-virtual
+   dnl-------------------------------------------------------------------
+   AC_MSG_CHECKING([if $CXX supports -Woverloaded-virtual flag])
+   SAVE_CXXFLAGS="$CXXFLAGS"
+   CXXFLAGS="-Woverloaded-virtual"
+   AC_LANG_PUSH(C++)
+   AC_COMPILE_IFELSE([int main(void){ return 0;}],[ac_overloaded_virtual_ok=yes],[ac_overloaded_virtual_ok=no])
+   AC_LANG_POP(C++)
+   CXXFLAGS="$SAVE_CXXFLAGS"
+   AC_MSG_RESULT([$ac_overloaded_virtual_ok])
+   if [[ "x${ac_overloaded_virtual_ok}" == "xyes" ]]; then
+      AM_CXXFLAGS=${AM_CXXFLAGS}" -Woverloaded-virtual "
+   fi
 fi
 
 dnl-------------------------------------------------------------------
