@@ -79,7 +79,7 @@
 \newcommand{\ClusterSequence}{\ttt{ClusterSequence}\xspace}
 \newcommand{\CS}{\ttt{ClusterSequence}\xspace}
 
-\title{FastJet 3.0.0alpha1 user manual}
+\title{FastJet 3.0alpha1 user manual}
 \author{Matteo Cacciari,$^{1,2}$ Gavin P. Salam$^{3,4,1}$ and Gregory Soyez$^{5}$\\[10pt]
   \normalsize
   $^1$LPTHE, UPMC Univ.~Paris 6 and CNRS UMR 7589, Paris, France\\
@@ -342,8 +342,11 @@ It includes the following member functions for accessing the components
   /// are 3-momentum, component 3 is energy).
   valarray<double> four_mom() const;
 \end{lstlisting}}
-It also allows the user to set and access an index, in case the user
-wishes to keep track of the identity of a \ttt{fastjet::PseudoJet} object
+%
+There are two ways of associating information user information with a
+\ttt{PseudoJet}. 
+%
+The simpler method is through an integer called the user index
 \begin{lstlisting}
   /// set the user_index, intended to allow the user to label the object
   void set_user_index(const int index);
@@ -351,6 +354,24 @@ wishes to keep track of the identity of a \ttt{fastjet::PseudoJet} object
   /// return the user_index
   int user_index() const ;
 \end{lstlisting}
+The second method is for the user to derive a class from
+\ttt{PseudoJet::ExtraInfo} and associate the \ttt{PseudoJet} with a
+pointer to an instance of that class:
+\begin{lstlisting}
+  void reset_extra_info(ExtraInfo * extra_info);
+  const ExtraInfo* extra_info() const;
+\end{lstlisting}
+It is important to be aware that the function
+\ttt{reset\_extra\_info;} transfers ownership of the pointer to the
+\ttt{PseudoJet}. This means that when the PseudoJet goes out of scope
+
+ \comment{SET INSTEAD OF RESET??? CARRY ON HERE}
+
+Since a 
+\begin{lstlisting}
+  template<class L> const L & extra_info_cast() const;
+\end{lstlisting}
+
 A \verb:PseudoJet: can be reset with
 \begin{lstlisting}
   /// reset the 4-momentum according to the supplied components and
@@ -754,7 +775,7 @@ associated with a \ClusterSequence, an error will be thrown.
 Since the information about a jet's constituents is actually stored in
 the \CS and not in the jet itself, these methods will also throw an
 error if the \CS associated with the jet has gone out of scope, been
-deleted, or in any other way rendered invalid.
+deleted, or in any other way become invalid.
 %
 One can establish the status of a \PseudoJet's associated cluster
 sequence with the following enquiry functions:
@@ -1045,6 +1066,9 @@ custom recombination schemes, as described in Appendix~\ref{app:a}.
 %======================================================================
 \section{Selectors}
 
+%----------------------------------------------------------------------
+\subsection{Essential usage}
+
 Analyses often place constraints (cuts) on jets' transverse momenta,
 rapidity, maybe consider only some $N$ hardest jets, etc.
 %
@@ -1169,8 +1193,12 @@ operations:
   sel.relocate(jet2);
   vector<PseudoJet> jets_near_jet2 = sel(jets);
 \end{lstlisting}
-Using a relocatable range before it has ever been relocated will
+Using a relocatable selector before it has ever been relocated will
 cause an exception to be thrown.
+%
+The other relocatable selectors that are available by default are
+\ttt{SelectorStrip}, \ttt{SelectorDoughnut} and
+\ttt{SelectorRectangle}.
 
 A user can obtain information on what a given \ttt{Selector} does by
 calling its \ttt{description()} member function. 
@@ -1218,19 +1246,31 @@ This behaves sensibly also for compound selectors.
 %......................................................................
 \subsection{Other information about selectors}
 
+
 Selectors contain a certain amount of additional information that can
-serve as useful hints in some contexts (for example, in anticipation of
+provide useful hints in some contexts (for example, in anticipation of
 their future use for background estimation).
-%
-Their rapidity extent is accessible through a
-\ttt{get\_rapidity\_extent(rapmin,rapmax)} call.
+
+One such piece of information is a selector's rapidity extent,
+accessible through a \ttt{get\_rapidity\_extent(rapmin,rapmax)} call.
 %
 If it is not sensible to talk about a rapidity extent for a given
 selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
-returned are the largest (positive and negative) numbers that can be
+returned are the largest (negative and positive) numbers that can be
 represented as doubles.
 
-\comment{carry on with areas}
+\comment{Is discussion of areas not too detailed?}
+
+Selectors may also have areas associated with them (in analogy with
+jet areas, section~\ref{sec:areas}).
+%
+The \ttt{has\_area()} member function returns true if a selector has a
+meaningful (finite) area; The \ttt{area()} function returns this area.
+%
+In some cases the area may be computed using ghosts (by default with
+ghosts of area $0.01$; the user can specify a different ghost area as
+an argument to the \ttt{area} function).
+
 
 %......................................................................
 \subsection{Implementing new selectors}
@@ -1286,6 +1326,7 @@ consult the authors.
 
 %======================================================================
 \section{Jet areas}
+\label{sec:areas}
 
 Since a jet is made up of only a finite number of particles, one needs
 a specific definition in order to make its {\sl area} (i.e. the
