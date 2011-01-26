@@ -2,15 +2,18 @@ Release Notes for fastjet
 -------------------------
 
 ===========================================================
-Summary of changes from v2.4.X -> v2.5/3.0 [@ SOME DATE]
+Summary of changes from v2.4.X -> v3.0alpha1
 ===========================================================
+
+This is an alpha release, previewing some of the new features that are
+expected to be available in FastJet version 3.
 
 New features:
 
 - Several extensions to PseudoJet
   * it now knows what ClusterSequence it belongs to
-  * info about internals of jets can be accessed e.g. as jet->constituents()
-  * it now has a virtual destructor
+  * info about internals of jets can be accessed e.g. as jet.constituents()
+  * it now has a virtual destructor + other support for classes derived from PseudoJet
   * new facilities for associating user info with a jet (see PseudoJet::ExtraInfo)
   * some of these features make use of a new SharedPtr class 
     (intended mainly for advanced users)  

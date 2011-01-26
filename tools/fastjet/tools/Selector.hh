@@ -41,7 +41,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //----------------------------------------------------------------------
 /// @ingroup tools
 /// \class Selector
-/// class to help with jet selections
+/// Class that encodes information about cuts and other selection
+/// criteria that can be applied to PseudoJet(s).
+///
 class Selector;
 //----------------------------------------------------------------------
 
@@ -127,14 +129,15 @@ public:
 
 //----------------------------------------------------------------------
 // class Selector
-// class to help with jet selections
+//
+// Class that encodes information about cuts that 
 class Selector{
 public:
   /// default constructor produces a Selector whose action is undefined
   /// (any attempt to use it will lead to an error)
   Selector() {}
 
-  /// constructor that causes the Selector to use the \param worker
+  /// constructor that causes the Selector to use the supplied worker
   ///
   /// Note that the Selector takes ownership of the pointer to the
   /// worker (and so will delete automatically when appropriate).
@@ -277,6 +280,12 @@ private:
 /// This will keep objects that do not pass the 's' selector
 Selector operator!(const Selector & s);
 
+/// logical or between two selectors
+///
+/// this will keep the objects that are selected by s1 or s2
+Selector operator ||(const Selector & s1, const Selector & s2);
+
+
 /// logical and between two selectors
 ///
 /// this will keep the objects that are selected by both s1 and s2
@@ -285,11 +294,6 @@ Selector operator!(const Selector & s);
 ///   original list of objects. For successive applications of two
 ///   selectors (convolution/multiplication) see the operator *
 Selector operator&&(const Selector & s1, const Selector & s2);
-
-/// logical or between two selectors
-///
-/// this will keep the objects that are selected by s1 or s2
-Selector operator ||(const Selector & s1, const Selector & s2);
 
 /// successive application of 2 selectors
 ///
