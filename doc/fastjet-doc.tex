@@ -62,7 +62,8 @@
 \newcommand{\fastjet}{\texttt{FastJet}\xspace}
 \newcommand{\ktjet}{\texttt{KtJet}\xspace}
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
-\newcommand{\ttt}[1]{\texttt{#1}}
+% ttt includes some resizing of text so that things look nicer inline
+\newcommand{\ttt}[1]{{\small\texttt{#1}}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 \newcommand{\order}[1]{{\cal O}\left(#1\right)}
 \newcommand{\ie}{{\it i.e.}\ }
@@ -70,6 +71,7 @@
 \newcommand{\ee}{e^+e^-}
 %\newcommand{\Dzero}{D0\!\!\!/\xspace}
 \newcommand{\Dzero}{D\O\xspace}
+\newcommand{\GeV}{\,\text{GeV}}
 
 % some things that crop up often
 \newcommand{\PseudoJet}{\ttt{PseudoJet}\xspace}
@@ -244,12 +246,15 @@ int main () {
 }
 \end{lstlisting}
 
-\item Then compile and run it with
+% force \rm, because of a some problem from lstlisting 
+\item \rm Then compile and run it with
 \begin{verbatim}
  g++ short-example.cc -o short-example \
      `fastjet-install/bin/fastjet-config --cxxflags` \
      `fastjet-install/bin/fastjet-config --libs`
 \end{verbatim}
+  (watch out, once again, for the backquotes if you cut and paste from
+  the PDF).
 \end{itemize}
 \noindent
 The output will consist of a banner, followed by the lines
@@ -1037,7 +1042,84 @@ custom recombination schemes, as described in Appendix~\ref{app:a}.
 
 
 
+%======================================================================
+\section{Selectors}
 
+Analyses often place constraints (cuts) on jets' transverse momenta,
+rapidity, maybe consider only some $N$ hardest jets, etc.
+%
+There are situations in which it is convenient to be able to define
+a set of cuts in one part of a program and then have it used
+elsewhere.
+%
+To allow for this, we provide a \ttt{Selector} class, available
+through 
+\begin{lstlisting}
+  #include "fastjet/tools/Selector.hh"
+\end{lstlisting}
+
+As an example of how it is used, if have a vector of jets, \ttt{jets},
+and wish to select those that have rapidities $|y|<2.5$ and transverse
+momenta above $20\GeV$, then we might write the following:
+\begin{lstlisting}
+  Selector select_rapidity = SelectorAbsRapMax(2.5);
+  Selector select_pt       = SelectorPtMin(20.0);
+  Selector select_both     = select_pt && select_rapidity;
+  
+  vector<PseudoJet> selected_jets = select_both(jets);
+\end{lstlisting}
+Here, \ttt{Selector} is a class, while \ttt{SelectorAbsRapMax} and
+\ttt{SelectorPtMin} are functions that return a instance of the
+\ttt{Selector} class containing the internal information needed to
+carry out the selection.
+%
+\ttt{Selector::operator(const vector<PseudoJet> \& jets)} takes the
+jets given as input and returns a vector containing those that pass
+the selection cuts. The logical operations \ttt{\&\&}, \ttt{||} and
+\ttt{!} enable different selectors to be combined.
+%
+
+Nearly all selectors, like those above, apply jet by jet (they return
+\ttt{Selector::applies\_jet\_by\_jet()} true). For these, one can
+query whether a single jet passes the selection with the help of the
+function \ttt{bool Selector::pass(const PseudoJet \&)}.
+
+There are also selectors that only make sense applied to an ensemble
+of jets. 
+%
+This is the case specifically for \ttt{SelectorNHardest(unsigned
+  int n)}, which, acting on an ensemble of jets, selects the $n$ with
+largest transverse momenta. If there are fewer than $n$ jets, then all
+jets pass.
+
+For selectors that apply jet-by-jet, the selectors on either
+side of the logical operators \ttt{\&\&} and \ttt{||} naturally
+commute.
+%
+For operators that act only on the ensemble of jets the behaviour needs
+specifying. 
+%
+The design choice that we have made is that
+\begin{lstlisting}
+  SelectorNHardest(2)    && SelectorAbsRapMax(2.5)
+  SelectorAbsRapMax(2.5) && SelectorNHardest(2)
+\end{lstlisting}
+give identical results: in logical combinations of selector, each
+constituent selector is applied independently to the ensemble of jets,
+and then a decision whether a jet passes is determined from the
+corresponding logical combination of each of the selectors'
+results. Thus, here only jets that are among the 2 hardest of the
+whole ensemble and that have $|y|<2.5$ will be selected.
+%
+If one wishes to first apply a rapidity cut, and then find the 2
+hardest among those jets that pass the rapidity cut, then one may
+instead use the \ttt{*} operator:
+\begin{lstlisting}
+  SelectorNHardest(2)  *  SelectorAbsRapMax(2.5)
+\end{lstlisting}
+In this combined selector, the right-hand selector is applied first,
+and then the left-hand selector is applied to the results of the
+right-hand selection.
 
 %======================================================================
 \section{Jet areas}
