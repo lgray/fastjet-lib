@@ -56,7 +56,7 @@ int main (int argc, char ** argv) {
   
   vector<fastjet::PseudoJet> input_particles;
   
-  // read in input particles
+  // Read in input particles
   double px, py , pz, E;
   while (cin >> px >> py >> pz >> E) {
     // create a fastjet::PseudoJet with these components and put it onto
