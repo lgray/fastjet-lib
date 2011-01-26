@@ -62,20 +62,12 @@ public:
   /// default dtor
   virtual ~SelectorWorker() {}
 
-  /// returns a description of the worker
-  virtual std::string description() const {return "missing description";}
-
-  /// return a copy of the current object
-  virtual SelectorWorker* copy(){ 
-    throw Error("this SelectorWorker has nothing to copy");
-  }
-
   //----------------------------------------------------------
   // basic operations for checking what gets selected
   //----------------------------------------------------------
 
-  /// returns true if a given object passes the selection criterium
-  /// this has to be overloaded by derived workers
+  /// returns true if a given object passes the selection criterion.
+  /// This has to be overloaded by derived workers
   virtual bool pass(const PseudoJet & jet) const = 0;
 
   /// For each jet that does not pass the cuts, this routine sets the 
@@ -91,6 +83,8 @@ public:
   /// returns true if this can be applied jet by jet
   virtual bool applies_jet_by_jet() const {return true;}
 
+  /// returns a description of the worker
+  virtual std::string description() const {return "missing description";}
 
   //----------------------------------------------------------
   // operations for relocation
@@ -104,6 +98,13 @@ public:
     throw Error("relocate undefined for a non-relocatable selector worker");
   }
 
+  /// return a copy of the current object.
+  ///
+  /// This function is only called for relocatable objects and need
+  /// not be reimplemented otherwise.
+  virtual SelectorWorker* copy(){ 
+    throw Error("this SelectorWorker has nothing to copy");
+  }
 
   //----------------------------------------------------------
   // operations for area and extent
@@ -125,6 +126,9 @@ public:
   virtual double known_area() const{
     throw Error("this selector has no computable area");
   }
+
+
+
 };
 
 //----------------------------------------------------------------------
