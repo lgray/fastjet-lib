@@ -1,5 +1,8 @@
 2011-01-26  Gregory Soyez  <soyez@cern.ch> + Gavin
 
+	* tools/fastjet/tools/Selector.hh:
+	  put the logical operators inside the doc
+
 	* configure.ac, example/Makefile.am, tools/Makefile.am:
 	  if --enable-debug is set, add by default -Woverloaded-virtual to
 	  the list of default compilation flags (if the compiler supports it)

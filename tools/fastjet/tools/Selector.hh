@@ -266,6 +266,8 @@ private:
 // a list of specific selectors
 //----------------------------------------------------------------------
 
+/// \addtogroup tools
+/// @{
 
 // logical operations
 //----------------------------------------------------------------------
@@ -299,9 +301,6 @@ Selector operator ||(const Selector & s1, const Selector & s2);
 ///   jet), this would have the same effect as the logical &&.
 Selector operator*(const Selector & s1, const Selector & s2);
 
-
-/// \addtogroup tools
-/// @{
 
 // selection with kinematic cuts
 //----------------------------------------------------------------------
