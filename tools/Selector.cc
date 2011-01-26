@@ -585,7 +585,9 @@ public:
 /// helper for selecting on rapidities: range
 class SW_RapRange : public SW_QuantityRange<QuantityRap>{
 public:
-  SW_RapRange(double rapmin, double rapmax) : SW_QuantityRange<QuantityRap>(rapmin, rapmax){}
+  SW_RapRange(double rapmin, double rapmax) : SW_QuantityRange<QuantityRap>(rapmin, rapmax){
+    assert(rapmin<=rapmax);
+  }
   virtual void get_rapidity_extent(double &rapmin, double & rapmax) const{
     rapmax = _qmax.comparison_value();      
     rapmin = _qmin.comparison_value(); 

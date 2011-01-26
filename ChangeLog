@@ -1,4 +1,4 @@
-2011-01-26  Gregory Soyez  <soyez@cern.ch>
+2011-01-26  Gregory Soyez  <soyez@cern.ch> + Gavin
 
 	* tools/Selector.cc, tools/fastjet/tools/Selector.hh:
 	  - added a SelectorRapPhiRange
@@ -8,6 +8,7 @@
 	    combination of 2 circles (advantages: has a known area + is
 	    really >= radius_in instead of >)
 	  - added a relocatable Rectangle range (given rap and phi half-widths)
+          - added check rapmin <= rapmax
 
 	* Makefile.am:
 	  added the -Woverloaded-virtual flag for a better finding of

@@ -343,11 +343,12 @@ Selector SelectorPhiRange(double phimin, double phimax); ///< select objects wit
 ///
 /// Note that this is essentially a combination of SelectorRapRange
 /// and SelectorPhiRange. We provide it as a Selector on its own in
-/// order to use the known area (that would otherwise be lost by the &&
+/// order to use the known area (which would otherwise be lost by the &&
 /// operator)
 Selector SelectorRapPhiRange(double rapmin, double rapmax, double phimin, double phimax);
 
-Selector SelectorNHardest(unsigned int n);   ///< select the n hardest objects 
+/// select the n hardest objects 
+Selector SelectorNHardest(unsigned int n); 
 
 
 // selection with geometric objects
