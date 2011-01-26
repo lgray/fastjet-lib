@@ -213,7 +213,7 @@ public:
   }
 
   /// returns the rapidity range for which it may return "true"
-  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const {
     double s1min, s1max, s2min, s2max;
     _s1.get_rapidity_extent(s1min, s1max);
     _s2.get_rapidity_extent(s2min, s2max);
@@ -296,7 +296,7 @@ public:
   }
 
   /// returns the rapidity range for which it may return "true"
-  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const {
     double s1min, s1max, s2min, s2max;
     _s1.get_rapidity_extent(s1min, s1max);
     _s2.get_rapidity_extent(s2min, s2max);
@@ -566,7 +566,7 @@ public:
 class SW_RapMin : public SW_QuantityMin<QuantityRap>{
 public:
   SW_RapMin(double rapmin) : SW_QuantityMin<QuantityRap>(rapmin){}
-  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax) const{
     rapmax = std::numeric_limits<double>::max();     
     rapmin = _qmin.comparison_value();
   }
@@ -576,7 +576,7 @@ public:
 class SW_RapMax : public SW_QuantityMax<QuantityRap>{
 public:
   SW_RapMax(double rapmax) : SW_QuantityMax<QuantityRap>(rapmax){}
-  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax) const{
     rapmax = _qmax.comparison_value(); 
     rapmin = -std::numeric_limits<double>::max();
   }
@@ -586,7 +586,7 @@ public:
 class SW_RapRange : public SW_QuantityRange<QuantityRap>{
 public:
   SW_RapRange(double rapmin, double rapmax) : SW_QuantityRange<QuantityRap>(rapmin, rapmax){}
-  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax) const{
     rapmax = _qmax.comparison_value();      
     rapmin = _qmin.comparison_value(); 
   }
@@ -627,7 +627,7 @@ public:
 class SW_AbsRapMax : public SW_QuantityMax<QuantityAbsRap>{
 public:
   SW_AbsRapMax(double absrapmax) : SW_QuantityMax<QuantityAbsRap>(absrapmax){}
-  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax) const{
     rapmax =  _qmax.comparison_value(); 
     rapmin = -_qmax.comparison_value();
   }
@@ -642,7 +642,7 @@ public:
 class SW_AbsRapRange : public SW_QuantityRange<QuantityAbsRap>{
 public:
   SW_AbsRapRange(double absrapmin, double absrapmax) : SW_QuantityRange<QuantityAbsRap>(absrapmin, absrapmax){}
-  virtual void get_rapidity_extent(double &rapmin, double & rapmax){
+  virtual void get_rapidity_extent(double &rapmin, double & rapmax) const{
     rapmax =  _qmax.comparison_value(); 
     rapmin = -_qmax.comparison_value();
   }
@@ -763,6 +763,33 @@ Selector SelectorPhiRange(double phimin, double phimax) {
   return Selector(new SW_PhiRange(phimin, phimax));
 }
 
+//----------------------------------------------------------------------
+/// helper for selecting on both rapidity and azimuthal angle
+class SW_RapPhiRange : public SW_And{
+public:
+  SW_RapPhiRange(double rapmin, double rapmax, double phimin, double phimax)
+    : SW_And(SelectorRapRange(rapmin, rapmax), SelectorPhiRange(phimin, phimax)){
+    _known_area = ((phimax-phimin > twopi) ? twopi : phimax-phimin) * (rapmax-rapmin);
+  }
+
+  /// check if it has a finite area
+  virtual bool has_area() const { return true;}
+
+  /// check if it has an analytically computable area
+  virtual bool has_known_area() const { return true;}
+  
+  /// if it has a computable area, return it
+  virtual double known_area() const{
+    return _known_area;
+  }
+
+protected:
+  double _known_area;
+};
+
+Selector SelectorRapPhiRange(double rapmin, double rapmax, double phimin, double phimax) {
+  return Selector(new SW_RapPhiRange(rapmin, rapmax, phimin, phimax));
+}
 
 
 //----------------------------------------------------------------------
@@ -881,7 +908,7 @@ public:
   }
 
   /// returns the rapidity range for which it may return "true"
-  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
     rapmax = _centre.rap()+sqrt(_radius2);
     rapmin = _centre.rap()-sqrt(_radius2);
   }
@@ -902,9 +929,58 @@ Selector SelectorCircle(const double & radius) {
   return Selector(new SW_Circle(radius));
 }
 
+
+//----------------------------------------------------------------------
+/// helper for selecting on objects with a distance to a reference
+/// betwene 'radius_in' and 'radius_out'
+class SW_Doughnut : public SW_Relocatable {
+public:
+  SW_Doughnut(const double &radius_in, const double &radius_out)
+    : _radius_in2(radius_in*radius_in), _radius_out2(radius_out*radius_out) {}
+
+  /// return a copy of the current object
+  virtual SelectorWorker* copy(){ return new SW_Doughnut(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorDoughnut (or any relocatable selector), you first have to call relocate()");
+
+    double distance2 = jet.squared_distance(_centre);
+
+    return (distance2 <= _radius_out2) && (distance2 >= _radius_in2);
+  } 
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << sqrt(_radius_in2) << " <= distance from the centre <= " << sqrt(_radius_out2);
+    return ostr.str();
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    rapmax = _centre.rap()+sqrt(_radius_out2);
+    rapmin = _centre.rap()-sqrt(_radius_out2);
+  }
+
+  virtual bool has_area() const { return true;}   ///< it has a finite area
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
+    return pi * (_radius_out2-_radius_in2);
+  }
+
+protected:
+  double _radius_in2, _radius_out2;
+};
+
+
+
 // select on objets with distance from the centre is between 'radius_in' and 'radius_out' 
 Selector SelectorDoughnut(const double & radius_in, const double & radius_out) {
-  return Selector(new SW_Circle(radius_out)) && !Selector(new SW_Circle(radius_in));
+  return Selector(new SW_Doughnut(radius_in, radius_out));
 }
 
 
@@ -922,7 +998,7 @@ public:
   virtual bool pass(const PseudoJet & jet) const {
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorCircle (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorStrip (or any relocatable selector), you first have to call relocate()");
     
     return abs(jet.rap()-_centre.rap()) <= _delta;
   } 
@@ -935,7 +1011,7 @@ public:
   }
 
   /// returns the rapidity range for which it may return "true"
-  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
     rapmax = _centre.rap()+_delta;
     rapmin = _centre.rap()-_delta;
   }
@@ -952,8 +1028,60 @@ protected:
 
 
 // select on objets within a distance 'radius' of a variable location
-Selector SelectorStrip(const double & radius) {
-  return Selector(new SW_Strip(radius));
+Selector SelectorStrip(const double & half_width) {
+  return Selector(new SW_Strip(half_width));
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting on objects with rapidity within a distance
+/// 'delta_rap' of a reference and phi within a distanve delta_phi of
+/// a reference
+class SW_Rectangle : public SW_Relocatable {
+public:
+  SW_Rectangle(const double &delta_rap, const double &delta_phi)
+    : _delta_rap(delta_rap),  _delta_phi(delta_phi) {}
+
+  /// return a copy of the current object
+  virtual SelectorWorker* copy(){ return new SW_Rectangle(*this);}
+
+  /// returns true if a given object passes the selection criterium
+  /// this has to be overloaded by derived workers
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorRectangle (or any relocatable selector), you first have to call relocate()");
+
+    return (abs(jet.rap()-_centre.rap()) <= _delta_rap) && (abs(jet.delta_phi_to(_centre)) <= _delta_phi);
+  } 
+
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "|rap - rap_centre| <= " << _delta_rap << " && |phi - phi_centre| <= " << _delta_phi ;
+    return ostr.str();
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    rapmax = _centre.rap()+_delta_rap;
+    rapmin = _centre.rap()-_delta_rap;
+  }
+
+  virtual bool has_area() const { return true;}   ///< it has a finite area
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
+    return 4 * _delta_rap * _delta_phi;
+  }
+
+protected:
+  double _delta_rap, _delta_phi;
+};
+
+
+// select on objets within a distance 'radius' of a variable location
+Selector SelectorRectangle(const double & half_rap_width, const double & half_phi_width) {
+  return Selector(new SW_Rectangle(half_rap_width, half_phi_width));
 }
 
 

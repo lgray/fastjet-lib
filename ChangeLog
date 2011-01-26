@@ -1,3 +1,24 @@
+2011-01-26  Gregory Soyez  <soyez@cern.ch>
+
+	* tools/Selector.cc, tools/fastjet/tools/Selector.hh:
+	  - added a SelectorRapPhiRange
+	    (with a corresponding SW_RapPhiRange)
+	  - used half_width instead of radius for the SelectorStrip (cc file)
+	  - the Doughnut range now uses its own worker rather than a
+	    combination of 2 circles (advantages: has a known area + is
+	    really >= radius_in instead of >)
+	  - added a relocatable Rectangle range (given rap and phi half-widths)
+
+	* Makefile.am:
+	  added the -Woverloaded-virtual flag for a better finding of
+	  possible overloading issues.
+
+	* tools/Selector.cc:
+	  fixed a missing const in various get_rapidity_extent
+
+	* tools/fastjet/tools/Selector.hh:
+	  slight update of exception messages in SW::copy
+
 2011-01-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/Selector.cc:

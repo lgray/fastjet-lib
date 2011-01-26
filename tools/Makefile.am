@@ -2,7 +2,7 @@
 
 SUBDIRS=fastjet
 lib_LTLIBRARIES = libfastjettools.la
-libfastjettools_la_CXXFLAGS = $(AM_CXXFLAGS) -I$(srcdir)/../include -I$(srcdir)
+libfastjettools_la_CXXFLAGS = $(AM_CXXFLAGS) -I$(srcdir)/../include -I$(srcdir) -Woverloaded-virtual
 libfastjettools_la_SOURCES = Selector.cc
 
 # EXTRA_DIST = makefile.static 

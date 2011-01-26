@@ -65,8 +65,7 @@ public:
 
   /// return a copy of the current object
   virtual SelectorWorker* copy(){ 
-    //TODO: do we throw an error or just return NULL?
-    throw Error("this worker has nothing to copy");
+    throw Error("this SelectorWorker has nothing to copy");
   }
 
   //----------------------------------------------------------
@@ -340,15 +339,35 @@ Selector SelectorAbsEtaRange(double absetamin, double absetamax); ///< select ob
 
 Selector SelectorPhiRange(double phimin, double phimax); ///< select objects with phimin <= phi <= phimax
 
+/// select objects with rapmin <= rap <= rapmax  &&  phimin <= phi <= phimax
+///
+/// Note that this is essentially a combination of SelectorRapRange
+/// and SelectorPhiRange. We provide it as a Selector on its own in
+/// order to use the known area (that would otherwise be lost by the &&
+/// operator)
+Selector SelectorRapPhiRange(double rapmin, double rapmax, double phimin, double phimax);
+
 Selector SelectorNHardest(unsigned int n);   ///< select the n hardest objects 
 
 
 // selection with geometric objects
 //----------------------------------------------------------------------
 
-Selector SelectorCircle(const double & radius); ///< select objets within a distance 'radius' the location set by Selector::relocate
-Selector SelectorDoughnut(const double & radius_in, const double & radius_out); ///< select objets with distance from the centre is between 'radius_in' and 'radius_out'; the centre is set by Selector::relocate
-Selector SelectorStrip(const double & half_width); ///< select objets within a rapidity distance 'half_width' from the location set by Selector::relocate
+/// select objets within a distance 'radius' the location set by Selector::relocate
+Selector SelectorCircle(const double & radius); 
+
+/// select objets with distance from the centre is between 'radius_in'
+/// and 'radius_out'; the centre is set by Selector::relocate
+Selector SelectorDoughnut(const double & radius_in, const double & radius_out); 
+
+/// select objets within a rapidity distance 'half_width' from the
+/// location set by Selector::relocate
+Selector SelectorStrip(const double & half_width);
+
+/// select objets within rapidity distance 'half_rap_width' from the
+/// centre and azimuthal-angle distance within 'half_phi_width'; the
+/// centre is set by Selector::relocate
+Selector SelectorRectangle(const double & half_rap_width, const double & half_phi_width);
 
 /// @}
 
