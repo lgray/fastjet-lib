@@ -33,7 +33,6 @@
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/GhostedAreaSpec.hh"  // for area support
-#include <cassert>
 #include <limits>
 #include <cmath>
 
@@ -110,7 +109,7 @@ public:
   //----------------------------------------------------------
 
   /// returns the rapidity range for which it may return "true"
-  virtual void get_rapidity_extent(double & rapmin, double & rapmax) {
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const {
     rapmax = std::numeric_limits<double>::max();
     rapmin = -rapmax; 
   }
@@ -119,10 +118,10 @@ public:
   virtual bool has_area() const { return false;}
 
   /// check if it has an analytically computable area
-  virtual bool has_computable_area() const { return false;}
+  virtual bool has_known_area() const { return false;}
 
   /// if it has a computable area, return it
-  virtual double computable_area() const{
+  virtual double known_area() const{
     throw Error("this selector has no computable area");
   }
 };
@@ -132,7 +131,14 @@ public:
 // class to help with jet selections
 class Selector{
 public:
+  /// default constructor produces a Selector whose action is undefined
+  /// (any attempt to use it will lead to an error)
   Selector() {}
+
+  /// constructor that causes the Selector to use the \param worker
+  ///
+  /// Note that the Selector takes ownership of the pointer to the
+  /// worker (and so will delete automatically when appropriate).
   Selector(SelectorWorker * worker) {_worker.reset(worker);}
 
   /// dummy virtual dtor
@@ -140,8 +146,7 @@ public:
 
   /// return true if the jet passes the selection
   bool pass(const PseudoJet & jet) const {
-    assert(_worker());
-    if (!_worker->applies_jet_by_jet()) {
+    if (!validated_worker()->applies_jet_by_jet()) {
       throw Error("Cannot apply this selector to an individual jet");
     }
     return _worker->pass(jet);
@@ -154,91 +159,61 @@ public:
 
   /// returns true if this can be applied jet by jet
   bool applies_jet_by_jet() const {
-    assert(_worker());
-    return _worker->applies_jet_by_jet();
+    return validated_worker()->applies_jet_by_jet();
   }
-
 
   /// returns a vector with the jets that pass the selection
-  std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & jets) const {
-    assert(_worker());
-    std::vector<PseudoJet> result;
-    if (_worker->applies_jet_by_jet()) {
-      //if (false) {
-      // for workers that apply jet by jet, this is more efficient
-      for (std::vector<PseudoJet>::const_iterator jet = jets.begin(); 
-           jet != jets.end(); jet++) {
-        if (_worker->pass(*jet)) result.push_back(*jet);
-      }
-    } else {
-      // for workers that can only be applied to entire vectors,
-      // go through the following
-      std::vector<const PseudoJet *> jetptrs(jets.size());
-      for (unsigned i = 0; i < jets.size(); i++) {
-        jetptrs[i] = & jets[i];
-      }
-      _worker->terminator(jetptrs);
-      for (unsigned i = 0; i < jetptrs.size(); i++) {
-        if (jetptrs[i]) result.push_back(jets[i]);
-      }
-    }
-    return result;
-  }
-
-  const SharedPtr<SelectorWorker> & worker() const {return _worker;}
-
-//  /// returns a vector with the jets that pass the selection
-//  std::vector<SharedPtr<PseudoJet> > 
-//  operator()(const std::vector<SharedPtr<PseudoJet> >& jets) const {
-//    assert(_worker());
-//    std::vector<SharedPtr<PseudoJet> >result;
-//    for (std::vector<SharedPtr<PseudoJet> >::const_iterator jet = jets.begin(); 
-//	 jet != jets.end(); jet++) {
-//      if (_worker->pass(**jet)) result.push_back(*jet);
-//    }
-//    return result;
-//  }
+  std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & jets) const;
 
   /// returns the rapidity range for which it may return "true"
-  virtual void get_rapidity_extent(double &rapmin, double &rapmax) const {
-    assert(_worker());
-    return _worker->get_rapidity_extent(rapmin, rapmax);
+  void get_rapidity_extent(double &rapmin, double &rapmax) const {
+    return validated_worker()->get_rapidity_extent(rapmin, rapmax);
   }
 
   /// return a textual description of the selector
-  virtual std::string description() const {
-    assert(_worker());
-    return _worker->description();
+  std::string description() const {
+    return validated_worker()->description();
   }
 
-  /// check if it has a finite area
-  virtual bool has_area() const{
-    assert(_worker());
-    return _worker->has_area();
+  /// check if it has a meaningful and finite area
+  bool has_area() const{
+    return validated_worker()->has_area();
   }
 
-  /// get the area
+  /// returns the rapidity-phi area associated with the Selector
+  /// (throws InvalidArea if the area does not make sense).
   ///
-  /// The argument passed is the requested cell area . It will be
-  /// discarded if the selector has an analytically-computable area
-  virtual double area(double cell_area=gas::def_ghost_area) const{
-    assert(has_area());  //< make sure area makes sense
+  /// The argument passed is the requested cell area, which is used
+  /// for obtaining a Monte Carlo type estimate of the area in case
+  /// the Selector does not have an analytically known error. The
+  /// Monte Carlo estimate involves a time penalty proportional to
+  /// rapidity extent of the Selector.
+  ///
+  double area(double cell_area=gas::def_ghost_area) const;
 
-    if (_worker->has_computable_area()) return _worker->computable_area();
+  /// returns a (reference to) the underlying worker's shared pointer
+  const SharedPtr<SelectorWorker> & worker() const {return _worker;}
 
-    // generate a set of "ghosts"
-    double rapmin, rapmax;
-    get_rapidity_extent(rapmin, rapmax);
-    GhostedAreaSpec ghost_spec(rapmin, rapmax, 1, cell_area);
-    std::vector<PseudoJet> ghosts;
-    ghost_spec.add_ghosts(ghosts);
-
-    // check what passes the selection
-    // unsigned int npass= 0;
-    // for (std::vector<PseudoJet>::const_iterator jet = ghosts.begin(); jet != ghosts.end(); jet++)
-    //   if (_worker->geometric_pass(*jet)) npass++;
-    return ghost_spec.ghost_area() * ((*this)(ghosts)).size();
+  /// returns a worker if there is a valid one, otherwise throws an InvalidWorker error
+  const SelectorWorker* validated_worker() const {
+    const SelectorWorker* worker_ptr = _worker.get();
+    if (worker_ptr == 0) throw InvalidWorker();
+    return worker_ptr;
   }
+
+  /// class that gets throw when a Selector is applied despite it not
+  /// having a valid underlying worker.
+  class InvalidWorker : public Error {
+  public:
+    InvalidWorker() : Error("Attempt to use Selector with no valid underlying worker") {}
+  };
+
+  /// class that gets throw when a Selector is applied despite it not
+  /// having a valid underlying worker.
+  class InvalidArea : public Error {
+  public:
+    InvalidArea() : Error("Attempt to obtain area from Selector for which this is not meaningful") {}
+  };
 
   //----------------------------------------------------
   // non-const operations
@@ -265,16 +240,14 @@ public:
 
   /// returns true if this can be applied jet by jet
   bool is_relocatable() const {
-    assert(_worker());
-    return _worker->is_relocatable();
+    return validated_worker()->is_relocatable();
   }
 
   /// relocate the selector on a given PseudoJet
   void relocate(const PseudoJet &centre){
-    assert(_worker());
 
     // if the worker is not relocatable, do nothing 
-    if (! _worker->is_relocatable()){
+    if (! validated_worker()->is_relocatable()){
       return;
     }
     
@@ -373,9 +346,9 @@ Selector SelectorNHardest(unsigned int n);   ///< select the n hardest objects
 // selection with geometric objects
 //----------------------------------------------------------------------
 
-Selector SelectorCircle(const double & radius); ///< select on objets within a distance 'radius' of a variable location
-Selector SelectorDoughnut(const double & radius_in, const double & radius_out); ///< select on objets with distance from the centre is between 'radius_in' and 'radius_out' 
-Selector SelectorStrip(const double & radius); ///< select on objets within a distance 'radius' of a variable location
+Selector SelectorCircle(const double & radius); ///< select objets within a distance 'radius' the location set by Selector::relocate
+Selector SelectorDoughnut(const double & radius_in, const double & radius_out); ///< select objets with distance from the centre is between 'radius_in' and 'radius_out'; the centre is set by Selector::relocate
+Selector SelectorStrip(const double & half_width); ///< select objets within a rapidity distance 'half_width' from the location set by Selector::relocate
 
 /// @}
 

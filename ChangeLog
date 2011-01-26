@@ -1,3 +1,11 @@
+2011-01-26  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/Selector.cc:
+	* tools/fastjet/tools/Selector.hh:
+	  moved some longer bits of code from Selector.hh to Selector.cc;
+	  replaced assertions with exceptions; and tided up some comments
+	  in a few places.
+
 2011-01-26  Gavin Salam  <gsalam@macth69.cern.ch>
 
 	* regression-tests/nightly-check.pl: 

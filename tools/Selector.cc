@@ -1,10 +1,62 @@
 #include <sstream>
-#include "fastjet/tools/Selector.hh"
 #include <algorithm>
+#include "fastjet/tools/Selector.hh"
 
 using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+//----------------------------------------------------------------------
+// implementations of some of the more complex bits of Selector
+//----------------------------------------------------------------------
+
+// implementation of the operator() acting on a vector of jets
+std::vector<PseudoJet> Selector::operator()(const std::vector<PseudoJet> & jets) const {
+  std::vector<PseudoJet> result;
+  if (validated_worker()->applies_jet_by_jet()) {
+    //if (false) {
+    // for workers that apply jet by jet, this is more efficient
+    for (std::vector<PseudoJet>::const_iterator jet = jets.begin(); 
+         jet != jets.end(); jet++) {
+      if (_worker->pass(*jet)) result.push_back(*jet);
+    }
+  } else {
+    // for workers that can only be applied to entire vectors,
+    // go through the following
+    std::vector<const PseudoJet *> jetptrs(jets.size());
+    for (unsigned i = 0; i < jets.size(); i++) {
+      jetptrs[i] = & jets[i];
+    }
+    _worker->terminator(jetptrs);
+    for (unsigned i = 0; i < jetptrs.size(); i++) {
+      if (jetptrs[i]) result.push_back(jets[i]);
+    }
+  }
+  return result;
+}
+
+
+// implementation of the Selector's area function
+double Selector::area(double cell_area) const{
+  if (! has_area()) throw InvalidArea();
+  
+  // has area will already check we've got a valid worker
+  if (_worker->has_known_area()) return _worker->known_area();
+  
+  // generate a set of "ghosts"
+  double rapmin, rapmax;
+  get_rapidity_extent(rapmin, rapmax);
+  GhostedAreaSpec ghost_spec(rapmin, rapmax, 1, cell_area);
+  std::vector<PseudoJet> ghosts;
+  ghost_spec.add_ghosts(ghosts);
+  
+  // check what passes the selection
+  // unsigned int npass= 0;
+  // for (std::vector<PseudoJet>::const_iterator jet = ghosts.begin(); jet != ghosts.end(); jet++)
+  //   if (_worker->geometric_pass(*jet)) npass++;
+  return ghost_spec.ghost_area() * ((*this)(ghosts)).size();
+}
+
 
 //----------------------------------------------------------------------
 // selector and workers for operators
@@ -539,8 +591,8 @@ public:
     rapmin = _qmin.comparison_value(); 
   }
   virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
-  virtual double computable_area() const { 
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
     return twopi * (_qmax.comparison_value()-_qmin.comparison_value());
   }
 };
@@ -580,8 +632,8 @@ public:
     rapmin = -_qmax.comparison_value();
   }
   virtual bool has_area() const { return true;}              ///< it has a finite area
-  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
-  virtual double computable_area() const { 
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
     return twopi * 2 * _qmax.comparison_value();
   }
 };
@@ -595,8 +647,8 @@ public:
     rapmin = -_qmax.comparison_value();
   }
   virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
-  virtual double computable_area() const { 
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
     return twopi * 2 * (_qmax.comparison_value()-max(_qmin.comparison_value(),0.0)); // this shold handle properly absrapmin<0
   }
 };
@@ -835,8 +887,8 @@ public:
   }
 
   virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
-  virtual double computable_area() const { 
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
     return pi * _radius2;
   }
 
@@ -889,8 +941,8 @@ public:
   }
 
   virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_computable_area() const { return true;}   ///< the area is analytically known
-  virtual double computable_area() const { 
+  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual double known_area() const { 
     return twopi * 2 * _delta;
   }
 
