@@ -1160,7 +1160,8 @@ For example one can define
   Selector sel = SelectorCircle(1.0);
 \end{lstlisting}
 Then if one is interested in the subset of \ttt{jets} neighbourhood of
-\ttt{jet1}, one performs the following operations:
+\ttt{jet1}, and then those near \ttt{jet2}, one performs the following
+operations:
 \begin{lstlisting}
   sel.relocate(jet1);
   vector<PseudoJet> jets_near_jet1 = sel(jets);
@@ -1168,7 +1169,13 @@ Then if one is interested in the subset of \ttt{jets} neighbourhood of
   sel.relocate(jet2);
   vector<PseudoJet> jets_near_jet2 = sel(jets);
 \end{lstlisting}
+Using a relocatable range before it has ever been relocated will
+cause an exception to be thrown.
 
+A user can obtain information on what a given \ttt{Selector} does by
+calling its \ttt{description()} member function. 
+%
+This behaves sensibly also for compound selectors.
 
 % \begin{lstlisting}
 %   SelectorPtMin(double ptmin);                    
@@ -1208,18 +1215,73 @@ Then if one is interested in the subset of \ttt{jets} neighbourhood of
 % \end{lstlisting}
 
 
+%......................................................................
+\subsection{Other information about selectors}
+
+Selectors contain a certain amount of additional information that can
+serve as useful hints in some contexts (for example, in anticipation of
+their future use for background estimation).
+%
+Their rapidity extent is accessible through a
+\ttt{get\_rapidity\_extent(rapmin,rapmax)} call.
+%
+If it is not sensible to talk about a rapidity extent for a given
+selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
+returned are the largest (positive and negative) numbers that can be
+represented as doubles.
+
+\comment{carry on with areas}
 
 %......................................................................
-\subsection{Advanced usage}
+\subsection{Implementing new selectors}
 
+Technically a \ttt{Selector} contains a shared pointer to a
+\ttt{SelectorWorker}.
+%
+Classes derived from \ttt{SelectorWorker} actually do the work. 
+%
+So, for example, the call to the function \ttt{SelectorAbsRapMax(2.5)}
+first causes a new instance of the internal \ttt{SW\_AbsRapMax} class
+to be constructed with the information that the limit on $|y|$
+is 2.5 (\ttt{SW\_AbsRapMax} derives from \ttt{SelectorWorker}).
+%
+Then a \ttt{Selector} is constructed with a pointer to the
+\ttt{SW\_AbsRapMax} object, and it is this \ttt{Selector} that is
+returned to the user:
+%
+\begin{lstlisting}
+  Selector SelectorAbsRapMax(double absrapmax) {
+    return Selector(new SW_AbsRapMax(absrapmax));
+  }
+\end{lstlisting}
+%
+Since \ttt{Selector} is really nothing more than a shared pointer to
+the \ttt{SW\_AbsRapMax} object, it is a lightweight object. 
+%
+The fact that it's a shared pointer also means that it looks after
+the memory management issues associated with the \ttt{SW\_AbsRapMax}
+object. 
+
+If a user wishes to implement a new selector, they should write a
+class derived from \ttt{SelectorWorker}.
+%
+The base is defined with sensible defaults, so for simple usage, only
+two \ttt{SelectorWorker} functions need to be overloaded:
+\begin{lstlisting}
+  /// returns true if a given object passes the selection criterion.
+  pass(const PseudoJet & jet) const = 0;
+
+  /// returns a description of the worker
+  virtual std::string description() const {return "missing description";}
+\end{lstlisting}
+For information on how to implement more advanced workers (for example
+workers that do not apply jet-by-jet, or that are relocatable), users
+may wish to examine the implementation of the existing workers and/or
+consult the authors.
 
 \comment{to come}:
 \begin{itemize}
-\item relocatable ones
-\item do we list all implemented selectors? (Selector{Type}{Var}),
-  plus some exceptions
 \item areas?
-\item do we tell users how to write their own Selectors
 \end{itemize}
 
 %======================================================================
