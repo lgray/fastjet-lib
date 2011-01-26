@@ -1,3 +1,9 @@
+2011-01-26  Gregory Soyez  <soyez@cern.ch>
+
+	* tools/Selector.cc (SW_Relocatable):
+	  for relocatable objects, make sure thay are initialized when
+	  calling _get_rapidity_extent()
+
 2011-01-26  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/Selector.hh:

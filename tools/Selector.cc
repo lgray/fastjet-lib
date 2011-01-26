@@ -911,6 +911,10 @@ public:
 
   /// returns the rapidity range for which it may return "true"
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorCircle (or any relocatable selector), you first have to call relocate()");
+    
     rapmax = _centre.rap()+sqrt(_radius2);
     rapmin = _centre.rap()-sqrt(_radius2);
   }
@@ -964,6 +968,10 @@ public:
 
   /// returns the rapidity range for which it may return "true"
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorDoughnut (or any relocatable selector), you first have to call relocate()");
+
     rapmax = _centre.rap()+sqrt(_radius_out2);
     rapmin = _centre.rap()-sqrt(_radius_out2);
   }
@@ -1014,6 +1022,10 @@ public:
 
   /// returns the rapidity range for which it may return "true"
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorStrip (or any relocatable selector), you first have to call relocate()");
+    
     rapmax = _centre.rap()+_delta;
     rapmin = _centre.rap()-_delta;
   }
@@ -1066,6 +1078,10 @@ public:
 
   /// returns the rapidity range for which it may return "true"
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorRectangle (or any relocatable selector), you first have to call relocate()");
+
     rapmax = _centre.rap()+_delta_rap;
     rapmin = _centre.rap()-_delta_rap;
   }
