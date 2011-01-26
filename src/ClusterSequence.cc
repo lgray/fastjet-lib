@@ -419,6 +419,8 @@ void ClusterSequence::plugin_record_ij_recombination(
   int tmp_index = _jets[newjet_k].cluster_hist_index();
   _jets[newjet_k] = newjet;
   _jets[newjet_k].set_cluster_hist_index(tmp_index);
+  _jets[newjet_k].set_associated_csw(_wrapper_to_this);
+
 }
 
 

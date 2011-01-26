@@ -8,6 +8,11 @@
 
 2011-01-26  Gregory Soyez  <soyez@cern.ch> + Gavin
 
+	* src/ClusterSequence.cc (plugin_record_ij_recombination):
+	  when overwriting the recombination result with the specified
+	  resulting PseudoJet, make sure it contains info about the
+	  ClusterSequenceWrapper
+
 	* tools/fastjet/tools/Selector.hh:
 	  put the logical operators inside the doc
 
