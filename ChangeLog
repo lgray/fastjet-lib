@@ -1,3 +1,8 @@
+2011-01-26  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* regression-tests/nightly-check.pl: 
+	  switched --enable-monolithic check over to --disable-monolithic 
+
 2011-01-26  Gregory Soyez  <soyez@cern.ch>
 
 	* m4/plugin.m4:
