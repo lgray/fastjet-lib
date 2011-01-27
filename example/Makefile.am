@@ -15,7 +15,8 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  06-area \
  07-subtraction \
  08-selector \
- 10-subjets
+ 10-subjets \
+ 11-boosted_higgs
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -75,7 +76,15 @@ endif
 10_subjets_SOURCES = 10-subjets.cc
 10_subjets_SHORTNAME = 10
 10_subjets_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-10_subjets_LDADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
+10_subjets_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
+
+# illustrate the access to the constituents
+11_boosted_higgs_SOURCES = 11-boosted_higgs.cc
+11_boosted_higgs_SHORTNAME = 11
+11_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+11_boosted_higgs_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
+
+
 
 # backward-compatible + make-check-related things
 fastjet_example_SOURCES = fastjet_example.cc
