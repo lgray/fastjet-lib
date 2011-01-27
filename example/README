@@ -2,13 +2,13 @@ List of the examples enclosed:
 
 01-basic.cc          basic usage example
 02-jetdef.cc         further usage of JetDefinition
-03-plugin.cc         illustrate the usage of (the SISCone) plugin
+03-plugin.cc         illustrates the usage of (the SISCone) plugin
 04-constituents.cc   show how a PseudoJet accesses its underlying ClusterSequence
 05-eplus_eminus.cc   illustrates the usage of the e+e- algorithms and exclusive jets
-06-area.cc
-07-subtraction.cc
-08-selector.cc
-09-extra_info.cc
-10-subjets.cc
-11-boosted_higgs.cc
+06-area.cc           illustrates the usage of jet areas
+07-subtraction.cc    shows how to estimate the background and subtract it from the jets
+08-selector.cc       illustrates the usage of Selector
+09-extra_info.cc     
+10-subjets.cc        shows how to extract information about subjets
+11-boosted_higgs.cc  
 

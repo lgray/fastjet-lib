@@ -13,7 +13,9 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  04-constituents \
  05-eplus_eminus \
  06-area \
- 08-selector
+ 07-subtraction \
+ 08-selector \
+ 10-subjets
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -58,10 +60,22 @@ endif
 06_area_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate the access to the constituents
+07_subtraction_SOURCES = 07-subtraction.cc
+07_subtraction_SHORTNAME = 07
+07_subtraction_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
+07_subtraction_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
+
+# illustrate the access to the constituents
 08_selector_SOURCES = 08-selector.cc
 08_selector_SHORTNAME = 08
 08_selector_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 08_selector_LDADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
+
+# illustrate the access to the constituents
+10_subjets_SOURCES = 10-subjets.cc
+10_subjets_SHORTNAME = 10
+10_subjets_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+10_subjets_LDADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # backward-compatible + make-check-related things
 fastjet_example_SOURCES = fastjet_example.cc
