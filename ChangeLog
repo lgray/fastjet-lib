@@ -1,7 +1,7 @@
 2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* fortran_wrapper/README:
-	* fortran_wrapper/fastjetfortran.cc:
+	* fortran_wrapper/fastjetfortran_v2.cc -> fastjetfortran.cc:
 	* fortran_wrapper/Makefile:
 	  moved what was called fastjetfortran_v2 to fastjetfortran
 	  providing SISCone, constituents, dmerge features from fortran.
@@ -153,7 +153,7 @@
 
 	* Doxyfile:
 	  updated the file (v1.7.1)
-	  limited te dot-graph depth to a single inheritance
+	  limited the dot-graph depth to a single inheritance
 
 	* include/fastjet/ClusterSequence.hh (ClusterSequence):
 	  reshaped the doxygen main page (restored links, added more links)
@@ -444,7 +444,7 @@
 	  then use
 	    PseudoJetPlusInfo<MyExtraInfo> instead of PseudoJet
 
-	  The implementation allows to copy from PseudoJetPlusInfo to
+	  The implementation allows one to copy from PseudoJetPlusInfo to
 	  PseudoJet without any loss of information (e.g. you can copy,
 	  element by element, a vector of PseudoetPlusInfo into a vector
 	  of PseudoJet and pass it to a ClusterSequence without loosing
