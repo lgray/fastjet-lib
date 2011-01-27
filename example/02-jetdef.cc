@@ -8,7 +8,7 @@
 ///
 /// run it with    : ./02-jetdef < data/single-event.dat
 ///
-/// The code is available <a href="02-jetdef_8cc_source.html">here</a>
+/// Source file: 02-jetdef.cc
 //----------------------------------------------------------------------
 //
 //STARTHEADER

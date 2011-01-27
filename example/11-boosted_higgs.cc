@@ -1,19 +1,24 @@
 //----------------------------------------------------------------------
-// fastjet example program, illustration of carrying out boosted
-// Higgs subjet ID analysis
-//
-// It illustrates two kinds of functionality: 
-//
-//  - following the decomposition of a jet into pieces
-//  - following information on a b-tag through the jet
-//
-// This kind of functionality was used in arXiv:0802.2470
-// (Butterworth, Davison, Rubin & Salam) for boosted Higgs searches,
-// and related functionality was used in arXiv:0806.0848 (Kaplan,
-// Rehermann, Schwartz & Tweedie) in searching for boosted tops
-// (without b-tag assumptions).
-//
-// run it with    : ./11-boosted_higgs < data/HZ-event-Hmass115.dat
+/// \file
+/// \page Example11 11 - boosted Higgs tagging
+///
+/// fastjet example program, illustration of carrying out boosted
+/// Higgs subjet ID analysis
+///
+/// It illustrates two kinds of functionality: 
+///
+///  - following the decomposition of a jet into pieces
+///  - following information on a b-tag through the jet
+///
+/// This kind of functionality was used in arXiv:0802.2470
+/// (Butterworth, Davison, Rubin & Salam) for boosted Higgs searches,
+/// and related functionality was used in arXiv:0806.0848 (Kaplan,
+/// Rehermann, Schwartz & Tweedie) in searching for boosted tops
+/// (without b-tag assumptions).
+///
+/// run it with    : ./11-boosted_higgs < data/HZ-event-Hmass115.dat
+///
+/// Source file: 11-boosted_higgs.cc
 //----------------------------------------------------------------------
 
 

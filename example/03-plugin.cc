@@ -16,7 +16,7 @@
 ///
 /// run it with    : ./03-plugin < data/single-event.dat
 ///
-/// The code is available <a href="03-plugin_8cc_source.html">here</a>
+/// Source file: 03-plugin.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

@@ -8,7 +8,7 @@
 ///
 /// run it with    : ./01-basic < data/single-event.dat
 ///
-/// The code is available <a href="01-basic_8cc_source.html">here</a>
+/// Source file: 01-basic.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

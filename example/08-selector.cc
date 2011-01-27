@@ -1,11 +1,16 @@
 //----------------------------------------------------------------------
-// fastjet sample program top illustrate the use of Selector(s):
-//
-// Note that to use Selector (and fastjet tools), you need the
-// fastjettools library. It is included by default by
-//   fastjet-config --libs
-//
-// run it with    : ./08-selector < data/single-event.dat
+/// \file
+/// \page Example08 08 - using the Selector tool
+///
+/// fastjet sample program top illustrate the use of Selector(s):
+///
+/// Note that to use Selector (and fastjet tools), you need the
+/// fastjettools library. It is included by default by
+///   fastjet-config --libs
+///
+/// run it with    : ./08-selector < data/single-event.dat
+///
+/// Source file: 08-selector.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

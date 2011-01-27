@@ -18,7 +18,7 @@
 ///
 /// run it with    : ./05-eplus_eminus < data/single-ee-event.dat
 ///
-/// The code is available <a href="05-eplus__eminus_8cc_source.html">here</a>
+/// Source file: 05-eplus_eminus.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

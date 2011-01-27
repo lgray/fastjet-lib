@@ -8,7 +8,7 @@
 ///
 /// run it with    : ./06-area < data/single-event.dat
 ///
-/// The code is available <a href="06-area_8cc_source.html">here</a>
+/// Source file: 06-area.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

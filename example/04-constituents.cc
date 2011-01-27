@@ -12,7 +12,7 @@
 ///
 /// run it with    : ./04-constituents < data/single-event.dat
 ///
-/// The code is available <a href="04-constituents_8cc_source.html">here</a>
+/// Source file: 04-constituents.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER
