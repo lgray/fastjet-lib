@@ -115,8 +115,9 @@ int main (int argc, char ** argv) {
   //    show the output as 
   //      {index, rap, phi, pt, number of constituents}
   //----------------------------------------------------------
+  cout << endl;
   cout << "Ran " << jet_def.description() << endl;
-  cout << "Area: " << area_def.description() << endl;
+  cout << "Area: " << area_def.description() << endl << endl;
 
   // label the columns
   printf("%5s %15s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "area", "area error");

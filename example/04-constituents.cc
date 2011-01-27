@@ -53,12 +53,15 @@ int main (int argc, char ** argv) {
   //----------------------------------------------------------
   vector<fastjet::PseudoJet> input_particles;
   
-  double px, py , pz, E;
+  valarray<double> fourvec(4);
   int index=0;
-  while (cin >> px >> py >> pz >> E) {
+  while (cin >> fourvec[0] >> fourvec[1] >> fourvec[2] >> fourvec[3]) {
     // create a particle with the approprite 4-momentum and 
     // set its user index to keep track of its index.
-    fastjet::PseudoJet particle(px,py,pz,E);
+    // you can construct a PseudoJet from any object that allows subscripts
+    // from [0] .. [3] (the last one must be the energy)
+    fastjet::PseudoJet particle(fourvec);
+
     particle.set_user_index(index);
     input_particles.push_back(particle); 
 
