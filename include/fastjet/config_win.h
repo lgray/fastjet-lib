@@ -1,5 +1,5 @@
-#define PACKAGE_STRING  "FastJet 3.0alpha1"
-#define PACKAGE_VERSION  "3.0alpha1"
+#define PACKAGE_STRING  "FastJet 3.0alpha2-devel"
+#define PACKAGE_VERSION  "3.0alpha2-devel"
 
 /* The ATLASCone plugin is disabled by default*/
 #undef ENABLE_PLUGIN_ATLASCONE 

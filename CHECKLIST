@@ -87,8 +87,8 @@ checklist for 3.0alpha1
 3.0alpha1  make sure it's committed with the CHECKLIST
 
 3.0alpha1  check everything is OK
-X.Y.Z  reset the SISCone link to the trunk
-X.Y.Z  move the version number to X.Y.(Z+1)-devel
+3.0alpha1  reset the SISCone link to the trunk
+3.0alpha1  move the version number to X.Y.(Z+1)-devel
 
 
 ----------------------------------------------------------------------

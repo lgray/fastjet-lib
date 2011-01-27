@@ -1,3 +1,10 @@
+2011-01-27  Gavin SALAM  <salam@ada.lpthe.jussieu.fr>
+
+	* configure.ac: 
+	* plugins/SISCone/siscone
+	  back on trunk for SISCone and
+	  work starts on fastjet-3.0alpha2-devel
+
 2011-01-27  Gregory Soyez  <soyez@cern.ch> and Gavin
 	* NEWS
 	* configure.ac
