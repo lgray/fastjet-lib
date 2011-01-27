@@ -72,11 +72,11 @@ checklist for 3.0alpha1
 
 3.0alpha1  rerun the nightly check [did 2,3,????]
 
-X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  run doxygen, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
-X.Y.Z  update main web page & menu in devel area
+3.0alpha1  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+3.0alpha1  compile manual
+3.0alpha1  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+3.0alpha1  run doxygen from untarred version, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+3.0alpha1  update main web page & menu in devel area
 
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
 X.Y.Z  update main web-page area
