@@ -1,5 +1,6 @@
 2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* fortran_wrapper/Makefile.am: 
 	* fortran_wrapper/README:
 	* fortran_wrapper/fastjetfortran_v2.cc -> fastjetfortran.cc:
 	* fortran_wrapper/Makefile:
