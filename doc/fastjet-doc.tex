@@ -163,15 +163,23 @@ algorithm~\cite{SISCone}.
 Version 2.3 introduced a new build system (GNU autotools), a
 broader range of areas and tools to help navigate the ClusterSequence.
 %
-Version 2.4 includes the new version 2.0 of SISCone, as well as
+Version 2.4 included the new version 2.0 of SISCone, as well as
 plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone and a
 range of $e^+e^-$ algorithms, and also further tools to help
 investigate jet substructure.
 %
-There is also a wrapper to \fastjet 
+It also added a wrapper to \fastjet 
 allowing one to run SISCone and some of the sequential recombination
 algorithms from Fortran programs.
-
+%
+In version 3.0(alpha1) a PseudoJet knows (where relevant) about its
+underlying ClusterSequence, allowing one to write {\em e.g.}
+\ttt{jet.constituents()}, and can be associated with extra information
+beyond just a user index. This version also adds the D0-Run I cone as
+a new plugin and support for native jet algorithms to be run with
+$R>\pi/2$. It also brings the first of a series of FastJet tools to
+help with advanced jet analyses, namely the Selector class.
+%
 The current implementation of the $pp$ sequential-recombinaion
 algorithms is restricted to 
 the so-called $\Delta R$ distance measure (recommended in

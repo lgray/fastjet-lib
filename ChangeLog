@@ -1,6 +1,23 @@
+2011-01-27  Gregory Soyez  <soyez@cern.ch>
+
+	* CHECKLIST:
+	  reported ongoing progress
+
+	* doc/fastjet-doc.tex:
+	  added a note on what's new in 3.0alpha1
+
+	* include/fastjet/config_win.h:
+	* configure.ac:
+	  updated version number
+
+	* Doxyfile:
+	* Doxyfile-devel:
+	  updated version numbers; checked included paths
+
+
 2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* fortran_wrapper/Makefile.am: 
+	* fortran_wrapper/Makefile.am:
 	* fortran_wrapper/README:
 	* fortran_wrapper/fastjetfortran_v2.cc -> fastjetfortran.cc:
 	* fortran_wrapper/Makefile:

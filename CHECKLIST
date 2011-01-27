@@ -13,13 +13,14 @@ checklist for X.Y.Z (make a copy before editing!)
 X.Y.Z  make sure version number in configure.ac is correct
 
 X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-X.Y.Z  update doxygen version number + check dirs are declared for new plugins
+X.Y.Z  update doxygen (including the devel) version number + check dirs are declared for new plugins
 X.Y.Z  version number in manual
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 
 X.Y.Z  make sure siscone points to a tag, not trunk
+
+X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
 X.Y.Z  make check 
 
@@ -51,16 +52,17 @@ X.Y.Z  move the version number to X.Y.(Z+1)-devel
 ----------------------------------------------------------------------
 checklist for 3.0alpha1
 -----------------------
-X.Y.Z  make sure version number in configure.ac is correct
+3.0alpha1  make sure version number in configure.ac is correct
 
-X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-X.Y.Z  update doxygen version number + check dirs are declared for new plugins
-X.Y.Z  version number in manual
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0alpha1  generate config_win.h: 	    cd src && ./genconfig.sh ../include/fastjet/config_win.h
+3.0alpha1  update doxygen (including the devel) version number + check dirs are declared for new plugins
+3.0alpha1  version number in manual
 
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 
 X.Y.Z  make sure siscone points to a tag, not trunk
+
+X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
 X.Y.Z  make check 
 

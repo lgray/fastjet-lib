@@ -31,7 +31,7 @@ PROJECT_NAME           = fastjet
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = 2.5-devel
+PROJECT_NUMBER         = 3.0alpha1
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
@@ -403,7 +403,7 @@ INLINE_INFO            = YES
 # alphabetically by member name. If set to NO the members will appear in
 # declaration order.
 
-SORT_MEMBER_DOCS       = YES
+SORT_MEMBER_DOCS       = NO
 
 # If the SORT_BRIEF_DOCS tag is set to YES then doxygen will sort the
 # brief documentation of file, namespace and class members alphabetically
@@ -581,36 +581,22 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = src/ \
-                         include/ \
-                         include/fastjet \
-                         include/fastjet/internal \
-                         tools/ \
-                         tools/fastjet/tools \
-                         example \
-                         plugins/ATLASCone \
-                         plugins/ATLASCone/fastjet \
-                         plugins/CMSIterativeCone \
-                         plugins/CMSIterativeCone/fastjet \
-                         plugins/CDFCones \
-                         plugins/CDFCones/fastjet \
-                         plugins/D0RunICone \
-                         plugins/D0RunICone/fastjet \
-                         plugins/D0RunIICone \
-                         plugins/D0RunIICone/fastjet \
-                         plugins/EECambridge \
-                         plugins/EECambridge/fastjet \
-                         plugins/Jade \
-                         plugins/Jade/fastjet \
-                         plugins/NestedDefs \
-                         plugins/NestedDefs/fastjet \
-                         plugins/SISCone \
-                         plugins/SISCone/fastjet \
-                         plugins/PxCone \
-                         plugins/PxCone/fastjet \
-                         plugins/TrackJet \
-                         plugins/TrackJet/fastjet \
-                         plugins/usage_examples
+INPUT                  = src/ include/ include/fastjet include/fastjet/internal \
+                         tools/ tools/fastjet/tools \
+		         example \
+                         plugins/ATLASCone plugins/ATLASCone/fastjet \
+                         plugins/CMSIterativeCone plugins/CMSIterativeCone/fastjet \
+                         plugins/CDFCones plugins/CDFCones/fastjet \
+                         plugins/D0RunIICone plugins/D0RunIICone/fastjet \
+                         plugins/D0RunICone plugins/D0RunICone/fastjet \
+                         plugins/EECambridge plugins/EECambridge/fastjet \
+                         plugins/Jade plugins/Jade/fastjet \
+                         plugins/NestedDefs plugins/NestedDefs/fastjet \
+                         plugins/SISCone plugins/SISCone/fastjet   \
+                         plugins/PxCone plugins/PxCone/fastjet     \
+                         plugins/TrackJet plugins/TrackJet/fastjet \
+                         plugins/usage_examples \
+			 .
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -627,7 +613,11 @@ INPUT_ENCODING         = UTF-8
 # *.c *.cc *.cxx *.cpp *.c++ *.java *.ii *.ixx *.ipp *.i++ *.inl *.h *.hh *.hxx
 # *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm *.py *.f90
 
-FILE_PATTERNS          =
+FILE_PATTERNS          = *.c *.cc *.cxx *.cpp *.c++ \
+                         *.h *.hh *.hxx *.hpp *.h++ \
+                         *.ii *.ixx *.ipp *.i++ *.icc \
+                         *.php *.php3 *.inc *.m *.py *.f90 *.f \
+                         NEWS
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories
 # should be searched for input files as well. Possible values are YES and NO.
