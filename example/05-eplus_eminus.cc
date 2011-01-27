@@ -1,19 +1,24 @@
 //----------------------------------------------------------------------
-// illustrate the use of e^+ e^- algorithms
-//
-// They mostly differ from the pp algorithm by the fact that rather
-// than using a radius parameter and inclusive jets, they use
-// exclusive jets in one of the following ways:
-//  - a fixed number of them
-//  - with a dcut
-//  - with a ycut
-//
-// Note that natively, FastJet includes the kt (ee_kt_algorithm) and
-// genkt (ee_genkt_algorithm) algorithms. Others (like Cambridge for
-// e+ e-, Jade or SISCone in spherical coordinates) are available as
-// plugins (see 03-plugin.cc)
-//
-// run it with    : ./05-eplus_eminus < data/single-ee-event.dat
+/// \file
+/// \page Example05 05 - using e+e- algorithms
+///
+/// illustrate the use of e^+ e^- algorithms
+///
+/// They mostly differ from the pp algorithm by the fact that rather
+/// than using a radius parameter and inclusive jets, they use
+/// exclusive jets in one of the following ways:
+///  - a fixed number of them
+///  - with a dcut
+///  - with a ycut
+///
+/// Note that natively, FastJet includes the kt (ee_kt_algorithm) and
+/// genkt (ee_genkt_algorithm) algorithms. Others (like Cambridge for
+/// e+ e-, Jade or SISCone in spherical coordinates) are available as
+/// plugins (see 03-plugin.cc)
+///
+/// run it with    : ./05-eplus_eminus < data/single-ee-event.dat
+///
+/// The code is available <a href="05-eplus__eminus_8cc_source.html">here</a>
 //----------------------------------------------------------------------
 
 //STARTHEADER

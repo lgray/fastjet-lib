@@ -1,9 +1,14 @@
 //----------------------------------------------------------------------
-// fastjet example program for jet areas
-// It mostly illustrates the usage of the 
-//   AreaDefinition and ClusterSequenceArea classes
-//
-// run it with    : ./06-area < data/single-event.dat
+/// \file
+/// \page Example06 06 - using jet areas
+///
+/// fastjet example program for jet areas
+/// It mostly illustrates the usage of the 
+///   AreaDefinition and ClusterSequenceArea classes
+///
+/// run it with    : ./06-area < data/single-event.dat
+///
+/// The code is available <a href="06-area_8cc_source.html">here</a>
 //----------------------------------------------------------------------
 
 //STARTHEADER

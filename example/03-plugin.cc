@@ -1,17 +1,22 @@
 //----------------------------------------------------------------------
-// fastjet plugins example program:
-//   we illustrate the plugin usage
-//   here, we use the SISCone plugin though different choices are possible
-//   see the output of 'fastjet-config --list-plugins' for more details
-//
-// Note that when using plugins, the code needs to be linked against
-// the libfastjetplugins library (with the default monolithic
-// build. For non-monolithic build, individual libraries have to be
-// used for each plugin). 
-// This is ensured in practice by calling
-//   fastjet-config --libs --plugins
-//
-// run it with    : ./03-plugin < data/single-event.dat
+/// \file
+/// \page Example03 03 - using plugins
+///
+/// fastjet plugins example program:
+///   we illustrate the plugin usage
+///   here, we use the SISCone plugin though different choices are possible
+///   see the output of 'fastjet-config --list-plugins' for more details
+///
+/// Note that when using plugins, the code needs to be linked against
+/// the libfastjetplugins library (with the default monolithic
+/// build. For non-monolithic build, individual libraries have to be
+/// used for each plugin). 
+/// This is ensured in practice by calling
+///   fastjet-config --libs --plugins
+///
+/// run it with    : ./03-plugin < data/single-event.dat
+///
+/// The code is available <a href="03-plugin_8cc_source.html">here</a>
 //----------------------------------------------------------------------
 
 //STARTHEADER

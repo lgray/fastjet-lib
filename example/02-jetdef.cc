@@ -1,9 +1,14 @@
 //----------------------------------------------------------------------
-// fastjet basic example program:
-//   illustration of the usage of how to change the jet definition
-//   used for the clustering
-//
-// run it with    : ./02-jetdef < data/single-event.dat
+/// \file
+/// \page Example02 02 - changing the jet definition
+///
+/// fastjet basic example program:
+///   illustration of the usage of how to change the jet definition
+///   used for the clustering
+///
+/// run it with    : ./02-jetdef < data/single-event.dat
+///
+/// The code is available <a href="02-jetdef_8cc_source.html">here</a>
 //----------------------------------------------------------------------
 //
 //STARTHEADER

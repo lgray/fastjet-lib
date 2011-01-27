@@ -1,9 +1,14 @@
 //----------------------------------------------------------------------
-// fastjet basic example program:
-//   simplest illustration of the usage of the basic classes:
-//   PseudoJet, JetDefinition and ClusterSequence
-//
-// run it with    : ./01-basic < data/single-event.dat
+/// \file
+/// \page Example01 01 - basic usage example
+///
+/// fastjet basic example program:
+///   simplest illustration of the usage of the basic classes:
+///   PseudoJet, JetDefinition and ClusterSequence
+///
+/// run it with    : ./01-basic < data/single-event.dat
+///
+/// The code is available <a href="01-basic_8cc_source.html">here</a>
 //----------------------------------------------------------------------
 
 //STARTHEADER

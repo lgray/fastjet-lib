@@ -1,3 +1,21 @@
+/// \file
+/// \page Examples FastJet examples
+///
+/// The FastJet examples have been organised by order of complexity,
+/// starting by the simplest case and introducing features one after
+/// another.
+///   - \subpage Example01
+///   - \subpage Example02
+///   - \subpage Example03
+///   - \subpage Example04
+///   - \subpage Example05
+///   - \subpage Example06
+///   - \subpage Example07
+///   - \subpage Example08
+///   - \subpage Example09
+///   - \subpage Example10
+///   - \subpage Example11
+
 //STARTHEADER
 // $Id$
 //

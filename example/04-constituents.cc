@@ -1,13 +1,18 @@
 //----------------------------------------------------------------------
-// illustrate how a jet can carry information about its clustering
-//
-// We do it by associating a user index to each of the input particles
-// and show what particles are in each jets (above 5 GeV)
-//
-// We also illustrate a few other features about how a PseudoJet
-// can access its underlying PseudoJet.
-//
-// run it with    : ./04-constituents < data/single-event.dat
+/// \file
+/// \page Example04 04 - accessing clustering information in a PseudoJet
+///
+/// illustrate how a jet can carry information about its clustering
+///
+/// We do it by associating a user index to each of the input particles
+/// and show what particles are in each jets (above 5 GeV)
+///
+/// We also illustrate a few other features about how a PseudoJet
+/// can access its underlying PseudoJet.
+///
+/// run it with    : ./04-constituents < data/single-event.dat
+///
+/// The code is available <a href="04-constituents_8cc_source.html">here</a>
 //----------------------------------------------------------------------
 
 //STARTHEADER
