@@ -2,6 +2,7 @@
 
 	* include/fastjet/PseudoJet.hh: 
 	  renamed reset_extra_info(...) to set_extra_info(...)
+	  and renamed argument.
 
 2011-01-27  Gregory Soyez  <soyez@cern.ch>
 

@@ -284,8 +284,8 @@ class PseudoJet {
   /// goes out of scope. If that behaviour does not fit your needs,
   /// access the shared pointer directly through the
   /// extra_info_shared() function.
-  void set_extra_info(ExtraInfo * extra_info) {
-    _extra_info.reset(extra_info);
+  void set_extra_info(ExtraInfo * extra_info_in) {
+    _extra_info.reset(extra_info_in);
   }
 
   /// returns a reference to the dynamic cast conversion of extra_info

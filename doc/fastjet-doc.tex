@@ -314,6 +314,9 @@ for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
   \ttt{HepLorentzVector} (so as to allow compilation even without
   \clhep).}
 %
+The default constructor for a \PJ leaves its momentum components
+uninitialised. 
+
 It includes the following member functions for accessing the components
 {
 \begin{lstlisting}
@@ -3069,9 +3072,10 @@ particle's barcode in a HepMC event), but can quickly show its
 limitations (for example, when simulating pileup, if an input particle
 can come from one of several HepMC events).
 
-The second method is for the user to derive a class from
-\ttt{PseudoJet::ExtraInfo} and associate the \ttt{PseudoJet} with a
-pointer to an instance of that class:
+A second method for supplementing a \PJ with extra information is for
+the user to derive a class from \ttt{PseudoJet::ExtraInfo} and
+associate the \ttt{PseudoJet} with a pointer to an instance of that
+class:
 \begin{lstlisting}
   void set_extra_info(ExtraInfo * extra_info);
   const ExtraInfo* extra_info() const;
