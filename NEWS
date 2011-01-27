@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 ===========================================================
-Summary of changes from v2.4.X -> v3.0alpha1
+Summary of changes from v2.4.X -> v3.0alpha1:  27 January 2011
 ===========================================================
 
 This is an alpha release, previewing some of the new features that are
@@ -10,26 +10,27 @@ expected to be available in FastJet version 3. Interfaces of new
 features may yet evolve.
 
 New features:
-
-- Several extensions to PseudoJet
+- Several extensions to PseudoJet:
   * it now knows what ClusterSequence it belongs to
   * info about internals of jets can be accessed e.g. as jet.constituents()
   * it now has a virtual destructor + other support for classes derived from PseudoJet
   * new facilities for associating user info with a jet (see PseudoJet::ExtraInfo)
   * some of these features make use of a new SharedPtr class 
     (intended mainly for advanced users)  
+    similar to C++0x std::shared_ptr
   * calculation of phi and rapdity (cached) only on request
 - R can now be taken larger than pi/2 for natively coded jet algorithms
-- Addition of "Selector" tools through #include "fastjet/tools/Selector.hh
+- Addition of "Selector" tools through #include "fastjet/tools/Selector.hh"
 - New plugin for D0RunICone (code contributed by Lars Sonnenschein)
 - Improvements to fortran wrapper (access to SISCone, jet constituents, etc.)
 
 Bug fixes:
 - fixed issue with inconsistent returned sign in PseudoJet::delta_phi_to(...)
 
-Other changes
+Other notable changes:
 - Revamping of examples
-- by default all plugins are now packaged into libfastjetplugins
+- by default all plugins are now packaged into libfastjetplugins.
+  Note that "external" libraries like libsiscone are still separate.
 - Significant improvements to doxygen documentation
 
 ===========================================================
