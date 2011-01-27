@@ -1,5 +1,11 @@
 2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* fortran_wrapper/README:
+	* fortran_wrapper/fastjetfortran.cc:
+	* fortran_wrapper/Makefile:
+	  moved what was called fastjetfortran_v2 to fastjetfortran
+	  providing SISCone, constituents, dmerge features from fortran.
+
 	* several places:
 	  set the svn:keywords property to Id
 
@@ -700,7 +706,7 @@
 
 
 *****************************************************
-	Start of work towards FJ 2.5
+	Start of work towards FJ 2.5/3.0
 *****************************************************
 
 2010-02-26  Gavin Salam  <salam@lpthe.jussieu.fr>

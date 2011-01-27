@@ -18,11 +18,13 @@ New features:
   * new facilities for associating user info with a jet (see PseudoJet::ExtraInfo)
   * some of these features make use of a new SharedPtr class 
     (intended mainly for advanced users)  
+  * calculation of phi and rapdity (cached) only on request
 - R can now be taken larger than pi/2 for natively coded jet algorithms
 - Addition of "Selector" tools through "#include "fastjet/tools/Selector.hh"
 - New plugin for D0RunICone (code contributed by Lars Sonnenschein)
 - Significant improvements to doxygen documentation
 - Revamping of examples
+- Improvements to fortran wrapper
 
 Bug fixes:
 - fixed issue with inconsistent returned sign in PseudoJet::delta_phi_to(...)

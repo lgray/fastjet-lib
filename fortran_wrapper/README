@@ -15,6 +15,10 @@ fastjet_fortran_example.f
 Makefile.alt
         for building (outside of the autotools framework)
 
-One day, if there is real demand, the authors might consider writing a
-more complete set of wrappers.
+If you have installed fastjet (and it is in your path), then do
 
+> make -f Makefile.alt
+> ./fastjet_fortran_example < ../example/data/single-event.dat
+
+These wrappers are usually updated on request. If you need features
+that are not available, contact the authors for help.
