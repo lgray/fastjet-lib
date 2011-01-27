@@ -277,14 +277,14 @@ class PseudoJet {
     return _extra_info.get();
   }
 
-  /// resets the internal shared pointer to the extra information.
+  /// sets the internal shared pointer to the extra information.
   ///
   /// Note that the PseudoJet will now _own_ the pointer, and delete
   /// the corresponding object when it (and anything copied from it)
   /// goes out of scope. If that behaviour does not fit your needs,
   /// access the shared pointer directly through the
   /// extra_info_shared() function.
-  void reset_extra_info(ExtraInfo * extra_info) {
+  void set_extra_info(ExtraInfo * extra_info) {
     _extra_info.reset(extra_info);
   }
 

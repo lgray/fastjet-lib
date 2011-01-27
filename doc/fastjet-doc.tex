@@ -354,23 +354,9 @@ The simpler method is through an integer called the user index
   /// return the user_index
   int user_index() const ;
 \end{lstlisting}
-The second method is for the user to derive a class from
-\ttt{PseudoJet::ExtraInfo} and associate the \ttt{PseudoJet} with a
-pointer to an instance of that class:
-\begin{lstlisting}
-  void reset_extra_info(ExtraInfo * extra_info);
-  const ExtraInfo* extra_info() const;
-\end{lstlisting}
-It is important to be aware that the function
-\ttt{reset\_extra\_info;} transfers ownership of the pointer to the
-\ttt{PseudoJet}. This means that when the PseudoJet goes out of scope
-
- \comment{SET INSTEAD OF RESET??? CARRY ON HERE}
-
-Since a 
-\begin{lstlisting}
-  template<class L> const L & extra_info_cast() const;
-\end{lstlisting}
+A more powerful method, which involves a pointer to a derived class of
+\ttt{PseudoJet::ExtraInfo} is discussed in
+appendix~\ref{app:extra-info}. 
 
 A \verb:PseudoJet: can be reset with
 \begin{lstlisting}
@@ -3071,6 +3057,78 @@ The derived class \ttt{JetDefinition::DefaultRecombiner} is what is
 used internally to implement the various recombination schemes if an
 external \ttt{Recombiner} is not provided. It provides a useful
 example of how to implement a new \ttt{Recombiner} class.
+
+%======================================================================
+\section{Extra Info in PseudoJets}
+\label{app:extra-info}
+
+One method for associating extra information with a \ttt{PseudoJet} is
+via its user index (section~\ref{sec:fastjet::PseudoJet}). This is
+adequate for encoding simple information (for example an input
+particle's barcode in a HepMC event), but can quickly show its
+limitations (for example, when simulating pileup, if an input particle
+can come from one of several HepMC events).
+
+The second method is for the user to derive a class from
+\ttt{PseudoJet::ExtraInfo} and associate the \ttt{PseudoJet} with a
+pointer to an instance of that class:
+\begin{lstlisting}
+  void set_extra_info(ExtraInfo * extra_info);
+  const ExtraInfo* extra_info() const;
+\end{lstlisting}
+It is important to be aware that the function
+\ttt{set\_extra\_info(...)} transfers ownership of the pointer to the
+\ttt{PseudoJet}. This is achieved with the help of a shared
+pointer. Copies of the \ttt{PseudoJet} will point to the same
+\ttt{extra\_info}. When the \ttt{PseudoJet} and all its copies go out
+of scope the \ttt{extra\_info} will be deleted.
+%
+Since nearly all practical uses of \ttt{extra\_info} will require it
+to be cast to the relevant derived class of  \ttt{ExtraInfo}, we also
+provide the following member function for convenience:
+\begin{lstlisting}
+  template<class L> const L & extra_info_cast() const;
+\end{lstlisting}
+which casts the extra info to type \ttt{L}.
+%
+If the cast fails, or the extra info has not been set, an error
+will be thrown.
+
+The user may wonder why we have used shared pointers internally (i.e.\ have
+ownership transferred to the \ttt{PseudoJet}) rather than normal
+pointers. 
+%
+An example use case where the difference is important is if, for
+example, one wishes to write a \ttt{Recombiner} that sets the
+\ttt{extra\_info} in the recombined \PJ.. 
+%
+Since this is likely to be new information, the \ttt{Recombiner} will
+have to allocate some memory for it. 
+%
+With a normal pointer, there is then no easy way to clean up that
+memory when the \PJ is no longer relevant (e.g.\ because the \CS that
+contains it has gone out of scope). 
+%
+In contrast, with a shared pointer the memory is handled automatically.\footnote{
+  The user may also wonder why we didn't simply write a templated
+  version of \PJ in order to contain extra information.
+  % 
+  The answer here is that to introduce a templated \PJ would then imply
+  that every other class in \fastjet should then also be templated. 
+}
+
+The shared pointer type in \fastjet is a template class called
+\ttt{SharedPtr}, available through 
+%
+\begin{lstlisting}
+  #include ``fastjet/SharedPtr.hh''
+\end{lstlisting}
+%
+It behaves almost identically to the \ttt{C++0x} \ttt{shared\_ptr},
+with the exception that a \ttt{SharedPtr<T>} cannot be dynamic cast to
+a \ttt{SharedPtr<U>} (with \ttt{U} a derived class of \ttt{T}). 
+%
+This restriction arises because 
 
 % \section{External Range Definitions}
 % \label{app:b}
