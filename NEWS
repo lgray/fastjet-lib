@@ -6,7 +6,8 @@ Summary of changes from v2.4.X -> v3.0alpha1
 ===========================================================
 
 This is an alpha release, previewing some of the new features that are
-expected to be available in FastJet version 3.
+expected to be available in FastJet version 3. Interface may yet
+evolve. 
 
 New features:
 
@@ -17,19 +18,12 @@ New features:
   * new facilities for associating user info with a jet (see PseudoJet::ExtraInfo)
   * some of these features make use of a new SharedPtr class 
     (intended mainly for advanced users)  
-
-- New plugin for D0RunICone (code contributed by Lars Sonnenschein???)
-
 - R can now be taken larger than pi/2 for natively coded jet algorithms
-
-- Addition of a tools/ directory. 
-  * including a series of "Selector" tools
+- Addition of "Selector" tools through "#include "fastjet/tools/Selector.hh"
+- New plugin for D0RunICone (code contributed by Lars Sonnenschein)
 
 Bug fixes:
 - fixed issue with inconsistent returned sign in PseudoJet::delta_phi_to(...)
-
-
-WHAT DO WE DO ABOUT PseudoJetPlusInfo???
 
 ===========================================================
 Summary of changes from v2.4.1 -> v2.4.2:  26 February 2010

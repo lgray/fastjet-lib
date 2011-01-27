@@ -1,3 +1,8 @@
+2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* several places:
+	  set the svn:keywords property to Id
+
 2011-01-27  Gregory Soyez  <soyez@cern.ch>
 
 	* example/Makefile.am:
