@@ -14,6 +14,7 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  06-area \
  07-subtraction \
  08-selector \
+ 09-extra_info \
  10-subjets \
  11-boosted_higgs
 
@@ -73,6 +74,12 @@ endif
 08_selector_SHORTNAME = 08
 08_selector_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 08_selector_LDADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
+
+# illustrate the access to the constituents
+09_extra_info_SOURCES = 09-extra_info.cc
+09_extra_info_SHORTNAME = 09
+09_extra_info_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+09_extra_info_LDADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # illustrate the access to the constituents
 10_subjets_SOURCES = 10-subjets.cc

@@ -1,3 +1,12 @@
+2011-01-27  Gregory Soyez  <soyez@cern.ch>
+
+	* example/Makefile.am:
+        * example/09-extra_info.cc:         *** ADDED ***
+	  added a (dummy) example for extra info
+
+	  + modified the doxygen doc for the examples
+
+
 2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh:
