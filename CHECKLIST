@@ -33,7 +33,7 @@ X.Y.Z  rerun the nightly check
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
 X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  run doxygen, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+X.Y.Z  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
 X.Y.Z  update main web page & menu in devel area
 
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
