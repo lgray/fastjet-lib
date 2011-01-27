@@ -25,6 +25,10 @@
 	* Doxyfile-devel:
 	  updated version numbers; checked included paths
 
+	* fastjet-config.in:
+	* examples/Makefile.am:
+	  reverted the order of the fastjettools and fastjet libs
+
 
 2011-01-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
