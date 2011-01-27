@@ -8,7 +8,7 @@ List of the examples enclosed:
 06-area.cc           illustrates the usage of jet areas
 07-subtraction.cc    shows how to estimate the background and subtract it from the jets
 08-selector.cc       illustrates the usage of Selector
-09-extra_info.cc     
+09-extra_info.cc     [yet to be written: will usse use of PseudoJet::ExtraInfo]
 10-subjets.cc        shows how to extract information about subjets
 11-boosted_higgs.cc  shows how to implement the boosted-higgs tagging using jet substructure
 
