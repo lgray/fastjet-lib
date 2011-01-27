@@ -3121,14 +3121,17 @@ The shared pointer type in \fastjet is a template class called
 \ttt{SharedPtr}, available through 
 %
 \begin{lstlisting}
-  #include ``fastjet/SharedPtr.hh''
+  #include "fastjet/SharedPtr.hh"
 \end{lstlisting}
 %
 It behaves almost identically to the \ttt{C++0x} \ttt{shared\_ptr},
-with the exception that a \ttt{SharedPtr<T>} cannot be dynamic cast to
-a \ttt{SharedPtr<U>} (with \ttt{U} a derived class of \ttt{T}). 
 %
-This restriction arises because 
+though some internal details are different.
+%
+The end-user should not usually need to manipulate the
+\ttt{SharedPtr}, though the \ttt{SharedPtr} to \ttt{extra\_info} is
+accessible through \PJ's \ttt{extra\_info\_shared()} member.
+
 
 % \section{External Range Definitions}
 % \label{app:b}
