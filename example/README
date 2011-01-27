@@ -10,5 +10,5 @@ List of the examples enclosed:
 08-selector.cc       illustrates the usage of Selector
 09-extra_info.cc     
 10-subjets.cc        shows how to extract information about subjets
-11-boosted_higgs.cc  
+11-boosted_higgs.cc  shows how to implement the boosted-higgs tagging using jet substructure
 
