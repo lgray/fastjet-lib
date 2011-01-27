@@ -66,11 +66,11 @@ checklist for 3.0alpha1
 
 3.0alpha1  make check 
 
-X.Y.Z  make distcheck
+3.0alpha1  make distcheck
 
-X.Y.Z  make sure it's committed
+3.0alpha1  make sure it's committed
 
-X.Y.Z  rerun the nightly check
+3.0alpha1  rerun the nightly check [did 2,3,????]
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
