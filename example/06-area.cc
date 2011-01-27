@@ -81,6 +81,11 @@ int main (int argc, char ** argv) {
   // (i.e. the number of different sets of ghosts that are used) and
   // the ghost density (controlled through the ghost_area).
   // Other, more exotic, parameters control how ghosts are placed.
+  //
+  // The ghost rapidity interval should be large enough to cover the
+  // jets which you want to calculate the area of. E.g. if you want to
+  // calculate the area of jets up to |y|=5, you need to put ghosts up
+  // to at least 4+R.
   double maxrap = 5.0;
   unsigned int n_repeat = 3; // default is 1
   double ghost_area = 0.001; // default is 0.01

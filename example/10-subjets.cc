@@ -1,3 +1,12 @@
+//----------------------------------------------------------------------
+// fastjet example program to show how to access subjets;
+// 
+// See also 11-boosted_higgs.cc to see the use of subjets for
+// identifying boosted higgs (and other objects)
+//
+// run it with    : ./10-subjets < data/single-event.dat
+//----------------------------------------------------------------------
+
 //STARTHEADER
 // $Id$
 //
@@ -28,22 +37,12 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-//----------------------------------------------------------------------
-// fastjet example program to show how to access subjets;
-// 
-// See also 11-boosted_higgs.cc to see the use of subjets for
-// identifying boosted higgs (and other objects)
-//
-// run it with    : ./10-subjets < data/single-event.dat
-//----------------------------------------------------------------------
-
 #include "fastjet/ClusterSequence.hh"
 #include <iostream> // needed for io
 #include <cstdio>   // needed for io
 
 using namespace std;
 
-/// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
   
   // read in input particles

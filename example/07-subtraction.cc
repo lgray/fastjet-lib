@@ -1,8 +1,13 @@
+//----------------------------------------------------------------------
+// fastjet subtraction example program. 
+//
+// run it with    : ./07-subtraction < data/Pythia-dijet-ptmin100-lhc-pileup-1ev.dat
+//----------------------------------------------------------------------
 
 //STARTHEADER
-// $Id: fastjet_subtraction.cc 1764 2010-09-18 08:08:15Z salam $
+// $Id$
 //
-// Copyright (c) 2005-2006, Matteo Cacciari and Gavin Salam
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -29,12 +34,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-
-//----------------------------------------------------------------------
-// fastjet subtraction example program. 
-//
-// run it with    : ./07-subtraction < data/Pythia-dijet-ptmin100-lhc-pileup-1ev.dat
-//----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include <iostream> // needed for io

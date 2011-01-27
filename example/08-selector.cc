@@ -1,3 +1,13 @@
+//----------------------------------------------------------------------
+// fastjet sample program top illustrate the use of Selector(s):
+//
+// Note that to use Selector (and fastjet tools), you need the
+// fastjettools library. It is included by default by
+//   fastjet-config --libs
+//
+// run it with    : ./08-selector < data/single-event.dat
+//----------------------------------------------------------------------
+
 //STARTHEADER
 // $Id$
 //
@@ -28,16 +38,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-//----------------------------------------------------------------------
-// fastjet sample program top illustrate the use of Selector(s):
-//
-// Note that to use Selector (and fastjet tools), you need the
-// fastjettools library. It is included by default by
-//   fastjet-config --libs
-//
-// run it with    : ./08-selector < data/single-event.dat
-//----------------------------------------------------------------------
-
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/tools/Selector.hh" // watch out that Selector is a tool!
 #include <iostream> // needed for io
@@ -45,7 +45,6 @@
 
 using namespace std;
 
-/// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
   
   // read in input particles
@@ -100,7 +99,7 @@ int main (int argc, char ** argv) {
   //  - the description of teh selectors used
   //  - the jets
   //    show the output as 
-  //      {index, rap, phi, pt, number of constituents}
+  //      {index, rap, phi, pt}
   //----------------------------------------------------------
   double rapmin, rapmax;
 
@@ -115,13 +114,13 @@ int main (int argc, char ** argv) {
   cout << "  with a total rapidity range of [" << rapmin << ", " << rapmax << "]" << endl;
 
   // label the columns
-  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "n constituents");
+  printf("%5s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt");
  
   // print out the details for each jet
   for (unsigned int i = 0; i < inclusive_jets.size(); i++) {
-    printf("%5u %15.8f %15.8f %15.8f %8u\n",
+    printf("%5u %15.8f %15.8f %15.8f\n",
 	   i, inclusive_jets[i].rap(), inclusive_jets[i].phi(),
-	   inclusive_jets[i].perp(), inclusive_jets[i].constituents().size());
+	   inclusive_jets[i].perp());
   }
 
   return 0;
