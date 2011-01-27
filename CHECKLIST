@@ -15,6 +15,7 @@ X.Y.Z  make sure version number in configure.ac is correct
 X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
 X.Y.Z  update doxygen version number + check dirs are declared for new plugins
 X.Y.Z  version number in manual
+X.Y.Z  mention the release in ChangeLog
 
 X.Y.Z  ensure NEWS is up to date (and has the corect release date!)
 
