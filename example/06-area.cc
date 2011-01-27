@@ -1,3 +1,11 @@
+//----------------------------------------------------------------------
+// fastjet example program for jet areas
+// It mostly illustrates the usage of the 
+//   AreaDefinition and ClusterSequenceArea classes
+//
+// run it with    : ./06-area < data/single-event.dat
+//----------------------------------------------------------------------
+
 //STARTHEADER
 // $Id$
 //
@@ -27,14 +35,6 @@
 //      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //----------------------------------------------------------------------
 //ENDHEADER
-
-//----------------------------------------------------------------------
-// fastjet example program for the usage of jet areas
-// It mostly illustrates the usage of the 
-//   AreaDefinition and ClusterSequenceArea classes
-//
-// run it with    : ./06-area < data/single-event.dat
-//----------------------------------------------------------------------
 
 #include "fastjet/ClusterSequenceArea.hh"  // use this instead of the "usual" ClusterSequence to get area support
 #include <iostream> // needed for io
@@ -80,15 +80,17 @@ int main (int argc, char ** argv) {
   // precision on the area) include the number of repetitions
   // (i.e. the number of different sets of ghosts that are used) and
   // the ghost density (controlled through the ghost_area).
-  // Other, more exotic, parameters control how ghosts are placed.
+  // Other, more exotic, parameters (not shown here) control how ghosts
+  // are placed.
   //
   // The ghost rapidity interval should be large enough to cover the
-  // jets which you want to calculate the area of. E.g. if you want to
-  // calculate the area of jets up to |y|=5, you need to put ghosts up
-  // to at least 4+R.
+  // jets for which you want to calculate. E.g. if you want to
+  // calculate the area of jets up to |y|=4, you need to put ghosts up
+  // to at least 4+R (or, optionally, up to the largest particle
+  // rapidity if this is smaller).
   double maxrap = 5.0;
   unsigned int n_repeat = 3; // default is 1
-  double ghost_area = 0.001; // default is 0.01
+  double ghost_area = 0.01; // this is the default
   fastjet::GhostedAreaSpec area_spec(maxrap, n_repeat, ghost_area);
 
   fastjet::AreaDefinition area_def(fastjet::active_area, area_spec);

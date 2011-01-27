@@ -9,7 +9,6 @@ EXTRA_DIST = Makefile.alt ktjet_example.cc ktjet_timing.cc CmdLine.hh\
 noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  01-basic  \
  02-jetdef \
- 03-plugin \
  04-constituents \
  05-eplus_eminus \
  06-area \
@@ -33,13 +32,16 @@ check_PROGRAMS = fastjet_example fastjet_areas
 02_jetdef_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrates the usage of plugins
+if BUILD_PLUGIN_SISCONE
+noinst_PROGRAMS += 03-plugin
 03_plugin_SOURCES = 03-plugin.cc
-03_plugin_SHORTNAME = 03
+#03_plugin_SHORTNAME = 03
 03_plugin_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 03_plugin_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
-if BUILD_PLUGIN_SISCONE
 03_plugin_CXXFLAGS += -I$(srcdir)/../plugins/SISCone -I$(srcdir)/../plugins/SISCone/siscone
 03_plugin_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone/siscone/siscone/libsiscone.la ../plugins/SISCone/siscone/siscone/spherical/libsiscone_spherical.la
+else
+EXTRA_DIST += 03-plugin.cc
 endif
 
 # illustrate the access to the constituents

@@ -1,3 +1,11 @@
+//----------------------------------------------------------------------
+// fastjet basic example program:
+//   illustration of the usage of how to change the jet definition
+//   used for the clustering
+//
+// run it with    : ./02-jetdef < data/single-event.dat
+//----------------------------------------------------------------------
+//
 //STARTHEADER
 // $Id$
 //
@@ -28,14 +36,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-//----------------------------------------------------------------------
-// fastjet basic example program:
-//   illustration of the usage of how to change the jet definition
-//   used for the clustering
-//   
-//
-// run it with    : ./02-jetdef < data/single-event.dat
-//----------------------------------------------------------------------
 
 #include "fastjet/ClusterSequence.hh"
 #include <iostream> // needed for io
@@ -121,18 +121,18 @@ int main (int argc, char ** argv) {
   //  - the description of the algorithm used
   //  - extract the inclusive jets with pt > 5 GeV
   //    show the output as 
-  //      {index, rap, phi, pt, number of constituents}
+  //      {index, rap, phi, pt}
   //----------------------------------------------------------
   cout << "Ran " << jet_def.description() << endl;
 
   // label the columns
-  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "n constituents");
+  printf("%5s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt");
  
   // print out the details for each jet
   for (unsigned int i = 0; i < inclusive_jets.size(); i++) {
-    printf("%5u %15.8f %15.8f %15.8f %8u\n",
+    printf("%5u %15.8f %15.8f %15.8f\n",
 	   i, inclusive_jets[i].rap(), inclusive_jets[i].phi(),
-	   inclusive_jets[i].perp(), inclusive_jets[i].constituents().size());
+	   inclusive_jets[i].perp());
   }
 
   return 0;

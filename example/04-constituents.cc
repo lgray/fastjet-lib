@@ -1,3 +1,15 @@
+//----------------------------------------------------------------------
+// illustrate how a jet can carry information about its clustering
+//
+// We do it by associating a user index to each of the input particles
+// and show what particles are in each jets (above 5 GeV)
+//
+// We also illustrate a few other features about how a PseudoJet
+// can access its underlying PseudoJet.
+//
+// run it with    : ./04-constituents < data/single-event.dat
+//----------------------------------------------------------------------
+
 //STARTHEADER
 // $Id$
 //
@@ -27,18 +39,6 @@
 //      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //----------------------------------------------------------------------
 //ENDHEADER
-
-//----------------------------------------------------------------------
-// illustrate how a jet can carry information about its clustering
-//
-// We do it by associating a user index to each of the input particles
-// and show what particles are in each jets (above 5 GeV)
-//
-// We also illustrate a few other features about how a PseudoJet
-// can access its underlying PseudoJet.
-//
-// run it with    : ./04-constituents < data/single-event.dat
-//----------------------------------------------------------------------
 
 #include "fastjet/ClusterSequence.hh"
 #include <iostream> // needed for io
@@ -90,11 +90,11 @@ int main (int argc, char ** argv) {
   //    show the output as 
   //      {index, rap, phi, pt, number of constituents}
   //----------------------------------------------------------
-  cout << "Ran " << jet_def.description() << endl;
+  cout << "Ran " << jet_def.description() << endl << endl;
 
   // label the columns
-  printf("# %5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "n constituents");
-  printf("#        constituents\n");
+  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "n constituents");
+  printf("        indices of constituents\n\n");
  
   // print out the details for each jet
   for (unsigned int i = 0; i < inclusive_jets.size(); i++) {

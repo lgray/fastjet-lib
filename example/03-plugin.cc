@@ -1,3 +1,19 @@
+//----------------------------------------------------------------------
+// fastjet plugins example program:
+//   we illustrate the plugin usage
+//   here, we use the SISCone plugin though different choices are possible
+//   see the output of 'fastjet-config --list-plugins' for more details
+//
+// Note that when using plugins, the code needs to be linked against
+// the libfastjetplugins library (with the default monolithic
+// build. For non-monolithic build, individual libraries have to be
+// used for each plugin). 
+// This is ensured in practice by calling
+//   fastjet-config --libs --plugins
+//
+// run it with    : ./03-plugin < data/single-event.dat
+//----------------------------------------------------------------------
+
 //STARTHEADER
 // $Id$
 //
@@ -28,49 +44,18 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-//----------------------------------------------------------------------
-// fastjet plugins example program:
-//   we illustrate the plugin usage
-//   here, we use the SISCone plugin though different choices are possible
-//   see the output of 'fastjet-config --list-plugins' for more details
-//
-// Note that when using plugins, the code needs to be linked against
-// the libfastjetplugins library (with the default monolithic
-// build. For non-monolithic build, individual libraries have to be
-// used for each plugin). 
-// This is ensured in practice by calling
-//   fastjet-config --libs --plugins
-//
-// run it with    : ./03-plugin < data/single-event.dat
-//----------------------------------------------------------------------
-
 #include "fastjet/ClusterSequence.hh"
 #include <iostream> // needed for io
 #include <cstdio>   // needed for io
 
-// get info on how fastjet was configured
-// this allows to know if SISCone is compiled
-#include "fastjet/config.h"
-
-// include the installed plugins (don't delete this line)
-#ifdef ENABLE_PLUGIN_SISCONE
+// include the SISCone plugin header
 #include "fastjet/SISConePlugin.hh"
-#else
-#warning "The plugin example (03-plugin.cc) uses SISCone which is not included in your build of Fastjet. The example will have no effect"
-#endif
 
 
 using namespace std;
 
-/// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
 
-  // exit with a short message if teh plugin is not available
-#ifndef ENABLE_PLUGIN_SISCONE
-  cerr << "The SISCone plugin used by this example is not included in your build of FastJet. Exiting..." << endl;
-  return 1;
-#else
-  
   // read in input particles
   //----------------------------------------------------------
   vector<fastjet::PseudoJet> input_particles;
@@ -120,21 +105,20 @@ int main (int argc, char ** argv) {
   //  - the description of the algorithm used
   //  - extract the inclusive jets with pt > 5 GeV
   //    show the output as 
-  //      {index, rap, phi, pt, number of constituents}
+  //      {index, rap, phi, pt}
   //----------------------------------------------------------
   cout << "Ran " << jet_def.description() << endl;
 
   // label the columns
-  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "n constituents");
+  printf("%5s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt");
  
   // print out the details for each jet
   for (unsigned int i = 0; i < inclusive_jets.size(); i++) {
-    printf("%5u %15.8f %15.8f %15.8f %8u\n",
+    printf("%5u %15.8f %15.8f %15.8f\n",
 	   i, inclusive_jets[i].rap(), inclusive_jets[i].phi(),
-	   inclusive_jets[i].perp(), inclusive_jets[i].constituents().size());
+	   inclusive_jets[i].perp());
   }
 
   return 0;
 
-#endif // ENABLE_PLUGIN_SISCONE
 }

@@ -1,3 +1,21 @@
+//----------------------------------------------------------------------
+// illustrate the use of e^+ e^- algorithms
+//
+// They mostly differ from the pp algorithm by the fact that rather
+// than using a radius parameter and inclusive jets, they use
+// exclusive jets in one of the following ways:
+//  - a fixed number of them
+//  - with a dcut
+//  - with a ycut
+//
+// Note that natively, FastJet includes the kt (ee_kt_algorithm) and
+// genkt (ee_genkt_algorithm) algorithms. Others (like Cambridge for
+// e+ e-, Jade or SISCone in spherical coordinates) are available as
+// plugins (see 03-plugin.cc)
+//
+// run it with    : ./05-eplus_eminus < data/single-ee-event.dat
+//----------------------------------------------------------------------
+
 //STARTHEADER
 // $Id$
 //
@@ -28,24 +46,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-//----------------------------------------------------------------------
-// illustrate the use of e^+ e^- algorithms
-//
-// They mostly differ from the pp algorithm by the fact that rather
-// than using a radius parameter and inclusive jets, they use
-// exclusive jets in one of the following ways:
-//  - a fixed number of them
-//  - with a dcut
-//  - with a ycut
-//
-// Note that natively, FastJet includes the kt (ee_kt_algorithm) and
-// genkt (ee_genkt_algorithm) algorithms. Others (like Cambridge for
-// e+ e-, Jade or SISCone in spherical coordinates) are available as
-// plugins (see 03-plugin.cc)
-//
-// run it with    : ./05-eplus_eminus < data/single-ee-event.dat
-//----------------------------------------------------------------------
-
 #include "fastjet/ClusterSequence.hh"
 #include <iostream> // needed for io
 #include <cstdio>   // needed for io
@@ -67,7 +67,8 @@ int main (int argc, char ** argv) {
   }
   
 
-  // create a jet definition for the kt algorithm
+  // create a jet definition for the kt algorithm (note that one
+  // should not specify an R value here)
   //----------------------------------------------------------
   fastjet::JetDefinition jet_def(fastjet::ee_kt_algorithm);
 
@@ -90,12 +91,12 @@ int main (int argc, char ** argv) {
   cout << "Ran " << jet_def.description() << endl;
 
   // label the columns
-  printf("%5s %15s %15s\n","jet #", "E", "n constituents");
+  printf("%5s %15s\n","jet #", "E");
  
   // print out the details for each jet
   for (unsigned int i = 0; i < exclusive_jets.size(); i++) {
-    printf("%5u %15.8f %8u\n",
-	   i, exclusive_jets[i].perp(), exclusive_jets[i].constituents().size());
+    printf("%5u %15.8f\n",
+	   i, exclusive_jets[i].perp());
   }
 
   return 0;
