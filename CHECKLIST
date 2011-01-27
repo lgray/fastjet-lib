@@ -64,7 +64,7 @@ checklist for 3.0alpha1
 
 3.0alpha1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-X.Y.Z  make check 
+3.0alpha1  make check 
 
 X.Y.Z  make distcheck
 
