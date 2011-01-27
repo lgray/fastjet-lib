@@ -59,9 +59,9 @@ int main (int argc, char ** argv) {
   }
 
   // Selector application #1: keep particles within a given acceptance
-  // e.g. all particles with 1<|y|<2, all particles with pt>1 for |y|<1
+  // e.g. all particles with 1<|y|<2.5, all particles with pt>1 for |y|<1
   //----------------------------------------------------------
-  fastjet::Selector particle_selector = fastjet::SelectorAbsRapRange(1.0,2.0)
+  fastjet::Selector particle_selector = fastjet::SelectorAbsRapRange(1.0,2.5)
     || (fastjet::SelectorAbsRapMax(1.0) && fastjet::SelectorPtMin(1.0));
   cout << input_particles.size() << " particles before selector" << endl;
   input_particles = particle_selector(input_particles);

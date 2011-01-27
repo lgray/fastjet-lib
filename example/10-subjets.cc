@@ -71,9 +71,13 @@ int main (int argc, char ** argv) {
   double ptmin = 6.0;
   vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(ptmin));
 
-  // extract the subjets at a smaller angular scale (Rsub=0.4)
+  // extract the subjets at a smaller angular scale (Rsub=0.5)
   //
-  // This is essentially done by using ClusterSequence::exclusive_subjets()
+  // This is done by using ClusterSequence::exclusive_subjets(dcut):
+  // for the Cambridge/Aachen algorithm, running with R and then
+  // asking for exclusive subjets with dcut should give the same
+  // subjets as rerunning the algorithm with R'=R*sqrt(dcut) on the
+  // jet's constituents.
   //
   // At the same time we output a summary of what has been done and the 
   // resulting subjets

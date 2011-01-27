@@ -61,7 +61,7 @@ int main (int argc, char ** argv) {
   // a jet algorithm with a given radius parameter
   //----------------------------------------------------------
   double R = 0.6;
-  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, R);
+  fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, R);
 
 
   // run the jet clustering with the above jet definition
