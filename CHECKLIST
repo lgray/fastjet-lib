@@ -60,9 +60,9 @@ checklist for 3.0alpha1
 
 3.0alpha1  ensure NEWS is up to date (and has the correct release date!)
 
-X.Y.Z  make sure siscone points to a tag, not trunk
+3.0alpha1  make sure siscone points to a tag, not trunk
 
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0alpha1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
 X.Y.Z  make check 
 

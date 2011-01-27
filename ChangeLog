@@ -1,7 +1,15 @@
-2011-01-27  Gregory Soyez  <soyez@cern.ch>
+2011-01-27  Gregory Soyez  <soyez@cern.ch> and Gavin
+	* NEWS
+	* configure.ac
+	  Release of fastjet-3.0alpha1
+
+2011-01-27  Gregory Soyez  <soyez@cern.ch> and Gavin
 
 	* CHECKLIST:
 	  reported ongoing progress
+
+	* plugins/SISCone/siscone
+	  switched back to 2.0.1 
 
 	* NEWS:
 	  fixed the text for 3.0alpha1
