@@ -9,7 +9,7 @@
 ///
 /// run it with    : ./10-subjets < data/single-event.dat
 ///
-/// Source file: 10-subjets.cc
+/// Source code: 10-subjets.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

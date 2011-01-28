@@ -18,7 +18,7 @@
 ///
 /// run it with    : ./05-eplus_eminus < data/single-ee-event.dat
 ///
-/// Source file: 05-eplus_eminus.cc
+/// Source code: 05-eplus_eminus.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

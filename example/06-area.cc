@@ -8,7 +8,7 @@
 ///
 /// run it with    : ./06-area < data/single-event.dat
 ///
-/// Source file: 06-area.cc
+/// Source code: 06-area.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

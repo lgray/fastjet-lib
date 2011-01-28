@@ -12,7 +12,7 @@
 ///
 /// run it with    : ./04-constituents < data/single-event.dat
 ///
-/// Source file: 04-constituents.cc
+/// Source code: 04-constituents.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

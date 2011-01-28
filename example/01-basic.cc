@@ -8,7 +8,7 @@
 ///
 /// run it with    : ./01-basic < data/single-event.dat
 ///
-/// Source file: 01-basic.cc
+/// Source code: 01-basic.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

@@ -10,7 +10,7 @@
 ///
 /// run it with    : ./08-selector < data/single-event.dat
 ///
-/// Source file: 08-selector.cc
+/// Source code: 08-selector.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

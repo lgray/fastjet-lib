@@ -4,7 +4,7 @@
 ///
 /// run it with    : ./09-extra_info < data/single-event.dat
 ///
-/// Source file: 09-extra_info.cc
+/// Source code: 09-extra_info.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

@@ -18,7 +18,7 @@
 ///
 /// run it with    : ./11-boosted_higgs < data/HZ-event-Hmass115.dat
 ///
-/// Source file: 11-boosted_higgs.cc
+/// Source code: 11-boosted_higgs.cc
 //----------------------------------------------------------------------
 
 

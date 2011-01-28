@@ -6,7 +6,7 @@
 ///
 /// run it with    : ./07-subtraction < data/Pythia-Zp2jets-lhc-pileup-1ev.dat
 ///
-/// Source file: 07-subtraction.cc
+/// Source code: 07-subtraction.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

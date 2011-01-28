@@ -1,5 +1,19 @@
 2011-01-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+        * example/01-basic.cc:
+        * example/02-jetdef.cc:
+        * example/03-plugin.cc:
+        * example/04-constituents.cc:
+        * example/05-eplus_eminus.cc:
+        * example/06-area.cc:
+	* example/07-subtraction.cc:
+        * example/08-selector.cc:
+        * example/09-extra_info.cc:
+	* example/10-subjets.cc:
+	* example/11-boosted_higgs.cc:
+	  changed "Source file" into "Source code" to avoid empty links
+	  created by Doxygen
+
 	* include/fastjet/ClusterSequenceWrapper.hh:
 	  remove the non_const_cs() method (it provided a way to cast
 	  constness away)

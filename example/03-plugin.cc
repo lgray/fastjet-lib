@@ -16,7 +16,7 @@
 ///
 /// run it with    : ./03-plugin < data/single-event.dat
 ///
-/// Source file: 03-plugin.cc
+/// Source code: 03-plugin.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

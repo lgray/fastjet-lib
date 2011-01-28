@@ -8,7 +8,7 @@
 ///
 /// run it with    : ./02-jetdef < data/single-event.dat
 ///
-/// Source file: 02-jetdef.cc
+/// Source code: 02-jetdef.cc
 //----------------------------------------------------------------------
 //
 //STARTHEADER
