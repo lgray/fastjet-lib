@@ -177,36 +177,36 @@
 #include "fastjet/config.h"
 
 // include the installed plugins (don't delete this line)
-#ifdef ENABLE_PLUGIN_SISCONE
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
 #include "fastjet/SISConePlugin.hh"
 #include "fastjet/SISConeSphericalPlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_CDFCONES
+#ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
 #include "fastjet/CDFMidPointPlugin.hh"
 #include "fastjet/CDFJetCluPlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_PXCONE
+#ifdef FASTJET_ENABLE_PLUGIN_PXCONE
 #include "fastjet/PxConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_D0RUNIICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNIICONE
 #include "fastjet/D0RunIIConePlugin.hh"
 #endif 
-#ifdef ENABLE_PLUGIN_TRACKJET
+#ifdef FASTJET_ENABLE_PLUGIN_TRACKJET
 #include "fastjet/TrackJetPlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_ATLASCONE
+#ifdef FASTJET_ENABLE_PLUGIN_ATLASCONE
 #include "fastjet/ATLASConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+#ifdef FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
 #include "fastjet/EECambridgePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_JADE
+#ifdef FASTJET_ENABLE_PLUGIN_JADE
 #include "fastjet/JadePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+#ifdef FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
 #include "fastjet/CMSIterativeConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_D0RUNICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
 #include "fastjet/D0RunIpre96ConePlugin.hh"
 #include "fastjet/D0RunIConePlugin.hh"
 #endif
@@ -306,7 +306,7 @@ int main (int argc, char ** argv) {
 
 // checking if one asks to run a plugin (don't delete this line)
   } else if (cmdline.present("-midpoint")) {
-#ifdef ENABLE_PLUGIN_CDFCONES
+#ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
     typedef fj::CDFMidPointPlugin MPPlug; // for brevity
     double cone_area_fraction = 1.0;
     int    max_pair_size = 2;
@@ -321,27 +321,27 @@ int main (int argc, char ** argv) {
                                       cone_area_fraction, max_pair_size,
                                       max_iterations, overlap_threshold,
                                       sm_scale));
-#else  // ENABLE_PLUGIN_CDFCONES
+#else  // FASTJET_ENABLE_PLUGIN_CDFCONES
     is_unavailable("midpoint");
-#endif // ENABLE_PLUGIN_CDFCONES
+#endif // FASTJET_ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-pxcone")) {
-#ifdef ENABLE_PLUGIN_PXCONE
+#ifdef FASTJET_ENABLE_PLUGIN_PXCONE
     double min_jet_energy = 5.0;
     jet_def = fj::JetDefinition( new fj::PxConePlugin (
                                       ktR, min_jet_energy,
                                       overlap_threshold));
-#else  // ENABLE_PLUGIN_PXCONE
+#else  // FASTJET_ENABLE_PLUGIN_PXCONE
     is_unavailable("pxcone");
-#endif // ENABLE_PLUGIN_PXCONE
+#endif // FASTJET_ENABLE_PLUGIN_PXCONE
   } else if (cmdline.present("-jetclu")) {
-#ifdef ENABLE_PLUGIN_CDFCONES
+#ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
     jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
                                       ktR, overlap_threshold, seed_threshold));
-#else  // ENABLE_PLUGIN_CDFCONES
+#else  // FASTJET_ENABLE_PLUGIN_CDFCONES
     is_unavailable("pxcone");
-#endif // ENABLE_PLUGIN_CDFCONES
+#endif // FASTJET_ENABLE_PLUGIN_CDFCONES
   } else if (cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
-#ifdef ENABLE_PLUGIN_SISCONE
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
     typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",0);
     if (cmdline.present("-siscone")) {
@@ -363,58 +363,58 @@ int main (int argc, char ** argv) {
       }
       jet_def = fj::JetDefinition(plugin);
     }
-#else  // ENABLE_PLUGIN_SISCONE
+#else  // FASTJET_ENABLE_PLUGIN_SISCONE
     is_unavailable("siscone");
-#endif // ENABLE_PLUGIN_SISCONE
+#endif // FASTJET_ENABLE_PLUGIN_SISCONE
   } else if (cmdline.present("-d0runiicone")) {
-#ifdef ENABLE_PLUGIN_D0RUNIICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNIICONE
     double min_jet_Et = 6.0; // was 8 GeV in earlier work
     jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR,min_jet_Et));
-#else  // ENABLE_PLUGIN_D0RUNIICONE
+#else  // FASTJET_ENABLE_PLUGIN_D0RUNIICONE
     is_unavailable("D0RunIICone");
-#endif // ENABLE_PLUGIN_D0RUNIICONE
+#endif // FASTJET_ENABLE_PLUGIN_D0RUNIICONE
   } else if (cmdline.present("-trackjet")) {
-#ifdef ENABLE_PLUGIN_TRACKJET
+#ifdef FASTJET_ENABLE_PLUGIN_TRACKJET
     jet_def = fj::JetDefinition(new fj::TrackJetPlugin(ktR));
-#else  // ENABLE_PLUGIN_TRACKJET
+#else  // FASTJET_ENABLE_PLUGIN_TRACKJET
     is_unavailable("TrackJet");
-#endif // ENABLE_PLUGIN_TRACKJET
+#endif // FASTJET_ENABLE_PLUGIN_TRACKJET
   } else if (cmdline.present("-atlascone")) {
-#ifdef ENABLE_PLUGIN_ATLASCONE
+#ifdef FASTJET_ENABLE_PLUGIN_ATLASCONE
     jet_def = fj::JetDefinition(new fj::ATLASConePlugin(ktR));
-#else  // ENABLE_PLUGIN_ATLASCONE
+#else  // FASTJET_ENABLE_PLUGIN_ATLASCONE
     is_unavailable("ATLASCone");
-#endif // ENABLE_PLUGIN_ATLASCONE
+#endif // FASTJET_ENABLE_PLUGIN_ATLASCONE
   } else if (cmdline.present("-eecambridge")) {
-#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+#ifdef FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
     jet_def = fj::JetDefinition(new fj::EECambridgePlugin(ycut));
-#else  // ENABLE_PLUGIN_EECAMBRIDGE
+#else  // FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
     is_unavailable("EECambridge");
-#endif // ENABLE_PLUGIN_EECAMBRIDGE
+#endif // FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
   } else if (cmdline.present("-jade")) {
-#ifdef ENABLE_PLUGIN_JADE
+#ifdef FASTJET_ENABLE_PLUGIN_JADE
     jet_def = fj::JetDefinition(new fj::JadePlugin());
-#else  // ENABLE_PLUGIN_JADE
+#else  // FASTJET_ENABLE_PLUGIN_JADE
     is_unavailable("Jade");
-#endif // ENABLE_PLUGIN_JADE
+#endif // FASTJET_ENABLE_PLUGIN_JADE
   } else if (cmdline.present("-cmsiterativecone")) {
-#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+#ifdef FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
     jet_def = fj::JetDefinition(new fj::CMSIterativeConePlugin(ktR,seed_threshold));
-#else  // ENABLE_PLUGIN_CMSITERATIVECONE
+#else  // FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
     is_unavailable("CMSIterativeCone");
-#endif // ENABLE_PLUGIN_CMSITERATIVECONE
+#endif // FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
   } else if (cmdline.present("-d0runipre96cone")) {
-#ifdef ENABLE_PLUGIN_D0RUNICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
     jet_def = fj::JetDefinition(new fj::D0RunIpre96ConePlugin(ktR, seed_threshold, overlap_threshold));
-#else  // ENABLE_PLUGIN_D0RUNICONE
+#else  // FASTJET_ENABLE_PLUGIN_D0RUNICONE
     is_unavailable("D0RunICone");
-#endif // ENABLE_PLUGIN_D0RUNICONE
+#endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
   } else if (cmdline.present("-d0runicone")) {
-#ifdef ENABLE_PLUGIN_D0RUNICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
     jet_def = fj::JetDefinition(new fj::D0RunIConePlugin(ktR, seed_threshold, overlap_threshold));
-#else  // ENABLE_PLUGIN_D0RUNICONE
+#else  // FASTJET_ENABLE_PLUGIN_D0RUNICONE
     is_unavailable("D0RunICone");
-#endif // ENABLE_PLUGIN_D0RUNICONE
+#endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]
@@ -563,7 +563,7 @@ int main (int argc, char ** argv) {
     }
 
 
-#ifdef ENABLE_PLUGIN_SISCONE
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
     // provide some complementary information for SISCone 
     if (show_cones) {
       const fj::SISConeExtras * extras = 
@@ -592,7 +592,7 @@ int main (int argc, char ** argv) {
 	
       }
     }
-#endif // ENABLE_PLUGIN_SISCONE
+#endif // FASTJET_ENABLE_PLUGIN_SISCONE
   } // try
   catch (fastjet::Error fjerr) {
     cout << "Caught fastjet error, exiting gracefully" << endl;

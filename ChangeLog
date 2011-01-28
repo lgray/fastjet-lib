@@ -1,5 +1,21 @@
 2011-01-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/config_win.h:
+	* src/genconfig.sh:
+	  reflected the change below to the other affected scripts
+	  and headers
+
+	* configure.ac:
+	* include/fastjet/version.hh:
+	* example/03-plugin.cc:
+	* example/fastjet_timing_plugins.cc:
+	* plugins/usage_examples/many_algs_example.cc:
+	* plugins/usage_examples/siscone_example.cc:
+	* plugins/usage_examples/cdfmidpoint_example.cc:
+	  added FASTJET_ to the macros defined in config(_auto).h
+	  so that one can safely include it without risking
+	  an interference with another package
+
 	* Doxyfile (STRIP_CODE_COMMENTS): set to NO
 	  Doxyfile-devel (STRIP_CODE_COMMENTS): set to NO
 	  + version number set to 3.0alpha2-devel

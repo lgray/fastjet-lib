@@ -42,35 +42,35 @@
 // get info on how fastjet was configured
 #include "fastjet/config.h"
 
-#ifdef ENABLE_PLUGIN_SISCONE
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
 #  include "fastjet/SISConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_CDFCONES
+#ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
 #  include "fastjet/CDFMidPointPlugin.hh"
 #  include "fastjet/CDFJetCluPlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_PXCONE
+#ifdef FASTJET_ENABLE_PLUGIN_PXCONE
 #  include "fastjet/PxConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_D0RUNIICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNIICONE
 #  include "fastjet/D0RunIIConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_TRACKJET
+#ifdef FASTJET_ENABLE_PLUGIN_TRACKJET
 #include "fastjet/TrackJetPlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_ATLASCONE
+#ifdef FASTJET_ENABLE_PLUGIN_ATLASCONE
 #include "fastjet/ATLASConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+#ifdef FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
 #include "fastjet/EECambridgePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_JADE
+#ifdef FASTJET_ENABLE_PLUGIN_JADE
 #include "fastjet/JadePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+#ifdef FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
 #include "fastjet/CMSIterativeConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_D0RUNICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
 #include "fastjet/D0RunIpre96ConePlugin.hh"
 #include "fastjet/D0RunIConePlugin.hh"
 #endif
@@ -100,18 +100,18 @@ int main(int argc, char** argv) {
 
   // set up a pxcone jet definition (if wanted -- requires f77, and you
   // should compile the pxcone plugin (not there by default))
-#ifdef ENABLE_PLUGIN_PXCONE
+#ifdef FASTJET_ENABLE_PLUGIN_PXCONE
   double min_jet_energy = 5.0;
   bool   E_scheme_jets = false;
   plugins.push_back( new fastjet::PxConePlugin (jet_radius, min_jet_energy, 
                                         overlap_threshold, E_scheme_jets));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_PXCONE
+#endif // FASTJET_ENABLE_PLUGIN_PXCONE
 
 
 
   // set up a CDF midpoint jet definition
-#ifdef ENABLE_PLUGIN_CDFCONES
+#ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
   double seed_threshold = 1.0;
   double cone_area_fraction = 1.0;
   int    max_pair_size = 2;
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
 #endif
 
   // set up a siscone jet definition
-#ifdef ENABLE_PLUGIN_SISCONE
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
   int npass = 0;               // do infinite number of passes
   double protojet_ptmin = 0.0; // use all protojets
   plugins.push_back(new fastjet::SISConePlugin (jet_radius, overlap_threshold, 
@@ -132,48 +132,48 @@ int main(int argc, char** argv) {
 #endif
 
   // set up a d0runiicone jet definition
-#ifdef ENABLE_PLUGIN_D0RUNIICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNIICONE
   double min_jet_Et = 6.0; // earlier D0 analyses used 8 GeV
   plugins.push_back(new fastjet::D0RunIIConePlugin (jet_radius, min_jet_Et, 
                                               overlap_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_D0RUNIICONE
+#endif // FASTJET_ENABLE_PLUGIN_D0RUNIICONE
 
   // set up a trackjet
-#ifdef ENABLE_PLUGIN_TRACKJET
+#ifdef FASTJET_ENABLE_PLUGIN_TRACKJET
   plugins.push_back(new fastjet::TrackJetPlugin(jet_radius));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_TRACKJET
+#endif // FASTJET_ENABLE_PLUGIN_TRACKJET
   // set up a atlascone
-#ifdef ENABLE_PLUGIN_ATLASCONE
+#ifdef FASTJET_ENABLE_PLUGIN_ATLASCONE
   plugins.push_back(new fastjet::ATLASConePlugin(jet_radius));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_ATLASCONE
+#endif // FASTJET_ENABLE_PLUGIN_ATLASCONE
   // set up a eecambridge
-#ifdef ENABLE_PLUGIN_EECAMBRIDGE
+#ifdef FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
   double ycut = 0.08;
   plugins.push_back(new fastjet::EECambridgePlugin(ycut));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_EECAMBRIDGE
+#endif // FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
   // set up a jade
-#ifdef ENABLE_PLUGIN_JADE
+#ifdef FASTJET_ENABLE_PLUGIN_JADE
   plugins.push_back(new fastjet::JadePlugin());
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_JADE
+#endif // FASTJET_ENABLE_PLUGIN_JADE
   // set up a cmsiterativecone
-#ifdef ENABLE_PLUGIN_CMSITERATIVECONE
+#ifdef FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
   double cms_seed_threshold = 1.0;
   plugins.push_back(new fastjet::CMSIterativeConePlugin(jet_radius, cms_seed_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_CMSITERATIVECONE
+#endif // FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
   // set up a d0runicone
-#ifdef ENABLE_PLUGIN_D0RUNICONE
+#ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
   double d0runi_seed_threshold = 8.0;
   plugins.push_back(new fastjet::D0RunIpre96ConePlugin(jet_radius, d0runi_seed_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
   plugins.push_back(new fastjet::D0RunIConePlugin(jet_radius, d0runi_seed_threshold));
   jet_defs.push_back(fastjet::JetDefinition(plugins.back()));
-#endif // ENABLE_PLUGIN_D0RUNICONE
+#endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
   // end of the plugins instantiation (don't modify this line)
 
   // set up kt and cam/aachen definitions

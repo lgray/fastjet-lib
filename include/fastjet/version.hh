@@ -36,7 +36,7 @@
 
 FASTJET_BEGIN_NAMESPACE
 
-const char* fastjet_version = PACKAGE_VERSION;
+const char* fastjet_version = FASTJET_PACKAGE_VERSION;
 
 FASTJET_END_NAMESPACE
 

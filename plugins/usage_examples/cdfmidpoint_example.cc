@@ -42,7 +42,7 @@
 #include "fastjet/config.h"
 
 // make sure we have what is needed
-#ifdef ENABLE_PLUGIN_CDFCONES
+#ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
 #  include "fastjet/CDFMidPointPlugin.hh"
 #else
 #  error "CDFMidPointPlugin not configured according to config.h"

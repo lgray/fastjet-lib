@@ -53,13 +53,20 @@
 #include <iostream> // needed for io
 #include <cstdio>   // needed for io
 
-// include the SISCone plugin header
+// include the SISCone plugin header if enabled
+#include "fastjet/config.h"
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
 #include "fastjet/SISConePlugin.hh"
+#else
+#warning "SISCone plugin not enabled. Skipping the example"
+#endif // FASTJET_ENABLE_PLUGIN_SISCONE
 
 
 using namespace std;
 
 int main (int argc, char ** argv) {
+
+#ifdef FASTJET_ENABLE_PLUGIN_SISCONE
 
   // read in input particles
   //----------------------------------------------------------
@@ -123,6 +130,8 @@ int main (int argc, char ** argv) {
 	   i, inclusive_jets[i].rap(), inclusive_jets[i].phi(),
 	   inclusive_jets[i].perp());
   }
+
+#endif
 
   return 0;
 
