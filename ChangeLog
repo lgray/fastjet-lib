@@ -1,5 +1,9 @@
 2011-01-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/ClusterSequenceWrapper.hh:
+	  remove the non_const_cs() method (it provided a way to cast
+	  constness away)
+
 	* include/fastjet/config_win.h:
 	* src/genconfig.sh:
 	  reflected the change below to the other affected scripts

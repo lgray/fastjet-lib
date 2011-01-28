@@ -53,7 +53,6 @@ public:
   ClusterSequenceWrapper(ClusterSequence *cs) : _cs(cs){};
 
   const ClusterSequence * cs() const { return _cs;}
-  ClusterSequence * non_const_cs() const { return _cs;}
   bool is_alive() const { return (_cs != NULL);}
 
   friend class ClusterSequence;
