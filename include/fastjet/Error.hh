@@ -46,10 +46,7 @@ class Error {
 public:
   // constructors
   Error() {}
-  Error(const std::string & message) {
-    _message = message; 
-    if (_print_errors) std::cerr << "fastjet::Error: "<<message << std::endl;
-  };
+  Error(const std::string & message);
 
   std::string message() const {return _message;};
 

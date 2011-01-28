@@ -1,5 +1,10 @@
 2011-01-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/Error.hh (Error):
+	* src/Error.cc (Error):
+	  when throwing a fastjet::Error, include a backtrace of the stack
+	  in the message
+
         * example/01-basic.cc:
         * example/02-jetdef.cc:
         * example/03-plugin.cc:

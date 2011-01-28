@@ -29,10 +29,37 @@
 //ENDHEADER
 
 #include "fastjet/Error.hh"
+#include <execinfo.h>
+#include <sstream>
+#include <malloc.h>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+using namespace std;
+
 bool Error::_print_errors = true;
+
+
+Error::Error(const std::string & message) {
+  _message = message; 
+  if (_print_errors){
+    void * array[10];
+    char ** messages;
+ 
+    int size = backtrace(array, 10);
+    messages = backtrace_symbols(array, size);
+      
+    ostringstream oss;
+    oss << "fastjet::Error:  "<< message << endl
+	<< "stack:" << endl;
+    for (int i = 1; i < size && messages != NULL; ++i){
+      oss << "  " << i << ": " << messages[i] << endl;
+    }
+
+    free(messages);
+    std::cerr << oss.str();
+  }
+}
 
 FASTJET_END_NAMESPACE
 
