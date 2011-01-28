@@ -1,6 +1,7 @@
 2011-01-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
-	* Doxyfile (REFERENCES_LINK_SOURCE): set to NO
+	* Doxyfile (STRIP_CODE_COMMENTS): set to NO
+	  Doxyfile-devel (STRIP_CODE_COMMENTS): set to NO
 	  + version number set to 3.0alpha2-devel
 
 2011-01-27  Gavin SALAM  <salam@ada.lpthe.jussieu.fr>
