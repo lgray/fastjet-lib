@@ -508,6 +508,14 @@ public:
   void transfer_from_sequence(ClusterSequence & from_seq, bool transfer_ownership=true);
 
 
+  /// retrieve a shared pointer to the wrapper to this ClusterSequence
+  ///
+  /// this may turn useful if you want to track when this
+  /// ClusterSequence goes out of scope
+  const SharedPtr<ClusterSequenceWrapper> & wrapper_to_this() const{
+    return _wrapper_to_this;
+  }
+
 protected:
   static JetAlgorithm _default_jet_algorithm;
   JetDefinition _jet_def;
