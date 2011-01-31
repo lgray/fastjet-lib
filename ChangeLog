@@ -1,3 +1,17 @@
+2011-01-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* m4/ax_prefix_config_h.m4:        *** ADDED ***
+	  apparently this is missing on some installations of autoconf
+	  just adding it to our own m4 dir seems to solve the problem
+
+	* configure.ac:
+	  made sure AC_CONFIG_HEADER outputs its (intermediate) header in
+	  include/fastjet in order to have the correct -I compilation flags
+
+	* Makefile.am:
+	  extended the target distclean to remove leftovers from
+	  AX_PERFIX_CONFIG_H
+
 2011-01-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/Error.hh (Error):

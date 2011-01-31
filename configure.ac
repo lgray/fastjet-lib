@@ -4,9 +4,13 @@ AM_INIT_AUTOMAKE(tar-ustar)
 
 dnl (un_comment the following lines if you want to use autoheader
 dnl and also (un_comment the call to autoheader in autogen.sh
-AM_CONFIG_HEADER(config.h:config.h.in)
-dnl AX_PREFIX_CONFIG_H(include/fastjet/config_auto.h,FASTJET,config.h.in)
-AX_PREFIX_CONFIG_H(include/fastjet/config_auto.h,FASTJET,config.h)
+dnl 
+dnl Notes:
+dnl  - the first macro needs to place the files in the correct 
+dnl    dir in order to have the correct -I options for the remote build
+dnl  - see Makefile.am for distcleaning AX_PREFIX_CONFIG_H leftovers
+AM_CONFIG_HEADER(include/fastjet/config_raw.h:config.h.in)
+AX_PREFIX_CONFIG_H(include/fastjet/config_auto.h,FASTJET,include/fastjet/config_raw.h)
 
 dnl check autoconf version
 AC_PREREQ(2.57)
