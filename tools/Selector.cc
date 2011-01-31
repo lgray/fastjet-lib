@@ -813,6 +813,9 @@ public:
   /// For each jet that does not pass the cuts, this routine sets the 
   /// pointer to 0. 
   virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // nothing to do if the size is too small
+    if (jets.size() < _n) return;
+
     // do we want to first chech if things are already ordered before
     // going through the ordering process?
 
