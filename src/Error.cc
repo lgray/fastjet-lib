@@ -29,9 +29,14 @@
 //ENDHEADER
 
 #include "fastjet/Error.hh"
-#include <execinfo.h>
+#include "fastjet/config.h"
 #include <sstream>
+
+// printing the stack would need execinfo
+#ifdef FASTJET_HAVE_EXECINFO_H
+#include <execinfo.h>
 #include <malloc.h>
+#endif
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -43,18 +48,22 @@ bool Error::_print_errors = true;
 Error::Error(const std::string & message) {
   _message = message; 
   if (_print_errors){
+    ostringstream oss;
+    oss << "fastjet::Error:  "<< message << endl;
+
+    // only print the stack if execinfo is available
+#ifdef FASTJET_HAVE_EXECINFO_H
     void * array[10];
     char ** messages;
  
     int size = backtrace(array, 10);
     messages = backtrace_symbols(array, size);
       
-    ostringstream oss;
-    oss << "fastjet::Error:  "<< message << endl
-	<< "stack:" << endl;
+    oss << "stack:" << endl;
     for (int i = 1; i < size && messages != NULL; ++i){
       oss << "  #" << i << ": " << messages[i] << endl;
     }
+#endif
 
     free(messages);
     std::cerr << oss.str();

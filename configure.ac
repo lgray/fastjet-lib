@@ -107,6 +107,11 @@ dnl libs to be disabled by default
 dnl AM_DISABLE_SHARED
 HAS_SHARED=${enable_shared}
 
+dnl-------------------------------------------------------------------
+dnl check headers
+dnl-------------------------------------------------------------------
+dnl execinfo.h (use in Error.cc to have the backtrace)
+AC_CHECK_HEADERS(execinfo.h)
 
 dnl-------------------------------------------------------------------
 dnl check libraries
