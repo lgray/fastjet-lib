@@ -1,5 +1,9 @@
 2011-01-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/ClusterSequence.hh (ClusterSequence):
+	  added a method to extraced the associated CSW (rename?)
+
+
 	* m4/ax_prefix_config_h.m4:        *** ADDED ***
 	  apparently this is missing on some installations of autoconf
 	  just adding it to our own m4 dir seems to solve the problem
