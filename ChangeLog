@@ -1,5 +1,9 @@
 2011-01-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* src/Error.cc (Error):
+	  prefixed the index in the stack with a hash
+
+
 	* include/fastjet/ClusterSequence.hh (ClusterSequence):
 	  added a method to extraced the associated CSW (rename?)
 

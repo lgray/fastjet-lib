@@ -53,7 +53,7 @@ Error::Error(const std::string & message) {
     oss << "fastjet::Error:  "<< message << endl
 	<< "stack:" << endl;
     for (int i = 1; i < size && messages != NULL; ++i){
-      oss << "  " << i << ": " << messages[i] << endl;
+      oss << "  #" << i << ": " << messages[i] << endl;
     }
 
     free(messages);
