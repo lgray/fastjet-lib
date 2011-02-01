@@ -1,3 +1,8 @@
+2011-02-01  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* plugins/usage_examples/pxcone_example.cc:
+	  prefixed ANABLE_PLUGIN_PXCONE with FASTJET_
+
 2011-01-31  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* tools/Selector.cc (SW_NHardest):
