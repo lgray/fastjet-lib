@@ -35,7 +35,7 @@
 // printing the stack would need execinfo
 #ifdef FASTJET_HAVE_EXECINFO_H
 #include <execinfo.h>
-#include <malloc.h>
+#include <cstdlib>
 #endif
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
