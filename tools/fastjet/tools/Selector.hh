@@ -171,6 +171,14 @@ public:
   /// returns a vector with the jets that pass the selection
   std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & jets) const;
 
+  /// For each jet that does not pass the cuts, this routine sets the 
+  /// pointer to 0. 
+  ///
+  /// It does not assume that the PseudoJet* passed as argumetn are not NULL
+  virtual void nullify_non_selected(std::vector<const PseudoJet *> & jets) const {
+    validated_worker()->terminator(jets);
+  }
+
   /// returns the rapidity range for which it may return "true"
   void get_rapidity_extent(double &rapmin, double &rapmax) const {
     return validated_worker()->get_rapidity_extent(rapmin, rapmax);

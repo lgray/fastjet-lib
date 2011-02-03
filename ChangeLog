@@ -1,5 +1,15 @@
 2011-02-03  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* tools/fastjet/tools/Selector.hh:
+	  added a Selector::nullify_non_selected() that setes to 0 the
+	  jets that do not pass the selection (equivalent to
+	  SelectorWorker::terminator())
+
+	* src/ClusterSequence.cc (_initialise_and_run):
+	  . for the Best strategy, moved the small N test first
+	  . similarily, inverted the series of tests redirecting to the
+	    processing method for the various strategies
+
 	* include/fastjet/Error.hh (Error):
 	  . added a 'set_backtrace(bool)' to control whether the backtrace
 	    is printed together with the error message or not

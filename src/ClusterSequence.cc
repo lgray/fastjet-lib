@@ -133,23 +133,19 @@ void ClusterSequence::_initialise_and_run (
   // core] with 2MB of cache).
   if (_strategy == Best) {
     int N = _jets.size();
-    if (N > 6200/pow(_Rparam,2.0) 
-	&& jet_def.jet_algorithm() == cambridge_algorithm) {
-      _strategy = NlnNCam;}
-    else
-#ifndef DROP_CGAL
-      if ((N > 16000/pow(_Rparam,1.15) && jet_def.jet_algorithm() != antikt_algorithm)
-        || N > 35000/pow(_Rparam,1.15)) {
-      _strategy = NlnN; }   
-    else                    
-#endif  // DROP_CGAL
-      if (N > 450) {
-      _strategy = N2MinHeapTiled;
-    }
-    else if (N > 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
-      _strategy = N2Tiled;
-    } else {
+    if (N <= 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
       _strategy = N2Plain;
+    } else if (N > 6200/pow(_Rparam,2.0) && jet_def.jet_algorithm() == cambridge_algorithm) {
+      _strategy = NlnNCam;
+#ifndef DROP_CGAL
+    } else if ((N > 16000/pow(_Rparam,1.15) && jet_def.jet_algorithm() != antikt_algorithm)
+	       || N > 35000/pow(_Rparam,1.15)) {
+      _strategy = NlnN;
+#endif  // DROP_CGAL
+    } else if (N > 450) {
+      _strategy = N2Tiled;
+    } else {                   
+      _strategy = N2MinHeapTiled;
     }
   }
 
@@ -181,32 +177,35 @@ void ClusterSequence::_initialise_and_run (
 
 
   // run the code containing the selected strategy
-  if (_strategy == NlnN || _strategy == NlnN3pi 
-      || _strategy == NlnN4pi ) {
+  // 
+  // We order the strategies stqrting from the ones used by the Best
+  // strategy in the order of increasing N, then the remaining ones
+  // again in the order of increasing N.
+  if (_strategy == N2Plain) {
+    // BriefJet provides standard long.invariant kt alg.
+    this->_simple_N2_cluster_BriefJet();
+  } else if (_strategy == N2Tiled) {
+    this->_faster_tiled_N2_cluster();
+  } else if (_strategy == N2MinHeapTiled) {
+    this->_minheap_faster_tiled_N2_cluster();
+  } else if (_strategy == NlnN) {
+    this->_delaunay_cluster();
+  } else if (_strategy == NlnNCam) {
+    this->_CP2DChan_cluster_2piMultD();
+  } else if (_strategy == NlnN3pi || _strategy == NlnN4pi ) {
     this->_delaunay_cluster();
   } else if (_strategy ==  N3Dumb ) {
     this->_really_dumb_cluster();
-  } else if (_strategy == N2Tiled) {
-    this->_faster_tiled_N2_cluster();
   } else if (_strategy == N2PoorTiled) {
     this->_tiled_N2_cluster();
-  } else if (_strategy == N2Plain) {
-    // BriefJet provides standard long.invariant kt alg.
-    //this->_simple_N2_cluster<BriefJet>();
-    this->_simple_N2_cluster_BriefJet();
-  } else if (_strategy == N2MinHeapTiled) {
-    this->_minheap_faster_tiled_N2_cluster();
   } else if (_strategy == NlnNCam4pi) {
     this->_CP2DChan_cluster();
   } else if (_strategy == NlnNCam2pi2R) {
     this->_CP2DChan_cluster_2pi2R();
-  } else if (_strategy == NlnNCam) {
-    this->_CP2DChan_cluster_2piMultD();
   } else {
     ostringstream err;
     err << "Unrecognised value for strategy: "<<_strategy;
     throw Error(err.str());
-    //assert(false);
   }
 }
 
