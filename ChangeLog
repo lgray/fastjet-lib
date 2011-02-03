@@ -1,3 +1,15 @@
+2011-02-03  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/Error.hh (Error):
+	  . added a 'set_backtrace(bool)' to control whether the backtrace
+	    is printed together with the error message or not
+	  . added a bunch of Doxygen comments
+
+2011-02-02  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/Error.cc:
+	  used the correct header (cstdlib) for the access to free()
+
 2011-02-01  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* plugins/usage_examples/pxcone_example.cc:

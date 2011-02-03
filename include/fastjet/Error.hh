@@ -44,20 +44,34 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// base class corresponding to errors that will be thrown by fastjet
 class Error {
 public:
-  // constructors
+  /// default constructors
   Error() {}
+
+  /// ctor from an error message
+  ///   \param message to be printed
+  /// Note: by default, in addition to the error message, the
+  /// backtrace will be displayed (showing the last few calls before
+  /// the error)
   Error(const std::string & message);
 
-  std::string message() const {return _message;};
-
-  static void set_print_errors(bool print_errors) {
-    _print_errors = print_errors;};
-
+  /// virtual dummy dtor
   virtual ~Error() {}
 
+  /// the error ,essage
+  std::string message() const {return _message;}
+
+  /// controls whether the error message (and the backtrace) is
+  /// printed out or not
+  static void set_print_errors(bool print_errors) {_print_errors = print_errors;}
+
+  /// controls whether the error message (and the backtrace) is
+  /// printed out or not
+  static void set_backtrace(bool enabled) {_print_backtrace = enabled;}
+
 private:
-  std::string _message;
-  static bool _print_errors;
+  std::string _message;         ///< error message
+  static bool _print_errors;    ///< do we print anything?
+  static bool _print_backtrace; ///< do we show the backtrace?
 };
 
 

@@ -43,6 +43,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 bool Error::_print_errors = true;
+bool Error::_print_backtrace = true;
 
 
 Error::Error(const std::string & message) {
@@ -51,21 +52,23 @@ Error::Error(const std::string & message) {
     ostringstream oss;
     oss << "fastjet::Error:  "<< message << endl;
 
-    // only print the stack if execinfo is available
+    // only print the stack if execinfo is available and stack enabled
 #ifdef FASTJET_HAVE_EXECINFO_H
-    void * array[10];
-    char ** messages;
+    if (_print_backtrace){
+      void * array[10];
+      char ** messages;
  
-    int size = backtrace(array, 10);
-    messages = backtrace_symbols(array, size);
+      int size = backtrace(array, 10);
+      messages = backtrace_symbols(array, size);
       
-    oss << "stack:" << endl;
-    for (int i = 1; i < size && messages != NULL; ++i){
-      oss << "  #" << i << ": " << messages[i] << endl;
+      oss << "stack:" << endl;
+      for (int i = 1; i < size && messages != NULL; ++i){
+	oss << "  #" << i << ": " << messages[i] << endl;
+      }
+      free(messages);
     }
 #endif
 
-    free(messages);
     std::cerr << oss.str();
   }
 }
