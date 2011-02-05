@@ -1,3 +1,8 @@
+2011-02-05  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
+	  fixed issue created by reordering of tests for Best strategy.
+
 2011-02-03  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/Selector.hh:

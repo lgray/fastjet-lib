@@ -142,7 +142,7 @@ void ClusterSequence::_initialise_and_run (
 	       || N > 35000/pow(_Rparam,1.15)) {
       _strategy = NlnN;
 #endif  // DROP_CGAL
-    } else if (N > 450) {
+    } else if (N <= 450) {
       _strategy = N2Tiled;
     } else {                   
       _strategy = N2MinHeapTiled;
