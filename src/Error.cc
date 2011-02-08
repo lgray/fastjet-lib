@@ -45,7 +45,6 @@ using namespace std;
 bool Error::_print_errors = true;
 bool Error::_print_backtrace = true;
 
-
 Error::Error(const std::string & message) {
   _message = message; 
   if (_print_errors){

@@ -31,6 +31,7 @@
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceInterface.hh"
 #include "fastjet/version.hh" // stores the current version number
 #include<iostream>
 #include<sstream>
@@ -50,12 +51,17 @@ JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
 //
 
 
-// destructor that guarantees proper bookkeeping for the CS Wrapper
+// destructor that guarantees proper bookkeeping for the CS Interface
 ClusterSequence::~ClusterSequence () {
   // set the pointer in the wrapper to this object to NULL to say that
   // we're going out of scope
-  if (_wrapper_to_this()) _wrapper_to_this->_cs = NULL;
-
+  if (_interface_to_this()){
+    ClusterSequenceInterface* csi = dynamic_cast<ClusterSequenceInterface*>(_interface_to_this()); 
+    ///\todo throw an error? 
+    /// normally the csi is purely internal so it really should not be NULL i.e assert should be OK
+    assert(csi != NULL);
+    csi->set_associated_cs(NULL);
+  }
 }
 
 //----------------------------------------------------------------------
@@ -272,7 +278,7 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def,
   _plugin_activated = false;
 
   // initialised the wrapper to the current CS
-  _wrapper_to_this.reset(new ClusterSequenceWrapper(this));
+  _interface_to_this.reset(new ClusterSequenceInterface(this));
 }
 
 
@@ -304,7 +310,7 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
-    _jets[i].set_associated_csw(_wrapper_to_this);
+    _jets[i].set_associated_csi(_interface_to_this);
 
     // determine the total energy in the event
     _Qtot += _jets[i].E();
@@ -398,10 +404,10 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq, bool tr
   // transfer of ownership
   if (transfer_ownership){
     // make sure we have an initialised wrapper. If not, initialise it
-    if (! _wrapper_to_this()) _wrapper_to_this.reset(new ClusterSequenceWrapper(this));
+    if (! _interface_to_this()) _interface_to_this.reset(new ClusterSequenceInterface(this));
   
     for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
-      jit->set_associated_csw(_wrapper_to_this);
+      jit->set_associated_csi(_interface_to_this);
   }
 }
 
@@ -418,8 +424,7 @@ void ClusterSequence::plugin_record_ij_recombination(
   int tmp_index = _jets[newjet_k].cluster_hist_index();
   _jets[newjet_k] = newjet;
   _jets[newjet_k].set_cluster_hist_index(tmp_index);
-  _jets[newjet_k].set_associated_csw(_wrapper_to_this);
-
+  _jets[newjet_k].set_associated_csi(_interface_to_this);
 }
 
 
@@ -1003,7 +1008,7 @@ void ClusterSequence::_add_step_to_history (
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
     _jets[jetp_index].set_cluster_hist_index(local_step);
-    _jets[jetp_index].set_associated_csw(_wrapper_to_this);
+    _jets[jetp_index].set_associated_csi(_interface_to_this);
   }
 
   if (_writeout_combinations) {

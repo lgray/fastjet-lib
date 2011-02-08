@@ -42,7 +42,7 @@
 #include "fastjet/internal/DerivedPseudoJetHelper.hh"
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/Error.hh"
-#include "fastjet/ClusterSequenceWrapper.hh"
+#include "fastjet/ClusterSequenceInterfaceBase.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -329,6 +329,28 @@ class PseudoJet {
   const ClusterSequence* associated_cluster_sequence() const;
   //\}
 
+  /// set the associated csw
+  void set_associated_csi(const SharedPtr<ClusterSequenceInterfaceBase> &csi){
+    _associated_csi = csi;
+  }
+
+  /// return a copy of the ClusterSequenceInterface
+  const SharedPtr<ClusterSequenceInterfaceBase> & associated_csi() const {
+    return _associated_csi;
+  }
+  
+  /// if the jet has a valid associated cluster sequence then return a
+  /// pointer to it; otherwise throw an error
+  const ClusterSequence * validated_cs() const;
+
+  /// if the jet has a valid associated cluster sequence interface
+  /// then return a pointer to it; otherwise throw an error
+  const SharedPtr<ClusterSequenceInterfaceBase> validated_csi() const;
+
+  /// if the jet has valid area information then return a pointer to
+  /// the associated ClusterSequenceAreaBase object; otherwise throw an error
+  const ClusterSequenceAreaBase * validated_csab() const;
+
   //-------------------------------------------------------------
   /// @name Methods for access to information about jet structure
   ///
@@ -475,35 +497,20 @@ class PseudoJet {
   inline void set_cluster_sequence_history_index(const int index) {
     set_cluster_hist_index(index);}
 
-  /// set the associated csw
-  void set_associated_csw(const SharedPtr<ClusterSequenceWrapper> &csw){
-    _associated_csw = csw;
-  }
-
-  /// return a copy of the ClusterSequenceWrapper
-  const SharedPtr<ClusterSequenceWrapper> & associated_csw() const {
-    return _associated_csw;
-  }
-  
-  /// if the jet has a valid associated cluster sequence then return a
-  /// pointer to it; otherwise throw an error
-  const ClusterSequence * validated_cs() const;
-
-  /// if the jet has valid area information then return a pointer to
-  /// the associated ClusterSequenceAreaBase object; otherwise throw an error
-  const ClusterSequenceAreaBase * validated_csab() const;
-
   //\} ---- end of internal use functions ---------------------------
-  
+
+ protected:  
+
+  SharedPtr<ClusterSequenceInterfaceBase> _associated_csi;
+  SharedPtr<ExtraInfo> _extra_info;
+
+
  private: 
   // NB: following order must be kept for things to behave sensibly...
   double _px,_py,_pz,_E;
   mutable double _phi, _rap;
   double _kt2; 
   int    _cluster_hist_index, _user_index;
-
-  SharedPtr<ClusterSequenceWrapper> _associated_csw;
-  SharedPtr<ExtraInfo> _extra_info;
 
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
@@ -611,7 +618,7 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 inline void PseudoJet::_reset_indices() { 
   set_cluster_hist_index(-1);
   set_user_index(-1);
-  _associated_csw.reset();
+  _associated_csi.reset();
 }
 
 //----------------------------------------------------------------------

@@ -1,5 +1,141 @@
 2011-02-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* merged the fastjet-2.5.X-clusterinfo-devel branch into the trunk
+
+=========================================================================
+              MERGING the devel-clusterinfo branch
+    Here starts the ChangeLog for the modifications in the branch
+=========================================================================
+
+2011-02-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* merged the (remaining) changes from the trunk into the branch
+	  created at revision 1804. It should now be ready for a
+	  reinsertion in the trunk.
+
+2011-02-02  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc:
+	* include/fastjet/ClusterSequenceInterface.hh (ClusterSequenceInterfaceBase):
+	  . removed the friendiness w CS: set_associated_cs can
+	    be used instead
+	  . added a missing const in the ctor
+
+2011-02-01  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* plugins/usage_examples/pxcone_example.cc:
+	  prefixed ENABLE_PLUGIN_PXCONE with FASTJET_
+
+2011-01-31  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* tools/Selector.cc (SW_NHardest):
+	  first check if the size of the vector is larger than the cut.
+
+
+2011-01-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/Error.cc (Error):
+	* configure.ac:
+	  checked for the presence of execinfo.h
+	  added a corresponding #ifdef in Error.cc
+
+	* src/Error.cc (Error):
+	  prefixed the index in the stack with a hash
+
+	* include/fastjet/ClusterSequence.hh (ClusterSequence):
+	  added a method to extraced the associated CSW (rename?)
+
+
+	* m4/ax_prefix_config_h.m4:        *** ADDED ***
+	  apparently this is missing on some installations of autoconf
+	  just adding it to our own m4 dir seems to solve the problem
+
+	* configure.ac:
+	  made sure AC_CONFIG_HEADER outputs its (intermediate) header in
+	  include/fastjet in order to have the correct -I compilation flags
+
+	* Makefile.am:
+	  extended the target distclean to remove leftovers from
+	  AX_PERFIX_CONFIG_H
+
+
+2011-01-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc (plugin_record_ij_recombination):
+	  replaced wrapper- > interface (comes from a bugfix in the branch
+	  that needed an update to the new nomenclature)
+
+	* src/PseudoJet.cc (has_area):
+	  replaced NULL by 0 to avoid a warning.
+
+2010-11-27  Gregory Soyez  <soyez@cern.ch>
+
+        * src/Makefile.am:
+        * include/fastjet/Makefile.am:
+	  included the previously added files in the build system
+
+	* include/fastjet/ClusterSequenceInterfaceBase.hh: *** ADDED ***
+	* include/fastjet/ClusterSequenceInterface.hh:	   *** ADDED ***
+	* src/ClusterSequenceInterfaceBase.cc:		   *** ADDED ***
+	* src/ClusterSequenceInterface.cc:                 *** ADDED ***
+	* src/PseudoJet.cc:
+	* src/ClusterSequence.cc:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/ClusterSequence.hh:
+	* include/fastjet/ClusterSequenceWrapper.hh:
+	* include/fastjet/ClusterSequenceInfo.hh:        *** REMOVED ***
+	* src/ClusterSequenceInfo.hh:                    *** REMOVED ***
+
+	  Merged the ClusterSequenceWrapper+ClusterSequenceInfo in a
+	  single ClusterSequenceInterface. at the same time, we've added a
+	  base calss ClusterSequenceInterfaceBase that allows to define
+	  other bahaviours than the default one in
+	  ClusterSequenceInterface.
+
+
+2010-11-04  Gregory Soyez  <soyez@cern.ch>
+
+	* include/fastjet/ClusterSequenceInfo.hh:
+	  added a series of missing 'virtual' declarations
+
+2010-11-03  Gregory Soyez  <soyez@cern.ch>
+
+        * src/Makefile.am:
+        * include/fastjet/Makefile.am:
+	  included the previously added files in the build system
+
+	* include/fastjet/ClusterSequenceInfo.hh: *** ADDED ***
+	* src/ClusterSequenceInfo.cc:             *** ADDED ***
+	* src/ClusterSequenceAreaBase.cc:
+	* src/PseudoJet.cc:
+	* src/ClusterSequence.cc:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/ClusterSequence.hh:
+	* include/fastjet/ClusterSequenceWrapper.hh:
+	  added ClusterSequenceInfo as an intermediate layer between the
+	  ClusterSequenceWrapper and the classes that use it
+	  (i.e. ClusterSequence and PseudoJet).
+
+	  By default, a single ClusterSequenceInfo object is shared
+	  between all the objects associated with the same
+	  ClusterSequence. This can thus be thought as a wrapper of
+	  ClusterSequenceWrapper.
+
+	  The underlying idea behind this apparently redundant structure
+	  is that if one wants to add info to a PseudoJet (e.g. jet
+	  substructure or filtering info), one can derive a class from
+	  ClusterSequenceInfo, add the extra information to it and
+	  associate it to the analysed jet. That way, each jet could carry
+	  its own extra information about its own substructure while
+	  keeping a shared ClusterSequenceWrapper.
+
+=========================================================================
+              MERGING the devel-clusterinfo branch
+    Here stops the ChangeLog for the modifications in the branch
+=========================================================================
+
+2011-02-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
 	* src/ClusterSequence_CP2DChan.cc (_CP2DChan_limited_cluster):
 	  for R>pi, some particles were mirrored outside the [-pi:3pi]
 	  range causing an assertion to be failed in ClosestPair2D.

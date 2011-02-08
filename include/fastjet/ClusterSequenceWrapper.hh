@@ -33,6 +33,7 @@
 #define __FASTJET_CLUSTER_SEQUENCE_WRAPPER_HH__
 
 #include "fastjet/internal/base.hh"
+#include<iostream>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
