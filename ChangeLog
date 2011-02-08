@@ -1,3 +1,15 @@
+2011-02-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/ClusterSequence_CP2DChan.cc (_CP2DChan_limited_cluster):
+	  for R>pi, some particles were mirrored outside the [-pi:3pi]
+	  range causing an assertion to be failed in ClosestPair2D.
+	  We fixed this by limiting the "mirroring distance" to pi
+	  i.e. practically copying all the particles: adding 2pi to the
+	  particles with phi<pi and subtracting 2pi to those with phi>pi
+	  (note that the particles at phi==pi are not mirrored). For
+	  additional security, we extended the range [-pi:3pi] to
+	  [-3.15:9.45].
+
 2011-02-05  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 

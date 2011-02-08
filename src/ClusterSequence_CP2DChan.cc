@@ -74,6 +74,14 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
   vector<int>          jetIDs(2*n);   // jet ID for a given coord ID
   vector<Coord2D>      coords(2*n);   // our coordinates (and copies)
 
+  // particles within a distance Dlim of the phi edges (phi<Dlim ||
+  // phi>2pi-Dli;) will be mirrored. For Dlim>pi, this could lead to
+  // particles copies outside the fixed range in phi which is
+  // [-pi:3pi] (see make_mirror above). Since in that case all
+  // particles get copied anywaym we can just copy particles up to a
+  // distance "pi" from the edges
+  double Dlim4mirror = min(Dlim,pi);
+
   // start things off...
   double minrap = numeric_limits<double>::max();
   double maxrap = -minrap;
@@ -97,7 +105,7 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
     maxrap = max(coords[coord_index].x,maxrap);
 
     Coord2D mirror_point(coords[coord_index]);
-    if (make_mirror(mirror_point, Dlim)) {
+    if (make_mirror(mirror_point, Dlim4mirror)) {
       coordIDs[jet_i].mirror = ++coord_index;
       coords[coord_index] = mirror_point;
       jetIDs[coord_index] = jet_i;
@@ -110,8 +118,8 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
   coords.resize(coord_index+1);
 
   // establish limits (with some leeway on rapidity)
-  Coord2D left_edge(minrap-1.0, -pi);
-  Coord2D right_edge(maxrap+1.0, 3*pi);
+  Coord2D left_edge(minrap-1.0, -3.15); // a security margin below  -pi
+  Coord2D right_edge(maxrap+1.0, 9.45); // a security margin above 3*pi
 
   //cerr << "minrap, maxrap = " << minrap << " " << maxrap << endl;
 
