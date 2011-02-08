@@ -1,3 +1,9 @@
+2011-02-08  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
+
+	* src/ClusterSequence_CP2DChan.cc (_CP2DChan_limited_cluster):
+	  same bugfix (make_mirror(... Dlim4mirror) as earlier today (I
+	  had forgotten one)
+
 2011-02-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* merged the fastjet-2.5.X-clusterinfo-devel branch into the trunk

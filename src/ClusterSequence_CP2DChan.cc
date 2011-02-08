@@ -170,7 +170,7 @@ void ClusterSequence::_CP2DChan_limited_cluster (double Dlim) {
     Coord2D new_point(_jets[newjet_k].rap(),_jets[newjet_k].phi_02pi());
     new_points.resize(0);
     new_points.push_back(new_point);
-    if (make_mirror(new_point, Dlim)) new_points.push_back(new_point);
+    if (make_mirror(new_point, Dlim4mirror)) new_points.push_back(new_point);  //< same warning as before concerning the mirroring
     
     // carry out actions on search tree
     cp.replace_many(cIDs_to_remove, new_points, new_cIDs);
