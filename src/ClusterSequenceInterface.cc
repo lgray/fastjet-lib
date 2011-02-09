@@ -31,7 +31,6 @@
 #include "fastjet/ClusterSequenceInterface.hh"
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequenceWrapper.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceAreaBase.hh"
 #include <iostream>

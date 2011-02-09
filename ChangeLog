@@ -1,3 +1,10 @@
+2011-02-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequenceWrapper.hh: *** REMOVED ***
+	* src/ClusterSequenceInterface.cc:
+	  Fixed the removal of ClusterSequenceWrapper (that apparently
+	  went wrong during the branch merging.)
+
 2011-02-08  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
 	* src/ClusterSequence_CP2DChan.cc (_CP2DChan_limited_cluster):
