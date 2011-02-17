@@ -315,7 +315,7 @@ class PseudoJet {
   /// @name Description
   ///
   /// Since a PseudoJet can have an interface that contains a variety
-  /// of information, we provide a description that allows to check
+  /// of information, we provide a description that allows one to check
   /// exactly what kind of PseudoJet we are dealing with
   //
   //\{
