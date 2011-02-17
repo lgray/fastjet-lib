@@ -74,6 +74,9 @@ public:
   /// default (virtual) dtor
   virtual ~ClusterSequenceInterface(){};
 
+  /// description
+  virtual std::string description(){ return "PseudoJet with an associated ClusterSequence"; }
+
   //-------------------------------------------------------------
   /// @name Direct access to the associated ClusterSequence object.
   ///

@@ -311,6 +311,20 @@ class PseudoJet {
 
   // \} --- end of extra info functions ---------------------------------
 
+  //----------------------------------------------------------------------
+  /// @name Description
+  ///
+  /// Since a PseudoJet can have an interface that contains a variety
+  /// of information, we provide a description that allows to check
+  /// exactly what kind of PseudoJet we are dealing with
+  //
+  //\{
+
+  /// return a string describing what kind of PseudoJet we are dealing with 
+  std::string description() const;
+
+  //\} ----- end of description functions ---------------------------------
+
   //-------------------------------------------------------------
   /// @name Access to the associated ClusterSequence object.
   ///

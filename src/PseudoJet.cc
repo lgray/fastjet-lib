@@ -329,6 +329,17 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 }
 
 
+string PseudoJet::description() const{
+  // the "default" case of a PJ which does not belong to any cluster sequence
+  if (!_associated_csi())
+    return "standard PseudoJet (with no associated Clustering information)";
+  
+  // for all the other cases, the descition comes from the interface
+  return _associated_csi()->description();
+}
+
+
+
 //----------------------------------------------------------------------
 //
 // The following methods access the associated cluster sequence (if any)

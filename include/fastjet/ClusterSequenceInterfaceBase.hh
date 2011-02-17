@@ -35,6 +35,7 @@
 #include "fastjet/internal/base.hh"
 
 #include <vector>
+#include <string>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -64,6 +65,9 @@ public:
 
   /// default (virtual) dtor
   virtual ~ClusterSequenceInterfaceBase(){};
+
+  /// description
+  virtual std::string description(){ return "PseudoJet with an unknown interface"; }
 
   //-------------------------------------------------------------
   /// @name Direct access to the associated ClusterSequence object.
