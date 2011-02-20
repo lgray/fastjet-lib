@@ -163,7 +163,11 @@ class ClusterSequence {
   std::vector<PseudoJet> exclusive_jets (const double & dcut) const;
 
   /// return a vector of all jets when the event is clustered (in the
-  /// exclusive sense) to exactly njets.
+  /// exclusive sense) to exactly njets. 
+  ///
+  /// If there are fewer than njets particles in the ClusterSequence
+  /// then FastJet crashes since it is not able to return njets
+  /// exclusive jets.
   std::vector<PseudoJet> exclusive_jets (const int & njets) const;
 
   /// return the dmin corresponding to the recombination that went from
@@ -216,17 +220,27 @@ class ClusterSequence {
   /// jet down to n subjets (or all constituents if there are fewer
   /// than n).
   ///
-  /// requires n ln n time
+  /// This requires n ln n time
+  ///
+  /// If the jet contains fewer than nsub particles (in which case it
+  /// is not possible to return nsub subjets) then the vector of
+  /// subjets that is returned is simply the list of particles (of
+  /// size < nsub). Note that this behaviour differs from that of
+  /// exclusive_jets().
   std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
                                             int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.
+  ///
+  /// Returns 0 if there were nsub or fewer constituents in the jet.
   double exclusive_subdmerge(const PseudoJet & jet, int nsub) const;
 
   /// return the maximum dij that occurred in the whole event at the
   /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
   /// this jet.
+  ///
+  /// Returns 0 if there were nsub or fewer constituents in the jet.
   double exclusive_subdmerge_max(const PseudoJet & jet, int nsub) const;
 
   //std::vector<PseudoJet> exclusive_jets (const PseudoJet & jet, 
