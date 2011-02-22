@@ -201,6 +201,13 @@ double ClusterSequenceInterfaceBase::exclusive_subdmerge_max(const PseudoJet &re
 }
 
 
+// retrieve the pieces building the jet. 
+// By default, a jet is made of a single piece: itself
+//------------------------------------------------------------------
+std::vector<PseudoJet> ClusterSequenceInterfaceBase::pieces(const PseudoJet &reference) const{
+  return vector<PseudoJet>(1, reference);
+}
+
 // the following ones require a computation of the area in the
 // parent ClusterSequence (See ClusterSequenceAreaBase for details)
 //------------------------------------------------------------------

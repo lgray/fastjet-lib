@@ -1,3 +1,20 @@
+2011-02-22  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh:
+	  include/fastjet/ClusterSequenceInterface.hh:
+	  include/fastjet/ClusterSequenceInterfaceBase.hh:
+	  src/PseudoJet.cc:
+	  src/ClusterSequenceInterfaceBase.cc:
+	  added a few extra methods:
+	   . has_constituents() that tells if the interface
+	     supports constituents
+	   . has_exclusive_subjets() that tells if the interface
+	     supports constituents
+	   . pieces() that returns the pieces of a jet (by default
+	     both "input particles" and clustering products are
+	     considered as made of a single pioece, themself.
+
+
 2011-02-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

@@ -67,7 +67,7 @@ public:
   virtual ~ClusterSequenceInterfaceBase(){};
 
   /// description
-  virtual std::string description(){ return "PseudoJet with an unknown interface"; }
+  virtual std::string description() const{ return "PseudoJet with an unknown interface"; }
 
   //-------------------------------------------------------------
   /// @name Direct access to the associated ClusterSequence object.
@@ -139,11 +139,16 @@ public:
   /// associated ClusterSequence
   virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
 
+
+  /// return true if the interface supports constituents. 
+  virtual bool has_constituents() const {return false;};
+
   /// retrieve the constituents. 
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
   virtual std::vector<PseudoJet> constituents(const PseudoJet &reference) const;
+
+
+  /// return true if the interface supports exclusive_subjets. 
+  virtual bool has_exclusive_subjets() const {return false;};
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
@@ -153,17 +158,11 @@ public:
   /// are found. If m gets to be of order of the total number of
   /// constituents in the jet, this could be substantially slower than
   /// just getting that list of constituents.
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
-  virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, const double & dcut) const;
+  virtual std::vector<PseudoJet> exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
   /// coefficient, but marginally more efficient than manually taking
   /// exclusive_subjets.size()
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
   virtual int n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
@@ -171,25 +170,25 @@ public:
   /// than n).
   ///
   /// requires n ln n time
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
   virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
   virtual double exclusive_subdmerge(const PseudoJet &reference, int nsub) const;
 
   /// return the maximum dij that occurred in the whole event at the
   /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
   /// this jet.
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
   virtual double exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const;
+
+
+  /// return true if the interface supports pieces. 
+  /// By default, a jet is made of a single piece: itself
+  virtual bool has_pieces() const {return true;};
+
+  /// retrieve the pieces building the jet. 
+  /// By default, a jet is made of a single piece: itself
+  virtual std::vector<PseudoJet> pieces(const PseudoJet &reference) const;
 
 
   // the following ones require a computation of the area in the
@@ -200,20 +199,16 @@ public:
   virtual bool has_area() const {return false;};
 
   /// return the jet (scalar) area.
-  /// throws an Error if there is no support for area in the parent CS
   virtual double area(const PseudoJet &reference) const;
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of this jet.
-  /// throws an Error if there is no support for area in the parent CS
   virtual double area_error(const PseudoJet &reference) const;
 
   /// return the jet 4-vector area.
-  /// throws an Error if there is no support for area in the parent CS
   virtual PseudoJet area_4vector(const PseudoJet &reference) const;
 
   /// true if this jet is made exclusively of ghosts.
-  /// throws an Error if there is no support for area in the parent CS
   virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
   //\} --- end of jet structure -------------------------------------

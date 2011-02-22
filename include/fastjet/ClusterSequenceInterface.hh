@@ -75,7 +75,7 @@ public:
   virtual ~ClusterSequenceInterface(){};
 
   /// description
-  virtual std::string description(){ return "PseudoJet with an associated ClusterSequence"; }
+  virtual std::string description() const{ return "PseudoJet with an associated ClusterSequence"; }
 
   //-------------------------------------------------------------
   /// @name Direct access to the associated ClusterSequence object.
@@ -151,11 +151,18 @@ public:
   /// associated ClusterSequence
   virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
 
+  /// return true if the interface supports constituents. 
+  virtual bool has_constituents() const {return true;};
+
   /// retrieve the constituents. 
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
   virtual std::vector<PseudoJet> constituents(const PseudoJet &reference) const;
+
+
+  /// return true if the interface supports exclusive_subjets. 
+  virtual bool has_exclusive_subjets() const {return true;};
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
@@ -202,6 +209,7 @@ public:
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
   virtual double exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const;
+
 
 
   // the following ones require a computation of the area in the

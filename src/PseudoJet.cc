@@ -440,12 +440,24 @@ bool PseudoJet::is_inside(const PseudoJet &jet) const{
 
 
 //----------------------------------------------------------------------
+// returns true if the PseudoJet has constituents
+bool PseudoJet::has_constituents() const{
+  return (_associated_csi()) && (_associated_csi->has_constituents());
+}
+
+//----------------------------------------------------------------------
 // retrieve the constituents. An empty vector is returned if there is
 // no associated ClusterSequence
 vector<PseudoJet> PseudoJet::constituents() const{
   return validated_csi()->constituents(*this);
 }
 
+
+//----------------------------------------------------------------------
+// returns true if the PseudoJet has support for exclusive subjets
+bool PseudoJet::has_exclusive_subjets() const{
+  return (_associated_csi()) && (_associated_csi->has_exclusive_subjets());
+}
 
 //----------------------------------------------------------------------
 // return a vector of all subjets of the current jet (in the sense
@@ -507,6 +519,20 @@ double PseudoJet::exclusive_subdmerge(int nsub) const {
 double PseudoJet::exclusive_subdmerge_max(int nsub) const {
   return validated_csi()->exclusive_subdmerge_max(*this, nsub);
 }
+
+
+// retrieve the pieces that build the jet. 
+//
+// By defaultm a jet has only itself as a piece.
+// If the underlying interface supports "pieces" retrieve the
+// pieces from there.
+std::vector<PseudoJet> PseudoJet::pieces() const{
+  if ((_associated_csi()) && (_associated_csi->has_pieces()))
+    return _associated_csi->pieces(*this);
+
+  return vector<PseudoJet>(1,*this);
+}
+
 
 //----------------------------------------------------------------------
 // the following ones require a computation of the area in the

@@ -412,11 +412,19 @@ class PseudoJet {
   /// associated ClusterSequence
   virtual bool is_inside(const PseudoJet &jet) const;
 
+
+  /// returns true if the PseudoJet has constituents
+  virtual bool has_constituents() const;
+
   /// retrieve the constituents. 
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
   virtual std::vector<PseudoJet> constituents() const;
+
+
+  /// returns true if the PseudoJet has support for exclusive subjets
+  virtual bool has_exclusive_subjets() const;
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
@@ -463,6 +471,14 @@ class PseudoJet {
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
   double exclusive_subdmerge_max(int nsub) const;
+
+
+  /// retrieve the pieces that build the jet. 
+  ///
+  /// By defaultm a jet has only itself as a piece.
+  /// If the underlying interface supports "pieces" retrieve the
+  /// pieces from there.
+  virtual std::vector<PseudoJet> pieces() const;
 
 
   // the following ones require a computation of the area in the
