@@ -72,7 +72,7 @@ public:
   };
 
   /// default (virtual) dtor
-  virtual ~ClusterSequenceInterface(){};
+  virtual ~ClusterSequenceInterface(){}
 
   /// description
   virtual std::string description() const{ return "PseudoJet with an associated ClusterSequence"; }
@@ -152,7 +152,7 @@ public:
   virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
 
   /// return true if the interface supports constituents. 
-  virtual bool has_constituents() const {return true;};
+  virtual bool has_constituents() const {return true;}
 
   /// retrieve the constituents. 
   ///
@@ -162,7 +162,7 @@ public:
 
 
   /// return true if the interface supports exclusive_subjets. 
-  virtual bool has_exclusive_subjets() const {return true;};
+  virtual bool has_exclusive_subjets() const {return true;}
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running

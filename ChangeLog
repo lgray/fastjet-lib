@@ -1,3 +1,8 @@
+2011-02-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequenceInterface.hh: 
+	  tiny mods (extraneous semicolons)
+	
 2011-02-22  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh:
@@ -12,7 +17,7 @@
 	     supports constituents
 	   . pieces() that returns the pieces of a jet (by default
 	     both "input particles" and clustering products are
-	     considered as made of a single pioece, themself.
+	     considered as made of a single piece, the object itself.
 
 
 2011-02-20  Gavin Salam  <salam@lpthe.jussieu.fr>
