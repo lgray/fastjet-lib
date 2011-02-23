@@ -1,3 +1,10 @@
+2011-02-23  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/Makefile.am: 
+	* include/FjPseudoJet.hh:        *** DELETED ***
+	* include/FjClusterSequence.hh:  *** DELETED ***
+	  removed these legacy headers
+
 2011-02-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequenceInterface.hh: 
