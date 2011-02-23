@@ -1,3 +1,13 @@
+2011-02-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* example/08-selector.cc: 
+	* tools/Selector.cc -> src/Selector.cc
+	* tools/fastjet/tools/Selector.hh -> include/fastjet/Selector.hh
+	* various Makefile.am:
+	* doc/fastjet-doc.tex:
+	  moved Selector into core of distribution. For doxygen, left it
+	  @ingroup tools. Revisit this later?
+
 2011-02-23  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/Makefile.am: 

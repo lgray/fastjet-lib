@@ -72,8 +72,8 @@ endif
 # illustrate the access to the constituents
 08_selector_SOURCES = 08-selector.cc
 08_selector_SHORTNAME = 08
-08_selector_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-08_selector_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
+08_selector_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include 
+08_selector_LDADD =  ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate the access to the constituents
 09_extra_info_SOURCES = 09-extra_info.cc

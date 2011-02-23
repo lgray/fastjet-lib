@@ -1,6 +1,6 @@
 #include <sstream>
 #include <algorithm>
-#include "fastjet/tools/Selector.hh"
+#include "fastjet/Selector.hh"
 
 using namespace std;
 

@@ -44,7 +44,7 @@
 //ENDHEADER
 
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/tools/Selector.hh" // watch out that Selector is a tool!
+#include "fastjet/Selector.hh" 
 #include <iostream> // needed for io
 #include <cstdio>   // needed for io
 
