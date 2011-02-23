@@ -87,20 +87,20 @@ public:
   virtual std::string description() const {return "missing description";}
 
   //----------------------------------------------------------
-  // operations for relocation
+  // operations for dealing with reference jets
   //----------------------------------------------------------
 
-  /// returns true is the worker can be relocated
-  virtual bool is_relocatable() const { return false;}
+  /// returns true if the worker is defined with respect to a reference jet
+  virtual bool takes_reference() const { return false;}
 
-  /// performs the relocation
-  virtual void relocate(const PseudoJet &centre){
-    throw Error("relocate undefined for a non-relocatable selector worker");
+  /// sets the reference jet for the selector
+  virtual void set_reference(const PseudoJet & reference){
+    throw Error("set_reference(...) cannot be used for a selector worker that does not take a reference");
   }
 
   /// return a copy of the current object.
   ///
-  /// This function is only called for relocatable objects and need
+  /// This function is only called for objects that take a reference and need
   /// not be reimplemented otherwise.
   virtual SelectorWorker* copy(){ 
     throw Error("this SelectorWorker has nothing to copy");
@@ -253,15 +253,15 @@ protected:
 public:
 
   /// returns true if this can be applied jet by jet
-  bool is_relocatable() const {
-    return validated_worker()->is_relocatable();
+  bool takes_reference() const {
+    return validated_worker()->takes_reference();
   }
 
-  /// relocate the selector on a given PseudoJet
-  const Selector & relocate(const PseudoJet &centre){
+  /// set the reference jet for this Selector
+  const Selector & set_reference(const PseudoJet &reference){
 
-    // if the worker is not relocatable, do nothing 
-    if (! validated_worker()->is_relocatable()){
+    // if the worker does not take a reference jet, do nothing 
+    if (! validated_worker()->takes_reference()){
       return *this;
     }
     
@@ -269,7 +269,7 @@ public:
     // correct behaviour with respect to shared workers
     _copy_worker_if_needed();
 
-    _worker->relocate(centre);
+    _worker->set_reference(reference);
     return *this;
   }
 
@@ -370,20 +370,21 @@ Selector SelectorNHardest(unsigned int n);
 // selection with geometric objects
 //----------------------------------------------------------------------
 
-/// select objets within a distance 'radius' the location set by Selector::relocate
+/// select objets within a distance 'radius' from the location of the
+/// reference jet, set by Selector::set_reference(...)
 Selector SelectorCircle(const double & radius); 
 
-/// select objets with distance from the centre is between 'radius_in'
-/// and 'radius_out'; the centre is set by Selector::relocate
+/// select objets with distance from the reference jet is between 'radius_in'
+/// and 'radius_out'; the reference jet is set by Selector::set_reference(...)
 Selector SelectorDoughnut(const double & radius_in, const double & radius_out); 
 
 /// select objets within a rapidity distance 'half_width' from the
-/// location set by Selector::relocate
+/// location of the reference jet, set by Selector::set_reference(...)
 Selector SelectorStrip(const double & half_width);
 
 /// select objets within rapidity distance 'half_rap_width' from the
-/// centre and azimuthal-angle distance within 'half_phi_width'; the
-/// centre is set by Selector::relocate
+/// reference jet and azimuthal-angle distance within 'half_phi_width'; the
+/// reference jet is set by Selector::set_reference(...)
 Selector SelectorRectangle(const double & half_rap_width, const double & half_phi_width);
 
 /// @}

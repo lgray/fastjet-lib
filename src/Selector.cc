@@ -112,8 +112,8 @@ public:
     return ostr.str();
   }
 
-  /// returns true is the worker can be relocated
-  virtual bool is_relocatable() const { return _s.is_relocatable();}
+  /// returns true is the worker can be set_referenced
+  virtual bool takes_reference() const { return _s.takes_reference();}
 
 protected:
   Selector _s;
@@ -137,8 +137,8 @@ public:
     // we can apply jet by jet only if this is the case for both sub-selectors
     _applies_jet_by_jet = _s1.applies_jet_by_jet() && _s2.applies_jet_by_jet();
 
-    // the selector is relocatable if any of the sub-selectors is
-    _is_relocatable = _s1.is_relocatable() || _s2.is_relocatable();
+    // the selector takes a reference if either of the sub-selectors does
+    _takes_reference = _s1.takes_reference() || _s2.takes_reference();
 
     // we have a well-defined area provided the two objects have one
     _has_area = _s1.has_area() && _s2.has_area();
@@ -147,15 +147,15 @@ public:
   /// returns true if this can be applied jet by jet
   virtual bool applies_jet_by_jet() const {return _applies_jet_by_jet;}
 
-  /// returns true if this is relocatable
-  virtual bool is_relocatable() const{ 
-    return _is_relocatable;
+  /// returns true if this takes a reference jet
+  virtual bool takes_reference() const{ 
+    return _takes_reference;
   }
 
-  /// performs the relocation
-  virtual void relocate(const PseudoJet &centre){
-    _s1.relocate(centre);
-    _s2.relocate(centre);
+  /// sets the reference jet
+  virtual void set_reference(const PseudoJet &centre){
+    _s1.set_reference(centre);
+    _s2.set_reference(centre);
   }
 
   /// check if it has a finite area
@@ -164,7 +164,7 @@ public:
 protected:
   Selector _s1, _s2;
   bool _applies_jet_by_jet;
-  bool _is_relocatable;
+  bool _takes_reference;
   bool _has_area;
 };
 
@@ -867,28 +867,28 @@ Selector SelectorNHardest(unsigned int n) {
 
 //----------------------------------------------------------------------
 /// a generic class for objects that contain a position
-class SW_Relocatable : public SelectorWorker{
+class SW_WithReference : public SelectorWorker{
 public:
   /// ctor
-  SW_Relocatable() : _is_initialised(false){};
+  SW_WithReference() : _is_initialised(false){};
 
-  /// returns true is the worker can be relocated
-  virtual bool is_relocatable() const { return true;}
+  /// returns true if the worker takes a reference jet
+  virtual bool takes_reference() const { return true;}
 
-  /// performs the relocation
-  virtual void relocate(const PseudoJet &centre){
+  /// sets the reference jet
+  virtual void set_reference(const PseudoJet &centre){
     _is_initialised = true;
-    _centre = centre;
+    _reference = centre;
   }
 
 protected:
-  PseudoJet _centre;
+  PseudoJet _reference;
   bool _is_initialised;
 };
 
 //----------------------------------------------------------------------
 /// helper for selecting on objects within a distance 'radius' of a reference
-class SW_Circle : public SW_Relocatable {
+class SW_Circle : public SW_WithReference {
 public:
   SW_Circle(const double &radius) : _radius2(radius*radius) {}
 
@@ -900,9 +900,9 @@ public:
   virtual bool pass(const PseudoJet & jet) const {
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorCircle (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorCircle (or any selector that requires a reference), you first have to call set_reference(...)");
     
-    return jet.squared_distance(_centre) <= _radius2;
+    return jet.squared_distance(_reference) <= _radius2;
   } 
 
   /// returns a description of the worker
@@ -916,10 +916,10 @@ public:
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorCircle (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorCircle (or any selector that requires a reference), you first have to call set_reference(...)");
     
-    rapmax = _centre.rap()+sqrt(_radius2);
-    rapmin = _centre.rap()-sqrt(_radius2);
+    rapmax = _reference.rap()+sqrt(_radius2);
+    rapmin = _reference.rap()-sqrt(_radius2);
   }
 
   virtual bool has_area() const { return true;}   ///< it has a finite area
@@ -942,7 +942,7 @@ Selector SelectorCircle(const double & radius) {
 //----------------------------------------------------------------------
 /// helper for selecting on objects with a distance to a reference
 /// betwene 'radius_in' and 'radius_out'
-class SW_Doughnut : public SW_Relocatable {
+class SW_Doughnut : public SW_WithReference {
 public:
   SW_Doughnut(const double &radius_in, const double &radius_out)
     : _radius_in2(radius_in*radius_in), _radius_out2(radius_out*radius_out) {}
@@ -955,9 +955,9 @@ public:
   virtual bool pass(const PseudoJet & jet) const {
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorDoughnut (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorDoughnut (or any selector that requires a reference), you first have to call set_reference(...)");
 
-    double distance2 = jet.squared_distance(_centre);
+    double distance2 = jet.squared_distance(_reference);
 
     return (distance2 <= _radius_out2) && (distance2 >= _radius_in2);
   } 
@@ -973,10 +973,10 @@ public:
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorDoughnut (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorDoughnut (or any selector that requires a reference), you first have to call set_reference(...)");
 
-    rapmax = _centre.rap()+sqrt(_radius_out2);
-    rapmin = _centre.rap()-sqrt(_radius_out2);
+    rapmax = _reference.rap()+sqrt(_radius_out2);
+    rapmin = _reference.rap()-sqrt(_radius_out2);
   }
 
   virtual bool has_area() const { return true;}   ///< it has a finite area
@@ -999,7 +999,7 @@ Selector SelectorDoughnut(const double & radius_in, const double & radius_out) {
 
 //----------------------------------------------------------------------
 /// helper for selecting on objects with rapidity within a distance 'delta' of a reference
-class SW_Strip : public SW_Relocatable {
+class SW_Strip : public SW_WithReference {
 public:
   SW_Strip(const double &delta) : _delta(delta) {}
 
@@ -1011,15 +1011,15 @@ public:
   virtual bool pass(const PseudoJet & jet) const {
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorStrip (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorStrip (or any selector that requires a reference), you first have to call set_reference(...)");
     
-    return abs(jet.rap()-_centre.rap()) <= _delta;
+    return abs(jet.rap()-_reference.rap()) <= _delta;
   } 
 
   /// returns a description of the worker
   virtual string description() const {
     ostringstream ostr;
-    ostr << "|rap - rap_centre| <= " << _delta;
+    ostr << "|rap - rap_reference| <= " << _delta;
     return ostr.str();
   }
 
@@ -1027,10 +1027,10 @@ public:
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorStrip (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorStrip (or any selector that requires a reference), you first have to call set_reference(...)");
     
-    rapmax = _centre.rap()+_delta;
-    rapmin = _centre.rap()-_delta;
+    rapmax = _reference.rap()+_delta;
+    rapmin = _reference.rap()-_delta;
   }
 
   virtual bool has_area() const { return true;}   ///< it has a finite area
@@ -1054,7 +1054,7 @@ Selector SelectorStrip(const double & half_width) {
 /// helper for selecting on objects with rapidity within a distance
 /// 'delta_rap' of a reference and phi within a distanve delta_phi of
 /// a reference
-class SW_Rectangle : public SW_Relocatable {
+class SW_Rectangle : public SW_WithReference {
 public:
   SW_Rectangle(const double &delta_rap, const double &delta_phi)
     : _delta_rap(delta_rap),  _delta_phi(delta_phi) {}
@@ -1067,15 +1067,15 @@ public:
   virtual bool pass(const PseudoJet & jet) const {
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorRectangle (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorRectangle (or any selector that requires a reference), you first have to call set_reference(...)");
 
-    return (abs(jet.rap()-_centre.rap()) <= _delta_rap) && (abs(jet.delta_phi_to(_centre)) <= _delta_phi);
+    return (abs(jet.rap()-_reference.rap()) <= _delta_rap) && (abs(jet.delta_phi_to(_reference)) <= _delta_phi);
   } 
 
   /// returns a description of the worker
   virtual string description() const {
     ostringstream ostr;
-    ostr << "|rap - rap_centre| <= " << _delta_rap << " && |phi - phi_centre| <= " << _delta_phi ;
+    ostr << "|rap - rap_reference| <= " << _delta_rap << " && |phi - phi_reference| <= " << _delta_phi ;
     return ostr.str();
   }
 
@@ -1083,10 +1083,10 @@ public:
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
     // make sure the centre is initialised
     if (! _is_initialised)
-      throw Error("To use a SelectorRectangle (or any relocatable selector), you first have to call relocate()");
+      throw Error("To use a SelectorRectangle (or any selector that requires a reference), you first have to call set_reference(...)");
 
-    rapmax = _centre.rap()+_delta_rap;
-    rapmin = _centre.rap()-_delta_rap;
+    rapmax = _reference.rap()+_delta_rap;
+    rapmin = _reference.rap()-_delta_rap;
   }
 
   virtual bool has_area() const { return true;}   ///< it has a finite area

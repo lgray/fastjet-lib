@@ -1170,31 +1170,49 @@ Following a similar naming convention, there are also
 \ttt{SelectorPhiRange(}$\phi_{\min},\phi_{\max}$\ttt{)} and
 \ttt{SelectorRapPhiRange(}$y_{\min},y_{\max},\phi_{\min},\phi_{\max}$\ttt{)}.
 
-In addition there are also some \emph{relocatable} selectors. 
+In addition there are also some selectors that take a \emph{reference jet}. 
 %
-These have been developed in anticipation of usefulness for background
-estimation, where one wishes to select a fixed-shape (in $y,\phi$)
-neighbourhood of first one jet, then another jet, and so forth.
+These have been developed because it is often useful for a selector to
+make its decision based on information about some other jet. 
 %
-For example one can define 
+For example one might wish to select all jets within some distance of
+a given reference jet; or all jets whose transverse momentum is at
+least some fraction of a reference jet's.
+%
+That reference jet may change from event to event, or even from one
+invocation of the Selector to the next, even though the Selector is
+fundamentally performing the same underlying type of action.
+
+One example of a selector that takes a reference jet is:
 \begin{lstlisting}
   Selector sel = SelectorCircle(1.0);
 \end{lstlisting}
-Then if one is interested in the subset of \ttt{jets} neighbourhood of
+Then if one is interested in the subset of \ttt{jets} near
 \ttt{jet1}, and then those near \ttt{jet2}, one performs the following
 operations:
 \begin{lstlisting}
-  sel.relocate(jet1);
+  sel.set_reference(jet1);
   vector<PseudoJet> jets_near_jet1 = sel(jets);
 
-  sel.relocate(jet2);
+  sel.set_reference(jet2);
   vector<PseudoJet> jets_near_jet2 = sel(jets);
 \end{lstlisting}
-Using a relocatable selector before it has ever been relocated will
-cause an exception to be thrown.
+If one uses a selector that takes a reference without the reference having been
+actually set, an exception will be thrown.
 %
-The other relocatable selectors that are available by default are
-\ttt{SelectorStrip}, \ttt{SelectorDoughnut} and
+If one sets a reference for a compound selector, the reference is
+automatically set for all components that take a reference.
+%
+One can verify whether a given selector takes a reference by calling
+the member function
+\begin{lstlisting}
+  bool Selector::takes_reference() const;
+\end{lstlisting}
+Attempting to set a reference for a Selector that returns \ttt{false}
+here will cause an exception to be thrown.
+%
+The other selectors taking a reference that are available by default
+are \ttt{SelectorStrip}, \ttt{SelectorDoughnut} and
 \ttt{SelectorRectangle}.
 
 A user can obtain information on what a given \ttt{Selector} does by

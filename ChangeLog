@@ -1,5 +1,12 @@
 2011-02-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* doc/fastjet-doc.tex:
+	* src/Selector.cc: 
+	* include/fastjet/Selector.hh: 
+	  changed relocate(...) and is_relocatable() to set_reference(...)
+	  and takes_reference(...) + other small mods to wording of
+	  documentation. 
+
 	* example/08-selector.cc: 
 	* tools/Selector.cc -> src/Selector.cc
 	* tools/fastjet/tools/Selector.hh -> include/fastjet/Selector.hh
