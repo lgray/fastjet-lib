@@ -111,6 +111,11 @@ bool ClusterSequenceInterface::has_parents(const PseudoJet &reference, PseudoJet
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence.
 bool ClusterSequenceInterface::contains(const PseudoJet &reference, const PseudoJet &constituent) const{
+  if ((!has_associated_cluster_sequence()) || (!constituent.has_associated_cluster_sequence()))
+    throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
+
+  if (associated_cluster_sequence() != constituent.associated_cluster_sequence()) return false;
+
   return validated_cs()->object_in_jet(constituent, reference);
 }
 
@@ -120,6 +125,11 @@ bool ClusterSequenceInterface::contains(const PseudoJet &reference, const Pseudo
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool ClusterSequenceInterface::is_inside(const PseudoJet &reference, const PseudoJet &jet) const{
+  if ((!has_associated_cluster_sequence()) || (!jet.has_associated_cluster_sequence()))
+    throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
+
+  if (associated_cluster_sequence() != jet.associated_cluster_sequence()) return false;
+
   return validated_cs()->object_in_jet(reference, jet);
 }
 

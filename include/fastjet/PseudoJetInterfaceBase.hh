@@ -101,45 +101,44 @@ public:
   /// case, return its partner through the argument. Otherwise,
   /// 'partner' is set to 0.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool has_partner(const PseudoJet &reference, PseudoJet &partner) const;
 
   /// check if it has been recombined with another PseudoJet in which
   /// case, return its child through the argument. Otherwise, 'child'
   /// is set to 0.
   /// 
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool has_child(const PseudoJet &reference, PseudoJet &child) const;
 
   /// check if it is the product of a recombination, in which case
   /// return the 2 parents through the 'parent1' and 'parent2'
   /// arguments. Otherwise, set these to 0.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const;
 
   /// check if the current PseudoJet contains the one passed as
   /// argument.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool contains(const PseudoJet &reference, const PseudoJet &constituent) const;
 
   /// check if the current PseudoJet is contained the one passed as
   /// argument.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
 
 
   /// return true if the interface supports constituents. 
+  ///
+  /// false by default
   virtual bool has_constituents() const {return false;};
 
   /// retrieve the constituents. 
+  ///
+  /// By default, throws an Error
   virtual std::vector<PseudoJet> constituents(const PseudoJet &reference) const;
 
 
@@ -154,36 +153,46 @@ public:
   /// are found. If m gets to be of order of the total number of
   /// constituents in the jet, this could be substantially slower than
   /// just getting that list of constituents.
+  ///
+  /// By default, throws an Error
   virtual std::vector<PseudoJet> exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
   /// coefficient, but marginally more efficient than manually taking
   /// exclusive_subjets.size()
+  ///
+  /// By default, throws an Error
   virtual int n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
   /// jet down to n subjets (or all constituents if there are fewer
   /// than n).
   ///
-  /// requires n ln n time
+  /// By default, throws an Error
   virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.
+  ///
+  /// By default, throws an Error
   virtual double exclusive_subdmerge(const PseudoJet &reference, int nsub) const;
 
   /// return the maximum dij that occurred in the whole event at the
   /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
   /// this jet.
+  ///
+  /// By default, throws an Error
   virtual double exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const;
 
 
   /// return true if the interface supports pieces. 
-  /// By default, a jet is made of a single piece: itself
-  virtual bool has_pieces() const {return true;};
+  ///
+  /// false by default
+  virtual bool has_pieces() const {return false;};
 
   /// retrieve the pieces building the jet. 
-  /// By default, a jet is made of a single piece: itself
+  ///
+  /// By default, throws an Error
   virtual std::vector<PseudoJet> pieces(const PseudoJet &reference) const;
 
 
@@ -192,19 +201,29 @@ public:
   //------------------------------------------------------------------
 
   /// check if it has a defined area
+  ///
+  /// false by default
   virtual bool has_area() const {return false;};
 
   /// return the jet (scalar) area.
+  ///
+  /// By default, throws an Error
   virtual double area(const PseudoJet &reference) const;
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of this jet.
+  ///
+  /// By default, throws an Error
   virtual double area_error(const PseudoJet &reference) const;
 
   /// return the jet 4-vector area.
+  ///
+  /// By default, throws an Error
   virtual PseudoJet area_4vector(const PseudoJet &reference) const;
 
   /// true if this jet is made exclusively of ghosts.
+  ///
+  /// By default, throws an Error
   virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
   //\} --- end of jet structure -------------------------------------

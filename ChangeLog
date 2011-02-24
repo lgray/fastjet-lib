@@ -1,6 +1,22 @@
 2011-02-24  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
-	* include/fastjet/Makefile.am (fastjetinclude_HEADERS): 
+	* src/ClusterSequenceInterface.cc:
+	  for contains and is_inside, check that the tao jets belong the
+	  same ClusterSequence (in which case false is returned)
+
+	* include/fastjet/ClusterSequenceInterface.hh:
+	  all the has_* methods that were simply returning 'true' now
+	  return true only if the associated ClusterSequence is still
+	  available (and false otherwise).
+	  That way, if has_xyz() returns true, xyz() can safely be applied
+	  to get the result.
+
+	* include/fastjet/PseudoJetInterfaceBase.hh:
+	* src/PseudoJetInterfaceBase.cc:
+	  updated some of the default behaviours (e.g. a jet has no pieces
+	  by default and pieces() throws an Error); updated comments
+
+	* include/fastjet/Makefile.am (fastjetinclude_HEADERS):
 	* src/Makefile.am (libfastjet_la_SOURCES):
 	* include/fastjet/PseudoJet.hh:
 	* include/fastjet/ClusterSequenceInterface.hh:

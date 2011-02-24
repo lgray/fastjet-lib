@@ -501,11 +501,19 @@ class PseudoJet {
   double exclusive_subdmerge_max(int nsub) const;
 
 
+  /// returns true if a jet has pieces
+  ///
+  /// By default a single particle or a jet coming from a
+  /// ClusterSequence have no pieces and this methos will return false.
+  ///
+  /// In practice, this is equivalent to have an interface of type
+  /// MergedJetInterface .
+  virtual bool has_pieces() const;
+
+
   /// retrieve the pieces that build the jet. 
   ///
-  /// By defaultm a jet has only itself as a piece.
-  /// If the underlying interface supports "pieces" retrieve the
-  /// pieces from there.
+  /// If the jet does not support pieces, an error is throw
   virtual std::vector<PseudoJet> pieces() const;
 
 
