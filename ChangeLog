@@ -1,5 +1,8 @@
 2011-02-24  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/MergedJetInterface.hh:
+	  adjusted references and constness.
+
 	* include/fastjet/ClusterSequenceInterface.hh (PseudoJetInterfaceBase):
 	  has_constituents() and has_exclusive_subjets() will throw an
 	  Error if the associated CS has gone out of scope

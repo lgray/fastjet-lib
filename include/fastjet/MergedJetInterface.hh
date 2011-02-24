@@ -51,7 +51,7 @@ public:
   MergedJetInterface(){};
 
   /// ctor with initialisation
-  MergedJetInterface(const std::vector<PseudoJet> initial_pieces) : _pieces(initial_pieces){};
+  MergedJetInterface(const std::vector<PseudoJet> & initial_pieces) : _pieces(initial_pieces){};
 
   /// default dtor
   virtual ~MergedJetInterface(){};
@@ -76,7 +76,7 @@ public:
   virtual std::vector<PseudoJet> pieces(const PseudoJet &jet) const;
 
 protected:
-  const std::vector<PseudoJet> _pieces;  ///< the pieces building the jet
+  std::vector<PseudoJet> _pieces;  ///< the pieces building the jet
 };
 
 
