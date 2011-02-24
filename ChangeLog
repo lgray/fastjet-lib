@@ -17,7 +17,7 @@
 	  from Merger in experimental/tools)
 
 	* src/ClusterSequenceInterface.cc:
-	  for contains and is_inside, check that the tao jets belong the
+	  for contains and is_inside, check that the two jets belong to the
 	  same ClusterSequence (in which case false is returned)
 
 	* include/fastjet/ClusterSequenceInterface.hh:
