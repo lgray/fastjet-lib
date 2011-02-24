@@ -720,6 +720,31 @@ inline void PseudoJet::reset(double px, double py, double pz, double E) {
 }
 
 
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//-------------------------------------------------------------------------------
+
+/// build a MergedJet from the vector of its pieces
+///
+/// In this case, E-scheme recombination is assumed to compute the
+/// total momentum
+PseudoJet merge(const std::vector<PseudoJet> & pieces);
+
+/// build a MergedJet from a single PseudoJet
+PseudoJet merge(const PseudoJet & j1);
+
+/// build a MergedJet from 2 PseudoJet
+PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2);
+
+/// build a MergedJet from 3 PseudoJet
+PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3);
+
+/// build a MergedJet from 4 PseudoJet
+PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4);
+
+
+
+
 FASTJET_END_NAMESPACE
 
 #endif // __FASTJET_PSEUDOJET_HH__

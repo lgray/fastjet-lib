@@ -1,5 +1,18 @@
 2011-02-24  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/ClusterSequenceInterface.hh (PseudoJetInterfaceBase):
+	  has_constituents() and has_exclusive_subjets() will throw an
+	  Error if the associated CS has gone out of scope
+
+	* include/fastjet/Makefile.am (fastjetinclude_HEADERS):
+	* src/Makefile.am (libfastjet_la_SOURCES):
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc:
+	* include/fastjet/MergedJetInterface.hh:             *** ADDED ***
+	* src/MergedJetInterface.cc:                         *** ADDED ***
+	  added the interface for a jet made of pieces (copied and adapted
+	  from Merger in experimental/tools)
+
 	* src/ClusterSequenceInterface.cc:
 	  for contains and is_inside, check that the tao jets belong the
 	  same ClusterSequence (in which case false is returned)

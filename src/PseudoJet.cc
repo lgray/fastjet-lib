@@ -33,11 +33,13 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceAreaBase.hh"
+#include "fastjet/MergedJetInterface.hh"
 #include<valarray>
 #include<iostream>
 #include<sstream>
 #include<cmath>
 #include<algorithm>
+#include <cstdarg>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -677,6 +679,61 @@ vector<PseudoJet> sorted_by_pz(const vector<PseudoJet> & jets) {
   for (size_t i = 0; i < jets.size(); i++) {pz[i] = jets[i].pz();}
   return objects_sorted_by_values(jets, pz);
 }
+
+
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//-------------------------------------------------------------------------------
+
+// build a MergedJet from the vector of its pieces
+//
+// In this case, E-scheme recombination is assumed to compute the
+// total momentum
+PseudoJet merge(const vector<PseudoJet> & pieces){
+  PseudoJet result(0.0,0.0,0.0,0.0);
+  for (unsigned int i=0; i<pieces.size(); i++){
+    const PseudoJet it = pieces[i];
+    result += it;
+  }
+
+  MergedJetInterface *interface = new MergedJetInterface(pieces);
+  result.set_associated_interface(SharedPtr<PseudoJetInterfaceBase>(interface));
+
+  return result;
+}
+
+// build a MergedJet from a single PseudoJet
+PseudoJet merge(const PseudoJet & j1){
+  return merge(vector<PseudoJet>(1,j1));
+}
+
+// build a MergedJet from two PseudoJet
+PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  return merge(pieces);
+}
+
+// build a MergedJet from 3 PseudoJet
+PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  return merge(pieces);
+}
+
+// build a MergedJet from 4 PseudoJet
+PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  pieces.push_back(j4);
+  return merge(pieces);
+}
+
 
 
 FASTJET_END_NAMESPACE

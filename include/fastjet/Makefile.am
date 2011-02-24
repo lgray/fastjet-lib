@@ -24,6 +24,7 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   NNH.hh\
   SharedPtr.hh\
   Selector.hh\
+  MergedJetInterface.hh\
   config_win.h\
   config.h
 

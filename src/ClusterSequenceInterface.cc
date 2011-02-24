@@ -134,12 +134,34 @@ bool ClusterSequenceInterface::is_inside(const PseudoJet &reference, const Pseud
 }
 
 
+// return true if the interface supports constituents. 
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+bool ClusterSequenceInterface::has_constituents() const{
+  if (!has_associated_cluster_sequence())
+    throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
+
+  return true;
+}
+
+
 // retrieve the constituents. An empty vector is returned if there is
 // no associated ClusterSequence
 vector<PseudoJet> ClusterSequenceInterface::constituents(const PseudoJet &reference) const{
   return validated_cs()->constituents(reference);
 }
 
+// return true if the interface supports exclusive_subjets. 
+//
+// an Error is thrown if this PseudoJet has no currently valid
+// associated ClusterSequence
+bool ClusterSequenceInterface::has_exclusive_subjets() const{
+  if (!has_associated_cluster_sequence())
+    throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
+
+  return true;
+}
 
 // return a vector of all subjets of the current jet (in the sense
 // of the exclusive algorithm) that would be obtained when running

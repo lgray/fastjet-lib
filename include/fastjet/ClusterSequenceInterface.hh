@@ -158,7 +158,10 @@ public:
   virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
 
   /// return true if the interface supports constituents. 
-  virtual bool has_constituents() const {return has_associated_cluster_sequence();}
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  virtual bool has_constituents() const;
 
   /// retrieve the constituents. 
   ///
@@ -168,7 +171,10 @@ public:
 
 
   /// return true if the interface supports exclusive_subjets. 
-  virtual bool has_exclusive_subjets() const {return has_associated_cluster_sequence();}
+  ///
+  /// an Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  virtual bool has_exclusive_subjets() const;
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
