@@ -34,7 +34,7 @@
 
 #include "fastjet/internal/base.hh"
 #include "fastjet/SharedPtr.hh"
-#include "fastjet/ClusterSequenceInterfaceBase.hh"
+#include "fastjet/PseudoJetInterfaceBase.hh"
 
 #include <vector>
 

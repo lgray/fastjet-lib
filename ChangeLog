@@ -1,5 +1,16 @@
 2011-02-24  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/Makefile.am (fastjetinclude_HEADERS): 
+	* src/Makefile.am (libfastjet_la_SOURCES):
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/ClusterSequenceInterface.hh:
+	* src/ClusterSequenceInterfaceBase.cc:               *** DELETED ***
+	* include/fastjet/ClusterSequenceInterfaceBase.hh:   *** DELETED ***
+	* src/PseudoJetInterfaceBase.cc:                       *** ADDED ***
+	* include/fastjet/PseudoJetInterfaceBase.hh:           *** ADDED ***
+	  renamed the files ClusterSequenceInterfaceBase.* into
+	  PseudoJetInterfaceBase.*
+
 	* src/ClusterSequenceAreaBase.cc:
 	* src/ClusterSequence.cc:
 	* src/ClusterSequenceInterfaceBase.cc:

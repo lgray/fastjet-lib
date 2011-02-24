@@ -1,7 +1,7 @@
 SUBDIRS = internal
 fastjetincludedir=$(includedir)/fastjet
 fastjetinclude_HEADERS= JetDefinition.hh\
-  ClusterSequenceInterfaceBase.hh\
+  PseudoJetInterfaceBase.hh\
   ClusterSequenceInterface.hh\
   PseudoJet.hh\
   PseudoJetPlusInfo.hh\

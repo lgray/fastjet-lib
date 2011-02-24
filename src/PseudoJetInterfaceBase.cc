@@ -29,7 +29,7 @@
 //ENDHEADER
 
 
-#include "fastjet/ClusterSequenceInterfaceBase.hh"
+#include "fastjet/PseudoJetInterfaceBase.hh"
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"

@@ -42,7 +42,7 @@
 #include "fastjet/internal/DerivedPseudoJetHelper.hh"
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/Error.hh"
-#include "fastjet/ClusterSequenceInterfaceBase.hh"
+#include "fastjet/PseudoJetInterfaceBase.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
