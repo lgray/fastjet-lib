@@ -331,11 +331,11 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 
 string PseudoJet::description() const{
   // the "default" case of a PJ which does not belong to any cluster sequence
-  if (!_associated_csi())
+  if (!_associated_interface())
     return "standard PseudoJet (with no associated Clustering information)";
   
   // for all the other cases, the descition comes from the interface
-  return _associated_csi()->description();
+  return _associated_interface()->description();
 }
 
 
@@ -351,7 +351,7 @@ string PseudoJet::description() const{
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
 bool PseudoJet::has_associated_cluster_sequence() const{
-  return (_associated_csi()) && (_associated_csi->has_associated_cluster_sequence());
+  return (_associated_interface()) && (_associated_interface->has_associated_cluster_sequence());
 }
 
 //----------------------------------------------------------------------
@@ -360,7 +360,7 @@ bool PseudoJet::has_associated_cluster_sequence() const{
 const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
   if (! has_associated_cluster_sequence()) return NULL;
 
-  return _associated_csi->associated_cluster_sequence();
+  return _associated_interface->associated_cluster_sequence();
 }
 
 
@@ -371,17 +371,17 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 // Open question: should these errors be upgraded to classes of their
 // own so that they can be caught? [Maybe, but later]
 const ClusterSequence * PseudoJet::validated_cs() const {
-  return validated_csi()->validated_cs();
+  return validated_interface()->validated_cs();
 }
 
 
 //----------------------------------------------------------------------
 // If there is a valid cluster sequence interface associated with this
 // jet, returns a pointer to it; otherwise throws an Error.
-const SharedPtr<ClusterSequenceInterfaceBase> PseudoJet::validated_csi() const {
-  if (!_associated_csi()) 
+const SharedPtr<PseudoJetInterfaceBase> PseudoJet::validated_interface() const {
+  if (!_associated_interface()) 
     throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence.");
-  return _associated_csi;
+  return _associated_interface;
 }
 
 
@@ -393,7 +393,7 @@ const SharedPtr<ClusterSequenceInterfaceBase> PseudoJet::validated_csi() const {
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::has_partner(PseudoJet &partner) const{
-  return validated_csi()->has_partner(*this, partner);
+  return validated_interface()->has_partner(*this, partner);
 }
 
 //----------------------------------------------------------------------
@@ -404,7 +404,7 @@ bool PseudoJet::has_partner(PseudoJet &partner) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence, with the child set to 0
 bool PseudoJet::has_child(PseudoJet &child) const{
-  return validated_csi()->has_child(*this, child);
+  return validated_interface()->has_child(*this, child);
 }
 
 //----------------------------------------------------------------------
@@ -415,7 +415,7 @@ bool PseudoJet::has_child(PseudoJet &child) const{
 // false is also returned if this PseudoJet has no parent
 // ClusterSequence
 bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
-  return validated_csi()->has_parents(*this, parent1, parent2);
+  return validated_interface()->has_parents(*this, parent1, parent2);
 }
 
 //----------------------------------------------------------------------
@@ -425,7 +425,7 @@ bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence.
 bool PseudoJet::contains(const PseudoJet &constituent) const{
-  return validated_csi()->contains(*this, constituent);
+  return validated_interface()->contains(*this, constituent);
 }
 
 //----------------------------------------------------------------------
@@ -435,28 +435,28 @@ bool PseudoJet::contains(const PseudoJet &constituent) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::is_inside(const PseudoJet &jet) const{
-  return validated_csi()->is_inside(*this, jet);
+  return validated_interface()->is_inside(*this, jet);
 }
 
 
 //----------------------------------------------------------------------
 // returns true if the PseudoJet has constituents
 bool PseudoJet::has_constituents() const{
-  return (_associated_csi()) && (_associated_csi->has_constituents());
+  return (_associated_interface()) && (_associated_interface->has_constituents());
 }
 
 //----------------------------------------------------------------------
 // retrieve the constituents. An empty vector is returned if there is
 // no associated ClusterSequence
 vector<PseudoJet> PseudoJet::constituents() const{
-  return validated_csi()->constituents(*this);
+  return validated_interface()->constituents(*this);
 }
 
 
 //----------------------------------------------------------------------
 // returns true if the PseudoJet has support for exclusive subjets
 bool PseudoJet::has_exclusive_subjets() const{
-  return (_associated_csi()) && (_associated_csi->has_exclusive_subjets());
+  return (_associated_interface()) && (_associated_interface->has_exclusive_subjets());
 }
 
 //----------------------------------------------------------------------
@@ -472,7 +472,7 @@ bool PseudoJet::has_exclusive_subjets() const{
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
 std::vector<PseudoJet> PseudoJet::exclusive_subjets (const double & dcut) const {
-  return validated_csi()->exclusive_subjets(*this, dcut);
+  return validated_interface()->exclusive_subjets(*this, dcut);
 }
 
 //----------------------------------------------------------------------
@@ -483,7 +483,7 @@ std::vector<PseudoJet> PseudoJet::exclusive_subjets (const double & dcut) const 
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
 int PseudoJet::n_exclusive_subjets(const double & dcut) const {
-  return validated_csi()->n_exclusive_subjets(*this, dcut);
+  return validated_interface()->n_exclusive_subjets(*this, dcut);
 }
 
 //----------------------------------------------------------------------
@@ -496,7 +496,7 @@ int PseudoJet::n_exclusive_subjets(const double & dcut) const {
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
 std::vector<PseudoJet> PseudoJet::exclusive_subjets (int nsub) const {
-  return validated_csi()->exclusive_subjets(*this, nsub);
+  return validated_interface()->exclusive_subjets(*this, nsub);
 }
 
 //----------------------------------------------------------------------
@@ -506,7 +506,7 @@ std::vector<PseudoJet> PseudoJet::exclusive_subjets (int nsub) const {
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
 double PseudoJet::exclusive_subdmerge(int nsub) const {
-  return validated_csi()->exclusive_subdmerge(*this, nsub);
+  return validated_interface()->exclusive_subdmerge(*this, nsub);
 }
 
 //----------------------------------------------------------------------
@@ -517,7 +517,7 @@ double PseudoJet::exclusive_subdmerge(int nsub) const {
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
 double PseudoJet::exclusive_subdmerge_max(int nsub) const {
-  return validated_csi()->exclusive_subdmerge_max(*this, nsub);
+  return validated_interface()->exclusive_subdmerge_max(*this, nsub);
 }
 
 
@@ -527,8 +527,8 @@ double PseudoJet::exclusive_subdmerge_max(int nsub) const {
 // If the underlying interface supports "pieces" retrieve the
 // pieces from there.
 std::vector<PseudoJet> PseudoJet::pieces() const{
-  if ((_associated_csi()) && (_associated_csi->has_pieces()))
-    return _associated_csi->pieces(*this);
+  if ((_associated_interface()) && (_associated_interface->has_pieces()))
+    return _associated_interface->pieces(*this);
 
   return vector<PseudoJet>(1,*this);
 }
@@ -553,14 +553,14 @@ const ClusterSequenceAreaBase * PseudoJet::validated_csab() const {
 // check if it has a defined area
 bool PseudoJet::has_area() const{
   if (! has_associated_cluster_sequence()) return false;
-  return (validated_csi()->has_area() != 0);
+  return (validated_interface()->has_area() != 0);
 }
 
 //----------------------------------------------------------------------
 // return the jet (scalar) area.
 // throw an Error if there is no support for area in the associated CS
 double PseudoJet::area() const{
-  return validated_csi()->area(*this);
+  return validated_interface()->area(*this);
 }
 
 //----------------------------------------------------------------------
@@ -568,21 +568,21 @@ double PseudoJet::area() const{
 // of the area of this jet.
 // throws an Error if there is no support for area in the associated CS
 double PseudoJet::area_error() const{
-  return validated_csi()->area_error(*this);
+  return validated_interface()->area_error(*this);
 }
 
 //----------------------------------------------------------------------
 // return the jet 4-vector area
 // throws an Error if there is no support for area in the associated CS
 PseudoJet PseudoJet::area_4vector() const{
-  return validated_csi()->area_4vector(*this);
+  return validated_interface()->area_4vector(*this);
 }
 
 //----------------------------------------------------------------------
 // true if this jet is made exclusively of ghosts
 // throws an Error if there is no support for area in the associated CS
 bool PseudoJet::is_pure_ghost() const{
-  return validated_csi()->is_pure_ghost(*this);
+  return validated_interface()->is_pure_ghost(*this);
 }
 
 

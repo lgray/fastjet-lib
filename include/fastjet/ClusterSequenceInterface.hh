@@ -58,7 +58,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // consistent (everything related to the same thing is at the same
 // place) and gives better access for derived classes. We'll go for
 // the second option.
-class ClusterSequenceInterface : public ClusterSequenceInterfaceBase{
+class ClusterSequenceInterface : public PseudoJetInterfaceBase{
 public:
   /// default ctor
   ClusterSequenceInterface() : _associated_cs(NULL){}

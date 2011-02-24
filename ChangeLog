@@ -1,3 +1,17 @@
+2011-02-24  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceAreaBase.cc:
+	* src/ClusterSequence.cc:
+	* src/ClusterSequenceInterfaceBase.cc:
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/ClusterSequence.hh:
+	* include/fastjet/ClusterSequenceInterface.hh:
+	* include/fastjet/ClusterSequenceInterfaceBase.hh:
+	  done some renaming:
+	    ClusterSequenceInterfaceBase -> PseudoJetInterfaceBase
+	    *_csi -> *_interface
+
 2011-02-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* doc/fastjet-doc.tex:

@@ -304,7 +304,7 @@ PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
   // (i.e. "looks like") the original jet
   sub_jet.set_cluster_hist_index(jet.cluster_hist_index());
   sub_jet.set_user_index(jet.user_index());
-  sub_jet.set_associated_csi(jet.associated_csi());
+  sub_jet.set_associated_interface(jet.associated_interface());
   return sub_jet;
 }
 

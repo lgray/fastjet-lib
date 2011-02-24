@@ -29,8 +29,8 @@
 //ENDHEADER
 
 
-#ifndef __FASTJET_CLUSTER_SEQUENCE_INTERFACE_BASE_HH__
-#define __FASTJET_CLUSTER_SEQUENCE_INTERFACE_BASE_HH__
+#ifndef __FASTJET_PSEUDOJET_INTERFACE_BASE_HH__
+#define __FASTJET_PSEUDOJET_INTERFACE_BASE_HH__
 
 #include "fastjet/internal/base.hh"
 
@@ -44,7 +44,7 @@ class ClusterSequence;
 class ClusterSequenceAreaBase;
 
 /// @ingroup extra_info
-/// \class ClusterSequenceInterfaceBase
+/// \class PseudoJetInterfaceBase
 ///
 /// Contains any information related to the clustering that should be
 /// directly accessible to PseudoJet.
@@ -54,17 +54,13 @@ class ClusterSequenceAreaBase;
 /// its area). But it can be overloaded in order e.g. to give access
 /// to the jet substructure.
 ///
-/// Note that the pointer to the underlying ClusterSequence has to be
-/// set to NULL (by the ClusterSequence itself) when it goes out of
-/// scope.
-///
-class ClusterSequenceInterfaceBase{
+class PseudoJetInterfaceBase{
 public:
   /// default ctor
-  ClusterSequenceInterfaceBase(){};
+  PseudoJetInterfaceBase(){};
 
   /// default (virtual) dtor
-  virtual ~ClusterSequenceInterfaceBase(){};
+  virtual ~PseudoJetInterfaceBase(){};
 
   /// description
   virtual std::string description() const{ return "PseudoJet with an unknown interface"; }
@@ -216,4 +212,4 @@ public:
 
 FASTJET_END_NAMESPACE
 
-#endif  //  __FASTJET_CLUSTER_SEQUENCE_INTERFACE_BASE_HH__
+#endif  //  __FASTJET_PSEUDOJET_INTERFACE_BASE_HH__

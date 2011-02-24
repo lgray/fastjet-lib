@@ -310,7 +310,7 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
-    _jets[i].set_associated_csi(_interface_to_this);
+    _jets[i].set_associated_interface(_interface_to_this);
 
     // determine the total energy in the event
     _Qtot += _jets[i].E();
@@ -407,7 +407,7 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq, bool tr
     if (! _interface_to_this()) _interface_to_this.reset(new ClusterSequenceInterface(this));
   
     for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
-      jit->set_associated_csi(_interface_to_this);
+      jit->set_associated_interface(_interface_to_this);
   }
 }
 
@@ -424,7 +424,7 @@ void ClusterSequence::plugin_record_ij_recombination(
   int tmp_index = _jets[newjet_k].cluster_hist_index();
   _jets[newjet_k] = newjet;
   _jets[newjet_k].set_cluster_hist_index(tmp_index);
-  _jets[newjet_k].set_associated_csi(_interface_to_this);
+  _jets[newjet_k].set_associated_interface(_interface_to_this);
 }
 
 
@@ -1008,7 +1008,7 @@ void ClusterSequence::_add_step_to_history (
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
     _jets[jetp_index].set_cluster_hist_index(local_step);
-    _jets[jetp_index].set_associated_csi(_interface_to_this);
+    _jets[jetp_index].set_associated_interface(_interface_to_this);
   }
 
   if (_writeout_combinations) {

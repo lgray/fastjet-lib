@@ -341,29 +341,57 @@ class PseudoJet {
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
-  //\}
 
-  /// set the associated csw
-  void set_associated_csi(const SharedPtr<ClusterSequenceInterfaceBase> &csi){
-    _associated_csi = csi;
-  }
-
-  /// return a copy of the ClusterSequenceInterface
-  const SharedPtr<ClusterSequenceInterfaceBase> & associated_csi() const {
-    return _associated_csi;
-  }
-  
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error
   const ClusterSequence * validated_cs() const;
 
-  /// if the jet has a valid associated cluster sequence interface
-  /// then return a pointer to it; otherwise throw an error
-  const SharedPtr<ClusterSequenceInterfaceBase> validated_csi() const;
-
   /// if the jet has valid area information then return a pointer to
   /// the associated ClusterSequenceAreaBase object; otherwise throw an error
   const ClusterSequenceAreaBase * validated_csab() const;
+
+  //\}
+
+  //-------------------------------------------------------------
+  /// @name Access to the associated PseudoJetInterface object.
+  ///
+  /// In addition to having kinematic information, jets may contain a
+  /// reference to an associated ClusterSequence (this is the case,
+  /// for example, if the jet has been returned by a ClusterSequence
+  /// member function).
+  //\{
+  //-------------------------------------------------------------
+
+  /// set the associated interface
+  void set_associated_interface(const SharedPtr<PseudoJetInterfaceBase> &interface){
+    _associated_interface = interface;
+  }
+
+  /// return a copy of the (shared pointer to the) PseudoJetInterfaceBase
+  const SharedPtr<PseudoJetInterfaceBase> & associated_interface() const {
+    return _associated_interface;
+  }
+  
+  /// if the jet has a valid associated cluster sequence interface
+  /// then return a pointer to it; otherwise throw an error
+  const SharedPtr<PseudoJetInterfaceBase> validated_interface() const;
+
+//  /// for faster accessm we provide a direct access to an interface of a given type
+//  /// if the type cannot be met, NULL is returned
+//  template<typename InterfaceType>
+//  const InterfaceType * interface_pointer() const;
+//
+//  /// check if the PseudoJet has the properties of the result of a Transformer 
+//  /// (that is, its interface is compatible with a Transformer::InterfaceType)
+//  template<typename TransformerType>
+//  bool has_properties_of() const;
+//
+//  /// this is a helper to access an interface created by a Transformer 
+//  /// (that is, of type Transformer::InterfaceType)
+//  template<typename TransformerType>
+//  typename const TransformerType::InterfaceType * extra_properties() const;
+
+  //\}
 
   //-------------------------------------------------------------
   /// @name Methods for access to information about jet structure
@@ -531,7 +559,7 @@ class PseudoJet {
 
  protected:  
 
-  SharedPtr<ClusterSequenceInterfaceBase> _associated_csi;
+  SharedPtr<PseudoJetInterfaceBase> _associated_interface;
   SharedPtr<ExtraInfo> _extra_info;
 
 
@@ -648,7 +676,7 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 inline void PseudoJet::_reset_indices() { 
   set_cluster_hist_index(-1);
   set_user_index(-1);
-  _associated_csi.reset();
+  _associated_interface.reset();
 }
 
 //----------------------------------------------------------------------

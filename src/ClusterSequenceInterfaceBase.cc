@@ -39,7 +39,7 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-// ClusterSequenceInterfaceBase implementation
+// PseudoJetInterfaceBase implementation
 //
 // Contains any information related to the clustering that should be
 // directly accessible to PseudoJet.
@@ -63,19 +63,19 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // get a (const) pointer to the parent ClusterSequence (NULL if
 // inexistent)
-const ClusterSequence* ClusterSequenceInterfaceBase::associated_cluster_sequence() const{
+const ClusterSequence* PseudoJetInterfaceBase::associated_cluster_sequence() const{
   throw Error("This ClusterSequenceInterface does not have an associated cluster sequence");
 }
   
 // if the jet has a valid associated cluster sequence then return a
 // pointer to it; otherwise throw an error
-const ClusterSequence * ClusterSequenceInterfaceBase::validated_cs() const{
+const ClusterSequence * PseudoJetInterfaceBase::validated_cs() const{
   throw Error("This ClusterSequenceInterface does not have a validated cluster sequence");
 }
 
 // if the jet has valid area information then return a pointer to
 // the associated ClusterSequenceAreaBase object; otherwise throw an error
-const ClusterSequenceAreaBase * ClusterSequenceInterfaceBase::validated_csab() const{
+const ClusterSequenceAreaBase * PseudoJetInterfaceBase::validated_csab() const{
   throw Error("This ClusterSequenceInterface does not have a validated cluster sequence with area");
 }
 
@@ -94,7 +94,7 @@ const ClusterSequenceAreaBase * ClusterSequenceInterfaceBase::validated_csab() c
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterfaceBase::has_partner(const PseudoJet &reference, PseudoJet &partner) const{
+bool PseudoJetInterfaceBase::has_partner(const PseudoJet &reference, PseudoJet &partner) const{
   throw Error("This ClusterSequenceInterface has no implementation for has_partner");
 }
 
@@ -104,7 +104,7 @@ bool ClusterSequenceInterfaceBase::has_partner(const PseudoJet &reference, Pseud
 // 
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterfaceBase::has_child(const PseudoJet &reference, PseudoJet &child) const{
+bool PseudoJetInterfaceBase::has_child(const PseudoJet &reference, PseudoJet &child) const{
   throw Error("This ClusterSequenceInterface has no implementation for has_child");
 }
 
@@ -114,7 +114,7 @@ bool ClusterSequenceInterfaceBase::has_child(const PseudoJet &reference, PseudoJ
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterfaceBase::has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const{
+bool PseudoJetInterfaceBase::has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const{
   throw Error("This ClusterSequenceInterface has no implementation for has_parents");
 }
 
@@ -123,7 +123,7 @@ bool ClusterSequenceInterfaceBase::has_parents(const PseudoJet &reference, Pseud
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterfaceBase::contains(const PseudoJet &reference, const PseudoJet &constituent) const{
+bool PseudoJetInterfaceBase::contains(const PseudoJet &reference, const PseudoJet &constituent) const{
   throw Error("This ClusterSequenceInterface has no implementation for contains");
 }
 
@@ -132,7 +132,7 @@ bool ClusterSequenceInterfaceBase::contains(const PseudoJet &reference, const Ps
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterfaceBase::is_inside(const PseudoJet &reference, const PseudoJet &jet) const{
+bool PseudoJetInterfaceBase::is_inside(const PseudoJet &reference, const PseudoJet &jet) const{
   throw Error("This ClusterSequenceInterface has no implementation for is_inside");
 }
 
@@ -140,7 +140,7 @@ bool ClusterSequenceInterfaceBase::is_inside(const PseudoJet &reference, const P
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-vector<PseudoJet> ClusterSequenceInterfaceBase::constituents(const PseudoJet &reference) const{
+vector<PseudoJet> PseudoJetInterfaceBase::constituents(const PseudoJet &reference) const{
   throw Error("This ClusterSequenceInterface has no implementation for constituents");
 }
 
@@ -155,7 +155,7 @@ vector<PseudoJet> ClusterSequenceInterfaceBase::constituents(const PseudoJet &re
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-vector<PseudoJet> ClusterSequenceInterfaceBase::exclusive_subjets (const PseudoJet &reference, const double & dcut) const{
+vector<PseudoJet> PseudoJetInterfaceBase::exclusive_subjets (const PseudoJet &reference, const double & dcut) const{
   throw Error("This ClusterSequenceInterface has no implementation for exclusive_subjets");
 }
 
@@ -165,7 +165,7 @@ vector<PseudoJet> ClusterSequenceInterfaceBase::exclusive_subjets (const PseudoJ
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-int ClusterSequenceInterfaceBase::n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const{
+int PseudoJetInterfaceBase::n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const{
   throw Error("This ClusterSequenceInterface has no implementation for n_exclusive_subjets");
 }
 
@@ -177,7 +177,7 @@ int ClusterSequenceInterfaceBase::n_exclusive_subjets(const PseudoJet &reference
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-vector<PseudoJet> ClusterSequenceInterfaceBase::exclusive_subjets (const PseudoJet &reference, int nsub) const{
+vector<PseudoJet> PseudoJetInterfaceBase::exclusive_subjets (const PseudoJet &reference, int nsub) const{
   throw Error("This ClusterSequenceInterface has no implementation for exclusive_subjets");
 }
 
@@ -186,7 +186,7 @@ vector<PseudoJet> ClusterSequenceInterfaceBase::exclusive_subjets (const PseudoJ
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-double ClusterSequenceInterfaceBase::exclusive_subdmerge(const PseudoJet &reference, int nsub) const{
+double PseudoJetInterfaceBase::exclusive_subdmerge(const PseudoJet &reference, int nsub) const{
   throw Error("This ClusterSequenceInterface has no implementation for exclusive_submerge");
 }
 
@@ -196,7 +196,7 @@ double ClusterSequenceInterfaceBase::exclusive_subdmerge(const PseudoJet &refere
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-double ClusterSequenceInterfaceBase::exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const{
+double PseudoJetInterfaceBase::exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const{
   throw Error("This ClusterSequenceInterface has no implementation for exclusive_submerge_max");
 }
 
@@ -204,7 +204,7 @@ double ClusterSequenceInterfaceBase::exclusive_subdmerge_max(const PseudoJet &re
 // retrieve the pieces building the jet. 
 // By default, a jet is made of a single piece: itself
 //------------------------------------------------------------------
-std::vector<PseudoJet> ClusterSequenceInterfaceBase::pieces(const PseudoJet &reference) const{
+std::vector<PseudoJet> PseudoJetInterfaceBase::pieces(const PseudoJet &reference) const{
   return vector<PseudoJet>(1, reference);
 }
 
@@ -214,26 +214,26 @@ std::vector<PseudoJet> ClusterSequenceInterfaceBase::pieces(const PseudoJet &ref
 
 // return the jet (scalar) area.
 // throws an Error if there is no support for area in the parent CS
-double ClusterSequenceInterfaceBase::area(const PseudoJet &reference) const{
+double PseudoJetInterfaceBase::area(const PseudoJet &reference) const{
   throw Error("This ClusterSequenceInterface has no implementation for area");
 }
 
 // return the error (uncertainty) associated with the determination
 // of the area of this jet.
 // throws an Error if there is no support for area in the parent CS
-double ClusterSequenceInterfaceBase::area_error(const PseudoJet &reference) const{
+double PseudoJetInterfaceBase::area_error(const PseudoJet &reference) const{
   throw Error("This ClusterSequenceInterface has no implementation for area_error");
 }
 
 // return the jet 4-vector area.
 // throws an Error if there is no support for area in the parent CS
-PseudoJet ClusterSequenceInterfaceBase::area_4vector(const PseudoJet &reference) const{
+PseudoJet PseudoJetInterfaceBase::area_4vector(const PseudoJet &reference) const{
   throw Error("This ClusterSequenceInterface has no implementation for area_4vector");
 }
 
 // true if this jet is made exclusively of ghosts.
 // throws an Error if there is no support for area in the parent CS
-bool ClusterSequenceInterfaceBase::is_pure_ghost(const PseudoJet &reference) const{
+bool PseudoJetInterfaceBase::is_pure_ghost(const PseudoJet &reference) const{
   throw Error("This ClusterSequenceInterface has no implementation for is_pure_ghost");
 }
 
