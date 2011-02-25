@@ -1,3 +1,16 @@
+2011-02-25  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh:
+	  added template methods to help accessing the interface:
+	   + associated_interface_ptr<IfaceType> returns a pointer
+	     of type IfaceType* or NULL if the interface is incompatible
+	   + extra_properties<TransformerType> returns a pointer to
+	     a interface of type TransformerType::InterfaceType (or
+	     NULL if incompatible)
+	   + has_properties_of<TransformerType> check that the
+	     interface of the type TransformerType::InterfaceType
+	     can be returned.
+
 2011-02-24  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/MergedJetInterface.hh:

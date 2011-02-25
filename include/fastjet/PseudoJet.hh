@@ -376,20 +376,25 @@ class PseudoJet {
   /// then return a pointer to it; otherwise throw an error
   const SharedPtr<PseudoJetInterfaceBase> validated_interface() const;
 
-//  /// for faster accessm we provide a direct access to an interface of a given type
-//  /// if the type cannot be met, NULL is returned
-//  template<typename InterfaceType>
-//  const InterfaceType * interface_pointer() const;
-//
-//  /// check if the PseudoJet has the properties of the result of a Transformer 
-//  /// (that is, its interface is compatible with a Transformer::InterfaceType)
-//  template<typename TransformerType>
-//  bool has_properties_of() const;
-//
-//  /// this is a helper to access an interface created by a Transformer 
-//  /// (that is, of type Transformer::InterfaceType)
-//  template<typename TransformerType>
-//  typename const TransformerType::InterfaceType * extra_properties() const;
+  /// for faster access, we provide a direct access to an interface of a given type
+  ///
+  /// if the type cannot be met, NULL is returned
+  /// if there is no interface, an error is thrown
+  template<typename InterfaceType>
+  const InterfaceType * associated_interface_ptr() const;
+
+  /// check if the PseudoJet has the properties of the result of a Transformer 
+  /// (that is, its interface is compatible with a Transformer::InterfaceType)
+  /// if there is no interface, false is returned
+  template<typename TransformerType>
+  bool has_properties_of() const;
+
+  /// this is a helper to access an interface created by a Transformer 
+  /// (that is, of type Transformer::InterfaceType)
+  /// NULL is returned if the corresponding type is not met
+  /// if there is no interface, an error is thrown
+  template<typename TransformerType>
+  const typename TransformerType::InterfaceType * extra_properties() const;
 
   //\}
 
@@ -718,6 +723,42 @@ inline void PseudoJet::reset(double px, double py, double pz, double E) {
   _finish_init();
   _reset_indices();
 }
+
+
+//-------------------------------------------------------------------------------
+// implementation of the templated accesses to the underlying interface
+//-------------------------------------------------------------------------------
+
+// for faster access, we provide a direct access to an interface of a given type
+// if the type cannot be met, NULL is returned
+template<typename InterfaceType>
+const InterfaceType * PseudoJet::associated_interface_ptr() const{
+  if (!_associated_interface())
+    throw Error("Trying to access the interface of a PseudoJet without an associated interface");
+
+  return dynamic_cast<const InterfaceType *>(_associated_interface.get());
+}
+
+// check if the PseudoJet has the properties of the result of a Transformer 
+// (that is, its interface is compatible with a Transformer::InterfaceType)
+template<typename TransformerType>
+bool PseudoJet::has_properties_of() const{
+  if (!_associated_interface()) return false;
+
+  return dynamic_cast<const typename TransformerType::InterfaceType *>(_associated_interface.get()) != 0;
+}
+
+// this is a helper to access an interface created by a Transformer 
+// (that is, of type Transformer::InterfaceType)
+// NULL is returned if the corresponding type is not met
+template<typename TransformerType>
+const typename TransformerType::InterfaceType * PseudoJet::extra_properties() const{
+  if (!_associated_interface()) 
+    throw Error("Trying to access the interface of a PseudoJet without an associated interface");
+
+  return dynamic_cast<const typename TransformerType::InterfaceType *>(_associated_interface.get());
+}
+
 
 
 //-------------------------------------------------------------------------------
