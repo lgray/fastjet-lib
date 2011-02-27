@@ -31,7 +31,7 @@
 
 	* src/ClusterSequenceInterface.cc:
 	  for contains and is_inside, check that the two jets belong to the
-	  same ClusterSequence (in which case false is returned)
+	  same ClusterSequence (failing which false is returned)
 
 	* include/fastjet/ClusterSequenceInterface.hh:
 	  all the has_* methods that were simply returning 'true' now
