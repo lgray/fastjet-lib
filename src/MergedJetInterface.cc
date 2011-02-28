@@ -61,7 +61,7 @@ bool MergedJetInterface::has_constituents() const{
 }
 
 std::vector<PseudoJet> MergedJetInterface::constituents(const PseudoJet &jet) const{
-  // the following code automatically throws an Error if any of teh
+  // the following code automatically throws an Error if any of the
   // pieces has no constituents
   vector<PseudoJet> all_constituents = _pieces[0].constituents();
   for (unsigned i = 1; i < _pieces.size(); i++) {

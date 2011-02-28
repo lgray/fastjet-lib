@@ -118,17 +118,11 @@ public:
   /// By default, throws an Error
   virtual bool has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const;
 
-  /// check if the current PseudoJet contains the one passed as
-  /// argument.
+  /// check if the reference PseudoJet is contained the second one
+  /// passed as argument.
   ///
   /// By default, throws an Error
-  virtual bool contains(const PseudoJet &reference, const PseudoJet &constituent) const;
-
-  /// check if the current PseudoJet is contained the one passed as
-  /// argument.
-  ///
-  /// By default, throws an Error
-  virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
+  virtual bool object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const;
 
 
   /// return true if the interface supports constituents. 

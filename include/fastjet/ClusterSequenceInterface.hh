@@ -137,25 +137,15 @@ public:
   /// associated ClusterSequence
   virtual bool has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const;
 
-  /// check if the current PseudoJet contains the one passed as
-  /// argument.
+  /// check if the reference PseudoJet is contained in the second one
+  /// passed as argument.
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
   ///
   /// false is returned if the 2 PseudoJet do not belong the same
   /// ClusterSequence
-  virtual bool contains(const PseudoJet &reference, const PseudoJet &constituent) const;
-
-  /// check if the current PseudoJet is contained the one passed as
-  /// argument.
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
-  ///
-  /// false is returned if the 2 PseudoJet do not belong the same
-  /// ClusterSequence
-  virtual bool is_inside(const PseudoJet &reference, const PseudoJet &jet) const;
+  virtual bool object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const;
 
   /// return true if the interface supports constituents. 
   ///

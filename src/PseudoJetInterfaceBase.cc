@@ -119,19 +119,11 @@ bool PseudoJetInterfaceBase::has_parents(const PseudoJet &reference, PseudoJet &
   throw Error("This PseudoJetInterface has no implementation for has_parents");
 }
 
-// check if the current PseudoJet contains the one passed as
-// argument.
+// check if the reference PseudoJet is contained in the second one
+// passed as argument.
 //
 // by default, an Error is thrown
-bool PseudoJetInterfaceBase::contains(const PseudoJet &reference, const PseudoJet &constituent) const{
-  throw Error("This PseudoJetInterface has no implementation for contains");
-}
-
-// check if the current PseudoJet is contained the one passed as
-// argument.
-//
-// by default, an Error is thrown
-bool PseudoJetInterfaceBase::is_inside(const PseudoJet &reference, const PseudoJet &jet) const{
+bool PseudoJetInterfaceBase::object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const{
   throw Error("This PseudoJetInterface has no implementation for is_inside");
 }
 
@@ -196,7 +188,7 @@ double PseudoJetInterfaceBase::exclusive_subdmerge_max(const PseudoJet &referenc
 //
 // by default, an Error is thrown
 std::vector<PseudoJet> PseudoJetInterfaceBase::pieces(const PseudoJet &reference) const{
-  return vector<PseudoJet>(1, reference);
+  throw Error("This PseudoJetInterface has no implementation for pieces");  
 }
 
 // the following ones require a computation of the area in the

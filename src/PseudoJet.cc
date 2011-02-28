@@ -427,7 +427,7 @@ bool PseudoJet::has_parents(PseudoJet &parent1, PseudoJet &parent2) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence.
 bool PseudoJet::contains(const PseudoJet &constituent) const{
-  return validated_interface()->contains(*this, constituent);
+  return validated_interface()->object_in_jet(constituent, *this);
 }
 
 //----------------------------------------------------------------------
@@ -437,7 +437,7 @@ bool PseudoJet::contains(const PseudoJet &constituent) const{
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
 bool PseudoJet::is_inside(const PseudoJet &jet) const{
-  return validated_interface()->is_inside(*this, jet);
+  return validated_interface()->object_in_jet(*this, jet);
 }
 
 

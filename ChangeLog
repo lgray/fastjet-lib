@@ -1,3 +1,19 @@
+2011-02-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJetInterfaceBase.hh:
+	* include/fastjet/ClusterSequenceInterface.hh:
+	* src/PseudoJetInterfaceBase.cc:
+	* src/ClusterSequenceInterface.cc:
+	  contains() + is_inside()  ->  object_in_jet() in the interface
+	  (not in PseudoJet)
+
+	* include/fastjet/PseudoJetInterfaceBase.hh:
+	  made pieces() throw an error when no pieces associated
+
+	* src/MergedJetInterface.cc:
+	  trivial typo
+
 2011-02-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequenceInterface.cc: 
