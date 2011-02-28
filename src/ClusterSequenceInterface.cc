@@ -66,7 +66,7 @@ const ClusterSequence* ClusterSequenceInterface::associated_cluster_sequence() c
 // own so that they can be caught? [Maybe, but later]
 const ClusterSequence * ClusterSequenceInterface::validated_cs() const {
   if (!_associated_cs) 
-    throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope.");
+    throw Error("you requested information about the internal structure of a jet, but its associated ClusterSequence has gone out of scope.");
   return _associated_cs;
 }
 

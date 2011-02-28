@@ -512,6 +512,13 @@ public:
   /// cone type algorithms it can be non-null;
   std::vector<PseudoJet> unclustered_particles() const;
 
+  /// returns true if the object (jet or particle) is contained by (ie
+  /// belongs to) this cluster sequence.
+  ///
+  /// Tests performed: if thejet's interface is this cluster sequence
+  /// and its cluster history index is in a consistent range.
+  bool contains(const PseudoJet & object) const;
+
   /// transfer the sequence contained in other_seq into our own;
   /// any plugin "extras" contained in the from_seq will be lost
   /// from there.
@@ -536,13 +543,6 @@ public:
 protected:
   static JetAlgorithm _default_jet_algorithm;
   JetDefinition _jet_def;
-
-  /// returns true if the jet has a history index contained within
-  /// the range of this CS
-  bool _potentially_valid(const PseudoJet & jet) const {
-    return jet.cluster_hist_index() >= 0 
-      && jet.cluster_hist_index() < int(_history.size());
-  }
 
   /// transfer the vector<L> of input jets into our own vector<PseudoJet>
   /// _jets (with some reserved space for future growth).

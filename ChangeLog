@@ -1,3 +1,15 @@
+2011-02-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceInterface.cc: 
+	  changed the validated_cs Error messages to refer only to the CS
+	  having gone out of scope (since anything that reaches CSI
+	  necessarily has assoc CSI).
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/ClusterSequence.hh: 
+	  _potentially_valid(jet) replaced with contains(jet), and added a
+	  check for all the exclusive_subjet calls.
+
 2011-02-27  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/dummy.cc:  *** ADDED ***

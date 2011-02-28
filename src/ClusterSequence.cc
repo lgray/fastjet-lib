@@ -713,6 +713,8 @@ double ClusterSequence::exclusive_subdmerge_max(const PseudoJet & jet, int nsub)
 void ClusterSequence::get_subhist_set(set<const history_element*> & subhist,
                                      const  PseudoJet & jet, 
                                      double dcut, int maxjet) const {
+  assert(contains(jet));
+  
   subhist.clear();
   subhist.insert(&(_history[jet.cluster_hist_index()]));
 
@@ -747,15 +749,18 @@ bool ClusterSequence::object_in_jet(const PseudoJet & object,
 
   // make sure the object conceivably belongs to this clustering
   // sequence
-  assert(_potentially_valid(object) && _potentially_valid(jet));
+  assert(contains(object) && contains(jet));
 
   const PseudoJet * this_object = &object;
   const PseudoJet * childp;
   while(true) {
     if (this_object->cluster_hist_index() == jet.cluster_hist_index()) {
       return true;
-    } else if (has_child(*this_object, childp)) {this_object = childp;}
-    else {return false;}
+    } else if (has_child(*this_object, childp)) {
+      this_object = childp;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -1089,6 +1094,18 @@ vector<PseudoJet> ClusterSequence::unclustered_particles() const {
       unclustered.push_back(_jets[_history[i].jetp_index]);
   }
   return unclustered;
+}
+
+
+
+//----------------------------------------------------------------------
+// returns true if the cluster sequence contains this jet (i.e.  jet's
+// interface is this cluster sequence's and the cluster history index
+// is in a consistent range)
+bool ClusterSequence::contains(const PseudoJet & jet) const {
+  return jet.cluster_hist_index() >= 0 
+    &&   jet.cluster_hist_index() < int(_history.size())
+    &&   jet.associated_interface() == interface_to_this();
 }
 
 
