@@ -1,8 +1,24 @@
+2011-03-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJet.hh:
+	* doc/fastjet-doc.tex:
+	  renamed ExtraInfo -> UserInfo (and similarly for all occurrences
+	  of extra_info -> user_info). Also changed some of the other
+	  naming aspects:
+
+	    - user_info<L>() is now a template and returns a const ref
+	    - user_info_ptr() returns the pointer
+	    - user_info_shared_ptr() returns the shared pointer
+
+	  Updated documentation and included a simple usage example as
+	  well.
+
 2011-02-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/dummy.cc: *** ADDED ***
 	  added missing file here.
-	
+
 2011-02-28  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc:

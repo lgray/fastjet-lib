@@ -236,77 +236,107 @@ class PseudoJet {
   //\} ----- end of use index functions ---------------------------------
 
   //----------------------------------------------------------------------
-  /// @name Extra information types and functions
+  /// @name User information types and functions
   ///
-  /// Allows PseudoJet to carry extra info (as an object derived from
-  /// ExtraInfo).
-  /// See also the PseudoJetPlusInfo<TExtraInfo> class that should
-  /// make this easier.
+  /// Allows PseudoJet to carry extra user info (as an object derived from
+  /// UserInfo).
   //\{
 
-  /// @ingroup extra_info
-  /// \class ExtraInfo
-  /// a base class to hold extra information in PseudoJet
+  /// @ingroup user_info
+  /// \class UserInfo
+  /// a base class to hold extra user information in a PseudoJet
   ///
-  /// This is a dummy class to hold extra information. The motivation
-  /// behind its existence is a safety procedure: we could symply hold
-  /// a generic pointer but this allows for clean destruction when
-  /// memory is released and this allows consistency checks at the
-  /// level of the end-user by using dynamic_cast instead of a
-  /// brute-force cast.
-  class ExtraInfo{
+  /// This is a base class to help associate extra user information
+  /// with a jet. The user should store their information in a class
+  /// derived from this. This allows information of arbitrary
+  /// complexity to be easily associated with a PseudoJet (in contrast
+  /// to the user index). For example, in a Monte Carlo simulation,
+  /// the user information might include the PDG ID, and the position
+  /// of the production vertex for the particle.
+  ///
+  /// The PseudoJet is able to store a shared pointer to any object
+  /// derived from UserInfo. The use of a shared pointer frees the
+  /// user of the need to handle the memory management associated with
+  /// the information.
+  ///
+  /// Having the user information derive from a common base class also
+  /// facilitates dynamic casting, etc.
+  ///
+  class UserInfo{
   public:
     // dummy ctor
-    ExtraInfo(){};
+    UserInfo(){};
 
     // dummy virtual dtor
     // makes it polymorphic to allow for dynamic_cast
-    virtual ~ExtraInfo(){}; 
+    virtual ~UserInfo(){}; 
   };
 
-  /// error class to be thrown if accessing extra info when it doesn't
+  /// error class to be thrown if accessing user info when it doesn't
   /// exist
-  class InexistentExtraInfo : public Error {
+  class InexistentUserInfo : public Error {
   public:
-    InexistentExtraInfo();
+    InexistentUserInfo();
   };
 
-  /// retrieve a pointer to the extra information
-  const ExtraInfo* extra_info() const{
-    if (!_extra_info()) return NULL;
-    return _extra_info.get();
-  }
-
-  /// sets the internal shared pointer to the extra information.
+  /// sets the internal shared pointer to the user information.
   ///
   /// Note that the PseudoJet will now _own_ the pointer, and delete
-  /// the corresponding object when it (and anything copied from it)
-  /// goes out of scope. If that behaviour does not fit your needs,
-  /// access the shared pointer directly through the
-  /// extra_info_shared() function.
-  void set_extra_info(ExtraInfo * extra_info_in) {
-    _extra_info.reset(extra_info_in);
+  /// the corresponding object when it (the jet, and any copies of the jet)
+  /// goes out of scope. 
+  void set_user_info(UserInfo * user_info_in) {
+    _user_info.reset(user_info_in);
   }
 
-  /// returns a reference to the dynamic cast conversion of extra_info
+  /// returns a reference to the dynamic cast conversion of user_info
   /// to type L.
   ///
-  /// throws an InexistentExtraInfo() error if there is no extra info;
-  /// throws a std::bad_cast if the conversion doesn't work
+  /// Usage: suppose you have previously set the user info with a pointer
+  /// to an object of type MyInfo, 
+  ///
+  ///   class MyInfo: public PseudoJet::UserInfo {
+  ///      MyInfo(int id) : _pdg_id(id);
+  ///      int pdg_id() const {return _pdg_id;}
+  ///      int _pdg_id;
+  ///   };
+  ///
+  ///   PseudoJet particle(...);
+  ///   particle.set_user_info(new MyInfo(its_pdg_id));
+  ///
+  /// Then you would access that pdg_id() as
+  ///
+  ///   particle.user_info<MyInfo>().pdg_id();
+  ///
+  /// It's overkill for just a single integer, but scales easily to
+  /// more extensive information.
+  ///
+  /// Note that user_info() throws an InexistentUserInfo() error if
+  /// there is no user info; throws a std::bad_cast if the conversion
+  /// doesn't work
+  ///
+  /// If this behaviour does not fit your needs, use instead the the
+  /// user_info_ptr() or user_info_shared_ptr() member functions.
   template<class L>
-  const L & extra_info_cast() const{
-    if (_extra_info.get() == 0) throw InexistentExtraInfo();
-    return dynamic_cast<const L &>(* _extra_info.get());
+  const L & user_info() const{
+    if (_user_info.get() == 0) throw InexistentUserInfo();
+    return dynamic_cast<const L &>(* _user_info.get());
   }
 
-  /// retrieve a shared pointer to the extra information
-  SharedPtr<ExtraInfo> & extra_info_shared(){
-    return _extra_info;
+  /// retrieve a pointer to the (const) user information
+  const UserInfo * user_info_ptr() const{
+    if (!_user_info()) return NULL;
+    return _user_info.get();
   }
 
-  /// retrieve a shared pointer to the extra information
-  const SharedPtr<ExtraInfo> & extra_info_shared() const{
-    return _extra_info;
+
+  /// retrieve a (const) shared pointer to the user information
+  const SharedPtr<UserInfo> & user_info_shared_ptr() const{
+    return _user_info;
+  }
+
+  /// retrieve a (non-const) shared pointer to the user information
+  SharedPtr<UserInfo> & user_info_shared_ptr(){
+    return _user_info;
   }
 
   // \} --- end of extra info functions ---------------------------------
@@ -452,7 +482,7 @@ class PseudoJet {
   /// retrieve the constituents. 
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// associated ClusterSequence or other substructure information
   virtual std::vector<PseudoJet> constituents() const;
 
 
@@ -516,7 +546,7 @@ class PseudoJet {
   virtual bool has_pieces() const;
 
 
-  /// retrieve the pieces that build the jet. 
+  /// retrieve the pieces that make up the jet. 
   ///
   /// If the jet does not support pieces, an error is throw
   virtual std::vector<PseudoJet> pieces() const;
@@ -573,7 +603,7 @@ class PseudoJet {
  protected:  
 
   SharedPtr<PseudoJetInterfaceBase> _associated_interface;
-  SharedPtr<ExtraInfo> _extra_info;
+  SharedPtr<UserInfo> _user_info;
 
 
  private: 

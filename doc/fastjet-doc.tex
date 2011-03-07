@@ -366,8 +366,8 @@ The simpler method is through an integer called the user index
   int user_index() const ;
 \end{lstlisting}
 A more powerful method, which involves a pointer to a derived class of
-\ttt{PseudoJet::ExtraInfo} is discussed in
-appendix~\ref{app:extra-info}. 
+\ttt{PseudoJet::UserInfo} is discussed in
+appendix~\ref{app:user-info}. 
 
 A \verb:PseudoJet: can be reset with
 \begin{lstlisting}
@@ -3088,49 +3088,49 @@ external \ttt{Recombiner} is not provided. It provides a useful
 example of how to implement a new \ttt{Recombiner} class.
 
 %======================================================================
-\section{Extra Info in PseudoJets}
-\label{app:extra-info}
+\section{User Info in PseudoJets}
+\label{app:user-info}
 
-One method for associating extra information with a \ttt{PseudoJet} is
+One method for associating extra user information with a \ttt{PseudoJet} is
 via its user index (section~\ref{sec:fastjet::PseudoJet}). This is
 adequate for encoding simple information (for example an input
 particle's barcode in a HepMC event), but can quickly show its
 limitations (for example, when simulating pileup, if an input particle
 can come from one of several HepMC events).
 
-A second method for supplementing a \PJ with extra information is for
-the user to derive a class from \ttt{PseudoJet::ExtraInfo} and
+A second method for supplementing a \PJ with extra user information is for
+the user to derive a class from \ttt{PseudoJet::UserInfo} and
 associate the \ttt{PseudoJet} with a pointer to an instance of that
 class:
 \begin{lstlisting}
-  void set_extra_info(ExtraInfo * extra_info);
-  const ExtraInfo* extra_info() const;
+  void set_user_info(UserInfo * user_info);
+  const UserInfo* user_info_ptr() const;
 \end{lstlisting}
 It is important to be aware that the function
-\ttt{set\_extra\_info(...)} transfers ownership of the pointer to the
+\ttt{set\_user\_info(...)} transfers ownership of the pointer to the
 \ttt{PseudoJet}. This is achieved with the help of a shared
 pointer. Copies of the \ttt{PseudoJet} will point to the same
-\ttt{extra\_info}. When the \ttt{PseudoJet} and all its copies go out
-of scope the \ttt{extra\_info} will be deleted.
+\ttt{user\_info}. When the \ttt{PseudoJet} and all its copies go out
+of scope the \ttt{user\_info} will be deleted.
 %
-Since nearly all practical uses of \ttt{extra\_info} will require it
-to be cast to the relevant derived class of  \ttt{ExtraInfo}, we also
+Since nearly all practical uses of \ttt{user\_info} will require it
+to be cast to the relevant derived class of  \ttt{UserInfo}, we also
 provide the following member function for convenience:
 \begin{lstlisting}
-  template<class L> const L & extra_info_cast() const;
+  template<class L> const L & user_info() const;
 \end{lstlisting}
 which casts the extra info to type \ttt{L}.
 %
 If the cast fails, or the extra info has not been set, an error
 will be thrown.
 
-The user may wonder why we have used shared pointers internally (i.e.\ have
-ownership transferred to the \ttt{PseudoJet}) rather than normal
-pointers. 
+The user may wonder why we have used shared pointers internally (i.e.\
+have ownership transferred to the \ttt{PseudoJet}) rather than normal
+pointers.
 %
 An example use case where the difference is important is if, for
 example, one wishes to write a \ttt{Recombiner} that sets the
-\ttt{extra\_info} in the recombined \PJ.. 
+\ttt{user\_info} in the recombined \PJ.. 
 %
 Since this is likely to be new information, the \ttt{Recombiner} will
 have to allocate some memory for it. 
@@ -3159,9 +3159,27 @@ It behaves almost identically to the \ttt{C++0x} \ttt{shared\_ptr},
 though some internal details are different.
 %
 The end-user should not usually need to manipulate the
-\ttt{SharedPtr}, though the \ttt{SharedPtr} to \ttt{extra\_info} is
-accessible through \PJ's \ttt{extra\_info\_shared()} member.
+\ttt{SharedPtr}, though the \ttt{SharedPtr} to \ttt{user\_info} is
+accessible through \PJ's \ttt{user\_info\_shared\_ptr()} member.
 
+An example of the usage might be the following. First you define a
+class \ttt{MyInfo}, derived from \ttt{PseudoJet::UserInfo},
+\begin{lstlisting}
+  class MyInfo: public PseudoJet::UserInfo {
+     MyInfo(int id) : _pdg_id(id);
+     int pdg_id() const {return _pdg_id;}
+     int _pdg_id;
+  };
+\end{lstlisting}
+Then you might set the info as follows
+\begin{lstlisting}
+  PseudoJet particle(...);
+  particle.set_user_info(new MyInfo(its_pdg_id));
+\end{lstlisting}
+and later access the PDG id through the function
+\begin{lstlisting}
+  particle.user_info<MyInfo>().pdg_id();
+\end{lstlisting}
 
 % \section{External Range Definitions}
 % \label{app:b}

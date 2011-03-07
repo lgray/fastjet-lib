@@ -448,8 +448,7 @@ bool PseudoJet::has_constituents() const{
 }
 
 //----------------------------------------------------------------------
-// retrieve the constituents. An empty vector is returned if there is
-// no associated ClusterSequence
+// retrieve the constituents.
 vector<PseudoJet> PseudoJet::constituents() const{
   return validated_interface()->constituents(*this);
 }
@@ -531,9 +530,9 @@ bool PseudoJet::has_pieces() const{
   return ((_associated_interface()) && (_associated_interface->has_pieces()));
 }
 
-// retrieve the pieces that build the jet. 
+// retrieve the pieces that make up the jet. 
 //
-// By defaultm a jet has only itself as a piece.
+// By default a jet does not have pieces.
 // If the underlying interface supports "pieces" retrieve the
 // pieces from there.
 std::vector<PseudoJet> PseudoJet::pieces() const{
@@ -604,8 +603,8 @@ bool PseudoJet::is_pure_ghost() const{
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-/// provide a meaningful error message for InexistentExtraInfo
-PseudoJet::InexistentExtraInfo::InexistentExtraInfo() : Error("you attempted to perform a dynamic cast of a PseudoJet's extra info, but the extra info pointer was null")
+/// provide a meaningful error message for InexistentUserInfo
+PseudoJet::InexistentUserInfo::InexistentUserInfo() : Error("you attempted to perform a dynamic cast of a PseudoJet's extra info, but the extra info pointer was null")
 {}
 
 
