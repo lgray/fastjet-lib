@@ -39,7 +39,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup tools
 /// \class MergedJetInterface
-/// The interface for qa jet made of pieces
+/// The interface for a jet made of pieces
 ///
 /// This stores the vector of the pieces that make the jet and provide
 /// the methods to access them
