@@ -398,6 +398,10 @@ Selector SelectorRectangle(const double & half_rap_width, const double & half_ph
 /// select objects that are (or are only made of) ghosts
 Selector SelectorIsPureGhost();
 
+/// select objects that carry at least a fraction "fraction" of the reference jet
+/// (Note that this selectir takes a reference)
+Selector SelectorPtFractionMin(double fraction);
+
 /// @}
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

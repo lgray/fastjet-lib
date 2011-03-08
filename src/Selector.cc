@@ -1147,20 +1147,16 @@ Selector SelectorRectangle(const double & half_rap_width, const double & half_ph
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-// very basic set of selectors (at the moment just the identity!)
-//----------------------------------------------------------------------
-
-//----------------------------------------------------------------------
-/// helper for selecting the n hardest jets
+/// helper for selecting the pure ghost
 class SW_IsPureGhost : public SelectorWorker {
 public:
   /// ctor with specification of the number of objects to keep
   SW_IsPureGhost(){}
 
-  /// just let everything pass
+  /// return true if the jet is a pure-ghost jet
   virtual bool pass(const PseudoJet & jet) const {
-    // if te jet has no area support then it's vertainly not a ghost
-    if (!jet.has_area()) return true;
+    // if the jet has no area support then it's certainly not a ghost
+    if (!jet.has_area()) return false;
 
     // otherwise, just call that method on the jet
     return jet.is_pure_ghost();
@@ -1174,6 +1170,44 @@ public:
 // select objects that are (or are only made of) ghosts
 Selector SelectorIsPureGhost(){
   return Selector(new SW_IsPureGhost());
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting the jets that carry at least a given fraction
+/// of the reference jet
+class SW_PtFractionMin : public SW_WithReference {
+public:
+  /// ctor with specification of the number of objects to keep
+  SW_PtFractionMin(double fraction) : _fraction2(fraction*fraction){}
+
+  /// return true if the jet carries a large enough fraction of the reference.
+  /// Throw an error if the reference is not initialised.
+  virtual bool pass(const PseudoJet & jet) const {
+    // make sure the centre is initialised
+    if (! _is_initialised)
+      throw Error("To use a SelectorPtFractionMin (or any selector that requires a reference), you first have to call set_reference(...)");
+
+    // otherwise, just call that method on the jet
+    return (jet.perp2() >= _fraction2*_reference.perp2());
+  }
+  
+  /// returns a description of the worker
+  virtual string description() const {
+    ostringstream ostr;
+    ostr << "pt >= " << sqrt(_fraction2) << "* pt_ref";
+    return ostr.str();
+  }
+
+protected:
+  double _fraction2;
+};
+
+
+// select objects that carry at least a fraction "fraction" of the reference jet
+// (Note that this selectir takes a reference)
+Selector SelectorPtFractionMin(double fraction){
+  return Selector(new SW_PtFractionMin(fraction));
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

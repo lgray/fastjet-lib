@@ -1,3 +1,14 @@
+2011-03-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/Selector.hh:
+	* src/Selector.cc:
+	  - pure-ghost selector: fixed comment; fixed return value for
+	    jets with no area (false is returned as they are certainly
+	    not ghosts)
+	  - added a SelectorPtFractionMin that keeps the jets carrying
+	    at least a given fraction of a reference jet.
+
+
 2011-03-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/Selector.hh:
