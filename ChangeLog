@@ -1,3 +1,11 @@
+2011-03-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* experimental/tools/Transformer.* -> tools/
+	* experimental/tools/Filter.* -> tools/
+	* tools/**/Makefile.am
+	  moved the Filter (and Transformer) into tools/ directory of the
+	  core structure.
+
 2011-03-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc:
