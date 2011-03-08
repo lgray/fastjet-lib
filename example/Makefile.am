@@ -16,7 +16,8 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  08-selector \
  09-extra_info \
  10-subjets \
- 11-boosted_higgs
+ 11-boosted_higgs \
+ 12-filter
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -93,6 +94,11 @@ endif
 11_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 11_boosted_higgs_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
+# illustrate the use of filtering
+12_filter_SOURCES = 12-filter.cc
+12_filter_SHORTNAME = 12
+12_filter_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+12_filter_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
 
 
 # backward-compatible + make-check-related things

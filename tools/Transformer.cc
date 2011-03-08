@@ -61,14 +61,15 @@ PseudoJet Transformer::operator()(const PseudoJet & original) const{
   // default behaviour?
   // options include
   //  - simply copy the original
-  //  - keep the original with a TransformerInterface
+  //  - keep the original with an empty PseudoJetInterfaceBase
   //  - throw an error
   // we go for the 2nd one mostly to illustrate the process but also
-  // because it would follow a more standard bahaviour of a
+  // because it would follow a more standard behaviour of a
   // Transformer leading to an object with a TransformerInterface
 
   PseudoJet result = original;
 
+  // the following sets the "interface"
   PseudoJetInterfaceBase *iface = new PseudoJetInterfaceBase();
   result.set_associated_interface(SharedPtr<PseudoJetInterfaceBase>(iface));
 

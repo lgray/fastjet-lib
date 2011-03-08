@@ -1,4 +1,13 @@
-2011-03-08  Gavin SALAM  <salam@lpthe.jussieu.fr>
+2011-03-08  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
+
+	* example/Makefile.am: 
+	* experimental/tools/test.cc -> example/12-filter.cc: 
+
+	  moved the test program for filter to example/
+	  Note, this will probably need reworking a little in the future. 
+
+	* include/fastjet/PseudoJetInterfaceBase.hh: 
+	  removed some extraneous semicolons.
 
 	* experimental/tools/Transformer.* -> tools/
 	* experimental/tools/Filter.* -> tools/
@@ -6,7 +15,10 @@
 	  moved the Filter (and Transformer) into tools/ directory of the
 	  core structure.
 
-2011-03-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+	  Removed TransformerInterface (it seemed to be unused and
+	  redundant) + worked a little bit on comments.
+
+2011-03-07  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* src/PseudoJet.cc:
 	* include/fastjet/PseudoJet.hh:

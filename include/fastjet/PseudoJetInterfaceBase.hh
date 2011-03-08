@@ -72,7 +72,7 @@ public:
   //\{
   //-------------------------------------------------------------
   /// returns true if there is a valid associated ClusterSequence
-  virtual bool has_associated_cluster_sequence() const { return false;};
+  virtual bool has_associated_cluster_sequence() const { return false;}
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
@@ -128,7 +128,7 @@ public:
   /// return true if the interface supports constituents. 
   ///
   /// false by default
-  virtual bool has_constituents() const {return false;};
+  virtual bool has_constituents() const {return false;}
 
   /// retrieve the constituents. 
   ///
@@ -137,7 +137,7 @@ public:
 
 
   /// return true if the interface supports exclusive_subjets. 
-  virtual bool has_exclusive_subjets() const {return false;};
+  virtual bool has_exclusive_subjets() const {return false;}
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
@@ -182,7 +182,7 @@ public:
   /// return true if the interface supports pieces. 
   ///
   /// false by default
-  virtual bool has_pieces() const {return false;};
+  virtual bool has_pieces() const {return false;}
 
   /// retrieve the pieces building the jet. 
   ///
@@ -197,7 +197,7 @@ public:
   /// check if it has a defined area
   ///
   /// false by default
-  virtual bool has_area() const {return false;};
+  virtual bool has_area() const {return false;}
 
   /// return the jet (scalar) area.
   ///
