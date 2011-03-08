@@ -1,3 +1,9 @@
+2011-03-08  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/Selector.hh:
+	* src/Selector.xx:
+	  added SelectorIdentity and SelectorIsPureGhost
+
 2011-03-08  Gavin SALAM  <salam@lpthe.jussieu.fr> & Matteo
 
 	* example/Makefile.am: 

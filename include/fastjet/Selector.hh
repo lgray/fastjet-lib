@@ -126,9 +126,6 @@ public:
   virtual double known_area() const{
     throw Error("this selector has no computable area");
   }
-
-
-
 };
 
 //----------------------------------------------------------------------
@@ -285,6 +282,13 @@ private:
 /// \addtogroup tools
 /// @{
 
+
+// fundamental selectors
+//----------------------------------------------------------------------
+
+// "identity" selector that lets everything pass
+Selector SelectorIdentity();
+
 // logical operations
 //----------------------------------------------------------------------
 
@@ -386,6 +390,13 @@ Selector SelectorStrip(const double & half_width);
 /// reference jet and azimuthal-angle distance within 'half_phi_width'; the
 /// reference jet is set by Selector::set_reference(...)
 Selector SelectorRectangle(const double & half_rap_width, const double & half_phi_width);
+
+
+// additional (mostly helper) selectors
+//----------------------------------------------------------------------
+
+/// select objects that are (or are only made of) ghosts
+Selector SelectorIsPureGhost();
 
 /// @}
 

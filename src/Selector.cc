@@ -59,6 +59,40 @@ double Selector::area(double cell_area) const{
 
 
 //----------------------------------------------------------------------
+// very basic set of selectors (at the moment just the identity!)
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+/// helper for selecting the n hardest jets
+class SW_Identity : public SelectorWorker {
+public:
+  /// ctor with specification of the number of objects to keep
+  SW_Identity(){}
+
+  /// just let everything pass
+  virtual bool pass(const PseudoJet & jet) const {
+    return true;
+  }
+
+  /// For each jet that does not pass the cuts, this routine sets the 
+  /// pointer to 0. 
+  virtual void terminator(vector<const PseudoJet *> & jets) const {
+    // everyything passes, hence nothing to nullify
+    return;
+  }
+  
+  /// returns a description of the worker
+  virtual string description() const { return "Identity";}
+};
+
+
+// returns an "identity" selector that lets everything pass
+Selector SelectorIdentity() {
+  return Selector(new SW_Identity);
+}
+
+
+//----------------------------------------------------------------------
 // selector and workers for operators
 //----------------------------------------------------------------------
 
@@ -1106,5 +1140,40 @@ Selector SelectorRectangle(const double & half_rap_width, const double & half_ph
 }
 
 
+
+
+//----------------------------------------------------------------------
+// additional (mostly helper) selectors
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+// very basic set of selectors (at the moment just the identity!)
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+/// helper for selecting the n hardest jets
+class SW_IsPureGhost : public SelectorWorker {
+public:
+  /// ctor with specification of the number of objects to keep
+  SW_IsPureGhost(){}
+
+  /// just let everything pass
+  virtual bool pass(const PseudoJet & jet) const {
+    // if te jet has no area support then it's vertainly not a ghost
+    if (!jet.has_area()) return true;
+
+    // otherwise, just call that method on the jet
+    return jet.is_pure_ghost();
+  }
+  
+  /// returns a description of the worker
+  virtual string description() const { return "pure ghost";}
+};
+
+
+// select objects that are (or are only made of) ghosts
+Selector SelectorIsPureGhost(){
+  return Selector(new SW_IsPureGhost());
+}
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
