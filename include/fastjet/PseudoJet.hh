@@ -42,7 +42,7 @@
 #include "fastjet/internal/DerivedPseudoJetHelper.hh"
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/Error.hh"
-#include "fastjet/PseudoJetInterfaceBase.hh"
+#include "fastjet/PseudoJetStructureBase.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -239,11 +239,11 @@ class PseudoJet {
   /// @name User information types and functions
   ///
   /// Allows PseudoJet to carry extra user info (as an object derived from
-  /// UserInfo).
+  /// UserInfoBase).
   //\{
 
   /// @ingroup user_info
-  /// \class UserInfo
+  /// \class UserInfoBase
   /// a base class to hold extra user information in a PseudoJet
   ///
   /// This is a base class to help associate extra user information
@@ -262,14 +262,14 @@ class PseudoJet {
   /// Having the user information derive from a common base class also
   /// facilitates dynamic casting, etc.
   ///
-  class UserInfo{
+  class UserInfoBase{
   public:
     // dummy ctor
-    UserInfo(){};
+    UserInfoBase(){};
 
     // dummy virtual dtor
     // makes it polymorphic to allow for dynamic_cast
-    virtual ~UserInfo(){}; 
+    virtual ~UserInfoBase(){}; 
   };
 
   /// error class to be thrown if accessing user info when it doesn't
@@ -284,7 +284,7 @@ class PseudoJet {
   /// Note that the PseudoJet will now _own_ the pointer, and delete
   /// the corresponding object when it (the jet, and any copies of the jet)
   /// goes out of scope. 
-  void set_user_info(UserInfo * user_info_in) {
+  void set_user_info(UserInfoBase * user_info_in) {
     _user_info.reset(user_info_in);
   }
 
@@ -294,7 +294,7 @@ class PseudoJet {
   /// Usage: suppose you have previously set the user info with a pointer
   /// to an object of type MyInfo, 
   ///
-  ///   class MyInfo: public PseudoJet::UserInfo {
+  ///   class MyInfo: public PseudoJet::UserInfoBase {
   ///      MyInfo(int id) : _pdg_id(id);
   ///      int pdg_id() const {return _pdg_id;}
   ///      int _pdg_id;
@@ -323,19 +323,19 @@ class PseudoJet {
   }
 
   /// retrieve a pointer to the (const) user information
-  const UserInfo * user_info_ptr() const{
+  const UserInfoBase * user_info_ptr() const{
     if (!_user_info()) return NULL;
     return _user_info.get();
   }
 
 
   /// retrieve a (const) shared pointer to the user information
-  const SharedPtr<UserInfo> & user_info_shared_ptr() const{
+  const SharedPtr<UserInfoBase> & user_info_shared_ptr() const{
     return _user_info;
   }
 
   /// retrieve a (non-const) shared pointer to the user information
-  SharedPtr<UserInfo> & user_info_shared_ptr(){
+  SharedPtr<UserInfoBase> & user_info_shared_ptr(){
     return _user_info;
   }
 
@@ -344,7 +344,7 @@ class PseudoJet {
   //----------------------------------------------------------------------
   /// @name Description
   ///
-  /// Since a PseudoJet can have an interface that contains a variety
+  /// Since a PseudoJet can have a structure that contains a variety
   /// of information, we provide a description that allows one to check
   /// exactly what kind of PseudoJet we are dealing with
   //
@@ -383,7 +383,7 @@ class PseudoJet {
   //\}
 
   //-------------------------------------------------------------
-  /// @name Access to the associated PseudoJetInterface object.
+  /// @name Access to the associated PseudoJetStructureBase object.
   ///
   /// In addition to having kinematic information, jets may contain a
   /// reference to an associated ClusterSequence (this is the case,
@@ -392,39 +392,50 @@ class PseudoJet {
   //\{
   //-------------------------------------------------------------
 
-  /// set the associated interface
-  void set_associated_interface(const SharedPtr<PseudoJetInterfaceBase> &interface){
-    _associated_interface = interface;
-  }
+  /// set the associated structure
+  void set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure);
 
-  /// return a copy of the (shared pointer to the) PseudoJetInterfaceBase
-  const SharedPtr<PseudoJetInterfaceBase> & associated_interface() const {
-    return _associated_interface;
-  }
-  
-  /// if the jet has a valid associated cluster sequence interface
-  /// then return a pointer to it; otherwise throw an error
-  const SharedPtr<PseudoJetInterfaceBase> validated_interface() const;
+  /// return true if there is some strusture associated with this PseudoJet
+  bool has_structure() const;
 
-  /// for faster access, we provide a direct access to an interface of a given type
+  /// return a pointer to the structure (of type
+  /// PseudoJetStructureBase*) associated wioth this PseudoJet.
   ///
-  /// if the type cannot be met, NULL is returned
-  /// if there is no interface, an error is thrown
-  template<typename InterfaceType>
-  const InterfaceType * associated_interface_ptr() const;
+  /// return NULL if there is no associated structure
+  const PseudoJetStructureBase* structure_ptr() const;
+  
+  /// return a pointer to the structure (of type
+  /// PseudoJetStructureBase*) associated wioth this PseudoJet.
+  ///
+  /// throw an error if there is no associated structure
+  const PseudoJetStructureBase* validated_structure_ptr() const;
+  
+  /// return a reference to the shared pointer to the
+  /// PseudoJetStructureBase associated wioth this PseudoJet
+  const SharedPtr<PseudoJetStructureBase> & structure_shared_ptr() const;
+
+  /// returns a reference to the structure casted to the requested
+  /// structure type
+  ///
+  /// If there is no sructure associated, an Error is thrown.
+  /// If the type is not met, a std::bad_cast error is thrown.
+  template<typename StructureType>
+  const StructureType & structure() const;
+
+
 
   /// check if the PseudoJet has the properties of the result of a Transformer 
-  /// (that is, its interface is compatible with a Transformer::InterfaceType)
-  /// if there is no interface, false is returned
+  /// (that is, its structure is compatible with a Transformer::StructureType)
+  /// if there is no structure, false is returned
   template<typename TransformerType>
   bool has_properties_of() const;
 
-  /// this is a helper to access an interface created by a Transformer 
-  /// (that is, of type Transformer::InterfaceType)
+  /// this is a helper to access an structuree created by a Transformer 
+  /// (that is, of type Transformer::StructureType)
   /// NULL is returned if the corresponding type is not met
-  /// if there is no interface, an error is thrown
+  /// if there is no structure, an error is thrown
   template<typename TransformerType>
-  const typename TransformerType::InterfaceType * extra_properties() const;
+  const typename TransformerType::StructureType * extra_properties() const;
 
   //\}
 
@@ -541,8 +552,8 @@ class PseudoJet {
   /// By default a single particle or a jet coming from a
   /// ClusterSequence have no pieces and this methos will return false.
   ///
-  /// In practice, this is equivalent to have an interface of type
-  /// MergedJetInterface .
+  /// In practice, this is equivalent to have an structure of type
+  /// CompositeJetStructure.
   virtual bool has_pieces() const;
 
 
@@ -602,8 +613,8 @@ class PseudoJet {
 
  protected:  
 
-  SharedPtr<PseudoJetInterfaceBase> _associated_interface;
-  SharedPtr<UserInfo> _user_info;
+  SharedPtr<PseudoJetStructureBase> _structure;
+  SharedPtr<UserInfoBase> _user_info;
 
 
  private: 
@@ -719,7 +730,7 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 inline void PseudoJet::_reset_indices() { 
   set_cluster_hist_index(-1);
   set_user_index(-1);
-  _associated_interface.reset();
+  _structure.reset();
 }
 
 //----------------------------------------------------------------------
@@ -756,37 +767,38 @@ inline void PseudoJet::reset(double px, double py, double pz, double E) {
 
 
 //-------------------------------------------------------------------------------
-// implementation of the templated accesses to the underlying interface
+// implementation of the templated accesses to the underlying structyre
 //-------------------------------------------------------------------------------
 
-// for faster access, we provide a direct access to an interface of a given type
-// if the type cannot be met, NULL is returned
-template<typename InterfaceType>
-const InterfaceType * PseudoJet::associated_interface_ptr() const{
-  if (!_associated_interface())
-    throw Error("Trying to access the interface of a PseudoJet without an associated interface");
-
-  return dynamic_cast<const InterfaceType *>(_associated_interface.get());
+// returns a reference to the structure casted to the requested
+// structure type
+//
+// If there is no sructure associated, an Error is thrown.
+// If the type is not met, a std::bad_cast error is thrown.
+template<typename StructureType>
+const StructureType & PseudoJet::structure() const{
+  return dynamic_cast<const StructureType &>(* validated_structure_ptr());
+  
 }
 
 // check if the PseudoJet has the properties of the result of a Transformer 
-// (that is, its interface is compatible with a Transformer::InterfaceType)
+// (that is, its structure is compatible with a Transformer::StructureType)
 template<typename TransformerType>
 bool PseudoJet::has_properties_of() const{
-  if (!_associated_interface()) return false;
+  if (!_structure()) return false;
 
-  return dynamic_cast<const typename TransformerType::InterfaceType *>(_associated_interface.get()) != 0;
+  return dynamic_cast<const typename TransformerType::StructureType *>(_structure.get()) != 0;
 }
 
-// this is a helper to access an interface created by a Transformer 
-// (that is, of type Transformer::InterfaceType)
+// this is a helper to access a structure created by a Transformer 
+// (that is, of type Transformer::StructureType)
 // NULL is returned if the corresponding type is not met
 template<typename TransformerType>
-const typename TransformerType::InterfaceType * PseudoJet::extra_properties() const{
-  if (!_associated_interface()) 
-    throw Error("Trying to access the interface of a PseudoJet without an associated interface");
+const typename TransformerType::StructureType * PseudoJet::extra_properties() const{
+  if (!_structure()) 
+    throw Error("Trying to access the structure of a PseudoJet without an associated structure");
 
-  return dynamic_cast<const typename TransformerType::InterfaceType *>(_associated_interface.get());
+  return dynamic_cast<const typename TransformerType::StructureType *>(_structure.get());
 }
 
 
@@ -795,23 +807,23 @@ const typename TransformerType::InterfaceType * PseudoJet::extra_properties() co
 // helper functions to build a jet made of pieces
 //-------------------------------------------------------------------------------
 
-/// build a MergedJet from the vector of its pieces
+/// build a "CompositeJet" from the vector of its pieces
 ///
 /// In this case, E-scheme recombination is assumed to compute the
 /// total momentum
-PseudoJet merge(const std::vector<PseudoJet> & pieces);
+PseudoJet join(const std::vector<PseudoJet> & pieces);
 
 /// build a MergedJet from a single PseudoJet
-PseudoJet merge(const PseudoJet & j1);
+PseudoJet join(const PseudoJet & j1);
 
 /// build a MergedJet from 2 PseudoJet
-PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2);
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2);
 
 /// build a MergedJet from 3 PseudoJet
-PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3);
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3);
 
 /// build a MergedJet from 4 PseudoJet
-PseudoJet merge(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4);
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4);
 
 
 

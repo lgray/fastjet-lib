@@ -69,9 +69,9 @@ PseudoJet Transformer::operator()(const PseudoJet & original) const{
 
   PseudoJet result = original;
 
-  // the following sets the "interface"
-  PseudoJetInterfaceBase *iface = new PseudoJetInterfaceBase();
-  result.set_associated_interface(SharedPtr<PseudoJetInterfaceBase>(iface));
+  // the following sets the "structure"
+  PseudoJetStructureBase *struct_ptr = new PseudoJetStructureBase();
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(struct_ptr));
 
   return result;
 }

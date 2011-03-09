@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include <fastjet/MergedJetInterface.hh>
+#include <fastjet/CompositeJetStructure.hh>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -36,31 +36,31 @@ using namespace std;
 
 
 //-------------------------------------------------------------------------------
-// \class MergedJetInterface
-// The interface for qa jet made of pieces
+// \class CompositeJetStructure
+// The structure for a jet made of pieces
 //
 // This stores the vector of the pieces that make the jet and provide
 // the methods to access them
 // -------------------------------------------------------------------------------
 
 // description
-std::string MergedJetInterface::description() const{ 
-  string str = "Merged PseudoJet";
+std::string CompositeJetStructure::description() const{ 
+  string str = "Composite PseudoJet";
   return str; 
 }
 
 
 
-// things reimplemented from the base interface
+// things reimplemented from the base structure
 //------------------------------------------------------------------------------
-bool MergedJetInterface::has_constituents() const{
+bool CompositeJetStructure::has_constituents() const{
   for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
     if (!pit->has_constituents()) return false;
 
   return true;
 }
 
-std::vector<PseudoJet> MergedJetInterface::constituents(const PseudoJet &jet) const{
+std::vector<PseudoJet> CompositeJetStructure::constituents(const PseudoJet &jet) const{
   // the following code automatically throws an Error if any of the
   // pieces has no constituents
   vector<PseudoJet> all_constituents = _pieces[0].constituents();
@@ -72,7 +72,7 @@ std::vector<PseudoJet> MergedJetInterface::constituents(const PseudoJet &jet) co
   return all_constituents;
 }
 
-std::vector<PseudoJet> MergedJetInterface::pieces(const PseudoJet &jet) const{
+std::vector<PseudoJet> CompositeJetStructure::pieces(const PseudoJet &jet) const{
   return _pieces;
 }
 

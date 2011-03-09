@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/ClusterSequenceInterface.hh"
+#include "fastjet/ClusterSequenceStructure.hh"
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
@@ -46,13 +46,13 @@ using namespace std;
 
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
-bool ClusterSequenceInterface::has_associated_cluster_sequence() const{
+bool ClusterSequenceStructure::has_associated_cluster_sequence() const{
   return (_associated_cs != NULL);
 }
 
 // get a (const) pointer to the associated ClusterSequence (NULL if
 // inexistent)
-const ClusterSequence* ClusterSequenceInterface::associated_cluster_sequence() const{
+const ClusterSequence* ClusterSequenceStructure::associated_cluster_sequence() const{
   if (! has_associated_cluster_sequence()) return NULL;
 
   return _associated_cs;
@@ -64,7 +64,7 @@ const ClusterSequence* ClusterSequenceInterface::associated_cluster_sequence() c
 //
 // Open question: should these errors be upgraded to classes of their
 // own so that they can be caught? [Maybe, but later]
-const ClusterSequence * ClusterSequenceInterface::validated_cs() const {
+const ClusterSequence * ClusterSequenceStructure::validated_cs() const {
   if (!_associated_cs) 
     throw Error("you requested information about the internal structure of a jet, but its associated ClusterSequence has gone out of scope.");
   return _associated_cs;
@@ -81,7 +81,7 @@ const ClusterSequence * ClusterSequenceInterface::validated_cs() const {
 //
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence
-bool ClusterSequenceInterface::has_partner(const PseudoJet &reference, PseudoJet &partner) const{
+bool ClusterSequenceStructure::has_partner(const PseudoJet &reference, PseudoJet &partner) const{
   return validated_cs()->has_partner(reference, partner);
 }
 
@@ -91,7 +91,7 @@ bool ClusterSequenceInterface::has_partner(const PseudoJet &reference, PseudoJet
 // 
 // false is also returned if this PseudoJet has no associated
 // ClusterSequence, with the child set to 0
-bool ClusterSequenceInterface::has_child(const PseudoJet &reference, PseudoJet &child) const{
+bool ClusterSequenceStructure::has_child(const PseudoJet &reference, PseudoJet &child) const{
   return validated_cs()->has_child(reference, child);
 }
 
@@ -101,7 +101,7 @@ bool ClusterSequenceInterface::has_child(const PseudoJet &reference, PseudoJet &
 //
 // false is also returned if this PseudoJet has no parent
 // ClusterSequence
-bool ClusterSequenceInterface::has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const{
+bool ClusterSequenceStructure::has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const{
   return validated_cs()->has_parents(reference, parent1, parent2);
 }
 
@@ -110,7 +110,7 @@ bool ClusterSequenceInterface::has_parents(const PseudoJet &reference, PseudoJet
 //
 // an error is thrown if there is no CS associated with one of the 2 jets.
 // fasle is returned if teh 2 jets do not belong to the same CS
-bool ClusterSequenceInterface::object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const{
+bool ClusterSequenceStructure::object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const{
   if ((!has_associated_cluster_sequence()) || (!jet.has_associated_cluster_sequence()))
     throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
 
@@ -120,11 +120,11 @@ bool ClusterSequenceInterface::object_in_jet(const PseudoJet &reference, const P
 }
 
 
-// return true if the interface supports constituents. 
+// return true if the structure supports constituents. 
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterface::has_constituents() const{
+bool ClusterSequenceStructure::has_constituents() const{
   if (!has_associated_cluster_sequence())
     throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
 
@@ -134,15 +134,15 @@ bool ClusterSequenceInterface::has_constituents() const{
 
 // retrieve the constituents. An empty vector is returned if there is
 // no associated ClusterSequence
-vector<PseudoJet> ClusterSequenceInterface::constituents(const PseudoJet &reference) const{
+vector<PseudoJet> ClusterSequenceStructure::constituents(const PseudoJet &reference) const{
   return validated_cs()->constituents(reference);
 }
 
-// return true if the interface supports exclusive_subjets. 
+// return true if the structure supports exclusive_subjets. 
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-bool ClusterSequenceInterface::has_exclusive_subjets() const{
+bool ClusterSequenceStructure::has_exclusive_subjets() const{
   if (!has_associated_cluster_sequence())
     throw Error("you requested information about the internal structure of a jet, but it is not associated with a ClusterSequence or its associated ClusterSequence has gone out of scope."); 
 
@@ -160,7 +160,7 @@ bool ClusterSequenceInterface::has_exclusive_subjets() const{
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-std::vector<PseudoJet> ClusterSequenceInterface::exclusive_subjets (const PseudoJet &reference, const double & dcut) const {
+std::vector<PseudoJet> ClusterSequenceStructure::exclusive_subjets (const PseudoJet &reference, const double & dcut) const {
   return validated_cs()->exclusive_subjets(reference, dcut);
 }
 
@@ -170,7 +170,7 @@ std::vector<PseudoJet> ClusterSequenceInterface::exclusive_subjets (const Pseudo
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-int ClusterSequenceInterface::n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const {
+int ClusterSequenceStructure::n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const {
   return validated_cs()->n_exclusive_subjets(reference, dcut);
 }
 
@@ -182,7 +182,7 @@ int ClusterSequenceInterface::n_exclusive_subjets(const PseudoJet &reference, co
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-std::vector<PseudoJet> ClusterSequenceInterface::exclusive_subjets (const PseudoJet &reference, int nsub) const {
+std::vector<PseudoJet> ClusterSequenceStructure::exclusive_subjets (const PseudoJet &reference, int nsub) const {
   return validated_cs()->exclusive_subjets(reference, nsub);
 }
 
@@ -191,7 +191,7 @@ std::vector<PseudoJet> ClusterSequenceInterface::exclusive_subjets (const Pseudo
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-double ClusterSequenceInterface::exclusive_subdmerge(const PseudoJet &reference, int nsub) const {
+double ClusterSequenceStructure::exclusive_subdmerge(const PseudoJet &reference, int nsub) const {
   return validated_cs()->exclusive_subdmerge(reference, nsub);
 }
 
@@ -201,7 +201,7 @@ double ClusterSequenceInterface::exclusive_subdmerge(const PseudoJet &reference,
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-double ClusterSequenceInterface::exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const {
+double ClusterSequenceStructure::exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const {
   return validated_cs()->exclusive_subdmerge_max(reference, nsub);
 }
 
@@ -213,7 +213,7 @@ double ClusterSequenceInterface::exclusive_subdmerge_max(const PseudoJet &refere
 
 // if possible, return a valid ClusterSequenceAreaBase pointer; otherwise
 // throw an error
-const ClusterSequenceAreaBase * ClusterSequenceInterface::validated_csab() const {
+const ClusterSequenceAreaBase * ClusterSequenceStructure::validated_csab() const {
   const ClusterSequenceAreaBase *csab = dynamic_cast<const ClusterSequenceAreaBase*>(validated_cs());
   if (csab == NULL) throw Error("you requested jet-area related information, but the PseudoJet does not have associated area information.");
   return csab;
@@ -221,33 +221,33 @@ const ClusterSequenceAreaBase * ClusterSequenceInterface::validated_csab() const
 
 
 // check if it has a defined area
-bool ClusterSequenceInterface::has_area() const{
+bool ClusterSequenceStructure::has_area() const{
   if (! has_associated_cluster_sequence()) return false;
   return (dynamic_cast<const ClusterSequenceAreaBase*>(_associated_cs) != NULL);
 }
 
 // return the jet (scalar) area.
 // throw an Error if there is no support for area in the associated CS
-double ClusterSequenceInterface::area(const PseudoJet &reference) const{
+double ClusterSequenceStructure::area(const PseudoJet &reference) const{
   return validated_csab()->area(reference);
 }
 
 // return the error (uncertainty) associated with the determination
 // of the area of this jet.
 // throws an Error if there is no support for area in the associated CS
-double ClusterSequenceInterface::area_error(const PseudoJet &reference) const{
+double ClusterSequenceStructure::area_error(const PseudoJet &reference) const{
   return validated_csab()->area_error(reference);
 }
 
 // return the jet 4-vector area
 // throws an Error if there is no support for area in the associated CS
-PseudoJet ClusterSequenceInterface::area_4vector(const PseudoJet &reference) const{
+PseudoJet ClusterSequenceStructure::area_4vector(const PseudoJet &reference) const{
   return validated_csab()->area_4vector(reference);
 }
 
 // true if this jet is made exclusively of ghosts
 // throws an Error if there is no support for area in the associated CS
-bool ClusterSequenceInterface::is_pure_ghost(const PseudoJet &reference) const{
+bool ClusterSequenceStructure::is_pure_ghost(const PseudoJet &reference) const{
   return validated_csab()->is_pure_ghost(reference);
 }
 

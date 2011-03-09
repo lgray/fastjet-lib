@@ -33,7 +33,7 @@
 
 #include <fastjet/SharedPtr.hh>
 #include <fastjet/PseudoJet.hh>
-#include <fastjet/PseudoJetInterfaceBase.hh>
+#include <fastjet/PseudoJetStructureBase.hh>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -83,8 +83,8 @@ public:
   /// description of the transformer
   virtual std::string description() const;
 
-  /// information about the associated interface type
-  typedef PseudoJetInterfaceBase InterfaceType;
+  /// information about the associated structure type
+  typedef PseudoJetStructureBase StructureType;
 
   /// action of the transformer on a single jet
   virtual PseudoJet operator()(const PseudoJet & original) const;

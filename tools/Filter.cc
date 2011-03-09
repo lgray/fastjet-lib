@@ -144,8 +144,8 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 PseudoJet Filter::_finalise(const PseudoJet & jet, vector<PseudoJet> & kept, vector<PseudoJet> & rejected, ClusterSequence * &internal_cs) const {
   PseudoJet filtered_jet(0.0,0.0,0.0,0.0);
 
-  // create an appropriate interface and transfer the info to it
-  FilteredJetInterface *fi = new FilteredJetInterface();
+  // create an appropriate structure and transfer the info to it
+  FilteredJetStructure *fi = new FilteredJetStructure();
 
   fi->_original_jet = jet;
   fi->_pieces = kept;   // in the base interface
@@ -167,7 +167,7 @@ PseudoJet Filter::_finalise(const PseudoJet & jet, vector<PseudoJet> & kept, vec
   filtered_jet.set_user_index(jet.user_index());
 
   // finally attach the clustering info to the PJ
-  filtered_jet.set_associated_interface(SharedPtr<PseudoJetInterfaceBase>(fi));
+  filtered_jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(fi));
 
   return filtered_jet;
 }

@@ -29,37 +29,37 @@
 //ENDHEADER
 
 
-#ifndef __FASTJET_MERGEDJET_INTERFACE_HH__
-#define __FASTJET_MERGEDJET_INTERFACE_HH__
+#ifndef __FASTJET_COMPOSITEJET_STRUCTURE_HH__
+#define __FASTJET_COMPOSITEJET_STRUCTURE_HH__
 
 #include <fastjet/PseudoJet.hh>
-#include <fastjet/PseudoJetInterfaceBase.hh>
+#include <fastjet/PseudoJetStructureBase.hh>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup tools
-/// \class MergedJetInterface
-/// The interface for a jet made of pieces
+/// \class CompositeJetStructure
+/// The structure for a jet made of pieces
 ///
 /// This stores the vector of the pieces that make the jet and provide
 /// the methods to access them
-class MergedJetInterface : public PseudoJetInterfaceBase{
+class CompositeJetStructure : public PseudoJetStructureBase{
 public:
   // basic class info
   //------------------------------------------------------------------------------
   /// default ctor
-  MergedJetInterface(){};
+  CompositeJetStructure(){};
 
   /// ctor with initialisation
-  MergedJetInterface(const std::vector<PseudoJet> & initial_pieces) : _pieces(initial_pieces){};
+  CompositeJetStructure(const std::vector<PseudoJet> & initial_pieces) : _pieces(initial_pieces){};
 
   /// default dtor
-  virtual ~MergedJetInterface(){};
+  virtual ~CompositeJetStructure(){};
 
   /// description
   virtual std::string description() const;
 
-  // things reimplemented from the base interface
+  // things reimplemented from the base structure
   //------------------------------------------------------------------------------
   /// true if the jet has constituents (i.e. all pieces do)
   virtual bool has_constituents() const;
@@ -83,4 +83,4 @@ protected:
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
-#endif // __FASTJET_MERGEDJET_INTERFACE_HH__
+#endif // __FASTJET_MERGEDJET_STRUCTURE_HH__

@@ -103,7 +103,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //----------------------------------------------------------------------
 
 // forward declaration
-class ClusterSequenceInterface;
+class ClusterSequenceStructure;
 
 /// @ingroup basic_classes
 /// \class ClusterSequence
@@ -532,12 +532,12 @@ public:
   ///
   /// this may turn useful if you want to track when this
   /// ClusterSequence goes out of scope
-  const SharedPtr<PseudoJetInterfaceBase> & interface_to_this() const{
-    return _interface_to_this;
+  const SharedPtr<PseudoJetStructureBase> & structure_shared_ptr() const{
+    return _structure_shared_ptr;
   }
 
-  /// the interface type associated with a jet belongoing to a ClusterSequence
-  typedef ClusterSequenceInterface InterfaceType;
+  /// the structure type associated with a jet belonging to a ClusterSequence
+  typedef ClusterSequenceStructure StructureType;
 
 
 protected:
@@ -612,7 +612,7 @@ protected:
   Strategy    _strategy;
   JetAlgorithm  _jet_algorithm;
 
-  SharedPtr<PseudoJetInterfaceBase> _interface_to_this; //< will actually be of type ClusterSequenceInterface
+  SharedPtr<PseudoJetStructureBase> _structure_shared_ptr; //< will actually be of type ClusterSequenceStructure
 
  private:
 

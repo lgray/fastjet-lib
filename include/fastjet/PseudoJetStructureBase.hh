@@ -29,19 +29,22 @@
 //ENDHEADER
 
 
-#ifndef __FASTJET_CLUSTER_SEQUENCE_INTERFACE_HH__
-#define __FASTJET_CLUSTER_SEQUENCE_INTERFACE_HH__
+#ifndef __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__
+#define __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__
 
 #include "fastjet/internal/base.hh"
-#include "fastjet/SharedPtr.hh"
-#include "fastjet/PseudoJetInterfaceBase.hh"
 
 #include <vector>
+#include <string>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+class PseudoJet;
+class ClusterSequence;
+class ClusterSequenceAreaBase;
+
 /// @ingroup extra_info
-/// \class ClusterSequenceInterface
+/// \class PseudoJetStructureBase
 ///
 /// Contains any information related to the clustering that should be
 /// directly accessible to PseudoJet.
@@ -51,31 +54,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// its area). But it can be overloaded in order e.g. to give access
 /// to the jet substructure.
 ///
-// Design question: Do we only put the methods that can be overloaded
-// or do we put everything a PJ can have access to? I think both cost
-// the same number of indirections. The first option limits the amount
-// of coding and maybe has a clearer structure. The second is more
-// consistent (everything related to the same thing is at the same
-// place) and gives better access for derived classes. We'll go for
-// the second option.
-class ClusterSequenceInterface : public PseudoJetInterfaceBase{
+class PseudoJetStructureBase{
 public:
   /// default ctor
-  ClusterSequenceInterface() : _associated_cs(NULL){}
-
-  /// ctor with initialisation to a given ClusterSequence
-  /// 
-  /// In principle, this is reserved for initialisation by the parent
-  /// ClusterSequence
-  ClusterSequenceInterface(const ClusterSequence *cs){
-    set_associated_cs(cs);
-  };
+  PseudoJetStructureBase(){};
 
   /// default (virtual) dtor
-  virtual ~ClusterSequenceInterface(){}
+  virtual ~PseudoJetStructureBase(){};
 
   /// description
-  virtual std::string description() const{ return "PseudoJet with an associated ClusterSequence"; }
+  virtual std::string description() const{ return "PseudoJet with an unknown structure"; }
 
   //-------------------------------------------------------------
   /// @name Direct access to the associated ClusterSequence object.
@@ -84,7 +72,7 @@ public:
   //\{
   //-------------------------------------------------------------
   /// returns true if there is a valid associated ClusterSequence
-  virtual bool has_associated_cluster_sequence() const;
+  virtual bool has_associated_cluster_sequence() const { return false;}
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
@@ -98,10 +86,6 @@ public:
   /// the associated ClusterSequenceAreaBase object; otherwise throw an error
   virtual const ClusterSequenceAreaBase * validated_csab() const;
 
-  /// set the associated csw
-  virtual void set_associated_cs(const ClusterSequence * new_cs){
-    _associated_cs = new_cs;
-  }
   //\}
 
   //-------------------------------------------------------------
@@ -117,54 +101,43 @@ public:
   /// case, return its partner through the argument. Otherwise,
   /// 'partner' is set to 0.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool has_partner(const PseudoJet &reference, PseudoJet &partner) const;
 
   /// check if it has been recombined with another PseudoJet in which
   /// case, return its child through the argument. Otherwise, 'child'
   /// is set to 0.
   /// 
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool has_child(const PseudoJet &reference, PseudoJet &child) const;
 
   /// check if it is the product of a recombination, in which case
   /// return the 2 parents through the 'parent1' and 'parent2'
   /// arguments. Otherwise, set these to 0.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual bool has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const;
 
-  /// check if the reference PseudoJet is contained in the second one
+  /// check if the reference PseudoJet is contained the second one
   /// passed as argument.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
-  ///
-  /// false is returned if the 2 PseudoJet do not belong the same
-  /// ClusterSequence
+  /// By default, throws an Error
   virtual bool object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const;
 
-  /// return true if the interface supports constituents. 
+
+  /// return true if the structure supports constituents. 
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
-  virtual bool has_constituents() const;
+  /// false by default
+  virtual bool has_constituents() const {return false;}
 
   /// retrieve the constituents. 
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual std::vector<PseudoJet> constituents(const PseudoJet &reference) const;
 
 
-  /// return true if the interface supports exclusive_subjets. 
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
-  virtual bool has_exclusive_subjets() const;
+  /// return true if the structure supports exclusive_subjets. 
+  virtual bool has_exclusive_subjets() const {return false;}
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
@@ -175,43 +148,46 @@ public:
   /// constituents in the jet, this could be substantially slower than
   /// just getting that list of constituents.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
-  virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, const double & dcut) const;
+  /// By default, throws an Error
+  virtual std::vector<PseudoJet> exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
   /// coefficient, but marginally more efficient than manually taking
   /// exclusive_subjets.size()
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual int n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
   /// jet down to n subjets (or all constituents if there are fewer
   /// than n).
   ///
-  /// requires n ln n time
-  ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual double exclusive_subdmerge(const PseudoJet &reference, int nsub) const;
 
   /// return the maximum dij that occurred in the whole event at the
   /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
   /// this jet.
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
-  /// associated ClusterSequence
+  /// By default, throws an Error
   virtual double exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const;
 
+
+  /// return true if the structure supports pieces. 
+  ///
+  /// false by default
+  virtual bool has_pieces() const {return false;}
+
+  /// retrieve the pieces building the jet. 
+  ///
+  /// By default, throws an Error
+  virtual std::vector<PseudoJet> pieces(const PseudoJet &reference) const;
 
 
   // the following ones require a computation of the area in the
@@ -219,31 +195,34 @@ public:
   //------------------------------------------------------------------
 
   /// check if it has a defined area
-  virtual bool has_area() const;
+  ///
+  /// false by default
+  virtual bool has_area() const {return false;}
 
   /// return the jet (scalar) area.
-  /// throws an Error if there is no support for area in the parent CS
+  ///
+  /// By default, throws an Error
   virtual double area(const PseudoJet &reference) const;
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of this jet.
-  /// throws an Error if there is no support for area in the parent CS
+  ///
+  /// By default, throws an Error
   virtual double area_error(const PseudoJet &reference) const;
 
   /// return the jet 4-vector area.
-  /// throws an Error if there is no support for area in the parent CS
+  ///
+  /// By default, throws an Error
   virtual PseudoJet area_4vector(const PseudoJet &reference) const;
 
   /// true if this jet is made exclusively of ghosts.
-  /// throws an Error if there is no support for area in the parent CS
+  ///
+  /// By default, throws an Error
   virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
   //\} --- end of jet structure -------------------------------------
-
-protected:
-  const ClusterSequence *_associated_cs;
 };
 
 FASTJET_END_NAMESPACE
 
-#endif  //  __FASTJET_CLUSTER_SEQUENCE_INTERFACE_HH__
+#endif  //  __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__

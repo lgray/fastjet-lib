@@ -1,5 +1,48 @@
 2011-03-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJetInterfaceBase.hh:   *** REMOVED ***
+	* include/fastjet/PseudoJetStructureBase.hh:   ***  ADDED  ***
+	* include/fastjet/ClusterSequenceInterface.hh: *** REMOVED ***
+	* include/fastjet/ClusterSequenceStructure.hh: ***  ADDED  ***
+	* include/fastjet/MergedJetInterface.hh:       *** REMOVED ***
+	* include/fastjet/CombinedJetStructure.hh:     ***  ADDED  ***
+	* src/PseudoJetInterfaceBase.cc:               *** REMOVED ***
+	* src/PseudoJetStructureBase.cc:               ***  ADDED  ***
+	* src/ClusterSequenceInterface.cc:             *** REMOVED ***
+	* src/ClusterSequenceStructure.cc:             ***  ADDED  ***
+	* src/MergedJetInterface.cc:                   *** REMOVED ***
+	* src/CombinedJetStructure.cc:                 ***  ADDED  ***
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc:
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc:
+	* src/ClusterSequenceAreaBase.cc (subtracted_jet):
+	* tools/fastjet/tools/Transformer.hh:
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Transformer.cc:
+	* tools/Filter.cc:
+	* example/12-filter.cc:
+
+	  done some renaming:
+	   + Interface -> Structure
+	   + ClusterSequenceInterface -> ClusterSequenceStructure
+	   + MergedJetInferface -> CompositeJetStructure
+	   + merge -> join
+	   + FilteredJetInterface -> FilteredJetStructure
+	   + UserInfo -> UserInfoBase
+
+	  In PseudoJet: set the structure methods to
+ 	    bool has_structure() const;
+ 	    const PJSB * structure_ptr() const;
+ 	    const PJSB * validated_structure_ptr() const;
+ 	    const SharedPtr<PJSB> structure_shared_ptr() const;
+ 	    const T & structure<T>() const;
+ 	    _associated_interface -> _structure
+
+	  In ClusterSequence.hh:
+	    _interface_to_this -> _structure_shared_ptr
+	    const SharedPtr<PJSB> structure_shared_ptr()
+
 	* include/fastjet/Selector.hh:
 	* src/Selector.cc:
 	  - pure-ghost selector: fixed comment; fixed return value for
