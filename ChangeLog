@@ -1,3 +1,8 @@
+2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* fastjet-config.in:
+	  fixed portability issue with sed and newlines
+
 2011-03-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJetInterfaceBase.hh:   *** REMOVED ***

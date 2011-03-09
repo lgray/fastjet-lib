@@ -332,6 +332,6 @@ case $found_query in
     list_plugins)
 	echo "Available plugins: "
 	echo -n "  "
-	echo @LIST_ALL_PLUGINS@ | sed -e "s/ /\n  /g"
+	echo @LIST_ALL_PLUGINS@ | sed -e "s/ /\\`echo -e '\n\r  '`/g"
 	;;
 esac
