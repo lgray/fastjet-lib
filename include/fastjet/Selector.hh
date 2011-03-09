@@ -371,7 +371,7 @@ Selector SelectorRapPhiRange(double rapmin, double rapmax, double phimin, double
 Selector SelectorNHardest(unsigned int n); 
 
 
-// selection with geometric objects
+// Selectors that take (require) a reference jet.
 //----------------------------------------------------------------------
 
 /// select objets within a distance 'radius' from the location of the
@@ -392,15 +392,18 @@ Selector SelectorStrip(const double & half_width);
 Selector SelectorRectangle(const double & half_rap_width, const double & half_phi_width);
 
 
+/// select objects that carry at least a fraction "fraction" of the
+/// reference jet. The reference jet must have been set with
+/// Selector::set_reference(...)
+Selector SelectorPtFractionMin(double fraction);
+
+
 // additional (mostly helper) selectors
 //----------------------------------------------------------------------
 
-/// select objects that are (or are only made of) ghosts
+/// select objects that are (or are only made of) ghosts.
+/// PseudoJets for which has_area() are considered non-pure-ghost.
 Selector SelectorIsPureGhost();
-
-/// select objects that carry at least a fraction "fraction" of the reference jet
-/// (Note that this selectir takes a reference)
-Selector SelectorPtFractionMin(double fraction);
 
 /// @}
 

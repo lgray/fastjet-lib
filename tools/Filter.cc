@@ -102,7 +102,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
       throw Error("Attempt to filter and subtract (non-zero rho) without area info for the original jet");
 
     if (!jet.has_associated_cluster_sequence())
-      throw Error("Attempt to filter and subtract (non-zero rho) without a cluster sequence associated wit the jet");
+      throw Error("Attempt to filter and subtract (non-zero rho) without a cluster sequence associated with the jet");
 
     // note theat the validated_csab() used in the next line will
     // automatically throw an error if there is no valis CSAB so we
