@@ -2,9 +2,14 @@
 /// \file
 /// \page Example12 12 - use of filtering
 ///
-/// fastjet example program, illustration the use of a Filter
+/// fastjet example program illustrating the use of a Filter
 ///
-/// [MORE DETAILS TO FOLLOW......]
+/// To do that, we apply different filter examples on a either the
+/// hardest jet of the given event or the compositipon of the two
+/// hardest jets: a filter keeping a fixed number of subjets (as in
+/// arXiv:0802.2470), and a "trimmer" i.e. a filter keeping subjets
+/// carrying a sufficient fraction of the pt of the jet
+/// (arXiv:0912.1342).
 ///
 /// run it with    : ./12-filter < data/single-event.dat
 ///
@@ -51,17 +56,34 @@ int main (int argc, char ** argv) {
 	   inclusive_jets[i].perp());
   }
 
-  // transformer piece
+  // simple test to avoid that the example below crashes:
+  // make sure there is at least 2 jets above our 5 GeV
+  if (inclusive_jets.size()<2){
+    cout << "Please provide an event with at least 2 jets above 5 GeV" << endl;
+    return 1;
+  }
+
+  // the sample PseudoJet that we shall filter
+  //  - the hardest jet of the event
+  //  - the compositiomn of the 2 hardest jets (showing that the Filter can also be applied on a CompositeJet)
   //----------------------------------------------------------
   vector<PseudoJet> candidates;
-  candidates.push_back(inclusive_jets[0]); // yes, it could crash if there is no jet above 5 GeV... lazyness
-  candidates.push_back(join(inclusive_jets[0],inclusive_jets[1])); // yes, it could crash if there is no jet above 5 GeV... lazyness
+  candidates.push_back(inclusive_jets[0]);
+  candidates.push_back(join(inclusive_jets[0],inclusive_jets[1]));
 
+  // create a few filters
+  //----------------------------------------------------------
   vector<Filter> filters;
-  filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtMin(2.0)));
-  filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorNHardest(3)));
-  filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.4), SelectorNHardest(2)));
 
+  // the Aachen/Cambridge filter as in arXiv:0802.2470
+  filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3)));
+
+  // Filtering with a pt cut as for trimming (arXiv:0912.1342)
+  filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtFractionMin(0.03)));
+
+  // apply the various filters on the test PseudoJet
+  // and show the result
+  //----------------------------------------------------------
   for (vector<PseudoJet>::iterator jit=candidates.begin(); jit!=candidates.end(); jit++){
     const PseudoJet & c = *jit;
     cout << "Original jet : " << c.description() << endl;

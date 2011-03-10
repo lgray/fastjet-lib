@@ -2,7 +2,7 @@
 /// \file
 /// \page Example08 08 - using the Selector tool
 ///
-/// fastjet sample program top illustrate the use of Selector(s):
+/// fastjet sample program to illustrate the use of Selector(s):
 ///
 /// Note that to use Selector (and fastjet tools), you need the
 /// fastjettools library. It is included by default by

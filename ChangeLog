@@ -1,3 +1,25 @@
+2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* example/09-user_info.cc:
+	* example/09-user_info.cc:
+	  renamed according to the renaming of the class. Note that the
+	  example itself is still to be written!
+
+	* tools/fastjet/tools/Filter.hh:
+	  - added a link in the Doxygen doc to the example 12
+
+	* example/12-filter.cc:
+	  - updated description
+	  - we now show 2 filters: "filtering" and "trimming"
+
+	* example/08-selector.cc:
+	  fixed typo in description
+
+	* tools/fastjet/tools/Filter.hh:
+	  use the jet being filtered as a reference if the selector takes
+	  one.
+
+
 2011-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 

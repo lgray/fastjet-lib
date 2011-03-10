@@ -63,7 +63,8 @@ class FilteredJetStructure;
 ///  - The first argument is the jet definition to be used to
 ///    recluster the constituents of the jet to be filtered.
 ///  - The second argument is a Selector specifying the condition for
-///    a subjet to be kept.
+///    a subjet to be kept. If the selector takes a reference, the jet
+///    being filtered is used.
 ///  - As an optional 3rd argument, one can pass a value of rho (the
 ///    estimated background per unit area) in which case, every subjet
 ///    is subtracted before the selection condition is applied.
@@ -78,9 +79,9 @@ class FilteredJetStructure;
 ///
 /// \section output Output/interface
 /// 
-///  - 
 ///  - a copy of the original jet is kept
-///  - 
+///  - kept pieces are stored under the form of a "CompositeJet"
+///  - rejected pieces are also stored in the structure
 ///
 /// \section usage Usage Examples
 /// 
@@ -126,6 +127,7 @@ class FilteredJetStructure;
 /// C/A algorithm on the constituents, but instead makes use of the
 /// existent C/A cluster sequence in the original jet.
 ///
+/// See also \subpage Example12  for a usage example.
 class Filter : public Transformer{
 public:
   /// trivial ctor

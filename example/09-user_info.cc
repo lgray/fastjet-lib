@@ -2,9 +2,11 @@
 /// \file
 /// \page Example09 09 - adding extra information to a PseudoJet
 ///
-/// run it with    : ./09-extra_info < data/single-event.dat
+/// TO BE WRITTEN!
 ///
-/// Source code: 09-extra_info.cc
+/// run it with    : ./09-user_info < data/single-event.dat
+///
+/// Source code: 09-user_info.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER
