@@ -1,4 +1,14 @@
+2011-03-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	  Release of fastjet-3.0alpha2
+
 2011-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac:
+	* NEWS:
+	* plugins/SISCone: [externals]
+	* ...
+	  preparing for 3.0alpha2
 
 	* tools/Makefile.am: 
 	* tools/fastjet/tools/Makefile.am: 
@@ -8,11 +18,6 @@
 	  allow people to play with them in 3.0a2; adapted it to work with
 	  latest naming of PseudoJet structure information
 
-	* configure.ac:
-	* NEWS:
-	* plugins/SISCone: [externals]
-	* ...
-	  preparing for 3.0alpha2
 
 2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
