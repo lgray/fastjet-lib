@@ -11,6 +11,8 @@ New features:
   individual pieces can be recovered with a.pieces();
 - New PseudoJetStructureBase class, to help implement such features
 - New fastjet/tools/Filter.hh provides a unified interface to filtering and trimming
+- New fastjet/tools/BackgroundEstimator.hh to provide a more flexible
+  interface to estimation of backgrounds (removal of hardest jets, etc.)
 - a few extra Selectors
 
 Changes to features introduced in alpha1:
