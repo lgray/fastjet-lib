@@ -1,8 +1,9 @@
 %%
 %% TO DOcument for 3.0alpha2
-%% - join(...)
+%% - join(...) [done]
 %% - check UserInfo part up to date [done]
-%% - check substructure of jets part up to date
+%% - check substructure of jets part up to date [done]
+%% - tools
 %%
 %% TO DO:
 %%
@@ -726,8 +727,8 @@ he should have set a unique index for each of the original particles
 with the \ttt{fastjet::PseudoJet::set\_user\_index} function.
 %
 Alternatively more detailed information can also be set through the
-\verb|extra_info| facilities of \PseudoJet. \comment{Put ref to place
-  where discussed}
+\verb|user_info| facilities of \PseudoJet, as discussed in
+appendix~\ref{app:user-info}.
 
 \paragraph{Subjet properties.} To obtain the set of subjets at a specific
 $d_{\mathrm{cut}}$ scale inside a given jet, one may use the following
@@ -783,6 +784,90 @@ sequence with the following enquiry functions:
   // get a (const) pointer to the parent ClusterSequence (NULL if inexistent) 
   const ClusterSequence* associated_cluster_sequence() const; 
 \end{lstlisting}
+
+%......................................................................
+\subsection{Composite jets}
+
+There are a number of cases where it is useful to be able to take two
+separate jets and create a single object that is the sum of the two,
+not just from the point of view of its 4-momentum, but also as
+concerns its structure.
+%
+For example, in a search for a dijet resonance, some user code may
+identify two jets, \ttt{jet1} and \ttt{jet2}, that are thought to come
+from a resonance decay and then wish to return a single object that
+combines both \ttt{jet1} and \ttt{jet2}.
+%
+This can be accomplished with the function \ttt{join}:
+%
+\begin{lstlisting}
+  PseudoJet resonance = join(jet1,jet2); 
+\end{lstlisting}
+The 4-momenta are added, and in addition the \ttt{resonance} remembers
+that it came from \ttt{jet1} and \ttt{jet2}. So, for example, a call
+to \ttt{resonance.constituents()} will return the constituents of both
+\ttt{jet1} and \ttt{jet2}.
+%
+It is possible to \ttt{join} 1, 2, 3 or 4 jets or a \ttt{vector} of
+jets.
+
+For a jet formed in this way, one can find out which pieces it has
+been composed from with the function
+\begin{lstlisting}
+  vector<PseudoJet> pieces = resonance.pieces();
+\end{lstlisting}
+which, in the above example, would simply return a vector of size 2
+containing \ttt{jet1} and \ttt{jet2}.
+%
+For jets not formed in this (or a related) way \ttt{pieces()} will
+throw an error.
+
+
+
+%......................................................................
+\paragraph{Inquiries as to available structural information.}
+
+Whether or not a given jet has constituents, recursive substructure or
+pieces depends on how it was formed. 
+%
+Generally a user will know how a given jet was formed, and so know if
+it makes sense, say, to call \ttt{pieces()}.  
+%
+However if a jet is returned from some third-party code, it may not
+always be clear kinds of structural information it has. 
+%
+Accordingly a number of inquiry functions are available:
+\begin{lstlisting}
+  bool has_structure();         // returns true if it has some kind of structural info
+  bool has_constituents();      // returns true if it has constituents 
+  bool has_exclusive_subjets(); // true if there is cluster-sequence style subjet info
+  bool has_pieces();            // true if the jet can be broken up into pieces
+  bool has_area();              // true if it has jet-area informaion
+\end{lstlisting}
+The dichotomy between cluster-sequence type structural information and
+\ttt{pieces} helps provide a distinction between different origins for
+structure --- either that arising diretly from a jet algorithm, or
+that applied a posteriori. 
+%
+There is a balance between the usefulness of such a dichotomy and the
+added complication it brings.
+%
+In this respect version 3.0alpha2 should be considered a snapshot of
+ongoing thought about the question.
+
+
+%......................................................................
+\paragraph{Features not yet documented}
+
+The following features still need documenting.
+\begin{lstlisting}
+  PseudoJetStructureBase;
+  structure<StructureType>();
+  has_properties_of<ToolName>();
+  extra_properties<ToolName>();
+\end{lstlisting}
+
+
 %----------------------------------------------------------------------
 \subsection{Version information}
 \label{sec:version-information}

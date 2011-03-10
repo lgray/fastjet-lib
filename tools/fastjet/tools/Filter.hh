@@ -45,19 +45,20 @@ class Filter;
 class FilteredJetStructure;
 
 //----------------------------------------------------------------------
+/// @ingroup tools
 /// \class Filter
-/// class that helps perform filtering on jets, and optionally
+/// Class that helps perform filtering/trimming on jets, and optionally
 /// subtraction (if rho > 0).
 ///
-/// Description
-/// -----------
 /// Though the original version was applied on Cambridge/Aachen jets,
 /// this one takes any jet (that has constituents) and reclusters it
-/// with a given algorithm. Only subjets passing a given condition are
-/// kept, the others are thrown.
+/// with a given algorithm. A user-provided Selector is applied to
+/// decide which of the subjets are kept to produce the filtered jet
+/// (others are discarded).
 ///
-/// Options
-/// -------
+///
+/// \section desc Options
+/// 
 /// The constructor has the following arguments:
 ///  - The first argument is the jet definition to be used to
 ///    recluster the constituents of the jet to be filtered.
@@ -67,35 +68,64 @@ class FilteredJetStructure;
 ///    estimated background per unit area) in which case, every subjet
 ///    is subtracted before the selection condition is applied.
 ///
-/// Input conditions
-/// ----------------
+///
+/// \section input Input conditions
+/// 
 ///  - the original jet must have constituents
 ///  - if rho>0, the jet must be the result of a Clustering with
 ///    active area with explicit ghosts support or a merging of
 ///    such pieces
 ///
-/// Output/interface
-/// ----------------
+/// \section output Output/interface
+/// 
 ///  - 
 ///  - a copy of the original jet is kept
 ///  - 
 ///
-/// Credits
-/// -------
-/// Filtering with just "nfilt" was originally proposed for
-/// boosted-object reconstruction in arXiv:0802.2470, and for normal
-/// kinematic reconstruction (e.g. dijet mass peaks) in
-/// arXiv:0810.1304.
+/// \section usage Usage Examples
+/// 
+/// Filtering as proposed in arXiv:0802.2470 for boosted object
+/// reconstruction (and used also in arXiv:0810.1304 for dijet
+/// reconstructions) involves two parameters, the filtering radius,
+/// Rfilt, and the number of subjets you wish to keep, nfilt. To get a
+/// filter of this kind define
 ///
-/// Filtering with just "ptkeep" was proposed in arXiv:0912.1342 under
-/// the name "trimming", though there "ptkeep" is expressed as a fraction
-/// of a hard scale in the problem rather than in absolute terms.
+///    Filter filter(JetDefinition(cambridge_algorithm,Rfilt),
+///                  SelectorNHardest(nfilt));
 ///
-/// The selection of the jet definition used for the sub-clustering
-/// goes as follows:
-///  - if the filter is created using a given jet definition, that one is used
-///  - if the filter is created specifying only Rfilt, the jet
-///    definition associated with the first jet is used
+/// You apply it as follows
+///
+///    PseudoJet filtered_jet = filter(jet);
+///
+/// To get trimming, arXiv:0912.1342, you need an Rtrim to define
+/// subjets and a pt_fraction_min to decide which subjets to keep:
+///
+///    Filter trimmer(JetDefinition(cambridge_algorithm,Rfilt),
+///                   SelectorPtFractionMin(pt_fraction_min));
+///
+/// You then apply it as before
+///
+///    PseudoJet trimmed_jet = trimmer(jet);
+///
+/// You can then find out which pieces were filtered or trimmed jet is
+/// made of by calling
+/// 
+///    trimmed_jet.pieces()
+///
+/// More sophisticated filters/trimmers can easily be obtained by
+/// combining Selectors.
+///
+/// [MORE INFO, E.G. ON PIECES REJECTED, SHOULD FOLLOW]
+///
+///
+/// \section impl Implementation
+/// 
+/// If the jet was defined with the cambridge/aachen algorithm (or is
+/// made of pieces each of which comes from the C/A alg) and the
+/// filtering definition is C/A, then the filter does not rerun the
+/// C/A algorithm on the constituents, but instead makes use of the
+/// existent C/A cluster sequence in the original jet.
+///
 class Filter : public Transformer{
 public:
   /// trivial ctor
@@ -181,6 +211,7 @@ protected:
 
 
 //----------------------------------------------------------------------
+/// @ingroup tools
 /// \class FilteredJetStructure
 /// Class to contain structure information for a filtered jet.
 class FilteredJetStructure : public CompositeJetStructure {

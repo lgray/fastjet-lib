@@ -1,8 +1,18 @@
 2011-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+
+	* doc/fastjet-doc.tex:
+	  documented composite jets
+
+	* tools/fastjet/tools/Filter.hh:
+	  worked on doxygen documentation of Filter.hh
+
+	* tools/fastjet/tools/Transformer.hh:
+	  fixed a minor issue in doxygen output from this file
+
 	* NEWS:
 	  working on this in view of 3.0alpha2
-	 
+
 	* doc/fastjet-doc.tex:
 	  incomplete treatment UserInfoBase renaming
 

@@ -42,7 +42,7 @@ class Transformer;
 
 /// @ingroup tools
 /// \class Transformer
-/// Base (abstract) class for a jet transformer
+/// Base (abstract) class for a jet transformer.
 ///
 /// The idea of a transformer is that applied to a jet, it somehow
 /// modifies its momentum and/or contents.. If applied to a vector of
@@ -61,7 +61,7 @@ class Transformer;
 /// corresponding Interface type.
 ///
 /// [.......comments still under preparation......]
-
+///
 /// transformation on them and return the list of modified jets This
 /// base class sets the fundamental requirements for all the
 /// transformers.
