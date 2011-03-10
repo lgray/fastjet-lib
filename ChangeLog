@@ -1,5 +1,13 @@
 2011-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* tools/Makefile.am: 
+	* tools/fastjet/tools/Makefile.am: 
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	* tools/BackgroundEstimator.cc: 
+          moved BackgroundEstimator into core from experimental area to
+	  allow people to play with them in 3.0a2; adapted it to work with
+	  latest naming of PseudoJet structure information
+
 	* configure.ac:
 	* NEWS:
 	* plugins/SISCone: [externals]
