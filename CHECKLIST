@@ -63,11 +63,11 @@ checklist for 3.0alpha2 (make a copy before editing!)
 3.0a2  make sure siscone points to a tag, not trunk
        
 
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0a2  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-X.Y.Z  make check 
+3.0a2  make check 
 
-X.Y.Z  make distcheck
+3.0a2  make distcheck
 
 X.Y.Z  make sure it's committed
 
