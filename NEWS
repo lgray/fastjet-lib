@@ -1,13 +1,14 @@
 Release Notes for fastjet
 -------------------------
 
-===========================================================
+================================================================
 Summary of changes from v3.0alpha1 -> v3.0alpha2:  10 March 2011
-===========================================================
+================================================================
 
 New features:
 - two jets, a and b can now be joined:  PseudoJet a = join(b,c),
-  intended to facilitate packaging the result of substructure tools
+  intended to facilitate packaging the result of substructure tools;
+  individual pieces can be recovered with a.pieces();
 - New PseudoJetStructureBase class, to help implement such features
 - New fastjet/tools/Filter.hh provides a unified interface to filtering and trimming
 - a few extra Selectors

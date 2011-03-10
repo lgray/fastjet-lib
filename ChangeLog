@@ -1,3 +1,11 @@
+2011-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac:
+	* NEWS:
+	* plugins/SISCone: [externals]
+	* ...
+	  preparing for 3.0alpha2
+
 2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/Filter.cc:
