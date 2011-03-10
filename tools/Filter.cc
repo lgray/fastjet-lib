@@ -70,8 +70,9 @@ PseudoJet Filter::operator()(const PseudoJet &jet) const {
   for (unsigned int i=0;i<subjets.size(); i++)
     subjet_pointers.push_back(&(subjets[i]));
 
-  if (_selector.takes_reference()) _selector.set_reference(jet);
-  _selector.nullify_non_selected(subjet_pointers);
+  Selector selector_copy = _selector;
+  if (selector_copy.takes_reference()) selector_copy.set_reference(jet);
+  selector_copy.nullify_non_selected(subjet_pointers);
 
   // now build the vector of kept and rejected subjets
   vector<PseudoJet> kept, rejected;
