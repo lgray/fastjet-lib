@@ -1,5 +1,10 @@
 2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* tools/Filter.cc:
+	* tools/fastjet.tools/Filter.hh:
+	  declared _selector as mutable to better handle the case of
+	  selectors taking a reference
+
 	* src/Selector.cc (SW_WithReference):
 	  added the missing copy() method.
 

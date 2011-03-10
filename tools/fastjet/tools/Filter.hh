@@ -205,9 +205,9 @@ protected:
     const PseudoJet & jet, 
     std::vector<PseudoJet> & filtered_elements) const;
 
-  JetDefinition _subjet_def; ///< the jet definition to use to extract the subjets
-  Selector _selector;        ///< the subjet selection criterium
-  double _rho;               ///< the background density (used for subtraction when possible)
+  JetDefinition _subjet_def;  ///< the jet definition to use to extract the subjets
+  mutable Selector _selector; ///< the subjet selection criterium
+  double _rho;                ///< the background density (used for subtraction when possible)
 };
 
 
