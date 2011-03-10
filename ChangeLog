@@ -1,7 +1,8 @@
 2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
-	* example/09-user_info.cc:
-	* example/09-user_info.cc:
+	* example/Makefile.am:
+	* example/09-extra_info.cc:                   *** REMOVED ***
+	* example/09-user_info.cc:                    ***  ADDED  ***
 	  renamed according to the renaming of the class. Note that the
 	  example itself is still to be written!
 
