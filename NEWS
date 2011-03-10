@@ -14,13 +14,13 @@ New features:
 - a few extra Selectors
 
 Changes to features introduced in alpha1:
-- Selector is now in fastjet/Selector.hh (no long fastjet/tools/...)
+- Selector is now in fastjet/Selector.hh (no longer fastjet/tools/...)
 - Selector::relocate(...) and is_relocatable() renamed to
   Selector::set_reference(...) and takes_reference()
 - PseudoJet::ExtraInfo has been renamed PseudoJet::UserInfoBase and
   corresponding access functions are now called set_user_info(...), etc.
 
-Other changes
+Other changes and fixes
 - some legacy headers removed
 - bug fixes in NlnNCam strategies for R>pi
 
@@ -41,7 +41,7 @@ New features:
   * some of these features make use of a new SharedPtr class 
     (intended mainly for advanced users)  
     similar to C++0x std::shared_ptr
-  * calculation of phi and rapdity (cached) only on request
+  * calculation of phi and rapidity (cached) only on request
 - R can now be taken larger than pi/2 for natively coded jet algorithms
 - Addition of "Selector" tools through #include "fastjet/tools/Selector.hh"
 - New plugin for D0RunICone (code contributed by Lars Sonnenschein)
