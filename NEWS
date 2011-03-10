@@ -2,6 +2,28 @@ Release Notes for fastjet
 -------------------------
 
 ===========================================================
+Summary of changes from v3.0alpha1 -> v3.0alpha2:  10 March 2011
+===========================================================
+
+New features:
+- two jets, a and b can now be joined:  PseudoJet a = join(b,c),
+  intended to facilitate packaging the result of substructure tools
+- New PseudoJetStructureBase class, to help implement such features
+- New fastjet/tools/Filter.hh provides a unified interface to filtering and trimming
+- a few extra Selectors
+
+Changes to features introduced in alpha1:
+- Selector is now in fastjet/Selector.hh (no long fastjet/tools/...)
+- Selector::relocate(...) and is_relocatable() renamed to
+  Selector::set_reference(...) and takes_reference()
+- PseudoJet::ExtraInfo has been renamed PseudoJet::UserInfoBase and
+  corresponding access functions are now called set_user_info(...), etc.
+
+Other changes
+- some legacy headers removed
+- bug fixes in NlnNCam strategies for R>pi
+
+===========================================================
 Summary of changes from v2.4.X -> v3.0alpha1:  27 January 2011
 ===========================================================
 

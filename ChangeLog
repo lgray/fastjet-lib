@@ -1,3 +1,26 @@
+2011-03-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* NEWS:
+	  working on this in view of 3.0alpha2
+	 
+	* doc/fastjet-doc.tex:
+	  incomplete treatment UserInfoBase renaming
+
+	* example/fastjet_example.cc: 	
+	  completed list of examples for doxygen
+
+	* src/ClusterSequence.cc (~ClusterSequence): 
+	  documenting use of assert
+
+	* various
+	  updates to copyright dates
+
+	* Roadmap gets some completion
+
+	* include/fastjet/Selector.hh:
+	* include/fastjet/internal/base.hh
+	  added a new selectors "module" for doxygen
+	
 2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* fastjet-config.in:
@@ -437,12 +460,12 @@
 2011-02-03  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/Selector.hh:
-	  added a Selector::nullify_non_selected() that setes to 0 the
+	  added a Selector::nullify_non_selected() that sets to 0 the
 	  jets that do not pass the selection (equivalent to
 	  SelectorWorker::terminator())
 
 	* src/ClusterSequence.cc (_initialise_and_run):
-	  . for the Best strategy, moved the small N test first
+	  . for the Best strategy, moved the small N test first;
 	  . similarily, inverted the series of tests redirecting to the
 	    processing method for the various strategies
 
@@ -459,7 +482,7 @@
 2011-02-01  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* plugins/usage_examples/pxcone_example.cc:
-	  prefixed ANABLE_PLUGIN_PXCONE with FASTJET_
+	  prefixed ENABLE_PLUGIN_PXCONE with FASTJET_
 
 2011-01-31  Gregory Soyez  <gsoyez@quark.phy.bnl.gov>
 
@@ -478,7 +501,7 @@
 	  prefixed the index in the stack with a hash
 
 	* include/fastjet/ClusterSequence.hh (ClusterSequence):
-	  added a method to extraced the associated CSW (rename?)
+	  added a method to extract the associated CSW (rename?)
 
 
 	* m4/ax_prefix_config_h.m4:        *** ADDED ***

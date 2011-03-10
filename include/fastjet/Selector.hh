@@ -39,7 +39,7 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup selectors
 /// \class Selector
 /// Class that encodes information about cuts and other selection
 /// criteria that can be applied to PseudoJet(s).
@@ -47,7 +47,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class Selector;
 //----------------------------------------------------------------------
 
-/// @ingroup tools
+/// @ingroup selectors
 /// \class SelectorWorker
 /// default selector worker is an abstract virtual base class
 ///
@@ -279,7 +279,7 @@ private:
 // a list of specific selectors
 //----------------------------------------------------------------------
 
-/// \addtogroup tools
+/// \addtogroup selectors
 /// @{
 
 

@@ -1,7 +1,7 @@
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2009, Matteo Cacciari, Gavin Salam and Gregory Soyez
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -57,8 +57,10 @@ ClusterSequence::~ClusterSequence () {
   // we're going out of scope
   if (_structure_shared_ptr()){
     ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
-    ///\todo throw an error? 
-    /// normally the csi is purely internal so it really should not be NULL i.e assert should be OK
+    // normally the csi is purely internal so it really should not be
+    // NULL i.e assert should be OK
+    // (we assert rather than throw an error, since failure here is a
+    // sign of major internal problems)
     assert(csi != NULL);
     csi->set_associated_cs(NULL);
   }

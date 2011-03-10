@@ -1,11 +1,11 @@
 %%
+%% TO DOcument for 3.0alpha2
+%% - join(...)
+%% - check UserInfo part up to date [done]
+%% - check substructure of jets part up to date
+%%
 %% TO DO:
 %%
-%%
-%%  . maybe overload the exclusive routines by allowing access
-%%    interfaces such as exclusive_jets(jet, dcut) to find the
-%%    subjets of jet.
-%% 
 %%  . document the cluster history structures?
 %%  
 %%  . refs for trackjet and other plugins?
@@ -366,7 +366,7 @@ The simpler method is through an integer called the user index
   int user_index() const ;
 \end{lstlisting}
 A more powerful method, which involves a pointer to a derived class of
-\ttt{PseudoJet::UserInfo} is discussed in
+\ttt{PseudoJet::UserInfoBase} is discussed in
 appendix~\ref{app:user-info}. 
 
 A \verb:PseudoJet: can be reset with
@@ -1212,8 +1212,8 @@ Attempting to set a reference for a Selector that returns \ttt{false}
 here will cause an exception to be thrown.
 %
 The other selectors taking a reference that are available by default
-are \ttt{SelectorStrip}, \ttt{SelectorDoughnut} and
-\ttt{SelectorRectangle}.
+are \ttt{SelectorStrip}, \ttt{SelectorDoughnut}, 
+\ttt{SelectorRectangle} and \ttt{SelectorPtFractionMin}.
 
 A user can obtain information on what a given \ttt{Selector} does by
 calling its \ttt{description()} member function. 
@@ -1274,7 +1274,7 @@ selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
 returned are the largest (negative and positive) numbers that can be
 represented as doubles.
 
-\comment{Is discussion of areas not too detailed?}
+%\comment{Is discussion of areas not too detailed?}
 
 Selectors may also have areas associated with them (in analogy with
 jet areas, section~\ref{sec:areas}).
@@ -3099,12 +3099,12 @@ limitations (for example, when simulating pileup, if an input particle
 can come from one of several HepMC events).
 
 A second method for supplementing a \PJ with extra user information is for
-the user to derive a class from \ttt{PseudoJet::UserInfo} and
+the user to derive a class from \ttt{PseudoJet::UserInfoBase} and
 associate the \ttt{PseudoJet} with a pointer to an instance of that
 class:
 \begin{lstlisting}
-  void set_user_info(UserInfo * user_info);
-  const UserInfo* user_info_ptr() const;
+  void set_user_info(UserInfoBase * user_info);
+  const UserInfoBase* user_info_ptr() const;
 \end{lstlisting}
 It is important to be aware that the function
 \ttt{set\_user\_info(...)} transfers ownership of the pointer to the
@@ -3114,7 +3114,7 @@ pointer. Copies of the \ttt{PseudoJet} will point to the same
 of scope the \ttt{user\_info} will be deleted.
 %
 Since nearly all practical uses of \ttt{user\_info} will require it
-to be cast to the relevant derived class of  \ttt{UserInfo}, we also
+to be cast to the relevant derived class of  \ttt{UserInfoBase}, we also
 provide the following member function for convenience:
 \begin{lstlisting}
   template<class L> const L & user_info() const;
@@ -3154,9 +3154,12 @@ The shared pointer type in \fastjet is a template class called
   #include "fastjet/SharedPtr.hh"
 \end{lstlisting}
 %
-It behaves almost identically to the \ttt{C++0x} \ttt{shared\_ptr},
+It behaves almost identically to the \ttt{C++0x} \ttt{shared\_ptr}.\footnote{
 %
-though some internal details are different.
+Internally it has been designed somewhat differently, in order
+to limit the memory footprint of the PseudoJet that contains it. One
+consequence of this is that dynamic casts of SharedPtr's are not
+supported.}
 %
 The end-user should not usually need to manipulate the
 \ttt{SharedPtr}, though the \ttt{SharedPtr} to \ttt{user\_info} is
@@ -3165,7 +3168,7 @@ accessible through \PJ's \ttt{user\_info\_shared\_ptr()} member.
 An example of the usage might be the following. First you define a
 class \ttt{MyInfo}, derived from \ttt{PseudoJet::UserInfo},
 \begin{lstlisting}
-  class MyInfo: public PseudoJet::UserInfo {
+  class MyInfo: public PseudoJet::UserInfoBase {
      MyInfo(int id) : _pdg_id(id);
      int pdg_id() const {return _pdg_id;}
      int _pdg_id;

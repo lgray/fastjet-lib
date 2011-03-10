@@ -15,6 +15,7 @@
 ///   - \subpage Example09
 ///   - \subpage Example10
 ///   - \subpage Example11
+///   - \subpage Example12
 
 //STARTHEADER
 // $Id$
