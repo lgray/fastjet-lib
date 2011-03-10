@@ -1,5 +1,8 @@
 2011-03-10  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* src/Selector.cc (SW_WithReference):
+	  added the missing copy() method.
+
 	* example/Makefile.am:
 	* example/09-extra_info.cc:                   *** REMOVED ***
 	* example/09-user_info.cc:                    ***  ADDED  ***

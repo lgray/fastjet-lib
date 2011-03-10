@@ -1181,6 +1181,9 @@ public:
   /// ctor with specification of the number of objects to keep
   SW_PtFractionMin(double fraction) : _fraction2(fraction*fraction){}
 
+  /// return a copy of the current object
+  virtual SelectorWorker* copy(){ return new SW_PtFractionMin(*this);}
+
   /// return true if the jet carries a large enough fraction of the reference.
   /// Throw an error if the reference is not initialised.
   virtual bool pass(const PseudoJet & jet) const {
