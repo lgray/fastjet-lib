@@ -4,7 +4,8 @@
 ///
 /// fastjet basic example program:
 ///   simplest illustration of the usage of the basic classes:
-///   PseudoJet, JetDefinition and ClusterSequence
+///   fastjet::PseudoJet, fastjet::JetDefinition and 
+///   fastjet::ClusterSequence
 ///
 /// run it with    : ./01-basic < data/single-event.dat
 ///

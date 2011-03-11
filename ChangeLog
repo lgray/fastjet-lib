@@ -1,3 +1,15 @@
+2011-03-11  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* example/01-basic.cc:
+	* example/02-jetdef.cc:
+	* example/04-constituents.cc:
+	* example/06-area.cc:
+	* example/08-selector.cc:
+	* example/09-user_info.cc:
+	* example/12-filter.cc:
+	  sorted out the links in the Doxygen doc (clqsses na;es had to be
+	  prefixed by fastjet::)
+
 2011-03-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* configure.ac:

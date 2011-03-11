@@ -4,7 +4,7 @@
 ///
 /// fastjet basic example program:
 ///   illustration of the usage of how to change the jet definition
-///   used for the clustering
+///   used for the clustering (see also fastjet::JetDefinition)
 ///
 /// run it with    : ./02-jetdef < data/single-event.dat
 ///

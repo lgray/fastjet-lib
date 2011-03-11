@@ -2,9 +2,9 @@
 /// \file
 /// \page Example08 08 - using the Selector tool
 ///
-/// fastjet sample program to illustrate the use of Selector(s):
+/// fastjet sample program to illustrate the use of fastjet::Selector
 ///
-/// Note that to use Selector (and fastjet tools), you need the
+/// Note that to use fastjet::Selector (and fastjet tools), you need the
 /// fastjettools library. It is included by default by
 ///   fastjet-config --libs
 ///

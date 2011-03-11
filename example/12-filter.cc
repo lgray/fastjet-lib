@@ -2,7 +2,7 @@
 /// \file
 /// \page Example12 12 - use of filtering
 ///
-/// fastjet example program illustrating the use of a Filter
+/// fastjet example program illustrating the use of the fastjet::Filter class
 ///
 /// To do that, we apply different filter examples on a either the
 /// hardest jet of the given event or the compositipon of the two

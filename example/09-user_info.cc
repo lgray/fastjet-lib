@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 /// \file
-/// \page Example09 09 - adding extra information to a PseudoJet
+/// \page Example09 09 - adding extra information to a fastjet::PseudoJet
 ///
 /// TO BE WRITTEN!
 ///

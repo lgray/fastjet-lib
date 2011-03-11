@@ -7,8 +7,8 @@
 /// We do it by associating a user index to each of the input particles
 /// and show what particles are in each jets (above 5 GeV)
 ///
-/// We also illustrate a few other features about how a PseudoJet
-/// can access its underlying PseudoJet.
+/// We also illustrate a few other features about how a fastjet::PseudoJet
+/// can access its underlying structure.
 ///
 /// run it with    : ./04-constituents < data/single-event.dat
 ///

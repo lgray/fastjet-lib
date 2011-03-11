@@ -4,7 +4,7 @@
 ///
 /// fastjet example program for jet areas
 /// It mostly illustrates the usage of the 
-///   AreaDefinition and ClusterSequenceArea classes
+/// fastjet::AreaDefinition and fastjet::ClusterSequenceArea classes
 ///
 /// run it with    : ./06-area < data/single-event.dat
 ///
