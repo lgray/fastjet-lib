@@ -98,8 +98,9 @@ class FilteredJetStructure;
 ///
 ///    PseudoJet filtered_jet = filter(jet);
 ///
-/// To get trimming, arXiv:0912.1342, you need an Rtrim to define
-/// subjets and a pt_fraction_min to decide which subjets to keep:
+/// To get trimming defined with respect to a jet's pt,
+/// arXiv:0912.1342, you need an Rtrim to define subjets and a
+/// pt_fraction_min to decide which subjets to keep:
 ///
 ///    Filter trimmer(JetDefinition(cambridge_algorithm,Rfilt),
 ///                   SelectorPtFractionMin(pt_fraction_min));
@@ -112,6 +113,9 @@ class FilteredJetStructure;
 /// made of by calling
 /// 
 ///    trimmed_jet.pieces()
+///
+/// Trimming defined with respect to an event's effective mass can
+/// be carried out with a SelectorPtMin(...) selector.
 ///
 /// More sophisticated filters/trimmers can easily be obtained by
 /// combining Selectors.
