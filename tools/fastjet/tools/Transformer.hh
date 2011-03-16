@@ -1,6 +1,3 @@
-#ifndef __FASTJET_TRANSFORMER_HH__
-#define __FASTJET_TRANSFORMER_HH__
-
 //STARTHEADER
 // $Id$
 //
@@ -30,6 +27,9 @@
 //      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //----------------------------------------------------------------------
 //ENDHEADER
+
+#ifndef __FASTJET_TRANSFORMER_HH__
+#define __FASTJET_TRANSFORMER_HH__
 
 #include <fastjet/SharedPtr.hh>
 #include <fastjet/PseudoJet.hh>

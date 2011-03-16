@@ -1,10 +1,7 @@
-#ifndef __FASTJET_TOOLS_FILTER_HH__
-#define __FASTJET_TOOLS_FILTER_HH__
-
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2009-2010, Matteo Cacciari, Gavin Salam and Gregory Soyez
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -30,6 +27,9 @@
 //      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //----------------------------------------------------------------------
 //ENDHEADER
+
+#ifndef __FASTJET_TOOLS_FILTER_HH__
+#define __FASTJET_TOOLS_FILTER_HH__
 
 #include <fastjet/ClusterSequence.hh>
 #include <fastjet/Selector.hh>

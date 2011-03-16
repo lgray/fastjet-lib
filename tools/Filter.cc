@@ -1,7 +1,7 @@
 //STARTHEADER
-// $Id: Filter.cc 1737 2010-07-08 16:19:56Z soyez $
+// $Id$
 //
-// Copyright (c) 2009-2010, Matteo Cacciari, Gavin Salam and Gregory Soyez
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
