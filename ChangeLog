@@ -16,6 +16,12 @@
 	  sorted out the links in the Doxygen doc (class names had to be
 	  prefixed by fastjet::)
 
+2011-03-11  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	* tools/BackgroundEstimator.cc: 
+          reworked some of the comments in BackgroundEstimator.
+	
 2011-03-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* configure.ac:

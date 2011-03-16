@@ -12,17 +12,17 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 /// \class BackgroundEstimator
 /// Class to estimate the density of the background per unit area
 ///
-/// The default behaviour of this class is to compute the global
-/// properties of the background as it is done in ClusterSequenceArea.
-/// The list of jets included in the computation of the median
-/// background is the one that passed a selection test (this could at
-/// the same time select jets in a given "range" and jets satisfying
-/// various kinematic cuts)
+/// For a given event, this class calculated the median of the
+/// distribution of pt/Area for all jets in the event that pass some
+/// selection criterion.
 ///
-/// Default behaviour:
-///   by default the list of included jets is the inclusive jets from
-///   the given ClusterSequence; the list of explicitly excluded jets 
-///   is empty; we use 4-vector area
+/// Events are passed either in the form of a ClusterSequenceArea (in
+/// which case the jets used as those returned by "inclusive_jets()")
+/// or directly as a set of jets.
+///
+/// The selection criterion is typically a geometrical one (e.g. all
+/// jets with |y|<2) sometimes supplemented with some kinematical
+/// restriction (e.g. exclusion of the two hardest jets).
 ///
 /// Beware: 
 ///   by default, to correctly handle partially empty events, the
@@ -97,10 +97,12 @@ public:
     return _sigma;
   }
 
-  /// get rho, the median background density oer unit area,
-  /// locally at the position of a given jet.
+  /// get rho, the median background density per unit area, locally at
+  /// the position of a given jet.
   ///
-  /// This requires a relocatable range
+  /// If the Selector associated with the range takes a reference jet
+  /// (i.e. is relocatable), the Selector has that jet set as its
+  /// reference.
   double rho(const PseudoJet jet) {
     set_reference(jet);
     return rho();
@@ -109,7 +111,9 @@ public:
   /// get sigma, the background fluctuations per unit area,
   /// locally at the position of a given jet.
   ///
-  /// This requires a relocatable range
+  /// If the Selector associated with the range takes a reference jet
+  /// (i.e. is relocatable), the Selector has that jet set as its
+  /// reference.
   double sigma(const PseudoJet &jet) {
     set_reference(jet);
     return sigma();
@@ -153,16 +157,29 @@ public:
   //\{
   //----------------------------------------------------------------
 
-  /// for estimation using a relocatable selector (i.e. local range)
-  /// this allows to set its position. Note that this HAS to be called
-  /// before any attempt to compute the background properties
+  /// for estimation using a selector that takes a reference jet
+  /// (i.e. a selector that can be relocated) this function allows one
+  /// to set its position.
+  ///
+  /// Note that this HAS to be called before any attempt to compute
+  /// the background properties. The call is, however, performed
+  /// automatically by the functions rho(jet) and sigma(jet).
   BackgroundEstimator & set_reference(const PseudoJet &jet);
 
-  /// reset to default values
-  /// set the list of included jets to the inclusive jets and clear the excluded ones
+  /// Resets the class to its default state, including the choice to
+  /// use 4-vector areas.
+  ///
   void reset();
 
-  /// specify if one uses the scalar or 4-vector area
+  /// By default when calculating pt/Area for a jet, it is the
+  /// transverse component of the 4-vector area that is used. Calling
+  /// this function with a "false" argument causes the scalar area to
+  /// be used instead. 
+  ///
+  /// While the difference between the two choices is usually small,
+  /// for high-precision work it is usually the 4-vector area that is
+  /// to be preferred.
+  ///
   ///  \param use_it             whether one uses the 4-vector area or not (true by default)
   void set_use_area_4vector(bool use_it = true){
     _use_area_4vector = use_it;

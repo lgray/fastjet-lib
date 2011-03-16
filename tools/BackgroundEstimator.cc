@@ -52,7 +52,7 @@ BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, con
   //  (i) check the alg is appropriate
   _check_jet_alg_good_for_median();
 
-  //  (ii) check that, if there is no explicit ghosts, the selector has an area
+  //  (ii) check that, if there are no explicit ghosts, the selector has an area
   if ((!csa.has_explicit_ghosts()) && (!_rho_range.has_area())){
     throw Error("BackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
@@ -95,7 +95,7 @@ BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Se
   //  (i) check the alg is appropriate
   _check_jet_alg_good_for_median();
 
-  //  (ii) check that, if there is no explicit ghosts, the selector has an area
+  //  (ii) check that, if there are no explicit ghosts, the selector has an area
   if ((!csab->has_explicit_ghosts()) && (!_rho_range.has_area())){
     throw Error("BackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
@@ -257,7 +257,7 @@ void BackgroundEstimator::_check_jet_alg_good_for_median(){
   if (cs->jet_def().jet_algorithm() != kt_algorithm
       && cs->jet_def().jet_algorithm() != cambridge_algorithm
       && cs->jet_def().jet_algorithm() != cambridge_for_passive_algorithm) {
-    _warnings.warn("BackgroundEstimator: jet_def being used may not be suitable for estimating diffuse backgrounds (good options are kt, cam)");
+    _warnings.warn("BackgroundEstimator: jet_def being used may not be suitable for estimating diffuse backgrounds (good alternatives are kt, cam)");
   }
 }
 
