@@ -1,6 +1,22 @@
 2011-03-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* regression-tests/nightly-check.pl: 
+	* src/Selector.cc:
+	* include/fastjet/Selector.hh:
+	  added two new Selector methods
+
+	  - Selector::count(jets), which returns a count of
+	    the number of jets that pass the selection; intended to be a
+	    a bit more efficient that getting a results vector and
+	    evaluating its size.
+
+	  - Selector::sift(jets, jets_that_pass, jets_that_fail), which
+	    sifts the input jets into two vectors, which respectively pass
+	    and fail the selector.
+
+	  Also eliminated some operator indirection in the main selection
+	  routine.
+
+	* regression-tests/nightly-check.pl:
 	  removed zetes from nightly check since it's down.
 
 2011-03-16  Gregory Soyez  <soyez@lpthe.jussieu.fr>

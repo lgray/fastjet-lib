@@ -160,6 +160,18 @@ public:
     return pass(jet);
   }
 
+  /// Return a count of the objects that pass the selection.
+  ///
+  /// This will often be more efficient that getting the vector of objects that
+  /// passes and then evaluating the size of the vector
+  unsigned int count(const std::vector<PseudoJet> & jets) const;
+
+  /// sift the input jets into two vectors -- those that pass the selector
+  /// and those that do not
+  void sift(const std::vector<PseudoJet> & jets,
+		  std::vector<PseudoJet> & jets_that_pass,
+		  std::vector<PseudoJet> & jets_that_fail) const;
+
   /// returns true if this can be applied jet by jet
   bool applies_jet_by_jet() const {
     return validated_worker()->applies_jet_by_jet();
@@ -247,6 +259,7 @@ protected:
     //std::cout << "will make a copy of " << description() << std::endl;
     _worker.reset(_worker->copy());
   }
+
 public:
 
   /// returns true if this can be applied jet by jet
