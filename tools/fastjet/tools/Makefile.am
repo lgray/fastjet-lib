@@ -1,2 +1,2 @@
 toolsincludedir=$(includedir)/fastjet/tools
-toolsinclude_HEADERS = Filter.hh Transformer.hh BackgroundEstimator.hh
+toolsinclude_HEADERS = BackgroundEstimator.hh Transformer.hh Filter.hh Subtractor.hh
