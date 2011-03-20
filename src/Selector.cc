@@ -587,17 +587,17 @@ public:
 
 // returns a selector for a minimum Et
 Selector SelectorEtMin(double Etmin) {
-  return Selector(new SW_QuantityMin<QuantityEt2>(Etmin*Etmin));
+  return Selector(new SW_QuantityMin<QuantityEt2>(Etmin));
 }
 
 // returns a selector for a maximum Et
 Selector SelectorEtMax(double Etmax) {
-  return Selector(new SW_QuantityMax<QuantityEt2>(Etmax*Etmax));
+  return Selector(new SW_QuantityMax<QuantityEt2>(Etmax));
 }
 
 // returns a selector for a Et range
 Selector SelectorEtRange(double Etmin, double Etmax) {
-  return Selector(new SW_QuantityRange<QuantityEt2>(Etmin*Etmin, Etmax*Etmax));
+  return Selector(new SW_QuantityRange<QuantityEt2>(Etmin, Etmax));
 }
 
 
