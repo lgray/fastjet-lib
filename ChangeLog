@@ -1,3 +1,9 @@
+2011-03-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/Selector.cc (SelectorM*, SelectorEt*): 
+	  these were incorrectly interpreting their arguments as the
+	  square-root of mass and Et. Should now be fixed.
+
 2011-03-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/Selector.cc:

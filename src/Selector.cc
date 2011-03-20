@@ -637,17 +637,17 @@ public:
 
 // returns a selector for a minimum m
 Selector SelectorMMin(double mmin) {
-  return Selector(new SW_QuantityMin<QuantityM2>(mmin*mmin));
+  return Selector(new SW_QuantityMin<QuantityM2>(mmin));
 }
 
 // returns a selector for a maximum m
 Selector SelectorMMax(double mmax) {
-  return Selector(new SW_QuantityMax<QuantityM2>(mmax*mmax));
+  return Selector(new SW_QuantityMax<QuantityM2>(mmax));
 }
 
 // returns a selector for a m range
 Selector SelectorMRange(double mmin, double mmax) {
-  return Selector(new SW_QuantityRange<QuantityM2>(mmin*mmin, mmax*mmax));
+  return Selector(new SW_QuantityRange<QuantityM2>(mmin, mmax));
 }
 
 
