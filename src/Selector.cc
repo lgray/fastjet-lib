@@ -464,6 +464,7 @@ Selector operator*(const Selector & s1, const Selector & s2) {
 class QuantityBase{
 public:
   QuantityBase(double q) : _q(q){}
+  virtual ~QuantityBase(){}
   virtual double operator()(const PseudoJet & jet ) const =0;
   virtual string description() const =0;
   virtual double comparison_value() const {return _q;}

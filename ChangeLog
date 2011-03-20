@@ -1,3 +1,9 @@
+2011-03-20  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/Selector.cc:
+	  provide a virtual dtor to QuantityBase (so that the derived
+	  quantities also have a virtual dtor).
+
 2011-03-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequenceVoronoiArea.cc:
