@@ -76,7 +76,7 @@ private:
   /// point i and point j and all distances are squared
   inline double circle_area(const double d12_2, double d01_2, double d02_2){
     return 0.5*_effective_R_squared
-      *acos((d01_2+d02_2-d12_2)/(2*sqrt(d01_2*d02_2)));
+      *acos(min(1.0,(d01_2+d02_2-d12_2)/(2*sqrt(d01_2*d02_2))));
   }
 };
 
@@ -90,14 +90,14 @@ double VAC::edge_circle_intersection(const Point &p0,
   Point p1(edge.x1-p0.x, edge.y1-p0.y);
   Point p2(edge.x2-p0.x, edge.y2-p0.y);
   Point pdiff = p2-p1;
-  
+
   //fprintf(stdout, "\tpt(%f,%f)\n", p0.x, p0.y);
 
   double cross = vector_product(p1, p2);
   double d12_2 = norm(pdiff);
   double d01_2 = norm(p1);
   double d02_2 = norm(p2);
-  
+
   // compute intersections between edge line and circle
   double delta = d12_2*_effective_R_squared - cross*cross;
   

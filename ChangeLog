@@ -1,5 +1,11 @@
 2011-03-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* src/ClusterSequenceVoronoiArea.cc:
+	  fixed rounding-error issue in VAC::circle_area(...), which was
+	  causing nan Voronoi areas in some circumstances for particles on
+	  a calorimeter. (Problem reported by Sue Ann Koay, with example
+	  event sent on 2011-03-20).
+
 	* src/Selector.cc (SelectorM*, SelectorEt*): 
 	  these were incorrectly interpreting their arguments as the
 	  square-root of mass and Et. Should now be fixed.
