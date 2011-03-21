@@ -1,3 +1,14 @@
+2011-03-21  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* tools/BackgroundEstimator.cc (_compute):
+	  . use systematically scalar area to estimate the empty area
+	  . fixed a bug in the computation of the empty area (dividing
+	    by R^2 rather than R)
+
+	  Note that the method to compute the empty area when there is no
+	  explicit ghost works as for ClusterSequenceAreaBase. This would
+	  differ to what is implemented in ClusterSequenceActiveArea.
+
 2011-03-20  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* src/Selector.cc:

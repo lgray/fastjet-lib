@@ -225,16 +225,23 @@ void BackgroundEstimator::_compute(){
   // determine the number of empty jets
   _empty_area = 0.0;
   _n_empty_jets = 0.0;
-  const ClusterSequenceAreaBase * csab = dynamic_cast<ClusterSequenceStructure*>(_csi())->validated_csab();
+  const ClusterSequenceAreaBase * csab = (dynamic_cast<ClusterSequenceStructure*>(_csi()))->validated_csab();
 
   if (csab->has_explicit_ghosts()) {
     _empty_area = 0.0;
     _n_empty_jets = 0;
   } else {
     // note that we are sure that the selector has an area
-    _empty_area = _rho_range.area() - total_area;
-    if (_empty_area<0) _empty_area = 0;
-    _n_empty_jets = _empty_area / (0.55*pi*csab->jet_def().R());
+    // And we also need to use the scalar area
+    if (_use_area_4vector){
+      _empty_area = _rho_range.area();
+      for (unsigned i = 0; i < _selected_jets.size(); i++) _empty_area -= _selected_jets[i].area();
+    } else {
+      _empty_area = _rho_range.area() - total_area;
+    }
+    //if (_empty_area<0) _empty_area = 0;
+    double Rused = csab->jet_def().R();
+    _n_empty_jets = _empty_area / (0.55*pi*Rused*Rused);
   }
 
   double total_njets = _n_jets_used + _n_empty_jets;
