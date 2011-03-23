@@ -95,11 +95,12 @@ push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard ma
 #push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 #push @setups, ["karnak","FC=/usr/local/bin/gfortran-4.4", "", 10]; # out of the box on karnak (OS X 10.5)
 # karnak reenabled 2010-12-20
-push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
-push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
-push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
-push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
+# karnak disabled 2011-03-23
+# push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
+# push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
+# push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
+# push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
+# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
 
 
 # process command-line

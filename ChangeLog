@@ -1,5 +1,8 @@
 2011-03-23  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* regression-tests/nightly-check.pl: 
+	  removed karnak from nightly check
+	
 	* include/fastjet/GhostedAreaSpec.hh: 
 	* GhostedAreaSpec.cc: 
 	  GhostedAreaSpec can now take a Selector in the constructor and
