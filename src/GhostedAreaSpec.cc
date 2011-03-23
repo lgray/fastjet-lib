@@ -29,6 +29,7 @@
 //ENDHEADER
 
 #include "fastjet/GhostedAreaSpec.hh"
+#include "fastjet/Error.hh"
 #include<iostream>
 #include<sstream>
 
@@ -38,6 +39,37 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 BasicRandom<double> GhostedAreaSpec::_random_generator;
 
+/// explicit constructor
+GhostedAreaSpec::GhostedAreaSpec(
+                           const Selector & selector,
+                           int    repeat        ,
+                           double ghost_area    ,   
+                           double grid_scatter  , 
+                           double kt_scatter    ,   
+                           double mean_ghost_kt 
+                          ): 
+    _repeat(repeat), 
+    _ghost_area(ghost_area), 
+    _grid_scatter(grid_scatter),  
+    _kt_scatter(kt_scatter), 
+    _mean_ghost_kt(mean_ghost_kt),
+    _selector(selector),
+    _actual_ghost_area(-1.0)
+  {
+    // check the selector has the properties needed -- an area and
+    // applicability jet-by-jet (the latter follows automatically from
+    // the former?)
+    if (!_selector.has_area()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must have an area");
+    if (!_selector.applies_jet_by_jet()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must apply jet-by-jet");
+    // get the internal rapidity extent from the selector
+    double ghost_maxrap, ghost_minrap;
+    _selector.get_rapidity_extent(ghost_minrap, ghost_maxrap);
+    _ghost_maxrap     = 0.5*(ghost_maxrap - ghost_minrap); 
+    _ghost_rap_offset = 0.5*(ghost_maxrap + ghost_minrap);
+    
+    _initialize();
+  
+}
 //======================================================================
 /// sets the detailed parameters for the ghosts (which may not be quite
 /// the same as those requested -- this is in order for things to fit
@@ -73,9 +105,11 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       double pplus  = kt*exp(+rap);
       double px = kt*sin(phi);
       double py = kt*cos(phi);
-      //cout << kt<<" "<<rap<<" "<<phi<<"\n";
-      //if (phi>=twopi || phi < 0.0) cout << "Hey: "<< phi-twopi<<"\n";
       PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
+
+      // if we have an active selector and the particle does not pass the 
+      // selection condition, move on to the next momentum
+      if (_selector.worker().get() && !_selector.pass(mom)) continue;
       event.push_back(mom);
     }
   }

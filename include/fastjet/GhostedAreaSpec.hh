@@ -36,6 +36,7 @@
 #include<string>
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/internal/BasicRandom.hh"
+#include "fastjet/Selector.hh"
 
 // 
 #define STATIC_GENERATOR 1
@@ -105,6 +106,16 @@ public:
     _kt_scatter(kt_scatter), 
     _mean_ghost_kt(mean_ghost_kt),
     _actual_ghost_area(-1.0) {_initialize();};
+
+
+  /// constructor based on a Selector
+  explicit GhostedAreaSpec(const Selector & selector,
+                           int    repeat        = gas::def_repeat,
+                           double ghost_area    = gas::def_ghost_area,   
+                           double grid_scatter  = gas::def_grid_scatter, 
+                           double kt_scatter    = gas::def_kt_scatter,   
+                           double mean_ghost_kt = gas::def_mean_ghost_kt
+			   );
 
 
   /// does the initialization of actual ghost parameters
@@ -178,6 +189,8 @@ private:
   double _grid_scatter;
   double _kt_scatter  ;
   double _mean_ghost_kt;
+
+  Selector _selector;
 
   // derived quantities
   double _actual_ghost_area, _dphi, _drap;

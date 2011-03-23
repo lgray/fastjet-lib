@@ -1,6 +1,7 @@
 #include <sstream>
 #include <algorithm>
 #include "fastjet/Selector.hh"
+#include "fastjet/GhostedAreaSpec.hh"  // for area support
 
 using namespace std;
 
@@ -100,6 +101,10 @@ void Selector::sift(const std::vector<PseudoJet> & jets,
   }
 }
 
+// area using default ghost area
+double Selector::area() const{
+  return area(gas::def_ghost_area);
+}
 
 // implementation of the Selector's area function
 double Selector::area(double cell_area) const{

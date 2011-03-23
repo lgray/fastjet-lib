@@ -1,3 +1,20 @@
+2011-03-23  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/GhostedAreaSpec.hh: 
+	* GhostedAreaSpec.cc: 
+	  GhostedAreaSpec can now take a Selector in the constructor and
+	  do the sensible thing with it.
+	
+	* include/fastjet/Selector.hh: 
+	* Selector.cc: 
+
+	  Set up separate area() and area(ghost_area) calls, so that we do
+	  not need to provide a default area in the include file (this was
+	  causing circularity in the includes with GhostedAreaSpec)
+
+	  Reorganised order of some methods (so everything public is
+	  together).
+
 2011-03-21  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/BackgroundEstimator.cc (_compute):

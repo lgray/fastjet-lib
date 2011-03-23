@@ -32,7 +32,6 @@
 //ENDHEADER
 
 #include "fastjet/PseudoJet.hh"
-#include "fastjet/GhostedAreaSpec.hh"  // for area support
 #include <limits>
 #include <cmath>
 
@@ -212,7 +211,11 @@ public:
   /// Monte Carlo estimate involves a time penalty proportional to
   /// rapidity extent of the Selector.
   ///
-  double area(double cell_area=gas::def_ghost_area) const;
+  double area(double cell_area) const;
+
+  /// estimate of area, which will use the default ghost area from
+  /// the ghosted_area_spec
+  double area() const;
 
   /// returns a (reference to) the underlying worker's shared pointer
   const SharedPtr<SelectorWorker> & worker() const {return _worker;}
@@ -223,44 +226,6 @@ public:
     if (worker_ptr == 0) throw InvalidWorker();
     return worker_ptr;
   }
-
-  /// class that gets throw when a Selector is applied despite it not
-  /// having a valid underlying worker.
-  class InvalidWorker : public Error {
-  public:
-    InvalidWorker() : Error("Attempt to use Selector with no valid underlying worker") {}
-  };
-
-  /// class that gets throw when a Selector is applied despite it not
-  /// having a valid underlying worker.
-  class InvalidArea : public Error {
-  public:
-    InvalidArea() : Error("Attempt to obtain area from Selector for which this is not meaningful") {}
-  };
-
-  //----------------------------------------------------
-  // non-const operations
-  //----------------------------------------------------
-
-protected:
-  /// Helper for copying selector workers if needed
-  ///
-  /// The following is needed if we want to modify a selectors that
-  /// shares a worker with another selector. In that case, we need to
-  /// get another copy of the worker to avoid interferences
-  ///
-  /// Note that any non-const operation has to call this to behave
-  /// correctly w.r.t shared workers!
-  void _copy_worker_if_needed(){
-    // do nothing if there's a sinlge user of the worker
-    if (_worker.unique()) return;
-
-    // call the worker's copy
-    //std::cout << "will make a copy of " << description() << std::endl;
-    _worker.reset(_worker->copy());
-  }
-
-public:
 
   /// returns true if this can be applied jet by jet
   bool takes_reference() const {
@@ -281,6 +246,40 @@ public:
 
     _worker->set_reference(reference);
     return *this;
+  }
+
+  /// class that gets throw when a Selector is applied despite it not
+  /// having a valid underlying worker.
+  class InvalidWorker : public Error {
+  public:
+    InvalidWorker() : Error("Attempt to use Selector with no valid underlying worker") {}
+  };
+
+  /// class that gets throw when a Selector is applied despite it not
+  /// having a valid underlying worker.
+  class InvalidArea : public Error {
+  public:
+    InvalidArea() : Error("Attempt to obtain area from Selector for which this is not meaningful") {}
+  };
+
+
+
+protected:
+  /// Helper for copying selector workers if needed
+  ///
+  /// The following is needed if we want to modify a selectors that
+  /// shares a worker with another selector. In that case, we need to
+  /// get another copy of the worker to avoid interferences
+  ///
+  /// Note that any non-const operation has to call this to behave
+  /// correctly w.r.t shared workers!
+  void _copy_worker_if_needed(){
+    // do nothing if there's a sinlge user of the worker
+    if (_worker.unique()) return;
+
+    // call the worker's copy
+    //std::cout << "will make a copy of " << description() << std::endl;
+    _worker.reset(_worker->copy());
   }
 
 private:
