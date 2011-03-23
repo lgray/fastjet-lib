@@ -119,9 +119,12 @@ string GhostedAreaSpec::description() const {
 
   ostringstream ostr;
   ostr << "ghosts of area " << actual_ghost_area() 
-       << " (had requested " << ghost_area() << ")"
-       << ", placed up to y = " << ghost_maxrap() 
-       << ", scattered wrt to perfect grid by (rel) " << grid_scatter() 
+       << " (had requested " << ghost_area() << ")";
+  if (_selector.worker().get()) 
+    ostr << ", placed according to selector (" << _selector.description() << ")";
+  else
+    ostr << ", placed up to y = " << ghost_maxrap() ;
+  ostr << ", scattered wrt to perfect grid by (rel) " << grid_scatter() 
        << ", mean_ghost_kt = " << mean_ghost_kt()
        << ", rel kt_scatter =  " << kt_scatter()
        << ", n repetitions of ghost distributions =  " << repeat();

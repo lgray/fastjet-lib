@@ -6,7 +6,8 @@
 	* include/fastjet/GhostedAreaSpec.hh: 
 	* GhostedAreaSpec.cc: 
 	  GhostedAreaSpec can now take a Selector in the constructor and
-	  do the sensible thing with it.
+	  do the sensible thing with it (+later, got description working
+	  for it)
 	
 	* include/fastjet/Selector.hh: 
 	* Selector.cc: 
