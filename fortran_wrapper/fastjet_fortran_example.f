@@ -51,9 +51,6 @@ c.....(uselessy slower if you do not need areas)
       ghost_maxrap = 6.0d0 ! make sure you define this as a double precision (with the d0)
       nrepeat = 1
       ghost_area = 0.01d0 ! make sure you define this as a double precision (with the d0)
-c      call fastjetsisconewitharea(p,npart,R,f,
-c     #                    ghost_maxrap,nrepeat,ghost_area,
-c     #                    jets,njets)   ! ... now you have the jets
       call fastjetppgenktwitharea(p,npart,R,palg,
      #                            ghost_maxrap,nrepeat,ghost_area,
      #                            jets,njets)   ! ... now you have the jets
