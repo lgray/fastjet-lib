@@ -1,7 +1,7 @@
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2007, Matteo Cacciari, Gavin Salam and Gregory Soyez
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -30,6 +30,7 @@
 
 #include <iostream>
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/SISConePlugin.hh"
 
 using namespace std;
@@ -69,6 +70,35 @@ namespace fwrapper {
       } 
     }
   }
+  
+  /// helper routine packaging the transfers, the clustering
+  /// and the extraction of the jets
+  void transfer_cluster_transfer(const double * p, const int & npart, 
+                                 const JetDefinition & jet_def,
+				 double * f77jets, int & njets,
+				 const double & ghost_maxrap = 0.0,  
+				 const int & nrepeat = 0, const double & ghost_area = 0.0) {
+
+    // transfer p[4*ipart+0..3] -> input_particles[i]
+    transfer_input_particles(p, npart);
+
+    // perform the clustering
+    if ( ghost_maxrap == 0.0 ) {
+         // cluster without areas
+	 cs.reset(new ClusterSequence(input_particles,jet_def));
+    } else {
+         // cluster with areas
+         GhostedAreaSpec area_spec(ghost_maxrap,nrepeat,ghost_area);
+         AreaDefinition area_def(active_area, area_spec);
+	 cs.reset(new ClusterSequenceArea(input_particles,jet_def,area_def));
+    }
+    // extract jets (pt-ordered)
+    jets = sorted_by_pt(cs->inclusive_jets());
+    
+    // transfer jets -> f77jets[4*ijet+0..3]
+    transfer_jets(f77jets, njets);
+ 
+  }
 
 }
 FASTJET_END_NAMESPACE
@@ -78,8 +108,8 @@ using namespace fastjet::fwrapper;
 
 extern "C" {   
 
-// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
-// [see below for the interface to kt, Cam/Aachen & kt]
+/// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
+/// [see below for the interface to kt, Cam/Aachen & kt]
 //
 // Corresponds to the following Fortran subroutine
 // interface structure:
@@ -110,33 +140,74 @@ extern "C" {
 void fastjetsiscone_(const double * p, const int & npart,                   
                      const double & R, const double & f,                   
                      double * f77jets, int & njets) {
-
-    // transfer p[4*ipart+0..3] -> input_particles[i]
-    transfer_input_particles(p, npart);
     
-    // prepare jet def and run fastjet
+    // prepare jet def
     plugin.reset(new SISConePlugin(R,f));
     jet_def = plugin.get();
-    
-    // perform clustering
-    cs.reset(new ClusterSequence(input_particles,jet_def));
-    // extract jets (pt-ordered)
-    jets = sorted_by_pt(cs->inclusive_jets());
 
-    // transfer jets -> f77jets[4*ijet+0..3]
-    transfer_jets(f77jets, njets);
+    // do everything
+    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
 
 
 
-// f77 interface to the pp generalised-kt (sequential recombination)
-// algorithms, as defined in arXiv.org:0802.1189, which includes
-// kt, Cambridge/Aachen and anti-kt as special cases.
+/// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
+/// [see below for the interface to kt, Cam/Aachen & kt]
+/// Also calculates the active area of the jets, as defined in  
+/// arXiv.org:0802.1188
 //
 // Corresponds to the following Fortran subroutine
 // interface structure:
 //
-//   SUBROUTINE FASTJETPPSEQREC(P,NPART,R,PALG,F77JETS,NJETS)
+//   SUBROUTINE FASTJETSISCONEWITHAREA(P,NPART,R,F,GHMAXRAP,NREP,GHAREA,F77JETS,NJETS)
+//   DOUBLE PRECISION P(4,*), R, F, F77JETS(4,*), GHMAXRAP, GHAREA
+//   INTEGER          NPART, NJETS, NREP
+// 
+// where on input
+//
+//   P        the input particle 4-momenta
+//   NPART    the number of input momenta
+//   R        the radius parameter
+//   F        the overlap threshold
+//   GHMAXRAP the maximum (abs) rapidity covered by ghosts (FastJet default 6.0) 
+//   NREP     the number of repetitions used to evaluate the area (FastJet default 1) 
+//   GHAREA   the area of a single ghost (FastJet default 0.01) 
+//
+// and on output 
+//
+//   F77JETS  the output jet momenta (whose second dim should be >= NPART)
+//            sorted in order of decreasing p_t.
+//   NJETS    the number of output jets 
+//
+// NOTE: if you are interfacing fastjet to Pythia 6, Pythia stores its
+// momenta as a matrix of the form P(4000,5), whereas this fortran
+// interface to fastjet expects them as P(4,NPART), i.e. you must take
+// the transpose of the Pythia array and drop the fifth component
+// (particle mass).
+//
+void fastjetsisconewitharea_(const double * p, const int & npart,                   
+                     const double & R, const double & f,                   
+                     const double & ghost_rapmax, const int & nrepeat, const double & ghost_area,
+                     double * f77jets, int & njets) {
+    
+    // prepare jet def
+    plugin.reset(new SISConePlugin(R,f));
+    jet_def = plugin.get();
+
+    // do everything
+    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
+}
+
+
+
+/// f77 interface to the pp generalised-kt (sequential recombination)
+/// algorithms, as defined in arXiv.org:0802.1189, which includes
+/// kt, Cambridge/Aachen and anti-kt as special cases.
+//
+// Corresponds to the following Fortran subroutine
+// interface structure:
+//
+//   SUBROUTINE FASTJETPPGENKT(P,NPART,R,PALG,F77JETS,NJETS)
 //   DOUBLE PRECISION P(4,*), R, PALG, F, F77JETS(4,*)
 //   INTEGER          NPART, NJETS
 // 
@@ -168,11 +239,8 @@ void fastjetsiscone_(const double * p, const int & npart,
 void fastjetppgenkt_(const double * p, const int & npart,                   
                      const double & R, const double & palg,
                      double * f77jets, int & njets) {
-
-    // transfer p[4*ipart+0..3] -> input_particles[i]
-    transfer_input_particles(p, npart);
     
-    // prepare jet def and run fastjet
+    // prepare jet def
     if (palg == 1.0) {
       jet_def = JetDefinition(kt_algorithm, R);
     }  else if (palg == 0.0) {
@@ -182,16 +250,73 @@ void fastjetppgenkt_(const double * p, const int & npart,
     } else {
       jet_def = JetDefinition(genkt_algorithm, R, palg);
     }
-    
-    // perform clustering
-    cs.reset(new ClusterSequence(input_particles,jet_def));
-    // extract jets (pt-ordered)
-    jets = sorted_by_pt(cs->inclusive_jets());
 
-    // transfer jets -> f77jets[4*ijet+0..3]
-    transfer_jets(f77jets, njets);
-    
+    // do everything
+    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
+
+
+/// f77 interface to the pp generalised-kt (sequential recombination)
+/// algorithms, as defined in arXiv.org:0802.1189, which includes
+/// kt, Cambridge/Aachen and anti-kt as special cases.
+/// Also calculates the active area of the jets, as defined in  
+/// arXiv.org:0802.1188
+//
+// Corresponds to the following Fortran subroutine
+// interface structure:
+//
+//   SUBROUTINE FASTJETPPGENKTWITHAREA(P,NPART,R,PALG,GHMAXRAP,NREP,GHAREA,F77JETS,NJETS)
+//   DOUBLE PRECISION P(4,*), R, PALG, GHMAXRAP, GHAREA,  F77JETS(4,*)
+//   INTEGER          NPART, NREP, NJETS
+// 
+// where on input
+//
+//   P        the input particle 4-momenta
+//   NPART    the number of input momenta
+//   R        the radius parameter
+//   PALG     the power for the generalised kt alg 
+//            (1.0=kt, 0.0=C/A,  -1.0 = anti-kt)
+//   GHMAXRAP the maximum (abs) rapidity covered by ghosts (FastJet default 6.0) 
+//   NREP     the number of repetitions used to evaluate the area (FastJet default 1) 
+//   GHAREA   the area of a single ghost (FastJet default 0.01) 
+//
+// and on output 
+//
+//   F77JETS  the output jet momenta (whose second dim should be >= NPART)
+//            sorted in order of decreasing p_t.
+//   NJETS    the number of output jets 
+//
+// For the values of PALG that correspond to "standard" cases (1.0=kt,
+// 0.0=C/A, -1.0 = anti-kt) this routine actually calls the direct
+// implementation of those algorithms, whereas for other values of
+// PALG it calls the generalised kt implementation.
+//
+// NOTE: if you are interfacing fastjet to Pythia 6, Pythia stores its
+// momenta as a matrix of the form P(4000,5), whereas this fortran
+// interface to fastjet expects them as P(4,NPART), i.e. you must take
+// the transpose of the Pythia array and drop the fifth component
+// (particle mass).
+//
+void fastjetppgenktwitharea_(const double * p, const int & npart,                   
+                             const double & R, const double & palg,
+                             const double & ghost_rapmax, const int & nrepeat, const double & ghost_area,
+                             double * f77jets, int & njets) {
+    
+    // prepare jet def
+    if (palg == 1.0) {
+      jet_def = JetDefinition(kt_algorithm, R);
+    }  else if (palg == 0.0) {
+      jet_def = JetDefinition(cambridge_algorithm, R);
+    }  else if (palg == -1.0) {
+      jet_def = JetDefinition(antikt_algorithm, R);
+    } else {
+      jet_def = JetDefinition(genkt_algorithm, R, palg);
+    }
+        
+    // do everything
+    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
+}
+
 
 /// f77 interface to provide access to the constituents of a jet found
 /// in the jet clustering with one of the above routines.
@@ -224,6 +349,34 @@ void fastjetconstituents_(const int & ijet,
 }
 
 
+/// f77 interface to provide access to the area of a jet found
+/// in the jet clustering with one of the above "...witharea" routines.
+///
+/// Given the index ijet of a jet (in the range 1...njets) obtained in
+/// the last call to jet clustering, return its area. If the jets have
+/// not been obtained with a "...witharea" soutine it returns 0.
+//
+// Corresponds to the following Fortran subroutine
+// interface structure:
+//
+//   FUNCTION FASTJETAREA(IJET)
+//   DOUBLE PRECISION FASTJETAREA
+//   INTEGER    IJET
+//
+   double fastjetarea_(const int & ijet) {
+   assert(ijet > 0 && ijet <= jets.size());
+   const ClusterSequenceAreaBase * csab =
+                    dynamic_cast<const ClusterSequenceAreaBase *>(cs.get());
+   if (csab != 0) {
+      // we have areas and can use csab to access all the area-related info
+      return csab->area(jets[ijet-1]);
+   } else {
+      return 0.;
+//     Error("No area information associated to this jet."); 
+   }
+}
+
+
 /// return the dmin corresponding to the recombination that went from
 /// n+1 to n jets (sometimes known as d_{n n+1}).
 //
@@ -237,6 +390,7 @@ double fastjetdmerge_(const int & n) {
   assert(cs.get() != 0);
   return cs->exclusive_dmerge(n);
 }
+
 
 /// return the maximum of the dmin encountered during all recombinations 
 /// up to the one that led to an n-jet final state; identical to

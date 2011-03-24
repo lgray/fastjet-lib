@@ -26,9 +26,11 @@ c ... parameters of the jet algorithm
       double precision  R, f, palg    
 c ... array to store the returned jets
       double precision jets(4,n)
-      double precision fastjetdmerge
+      double precision fastjetdmerge,fastjetarea
       integer constituents(n)
       integer npart, njets, nconst ! <= n
+      double precision ghost_maxrap, ghost_area
+      integer nrepeat
 c ... fill in p (NB, energy is p(4,i))
       do i=1,n
          read(*,*,end=500) p(1,i),p(2,i),p(3,i),p(4,i)
@@ -36,21 +38,35 @@ c ... fill in p (NB, energy is p(4,i))
       
  500  npart = i-1
 
-      R = 0.7
-      f = 0.75
+      R = 0.6d0
+      f = 0.75d0
 c.....run the clustering with SISCone
 c      call fastjetsiscone(p,npart,R,f,jets,njets)   ! ... now you have the jets
 c.....or with a pp generalised-kt sequential recombination alg
       palg = 1d0 ! 1.0d0 = kt, 0.0d0 = Cam/Aachen, -1.0d0 = anti-kt
-      call fastjetppgenkt(p,npart,R,palg,jets,njets)   ! ... now you have the jets
+c      call fastjetppgenkt(p,npart,R,palg,jets,njets)   ! ... now you have the jets
+
+c.....the same, but calculating area information too 
+c.....(uselessy slower if you do not need areas)
+      ghost_maxrap = 6.0d0 ! make sure you define this as a double precision (with the d0)
+      nrepeat = 1
+      ghost_area = 0.01d0 ! make sure you define this as a double precision (with the d0)
+c      call fastjetsisconewitharea(p,npart,R,f,
+c     #                    ghost_maxrap,nrepeat,ghost_area,
+c     #                    jets,njets)   ! ... now you have the jets
+      call fastjetppgenktwitharea(p,npart,R,palg,
+     #                            ghost_maxrap,nrepeat,ghost_area,
+     #                            jets,njets)   ! ... now you have the jets
 
 
 c.....write out all inclusive jets, in order of decreasing pt
-      write(*,*) '      px         py          pz         E         pT'
+      write(*,*) '      px         py          pz         E         pT  
+     #        area'
       do i=1,njets
          write(*,*) i,(jets(j,i),j=1,4), sqrt(jets(1,i)**2+jets(2,i)**2)
+     #      , fastjetarea(i)
       enddo
-
+      
 c.....write out indices of constituents of first jet
       write(*,*)
       write(*,*) 'Indices of constituents of first jet'

@@ -1,3 +1,13 @@
+2011-03-24  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * fortran_wrapper/fastjetfortran.cc
+	* fortran_wrapper/fastjet_fortran_example.f
+	
+	  Added fortran interface to calculate and retrieve
+	  active jet areas (subroutines fastjetsisconewitharea(), 
+	  fastjetppgenktwitharea() and function fastjetarea()).
+	  Also moved some code in new helper routine transfer_cluster_transfer()
+	  
 2011-03-23  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
