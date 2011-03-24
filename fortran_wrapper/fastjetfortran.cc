@@ -363,17 +363,17 @@ void fastjetconstituents_(const int & ijet,
 //   DOUBLE PRECISION FASTJETAREA
 //   INTEGER    IJET
 //
-   double fastjetarea_(const int & ijet) {
-   assert(ijet > 0 && ijet <= jets.size());
-   const ClusterSequenceAreaBase * csab =
+double fastjetarea_(const int & ijet) {
+  assert(ijet > 0 && ijet <= jets.size());
+  const ClusterSequenceAreaBase * csab =
                     dynamic_cast<const ClusterSequenceAreaBase *>(cs.get());
-   if (csab != 0) {
-      // we have areas and can use csab to access all the area-related info
-      return csab->area(jets[ijet-1]);
-   } else {
-      return 0.;
-//     Error("No area information associated to this jet."); 
-   }
+  if (csab != 0) {
+    // we have areas and can use csab to access all the area-related info
+    return csab->area(jets[ijet-1]);
+  } else {
+    return 0.;
+//  Error("No area information associated to this jet."); 
+  }
 }
 
 
