@@ -31,6 +31,7 @@
 #include <iostream>
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
+#include "fastjet/RangeDefinition.hh"
 #include "fastjet/SISConePlugin.hh"
 
 using namespace std;
@@ -407,6 +408,35 @@ double fastjetdmergemax_(const int & n) {
   assert(cs.get() != 0);
   return cs->exclusive_dmerge_max(n);
 }
+
+
+/// return the background transverse momentum density per unit scalar
+/// area rho, its fluctuation sigma, and the mean area of the jets used for the
+/// background estimation in a given event,
+/// as evaluated in the range [rapmin,rapmax] in rapidity and [phimin,phimax] in azimuth
+//
+// Corresponds to the following Fortran interface
+// 
+//   SUBROUTINE FASTJETGLOBALRHOANDSIGMA(RAPMIN,RAPMAX,PHIMIN,PHIMAX,RHO,SIGMA,MEANAREA)
+//   DOUBLE PRECISION RAPMIN,RAPMAX,PHIMIN,PHIMAX
+//   DOUBLE PRECISION RHO,SIGMA,MEANAREA
+//   
+void fastjetglobalrhoandsigma_(const double & rapmin, const double & rapmax,
+                               const double & phimin, const double & phimax,
+			       double & rho, double & sigma, double & meanarea) {
+  const ClusterSequenceAreaBase * csab =
+                    dynamic_cast<const ClusterSequenceAreaBase *>(cs.get());
+  if (csab != 0) {
+      // we have areas and can use csab to access all the area-related info
+      RangeDefinition range(rapmin,rapmax,phimin,phimax);
+      bool use_area_4vector = false;
+      csab->get_median_rho_and_sigma(range,use_area_4vector,rho,sigma,meanarea);
+  } else {
+      Error("Clustering with area is necessary in order to be able to evaluate rho."); 
+  }
+}
+
+
 
 
 }

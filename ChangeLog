@@ -1,3 +1,10 @@
+2011-03-27  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * fortran_wrapper/fastjetfortran.cc
+	* fortran_wrapper/fastjet_fortran_example.f
+	
+	  Added subroutine for rho determination from fortran
+
 2011-03-24  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * fortran_wrapper/fastjetfortran.cc

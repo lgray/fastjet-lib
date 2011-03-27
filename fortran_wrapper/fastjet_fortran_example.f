@@ -30,6 +30,7 @@ c ... array to store the returned jets
       integer constituents(n)
       integer npart, njets, nconst ! <= n
       double precision ghost_maxrap, ghost_area
+      double precision rapmin,rapmax,phimin,phimax,rho,sigma,meanarea
       integer nrepeat
 c ... fill in p (NB, energy is p(4,i))
       do i=1,n
@@ -78,5 +79,18 @@ c.....write out the last 5 dmerge values
          write(*,*) " dmerge from ",i+1," to ",i," = ", fastjetdmerge(i)
       end do
 
+
+c.....write out the values of rho, sigma and mean_area in the event
+      write(*,*)
+      write(*,*) "Background determination"
+      rapmin = -3d0
+      rapmax = 3d0
+      phimin = 0d0
+      phimax = 8d0*datan(1d0) ! 2pi
+      call fastjetglobalrhoandsigma(rapmin,rapmax,phimin,phimax,
+     #                              rho,sigma,meanarea)
+      write(*,*) " rho       = ", rho
+      write(*,*) " sigma     = ", sigma
+      write(*,*) " mean area = ", meanarea
       end
       
