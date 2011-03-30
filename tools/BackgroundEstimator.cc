@@ -204,7 +204,7 @@ void BackgroundEstimator::_compute(){
       total_area  += this_area;
       _n_jets_used++;
     } else {
-      _warnings_zero_area.warn("BackgroundEstimator::get_median_rho_and_sigma(...): discarded jet with zero area. Zero-area jets may be due to (i) too large a ghost area (ii) a jet being outside the ghost range (iii) the computation not being done using an appropriate algorithm (kt;C/A).");
+      _warnings_zero_area.warn("BackgroundEstimator::_compute(...): discarded jet with zero area. Zero-area jets may be due to (i) too large a ghost area (ii) a jet being outside the ghost range (iii) the computation not being done using an appropriate algorithm (kt;C/A).");
     }
       
   }

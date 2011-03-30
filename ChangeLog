@@ -1,3 +1,8 @@
+2011-03-30  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* tools/BackgroundEstimator.cc (_compute):
+	  fixed typo in error message
+
 2011-03-27  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * fortran_wrapper/fastjetfortran.cc
