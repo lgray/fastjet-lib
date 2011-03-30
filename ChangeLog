@@ -1,5 +1,8 @@
 2011-03-30  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* tools/fastjet/tools/Subtractor.hh:
+	  passed the ctor argument as a reference
+
 	* tools/BackgroundEstimator.cc (_compute):
 	  fixed typo in error message
 
