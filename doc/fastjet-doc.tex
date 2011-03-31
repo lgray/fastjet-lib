@@ -1227,6 +1227,21 @@ In this combined selector, the right-hand selector is applied first,
 and then the left-hand selector is applied to the results of the
 right-hand selection.
 
+A complementary selector can also be defined using the negation operator. For
+instance
+\begin{lstlisting}
+  Selector sel_allbut2hardest = !SelectorNHardest(2);
+\end{lstlisting}
+Note that, if directly applying (as opposed to first defining) a similar 
+negated selector to a collection
+of jets, one should write
+\begin{lstlisting}
+  vector<PseudoJet> allbut2hardest = (!SelectorNHardest(2))(jets);
+\end{lstlisting}
+with the brackets around the selector definition being now necessary due to
+\ttt{()} having in C++  higher precedence than boolean operators.
+
+
 %......................................................................
 \subsection{Available selectors}
 
