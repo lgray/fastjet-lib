@@ -67,33 +67,24 @@ public:
   /// default dtor
   virtual ~Subtractor(){};
 
-  /// runs the filtering and sets kept and rejected to be the jets of interest
-  /// (with non-zero rho, they will have been subtracted).
+  /// returns a jet that's subtracted
   ///
-  /// \param jet    the jet that gets filtered
-  /// \return the filtered jet
-  virtual PseudoJet operator()(const PseudoJet & jet) const{
-    if (!jet.has_area()){
-      throw Error("Trying to subtract a jet without area support");
-    }
+  /// \param jet    the jet that is to be subtracted
+  /// \return       the subtracted jet
+  virtual PseudoJet operator()(const PseudoJet & jet) const;
 
-    PseudoJet result = jet;
-    result -= _bge.rho(jet) * jet.area_4vector();
-    return result;
-  }
-
-  /// action of the transformer on each jet from the vector 
-  /// this has to be repeated because it shares the same name as the operator()(PseudoJet)
+  /// action of the transformer on each jet from the vector. This has
+  /// to be repeated because the
+  /// Subtractor::operator(vector<PseudoJet>) shares the same name as
+  /// the operator()(PseudoJet)
   virtual std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & originals) const{
     return Transformer::operator()(originals);
   }
 
   /// class description
   std::string description() const{
-    return "subtractor";
+    return "Subtractor";
   }
-
-  typedef ClusterSequenceStructure StructureType;
 
 protected:
   /// the tool used to estimate the background

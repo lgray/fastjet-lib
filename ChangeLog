@@ -1,3 +1,22 @@
+2011-04-11  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/07-subtraction-new.cc: *** ADDED ***
+	  an example with the new form of subtraction; not yet compiled by
+	  default; comments still need work.
+
+	* tools/Makefile.am: 
+	* tools/fastjet/tools/Subtractor.hh: 
+	* tools/Subtractor.cc:                   *** ADDED ***
+	  modified comments; moved some of the code to .cc and ensured
+	  that the resulting subtracted jets have their pt set to if the
+	  subtraction would take away too much pt and that they retain
+	  their structural information.
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	* tools/BackgroundEstimator.cc: 
+	  made rho() and sigma() calls const, which necessitated making a
+	  number of member variables mutable.
+
 2011-04-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 

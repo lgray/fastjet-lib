@@ -74,22 +74,24 @@ public:
   /// @name constructors and destructors
   //\{
   //----------------------------------------------------------------
-  /// ctor from a ClusterSequence with area
+  /// ctor from a ClusterSequenceAreaBase with area
   ///
   /// \param csa         the ClusterSequenceArea to use
-  /// \param rho_range   the range over which jets will be considered
+  /// \param rho_range   a Selector that specifies the range over 
+  ///                    which jets will be considered 
   ///
   /// Pre-conditions: 
   ///  - one should be able to estimate the "empty area" (i.e. the area
-  ///    not occupied by jets). This is feasible is one of the following
+  ///    not occupied by jets). This is feasible if at least one of the following
   ///    conditions is satisfied:
   ///     ( i) the ClusterSequence has explicit ghosts
   ///     (ii) the range has a computable area.
   ///  - the jet algorithm must be suited for median computation
   ///    (otherwise a warning will be issues)
-  /// Note that selectors with e.g. hardest-jets exclusion do not have a
-  /// well-defined area
-  /// For these reasons, it is STRONGLY advised to use explicit ghosts
+  ///
+  /// Note that selectors with e.g. hardest-jets exclusion do not have
+  /// a well-defined area. For this reasons, it is STRONGLY advised to
+  /// use an area with explicit ghosts.
   BackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range);
   
   /// ctor from a list of jets
@@ -116,13 +118,13 @@ public:
   //----------------------------------------------------------------
 
   /// get rho, the median background density oer unit area
-  double rho() {
+  double rho() const {
     _recompute_if_needed();
     return _rho;
   }
 
   /// get sigma, the background fluctuations per unit area
-  double sigma() {
+  double sigma() const {
     _recompute_if_needed();
     return _sigma;
   }
@@ -131,8 +133,8 @@ public:
   /// the position of a given jet.
   ///
   /// If the Selector associated with the range takes a reference jet
-  /// (i.e. is relocatable), the Selector has that jet set as its
-  /// reference.
+  /// (i.e. is relocatable), then for subsequent operations the
+  /// Selector has that jet set as its reference.
   double rho(const PseudoJet jet) {
     set_reference(jet);
     return rho();
@@ -142,8 +144,8 @@ public:
   /// locally at the position of a given jet.
   ///
   /// If the Selector associated with the range takes a reference jet
-  /// (i.e. is relocatable), the Selector has that jet set as its
-  /// reference.
+  /// (i.e. is relocatable), then for subsequent operations the
+  /// Selector has that jet set as its reference.
   double sigma(const PseudoJet &jet) {
     set_reference(jet);
     return sigma();
@@ -216,14 +218,15 @@ public:
     _uptodate = false;
   }  
   //\}
-  
+
 private:
+
   /// do the actual job
-  void _compute();
+  void _compute() const;
   
   /// check if the properties need to be recomputed 
   /// and do so if needed
-  void _require_uptodate(){
+  void _require_uptodate() const {
     if (!_uptodate){
       throw Error("The requested information can only be obtained once the background has actually been computed");
     }
@@ -231,7 +234,7 @@ private:
 
   /// check if the properties need to be recomputed 
   /// and do so if needed
-  void _recompute_if_needed(){
+  void _recompute_if_needed() const {
     if (!_uptodate)
       _compute();
     _uptodate = true;
@@ -239,30 +242,30 @@ private:
 
   /// check that the underlying structure is still alive
   /// throw an error otherwise
-  void _check_csa_alive();
+  void _check_csa_alive() const;
 
   /// check that the algorithm used for the clustering is adapted for
   /// background estimation (i.e. either kt or C/A)
   /// Issue a warning otherwise
-  void _check_jet_alg_good_for_median();
+  void _check_jet_alg_good_for_median() const;
   
   // the information needed to do the computation
   Selector _rho_range;                      ///< range to compute the background in
-  std::vector<PseudoJet> _included_jets;    ///< jets to be used
-  std::vector<PseudoJet> _selected_jets;    ///< jets used in practice
+  mutable std::vector<PseudoJet> _included_jets;    ///< jets to be used
+  mutable std::vector<PseudoJet> _selected_jets;    ///< jets used in practice
   bool _use_area_4vector;
   
   // the actual results of the computation
-  double _rho;		                    ///< background estimated density per unit area
-  double _sigma;		            ///< background estimated fluctuations
-  double _mean_area;		            ///< mean area of the jets used to estimate the background
-  unsigned int _n_jets_used;                ///< number of jets used to estimate the background
-  double _n_empty_jets;                     ///< number of empty (pure-ghost) jets
-  double _empty_area;                       ///< the empty (pure-ghost/unclustered) area!
+  mutable double _rho;		        ///< background estimated density per unit area
+  mutable double _sigma;	        ///< background estimated fluctuations
+  mutable double _mean_area;	        ///< mean area of the jets used to estimate the background
+  mutable unsigned int _n_jets_used;    ///< number of jets used to estimate the background
+  mutable double _n_empty_jets;         ///< number of empty (pure-ghost) jets
+  mutable double _empty_area;           ///< the empty (pure-ghost/unclustered) area!
 
   // internal variables
   SharedPtr<PseudoJetStructureBase> _csi;   ///< allows to check if _csa is still valid
-  bool _uptodate;                           ///< true when the background computation is up-to-date
+  mutable bool _uptodate;                   ///< true when the background computation is up-to-date
 
   /// handle warning messages
   static LimitedWarning _warnings;

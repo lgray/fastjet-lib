@@ -177,7 +177,7 @@ void BackgroundEstimator::reset(){
 
 
 // do the actual job
-void BackgroundEstimator::_compute(){
+void BackgroundEstimator::_compute() const {
   // check if the clustersequence is still valid
   _check_csa_alive();
 
@@ -279,7 +279,7 @@ void BackgroundEstimator::_compute(){
 
 // check that the underlying structure is still alive
 // throw an error otherwise
-void BackgroundEstimator::_check_csa_alive(){
+void BackgroundEstimator::_check_csa_alive() const{
   if (! dynamic_cast<ClusterSequenceStructure*>(_csi())->has_associated_cluster_sequence())
     throw Error("BackgroundEstimator: modifications are no longer possible as the underlying ClusterSequence has gone out of scope");
 }
@@ -288,7 +288,7 @@ void BackgroundEstimator::_check_csa_alive(){
 // check that the algorithm used for the clustering is adapted for
 // background estimation (i.e. either kt or C/A)
 // Issue a warning otherwise
-void BackgroundEstimator::_check_jet_alg_good_for_median(){
+void BackgroundEstimator::_check_jet_alg_good_for_median() const{
   const ClusterSequence * cs = dynamic_cast<ClusterSequenceStructure*>(_csi())->validated_cs();
 
   if (cs->jet_def().jet_algorithm() != kt_algorithm
