@@ -1,5 +1,9 @@
 2011-04-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJet.hh: 
+	  extra_properties<T>() now returns a reference rather than a
+	  pointer.
+
 	* include/fastjet/PseudoJetPlusInfo.hh: *** DELETED ***
 	  we decided there wasn't much benefit from this
 

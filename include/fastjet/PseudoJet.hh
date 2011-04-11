@@ -435,7 +435,7 @@ class PseudoJet {
   /// NULL is returned if the corresponding type is not met
   /// if there is no structure, an error is thrown
   template<typename TransformerType>
-  const typename TransformerType::StructureType * extra_properties() const;
+  const typename TransformerType::StructureType & extra_properties() const;
 
   //\}
 
@@ -794,11 +794,11 @@ bool PseudoJet::has_properties_of() const{
 // (that is, of type Transformer::StructureType)
 // NULL is returned if the corresponding type is not met
 template<typename TransformerType>
-const typename TransformerType::StructureType * PseudoJet::extra_properties() const{
+const typename TransformerType::StructureType & PseudoJet::extra_properties() const{
   if (!_structure()) 
     throw Error("Trying to access the structure of a PseudoJet without an associated structure");
 
-  return dynamic_cast<const typename TransformerType::StructureType *>(_structure.get());
+  return dynamic_cast<const typename TransformerType::StructureType &>(*_structure);
 }
 
 
