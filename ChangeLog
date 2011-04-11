@@ -1,5 +1,8 @@
 2011-04-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJetPlusInfo.hh: *** DELETED ***
+	  we decided there wasn't much benefit from this
+
 	* example/07-subtraction-new.cc: *** ADDED ***
 	  an example with the new form of subtraction; not yet compiled by
 	  default; comments still need work.
