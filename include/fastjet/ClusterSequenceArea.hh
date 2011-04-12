@@ -103,17 +103,26 @@ public:
   // virtual double n_empty_jets(double maxrap) const {
   //   return _area_base->n_empty_jets(maxrap);
 
-  /// return the total area, in the given rap-phi range, that is free of jets
-  virtual double empty_area(const RangeDefinition & range) const {
-    return _area_base->empty_area(range);}
+  /// return the total area, corresponding to the given selector, that
+  /// is free of jets
+  ///
+  /// The selector need to have a finite area and be applicable jet by
+  /// jet (see the BackgroundEstimator and Subtractor tools for more
+  /// advanced usage)
+  virtual double empty_area(const Selector & selector) const {
+    return _area_base->empty_area(selector);}
 
   /// return something similar to the number of pure ghost jets
   /// in the given rap-phi range in an active area case.
   /// For the local implementation we return empty_area/(0.55 pi R^2),
   /// based on measured properties of ghost jets with kt and cam. Note
   /// that the number returned is a double.
-  virtual double n_empty_jets(const RangeDefinition & range) const {
-    return _area_base->n_empty_jets(range);
+  ///
+  /// The selector need to have a finite area and be applicable jet by
+  /// jet (see the BackgroundEstimator and Subtractor tools for more
+  /// advanced usage)
+  virtual double n_empty_jets(const Selector & selector) const {
+    return _area_base->n_empty_jets(selector);
   }
 
   /// true if a jet is made exclusively of ghosts
@@ -128,17 +137,21 @@ public:
   
 
   /// overload version of what's in the ClusterSequenceAreaBase class, which 
-  /// additionally checks compatibility between "range" and region in which
+  /// additionally checks compatibility between "selector" and region in which
   /// ghosts are thrown.
+  ///
+  /// The selector need to have a finite area and be applicable jet by
+  /// jet (see the BackgroundEstimator and Subtractor tools for more
+  /// advanced usage)
   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
-					const RangeDefinition & range, 
+					const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
                                         double & mean_area,
 					bool all_are_incl = false) const {
-    _warn_if_range_unsuitable(range);
+    _warn_if_range_unsuitable(selector);
     ClusterSequenceAreaBase::get_median_rho_and_sigma(
-                                 all_jets, range, use_area_4vector,
+                                 all_jets, selector, use_area_4vector,
 				 median, sigma, mean_area, all_are_incl);
   }
 
@@ -146,10 +159,10 @@ public:
   /// which actually just does the same thing as the base version (but
   /// since we've overridden the 5-argument version above, we have to
   /// override the 4-argument version too.
-  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+  virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma) const {
-    ClusterSequenceAreaBase::get_median_rho_and_sigma(range,use_area_4vector,
+    ClusterSequenceAreaBase::get_median_rho_and_sigma(selector,use_area_4vector,
                                                       median,sigma);
   }
 
@@ -157,11 +170,11 @@ public:
   /// which actually just does the same thing as the base version (but
   /// since we've overridden the multi-argument version above, we have to
   /// override the 5-argument version too.
-  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+  virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
 					double & mean_area) const {
-    ClusterSequenceAreaBase::get_median_rho_and_sigma(range,use_area_4vector,
+    ClusterSequenceAreaBase::get_median_rho_and_sigma(selector,use_area_4vector,
                                                       median,sigma, mean_area);
   }
 
@@ -170,12 +183,12 @@ public:
   /// additionally checks compatibility between "range" and region in which
   /// ghosts are thrown.
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
-                                          const RangeDefinition & range, 
+                                          const Selector & selector, 
                                           double exclude_above=-1.0, 
                                           bool use_area_4vector=false) const {
-    _warn_if_range_unsuitable(range);
+    _warn_if_range_unsuitable(selector);
     ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
-                                a,b,range, exclude_above, use_area_4vector);
+                                a,b,selector, exclude_above, use_area_4vector);
   }
 
 
@@ -184,7 +197,7 @@ private:
   /// print a warning if the range is unsuitable for the current
   /// calculation of the area (e.g. because ghosts do not extend
   /// far enough).
-  void _warn_if_range_unsuitable(const RangeDefinition & range) const;
+  void _warn_if_range_unsuitable(const Selector & selector) const;
 
   template<class L> void initialize_and_run_cswa (
                                  const std::vector<L> & pseudojets, 

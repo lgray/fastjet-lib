@@ -45,17 +45,18 @@ LimitedWarning ClusterSequenceAreaBase::_warnings;
 LimitedWarning ClusterSequenceAreaBase::_warnings_zero_area;
 
 //----------------------------------------------------------------------
-/// return the total area, within range, that is free of jets.
+/// return the total area, within the selector's range, that is free
+/// of jets.
 /// 
 /// Calculate this as (range area) - \sum_{i in range} A_i
 ///
 /// for ClusterSequences with explicit ghosts, assume that there will
 /// never be any empty area, i.e. it is always filled in by pure
 /// ghosts jets. This holds for seq.rec. algorithms
-double ClusterSequenceAreaBase::empty_area(const RangeDefinition & range) const {
+double ClusterSequenceAreaBase::empty_area(const Selector & selector) const {
 
   if (has_explicit_ghosts()) {return 0.0;}
-  else { return empty_area_from_jets(inclusive_jets(0.0), range);}
+  else { return empty_area_from_jets(inclusive_jets(0.0), selector);}
 
 }
 
@@ -66,21 +67,22 @@ double ClusterSequenceAreaBase::empty_area(const RangeDefinition & range) const 
 ///
 double ClusterSequenceAreaBase::empty_area_from_jets(
                       const std::vector<PseudoJet> & all_jets,
-                      const RangeDefinition & range) const {
+                      const Selector & selector) const {
+  _check_selector_good_for_median(selector);
 
-  double empty = range.area();
+  double empty = selector.area();
   for (unsigned i = 0; i < all_jets.size(); i++) {
-    if (range.is_in_range(all_jets[i])) empty -= area(all_jets[i]);
+    if (selector.pass(all_jets[i])) empty -= area(all_jets[i]);
   }
   return empty;
 }
 
-double ClusterSequenceAreaBase::median_pt_per_unit_area(const RangeDefinition & range) const {
-  return median_pt_per_unit_something(range,false);
+double ClusterSequenceAreaBase::median_pt_per_unit_area(const Selector & selector) const {
+  return median_pt_per_unit_something(selector,false);
 }
 
-double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(const RangeDefinition & range) const {
-  return median_pt_per_unit_something(range,true);
+double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(const Selector & selector) const {
+  return median_pt_per_unit_something(selector,true);
 }
 
 
@@ -89,10 +91,10 @@ double ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(const RangeDefin
 /// the empty area as if it were made up of a collection of empty
 /// jets each of area (0.55 * pi R^2).
 double ClusterSequenceAreaBase::median_pt_per_unit_something(
-                const RangeDefinition & range, bool use_area_4vector) const {
+                const Selector & selector, bool use_area_4vector) const {
 
   double median, sigma, mean_area;
-  get_median_rho_and_sigma(range, use_area_4vector, median, sigma, mean_area);
+  get_median_rho_and_sigma(selector, use_area_4vector, median, sigma, mean_area);
   return median;
 
 }
@@ -103,9 +105,13 @@ double ClusterSequenceAreaBase::median_pt_per_unit_something(
 /// exclude_above allows one to exclude large values of pt/area from fit. 
 /// use_area_4vector = true uses the 4vector areas.
 void ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
-       double & a, double & b, const RangeDefinition & range, 
+       double & a, double & b, const Selector & selector, 
        double exclude_above, bool use_area_4vector) const {
-  
+  // sanity check on the selector: we require a finite area and that
+  // it applies jet by jet (see BackgroundEstimator for more advanced
+  // usage)
+  _check_selector_good_for_median(selector);
+
   int n=0;
   int n_excluded = 0;
   double mean_f=0, mean_x2=0, mean_x4=0, mean_fx2=0; 
@@ -113,7 +119,7 @@ void ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
   vector<PseudoJet> incl_jets = inclusive_jets();
 
   for (unsigned i = 0; i < incl_jets.size(); i++) {
-    if (range.is_in_range(incl_jets[i])) {
+    if (selector.pass(incl_jets[i])) {
       double this_area;
       if ( use_area_4vector ) {
           this_area = area_4vector(incl_jets[i]).perp();     
@@ -155,29 +161,34 @@ void ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
 
 
 void ClusterSequenceAreaBase::get_median_rho_and_sigma(
-            const RangeDefinition & range, bool use_area_4vector,
+            const Selector & selector, bool use_area_4vector,
             double & median, double & sigma, double & mean_area) const {
 
   vector<PseudoJet> incl_jets = inclusive_jets();
-  get_median_rho_and_sigma(incl_jets, range, use_area_4vector,
+  get_median_rho_and_sigma(incl_jets, selector, use_area_4vector,
 			   median, sigma, mean_area, true);
 }
 
 
 void ClusterSequenceAreaBase::get_median_rho_and_sigma(
             const vector<PseudoJet> & all_jets,
-            const RangeDefinition & range, bool use_area_4vector,
+            const Selector & selector, bool use_area_4vector,
             double & median, double & sigma, double & mean_area,
 	    bool all_are_incl) const {
 
   _check_jet_alg_good_for_median();
+
+  // sanity check on the selector: we require a finite area and that
+  // it applies jet by jet (see BackgroundEstimator for more advanced
+  // usage)
+  _check_selector_good_for_median(selector);
 
   vector<double> pt_over_areas;
   double total_area  = 0.0;
   double total_njets = 0;
 
   for (unsigned i = 0; i < all_jets.size(); i++) {
-    if (range.is_in_range(all_jets[i])) {
+    if (selector.pass(all_jets[i])) {
       double this_area;
       if (use_area_4vector) {
           this_area = area_4vector(all_jets[i]).perp();
@@ -225,13 +236,13 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
     n_empty = 0;
   } else if (all_are_incl) {
     // the default case
-    empty_a = empty_area(range);
-    n_empty = n_empty_jets(range);
+    empty_a = empty_area(selector);
+    n_empty = n_empty_jets(selector);
   } else {
     // this one is intended to be used when e.g. one runs C/A, then looks at its
     // exclusive jets in order to get an effective smaller R value, and passes those
     // to this routine.
-    empty_a = empty_area_from_jets(all_jets, range);
+    empty_a = empty_area_from_jets(all_jets, selector);
     mean_area = total_area / total_njets; // temporary value
     n_empty   = empty_a / mean_area;
   }
@@ -282,10 +293,10 @@ vector<PseudoJet> ClusterSequenceAreaBase::subtracted_jets(const double rho,
 /// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
 /// i.e. not necessarily ordered in pt once subtracted
 vector<PseudoJet> ClusterSequenceAreaBase::subtracted_jets(
-                                                 const RangeDefinition & range, 
+                                                 const Selector & selector, 
 						 const double ptmin)
 						 const {
-  double rho = median_pt_per_unit_area_4vector(range);
+  double rho = median_pt_per_unit_area_4vector(selector);
   return subtracted_jets(rho,ptmin);
 }
 
@@ -313,8 +324,8 @@ PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
 /// potentially inefficient if repeatedly used for many different
 /// jets, because rho will be recalculated each time around.
 PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
-                                       const RangeDefinition & range) const {
-  double rho = median_pt_per_unit_area_4vector(range);
+                                       const Selector & selector) const {
+  double rho = median_pt_per_unit_area_4vector(selector);
   PseudoJet sub_jet = subtracted_jet(jet, rho);
   return sub_jet;
 }
@@ -337,16 +348,30 @@ double ClusterSequenceAreaBase::subtracted_pt(const PseudoJet & jet,
 /// potentially inefficient if repeatedly used for many different
 /// jets, because rho will be recalculated each time around.
 double ClusterSequenceAreaBase::subtracted_pt(const PseudoJet & jet,
-                                              const RangeDefinition & range,
+                                              const Selector & selector,
                                               bool use_area_4vector) const {
   if ( use_area_4vector ) { 
-     PseudoJet sub_jet = subtracted_jet(jet,range);
+     PseudoJet sub_jet = subtracted_jet(jet,selector);
      return sub_jet.perp();
   } else {
-     double rho = median_pt_per_unit_area(range);
+     double rho = median_pt_per_unit_area(selector);
      return subtracted_pt(jet,rho,false);
   }
 }  
+
+// check the selector is suited for the computations i.e. applies jet
+// by jet and has a finite area
+void ClusterSequenceAreaBase::_check_selector_good_for_median(const Selector &selector) const{
+  // make sure the selector has a finite area
+  if (! selector.has_finite_area()){
+    throw Error("ClusterSequenceAreaBase: empty area can only be computed from selectors with a finite area");
+  }
+
+  // make sure the selector applies jet by jet
+  if (! selector.applies_jet_by_jet()){
+    throw Error("ClusterSequenceAreaBase: empty area can only be computed from selectors that apply jet by jet");
+  }
+}
 
 
 /// check the jet algorithm is suitable (and if not issue a warning)

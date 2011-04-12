@@ -1,5 +1,36 @@
 2011-04-12  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/ClusterSequenceAreaBase.hh:
+	* include/fastjet/ClusterSequenceArea.hh:
+	* include/fastjet/ClusterSequenceActiveArea.hh:
+	* include/fastjet/ClusterSequencePassiveArea.hh:
+	* include/fastjet/ClusterSequence1GhostPassiveArea.hh:
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh:
+	* include/fastjet/Makefile.am:
+	* src/GhostedAreaSpec.cc:
+	* src/ClusterSequenceAreaBase.cc:
+	* src/ClusterSequenceArea.cc:
+	* src/ClusterSequencePassiveArea.cc:
+	* src/ClusterSequenceActiveArea.cc:
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc:
+	* src/Makefile.am:
+	  replaced the use of RangeDefinition by Selector. From
+	  ClusterSequenceArea, the selector is required to be geometric
+	  and to have a finite area. For more advanced usage, use
+	  BackgroundEstimator and Subtractor.
+
+	  Note that from now on, the use of RangeDefinition is considered
+	  obsolete and should be disfavoured. Use Selector instead.
+
+	* include/fastjet/Selector.hh:
+	* src/Selector.cc:
+	* tools/BackgroundEstimator.cc:
+	  replaced the has_area test by is_geometric() that tests if the
+	  selector only puts constraints on the geometry of the PseudoJet
+	  (y and phi) and has_finite_area() that checks if the selector
+	  has a	finite area
+
+	* include/fastjet/Selector.hh:
 	* src/Selector.cc:
 	  . added a SW_RangeDefinition that works from a RangeDefinition
 	  . added a Selector ctor from a RangeDefinition [provided for

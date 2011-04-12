@@ -115,9 +115,11 @@ public:
   /// this class does have explicit ghosts
   virtual bool has_explicit_ghosts() const {return true;}
 
-  /// return the total area, up to |y|<maxrap, that consists of
-  /// unclustered ghosts
-  virtual double empty_area(const RangeDefinition & range) const;
+  /// return the total area, corresponding to a given Selector, that
+  /// consists of unclustered ghosts
+  ///
+  /// The selector needs to apply jet by jet
+  virtual double empty_area(const Selector & selector) const;
 
   /// returns the total area under study
   double total_area () const;

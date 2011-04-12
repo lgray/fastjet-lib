@@ -33,7 +33,7 @@
 
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/LimitedWarning.hh"
-#include "fastjet/RangeDefinition.hh"
+#include "fastjet/Selector.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -104,41 +104,60 @@ public:
     return false;
   }
 
-  /// return the total area, within range, that is free of jets, in
-  /// general based on the inclusive jets
-  virtual double empty_area(const RangeDefinition & range) const;
+  /// return the total area, corresponding to the given Selector, that
+  /// is free of jets, in general based on the inclusive jets.
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
+  virtual double empty_area(const Selector & selector) const;
 
-  /// return the total area, within range, that is free of jets, based 
-  /// on the supplied all_jets
+  /// return the total area, corresponding to the given Selector, that
+  /// is free of jets, based on the supplied all_jets
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
   double empty_area_from_jets(const std::vector<PseudoJet> & all_jets,
-			      const RangeDefinition & range) const;
+			      const Selector & selector) const;
 
   /// return something similar to the number of pure ghost jets
-  /// in the given range in an active area case.
+  /// in the given selector's range in an active area case.
   /// For the local implementation we return empty_area/(0.55 pi R^2),
   /// based on measured properties of ghost jets with kt and cam. Note
   /// that the number returned is a double.
-  virtual double n_empty_jets(const RangeDefinition & range) const {
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
+  virtual double n_empty_jets(const Selector & selector) const {
     double R = jet_def().R();
-    return empty_area(range)/(0.55*pi*R*R);
+    return empty_area(selector)/(0.55*pi*R*R);
   }
 
-  /// the median of (pt/area) for jets contained within range, 
-  /// making use also of the info on n_empty_jets
-  double median_pt_per_unit_area(const RangeDefinition & range) const;
+  /// the median of (pt/area) for jets contained within the selector
+  /// range, making use also of the info on n_empty_jets
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
+  double median_pt_per_unit_area(const Selector & selector) const;
 
-  /// the median of (pt/area_4vector) for jets contained within
-  /// making use also of the info on n_empty_jets
-  double median_pt_per_unit_area_4vector(const RangeDefinition & range) const;
+  /// the median of (pt/area_4vector) for jets contained within the
+  /// selector range, making use also of the info on n_empty_jets
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet
+  double median_pt_per_unit_area_4vector(const Selector & selector) const;
   
   /// the function that does the work for median_pt_per_unit_area and 
   /// median_pt_per_unit_area_4vector: 
   /// - something_is_area_4vect = false -> use plain area
   /// - something_is_area_4vect = true  -> use 4-vector area
   double median_pt_per_unit_something(
-                    const RangeDefinition & range, bool use_area_4vector) const;
+                    const Selector & selector, bool use_area_4vector) const;
 
-  /// using jets withing range (and with 4-vector areas if
+  /// using jets withing the selector range (and with 4-vector areas if
   /// use_area_4vector), calculate the median pt/area, as well as an
   /// "error" (uncertainty), which is defined as the 1-sigma
   /// half-width of the distribution of pt/A, obtained by looking for
@@ -152,13 +171,17 @@ public:
   /// where the error is only that associated with the fluctuations
   /// in the noise and not that associated with the noise having 
   /// caused changes in the hard-particle content of the jet.
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
   ///
   /// NB: subtraction may also be done with 4-vector area of course,
   /// and this is recommended for jets with larger values of R, as
   /// long as rho has also been determined with a 4-vector area;
   /// using a scalar area causes one to neglect terms of relative
   /// order $R^2/8$ in the jet $p_t$.
-  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+  virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
                                         double & mean_area) const;
@@ -178,8 +201,12 @@ public:
   /// and so the estimate comes out all wrong. In these situations
   /// it is highly advisable to use an area with explicit ghosts, since
   /// then the "empty" jets are actually visible.
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
-					const RangeDefinition & range, 
+					const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
                                         double & mean_area,
@@ -187,21 +214,29 @@ public:
 
   /// same as the full version of get_median_rho_and_error, but without
   /// access to the mean_area
-  virtual void get_median_rho_and_sigma(const RangeDefinition & range, 
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
+  virtual void get_median_rho_and_sigma(const Selector & selector, 
                                 bool use_area_4vector,
                                 double & median, double & sigma) const {
     double mean_area;
-    get_median_rho_and_sigma(range,  use_area_4vector,
+    get_median_rho_and_sigma(selector,  use_area_4vector,
                              median,  sigma, mean_area);
   }
   
 
-  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the range "range". 
+  /// fits a form pt_per_unit_area(y) = a + b*y^2 in the selector range. 
   /// exclude_above allows one to exclude large values of pt/area from fit. 
   ///               (if negative, the cut is discarded)
   /// use_area_4vector = true uses the 4vector areas.
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
-                                          const RangeDefinition & range, 
+                                          const Selector & selector, 
                                           double exclude_above=-1.0, 
                                           bool use_area_4vector=false) const;
 
@@ -216,7 +251,11 @@ public:
   /// Only inclusive_jets above ptmin are subtracted and returned.
   /// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
   /// i.e. not necessarily ordered in pt once subtracted
-  std::vector<PseudoJet> subtracted_jets(const RangeDefinition & range, 
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
+  std::vector<PseudoJet> subtracted_jets(const Selector & selector, 
                                          const double ptmin=0.0) const;
 
   /// return a subtracted jet, using area_4vector, given rho
@@ -227,8 +266,12 @@ public:
   /// that this is potentially inefficient if repeatedly used for many
   /// different jets, because rho will be recalculated each time
   /// around.
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
   PseudoJet subtracted_jet(const PseudoJet & jet,
-                           const RangeDefinition & range) const;
+                           const Selector & selector) const;
 
   /// return the subtracted pt, given rho
   double subtracted_pt(const PseudoJet & jet,
@@ -238,9 +281,17 @@ public:
   /// return the subtracted pt; note that this is
   /// potentially inefficient if repeatedly used for many different
   /// jets, because rho will be recalculated each time around.
+  /// 
+  /// The selector passed as an argument has to have a finite area and
+  /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
+  /// tools for more generic usages)
   double subtracted_pt(const PseudoJet & jet,
-                       const RangeDefinition & range,
+                       const Selector & selector,
 	               bool use_area_4vector=false) const;
+
+protected:
+  /// check the selector is suited for the computations i.e. applies jet by jet and has a finite area
+  void _check_selector_good_for_median(const Selector &selector) const;
 
 
 private:

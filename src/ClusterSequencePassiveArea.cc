@@ -94,12 +94,12 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
 
 //----------------------------------------------------------------------
 // dispatch to most relevant empty area calculation...
-double ClusterSequencePassiveArea::empty_area (const RangeDefinition & range) const {
+double ClusterSequencePassiveArea::empty_area (const Selector & selector) const {
   if (jet_def().jet_algorithm() == kt_algorithm) {
     // run the naive algorithm
-    return ClusterSequenceAreaBase::empty_area(range);
+    return ClusterSequenceAreaBase::empty_area(selector);
   } else {
-    return ClusterSequence1GhostPassiveArea::empty_area(range);
+    return ClusterSequence1GhostPassiveArea::empty_area(selector);
   }
 }
 

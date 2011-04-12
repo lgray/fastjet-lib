@@ -94,11 +94,16 @@ bool ClustSeqActAreaEG::is_pure_ghost(int hist_ix) const
 }
 
 //----------------------------------------------------------------------
-double ClustSeqActAreaEG::empty_area(const RangeDefinition & range) const {
+double ClustSeqActAreaEG::empty_area(const Selector & selector) const {
+  // make sure that the selector applies jet by jet
+  if (! selector.applies_jet_by_jet()){
+    throw Error("ClusterSequenceActiveAreaExplicitGhosts: empty area can only be computed from selectors applying jet by jet");
+  }
+
   vector<PseudoJet> unclust = unclustered_particles();
   double area = 0.0;
   for (unsigned iu = 0; iu < unclust.size();  iu++) {
-    if (is_pure_ghost(unclust[iu]) && range.is_in_range(unclust[iu])) {
+    if (is_pure_ghost(unclust[iu]) && selector.pass(unclust[iu])) {
       area += _ghost_area;
     }
   }

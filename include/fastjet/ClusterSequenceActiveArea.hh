@@ -110,13 +110,15 @@ public:
 // 
   /// rewrite the empty area from the parent class, so as to use
   /// all info at our disposal
-  /// return the total area, in the given y-phi range, that consists of ghost
-  /// jets or unclustered ghosts
-  virtual double empty_area(const RangeDefinition & range) const;
+  /// return the total area, corresponding to a given Selector, that
+  /// consists of ghost jets or unclustered ghosts
+  ///
+  /// The selector passed as an argument needs to apply jet by jet.
+  virtual double empty_area(const Selector & selector) const;
 
   /// return the true number of empty jets (replaces
   /// ClusterSequenceAreaBase::n_empty_jets(...))
-  virtual double n_empty_jets(const RangeDefinition & range) const;
+  virtual double n_empty_jets(const Selector & selector) const;
 
 protected:
   void _resize_and_zero_AA ();

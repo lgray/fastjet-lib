@@ -442,17 +442,22 @@ double ClusterSequenceActiveArea::pt_per_unit_area(
 
 
 //----------------------------------------------------------------------
-double ClusterSequenceActiveArea::empty_area(const RangeDefinition & range) const {
+double ClusterSequenceActiveArea::empty_area(const Selector & selector) const {
+  // make sure that the selector applies jet by jet
+  if (! selector.applies_jet_by_jet()){
+    throw Error("ClusterSequenceActiveArea: empty area can only be computed from selectors applying jet by jet");
+  }
+
   double empty = 0.0;
   // first deal with ghost jets
   for (unsigned  i = 0; i < _ghost_jets.size(); i++) {
-    if (range.is_in_range(_ghost_jets[i])) {
+    if (selector.pass(_ghost_jets[i])) {
       empty += _ghost_jets[i].area;
     }
   }
   // then deal with unclustered ghosts
   for (unsigned  i = 0; i < _unclustered_ghosts.size(); i++) {
-    if (range.is_in_range(_unclustered_ghosts[i])) {
+    if (selector.pass(_unclustered_ghosts[i])) {
       empty += _unclustered_ghosts[i].area;
     }
   }
@@ -461,10 +466,12 @@ double ClusterSequenceActiveArea::empty_area(const RangeDefinition & range) cons
 }
 
 //----------------------------------------------------------------------
-double ClusterSequenceActiveArea::n_empty_jets(const RangeDefinition & range) const {
+double ClusterSequenceActiveArea::n_empty_jets(const Selector & selector) const {
+  _check_selector_good_for_median(selector);
+
   double inrange = 0;
   for (unsigned  i = 0; i < _ghost_jets.size(); i++) {
-    if (range.is_in_range(_ghost_jets[i])) inrange++;
+    if (selector.pass(_ghost_jets[i])) inrange++;
   }
   inrange /= _ghost_spec_repeat;
   return inrange;

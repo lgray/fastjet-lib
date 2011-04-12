@@ -108,7 +108,7 @@ double Selector::area() const{
 
 // implementation of the Selector's area function
 double Selector::area(double cell_area) const{
-  if (! has_area()) throw InvalidArea();
+  if (! is_geometric()) throw InvalidArea();
   
   // has area will already check we've got a valid worker
   if (_worker->has_known_area()) return _worker->known_area();
@@ -121,10 +121,20 @@ double Selector::area(double cell_area) const{
   ghost_spec.add_ghosts(ghosts);
   
   // check what passes the selection
-  // unsigned int npass= 0;
-  // for (std::vector<PseudoJet>::const_iterator jet = ghosts.begin(); jet != ghosts.end(); jet++)
-  //   if (_worker->geometric_pass(*jet)) npass++;
   return ghost_spec.ghost_area() * ((*this)(ghosts)).size();
+}
+
+
+//----------------------------------------------------------------------
+// implementations of some of the more complex bits of SelectorWorker
+//----------------------------------------------------------------------
+// check if it has a finite area
+bool SelectorWorker::has_finite_area() const { 
+  if (! is_geometric()) return false;
+  double rapmin, rapmax;
+  get_rapidity_extent(rapmin, rapmax);
+  return (rapmax != std::numeric_limits<double>::infinity())
+    &&  (-rapmin != std::numeric_limits<double>::infinity());
 }
 
 
@@ -154,6 +164,9 @@ public:
   
   /// returns a description of the worker
   virtual string description() const { return "Identity";}
+
+  /// strictly speaking, this is geometric
+  virtual bool is_geometric() const { return true;}
 };
 
 
@@ -217,7 +230,10 @@ public:
     return ostr.str();
   }
 
-  /// returns true is the worker can be set_referenced
+  /// is geometric if the underlying selector is
+  virtual bool is_geometric() const { return _s.is_geometric();}
+
+  /// returns true if the worker can be set_referenced
   virtual bool takes_reference() const { return _s.takes_reference();}
 
 protected:
@@ -246,7 +262,7 @@ public:
     _takes_reference = _s1.takes_reference() || _s2.takes_reference();
 
     // we have a well-defined area provided the two objects have one
-    _has_area = _s1.has_area() && _s2.has_area();
+    _is_geometric = _s1.is_geometric() && _s2.is_geometric();
   }
 
   /// returns true if this can be applied jet by jet
@@ -264,13 +280,13 @@ public:
   }
 
   /// check if it has a finite area
-  virtual bool has_area() const { return _has_area;} 
+  virtual bool is_geometric() const { return _is_geometric;} 
 
 protected:
   Selector _s1, _s2;
   bool _applies_jet_by_jet;
   bool _takes_reference;
-  bool _has_area;
+  bool _is_geometric;
 };
 
 
@@ -472,6 +488,7 @@ public:
   virtual ~QuantityBase(){}
   virtual double operator()(const PseudoJet & jet ) const =0;
   virtual string description() const =0;
+  virtual bool is_geometric() const { return false;}
   virtual double comparison_value() const {return _q;}
   virtual double description_value() const {return comparison_value();}
 protected:
@@ -504,6 +521,8 @@ public:
     return ostr.str();
   }
 
+  virtual bool is_geometric() const { return _qmin.is_geometric();}
+
 protected:
   QuantityType _qmin;     ///< the cut
 };
@@ -525,6 +544,8 @@ public:
     ostr << _qmax.description() << " <= " << _qmax.description_value();
     return ostr.str();
   }
+
+  virtual bool is_geometric() const { return _qmax.is_geometric();}
 
 protected:
   QuantityType _qmax;   ///< the cut
@@ -550,6 +571,8 @@ public:
     ostr << _qmin.description_value() << " <= " << _qmin.description() << " <= " << _qmax.description_value();
     return ostr.str();
   }
+
+  virtual bool is_geometric() const { return _qmin.is_geometric();}
 
 protected:
   QuantityType _qmin;   // the lower cut 
@@ -665,6 +688,7 @@ public:
   QuantityRap(double rap) : QuantityBase(rap){}
   virtual double operator()(const PseudoJet & jet ) const { return jet.rap();}
   virtual string description() const {return "rap";}
+  virtual bool is_geometric() const { return true;}
 };  
 
 
@@ -698,8 +722,7 @@ public:
     rapmax = _qmax.comparison_value();      
     rapmin = _qmin.comparison_value(); 
   }
-  virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual bool has_known_area() const { return true;} ///< the area is analytically known
   virtual double known_area() const { 
     return twopi * (_qmax.comparison_value()-_qmin.comparison_value());
   }
@@ -728,6 +751,7 @@ public:
   QuantityAbsRap(double absrap) : QuantityBase(absrap){}
   virtual double operator()(const PseudoJet & jet ) const { return abs(jet.rap());}
   virtual string description() const {return "|rap|";}
+  virtual bool is_geometric() const { return true;}
 };  
 
 
@@ -739,7 +763,6 @@ public:
     rapmax =  _qmax.comparison_value(); 
     rapmin = -_qmax.comparison_value();
   }
-  virtual bool has_area() const { return true;}              ///< it has a finite area
   virtual bool has_known_area() const { return true;}   ///< the area is analytically known
   virtual double known_area() const { 
     return twopi * 2 * _qmax.comparison_value();
@@ -754,10 +777,9 @@ public:
     rapmax =  _qmax.comparison_value(); 
     rapmin = -_qmax.comparison_value();
   }
-  virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual bool has_known_area() const { return true;} ///< the area is analytically known
   virtual double known_area() const { 
-    return twopi * 2 * (_qmax.comparison_value()-max(_qmin.comparison_value(),0.0)); // this shold handle properly absrapmin<0
+    return twopi * 2 * (_qmax.comparison_value()-max(_qmin.comparison_value(),0.0)); // this should handle properly absrapmin<0
   }
 };
 
@@ -784,6 +806,7 @@ public:
   QuantityEta(double eta) : QuantityBase(eta){}
   virtual double operator()(const PseudoJet & jet ) const { return jet.eta();}
   virtual string description() const {return "eta";}
+  // virtual bool is_geometric() const { return true;} // not strictly only y and phi-dependent
 };  
 
 // returns a selector for a pseudo-minimum rapidity
@@ -809,6 +832,7 @@ public:
   QuantityAbsEta(double abseta) : QuantityBase(abseta){}
   virtual double operator()(const PseudoJet & jet ) const { return abs(jet.eta());}
   virtual string description() const {return "|eta|";}
+  virtual bool is_geometric() const { return true;}
 };  
 
 // returns a selector for a minimum |pseudo-rapidity|
@@ -859,6 +883,8 @@ public:
     return ostr.str();
   }
 
+  virtual bool is_geometric() const { return true;}
+
 protected:
   double _phimin;   // the lower cut 
   double _phimax;   // the upper cut
@@ -880,12 +906,6 @@ public:
     _known_area = ((phimax-phimin > twopi) ? twopi : phimax-phimin) * (rapmax-rapmin);
   }
 
-  /// check if it has a finite area
-  virtual bool has_area() const { return true;}
-
-  /// check if it has an analytically computable area
-  virtual bool has_known_area() const { return true;}
-  
   /// if it has a computable area, return it
   virtual double known_area() const{
     return _known_area;
@@ -1028,8 +1048,9 @@ public:
     rapmin = _reference.rap()-sqrt(_radius2);
   }
 
-  virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual bool is_geometric() const { return true;}    ///< implies a finite area
+  virtual bool has_finite_area() const { return true;} ///< regardless of the reference 
+  virtual bool has_known_area() const { return true;}  ///< the area is analytically known
   virtual double known_area() const { 
     return pi * _radius2;
   }
@@ -1085,8 +1106,9 @@ public:
     rapmin = _reference.rap()-sqrt(_radius_out2);
   }
 
-  virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual bool is_geometric() const { return true;}    ///< implies a finite area
+  virtual bool has_finite_area() const { return true;} ///< regardless of the reference 
+  virtual bool has_known_area() const { return true;}  ///< the area is analytically known
   virtual double known_area() const { 
     return pi * (_radius_out2-_radius_in2);
   }
@@ -1139,8 +1161,9 @@ public:
     rapmin = _reference.rap()-_delta;
   }
 
-  virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual bool is_geometric() const { return true;}    ///< implies a finite area
+  virtual bool has_finite_area() const { return true;} ///< regardless of the reference 
+  virtual bool has_known_area() const { return true;}  ///< the area is analytically known
   virtual double known_area() const { 
     return twopi * 2 * _delta;
   }
@@ -1195,8 +1218,9 @@ public:
     rapmin = _reference.rap()-_delta_rap;
   }
 
-  virtual bool has_area() const { return true;}   ///< it has a finite area
-  virtual bool has_known_area() const { return true;}   ///< the area is analytically known
+  virtual bool is_geometric() const { return true;}    ///< implies a finite area
+  virtual bool has_finite_area() const { return true;} ///< regardless of the reference 
+  virtual bool has_known_area() const { return true;}  ///< the area is analytically known
   virtual double known_area() const { 
     return 4 * _delta_rap * _delta_phi;
   }
@@ -1317,7 +1341,7 @@ public:
   }
 
   /// check if it has a finite area
-  virtual bool has_area() const { return true;}
+  virtual bool is_geometric() const { return true;}
 
   /// check if it has an analytically computable area
   virtual bool has_known_area() const { return true;}

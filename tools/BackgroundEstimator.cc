@@ -82,8 +82,8 @@ BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, con
   //  (i) check the alg is appropriate
   _check_jet_alg_good_for_median();
 
-  //  (ii) check that, if there are no explicit ghosts, the selector has an area
-  if ((!csa.has_explicit_ghosts()) && (!_rho_range.has_area())){
+  //  (ii) check that, if there are no explicit ghosts, the selector has a finite area
+  if ((!csa.has_explicit_ghosts()) && (!_rho_range.has_finite_area())){
     throw Error("BackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
 
@@ -125,8 +125,8 @@ BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Se
   //  (i) check the alg is appropriate
   _check_jet_alg_good_for_median();
 
-  //  (ii) check that, if there are no explicit ghosts, the selector has an area
-  if ((!csab->has_explicit_ghosts()) && (!_rho_range.has_area())){
+  //  (ii) check that, if there are no explicit ghosts, the selector has a finite area
+  if ((!csab->has_explicit_ghosts()) && (!_rho_range.has_finite_area())){
     throw Error("BackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
 
@@ -231,17 +231,11 @@ void BackgroundEstimator::_compute() const {
     _empty_area = 0.0;
     _n_empty_jets = 0;
   } else {
-    // note that we are sure that the selector has an area
-    // And we also need to use the scalar area
-    if (_use_area_4vector){
-      _empty_area = _rho_range.area();
-      for (unsigned i = 0; i < _selected_jets.size(); i++) _empty_area -= _selected_jets[i].area();
-    } else {
-      _empty_area = _rho_range.area() - total_area;
-    }
-    //if (_empty_area<0) _empty_area = 0;
-    double Rused = csab->jet_def().R();
-    _n_empty_jets = _empty_area / (0.55*pi*Rused*Rused);
+    _empty_area = csab->empty_area(_rho_range);
+    _n_empty_jets = csab->n_empty_jets(_rho_range);
+    // //if (_empty_area<0) _empty_area = 0;
+    // double Rused = csab->jet_def().R();
+    // _n_empty_jets = _empty_area / (0.55*pi*Rused*Rused);
   }
 
   double total_njets = _n_jets_used + _n_empty_jets;

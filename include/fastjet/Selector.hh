@@ -112,12 +112,16 @@ public:
 
   /// returns the rapidity range for which it may return "true"
   virtual void get_rapidity_extent(double & rapmin, double & rapmax) const {
-    rapmax = std::numeric_limits<double>::max();
+    rapmax = std::numeric_limits<double>::infinity();
     rapmin = -rapmax; 
   }
 
+  /// check if it is a geometric selector (i.e. only puts constraints
+  /// on rapidity and azimuthal angle)
+  virtual bool is_geometric() const { return false;}
+
   /// check if it has a finite area
-  virtual bool has_area() const { return false;}
+  virtual bool has_finite_area() const;
 
   /// check if it has an analytically computable area
   virtual bool has_known_area() const { return false;}
@@ -210,9 +214,15 @@ public:
     return validated_worker()->description();
   }
 
+  /// check if it is a geometric selector (i.e. one that only puts
+  /// constraints on rapidities and azimuthal angles)
+  bool is_geometric() const{
+    return validated_worker()->is_geometric();
+  }
+
   /// check if it has a meaningful and finite area
-  bool has_area() const{
-    return validated_worker()->has_area();
+  bool has_finite_area() const{
+    return validated_worker()->has_finite_area();
   }
 
   /// returns the rapidity-phi area associated with the Selector
