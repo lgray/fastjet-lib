@@ -4,7 +4,6 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   PseudoJetStructureBase.hh\
   ClusterSequenceStructure.hh\
   PseudoJet.hh\
-  PseudoJetPlusInfo.hh\
   ClusterSequence.hh\
   Error.hh\
   RangeDefinition.hh\

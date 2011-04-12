@@ -1,3 +1,9 @@
+2011-04-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Makefile.am (fastjetinclude_HEADERS):
+	  removed PseudoJetPlusInfo.hh from the list of headers
+	  since the file is no longer included.
+
 2011-04-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 
