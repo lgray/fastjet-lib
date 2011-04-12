@@ -1,8 +1,8 @@
 FastJet is released under the GNU General Public License v2 (given
 below).
 
-Permission is specifically to link with CGAL (which is under a QPL
-license) and where relevant the plugins.
+Permission is specifically granted to link with CGAL (which is under a
+QPL license) and where relevant the plugins. 
 
 For the plugin jet finders, the licensing situation is as follows:
 
@@ -10,14 +10,15 @@ For the plugin jet finders, the licensing situation is as follows:
 . PxCone code: unknown (permission for distribution granted by M.H.Seymour)
 . SISCone code: GPL
 
+
 The "interface" part of the plugins are GPL.
 
 FastJet and SISCone are the result of original scientific research. If
 you use them in scientific work you are also encouraged to cite the
 papers which describe them.
 
-FastJet: M. Cacciari and G.P. Salam, Phys.Lett.B641 (2006) 57 [hep-ph/0512210]
-SISCone: G.P. Salam and G. Soyez, hep-ph/07mmnnn
+FastJet: M. Cacciari and G.P. Salam, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
+SISCone: G.P. Salam and G. Soyez, JHEP 0705 (2007) 086 [arXiv:0704.0292]
 
 ----------------------------------------------------------------------
 		    GNU GENERAL PUBLIC LICENSE
