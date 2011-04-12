@@ -232,7 +232,7 @@ bool ee_print = false;
 void print_jets(const vector<fj::PseudoJet> & jets, bool show_const = false);
 
 void is_unavailable(const string & algname) {
-  cerr << algname << " requested, but not available for this compilation";
+  cerr << algname << " requested, but not available for this compilation" << endl;
   exit(0);
 }
 
