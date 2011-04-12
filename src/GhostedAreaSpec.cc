@@ -59,7 +59,7 @@ GhostedAreaSpec::GhostedAreaSpec(
     // check the selector has the properties needed -- an area and
     // applicability jet-by-jet (the latter follows automatically from
     // the former?)
-    if (!_selector.has_area()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must have an area");
+    if (!_selector.has_finite_area()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must have a finite area");
     if (!_selector.applies_jet_by_jet()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must apply jet-by-jet");
     // get the internal rapidity extent from the selector
     double ghost_maxrap, ghost_minrap;
