@@ -1285,4 +1285,59 @@ Selector SelectorPtFractionMin(double fraction){
   return Selector(new SW_PtFractionMin(fraction));
 }
 
+
+//----------------------------------------------------------------------
+// Selector and workers for obtaining a Selector from an old
+// RangeDefinition
+//
+// This is mostly intended for backward compatibility and is likely to
+// be removed in a future major release of FastJet
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+/// helper for selecting on both rapidity and azimuthal angle
+class SW_RangeDefinition : public SelectorWorker{
+public:
+  /// ctor from a RangeDefinition
+  SW_RangeDefinition(const RangeDefinition &range) : _range(&range){}
+
+  /// transfer the selection creterium to the underlying RangeDefinition
+  virtual bool pass(const PseudoJet & jet) const {
+    return _range->is_in_range(jet);
+  } 
+
+  /// returns a description of the worker
+  virtual string description() const {
+    return _range->description();
+  }
+
+  /// returns the rapidity range for which it may return "true"
+  virtual void get_rapidity_extent(double & rapmin, double & rapmax) const{
+    _range->get_rap_limits(rapmin, rapmax);
+  }
+
+  /// check if it has a finite area
+  virtual bool has_area() const { return true;}
+
+  /// check if it has an analytically computable area
+  virtual bool has_known_area() const { return true;}
+  
+  /// if it has a computable area, return it
+  virtual double known_area() const{
+    return _range->area();
+  }
+
+protected:
+  const RangeDefinition *_range;
+};
+
+// ctor from a RangeDefinition
+//
+// This is provided for backward compatibility and will be removed in
+// a future major release of FastJet
+Selector::Selector(const RangeDefinition &range) {
+  _worker.reset(new SW_RangeDefinition(range));
+}
+
+
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

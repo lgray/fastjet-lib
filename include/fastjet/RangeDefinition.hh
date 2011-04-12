@@ -33,7 +33,6 @@
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Error.hh"
-#include "fastjet/Selector.hh"
 #include<sstream>
 #include<iostream>
 #include<string>
@@ -51,8 +50,6 @@ class RangeDefinition {
 public:
   /// default constructor
   RangeDefinition() {}
-
-  RangeDefinition(const Selector & sel) {}
 
   /// constructor for a range definition given by |y|<rapmax
   RangeDefinition(double rapmax) {

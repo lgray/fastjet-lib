@@ -32,6 +32,7 @@
 //ENDHEADER
 
 #include "fastjet/PseudoJet.hh"
+#include "fastjet/RangeDefinition.hh"  // for initialisation from a RangeDefinition
 #include <limits>
 #include <cmath>
 
@@ -142,6 +143,18 @@ public:
   /// Note that the Selector takes ownership of the pointer to the
   /// worker (and so will delete automatically when appropriate).
   Selector(SelectorWorker * worker) {_worker.reset(worker);}
+
+
+  /// ctor from a RangeDefinition
+  ///
+  /// This is provided for backward compatibility and will be removed in
+  /// a future major release of FastJet
+  ///
+  /// Watch out that the Selector will only hold a pointer to the
+  /// range so the selector will crash if one tries to use it after
+  /// the range has gone out of scope. We thus strongly advise against
+  /// the direct use of this constructor.
+  Selector(const RangeDefinition &range);
 
   /// dummy virtual dtor
   virtual ~Selector(){}

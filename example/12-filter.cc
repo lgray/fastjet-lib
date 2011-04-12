@@ -102,8 +102,8 @@ int main (int argc, char ** argv) {
       // note that, alternatively, we could directly access teh
       // relevant structure
       assert(j.has_properties_of<Filter>());
-      const FilteredJetStructure * fj_struct = j.extra_properties<Filter>();
-      cout << "  #rejected pieces: " << fj_struct->rejected().size() << endl;
+      const FilteredJetStructure & fj_struct = j.extra_properties<Filter>();
+      cout << "  #rejected pieces: " << fj_struct.rejected().size() << endl;
     }
     cout << endl;
   }
