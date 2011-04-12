@@ -1,5 +1,8 @@
 2011-04-12  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/ClusterSequenceAreaBase.cc:
+	  only imposes a finite area if the area has no explicit ghosts
+
 	* include/fastjet/ClusterSequenceAreaBase.hh:
 	* include/fastjet/ClusterSequenceArea.hh:
 	* include/fastjet/ClusterSequenceActiveArea.hh:

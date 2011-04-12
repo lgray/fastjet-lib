@@ -363,7 +363,7 @@ double ClusterSequenceAreaBase::subtracted_pt(const PseudoJet & jet,
 // by jet and has a finite area
 void ClusterSequenceAreaBase::_check_selector_good_for_median(const Selector &selector) const{
   // make sure the selector has a finite area
-  if (! selector.has_finite_area()){
+  if ((! has_explicit_ghosts()) &&  (! selector.has_finite_area())){
     throw Error("ClusterSequenceAreaBase: empty area can only be computed from selectors with a finite area");
   }
 
