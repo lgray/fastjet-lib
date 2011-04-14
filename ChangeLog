@@ -1,3 +1,8 @@
+2011-04-14  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex (Note):
+	  fixed name in the acks
+
 2011-04-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* COPYING: 
