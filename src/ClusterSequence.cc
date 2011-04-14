@@ -241,17 +241,18 @@ void ClusterSequence::_print_banner() {
   //Symp. Discr. Alg, p.472 (2002) and  CGAL (http://www.cgal.org);
 
   cout << "#--------------------------------------------------------------------------\n";
-  cout << "#                      FastJet release " << fastjet_version << endl;
+  cout << "#                         FastJet release " << fastjet_version << endl;
   cout << "#            Written by M. Cacciari, G.P. Salam and G. Soyez            \n"; 
   cout << "#                         http://www.fastjet.fr                         \n"; 
   cout << "#								      	   \n";
   cout << "# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  \n";
-  cout << "# clustering using fast geometric algorithms, with area measures and optional\n";
-  cout << "# external jet-finder plugins.                                          \n";
-  cout << "# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.\n";
+  cout << "# clustering using fast geometric algorithms, with jet areas and optional\n";
+  cout << "# external jet-finder plugins. If you use this code towards a scientific \n";
+  cout << "# publication please cite Phys. Lett. B641 (2006) [hep-ph/0512210] and   \n";
+  cout << "# M. Cacciari, G.P. Salam and G. Soyez, http://fastjet.fr/              \n";
   cout << "#								      	   \n";
   cout << "# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM \n";
-  cout << "# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code " ;
+  cout << "# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code" ;
 #ifndef DROP_CGAL
   cout << endl << "# and CGAL: http://www.cgal.org/";
 #endif  // DROP_CGAL

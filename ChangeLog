@@ -1,11 +1,14 @@
-2011-04-14  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+2011-04-14  Gregory Soyez  <soyez@lpthe.jussieu.fr> + Matteo & Gavin
+
+	* src/ClusterSequence.cc (_print_banner):
+	  updated the banner
 
 	* doc/fastjet-doc.tex (Note):
 	  fixed name in the acks
 
 2011-04-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* COPYING: 
+	* COPYING:
 	  fixed a typo; added SISCone reference
 
 2011-04-12  Gregory Soyez  <soyez@fastjet.fr>
