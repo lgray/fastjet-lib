@@ -1,3 +1,9 @@
+2011-04-16  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh (PseudoJet::reset_momentum):
+	  added reset_momentum(...), which changes the momentum but
+	  leaves all other information untouched.
+
 2011-04-14  Gregory Soyez  <soyez@lpthe.jussieu.fr> + Matteo & Gavin
 
 	* src/ClusterSequence.cc (_print_banner):

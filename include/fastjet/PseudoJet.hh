@@ -215,6 +215,20 @@ class PseudoJet {
           some_four_vector[2], some_four_vector[3]);
   }
 
+  /// reset the 4-momentum according to the supplied components 
+  /// but leave all other information (indices, user info, etc.)
+  /// untouched
+  inline void reset_momentum(double px, double py, double pz, double E);
+
+  /// reset the 4-momentum according to the supplied generic 4-vector
+  /// (accessible via indexing, [0]==px,...[3]==E), but leave all
+  /// other information (indices, user info, etc.)  untouched
+  template <class L> inline void reset_momentum(const L & some_four_vector) {
+    reset_momentum(some_four_vector[0], some_four_vector[1],
+		   some_four_vector[2], some_four_vector[3]);
+  }
+
+
   //\} --- end of kin mod functions ------------------------------------
 
   //----------------------------------------------------------------------
@@ -763,6 +777,14 @@ inline void PseudoJet::reset(double px, double py, double pz, double E) {
   _E  = E;
   _finish_init();
   _reset_indices();
+}
+
+inline void PseudoJet::reset_momentum(double px, double py, double pz, double E) {
+  _px = px;
+  _py = py;
+  _pz = pz;
+  _E  = E;
+  _finish_init();
 }
 
 
