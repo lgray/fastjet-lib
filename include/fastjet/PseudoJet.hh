@@ -228,6 +228,23 @@ class PseudoJet {
 		   some_four_vector[2], some_four_vector[3]);
   }
 
+  /// in some cases when setting a 4-momentum, the user/program knows
+  /// what rapidity and azimuth are associated with that 4-momentum;
+  /// by calling this routine the user can provide the information
+  /// directly to the PseudoJet and avoid expensive rap-phi
+  /// recalculations.
+  ///
+  /// - \param rap  rapidity
+  /// - \param phi  (in range -twopi...twopi)
+  ///
+  /// USE WITH CAUTION: there are no checks that the rapidity and
+  /// azimuth supplied are sensible, nor does this reset the
+  /// 4-momentum components if things don't match.
+  inline void hint_associated_rap_phi(double rap, double phi) {
+    _rap = rap; _phi = phi;
+    if (_phi < 0) _phi += twopi;
+  }
+
 
   //\} --- end of kin mod functions ------------------------------------
 

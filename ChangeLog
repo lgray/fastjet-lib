@@ -1,3 +1,17 @@
+2011-04-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	  added the new hint_associated_rap_phi(rap,phi) routine, which
+	  allows a user to tell the PseudoJet what its rapidity and phi
+	  are, thus sometimes avoiding expensive recalculations.
+	
+	* src/PseudoJet.cc (PtYPhiM):
+	  made this significantly more efficient, by directly calculating
+	  exp(y) rather than calling sinh and cosh; also avoided a
+	  sqrt(pt^2+m^2) if the mass is zero and called
+	  PseudoJet::hint_associated_rap_phi so that rapidity and phi info
+	  are passed to the PseudoJet for free.
+
 2011-04-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh (PseudoJet::reset_momentum):
