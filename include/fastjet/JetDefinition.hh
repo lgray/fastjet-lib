@@ -116,7 +116,11 @@ enum JetAlgorithm {
   ee_genkt_algorithm=53,
   //.................................................................
   /// any plugin algorithm supplied by the user
-  plugin_algorithm = 99
+  plugin_algorithm = 99,
+  //.................................................................
+  /// the value for the jet algorithm in a JetDefinition for which
+  /// no algorithm has yet been defined
+  undefined_jet_algorithm = 999
 };
 
 /// make standard Les Houches nomenclature JetAlgorithm (algorithm is general
@@ -182,7 +186,6 @@ public:
   // extend these facilities
   class Recombiner;
 
-  
 
   /// constructor with alternative ordering or arguments -- note that
   /// we have not provided a default jet finder, to avoid ambiguous
@@ -248,10 +251,18 @@ public:
     set_extra_param(xtra_param);
   }
 
-  /// a default constructor
-  JetDefinition() {
-    *this = JetDefinition(kt_algorithm, 1.0);
+  /// a default constructor which creates a jet definition that is in
+  /// a well-defined internal state, but not actually usable for jet
+  /// clustering.
+  JetDefinition()  {
+    *this = JetDefinition(undefined_jet_algorithm, 1.0);
   }
+  
+
+  // /// a default constructor
+  // JetDefinition() {
+  //   *this = JetDefinition(kt_algorithm, 1.0);
+  // }
 
   /// constructor based on a pointer to a user's plugin; the object
   /// pointed to must remain valid for the whole duration of existence

@@ -121,8 +121,10 @@ string JetDefinition::description() const {
     name << "e+e- generalised kt algorithm with R = " 
 	 << R() << ", p = " << extra_param();
     name << " and " << recombiner()->description();
+  } else if (jet_algorithm() == undefined_jet_algorithm) {
+    name << "uninitialised JetDefinition (jet_algorithm=undefined_jet_algorithm)" ;
   } else {
-    throw Error("JetDefinition::description(): unrecognized jet_finder");
+    throw Error("JetDefinition::description(): unrecognized jet_algorithm");
   }
   return name.str();
 }

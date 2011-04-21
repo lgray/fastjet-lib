@@ -128,9 +128,10 @@ void ClusterSequence::_initialise_and_run (
       }
       _invR2 = 1.0/_R2;
     }
-    //_simple_N2_cluster<EEBriefJet>();
     _simple_N2_cluster_EEBriefJet();
     return;
+  } else if (_jet_algorithm == undefined_jet_algorithm) {
+    throw Error("A ClusterSequence cannot be created with an uninitialised JetDefinition");
   }
 
 

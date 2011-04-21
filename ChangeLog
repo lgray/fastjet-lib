@@ -1,3 +1,14 @@
+2011-04-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
+	* src/JetDefinition.cc: 
+	* include/fastjet/JetDefinition.hh: 
+	  added an undefined_jet_algorithm entry to the JetAlgorithm enum;
+	  this is now set in the default constructor to JetDefinition;
+	  corresponding entries/error-messages have been added to
+	  JetDefinition::description() and
+	  ClusterSequence::_initialise_and_run.
+
 2011-04-18  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 
