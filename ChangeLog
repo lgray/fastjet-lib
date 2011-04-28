@@ -1,3 +1,10 @@
+2011-04-28  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc (PtYPhiM): 
+	  fixed serious bug where PtYPhiM was generating exchanged x and y
+	  components (making it inconsistent with the hinted phi). Pointed
+	  out my Gregory.
+
 2011-04-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_initialise_and_run): 
