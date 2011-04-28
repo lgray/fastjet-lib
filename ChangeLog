@@ -3,7 +3,7 @@
 	* src/PseudoJet.cc (PtYPhiM): 
 	  fixed serious bug where PtYPhiM was generating exchanged x and y
 	  components (making it inconsistent with the hinted phi). Pointed
-	  out my Gregory.
+	  out by Gregory.
 
 2011-04-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
