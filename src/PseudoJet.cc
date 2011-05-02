@@ -297,8 +297,8 @@ PseudoJet PtYPhiM(double pt, double y, double phi, double m) {
   double exprap = exp(y);
   double pminus = ptm/exprap;
   double pplus  = ptm*exprap;
-  double px = ptm*cos(phi);
-  double py = ptm*sin(phi);
+  double px = pt*cos(phi);
+  double py = pt*sin(phi);
   PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
   mom.hint_associated_rap_phi(y,phi);
   return mom;
