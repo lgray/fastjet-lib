@@ -1,3 +1,10 @@
+2011-05-02  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/PseudoJet.cc (PtYPhiM):
+	  fixed serious bug where PtYPhiM was using ptm (=mt) to generate
+	  x and y components (making pt wrong and m=0 when a non-zero m
+	  was asked)
+
 2011-04-28  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc (PtYPhiM): 
