@@ -218,6 +218,9 @@ public:
     _uptodate = false;
   }  
 
+  /// check if the estimator uses the 4-vector area or the scalar area
+  bool use_area_4vector() const{ return _use_area_4vector;}
+
   /// The FastJet v2.X sigma calculation had a small spurious offset
   /// in the limit of a small number of jets. This is fixed by default
   /// in versions 3 upwards. The old behaviour can be obtained with a

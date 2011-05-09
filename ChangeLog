@@ -1,3 +1,9 @@
+2011-05-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/BackgroundEstimator.hh:
+	  added a use_area_4vector method returning true if the abckground
+	  estimation is currently using 4-vector area
+
 2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/fastjet/tools/BackgroundEstimator.hh:
