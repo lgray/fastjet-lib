@@ -124,8 +124,10 @@ public:
   /// return something similar to the number of pure ghost jets
   /// in the given selector's range in an active area case.
   /// For the local implementation we return empty_area/(0.55 pi R^2),
-  /// based on measured properties of ghost jets with kt and cam. Note
-  /// that the number returned is a double.
+  /// based on measured properties of ghost jets with kt and cam
+  /// (cf arXiv:0802.1188).
+  ///
+  /// Note that the number returned is a double.
   /// 
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
