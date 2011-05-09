@@ -195,14 +195,10 @@ void BackgroundEstimator::_compute() const {
   // check if the clustersequence is still valid
   _check_csa_alive();
 
-  // fill the vector of pt/area with the jets 
-  //  - in included_jets
-  //  - not in excluded_jets
+  // fill the vector of pt/area (or the quantity from the jet density class) 
   //  - in the range
-  // GPS+MC: rename this at some point
-  vector<double> pt_over_areas;
+  vector<double> vector_for_median;
   double total_area  = 0.0;
-  
   _n_jets_used = 0;
 
   // apply the selector to the included jets
@@ -216,9 +212,9 @@ void BackgroundEstimator::_compute() const {
 
     if (this_area>0){
       if (_jet_density_class == 0) {
-	pt_over_areas.push_back(current_jet.perp()/this_area);
+	vector_for_median.push_back(current_jet.perp()/this_area);
       } else {
-	pt_over_areas.push_back( (*_jet_density_class)(current_jet));
+	vector_for_median.push_back( (*_jet_density_class)(current_jet));
       }
       total_area  += this_area;
       _n_jets_used++;
@@ -229,7 +225,7 @@ void BackgroundEstimator::_compute() const {
   }
   
   // there is nothing inside our region, so answer will always be zero
-  if (pt_over_areas.size() == 0) {
+  if (vector_for_median.size() == 0) {
     _rho        = 0.0;
     _sigma      = 0.0;
     _mean_area  = 0.0;
@@ -250,7 +246,7 @@ void BackgroundEstimator::_compute() const {
   total_area  += _empty_area;
 
   double stand_dev;
-  _median_and_stddev(pt_over_areas, _n_empty_jets, _rho, stand_dev, 
+  _median_and_stddev(vector_for_median, _n_empty_jets, _rho, stand_dev, 
 		     _provide_fj2_sigma);
 
   // process and store the results (_rho was already stored above)

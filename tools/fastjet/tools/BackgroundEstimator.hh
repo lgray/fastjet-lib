@@ -63,16 +63,6 @@ public:
   BackgroundJetScalarPtDensity(double pt_power) : _pt_power(pt_power) {}
 
   virtual double operator()(const PseudoJet & jet) const;
-  // {
-  //   std::vector<PseudoJet> constituents = jet.constituents();
-  //   double scalar_pt = 0;
-  //   for (unsigned i = 0; i < constituents.size(); i++) {
-  //     scalar_pt += pow(constituents[i].perp(), _pt_power);
-  //   }
-  //   return scalar_pt / jet.area();
-  // }
-  //virtual std::string description() const;
-  //virtual std::string short_name() const;
 
 private:
   double _pt_power;
@@ -289,10 +279,17 @@ public:
     _uptodate = false;
   }
 
-  /// GPS+MC add some sensible comment here
+  /// Set a pointer to a class that calculates the quantity whose
+  /// median will be calculated; if the pointer is null then pt/area
+  /// is used (as occurs also if this function is not called).
   void set_jet_density_class(const BackgroundJetDensityBase * jet_density_class) {
     _jet_density_class = jet_density_class;
     _uptodate = false;
+  }
+
+  /// return the pointer to the jet density class
+  const BackgroundJetDensityBase *  jet_density_class() {
+    return _jet_density_class;
   }
 
   //\}
