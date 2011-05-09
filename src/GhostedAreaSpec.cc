@@ -96,16 +96,27 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
     for (int iphi = 0; iphi < _nphi; iphi++) {
      
       // include random offsets for all quantities
-      double phi = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
+      //----------------------------------------------
+      // NB: in FJ2 we'd exchanged the px and py components relative to a
+      // standard definition of phi; to preserve the same areas as fj2
+      // we now generate a "phi_fj2", and then convert to a standard phi
+      double phi_fj2 = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
+      double phi = 0.5*pi - phi_fj2;
       double rap = irap * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
 	                                                 + _ghost_rap_offset ;
       double kt = _mean_ghost_kt*(1+(_our_rand()-0.5)*_kt_scatter);
 
-      double pminus = kt*exp(-rap);
-      double pplus  = kt*exp(+rap);
-      double px = kt*sin(phi);
-      double py = kt*cos(phi);
+      double exprap = exp(+rap);
+      double pminus = kt/exprap;
+      double pplus  = kt*exprap;
+      double px = kt*cos(phi);
+      double py = kt*sin(phi);
       PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
+      // the hint fills in the PseudoJet's cached rap,phi information,
+      // based on pre-existing knowledge. Watch out: if you get the hint
+      // wrong nobody will tell you, but you will certainly mess up
+      // your results.
+      mom.hint_associated_rap_phi(rap,phi);
 
       // if we have an active selector and the particle does not pass the 
       // selection condition, move on to the next momentum

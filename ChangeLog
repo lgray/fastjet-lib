@@ -1,3 +1,12 @@
+2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* src/GhostedAreaSpec.cc (add_ghosts): 
+
+	  renamed the old (wrong) phi as phi_fj2 and now use a phi that
+	  has the correct px,py use. Also speeded up the ghost generation
+	  a little (exprap) and added a hint to set the ghost rapidity and
+	  phi. Checked that active results are unchanged.
+
 2011-05-02  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* src/PseudoJet.cc (PtYPhiM):
