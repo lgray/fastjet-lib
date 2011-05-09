@@ -240,7 +240,7 @@ class PseudoJet {
   /// USE WITH CAUTION: there are no checks that the rapidity and
   /// azimuth supplied are sensible, nor does this reset the
   /// 4-momentum components if things don't match.
-  inline void hint_associated_rap_phi(double rap, double phi) {
+  inline void set_cached_rap_phi(double rap, double phi) {
     _rap = rap; _phi = phi;
     if (_phi < 0) _phi += twopi;
   }

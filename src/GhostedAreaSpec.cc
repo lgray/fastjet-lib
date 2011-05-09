@@ -112,11 +112,11 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       double px = kt*cos(phi);
       double py = kt*sin(phi);
       PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
-      // the hint fills in the PseudoJet's cached rap,phi information,
+      // this call fills in the PseudoJet's cached rap,phi information,
       // based on pre-existing knowledge. Watch out: if you get the hint
       // wrong nobody will tell you, but you will certainly mess up
       // your results.
-      mom.hint_associated_rap_phi(rap,phi);
+      mom.set_cached_rap_phi(rap,phi);
 
       // if we have an active selector and the particle does not pass the 
       // selection condition, move on to the next momentum

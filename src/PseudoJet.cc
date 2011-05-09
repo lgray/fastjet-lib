@@ -300,7 +300,7 @@ PseudoJet PtYPhiM(double pt, double y, double phi, double m) {
   double px = pt*cos(phi);
   double py = pt*sin(phi);
   PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
-  mom.hint_associated_rap_phi(y,phi);
+  mom.set_cached_rap_phi(y,phi);
   return mom;
   //return PseudoJet(pt*cos(phi), pt*sin(phi), ptm*sinh(y), ptm*cosh(y));
 }
