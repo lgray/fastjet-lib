@@ -1,5 +1,9 @@
 2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* testsuite/TestBase.hh: *** ADDED ***
+	* testsuite/run_tests.cc: *** ADDED ***
+	  just some first structural thoughts about tests
+
 	* src/PseudoJet.cc:
 	* include/fastjet/PseudoJet.hh:
 	  renamed hint_associated_rap_phi() -> set_cached_rap_phi() [this
