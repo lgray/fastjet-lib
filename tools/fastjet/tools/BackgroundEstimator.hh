@@ -38,6 +38,65 @@
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 
+class BackgroundJetDensityBase {
+public:
+  virtual double operator()(const PseudoJet & jet) const = 0;
+  virtual std::string description() const {return "";}
+  virtual std::string short_name() const {return "";}
+};
+
+//----------------------------------------------------------------------
+class BackgroundJetPtDensity : public BackgroundJetDensityBase {
+public:
+  virtual double operator()(const PseudoJet & jet) const {
+    return jet.perp() / jet.area_4vector().perp();
+  }
+  //virtual std::string description() const;
+  //virtual std::string short_name() const;
+};
+
+
+//----------------------------------------------------------------------
+class BackgroundJetScalarPtDensity : public BackgroundJetDensityBase {
+public:
+  BackgroundJetScalarPtDensity() : _pt_power(1) {}
+  BackgroundJetScalarPtDensity(double pt_power) : _pt_power(pt_power) {}
+
+  virtual double operator()(const PseudoJet & jet) const;
+  // {
+  //   std::vector<PseudoJet> constituents = jet.constituents();
+  //   double scalar_pt = 0;
+  //   for (unsigned i = 0; i < constituents.size(); i++) {
+  //     scalar_pt += pow(constituents[i].perp(), _pt_power);
+  //   }
+  //   return scalar_pt / jet.area();
+  // }
+  //virtual std::string description() const;
+  //virtual std::string short_name() const;
+
+private:
+  double _pt_power;
+};
+
+//----------------------------------------------------------------------
+class BackgroundJetPtMDensity : public BackgroundJetDensityBase {
+public:
+  virtual double operator()(const PseudoJet & jet) const {
+    std::vector<PseudoJet> constituents = jet.constituents();
+    double scalar_ptm = 0;
+    for (unsigned i = 0; i < constituents.size(); i++) {
+      scalar_ptm += sqrt(constituents[i].mperp2()) - constituents[i].perp();
+    }
+    return scalar_ptm / jet.area();
+  }
+  //virtual std::string description() const;
+  //virtual std::string short_name() const;
+
+};
+
+
+
+
 /// @ingroup tools
 /// \class BackgroundEstimator
 /// Class to estimate the density of the background per unit area
@@ -227,6 +286,13 @@ public:
   /// call to this function.
   void set_provide_fj2_sigma(bool provide_fj2_sigma = true) {
     _provide_fj2_sigma = provide_fj2_sigma;
+    _uptodate = false;
+  }
+
+  /// GPS+MC add some sensible comment here
+  void set_jet_density_class(const BackgroundJetDensityBase * jet_density_class) {
+    _jet_density_class = jet_density_class;
+    _uptodate = false;
   }
 
   //\}
@@ -284,6 +350,8 @@ private:
   mutable std::vector<PseudoJet> _selected_jets;    ///< jets used in practice
   bool _use_area_4vector;
   bool _provide_fj2_sigma;
+
+  const BackgroundJetDensityBase * _jet_density_class;
   
   // the actual results of the computation
   mutable double _rho;		        ///< background estimated density per unit area

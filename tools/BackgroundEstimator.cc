@@ -58,6 +58,16 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 using namespace std;
 
+double BackgroundJetScalarPtDensity::operator()(const PseudoJet & jet) const {
+  std::vector<PseudoJet> constituents = jet.constituents();
+  double scalar_pt = 0;
+  for (unsigned i = 0; i < constituents.size(); i++) {
+    scalar_pt += pow(constituents[i].perp(), _pt_power);
+  }
+  return scalar_pt / jet.area();
+}
+
+
 
 /// allow for warnings
 LimitedWarning BackgroundEstimator::_warnings;
@@ -89,6 +99,7 @@ BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, con
 
   // get the initial list of jets
   _included_jets = csa.inclusive_jets();
+
 
   // initialise things properly
   reset();
@@ -173,6 +184,8 @@ void BackgroundEstimator::reset(){
   _n_jets_used = _n_empty_jets = 0;
   _empty_area = _mean_area = 0.0;
 
+  _jet_density_class = 0; // null pointer
+
   _uptodate = false;
 }
 
@@ -186,6 +199,7 @@ void BackgroundEstimator::_compute() const {
   //  - in included_jets
   //  - not in excluded_jets
   //  - in the range
+  // GPS+MC: rename this at some point
   vector<double> pt_over_areas;
   double total_area  = 0.0;
   
@@ -201,7 +215,11 @@ void BackgroundEstimator::_compute() const {
     double this_area = (_use_area_4vector) ? current_jet.area_4vector().perp() : current_jet.area(); 
 
     if (this_area>0){
-      pt_over_areas.push_back(current_jet.perp()/this_area);
+      if (_jet_density_class == 0) {
+	pt_over_areas.push_back(current_jet.perp()/this_area);
+      } else {
+	pt_over_areas.push_back( (*_jet_density_class)(current_jet));
+      }
       total_area  += this_area;
       _n_jets_used++;
     } else {

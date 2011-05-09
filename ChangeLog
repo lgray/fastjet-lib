@@ -6,8 +6,14 @@
 
 2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* tools/BackgroundEstimator.cc: 
 	* tools/fastjet/tools/BackgroundEstimator.hh:
+	  added facility for using the background estimator to get
+	  estimates of quantities other than just pt/area, with a few
+	  classes to help with this (e.g. for PtM). Docs etc. to follow
+
 	* tools/BackgroundEstimator.cc ():
+	* tools/fastjet/tools/BackgroundEstimator.hh:
 	  factored median calculation out into _median_and_stddev(...), in
 	  anticipation of other future modifications (e.g. medians of
 	  quantities other than pt/area).
