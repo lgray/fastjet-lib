@@ -1,5 +1,17 @@
 2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* tools/fastjet/tools/BackgroundEstimator.hh:
+	* tools/BackgroundEstimator.cc ():
+	  factored median calculation out into _median_and_stddev(...), in
+	  anticipation of other future modifications (e.g. medians of
+	  quantities other than pt/area).
+
+	  Also modified calculation of sigma so that it deals with the
+	  "bin width" associated with each jet. To obtain the old FJ2
+	  calculation of sigma, first call the new function
+	  set_provide_fj2_sigma().
+
+
 	* testsuite/TestBase.hh: *** ADDED ***
 	* testsuite/run_tests.cc: *** ADDED ***
 	  just some first structural thoughts about tests

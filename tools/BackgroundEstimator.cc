@@ -166,6 +166,7 @@ BackgroundEstimator & BackgroundEstimator::set_reference(const PseudoJet &jet){
 void BackgroundEstimator::reset(){
   // set the remaining default parameters
   set_use_area_4vector();  // true by default
+  set_provide_fj2_sigma(false);
 
   // reset the computed values
   _rho = _sigma = 0.0;
@@ -217,61 +218,89 @@ void BackgroundEstimator::_compute() const {
     return;
   }
 
-  // get median (pt/area) [this is the "old" median definition. It considers
-  // only the "real" jets in calculating the median, i.e. excluding the
-  // only-ghost ones; it will be supplemented with more info below]
-  sort(pt_over_areas.begin(), pt_over_areas.end());
-
   // determine the number of empty jets
-  _empty_area = 0.0;
-  _n_empty_jets = 0.0;
   const ClusterSequenceAreaBase * csab = (dynamic_cast<ClusterSequenceStructure*>(_csi()))->validated_csab();
-
   if (csab->has_explicit_ghosts()) {
     _empty_area = 0.0;
     _n_empty_jets = 0;
   } else {
     _empty_area = csab->empty_area(_rho_range);
     _n_empty_jets = csab->n_empty_jets(_rho_range);
-    // //if (_empty_area<0) _empty_area = 0;
-    // double Rused = csab->jet_def().R();
-    // _n_empty_jets = _empty_area / (0.55*pi*Rused*Rused);
   }
 
   double total_njets = _n_jets_used + _n_empty_jets;
   total_area  += _empty_area;
+
+  double stand_dev;
+  _median_and_stddev(pt_over_areas, _n_empty_jets, _rho, stand_dev, 
+		     _provide_fj2_sigma);
+
+  // process and store the results (_rho was already stored above)
+  _mean_area  = total_area / total_njets;
+  _sigma      = stand_dev * sqrt(_mean_area);
+
+  // record that the computation has been performed  
+  _uptodate = true;
+}
+
+//----------------------------------------------------------------------
+void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vector, 
+					     double n_empty_jets, 
+					     double & median, 
+					     double & stand_dev_if_gaussian,
+					     bool do_fj2_calculation) const {
+
+  // this check is redundant (the code below behaves sensibly even
+  // with a zero size), but serves as a reminder of what happens if
+  // the quantity vector is zero-sized
+  if (quantity_vector.size() == 0) {
+    median = 0;
+    stand_dev_if_gaussian = 0;
+    return;
+  }
+
+  vector<double> sorted_quantity_vector = quantity_vector;
+  sort(sorted_quantity_vector.begin(), sorted_quantity_vector.end());
 
   // now get the median & error, accounting for empty jets
   // define the fractions of distribution at median, median-1sigma
   double posn[2] = {0.5, (1.0-0.6827)/2.0};
   double res[2];
 
+  int n_jets_used = sorted_quantity_vector.size();
+  double total_njets = n_jets_used + _n_empty_jets;
+
   for (int i = 0; i < 2; i++) {
-    double nj_median_pos = (total_njets-1)*posn[i] - _n_empty_jets;
+    double nj_median_pos;
+    if (do_fj2_calculation) {
+      nj_median_pos = (total_njets-1)*posn[i] - n_empty_jets;
+    } else {
+      nj_median_pos = (total_njets)*posn[i] - n_empty_jets - 0.5;
+    }
+
     double nj_median_ratio;
-    if (nj_median_pos >= 0 && pt_over_areas.size() > 1) {
+    if (nj_median_pos >= 0 && sorted_quantity_vector.size() > 1) {
       int int_nj_median = int(nj_median_pos);
       nj_median_ratio =
-        pt_over_areas[int_nj_median] * (int_nj_median+1-nj_median_pos)
-        + pt_over_areas[int_nj_median+1] * (nj_median_pos - int_nj_median);
+	sorted_quantity_vector[int_nj_median] * (int_nj_median+1-nj_median_pos)
+	+ sorted_quantity_vector[int_nj_median+1] * (nj_median_pos - int_nj_median);
+    } else if (nj_median_pos > -0.5 && sorted_quantity_vector.size() >= 1 && !do_fj2_calculation) {
+      // in the LHS of this "bin", just keep a constant value (we could have
+      // interpolated to zero, but this might misbehave in cases where all jets
+      // are active, because it would go to zero too fast)
+      nj_median_ratio = sorted_quantity_vector[0];
     } else {
       nj_median_ratio = 0.0;
     }
     res[i] = nj_median_ratio;
   }
-
-  // store the results
-  double error  = res[0] - res[1];
-  _rho        = res[0];
-  _mean_area  = total_area / total_njets;
-  _sigma      = error * sqrt(_mean_area);
-
-  // record that the computation has been performed  
-  _uptodate = true;
+  
+  median = res[0];
+  stand_dev_if_gaussian = res[0] - res[1];
 }
 
 
-// check that the underlying structure is still alive
+// check that the underlying structure is still alive;
 // throw an error otherwise
 void BackgroundEstimator::_check_csa_alive() const{
   if (! dynamic_cast<ClusterSequenceStructure*>(_csi())->has_associated_cluster_sequence())
@@ -279,8 +308,8 @@ void BackgroundEstimator::_check_csa_alive() const{
 }
 
 
-// check that the algorithm used for the clustering is adapted for
-// background estimation (i.e. either kt or C/A)
+// check that the algorithm used for the clustering is suitable for
+// background estimation (i.e. either kt or C/A).
 // Issue a warning otherwise
 void BackgroundEstimator::_check_jet_alg_good_for_median() const{
   const ClusterSequence * cs = dynamic_cast<ClusterSequenceStructure*>(_csi())->validated_cs();

@@ -217,7 +217,33 @@ public:
     _use_area_4vector = use_it;
     _uptodate = false;
   }  
+
+  /// The FastJet v2.X sigma calculation had a small spurious offset
+  /// in the limit of a small number of jets. This is fixed by default
+  /// in versions 3 upwards. The old behaviour can be obtained with a
+  /// call to this function.
+  void set_provide_fj2_sigma(bool provide_fj2_sigma = true) {
+    _provide_fj2_sigma = provide_fj2_sigma;
+  }
+
   //\}
+
+protected:
+
+  /// given a quantity in a vector (e.g. pt_over_area) and knowledge
+  /// about the number of empty jets, calculate the median and
+  /// stand_dev_if_gaussian (roughly from the 16th percentile)
+  ///
+  /// If do_fj2_calculation is set to true then this performs FastJet
+  /// 2.X estimation of the standard deviation, which has a spurious
+  /// offset in the limit of a small number of jets.
+  void _median_and_stddev(const std::vector<double> & quantity_vector, 
+			  double n_empty_jets, 
+			  double & median, 
+			  double & stand_dev_if_gaussian,
+			  bool do_fj2_calculation = false
+			  ) const;
+
 
 private:
 
@@ -254,6 +280,7 @@ private:
   mutable std::vector<PseudoJet> _included_jets;    ///< jets to be used
   mutable std::vector<PseudoJet> _selected_jets;    ///< jets used in practice
   bool _use_area_4vector;
+  bool _provide_fj2_sigma;
   
   // the actual results of the computation
   mutable double _rho;		        ///< background estimated density per unit area
