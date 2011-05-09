@@ -38,40 +38,99 @@
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 
+//----------------------------------------------------------------------
+/// @ingroup tools
+/// Base class that provides structure for rescaling the background
+/// density as a function of a jet's position (etc.)
+class BackgroundRescalingBase {
+public:
+  /// return the rescaling factor associated with this jet
+  virtual double rescaling_factor(const PseudoJet & jet) const = 0;
+};
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools
+/// A background rescaling that is a simple polynomial in y
+class BackgroundRescalingYPolynomial : public BackgroundRescalingBase {
+public:
+  /// construct a background rescaling polynomial of the form
+  /// a0 + a1*y + a2*y^2 + a3*y^3 + a4*y^4
+  BackgroundRescalingYPolynomial(double a0=1, 
+				 double a1=0, 
+				 double a2=0, 
+				 double a3=0, 
+				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
+
+  /// return the rescaling factor associated with this jet
+  virtual double rescaling_factor(const PseudoJet & jet) const;
+private:
+  double _a0, _a1, _a2, _a3, _a4;
+};
+
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools
+/// Base class that provides structure for calculation of the input to
+/// the median operation of BackgroundEstimator (e.g. it would
+/// calculate pt/area for each given jet)
 class BackgroundJetDensityBase {
 public:
-  virtual double operator()(const PseudoJet & jet) const = 0;
-  virtual std::string description() const {return "";}
-  virtual std::string short_name() const {return "";}
+  /// return the quantity associated with this jet that is to
+  /// be used for the median operation of BackgroundEstimator
+  virtual double density(const PseudoJet & jet) const = 0;
+  virtual std::string description() const {return "BackgroundJetDensityBase";}
+  virtual std::string short_name() const {return "BackgroundJetDensityBase";}
 };
 
 //----------------------------------------------------------------------
+/// @ingroup tools
+/// Class that implements pt/area_4vector.perp() for background estimation
 class BackgroundJetPtDensity : public BackgroundJetDensityBase {
 public:
-  virtual double operator()(const PseudoJet & jet) const {
+  virtual double density(const PseudoJet & jet) const {
     return jet.perp() / jet.area_4vector().perp();
   }
-  //virtual std::string description() const;
-  //virtual std::string short_name() const;
+  virtual std::string description() const {return "BackgroundJetPtDensity";}
+  virtual std::string short_name() const {return "BackgroundJetPtDensity";}
 };
 
 
 //----------------------------------------------------------------------
+/// @ingroup tools
+/// Class that implements (scalar pt sum of jet)/(scalar area of jet)
+/// for background estimation. Optionally it can return a quantity
+/// based on the sum of pt^n, e.g. for use in subtracting
+/// fragementation function moments.
 class BackgroundJetScalarPtDensity : public BackgroundJetDensityBase {
 public:
+  /// Default constructor provides background estimation with scalar pt sum
   BackgroundJetScalarPtDensity() : _pt_power(1) {}
-  BackgroundJetScalarPtDensity(double pt_power) : _pt_power(pt_power) {}
+  /// Constructor to provides background estimation based on 
+  /// \f$ sum_{i\in jet} p_{ti}^{n} \f$
+  BackgroundJetScalarPtDensity(double n) : _pt_power(n) {}
 
-  virtual double operator()(const PseudoJet & jet) const;
+  virtual double density(const PseudoJet & jet) const;
+
+  virtual std::string description() const {return "BackgroundScalarJetPtDensity";}
+  virtual std::string short_name() const {return "BackgroundScalarJetPtDensity";}
 
 private:
   double _pt_power;
 };
 
 //----------------------------------------------------------------------
+/// @ingroup tools
+/// Class that implements
+/// \f$  \frac{1}{A} \sum_{i \in jet} (\sqrt{p_{ti}^2+m^2} - p_{ti}) \f$
+/// for background estimation.
+///
+/// This is useful for correcting jet masses in cases where the event
+/// involves massive particles.
 class BackgroundJetPtMDensity : public BackgroundJetDensityBase {
 public:
-  virtual double operator()(const PseudoJet & jet) const {
+  virtual double density(const PseudoJet & jet) const {
     std::vector<PseudoJet> constituents = jet.constituents();
     double scalar_ptm = 0;
     for (unsigned i = 0; i < constituents.size(); i++) {
@@ -79,8 +138,9 @@ public:
     }
     return scalar_ptm / jet.area();
   }
-  //virtual std::string description() const;
-  //virtual std::string short_name() const;
+
+  virtual std::string description() const {return "BackgroundPtMDensity";}
+  virtual std::string short_name() const {return "BackgroundPtMDensity";}
 
 };
 
@@ -118,7 +178,7 @@ public:
 ///   ClusterSequenceArea class with explicit ghosts
 ///   (ActiveAreaExplicitGhosts). This is _recommended_!
 ///
-class BackgroundEstimator{
+class BackgroundEstimator {
 public:
   /// @name constructors and destructors
   //\{
@@ -186,7 +246,11 @@ public:
   /// Selector has that jet set as its reference.
   double rho(const PseudoJet jet) {
     set_reference(jet);
-    return rho();
+    double our_rho = rho();
+    if (_rescaling_class != 0) { 
+      our_rho *= _rescaling_class->rescaling_factor(jet);
+    }
+    return our_rho;
   }
 
   /// get sigma, the background fluctuations per unit area,
@@ -197,7 +261,11 @@ public:
   /// Selector has that jet set as its reference.
   double sigma(const PseudoJet &jet) {
     set_reference(jet);
-    return sigma();
+    double our_sigma = sigma();
+    if (_rescaling_class != 0) { 
+      our_sigma *= _rescaling_class->rescaling_factor(jet);
+    }
+    return our_sigma;
   }
 
   //\}
@@ -292,6 +360,21 @@ public:
     return _jet_density_class;
   }
 
+  /// Set a pointer to a class that calculates the rescaling factor as
+  /// a function of the jet (position). Note that the rescaling factor
+  /// is used both in the determination of the "global" rho (the pt/A
+  /// of each jet is divided by this factor) and when asking for a
+  /// local rho (the result is multiplied by this factor).
+  void set_rescaling_class(const BackgroundRescalingBase * rescaling_class) {
+    _rescaling_class = rescaling_class;
+    _uptodate = false;
+  }
+
+  /// return the pointer to the jet density class
+  const BackgroundRescalingBase *  rescaling_class() {
+    return _rescaling_class;
+  }
+
   //\}
 
 protected:
@@ -349,6 +432,7 @@ private:
   bool _provide_fj2_sigma;
 
   const BackgroundJetDensityBase * _jet_density_class;
+  const BackgroundRescalingBase  * _rescaling_class;
   
   // the actual results of the computation
   mutable double _rho;		        ///< background estimated density per unit area

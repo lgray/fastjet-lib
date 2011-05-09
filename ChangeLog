@@ -1,3 +1,13 @@
+2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> & Matteo
+
+	* tools/BackgroundEstimator.cc:
+	* tools/fastjet/tools/BackgroundEstimator.hh
+
+	  added BackgroundRescalingBase and BackgroundRescalingYPolynomial
+	  classes, and corresponding support within BackgroundEstimator
+	  (both in the background estimation part and the local rho part,
+	  so that overall normalisation should cancel).
+
 2011-05-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh:

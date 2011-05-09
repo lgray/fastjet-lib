@@ -58,7 +58,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-double BackgroundJetScalarPtDensity::operator()(const PseudoJet & jet) const {
+double BackgroundJetScalarPtDensity::density(const PseudoJet & jet) const {
   std::vector<PseudoJet> constituents = jet.constituents();
   double scalar_pt = 0;
   for (unsigned i = 0; i < constituents.size(); i++) {
@@ -68,6 +68,13 @@ double BackgroundJetScalarPtDensity::operator()(const PseudoJet & jet) const {
 }
 
 
+//----------------------------------------------------------------------
+double BackgroundRescalingYPolynomial::rescaling_factor(const PseudoJet & jet) const {
+  double y = jet.rap();
+  double y2 = y*y;
+  double rescaling = _a0 + _a1*y + _a2*y2 + _a3*y2*y + _a4*y2*y2;
+  return rescaling;
+}
 
 /// allow for warnings
 LimitedWarning BackgroundEstimator::_warnings;
@@ -185,6 +192,7 @@ void BackgroundEstimator::reset(){
   _empty_area = _mean_area = 0.0;
 
   _jet_density_class = 0; // null pointer
+  _rescaling_class = 0;   // null pointer
 
   _uptodate = false;
 }
@@ -211,11 +219,16 @@ void BackgroundEstimator::_compute() const {
     double this_area = (_use_area_4vector) ? current_jet.area_4vector().perp() : current_jet.area(); 
 
     if (this_area>0){
+      double median_input;
       if (_jet_density_class == 0) {
-	vector_for_median.push_back(current_jet.perp()/this_area);
+	median_input = current_jet.perp()/this_area;
       } else {
-	vector_for_median.push_back( (*_jet_density_class)(current_jet));
+	median_input = _jet_density_class->density(current_jet);
       }
+      if (_rescaling_class != 0) {
+	median_input /= _rescaling_class->rescaling_factor(current_jet);
+      }
+      vector_for_median.push_back(median_input);
       total_area  += this_area;
       _n_jets_used++;
     } else {
