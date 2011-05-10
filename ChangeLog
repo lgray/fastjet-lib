@@ -1,3 +1,9 @@
+2011-05-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	  added (perhaps temporary) illustration of a templated
+	  set_rescaling. 
+
 2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> & Matteo
 
 	* tools/BackgroundEstimator.cc:

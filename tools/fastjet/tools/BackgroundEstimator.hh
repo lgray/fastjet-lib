@@ -370,6 +370,17 @@ public:
     _uptodate = false;
   }
 
+  /// Set the class that calculates the rescaling factor as a function
+  /// of the jet (position). Usage as for set_rescaling_class, but it just
+  /// take a copy of the rescaling class, which must derive from BackgroundRescalingBase
+  ///
+  /// TEMPORARY GPS FOR ILLUSTRATION
+  template<class T> void set_rescaling(const T & rescaling_class) {
+    _rescaling_class = new T(rescaling_class);
+    _rescaling_class_sharedptr.reset(_rescaling_class);
+    _uptodate = false;
+  }
+
   /// return the pointer to the jet density class
   const BackgroundRescalingBase *  rescaling_class() {
     return _rescaling_class;
@@ -433,6 +444,7 @@ private:
 
   const BackgroundJetDensityBase * _jet_density_class;
   const BackgroundRescalingBase  * _rescaling_class;
+  SharedPtr<const BackgroundRescalingBase> _rescaling_class_sharedptr;
   
   // the actual results of the computation
   mutable double _rho;		        ///< background estimated density per unit area
@@ -451,6 +463,8 @@ private:
   static LimitedWarning _warnings_zero_area;
   static LimitedWarning _warnings_relocation;
 };
+
+
 
 FASTJET_END_NAMESPACE
 
