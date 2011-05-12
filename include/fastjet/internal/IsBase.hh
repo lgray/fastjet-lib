@@ -120,12 +120,23 @@ struct IsBaseAndDerived{
   };
 
   /// the boolean value being true if D is derived from B
-  static const bool value = ((sizeof(B)!=0) && (sizeof(D)!=0) && (sizeof(__inheritance_helper<B,D>::check_sig(Host(), 0)) == sizeof(__yes_type)));
+  static const bool value = ((sizeof(B)!=0) && 
+			     (sizeof(D)!=0) && 
+			     (sizeof(__inheritance_helper<B,D>::check_sig(Host(), 0)) == sizeof(__yes_type)));
 
 #if ((_MSC_FULL_VER != 0) && (_MSC_FULL_VER >= 140050000))
 #pragma warning(pop)
 #endif
 };
+
+
+/// a little helper that returns a pointer to d of type B* if D is
+/// derived from B and NULL otherwise
+template<class B, class D>
+B* cast_if_derived(D* d){
+  return IsBaseAndDerived<B,D>::value ? (B*)(d) : NULL;
+}
+
 
 FASTJET_END_NAMESPACE
 
