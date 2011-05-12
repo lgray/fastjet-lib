@@ -67,8 +67,14 @@ class PseudoJet {
   //----------------------------------------------------------------------
   /// @name Constructors and destructor
   //\{
-  /// default constructor leaves PseudoJet unusable
-  PseudoJet() {};
+  /// default constructor, which as of FJ3.0 provides an object for
+  /// which all operations are now valid and which has zero momentum
+  ///
+  // (cf. this is actually OK from a timing point of view and in some
+  // cases better than just having the default constructor for the
+  // internal shared pointer: see PJtiming.cc and the notes therein)
+  PseudoJet() : _px(0), _py(0), _pz(0), _E(0) {_finish_init(); _reset_indices();}
+
   /// construct a pseudojet from explicit components
   PseudoJet(const double px, const double py, const double pz, const double E);
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],

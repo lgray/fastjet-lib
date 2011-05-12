@@ -1,5 +1,10 @@
 2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJet.hh (class PseudoJet): 
+	  changed the default constructor so that it provides a
+	  sensibly-initialised PseudoJet (with zero momentum). No speed
+	  penalty and some significant speed improvement on some systems.
+
 	* testsuite/PJtiming.cc: *** ADDED ***
 	  small program for testing timing of default PseudoJet constructor
 
