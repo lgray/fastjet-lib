@@ -54,15 +54,15 @@ string Filter::description() const {
 }
 
 
-// return a vector of subjets, which are the ones that would be kept by the filtering
+// return a vector of subjets, which are the ones that would be kept
+// by the filtering
 PseudoJet Filter::operator()(const PseudoJet &jet) const {
-  ClusterSequence *internal_cs;
-
-  // start by getting the list of subjets (including a sanity check
-  // that all the jets in the argument vector share the same
-  // underlying ClusterSequence)
-  vector<PseudoJet> subjets; // NB: empty to begin with (see the comment for _set_filtered_elements_cafilt)
-  _set_filtered_elements(jet, subjets, internal_cs);
+  // start by getting the list of subjets (including a list of sanity
+  // checks)
+  // NB: subjets is empty to begin with (see the comment for
+  //     _set_filtered_elements_cafilt)
+  vector<PseudoJet> subjets; 
+  _set_filtered_elements(jet, subjets);
 
   // decide what to keep and what to reject
   // we first make a copy of the pointers then apply the selector
@@ -70,7 +70,8 @@ PseudoJet Filter::operator()(const PseudoJet &jet) const {
   for (unsigned int i=0;i<subjets.size(); i++)
     subjet_pointers.push_back(&(subjets[i]));
 
-  // Note that the following line is the one requiring that _seelector be declared as mutable
+  // Note that the following line is the one requiring that _selector
+  // be declared as mutable
   if (_selector.takes_reference()) _selector.set_reference(jet);
   _selector.nullify_non_selected(subjet_pointers);
 
@@ -84,22 +85,21 @@ PseudoJet Filter::operator()(const PseudoJet &jet) const {
   }
 
   // gather the info under the form of a PseudoJet
-  return _finalise(jet, kept, rejected, internal_cs);
+  return _finalise(jet, kept, rejected);
 }
 
 
 // sets filtered_elements to be all the subjets on which filtering will work
 void Filter::_set_filtered_elements(const PseudoJet & jet,
-				    vector<PseudoJet> & filtered_elements,
-				    ClusterSequence * &internal_cs) const {
+				    vector<PseudoJet> & filtered_elements) const {
   // sanity checks
   //-------------------------------------------------------------------
   // make sure that the jet has constituents
   if (! jet.has_constituents())
     throw Error("Filter can only be applied on jets having constituents");
   
-  // if rho!=0, make sure we have a CS that supports area and has explicit ghosts
-  // watch out: that will fail for a MergedJet!!x
+  // if rho!=0, make sure we have a CS that supports area and has
+  // explicit ghosts watch out: that will fail for a MergedJet!!x
   if (_rho != 0.0){
     if (!jet.has_area())   
       throw Error("Attempt to filter and subtract (non-zero rho) without area info for the original jet");
@@ -115,26 +115,27 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   }
 
 
-  // get the jet definition to be use and whether we can apply our simplified C/A+C/A filter
+  // get the jet definition to be use and whether we can apply our
+  // simplified C/A+C/A filter
   //
   // we apply C/A clustering iff
   //  - the request subjet_def is C/A
-  //  - the jet is either directly coming from C/A or if it is a superposition of C/A jets
+  //  - the jet is either directly coming from C/A or if it is a
+  //    superposition of C/A jets
   //  - the pieces agree with the recombination scheme of subjet_def
   //-------------------------------------------------------------------
-  bool simple_cafilt = (_subjet_def.jet_algorithm() == cambridge_algorithm) && (_recursively_check_ca(jet));
+  bool simple_cafilt = 
+    (_subjet_def.jet_algorithm() == cambridge_algorithm) &&
+    (_recursively_check_ca(jet));
  
   // extract the subjets
   //-------------------------------------------------------------------
   if (simple_cafilt){
     _set_filtered_elements_cafilt(jet, filtered_elements, _subjet_def.R());
-    internal_cs = NULL;
+  } else if (_rho != 0.0){
+    _set_filtered_elements_generic_subtracted(jet, filtered_elements);
   } else {
-    if (_rho != 0.0){
-      internal_cs = _set_filtered_elements_generic_subtracted(jet, filtered_elements);
-    } else {
-      internal_cs = _set_filtered_elements_generic_unsubtracted(jet, filtered_elements);
-    }
+   _set_filtered_elements_generic_unsubtracted(jet, filtered_elements);
   }
 
   // order the filtered elements in pt
@@ -144,7 +145,9 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 
 // gather the information about what is kept and rejected under the
 // form of a PseudoJet with a special ClusterSequenceInfo
-PseudoJet Filter::_finalise(const PseudoJet & jet, vector<PseudoJet> & kept, vector<PseudoJet> & rejected, ClusterSequence * &internal_cs) const {
+PseudoJet Filter::_finalise(const PseudoJet & jet, 
+			    vector<PseudoJet> & kept, 
+			    vector<PseudoJet> & rejected) const {
   PseudoJet filtered_jet(0.0,0.0,0.0,0.0);
 
   // create an appropriate structure and transfer the info to it
@@ -154,9 +157,6 @@ PseudoJet Filter::_finalise(const PseudoJet & jet, vector<PseudoJet> & kept, vec
   fi->_pieces = kept;   // in the base interface
   fi->_rejected = rejected;
 
-  if (internal_cs)
-    fi->_internal_cs.reset(internal_cs);
-
   // to sum the kept pieces, extract the recombiner used for the sub-clustering
   const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
   for (unsigned i = 0; i < kept.size(); i++)
@@ -165,7 +165,9 @@ PseudoJet Filter::_finalise(const PseudoJet & jet, vector<PseudoJet> & kept, vec
   // make sure the filtered jet has the same index (cluster and user)
   // (i.e. "looks like") the original jet
   // what about extra info? 
-  // TODO: do we want this: in principle, this could interfere with teh recombiner??
+  //
+  // TODO: do we want this: in principle, this could interfere with
+  //       the recombiner??
   filtered_jet.set_cluster_hist_index(jet.cluster_hist_index());
   filtered_jet.set_user_index(jet.user_index());
 
@@ -196,9 +198,12 @@ bool Filter::_recursively_check_ca(const PseudoJet & jet) const{
 // set the filtered elements in the simple case of C/A+C/A
 //
 // WATCH OUT: this could be recursively called, so filtered elements
-// of 'jet' are APPENDED to 'filtered_elements'
-void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet, vector<PseudoJet> & filtered_elements, double Rfilt) const{
-  // we know that the jet is either a C/A jet or a superposition of such pieces
+//            of 'jet' are APPENDED to 'filtered_elements'
+void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet, 
+					   vector<PseudoJet> & filtered_elements, 
+					   double Rfilt) const{
+  // we know that the jet is either a C/A jet or a superposition of
+  // such pieces
   if (jet.has_associated_cluster_sequence()){
     // just extract the exclusive subjets of 'jet'
     const ClusterSequence *cs = jet.associated_cluster_sequence(); 
@@ -227,26 +232,29 @@ void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet, vector<PseudoJ
 
   // just recurse into the pieces
   const vector<PseudoJet> & pieces = jet.pieces();
-  for (vector<PseudoJet>::const_iterator it = pieces.begin(); it!=pieces.end(); it++)
+  for (vector<PseudoJet>::const_iterator it = pieces.begin(); 
+       it!=pieces.end(); it++)
     _set_filtered_elements_cafilt(*it, filtered_elements, Rfilt);
 }
 
 
-// set the filtered elements in the generic re-clustering case (wo subtraction)
-ClusterSequence * Filter::_set_filtered_elements_generic_unsubtracted(const PseudoJet & jet, 
-								      vector<PseudoJet> & filtered_elements) const{
+// set the filtered elements in the generic re-clustering case (wo
+// subtraction)
+void Filter::_set_filtered_elements_generic_unsubtracted(const PseudoJet & jet, 
+							 vector<PseudoJet> & filtered_elements) const{
   // create a new, internal, ClusterSequence from the jet constituents
   // get the subjets directly from there
   //---------------------------------------------------------------
   ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
   filtered_elements = cs->inclusive_jets();
-
-  return cs;
+  // allow the cs to be deleted when it's no longer used
+  cs->delete_self_when_unused();
 }
 
-// set the filtered elements in the generic re-clustering case (with subtraction)
-ClusterSequence * Filter::_set_filtered_elements_generic_subtracted(const PseudoJet & jet, 
-								    vector<PseudoJet> & filtered_elements) const{
+// set the filtered elements in the generic re-clustering case (with
+// subtraction)
+void Filter::_set_filtered_elements_generic_subtracted(const PseudoJet & jet, 
+						       vector<PseudoJet> & filtered_elements) const{
   // create a new, internal, ClusterSequence from jet constituents
   // 
   // the difference is that we need to separate the ghosts to get a
@@ -268,13 +276,15 @@ ClusterSequence * Filter::_set_filtered_elements_generic_subtracted(const Pseudo
   // no effect!)
   double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
   ClusterSequenceActiveAreaExplicitGhosts * csa
-    = new ClusterSequenceActiveAreaExplicitGhosts(regular_constituents, _subjet_def, 
+    = new ClusterSequenceActiveAreaExplicitGhosts(regular_constituents, 
+						  _subjet_def, 
 						  ghosts, ghost_area);
       
   // get the subjets
   filtered_elements = csa->subtracted_jets(_rho);
 
-  return csa;
+  // allow the cs to be deleted when it's no longer used
+  csa->delete_self_when_unused();
 }
 
 

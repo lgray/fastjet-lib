@@ -180,15 +180,13 @@ protected:
   /// [NB: this routine is work in progress as part of a transition to a Filter
   ///      that also works on jet collections]
   void _set_filtered_elements(const PseudoJet & jet,
-			      std::vector<PseudoJet> & filtered_elements,
-			      ClusterSequence * &internal_cs) const;
+			      std::vector<PseudoJet> & filtered_elements) const;
   
   /// gather the information about what is kept and rejected under the
   /// form of a PseudoJet with a special ClusterSequenceInfo
   PseudoJet _finalise(const PseudoJet & jet, 
 		      std::vector<PseudoJet> & kept, 
-		      std::vector<PseudoJet> & rejected, 
-		      ClusterSequence * &internal_cs) const;
+		      std::vector<PseudoJet> & rejected) const;
 
   /// check if the jet is obtained from C/A or a superposition of C/A pieces
   bool _recursively_check_ca(const PseudoJet & jet) const;
@@ -200,12 +198,12 @@ protected:
     double Rfilt) const;
 
   /// set the filtered elements in the generic re-clustering case (wo subtraction)
-  ClusterSequence* _set_filtered_elements_generic_unsubtracted(
+  void _set_filtered_elements_generic_unsubtracted(
     const PseudoJet & jet, 
     std::vector<PseudoJet> & filtered_elements) const;
 
   /// set the filtered elements in the generic re-clustering case (with subtraction)
-  ClusterSequence* _set_filtered_elements_generic_subtracted(
+  void _set_filtered_elements_generic_subtracted(
     const PseudoJet & jet, 
     std::vector<PseudoJet> & filtered_elements) const;
 
@@ -250,8 +248,6 @@ public:
 protected:
   PseudoJet _original_jet;
   std::vector<PseudoJet> _rejected;
-
-  SharedPtr<ClusterSequence> _internal_cs;  //< for a generic filter (we use a shared-ptr to avoid worrying about memory management)
 };
 
 

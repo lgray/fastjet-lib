@@ -1,3 +1,11 @@
+2011-05-12  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Filter.cc:
+	  got rid of the internal_cs in FilteredJetStructure and at
+	  various places in the Filter by using the new
+	  CS::delete_self_when_unused().
+
 2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/Error.cc: 
