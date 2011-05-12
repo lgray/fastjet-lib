@@ -4,15 +4,31 @@
 /// on timing for creation of vectors of PseudoJets.
 /// 
 /// Results are for g++ 4.4.5 and were obtained on 12 May 2011, around
-/// revision 2093.
+/// revision 2093. Runs are performed with the following arguments
+///
+///   ./PJtiming -n 1e3 -sz 1e4 [-array]
+///
+/// Results on my ubuntu virtual machine (host: OS X 10.6)
 ///
 /// - FJ3.0 (with two shared pointers, no default initialisation of rest):
-///   - C++ vector: 140ns / PJ (for vector of size 10^4; 110ns for smaller vector)
+///   - C++ vector: 110ns / PJ (for vector of size 10^3; 140ns for bigger vector)
 ///   - C   array:    9ns / PJ
 ///
+/// - FJ3.0 (with two shared pointers, and default initialisation of rest):
+///   - C++ vector:  15ns / PJ (for vector of size 10^3; 45ns for bigger vector)
+///   - C   array:   15ns / PJ
+///
 /// - FJ2.4
-///   - C++ vector:  27ns / PJ (for vector of size 10^4; much less for smaller vector)
+///   - C++ vector:   0ns / PJ (for vector of size 10^3; near 27ns for smaller vector)
 ///   - C   array:    0ns / PJ
+///
+/// Note that these timings seem hugely system dependent. On Gregory's
+/// home system the 100ns penalty (top case) is not there (a question
+/// of cache?). On Gavin's laptop it's more like 200ns.
+///
+/// All three systems tested concur that with the full initialisation, timings
+/// are down to O(10-20ns) (5ns for Gregory).
+
 #include "fastjet/PseudoJet.hh"
 #include <iostream>
 #include "CmdLine.hh"
