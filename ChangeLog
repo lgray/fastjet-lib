@@ -1,3 +1,10 @@
+2011-05-12  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/SharedPtr.hh:
+	  added the option to force the count to a user-specified value
+	  (USE AT YOUR OWN RISKS). Note that this is certainly not in the
+	  standard shared_ptr specification.
+
 2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh (class PseudoJet): 

@@ -99,6 +99,8 @@ public:
  * implementation only needs one. We did not implement then since we
  * want to limit as much as possible memory and time consumption, and
  * can easily avoid (at least for our needs so far) the casts.
+ *
+ * We also add the possibility to force an update of the count.
  * 
  * The class has been tested against the existing boost (v1.42)
  * implementation (for the parts that we have implemented).
@@ -250,6 +252,13 @@ public:
     _ptr = share_container;
   }
 
+  /// force the count to be set to a specified value
+  ///   \param count   the value that we ned to reset to
+  void set_count(const long & count){
+    if (_ptr==NULL) return;
+    _ptr.set_count(count);
+  }
+
   /**
    * \if internal_doc
    * \class __SharedCountingPtr
@@ -292,6 +301,12 @@ public:
     /// prefix decrementation
     inline long operator--(){return --_count;}
 
+    /// force the count to be set to a specified value
+    ///   \param count   the value that we ned to reset to
+    void set_count(const long & count){
+      _count = count;
+    }
+
   private:
     T *_ptr;              ///< the pointer we're counting the references to
     long _count;  ///< the number of references
@@ -305,6 +320,14 @@ private:
 
   /// decrease the pointer count and support deletion
   /// Warning: we don't test that the pointer is allocated
+  ///          This can be dangerous if we have explicitly reset the
+  ///          count.  Generally speaking, if the count goes negative
+  ///          after _ptr has been effectively deleted, this is going
+  ///          to lead to a segmentation fault. But, if in the course
+  ///          of the deletion of _ptr, the deletion of its pointer
+  ///          (_ptr::_ptr, i.e. the real data we're storing) makes
+  ///          the counts to become negative, this is going to pass
+  ///          smoothly.
   void _decrease_count(){
     // decrease the count
     (*_ptr)--;
