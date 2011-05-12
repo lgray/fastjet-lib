@@ -1,3 +1,13 @@
+2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceStructure.cc (ClusterSequenceStructure):
+	* include/fastjet/ClusterSequenceStructure.hh (PseudoJetStructureBase):
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc:
+	  added CS::delete_self_when_unused() allowing FastJet to look
+	  after deletion of a CS when there are no longer any jets or
+	  other objects associated with it. (+small fix to SharedPtr)
+
 2011-05-12  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/SharedPtr.hh:

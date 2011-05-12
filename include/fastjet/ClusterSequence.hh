@@ -328,10 +328,17 @@ class ClusterSequence {
   /// return a reference to the jet definition
   const JetDefinition & jet_def() const {return _jet_def;}
 
+  /// by calling this routine you tell the ClusterSequence to delete
+  /// itself when all the Pseudojets associated with it have gone out
+  /// of scope. 
+  void delete_self_when_unused();
+
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
   /// Cambridge algorithm). [May become virtual at some point]
   double jet_scale_for_algorithm(const PseudoJet & jet) const;
+
+  ///
 
   //----- next follow functions designed specifically for plugins, which
   //      may only be called when plugin_activated() returns true
@@ -582,6 +589,9 @@ protected:
   /// the beam, 
   void _do_iB_recombination_step(const int & jet_i, const double & diB);
 
+  /// call that does any required bookkeeping after the clustering is done
+  void _operations_after_clustering();
+  
 
   /// This contains the physical PseudoJets; for each PseudoJet one
   /// can find the corresponding position in the _history by looking
@@ -613,6 +623,8 @@ protected:
   JetAlgorithm  _jet_algorithm;
 
   SharedPtr<PseudoJetStructureBase> _structure_shared_ptr; //< will actually be of type ClusterSequenceStructure
+  int _structure_use_count_after_construction; //< info of use when CS handles its own memory
+  bool _deletes_self_when_unused;
 
  private:
 
@@ -667,6 +679,8 @@ protected:
 
   /// for making sure the user knows what it is they're running...
   void _print_banner();
+
+
   /// will be set by default to be true for the first run
   static bool _first_time;
 

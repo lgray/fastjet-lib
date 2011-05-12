@@ -72,7 +72,7 @@ public:
   };
 
   /// default (virtual) dtor
-  virtual ~ClusterSequenceStructure(){}
+  virtual ~ClusterSequenceStructure();
 
   /// description
   virtual std::string description() const{ return "PseudoJet with an associated ClusterSequence"; }

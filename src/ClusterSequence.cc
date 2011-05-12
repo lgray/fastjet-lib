@@ -63,6 +63,17 @@ ClusterSequence::~ClusterSequence () {
     // sign of major internal problems)
     assert(csi != NULL);
     csi->set_associated_cs(NULL);
+
+    // if the user had given the CS responsibility to delete itself,
+    // but then deletes the CS themselves, the following lines of
+    // code will ensure that the structure_shared_ptr will have
+    // a proper object count (so that jets associated with the CS will
+    // throw the correct error if the user tries to access their
+    // constituents).
+    if (_deletes_self_when_unused) {
+      _structure_shared_ptr.set_count(_structure_shared_ptr.use_count() 
+				        + _structure_use_count_after_construction);
+    }
   }
 }
 
@@ -90,7 +101,7 @@ void ClusterSequence::_initialise_and_run (
   _fill_initial_history();
 
   // don't run anything if the event is empty
-  if (n_particles() == 0) return;
+  if (n_particles() == 0) {_operations_after_clustering(); return;}
 
   // ----- deal with special cases: plugins & e+e- ------
   if (_jet_algorithm == plugin_algorithm) {
@@ -99,6 +110,7 @@ void ClusterSequence::_initialise_and_run (
     // let the plugin do its work here
     _jet_def.plugin()->run_clustering( (*this) );
     _plugin_activated = false;
+    _operations_after_clustering();
     return;
   } else if (_jet_algorithm == ee_kt_algorithm ||
 	     _jet_algorithm == ee_genkt_algorithm) {
@@ -129,6 +141,7 @@ void ClusterSequence::_initialise_and_run (
       _invR2 = 1.0/_R2;
     }
     _simple_N2_cluster_EEBriefJet();
+    _operations_after_clustering();
     return;
   } else if (_jet_algorithm == undefined_jet_algorithm) {
     throw Error("A ClusterSequence cannot be created with an uninitialised JetDefinition");
@@ -216,6 +229,8 @@ void ClusterSequence::_initialise_and_run (
     err << "Unrecognised value for strategy: "<<_strategy;
     throw Error(err.str());
   }
+
+  _operations_after_clustering();
 }
 
 
@@ -320,6 +335,7 @@ void ClusterSequence::_fill_initial_history () {
     _Qtot += _jets[i].E();
   }
   _initial_n = _jets.size();
+  _deletes_self_when_unused = false;
 }
 
 
@@ -1195,6 +1211,28 @@ void ClusterSequence::_do_iB_recombination_step(
 
 // make sure the static member _changed_strategy_warning is defined. 
 LimitedWarning ClusterSequence::_changed_strategy_warning;
+
+
+//----------------------------------------------------------------------
+void ClusterSequence::_operations_after_clustering() {
+  // record the use count of the structure shared point to help
+  // in case we want to ask the CS to handle its own memory
+  _structure_use_count_after_construction = _structure_shared_ptr.use_count();
+}
+
+//----------------------------------------------------------------------
+/// by calling this routine you tell the ClusterSequence to delete
+/// itself when all the Pseudojets associated with it have gone out
+/// of scope. 
+void ClusterSequence::delete_self_when_unused() {
+  // the trick we use to handle this is to modify the use count; 
+  // that way the structure will be deleted when there are no external
+  // objects left associated the CS and the structure's destructor will then
+  // look after deleting the cluster sequence
+  _structure_shared_ptr.set_count(_structure_shared_ptr.use_count() 
+				  - _structure_use_count_after_construction);
+  _deletes_self_when_unused = true;
+}
 
 
 FASTJET_END_NAMESPACE

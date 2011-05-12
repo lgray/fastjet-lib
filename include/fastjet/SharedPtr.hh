@@ -256,7 +256,7 @@ public:
   ///   \param count   the value that we ned to reset to
   void set_count(const long & count){
     if (_ptr==NULL) return;
-    _ptr.set_count(count);
+    _ptr->set_count(count);
   }
 
   /**
