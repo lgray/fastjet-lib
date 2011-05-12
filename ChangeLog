@@ -1,3 +1,11 @@
+2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* testsuite/run_tests.cc: 
+	* testsuite/TestBase.hh: 
+	* testsuite/TestPseudoJet.hh:  *** ADDED ***
+	  added some more infrastructure for running tests and beefed-up
+	  the PtYPhiM test.
+
 2011-05-10  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh: 
