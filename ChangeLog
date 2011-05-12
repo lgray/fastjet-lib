@@ -1,5 +1,8 @@
 2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* src/Error.cc: 
+	  turned off backtrace by default
+
 	* src/ClusterSequenceStructure.cc (ClusterSequenceStructure):
 	* include/fastjet/ClusterSequenceStructure.hh (PseudoJetStructureBase):
 	* include/fastjet/ClusterSequence.hh:

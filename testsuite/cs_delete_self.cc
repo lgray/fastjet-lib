@@ -15,8 +15,9 @@ PseudoJet hardest_jet(const ClusterSequence & cs){
 /// do the clustering and retrieve the hardest of the jets
 PseudoJet hardest_jet(const vector<PseudoJet> & particles){
   ClusterSequence * cs = new ClusterSequence(particles, jet_def);
+  PseudoJet jet = hardest_jet(*cs);
   cs->delete_self_when_unused();
-  return hardest_jet(*cs);
+  return jet;
 }
 
 /// print jet info
@@ -55,6 +56,7 @@ int main (int argc, char ** argv) {
   // 2. owned CS, no PJ left using it
   PseudoJet * j3 = new PseudoJet(hardest_jet(particles));
   show_jet(*j3);
+  cout << "Just about to delete j3 " << endl;
   delete j3;
   cout << "Test 3 passed" << endl;
 

@@ -77,6 +77,25 @@ ClusterSequence::~ClusterSequence () {
   }
 }
 
+//-----------
+void ClusterSequence::signal_imminent_self_deletion() const {
+  // normally if the destructor is called when
+  // _deletes_self_when_unused is true, it assumes that it's been
+  // called by the user (and it therefore resets the shared pointer
+  // count to the true count).
+  //
+  // for self deletion (called from the destructor of the CSstructure,
+  // the shared_ptr to which has just had its pointer -> 0) you do
+  // _not_ want to reset the pointer count (otherwise you will end up
+  // with a double delete on the shared pointer once you start
+  // deleting the internal structure of the CS).
+  //
+  // the following modification ensures that the count reset will not
+  // take place in the destructor
+  assert(_deletes_self_when_unused);
+  _deletes_self_when_unused = false;
+}
+
 //----------------------------------------------------------------------
 void ClusterSequence::_initialise_and_run (
 				  const double & R,
@@ -1229,8 +1248,15 @@ void ClusterSequence::delete_self_when_unused() {
   // that way the structure will be deleted when there are no external
   // objects left associated the CS and the structure's destructor will then
   // look after deleting the cluster sequence
-  _structure_shared_ptr.set_count(_structure_shared_ptr.use_count() 
-				  - _structure_use_count_after_construction);
+  
+  // first make sure that there is at least one other object
+  // associated with the CS
+  int new_count = _structure_shared_ptr.use_count() - _structure_use_count_after_construction;
+  if (new_count <= 0) {
+    throw Error("delete_self_when_unused may only be called if at least one object outside the CS (e.g. a jet) is already associated with the CS");
+  }
+
+  _structure_shared_ptr.set_count(new_count);
   _deletes_self_when_unused = true;
 }
 

@@ -331,7 +331,14 @@ class ClusterSequence {
   /// by calling this routine you tell the ClusterSequence to delete
   /// itself when all the Pseudojets associated with it have gone out
   /// of scope. 
+  ///
+  /// At the time you call this, there must be at least one jet or
+  /// other object outside the CS that is associated with the CS
+  /// (e.g. the result of inclusive_jets()).
   void delete_self_when_unused();
+
+  /// tell the ClusterSequence it's about to be self deleted (internal use only)
+  void signal_imminent_self_deletion() const;
 
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
@@ -624,7 +631,7 @@ protected:
 
   SharedPtr<PseudoJetStructureBase> _structure_shared_ptr; //< will actually be of type ClusterSequenceStructure
   int _structure_use_count_after_construction; //< info of use when CS handles its own memory
-  bool _deletes_self_when_unused;
+  mutable bool _deletes_self_when_unused;
 
  private:
 

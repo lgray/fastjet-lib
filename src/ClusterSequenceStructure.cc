@@ -49,6 +49,7 @@ ClusterSequenceStructure::~ClusterSequenceStructure(){
     // pointer count goes to zero [on destruction of the last of the
     // jets in the CS and the destruction of the CS's copy of the
     // shared pointer)
+    _associated_cs->signal_imminent_self_deletion();
     delete _associated_cs;
   }
 }

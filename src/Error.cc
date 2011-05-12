@@ -43,7 +43,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 bool Error::_print_errors = true;
-bool Error::_print_backtrace = true;
+bool Error::_print_backtrace = false;
 
 Error::Error(const std::string & message) {
   _message = message; 
