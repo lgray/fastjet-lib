@@ -785,6 +785,21 @@ sequence with the following enquiry functions:
   const ClusterSequence* associated_cluster_sequence() const; 
 \end{lstlisting}
 
+There are contexts in which, within some function, you might create a
+\ClusterSequence, obtain a jet from it and then return that jet from
+the function. For the user to be able to access the information about
+the jet's internal structure, the \ClusterSequence must not have gone
+out of scope and/or been deleted.
+%
+To aid with potential memory management issues in this case, as long
+as you have created the \ClusterSequence via a \ttt{new} operation,
+then you can tell the \ClusterSequence that it should be automatically
+deleted after the last external object (jet, etc.)  associated with it
+has disappeared. The call to do this is
+\ttt{ClusterSequence::delete\_self\_when\_unused()}. There must be at
+least one external object already associated with the \ClusterSequence
+at the time of the call.
+
 %......................................................................
 \subsection{Composite jets}
 
