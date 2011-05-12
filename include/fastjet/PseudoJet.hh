@@ -39,7 +39,6 @@
 #include<iostream>
 #include "fastjet/internal/numconsts.hh"
 #include "fastjet/internal/IsBase.hh"
-#include "fastjet/internal/DerivedPseudoJetHelper.hh"
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJetStructureBase.hh"
@@ -201,8 +200,11 @@ class PseudoJet {
   
   /// reset the PseudoJet to be equal to psjet (including its
   /// indices); NB if the argument is derived from a PseudoJet then
-  /// the "reset" used will be the templated version (which does not
-  /// know about indices...)
+  /// the "reset" used will be the templated version
+  ///
+  /// Note: this is included on top of the templated version because
+  /// PseudoJet is not "derived" from PseudoJet, so the templated
+  /// reset would not handle this case properly.
   inline void reset(const PseudoJet & psjet) {
     (*this) = psjet;
   }
@@ -211,8 +213,21 @@ class PseudoJet {
   /// (accessible via indexing, [0]==px,...[3]==E) and put the user
   /// and history indices back to their default values.
   template <class L> inline void reset(const L & some_four_vector) {
-    reset(some_four_vector[0], some_four_vector[1],
-          some_four_vector[2], some_four_vector[3]);
+    // check if some_four_vector can be cast to a PseudoJet
+    //
+    // Note that a regular dynamic_cast would not work here because
+    // there is no guarantee that L is polymorphic. We use a more
+    // complex construct here that works also in such a case. As for
+    // dynamic_cast, NULL is returned if L is not derived from
+    // PseudoJet
+    const PseudoJet * pj = cast_if_derived<const PseudoJet>(&some_four_vector);
+
+    if (pj){
+      (*this) = *pj;
+    } else {
+      reset(some_four_vector[0], some_four_vector[1],
+	    some_four_vector[2], some_four_vector[3]);
+    }
   }
 
   /// reset the 4-momentum according to the supplied components 
@@ -743,17 +758,7 @@ private:
 // NB: do not know if it really needs to be inline, but when it wasn't
 //     linking failed with g++ (who knows what was wrong...)
 template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
-  // now check whether L is simply a class that implements
-  // some_fuor_vector[0--3] or actually is derived from PseudoJet and
-  // has extra information
-  DerivedPseudoJetHelper<L, IsBaseAndDerived<PseudoJet,L>::value> dpj_helper(some_four_vector);
-
-  if (dpj_helper() != NULL){
-    const PseudoJet *pj = dpj_helper();
-    reset(*pj);
-  } else {
-    reset(some_four_vector);
-  }
+  reset(some_four_vector);
 }
 
 

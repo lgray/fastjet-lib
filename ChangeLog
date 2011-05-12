@@ -1,3 +1,23 @@
+2011-05-12  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/internal/Makefile.am (fastjetincludeinternal_HEADERS):
+	* include/fastjet/internal/DerivedPseudoJetHelper.hh: *** REMOVED ***
+	  no longer needed
+
+	* include/fastjet/PseudoJet.hh:
+	  instead of having the template ctor decide whether the object is
+	  derived from PseudoJet, do that in reset (that way, reset<L> also
+	  handles properly the case where L derives from PseudoJet).
+
+	  We also switched to the use of cast_if_derived which avoid the
+	  need for the DerivedPseudoJetHelper class
+
+	* include/fastjet/internal/IsBase.hh:
+	  added a "cast_if_derived<B,D>" that, from a pointer of type D,
+	  converts it into a pointer of type B if D is derived from B and
+	  returns NULL otherwise (as dynamic_cast except that it works for
+	  non-polymorphic types)
+
 2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* testsuite/run_tests.cc: 
