@@ -1,3 +1,14 @@
+2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* testsuite/TestBase.hh:
+	* testsuite/TestPseudoJet.hh:
+	* testsuite/run_tests.cc:
+	  a bunch more tests, including one that found the _user_info not
+	  being reset by reset_indices.
+
+	* include/fastjet/PseudoJet.hh (reset_indices):
+	  ensured that _user_info also gets reset
+
 2011-05-12  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* include/fastjet/internal/Makefile.am (fastjetincludeinternal_HEADERS):

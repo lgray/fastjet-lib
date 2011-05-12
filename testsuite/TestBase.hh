@@ -16,9 +16,9 @@ using namespace fastjet;
 /// to provide, and also including some helper functions
 class TestBase {
 public:
-  TestBase() : _pass_test(true) {}
+  TestBase() : _pass_test(true), _quiet_OK(false) {}
 
-  virtual std::string description() const = 0;
+  virtual std::string description() const {return short_name();}
   virtual std::string short_name()  const = 0;
   virtual bool run_test() = 0;
 
@@ -33,23 +33,100 @@ public:
 
   /// verifies two things are equal within tolerance; if not it
   /// registers failure in the _pass_test
-  void verify_equal(double a, double b, const string & point, double tol = -1.0) {
+  void verify_equal(double a, double b, const string & testname, double tol = -1.0) {
     if (!equal_within_tolerance(a,b,tol)) {
       _pass_test = false;
       std::ostringstream ostr;
-      ostr << point << ": " << a << " != " << b << " (within tol = " << tol << ")";
-      _failure_points.push_back(ostr.str());
+      ostr << testname << ": " << a << " != " << b << " (within tol = " << tol << ")";
+      _failure_testnames.push_back(ostr.str());
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
     }
   }
 
+  /// verifies equality of two integers and registers failure if appropriate
+  void verify_equal(int a, int b, const string & testname) {
+    if (a != b) {
+      _pass_test = false;
+      std::ostringstream ostr;
+      ostr << testname << ": " << a << " != " << b;
+      _failure_testnames.push_back(ostr.str());
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
+    }
+  }
+
+  /// verifies equality of two integers and registers failure if appropriate
+  void verify_equal(const void * a, const void * b, const string & testname) {
+    if (a != b) {
+      _pass_test = false;
+      std::ostringstream ostr;
+      ostr << testname << ": " << a << " != " << b;
+      _failure_testnames.push_back(ostr.str());
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
+    }
+  }
+
+  /// verifies equality of two integers and registers failure if appropriate
+  void verify_different(const void * a, const void * b, const string & testname) {
+    if (a == b) {
+      _pass_test = false;
+      std::ostringstream ostr;
+      ostr << testname << ": " << a << " == " << b;
+      _failure_testnames.push_back(ostr.str());
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
+    }
+  }
+
+
+  /// verifies two things are equal within tolerance; if not it
+  /// registers failure in the _pass_test
+  void verify_equal(const PseudoJet & a, const PseudoJet b, 
+		    const string & testname, double tol = -1.0) {
+
+    // don't record all the individual tests below unless they fail
+    _quiet_OK = true;
+
+    verify_equal(a.px(), b.px(), testname+" (x)", tol);
+    verify_equal(a.py(), b.py(), testname+" (y)", tol);
+    verify_equal(a.pz(), b.pz(), testname+" (z)", tol);
+    verify_equal(a.E (), b.E (), testname+" (E)", tol);
+
+    verify_equal(a.perp(), b.perp(),  testname+"(pt )", tol);
+    verify_equal(a.rap() , b.rap() ,  testname+"(rap)", tol);
+    verify_equal(a.eta() , b.eta() ,  testname+"(eta)", tol);
+    verify_equal(a.phi() , b.phi() ,  testname+"(phi)", tol);
+    verify_equal(a.m2()  , b.m2()  ,  testname+"(m2 )", tol);
+
+    verify_equal(a.user_index(), b.user_index(), testname+"(user index)");
+    verify_equal(a.cluster_hist_index(), b.cluster_hist_index(), testname+"(cluster hist index)");
+    verify_equal(a.user_info_ptr(), b.user_info_ptr(), testname+"(user info ptr)");
+    verify_equal(a.structure_ptr(), b.structure_ptr(), testname+"(structure ptr)");
+
+    _quiet_OK = false;
+  }
+
+
   /// print a list of all the failures
   void print_failures(std::ostream & ostr = std::cout, unsigned max_print = 5) {
-    for (unsigned i=0; i < min(_failure_points.size(), max_print); i++) {
-      ostr << "           " << _failure_points[i] << endl;
+    for (unsigned i=0; i < min(_failure_testnames.size(), max_print); i++) {
+      ostr << "           " << _failure_testnames[i] << endl;
     }
-    if (_failure_points.size() > max_print) {
-      ostr << "           ... and " << _failure_points.size() - max_print 
+    if (_failure_testnames.size() > max_print) {
+      ostr << "           ... and " << _failure_testnames.size() - max_print 
 	   << " more failures ... " << endl;
+    }
+  }
+
+  void print_OK(std::ostream & ostr = std::cout, unsigned max_print = 4000000000U) {
+    for (unsigned i=0; i < min(_OK_testnames.size(), max_print); i++) {
+      ostr << "           " << _OK_testnames[i] << endl;
+    }
+    if (_OK_testnames.size() > max_print) {
+      ostr << "           ... and " << _OK_testnames.size() - max_print 
+	   << " more OKs ... " << endl;
     }
   }
 
@@ -59,13 +136,29 @@ public:
   }
 
 
-protected:
-  BasicRandom<double> random;
   /// return a random number in the range xmin to xmax
   double uniform_random(double xmin, double xmax) {return xmin + (xmax-xmin)*random();}
+
+  /// return a sensible random PseudoJet
+  PseudoJet random_PtYPhiM(double m = -1.0) {
+    
+    // range of pt values chosen affects choice for tolerance below
+    double pt = uniform_random(1.0, 10.0);
+    double rap = uniform_random(-5.0, 5.0);
+    double phi = uniform_random(0.0, twopi);
+
+    if (m < 0) m = uniform_random(40.0,10.0);
+    return PtYPhiM(pt, rap, phi, m);
+  }
+
+
+protected:
+  BasicRandom<double> random;
   
   bool _pass_test;
-  std::vector<std::string> _failure_points;
+  std::vector<std::string> _failure_testnames;
+  std::vector<std::string> _OK_testnames;
+  bool _quiet_OK;
 };
 
 

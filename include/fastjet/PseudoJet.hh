@@ -767,6 +767,7 @@ inline void PseudoJet::_reset_indices() {
   set_cluster_hist_index(-1);
   set_user_index(-1);
   _structure.reset();
+  _user_info.reset();
 }
 
 //----------------------------------------------------------------------
