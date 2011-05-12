@@ -1,5 +1,8 @@
 2011-05-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* testsuite/PJtiming.cc: *** ADDED ***
+	  small program for testing timing of default PseudoJet constructor
+
 	* testsuite/TestBase.hh:
 	* testsuite/TestPseudoJet.hh:
 	* testsuite/run_tests.cc:
