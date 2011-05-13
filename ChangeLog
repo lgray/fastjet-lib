@@ -1,6 +1,11 @@
 2011-05-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	* tools/BackgroundEstimator.cc: 
+	  added set_jets, set_cluster_sequence, set_selector calls and
+	  allowed for constructors in which the jets/CS or selector are unset.
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
 	  a few games with the range of set_rescaling_class(...) calls
 
 	* src/ClusterSequence.cc:

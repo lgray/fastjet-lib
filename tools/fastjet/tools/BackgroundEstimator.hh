@@ -134,7 +134,7 @@ public:
     std::vector<PseudoJet> constituents = jet.constituents();
     double scalar_ptm = 0;
     for (unsigned i = 0; i < constituents.size(); i++) {
-      scalar_ptm += sqrt(constituents[i].mperp2()) - constituents[i].perp();
+      scalar_ptm += sqrt(constituents[i].mperp()) - constituents[i].perp();
     }
     return scalar_ptm / jet.area();
   }
@@ -217,6 +217,22 @@ public:
   ///  - As for the above ctor, the jet alg must be adequate
   BackgroundEstimator(const std::vector<PseudoJet> &jets, const Selector &rho_range);
   
+  /// Constructor that just sets the rho range. The CSA or jets
+  /// actually used for estimating the background must be passed
+  /// later via set_cluster_sequence(...) or set_jets(...)
+  ///
+  /// \param rho_range   the range over which jets will be considered
+  ///
+  BackgroundEstimator(const Selector &rho_range) : _rho_range(rho_range) {
+    reset();
+  }
+
+  /// default ctor. In order to use the BG estimator you then need to
+  /// call set_selector(...) and also set_cluster_sequence(...) or
+  /// set_jets(...)
+  BackgroundEstimator()  {reset();}
+  
+
   /// default dtor
   ~BackgroundEstimator();
 
@@ -306,6 +322,36 @@ public:
   //\{
   //----------------------------------------------------------------
 
+  /// set the cluster sequence (with area support) to be used by
+  /// future calls to rho() etc. 
+  ///
+  /// \param csa  the cluster sequence area
+  ///
+  /// Pre-conditions: 
+  ///  - one should be able to estimate the "empty area" (i.e. the area
+  ///    not occupied by jets). This is feasible if at least one of the following
+  ///    conditions is satisfied:
+  ///     ( i) the ClusterSequence has explicit ghosts
+  ///     (ii) the range has a computable area.
+  ///  - the jet algorithm must be suited for median computation
+  ///    (otherwise a warning will be issues)
+  ///
+  /// Note that selectors with e.g. hardest-jets exclusion do not have
+  /// a well-defined area. For this reasons, it is STRONGLY advised to
+  /// use an area with explicit ghosts.
+  void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
+
+  /// set the jets (which must have area support) to be used by future
+  /// calls to rho() etc.; for the conditions that must be satisfied
+  /// by the jets, see the Constructor that takes jets.
+  void set_jets(const std::vector<PseudoJet> &jets);
+
+  /// set the selector for calculating rho
+  void set_selector(const Selector & rho_range_selector) {
+    _rho_range = rho_range_selector;
+    _uptodate = false;
+  }
+
   /// for estimation using a selector that takes a reference jet
   /// (i.e. a selector that can be relocated) this function allows one
   /// to set its position.
@@ -314,6 +360,8 @@ public:
   /// the background properties. The call is, however, performed
   /// automatically by the functions rho(jet) and sigma(jet).
   BackgroundEstimator & set_reference(const PseudoJet &jet);
+
+
 
   /// Resets the class to its default state, including the choice to
   /// use 4-vector areas.

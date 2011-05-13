@@ -92,6 +92,35 @@ LimitedWarning BackgroundEstimator::_warnings_zero_area;
 BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range)
   : _rho_range(rho_range){
 
+  // initialise things properly
+  reset();
+
+  // tell the BGE about the cluster sequence
+  set_cluster_sequence(csa);
+}
+
+
+
+//----------------------------------------------------------------------
+// ctor from a list of jets
+//  - jets        the set of jets to use for the computation
+//  - rho_range   the range over which jets will be considered
+BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
+  : _rho_range(rho_range){
+
+  // initialise things properly
+  reset();
+}
+
+
+// default dtor
+BackgroundEstimator::~BackgroundEstimator(){
+
+}
+
+
+//----------------------------------------------------------------------
+void BackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & csa) {
   _csi = csa.structure_shared_ptr();
 
   // sanity checks
@@ -107,18 +136,13 @@ BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, con
   // get the initial list of jets
   _included_jets = csa.inclusive_jets();
 
-
-  // initialise things properly
-  reset();
+  _uptodate = false;
 }
 
 
-// ctor from a list of jets
-//  - jets        the set of jets to use for the computation
-//  - rho_range   the range over which jets will be considered
-BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
-  : _rho_range(rho_range){
-
+//----------------------------------------------------------------------
+void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
+  
   if (! jets.size())
     throw Error("BackgroundEstimator::BackgroundEstimator: At least one jet is needed to compute the background properties");
 
@@ -134,10 +158,10 @@ BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Se
 
   for (unsigned int i=1;i<jets.size(); i++){
     if (! jets[i].has_associated_cluster_sequence()) // area automatic if the next test succeeds
-      throw Error("BackgroundEstimator::BackgroundEstimator: the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
+      throw Error("BackgroundEstimator::set_jets(...): the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
 
     if (jets[i].structure_shared_ptr().get() != _csi.get())
-      throw Error("BackgroundEstimator::BackgroundEstimator: all the jets used to estimate the background properties must share the same ClusterSequence");
+      throw Error("BackgroundEstimator::set_jets(...): all the jets used to estimate the background properties must share the same ClusterSequence");
   }
 
   //  (i) check the alg is appropriate
@@ -152,17 +176,12 @@ BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Se
   // get the initial list of jets
   _included_jets = jets;
 
-  // initialise things properly
-  reset();
+  // ensure recalculation of quantities that need it
+  _uptodate = false;
 }
 
 
-// default dtor
-BackgroundEstimator::~BackgroundEstimator(){
-
-}
-
-
+//----------------------------------------------------------------------
 // for estimation using a relocatable selector (i.e. local range)
 // this allows to set its position. Note that this HAS to be called
 // before any attempt to compute the background properties
@@ -347,6 +366,9 @@ void BackgroundEstimator::_check_jet_alg_good_for_median() const{
     _warnings.warn("BackgroundEstimator: jet_def being used may not be suitable for estimating diffuse backgrounds (good alternatives are kt, cam)");
   }
 }
+
+
+
 
 FASTJET_END_NAMESPACE
 
