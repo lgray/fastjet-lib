@@ -1,3 +1,26 @@
+2011-05-13  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc:
+	* include/fastjet/ClusterSequence.hh:
+	  added CS::_set_structure_shared_ptr(jet), to make sure use count
+	  is kept updated any time a jet is associated with the CS
+	  internally (all calls to jet.set_structure_shared_ptr(...) were
+	  correspondingly replaced). This should ensure that the
+	  delete_self_when_unused() call will work also with CSArea
+	  etc. without mods all over the place.
+
+	* src/ClusterSequenceStructure.cc:
+	  added a check in destructor that when _associated_cs is not
+	  NULL, it is only deleted if CS::will_delete_self_when_unused()
+	  is true. Previously we relied on the CS setting the
+	  associated_cs pointer to null in its destructor. But if the CS
+	  constructor throws an error, then ~CS never gets called and this
+	  extra check becomes necessary.
+
+	* src/ClusterSequenceAreaBase.cc (subtracted_jet):
+	  just added a comment about the set_structure call
+
+
 2011-05-12  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/Filter.hh:

@@ -315,6 +315,8 @@ PseudoJet ClusterSequenceAreaBase::subtracted_jet(const PseudoJet & jet,
   // (i.e. "looks like") the original jet
   sub_jet.set_cluster_hist_index(jet.cluster_hist_index());
   sub_jet.set_user_index(jet.user_index());
+  // do not use CS::_set_structure_shared_ptr here, which should
+  // only be called to maintain the tally during construction
   sub_jet.set_structure_shared_ptr(jet.structure_shared_ptr());
   return sub_jet;
 }

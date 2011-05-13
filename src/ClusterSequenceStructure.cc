@@ -40,7 +40,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 ClusterSequenceStructure::~ClusterSequenceStructure(){
-  if (_associated_cs != NULL) {
+  if (_associated_cs != NULL 
+      && _associated_cs->will_delete_self_when_unused()) {
     // automatically handle deletion of the cluster sequence;
     // execution should only ever reach this point if the user had
     // called CS::delete_self_when_unused, which resets the count of

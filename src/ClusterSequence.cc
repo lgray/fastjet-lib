@@ -120,7 +120,7 @@ void ClusterSequence::_initialise_and_run (
   _fill_initial_history();
 
   // don't run anything if the event is empty
-  if (n_particles() == 0) {_operations_after_clustering(); return;}
+  if (n_particles() == 0) return;
 
   // ----- deal with special cases: plugins & e+e- ------
   if (_jet_algorithm == plugin_algorithm) {
@@ -129,7 +129,7 @@ void ClusterSequence::_initialise_and_run (
     // let the plugin do its work here
     _jet_def.plugin()->run_clustering( (*this) );
     _plugin_activated = false;
-    _operations_after_clustering();
+    _update_structure_use_count();
     return;
   } else if (_jet_algorithm == ee_kt_algorithm ||
 	     _jet_algorithm == ee_genkt_algorithm) {
@@ -160,7 +160,6 @@ void ClusterSequence::_initialise_and_run (
       _invR2 = 1.0/_R2;
     }
     _simple_N2_cluster_EEBriefJet();
-    _operations_after_clustering();
     return;
   } else if (_jet_algorithm == undefined_jet_algorithm) {
     throw Error("A ClusterSequence cannot be created with an uninitialised JetDefinition");
@@ -249,7 +248,6 @@ void ClusterSequence::_initialise_and_run (
     throw Error(err.str());
   }
 
-  _operations_after_clustering();
 }
 
 
@@ -317,6 +315,7 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def,
 
   // initialised the wrapper to the current CS
   _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+  _update_structure_use_count(); // make sure it's correct already here
 }
 
 
@@ -348,7 +347,7 @@ void ClusterSequence::_fill_initial_history () {
 
     // get cross-referencing right from PseudoJets
     _jets[i].set_cluster_hist_index(i);
-    _jets[i].set_structure_shared_ptr(_structure_shared_ptr);
+    _set_structure_shared_ptr(_jets[i]);
 
     // determine the total energy in the event
     _Qtot += _jets[i].E();
@@ -421,7 +420,10 @@ double ClusterSequence::jet_scale_for_algorithm(
 /// transfer the sequence contained in other_seq into our own;
 /// any plugin "extras" contained in the from_seq will be lost
 /// from there.
-void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq, bool transfer_ownership) {
+void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
+
+  if (will_delete_self_when_unused()) 
+    throw(Error("cannot use CS::transfer_from_sequence after a call to delete_self_when_unused()"));
 
   // the metadata
   _jet_def                 = from_seq._jet_def                ;
@@ -441,13 +443,20 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq, bool tr
   _extras   = from_seq._extras;
 
   // transfer of ownership
-  if (transfer_ownership){
-    // make sure we have an initialised wrapper. If not, initialise it
-    if (! _structure_shared_ptr()) _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+    if (_structure_shared_ptr()) {
+      // anything that is currently associated with the cluster sequence
+      // should be told that its cluster sequence no longer exists
+      ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
+      assert(csi != NULL);
+      csi->set_associated_cs(NULL);
+    }
+    // create a new _structure_shared_ptr to reflect the fact that
+    // this CS is essentially a new one
+    _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+    _update_structure_use_count();
   
     for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
-      jit->set_structure_shared_ptr(_structure_shared_ptr);
-  }
+      _set_structure_shared_ptr(*jit);
 }
 
 //----------------------------------------------------------------------
@@ -463,7 +472,7 @@ void ClusterSequence::plugin_record_ij_recombination(
   int tmp_index = _jets[newjet_k].cluster_hist_index();
   _jets[newjet_k] = newjet;
   _jets[newjet_k].set_cluster_hist_index(tmp_index);
-  _jets[newjet_k].set_structure_shared_ptr(_structure_shared_ptr);
+  _set_structure_shared_ptr(_jets[newjet_k]);
 }
 
 
@@ -1052,7 +1061,7 @@ void ClusterSequence::_add_step_to_history (
     assert(jetp_index >= 0);
     //cout << _jets.size() <<" "<<jetp_index<<"\n";
     _jets[jetp_index].set_cluster_hist_index(local_step);
-    _jets[jetp_index].set_structure_shared_ptr(_structure_shared_ptr);
+    _set_structure_shared_ptr(_jets[jetp_index]);
   }
 
   if (_writeout_combinations) {
@@ -1233,7 +1242,16 @@ LimitedWarning ClusterSequence::_changed_strategy_warning;
 
 
 //----------------------------------------------------------------------
-void ClusterSequence::_operations_after_clustering() {
+void ClusterSequence::_set_structure_shared_ptr(PseudoJet & j) {
+  j.set_structure_shared_ptr(_structure_shared_ptr);
+  // record the use count of the structure shared point to help
+  // in case we want to ask the CS to handle its own memory
+  _update_structure_use_count();
+}
+
+
+//----------------------------------------------------------------------
+void ClusterSequence::_update_structure_use_count() {
   // record the use count of the structure shared point to help
   // in case we want to ask the CS to handle its own memory
   _structure_use_count_after_construction = _structure_shared_ptr.use_count();

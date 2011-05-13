@@ -114,7 +114,7 @@ class ClusterSequence {
  public: 
 
   /// default constructor
-  ClusterSequence () {}
+  ClusterSequence () : _deletes_self_when_unused(false) {}
 
   /// create a clustersequence starting from the supplied set
   /// of pseudojets and clustering them with the long-invariant
@@ -335,7 +335,16 @@ class ClusterSequence {
   /// At the time you call this, there must be at least one jet or
   /// other object outside the CS that is associated with the CS
   /// (e.g. the result of inclusive_jets()).
+  ///
+  /// NB: after having made this call, the user is still allowed to
+  /// delete the CS or let it go out of scope. Jets associated with it
+  /// will then simply not be able to access their substructure after
+  /// that point.
   void delete_self_when_unused();
+
+  /// return true if the object has been told to delete itself
+  /// when unused
+  bool will_delete_self_when_unused() const {return _deletes_self_when_unused;}
 
   /// tell the ClusterSequence it's about to be self deleted (internal use only)
   void signal_imminent_self_deletion() const;
@@ -540,7 +549,7 @@ public:
   /// If transfer_ownership is true, it also sets the ClusterSequence
   /// pointers of the PseudoJets in the history to point to this
   /// ClusterSequence (true by default)
-  void transfer_from_sequence(ClusterSequence & from_seq, bool transfer_ownership=true);
+  void transfer_from_sequence(ClusterSequence & from_seq);
 
   /// retrieve a shared pointer to the wrapper to this ClusterSequence
   ///
@@ -596,8 +605,16 @@ protected:
   /// the beam, 
   void _do_iB_recombination_step(const int & jet_i, const double & diB);
 
-  /// call that does any required bookkeeping after the clustering is done
-  void _operations_after_clustering();
+  /// every time a jet is added internally during clustering, this
+  /// should be called to set the jet's structure shared ptr to point
+  /// to the CS (and the count of internally associated objects is
+  /// also updated). This should not be called outside construction of
+  /// a CS object.
+  void _set_structure_shared_ptr(PseudoJet & j);
+
+  /// make sure that the CS's internal tally of the use count matches
+  /// that of the _structure_shared_ptr
+  void _update_structure_use_count();
   
 
   /// This contains the physical PseudoJets; for each PseudoJet one

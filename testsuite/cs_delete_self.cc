@@ -1,4 +1,5 @@
 #include <fastjet/ClusterSequence.hh>
+#include <fastjet/ClusterSequenceArea.hh>
 #include <iostream> // needed for io
 #include <cstdio>   // needed for io
 
@@ -6,6 +7,7 @@ using namespace std;
 using namespace fastjet;
 
 const JetDefinition jet_def(antikt_algorithm, 1.0);
+const AreaDefinition area_def(active_area, GhostedAreaSpec(5.0, 1, 0.02));
 
 /// do the clustering and retrieve the hardest of the jets
 PseudoJet hardest_jet(const ClusterSequence & cs){
@@ -14,7 +16,8 @@ PseudoJet hardest_jet(const ClusterSequence & cs){
 
 /// do the clustering and retrieve the hardest of the jets
 PseudoJet hardest_jet(const vector<PseudoJet> & particles){
-  ClusterSequence * cs = new ClusterSequence(particles, jet_def);
+  //ClusterSequence * cs = new ClusterSequence(particles, jet_def);
+  ClusterSequence * cs = new ClusterSequenceArea(particles, jet_def, area_def);
   PseudoJet jet = hardest_jet(*cs);
   cs->delete_self_when_unused();
   return jet;
@@ -23,7 +26,9 @@ PseudoJet hardest_jet(const vector<PseudoJet> & particles){
 /// print jet info
 void show_jet(const PseudoJet & jet){
   try{
-    cout << "Jet has pt=" << jet.perp() << " and " << jet.constituents().size() << " constituents" << endl;
+    cout << "Jet has pt=" << jet.perp() << " and " << jet.constituents().size() << " constituents";
+    if (jet.has_area()) cout << ", area = " << jet.area();
+    cout << endl;
   } catch (fastjet::Error){
     cerr << "fastjet::Error caught" << endl;
   }
@@ -40,27 +45,36 @@ int main (int argc, char ** argv) {
   
   // series of tests:
   //----------------------------------------------------------
+  // 0. empty cluster sequence
+  ClusterSequence * cs0 = new ClusterSequence();
+  delete cs0;
+  cout << "Test 0 passed" << endl;
+
+  //----------------------------------------------------------
   // 1. regular CS, no PJ left using it
-  ClusterSequence * cs1 = new ClusterSequence(particles, jet_def);
+  ClusterSequence * cs1 = new ClusterSequenceArea(particles, jet_def, area_def);
   delete cs1;
   cout << "Test 1 passed" << endl;
 
+  //----------------------------------------------------------
   // 2. regular CS, no PJ left using it
-  ClusterSequence * cs2 = new ClusterSequence(particles, jet_def);
+  ClusterSequence * cs2 = new ClusterSequenceArea(particles, jet_def, area_def);
   PseudoJet j2 = hardest_jet(*cs2);
   show_jet(j2);
   delete cs2;
   show_jet(j2); // should throw
   cout << "Test 2 passed" << endl;
 
-  // 2. owned CS, no PJ left using it
+  //----------------------------------------------------------
+  // 3. owned CS, no PJ left using it
   PseudoJet * j3 = new PseudoJet(hardest_jet(particles));
   show_jet(*j3);
   cout << "Just about to delete j3 " << endl;
   delete j3;
   cout << "Test 3 passed" << endl;
 
-  // 2. owned CS, explicitly delete the CS
+  //----------------------------------------------------------
+  // 4. owned CS, explicitly delete the CS
   PseudoJet * j4 = new PseudoJet(hardest_jet(particles));
   show_jet(*j4);
   delete j4->associated_cluster_sequence();
