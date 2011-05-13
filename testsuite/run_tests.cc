@@ -1,12 +1,17 @@
+//----------------------------------------------------------------------
+/// \file run_tests.cc
+///
+/// Usage:
+///   ./run-tests [-verbose] 
 #include "TestBase.hh"
 #include "TestPseudoJet.hh"
 #include <iomanip>
+#include "CmdLine.hh"
 
+int main(int argc, char** argv) {
+  CmdLine cmdline(argc,argv);
 
-int main() {
-
-  //bool verbose = true;
-  bool verbose = false;
+  bool verbose = cmdline.present("-verbose");
 
   vector<TestBase *> tests;
 

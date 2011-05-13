@@ -26,27 +26,14 @@ public:
   /// tolerance, with the tolerance defined as a relative tolerance
   /// for large numbers (>>1) and an absolute tolerance for small
   /// numbers (<<1).
-  bool equal_within_tolerance(double a, double b, double tol = -1.0) const {
+  bool almost_equal(double a, double b, double tol = -1.0) const {
     double local_tol = tol >= 0 ? tol : default_tolerance();
-    return abs(a-b) < local_tol*(1+max(abs(a),abs(b)));
-  }
-
-  /// verifies two things are equal within tolerance; if not it
-  /// registers failure in the _pass_test
-  void verify_equal(double a, double b, const string & testname, double tol = -1.0) {
-    if (!equal_within_tolerance(a,b,tol)) {
-      _pass_test = false;
-      std::ostringstream ostr;
-      ostr << testname << ": " << a << " != " << b << " (within tol = " << tol << ")";
-      _failure_testnames.push_back(ostr.str());
-    } else if (!_quiet_OK) {
-      _OK_testnames.push_back(testname);
-    }
+    return abs(a-b) <= local_tol*(1+max(abs(a),abs(b)));
   }
 
   /// verifies equality of two integers and registers failure if appropriate
-  void verify_equal(int a, int b, const string & testname) {
-    if (a != b) {
+  template<class T> void verify_equal(const T & a, const T & b, const string & testname) {
+    if (! (a == b)) {
       _pass_test = false;
       std::ostringstream ostr;
       ostr << testname << ": " << a << " != " << b;
@@ -56,20 +43,31 @@ public:
     }
   }
 
-  /// verifies equality of two integers and registers failure if appropriate
-  void verify_equal(const void * a, const void * b, const string & testname) {
-    if (a != b) {
+  template<class T> void verify_null(const T * a, const string & testname) {
+    if (a != 0) {
       _pass_test = false;
       std::ostringstream ostr;
-      ostr << testname << ": " << a << " != " << b;
+      ostr << testname << ": " << a << " != null";
       _failure_testnames.push_back(ostr.str());
     } else if (!_quiet_OK) {
       _OK_testnames.push_back(testname);
     }
   }
 
+  // /// verifies equality of two integers and registers failure if appropriate
+  // void verify_equal(const void * a, const void * b, const string & testname) {
+  //   if (a != b) {
+  //     _pass_test = false;
+  //     std::ostringstream ostr;
+  //     ostr << testname << ": " << a << " != " << b;
+  //     _failure_testnames.push_back(ostr.str());
+  //   } else if (!_quiet_OK) {
+  //     _OK_testnames.push_back(testname);
+  //   }
+  // }
+
   /// verifies equality of two integers and registers failure if appropriate
-  void verify_different(const void * a, const void * b, const string & testname) {
+  template<class T> void verify_different(const T & a, const T & b, const string & testname) {
     if (a == b) {
       _pass_test = false;
       std::ostringstream ostr;
@@ -83,22 +81,36 @@ public:
 
   /// verifies two things are equal within tolerance; if not it
   /// registers failure in the _pass_test
-  void verify_equal(const PseudoJet & a, const PseudoJet b, 
-		    const string & testname, double tol = -1.0) {
+  void verify_almost_equal(double a, double b, const string & testname, double tol = -1.0) {
+    if (!almost_equal(a,b,tol)) {
+      _pass_test = false;
+      std::ostringstream ostr;
+      ostr << testname << ": " << a << " != " << b << " (within tol = " << tol << ")";
+      _failure_testnames.push_back(ostr.str());
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
+    }
+  }
+
+
+  /// verifies two things are equal within tolerance; if not it
+  /// registers failure in the _pass_test
+  void verify_almost_equal(const PseudoJet & a, const PseudoJet b, 
+			   const string & testname, double tol = -1.0) {
 
     // don't record all the individual tests below unless they fail
     _quiet_OK = true;
 
-    verify_equal(a.px(), b.px(), testname+" (x)", tol);
-    verify_equal(a.py(), b.py(), testname+" (y)", tol);
-    verify_equal(a.pz(), b.pz(), testname+" (z)", tol);
-    verify_equal(a.E (), b.E (), testname+" (E)", tol);
+    verify_almost_equal(a.px(), b.px(), testname+" (x)", tol);
+    verify_almost_equal(a.py(), b.py(), testname+" (y)", tol);
+    verify_almost_equal(a.pz(), b.pz(), testname+" (z)", tol);
+    verify_almost_equal(a.E (), b.E (), testname+" (E)", tol);
 
-    verify_equal(a.perp(), b.perp(),  testname+"(pt )", tol);
-    verify_equal(a.rap() , b.rap() ,  testname+"(rap)", tol);
-    verify_equal(a.eta() , b.eta() ,  testname+"(eta)", tol);
-    verify_equal(a.phi() , b.phi() ,  testname+"(phi)", tol);
-    verify_equal(a.m2()  , b.m2()  ,  testname+"(m2 )", tol);
+    verify_almost_equal(a.perp(), b.perp(),  testname+"(pt )", tol);
+    verify_almost_equal(a.rap() , b.rap() ,  testname+"(rap)", tol);
+    verify_almost_equal(a.eta() , b.eta() ,  testname+"(eta)", tol);
+    verify_almost_equal(a.phi() , b.phi() ,  testname+"(phi)", tol);
+    verify_almost_equal(a.m2()  , b.m2()  ,  testname+"(m2 )", tol);
 
     verify_equal(a.user_index(), b.user_index(), testname+"(user index)");
     verify_equal(a.cluster_hist_index(), b.cluster_hist_index(), testname+"(cluster hist index)");
@@ -106,6 +118,12 @@ public:
     verify_equal(a.structure_ptr(), b.structure_ptr(), testname+"(structure ptr)");
 
     _quiet_OK = false;
+  }
+
+  /// verifies two things are equal within tolerance; if not it
+  /// registers failure in the _pass_test
+  void verify_equal(const PseudoJet & a, const PseudoJet b, const string & testname) {
+    verify_almost_equal(a,b,testname, 0.0);
   }
 
 

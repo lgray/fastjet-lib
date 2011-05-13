@@ -22,33 +22,33 @@ class TestPtYPhiM : public TestBase {
       double phi = uniform_random(0.0, twopi);
 
       PseudoJet p = PtYPhiM(pt, rap, phi);
-      verify_equal(pt , p.perp(),  "pt test (m=0)");
-      verify_equal(rap, p.rap() ,  "rap test (m=0)");
-      verify_equal(phi, p.phi() ,  "phi test (m=0)");
-      verify_equal(0  , p.m()   ,  "m test (m=0)", 1e-5); // lower tolerance
+      verify_almost_equal(pt , p.perp(),  "pt test (m=0)");
+      verify_almost_equal(rap, p.rap() ,  "rap test (m=0)");
+      verify_almost_equal(phi, p.phi() ,  "phi test (m=0)");
+      verify_almost_equal(0  , p.m()   ,  "m test (m=0)", 1e-5); // lower tolerance
 
       p += PseudoJet(1e-100,1e-100,1e-100,1e-100);
-      verify_equal(pt , p.perp(),  "2nd pt test (m=0)");
-      verify_equal(rap, p.rap() ,  "2nd rap test (m=0)");
-      verify_equal(phi, p.phi() ,  "2nd phi test (m=0)");
-      verify_equal(0  , p.m()   ,  "2nd m test (m=0)", 1e-10); // lower tolerance
+      verify_almost_equal(pt , p.perp(),  "2nd pt test (m=0)");
+      verify_almost_equal(rap, p.rap() ,  "2nd rap test (m=0)");
+      verify_almost_equal(phi, p.phi() ,  "2nd phi test (m=0)");
+      verify_almost_equal(0  , p.m()   ,  "2nd m test (m=0)", 1e-5); // lower tolerance
 
       PseudoJet pp = p;
       pp = pp + PseudoJet(1e-100,1e-100,1e-100,1e-100);
-      verify_equal(p,pp, "usual addition");
+      verify_almost_equal(p,pp, "usual addition");
 
       double m = uniform_random(1.0,10.0);
       p = PtYPhiM(pt, rap, phi, m); 
-      verify_equal(pt , p.perp(),  "pt test");
-      verify_equal(rap, p.rap() ,  "rap test");
-      verify_equal(phi, p.phi() ,  "phi test");
-      verify_equal(m  , p.m()   ,  "m test", 1e-5); // lower tolerance
+      verify_almost_equal(pt , p.perp(),  "pt test");
+      verify_almost_equal(rap, p.rap() ,  "rap test");
+      verify_almost_equal(phi, p.phi() ,  "phi test");
+      verify_almost_equal(m  , p.m()   ,  "m test", 1e-5); // lower tolerance
 
       p += PseudoJet(1e-100,1e-100,1e-100,1e-100);
-      verify_equal(pt , p.perp(),  "2nd pt test");
-      verify_equal(rap, p.rap() ,  "2nd rap test");
-      verify_equal(phi, p.phi() ,  "2nd phi test");
-      verify_equal(m  , p.m()   ,  "2nd m test", 1e-5); // lower tolerance
+      verify_almost_equal(pt , p.perp(),  "2nd pt test");
+      verify_almost_equal(rap, p.rap() ,  "2nd rap test");
+      verify_almost_equal(phi, p.phi() ,  "2nd phi test");
+      verify_almost_equal(m  , p.m()   ,  "2nd m test", 1e-5); // lower tolerance
     }
     return _pass_test;
   }
@@ -90,15 +90,22 @@ class TestPJAssignment : public TestBase {
     // check default indices
     verify_equal(a.user_index(),         -1, "default user index");
     verify_equal(a.cluster_hist_index(), -1, "default cluster index");
-    verify_equal(a.user_info_ptr(),       0, "default user_info");
-    verify_equal(a.structure_ptr(),       0, "default structure");
+    verify_null(a.user_info_ptr(), "default user_info");
+    verify_null(a.structure_ptr(), "default structure");
+
+    PseudoJet b = a;
+    verify_equal(a == b, true, "PJ internal equality test");
 
     // set indices -- we'll check them again later
     a.set_user_index(10);
+    verify_equal(a != b, true, "PJ internal inequality test (because of user index)");
+
+    b = a;
     a.set_cluster_hist_index(11);
+    verify_equal(a != b, true, "PJ internal equality test (because of cluster history index)");
 
     // check assignments and resets
-    PseudoJet b = a;
+    b = a;
     verify_equal(a, b, "assignment from PJ");
     b.reset(a);
     verify_equal(a, b, "reset from PJ");
@@ -122,10 +129,10 @@ class TestPJAssignment : public TestBase {
     // checks that assignments and resets from MyPJ -> PJ -> MyPJ behave sensibly
     b = particle; // remember b is a PseudoJet
     MyPseudoJet particle2(b);
-    verify_equal(particle, particle2, "MyPJ -> PJ -> MyPJ (via assignment)");
+    verify_almost_equal(particle, particle2, "MyPJ -> PJ -> MyPJ (via assignment)");
     MyPseudoJet particle3;
     particle3.reset(b);
-    verify_equal(particle, particle3, "MyPJ -> PJ -> MyPJ (via reset)");
+    verify_almost_equal(particle, particle3, "MyPJ -> PJ -> MyPJ (via reset)");
     
     // NB these values were set earlier
     verify_equal(b.user_index(),         10, "remembering modified user index");
@@ -138,8 +145,11 @@ class TestPJAssignment : public TestBase {
     verify_different(particle.user_info_ptr(), particle4.user_info_ptr(), "user info reset");
     verify_equal(particle4.user_index(),         -1, "default user index on reset from 4-mom");
     verify_equal(particle4.cluster_hist_index(), -1, "default clust index on reset from 4-mom");
-    verify_equal(particle4.user_info_ptr(),       0, "default user_info");
-    verify_equal(particle4.structure_ptr(),       0, "default structure");
+    verify_null(particle4.user_info_ptr(), "default user_info");
+    verify_null(particle4.structure_ptr(), "default structure");
+
+    // now run some tests 
+    verify_equal(particle4==particle, false, "PJ inequality because of meta-info");
 
     return _pass_test;
   }
