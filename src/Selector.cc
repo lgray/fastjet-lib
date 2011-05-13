@@ -236,6 +236,9 @@ public:
   /// returns true if the worker can be set_referenced
   virtual bool takes_reference() const { return _s.takes_reference();}
 
+  /// set the reference jet for this selector
+  virtual void set_reference(const PseudoJet &ref) { _s.set_reference(ref);}
+
 protected:
   Selector _s;
 };

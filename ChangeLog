@@ -1,3 +1,9 @@
+2011-05-13  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* src/Selector.cc (SelectorWorker):
+	  fixed an issue with setting the reference for negated selectors
+	  --- set_reference was missing in SW_Not.
+
 2011-05-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh: 
