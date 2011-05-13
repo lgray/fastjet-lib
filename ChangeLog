@@ -1,5 +1,6 @@
 2011-05-13  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* tools/BackgroundEstimator.cc:
 	* tools/fastjet/tools/BackgroundEstimator.hh:
 	  Fixed policy regarding constness and selectors taking (or not) a
 	  reference:
@@ -12,7 +13,7 @@
 	     unset reference.
           All const calls leave the behaviour unchanged (only mutable
 	  cached data could change)
-	
+
 	* src/Selector.cc (SelectorWorker):
 	  fixed an issue with setting the reference for negated selectors
 	  --- set_reference was missing in SW_Not.

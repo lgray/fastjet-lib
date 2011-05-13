@@ -186,18 +186,19 @@ void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 // this allows to set its position. Note that this HAS to be called
 // before any attempt to compute the background properties
 void BackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
-  // if the range is norrelocatable, do nothing
-  if (! _rho_range.takes_reference()) return;
+  // if the range is relocatable, handles its relocation
+  if (_rho_range.takes_reference()){
+    // check that the reference is not the same as the previous one
+    // (would avoid an unnecessary recomputation)
+    if (jet == _current_reference) return;
 
-  // check that the reference is not the same as the previous one
-  // (would avoid an unnecessary recomputation)
-  if (jet == _current_reference) return;
+    // relocate the range and make sure things get recomputed the next
+    // time one tries to get some information
+    _rho_range.set_reference(jet);
+    _uptodate=false;
+  }
 
-  // relocate the range and make sure things get recomputed the next
-  // time one tries to get some information
-  _rho_range.set_reference(jet);
-  _uptodate=false;
-  _compute();
+  _recompute_if_needed();
 }
 
 // reset to default values
