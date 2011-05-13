@@ -244,12 +244,16 @@ public:
 
   /// get rho, the median background density oer unit area
   double rho() const {
+    if (_rho_range.takes_reference())
+      throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
     _recompute_if_needed();
     return _rho;
   }
 
   /// get sigma, the background fluctuations per unit area
   double sigma() const {
+    if (_rho_range.takes_reference())
+      throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
     _recompute_if_needed();
     return _sigma;
   }
@@ -261,8 +265,8 @@ public:
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
   double rho(const PseudoJet jet) {
-    set_reference(jet);
-    double our_rho = rho();
+    _recompute_if_needed(jet);
+    double our_rho = _rho;
     if (_rescaling_class != 0) { 
       our_rho *= _rescaling_class->rescaling_factor(jet);
     }
@@ -276,8 +280,8 @@ public:
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
   double sigma(const PseudoJet &jet) {
-    set_reference(jet);
-    double our_sigma = sigma();
+    _recompute_if_needed(jet);
+    double our_sigma = _sigma;
     if (_rescaling_class != 0) { 
       our_sigma *= _rescaling_class->rescaling_factor(jet);
     }
@@ -290,29 +294,29 @@ public:
   //\{
   //----------------------------------------------------------------
   /// get the median area of the jets used to actually compute the background properties
-  double mean_area(){
-    _require_uptodate();
+  double mean_area() const{
+    _recompute_if_needed();
     return _mean_area;
   }
   
   /// get the number of jets used to actually compute the background properties
-  unsigned int n_jets_used(){
-    _require_uptodate();
+  unsigned int n_jets_used() const{
+    _recompute_if_needed();
     return _n_jets_used;
   }
 
   /// get the number of empty jets used when computing the background properties;
   /// (it is deduced from the empty area with an assumption about the average
   /// area of jets)
-  double n_empty_jets(){
-    _require_uptodate();
+  double n_empty_jets() const{
+    _recompute_if_needed();
     return _n_empty_jets;
   }
 
   /// returns the estimate of the area (within Range) that is not occupied
   /// by the jets (excluded jets are removed from this count)
-  double empty_area(){
-    _require_uptodate();
+  double empty_area() const{
+    _recompute_if_needed();
     return _empty_area;
   }
 
@@ -351,16 +355,6 @@ public:
     _rho_range = rho_range_selector;
     _uptodate = false;
   }
-
-  /// for estimation using a selector that takes a reference jet
-  /// (i.e. a selector that can be relocated) this function allows one
-  /// to set its position.
-  ///
-  /// Note that this HAS to be called before any attempt to compute
-  /// the background properties. The call is, however, performed
-  /// automatically by the functions rho(jet) and sigma(jet).
-  BackgroundEstimator & set_reference(const PseudoJet &jet);
-
 
 
   /// Resets the class to its default state, including the choice to
@@ -472,22 +466,22 @@ private:
 
   /// do the actual job
   void _compute() const;
-  
-  /// check if the properties need to be recomputed 
-  /// and do so if needed
-  void _require_uptodate() const {
-    if (!_uptodate){
-      throw Error("The requested information can only be obtained once the background has actually been computed");
-    }
-  }
-
+   
   /// check if the properties need to be recomputed 
   /// and do so if needed
   void _recompute_if_needed() const {
-    if (!_uptodate)
-      _compute();
+    if (!_uptodate) _compute();
     _uptodate = true;
   }
+
+  /// for estimation using a selector that takes a reference jet
+  /// (i.e. a selector that can be relocated) this function allows one
+  /// to set its position.
+  ///
+  /// Note that this HAS to be called before any attempt to compute
+  /// the background properties. The call is, however, performed
+  /// automatically by the functions rho(jet) and sigma(jet).
+  void _recompute_if_needed(const PseudoJet &jet);
 
   /// check that the underlying structure is still alive
   /// throw an error otherwise
@@ -500,10 +494,10 @@ private:
   
   // the information needed to do the computation
   Selector _rho_range;                      ///< range to compute the background in
-  mutable std::vector<PseudoJet> _included_jets;    ///< jets to be used
-  mutable std::vector<PseudoJet> _selected_jets;    ///< jets used in practice
+  std::vector<PseudoJet> _included_jets;    ///< jets to be used
   bool _use_area_4vector;
   bool _provide_fj2_sigma;
+  PseudoJet _current_reference;
 
   const BackgroundJetDensityBase * _jet_density_class;
   const BackgroundRescalingBase  * _rescaling_class;

@@ -185,16 +185,19 @@ void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 // for estimation using a relocatable selector (i.e. local range)
 // this allows to set its position. Note that this HAS to be called
 // before any attempt to compute the background properties
-BackgroundEstimator & BackgroundEstimator::set_reference(const PseudoJet &jet){
+void BackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
   // if the range is norrelocatable, do nothing
-  if (_rho_range.takes_reference()){
-    // relocate the range and make sure things get recomputed the next
-    // time one tries to get some information
-    _rho_range.set_reference(jet);
-    _uptodate=false;
-  }
+  if (! _rho_range.takes_reference()) return;
 
-  return *this;
+  // check that the reference is not the same as the previous one
+  // (would avoid an unnecessary recomputation)
+  if (jet == _current_reference) return;
+
+  // relocate the range and make sure things get recomputed the next
+  // time one tries to get some information
+  _rho_range.set_reference(jet);
+  _uptodate=false;
+  _compute();
 }
 
 // reset to default values
@@ -229,11 +232,11 @@ void BackgroundEstimator::_compute() const {
   _n_jets_used = 0;
 
   // apply the selector to the included jets
-  _selected_jets = _rho_range(_included_jets);
+  vector<PseudoJet> selected_jets = _rho_range(_included_jets);
 
   // compute the pt/area for the selected jets
-  for (unsigned i = 0; i < _selected_jets.size(); i++) {
-    const PseudoJet & current_jet = _selected_jets[i];
+  for (unsigned i = 0; i < selected_jets.size(); i++) {
+    const PseudoJet & current_jet = selected_jets[i];
 
     double this_area = (_use_area_4vector) ? current_jet.area_4vector().perp() : current_jet.area(); 
 
