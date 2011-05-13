@@ -1510,14 +1510,16 @@ classes:
    class fastjet::ClusterSequenceArea;
 \end{lstlisting}
 
-If jet areas are to be used to study the level of a diffuse noise which might be present
-in the event (like underlying event particles or pileup), a further specification, the
-phase space region over which to study such noise, will have to be given via the class
+If jet areas are to be used to study the level of a diffuse noise
+which might be present in the event (like underlying event particles
+or pileup) and maybe subtract it from jets, two further classes are useful:
 \begin{lstlisting}
-   class fastjet::RangeDefinition;
+   class fastjet::BackgroundEstimator
+   class fastjet::Subtractor
 \end{lstlisting}
-These classes are described in detail below, and an example program is given in 
-section~\ref{sec:ex-prog-sub}.
+These classes are described in detail below and an example program is
+given in section~\ref{sec:ex-prog-sub}. \comment{Check it before release...?}
+
 
 %----------------------------------------------------------------------
 \subsection{fastjet::AreaDefinition}
@@ -1658,6 +1660,29 @@ and information about the \ttt{GhostedAreaSpec} in use can be retrieved as follo
   int	 repeat        () const ;
 \end{lstlisting}
 
+An alternative constructor
+\begin{lstlisting}
+  fastjet::GhostedAreaSpec(const Selector & selector, 
+                           int    repeat        = 1,
+                           double ghost_area    = 0.01, 
+                           double grid_scatter  = 1.0, 
+                           double kt_scatter    = 0.1,
+                           double mean_ghost_kt = 1e-100);
+\end{lstlisting}
+allows the user to have ghosts placed in the region specified by the
+\ttt{selector}, which must be purely geometrical and have finite
+rapidity extent.
+%
+This option is useful, for example, if one wishes to place ghosts in a
+manner that reflects a detector's acceptance for particles.
+%
+Though this will not give the ``true'' geometrical area of jets near
+the boundary of the acceptance, it will ensure that the area measures
+sensitivity to contamination only in the region where contamination by
+particles can effectively take place.
+%
+This is often more useful information than the geometrical area.
+
 \subsubsection{Voronoi Areas}
 \label{sec:voronoi-areas}
 
@@ -1695,6 +1720,14 @@ Information about the specification in use is returned by
 The Voronoi areas are calculated with the help of Fortune's ($N \ln
 N$) Voronoi diagram generator for planar static point
 sets~\cite{Fortune}.
+
+One use for the Voronoi area is in background determination with the
+$k_t$ algorithm (below,
+section~\ref{sec:areas-and-background-subtraction}): with the choice
+$\ttt{effective\_Rfact}\simeq0.9$ it provides an acceptable
+approximation to the $k_t$ algorithm's active area that is often
+significantly faster to compute than the active area.
+
 
 %----------------------------------------------------------------------
 \subsection{fastjet::ClusterSequenceArea}
@@ -1748,28 +1781,162 @@ also be one of the constituents of a jet, in which case it will return
 
 %----------------------------------------------------------------------
 \subsection{Areas and background subtraction}
+\label{sec:areas-and-background-subtraction}
 
 Jet areas can be used to study the level of a randomly distributed
 diffuse background which might be present together with the hard event
-of interest. After selecting a phase space region over which to analyse
-the jets, one can determine the average level $rho$ (transverse momentum per
-unit area) of the background, 
-and also subtract it from the hard jets. This way of using jets to
-determine the noise level on an event-by-event basis was
-introduced and described in~\cite{cs}.
+of interest. After selecting a phase space region over which to
+analyse the jets, one can determine the average level $rho$
+(transverse momentum per unit area) of the background, and also
+subtract it from the hard jets.
+%
+A difficulty in estimating the background is that it is difficult to
+introduce a robust criterion to distinguish ``background'' jets from
+hard jets. 
+%
+The main method that is available in FastJet involves the
+determination of the distribution of $p_t/A$ for the jets in a given
+event and then taking the median of the distribution as an estimate of
+$\rho$, as proposed in~\cite{cs} and studied in detail also
+in~\cite{Cacciari:2009dp}.
+%
+This is insensitive to the presence of even very hard jets, and avoids
+any need for introducing a $p_t$ scale to distinguish hard and
+background jets.
 
-Note that we recommend that you use only the $k_t$ or Cambridge/Aachen 
-algorithms for calculating the UE/pileup density $\rho$. In fact, it is important to
-avoid algorithms with extreme behaviours for the areas. In particular one
-should not use anti-$k_t$ (which has many jets with near-zero area) or
-SISCone (which can have jets with near-zero area, as well as monster jets
-with huge areas if the overlap parameter $f$ is too small). In contrast the
-$k_t$ and Cambridge/Aachen algorithms are suitable. 
 
-Once $\rho$ has been determined using $k_t$ or Cambridge/Aachen (and an appropriate
-value of $R$, typically of order 0.4--0.6, see~\cite{cs} for more details), its
-value can then be used for UE/pileup subtraction in an analysis using any jet 
-algorithm.
+Note that we recommend that you use only the $k_t$ or Cambridge/Aachen
+algorithms for calculating the UE/pileup density $\rho$ in this
+way. In particular, it is important to avoid algorithms with extreme
+behaviours for the areas. For example, one should not use anti-$k_t$
+(which has many jets with near-zero area), nor SISCone (which can have
+jets with near-zero area, as well as monster jets with huge areas if
+the overlap parameter $f$ is too small).
+%In contrast the $k_t$ and
+%Cambridge/Aachen algorithms are suitable.
+
+Once $\rho$ has been determined using $k_t$ or Cambridge/Aachen (and
+an appropriate value of $R$, typically of order 0.4--0.6,
+see~\cite{cs,Cacciari:2009dp} for more details), its value can then be
+used for UE/pileup subtraction in an analysis using any jet algorithm.
+
+
+%......................................................................
+\subsubsection{Background Estimation}
+\label{sec:BackgroundEstimator}
+
+Two elements are needed for FastJet's background estimation: a cluster
+sequence with area information and a \ttt{Selector} to specify the
+subset of jets that will be used for the background estimation.
+%
+The class that provides background estimation facilities is
+\ttt{BackgroundEstimator}. The simplest way to construct it is:
+\begin{lstlisting}
+   /// constructor for a BackgroundEstimator that will use the
+   /// inclusive jets from csa that pass the cuts specified by
+   /// the selector in order to estimate the background density
+   BackgroundEstimator(const ClusterSequenceAreaBase & csa,
+                       const Selector & selector);
+\end{lstlisting}
+If one wants to use all jets within $|y|<4.5$ to estimate the
+background, then one would choose \ttt{selector =
+  SelectorAbsRapMax(4.5)} and then access the background density
+$\rho$ and its fluctuations $\sigma$ 
+through the functions:
+\begin{lstlisting}
+   // the median of ($p_t$/area) for jets that pass the selection cut, 
+   // making use also of information on empty area in the event
+   double rho()   const; 
+
+   // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
+   // defined as the 1-sigma half-width of the distribution of $p_t$/A, obtained
+   // by looking for the value $\sigma$ such that a fraction (1-0.6827)/2 of the jets
+   // (including empty jets) have $p_t/A < \rho - \sigma \smash{\sqrt{\langle A \rangle}}$
+   double sigma() const; 
+\end{lstlisting}
+The use of information on empty area is crucial if the method is to
+correctly return $\rho = 0$ in events where there are only a handful
+of jets, i.e. there is no background at all in most of the event.
+%
+\comment{carry on here about empty areas -- and check what we already have}
+
+One drawback of a $\rho$ estimate based on all jets from (say)
+$|y|<4.5$ is that the background density in $pp$ and heavy-ion
+collisions usually has some non-negligible dependence on rapidity and
+this information is not correctly accounted for.
+%
+Two techniques can help alleviate this problem.
+%
+The first involves the use of a more local range for the determination
+of $\rho$, with the help of a \ttt{Selector} that is able to take a
+reference jet, e.g. \ttt{SelectorStrip(}$\Delta y$\ttt{)}, a strip of
+half-width $\Delta y$ (which might be of order $1$).
+%
+With this kind of selector, when the user calls either of the functions
+\begin{lstlisting}
+   double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
+   double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
+\end{lstlisting}
+a \ttt{selector.set\_reference(jet)} call is made to centre the
+selector on the specified jet. Then the jets in \ttt{csa} that pass
+the cut specified by this newly positioned \ttt{selector} are used to
+estimate $\rho$ or $\sigma$.\footnote{If the selector is not
+  modified by the reference jet, then these calls give identical
+  results to the plain \ttt{rho()} and \ttt{sigma()} calls, unless a
+  manual rapidity rescaling is in effect.}
+%
+This method is adequate if the number of jets that pass the selector
+is much larger than the number of hard jets in the range (otherwise
+the median $p_t/A$ will be noticeably biased by the hard jets).
+%
+Therefore this method is adequate for dijet events in $pp$ or PbPb
+collisions, but may fare less well in event samples such as
+hadronically decaying $t\bar t$ which may have many central hard jets.
+%
+One can attempt to remove some given number of hard jets before
+carrying out the median estimation, e.g.\ with a \ttt{selector} such
+as
+\begin{lstlisting}
+   selector = SelectorStrip($\Delta y$) * (!SelectorNHardest(4))
+\end{lstlisting}
+which removes the 4 hardest jets globally and then, of the remainder,
+takes the ones within the strip. This is however not always very
+effective.\footnote{If you use non-geometric selectors in determining
+  $\rho$, the area must have explicit ghosts in order to simplify the
+  determination of the empty area. If it does not, an error will be
+  thrown.}
+
+In unpublished studies for the case of $pp$ pileup events (with
+Pythia~8.145, tune 4C for the pileup~\cite{Sjostrand:2007gs}), we have
+found that an alternative method that is adequate for handling the
+rapidity dependence is to parametrise the average shape of the
+rapidity dependence from some number of pileup events and then carry
+out an event-by-event global $\rho$ determination taking into account
+that shape.
+%
+One first creates an object that encodes the shape
+\begin{lstlisting}
+   // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
+   BackgroundRescalingYPolynomial rescaling(1.16, 0, -0.023, 0, 0.000041);
+\end{lstlisting}
+(for other shapes, derive a class from \ttt{BackgroundRescalingBase}
+\comment{check the name stays the same}) and then one tells the
+\ttt{BackgroundEstimator} about the rescaling with the call
+\begin{lstlisting}
+   // tell the BackgroundEstimator about the rescaling
+   set_rescaling_class(*rescaling);
+\end{lstlisting}
+Subsequent calls will then take the median of the distribution $p_t/A
+/ \ttt{rescaling}(y)$ (rather than $p_t/A$) and any calls to
+\ttt{rho(jet)} and \ttt{sigma(jet)} will including an additional
+factor of \ttt{rescaling}$(y_\ttt{jet})$.
+%
+Note that any overall factor in the rescaling function cancels out for
+\ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
+and \ttt{sigma()}.
+
+\comment{Carry on here(?) with information about mean area, empty
+  area, etc.?}
 
 \subsubsection{Fixed range}
 
@@ -3595,6 +3762,18 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   B.~Abbott {\it et al.} [D0 Collaboration],
   %``Fixed cone jet definitions in D0 and R(sep),''
   FERMILAB-PUB-97-242-E.
+
+\bibitem{Cacciari:2009dp}
+  M.~Cacciari, G.~P.~Salam, S.~Sapeta,
+  %``On the characterisation of the underlying event,''
+  JHEP {\bf 1004 } (2010)  065.
+  [arXiv:0912.4926 [hep-ph]].
+
+\bibitem{Sjostrand:2007gs}
+  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
+  %``A Brief Introduction to PYTHIA 8.1,''
+  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
+  [arXiv:0710.3820 [hep-ph]].
 
 \end{thebibliography}
 
