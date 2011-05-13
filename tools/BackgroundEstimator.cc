@@ -349,6 +349,10 @@ void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vec
 // check that the underlying structure is still alive;
 // throw an error otherwise
 void BackgroundEstimator::_check_csa_alive() const{
+  ClusterSequenceStructure* csa = dynamic_cast<ClusterSequenceStructure*>(_csi());
+  if (csa == 0) {
+    throw Error("BackgroundEstimator: there is no cluster sequence associated with the BackgroundEstimator");
+  }
   if (! dynamic_cast<ClusterSequenceStructure*>(_csi())->has_associated_cluster_sequence())
     throw Error("BackgroundEstimator: modifications are no longer possible as the underlying ClusterSequence has gone out of scope");
 }
