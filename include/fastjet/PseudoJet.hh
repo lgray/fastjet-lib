@@ -701,6 +701,14 @@ PseudoJet operator*(double, const PseudoJet &);
 PseudoJet operator*(const PseudoJet &, double);
 PseudoJet operator/(const PseudoJet &, double);
 
+/// returns true if the 4 momentum components of the two PseudoJets
+/// are identical and all the internal indices (user, cluster_history)
+/// + structure and user-info shared pointers are too
+bool operator==(const PseudoJet &, const PseudoJet &);
+
+/// inequality test which is exact opposite of operator==
+inline bool operator!=(const PseudoJet & a, const PseudoJet & b) {return !(a==b);}
+
 inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
   return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();
 }
