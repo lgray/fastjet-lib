@@ -2,6 +2,34 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
+Summary of changes from v3.0alpha1 -> v3.0beta1:  ????????
+================================================================
+[did stuff up to 2011-05-13]
+
+New features
+- CS::delete_self_when_unused() allows it to handle its own
+  memory management
+- fortran interface now has basic area functionality
+- GhostedAreaSpec can take a Selector to help specify ghost placement
+- Added a Subtractor transformer
+
+Changes to features introduced in alpha2 (or 1):
+- significantly more flexible BackgroundEstimator: manual encoding of
+  rapidity dependence; ability to determine background density of
+  quantities other than pt; correct handling of finite number of jets
+  for sigma() + some bug fixes
+- Selector::count(jets) to know how many pass a cut (also new: Selector::sift)
+
+Other changes and fixes
+- by default PseudoJet is constructed with zero momentum
+- by default a JetDefinition has an undefined_jet_algorithm
+- efficiency improvements in PtYPhiM and ghost generation
+- all uses of RangeDefinition now replaced by Selector (for
+  background compatibility, calls with RangeDefinitions will still
+  work).  RangeDefinition is now obsolete.
+- fixed crashes of VoronoiAreas for particles on a grid
+
+================================================================
 Summary of changes from v3.0alpha1 -> v3.0alpha2:  10 March 2011
 ================================================================
 

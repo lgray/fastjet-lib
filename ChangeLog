@@ -1,5 +1,7 @@
 2011-05-13  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 
+	* NEWS: prepared a summary of what we've done so far towards 3.0b1
+
 	* RoadMap: 
 	  a series of updates reflect needs for 3.0b1
 
@@ -152,7 +154,7 @@
 2011-05-09  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh:
-	  added a use_area_4vector method returning true if the abckground
+	  added a use_area_4vector method returning true if the background
 	  estimation is currently using 4-vector area
 
 2011-05-09  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
@@ -329,7 +331,7 @@
 	* tools/fastjet/tools/Subtractor.hh: 
 	* tools/Subtractor.cc:                   *** ADDED ***
 	  modified comments; moved some of the code to .cc and ensured
-	  that the resulting subtracted jets have their pt set to if the
+	  that the resulting subtracted jets have their pt set to zero if the
 	  subtraction would take away too much pt and that they retain
 	  their structural information.
 
