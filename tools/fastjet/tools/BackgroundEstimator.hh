@@ -293,31 +293,52 @@ public:
   /// @ name  retrieving additional useful information
   //\{
   //----------------------------------------------------------------
-  /// get the median area of the jets used to actually compute the background properties
+  /// Returns the mean area of the jets used to actually compute the
+  /// background properties in the last call of rho() or sigma()
   double mean_area() const{
     _recompute_if_needed();
     return _mean_area;
   }
   
-  /// get the number of jets used to actually compute the background properties
+  /// returns the number of jets used to actually compute the
+  /// background properties in the last call of rho() or sigma()
   unsigned int n_jets_used() const{
     _recompute_if_needed();
     return _n_jets_used;
   }
 
-  /// get the number of empty jets used when computing the background properties;
-  /// (it is deduced from the empty area with an assumption about the average
-  /// area of jets)
-  double n_empty_jets() const{
-    _recompute_if_needed();
-    return _n_empty_jets;
-  }
-
-  /// returns the estimate of the area (within Range) that is not occupied
-  /// by the jets (excluded jets are removed from this count)
+  /// Returns the estimate of the area (within the range defined by
+  /// the selector) that is not occupied by jets. The value is that
+  /// for the last call of rho() or sigma()
+  ///
+  /// The answer is defined to be zero if the area calculation
+  /// involved explicit ghosts; if the area calculation was an active
+  /// area, then use is made of the active area's internal list of
+  /// pure ghost jets (taking those that pass the selector); otherwise
+  /// it is based on the difference between the selector's total area
+  /// and the area of the jets that pass the selector.
+  ///
+  /// The result here is just the cached result of the corresponding
+  /// call to the ClusterSequenceAreaBase function.
   double empty_area() const{
     _recompute_if_needed();
     return _empty_area;
+  }
+
+  /// Returns the number of empty jets used when computing the
+  /// background properties. The value is that for the last call of
+  /// rho() or sigma().
+  ///
+  /// If the area has explicit ghosts the result is zero; for active
+  /// areas it is the number of internal pure ghost jets that pass the
+  /// selector; otherwise it is deduced from the empty area, divided by 
+  /// \f$ 0.55 \pi R^2 \f$ (the average pure-ghost-jet area).
+  ///
+  /// The result here is just the cached result of the corresponding
+  /// call to the ClusterSequenceAreaBase function.
+  double n_empty_jets() const{
+    _recompute_if_needed();
+    return _n_empty_jets;
   }
 
   //}
@@ -326,7 +347,7 @@ public:
   //\{
   //----------------------------------------------------------------
 
-  /// set the cluster sequence (with area support) to be used by
+  /// (re)set the cluster sequence (with area support) to be used by
   /// future calls to rho() etc. 
   ///
   /// \param csa  the cluster sequence area
@@ -345,12 +366,12 @@ public:
   /// use an area with explicit ghosts.
   void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
 
-  /// set the jets (which must have area support) to be used by future
+  /// (re)set the jets (which must have area support) to be used by future
   /// calls to rho() etc.; for the conditions that must be satisfied
   /// by the jets, see the Constructor that takes jets.
   void set_jets(const std::vector<PseudoJet> &jets);
 
-  /// set the selector for calculating rho
+  /// (re)set the selector to be used for future calls to rho() etc.
   void set_selector(const Selector & rho_range_selector) {
     _rho_range = rho_range_selector;
     _uptodate = false;
@@ -363,8 +384,8 @@ public:
   void reset();
 
   /// By default when calculating pt/Area for a jet, it is the
-  /// transverse component of the 4-vector area that is used. Calling
-  /// this function with a "false" argument causes the scalar area to
+  /// transverse component of the 4-vector area that is used in the ratiof \f$p_t/A\f$. 
+  /// Calling this function with a "false" argument causes the scalar area to
   /// be used instead. 
   ///
   /// While the difference between the two choices is usually small,
@@ -412,31 +433,31 @@ public:
     _uptodate = false;
   }
 
-  /// Set the class that calculates the rescaling factor as a function
-  /// of the jet (position). Usage as for set_rescaling_class, but it just
-  /// take a copy of the rescaling class, which must derive from BackgroundRescalingBase
-  template<class T> void set_rescaling_class(const T & rescaling_class) {
-    BackgroundRescalingBase * rescaling_class_copy = new T(rescaling_class);
-    _rescaling_class_sharedptr.reset(rescaling_class_copy);
-    _rescaling_class = rescaling_class_copy;
-    _uptodate = false;
-  }
-
-  /// include a template for pointers that are derived from BackgroundRescalingBase
-  template<class T> void set_rescaling_class(T * rescaling_class) {
-    const BackgroundRescalingBase * brb = dynamic_cast<const BackgroundRescalingBase *>(rescaling_class);
-    if (brb != 0) {
-      set_rescaling_class(brb);
-      return;
-    } else {
-      throw Error("set_rescaling called with a pointer that does not dynamic cast down to const BackgroundRescalingBase");
-    }
-  }
-
-  void set_rescaling_class(SharedPtr<BackgroundRescalingBase> & rescaling_class) {
-    _rescaling_class_sharedptr = rescaling_class;
-    _rescaling_class = _rescaling_class_sharedptr.get();
-  }
+//   /// Set the class that calculates the rescaling factor as a function
+//   /// of the jet (position). Usage as for set_rescaling_class, but it just
+//   /// take a copy of the rescaling class, which must derive from BackgroundRescalingBase
+//   template<class T> void set_rescaling_class(const T & rescaling_class) {
+//     BackgroundRescalingBase * rescaling_class_copy = new T(rescaling_class);
+//     _rescaling_class_sharedptr.reset(rescaling_class_copy);
+//     _rescaling_class = rescaling_class_copy;
+//     _uptodate = false;
+//   }
+// 
+//   /// include a template for pointers that are derived from BackgroundRescalingBase
+//   template<class T> void set_rescaling_class(T * rescaling_class) {
+//     const BackgroundRescalingBase * brb = dynamic_cast<const BackgroundRescalingBase *>(rescaling_class);
+//     if (brb != 0) {
+//       set_rescaling_class(brb);
+//       return;
+//     } else {
+//       throw Error("set_rescaling called with a pointer that does not dynamic cast down to const BackgroundRescalingBase");
+//     }
+//   }
+// 
+//   void set_rescaling_class(SharedPtr<BackgroundRescalingBase> & rescaling_class) {
+//     _rescaling_class_sharedptr = rescaling_class;
+//     _rescaling_class = _rescaling_class_sharedptr.get();
+//   }
 
   /// return the pointer to the jet density class
   const BackgroundRescalingBase *  rescaling_class() {

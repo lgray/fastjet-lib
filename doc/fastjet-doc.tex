@@ -1821,10 +1821,12 @@ background jets.
 Note that we recommend that you use only the $k_t$ or Cambridge/Aachen
 algorithms for calculating the UE/pileup density $\rho$ in this
 way. In particular, it is important to avoid algorithms with extreme
-behaviours for the areas. For example, one should not use anti-$k_t$
-(which has many jets with near-zero area), nor SISCone (which can have
-jets with near-zero area, as well as monster jets with huge areas if
-the overlap parameter $f$ is too small).
+behaviours for the areas. 
+%
+Specifically, one should not use anti-$k_t$ (which has many jets with
+near-zero area), or SISCone (which can have jets with near-zero area,
+as well as monster jets with huge areas if the overlap parameter $f$
+is too small).
 %
 The choice of jet radius can also have an impact on the determination,
 especially for events that are relatively sparse.
@@ -1858,9 +1860,12 @@ subset of jets that will be used for the background estimation.
 The class that provides background estimation facilities is
 \ttt{BackgroundEstimator}. The simplest way to construct it is:
 \begin{lstlisting}
-   /// constructor for a BackgroundEstimator that will use the
-   /// inclusive jets from csa that pass the cuts specified by
-   /// the selector in order to estimate the background density
+   #include "fastjet/tools/BackgroundEstimator.hh"
+   // ...
+
+   // constructor for a BackgroundEstimator that will use the
+   // inclusive jets from csa that pass the cuts specified by
+   // the selector in order to estimate the background density
    BackgroundEstimator(const ClusterSequenceAreaBase & csa,
                        const Selector & selector);
 \end{lstlisting}
@@ -1888,17 +1893,23 @@ selector is empty the median estimate for $\rho$ will be zero.
 \comment{empty areas should be discussed more in comments to empty
   area calls below --- check it's OK later}
 
+%......................................................................
+\subsubsection{Positional dependence of background}
+\label{sec:BGE-positional}
+
 One drawback of a $\rho$ estimate based on all jets from (say)
 $|y|<4.5$ is that the background density in $pp$ and heavy-ion
-collisions usually has some non-negligible dependence on rapidity and
-this information is not correctly accounted for.
+collisions usually has some non-negligible dependence on rapidity (and
+sometimes azimuth) and this information is not correctly accounted
+for.
 %
 Two techniques can help alleviate this problem.
 %
 The first involves the use of a more local range for the determination
 of $\rho$, with the help of a \ttt{Selector} that is able to take a
 reference jet, e.g. \ttt{SelectorStrip(}$\Delta y$\ttt{)}, a strip of
-half-width $\Delta y$ (which might be of order $1$).
+half-width $\Delta y$ (which might be of order $1$) centred on
+whichever jet is set as its reference.
 %
 With this kind of selector, when the user calls either of the functions
 \begin{lstlisting}
@@ -1906,18 +1917,18 @@ With this kind of selector, when the user calls either of the functions
    double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
 \end{lstlisting}
 a \ttt{selector.set\_reference(jet)} call is made to centre the
-selector on the specified jet. Then the jets in \ttt{csa} that pass
-the cut specified by this newly positioned \ttt{selector} are used to
-estimate $\rho$ or $\sigma$.\footnote{If the selector is not
-  modified by the reference jet, then these calls give identical
-  results to the plain \ttt{rho()} and \ttt{sigma()} calls, unless a
+selector on the specified jet. Then the inclusive jets in \ttt{csa}
+that pass the cut specified by this newly positioned \ttt{selector}
+are used to estimate $\rho$ or $\sigma$.\footnote{If the selector does
+  not take a reference jet, then these calls give identical
+  results to the plain \texttt{rho()} and \texttt{sigma()} calls, unless a
   manual rapidity rescaling is in effect.}
 %
 This method is adequate if the number of jets that pass the selector
 is much larger than the number of hard jets in the range (otherwise
 the median $p_t/A$ will be noticeably biased by the hard jets).
 %
-Therefore this method is adequate for dijet events in $pp$ or PbPb
+It therefore tends to be suitable for dijet events in $pp$ or PbPb
 collisions, but may fare less well in event samples such as
 hadronically decaying $t\bar t$ which may have many central hard jets.
 %
@@ -1929,7 +1940,8 @@ as
 \end{lstlisting}
 which removes the 2 hardest jets globally and then, of the remainder,
 takes the ones within the strip. This is however not always very
-effective.\footnote{If you use non-geometric selectors in determining
+effective, because one may not know how many hard jets to
+remove.\footnote{If you use non-geometric selectors in determining
   $\rho$, the area must have explicit ghosts in order to simplify the
   determination of the empty area. If it does not, an error will be
   thrown.}
@@ -1940,7 +1952,7 @@ found that an alternative method that is adequate for handling the
 rapidity dependence is to parametrise the average shape of the
 rapidity dependence from some number of pileup events and then carry
 out an event-by-event global $\rho$ determination taking into account
-that shape.
+that average shape.
 %
 One first creates an object that encodes the shape
 \begin{lstlisting}
@@ -1964,11 +1976,130 @@ Note that any overall factor in the rescaling function cancels out for
 and \ttt{sigma()}.
 
 %......................................................................
-\subsubsection{Advanced use}
-\label{sec:bkgd-advanced}
+\subsubsection{Other facilities}
+\label{sec:BGE-other-facilities}
 
-\comment{Carry on here(?) with information about mean area, empty
-  area, etc.?}
+%% Finally, the base class \ttt{ClusterSequenceAreaBase} contains virtual methods (usually
+%% overloaded by the derived classes) that deal with pure-ghost jets that might be formed
+%% when adding ghost particles to the events in order to calculate ghosted areas:
+%%   // true if a jet is made exclusively of ghosts
+%%   //
+%%   // NB: most area classes do not give any explicit ghost jets, but
+%%   // some do, and they should replace this function with their own
+%%   // version.
+%%   virtual bool is_pure_ghost(const PseudoJet & jet) const ;
+%% 
+A number of enquiry functions are available to obtain information used
+internally within the median $\rho$ and $\sigma$ determination.
+\begin{lstlisting}
+   // Returns the mean area of the jets used to actually compute the background properties
+   // (including empty area and jets)
+   double mean_area() const;
+   
+   // returns the number of jets used to actually compute the background properties
+   // (including empty jets)
+   unsigned int n_jets_used() const;
+   
+   // Returns the estimate of the area (within the range defined by the selector) that
+   // is not occupied by jets.
+   double empty_area() const;
+   
+   // Returns the number of empty jets used when computing the background properties. 
+   double n_empty_jets() const;
+\end{lstlisting}
+For area definitions with explicit ghosts the last two functions
+return $0$.
+%
+For active areas without explicit ghosts the results are calculated
+based on the observed number of internally recorded pure ghost jets
+(and unclustered ghosts) that pass the selector; for Voronoi and
+passive areas, they are calculated using the difference between the
+total range area and the area of the jets contained in the range, with
+the number of empty jets then being calculated based on the average
+jet area for ghost jets ($0.55\pi R^2$~\cite{CSSAreas}).
+%
+All four function above return a result corresponding to the last call
+to \ttt{rho} or \ttt{sigma} (as long as the cluster sequence or
+selector has not changed in the meantime).
+
+To allow flexibility in the user's workflow, there are a number of
+alternative constructors to \ttt{BackgroundEstimator}, together with
+elements to (re)set the cluster sequence and/or jets, and also the
+selector:
+\begin{lstlisting}
+  // the estimator will use the supplied jets instead of inclusive jets from a ClusterSequence
+  BackgroundEstimator(const std::vector<PseudoJet> & jets, const Selector & rho_range);
+  // information about the ClusterSequence or jets will be set later
+  BackgroundEstimator(const Selector & rho_range);
+  // information about the ClusterSequence/jets and Selector will be set later
+  BackgroundEstimator();
+
+  // (re)set the cluster sequence to be used by future calls to rho() etc. 
+  void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
+  // (re)set the jets to be used by future calls to rho() etc. 
+  void set_jets(const std::vector<PseudoJet> & jets);
+  // (re)set the selector to be used for future calls to rho() etc.
+  void set_selector(const Selector & rho_range_selector);
+\end{lstlisting}
+Jets passed to any of the above calls must originate from a common
+originate from a common \ttt{ClusterSequenceAreaBase} type class.
+
+Finally, there are cases where the user may wish to determine medians
+of quantities other than $p_t/A$. 
+%
+This may arise in estimating the hadron-mass contribution to pileup
+contamination of jet masses, or in the determination of moments of
+fragmentation functions.
+%
+For this purpose, the user may use the following call
+\begin{lstlisting}
+  void set_jet_density_class(const BackgroundJetDensityBase * jet_density_class);
+\end{lstlisting}
+For each jet that passes the selection, \ttt{jet\_density\_class}'s
+\ttt{BackgroundJetDensityBase::operator(PseudoJet \& jet)} function is
+called and it returns the quantity that substitutes $p_t/A$.
+%
+\comment{Do we discuss the \ttt{BackgroundJetPtMDensity} class as an
+  example here?}
+
+
+%......................................................................
+\subsubsection{Backwards compatibility}
+\label{sec:BGE-backwards}
+
+The \ttt{BackgroundEstimator} class is new to FastJet 3.0.
+%
+In FastJet versions 2.3 and 2.4, the background estimation tools were
+instead integrated into the \ttt{ClusterSequenceAreaBase} class.
+%
+Rather than using Selectors to specify the jets used in the background
+estimation, they used the \ttt{RangeDefinition} class.
+%
+For the purpose of backwards compatibility, these facilities will
+remain present in all 3.0.x versions.
+%
+Note that \ttt{ClusterSequenceAreaBase} now actually uses a Selector
+in its background estimation interface, and that a
+\ttt{RangeDefinition} is automatically converted to a Selector.
+
+An explicit argument in $\rho$-determination calls in \fastjet 2.4
+concerned the choice between the use of scalar areas and the
+transverse component of the 4-vector area in the denominator of
+$p_t/A$.
+%
+The transverse component gives the more accurate $\rho$ determination
+and that is now the default in \ttt{BackgroundEstimator}. 
+%
+The behaviour can be changed with a call to
+\begin{lstlisting}
+  void set_use_area_4vector(bool use_it = true);
+\end{lstlisting}
+%
+Finally, the calculation of $\sigma$ in Fastjet 2.x incorrectly
+handled the limit of a small number of jets. A call to
+\ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{BackgroundEstimator}
+to reproduce that behaviour.
+
 
 % \subsubsection{Fixed range}
 % 
@@ -1976,7 +2107,7 @@ and \ttt{sigma()}.
 % rapidity-azimuth range over which he/she wishes to study the areas of the
 % jets. It has two constructors. The first is
 % \begin{lstlisting}
-%   /// constructor for a range definition given by |y|<rapmax
+%   // constructor for a range definition given by |y|<rapmax
 %   fastjet::RangeDefinition(double rapmax);
 % \end{lstlisting}
 % which defines a range inclusive in azimuth (0--2$\pi$), and bound by a
@@ -1990,8 +2121,8 @@ and \ttt{sigma()}.
 % %simply be replaced by the double \ttt{rapmax}.
 % The second constructor,
 % \begin{lstlisting}
-%   /// constructor for a range definition given by 
-%   /// rapmin <= y <= rapmax, phimin <= phi <= phimax
+%   // constructor for a range definition given by 
+%   // rapmin <= y <= rapmax, phimin <= phi <= phimax
 %   fastjet::RangeDefinition(double rapmin, double rapmax, 
 %                            double phimin = 0.0, double phimax = twopi);
 % \end{lstlisting}
@@ -1999,19 +2130,19 @@ and \ttt{sigma()}.
 % 
 % \ttt{fastjet::RangeDefinition} contains
 % \begin{lstlisting}
-%   /// return bool according to whether the jet is within the given range
+%   // return bool according to whether the jet is within the given range
 %   bool is_in_range(const PseudoJet & jet) const ;
 % 
-%   /// return bool according to whether the (rap,phi) point is within the given range
+%   // return bool according to whether the (rap,phi) point is within the given range
 %   virtual bool is_in_range(double rap, double phi) const ;
 % 
-%   /// (scalar) area of the range region
+%   // (scalar) area of the range region
 %   virtual double area() const ;
 % 
-%   /// return the minimal and maximal rapidity of this range
+%   // return the minimal and maximal rapidity of this range
 %   virtual inline void get_rap_limits(double & rapmin, double & rapmax) const;
 % 
-%   /// textual description of the range
+%   // textual description of the range
 %   virtual std::string description() const ;
 % \end{lstlisting}
 % 
@@ -2022,11 +2153,11 @@ and \ttt{sigma()}.
 % \ttt{CircularRange.hh}, which implements a circular range centred on a
 % jet's axis. Its constructors are
 % \begin{lstlisting}
-%   /// initialise CircularRange with a jet
+%   // initialise CircularRange with a jet
 %   fastjet::CircularRange(const fastjet::PseudoJet & jet, double distance) ;
-%   /// initialise CircularRange with a (rap,phi) point
+%   // initialise CircularRange with a (rap,phi) point
 %   fastjet::CircularRange(double rap, double phi, double distance) ;
-%   /// initialise CircularRange with just the radius parameter
+%   // initialise CircularRange with just the radius parameter
 %   fastjet::CircularRange(double distance) ;
 % \end{lstlisting}
 % 
@@ -2034,16 +2165,16 @@ and \ttt{sigma()}.
 % This {\sl local} range makes use of two further methods.
 % First, it overrides a virtual function already present in \ttt{RangeDefinition}
 % \begin{lstlisting}
-%   /// For localizable classes override this function with a function
-%   /// that returns true
+%   // For localizable classes override this function with a function
+%   // that returns true
 %   virtual inline bool is_localizable() const ;
 % \end{lstlisting}
 % to return \ttt{true}. This causes the two following functions (present
 % but disabled in the base class) to be enabled:
 % \begin{lstlisting}
-%   /// place the range on the rap-phi position
+%   // place the range on the rap-phi position
 %   inline void set_position(const double & rap, const double & phi);
-%   /// place the range on the jet position
+%   // place the range on the jet position
 %   inline void set_position(const PseudoJet & jet);
 % \end{lstlisting}
 % They allow one to place an existing local range at the supplied position.
@@ -2057,10 +2188,10 @@ and \ttt{sigma()}.
 % 
 % Finally, the protected function 
 % \begin{lstlisting}
-%   /// calculate, and set  _total_area, by calculating which of points on 
-%   /// a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
-%   /// in the range; it takes a reasonable time with rapmax = 10,
-%   /// npoints = 100.
+%   // calculate, and set  _total_area, by calculating which of points on 
+%   // a grid (npoints * npoints from -rapmax..rapmax,0..2pi) are contained
+%   // in the range; it takes a reasonable time with rapmax = 10,
+%   // npoints = 100.
 %   void _numerical_total_area(double rapmax, int npoints) ;
 % \end{lstlisting}
 % is also provided by the \ttt{RangeDefinition} base class, and can be called by
@@ -2073,165 +2204,180 @@ and \ttt{sigma()}.
 \subsection{Background subtraction}
 \label{sec:subtractor}
 
-Once a range has been specified, the following methods, belonging  to
-the base class \ttt{ClusterSequenceAreaBase}, 
-are available for extracting the diffuse noise level and its fluctuations:
-\begin{lstlisting}
-  /// the median of (pt/area) for jets contained within range, 
-  /// making use also of the info on n_empty_jets
-  double median_pt_per_unit_area(const RangeDefinition & range) const;
+\comment{Fill this in with the new Subtractor}
 
-  /// the median of (pt/area_4vector.perp()) for jets contained within range,
-  /// making use also of the info on n_empty_jets
-  double median_pt_per_unit_area_4vector(const RangeDefinition & range) const;
-  
-  /// the function that does the work for median_pt_per_unit_area and 
-  /// median_pt_per_unit_area_4vector: 
-  /// - use_area_4vector = false -> use plain area
-  /// - use_area_4vector = true  -> use 4-vector area
-  double median_pt_per_unit_something(
-                 const & RangeDefinition range, bool use_area_4vector) const;
-
-  /// using jets within range (and with 4-vector areas if
-  /// use_area_4vector), calculate the median pt/area ($\rho$), as well as an
-  /// "error" (uncertainty), which is obtained from the 1-sigma
-  /// half-width of the distribution of pt/A. To be precise it is
-  /// defined such that a fraction (1-0.6827)/2 of the jets
-  /// (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
-  ///
-  /// The subtraction for a jet with uncorrected pt, $p_t^U$ and area A is
-  ///
-  ///   $p_t^S = p_t^U\; -\; \rho A \;\pm\; \sigma \sqrt{A}$
-  ///
-  /// where the error is only that associated with the fluctuations
-  /// in the noise and not that associated with the noise having 
-  /// caused changes in the hard-particle content of the jet.
-  ///
-  /// NB: subtraction may also be done with 4-vector area of course,
-  /// and this is recommended for jets with larger values of R, as
-  /// long as rho has also been determined with a 4-vector area;
-  /// using a scalar area causes one to neglect terms of relative
-  /// order $R^2/8$ in the jet $p_t$.
-  void get_median_rho_and_sigma(const RangeDefinition & range, 
-                                bool use_area_4vector,
-                                double & median, double & sigma,
-                                double & mean_area);
-\end{lstlisting}
-A version exists also without the last argument.
-
-A final version that is present allows one to calculate the median
-based on an explicit li:st of jets, rather than the cluster-sequence's
-\ttt{inclusive\_jets()} 
-\begin{lstlisting}
-  virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
-					const RangeDefinition & range, 
-                                        bool use_area_4vector,
-                                        double & median, double & sigma,
-                                        double & mean_area,
-					bool all_are_inclusive = false) const;
-\end{lstlisting}
-There are at least two ways this might be used. One is if you want to
-exclude (say) some number of hardest jets from the estimate of $\rho$:
-\begin{lstlisting}
-  // get list of jets
-  vector<PseudoJet> all_jets = sorted_by_pt(cs.inclusive_jets());
-  // remove the two hardest jets (you might do this more efficiently...)
-  all_jets.erase(all_jets.begin(), all_jets.begin()+2);
-  // Get rho based on all but the two hardest jets.
-  // The last argument MUST be set to true unless you are using explicit ghosts
-  cs.get_median_rho_and_sigma(all_jets, range, true, median, sigma,  mean_area, true);
-\end{lstlisting}
-Another way it might be used is if you have the Cambridge/Aachen
-algorithm at some $R$ value and wish to determine $\rho$ based on the
-jets it would provide at a different jet radius, $R' < R$ (without rerunning the
-clustering):
-\begin{lstlisting}
-  // get list of jets at smaller $R'$ value
-  vector<PseudoJet> all_jets = cs.exclusive_jets(pow($R'/R$,2)));
-  // The last argument MUST be set to false unless you are using explicit ghosts
-  cs.get_median_rho_and_sigma(all_jets, range, true, median, sigma,  mean_area, false);
-\end{lstlisting}
-This is useful, for example, if you wish to determine $\rho$ at a
-series of different angular resolutions $R'$. It \emph{only} works for
-the Cambridge/Aachen algorithm.
-
-Note: the \ttt{all\_are\_inclusive} argument relates to \fastjet's
-internal mechanism for dealing with empty area. The treatment of empty
-area is much more robust if the area is based on explicit ghosts
-(\verb|active_area_explicit_ghosts|). Its use of strongly recommended
-for the above applications (in which case the value of
-\ttt{all\_are\_inclusive} becomes irrelevant).
-
-%%   /// same as the full version of get_median_rho_and_error, but without
-%%   /// access to the mean_area
-%%   void get_median_rho_and_sigma(const RangeDefinition & range, 
-%%                                 bool use_area_4vector,
-%%                                 double & median, double & sigma);
-
-There is also a routine for estimating rapidity-dependent densities,
-intended for example for heavy-ion events
-\begin{lstlisting}
-  /// fits a form pt_per_unit_area(y) = a + b*y$^2$ in the given range.
-  /// exclude_above allows one to exclude large values of pt/area from fit. 
-  /// use_area_4vector = true uses the 4vector areas.
-  void parabolic_pt_per_unit_area(double & a, double & b, 
-                                  const RangeDefinition & range,
-                                  double exclude_above = -1.0, 
-                                  bool use_area_4vector = false) const;
-\end{lstlisting}
-This method is now considered \emph{deprecated} (it is too sensitive
-to contamination from hard jets).
-%
-An alternative is to use a {\sl local} range definition, 
-like the \ttt{CircularRange} mentioned above.
-%% It defines a range which is centred on a given jet axis (as opposed to
-%% covering a fixed, given region in the rapidity-azimuth plane), and
-%% extends up to a distance $d$ from the axis of thejet. 
-Such a range definition will of course lead to a different
-median $\rho$ according to where the range is placed. 
-%
-It is useful whenever the background distribution is expected to be
-non uniform in rapidity and, for instance in the case of non-central
-collisions, also in azimuth.
-%
-With a wise choice for the
-distance $d$, \ttt{CircularRange} will then allow one to use
-\ttt{ClusterSequenceArea::get\_median\_rho\_and\_sigma}\ttt{()} on a jet-by-jet basis.
-%
-One can similarly also use a plain RangeDefinition in a limited
-rapidity and/or azimuth region.
-
-Note that more specialised methods for extracting the noise level might
-be present at the level of a specific class, e.g.
-\ttt{ClusterSequenceActiveArea}. At least some of them 
-should however be considered obsolete, and might be removed in 
-future releases of \ttt{FastJet}.
-
-Finally, the base class \ttt{ClusterSequenceAreaBase} contains virtual methods (usually
-overloaded by the derived classes) that deal with pure-ghost jets that might be formed
-when adding ghost particles to the events in order to calculate ghosted areas:
-%%   /// true if a jet is made exclusively of ghosts
-%%   ///
-%%   /// NB: most area classes do not give any explicit ghost jets, but
-%%   /// some do, and they should replace this function with their own
-%%   /// version.
-%%   virtual bool is_pure_ghost(const PseudoJet & jet) const ;
-%% 
-\begin{lstlisting}
-  /// return the total area, within range, that is free of jets
-  virtual double empty_area(const RangeDefinition & range) const;
-
-  /// return something similar to the number of pure ghost jets
-  /// in the given range in an active area case.
-  /// Note that the number returned is a double.
-  virtual double n_empty_jets(const RangeDefinition & range) const;
-\end{lstlisting}
-With active area definitions these are calculated based on the
-observed number of pure ghost jets (and unclustered ghosts) in range;
-for Voronoi and passive and areas, they are calculated using the
-difference between the total range area and the area of the jets
-contained in the range, with the number of empty jets then being
-calculated based on the average jet area.
+% Once a range has been specified, the following methods, belonging  to
+% the base class \ttt{ClusterSequenceAreaBase}, 
+% are available for extracting the diffuse noise level and its fluctuations:
+% \begin{lstlisting}
+%   // the median of (pt/area) for jets contained within range, 
+%   // making use also of the info on n_empty_jets
+%   double median_pt_per_unit_area(const RangeDefinition & range) const;
+% 
+%   // the median of (pt/area_4vector.perp()) for jets contained within range,
+%   // making use also of the info on n_empty_jets
+%   double median_pt_per_unit_area_4vector(const RangeDefinition & range) const;
+%   
+%   // the function that does the work for median_pt_per_unit_area and 
+%   // median_pt_per_unit_area_4vector: 
+%   // - use_area_4vector = false -> use plain area
+%   // - use_area_4vector = true  -> use 4-vector area
+%   double median_pt_per_unit_something(
+%                  const & RangeDefinition range, bool use_area_4vector) const;
+% 
+%   // using jets within range (and with 4-vector areas if
+%   // use_area_4vector), calculate the median pt/area ($\rho$), as well as an
+%   // "error" (uncertainty), which is obtained from the 1-sigma
+%   // half-width of the distribution of pt/A. To be precise it is
+%   // defined such that a fraction (1-0.6827)/2 of the jets
+%   // (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
+%   //
+%   // The subtraction for a jet with uncorrected pt, $p_t^U$ and area A is
+%   //
+%   //   $p_t^S = p_t^U\; -\; \rho A \;\pm\; \sigma \sqrt{A}$
+%   //
+%   // where the error is only that associated with the fluctuations
+%   // in the noise and not that associated with the noise having 
+%   // caused changes in the hard-particle content of the jet.
+%   //
+%   // NB: subtraction may also be done with 4-vector area of course,
+%   // and this is recommended for jets with larger values of R, as
+%   // long as rho has also been determined with a 4-vector area;
+%   // using a scalar area causes one to neglect terms of relative
+%   // order $R^2/8$ in the jet $p_t$.
+%   void get_median_rho_and_sigma(const RangeDefinition & range, 
+%                                 bool use_area_4vector,
+%                                 double & median, double & sigma,
+%                                 double & mean_area);
+% \end{lstlisting}
+% A version exists also without the last argument.
+% 
+% A final version that is present allows one to calculate the median
+% based on an explicit li:st of jets, rather than the cluster-sequence's
+% \ttt{inclusive\_jets()} 
+% \begin{lstlisting}
+%   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
+% 					const RangeDefinition & range, 
+%                                         bool use_area_4vector,
+%                                         double & median, double & sigma,
+%                                         double & mean_area,
+% 					bool all_are_inclusive = false) const;
+% \end{lstlisting}
+% There are at least two ways this might be used. One is if you want to
+% exclude (say) some number of hardest jets from the estimate of $\rho$:
+% \begin{lstlisting}
+%   // get list of jets
+%   vector<PseudoJet> all_jets = sorted_by_pt(cs.inclusive_jets());
+%   // remove the two hardest jets (you might do this more efficiently...)
+%   all_jets.erase(all_jets.begin(), all_jets.begin()+2);
+%   // Get rho based on all but the two hardest jets.
+%   // The last argument MUST be set to true unless you are using explicit ghosts
+%   cs.get_median_rho_and_sigma(all_jets, range, true, median, sigma,  mean_area, true);
+% \end{lstlisting}
+% Another way it might be used is if you have the Cambridge/Aachen
+% algorithm at some $R$ value and wish to determine $\rho$ based on the
+% jets it would provide at a different jet radius, $R' < R$ (without rerunning the
+% clustering):
+% \begin{lstlisting}
+%   // get list of jets at smaller $R'$ value
+%   vector<PseudoJet> all_jets = cs.exclusive_jets(pow($R'/R$,2)));
+%   // The last argument MUST be set to false unless you are using explicit ghosts
+%   cs.get_median_rho_and_sigma(all_jets, range, true, median, sigma,  mean_area, false);
+% \end{lstlisting}
+% This is useful, for example, if you wish to determine $\rho$ at a
+% series of different angular resolutions $R'$. It \emph{only} works for
+% the Cambridge/Aachen algorithm.
+% 
+% Note: the \ttt{all\_are\_inclusive} argument relates to \fastjet's
+% internal mechanism for dealing with empty area. The treatment of empty
+% area is much more robust if the area is based on explicit ghosts
+% (\verb|active_area_explicit_ghosts|). Its use of strongly recommended
+% for the above applications (in which case the value of
+% \ttt{all\_are\_inclusive} becomes irrelevant).
+% 
+% %%   // same as the full version of get_median_rho_and_error, but without
+% %%   // access to the mean_area
+% %%   void get_median_rho_and_sigma(const RangeDefinition & range, 
+% %%                                 bool use_area_4vector,
+% %%                                 double & median, double & sigma);
+% 
+% There is also a routine for estimating rapidity-dependent densities,
+% intended for example for heavy-ion events
+% \begin{lstlisting}
+%   // fits a form pt_per_unit_area(y) = a + b*y$^2$ in the given range.
+%   // exclude_above allows one to exclude large values of pt/area from fit. 
+%   // use_area_4vector = true uses the 4vector areas.
+%   void parabolic_pt_per_unit_area(double & a, double & b, 
+%                                   const RangeDefinition & range,
+%                                   double exclude_above = -1.0, 
+%                                   bool use_area_4vector = false) const;
+% \end{lstlisting}
+% This method is now considered \emph{deprecated} (it is too sensitive
+% to contamination from hard jets).
+% %
+% An alternative is to use a {\sl local} range definition, 
+% like the \ttt{CircularRange} mentioned above.
+% %% It defines a range which is centred on a given jet axis (as opposed to
+% %% covering a fixed, given region in the rapidity-azimuth plane), and
+% %% extends up to a distance $d$ from the axis of thejet. 
+% Such a range definition will of course lead to a different
+% median $\rho$ according to where the range is placed. 
+% %
+% It is useful whenever the background distribution is expected to be
+% non uniform in rapidity and, for instance in the case of non-central
+% collisions, also in azimuth.
+% %
+% With a wise choice for the
+% distance $d$, \ttt{CircularRange} will then allow one to use
+% \ttt{ClusterSequenceArea::get\_median\_rho\_and\_sigma}\ttt{()} on a jet-by-jet basis.
+% %
+% One can similarly also use a plain RangeDefinition in a limited
+% rapidity and/or azimuth region.
+% 
+% Note that more specialised methods for extracting the noise level might
+% be present at the level of a specific class, e.g.
+% \ttt{ClusterSequenceActiveArea}. At least some of them 
+% should however be considered obsolete, and might be removed in 
+% future releases of \ttt{FastJet}.
+% 
+% Finally, the base class \ttt{ClusterSequenceAreaBase} contains virtual methods (usually
+% overloaded by the derived classes) that deal with pure-ghost jets that might be formed
+% when adding ghost particles to the events in order to calculate ghosted areas:
+% %%   // true if a jet is made exclusively of ghosts
+% %%   //
+% %%   // NB: most area classes do not give any explicit ghost jets, but
+% %%   // some do, and they should replace this function with their own
+% %%   // version.
+% %%   virtual bool is_pure_ghost(const PseudoJet & jet) const ;
+% %% 
+% \begin{lstlisting}
+%   // return the total area, within the range, that is free of jets
+%   virtual double empty_area(const RangeDefinition & range) const;
+% 
+%   // return something similar to the number of pure ghost jets
+%   // in the given range in an active area case.
+%   // Note that the number returned is a double.
+%   virtual double n_empty_jets(const RangeDefinition & range) const;
+% 
+%   // get the median area of the jets used to actually compute the background properties
+%   double mean_area() const{
+%     _recompute_if_needed();
+%     return _mean_area;
+%   }
+%   
+%   // get the number of jets used to actually compute the background properties
+%   unsigned int n_jets_used() const{
+%     _recompute_if_needed();
+%     return _n_jets_used;
+%   }
+% 
+% \end{lstlisting}
+% With active area definitions these are calculated based on the
+% observed number of pure ghost jets (and unclustered ghosts) in range;
+% for Voronoi and passive and areas, they are calculated using the
+% difference between the total range area and the area of the jets
+% contained in the range, with the number of empty jets then being
+% calculated based on the average jet area.
 
 \subsection{Example program with areas and subtraction}
 \label{sec:ex-prog-sub}

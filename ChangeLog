@@ -1,3 +1,13 @@
+2011-05-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex: 
+	  new documentation section for the BackgroundEstimator (and some
+	  mods to the subdivision of the areas section as a whole)
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	  worked on some comments and (for now) commented out all the
+	  alternative calls to set_rescaling_class
+
 2011-05-13  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 
 	* NEWS: prepared a summary of what we've done so far towards 3.0b1
