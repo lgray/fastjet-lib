@@ -60,7 +60,7 @@ class ClusterSequenceAreaBase;
 /// @ingroup basic_classes
 /// \class PseudoJet
 /// Class to contain pseudojets, including minimal information of use to
-/// to jet-clustering routines.
+/// jet-clustering routines.
 class PseudoJet {
 
  public:
