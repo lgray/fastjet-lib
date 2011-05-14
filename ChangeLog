@@ -1,5 +1,12 @@
 2011-05-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* tools/Subtractor.cc: 
+	* tools/fastjet/tools/Subtractor.hh: 
+	  subtractor now takes a pointer to a bge
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	  fixed bug in BackgroundJetPtMDensity return value (excess sqrt)
+
 	* include/fastjet/PseudoJet.hh: 
 	  corrected typo in first sentence of doc...
 

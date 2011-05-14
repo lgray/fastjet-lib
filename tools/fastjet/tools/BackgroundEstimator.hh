@@ -134,7 +134,7 @@ public:
     std::vector<PseudoJet> constituents = jet.constituents();
     double scalar_ptm = 0;
     for (unsigned i = 0; i < constituents.size(); i++) {
-      scalar_ptm += sqrt(constituents[i].mperp()) - constituents[i].perp();
+      scalar_ptm += constituents[i].mperp() - constituents[i].perp();
     }
     return scalar_ptm / jet.area();
   }

@@ -37,7 +37,7 @@ PseudoJet Subtractor::operator()(const PseudoJet & jet) const {
     throw Error("Trying to subtract a jet without area support");
   }
   
-  double rho = _bge.rho(jet);
+  double rho = _bge->rho(jet);
   PseudoJet subtracted_jet = jet;
   PseudoJet area4vect = jet.area_4vector();
   // sanity check
