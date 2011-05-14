@@ -80,7 +80,7 @@
 \newcommand{\ClusterSequence}{\ttt{ClusterSequence}\xspace}
 \newcommand{\CS}{\ttt{ClusterSequence}\xspace}
 
-\title{FastJet 3.0alpha2 user manual}
+\title{FastJet 3.0beta1 user manual}
 \author{Matteo Cacciari,$^{1,2}$ Gavin P. Salam$^{3,4,1}$ and Gregory Soyez$^{5}$\\[10pt]
   \normalsize
   $^1$LPTHE, UPMC Univ.~Paris 6 and CNRS UMR 7589, Paris, France\\
@@ -1455,7 +1455,7 @@ consult the authors.
 \end{itemize}
 
 %======================================================================
-\section{Jet areas}
+\section{Jet areas, background evaluation and subtraction}
 \label{sec:areas}
 
 Since a jet is made up of only a finite number of particles, one needs
@@ -1722,9 +1722,8 @@ N$) Voronoi diagram generator for planar static point
 sets~\cite{Fortune}.
 
 One use for the Voronoi area is in background determination with the
-$k_t$ algorithm (below,
-section~\ref{sec:areas-and-background-subtraction}): with the choice
-$\ttt{effective\_Rfact}\simeq0.9$ it provides an acceptable
+$k_t$ algorithm (below, section~\ref{sec:BackgroundEstimator}): with
+the choice $\ttt{effective\_Rfact}\simeq0.9$ it provides an acceptable
 approximation to the $k_t$ algorithm's active area that is often
 significantly faster to compute than the active area.
 
@@ -1780,28 +1779,42 @@ also be one of the constituents of a jet, in which case it will return
 \verb|true| if that constituent is a ghost.
 
 %----------------------------------------------------------------------
-\subsection{Areas and background subtraction}
-\label{sec:areas-and-background-subtraction}
+\subsection{Background estimation}
+\label{sec:BackgroundEstimator}
 
-Jet areas can be used to study the level of a randomly distributed
-diffuse background which might be present together with the hard event
-of interest. After selecting a phase space region over which to
-analyse the jets, one can determine the average level $rho$
-(transverse momentum per unit area) of the background, and also
-subtract it from the hard jets.
+Events with hard jets are often accompanied by a more diffuse
+``background'' of relatively soft particles, for example from the
+underlying event (in $pp$ or PbPb collisions) or from pileup (in $pp$
+collisions).
 %
-A difficulty in estimating the background is that it is difficult to
-introduce a robust criterion to distinguish ``background'' jets from
-hard jets. 
+For many physical applications, it is often useful to be able to
+estimate characteristics of the background on an event-by-event basis,
+for example the $p_t$ per unit area ($\rho$), or fluctuations from
+point to point ($\sigma$).
+%
+One use of this information is to correct the hard jets for the soft
+contamination, as discussed below in section~\ref{sec:subtractor}.
+
+% Jet areas can be of use in determining the level of a randomly
+% distributed diffuse background that might be present together with the
+% hard event of interest, whether from the underlying event or pileup.
+% %
+% After selecting a phase space region over which to analyse the jets,
+% one can determine the average level $\rho$ (transverse momentum per
+% unit area) of the background, and also subtract it from the hard jets.
+
+One of the difficulties in characterising the background is that it is
+difficult to introduce a robust criterion to distinguish
+``background'' jets from hard jets.
 %
 The main method that is available in FastJet involves the
 determination of the distribution of $p_t/A$ for the jets in a given
-event and then taking the median of the distribution as an estimate of
-$\rho$, as proposed in~\cite{cs} and studied in detail also
-in~\cite{Cacciari:2009dp}.
+event (or region of the event) and then taking the median of the
+distribution as an estimate of $\rho$, as proposed in~\cite{cs} and
+studied in detail also in~\cite{Cacciari:2009dp}.
 %
-This is insensitive to the presence of even very hard jets, and avoids
-any need for introducing a $p_t$ scale to distinguish hard and
+This is insensitive to the presence of a handful of hard jets, and
+avoids any need for introducing a $p_t$ scale to distinguish hard and
 background jets.
 
 
@@ -1812,18 +1825,31 @@ behaviours for the areas. For example, one should not use anti-$k_t$
 (which has many jets with near-zero area), nor SISCone (which can have
 jets with near-zero area, as well as monster jets with huge areas if
 the overlap parameter $f$ is too small).
+%
+The choice of jet radius can also have an impact on the determination,
+especially for events that are relatively sparse.
+%
+We have found that a choice in the range $R=0.4-0.6$ is generally
+adequate~\cite{cs,Cacciari:2009dp} with a preference for larger values
+if the events are relatively sparse and smaller values if you expect
+your events to have many hard jets.
+
+% an appropriate value of $R$, typically of order 0.4--0.6,
+% see~\cite{cs,Cacciari:2009dp} for more details), its value can then be
+% used for UE/pileup subtraction in an analysis using any jet algorithm.
+
+
 %In contrast the $k_t$ and
 %Cambridge/Aachen algorithms are suitable.
 
-Once $\rho$ has been determined using $k_t$ or Cambridge/Aachen (and
-an appropriate value of $R$, typically of order 0.4--0.6,
-see~\cite{cs,Cacciari:2009dp} for more details), its value can then be
-used for UE/pileup subtraction in an analysis using any jet algorithm.
+% Once $\rho$ has been determined using $k_t$ or Cambridge/Aachen (and
+% an appropriate value of $R$, typically of order 0.4--0.6,
+% see~\cite{cs,Cacciari:2009dp} for more details), its value can then be
+% used for UE/pileup subtraction in an analysis using any jet algorithm.
 
 
-%......................................................................
-\subsubsection{Background Estimation}
-\label{sec:BackgroundEstimator}
+% %......................................................................
+% \subsubsection{Background Estimation}
 
 Two elements are needed for FastJet's background estimation: a cluster
 sequence with area information and a \ttt{Selector} to specify the
@@ -1838,27 +1864,29 @@ The class that provides background estimation facilities is
    BackgroundEstimator(const ClusterSequenceAreaBase & csa,
                        const Selector & selector);
 \end{lstlisting}
-If one wants to use all jets within $|y|<4.5$ to estimate the
-background, then one would choose \ttt{selector =
-  SelectorAbsRapMax(4.5)} and then access the background density
-$\rho$ and its fluctuations $\sigma$ 
-through the functions:
+If, for example, one wants to use all jets within $|y|<4.5$ to
+estimate the background, one should choose \ttt{selector =
+  SelectorAbsRapMax(4.5)}. The background density $\rho$ and its
+fluctuations $\sigma$ can then be accessed through the functions:
 \begin{lstlisting}
    // the median of ($p_t$/area) for jets that pass the selection cut, 
    // making use also of information on empty area in the event
    double rho()   const; 
 
    // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
-   // defined as the 1-sigma half-width of the distribution of $p_t$/A, obtained
-   // by looking for the value $\sigma$ such that a fraction (1-0.6827)/2 of the jets
-   // (including empty jets) have $p_t/A < \rho - \sigma \smash{\sqrt{\langle A \rangle}}$
+   // which is obtained from the 1-sigma half-width of the distribution of pt/A.
+   // To be precise it is defined such that a fraction (1-0.6827)/2 of the jets
+   // (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
    double sigma() const; 
 \end{lstlisting}
-The use of information on empty area is crucial if the method is to
-correctly return $\rho = 0$ in events where there are only a handful
-of jets, i.e. there is no background at all in most of the event.
+Note that $\rho$ and $\sigma$ determinations count empty area within
+the selected region as consisting of jets of zero $p_t$.
 %
-\comment{carry on here about empty areas -- and check what we already have}
+Thus (roughly speaking), if more that half of the area covered by the
+selector is empty the median estimate for $\rho$ will be zero.
+%
+\comment{empty areas should be discussed more in comments to empty
+  area calls below --- check it's OK later}
 
 One drawback of a $\rho$ estimate based on all jets from (say)
 $|y|<4.5$ is that the background density in $pp$ and heavy-ion
@@ -1897,9 +1925,9 @@ One can attempt to remove some given number of hard jets before
 carrying out the median estimation, e.g.\ with a \ttt{selector} such
 as
 \begin{lstlisting}
-   selector = SelectorStrip($\Delta y$) * (!SelectorNHardest(4))
+   selector = SelectorStrip($\Delta y$) * (!SelectorNHardest(2))
 \end{lstlisting}
-which removes the 4 hardest jets globally and then, of the remainder,
+which removes the 2 hardest jets globally and then, of the remainder,
 takes the ones within the strip. This is however not always very
 effective.\footnote{If you use non-geometric selectors in determining
   $\rho$, the area must have explicit ghosts in order to simplify the
@@ -1935,89 +1963,93 @@ Note that any overall factor in the rescaling function cancels out for
 \ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
 and \ttt{sigma()}.
 
+%......................................................................
+\subsubsection{Advanced use}
+\label{sec:bkgd-advanced}
+
 \comment{Carry on here(?) with information about mean area, empty
   area, etc.?}
 
-\subsubsection{Fixed range}
-
-The \ttt{fastjet::RangeDefinition} class allows the user to set the
-rapidity-azimuth range over which he/she wishes to study the areas of the
-jets. It has two constructors. The first is
-\begin{lstlisting}
-  /// constructor for a range definition given by |y|<rapmax
-  fastjet::RangeDefinition(double rapmax);
-\end{lstlisting}
-which defines a range inclusive in azimuth (0--2$\pi$), and bound by a
-maximum value for $\mathrm{abs}(y)$. 
-% Not true if a second method with identical arguments but a double
-% with different meaning in place of RangeDefinition exists!!
-% so better not to suggest dangerous habits.
-%
-%Note that in the methods above (and below)
-%a \ttt{RangeDefinition} instance instantiated by this constructor can
-%simply be replaced by the double \ttt{rapmax}.
-The second constructor,
-\begin{lstlisting}
-  /// constructor for a range definition given by 
-  /// rapmin <= y <= rapmax, phimin <= phi <= phimax
-  fastjet::RangeDefinition(double rapmin, double rapmax, 
-                           double phimin = 0.0, double phimax = twopi);
-\end{lstlisting}
-allows one to fully specify a rectangle in the rapidity-azimuth plane.
-
-\ttt{fastjet::RangeDefinition} contains
-\begin{lstlisting}
-  /// return bool according to whether the jet is within the given range
-  bool is_in_range(const PseudoJet & jet) const ;
-
-  /// return bool according to whether the (rap,phi) point is within the given range
-  virtual bool is_in_range(double rap, double phi) const ;
-
-  /// (scalar) area of the range region
-  virtual double area() const ;
-
-  /// return the minimal and maximal rapidity of this range
-  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const;
-
-  /// textual description of the range
-  virtual std::string description() const ;
-\end{lstlisting}
-
-\subsubsection{Local Ranges}
-
-The virtual functions above can be overloaded by the user in a derived class, where a
-different range definition can be specified. An example can be found in 
-\ttt{CircularRange.hh}, which implements a circular range centred on a
-jet's axis. Its constructors are
-\begin{lstlisting}
-  /// initialise CircularRange with a jet
-  fastjet::CircularRange(const fastjet::PseudoJet & jet, double distance) ;
-  /// initialise CircularRange with a (rap,phi) point
-  fastjet::CircularRange(double rap, double phi, double distance) ;
-  /// initialise CircularRange with just the radius parameter
-  fastjet::CircularRange(double distance) ;
-\end{lstlisting}
-
-
-This {\sl local} range makes use of two further methods.
-First, it overrides a virtual function already present in \ttt{RangeDefinition}
-\begin{lstlisting}
-  /// For localizable classes override this function with a function
-  /// that returns true
-  virtual inline bool is_localizable() const ;
-\end{lstlisting}
-to return \ttt{true}. This causes the two following functions (present
-but disabled in the base class) to be enabled:
-\begin{lstlisting}
-  /// place the range on the rap-phi position
-  inline void set_position(const double & rap, const double & phi);
-  /// place the range on the jet position
-  inline void set_position(const PseudoJet & jet);
-\end{lstlisting}
-They allow one to place an existing local range at the supplied position.
-
-Note: we expect the interface for ranges to evolve significantly in
-releases subsequent to 2.4.
+% \subsubsection{Fixed range}
+% 
+% The \ttt{fastjet::RangeDefinition} class allows the user to set the
+% rapidity-azimuth range over which he/she wishes to study the areas of the
+% jets. It has two constructors. The first is
+% \begin{lstlisting}
+%   /// constructor for a range definition given by |y|<rapmax
+%   fastjet::RangeDefinition(double rapmax);
+% \end{lstlisting}
+% which defines a range inclusive in azimuth (0--2$\pi$), and bound by a
+% maximum value for $\mathrm{abs}(y)$. 
+% % Not true if a second method with identical arguments but a double
+% % with different meaning in place of RangeDefinition exists!!
+% % so better not to suggest dangerous habits.
+% %
+% %Note that in the methods above (and below)
+% %a \ttt{RangeDefinition} instance instantiated by this constructor can
+% %simply be replaced by the double \ttt{rapmax}.
+% The second constructor,
+% \begin{lstlisting}
+%   /// constructor for a range definition given by 
+%   /// rapmin <= y <= rapmax, phimin <= phi <= phimax
+%   fastjet::RangeDefinition(double rapmin, double rapmax, 
+%                            double phimin = 0.0, double phimax = twopi);
+% \end{lstlisting}
+% allows one to fully specify a rectangle in the rapidity-azimuth plane.
+% 
+% \ttt{fastjet::RangeDefinition} contains
+% \begin{lstlisting}
+%   /// return bool according to whether the jet is within the given range
+%   bool is_in_range(const PseudoJet & jet) const ;
+% 
+%   /// return bool according to whether the (rap,phi) point is within the given range
+%   virtual bool is_in_range(double rap, double phi) const ;
+% 
+%   /// (scalar) area of the range region
+%   virtual double area() const ;
+% 
+%   /// return the minimal and maximal rapidity of this range
+%   virtual inline void get_rap_limits(double & rapmin, double & rapmax) const;
+% 
+%   /// textual description of the range
+%   virtual std::string description() const ;
+% \end{lstlisting}
+% 
+% \subsubsection{Local Ranges}
+% 
+% The virtual functions above can be overloaded by the user in a derived class, where a
+% different range definition can be specified. An example can be found in 
+% \ttt{CircularRange.hh}, which implements a circular range centred on a
+% jet's axis. Its constructors are
+% \begin{lstlisting}
+%   /// initialise CircularRange with a jet
+%   fastjet::CircularRange(const fastjet::PseudoJet & jet, double distance) ;
+%   /// initialise CircularRange with a (rap,phi) point
+%   fastjet::CircularRange(double rap, double phi, double distance) ;
+%   /// initialise CircularRange with just the radius parameter
+%   fastjet::CircularRange(double distance) ;
+% \end{lstlisting}
+% 
+% 
+% This {\sl local} range makes use of two further methods.
+% First, it overrides a virtual function already present in \ttt{RangeDefinition}
+% \begin{lstlisting}
+%   /// For localizable classes override this function with a function
+%   /// that returns true
+%   virtual inline bool is_localizable() const ;
+% \end{lstlisting}
+% to return \ttt{true}. This causes the two following functions (present
+% but disabled in the base class) to be enabled:
+% \begin{lstlisting}
+%   /// place the range on the rap-phi position
+%   inline void set_position(const double & rap, const double & phi);
+%   /// place the range on the jet position
+%   inline void set_position(const PseudoJet & jet);
+% \end{lstlisting}
+% They allow one to place an existing local range at the supplied position.
+% 
+% Note: we expect the interface for ranges to evolve significantly in
+% releases subsequent to 2.4.
 
 % The user might also wish to overload the virtual function
 % \ttt{RangeDefinition::area()}, rather than rely on the base class function to
@@ -2036,7 +2068,10 @@ releases subsequent to 2.4.
 % calculate numerically the area of a given range, in case it changes
 % dynamically (for instance, if a circular range centred on a jet is intersected
 % with a rigid boundary in rapidity and/or azimuth).
-\subsubsection{Background subtraction}
+
+%----------------------------------------------------------------------
+\subsection{Background subtraction}
+\label{sec:subtractor}
 
 Once a range has been specified, the following methods, belonging  to
 the base class \ttt{ClusterSequenceAreaBase}, 
@@ -2059,9 +2094,9 @@ are available for extracting the diffuse noise level and its fluctuations:
 
   /// using jets within range (and with 4-vector areas if
   /// use_area_4vector), calculate the median pt/area ($\rho$), as well as an
-  /// "error" (uncertainty), which is defined as the 1-sigma
-  /// half-width of the distribution of pt/A, obtained by looking for
-  /// the value $\sigma$ such which a fraction (1-0.6827)/2 of the jets
+  /// "error" (uncertainty), which is obtained from the 1-sigma
+  /// half-width of the distribution of pt/A. To be precise it is
+  /// defined such that a fraction (1-0.6827)/2 of the jets
   /// (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
   ///
   /// The subtraction for a jet with uncorrected pt, $p_t^U$ and area A is
