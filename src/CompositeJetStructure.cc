@@ -77,4 +77,46 @@ std::vector<PseudoJet> CompositeJetStructure::pieces(const PseudoJet &jet) const
 }
 
 
+// area-related material
+
+// check if it has a well-defined area
+bool CompositeJetStructure::has_area() const{
+  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
+    if (!pit->has_area()) return false;
+
+  return true;
+}
+
+// return the jet (scalar) area.
+double CompositeJetStructure::area(const PseudoJet &reference) const{
+  double total_area = 0.0;
+  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
+    total_area += pit->area();
+
+  return total_area;
+}
+
+// return the error (uncertainty) associated with the determination
+// of the area of this jet.
+// 
+// Be conservative: return the sum of the errors
+double CompositeJetStructure::area_error(const PseudoJet &reference) const{
+  double total_area = 0.0;
+  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
+    total_area += pit->area_error();
+
+  return total_area;
+}
+
+// return the jet 4-vector area.
+PseudoJet CompositeJetStructure::area_4vector(const PseudoJet &reference) const{
+  PseudoJet total_area;
+  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
+    total_area += pit->area_4vector();
+
+  return total_area;
+}
+
+
+
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
