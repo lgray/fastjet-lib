@@ -58,14 +58,13 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
 
   // the cluster sequence will be stored until the next run so we
   // can temporarily access the CS
-  ClusterSequence * cs_rest = new ClusterSequence(rest_input, _subjet_def);
+  ClusterSequence cs_rest(rest_input, _subjet_def);
   vector<PseudoJet> subjets = (_use_exclusive)
-    ? cs_rest->exclusive_jets(2)
-    : sorted_by_E(cs_rest->inclusive_jets());
+    ? cs_rest.exclusive_jets(2)
+    : sorted_by_E(cs_rest.inclusive_jets());
 
   // impose the cuts in the rest-frame
   if (subjets.size()<2){
-    delete cs_rest;
     return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
   }
 
@@ -78,7 +77,6 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   double ct1 = (j1.px()*jet.px() + j1.py()*jet.py() + j1.pz()*jet.pz())
     /sqrt(j1.modp2()*jet.modp2());
   if ((ct0 > _costscut) || (ct1 > _costscut)){
-    delete cs_rest;
     return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
   }
   
@@ -91,14 +89,14 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   tau2 *= (2.0/jet.m2());
 
   if (tau2 > _t2cut){
-    delete cs_rest;
     return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
   }
 
   // We have a positive tag, 
   //  - boost everything back in the lab frame
   //  - record the info in the interface
-  //TODO cs_rest->boost(jet);
+  ClusterSequence * cs_structure = new ClusterSequence();
+  cs_structure->transfer_from_sequence(cs_rest, Boost(jet));
   for (unsigned int i=0; i<2; i++) subjets[i].boost(jet);
     
   PseudoJet result = join<StructureType>(subjets[0],subjets[1]);
@@ -106,7 +104,7 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   result.extra_properties<NSubjettinessTagger>()._costhetas = min(ct0, ct1);
 
   // keep the rest-frame CS alive
-  cs_rest->delete_self_when_unused();
+  cs_structure->delete_self_when_unused();
 
   return result;
 }
