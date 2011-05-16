@@ -48,7 +48,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 string Filter::description() const {
   ostringstream ostr;
   ostr << "Filter with subjet_def = ";
-  ostr << _subjet_def.description();
+  if (_Rfiltfunc)
+    ostr << "Cambridge/Aachen algorithm with dynamic Rfilt";
+  else
+    ostr << _subjet_def.description();
   ostr<< ", and selection " << _selector.description();
   return ostr.str();
 }
@@ -56,7 +59,7 @@ string Filter::description() const {
 
 // return a vector of subjets, which are the ones that would be kept
 // by the filtering
-PseudoJet Filter::operator()(const PseudoJet &jet) const {
+PseudoJet Filter::apply(const PseudoJet &jet) const {
   // start by getting the list of subjets (including a list of sanity
   // checks)
   // NB: subjets is empty to begin with (see the comment for
@@ -114,6 +117,10 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
       throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
   }
 
+  // if we're dealing with a dynamic determination of the filtering
+  // radius, do it now
+  if (_Rfiltfunc)
+    _subjet_def = JetDefinition(cambridge_algorithm, (*_Rfiltfunc)(jet));
 
   // get the jet definition to be use and whether we can apply our
   // simplified C/A+C/A filter

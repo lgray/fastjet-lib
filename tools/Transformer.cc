@@ -57,7 +57,7 @@ std::string Transformer::description() const{
 }
 
 // action of the transformer on a single jet
-PseudoJet Transformer::operator()(const PseudoJet & original) const{
+PseudoJet Transformer::apply(const PseudoJet & original) const{
   // default behaviour?
   // options include
   //  - simply copy the original
@@ -76,13 +76,13 @@ PseudoJet Transformer::operator()(const PseudoJet & original) const{
   return result;
 }
 
-// action of the transformer on each jet from the vector
-vector<PseudoJet> Transformer::operator()(const std::vector<PseudoJet> & originals) const{
-  vector<PseudoJet> result;
-  for (vector<PseudoJet>::const_iterator it=originals.begin(); it!=originals.end(); it++)
-    result.push_back((*this)(*it));
-  return result;
-}
+// // action of the transformer on each jet from the vector
+// vector<PseudoJet> Transformer::operator()(const std::vector<PseudoJet> & originals) const{
+//   vector<PseudoJet> result;
+//   for (vector<PseudoJet>::const_iterator it=originals.begin(); it!=originals.end(); it++)
+//     result.push_back((*this)(*it));
+//   return result;
+// }
 
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

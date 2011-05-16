@@ -1,3 +1,44 @@
+2011-05-16  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	  overloaded apply instead of operator() to fit the new
+	  Transformer.
+
+	* example/12-filter.cc:
+	  added an example of the specification of a dynamic Rfilt
+
+	* tools/Filter.cc:
+	* tools/fastjet/tools/Filter.hh:
+	  . added a ctor specifying just Rfilt (Cambridge/Aachen used by
+	    default)
+	  . added a ctor with Rfilt specified using a
+	    FunctionOfPseudoJet<double>. In that case, Rfilt will be
+	    computed dynamically as a function of the jet being filtered
+
+	* tools/fastjet/tools/Transformer.hh:
+	  Declared Transformer as a FunctionOfPseudoJet<PseudoJet> i.e. a
+	  special function that returns a PseudoJet from a PseudoJet. This
+	  also has a description and a structure type as before.
+
+	* tools/fastjet/tools/Makefile.am:
+	* tools/fastjet/tools/FunctionOfPseudoJet.hh:      *** ADDED ***
+	  added a generic FunctionOfPseudoJet<TOut> class allowing to
+	  define a function returning a result ot type TOut from
+	  a PseudoJet input.
+
+	  These functions have a virtual member 'apply()' that one can
+	  overload to define any function.
+
+	  The operator() will have the same effect as apply when called
+	  from a single object but can also be called on a vector of
+	  objects.
+
+	* include/fastjet/CompositeJetStructure.hh:
+	  added area support for CompositeJet.
+	  Note that the area error is estimated (conservatively) as the
+	  sum of the errors on each of the pieces.
+
 2011-05-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/Subtractor.cc: 

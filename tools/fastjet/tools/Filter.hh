@@ -33,8 +33,8 @@
 
 #include <fastjet/ClusterSequence.hh>
 #include <fastjet/Selector.hh>
-#include <fastjet/CompositeJetStructure.hh>    // to derive the FilteredJet structure from CompositeJetStructure
-#include "Transformer.hh" // to derive Filter from Transformer
+#include <fastjet/CompositeJetStructure.hh> // to derive the FilteredJet structure from CompositeJetStructure
+#include <fastjet/tools/Transformer.hh>     // to derive Filter from Transformer
 #include <iostream>
 #include <string>
 
@@ -137,7 +137,7 @@ public:
   /// trivial ctor
   /// Note: this is just for derived classes
   ///       a Filter initialised through this constructor will not work!
-  Filter(){};
+  Filter() : _Rfiltfunc(0){};
 
   /// define a filter that decomposes a jet into subjets using a
   /// generic JetDefinition and then keeps only a subset of these
@@ -152,7 +152,21 @@ public:
   /// obtained with a cluster sequence with area support and explicit
   /// ghosts
   Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0) : 
-    _subjet_def(subjet_def), _selector(selector), _rho(rho) {}
+    _subjet_def(subjet_def), _Rfiltfunc(0), _selector(selector), _rho(rho) {}
+
+  /// Same as the full constructor (see above) but just specifying the radius
+  /// By default, Cambridge-Aachen is used
+  ///  \param Rfilt   the filtering radius
+  Filter(double Rfilt, Selector selector, double rho = 0.0) : 
+    _subjet_def(JetDefinition(cambridge_algorithm, Rfilt)), 
+    _Rfiltfunc(0), _selector(selector), _rho(rho) {}
+
+  /// Same as the full constructor (see above) but just specifying a
+  /// filtering radius that will depend on the jet being filtered
+  /// As for teh previous case, Cambridge-Aachen is used
+  ///  \param Rfilt_func   the filtering radius function of a PseudoJet
+  Filter(FunctionOfPseudoJet<double> *Rfilt_func, Selector selector, double rho = 0.0) : 
+    _Rfiltfunc(Rfilt_func), _selector(selector), _rho(rho) {}
 
   /// default dtor
   virtual ~Filter(){};
@@ -162,13 +176,7 @@ public:
   ///
   /// \param jet    the jet that gets filtered
   /// \return the filtered jet
-  virtual PseudoJet operator()(const PseudoJet & jet) const;
-
-  /// action of the transformer on each jet from the vector 
-  /// this has to be repeated because it shares the same name as the operator()(PseudoJet)
-  virtual std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & originals) const{
-    return Transformer::operator()(originals);
-  }
+  virtual PseudoJet apply(const PseudoJet & jet) const;
 
   /// class description
   std::string description() const;
@@ -207,9 +215,12 @@ protected:
     const PseudoJet & jet, 
     std::vector<PseudoJet> & filtered_elements) const;
 
-  JetDefinition _subjet_def;  ///< the jet definition to use to extract the subjets
-  mutable Selector _selector; ///< the subjet selection criterium
-  double _rho;                ///< the background density (used for subtraction when possible)
+  mutable JetDefinition _subjet_def; 
+                               ///< the jet definition to use to extract the subjets
+  FunctionOfPseudoJet<double> *_Rfiltfunc; 
+                               ///< a dynamic filtering radius function of the jet being filtered
+  mutable Selector _selector;  ///< the subjet selection criterium
+  double _rho;                 ///< the background density (used for subtraction when possible)
 };
 
 

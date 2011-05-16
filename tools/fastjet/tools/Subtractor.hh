@@ -61,7 +61,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 class Subtractor : public Transformer{
 public:
   /// define a subtractor based on a BackgroundEstimator
-  Subtractor(BackgroundEstimator * bge) : 
+  Subtractor(BackgroundEstimator & bge) : 
     _bge(bge) {}
 
   /// default dtor
@@ -71,25 +71,17 @@ public:
   ///
   /// \param jet    the jet that is to be subtracted
   /// \return       the subtracted jet
-  virtual PseudoJet operator()(const PseudoJet & jet) const;
-
-  /// action of the transformer on each jet from the vector. This has
-  /// to be repeated because the
-  /// Subtractor::operator(vector<PseudoJet>) shares the same name as
-  /// the operator()(PseudoJet)
-  virtual std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & originals) const{
-    return Transformer::operator()(originals);
-  }
+  virtual PseudoJet apply(const PseudoJet & jet) const;
 
   /// class description
-  std::string description() const {
+  std::string description() const{
     return "Subtractor";
   }
 
 protected:
   /// the tool used to estimate the background
   /// if has to be mutable in case its underlying selector takes a reference jet
-  mutable BackgroundEstimator * _bge;
+  mutable BackgroundEstimator _bge;
 };
 
 FASTJET_END_NAMESPACE

@@ -34,6 +34,7 @@
 #include <fastjet/SharedPtr.hh>
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/PseudoJetStructureBase.hh>
+#include <fastjet/tools/FunctionOfPseudoJet.hh>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -72,7 +73,7 @@ class Transformer;
 /// provide (at least) 2 classes:
 ///  - the transformer itself (derived from Transformer)
 ///  - the associated property class (derived from TransformerInterface see below)
-class Transformer{
+class Transformer : public FunctionOfPseudoJet<PseudoJet>{
 public:
   /// default ctor
   Transformer(){}
@@ -83,14 +84,12 @@ public:
   /// description of the transformer
   virtual std::string description() const;
 
+  /// the default action of a Transformer: this returns a 0 PseudoJet
+  /// with a PseudoJetStructureBase structure
+  PseudoJet apply(const PseudoJet & original) const;
+
   /// information about the associated structure type
   typedef PseudoJetStructureBase StructureType;
-
-  /// action of the transformer on a single jet
-  virtual PseudoJet operator()(const PseudoJet & original) const;
-
-  /// action of the transformer on each jet from the vector
-  virtual std::vector<PseudoJet> operator()(const std::vector<PseudoJet> & originals) const;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

@@ -27,6 +27,31 @@
 using namespace fastjet;
 using namespace std;
 
+// a function returning
+//   min(R(j1,j2),Rmin)
+// where j1 and j2 are the 2 subjets of j
+// if the jet does not have 2 exactly pieces, Rmin is used.
+class RfiltDyn : public FunctionOfPseudoJet<double>{
+public:
+  // default ctor 
+  RfiltDyn(double Rmin) : _Rmin(Rmin){}
+
+  // action of the function
+  double apply(const PseudoJet &j) const{
+    if (! j.has_pieces()) return _Rmin;
+
+    vector<PseudoJet> pieces = j.pieces();
+    if (! pieces.size()==2) return _Rmin;
+
+    double R = sqrt(pieces[0].squared_distance(pieces[1]));
+    if (R<_Rmin) R = _Rmin;
+    return R;
+  }
+
+private:
+  double _Rmin;
+};
+
 /// an example program showing how to use fastjet
 int main (int argc, char ** argv) {
   // read in input particles
@@ -75,8 +100,12 @@ int main (int argc, char ** argv) {
   //----------------------------------------------------------
   vector<Filter> filters;
 
-  // the Aachen/Cambridge filter as in arXiv:0802.2470
+  // the Aachen/Cambridge filter with Rfilt=0.3
   filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3)));
+
+  // the Aachen/Cambridge filter with Rfilt=min(Rbb,0.3) as in arXiv:0802.2470
+  SharedPtr<RfiltDyn> rfilt_dyn(new RfiltDyn(0.3));
+  filters.push_back(Filter(rfilt_dyn.get(), SelectorNHardest(3)));
 
   // Filtering with a pt cut as for trimming (arXiv:0912.1342)
   filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtFractionMin(0.03)));
