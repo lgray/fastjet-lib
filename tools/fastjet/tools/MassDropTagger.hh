@@ -61,7 +61,6 @@ class MassDropStructure;
 ///
 /// \section output Output/interface
 /// 
-///  - a copy of the original jet is kept
 ///  - the 2 subjets are kept as pieces if some substructure is found,
 ///    otherwise a single 0-momentum piece
 ///  - the 'mu' and 'y' values corresponding to the unclustering step

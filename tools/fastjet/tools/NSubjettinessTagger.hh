@@ -66,7 +66,6 @@ class NSubjettinessStructure;
 ///
 /// \section output Output/interface
 /// 
-///  - a copy of the original jet is kept
 ///  - the 2 subjets are kept as pieces if some substructure is found,
 ///    otherwise a single 0-momentum piece
 ///  - the tau2 and cos(theta_s) values computed during the tagging
