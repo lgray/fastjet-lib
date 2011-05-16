@@ -56,9 +56,9 @@ public:
   virtual std::string description() const{ return "";}
 
   /// the action of the function
-  /// this has to be overloaded in derived classes
+  /// this _has_ to be overloaded in derived classes
   ///  \param pj   the PseudoJet input to the function
-  virtual TOut apply(const PseudoJet &pj) const { return TOut();}
+  virtual TOut apply(const PseudoJet &pj) const = 0;
 
   /// apply the function using the "traditional" () operator.
   /// By default, this just calls the apply(...) method above.
