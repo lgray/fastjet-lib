@@ -75,6 +75,24 @@ public:
   /// returns the pieces
   virtual std::vector<PseudoJet> pieces(const PseudoJet &jet) const;
 
+  // area-related material
+
+  /// check if it has a well-defined area
+  virtual bool has_area() const;
+
+  /// return the jet (scalar) area.
+  virtual double area(const PseudoJet &reference) const;
+
+  /// return the error (uncertainty) associated with the determination
+  /// of the area of this jet.
+  ///
+  /// Be conservative: return the sum of the errors
+  virtual double area_error(const PseudoJet &reference) const;
+
+  /// return the jet 4-vector area.
+  virtual PseudoJet area_4vector(const PseudoJet &reference) const;
+
+
 protected:
   std::vector<PseudoJet> _pieces;  ///< the pieces building the jet
 };
