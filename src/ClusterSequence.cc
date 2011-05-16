@@ -443,21 +443,43 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
   _extras   = from_seq._extras;
 
   // transfer of ownership
-    if (_structure_shared_ptr()) {
-      // anything that is currently associated with the cluster sequence
-      // should be told that its cluster sequence no longer exists
-      ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
-      assert(csi != NULL);
-      csi->set_associated_cs(NULL);
-    }
-    // create a new _structure_shared_ptr to reflect the fact that
-    // this CS is essentially a new one
-    _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
-    _update_structure_use_count();
+  if (_structure_shared_ptr()) {
+    // anything that is currently associated with the cluster sequence
+    // should be told that its cluster sequence no longer exists
+    ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
+    assert(csi != NULL);
+    csi->set_associated_cs(NULL);
+  }
+  // create a new _structure_shared_ptr to reflect the fact that
+  // this CS is essentially a new one
+  _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+  _update_structure_use_count();
   
-    for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
-      _set_structure_shared_ptr(*jit);
+  for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
+    _set_structure_shared_ptr(*jit);
 }
+
+
+//----------------------------------------------------------------------
+// transfer the sequence contained in other_seq into our own;
+// any plugin "extras" contained in the from_seq will be lost
+// from there.
+//
+// It also sets the ClusterSequence pointers of the PseudoJets in
+// the history to point to this ClusterSequence
+//
+// The second argument is an action that will be applied on every
+// jets in the resulting ClusterSequence
+void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq,
+					     const FunctionOfPseudoJet<PseudoJet> &action_on_jets){
+  // first do the transfer
+  transfer_from_sequence(from_seq);
+
+  // then apply the transformation
+  for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
+    *jit = action_on_jets(*jit);
+}
+
 
 //----------------------------------------------------------------------
 // record an ij recombination and reset the _jets[newjet_k] momentum and

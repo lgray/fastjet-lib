@@ -46,7 +46,7 @@
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/internal/LimitedWarning.hh"
-
+#include "fastjet/FunctionOfPseudoJet.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -546,10 +546,21 @@ public:
   /// any plugin "extras" contained in the from_seq will be lost
   /// from there.
   ///
-  /// If transfer_ownership is true, it also sets the ClusterSequence
-  /// pointers of the PseudoJets in the history to point to this
-  /// ClusterSequence (true by default)
+  /// It also sets the ClusterSequence pointers of the PseudoJets in
+  /// the history to point to this ClusterSequence.
   void transfer_from_sequence(ClusterSequence & from_seq);
+
+  /// transfer the sequence contained in other_seq into our own;
+  /// any plugin "extras" contained in the from_seq will be lost
+  /// from there.
+  ///
+  /// It also sets the ClusterSequence pointers of the PseudoJets in
+  /// the history to point to this ClusterSequence
+  ///
+  /// The second argument is an action that will be applied on every
+  /// jets in the resulting ClusterSequence
+  void transfer_from_sequence(ClusterSequence & from_seq,
+			      const FunctionOfPseudoJet<PseudoJet> &action_on_jets);
 
   /// retrieve a shared pointer to the wrapper to this ClusterSequence
   ///
