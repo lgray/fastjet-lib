@@ -1,5 +1,23 @@
 2011-05-16  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/CompositeJetStructure.hh:
+	  added a template version of join() to help create composite jets
+	  with a Structure derived from CompositeJet Structure.
+
+	* tools/fastjet/tools/Makefile.am:
+	* include/fastjet/Makefile.am:
+	* tools/fastjet/tools/Transformer.hh:
+	* include/fastjet/FunctionOfPseudoJet.hh:      ***  ADDED  ***
+	* tools/fastjet/tools/FunctionOfPseudoJet.hh:  *** DELETED ***
+	  moved FunctionOfPseudoJet<> to the core of FastJet.
+
+	  made apply() purely virtual to make sure one overloads it in
+	  derived classes.
+
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/fastjet/tools/Filter.hh:
+	  declared the description as virtual (more consistent)
+
 	* tools/Subtractor.cc:
 	* tools/fastjet/tools/Subtractor.hh:
 	  overloaded apply instead of operator() to fit the new

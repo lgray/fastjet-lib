@@ -99,6 +99,65 @@ protected:
 
 
 
+// helpers to "join" jets and produce a structure derived from
+// CompositeJetStructure
+//------------------------------------------------------------------------
+
+/// build a "CompositeJet" from the vector of its pieces with an
+/// extended structure of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const std::vector<PseudoJet> & pieces){
+  PseudoJet result(0.0,0.0,0.0,0.0);
+  for (unsigned int i=0; i<pieces.size(); i++){
+    const PseudoJet it = pieces[i];
+    result += it;
+  }
+
+  T *cj_struct = new T(pieces);
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(cj_struct));
+
+  return result;
+}
+
+
+/// build a "CompositeJet" from a single PseudoJet with an extended
+/// structure of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1){
+  return join<T>(std::vector<PseudoJet>(1,j1));
+}
+
+/// build a "CompositeJet" from two PseudoJet with an extended
+/// structure of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2){
+  std::vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  return join<T>(pieces);
+}
+
+/// build a "CompositeJet" from 3 PseudoJet with an extended structure
+/// of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+				    const PseudoJet & j3){
+  std::vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  return join<T>(pieces);
+}
+
+/// build a "CompositeJet" from 4 PseudoJet with an extended structure
+/// of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+				    const PseudoJet & j3, const PseudoJet & j4){
+  std::vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  pieces.push_back(j4);
+  return join<T>(pieces);
+}
+
+
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
 #endif // __FASTJET_MERGEDJET_STRUCTURE_HH__
