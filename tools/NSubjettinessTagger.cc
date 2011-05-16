@@ -1,0 +1,112 @@
+//STARTHEADER
+// $Id$
+//
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+#include <fastjet/tools/NSubjettinessTagger.hh>
+#include <fastjet/tools/Boost.hh>
+#include <fastjet/ClusterSequence.hh>
+#include <sstream>
+
+using namespace fastjet;
+using namespace std;
+
+//------------------------------------------------------------------------
+// tagger description
+string NSubjettinessTagger::description() const{ 
+  ostringstream oss;
+  oss << "NSubjettiness cut with tau_2<" << _t2cut 
+      << " and cos(theta_s)<" << _costscut;
+  return oss.str();
+}
+
+// action on a single jet
+PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
+  // make sure that the jet has constituents
+  if (!jet.has_constituents())
+    throw("The jet you try to tag needs to have accessible constituents");
+   
+  // get the constituents and boost them in the rest frame of the jet
+  vector<PseudoJet> rest_input = jet.constituents();
+  for (unsigned int i=0; i<rest_input.size(); i++)
+    rest_input[i].unboost(jet);
+
+  // the cluster sequence will be stored until the next run so we
+  // can temporarily access the CS
+  ClusterSequence * cs_rest = new ClusterSequence(rest_input, _subjet_def);
+  vector<PseudoJet> subjets = (_use_exclusive)
+    ? cs_rest->exclusive_jets(2)
+    : sorted_by_E(cs_rest->inclusive_jets());
+
+  // impose the cuts in the rest-frame
+  if (subjets.size()<2){
+    delete cs_rest;
+    return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
+  }
+
+  const PseudoJet &j0 = subjets[0];
+  const PseudoJet &j1 = subjets[1];
+
+  /// impose the cut on cos(theta_s)
+  double ct0 = (j0.px()*jet.px() + j0.py()*jet.py() + j0.pz()*jet.pz())
+    /sqrt(j0.modp2()*jet.modp2());
+  double ct1 = (j1.px()*jet.px() + j1.py()*jet.py() + j1.pz()*jet.pz())
+    /sqrt(j1.modp2()*jet.modp2());
+  if ((ct0 > _costscut) || (ct1 > _costscut)){
+    delete cs_rest;
+    return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
+  }
+  
+  // ccompute the 2-subjettiness and impose the coresponding cut
+  double tau2 = 0.0;
+  for (unsigned int i=0; i<rest_input.size(); i++)
+    tau2 += min(dot_product(rest_input[i], j0), 
+		dot_product(rest_input[i], j1));
+
+  tau2 *= (2.0/jet.m2());
+
+  if (tau2 > _t2cut){
+    delete cs_rest;
+    return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
+  }
+
+  // We have a positive tag, 
+  //  - boost everything back in the lab frame
+  //  - record the info in the interface
+  //TODO cs_rest->boost(jet);
+  for (unsigned int i=0; i<2; i++) subjets[i].boost(jet);
+    
+  PseudoJet result = join<StructureType>(subjets[0],subjets[1]);
+  result.extra_properties<NSubjettinessTagger>()._tau2 = tau2;
+  result.extra_properties<NSubjettinessTagger>()._costhetas = min(ct0, ct1);
+
+  // keep the rest-frame CS alive
+  cs_rest->delete_self_when_unused();
+
+  return result;
+}

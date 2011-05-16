@@ -1,5 +1,18 @@
 2011-05-16  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/NSubjettinessTagger.cc:                ***  ADDED  ***
+	* tools/fastjet/tools/NSubjettinessTagger.hh:  ***  ADDED  ***
+	  added a tagger using 2-subjettiness in the rest-frame of the fat
+	  jet
+
+	* tools/MassDropTagger.cc:                     ***  ADDED  ***
+	* tools/fastjet/tools/MassDropTagger.hh:       ***  ADDED  ***
+	  added a tagger based on the mass-drop creterium
+
+	* tools/fastjet/tools/Boost.hh:                ***  ADDED  ***
+	  added a couple of classes (FunctionOfPseudoJet<PseudoJet>) with
+	  the action of boosting and unboosting a PseudoJEt
+
 	* src/ClusterSequence.cc:
 	* include/fastjet/ClusterSequence.hh:
 	  added a version of transfer_from_sequence() that takes, as a
