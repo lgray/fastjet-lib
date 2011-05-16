@@ -22,6 +22,7 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   ClusterSequenceVoronoiArea.hh\
   NNH.hh\
   SharedPtr.hh\
+  FunctionOfPseudoJet.hh\
   Selector.hh\
   CompositeJetStructure.hh\
   config_win.h\

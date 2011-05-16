@@ -179,7 +179,7 @@ public:
   virtual PseudoJet apply(const PseudoJet & jet) const;
 
   /// class description
-  std::string description() const;
+  virtual std::string description() const;
 
   typedef FilteredJetStructure StructureType;
 
