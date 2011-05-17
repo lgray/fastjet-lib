@@ -2675,6 +2675,111 @@ in input, and therefore calculate $\rho$ themselves, do it according to
 % the \ttt{area\_4vector()} function is used internally to evaluate the areas.
 
 %======================================================================
+\section{Jet grooming}
+\label{sec:grooming}
+
+Performing post-clustering actions on jets has become very common: for
+example, various techniques have been introduced to tag boosted
+objects. We introduced (from \fastjet 3.x onwards) a common interface
+to ease the usage of these tools and the creation of new ones.
+
+Below, we first discuss generic considerations about these tools that
+we call {\ttt Transformer}'s, then we go through the list of the ones
+that have already been implemented. We then dig into the more
+technical aspects related to how they are implemented and how to add
+user-defined transformers.
+
+
+\subsection{Generic considerations about \ttt{Transformer}'s}
+\label{sec:transformers}
+
+The common interface to all the transformers is the following one:
+\begin{lstlisting}
+  class Transformer : public FunctionOfPseudoJet<PseudoJet>{
+  public:
+    // default ctor
+    Transformer(){}
+  
+    // default dtor
+    virtual ~Transformer(){}
+  
+    // description of the transformer
+    virtual std::string description() const;
+  
+    // the default action of a Transformer: this returns a 0 PseudoJet
+    // with a PseudoJetStructureBase structure
+    virtual PseudoJet apply(const PseudoJet & original) const;
+  
+    // information about the associated structure type
+    typedef PseudoJetStructureBase StructureType;
+  };
+\end{lstlisting}
+
+This contains two concepts: first, the basic action of the transformer
+through \ttt{apply} would return a transformed jet from the one passed
+as an argument. Note that, in practice,
+\begin{lstlisting}
+  TOut operator()(const PseudoJet &pj) const;
+  vector<TOut> operator()(const vector<PseudoJet> &pjs) const;
+\end{lstlisting}
+would equivalently return the action of the transformer on one or a
+vector of \ttt{PseudoJet}, since \ttt{Transformer} is declared as a
+function of \ttt{PseudoJet} returning a \ttt{PseudoJet} (see Appendix
+\ref{app:function-of-pj}). Then, transformers are likely to bring new
+structural information with the returned result. For a given
+transformer, say \ttt{MyTransformer}, the new information that is not
+directly accessible from \ttt{PseudoJet} (like its \ttt{constituents},
+\ttt{pieces} or \ttt{area} when they are available), coulb be accessed
+through
+\begin{lstlisting}
+  jet.structure_of<MyTransformer>()
+\end{lstlisting}
+which would give direct access to the structural information produced
+by \ttt{MyTransformer}. Using
+\ttt{jet.has\_structure\_of<MyTransformer>()}, it is possible to check
+if \ttt{jet} is compatible with the information provided by
+\ttt{MyTransformer}.
+
+
+\subsection{Jet Filtering using \ttt{Filter}}
+\label{sec:filtering}
+
+Filtering was first introduced in \cite{BDRS} to reduce the
+sensitivity of the boosted Higgs jet to the Underlying
+Event. Originally, the idea was, starting from a jet obtained with a
+Cambridge-Aachen clustering, to uncluster it down to a smaller jet
+radius $R_{\rm filt}$ and only keep the 3 hardest of these subjets as
+the pieces of the final filtered jet, rejecting the others.
+
+Similarly, trimming \cite{trimming} also unclusters a jet into subjets
+but selects the subjets to be kept based on a $p_t$ cut.
+
+Here, we decided to take the most generic approach by introducing
+\begin{lstlisting}
+  class Filter : public Transformer
+    Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0)
+
+    ...
+  };
+\end{lstlisting}
+which would obtain the subjets by reclustering the jet's constituents
+with the jet definition \ttt{subjet\_def} and use \ttt{selector} to
+decide which of these subjets have to be kept. If \ttt{rho} is
+non-zero, each of the subjets will be subtracted prior to the
+selection of the kept subjets.
+
+%% Note on the constraints on the input / extra structural stuff: do
+%% we want to mention that in the previous section?
+
+\subsection{2-Pronged taggers: \ttt{MassDropTagger} and \ttt{NSubjettinessTagger}}
+\label{sec:2prongedtaggers}
+
+\subsection{User-defined transformers}
+\label{sec:transformerdetails}
+
+
+
+%======================================================================
 \section{Plugin jet algorithms}
 \label{sec:plugins}
 
@@ -3647,6 +3752,53 @@ and later access the PDG id through the function
   particle.user_info<MyInfo>().pdg_id();
 \end{lstlisting}
 
+%======================================================================
+\section{Functions of \ttt{PseudoJet}'s}
+\label{app:function-of-pj}
+
+It is interesting to realise that when manipulating jets, one often
+needs functions that allow to obtain a result varying from a jet to
+another. Thiscould be for example the \ttt{BackgroundRescaling} (see
+\ref{sec:BGE-positional}) used to parametrise the positional
+dependence of the background --- and allowing to obtain a number
+associated with each jet ---, or the \ttt{Filter} (see below)
+associating a filtered jet to an initial jet. Generally speaking, all
+these take the form
+\begin{lstlisting}
+   // a generic function of a PseudoJet
+   template<typename TOut> class FunctionOfPseudoJet{
+     // the action of the function (this _has_ to be overloaded in derived classes)
+     virtual TOut apply(const PseudoJet &pj) const = 0;
+   };
+\end{lstlisting}
+that would be a function returning a result of a given type
+\ttt{TOut} depending on the \ttt{PseudoJet} input.
+%
+For completeness and comfort, we have also added
+\begin{lstlisting}
+  virtual std::string description() const{ return "";}
+\end{lstlisting}
+that allows to provide a description of the function and
+\begin{lstlisting}
+  TOut operator()(const PseudoJet &pj) const;
+  vector<TOut> operator()(const vector<PseudoJet> &pjs) const;
+\end{lstlisting}
+equivalent to calling \ttt{apply} on one or a vector of
+\ttt{PseudoJet} but in a more natural way\footnote{This construction
+  where we have both \ttt{apply} and \ttt{operator()} doing the same
+  thing seems redundant but it allows to redefine only \ttt{apply} in
+  derived classes while, if we had only \ttt{operator()}, both
+  the \ttt{PseudoJet} and \ttt{vector<PseudoJet>} version would have
+  had to be overloaded.}.
+
+This definition allows for example to pass functions of
+\ttt{PseudoJet} as arguments. This is {\em e.g.} the case for the
+background rescaling which would just be derived from
+\ttt{FunctionOfPseudoJet<double>}. Similarly, a \ttt{Transformer} is a
+function of a \ttt{PseudoJet} returning a \ttt{PseudoJet}, hence its
+inheritance from \ttt{FunctionOfPseudoJet<PseudoJet>}.
+
+
 % \section{External Range Definitions}
 % \label{app:b}
 % 
@@ -3874,7 +4026,19 @@ Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
   Algorithmica {\bf 2} (1987) 1.
 
 
+\bibitem{BDRS}
+  J.~M.~Butterworth, A.~R.~Davison, M.~Rubin and G.~P.~Salam,
+  %``Jet substructure as a new Higgs search channel at the LHC,''
+  Phys.\ Rev.\ Lett.\  {\bf 100} (2008) 242001
+  [arXiv:0802.2470 [hep-ph]].
+  %%CITATION = PRLTA,100,242001;%%
 
+\bibitem{trimming}
+  D.~Krohn, J.~Thaler and L.~T.~Wang,
+  %``Jet Trimming,''
+  JHEP {\bf 1002} (2010) 084
+  [arXiv:0912.1342 [hep-ph]].
+  %%CITATION = JHEPA,1002,084;%%
 
 \bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
 
