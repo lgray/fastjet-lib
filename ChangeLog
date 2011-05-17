@@ -1,3 +1,8 @@
+2011-05-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/MassDropTagger.hh: 
+	  tiny change to comment.
+
 2011-05-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Transformer.hh (>):

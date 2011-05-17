@@ -92,7 +92,7 @@ class MassDropStructure;
 /// \section output Output/interface
 /// 
 ///  - the 2 subjets are kept as pieces if some substructure is found,
-///    otherwise a single 0-momentum piece
+///    otherwise a single 0-momentum piece is returned
 ///  - the 'mu' and 'y' values corresponding to the unclustering step
 ///    that passed the tagger's cuts
 ///
