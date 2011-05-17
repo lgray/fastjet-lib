@@ -61,7 +61,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 class Subtractor : public Transformer{
 public:
   /// define a subtractor based on a BackgroundEstimator
-  Subtractor(BackgroundEstimator & bge) : 
+  Subtractor(BackgroundEstimator * bge) : 
     _bge(bge) {}
 
   /// default dtor
@@ -81,7 +81,7 @@ public:
 protected:
   /// the tool used to estimate the background
   /// if has to be mutable in case its underlying selector takes a reference jet
-  mutable BackgroundEstimator _bge;
+  mutable BackgroundEstimator * _bge;
 };
 
 FASTJET_END_NAMESPACE
