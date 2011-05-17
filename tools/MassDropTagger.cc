@@ -36,32 +36,10 @@ FASTJET_BEGIN_NAMESPACE
 using namespace std;
 
 //----------------------------------------------------------------------
-// class MassDropTagger
-// Class that helps perform 2-pronged boosted ftagging using
-// the "mass-drop" technique
-//
-// <FULL DESCRIPTION TO BE ADDED>
-//
-// Options
-// 
-// The constructor has the following arguments:
-//  - The first argument is the jet definition to be used to
-//    recluster the constituents of the jet to be filtered (in the
-//    rest frame of the tagged jet).
-//  - The second argument is the cut on tau_2 [0.08 by default]
-//
-// Input conditions
-// 
-//  - the original jet must have constituents
-//
-// Output/interface
-// 
-//  - a copy of the original jet is kept
-//  - the 2 subjets are kept as pieces if some substructure is found,
-//    otherwise a single 0-momentum piece
-//  - the 'mu' and 'y' values corresponding to the unclustering step
-//    that passed the tagger's cuts
+// MassDropTagger class implementation
+//----------------------------------------------------------------------
 
+//------------------------------------------------------------------------
 // description of the tagger
 string MassDropTagger::description() const{ 
   ostringstream oss;
@@ -69,6 +47,7 @@ string MassDropTagger::description() const{
   return oss.str();
 }
 
+//------------------------------------------------------------------------
 // the tagging itself
 //  - jet   the PseudoJet to tag
 PseudoJet MassDropTagger::apply(const PseudoJet & jet) const{
@@ -94,7 +73,7 @@ PseudoJet MassDropTagger::apply(const PseudoJet & jet) const{
     return join<MassDropStructure>(PseudoJet(0.0,0.0,0.0,0.0));
   }
 
-  // apply the filter
+  // create the result and its structure
   PseudoJet result = join<MassDropStructure>(j1,j2);
   result.extra_properties<MassDropTagger>()._mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
   result.extra_properties<MassDropTagger>()._y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;

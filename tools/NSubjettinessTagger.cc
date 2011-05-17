@@ -37,6 +37,10 @@ using namespace fastjet;
 using namespace std;
 
 //------------------------------------------------------------------------
+// NSubjettinessTagger class implementation
+//------------------------------------------------------------------------
+
+//------------------------------------------------------------------------
 // tagger description
 string NSubjettinessTagger::description() const{ 
   ostringstream oss;
@@ -45,6 +49,8 @@ string NSubjettinessTagger::description() const{
   return oss.str();
 }
 
+
+//------------------------------------------------------------------------
 // action on a single jet
 PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   // make sure that the jet has constituents
@@ -101,7 +107,7 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
     
   PseudoJet result = join<StructureType>(subjets[0],subjets[1]);
   result.extra_properties<NSubjettinessTagger>()._tau2 = tau2;
-  result.extra_properties<NSubjettinessTagger>()._costhetas = min(ct0, ct1);
+  result.extra_properties<NSubjettinessTagger>()._costhetas = max(ct0, ct1);
 
   // keep the rest-frame CS alive
   cs_structure->delete_self_when_unused();

@@ -44,10 +44,38 @@ class NSubjettinessStructure;
 //----------------------------------------------------------------------
 /// @ingroup tools
 /// \class NSubjettinessTagger
-/// Class that helps perform 2-pronged boosted ftagging using
+/// Class that helps perform 2-pronged boosted tagging using
 /// N-subjettiness
 ///
-/// <FULL DESCRIPTION TO BE ADDED>
+/// This is the implementation of the N-Subjettiness tagger intruduced
+/// by Ji-Hun Kim im arXiv:1011.1493.
+///
+/// To tag a fat jet, we proceed as follows:
+///
+///  - boost its constituents back in the rest frame of the jet
+///
+///  - recluster them using another jet definition (the original
+///    choice was SISCone in spherical coordinates with R=0.6 and
+///    f=0.75.
+///
+///  - keep the 2 most energetic subjets (\f$q_{1,2}\f$) and compute
+///    the 2-subjettiness
+///    \f[
+///      \tau_2^j = \frac{2}{m_{\rm jet}^2}\,
+///                 \sum_{k\in {\rm jet}} {\rm min}(q_1.p_k,q_2.p_k)
+///    \f]
+///    where the sum runs over the constituents of the jet. 
+///
+///  - require \f$\tau_2^j < \tau_2^{\rm cut}\f$ [0.08 by default]
+///
+///  - impose that (in the rest frame of the fat jet), the angles
+///    between the 2 most energetic subjets and the boost axis are
+///    both large enough: \f$\cos(\theta_s)<c_\theta^{\rm cut}\f$ 
+///    [0.8 by default]
+///
+/// Note that in the original version, the jets are reconstructed
+/// using SISCone with R=0.8 and f=0.75. Also, b-tagging was imposed
+/// on the 2 subjets found in the tagging procedure.
 ///
 /// \section desc Options
 /// 
@@ -68,7 +96,8 @@ class NSubjettinessStructure;
 /// 
 ///  - the 2 subjets are kept as pieces if some substructure is found,
 ///    otherwise a single 0-momentum piece
-///  - the tau2 and cos(theta_s) values computed during the tagging
+///  - the tau2 and maximal cos(theta_s) values computed during the
+///    tagging
 ///
 class NSubjettinessTagger : public Transformer{
 public:

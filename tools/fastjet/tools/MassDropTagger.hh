@@ -42,22 +42,52 @@ class MassDropStructure;
 //----------------------------------------------------------------------
 /// @ingroup tools
 /// \class MassDropTagger
-/// Class that helps perform 2-pronged boosted ftagging using
+/// Class that helps perform 2-pronged boosted tagging using
 /// the "mass-drop" technique
 ///
-/// <FULL DESCRIPTION TO BE ADDED>
+/// This implements the boosted Higgs tagger introduced by Jonathan
+/// Butterworth, Adam Davison, Mathieu Rubin and Gavin Salam in
+/// arXiv:0802.2470.
+///
+/// The tagger proceeds as follows:
+///
+///  0. start from a jet obtained from with the Cambridge/Aachen
+///     algorithm
+///
+///  1. undo the last ste of the clustering step j -> j1 + j2 (label
+///     them such as j1 is the most massive).
+///  
+///  2. if there is a mass drop, i.e. m_j1/m_j < mu_cut, and the
+///     splitting is sufficiently symmetric, \f${/rm
+///     min}(p_{tj1}^2,p_{tj2}^2)\DeltaR_{j1,j2}^2 > y_{/rm cut}
+///     m_j^2\f$, keep j as the result of the tagger (with j1 and j2
+///     its 2 subjets)
+///
+///  3. otherwise, redefine j to be equal to j1 and return to step 1.
+///
+/// Note that in the original proposal, j1 and j2 were both required
+/// to be b-tagged and a filter (with Rfilt=min(0.3,Rbb/2) and
+/// n_filt=3) was applied to j to obtain the final "Higgs candidate".
+/// This filtering technique can always be done by defining a
+/// FunctionOfPseudoJet to compute dynamically Rfilt and then use the
+/// Filter
+///   RfiltDyn rfilt;
+///   Filter final_filter(&rfilt, SelectorNHardest(3));
+/// See the filter example to see explicitly how this can be done.
+/// 
 ///
 /// \section desc Options
 /// 
 /// The constructor has the following arguments:
-///  - The first argument is the jet definition to be used to
-///    recluster the constituents of the jet to be filtered (in the
-///    rest frame of the tagged jet).
-///  - The second argument is the cut on tau_2 [0.08 by default]
+///  - The first argument is minimal mass drop required (mu_cut) [0.67
+///    by default]
+///  - The second argument is asymmetry cut (y_cut) [0.09 by default]
 ///
 /// \section input Input conditions
 /// 
-///  - the original jet must have constituents
+///  - the original jet must be the result of a Cambridge/Aachen
+///    clustering (other options would be possible but have not been
+///    implemented)
 ///
 /// \section output Output/interface
 /// 
