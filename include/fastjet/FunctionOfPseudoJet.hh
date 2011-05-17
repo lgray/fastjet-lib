@@ -40,8 +40,6 @@ FASTJET_BEGIN_NAMESPACE
 ///
 /// This class implements a generic funstion returning an object of a
 /// given (template) type as a function of a PseudoJet
-///
-/// Constraints: TOut had to be default-constructible.
 template<typename TOut>
 class FunctionOfPseudoJet{
 public:
