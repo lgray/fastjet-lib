@@ -45,20 +45,35 @@ class Transformer;
 /// Base (abstract) class for a jet transformer.
 ///
 /// The idea of a transformer is that applied to a jet, it somehow
-/// modifies its momentum and/or contents.. If applied to a vector of
+/// modifies its momentum and/or contents. If applied to a vector of
 /// jets, the Transformer is applied to each one individually.
 ///
 /// This class here is a base class that provides a basic template on
-/// which actual Transformers may be built (one example is a filter).
+/// which actual Transformers may be built (one example is a tagger).
 ///
-/// Any new transformer must implement the operator(). 
+/// Any new transformer must implement apply(), but its action can
+/// equivalently be accessed through the operator() that works either
+/// on a single PseudoJet or on a vector of PseudoJet.
 ///
 /// In addition many transformers will want to associated extra
 /// information on the resulting jet's substructure, by setting a
-/// shared pointer to some class derived from PseudoJetInterfaceBase.
-/// It is the user's responsability to implement this and also set
-/// up a typedef so that DerivedTransformer::InterfaceType is the
-/// corresponding Interface type.
+/// shared pointer to some class derived from PseudoJetStructureBase.
+/// It is the user's responsability to implement this and also set up
+/// a typedef so that DerivedTransformer::StructureType is the
+/// corresponding Structure type. See any of the derived transformers
+/// already implemented for explicit examples). 
+/// 
+/// This associated information about the structure of the PseudoJet
+/// can then be accessed using either
+///   p.structure<DerivedStructureType>()
+/// or
+///   p.extra_properties<DerivedTransformer>()
+/// which both return a reference to the associated structure.
+///
+/// To check if the structure associated to a given PseudoJet is
+/// compatible with the one produced by a DerivedTransformer, one can
+/// also use
+///   if (p.has_properties_of<DerivedTransformer>()) ...;
 ///
 /// [.......comments still under preparation......]
 ///
@@ -72,6 +87,7 @@ class Transformer;
 /// provide (at least) 2 classes:
 ///  - the transformer itself (derived from Transformer)
 ///  - the associated property class (derived from TransformerInterface see below)
+///
 class Transformer : public FunctionOfPseudoJet<PseudoJet>{
 public:
   /// default ctor
