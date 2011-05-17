@@ -67,25 +67,12 @@ PseudoJet Filter::apply(const PseudoJet &jet) const {
   vector<PseudoJet> subjets; 
   _set_filtered_elements(jet, subjets);
 
-  // decide what to keep and what to reject
-  // we first make a copy of the pointers then apply the selector
-  vector<const PseudoJet*> subjet_pointers;
-  for (unsigned int i=0;i<subjets.size(); i++)
-    subjet_pointers.push_back(&(subjets[i]));
-
+  // now build the vector of kept and rejected subjets
+  vector<PseudoJet> kept, rejected;
   // Note that the following line is the one requiring that _selector
   // be declared as mutable
   if (_selector.takes_reference()) _selector.set_reference(jet);
-  _selector.nullify_non_selected(subjet_pointers);
-
-  // now build the vector of kept and rejected subjets
-  vector<PseudoJet> kept, rejected;
-  for (unsigned int i=0;i<subjets.size(); i++){
-    if (subjet_pointers[i]==0)
-      rejected.push_back(subjets[i]);
-    else
-      kept.push_back(subjets[i]);
-  }
+  _selector.sift(subjets, kept, rejected);
 
   // gather the info under the form of a PseudoJet
   return _finalise(jet, kept, rejected);
@@ -110,7 +97,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     if (!jet.has_associated_cluster_sequence())
       throw Error("Attempt to filter and subtract (non-zero rho) without a cluster sequence associated with the jet");
 
-    // note theat the validated_csab() used in the next line will
+    // note that the validated_csab() used in the next line will
     // automatically throw an error if there is no valis CSAB so we
     // just have to check for the explicit ghosts
     if (!jet.validated_csab()->has_explicit_ghosts())

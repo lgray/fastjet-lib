@@ -1,3 +1,9 @@
+2011-05-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/Filter.cc (Filter::apply): 
+	  compactified the apply(...) code somewhat, making use of
+	  Selector::sift(...).
+
 2011-05-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Subtractor.hh:

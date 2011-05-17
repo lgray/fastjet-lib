@@ -7,10 +7,10 @@
 /// simple user index), using a class derived from
 /// fastjet::UserInfoBase.
 ///
-/// Note thatm in this examplem we have chosen to use this
+/// Note that in this example we have chosen to use this
 /// user-defined information to obtain properties of the constituents
 /// of the reconstructed jet (e.g. if the event is made of a hard
-/// interaction and pileup, what part of te reconstructed jets comes
+/// interaction and pileup, what part of the reconstructed jet comes
 /// from the hard interaction). To do that, we also show how to
 /// introduce a user-defined fastjet::Selector. For some applications,
 /// it might also be useful to define new recombination schemes using
