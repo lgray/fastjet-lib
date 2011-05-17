@@ -47,8 +47,8 @@ class NSubjettinessStructure;
 /// Class that helps perform 2-pronged boosted tagging using
 /// N-subjettiness
 ///
-/// This is the implementation of the N-Subjettiness tagger intruduced
-/// by Ji-Hun Kim im arXiv:1011.1493.
+/// This is the implementation of the N-Subjettiness tagger introduced
+/// by Ji-Hun Kim in arXiv:1011.1493.
 ///
 /// To tag a fat jet, we proceed as follows:
 ///

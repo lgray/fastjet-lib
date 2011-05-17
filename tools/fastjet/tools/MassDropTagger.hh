@@ -54,7 +54,7 @@ class MassDropStructure;
 ///  0. start from a jet obtained from with the Cambridge/Aachen
 ///     algorithm
 ///
-///  1. undo the last ste of the clustering step j -> j1 + j2 (label
+///  1. undo the last step of the clustering step j -> j1 + j2 (label
 ///     them such as j1 is the most massive).
 ///  
 ///  2. if there is a mass drop, i.e. m_j1/m_j < mu_cut, and the
