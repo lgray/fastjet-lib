@@ -101,7 +101,7 @@ public:
 
   /// the default action of a Transformer: this returns a 0 PseudoJet
   /// with a PseudoJetStructureBase structure
-  PseudoJet apply(const PseudoJet & original) const;
+  virtual PseudoJet apply(const PseudoJet & original) const;
 
   /// information about the associated structure type
   typedef PseudoJetStructureBase StructureType;
