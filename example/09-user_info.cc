@@ -16,7 +16,7 @@
 /// it might also be useful to define new recombination schemes using
 /// the extra information.
 ///
-/// run it with    : ./09-user_info < data/Pythia8-dijet-ptmin100-lhc7-pileup-1ev.dat
+/// run it with    : ./09-user_info < data/Pythia-dijet-ptmin100-lhc-pileup-1ev.dat
 ///
 /// (Note that this event consists of many sub-events, the first one
 /// being the "hard" interaction and the following being minbias
