@@ -5,6 +5,7 @@
 	    SelectorIsPureGhost
 	  . put the correct ref to FunctionOfPseudoJet<> in the
 	    documentation of BackgroundEstimator
+	  . documented the Filter
 
 	* tools/NSubjettinessTagger.cc:
 	  made sure that the subjets returned as the pieces of the result

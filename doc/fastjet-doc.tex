@@ -802,6 +802,7 @@ at the time of the call.
 
 %......................................................................
 \subsection{Composite jets}
+\label{sec:composite-jet}
 
 There are a number of cases where it is useful to be able to take two
 separate jets and create a single object that is the sum of the two,
@@ -2735,19 +2736,23 @@ as an argument. Note that, in practice,
 would equivalently return the action of the transformer on one or a
 vector of \ttt{PseudoJet}, since \ttt{Transformer} is declared as a
 function of \ttt{PseudoJet} returning a \ttt{PseudoJet} (see Appendix
-\ref{app:function-of-pj}). Then, transformers are likely to bring new
-structural information with the returned result. For a given
-transformer, say \ttt{MyTransformer}, the new information that is not
-directly accessible from \ttt{PseudoJet} (like its \ttt{constituents},
-\ttt{pieces} or \ttt{area} when they are available), coulb be accessed
-through
+\ref{app:function-of-pj}):
+\begin{lstlisting}
+  MyTransformer transformer;
+  PseudoJet transformed_jet = transformer(jet);
+\end{lstlisting}
+Then, transformers are likely to bring new structural information with
+the returned result. For a given transformer, say \ttt{MyTransformer},
+the new information that is not directly accessible from
+\ttt{PseudoJet} (like its \ttt{constituents}, \ttt{pieces} or
+\ttt{area} when they are available), coulb be accessed through
 \begin{lstlisting}
   jet.structure_of<MyTransformer>()
 \end{lstlisting}
 which would give direct access to the structural information produced
 by \ttt{MyTransformer}. Using
 \ttt{jet.has\_structure\_of<MyTransformer>()}, it is possible to check
-if \ttt{jet} is compatible with the information provided by
+if \ttt{jet} is compatible with the structure provided by
 \ttt{MyTransformer}.
 
 
@@ -2768,15 +2773,66 @@ Here, we decided to take the most generic approach by introducing
 \begin{lstlisting}
   class Filter : public Transformer
     Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0)
-
     ...
   };
 \end{lstlisting}
 which would obtain the subjets by reclustering the jet's constituents
 with the jet definition \ttt{subjet\_def} and use \ttt{selector} to
 decide which of these subjets have to be kept. If \ttt{rho} is
-non-zero, each of the subjets will be subtracted prior to the
-selection of the kept subjets.
+non-zero, each of the subjets will be subtracted (using the specified
+value for the background density) prior to the selection of the kept
+subjets.
+
+Two alternative constructors are supported:
+\begin{lstlisting}
+  Filter(double Rfilt, Selector selector, double rho = 0.0)
+  Filter(FunctionOfPseudoJet<double> * Rfilt_dyn, Selector selector, double rho = 0.0)
+\end{lstlisting}
+In the first one, only the radius parameter is specified instead of
+the full subjet definition. For the second, one has to provide a
+(pointer to) a class derived from \ttt{FunctionOfPseudoJet<double>}
+that would dynamically compute the filtering radius as a function of
+the jet being filtered (as it was originally proposed in \cite{BDRS}
+where $R_{/rm filt}={\rm max}(0.3,R_{b\bar{b}})$ depends on the object
+being filtered). In both cases, the Cambridge/Aachen algorithm is used.
+
+\paragraph{Constraints.} The jet being filtered must have
+constituents. Furthermore, if \ttt{rho} is non-zero, the input jet
+must be the result of a \ttt{ClusterSequence} with area support and
+explicit ghosts. If any of these requirements fail, an exception will
+be thrown.
+
+\paragraph{Structure of the result.} The \ttt{PseudoJet} resulting
+from the filtering will have an associated structure of type
+\ttt{FilteredJetStructure}, derived from
+\ttt{CompositeJetStructure}. On top of the subjets kept by the filter,
+available as its \ttt{pieces} (see Section \ref{sec:composite-jet}),
+we store the rejected pieces and the original (input) jet. They are
+accessible using
+\begin{lstlisting}
+  vector<PseudoJet> rejected = jet.structure_of<Filter>().rejected();
+  PseudoJet original = jet.structure_of<Filter>().original();
+\end{lstlisting}
+
+\paragraph{Usage examples.} Filtering involving obtaining the subjets
+with the Cambridge/Aachen algorithm with radius $R_{/rm filt}$ and
+keeping the $n_{/rm filt}$ hardest subjets found can be achieved using
+\begin{lstlisting}
+  Filter filter(Rfilt, SelectorNHardest(nfilt));
+\end{lstlisting}
+Similarily, trimming, keeping the jets with a $p_t$ larger than a
+fixed fraction of the input jet, is done using
+\begin{lstlisting}
+  Filter trimmer(subjet_def, SelectorPtFractionMin(pt_fraction_min));
+\end{lstlisting}
+
+\paragraph{Implementation note.} Generally speaking, the constituents
+of the input jet will be reclustered with the subjet definition to
+extract the subjets. The one exception is when both the clustering
+giving the input jet and the subjet definition use the
+Cambridge/Aachen algorithm. In that specific case one can use
+exclusive subjets of the input jets and avoid reclustering its
+constituents.
 
 %% Note on the constraints on the input / extra structural stuff: do
 %% we want to mention that in the previous section?
