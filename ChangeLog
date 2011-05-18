@@ -1,3 +1,16 @@
+2011-05-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/MassDropTagger.cc:
+	* tools/NSubjettinessTagger.cc:
+	* example/12-filter.cc:
+	  adapted to the renaming mentioned just below.
+
+	* include/fastjet/PseudoJet.hh:
+	  renamed 'has_properties_of' -> 'has_structure_of' and
+	  'extra_properties' -> 'structure_of'. This is hopefully more
+	  indicative of the fact that it deals with the structure of the
+	  jet.
+
 2011-05-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/MassDropTagger.hh: 

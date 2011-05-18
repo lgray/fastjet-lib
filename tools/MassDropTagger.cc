@@ -75,8 +75,8 @@ PseudoJet MassDropTagger::apply(const PseudoJet & jet) const{
 
   // create the result and its structure
   PseudoJet result = join<MassDropStructure>(j1,j2);
-  result.extra_properties<MassDropTagger>()._mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
-  result.extra_properties<MassDropTagger>()._y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
+  result.structure_of<MassDropTagger>()._mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
+  result.structure_of<MassDropTagger>()._y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
   return result;
 }
 

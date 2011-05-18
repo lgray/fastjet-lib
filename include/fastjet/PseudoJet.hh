@@ -476,18 +476,18 @@ class PseudoJet {
 
 
 
-  /// check if the PseudoJet has the properties of the result of a Transformer 
+  /// check if the PseudoJet has the structure resulting from a Transformer 
   /// (that is, its structure is compatible with a Transformer::StructureType)
   /// if there is no structure, false is returned
   template<typename TransformerType>
-  bool has_properties_of() const;
+  bool has_structure_of() const;
 
   /// this is a helper to access an structuree created by a Transformer 
   /// (that is, of type Transformer::StructureType)
   /// NULL is returned if the corresponding type is not met
   /// if there is no structure, an error is thrown
   template<typename TransformerType>
-  const typename TransformerType::StructureType & extra_properties() const;
+  const typename TransformerType::StructureType & structure_of() const;
 
   //\}
 
@@ -840,10 +840,10 @@ const StructureType & PseudoJet::structure() const{
   
 }
 
-// check if the PseudoJet has the properties of the result of a Transformer 
+// check if the PseudoJet has the structure resulting from a Transformer 
 // (that is, its structure is compatible with a Transformer::StructureType)
 template<typename TransformerType>
-bool PseudoJet::has_properties_of() const{
+bool PseudoJet::has_structure_of() const{
   if (!_structure()) return false;
 
   return dynamic_cast<const typename TransformerType::StructureType *>(_structure.get()) != 0;
@@ -853,7 +853,7 @@ bool PseudoJet::has_properties_of() const{
 // (that is, of type Transformer::StructureType)
 // NULL is returned if the corresponding type is not met
 template<typename TransformerType>
-const typename TransformerType::StructureType & PseudoJet::extra_properties() const{
+const typename TransformerType::StructureType & PseudoJet::structure_of() const{
   if (!_structure()) 
     throw Error("Trying to access the structure of a PseudoJet without an associated structure");
 

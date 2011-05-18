@@ -128,10 +128,14 @@ int main (int argc, char ** argv) {
       cout << "  rap = " << j.rap() << ", phi = " << j.phi() << ", pt = " << j.perp() << endl;
       cout << "  #pieces: " << j.pieces().size() << endl;
       
-      // note that, alternatively, we could directly access teh
-      // relevant structure
-      assert(j.has_properties_of<Filter>());
-      const FilteredJetStructure & fj_struct = j.extra_properties<Filter>();
+      // access properties specific to the Filter
+      //
+      // We first make sure that the jet indeed has a structure
+      // compatible with the result of a Filter (using
+      // has_structure_of()), then retrieve the pieces rejected by the
+      // filter (using structure_of())
+      assert(j.has_structure_of<Filter>());
+      const FilteredJetStructure & fj_struct = j.structure_of<Filter>();
       cout << "  #rejected pieces: " << fj_struct.rejected().size() << endl;
     }
     cout << endl;
