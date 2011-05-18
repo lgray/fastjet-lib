@@ -6,6 +6,7 @@
 	  . put the correct ref to FunctionOfPseudoJet<> in the
 	    documentation of BackgroundEstimator
 	  . documented the Filter
+	  . started to document the boosted taggers
 
 	* tools/NSubjettinessTagger.cc:
 	  made sure that the subjets returned as the pieces of the result
