@@ -101,11 +101,15 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   // We have a positive tag, 
   //  - boost everything back in the lab frame
   //  - record the info in the interface
+  // Note that in order to point to the correct Clustersequence, the
+  // subjets must be taken from the boosted one. We extract that
+  // through the history index of the rest-frame subjets
   ClusterSequence * cs_structure = new ClusterSequence();
   cs_structure->transfer_from_sequence(cs_rest, Boost(jet));
-  for (unsigned int i=0; i<2; i++) subjets[i].boost(jet);
+  PseudoJet subjet_lab1 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
+  PseudoJet subjet_lab2 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
     
-  PseudoJet result = join<StructureType>(subjets[0],subjets[1]);
+  PseudoJet result = join<StructureType>(subjet_lab1,subjet_lab2);
   result.structure_of<NSubjettinessTagger>()._tau2 = tau2;
   result.structure_of<NSubjettinessTagger>()._costhetas = max(ct0, ct1);
 

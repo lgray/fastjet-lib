@@ -1,5 +1,9 @@
 2011-05-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/NSubjettinessTagger.cc:
+	  made sure that the subjets returned as the pieces of the result
+	  refer to the ClusterSequence boostedback in the lab frame
+
 	* example/Makefile.am:
 	  . added the example illustrating the "new" subtraction
 	  . updated the comments
