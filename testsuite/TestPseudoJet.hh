@@ -5,7 +5,7 @@
 /// Provides a series of tests of PseudoJets
 
 #include "TestBase.hh"
-
+#include "fastjet/ClusterSequence.hh"
 
 
 //----------------------------------------------------------------------
@@ -151,6 +151,62 @@ class TestPJAssignment : public TestBase {
     // now run some tests 
     verify_equal(particle4==particle, false, "PJ inequality because of meta-info");
 
+    return _pass_test;
+  }
+};
+
+
+//----------------------------------------------------------------------
+/// Tests of assignments and resets of PseudoJets
+class TestPJCSaccess : public TestBase {
+  virtual std::string description() const {return "Tests of the PseudoJet structure calls";}
+  virtual std::string short_name()  const {return "TestPJStructure";}
+
+  virtual bool run_test() {
+    vector<PseudoJet> event = default_event();
+    double R = 0.5;
+    JetDefinition jet_def(antikt_algorithm, R);
+    ClusterSequence * cs = new ClusterSequence(event, jet_def);
+    vector<PseudoJet> jets = sorted_by_pt(cs->inclusive_jets());
+
+    verify_equal(event[0].has_constituents(), false, 
+		 "input particle has no constituents");
+    verify_equal(event[0].has_associated_cluster_sequence(), false, 
+		 "input particle has no cluster sequence");
+
+    verify_equal(jets[0].has_associated_cluster_sequence(), true, 
+		 "jet has cluster sequence");
+    verify_equal(jets[0].has_constituents(), true, 
+		 "jet has constituents");
+    verify_equal(jets[0].constituents().size(), 31U, 
+		 "jet has 31 constituents"); // hard coded # of constit is ugly
+
+    delete cs;
+    
+    verify_equal(jets[0].has_associated_cluster_sequence(), false, 
+		 "post-CS-deletion, jet has cluster sequence (=no)");
+    // now quite a painful series of operations to check that we 
+    // generate the correct FJ Error (but we should refine this to become
+    // more specific?)
+    bool check = false;
+    Error::set_print_errors(false);
+    try {
+      jets[0].has_constituents();
+      //verify_equal(jets[0].has_constituents(), false, 
+      //		   "post-CS-deletion, jet has constituents (=no)"); 
+    } catch (const fastjet::Error & err) {
+      check = true;
+    }
+    verify_equal(check, true, 
+		   "post-CS-deletion, jet has constituents (=throws error)"); 
+    Error::set_print_errors(true);
+    
+    
+//     cout << jets[0].perp() << endl;
+//     cout << jets[0].has_associated_cluster_sequence() << endl;
+//     cout << jets[0].has_constituents() << endl;
+//     cout << jets[0].constituents().size() << endl;
+// 
     return _pass_test;
   }
 };

@@ -38,15 +38,15 @@ FASTJET_BEGIN_NAMESPACE
 /// \class FunctionOfPseudoJet
 /// a generic function of any type of a PseudoJet
 ///
-/// This class implements a generic funstion returning an object of a
-/// given (template) type as a function of a PseudoJet
+/// This class implements a generic function returning an object of a
+/// given (templated) type as a function of a PseudoJet
 template<typename TOut>
 class FunctionOfPseudoJet{
 public:
   /// default ctor
   FunctionOfPseudoJet(){}
 
-  /// default dtor (virtual to make it polymorphic)
+  /// default dtor (virtual to allow safe polymorphism)
   virtual ~FunctionOfPseudoJet(){}
 
   /// returns a description of the function (an empty string by

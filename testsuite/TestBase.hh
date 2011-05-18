@@ -5,6 +5,7 @@
 #include "fastjet/internal/BasicRandom.hh"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 using namespace fastjet;
@@ -169,6 +170,21 @@ public:
     return PtYPhiM(pt, rap, phi, m);
   }
 
+
+  //----------------------------------------------------
+  vector<PseudoJet> default_event() const {
+    string file="../example/data/single-event.dat";
+    ifstream istr(file.c_str());
+    double px, py , pz, E;
+    vector<PseudoJet> input_particles;
+    while (istr >> px >> py >> pz >> E) {
+      // create a fastjet::PseudoJet with these components and put it onto
+      // back of the input_particles vector
+      input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
+      input_particles.back().set_user_index(input_particles.size()-1);
+    }
+    return input_particles;
+  }
 
 protected:
   BasicRandom<double> random;

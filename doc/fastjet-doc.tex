@@ -1,3 +1,12 @@
+%% TO DO before a 3.0:
+%% - make sure references to 3.0(alpha) are all dealt with
+%% - discuss UserInfo in section 3?
+%% - section 7.5 background subtraction
+%% - section 7.5 background estimation example
+%%
+%% TO DO for arXiv release?
+%% - rewrite abstract
+%% - move description of native jet algorithms to start of document?
 %%
 %% TO DOcument for 3.0alpha2
 %% - join(...) [done]
@@ -80,7 +89,7 @@
 \newcommand{\ClusterSequence}{\ttt{ClusterSequence}\xspace}
 \newcommand{\CS}{\ttt{ClusterSequence}\xspace}
 
-\title{FastJet 3.0beta1 user manual}
+\title{FastJet 3.0alpha3-devel user manual}
 \author{Matteo Cacciari,$^{1,2}$ Gavin P. Salam$^{3,4,1}$ and Gregory Soyez$^{5}$\\[10pt]
   \normalsize
   $^1$LPTHE, UPMC Univ.~Paris 6 and CNRS UMR 7589, Paris, France\\
@@ -323,10 +332,11 @@ for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
   \ttt{HepLorentzVector} (so as to allow compilation even without
   \clhep).}
 %
-The default constructor for a \PJ leaves its momentum components
-uninitialised. 
+The default constructor for a \PJ sets the momentum components to
+zero.
 
-It includes the following member functions for accessing the components
+The \ttt{PseudoJet} class includes the following member functions for
+accessing the components
 {
 \begin{lstlisting}
   double E()        const ; // returns the energy component
@@ -360,20 +370,20 @@ There are two ways of associating information user information with a
 %
 The simpler method is through an integer called the user index
 \begin{lstlisting}
-  /// set the user_index, intended to allow the user to label the object
+  /// set the user_index, intended to allow the user to label the object (default is -1)
   void set_user_index(const int index);
 
   /// return the user_index
   int user_index() const ;
 \end{lstlisting}
-A more powerful method, which involves a pointer to a derived class of
-\ttt{PseudoJet::UserInfoBase} is discussed in
+A more powerful method involves a pointer to a derived class of
+\ttt{PseudoJet::UserInfoBase}. It is discussed in
 appendix~\ref{app:user-info}. 
 
 A \verb:PseudoJet: can be reset with
 \begin{lstlisting}
-  /// reset the 4-momentum according to the supplied components and
-  /// put the user and history indices back to their default values
+  /// reset the 4-momentum according to the supplied components,
+  /// put the user and history indices back to their default values (-1
   inline void reset(double px, double py, double pz, double E);
 \end{lstlisting}
 and similarly taking as argument a templated
@@ -486,10 +496,8 @@ If the user calls a constructor with the incorrect number of arguments
 for the requested jet algorithm, a \verb!fastjet::Error()! exception
 will be thrown with an explanatory message.
 
-The default constructor for \verb:JetDefinition: provides the $k_t$
-algorithm with $R=1$; the default constructor is there for programming
-convenience and should not be taken to constitute a default
-recommendation for physics analyses.
+The default constructor for \verb:JetDefinition: sets the jet
+algorithm to \verb:undefined_jet_algorithm:.
 
 The strategy selects the algorithmic strategy to use while clustering
 and is an \texttt{enum} of type \texttt{fastjet::Strategy} with
@@ -757,7 +765,7 @@ follow the merging sequence (and walk back through it):
   /// parent2 to zero
   bool has_parents(PseudoJet & parent1, PseudoJet & parent2) const;
 
-  /// if the jet has a child then return true and give the child jet
+  /// if the jet has a child then return true and set the child jet
   /// otherwise return false and set the child to zero
   bool has_child(PseudoJet & child) const;
 
@@ -868,7 +876,7 @@ that applied a posteriori.
 There is a balance between the usefulness of such a dichotomy and the
 added complication it brings.
 %
-In this respect version 3.0alpha2 should be considered a snapshot of
+In this respect version 3.0alpha3 should be considered a snapshot of
 ongoing thought about the question.
 
 
@@ -879,8 +887,8 @@ The following features still need documenting.
 \begin{lstlisting}
   PseudoJetStructureBase;
   structure<StructureType>();
-  has_properties_of<ToolName>();
-  extra_properties<ToolName>();
+  has_structure_of<ToolName>();
+  structure_of<ToolName>();
 \end{lstlisting}
 
 
@@ -2393,6 +2401,9 @@ to reproduce that behaviour.
 \subsection{Example program with areas and subtraction}
 \label{sec:ex-prog-sub}
 
+\comment{This subsecction still relates to the version 2.x subtraction
+  interface in \fastjet.}
+
 The following simplified example program clusters a series of input
 particles into jets, evaluates the median transverse momentum per unit
 area of the event (both for the standard area, and the alternative
@@ -3865,15 +3876,32 @@ and later access the PDG id through the function
 \end{lstlisting}
 
 %======================================================================
-\section{Functions of \ttt{PseudoJet}'s}
+\section{Functions of a \texttt{PseudoJet}}
 \label{app:function-of-pj}
 
+\subsection{Start of New version}
+
+A core concept that is new to \fastjet v3.0 is that of a
+\ttt{FunctionOfPseudoJet}.
+%
+Functions of \ttt{PseudoJet}s arise in many contexts: many
+boosted-object taggers take a jet and return a modified version of a
+jet; background subtraction does the same; so does a simple Lorentz
+boost.
+%
+Another class of functions returns a floating-point number associated
+with the jet: for example jet shapes; but also the rescaling functions
+used to provide local background estimates in
+section~\ref{sec:BGE-positional}.
+%
+
+\subsection{Old version}
 It is interesting to realise that when manipulating jets, one often
 needs functions that allow to obtain a result varying from a jet to
-another. Thiscould be for example the \ttt{BackgroundRescaling} (see
+another. This could be for example the \ttt{BackgroundRescaling} (see
 \ref{sec:BGE-positional}) used to parametrise the positional
-dependence of the background --- and allowing to obtain a number
-associated with each jet ---, or the \ttt{Filter} (see below)
+dependence of the background --- and allowing one to obtain a number
+associated with each jet --- or the \ttt{Filter} (see below)
 associating a filtered jet to an initial jet. Generally speaking, all
 these take the form
 \begin{lstlisting}
@@ -3890,7 +3918,7 @@ For completeness and comfort, we have also added
 \begin{lstlisting}
   virtual std::string description() const{ return "";}
 \end{lstlisting}
-that allows to provide a description of the function and
+that allows one to provide a description of the function and
 \begin{lstlisting}
   TOut operator()(const PseudoJet &pj) const;
   vector<TOut> operator()(const vector<PseudoJet> &pjs) const;

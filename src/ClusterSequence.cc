@@ -439,7 +439,7 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
   // the data
   _jets     = from_seq._jets;
   _history  = from_seq._history;
-  // the following transferse ownership of the extras from the from_seq
+  // the following transfers ownership of the extras from the from_seq
   _extras   = from_seq._extras;
 
   // transfer of ownership

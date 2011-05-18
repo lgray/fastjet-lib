@@ -83,7 +83,7 @@ public:
   /// Default constructor provides background estimation with scalar pt sum
   BackgroundJetScalarPtDensity() : _pt_power(1) {}
 
-  /// Constructor to provides background estimation based on 
+  /// Constructor to provide background estimation based on 
   /// \f$ sum_{i\in jet} p_{ti}^{n} \f$
   BackgroundJetScalarPtDensity(double n) : _pt_power(n) {}
 

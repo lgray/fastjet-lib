@@ -60,8 +60,9 @@ PseudoJet MassDropTagger::apply(const PseudoJet & jet) const{
     if (j1.m() < j2.m()) std::swap(j1,j2);
 
     // if we pass the conditions on the mass drop and its degree of
-    // asymmetry (z/(1-z) \sim kt_dist/m^2 > rtycut), then we've found
-    // something interesting, so exit the loop
+    // asymmetry (kt_dist/m^2 > rtycut [where kt_dist/m^2 \sim
+    // z/(1-z)), then we've found something interesting, so exit the
+    // loop
     if ( (j1.m() < _mu*j.m()) && (j1.kt_distance(j2) > _ycut*j.m2()) )
       break;
     else

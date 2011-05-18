@@ -129,10 +129,12 @@ public:
   MassDropStructure(std::vector<PseudoJet> pieces) :
     CompositeJetStructure(pieces), _mu(0.0), _y(0.0){}
 
-  /// access to the associated N-subjettiness
+  /// the mass-drop ratio, pieces[0].m()/jet.m(), for the splitting
+  /// that triggered the mass-drop condition
   inline double mu() const{return _mu;}
 
-  /// access to the associated angle with the boosted axis
+  /// The value of y = (squared kt distance) / (squared mass) for the
+  /// splitting that triggered the mass-drop condition
   inline double y() const {return _y;}
 
 protected:

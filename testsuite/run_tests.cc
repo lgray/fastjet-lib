@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
   // the list of tests we will perform
   tests.push_back(new TestPtYPhiM());
   tests.push_back(new TestPJAssignment());
+  tests.push_back(new TestPJCSaccess());
 
   // loop over the tests
   for (unsigned i = 0; i < tests.size(); i++) {

@@ -1,3 +1,28 @@
+2011-05-18  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/NSubjettinessTagger.hh: 
+	* tools/NSubjettinessTagger.cc: 
+	  small changes to comments
+
+	* include/fastjet/FunctionOfPseudoJet.hh: 
+	  typos + other small changes in comments
+
+	* src/ClusterSequence.cc (ClusterSequence::transfer_from_sequence):
+	  typo in comments
+
+	* tools/MassDropTagger.cc: 
+	  slight reworking of some comments
+
+	* tools/fastjet/tools/MassDropTagger.hh: 
+	  fixed the descriptions of mu() and y() for MassDropStructure
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	  typos in comments
+
+	* testsuite/TestPseudoJet.hh (class TestPJCSaccess):
+	  added a class to help help maintain consistency of behaviours
+	  wrt constituents etc. once the CS goes out of scope
+
 2011-05-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex (algorithms):
@@ -81,11 +106,11 @@
 
 	* tools/MassDropTagger.cc:                     ***  ADDED  ***
 	* tools/fastjet/tools/MassDropTagger.hh:       ***  ADDED  ***
-	  added a tagger based on the mass-drop creterium
+	  added a tagger based on the mass-drop criterion
 
 	* tools/fastjet/tools/Boost.hh:                ***  ADDED  ***
 	  added a couple of classes (FunctionOfPseudoJet<PseudoJet>) with
-	  the action of boosting and unboosting a PseudoJEt
+	  the action of boosting and unboosting a PseudoJet
 
 	* src/ClusterSequence.cc:
 	* include/fastjet/ClusterSequence.hh:

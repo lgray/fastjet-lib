@@ -57,13 +57,11 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   if (!jet.has_constituents())
     throw("The jet you try to tag needs to have accessible constituents");
    
-  // get the constituents and boost them in the rest frame of the jet
+  // get the constituents and boost them into the rest frame of the jet
   vector<PseudoJet> rest_input = jet.constituents();
   for (unsigned int i=0; i<rest_input.size(); i++)
     rest_input[i].unboost(jet);
 
-  // the cluster sequence will be stored until the next run so we
-  // can temporarily access the CS
   ClusterSequence cs_rest(rest_input, _subjet_def);
   vector<PseudoJet> subjets = (_use_exclusive)
     ? cs_rest.exclusive_jets(2)
@@ -99,7 +97,7 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   }
 
   // We have a positive tag, 
-  //  - boost everything back in the lab frame
+  //  - boost everything back into the lab frame
   //  - record the info in the interface
   // Note that in order to point to the correct Clustersequence, the
   // subjets must be taken from the boosted one. We extract that

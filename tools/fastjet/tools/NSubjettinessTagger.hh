@@ -52,7 +52,7 @@ class NSubjettinessStructure;
 ///
 /// To tag a fat jet, we proceed as follows:
 ///
-///  - boost its constituents back in the rest frame of the jet
+///  - boost its constituents into the rest frame of the jet
 ///
 ///  - recluster them using another jet definition (the original
 ///    choice was SISCone in spherical coordinates with R=0.6 and
