@@ -1,5 +1,12 @@
 2011-05-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/Makefile.am:
+	  . added the example illustrating the "new" subtraction
+	  . updated the comments
+
+	* example/07-subtraction-new.cc:
+	  made subtractor take a pointer to the background estimator
+
 	* tools/MassDropTagger.cc:
 	* tools/NSubjettinessTagger.cc:
 	* example/12-filter.cc:

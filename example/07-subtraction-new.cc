@@ -170,7 +170,7 @@ int main (int argc, char ** argv) {
   // ----------------------------------------------------------
   Selector selector = SelectorAbsRapMax(5.0);
   BackgroundEstimator bkgd_estimator(clust_seq_bkgd, selector);
-  Subtractor subtractor(bkgd_estimator);
+  Subtractor subtractor(&bkgd_estimator);
 
   // show a summary of what was done so far
   //  - the description of the algorithms, areas and ranges used
