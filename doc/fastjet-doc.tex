@@ -1964,8 +1964,9 @@ One first creates an object that encodes the shape
    // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
    BackgroundRescalingYPolynomial rescaling(1.16, 0, -0.023, 0, 0.000041);
 \end{lstlisting}
-(for other shapes, derive a class from \ttt{BackgroundRescalingBase}
-\comment{check the name stays the same}) and then one tells the
+(for other shapes, derive a class from
+\ttt{FunctionOfPseudoJet<double>} --- see appendix
+\ref{app:function-of-pj}) and then one tells the
 \ttt{BackgroundEstimator} about the rescaling with the call
 \begin{lstlisting}
    // tell the BackgroundEstimator about the rescaling
@@ -2058,11 +2059,15 @@ fragmentation functions.
 %
 For this purpose, the user may use the following call
 \begin{lstlisting}
-  void set_jet_density_class(const BackgroundJetDensityBase * jet_density_class);
+  void set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class);
 \end{lstlisting}
 For each jet that passes the selection, \ttt{jet\_density\_class}'s
-\ttt{BackgroundJetDensityBase::operator(PseudoJet \& jet)} function is
-called and it returns the quantity that substitutes $p_t/A$.
+\ttt{FunctionOfPseudoJet<double>::operator(PseudoJet \& jet)} function
+is called\footnote{As explained in Appendix \ref{app:function-of-pj}
+  describing functions of \ttt{PseudoJet}, user-defined density
+  classes derived from \ttt{FunctionOfPseudoJet<double>} should
+  overload \ttt{FunctionOfPseudoJet<double>::apply()}.} and it returns
+the quantity that substitutes $p_t/A$.
 %
 \comment{Do we discuss the \ttt{BackgroundJetPtMDensity} class as an
   example here?}

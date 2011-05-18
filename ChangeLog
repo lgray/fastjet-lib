@@ -1,7 +1,10 @@
 2011-05-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex (algorithms):
-	  added a description of SelectorIdentity and SelectorIsPureGhost
+	  . added a description of SelectorIdentity and
+	    SelectorIsPureGhost
+	  . put the correct ref to FunctionOfPseudoJet<> in the
+	    documentation of BackgroundEstimator
 
 	* tools/NSubjettinessTagger.cc:
 	  made sure that the subjets returned as the pieces of the result
