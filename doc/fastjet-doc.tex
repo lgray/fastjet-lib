@@ -2837,8 +2837,54 @@ constituents.
 %% Note on the constraints on the input / extra structural stuff: do
 %% we want to mention that in the previous section?
 
-\subsection{2-Pronged taggers: \ttt{MassDropTagger} and \ttt{NSubjettinessTagger}}
+\subsection{2-Pronged taggers}
 \label{sec:2prongedtaggers}
+
+
+Most of the taggers that investigate the substructure of boosted jets
+in order to discrinminate boosted vector bosons from QCD jets form
+another big class of \emph{jet transformers}. Given an input jet, they
+search for a 2-pronged structure inside it and thus naturally result
+in a ``tagged'' jet with new structural information.
+
+At the moment, we have implemented two of the taggers proposed for
+boosted Higgs reconstruction: the \ttt{MassDropTagger} introduced in
+\cite{BDRS} and a rest-frame \ttt{NSubjettinessTagger} from
+Ref. \cite{nsubtagger}. We refer the reader to these articles for an
+extensive description of the taggers and shall only give a very brief
+overview in what follows. 
+
+\subsubsection{The mass-drop tagger}
+
+Introduced in \cite{BDRS}, this tagger starts with a fat jet obtained
+with a Cambridge/Aachen algorithm (originally, $R=1.2$ was suggested
+for boosted Higgs tagging). Tagging then proceeds as follows
+\begin{enumerate}
+\item the last step of the clustering is undone: $j \to j_1,j_2$, with
+  $m_{j_1} > m_{j_2}$,
+\item if there is a significant mass drop, $\mu \equiv m_{j_1}/m_j <
+  \mu_{/rm cut}$, and the splitting is sufficiently symmetric,
+  $y\equiv {\rm min}(p_{tj_1}^2, p_{tj_2}^2)\Delta R_{j_1j_2}^2/m_j^2
+  > y_{\rm cut}$, then $j$ is the resulting heavy particle candidate
+  with $j_1$ and $j_2$ its subjets,
+\item otherwise, redefine $j$ to be equal to $j_1$ and go back to step
+  1.
+\end{enumerate}
+
+\paragraph{Constraints.}
+
+
+\paragraph{Structure of the result.}
+
+
+\subsubsection{The rest-frame $N$-subjettiness tagger}
+
+\paragraph{Constraints.}
+
+
+\paragraph{Structure of the result.}
+
+
 
 \subsection{User-defined transformers}
 \label{sec:transformerdetails}
@@ -4105,6 +4151,15 @@ Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
   JHEP {\bf 1002} (2010) 084
   [arXiv:0912.1342 [hep-ph]].
   %%CITATION = JHEPA,1002,084;%%
+
+\bibitem{nsubtagger}
+  J.~H.~Kim,
+  %``Rest Frame Subjet Algorithm With SISCone Jet For Fully Hadronic Decaying
+  %Higgs Search,''
+  Phys.\ Rev.\  D {\bf 83} (2011) 011502
+  [arXiv:1011.1493 [hep-ph]].
+  %%CITATION = PHRVA,D83,011502;%%
+
 
 \bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
 
