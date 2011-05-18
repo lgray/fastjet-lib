@@ -1,5 +1,8 @@
 2011-05-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* doc/fastjet-doc.tex (algorithms):
+	  added a description of SelectorIdentity and SelectorIsPureGhost
+
 	* tools/NSubjettinessTagger.cc:
 	  made sure that the subjets returned as the pieces of the result
 	  refer to the ClusterSequence boostedback in the lab frame
@@ -28,6 +31,10 @@
 	  tiny change to comment.
 
 2011-05-17  Gregory Soyez  <soyez@fastjet.fr>
+
+	* doc/fastjet-doc.tex (algorithms):
+	  started to document the Transformer's; added FunctionOfPseudoJet<>
+	  as an appendix.
 
 	* tools/fastjet/tools/Transformer.hh (>):
 	  added a missing "virtual" in Transformer

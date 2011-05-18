@@ -1285,6 +1285,11 @@ Following a similar naming convention, there are also
 \ttt{SelectorPhiRange(}$\phi_{\min},\phi_{\max}$\ttt{)} and
 \ttt{SelectorRapPhiRange(}$y_{\min},y_{\max},\phi_{\min},\phi_{\max}$\ttt{)}.
 
+Mostly for completeness, there is a \ttt{SelectorIdentity} which
+selects everything. And, as a helper for the situations where ghost
+areas are computed using explicit ghosts, \ttt{SelectorIsPureGhost}
+selects only pure-ghost jets.
+
 In addition there are also some selectors that take a \emph{reference jet}. 
 %
 These have been developed because it is often useful for a selector to
