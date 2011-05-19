@@ -547,20 +547,12 @@ public:
   /// from there.
   ///
   /// It also sets the ClusterSequence pointers of the PseudoJets in
-  /// the history to point to this ClusterSequence.
-  void transfer_from_sequence(ClusterSequence & from_seq);
-
-  /// transfer the sequence contained in other_seq into our own;
-  /// any plugin "extras" contained in the from_seq will be lost
-  /// from there.
-  ///
-  /// It also sets the ClusterSequence pointers of the PseudoJets in
   /// the history to point to this ClusterSequence
   ///
-  /// The second argument is an action that will be applied on every
-  /// jets in the resulting ClusterSequence
+  /// When specified, the second argument is an action that will be
+  /// applied on every jets in the resulting ClusterSequence
   void transfer_from_sequence(ClusterSequence & from_seq,
-			      const FunctionOfPseudoJet<PseudoJet> &action_on_jets);
+			      const FunctionOfPseudoJet<PseudoJet> * action_on_jets = 0);
 
   /// retrieve a shared pointer to the wrapper to this ClusterSequence
   ///

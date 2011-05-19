@@ -416,11 +416,62 @@ double ClusterSequence::jet_scale_for_algorithm(
 }
 
 
+// //----------------------------------------------------------------------
+// /// transfer the sequence contained in other_seq into our own;
+// /// any plugin "extras" contained in the from_seq will be lost
+// /// from there.
+// void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
+// 
+//   if (will_delete_self_when_unused()) 
+//     throw(Error("cannot use CS::transfer_from_sequence after a call to delete_self_when_unused()"));
+// 
+//   // the metadata
+//   _jet_def                 = from_seq._jet_def                ;
+//   _writeout_combinations   = from_seq._writeout_combinations  ;
+//   _initial_n               = from_seq._initial_n              ;
+//   _Rparam                  = from_seq._Rparam                 ;
+//   _R2                      = from_seq._R2                     ;
+//   _invR2                   = from_seq._invR2                  ;
+//   _strategy                = from_seq._strategy               ;
+//   _jet_algorithm           = from_seq._jet_algorithm          ;
+//   _plugin_activated        = from_seq._plugin_activated       ;
+// 
+//   // the data
+//   _jets     = from_seq._jets;
+//   _history  = from_seq._history;
+//   // the following transfers ownership of the extras from the from_seq
+//   _extras   = from_seq._extras;
+// 
+//   // transfer of ownership
+//   if (_structure_shared_ptr()) {
+//     // anything that is currently associated with the cluster sequence
+//     // should be told that its cluster sequence no longer exists
+//     ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
+//     assert(csi != NULL);
+//     csi->set_associated_cs(NULL);
+//   }
+//   // create a new _structure_shared_ptr to reflect the fact that
+//   // this CS is essentially a new one
+//   _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+//   _update_structure_use_count();
+//   
+//   for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
+//     _set_structure_shared_ptr(*jit);
+// }
+
+
 //----------------------------------------------------------------------
-/// transfer the sequence contained in other_seq into our own;
-/// any plugin "extras" contained in the from_seq will be lost
-/// from there.
-void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
+// transfer the sequence contained in other_seq into our own;
+// any plugin "extras" contained in the from_seq will be lost
+// from there.
+//
+// It also sets the ClusterSequence pointers of the PseudoJets in
+// the history to point to this ClusterSequence
+//
+// The second argument is an action that will be applied on every
+// jets in the resulting ClusterSequence
+void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq,
+					     const FunctionOfPseudoJet<PseudoJet> * action_on_jets){
 
   if (will_delete_self_when_unused()) 
     throw(Error("cannot use CS::transfer_from_sequence after a call to delete_self_when_unused()"));
@@ -437,7 +488,12 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
   _plugin_activated        = from_seq._plugin_activated       ;
 
   // the data
-  _jets     = from_seq._jets;
+
+  // apply the transformation on the jets if needed
+  if (action_on_jets)
+    _jets     = (*action_on_jets)(from_seq._jets);
+  else
+    _jets     = from_seq._jets;
   _history  = from_seq._history;
   // the following transfers ownership of the extras from the from_seq
   _extras   = from_seq._extras;
@@ -455,29 +511,14 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq) {
   _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
   _update_structure_use_count();
   
-  for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
-    _set_structure_shared_ptr(*jit);
-}
+  for (unsigned int i=0; i<_jets.size(); i++){
+    // we reset the cluster history index in case action_on_jets
+    // messed up with it
+    _jets[i].set_cluster_hist_index(from_seq._jets[i].cluster_hist_index());
 
-
-//----------------------------------------------------------------------
-// transfer the sequence contained in other_seq into our own;
-// any plugin "extras" contained in the from_seq will be lost
-// from there.
-//
-// It also sets the ClusterSequence pointers of the PseudoJets in
-// the history to point to this ClusterSequence
-//
-// The second argument is an action that will be applied on every
-// jets in the resulting ClusterSequence
-void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq,
-					     const FunctionOfPseudoJet<PseudoJet> &action_on_jets){
-  // first do the transfer
-  transfer_from_sequence(from_seq);
-
-  // then apply the transformation
-  for (vector<PseudoJet>::iterator jit = _jets.begin(); jit != _jets.end(); jit++)
-    *jit = action_on_jets(*jit);
+    // reset the structure pointer
+    _set_structure_shared_ptr(_jets[i]);
+  }
 }
 
 

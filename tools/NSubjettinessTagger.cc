@@ -103,7 +103,8 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   // subjets must be taken from the boosted one. We extract that
   // through the history index of the rest-frame subjets
   ClusterSequence * cs_structure = new ClusterSequence();
-  cs_structure->transfer_from_sequence(cs_rest, Boost(jet));
+  Boost boost(jet);
+  cs_structure->transfer_from_sequence(cs_rest, &boost);
   PseudoJet subjet_lab1 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
   PseudoJet subjet_lab2 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
     

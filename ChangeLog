@@ -1,5 +1,18 @@
 2011-05-19  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/NSubjettinessTagger.cc:
+	  passed a pointer to the boost transformation rather than a
+	  reference
+
+	* src/ClusterSequence.cc (transfer_from_sequence):
+	* include/fastjet/ClusterSequence.hh:
+	  merged the 2 versions of transfer_from_sequence int oa single
+	  one taking a pointer to a FunctionPOfPseudoJet<PseudoJet> (instead
+	  of a reference) which is NULL by default.
+
+	  made the implementation a bit more robust in case action_on_jets
+	  messes up with the structural information
+
 	* tools/Makefile.am:
 	* tools/Transformer.cc:                   *** REMOVED ***
 	  no longer needed (empty file)
