@@ -34,18 +34,17 @@ using namespace std;
 class RfiltDyn : public FunctionOfPseudoJet<double>{
 public:
   // default ctor 
-  RfiltDyn(double Rmin) : _Rmin(Rmin){}
+  RfiltDyn(double Rmax) : _Rmax(Rmax){}
 
   // action of the function
   double apply(const PseudoJet &j) const{
-    if (! j.has_pieces()) return _Rmin;
+    if (! j.has_pieces()) return _Rmax;
 
     vector<PseudoJet> pieces = j.pieces();
-    if (! pieces.size()==2) return _Rmin;
+    if (! pieces.size()==2) return _Rmax;
 
     double R = sqrt(pieces[0].squared_distance(pieces[1]));
-    if (R<_Rmin) R = _Rmin;
-    return R;
+    return (R < _Rmax) ? R : _Rmax;
   }
 
 private:

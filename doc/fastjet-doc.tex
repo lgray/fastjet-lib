@@ -2804,7 +2804,7 @@ the full subjet definition. For the second, one has to provide a
 (pointer to) a class derived from \ttt{FunctionOfPseudoJet<double>}
 that would dynamically compute the filtering radius as a function of
 the jet being filtered (as it was originally proposed in \cite{BDRS}
-where $R_{/rm filt}={\rm max}(0.3,R_{b\bar{b}})$ depends on the object
+where $R_{/rm filt}={\rm min}(0.3,R_{b\bar{b}})$ depends on the object
 being filtered). In both cases, the Cambridge/Aachen algorithm is used.
 
 \paragraph{Constraints.} The jet being filtered must have

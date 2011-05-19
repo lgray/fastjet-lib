@@ -1,5 +1,9 @@
 2011-05-19  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/12-filter.cc:
+	  fixed a bug in the dynamic filter case (max(Rbb,0.3) was
+	  implemented instead of min(Rbb,0.3))
+
 	* tools/NSubjettinessTagger.cc:
 	  passed a pointer to the boost transformation rather than a
 	  reference
