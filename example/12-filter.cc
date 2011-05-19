@@ -48,7 +48,7 @@ public:
   }
 
 private:
-  double _Rmin;
+  double _Rmax;
 };
 
 /// an example program showing how to use fastjet
