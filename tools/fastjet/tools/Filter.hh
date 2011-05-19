@@ -196,8 +196,11 @@ protected:
 		      std::vector<PseudoJet> & kept, 
 		      std::vector<PseudoJet> & rejected) const;
 
+  /// check if one can apply the simplified trick for C/A subjets
+  bool _check_ca(const PseudoJet & jet) const;
+
   /// check if the jet is obtained from C/A or a superposition of C/A pieces
-  bool _recursively_check_ca(const PseudoJet & jet) const;
+  bool _recursively_check_ca(const PseudoJet & jet, std::vector<PseudoJet> & cumulative_pieces) const;
 
   /// set the filtered elements in the simple case of C/A+C/A
   void _set_filtered_elements_cafilt(

@@ -117,10 +117,8 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   //  - the jet is either directly coming from C/A or if it is a
   //    superposition of C/A jets
   //  - the pieces agree with the recombination scheme of subjet_def
-  //-------------------------------------------------------------------
-  bool simple_cafilt = 
-    (_subjet_def.jet_algorithm() == cambridge_algorithm) &&
-    (_recursively_check_ca(jet));
+  //------------------------------------------------------------------
+  bool simple_cafilt = _check_ca(jet);
  
   // extract the subjets
   //-------------------------------------------------------------------
@@ -172,15 +170,38 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
 }
 
 
+// check if one can apply the simplification for C/A subjets
+bool Filter::_check_ca(const PseudoJet & jet) const{
+  if (_subjet_def.jet_algorithm() != cambridge_algorithm) return false;
+
+  vector<PseudoJet> all_pieces;
+  if (!(_recursively_check_ca(jet, all_pieces))) return false;
+
+  // we also have to make sure that the filtering radius is not larger
+  // than any of the inter-pieces distance
+  double Rfilt2 = _subjet_def.R();
+  Rfilt2 *= Rfilt2;
+  for (unsigned int i=0; i<all_pieces.size()-1; i++){
+    for (unsigned int j=i+1; j<all_pieces.size(); j++){
+      if (all_pieces[i].squared_distance(all_pieces[j]) <  Rfilt2) return false;
+    }
+  }
+
+  return true;
+}
+	
+
 // check if the jet is obtained from C/A or a superposition of C/A pieces
-bool Filter::_recursively_check_ca(const PseudoJet & jet) const{
-  if (jet.has_associated_cluster_sequence()) 
+bool Filter::_recursively_check_ca(const PseudoJet & jet, vector<PseudoJet> &cumulative_pieces) const{
+  if (jet.has_associated_cluster_sequence()){
+    cumulative_pieces.push_back(jet);
     return jet.associated_cluster_sequence()->jet_def().jet_algorithm() == cambridge_algorithm;
+  }
 
   if (jet.has_pieces()){
     const vector<PseudoJet> pieces = jet.pieces();
     for (vector<PseudoJet>::const_iterator it=pieces.begin(); it!=pieces.end(); it++)
-      if (!_recursively_check_ca(*it)) return false;
+      if (!_recursively_check_ca(*it, cumulative_pieces)) return false;
     return true;
   }
 
