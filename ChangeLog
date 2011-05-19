@@ -1,3 +1,9 @@
+2011-05-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/FunctionOfPseudoJet.hh:
+	  removed the virtual for operator(). This highlights the fact
+	  that apply() is the one to be overloaded.
+
 2011-05-18  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/NSubjettinessTagger.hh: 
