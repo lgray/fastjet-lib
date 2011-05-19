@@ -1,5 +1,13 @@
 2011-05-19  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/Makefile.am:
+	* tools/Transformer.cc:                   *** REMOVED ***
+	  no longer needed (empty file)
+
+	* tools/fastjet/tools/Transformer.hh:
+	  set apply() and description() as purely virtual: one has to
+	  implement them in derived classes
+
 	* include/fastjet/FunctionOfPseudoJet.hh:
 	  removed the virtual for operator(). This highlights the fact
 	  that apply() is the one to be overloaded.

@@ -97,11 +97,12 @@ public:
   virtual ~Transformer(){}
 
   /// description of the transformer
-  virtual std::string description() const;
+  /// This has to be implemented in derived classes
+  virtual std::string description() const = 0;
 
-  /// the default action of a Transformer: this returns a 0 PseudoJet
-  /// with a PseudoJetStructureBase structure
-  virtual PseudoJet apply(const PseudoJet & original) const;
+  /// the default action of a Transformer
+  /// This has to be implemented in derived classes
+  virtual PseudoJet apply(const PseudoJet & original) const = 0;
 
   /// information about the associated structure type
   typedef PseudoJetStructureBase StructureType;
