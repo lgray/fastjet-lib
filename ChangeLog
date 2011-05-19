@@ -1,6 +1,10 @@
 2011-05-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Filter.cc:
+	  added the condition that all the pieces must share the same
+	  cluster sequence for the C/A simplification to be applicable.
+
+	* tools/Filter.cc:
 	* tools/fastjet/tools/Filter.hh:
 	  improved the test for the simple CA trick: when the jet is made
 	  of pieces, we ask that the maximal distance between the pieces
