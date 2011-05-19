@@ -500,6 +500,11 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq,
 
   // transfer of ownership
   if (_structure_shared_ptr()) {
+    // If there are jets associated with an old version of the CS and
+    // a new one, keeping track of when to delete the CS becomes more
+    // complex; so we don't allow this situation to occur.
+    if (_deletes_self_when_unused) throw Error("transfer_from_sequence cannot be used for a cluster sequence that deletes self when unused");
+    
     // anything that is currently associated with the cluster sequence
     // should be told that its cluster sequence no longer exists
     ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 

@@ -1,3 +1,10 @@
+2011-05-19  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc (transfer_from_sequence): 
+	  put in protection to make sure transfer_from_sequence will throw
+	  an error if the CS deletes_self_when_unused (which would cause
+	  complications we don't want to worry about right now).
+
 2011-05-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Filter.cc:
@@ -21,7 +28,7 @@
 
 	* src/ClusterSequence.cc (transfer_from_sequence):
 	* include/fastjet/ClusterSequence.hh:
-	  merged the 2 versions of transfer_from_sequence int oa single
+	  merged the 2 versions of transfer_from_sequence into a single
 	  one taking a pointer to a FunctionPOfPseudoJet<PseudoJet> (instead
 	  of a reference) which is NULL by default.
 

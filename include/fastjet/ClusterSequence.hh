@@ -651,6 +651,10 @@ protected:
 
   SharedPtr<PseudoJetStructureBase> _structure_shared_ptr; //< will actually be of type ClusterSequenceStructure
   int _structure_use_count_after_construction; //< info of use when CS handles its own memory
+  /// if true then the CS will delete itself when the last external
+  /// object referring to it disappears. It is mutable so as to ensure
+  /// that signal_imminent_self_deletion() [const] can make relevant
+  /// changes.
   mutable bool _deletes_self_when_unused;
 
  private:
