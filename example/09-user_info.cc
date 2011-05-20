@@ -58,6 +58,7 @@
 
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/Selector.hh"
+#include "fastjet/CompositeJetStructure.hh"
 #include <iostream> // needed for io
 #include <sstream>  // needed for io
 #include <cstdio>   // needed for io

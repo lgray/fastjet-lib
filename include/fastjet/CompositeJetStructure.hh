@@ -35,6 +35,9 @@
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/PseudoJetStructureBase.hh>
 
+// to have access to the recombiner we need to include the JetDefinition header
+#include <fastjet/JetDefinition.hh>
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup tools
@@ -48,13 +51,16 @@ public:
   // basic class info
   //------------------------------------------------------------------------------
   /// default ctor
-  CompositeJetStructure(){};
+  CompositeJetStructure() : _area_4vector_ptr(0), _area(0.0), _area_error(0.0){};
 
   /// ctor with initialisation
-  CompositeJetStructure(const std::vector<PseudoJet> & initial_pieces) : _pieces(initial_pieces){};
+  CompositeJetStructure(const std::vector<PseudoJet> & initial_pieces, 
+			JetDefinition::Recombiner * recombiner = 0);
 
   /// default dtor
-  virtual ~CompositeJetStructure(){};
+  virtual ~CompositeJetStructure(){
+    if (_area_4vector_ptr) delete _area_4vector_ptr;
+  };
 
   /// description
   virtual std::string description() const;
@@ -93,10 +99,52 @@ public:
   virtual PseudoJet area_4vector(const PseudoJet &reference) const;
 
 
+  // allow to modify the area information
+  // (for use in join())
+  //------------------------------------------------------------------------------
+  void set_area_information(PseudoJet *area_4vector_ptr, double area, double area_error=0.0){
+    _area_4vector_ptr = area_4vector_ptr;
+    _area = area;
+    _area_error = area_error;
+  }
+
+
 protected:
   std::vector<PseudoJet> _pieces;  ///< the pieces building the jet
+  PseudoJet * _area_4vector_ptr;   ///< pointer to the 4-vector jet area
+  double _area, _area_error;       ///< the jet area and associated error
 };
 
+
+
+
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//-------------------------------------------------------------------------------
+
+
+
+/// build a "CompositeJet" from the vector of its pieces
+///
+/// In this case, E-scheme recombination is assumed to compute the
+/// total momentum
+PseudoJet join(const std::vector<PseudoJet> & pieces, JetDefinition::Recombiner * recombiner = 0);
+
+/// build a MergedJet from a single PseudoJet
+PseudoJet join(const PseudoJet & j1, 
+	       JetDefinition::Recombiner * recombiner = 0);
+
+/// build a MergedJet from 2 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+	       JetDefinition::Recombiner * recombiner = 0);
+
+/// build a MergedJet from 3 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, 
+	       JetDefinition::Recombiner * recombiner = 0);
+
+/// build a MergedJet from 4 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4, 
+	       JetDefinition::Recombiner * recombiner = 0);
 
 
 // helpers to "join" jets and produce a structure derived from

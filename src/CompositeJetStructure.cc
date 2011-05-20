@@ -34,6 +34,70 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//-------------------------------------------------------------------------------
+
+// build a "CompositeJet" from the vector of its pieces
+//
+// In this case, E-scheme recombination is assumed to compute the
+// total momentum
+PseudoJet join(const vector<PseudoJet> & pieces, JetDefinition::Recombiner * recombiner){
+  // compute the total momentum
+  //--------------------------------------------------
+  PseudoJet result;  // automatically initialised to 0
+  for (unsigned int i=0; i<pieces.size(); i++){
+    if (recombiner)
+      recombiner->plus_equal(result, pieces[i]);
+    else
+      result += pieces[i];
+  }
+
+  // attach a CompositeJetStructure to the result
+  //--------------------------------------------------
+  CompositeJetStructure *cj_struct = new CompositeJetStructure(pieces, recombiner);
+
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(cj_struct));
+
+  return result;
+}
+
+// build a "CompositeJet" from a single PseudoJet
+PseudoJet join(const PseudoJet & j1, 
+	       JetDefinition::Recombiner * recombiner){
+  return join(vector<PseudoJet>(1,j1), recombiner);
+}
+
+// build a "CompositeJet" from two PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+	       JetDefinition::Recombiner * recombiner){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  return join(pieces, recombiner);
+}
+
+// build a "CompositeJet" from 3 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, 
+	       JetDefinition::Recombiner * recombiner){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  return join(pieces, recombiner);
+}
+
+// build a "CompositeJet" from 4 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4,
+	       JetDefinition::Recombiner * recombiner){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  pieces.push_back(j4);
+  return join(pieces, recombiner);
+}
+
 
 //-------------------------------------------------------------------------------
 // \class CompositeJetStructure
@@ -42,6 +106,43 @@ using namespace std;
 // This stores the vector of the pieces that make the jet and provide
 // the methods to access them
 // -------------------------------------------------------------------------------
+
+CompositeJetStructure::CompositeJetStructure(const std::vector<PseudoJet> & initial_pieces, 
+					     JetDefinition::Recombiner * recombiner)
+  : _pieces(initial_pieces){
+  // deal with area support (cache the area if needed)
+  //--------------------------------------------------
+  // check if all the pieces have area, in which case store it
+  bool has_area = true;
+  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++){
+    if (!pit->has_area()){
+      has_area = false;
+      continue;
+    }
+  }
+
+  _area             = 0.0;
+  _area_error       = 0.0;
+  
+  if (has_area){
+    _area_4vector_ptr = new PseudoJet();
+    _area             = 0.0;
+    _area_error       = 0.0;
+    for (unsigned int i=0; i<_pieces.size(); i++){
+      const PseudoJet & p = _pieces[i];
+      _area       += p.area();
+      _area_error += p.area_error();
+      if (recombiner)
+	recombiner->plus_equal(*_area_4vector_ptr, p.area_4vector());
+      else
+	*_area_4vector_ptr += p.area_4vector();
+    } 
+  } else {
+    _area_4vector_ptr = 0;
+  }
+
+}
+
 
 // description
 std::string CompositeJetStructure::description() const{ 
@@ -81,19 +182,12 @@ std::vector<PseudoJet> CompositeJetStructure::pieces(const PseudoJet &jet) const
 
 // check if it has a well-defined area
 bool CompositeJetStructure::has_area() const{
-  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
-    if (!pit->has_area()) return false;
-
-  return true;
+  return (_area_4vector_ptr != 0);
 }
 
 // return the jet (scalar) area.
 double CompositeJetStructure::area(const PseudoJet &reference) const{
-  double total_area = 0.0;
-  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
-    total_area += pit->area();
-
-  return total_area;
+  return _area;
 }
 
 // return the error (uncertainty) associated with the determination
@@ -101,20 +195,12 @@ double CompositeJetStructure::area(const PseudoJet &reference) const{
 // 
 // Be conservative: return the sum of the errors
 double CompositeJetStructure::area_error(const PseudoJet &reference) const{
-  double total_area = 0.0;
-  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
-    total_area += pit->area_error();
-
-  return total_area;
+  return _area_error;
 }
 
 // return the jet 4-vector area.
 PseudoJet CompositeJetStructure::area_4vector(const PseudoJet &reference) const{
-  PseudoJet total_area;
-  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
-    total_area += pit->area_4vector();
-
-  return total_area;
+  return *_area_4vector_ptr; // one is supposed to call has_area before!
 }
 
 
