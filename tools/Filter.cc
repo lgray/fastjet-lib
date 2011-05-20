@@ -176,6 +176,7 @@ bool Filter::_check_ca(const PseudoJet & jet) const{
 
   vector<PseudoJet> all_pieces;
   if (!(_recursively_check_ca(jet, all_pieces))) return false;
+  if (! all_pieces.size()) return 0; // just in case one passes a CompositeJet with 0 pieces!
 
   // for now we know that all the pieces come from a C/A clustering
   // (hence have an associated cluster sequence)
@@ -183,10 +184,16 @@ bool Filter::_check_ca(const PseudoJet & jet) const{
   // We'll enforce that they all come from the same ClsuterSequence
   // (otherwise there may be interferences and we'd better recluster
   // the whole set of constituents)
-  vector<PseudoJet>::iterator pit = all_pieces.begin(); // there's at least 1
-  const ClusterSequence * cs_ref = pit->associated_cluster_sequence();
-  while (++pit != all_pieces.end())
-    if (pit->associated_cluster_sequence() != cs_ref) return false;
+  //
+  // Note that we're sure there's at least one piece
+  const ClusterSequence * cs_ref = all_pieces[0].associated_cluster_sequence();
+  for (unsigned int i=1; i<all_pieces.size(); i++)
+    if (all_pieces[i].associated_cluster_sequence() != cs_ref) return false;
+
+  // vector<PseudoJet>::iterator pit = all_pieces.begin(); // there's at least 1
+  // const ClusterSequence * cs_ref = pit->associated_cluster_sequence();
+  // while (++pit != all_pieces.end())
+  //   if (pit->associated_cluster_sequence() != cs_ref) return false;
 
   // we also have to make sure that the filtering radius is not larger
   // than any of the inter-pieces distance

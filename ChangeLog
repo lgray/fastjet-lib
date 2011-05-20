@@ -1,3 +1,10 @@
+2011-05-20  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Filter.cc (_check_ca):
+	  slightly changed the coding style.
+	  added a safety check in case one passes a composite jet with 0
+	  pieces
+
 2011-05-19  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (transfer_from_sequence): 
