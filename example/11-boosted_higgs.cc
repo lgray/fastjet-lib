@@ -67,8 +67,15 @@ using namespace fastjet;
 // recombination, with additional tracking of flavour information in
 // the user_index. 
 //
-// If you use this, you must explicitly set the user index to 0 for
-// non-flavoured particles (the default value is -1);
+// b-tagged particles are assumed to have their user_index set to 1,
+// and other particles should have user_index to 0.
+//
+// Watch out however that, by default, the user_index of a particle is
+// set to -1 and you may not have control over that (e.g. if you
+// compute the jet area using explicit ghosts, the ghosts will have a
+// default user_index of -1). For that reason, if one of the particle
+// being combined has a user index of -1, we assume it is not b-tagged
+// (i.e. we count it as 0 in the recombination)
 //
 // This will work for native algorithms, but not for all plugins
 //----------------------------------------------------------------------
@@ -86,7 +93,9 @@ public:
   virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
                          PseudoJet & pab) const {
     DefRecomb::recombine(pa,pb,pab);
-    pab.set_user_index(pa.user_index() + pb.user_index());
+    // Note: see the above discussion for the fact that we consider
+    // negative user indices as "0"
+    pab.set_user_index(max(pa.user_index(),0) + max(pb.user_index(),0));
   }
 };
 

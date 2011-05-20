@@ -1,5 +1,11 @@
 2011-05-20  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/11-boosted_higgs.cc:
+	  In the recombiner, considered negative user indices as
+	  0 (particles with a default user index, such as potential ghosts
+	  added to the computation, should not be considered as b-tagged)
+
+
 	* tools/Filter.cc (_check_ca):
 	  slightly changed the coding style.
 	  added a safety check in case one passes a composite jet with 0
