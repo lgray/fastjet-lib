@@ -479,6 +479,37 @@ private:
 
 
 
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//
+// These functions include an options recombiner used to compute the
+// total composite jet momentum
+// -------------------------------------------------------------------------------
+
+/// build a "CompositeJet" from the vector of its pieces
+///
+/// In this case, E-scheme recombination is assumed to compute the
+/// total momentum
+PseudoJet join(const std::vector<PseudoJet> & pieces, const JetDefinition::Recombiner & recombiner);
+
+/// build a MergedJet from a single PseudoJet
+PseudoJet join(const PseudoJet & j1, 
+	       const JetDefinition::Recombiner & recombiner);
+
+/// build a MergedJet from 2 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+	       const JetDefinition::Recombiner & recombiner);
+
+/// build a MergedJet from 3 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, 
+	       const JetDefinition::Recombiner & recombiner);
+
+/// build a MergedJet from 4 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4, 
+	       const JetDefinition::Recombiner & recombiner);
+
+
+
 
 
 FASTJET_END_NAMESPACE

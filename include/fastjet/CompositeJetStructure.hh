@@ -55,7 +55,7 @@ public:
 
   /// ctor with initialisation
   CompositeJetStructure(const std::vector<PseudoJet> & initial_pieces, 
-			JetDefinition::Recombiner * recombiner = 0);
+			const JetDefinition::Recombiner * recombiner = 0);
 
   /// default dtor
   virtual ~CompositeJetStructure(){
@@ -115,36 +115,6 @@ protected:
   double _area, _area_error;       ///< the jet area and associated error
 };
 
-
-
-
-//-------------------------------------------------------------------------------
-// helper functions to build a jet made of pieces
-//-------------------------------------------------------------------------------
-
-
-
-/// build a "CompositeJet" from the vector of its pieces
-///
-/// In this case, E-scheme recombination is assumed to compute the
-/// total momentum
-PseudoJet join(const std::vector<PseudoJet> & pieces, JetDefinition::Recombiner * recombiner = 0);
-
-/// build a MergedJet from a single PseudoJet
-PseudoJet join(const PseudoJet & j1, 
-	       JetDefinition::Recombiner * recombiner = 0);
-
-/// build a MergedJet from 2 PseudoJet
-PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
-	       JetDefinition::Recombiner * recombiner = 0);
-
-/// build a MergedJet from 3 PseudoJet
-PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, 
-	       JetDefinition::Recombiner * recombiner = 0);
-
-/// build a MergedJet from 4 PseudoJet
-PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4, 
-	       JetDefinition::Recombiner * recombiner = 0);
 
 
 // helpers to "join" jets and produce a structure derived from

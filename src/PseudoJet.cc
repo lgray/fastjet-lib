@@ -735,5 +735,65 @@ vector<PseudoJet> sorted_by_pz(const vector<PseudoJet> & jets) {
 }
 
 
+
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//-------------------------------------------------------------------------------
+
+// build a "CompositeJet" from the vector of its pieces
+//
+// In this case, E-scheme recombination is assumed to compute the
+// total momentum
+PseudoJet join(const vector<PseudoJet> & pieces){
+  // compute the total momentum
+  //--------------------------------------------------
+  PseudoJet result;  // automatically initialised to 0
+  for (unsigned int i=0; i<pieces.size(); i++)
+    result += pieces[i];
+
+  // attach a CompositeJetStructure to the result
+  //--------------------------------------------------
+  CompositeJetStructure *cj_struct = new CompositeJetStructure(pieces);
+
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(cj_struct));
+
+  return result;
+}
+
+// build a "CompositeJet" from a single PseudoJet
+PseudoJet join(const PseudoJet & j1){
+  return join(vector<PseudoJet>(1,j1));
+}
+
+// build a "CompositeJet" from two PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  return join(pieces);
+}
+
+// build a "CompositeJet" from 3 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  return join(pieces);
+}
+
+// build a "CompositeJet" from 4 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  pieces.push_back(j4);
+  return join(pieces);
+}
+
+
+
+
 FASTJET_END_NAMESPACE
 

@@ -30,6 +30,7 @@
 
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/Error.hh"
+#include "fastjet/CompositeJetStructure.hh"
 #include<sstream>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -254,6 +255,72 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
 void JetDefinition::Plugin::set_ghost_separation_scale(double scale) const {
       throw Error("set_ghost_separation_scale not supported");
 }
+
+
+
+//-------------------------------------------------------------------------------
+// helper functions to build a jet made of pieces
+//
+// This is the extended version with support for a user-defined
+// recombination-scheme
+// -------------------------------------------------------------------------------
+
+// build a "CompositeJet" from the vector of its pieces
+//
+// the user passes the reciombination scheme used to "sum" the pieces.
+PseudoJet join(const vector<PseudoJet> & pieces, const JetDefinition::Recombiner & recombiner){
+  // compute the total momentum
+  //--------------------------------------------------
+  PseudoJet result;  // automatically initialised to 0
+  for (unsigned int i=0; i<pieces.size(); i++)
+    recombiner.plus_equal(result, pieces[i]);
+
+  // attach a CompositeJetStructure to the result
+  //--------------------------------------------------
+  CompositeJetStructure *cj_struct = new CompositeJetStructure(pieces, &recombiner);
+
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(cj_struct));
+
+  return result;
+}
+
+// build a "CompositeJet" from a single PseudoJet
+PseudoJet join(const PseudoJet & j1, 
+	       const JetDefinition::Recombiner & recombiner){
+  return join(vector<PseudoJet>(1,j1), recombiner);
+}
+
+// build a "CompositeJet" from two PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+	       const JetDefinition::Recombiner & recombiner){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  return join(pieces, recombiner);
+}
+
+// build a "CompositeJet" from 3 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, 
+	       const JetDefinition::Recombiner & recombiner){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  return join(pieces, recombiner);
+}
+
+// build a "CompositeJet" from 4 PseudoJet
+PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3, const PseudoJet & j4,
+	       const JetDefinition::Recombiner & recombiner){
+  vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  pieces.push_back(j4);
+  return join(pieces, recombiner);
+}
+
+
  
 
 FASTJET_END_NAMESPACE

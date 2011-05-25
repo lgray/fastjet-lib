@@ -1,3 +1,20 @@
+2011-05-26  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/CompositeJetStructure.hh:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/JetDefinition.hh:
+	* src/CompositeJetStructure.cc:
+	* src/PseudoJet.cc:
+	* src/JetDefinition.cc:
+	  join(pieces, Recombiner*) has been split into a join(pieces) in
+	  PseudoJet.(hh,cc) and a join(pieces, Recombiner&) in
+	  JetDefinition.(hh,cc). The advantage of this is that an end-user
+	  that want to use join does not explicitly need to include any
+	  header. If he wants the "basic" version then PseudoJet should
+	  anyway already be available, and if he wants the version with
+	  the recombiner then JetDefinition should already have been
+	  included.
+
 2011-05-20  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/PseudoJet.cc (has_area):
