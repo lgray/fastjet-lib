@@ -14,6 +14,7 @@ libfastjet_la_SOURCES = DnnPlane.cc\
 	ClusterSequencePassiveArea.cc ClusterSequence1GhostPassiveArea.cc\
 	PseudoJetStructureBase.cc ClusterSequenceStructure.cc\
 	BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc\
-	RangeDefinition.cc CompositeJetStructure.cc
+	RangeDefinition.cc CompositeJetStructure.cc \
+	FunctionOfPseudoJet.cc
 
 EXTRA_DIST = makefile.static genconfig.sh
