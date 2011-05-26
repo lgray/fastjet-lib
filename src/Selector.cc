@@ -1239,39 +1239,6 @@ Selector SelectorRectangle(const double & half_rap_width, const double & half_ph
 }
 
 
-
-
-//----------------------------------------------------------------------
-// additional (mostly helper) selectors
-//----------------------------------------------------------------------
-
-//----------------------------------------------------------------------
-/// helper for selecting the pure ghost
-class SW_IsPureGhost : public SelectorWorker {
-public:
-  /// ctor with specification of the number of objects to keep
-  SW_IsPureGhost(){}
-
-  /// return true if the jet is a pure-ghost jet
-  virtual bool pass(const PseudoJet & jet) const {
-    // if the jet has no area support then it's certainly not a ghost
-    if (!jet.has_area()) return false;
-
-    // otherwise, just call that method on the jet
-    return jet.is_pure_ghost();
-  }
-  
-  /// returns a description of the worker
-  virtual string description() const { return "pure ghost";}
-};
-
-
-// select objects that are (or are only made of) ghosts
-Selector SelectorIsPureGhost(){
-  return Selector(new SW_IsPureGhost());
-}
-
-
 //----------------------------------------------------------------------
 /// helper for selecting the jets that carry at least a given fraction
 /// of the reference jet
@@ -1310,6 +1277,60 @@ protected:
 // (Note that this selectir takes a reference)
 Selector SelectorPtFractionMin(double fraction){
   return Selector(new SW_PtFractionMin(fraction));
+}
+
+
+//----------------------------------------------------------------------
+// additional (mostly helper) selectors
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+/// helper for selecting on zero PseudoJet
+class SW_IsZero : public SelectorWorker {
+public:
+  /// ctor with specification of the number of objects to keep
+  SW_IsZero(){}
+
+  /// return true if the jet is a pure-ghost jet
+  virtual bool pass(const PseudoJet & jet) const {
+    return jet == PseudoJet();
+  }
+  
+  /// returns a description of the worker
+  virtual string description() const { return "zero PseudoJet";}
+};
+
+
+// select objects that are zero PseudoJet
+Selector SelectorIsZero(){
+  return Selector(new SW_IsZero());
+}
+
+
+//----------------------------------------------------------------------
+/// helper for selecting the pure ghost
+class SW_IsPureGhost : public SelectorWorker {
+public:
+  /// ctor with specification of the number of objects to keep
+  SW_IsPureGhost(){}
+
+  /// return true if the jet is a pure-ghost jet
+  virtual bool pass(const PseudoJet & jet) const {
+    // if the jet has no area support then it's certainly not a ghost
+    if (!jet.has_area()) return false;
+
+    // otherwise, just call that method on the jet
+    return jet.is_pure_ghost();
+  }
+  
+  /// returns a description of the worker
+  virtual string description() const { return "pure ghost";}
+};
+
+
+// select objects that are (or are only made of) ghosts
+Selector SelectorIsPureGhost(){
+  return Selector(new SW_IsPureGhost());
 }
 
 

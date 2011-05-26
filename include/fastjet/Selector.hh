@@ -436,6 +436,9 @@ Selector SelectorPtFractionMin(double fraction);
 // additional (mostly helper) selectors
 //----------------------------------------------------------------------
 
+/// select objects that are zero PseudoJet
+Selector SelectorIsZero();
+
 /// select objects that are (or are only made of) ghosts.
 /// PseudoJets for which has_area() are considered non-pure-ghost.
 Selector SelectorIsPureGhost();

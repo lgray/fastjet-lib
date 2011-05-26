@@ -1,5 +1,14 @@
 2011-05-26  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/FunctionOfPseudoJet.cc:              ***  ADDED  ***
+	* include/fastjet/FunctionOfPseudoJet.hh:
+	  added a series of Selectors implementing ordering between a
+	  FunctionOfPseudoJet<double> and a double.
+
+	* src/Selector.cc:
+	* include/fastjet/Selector.hh:
+	  added a SelectorIsZero selecting zero PseudoJet
+
 	* tools/fastjet/tools/Filter.hh:
 	* tools/Filter.cc:
 	* example/12-filter.cc:

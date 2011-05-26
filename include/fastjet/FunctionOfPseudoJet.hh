@@ -32,6 +32,7 @@
 //ENDHEADER
 
 #include <fastjet/PseudoJet.hh>
+#include <fastjet/Selector.hh>
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -45,6 +46,9 @@ class FunctionOfPseudoJet{
 public:
   /// default ctor
   FunctionOfPseudoJet(){}
+
+  /// ctor that creates a constant function
+  FunctionOfPseudoJet(const TOut &constant_value);
 
   /// default dtor (virtual to allow safe polymorphism)
   virtual ~FunctionOfPseudoJet(){}
@@ -74,6 +78,36 @@ public:
     return res;
   }
 };
+
+
+// Selectors created from the ordering between a FunctionOfPseudoJet
+// and a constant
+//----------------------------------------------------------------------
+
+/// 'larger than' operator
+///
+/// Select jets for which the given function returns a reult larger
+/// than the specified constant
+Selector operator >(const FunctionOfPseudoJet<double> & fn, const double & cut);
+
+/// 'smaller than' operator
+///
+/// Select jets for which the given function returns a reult larger
+/// than the specified constant
+Selector operator <(const FunctionOfPseudoJet<double> & fn, const double & cut);
+
+/// 'larger or equal' operator
+///
+/// Select jets for which the given function returns a reult larger
+/// than the specified constant
+Selector operator >=(const FunctionOfPseudoJet<double> & fn, const double & cut);
+
+/// 'smaller or equal' operator
+///
+/// Select jets for which the given function returns a reult larger
+/// than the specified constant
+Selector operator <=(const FunctionOfPseudoJet<double> & fn, const double & cut);
+
 
 FASTJET_END_NAMESPACE
 
