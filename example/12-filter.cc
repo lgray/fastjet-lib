@@ -135,7 +135,7 @@ int main (int argc, char ** argv) {
       // has_structure_of()), then retrieve the pieces rejected by the
       // filter (using structure_of())
       assert(j.has_structure_of<Filter>());
-      const FilteredJetStructure & fj_struct = j.structure_of<Filter>();
+      const Filter::StructureType & fj_struct = j.structure_of<Filter>();
       cout << "  #rejected pieces: " << fj_struct.rejected().size() << endl;
     }
     cout << endl;

@@ -143,7 +143,7 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   PseudoJet filtered_jet(0.0,0.0,0.0,0.0);
 
   // create an appropriate structure and transfer the info to it
-  FilteredJetStructure *fi = new FilteredJetStructure();
+  FilterStructure *fi = new FilterStructure();
 
   fi->_original_jet = jet;
   fi->_pieces = kept;   // in the base interface

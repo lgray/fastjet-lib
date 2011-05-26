@@ -33,7 +33,7 @@
 
 #include <fastjet/ClusterSequence.hh>
 #include <fastjet/Selector.hh>
-#include <fastjet/CompositeJetStructure.hh> // to derive the FilteredJet structure from CompositeJetStructure
+#include <fastjet/CompositeJetStructure.hh> // to derive the FilterStructure from CompositeJetStructure
 #include <fastjet/tools/Transformer.hh>     // to derive Filter from Transformer
 #include <iostream>
 #include <string>
@@ -42,7 +42,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // fwd declarations
 class Filter;
-class FilteredJetStructure;
+class FilterStructure;
 
 //----------------------------------------------------------------------
 /// @ingroup tools
@@ -181,7 +181,7 @@ public:
   /// class description
   virtual std::string description() const;
 
-  typedef FilteredJetStructure StructureType;
+  typedef FilterStructure StructureType;
 
 protected:
   /// sets filtered_elements to be all the subjets on which filtering will work
@@ -230,17 +230,17 @@ protected:
 
 //----------------------------------------------------------------------
 /// @ingroup tools
-/// \class FilteredJetStructure
+/// \class FilterStructure
 /// Class to contain structure information for a filtered jet.
-class FilteredJetStructure : public CompositeJetStructure {
+class FilterStructure : public CompositeJetStructure {
 public:
   /// constructor from an original ClusterSequenceInfo
   /// We just share the original ClusterSequenceWrapper and initialise
   /// the rest
-  FilteredJetStructure(){}
+  FilterStructure(){}
 
   /// virtual dtor to allow further overloading  
-  virtual ~FilteredJetStructure(){}
+  virtual ~FilterStructure(){}
 
   /// description
   virtual std::string description() const { return "Filtered PseudoJet"; }

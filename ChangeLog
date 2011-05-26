@@ -1,5 +1,10 @@
 2011-05-26  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Filter.cc:
+	* example/12-filter.cc:
+	  renamed FilteredJetStructure into FilterStructure
+
 	* example/09-user_info.cc:
 	  removed unneeded header
 
