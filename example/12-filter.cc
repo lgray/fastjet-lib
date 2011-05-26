@@ -5,7 +5,7 @@
 /// fastjet example program illustrating the use of the fastjet::Filter class
 ///
 /// To do that, we apply different filter examples on a either the
-/// hardest jet of the given event or the compositipon of the two
+/// hardest jet of the given event or the composition of the two
 /// hardest jets: a filter keeping a fixed number of subjets (as in
 /// arXiv:0802.2470), and a "trimmer" i.e. a filter keeping subjets
 /// carrying a sufficient fraction of the pt of the jet
@@ -89,7 +89,8 @@ int main (int argc, char ** argv) {
 
   // the sample PseudoJet that we shall filter
   //  - the hardest jet of the event
-  //  - the compositiomn of the 2 hardest jets (showing that the Filter can also be applied on a CompositeJet)
+  //  - the composition of the 2 hardest jets (showing that the Filter
+  //    can also be applied on a CompositeJet)
   //----------------------------------------------------------
   vector<PseudoJet> candidates;
   candidates.push_back(inclusive_jets[0]);

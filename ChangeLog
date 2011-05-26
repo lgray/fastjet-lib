@@ -1,5 +1,11 @@
 2011-05-26  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/09-user_info.cc:
+	  removed unneeded header
+
+	* example/12-filter.cc:
+	  typos in comments
+
 	* include/fastjet/CompositeJetStructure.hh:
 	* include/fastjet/PseudoJet.hh:
 	* include/fastjet/JetDefinition.hh:
