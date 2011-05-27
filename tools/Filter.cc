@@ -181,7 +181,7 @@ bool Filter::_check_ca(const PseudoJet & jet) const{
   // for now we know that all the pieces come from a C/A clustering
   // (hence have an associated cluster sequence)
   //
-  // We'll enforce that they all come from the same ClsuterSequence
+  // We'll enforce that they all come from the same ClusterSequence
   // (otherwise there may be interferences and we'd better recluster
   // the whole set of constituents)
   //

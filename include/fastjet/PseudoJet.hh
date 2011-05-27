@@ -447,23 +447,23 @@ class PseudoJet {
   /// set the associated structure
   void set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure);
 
-  /// return true if there is some strusture associated with this PseudoJet
+  /// return true if there is some structure associated with this PseudoJet
   bool has_structure() const;
 
   /// return a pointer to the structure (of type
-  /// PseudoJetStructureBase*) associated wioth this PseudoJet.
+  /// PseudoJetStructureBase*) associated with this PseudoJet.
   ///
   /// return NULL if there is no associated structure
   const PseudoJetStructureBase* structure_ptr() const;
   
   /// return a pointer to the structure (of type
-  /// PseudoJetStructureBase*) associated wioth this PseudoJet.
+  /// PseudoJetStructureBase*) associated with this PseudoJet.
   ///
   /// throw an error if there is no associated structure
   const PseudoJetStructureBase* validated_structure_ptr() const;
   
   /// return a reference to the shared pointer to the
-  /// PseudoJetStructureBase associated wioth this PseudoJet
+  /// PseudoJetStructureBase associated with this PseudoJet
   const SharedPtr<PseudoJetStructureBase> & structure_shared_ptr() const;
 
   /// returns a reference to the structure casted to the requested
@@ -473,8 +473,6 @@ class PseudoJet {
   /// If the type is not met, a std::bad_cast error is thrown.
   template<typename StructureType>
   const StructureType & structure() const;
-
-
 
   /// check if the PseudoJet has the structure resulting from a Transformer 
   /// (that is, its structure is compatible with a Transformer::StructureType)
