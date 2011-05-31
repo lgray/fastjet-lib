@@ -60,12 +60,12 @@ public:
   /// the action of the function
   /// this _has_ to be overloaded in derived classes
   ///  \param pj   the PseudoJet input to the function
-  virtual TOut apply(const PseudoJet &pj) const = 0;
+  virtual TOut result(const PseudoJet &pj) const = 0;
 
   /// apply the function using the "traditional" () operator.
   /// By default, this just calls the apply(...) method above.
   ///  \param pj   the PseudoJet input to the function
-  TOut operator()(const PseudoJet &pj) const { return apply(pj);}
+  TOut operator()(const PseudoJet &pj) const { return result(pj);}
 
   /// apply the function on a vector of PseudoJet, returning a vector
   /// of the results.
@@ -74,7 +74,7 @@ public:
   std::vector<TOut> operator()(const std::vector<PseudoJet> &pjs) const {
     std::vector<TOut> res(pjs.size());
     for (unsigned int i=0; i<pjs.size(); i++)
-      res[i] = apply(pjs[i]);
+      res[i] = result(pjs[i]);
     return res;
   }
 };

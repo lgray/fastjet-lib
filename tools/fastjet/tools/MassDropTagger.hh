@@ -85,9 +85,8 @@ class MassDropStructure;
 ///
 /// \section input Input conditions
 /// 
-///  - the original jet must be the result of a Cambridge/Aachen
-///    clustering (other options would be possible but have not been
-///    implemented)
+///  - one must be able to succesively "uncluster" the original jet
+///    using "has_parents"
 ///
 /// \section output Output/interface
 /// 
@@ -106,7 +105,7 @@ public:
 
   /// the tagging itself
   ///  \param jet   the PseudoJet to tag
-  virtual PseudoJet apply(const PseudoJet & jet) const;
+  virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of the associated structure
   typedef MassDropStructure StructureType;
@@ -125,9 +124,12 @@ protected:
 ///
 class MassDropStructure : public CompositeJetStructure{
 public:
-  /// ctor with pieces initialisation
-  MassDropStructure(std::vector<PseudoJet> pieces) :
-    CompositeJetStructure(pieces), _mu(0.0), _y(0.0){}
+  /// ctor with initialisation
+  ///  \param pieces  the pieces of the created jet
+  ///  \param rec     the recombiner from the underlying cluster sequence
+  MassDropStructure(const std::vector<PseudoJet> & pieces, 
+		    const JetDefinition::Recombiner *recombiner = 0) :
+    CompositeJetStructure(pieces, recombiner), _mu(0.0), _y(0.0){}
 
   /// the mass-drop ratio, pieces[0].m()/jet.m(), for the splitting
   /// that triggered the mass-drop condition
@@ -138,8 +140,8 @@ public:
   inline double y() const {return _y;}
 
 protected:
-  mutable double _mu;  ///< the value of the mass-drop parameter
-  mutable double _y;   ///< the value of the asymmetry parameter
+  double _mu;  ///< the value of the mass-drop parameter
+  double _y;   ///< the value of the asymmetry parameter
 
   // allow the tagger to set these
   friend class MassDropTagger;

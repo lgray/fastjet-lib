@@ -62,15 +62,13 @@ ClusterSequenceStructure::~ClusterSequenceStructure(){
 
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
-bool ClusterSequenceStructure::has_associated_cluster_sequence() const{
+bool ClusterSequenceStructure::has_validated_cluster_sequence() const{
   return (_associated_cs != NULL);
 }
 
 // get a (const) pointer to the associated ClusterSequence (NULL if
 // inexistent)
 const ClusterSequence* ClusterSequenceStructure::associated_cluster_sequence() const{
-  if (! has_associated_cluster_sequence()) return NULL;
-
   return _associated_cs;
 }
 
@@ -219,6 +217,37 @@ double ClusterSequenceStructure::exclusive_subdmerge(const PseudoJet &reference,
 // associated ClusterSequence
 double ClusterSequenceStructure::exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const {
   return validated_cs()->exclusive_subdmerge_max(reference, nsub);
+}
+
+
+//----------------------------------------------------------------------
+// information related to the pieces of the jet
+//----------------------------------------------------------------------
+
+// by convention, a jet associated with a ClusterSequence will have
+// pieces if it has parents in the cluster sequence.
+//
+// an error is thrown if the ClusterSequence is out of scope (since
+// the answer depends on information in the Cluster Sequence)
+bool ClusterSequenceStructure::has_pieces(const PseudoJet &reference) const{
+  PseudoJet dummy1, dummy2;
+  return has_parents(reference, dummy1, dummy2);
+}
+
+// by convention, the pieces of a jet associated with a
+// ClusterSequence are its parents in the Cluster Sequence. If it has
+// no parents, an empty jet is returned.
+//
+// an error is thrown if the ClusterSequence is out of scope
+vector<PseudoJet> ClusterSequenceStructure::pieces(const PseudoJet &reference) const{
+  PseudoJet j1, j2;
+  vector<PseudoJet> res;
+  if (has_parents(reference, j1, j2)){
+    res.push_back(j1);
+    res.push_back(j2);
+  }
+
+  return res;
 }
 
 

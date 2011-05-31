@@ -37,7 +37,7 @@ public:
   RfiltDyn(double Rmax) : _Rmax(Rmax){}
 
   // action of the function
-  double apply(const PseudoJet &j) const{
+  double result(const PseudoJet &j) const{
     if (! j.has_pieces()) return _Rmax;
 
     vector<PseudoJet> pieces = j.pieces();

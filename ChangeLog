@@ -1,3 +1,124 @@
+2011-05-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/Selector.hh:
+	* src/Selector.cc:
+	  removed SelectorIsZero (not needed now + could introduce some
+	  confusion)
+
+2011-05-30  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/MassDropTagger.hh:
+	  relaxed the input condition (has_parents is the only thing we
+	  really use/need)
+
+	* tools/Filter.cc:
+	  used has_validated_cluster_sequence instead of has_associated_cs
+	  when apropriate
+
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc:
+	  . adapted to the new has_associated_cs vs. has_validated_cs
+	  . adapted to the argument added to has_pieces (in the structure)
+	  . pieces() now relies entirely on the implementation in the
+	    structure (before it was making sire that the structure had
+	    support for pieces and throwing an error otherwise)
+
+	* include/fastjet/CompositeJetStructure.hh:
+	* src/CompositeJetStructure.cc:
+	  . adapted to the additional argument in has_pieces()
+	  . considered pieces without constituents as their own
+	    constituent. This means that except for composite jets with no
+	    pieces (for which constituents() will return an empty vector)
+	    all composite jets have constituents. constituents() will
+	    recurse into pieces that have constituents support.
+
+	* include/fastjet/ClusterSequenceStructure.hh:
+	* src/ClusterSequenceStructure.cc:
+	  . pieces() for jets associated with a ClusterSequence will now
+	    return the jets parent's (or an empty vector if the jet has no
+	    parents). has_pieces() would return true in the first case and
+	    false in the second.
+	  . adapted to the new has_associated_cs vs. has_validated_cs
+
+	* include/fastjet/PseudoJetStructureBase.hh:
+	  . added has_validated_cluster_sequence(). Now,
+	    has_associated_cluster_sequence() just check if the structure
+	    is associated with a CS. It no longer check if it is valid.
+	    The added method is the one that also checks if it is valid.
+	    That way we can disentangle between jets with no associated
+	    cluster sequence and jets for which the cluster sequence has
+	    gone out of scope
+	  . added a reference argument to 'has_pieces()'
+
+	* src/PseudoJetStructureBase.cc:
+	  slightly modified the messages for thrown errors
+
+	* tools/MassDropTagger.cc:
+	* tools/MassDropTagger.hh:
+	  added support for user-defined recombiners (in the tagged jets)
+
+	* src/JetDefinition.cc (have_same_recombiner):
+	* include/fastjet/JetDefinition.hh:
+	  added a test that different jet definitions share the same
+	  recombiner
+
+	* tools/fastjet/tools/MassDropTagger.hh:
+	* tools/MassDropTagger.cc:
+	  used the parent ClusterSequence recombiner to build the final
+	  composite jet
+
+	* tools/Filter.cc:
+	* tools/MassDropTagger.cc:
+	* tools/NSubjettinessTagger.cc:
+	  used the non-const access to the structure to build the final
+	  jet more transparently
+
+	* tools/fastjet/tools/MassDropTagger.hh:
+	* tools/fastjet/tools/NSubjettinessTagger.hh:
+	  removed the "mutable" qualifier for the structure data (no
+	  longer needed with the non-const access to the
+
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJet.hh:
+	  added structure_non_const_ptr() to get a "write" access to the
+	  PseudoJet's underlying structure.
+	  Only use this if you know what you are doing!
+
+
+	* src/JetDefinition.cc (join):
+	  avoided the risk that the recombiner does not handle properly
+	  plus_equal for uninitialised jets.
+
+	* include/fastjet/CompositeJetStructure.hh:
+	  added a templated version of join (as the first one, for use
+	  together with structures derived from CompositeJetStructure)
+	  with support for an external recombination scheme
+
+	* tools/Transformer.cc:
+	* tools/Subtractor.cc:
+	* tools/NSubjettinessTagger.cc:
+	* tools/MassDropTagger.cc:
+	* tools/Filter.cc:
+	* tools/BackgroundEstimator.cc:
+        * tools/fastjet/tools/Transformer.hh:
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/fastjet/tools/NSubjettinessTagger.hh:
+	* tools/fastjet/tools/MassDropTagger.hh:
+	* tools/fastjet/tools/Filter.hh:
+	* tools/fastjet/tools/BackgroundEstimator.hh:
+	* tools/fastjet/tools/Boost.hh:
+	  renamed 'apply()' into 'result()'
+
+	* include/fastjet/FunctionOfPseudoJet.hh:
+	  renamed 'apply()' into 'result()'
+
+	* include/fastjet/PseudoJet.hh:
+	* srcPseudoJet.cc:
+	  added a comparison (== and !=) between a PseudJEt and a constant
+	  (double). It tests if a PseudoJet has zero momentum (the
+	  operator == can only be called with a zero double value, an error
+	  is thrown otherwise)
+
 2011-05-26  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/FunctionOfPseudoJet.cc:              ***  ADDED  ***
@@ -331,6 +452,46 @@
 	  a series of updates reflect needs for 3.0b1
 
 2011-05-13  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* include/fastjet/CompositeJetStructure.hh:
+	  added area support for CompositeJet.
+	  Note that the area error is estimated (conservatively) as the
+	  sum of the errors on each of the pieces.
+
+	* tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	  overloaded apply instead of operator() to fit the new
+	  Transformer.
+
+	* example/12-filter.cc:
+	  added an example of the specification of a dynamic Rfilt
+
+	* tools/Filter.cc:
+	* tools/fastjet/tools/Filter.hh:
+	  . added a ctor specifying just Rfilt (Cambridge/Aachen used by
+	    default)
+	  . added a ctor with Rfilt specified using a
+	    FunctionOfPseudoJet<double>. In that case, Rfilt will be
+	    computed dynamically as a function of the jet being filtered
+
+	* tools/fastjet/tools/Transformer.hh:
+	  Declared Transformer as a FunctionOfPseudoJet<PseudoJet> i.e. a
+	  special function that returns a PseudoJet from a PseudoJet. This
+	  also has a description and a structure type as before.
+
+	* tools/fastjet/tools/Function.hh:           *** ADDED ***
+	  added a generic Function<TIn,TOut> class allowing to define an
+	  object returning a result ot type TOut from an object of type
+	  TIn.
+	  Defined FunctionOfPseudoJet<TOut> allowing to define functions
+	  of PseudoJet returning any desired type.
+
+	  These functions have a virtual member 'apply()' that one can
+	  overload to define any function.
+
+	  The operator() will have the same effect as apply when called
+	  from a single object but can also be called on a vector of
+	  objects.
 
 	* tools/BackgroundEstimator.cc:
 	* tools/fastjet/tools/BackgroundEstimator.hh:

@@ -477,6 +477,9 @@ private:
 };
 
 
+/// returns true if the 2 jet definitions share the same recombiner
+bool have_same_recombiner(const JetDefinition &jd1, 
+			  const JetDefinition &jd2);
 
 
 //-------------------------------------------------------------------------------

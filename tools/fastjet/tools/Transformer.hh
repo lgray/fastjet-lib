@@ -51,7 +51,7 @@ class Transformer;
 /// This class here is a base class that provides a basic template on
 /// which actual Transformers may be built (one example is a tagger).
 ///
-/// Any new transformer must implement apply(), but its action can
+/// Any new transformer must implement result(), but its action can
 /// equivalently be accessed through the operator() that works either
 /// on a single PseudoJet or on a vector of PseudoJet.
 ///
@@ -102,7 +102,7 @@ public:
 
   /// the default action of a Transformer
   /// This has to be implemented in derived classes
-  virtual PseudoJet apply(const PseudoJet & original) const = 0;
+  virtual PseudoJet result(const PseudoJet & original) const = 0;
 
   /// information about the associated structure type
   typedef PseudoJetStructureBase StructureType;

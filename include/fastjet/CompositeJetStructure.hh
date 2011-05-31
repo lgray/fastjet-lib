@@ -49,7 +49,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class CompositeJetStructure : public PseudoJetStructureBase{
 public:
   // basic class info
-  //------------------------------------------------------------------------------
+  //-------------------------------------------------------------------
   /// default ctor
   CompositeJetStructure() : _area_4vector_ptr(0), _area(0.0), _area_error(0.0){};
 
@@ -66,17 +66,24 @@ public:
   virtual std::string description() const;
 
   // things reimplemented from the base structure
-  //------------------------------------------------------------------------------
-  /// true if the jet has constituents (i.e. all pieces do)
+  //-------------------------------------------------------------------
+  /// true unless the jet has no pieces (see also the description of
+  /// constituents() below)
   virtual bool has_constituents() const;
 
   /// return the constituents (i.e. the union of the constituents of each piece)
   /// 
-  /// If any of the pieces has no constituent, an error is thrown
+  /// If any of the pieces has no constituent, the piece itself is
+  /// considered as a constituent
+  /// Note that as a consequence, a composite jet with no pieces will
+  /// have an empty vector as constituents
   virtual std::vector<PseudoJet> constituents(const PseudoJet &jet) const;
 
+  //-------------------------------------------------------------------
+  // information related to the pieces of the jet
+  //-------------------------------------------------------------------
   /// true if it has pieces (always the case)
-  virtual bool has_pieces() const {return true;};
+  virtual bool has_pieces(const PseudoJet &jet) const {return true;};
 
   /// returns the pieces
   virtual std::vector<PseudoJet> pieces(const PseudoJet &jet) const;
@@ -119,7 +126,10 @@ protected:
 
 // helpers to "join" jets and produce a structure derived from
 // CompositeJetStructure
-//------------------------------------------------------------------------
+//
+// The template structure T must have a constructor accepting as
+// argument the pieces and of the composite jet
+// ------------------------------------------------------------------------
 
 /// build a "CompositeJet" from the vector of its pieces with an
 /// extended structure of type T derived from CompositeJetStructure
@@ -173,6 +183,75 @@ template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2,
   pieces.push_back(j3);
   pieces.push_back(j4);
   return join<T>(pieces);
+}
+
+
+// the same as above with an additional argument for a
+// user-defined recombiner
+//
+// The template structure T must be derived from CompositeJetStructure
+// and have a constructor accepting as arguments the pieces and a
+// pointer to the recombination scheme
+// ----------------------------------------------------------------------
+
+/// build a "CompositeJet" from the vector of its pieces with an
+/// extended structure of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const std::vector<PseudoJet> & pieces, 
+				    const JetDefinition::Recombiner & recombiner){
+  PseudoJet result;
+  if (pieces.size()>0){
+    result = pieces[0];
+    for (unsigned int i=1; i<pieces.size(); i++){
+      recombiner.plus_equal(result, pieces[i]);
+    }
+  }
+
+  T *cj_struct = new T(pieces, &recombiner);
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(cj_struct));
+
+  return result;
+}
+
+/// build a "CompositeJet" from a single PseudoJet with an extended
+/// structure of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, 
+				    const JetDefinition::Recombiner & recombiner){
+  return join<T>(std::vector<PseudoJet>(1,j1), recombiner);
+}
+
+/// build a "CompositeJet" from two PseudoJet with an extended
+/// structure of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+				    const JetDefinition::Recombiner & recombiner){
+  std::vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  return join<T>(pieces, recombiner);
+}
+
+/// build a "CompositeJet" from 3 PseudoJet with an extended structure
+/// of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+				    const PseudoJet & j3, 
+				    const JetDefinition::Recombiner & recombiner){
+  std::vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  return join<T>(pieces, recombiner);
+}
+
+/// build a "CompositeJet" from 4 PseudoJet with an extended structure
+/// of type T derived from CompositeJetStructure
+template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
+				    const PseudoJet & j3, const PseudoJet & j4, 
+				    const JetDefinition::Recombiner & recombiner){
+  std::vector<PseudoJet> pieces;
+  pieces.push_back(j1);
+  pieces.push_back(j2);
+  pieces.push_back(j3);
+  pieces.push_back(j4);
+  return join<T>(pieces, recombiner);
 }
 
 

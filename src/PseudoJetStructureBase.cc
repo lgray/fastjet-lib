@@ -72,7 +72,7 @@ const ClusterSequence* PseudoJetStructureBase::associated_cluster_sequence() con
 //
 // by default, an Error is thrown
 const ClusterSequence * PseudoJetStructureBase::validated_cs() const{
-  throw Error("This PseudoJetStructure does not have a validated cluster sequence");
+  throw Error("This PseudoJet structure is not associated with a valid ClusterSequence");
 }
 
 // if the jet has valid area information then return a pointer to
@@ -80,7 +80,7 @@ const ClusterSequence * PseudoJetStructureBase::validated_cs() const{
 //
 // by default, an Error is thrown
 const ClusterSequenceAreaBase * PseudoJetStructureBase::validated_csab() const{
-  throw Error("This PseudoJetStructure does not have a validated cluster sequence with area");
+  throw Error("This PseudoJet structure is not associated with a valid cluster sequence with area");
 }
 
 
@@ -98,7 +98,7 @@ const ClusterSequenceAreaBase * PseudoJetStructureBase::validated_csab() const{
 //
 // by default, an Error is thrown
 bool PseudoJetStructureBase::has_partner(const PseudoJet &reference, PseudoJet &partner) const{
-  throw Error("This PseudoJetStructure has no implementation for has_partner");
+  throw Error("This PseudoJet structure has no implementation for has_partner");
 }
 
 // check if it has been recombined with another PseudoJet in which
@@ -107,7 +107,7 @@ bool PseudoJetStructureBase::has_partner(const PseudoJet &reference, PseudoJet &
 // 
 // by default, an Error is thrown
 bool PseudoJetStructureBase::has_child(const PseudoJet &reference, PseudoJet &child) const{
-  throw Error("This PseudoJetStructure has no implementation for has_child");
+  throw Error("This PseudoJet structure has no implementation for has_child");
 }
 
 // check if it is the product of a recombination, in which case
@@ -116,7 +116,7 @@ bool PseudoJetStructureBase::has_child(const PseudoJet &reference, PseudoJet &ch
 //
 // by default, an Error is thrown
 bool PseudoJetStructureBase::has_parents(const PseudoJet &reference, PseudoJet &parent1, PseudoJet &parent2) const{
-  throw Error("This PseudoJetStructure has no implementation for has_parents");
+  throw Error("This PseudoJet structure has no implementation for has_parents");
 }
 
 // check if the reference PseudoJet is contained in the second one
@@ -124,14 +124,14 @@ bool PseudoJetStructureBase::has_parents(const PseudoJet &reference, PseudoJet &
 //
 // by default, an Error is thrown
 bool PseudoJetStructureBase::object_in_jet(const PseudoJet &reference, const PseudoJet &jet) const{
-  throw Error("This PseudoJetStructure has no implementation for is_inside");
+  throw Error("This PseudoJet structure has no implementation for is_inside");
 }
 
 // retrieve the constituents. 
 //
 // by default, an Error is thrown
 vector<PseudoJet> PseudoJetStructureBase::constituents(const PseudoJet &reference) const{
-  throw Error("This PseudoJetStructure has no implementation for constituents");
+  throw Error("This PseudoJet structure has no implementation for constituents");
 }
 
 // return a vector of all subjets of the current jet (in the sense
@@ -145,7 +145,7 @@ vector<PseudoJet> PseudoJetStructureBase::constituents(const PseudoJet &referenc
 //
 // by default, an Error is thrown
 vector<PseudoJet> PseudoJetStructureBase::exclusive_subjets (const PseudoJet &reference, const double & dcut) const{
-  throw Error("This PseudoJetStructure has no implementation for exclusive_subjets");
+  throw Error("This PseudoJet structure has no implementation for exclusive_subjets");
 }
 
 // return the size of exclusive_subjets(...); still n ln n with same
@@ -154,7 +154,7 @@ vector<PseudoJet> PseudoJetStructureBase::exclusive_subjets (const PseudoJet &re
 //
 // by default, an Error is thrown
 int PseudoJetStructureBase::n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const{
-  throw Error("This PseudoJetStructure has no implementation for n_exclusive_subjets");
+  throw Error("This PseudoJet structure has no implementation for n_exclusive_subjets");
 }
 
 // return the list of subjets obtained by unclustering the supplied
@@ -163,7 +163,7 @@ int PseudoJetStructureBase::n_exclusive_subjets(const PseudoJet &reference, cons
 //
 // by default, an Error is thrown
 vector<PseudoJet> PseudoJetStructureBase::exclusive_subjets (const PseudoJet &reference, int nsub) const{
-  throw Error("This PseudoJetStructure has no implementation for exclusive_subjets");
+  throw Error("This PseudoJet structure has no implementation for exclusive_subjets");
 }
 
 // return the dij that was present in the merging nsub+1 -> nsub 
@@ -171,7 +171,7 @@ vector<PseudoJet> PseudoJetStructureBase::exclusive_subjets (const PseudoJet &re
 //
 // by default, an Error is thrown
 double PseudoJetStructureBase::exclusive_subdmerge(const PseudoJet &reference, int nsub) const{
-  throw Error("This PseudoJetStructure has no implementation for exclusive_submerge");
+  throw Error("This PseudoJet structure has no implementation for exclusive_submerge");
 }
 
 // return the maximum dij that occurred in the whole event at the
@@ -180,7 +180,7 @@ double PseudoJetStructureBase::exclusive_subdmerge(const PseudoJet &reference, i
 //
 // by default, an Error is thrown
 double PseudoJetStructureBase::exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const{
-  throw Error("This PseudoJetStructure has no implementation for exclusive_submerge_max");
+  throw Error("This PseudoJet structure has no implementation for exclusive_submerge_max");
 }
 
 
@@ -188,7 +188,7 @@ double PseudoJetStructureBase::exclusive_subdmerge_max(const PseudoJet &referenc
 //
 // by default, an Error is thrown
 std::vector<PseudoJet> PseudoJetStructureBase::pieces(const PseudoJet &reference) const{
-  throw Error("This PseudoJetStructure has no implementation for pieces");  
+  throw Error("This PseudoJet structure has no implementation for pieces");  
 }
 
 // the following ones require a computation of the area in the
@@ -199,7 +199,7 @@ std::vector<PseudoJet> PseudoJetStructureBase::pieces(const PseudoJet &reference
 //
 // by default, an Error is thrown
 double PseudoJetStructureBase::area(const PseudoJet &reference) const{
-  throw Error("This PseudoJetStructure has no implementation for area");
+  throw Error("This PseudoJet structure has no implementation for area");
 }
 
 // return the error (uncertainty) associated with the determination
@@ -207,21 +207,21 @@ double PseudoJetStructureBase::area(const PseudoJet &reference) const{
 //
 // by default, an Error is thrown
 double PseudoJetStructureBase::area_error(const PseudoJet &reference) const{
-  throw Error("This PseudoJetStructure has no implementation for area_error");
+  throw Error("This PseudoJet structure has no implementation for area_error");
 }
 
 // return the jet 4-vector area.
 //
 // by default, an Error is thrown
 PseudoJet PseudoJetStructureBase::area_4vector(const PseudoJet &reference) const{
-  throw Error("This PseudoJetStructure has no implementation for area_4vector");
+  throw Error("This PseudoJet structure has no implementation for area_4vector");
 }
 
 // true if this jet is made exclusively of ghosts.
 //
 // by default, an Error is thrown
 bool PseudoJetStructureBase::is_pure_ghost(const PseudoJet &reference) const{
-  throw Error("This PseudoJetStructure has no implementation for is_pure_ghost");
+  throw Error("This PseudoJet structure has no implementation for is_pure_ghost");
 }
 
 FASTJET_END_NAMESPACE

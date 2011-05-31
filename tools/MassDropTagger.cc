@@ -29,6 +29,7 @@
 //ENDHEADER
 
 #include <fastjet/tools/MassDropTagger.hh>
+#include <fastjet/ClusterSequence.hh>
 #include <sstream>
 
 FASTJET_BEGIN_NAMESPACE
@@ -50,11 +51,14 @@ string MassDropTagger::description() const{
 //------------------------------------------------------------------------
 // the tagging itself
 //  - jet   the PseudoJet to tag
-PseudoJet MassDropTagger::apply(const PseudoJet & jet) const{
+PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
   PseudoJet j = jet;
   PseudoJet j1, j2;
   bool had_parents;
 
+  // we just ask that we can "walk" in the cluster sequence.
+  // appropriate errors will be thrown automatically if this is not
+  // the case
   while ((had_parents = j.has_parents(j1,j2))) {
     // make parent1 the more massive jet
     if (j1.m() < j2.m()) std::swap(j1,j2);
@@ -75,9 +79,12 @@ PseudoJet MassDropTagger::apply(const PseudoJet & jet) const{
   }
 
   // create the result and its structure
-  PseudoJet result = join<MassDropStructure>(j1,j2);
-  result.structure_of<MassDropTagger>()._mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
-  result.structure_of<MassDropTagger>()._y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
+  const JetDefinition::Recombiner *rec
+    = jet.associated_cluster_sequence()->jet_def().recombiner();
+  PseudoJet result = join<MassDropStructure>(j1,j2,*rec);
+  MassDropStructure * s = (MassDropStructure *) result.structure_non_const_ptr();
+  s->_mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
+  s->_y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
   return result;
 }
 

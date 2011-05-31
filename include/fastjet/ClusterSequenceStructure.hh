@@ -83,13 +83,16 @@ public:
   /// Get access to the associated ClusterSequence (if any)
   //\{
   //-------------------------------------------------------------
-  /// returns true if there is a valid associated ClusterSequence
-  virtual bool has_associated_cluster_sequence() const;
+  /// returns true if there is an associated ClusterSequence
+  virtual bool has_associated_cluster_sequence() const{ return true;}
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   virtual const ClusterSequence* associated_cluster_sequence() const;
   
+  /// returns true if there is a valid associated ClusterSequence
+  virtual bool has_validated_cluster_sequence() const;
+
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error
   virtual const ClusterSequence * validated_cs() const;
@@ -212,6 +215,24 @@ public:
   /// associated ClusterSequence
   virtual double exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const;
 
+
+  //-------------------------------------------------------------------
+  // information related to the pieces of the jet
+  //-------------------------------------------------------------------
+  /// by convention, a jet associated with a ClusterSequence will have
+  /// its parents as pieces
+  virtual bool has_pieces(const PseudoJet &reference) const;
+
+  /// by convention, a jet associated with a ClusterSequence will have
+  /// its parents as pieces
+  ///
+  /// if it has no parents, then there will only be a single piece:
+  /// itself
+  ///
+  /// Note that to answer that question, we need to access the cluster
+  /// sequence. If the cluster sequence has gone out of scope, an
+  /// error will be thrown
+  virtual std::vector<PseudoJet> pieces(const PseudoJet &reference) const;
 
 
   // the following ones require a computation of the area in the

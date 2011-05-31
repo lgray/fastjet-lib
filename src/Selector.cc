@@ -1285,29 +1285,6 @@ Selector SelectorPtFractionMin(double fraction){
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-/// helper for selecting on zero PseudoJet
-class SW_IsZero : public SelectorWorker {
-public:
-  /// ctor with specification of the number of objects to keep
-  SW_IsZero(){}
-
-  /// return true if the jet is a pure-ghost jet
-  virtual bool pass(const PseudoJet & jet) const {
-    return jet == PseudoJet();
-  }
-  
-  /// returns a description of the worker
-  virtual string description() const { return "zero PseudoJet";}
-};
-
-
-// select objects that are zero PseudoJet
-Selector SelectorIsZero(){
-  return Selector(new SW_IsZero());
-}
-
-
-//----------------------------------------------------------------------
 /// helper for selecting the pure ghost
 class SW_IsPureGhost : public SelectorWorker {
 public:

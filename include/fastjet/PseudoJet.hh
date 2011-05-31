@@ -416,13 +416,16 @@ class PseudoJet {
   /// member function).
   //\{
   //-------------------------------------------------------------
-  /// returns true if this PseudoJet has an associated (and still
-  /// valid) ClusterSequence.
+  /// returns true if this PseudoJet has an associated ClusterSequence.
   bool has_associated_cluster_sequence() const;
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
+
+  /// returns true if this PseudoJet has an associated and still
+  /// valid ClusterSequence.
+  bool has_validated_cluster_sequence() const;
 
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error
@@ -455,6 +458,17 @@ class PseudoJet {
   ///
   /// return NULL if there is no associated structure
   const PseudoJetStructureBase* structure_ptr() const;
+  
+  /// return a non-const pointer to the structure (of type
+  /// PseudoJetStructureBase*) associated with this PseudoJet.
+  ///
+  /// return NULL if there is no associated structure
+  ///
+  /// Only use this if you know what you are doing. In any case,
+  /// prefer the 'structure_ptr()' (the const version) to this method,
+  /// unless you really need a write access to the PseudoJet's
+  /// underlying structure.
+  PseudoJetStructureBase* structure_non_const_ptr();
   
   /// return a pointer to the structure (of type
   /// PseudoJetStructureBase*) associated with this PseudoJet.
@@ -706,6 +720,14 @@ bool operator==(const PseudoJet &, const PseudoJet &);
 
 /// inequality test which is exact opposite of operator==
 inline bool operator!=(const PseudoJet & a, const PseudoJet & b) {return !(a==b);}
+
+/// Can only be used with val=0 and tests whether all four
+/// momentum components are equal to val (=0.0)
+bool operator==(const PseudoJet & jet, const double val);
+
+/// Can only be used with val=0 and tests whether at least one of the
+/// four momentum components is different from val (=0.0)
+inline bool operator!=(const PseudoJet & a, const double & val) {return !(a==val);}
 
 inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
   return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();

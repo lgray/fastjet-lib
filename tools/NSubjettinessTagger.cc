@@ -52,7 +52,7 @@ string NSubjettinessTagger::description() const{
 
 //------------------------------------------------------------------------
 // action on a single jet
-PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
+PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
   // make sure that the jet has constituents
   if (!jet.has_constituents())
     throw("The jet you try to tag needs to have accessible constituents");
@@ -109,8 +109,9 @@ PseudoJet NSubjettinessTagger::apply(const PseudoJet & jet) const{
   PseudoJet subjet_lab2 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
     
   PseudoJet result = join<StructureType>(subjet_lab1,subjet_lab2);
-  result.structure_of<NSubjettinessTagger>()._tau2 = tau2;
-  result.structure_of<NSubjettinessTagger>()._costhetas = max(ct0, ct1);
+  StructureType * s = (StructureType *) result.structure_non_const_ptr();
+  s->_tau2 = tau2;
+  s->_costhetas = max(ct0, ct1);
 
   // keep the rest-frame CS alive
   cs_structure->delete_self_when_unused();

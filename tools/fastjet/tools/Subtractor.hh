@@ -71,7 +71,7 @@ public:
   ///
   /// \param jet    the jet that is to be subtracted
   /// \return       the subtracted jet
-  virtual PseudoJet apply(const PseudoJet & jet) const;
+  virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// class description
   virtual std::string description() const{

@@ -91,19 +91,28 @@ std::string CompositeJetStructure::description() const{
 // things reimplemented from the base structure
 //------------------------------------------------------------------------------
 bool CompositeJetStructure::has_constituents() const{
-  for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
-    if (!pit->has_constituents()) return false;
+  //for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++)
+  //  if (!pit->has_constituents()) return false;
+  //
+  //return true;
 
-  return true;
+  // the only case where we do not have constituents is the case where
+  // there is no pieces!
+  return _pieces.size()!=0;
 }
 
 std::vector<PseudoJet> CompositeJetStructure::constituents(const PseudoJet &jet) const{
+  // recurse into the pieces that ahve constituents, just append the others
   // the following code automatically throws an Error if any of the
   // pieces has no constituents
-  vector<PseudoJet> all_constituents = _pieces[0].constituents();
-  for (unsigned i = 1; i < _pieces.size(); i++) {
-    vector<PseudoJet> constits = _pieces[i].constituents();
-    copy(constits.begin(), constits.end(), back_inserter(all_constituents));
+  vector<PseudoJet> all_constituents;
+  for (unsigned i = 0; i < _pieces.size(); i++) {
+    if (_pieces[i].has_constituents()){
+      vector<PseudoJet> constits = _pieces[i].constituents();
+      copy(constits.begin(), constits.end(), back_inserter(all_constituents));
+    } else {
+      all_constituents.push_back(_pieces[i]);
+    }
   }
  
   return all_constituents;

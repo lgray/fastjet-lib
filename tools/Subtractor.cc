@@ -32,7 +32,7 @@
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
-PseudoJet Subtractor::apply(const PseudoJet & jet) const {
+PseudoJet Subtractor::result(const PseudoJet & jet) const {
   if (!jet.has_area()){
     throw Error("Trying to subtract a jet without area support");
   }

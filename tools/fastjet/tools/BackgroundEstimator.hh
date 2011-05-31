@@ -54,7 +54,7 @@ public:
 				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
 
   /// return the rescaling factor associated with this jet
-  virtual double apply(const PseudoJet & jet) const;
+  virtual double result(const PseudoJet & jet) const;
 private:
   double _a0, _a1, _a2, _a3, _a4;
 };
@@ -65,7 +65,7 @@ private:
 /// Class that implements pt/area_4vector.perp() for background estimation
 class BackgroundJetPtDensity : public FunctionOfPseudoJet<double> {
 public:
-  virtual double apply(const PseudoJet & jet) const {
+  virtual double result(const PseudoJet & jet) const {
     return jet.perp() / jet.area_4vector().perp();
   }
   virtual std::string description() const {return "BackgroundJetPtDensity";}
@@ -87,7 +87,7 @@ public:
   /// \f$ sum_{i\in jet} p_{ti}^{n} \f$
   BackgroundJetScalarPtDensity(double n) : _pt_power(n) {}
 
-  virtual double apply(const PseudoJet & jet) const;
+  virtual double result(const PseudoJet & jet) const;
 
   virtual std::string description() const {return "BackgroundScalarJetPtDensity";}
 
@@ -105,7 +105,7 @@ private:
 /// involves massive particles.
 class BackgroundJetPtMDensity : public FunctionOfPseudoJet<double> {
 public:
-  virtual double apply(const PseudoJet & jet) const {
+  virtual double result(const PseudoJet & jet) const {
     std::vector<PseudoJet> constituents = jet.constituents();
     double scalar_ptm = 0;
     for (unsigned i = 0; i < constituents.size(); i++) {

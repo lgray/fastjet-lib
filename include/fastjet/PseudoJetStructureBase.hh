@@ -71,13 +71,17 @@ public:
   /// Get access to the associated ClusterSequence (if any)
   //\{
   //-------------------------------------------------------------
-  /// returns true if there is a valid associated ClusterSequence
+  /// returns true if there is an associated ClusterSequence
   virtual bool has_associated_cluster_sequence() const { return false;}
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   virtual const ClusterSequence* associated_cluster_sequence() const;
   
+  /// returns true if this PseudoJet has an associated and still
+  /// valid ClusterSequence.
+  virtual bool has_validated_cluster_sequence() const {return false;}
+
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error
   virtual const ClusterSequence * validated_cs() const;
@@ -179,10 +183,13 @@ public:
   virtual double exclusive_subdmerge_max(const PseudoJet &reference, int nsub) const;
 
 
+  //-------------------------------------------------------------------
+  // information related to the pieces of the jet
+  //-------------------------------------------------------------------
   /// return true if the structure supports pieces. 
   ///
   /// false by default
-  virtual bool has_pieces() const {return false;}
+  virtual bool has_pieces(const PseudoJet &reference) const {return false;}
 
   /// retrieve the pieces building the jet. 
   ///

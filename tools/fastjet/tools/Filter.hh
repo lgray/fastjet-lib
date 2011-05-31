@@ -176,7 +176,7 @@ public:
   ///
   /// \param jet    the jet that gets filtered
   /// \return the filtered jet
-  virtual PseudoJet apply(const PseudoJet & jet) const;
+  virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// class description
   virtual std::string description() const;
@@ -237,7 +237,9 @@ public:
   /// constructor from an original ClusterSequenceInfo
   /// We just share the original ClusterSequenceWrapper and initialise
   /// the rest
-  FilterStructure(){}
+  FilterStructure(const std::vector<PseudoJet> & pieces, 
+		  const JetDefinition::Recombiner *rec = 0)
+    : CompositeJetStructure(pieces, rec){}
 
   /// virtual dtor to allow further overloading  
   virtual ~FilterStructure(){}

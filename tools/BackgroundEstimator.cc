@@ -58,7 +58,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-double BackgroundJetScalarPtDensity::apply(const PseudoJet & jet) const {
+double BackgroundJetScalarPtDensity::result(const PseudoJet & jet) const {
   std::vector<PseudoJet> constituents = jet.constituents();
   double scalar_pt = 0;
   for (unsigned i = 0; i < constituents.size(); i++) {
@@ -69,7 +69,7 @@ double BackgroundJetScalarPtDensity::apply(const PseudoJet & jet) const {
 
 
 //----------------------------------------------------------------------
-double BackgroundRescalingYPolynomial::apply(const PseudoJet & jet) const {
+double BackgroundRescalingYPolynomial::result(const PseudoJet & jet) const {
   double y = jet.rap();
   double y2 = y*y;
   double rescaling = _a0 + _a1*y + _a2*y2 + _a3*y2*y + _a4*y2*y2;

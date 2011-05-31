@@ -240,6 +240,16 @@ bool operator==(const PseudoJet & a, const PseudoJet & b) {
   return true;
 }
 
+//----------------------------------------------------------------------
+// check if the jet has zero momentum
+bool operator==(const PseudoJet & jet, const double val) {
+  if (val != 0) 
+    throw Error("comparing a PseudoJet with a non-zero constant (double) is not allowed.");
+  return (jet.px() == 0 && jet.py() == 0 && 
+	  jet.pz() == 0 && jet.E() == 0);
+}
+
+
 
 //----------------------------------------------------------------------
 /// transform this jet (given in lab) into a jet in the rest
@@ -390,6 +400,13 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 
 
 //----------------------------------------------------------------------
+// check whether this PseudoJet has an associated parent
+// ClusterSequence that is still valid
+bool PseudoJet::has_validated_cluster_sequence() const{
+  return (_structure()) && (_structure->has_validated_cluster_sequence());
+}
+
+//----------------------------------------------------------------------
 // If there is a valid cluster sequence associated with this jet,
 // returns a pointer to it; otherwise throws an Error.
 //
@@ -414,7 +431,7 @@ bool PseudoJet::has_structure() const{
 
 //----------------------------------------------------------------------
 // return a pointer to the structure (of type
-// PseudoJetStructureBase*) associated wioth this PseudoJet.
+// PseudoJetStructureBase*) associated with this PseudoJet.
 //
 // return NULL if there is no associated structure
 const PseudoJetStructureBase* PseudoJet::structure_ptr() const {
@@ -423,8 +440,23 @@ const PseudoJetStructureBase* PseudoJet::structure_ptr() const {
 }
   
 //----------------------------------------------------------------------
+// return a non-const pointer to the structure (of type
+// PseudoJetStructureBase*) associated with this PseudoJet.
+//
+// return NULL if there is no associated structure
+//
+// Only use this if you know what you are doing. In any case,
+// prefer the 'structure_ptr()' (the const version) to this method,
+// unless you really need a write access to the PseudoJet's
+// underlying structure.
+PseudoJetStructureBase* PseudoJet::structure_non_const_ptr(){
+  if (!_structure()) return NULL;
+  return _structure();
+}
+  
+//----------------------------------------------------------------------
 // return a pointer to the structure (of type
-// PseudoJetStructureBase*) associated wioth this PseudoJet.
+// PseudoJetStructureBase*) associated with this PseudoJet.
 //
 // throw an error if there is no associated structure
 const PseudoJetStructureBase* PseudoJet::validated_structure_ptr() const {
@@ -435,7 +467,7 @@ const PseudoJetStructureBase* PseudoJet::validated_structure_ptr() const {
   
 //----------------------------------------------------------------------
 // return a reference to the shared pointer to the
-// PseudoJetStructureBase associated wioth this PseudoJet
+// PseudoJetStructureBase associated with this PseudoJet
 const SharedPtr<PseudoJetStructureBase> & PseudoJet::structure_shared_ptr() const {
   return _structure;
 }
@@ -581,7 +613,7 @@ double PseudoJet::exclusive_subdmerge_max(int nsub) const {
 // By default a single particle or a jet coming from a
 // ClusterSequence have no pieces and this methos will return false.
 bool PseudoJet::has_pieces() const{
-  return ((_structure()) && (_structure->has_pieces()));
+  return ((_structure()) && (_structure->has_pieces(*this)));
 }
 
 // retrieve the pieces that make up the jet. 
@@ -590,10 +622,11 @@ bool PseudoJet::has_pieces() const{
 // If the underlying interface supports "pieces" retrieve the
 // pieces from there.
 std::vector<PseudoJet> PseudoJet::pieces() const{
-  if (!has_pieces())
-    throw Error("Trying to retrieve the pieces of a PseudoJet that has no support for pieces.");
-
-  return _structure->pieces(*this);
+  return validated_structure_ptr()->pieces(*this);
+  // if (!has_pieces())
+  //   throw Error("Trying to retrieve the pieces of a PseudoJet that has no support for pieces.");
+  //
+  // return _structure->pieces(*this);
 }
 
 

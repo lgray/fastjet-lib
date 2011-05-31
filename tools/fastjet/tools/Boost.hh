@@ -51,7 +51,7 @@ public:
 
   /// the action of the function: boost the PseudoJet by a boost
   /// vector _jet_rest
-  PseudoJet apply(const PseudoJet & original) const{
+  PseudoJet result(const PseudoJet & original) const{
     PseudoJet result = original;
     return result.boost(_jet_rest);
   }
@@ -74,7 +74,7 @@ public:
 
   /// the action of the function: boost the PseudoJet to the rest
   /// frame of _jet_rest
-  PseudoJet apply(const PseudoJet & original) const{
+  PseudoJet result(const PseudoJet & original) const{
     PseudoJet result = original;
     return result.unboost(_jet_rest);
   }

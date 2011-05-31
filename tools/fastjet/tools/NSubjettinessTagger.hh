@@ -113,7 +113,7 @@ public:
   virtual std::string description() const;
 
   /// action on a single jet
-  virtual PseudoJet apply(const PseudoJet & jet) const;
+  virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of Structure returned
   typedef NSubjettinessStructure StructureType;
@@ -135,7 +135,7 @@ protected:
 class NSubjettinessStructure : public CompositeJetStructure{
 public:
   /// ctor with pieces initialisation
-  NSubjettinessStructure(std::vector<PseudoJet> pieces) :
+  NSubjettinessStructure(const std::vector<PseudoJet> & pieces) :
     CompositeJetStructure(pieces), _tau2(0.0), _costhetas(1.0){}
 
   /// access to the associated N-subjettiness
@@ -145,9 +145,9 @@ public:
   inline double costhetas() const {return _costhetas;}
 
 protected:
-  mutable double _tau2;      ///< the value of the N-subjettiness
-  mutable double _costhetas; ///< the minimal angle between the dijets
-			     ///< and the boost axis
+  double _tau2;      ///< the value of the N-subjettiness
+  double _costhetas; ///< the minimal angle between the dijets
+  		     ///< and the boost axis
 
   // allow the tagger to set these
   friend class NSubjettinessTagger;

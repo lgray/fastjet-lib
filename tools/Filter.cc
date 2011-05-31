@@ -59,7 +59,7 @@ string Filter::description() const {
 
 // return a vector of subjets, which are the ones that would be kept
 // by the filtering
-PseudoJet Filter::apply(const PseudoJet &jet) const {
+PseudoJet Filter::result(const PseudoJet &jet) const {
   // start by getting the list of subjets (including a list of sanity
   // checks)
   // NB: subjets is empty to begin with (see the comment for
@@ -89,7 +89,9 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     throw Error("Filter can only be applied on jets having constituents");
   
   // if rho!=0, make sure we have a CS that supports area and has
-  // explicit ghosts watch out: that will fail for a MergedJet!!x
+  // explicit ghosts 
+  // watch out: that will fail for a CompositeJet!!
+  // TODO: add support for composite jets
   if (_rho != 0.0){
     if (!jet.has_area())   
       throw Error("Attempt to filter and subtract (non-zero rho) without area info for the original jet");
@@ -103,6 +105,9 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     if (!jet.validated_csab()->has_explicit_ghosts())
       throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
   }
+
+  // deduce a recombiner from the jet
+  //const JetDefinition::Recombiner *recombiner = _deduced_recombiner(jet);
 
   // if we're dealing with a dynamic determination of the filtering
   // radius, do it now
@@ -140,19 +145,14 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 PseudoJet Filter::_finalise(const PseudoJet & jet, 
 			    vector<PseudoJet> & kept, 
 			    vector<PseudoJet> & rejected) const {
-  PseudoJet filtered_jet(0.0,0.0,0.0,0.0);
+  // figure out which recombiner to use
+  const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
 
   // create an appropriate structure and transfer the info to it
-  FilterStructure *fi = new FilterStructure();
-
-  fi->_original_jet = jet;
-  fi->_pieces = kept;   // in the base interface
-  fi->_rejected = rejected;
-
-  // to sum the kept pieces, extract the recombiner used for the sub-clustering
-  const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
-  for (unsigned i = 0; i < kept.size(); i++)
-    rec.plus_equal(filtered_jet, kept[i]);
+  PseudoJet filtered_jet = join<StructureType>(kept, rec);
+  StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
+  fs->_original_jet = jet;
+  fs->_rejected = rejected;
 
   // make sure the filtered jet has the same index (cluster and user)
   // (i.e. "looks like") the original jet
@@ -164,7 +164,7 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   filtered_jet.set_user_index(jet.user_index());
 
   // finally attach the clustering info to the PJ
-  filtered_jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(fi));
+  filtered_jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(fs));
 
   return filtered_jet;
 }
@@ -211,7 +211,7 @@ bool Filter::_check_ca(const PseudoJet & jet) const{
 
 // check if the jet is obtained from C/A or a superposition of C/A pieces
 bool Filter::_recursively_check_ca(const PseudoJet & jet, vector<PseudoJet> &cumulative_pieces) const{
-  if (jet.has_associated_cluster_sequence()){
+  if (jet.has_validated_cluster_sequence()){
     cumulative_pieces.push_back(jet);
     return jet.associated_cluster_sequence()->jet_def().jet_algorithm() == cambridge_algorithm;
   }

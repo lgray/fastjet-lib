@@ -257,6 +257,19 @@ void JetDefinition::Plugin::set_ghost_separation_scale(double scale) const {
 }
 
 
+/// returns true if the 2 jet definitions share the same recombiner
+bool have_same_recombiner(const JetDefinition &jd1, 
+			  const JetDefinition &jd2){
+  // first make sure that they have the same recombination scheme
+  const RecombinationScheme & scheme = jd1.recombination_scheme();
+  if (jd2.recombination_scheme() != scheme) return false;
+
+  // if the scheme is "external", also check that they ahve the same
+  // recombiner
+  return (scheme != external_scheme) 
+    || (jd1.recombiner() == jd2.recombiner());
+}
+
 
 //-------------------------------------------------------------------------------
 // helper functions to build a jet made of pieces
@@ -272,8 +285,11 @@ PseudoJet join(const vector<PseudoJet> & pieces, const JetDefinition::Recombiner
   // compute the total momentum
   //--------------------------------------------------
   PseudoJet result;  // automatically initialised to 0
-  for (unsigned int i=0; i<pieces.size(); i++)
-    recombiner.plus_equal(result, pieces[i]);
+  if (pieces.size()>0){
+    result = pieces[0];
+    for (unsigned int i=1; i<pieces.size(); i++)
+      recombiner.plus_equal(result, pieces[i]);
+  }
 
   // attach a CompositeJetStructure to the result
   //--------------------------------------------------
