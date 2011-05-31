@@ -153,7 +153,7 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
   fs->_original_jet = jet;
   fs->_rejected = rejected;
-
+  
   // make sure the filtered jet has the same index (cluster and user)
   // (i.e. "looks like") the original jet
   // what about extra info? 
@@ -162,9 +162,6 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   //       the recombiner??
   filtered_jet.set_cluster_hist_index(jet.cluster_hist_index());
   filtered_jet.set_user_index(jet.user_index());
-
-  // finally attach the clustering info to the PJ
-  filtered_jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(fs));
 
   return filtered_jet;
 }

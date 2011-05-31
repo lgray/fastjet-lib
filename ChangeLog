@@ -1,5 +1,10 @@
 2011-05-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* tools/Filter.cc (_finalise):
+	  do not set the structure share pointer at the end (this is
+	  already done by the call to join() and would lead to a memory
+	  problem)
+
 	* include/fastjet/Selector.hh:
 	* src/Selector.cc:
 	  removed SelectorIsZero (not needed now + could introduce some
