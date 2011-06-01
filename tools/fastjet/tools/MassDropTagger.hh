@@ -59,7 +59,7 @@ class MassDropStructure;
 ///  
 ///  2. if there is a mass drop, i.e. m_j1/m_j < mu_cut, and the
 ///     splitting is sufficiently symmetric, \f${/rm
-///     min}(p_{tj1}^2,p_{tj2}^2)\DeltaR_{j1,j2}^2 > y_{/rm cut}
+///     min}(p_{tj1}^2,p_{tj2}^2)\Delta R_{j1,j2}^2 > y_{/rm cut}
 ///     m_j^2\f$, keep j as the result of the tagger (with j1 and j2
 ///     its 2 subjets)
 ///
@@ -88,7 +88,7 @@ class MassDropStructure;
 ///  - one must be able to succesively "uncluster" the original jet
 ///    using "has_parents"
 ///
-/// \section output Output/interface
+/// \section output Output/structure
 /// 
 ///  - the 2 subjets are kept as pieces if some substructure is found,
 ///    otherwise a single 0-momentum piece is returned
@@ -116,6 +116,7 @@ protected:
 
 
 //------------------------------------------------------------------------
+/// @ingroup tools
 /// \class MassDropStructure
 /// the structure returned by the MassDropTagger transformer.
 ///

@@ -77,7 +77,7 @@ class FilterStructure;
 ///    active area with explicit ghosts support or a merging of
 ///    such pieces
 ///
-/// \section output Output/interface
+/// \section output Output/structure
 /// 
 ///  - a copy of the original jet is kept
 ///  - kept pieces are stored under the form of a "CompositeJet"

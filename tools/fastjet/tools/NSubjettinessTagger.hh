@@ -92,7 +92,7 @@ class NSubjettinessStructure;
 /// 
 ///  - the original jet must have constituents
 ///
-/// \section output Output/interface
+/// \section output Output/structure
 /// 
 ///  - the 2 subjets are kept as pieces if some substructure is found,
 ///    otherwise a single 0-momentum piece
@@ -126,6 +126,7 @@ protected:
 
 
 //------------------------------------------------------------------------
+/// @ingroup tools
 /// \class NSubjettinessStructure
 /// the structure returned by the NSubjettinessTagger transformer.
 ///
