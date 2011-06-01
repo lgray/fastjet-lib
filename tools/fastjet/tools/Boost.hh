@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: Transformer.hh 2126 2011-05-16 12:40:34Z soyez $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
