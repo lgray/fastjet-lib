@@ -130,7 +130,7 @@ public:
 
   /// print a list of all the failures
   void print_failures(std::ostream & ostr = std::cout, unsigned max_print = 5) {
-    for (unsigned i=0; i < min(_failure_testnames.size(), max_print); i++) {
+    for (unsigned i=0; i < min((unsigned int) _failure_testnames.size(), max_print); i++) {
       ostr << "           " << _failure_testnames[i] << endl;
     }
     if (_failure_testnames.size() > max_print) {
@@ -140,7 +140,7 @@ public:
   }
 
   void print_OK(std::ostream & ostr = std::cout, unsigned max_print = 4000000000U) {
-    for (unsigned i=0; i < min(_OK_testnames.size(), max_print); i++) {
+    for (unsigned i=0; i < min((unsigned int) _OK_testnames.size(), max_print); i++) {
       ostr << "           " << _OK_testnames[i] << endl;
     }
     if (_OK_testnames.size() > max_print) {
@@ -194,6 +194,19 @@ protected:
   std::vector<std::string> _OK_testnames;
   bool _quiet_OK;
 };
+
+
+#define VERIFY_THROWS(CODE, MSG) {		\
+    bool check = false;				\
+    Error::set_print_errors(false);		\
+    try {					\
+      CODE ;					\
+    } catch (const fastjet::Error & err) {	\
+      check = true;				\
+    }						\
+    verify_equal(check, true, MSG );		\
+    Error::set_print_errors(true);		\
+  }
 
 
 //FASTJET_END_NAMESPACE

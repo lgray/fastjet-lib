@@ -169,37 +169,170 @@ class TestPJCSaccess : public TestBase {
     ClusterSequence * cs = new ClusterSequence(event, jet_def);
     vector<PseudoJet> jets = sorted_by_pt(cs->inclusive_jets());
 
-    verify_equal(event[0].has_constituents(), false, 
-		 "input particle has no constituents");
+    PseudoJet dummy1, dummy2;
+
+    // test an uninitialised particle
+    PseudoJet empty;
+    verify_equal(empty.has_associated_cluster_sequence(), false,
+		 "empty PseudoJet has no cluster sequence (=false)");
+    verify_equal<const ClusterSequence*>(empty.associated_cluster_sequence(), NULL,
+		 "empty PseudoJet associated cluster sequence (=NULL)");
+    verify_equal(empty.has_validated_cluster_sequence(), false,
+		 "empty PseudoJet has no valid cluster sequence (=throws)");
+    VERIFY_THROWS(empty.validated_cs(),
+		  "empty PseudoJet validated cluster sequence (=throws)");
+    verify_equal(empty.has_constituents(), false,
+		 "empty PseudoJet has no constituents (=false)");
+    VERIFY_THROWS(empty.constituents(),
+		 "empty PseudoJet constituents (=throws)");
+    verify_equal(empty.has_pieces(), false,
+		 "empty PseudoJet has no pieces (=false)");
+    VERIFY_THROWS(empty.pieces(),
+		  "empty PseudoJet pieces (=throws)");
+    VERIFY_THROWS(empty.has_parents(dummy1, dummy2),
+		  "empty PseudoJet parents (=false)");
+    VERIFY_THROWS(empty.has_child(dummy1),
+		  "empty PseudoJet child (=false)");
+
+    // test an input particle
     verify_equal(event[0].has_associated_cluster_sequence(), false, 
 		 "input particle has no cluster sequence");
+    verify_equal<const ClusterSequence*>(event[0].associated_cluster_sequence(), 
+		 NULL, "input particle associated cluster sequence (=NULL)");
+    verify_equal(event[0].has_validated_cluster_sequence(), false, 
+		 "input particle has no valid cluster sequence");
+    VERIFY_THROWS(event[0].validated_cs(),
+		  "input particle validated cluster sequence (=throws)");
+    verify_equal(event[0].has_constituents(), false, 
+		 "input particle has no constituents");
+    VERIFY_THROWS(event[0].constituents(),
+		 "input particle constituents (=throws)");
+    verify_equal(event[0].has_pieces(), false, 
+		 "input particle has no pieces");
+    VERIFY_THROWS(event[0].pieces(),
+		  "input particle pieces (=throws)");
+    VERIFY_THROWS(event[0].has_parents(dummy1, dummy2),
+		  "input particle parents (=throws)");
+    VERIFY_THROWS(event[0].has_child(dummy1),
+		  "input particle child (=throws)");
 
+    // test a jet
     verify_equal(jets[0].has_associated_cluster_sequence(), true, 
 		 "jet has cluster sequence");
+    verify_equal<const ClusterSequence*>(jets[0].associated_cluster_sequence(),
+		 cs, "jet associated cluster sequence (=CS)");
+    verify_equal(jets[0].has_validated_cluster_sequence(), true, 
+		 "jet has valid cluster sequence");
+    verify_equal<const ClusterSequence*>(jets[0].validated_cs(), cs, 
+		 "jet validated cluster sequence (=CS)");
     verify_equal(jets[0].has_constituents(), true, 
 		 "jet has constituents");
-    verify_equal(jets[0].constituents().size(), 31U, 
-		 "jet has 31 constituents"); // hard coded # of constit is ugly
+    verify_equal((unsigned int) jets[0].constituents().size(), 31U, 
+    		 "jet has 31 constituents"); // hard coded # of constit is ugly
+    verify_equal(jets[0].has_pieces(), true, 
+		 "jet has pieces");
+    verify_equal((unsigned int) jets[0].pieces().size(), 2U,
+		 "jet has 2 pieces");
+    verify_equal(jets[0].has_parents(dummy1, dummy2), true,
+		 "jet parents");
+    verify_equal(jets[0].has_child(dummy1), false,
+		 "jet child (=false)");
 
+    // test a jet's constituent
+    PseudoJet constituent = jets[0].constituents()[0];
+    verify_equal(constituent.has_associated_cluster_sequence(), true, 
+		 "jet constituent has cluster sequence");
+    verify_equal<const ClusterSequence*>(constituent.associated_cluster_sequence(),
+                 cs, "jet constituent associated cluster sequence (=CS)");
+    verify_equal(constituent.has_validated_cluster_sequence(), true, 
+		 "jet constituent has valid cluster sequence");
+    verify_equal<const ClusterSequence*>(constituent.validated_cs(), cs, 
+		 "jet constituent validated cluster sequence (=CS)");
+    verify_equal(constituent.has_constituents(), true, 
+		 "jet constituent has constituents");
+    verify_equal(constituent.constituents()[0], constituent, 
+    		 "jet constituent has itself as a constituents"); 
+    verify_equal(constituent.has_pieces(), false, 
+		 "jet constituent has no pieces");
+    verify_equal((unsigned int) constituent.pieces().size(), 0U,
+		  "jet constituent pieces (=0)");
+    verify_equal(constituent.has_parents(dummy1, dummy2), false,
+		 "jet constituent has no parents");
+    verify_equal(constituent.has_child(dummy1), true,
+		 "jet constituent child (=true)");
+
+    // test a composite jet (from input particles)
+    PseudoJet composite1 = join(event[0], event[1]);
+    verify_equal(composite1.has_associated_cluster_sequence(), false, 
+		 "composite (2 inputs) has no cluster sequence");
+    verify_equal<const ClusterSequence*>(composite1.associated_cluster_sequence(),
+                 NULL, "composite (2 inputs) associated cluster sequence (=NULL)");
+    verify_equal(composite1.has_validated_cluster_sequence(), false, 
+		 "composite (2 inputs) has valid cluster sequence");
+    VERIFY_THROWS(composite1.validated_cs(), 
+		  "composite (2 inputs) validated cluster sequence (=throws)");
+    verify_equal(composite1.has_constituents(), true, 
+		 "composite (2 inputs) has constituents");
+    verify_equal((unsigned int) composite1.constituents().size(), 2U, 
+    		 "composite (2 inputs) has 2 constituents"); 
+    verify_equal(composite1.has_pieces(), true, 
+		 "composite (2 inputs) has pieces");
+    verify_equal((unsigned int) composite1.pieces().size(), 2U,
+		  "composite (2 inputs) has 2 pieces");
+    VERIFY_THROWS(composite1.has_parents(dummy1, dummy2),
+		  "composite (2 inputs) parents (=throws)");
+    VERIFY_THROWS(composite1.has_child(dummy1),
+		  "composite (2 inputs) child (=throws)");
+
+    // test a composite jet (from CS jets)
+    PseudoJet composite2 = join(jets[0], jets[1]);
+    verify_equal(composite2.has_associated_cluster_sequence(), false, 
+		 "composite (2 jets) has no cluster sequence");
+    verify_equal<const ClusterSequence*>(composite2.associated_cluster_sequence(),
+                 NULL, "composite (2 jets) associated cluster sequence (=NULL)");
+    verify_equal(composite2.has_validated_cluster_sequence(), false, 
+		 "composite (2 jets) has valid cluster sequence");
+    VERIFY_THROWS(composite2.validated_cs(), 
+		  "composite (2 jets) validated cluster sequence (=throws)");
+    verify_equal(composite2.has_constituents(), true, 
+		 "composite (2 jets) has constituents");
+    verify_equal((unsigned int) composite2.constituents().size(), 
+		 (unsigned int) (jets[0].constituents().size() + jets[1].constituents().size()),
+    		 "composite (2 jets) has itself as a constituents"); 
+    verify_equal(composite2.has_pieces(), true, 
+		 "composite (2 jets) has pieces");
+    verify_equal((unsigned int) composite2.pieces().size(), 2U,
+		  "composite (2 jets) has 2 pieces");
+    VERIFY_THROWS(composite2.has_parents(dummy1, dummy2),
+		  "composite (2 jets) parents (=throws)");
+    VERIFY_THROWS(composite2.has_child(dummy1),
+		  "composite (2 jets) child (=throws)");
+
+
+    // test a jet (after CS deletion)
     delete cs;
+
+    verify_equal(jets[0].has_associated_cluster_sequence(), true, 
+		 "post CS-deletion, jet has cluster sequence");
+    verify_equal<const ClusterSequence*>(jets[0].associated_cluster_sequence(),
+		 NULL, "post CS-deletion, jet associated cluster sequence (=NULL)");
+    verify_equal(jets[0].has_validated_cluster_sequence(), false, 
+		 "post CS-deletion, jet has no valid cluster sequence");
+    VERIFY_THROWS(jets[0].validated_cs(),
+		 "post CS-deletion, jet validated cluster sequence (=throws)");
+    verify_equal(jets[0].has_constituents(), true, 
+		 "post CS-deletion, jet has constituents");
+    VERIFY_THROWS(jets[0].constituents().size(),
+		  "post CS-deletion, jet has constituents (=throws)");
+    VERIFY_THROWS(jets[0].has_pieces(),
+		  "post CS-deletion, jet has pieces (=throws)");
+    VERIFY_THROWS(jets[0].pieces().size(),
+		 "post CS-deletion, jet has 2 pieces (=throws)");
+    VERIFY_THROWS(jets[0].has_parents(dummy1, dummy2),
+		 "post CS-deletion, jet parents (=throws)");
+    VERIFY_THROWS(jets[0].has_child(dummy1),
+		 "post CS-deletion, jet child (=throws)");
     
-    verify_equal(jets[0].has_associated_cluster_sequence(), false, 
-		 "post-CS-deletion, jet has cluster sequence (=no)");
-    // now quite a painful series of operations to check that we 
-    // generate the correct FJ Error (but we should refine this to become
-    // more specific?)
-    bool check = false;
-    Error::set_print_errors(false);
-    try {
-      jets[0].has_constituents();
-      //verify_equal(jets[0].has_constituents(), false, 
-      //		   "post-CS-deletion, jet has constituents (=no)"); 
-    } catch (const fastjet::Error & err) {
-      check = true;
-    }
-    verify_equal(check, true, 
-		   "post-CS-deletion, jet has constituents (=throws error)"); 
-    Error::set_print_errors(true);
     
     
 //     cout << jets[0].perp() << endl;

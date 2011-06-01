@@ -14,9 +14,15 @@ int main(int argc, char** argv) {
   bool verbose = cmdline.present("-verbose");
   string only = cmdline.value<string>("-only", "");
 
-  vector<TestBase *> tests;
+  // simply force the banner to appear at the beginning
+  vector<PseudoJet> event;
+  event.push_back(PtYPhiM(1.0,0.0,0.0));
+  JetDefinition jet_def(antikt_algorithm, 0.5);
+  ClusterSequence * cs = new ClusterSequence(event, jet_def);
+  delete cs;
 
   // the list of tests we will perform
+  vector<TestBase *> tests;
   tests.push_back(new TestPtYPhiM());
   tests.push_back(new TestPJAssignment());
   tests.push_back(new TestPJCSaccess());
