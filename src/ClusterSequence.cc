@@ -1221,7 +1221,8 @@ vector<PseudoJet> ClusterSequence::unclustered_particles() const {
 bool ClusterSequence::contains(const PseudoJet & jet) const {
   return jet.cluster_hist_index() >= 0 
     &&   jet.cluster_hist_index() < int(_history.size())
-    &&   jet.structure_shared_ptr() == structure_shared_ptr();
+    &&   jet.has_validated_cluster_sequence()
+    &&   jet.associated_cluster_sequence() == this;
 }
 
 
