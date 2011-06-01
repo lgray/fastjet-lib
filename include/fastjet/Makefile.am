@@ -25,6 +25,7 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   FunctionOfPseudoJet.hh\
   Selector.hh\
   CompositeJetStructure.hh\
+  WrappedStructure.hh\
   config_win.h\
   config.h
 
