@@ -40,7 +40,7 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// @ingroup tools
+/// @ingroup extra_info
 /// \class CompositeJetStructure
 /// The structure for a jet made of pieces
 ///
