@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: MassDropTagger.hh 2188 2011-05-31 15:44:46Z soyez $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
