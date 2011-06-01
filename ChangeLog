@@ -1,4 +1,25 @@
-2011-05-31  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+2011-06-01  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence.cc (contains):
+	  instead of testinmg if jet structure shared pointers is equal to
+	  the ClusterSequence one, compare directly the pointer to the
+	  cluster sequence itself. This would work also with the wrapped
+	  structure.
+
+	* tools/fastjet/tools/CASubJetTagger.hh:    ***   ADDED   ***
+	* tools/CASubJetTagger.c:                   ***   ADDED   ***
+	* tools/fastjet/tools/Makefile.am:
+	* tools/Makefile.am:
+	  added a tagger searching for a maximal scale (distance) in a
+	  Cambridge/Aachen cluster sequence history
+
+	* include/fastjet/WrappedStructure.hh:      ***   ADDED   ***
+	* include/fastjet/Makefile.am:
+          added a wrapper around another structure (makes feasible the
+	  addition of extra features to a structure while keeping sharing
+	  the memry of the wrapped structure)
+
+2011-05-31  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Filter.cc (_finalise):
 	  do not set the structure share pointer at the end (this is
@@ -10,7 +31,7 @@
 	  removed SelectorIsZero (not needed now + could introduce some
 	  confusion)
 
-2011-05-30  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+2011-05-30  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/MassDropTagger.hh:
 	  relaxed the input condition (has_parents is the only thing we
