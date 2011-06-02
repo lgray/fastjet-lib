@@ -42,7 +42,7 @@ Changes to features introduced in alpha2 (or 1):
   specify a user-defined recombiner.
 - Selector::count(jets) to know how many pass a cut (also new: Selector::sift)
 
-Other changes and fixes
+Other changes 
 - by default PseudoJet is constructed with zero momentum
 - by default a JetDefinition has an undefined_jet_algorithm
 - efficiency improvements in PtYPhiM and ghost generation
@@ -53,6 +53,10 @@ Other changes and fixes
   value of type T depending on a PseudoJet argument.
 - added an example (09) to illustrate how to add user info to a PseudoJet
 - fixed crashes of VoronoiAreas for particles on a grid
+
+Bug fixes
+- the default recombiner used to set the user_index to the non-default
+  value of 0. Now it sets it to the default (-1).
 
 to be included??????
 - template join?

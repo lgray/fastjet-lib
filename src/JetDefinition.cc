@@ -172,7 +172,6 @@ void JetDefinition::DefaultRecombiner::recombine(
   switch(_recomb_scheme) {
   case E_scheme:
     pab = pa + pb; 
-    pab.set_user_index(0);
     return;
   // all remaining schemes are massless recombinations and locally
   // we just set weights, while the hard work is done below...
@@ -212,7 +211,6 @@ void JetDefinition::DefaultRecombiner::recombine(
   } else { // weights are zero
     pab = PseudoJet(0.0,0.0,0.0,0.0);
   }
-  pab.set_user_index(0);
 }
 
 

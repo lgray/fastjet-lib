@@ -55,7 +55,6 @@ class TestSubStructure : public TestBase {
     // the third jet should be tagged on its internal structure, particles
     // 4+5
     tagged = tagger(jets[2]);
-    tagged.set_user_index(-1); // fudge this (by default comes out 0)
     verify_almost_equal(tagged, particles[4]+particles[5], 
 		        name+": jet 2 tagged = p[4]+p[5]", 1e-10, ignore_struct);
 
