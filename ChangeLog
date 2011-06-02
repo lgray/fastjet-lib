@@ -1,5 +1,9 @@
 2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
 
+	* doc/fastjet-doc.tex:
+	  added a table corresponding to the structure associated with a
+	  PseudoJet for different types of PseudoJet.
+
 	* configure.ac:
 	* plugins/Makefile.ac:
 	* plugins/usage_examples:                *** REMOVED ***
