@@ -192,7 +192,7 @@ dnl
 dnl See m4/plugins.m4 to see what is enabled by default
 dnl-------------------------------------------------------------------
 dnl general
-AC_CONFIG_FILES( plugins/Makefile plugins/usage_examples/Makefile )
+AC_CONFIG_FILES( plugins/Makefile )
 CONFIG_LIBS_PLUGINS=""
 CONFIG_LIBS_PLUGINS_STATIC=""
 

@@ -35,7 +35,7 @@ SUBDIRS += D0RunICone
 endif
 # end plugin section -- do not modify this line
 
-SUBDIRS += . usage_examples
+SUBDIRS += .
 
 if MONOLITHIC_PLUGINS
 lib_LTLIBRARIES = libfastjetplugins.la
