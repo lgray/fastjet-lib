@@ -1,5 +1,9 @@
 2011-06-02  Gregory Soyez  <soyez@lpthe.jussieu.fr>
 
+	* NEWS + RoadMap:
+	  included changes up to here in the NEWS.
+	  updated the RoadMap with open questions/tasks before 3.0a3
+
 	* tools/fastjet/tools/CASubJetTagger.hh:
 	  added the StructureType (typedef'ed to CASubJetStructure)
 
