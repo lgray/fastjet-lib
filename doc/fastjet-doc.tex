@@ -28,6 +28,7 @@
 \usepackage{xspace}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{booktabs}
 \usepackage{url}
 \usepackage[breaklinks=true]{hyperref}
 %\usepackage[colorlinks=true]{hyperref}
@@ -2714,8 +2715,8 @@ technical aspects related to how they are implemented and how to add
 user-defined transformers.
 
 
-\subsection{Generic considerations about \ttt{Transformer}'s}
-\label{sec:transformers}
+\subsection{Generic considerations about \texttt{Transformer}'s}
+\label{sec:transformers-generic}
 
 The common interface to all the transformers is the following one:
 \begin{lstlisting}
@@ -3881,66 +3882,76 @@ and later access the PDG id through the function
 \section{Structural information for various inputs}
 \label{app:structure_table}
 
-\begin{table}[t]
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-Call & empty/input & Jet & Jet (no CS) & Constituent & Comp. Jet & Comp. Input \\
-\hline
-has\_associated\_cs& false   & true    &  true   & true    & false    & false   \\
-associated\_cs     & NULL    &  CS     &  NULL   &  CS     & NULL     & NULL    \\
-\hline                       
-has\_valid\_cs     & false   & true    &  false  & true    & false    & false   \\
-valid\_cs          & \throws &  CS     & \throws &  CS     & \throws  & \throws \\
-\hline                       
-has\_constituents  & false   & true    & true    & true    & true     & true    \\
-constituents       & \throws & from CS & \throws & itself  & recurse  & pieces  \\
-\hline                       
-has\_pieces        & false   & true    & \throws & false   & true     & true    \\ 
-pieces             & \throws & parents & \throws & empty   & pieces   & pieces  \\ 
-\hline                       
-has\_parents       & \throws & from CS & \throws & from CS & \throws  & \throws \\ 
-has\_child         & \throws & from CS & \throws & from CS & \throws  & \throws \\ 
-contains           & \throws & from CS & \throws & from CS & \throws  & \throws \\ 
-\hline
+\begin{table}[t]\centering
+%\begin{tabular}{|l|c|c|c|c|c|c|}
+\begin{tabular}{lccccccc}
+\toprule
+  && particle & jet & jet (no CS) & constituent & \ttt{join(}$j_1,j_2$\ttt{)} & \ttt{join(}$p_1,p_2$\ttt{)} \\
+\midrule
+\ttt{has\_associated\_cs()}
+                     && false   & true    &  true   & true    & false    & false   \\
+\ttt{associated\_cs()}     
+                     && NULL    &  CS     &  NULL   &  CS     & NULL     & NULL    \\
+\midrule                       
+\ttt{has\_validated\_cs()}
+                     && false   & true    &  false  & true    & false    & false   \\
+\ttt{validated\_cs()}&& \throws &  CS     & \throws &  CS     & \throws  & \throws \\
+\midrule                       
+\ttt{has\_constituents()}
+                     && false   & true    & true    & true    & true     & true    \\
+\ttt{constituents()} && \throws & from CS & \throws & itself  & recurse  & pieces  \\
+\midrule                       
+\ttt{has\_pieces()}  && false   & true    & \throws & false   & true     & true    \\ 
+\ttt{pieces()}       && \throws & parents & \throws & empty   & pieces   & pieces  \\ 
+\midrule                       
+\ttt{has\_parents(...)}
+                     && \throws & from CS & \throws & from CS & \throws  & \throws \\ 
+\ttt{has\_child(..)} && \throws & from CS & \throws & from CS & \throws  & \throws \\ 
+\ttt{contains(...)}  && \throws & from CS & \throws & from CS & \throws  & \throws \\ 
+\bottomrule
 \end{tabular}
-\caption{Table summarising the behaviour obtained when requesting
-  structural information for different kinds of
-  \ttt{PseudoJet}. ``from CS'' means that the information is obtained
-  from the associated \ttt{ClusterSequence}. All other entries should
-  be straightforward.}\label{tab:structure}
+\caption{summary of the behaviour obtained when requesting
+  structural information from different kinds of \ttt{PseudoJet}. A
+  particle (also $p_1,p_2$) is a \ttt{PseudoJet}
+  constructed by the user, without structural information; a ``jet''
+  (also $j_1,j_2$) is the output from a
+  \ttt{ClusterSequence}; ``from CS'' means that the information is
+  obtained from the associated \ttt{ClusterSequence}. 
+  %
+  A ``jet (no CS)'' is one whose \ttt{ClusterSequence} has gone out of
+  scope.
+  %
+  All other entries should be self-explanatory.}\label{tab:structure}
 \end{table}
 
-Since \fastjet version 3.0, a \ttt{PseudoJet} can access information
-on its structure. Typically, this means accessing clustering
-information like a jet's constituents, or its pieces for a composite
-jet.
+Starting with \fastjet version 3.0, a \ttt{PseudoJet} can access
+information about its structure, for example its constituents if it came
+from a \ClusterSequence, or its pieces if it was the result of a
+\ttt{join(...)} operation.
+%
+In this appendix, we summarise what the various structural access
+methods will return for different types of \ttt{PseudoJet}s: input
+particles, jets resulting from a clustering, etc.
+%
+Table \ref{tab:structure} provides the information for the most
+commonly-used methods. 
 
-There are several methods that have been added to \ttt{PseudoJet} to
-allow direct access to the structure. In this appendix, we try to
-present in a synthetic way what these methods will return depending on
-the \ttt{PseudoJet} one have --- {\em e.g.} does a jet resulting from
-a clustering have pieces, does an input particle have constituents,
-...?
-
-This has been summarised in Table \ref{tab:structure} for the most
-relevant methods. For completeness, we discuss in the text below the
-additional accessible information not included in the table.
-
-All the methods accessing information related to the clustering
-(\ttt{has\_partner()}, \ttt{is\_inside()},
+Additionally, all the methods that access information related to the
+clustering (\ttt{has\_partner()}, \ttt{is\_inside()},
 \ttt{has\_exclusive\_subjets()}, \ttt{exclusive\_subjets()},
 \ttt{n\_exclusive\_subjets()}, \ttt{exclusive\_subdmerge()}, and
-\ttt{exclusive\_subdmerge\_max}) will access the assocaited cluster
-sequence and throw an error if none is available (except for
-\ttt{has\_exclusive\_subjets()} which would just return \ttt{false}).
+\ttt{exclusive\_subdmerge\_max}) require the presence of an associated
+cluster sequence and throw an error if none is available (except for
+\ttt{has\_exclusive\_subjets()} which just returns \ttt{false}).
 
 For area-related calls, \ttt{has\_area()} will be \ttt{false} unless
-the jet is obtained from a \ttt{ClusterSequenceArea} or is a composite
-jet made from such jets. All other calls \ttt{validated\_csab()},
-\ttt{area()}, \ttt{area\_error()}, \ttt{area\_4vector()}) will return
-the information from the ClusterSequence (or the pieces in case of a
-composite jet) and throw an error if the jet is nor associated with a
-\ttt{ClusterSequenceArea}.
+the jet is obtained from a \ttt{ClusterSequenceAreaBase} or is a
+composite jet made from such jets. All other area calls
+(\ttt{validated\_csab()}, \ttt{area()}, \ttt{area\_error()},
+\ttt{area\_4vector()}) will return the information from the
+ClusterSequence (or the pieces in case of a composite jet) and throw
+an error if the jet is not associated with a
+\ttt{ClusterSequenceAreaBase}.
 
 %======================================================================
 \section{Functions of a \texttt{PseudoJet}}
