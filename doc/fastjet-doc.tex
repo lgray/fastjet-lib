@@ -3957,9 +3957,7 @@ an error if the jet is not associated with a
 \section{Functions of a \texttt{PseudoJet}}
 \label{app:function-of-pj}
 
-\subsection{Start of New version}
-
-A core concept that is new to \fastjet v3.0 is that of a
+A concept that is new to \fastjet v3.0 is that of a
 \ttt{FunctionOfPseudoJet}.
 %
 Functions of \ttt{PseudoJet}s arise in many contexts: many
@@ -3973,48 +3971,59 @@ used to provide local background estimates in
 section~\ref{sec:BGE-positional}.
 %
 
-\subsection{Old version}
-It is interesting to realise that when manipulating jets, one often
-needs functions that allow to obtain a result varying from a jet to
-another. This could be for example the \ttt{BackgroundRescaling} (see
-\ref{sec:BGE-positional}) used to parametrise the positional
-dependence of the background --- and allowing one to obtain a number
-associated with each jet --- or the \ttt{Filter} (see below)
-associating a filtered jet to an initial jet. Generally speaking, all
-these take the form
+% \subsection{Old version of this documentation}
+% It is interesting to realise that when manipulating jets, one often
+% needs functions that allow to obtain a result varying from a jet to
+% another. This could be for example the \ttt{BackgroundRescaling} (see
+% \ref{sec:BGE-positional}) used to parametrise the positional
+% dependence of the background --- and allowing one to obtain a number
+% associated with each jet --- or the \ttt{Filter} (see below)
+% associating a filtered jet to an initial jet. Generally speaking, all
+% these take the form
+To help provide a uniform interface for functions of a \PseudoJet,
+\fastjet provides the following template base class:
 \begin{lstlisting}
    // a generic function of a PseudoJet
    template<typename TOut> class FunctionOfPseudoJet{
      // the action of the function (this _has_ to be overloaded in derived classes)
-     virtual TOut apply(const PseudoJet &pj) const = 0;
+     virtual TOut result(const PseudoJet &pj) const = 0;
    };
 \end{lstlisting}
-that would be a function returning a result of a given type
-\ttt{TOut} depending on the \ttt{PseudoJet} input.
+Derived classes should implement the \ttt{result(...)} function. 
 %
-For completeness and comfort, we have also added
+In addition it is good practice to overload the \ttt{description()}
+member,
 \begin{lstlisting}
   virtual std::string description() const{ return "";}
 \end{lstlisting}
-that allows one to provide a description of the function and
+
+Usage of a \ttt{FunctionOfPseudoJet} is simplest through the
+\ttt{operator(...)} member functions
 \begin{lstlisting}
-  TOut operator()(const PseudoJet &pj) const;
-  vector<TOut> operator()(const vector<PseudoJet> &pjs) const;
+  TOut operator()(const PseudoJet & pj) const;
+  vector<TOut> operator()(const vector<PseudoJet> & pjs) const;
 \end{lstlisting}
-equivalent to calling \ttt{apply} on one or a vector of
-\ttt{PseudoJet} but in a more natural way\footnote{This construction
-  where we have both \ttt{apply} and \ttt{operator()} doing the same
-  thing seems redundant but it allows to redefine only \ttt{apply} in
-  derived classes while, if we had only \ttt{operator()}, both
-  the \ttt{PseudoJet} and \ttt{vector<PseudoJet>} version would have
+which just call \ttt{result(...)} either on the single jet, or
+separately on each of the elements of the vector of
+{\PseudoJet}s.\footnote{Having \ttt{result(...)} and
+  \ttt{operator(...)} doing the same thing may seems redundant,
+  however, it allows one to redefine only \ttt{result} in derived
+  classes.  If we had had a virtual \ttt{operator(...)} instead, both
+  the \ttt{PseudoJet} and \ttt{vector<PseudoJet>} versions would have
   had to be overloaded.}.
 
-This definition allows for example to pass functions of
-\ttt{PseudoJet} as arguments. This is {\em e.g.} the case for the
-background rescaling which would just be derived from
-\ttt{FunctionOfPseudoJet<double>}. Similarly, a \ttt{Transformer} is a
-function of a \ttt{PseudoJet} returning a \ttt{PseudoJet}, hence its
-inheritance from \ttt{FunctionOfPseudoJet<PseudoJet>}.
+This definition allows one for example to pass functions of
+\ttt{PseudoJet}s as arguments. This is {\em e.g.} used for the
+background rescalings in section~\ref{sec:BGE-positional} which are
+just derived from \ttt{FunctionOfPseudoJet<double>}. 
+%
+It is also used for the \ttt{Transformer}s of
+section~\ref{sec:transformers}, which all derive from
+\ttt{FunctionOfPseudoJet<PseudoJet>}.
+%
+The use of a class for these purposes, rather than a pointer to a
+function, provides the advantage that the class can be initialised
+with additional arguments.
 
 
 % \section{External Range Definitions}
