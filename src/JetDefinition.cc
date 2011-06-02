@@ -138,6 +138,19 @@ void JetDefinition::set_recombination_scheme(
 }
 
 
+// returns true if the current jet definitions shares the same
+// recombiner as teh one passed as an argument
+bool JetDefinition::have_same_recombiner(const JetDefinition &other_jd) const{
+  // first make sure that they have the same recombination scheme
+  const RecombinationScheme & scheme = recombination_scheme();
+  if (other_jd.recombination_scheme() != scheme) return false;
+
+  // if the scheme is "external", also check that they ahve the same
+  // recombiner
+  return (scheme != external_scheme) 
+    || (recombiner() == other_jd.recombiner());
+}
+
 string JetDefinition::DefaultRecombiner::description() const {
   switch(_recomb_scheme) {
   case E_scheme:
@@ -254,19 +267,6 @@ void JetDefinition::Plugin::set_ghost_separation_scale(double scale) const {
       throw Error("set_ghost_separation_scale not supported");
 }
 
-
-/// returns true if the 2 jet definitions share the same recombiner
-bool have_same_recombiner(const JetDefinition &jd1, 
-			  const JetDefinition &jd2){
-  // first make sure that they have the same recombination scheme
-  const RecombinationScheme & scheme = jd1.recombination_scheme();
-  if (jd2.recombination_scheme() != scheme) return false;
-
-  // if the scheme is "external", also check that they ahve the same
-  // recombiner
-  return (scheme != external_scheme) 
-    || (jd1.recombiner() == jd2.recombiner());
-}
 
 
 //-------------------------------------------------------------------------------

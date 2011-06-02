@@ -343,6 +343,10 @@ public:
   const Recombiner * recombiner() const {
     return _recombiner == 0 ? & _default_recombiner : _recombiner;}
 
+  /// returns true if the current jet definitions shares the same
+  /// recombiner as teh one passed as an argument
+  bool have_same_recombiner(const JetDefinition &other_jd) const;
+
   /// return a textual description of the current jet definition 
   std::string description() const;
 
@@ -475,11 +479,6 @@ private:
   const Recombiner * _recombiner;
 
 };
-
-
-/// returns true if the 2 jet definitions share the same recombiner
-bool have_same_recombiner(const JetDefinition &jd1, 
-			  const JetDefinition &jd2);
 
 
 //-------------------------------------------------------------------------------
