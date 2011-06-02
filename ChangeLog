@@ -21,6 +21,10 @@
 	  got rid of the mutable member and cleaned up some behaviour
 	  (including correct failure on jet that should not be tagged).
 
+	  Changed the default scale to be jade (also put a non-zero
+	  z_threshold). Changed error -> warning when alg passed is not
+	  C/A.
+
 2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex:

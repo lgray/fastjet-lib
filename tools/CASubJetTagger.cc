@@ -40,6 +40,8 @@ using namespace std;
 FASTJET_BEGIN_NAMESPACE
 
 
+LimitedWarning CASubJetTagger::_non_ca_warnings;
+
 // the tagger's description
 //----------------------------------------------------------------------
 string CASubJetTagger::description() const{
@@ -66,7 +68,7 @@ string CASubJetTagger::description() const{
 PseudoJet CASubJetTagger::result(const fastjet::PseudoJet & jet) const{
   // make sure that the jet results from a Cambridge/Aachen clustering
   if (jet.validated_cs()->jet_def().jet_algorithm() != cambridge_algorithm)
-    throw Error("CASubJetTagger can only be applied on jets from a Cambridge/Aachen clustering");
+    _non_ca_warnings.warn("CASubJetTagger should only be applied on jets from a Cambridge/Aachen clustering; use it with other algorithms at your own risk");
 
   // recurse in the jet to find the max distance
   JetAux aux;

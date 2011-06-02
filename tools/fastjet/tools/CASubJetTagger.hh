@@ -34,6 +34,7 @@
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/WrappedStructure.hh>
 #include <fastjet/tools/Transformer.hh>
+#include "fastjet/internal/LimitedWarning.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -117,8 +118,8 @@ public:
   };
 
   /// just constructs
-  CASubJetTagger(ScaleChoice scale_choice = kt2_distance,
-		 double      z_threshold  = 0)
+  CASubJetTagger(ScaleChoice scale_choice = jade_distance,
+		 double      z_threshold  = 0.1)
     : _scale_choice(scale_choice), _z_threshold(z_threshold),
       _dr2_min(0.0), _absolute_z_cut(false){};
 
@@ -151,7 +152,7 @@ public:
   typedef CASubJetStructure StructureType;
 
 protected:
-  /// class that contains the result
+  /// class that contains the result internally
   class JetAux {
   public:
     fastjet::PseudoJet jet;          //< the subjet (immediate parent of splitting)
@@ -169,6 +170,8 @@ protected:
   double      _z_threshold;
   double      _dr2_min;
   bool        _absolute_z_cut;
+
+  static  LimitedWarning _non_ca_warnings;
 };
 
 
