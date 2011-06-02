@@ -83,8 +83,8 @@ public:
   
   /// returns true if this PseudoJet has an associated and still
   /// valid ClusterSequence.
-  virtual bool has_validated_cluster_sequence() const {
-    return _structure->has_validated_cluster_sequence();
+  virtual bool has_valid_cluster_sequence() const {
+    return _structure->has_valid_cluster_sequence();
   }
 
   /// if the jet has a valid associated cluster sequence then return a

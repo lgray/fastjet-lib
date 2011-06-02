@@ -62,7 +62,7 @@ ClusterSequenceStructure::~ClusterSequenceStructure(){
 
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
-bool ClusterSequenceStructure::has_validated_cluster_sequence() const{
+bool ClusterSequenceStructure::has_valid_cluster_sequence() const{
   return (_associated_cs != NULL);
 }
 

@@ -208,7 +208,7 @@ bool Filter::_check_ca(const PseudoJet & jet) const{
 
 // check if the jet is obtained from C/A or a superposition of C/A pieces
 bool Filter::_recursively_check_ca(const PseudoJet & jet, vector<PseudoJet> &cumulative_pieces) const{
-  if (jet.has_validated_cluster_sequence()){
+  if (jet.has_valid_cluster_sequence()){
     cumulative_pieces.push_back(jet);
     return jet.associated_cluster_sequence()->jet_def().jet_algorithm() == cambridge_algorithm;
   }

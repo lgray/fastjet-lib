@@ -91,7 +91,7 @@ public:
   virtual const ClusterSequence* associated_cluster_sequence() const;
   
   /// returns true if there is a valid associated ClusterSequence
-  virtual bool has_validated_cluster_sequence() const;
+  virtual bool has_valid_cluster_sequence() const;
 
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error

@@ -419,13 +419,13 @@ class PseudoJet {
   /// returns true if this PseudoJet has an associated ClusterSequence.
   bool has_associated_cluster_sequence() const;
 
+  /// returns true if this PseudoJet has an associated and still
+  /// valid ClusterSequence.
+  bool has_valid_cluster_sequence() const;
+
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
-
-  /// returns true if this PseudoJet has an associated and still
-  /// valid ClusterSequence.
-  bool has_validated_cluster_sequence() const;
 
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error

@@ -1,8 +1,11 @@
-2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
+2011-06-02  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 
-	* src/ClusterSequenceStructure.cc: 
-
+	* tools/Filter.cc (_recursively_check_ca):
+	* src/ClusterSequence.cc (contains):
+	* src/ClusterSequenceStructure.cc:
 	* src/PseudoJet.cc:
+	* include/fastjet/WrappedStructure.hh:
+	* include/fastjet/ClusterSequenceStructure.hh:
 	* include/fastjet/PseudoJetStructureBase.hh:
 	* include/fastjet/PseudoJet.hh:
 	  has_validated_cluster_sequence() -> has_valid_cluster_sequence()

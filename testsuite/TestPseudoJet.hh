@@ -177,7 +177,7 @@ class TestPJCSaccess : public TestBase {
 		 "empty PseudoJet has no cluster sequence (=false)");
     verify_equal<const ClusterSequence*>(empty.associated_cluster_sequence(), NULL,
 		 "empty PseudoJet associated cluster sequence (=NULL)");
-    verify_equal(empty.has_validated_cluster_sequence(), false,
+    verify_equal(empty.has_valid_cluster_sequence(), false,
 		 "empty PseudoJet has no valid cluster sequence (=throws)");
     VERIFY_THROWS(empty.validated_cs(),
 		  "empty PseudoJet validated cluster sequence (=throws)");
@@ -199,7 +199,7 @@ class TestPJCSaccess : public TestBase {
 		 "input particle has no cluster sequence");
     verify_equal<const ClusterSequence*>(event[0].associated_cluster_sequence(), 
 		 NULL, "input particle associated cluster sequence (=NULL)");
-    verify_equal(event[0].has_validated_cluster_sequence(), false, 
+    verify_equal(event[0].has_valid_cluster_sequence(), false, 
 		 "input particle has no valid cluster sequence");
     VERIFY_THROWS(event[0].validated_cs(),
 		  "input particle validated cluster sequence (=throws)");
@@ -221,7 +221,7 @@ class TestPJCSaccess : public TestBase {
 		 "jet has cluster sequence");
     verify_equal<const ClusterSequence*>(jets[0].associated_cluster_sequence(),
 		 cs, "jet associated cluster sequence (=CS)");
-    verify_equal(jets[0].has_validated_cluster_sequence(), true, 
+    verify_equal(jets[0].has_valid_cluster_sequence(), true, 
 		 "jet has valid cluster sequence");
     verify_equal<const ClusterSequence*>(jets[0].validated_cs(), cs, 
 		 "jet validated cluster sequence (=CS)");
@@ -244,7 +244,7 @@ class TestPJCSaccess : public TestBase {
 		 "jet constituent has cluster sequence");
     verify_equal<const ClusterSequence*>(constituent.associated_cluster_sequence(),
                  cs, "jet constituent associated cluster sequence (=CS)");
-    verify_equal(constituent.has_validated_cluster_sequence(), true, 
+    verify_equal(constituent.has_valid_cluster_sequence(), true, 
 		 "jet constituent has valid cluster sequence");
     verify_equal<const ClusterSequence*>(constituent.validated_cs(), cs, 
 		 "jet constituent validated cluster sequence (=CS)");
@@ -267,7 +267,7 @@ class TestPJCSaccess : public TestBase {
 		 "composite (2 inputs) has no cluster sequence");
     verify_equal<const ClusterSequence*>(composite1.associated_cluster_sequence(),
                  NULL, "composite (2 inputs) associated cluster sequence (=NULL)");
-    verify_equal(composite1.has_validated_cluster_sequence(), false, 
+    verify_equal(composite1.has_valid_cluster_sequence(), false, 
 		 "composite (2 inputs) has valid cluster sequence");
     VERIFY_THROWS(composite1.validated_cs(), 
 		  "composite (2 inputs) validated cluster sequence (=throws)");
@@ -290,7 +290,7 @@ class TestPJCSaccess : public TestBase {
 		 "composite (2 jets) has no cluster sequence");
     verify_equal<const ClusterSequence*>(composite2.associated_cluster_sequence(),
                  NULL, "composite (2 jets) associated cluster sequence (=NULL)");
-    verify_equal(composite2.has_validated_cluster_sequence(), false, 
+    verify_equal(composite2.has_valid_cluster_sequence(), false, 
 		 "composite (2 jets) has valid cluster sequence");
     VERIFY_THROWS(composite2.validated_cs(), 
 		  "composite (2 jets) validated cluster sequence (=throws)");
@@ -316,7 +316,7 @@ class TestPJCSaccess : public TestBase {
 		 "post CS-deletion, jet has cluster sequence");
     verify_equal<const ClusterSequence*>(jets[0].associated_cluster_sequence(),
 		 NULL, "post CS-deletion, jet associated cluster sequence (=NULL)");
-    verify_equal(jets[0].has_validated_cluster_sequence(), false, 
+    verify_equal(jets[0].has_valid_cluster_sequence(), false, 
 		 "post CS-deletion, jet has no valid cluster sequence");
     VERIFY_THROWS(jets[0].validated_cs(),
 		 "post CS-deletion, jet validated cluster sequence (=throws)");

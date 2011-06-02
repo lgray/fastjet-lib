@@ -402,8 +402,8 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 //----------------------------------------------------------------------
 // check whether this PseudoJet has an associated parent
 // ClusterSequence that is still valid
-bool PseudoJet::has_validated_cluster_sequence() const{
-  return (_structure()) && (_structure->has_validated_cluster_sequence());
+bool PseudoJet::has_valid_cluster_sequence() const{
+  return (_structure()) && (_structure->has_valid_cluster_sequence());
 }
 
 //----------------------------------------------------------------------
