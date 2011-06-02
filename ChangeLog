@@ -1,5 +1,8 @@
 2011-06-02  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 
+	* include/fastjet/WrappedStructure.hh:
+          throws an error if constructed from an empty (NULL) structure
+
 	* tools/Filter.cc (_recursively_check_ca):
 	* src/ClusterSequence.cc (contains):
 	* src/ClusterSequenceStructure.cc:

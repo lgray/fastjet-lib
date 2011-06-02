@@ -54,7 +54,10 @@ public:
   /// default ctor
   /// the argument is the structure we need to wrap
   WrappedStructure(const SharedPtr<PseudoJetStructureBase> & to_be_shared)
-    : _structure(to_be_shared){}
+    : _structure(to_be_shared){
+    if (!_structure())
+      throw Error("Trying to construct a wrapped structure around an empty (NULL) structure");
+  }
 
   /// default (virtual) dtor
   virtual ~WrappedStructure(){}
