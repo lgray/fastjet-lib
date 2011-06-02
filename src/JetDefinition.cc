@@ -140,7 +140,7 @@ void JetDefinition::set_recombination_scheme(
 
 // returns true if the current jet definitions shares the same
 // recombiner as teh one passed as an argument
-bool JetDefinition::have_same_recombiner(const JetDefinition &other_jd) const{
+bool JetDefinition::has_same_recombiner(const JetDefinition &other_jd) const{
   // first make sure that they have the same recombination scheme
   const RecombinationScheme & scheme = recombination_scheme();
   if (other_jd.recombination_scheme() != scheme) return false;

@@ -345,7 +345,7 @@ public:
 
   /// returns true if the current jet definitions shares the same
   /// recombiner as teh one passed as an argument
-  bool have_same_recombiner(const JetDefinition &other_jd) const;
+  bool has_same_recombiner(const JetDefinition &other_jd) const;
 
   /// return a textual description of the current jet definition 
   std::string description() const;

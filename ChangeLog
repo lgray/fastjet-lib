@@ -1,6 +1,10 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
-	* include/fastjet/JetDefinition.hh (have_same_recombiner):
+	* include/fastjet/JetDefinition.hh:
+	* src/JetDefinition.cc (have_same_recombiner):
+	  have_same_recombiner -> has_same_recombiner
+
+	* include/fastjet/JetDefinition.hh:
 	* src/JetDefinition.cc (have_same_recombiner):
 	  moved in jet definition:
 	  JetDefinition::have_same_recombiner(other_jd)
