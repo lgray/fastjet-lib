@@ -51,7 +51,7 @@ public:
   // basic class info
   //-------------------------------------------------------------------
   /// default ctor
-  CompositeJetStructure() : _area_4vector_ptr(0), _area(0.0), _area_error(0.0){};
+  CompositeJetStructure() : _area_4vector_ptr(0){};
 
   /// ctor with initialisation
   CompositeJetStructure(const std::vector<PseudoJet> & initial_pieces, 
@@ -105,21 +105,22 @@ public:
   /// return the jet 4-vector area.
   virtual PseudoJet area_4vector(const PseudoJet &reference) const;
 
+  /// true if this jet is made exclusively of ghosts.
+  ///
+  /// In this case, it will be true if all pieces are pure ghost
+  virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
   // allow to modify the area information
   // (for use in join())
   //------------------------------------------------------------------------------
-  void set_area_information(PseudoJet *area_4vector_ptr, double area, double area_error=0.0){
+  void set_area_information(PseudoJet *area_4vector_ptr){
     _area_4vector_ptr = area_4vector_ptr;
-    _area = area;
-    _area_error = area_error;
   }
 
 
 protected:
   std::vector<PseudoJet> _pieces;  ///< the pieces building the jet
   PseudoJet * _area_4vector_ptr;   ///< pointer to the 4-vector jet area
-  double _area, _area_error;       ///< the jet area and associated error
 };
 
 

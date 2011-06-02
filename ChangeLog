@@ -1,3 +1,12 @@
+2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequenceStructure.cc: 
+
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJetStructureBase.hh:
+	* include/fastjet/PseudoJet.hh:
+	  has_validated_cluster_sequence() -> has_valid_cluster_sequence()
+
 2011-06-02  Gavin Salam  <salam@lpthe.jussieu.fr> & Gregory
 
 	* NEWS: tried to compactify it.
@@ -13,6 +22,12 @@
 	  default that comes out of addition / initialisation (i.e. -1).
 
 2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/CompositeJetStructure.cc:
+	* include/fastjet/CompositeJetStructure.hh:
+	  get the scalar area and its error from the pieces rather than
+	  caching it + added support for is_pure_ghost (true if all pieces
+	  are).
 
 	* tools/MassDropTagger.cc:
 	* tools/NSubjettinessTagger.cc:

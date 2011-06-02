@@ -57,17 +57,10 @@ CompositeJetStructure::CompositeJetStructure(const std::vector<PseudoJet> & init
     }
   }
 
-  _area             = 0.0;
-  _area_error       = 0.0;
-  
   if (has_area){
     _area_4vector_ptr = new PseudoJet();
-    _area             = 0.0;
-    _area_error       = 0.0;
     for (unsigned int i=0; i<_pieces.size(); i++){
       const PseudoJet & p = _pieces[i];
-      _area       += p.area();
-      _area_error += p.area_error();
       if (recombiner)
 	recombiner->plus_equal(*_area_4vector_ptr, p.area_4vector());
       else
@@ -132,7 +125,14 @@ bool CompositeJetStructure::has_area() const{
 
 // return the jet (scalar) area.
 double CompositeJetStructure::area(const PseudoJet &reference) const{
-  return _area;
+  if (! has_area())
+    throw Error("One or more of this composite jet's pieces does not support area");
+
+  double a=0;
+  for (unsigned i = 0; i < _pieces.size(); i++)
+    a += _pieces[i].area();
+
+  return a;
 }
 
 // return the error (uncertainty) associated with the determination
@@ -140,12 +140,32 @@ double CompositeJetStructure::area(const PseudoJet &reference) const{
 // 
 // Be conservative: return the sum of the errors
 double CompositeJetStructure::area_error(const PseudoJet &reference) const{
-  return _area_error;
+  if (! has_area())
+    throw Error("One or more of this composite jet's pieces does not support area");
+
+  double a_err=0;
+  for (unsigned i = 0; i < _pieces.size(); i++)
+    a_err += _pieces[i].area();
+
+  return a_err;
 }
 
 // return the jet 4-vector area.
 PseudoJet CompositeJetStructure::area_4vector(const PseudoJet &reference) const{
+  if (! has_area())
+    throw Error("One or more of this composite jet's pieces does not support area");
+
   return *_area_4vector_ptr; // one is supposed to call has_area before!
+}
+
+// true if this jet is made exclusively of ghosts.
+//
+// In this case, it will be true if all pieces are pure ghost
+bool CompositeJetStructure::is_pure_ghost(const PseudoJet &reference) const{
+  for (unsigned i = 0; i < _pieces.size(); i++)
+    if (! _pieces[i].is_pure_ghost()) return false;
+
+  return true;
 }
 
 
