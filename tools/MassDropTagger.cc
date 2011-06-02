@@ -73,10 +73,9 @@ PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
       j = j1;
   }
     
-  if (!had_parents){
-    // no Higgs found, return a merged jet with a single piece of mom 0
-    return join<MassDropStructure>(PseudoJet(0.0,0.0,0.0,0.0));
-  }
+  if (!had_parents)
+    // no Higgs found, return an empty PseudoJet
+    return PseudoJet();
 
   // create the result and its structure
   const JetDefinition::Recombiner *rec
@@ -85,6 +84,7 @@ PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
   MassDropStructure * s = (MassDropStructure *) result.structure_non_const_ptr();
   s->_mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
   s->_y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
+
   return result;
 }
 

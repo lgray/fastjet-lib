@@ -68,9 +68,7 @@ PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
     : sorted_by_E(cs_rest.inclusive_jets());
 
   // impose the cuts in the rest-frame
-  if (subjets.size()<2){
-    return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
-  }
+  if (subjets.size()<2) return PseudoJet();
 
   const PseudoJet &j0 = subjets[0];
   const PseudoJet &j1 = subjets[1];
@@ -80,9 +78,7 @@ PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
     /sqrt(j0.modp2()*jet.modp2());
   double ct1 = (j1.px()*jet.px() + j1.py()*jet.py() + j1.pz()*jet.pz())
     /sqrt(j1.modp2()*jet.modp2());
-  if ((ct0 > _costscut) || (ct1 > _costscut)){
-    return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
-  }
+  if ((ct0 > _costscut) || (ct1 > _costscut)) return PseudoJet();
   
   // ccompute the 2-subjettiness and impose the coresponding cut
   double tau2 = 0.0;
@@ -92,9 +88,7 @@ PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
 
   tau2 *= (2.0/jet.m2());
 
-  if (tau2 > _t2cut){
-    return join<StructureType>(PseudoJet(0.0,0.0,0.0,0.0));
-  }
+  if (tau2 > _t2cut) return PseudoJet();
 
   // We have a positive tag, 
   //  - boost everything back into the lab frame

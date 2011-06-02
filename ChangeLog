@@ -1,3 +1,9 @@
+2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/MassDropTagger.cc:
+	* tools/NSubjettinessTagger.cc:
+	  returned an empty PseudoJet when the tagger fails
+
 2011-06-02  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* testsuite/run_tests.cc: 
