@@ -1,3 +1,20 @@
+2011-06-02  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* testsuite/run_tests.cc: 
+	* testsuite/TestSubStructure.hh: *** ADDED ***  
+	  added some tests of CASubJetTagger and MassDropTagger
+
+	* testsuite/TestBase.hh: 
+	  verify function all return a boolean now; verify_equal for
+	  PseudoJets takes an option to ignore the substructure; and added
+	  a specific verify_null for PseudoJets that checks == 0
+	
+	* tools/CASubJetTagger.cc: 
+	* tools/fastjet/tools/CASubJetTagger.hh: 
+	  made CASubJetTagger::JetAux private and updated some comments;
+	  got rid of the mutable member and cleaned up some behaviour
+	  (including correct failure on jet that should not be tagged).
+
 2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex:
@@ -22,7 +39,7 @@
 2011-06-01  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence.cc (contains):
-	  instead of testinmg if jet structure shared pointers is equal to
+	  instead of testing if jet structure shared pointer is equal to
 	  the ClusterSequence one, compare directly the pointer to the
 	  cluster sequence itself. This would work also with the wrapped
 	  structure.

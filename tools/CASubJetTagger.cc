@@ -44,7 +44,9 @@ FASTJET_BEGIN_NAMESPACE
 //----------------------------------------------------------------------
 string CASubJetTagger::description() const{
   ostringstream oss;
-  oss << "CASubJetTagger with z_threshold=" << _z_threshold << " and scale choice ";
+  oss << "CASubJetTagger with z_threshold=" << _z_threshold ;
+  if (_absolute_z_cut) oss << " (defined wrt original jet)";
+  oss << " and scale choice ";
   switch (_scale_choice) {
   case kt2_distance:         oss << "kt2_distance";         break;
   case jade_distance:        oss << "jade_distance";        break;
@@ -66,41 +68,37 @@ PseudoJet CASubJetTagger::result(const fastjet::PseudoJet & jet) const{
   if (jet.validated_cs()->jet_def().jet_algorithm() != cambridge_algorithm)
     throw Error("CASubJetTagger can only be applied on jets from a Cambridge/Aachen clustering");
 
-  // copy the jet for future internal usage
-  _original_jet = jet;
-
   // recurse in the jet to find the max distance
   JetAux aux;
-  aux.jet          = jet;
-  aux.aux_distance = 0.0;
+  aux.jet          = PseudoJet();
+  aux.aux_distance = -numeric_limits<double>::max();
   aux.delta_r      = 0.0;
   aux.z            = 1.0;
-  _recurse_through_jet(jet, aux);
+  _recurse_through_jet(jet, aux, jet); // last arg remains original jet
 
   // create the result and its associated structure
   PseudoJet result = aux.jet;
-  
+
+  // the tagger is considered to have failed if aux has never been set
+  // (in which case it will not have parents).
+  if (result == PseudoJet()) return result;
+
+  // otherwise sort out the structure
   CASubJetStructure * s = new CASubJetStructure(result);
   s->_scale_choice = _scale_choice;
   s->_distance     = aux.aux_distance;
   s->_absolute_z   = _absolute_z_cut;
   s->_z            = aux.z;
 
-  // the tagger is considered to have failed if we've reached the
-  // initial constituents (or the distance cut) without finding a
-  // structure
-  PseudoJet d1, d2;
-  if ((!result.has_parents(d1, d2)) || (aux.delta_r*aux.delta_r < _dr2_min))
-    result = PseudoJet();
-  
   result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
+
   return result;
 }
 
 
 ///----------------------------------------------------------------------
 /// work through the jet, establishing a distance at each branching
-inline void CASubJetTagger::_recurse_through_jet(const fastjet::PseudoJet & jet, JetAux &aux) const {
+inline void CASubJetTagger::_recurse_through_jet(const fastjet::PseudoJet & jet, JetAux &aux, const PseudoJet & original_jet) const {
 
   fastjet::PseudoJet parent1, parent2;
   if (! jet.has_parents(parent1, parent2)) return;
@@ -150,8 +148,8 @@ inline void CASubJetTagger::_recurse_through_jet(const fastjet::PseudoJet & jet,
   if (parent1.perp2() < parent2.perp2()) std::swap(parent1,parent2);
 
   if (_absolute_z_cut) {
-    z2    = parent2.perp() / _original_jet.perp();
-    zcut1 = parent1.perp() / _original_jet.perp() >= _z_threshold;
+    z2    = parent2.perp() / original_jet.perp();
+    zcut1 = parent1.perp() / original_jet.perp() >= _z_threshold;
   } else {
     z2    = parent2.perp()/(parent1.perp()+parent2.perp());
   }
@@ -166,8 +164,8 @@ inline void CASubJetTagger::_recurse_through_jet(const fastjet::PseudoJet & jet,
     }
   }    
 
-  if (zcut1) _recurse_through_jet(parent1,aux);
-  if (zcut2) _recurse_through_jet(parent2,aux);
+  if (zcut1) _recurse_through_jet(parent1, aux, original_jet);
+  if (zcut2) _recurse_through_jet(parent2, aux, original_jet);
 }
 
 FASTJET_END_NAMESPACE

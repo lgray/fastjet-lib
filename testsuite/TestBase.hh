@@ -33,26 +33,57 @@ public:
   }
 
   /// verifies equality of two integers and registers failure if appropriate
-  template<class T> void verify_equal(const T & a, const T & b, const string & testname) {
+  template<class T> bool verify_equal(const T & a, const T & b, const string & testname) {
     if (! (a == b)) {
       _pass_test = false;
       std::ostringstream ostr;
       ostr << testname << ": " << a << " != " << b;
       _failure_testnames.push_back(ostr.str());
+      return false;
     } else if (!_quiet_OK) {
       _OK_testnames.push_back(testname);
     }
+    return true;
   }
 
-  template<class T> void verify_null(const T * a, const string & testname) {
+  template<class T> bool verify_null(const T * a, const string & testname) {
     if (a != 0) {
       _pass_test = false;
       std::ostringstream ostr;
       ostr << testname << ": " << a << " != null";
       _failure_testnames.push_back(ostr.str());
+      return false;
     } else if (!_quiet_OK) {
       _OK_testnames.push_back(testname);
     }
+    return true;
+  }
+
+  template<class T> bool verify_null(const T & a, const string & testname) {
+    if (a != 0) {
+      _pass_test = false;
+      std::ostringstream ostr;
+      ostr << testname << ": " << a << " != null";
+      _failure_testnames.push_back(ostr.str());
+      return false;
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
+    }
+    return true;
+  }
+
+  /// verify that a jet is 0 (though not necessarily equal to PseudoJet())
+  bool verify_null(const PseudoJet & j, const string & testname) {
+    if (j != 0) {
+      _pass_test = false;
+      std::ostringstream ostr;
+      ostr << testname << ": jet " << " != 0";
+      _failure_testnames.push_back(ostr.str());
+      return false;
+    } else if (!_quiet_OK) {
+      _OK_testnames.push_back(testname);
+    }
+    return true;
   }
 
   // /// verifies equality of two integers and registers failure if appropriate
@@ -68,63 +99,73 @@ public:
   // }
 
   /// verifies equality of two integers and registers failure if appropriate
-  template<class T> void verify_different(const T & a, const T & b, const string & testname) {
+  template<class T> bool verify_different(const T & a, const T & b, const string & testname) {
     if (a == b) {
       _pass_test = false;
       std::ostringstream ostr;
       ostr << testname << ": " << a << " == " << b;
       _failure_testnames.push_back(ostr.str());
+      return false;
     } else if (!_quiet_OK) {
       _OK_testnames.push_back(testname);
     }
+    return true;
   }
 
 
   /// verifies two things are equal within tolerance; if not it
   /// registers failure in the _pass_test
-  void verify_almost_equal(double a, double b, const string & testname, double tol = -1.0) {
+  bool verify_almost_equal(double a, double b, const string & testname, double tol = -1.0) {
     if (!almost_equal(a,b,tol)) {
       _pass_test = false;
       std::ostringstream ostr;
       ostr << testname << ": " << a << " != " << b << " (within tol = " << tol << ")";
       _failure_testnames.push_back(ostr.str());
+      return false;
     } else if (!_quiet_OK) {
       _OK_testnames.push_back(testname);
     }
+    return true;
   }
 
 
-  /// verifies two things are equal within tolerance; if not it
+  /// verifies two PseudoJets are equal within tolerance; if not it
   /// registers failure in the _pass_test
-  void verify_almost_equal(const PseudoJet & a, const PseudoJet b, 
-			   const string & testname, double tol = -1.0) {
+  bool verify_almost_equal(const PseudoJet & a, const PseudoJet b, 
+			   const string & testname, double tol = -1.0,
+			   bool ignore_structure = false) {
 
     // don't record all the individual tests below unless they fail
     _quiet_OK = true;
 
-    verify_almost_equal(a.px(), b.px(), testname+" (x)", tol);
-    verify_almost_equal(a.py(), b.py(), testname+" (y)", tol);
-    verify_almost_equal(a.pz(), b.pz(), testname+" (z)", tol);
-    verify_almost_equal(a.E (), b.E (), testname+" (E)", tol);
+    bool pass = true;
+    pass &= verify_almost_equal(a.px(), b.px(), testname+" (x)", tol);
+    pass &= verify_almost_equal(a.py(), b.py(), testname+" (y)", tol);
+    pass &= verify_almost_equal(a.pz(), b.pz(), testname+" (z)", tol);
+    pass &= verify_almost_equal(a.E (), b.E (), testname+" (E)", tol);
 
-    verify_almost_equal(a.perp(), b.perp(),  testname+"(pt )", tol);
-    verify_almost_equal(a.rap() , b.rap() ,  testname+"(rap)", tol);
-    verify_almost_equal(a.eta() , b.eta() ,  testname+"(eta)", tol);
-    verify_almost_equal(a.phi() , b.phi() ,  testname+"(phi)", tol);
-    verify_almost_equal(a.m2()  , b.m2()  ,  testname+"(m2 )", tol);
+    pass &= verify_almost_equal(a.perp(), b.perp(),  testname+"(pt )", tol);
+    pass &= verify_almost_equal(a.rap() , b.rap() ,  testname+"(rap)", tol);
+    pass &= verify_almost_equal(a.eta() , b.eta() ,  testname+"(eta)", tol);
+    pass &= verify_almost_equal(a.phi() , b.phi() ,  testname+"(phi)", tol);
+    pass &= verify_almost_equal(a.m2()  , b.m2()  ,  testname+"(m2 )", tol);
 
-    verify_equal(a.user_index(), b.user_index(), testname+"(user index)");
-    verify_equal(a.cluster_hist_index(), b.cluster_hist_index(), testname+"(cluster hist index)");
-    verify_equal(a.user_info_ptr(), b.user_info_ptr(), testname+"(user info ptr)");
-    verify_equal(a.structure_ptr(), b.structure_ptr(), testname+"(structure ptr)");
-
+    pass &= verify_equal(a.user_index(), b.user_index(), testname+"(user index)");
+    pass &= verify_equal(a.user_info_ptr(), b.user_info_ptr(), testname+"(user info ptr)");
+    if (!ignore_structure) {
+      pass &= verify_equal(a.cluster_hist_index(), b.cluster_hist_index(), testname+"(cluster hist index)");
+      pass &= verify_equal(a.structure_ptr(), b.structure_ptr(), testname+"(structure ptr)");
+    }
     _quiet_OK = false;
+    if (pass) _OK_testnames.push_back(testname);
+    return pass;
   }
 
   /// verifies two things are equal within tolerance; if not it
   /// registers failure in the _pass_test
-  void verify_equal(const PseudoJet & a, const PseudoJet b, const string & testname) {
-    verify_almost_equal(a,b,testname, 0.0);
+  bool verify_equal(const PseudoJet & a, const PseudoJet b, const string & testname,
+		    bool ignore_structure = false) {
+    return verify_almost_equal(a,b,testname, 0.0, ignore_structure);
   }
 
 

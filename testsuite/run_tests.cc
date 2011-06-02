@@ -5,6 +5,7 @@
 ///   ./run-tests [-verbose] 
 #include "TestBase.hh"
 #include "TestPseudoJet.hh"
+#include "TestSubStructure.hh"
 #include <iomanip>
 #include "CmdLine.hh"
 
@@ -26,6 +27,7 @@ int main(int argc, char** argv) {
   tests.push_back(new TestPtYPhiM());
   tests.push_back(new TestPJAssignment());
   tests.push_back(new TestPJCSaccess());
+  tests.push_back(new TestSubStructure());
 
   // loop over the tests
   for (unsigned i = 0; i < tests.size(); i++) {

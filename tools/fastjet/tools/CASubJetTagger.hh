@@ -147,6 +147,10 @@ public:
   /// run the tagger on the given cs/jet
   virtual PseudoJet result(const fastjet::PseudoJet & jet) const;
 
+  /// the type of Structure returned
+  typedef CASubJetStructure StructureType;
+
+protected:
   /// class that contains the result
   class JetAux {
   public:
@@ -156,14 +160,11 @@ public:
     double             z;            //< the transverse momentum fraction
   };
 
-  /// the type of Structure returned
-  typedef CASubJetStructure StructureType;
 
-protected:
   void _recurse_through_jet(const PseudoJet & current_jet, 
-			    JetAux &aux_max) const;
-  
-  mutable PseudoJet _original_jet;
+			    JetAux &aux_max,
+			    const PseudoJet & original_jet) const;
+
   ScaleChoice _scale_choice;
   double      _z_threshold;
   double      _dr2_min;
@@ -190,14 +191,18 @@ public:
   /// returns the scale choice asked for the maximisation
   CASubJetTagger::ScaleChoice scale_choice() const {return _scale_choice;}
 
-  /// returns the distance (maximised over the jet history)
+  /// returns the value of the distance measure (corresponding to
+  /// ScaleChoice) for this jet's splitting
   double distance() const {return _distance;}
 
-  /// returns the distance
+  /// returns the pt fraction contained by the softer of the two component
+  /// pieces of this jet (normalised relative to this jet)
+  double z() const {return _z;}
+
+  /// returns the pt fraction contained by the softer of the two component
+  /// pieces of this jet (normalised relative to the original jet)
   bool absolute_z() const {return _absolute_z;}
 
-  /// returns the distance
-  double z() const {return _z;}
 
 protected:
   CASubJetTagger::ScaleChoice _scale_choice; ///< the user scale choice 
