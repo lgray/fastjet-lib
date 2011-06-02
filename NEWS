@@ -2,66 +2,51 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
-Summary of changes from v3.0alpha1 -> v3.0alpha3:  ????????
+Summary of changes from v3.0alpha2 -> v3.0alpha3:  ????????
 ================================================================
-[did stuff up to 2011-06-02]
 
 New features
-- Added a series of transformer (in libfastjettools):
+- Added a series of "Transformer"s in tools/:
    * Subtractor: subtract the jet using a BackgroundEstimator
-   * Boost: boosts a jet
-   * Unboost: unboosts a jet
+   * Boost/Unboost: boosts/unboosts a jet
    * MassDropTagger: look for a mass drop in the jet substructure
-   * NSubjettinessTagger: 2-pronged jet tagger based on rest-frame
-                          2-subjettiness
-   * CASubJetTagger: 2-pronged jet tagger maximising distances in the
-                     jet history
-  See the doxygen documentation for detailed description. As for any
-  transformer, the usage works as for the Filter (see the example 12).
-- when transferring a ClusterSequence from another one (i.e. when
-  using ClusterSequence::transfer_from_sequence) one could pass a
-  Transformer that acts on every jets in the cluster sequence history
-  (that allows e.g.to boost or subtract a whole cluster sequence)
-- CS::delete_self_when_unused() allows it to handle its own
-  memory management
-- fortran interface now has basic area functionality
+   * NSubjettinessTagger: 2-pronged tagger based on rest-frame 2-subjettiness
+   * CASubJetTagger: 2-pronged tagger based on maximal distance in jet history
+   * Filter updated from alpha2 (bug fixes & new constructors)
+  NB: Usage similar to Filter (example 12); further info in doxygen.
+- CS::delete_self_when_unused() allows it to handle its own memory management
 - GhostedAreaSpec can take a Selector to help specify ghost placement
+- added a FunctionOfPseudoJet<T> base class to help standardise tool interfaces
+- ClusterSequence::transfer_from_sequence now allows for a
+  FunctionOfPseudoJet<PseudoJet> argument to transform (e.g. boost)
+  the jets from an old sequence as they are transferred to the new one
+- fortran interface now has basic area functionality
 
-Changes to features introduced in alpha2 (or 1):
-- significantly more flexible BackgroundEstimator: manual encoding of
-  rapidity dependence; ability to determine background density of
-  quantities other than pt; correct handling of finite number of jets
-  for sigma() + some bug fixes
-- various changes in the behaviour of a PseudoJet structure (e.g. a
-  PseudoJet from a ClusterSequence is considered to have its parents
-  as pieces()). See the table in the documentation for more details.
-- the "extra structural information" associated to a PseudoJet by a
-  Transformer is obtained through PseudoJet::has_structure_of()
-  (rather than extra_properties()). (See e.g. example 12)
-- added area computation for composite jets as well as the option to
-  specify a user-defined recombiner.
+Changes to features introduced in alpha2 and alpha1:
+- Numerous changes to BackgroundEstimator 
+    * it allows manual encoding of rapidity dependence;
+    * it can calculate density of quantities other than pt;
+    * it has additional constructors, plus methods to reset its ClusterSequence, etc.
+    * its sigma() now properly handles finite numbers of jets (+ other bug fixes).
+- jet.pieces() for a jet from a clustering now returns the two parents
+- various changes to behaviour of a jet's structural calls; see new table in doc
+- PseudoJet::extra_properties<...>() -> PseudoJet::structure_of<...>() (cf example 12)
+- join(...) can now include a recombiner argument; it also now supports areas
 - Selector::count(jets) to know how many pass a cut (also new: Selector::sift)
 
 Other changes 
-- by default PseudoJet is constructed with zero momentum
+- by default a PseudoJet is constructed with zero momentum
 - by default a JetDefinition has an undefined_jet_algorithm
 - efficiency improvements in PtYPhiM and ghost generation
-- all uses of RangeDefinition now replaced by Selector (for
-  background compatibility, calls with RangeDefinitions will still
-  work).  RangeDefinition is now obsolete.
-- added a FunctionOfPseudoJet<T> to help define functions returning a
-  value of type T depending on a PseudoJet argument.
+- all uses of RangeDefinition now replaced by Selector. Old interfaces with 
+  RangeDefinition retained for backwards compatibility, but deprecated.
 - added an example (09) to illustrate how to add user info to a PseudoJet
-- fixed crashes of VoronoiAreas for particles on a grid
+- doxygen output now configured with an internal search engine
 
 Bug fixes
 - the default recombiner used to set the user_index to the non-default
   value of 0. Now it sets it to the default (-1).
-
-to be included??????
-- template join?
-- dynamic Rfilt?
-- various minor fixes (mostly comments)
+- fixed crashes of VoronoiAreas for particles on a grid (also in 2.4.3)
 
 
 ================================================================

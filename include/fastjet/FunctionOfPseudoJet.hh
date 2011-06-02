@@ -37,10 +37,13 @@
 FASTJET_BEGIN_NAMESPACE
 
 /// \class FunctionOfPseudoJet
-/// a generic function of any type of a PseudoJet
+/// base class providing interface for a generic function of a PseudoJet
 ///
-/// This class implements a generic function returning an object of a
-/// given (templated) type as a function of a PseudoJet
+/// This class serves as a base class to provide a standard interface
+/// for a function that returns an object of a given (templated) type
+/// that depends on a PseudoJet argument. The rationale for using a
+/// class (rather than a pointer to a function) is that a class can be
+/// constructed with (and store) additional arguments.
 template<typename TOut>
 class FunctionOfPseudoJet{
 public:

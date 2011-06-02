@@ -1,11 +1,16 @@
-2011-06-02  Gavin Salam  <salam@lpthe.jussieu.fr>
+2011-06-02  Gavin Salam  <salam@lpthe.jussieu.fr> & Gregory
+
+	* NEWS: tried to compactify it.
+
+	* include/fastjet/FunctionOfPseudoJet.hh: 
+	  worked on documentation
 
 	* src/JetDefinition.cc (DefaultRecombiner::recombine): 
 	  user_index used to be set to 0 on recombination. This should be
 	  considered a bug (dates to 27 November 2006 and was never
-	  updated to reflected the default user index of -1 that was set
-	  on 24 February 2007. The user index is now the default that
-	  comes out of addition / initialisation (i.e. -1).
+	  updated to reflect the default user index of -1 that was set on
+	  24 February 2007. The user index from recombination is now the
+	  default that comes out of addition / initialisation (i.e. -1).
 
 2011-06-02  Gregory Soyez  <soyez@fastjet.fr>
 
