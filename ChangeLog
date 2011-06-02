@@ -1,3 +1,8 @@
+2011-06-02  Gregory Soyez  <soyez@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/CASubJetTagger.hh:
+	  added the StructureType (typedef'ed to CASubJetStructure)
+
 2011-06-01  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence.cc (contains):

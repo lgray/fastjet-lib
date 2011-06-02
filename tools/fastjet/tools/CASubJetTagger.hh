@@ -156,6 +156,9 @@ public:
     double             z;            //< the transverse momentum fraction
   };
 
+  /// the type of Structure returned
+  typedef CASubJetStructure StructureType;
+
 protected:
   void _recurse_through_jet(const PseudoJet & current_jet, 
 			    JetAux &aux_max) const;
