@@ -78,6 +78,6 @@ endif
 # end monolithic plugin section -- do not modify this line
 endif
 
-DIST_SUBDIRS = D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs usage_examples
+DIST_SUBDIRS = D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs
 
 EXTRA_DIST = makefile.static

@@ -1,5 +1,8 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/Makefile.am (DIST_SUBDIRS):
+	  removed the usage examples
+
 	* include/fastjet/JetDefinition.hh:
 	* src/JetDefinition.cc (have_same_recombiner):
 	  have_same_recombiner -> has_same_recombiner
