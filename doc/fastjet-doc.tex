@@ -2770,7 +2770,7 @@ if \ttt{jet} is compatible with the structure provided by
 \ttt{MyTransformer}.
 
 
-\subsection{Jet Filtering using \ttt{Filter}}
+\subsection{Jet Filtering using \texttt{Filter}}
 \label{sec:filtering}
 
 Filtering was first introduced in \cite{BDRS} to reduce the
@@ -2786,7 +2786,7 @@ but selects the subjets to be kept based on a $p_t$ cut.
 Here, we decided to take the most generic approach by introducing
 \begin{lstlisting}
   class Filter : public Transformer
-    Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0)
+    Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0);
     ...
   };
 \end{lstlisting}
@@ -2799,15 +2799,15 @@ subjets.
 
 Two alternative constructors are supported:
 \begin{lstlisting}
-  Filter(double Rfilt, Selector selector, double rho = 0.0)
-  Filter(FunctionOfPseudoJet<double> * Rfilt_dyn, Selector selector, double rho = 0.0)
+  Filter(double Rfilt, Selector selector, double rho = 0.0);
+  Filter(FunctionOfPseudoJet<double> * Rfilt_dyn, Selector selector, double rho = 0.0);
 \end{lstlisting}
 In the first one, only the radius parameter is specified instead of
 the full subjet definition. For the second, one has to provide a
 (pointer to) a class derived from \ttt{FunctionOfPseudoJet<double>}
 that would dynamically compute the filtering radius as a function of
 the jet being filtered (as it was originally proposed in \cite{BDRS}
-where $R_{/rm filt}={\rm min}(0.3,R_{b\bar{b}})$ depends on the object
+where $R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}})$ depends on the object
 being filtered). In both cases, the Cambridge/Aachen algorithm is used.
 
 \paragraph{Constraints.} The jet being filtered must have

@@ -101,6 +101,9 @@ int main (int argc, char ** argv) {
 
   // create an area definition for the clustering
   //----------------------------------------------------------
+  // ghosts should go up to the acceptance of the detector or
+  // (with infinite acceptance) at least 2R beyond the region
+  // where you plan to investigate jets.
   double ghost_maxrap = 6.0;
   fastjet::ActiveAreaSpec area_spec(ghost_maxrap);
   fastjet::AreaDefinition area_def(fastjet::active_area, area_spec);
@@ -127,9 +130,11 @@ int main (int argc, char ** argv) {
   // event:
   //  - We strongly recommend using the kt or Cambridge/Aachen algorithm
   //    (a warning will be issued otherwise)
-  //  - The choice of the radius is a bit more subtle. R=0.6 is a
-  //    decent default, though for dense events, one can also
-  //    decrease that value to 0.4-0.5.
+  //  - The choice of the radius is a bit more subtle. R=0.4 has been
+  //    chosen to limit the impact of hard jets; in samples of
+  //    dominantly sparse events it may cause the UE/pileup to be
+  //    underestimated a little, a slightly larger value (0.5 or 0.6)
+  //    may be better.
   //  - For the area definition, we recommend the use of explicit
   //    ghosts (i.e. active_area_explicit_ghosts)
   //    As mentionned in the area example (06-area.cc), ghosts should
@@ -137,7 +142,7 @@ int main (int argc, char ** argv) {
   //    the computation of the background (see also the comment below)
   //
   // ----------------------------------------------------------
-  fastjet::JetDefinition jet_def_bkgd(fastjet::kt_algorithm, 0.6);
+  fastjet::JetDefinition jet_def_bkgd(fastjet::kt_algorithm, 0.4);
   fastjet::GhostedAreaSpec area_spec_bkgd(ghost_maxrap);
   fastjet::AreaDefinition area_def_bkgd(fastjet::active_area_explicit_ghosts, area_spec_bkgd);
   fastjet::ClusterSequenceArea clust_seq_bkgd(full_event, jet_def_bkgd, area_def_bkgd);
@@ -164,7 +169,7 @@ int main (int argc, char ** argv) {
   // 4-vector areas)
   //
   // ----------------------------------------------------------
-  double range_maxrap = 5.0;  // we have a ghost_maxrap of 6.0
+  double range_maxrap = 4.5;  // we have a ghost_maxrap of 6.0, particles up to 5
   fastjet::RangeDefinition range(range_maxrap);
 
   bool use_4vector_area = true;

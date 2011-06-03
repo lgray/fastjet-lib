@@ -162,6 +162,12 @@ class PseudoJet {
   inline double squared_distance(const PseudoJet & other) const {
     return plain_distance(other);}
 
+  /// return the cylinder (rap-phi) distance between this jet and another,
+  /// \f$\Delta_R = \sqrt{\Delta y^2 + \Delta \phi^2}\f$.
+  inline double delta_R(const PseudoJet & other) const {
+    return sqrt(squared_distance(other));
+  }
+
   /// returns other.phi() - this.phi(), constrained to be in 
   /// range -pi .. pi
   double delta_phi_to(const PseudoJet & other) const;
@@ -386,7 +392,19 @@ class PseudoJet {
     return _user_info;
   }
 
-  /// retrieve a (non-const) shared pointer to the user information
+  /// retrieve a (non-const) shared pointer to the user information;
+  /// you can use this, for example, to set the shared pointer, eg
+  ///
+  /// \code
+  ///   p2.user_info_shared_ptr() = p1.user_info_shared_ptr();
+  /// \endcode
+  ///
+  /// or 
+  ///
+  /// \code
+  ///   SharedPtr<PseudoJet::UserInfoBase> info_shared(new MyInfo(...));
+  ///   p2.user_info_shared_ptr() = info_shared;
+  /// \endcode
   SharedPtr<UserInfoBase> & user_info_shared_ptr(){
     return _user_info;
   }

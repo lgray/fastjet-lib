@@ -99,11 +99,11 @@ protected:
 // Select pi0 and photons
 //
 // This shows how we can build a Selector that uses the user-defined
-// iformation to select on particles that are either pi0's or photons
+// iformation to select particles that are either pi0's or photons
 // (we choose this purely for simplicity).
 // 
 // To create a user-defined fastjet::Selector, the first step is to
-// create it's associated "worker" class, i.e. to derive a class from
+// create its associated "worker" class, i.e. to derive a class from
 // fastjet::SelectorWorker. Then (see below), we just write a function
 // (SelectorIsPi0Gamma()) that creates a fastjet::Selector with the
 // appropriate worker class.
@@ -221,16 +221,15 @@ int main (int argc, char ** argv) {
       //
       // IMPORTANT NOTE: set_user_info(...) takes a pointer as an
       // argument. It will "own" that pointer i.e. will delete it when
-      // all the PseudoJet's using it will be deleted. Of course, more
-      // than one PseudoJet can share the same extra information using
-      // e.g.
-      //   PseudoJet p1, p2;
-      //   MyUserInfo * user_info = new MyUserInfo(...);
-      //   p1.set_user_info(user_info);
-      //   p2.set_user_info(user_info);
-      // In that case, user_info will automatically be deleted when
-      // boht p1 and p2 (and their copies) are deleted
+      // all the PseudoJet's using it will be deleted.
+      //
+      // NB: once you've done p.set_user_info(my_user_info_ptr), you must
+      // not call p2.set_user_info(my_user_info_ptr) with the same pointer
+      // because p and p2 will both attempt to delete it when they go out
+      // of scope causing a double-free corruption error. Instead do
+      // p2.user_info_shared_ptr() = p.user_info_shared_ptr();
       p.set_user_info(new MyUserInfo(pdg_id, vertex_number));
+      PseudoJet p2;
 
       input_particles.push_back(p);
       continue;
@@ -272,7 +271,7 @@ int main (int argc, char ** argv) {
   // label the columns
   printf("%5s %15s %15s %15s %15s %15s\n","jet #",
 	 "rapidity", "phi", "pt",
-	 "pt_hard", "pt_pi0+g");
+	 "pt_hard", "pt_pi0+gamma");
 
   // a selection on the 1st vertex
   Selector sel_vtx0 = SelectorVertexNumber(0);

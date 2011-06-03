@@ -1,3 +1,19 @@
+2011-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/12-filter.cc: 
+	  RfiltDyn -> DynamicRfilt, which now takes two arguments (Rmax,
+	  deltaR_factor).
+
+	* example/07-subtraction.cc: 
+	* example/07-subtraction-new.cc:
+	  changes to comments and default values
+
+	* example/09-user_info.cc: 
+	  changes to comments
+
+	* include/fastjet/PseudoJet.hh: 
+	  changes to comments + plus addition of delta_R(other) member 
+
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/Makefile.am (DIST_SUBDIRS):

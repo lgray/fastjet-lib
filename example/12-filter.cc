@@ -28,13 +28,13 @@ using namespace fastjet;
 using namespace std;
 
 // a function returning
-//   min(R(j1,j2),Rmin)
+//   min(Rmax, deltaR_factor * deltaR(j1,j2))
 // where j1 and j2 are the 2 subjets of j
-// if the jet does not have 2 exactly pieces, Rmin is used.
-class RfiltDyn : public FunctionOfPseudoJet<double>{
+// if the jet does not have 2 exactly pieces, Rmax is used.
+class DynamicRfilt : public FunctionOfPseudoJet<double>{
 public:
   // default ctor 
-  RfiltDyn(double Rmax) : _Rmax(Rmax){}
+  DynamicRfilt(double Rmax, double deltaR_factor) : _Rmax(Rmax), _deltaR_factor(deltaR_factor){}
 
   // action of the function
   double result(const PseudoJet &j) const{
@@ -43,12 +43,12 @@ public:
     vector<PseudoJet> pieces = j.pieces();
     if (! pieces.size()==2) return _Rmax;
 
-    double R = sqrt(pieces[0].squared_distance(pieces[1]));
-    return (R < _Rmax) ? R : _Rmax;
+    double deltaR = pieces[0].delta_R(pieces[1]);
+    return min(_Rmax, _deltaR_factor * deltaR);
   }
 
 private:
-  double _Rmax;
+  double _Rmax, _deltaR_factor;
 };
 
 /// an example program showing how to use fastjet
@@ -103,9 +103,9 @@ int main (int argc, char ** argv) {
   // the Aachen/Cambridge filter with Rfilt=0.3
   filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3)));
 
-  // the Aachen/Cambridge filter with Rfilt=min(Rbb,0.3) as in arXiv:0802.2470
-  SharedPtr<RfiltDyn> rfilt_dyn(new RfiltDyn(0.3));
-  filters.push_back(Filter(rfilt_dyn.get(), SelectorNHardest(3)));
+  // the Aachen/Cambridge filter with Rfilt=min(0.3, 0.5*Rbb) as in arXiv:0802.2470
+  SharedPtr<DynamicRfilt> dynamic_Rfilt(new DynamicRfilt(0.3, 0.5));
+  filters.push_back(Filter(dynamic_Rfilt.get(), SelectorNHardest(3)));
 
   // Filtering with a pt cut as for trimming (arXiv:0912.1342)
   filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtFractionMin(0.03)));

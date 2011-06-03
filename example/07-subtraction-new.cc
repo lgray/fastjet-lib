@@ -105,6 +105,9 @@ int main (int argc, char ** argv) {
 
   // create an area definition for the clustering
   //----------------------------------------------------------
+  // ghosts should go up to the acceptance of the detector or
+  // (with infinite acceptance) at least 2R beyond the region
+  // where you plan to investigate jets.
   double ghost_maxrap = 6.0;
   fastjet::ActiveAreaSpec area_spec(ghost_maxrap);
   fastjet::AreaDefinition area_def(fastjet::active_area, area_spec);
@@ -131,9 +134,11 @@ int main (int argc, char ** argv) {
   // event:
   //  - We strongly recommend using the kt or Cambridge/Aachen algorithm
   //    (a warning will be issued otherwise)
-  //  - The choice of the radius is a bit more subtle. R=0.6 is a
-  //    decent default, though for dense events, one can also
-  //    decrease that value to 0.4-0.5.
+  //  - The choice of the radius is a bit more subtle. R=0.4 has been
+  //    chosen to limit the impact of hard jets; in samples of
+  //    dominantly sparse events it may cause the UE/pileup to be
+  //    underestimated a little, a slightly larger value (0.5 or 0.6)
+  //    may be better.
   //  - For the area definition, we recommend the use of explicit
   //    ghosts (i.e. active_area_explicit_ghosts)
   //    As mentionned in the area example (06-area.cc), ghosts should
@@ -141,7 +146,7 @@ int main (int argc, char ** argv) {
   //    the computation of the background (see also the comment below)
   //
   // ----------------------------------------------------------
-  fastjet::JetDefinition jet_def_bkgd(fastjet::kt_algorithm, 0.6);
+  fastjet::JetDefinition jet_def_bkgd(fastjet::kt_algorithm, 0.4);
   fastjet::GhostedAreaSpec area_spec_bkgd(ghost_maxrap);
   fastjet::AreaDefinition area_def_bkgd(fastjet::active_area_explicit_ghosts, area_spec_bkgd);
   fastjet::ClusterSequenceArea clust_seq_bkgd(full_event, jet_def_bkgd, area_def_bkgd);
@@ -168,7 +173,7 @@ int main (int argc, char ** argv) {
   // 4-vector areas)
   //
   // ----------------------------------------------------------
-  Selector selector = SelectorAbsRapMax(5.0);
+  Selector selector = SelectorAbsRapMax(4.5);
   BackgroundEstimator bkgd_estimator(clust_seq_bkgd, selector);
   Subtractor subtractor(&bkgd_estimator);
 
@@ -203,15 +208,9 @@ int main (int argc, char ** argv) {
   cout << endl;
 
   // Once the background properties have been computed, subtraction
-  // can be applied on the jets
+  // can be applied on the jets. Subtraction is performed on the
+  // full 4-vector
   //
-  // This uses ClusterSequenceArea::subtracted_jet(jet, rho), with the
-  // ClusterSequence used to cluster the jet and the background
-  // density we have just computed
-  // 
-  // (Note that when using scalar areas, subtracted_pt should be used
-  // instead of subtracted_jet)
-  // 
   // We output the jets before and after subtraction
   // ----------------------------------------------------------
   cout << "Jets above " << ptmin << " GeV in the full event (" << full_event.size() << " particles)" << endl;
