@@ -13,7 +13,9 @@ New features
    * NSubjettinessTagger: 2-pronged tagger based on rest-frame 2-subjettiness
    * CASubJetTagger: 2-pronged tagger based on maximal distance in jet history
    * Filter updated from alpha2 (bug fixes & new constructors)
-  NB: Usage similar to Filter (example 12); further info in doxygen.
+  NB: examples 11 (boosted Higgs) and 12 (Filter) illustrate usage.
+
+similar to Filter (example 12); further info in doxygen.
 - CS::delete_self_when_unused() allows it to handle its own memory management
 - GhostedAreaSpec can take a Selector to help specify ghost placement
 - added a FunctionOfPseudoJet<T> base class to help standardise tool interfaces
@@ -38,8 +40,8 @@ Other changes
 - by default a PseudoJet is constructed with zero momentum
 - by default a JetDefinition has an undefined_jet_algorithm
 - efficiency improvements in PtYPhiM and ghost generation
-- all uses of RangeDefinition now replaced by Selector. Old interfaces with 
-  RangeDefinition retained for backwards compatibility, but deprecated.
+- all uses of RangeDefinition now replaced by Selector. Old interfaces
+  retained, but deprecated.
 - added an example (09) to illustrate how to add user-info to a PseudoJet
 - doxygen output now configured with an internal search engine
 
