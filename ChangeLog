@@ -1,5 +1,23 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 
+	Release of FastJet 3.0alpha3
+
+2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
+
+	* NEWS:
+	  put the v3.0alpha3 release date
+
+	* doc/fastjet-doc.tex:
+	* configure.ac:
+	* Doxyfile:
+	  updated the version number
+
+	* Doxyfile-devel:
+	  updated the version number; enabled the search engine
+
+	* include/fastjet/config_win.h:
+	  updated for v3.0alpha3
+
 	* example/11-boosted_higgs-new.cc:
 	  explicitly set the recombiner to use by the filter
 

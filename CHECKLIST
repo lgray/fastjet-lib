@@ -49,6 +49,51 @@ X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
 X.Y.Z  move the version number to X.Y.(Z+1)-devel
 
+
+----------------------------------------------------------------------
+checklist for 3.0alpha3
+-----------------------
+3.0a3  make sure version number in configure.ac is correct
+
+3.0a3  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+3.0a3  update doxygen (including the devel) version number + check dirs are declared for new plugins
+3.0a3  version number in manual
+
+3.0a3  ensure NEWS is up to date (and has the correct release date!)
+
+3.0a3  make sure siscone points to a tag, not trunk
+       cd ../plugins/SISCone; svn propedit svn:externals .; svn up
+
+3.0a3  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+
+3.0a3  make check 
+
+3.0a3  make distcheck
+
+3.0a3  make sure it's committed
+
+X.Y.Z  rerun the nightly check
+X.Y.Z  make distcheck
+
+X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+X.Y.Z  compile manual
+X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+3.0a3  doxygen built and copied to ~soyez/doc/*
+X.Y.Z  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+X.Y.Z  update main web page & menu in devel area
+
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  update main web-page area
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+X.Y.Z  make sure it's committed with the CHECKLIST
+
+X.Y.Z  check everything is OK
+X.Y.Z  reset the SISCone link to the trunk
+X.Y.Z  move the version number to X.Y.(Z+1)-devel
+
 ----------------------------------------------------------------------
 checklist for 3.0alpha2 (make a copy before editing!)
 -------------------
