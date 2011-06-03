@@ -94,7 +94,7 @@ int main (int argc, char ** argv) {
   //----------------------------------------------------------
   vector<PseudoJet> candidates;
   candidates.push_back(inclusive_jets[0]);
-  candidates.push_back(join(inclusive_jets[0],inclusive_jets[1]));
+  candidates.push_back(join(inclusive_jets[1],inclusive_jets[2]));
 
   // create a few filters
   //----------------------------------------------------------

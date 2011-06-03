@@ -1,5 +1,9 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/12-filter.cc:
+	  take the 2nd and 3rd jets for the composite-jet example rather
+	  than teh two hardest
+
 	* BUGS:
 	  added a comment about potential issues with plugins relying on
 	  Et ordering of the input particles (due to the undefined
