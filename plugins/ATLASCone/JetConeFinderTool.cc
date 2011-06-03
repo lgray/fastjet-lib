@@ -159,12 +159,48 @@ JetConeFinderTool::reconstruct()
 	double dphi = fabs(JetDistances::deltaPhi(phiT,phiC));
 
 	if ( deta < 0.05  && dphi < 0.05 ) { 
+	  // Debugging done by Gregory Soyez:
+	  //
+	  // Becase of the cut on the Et difference imposed on the
+	  // ordering (line 80 of Jet.hh), the ordering of the input
+	  // particles in Et is not robust agains different
+	  // implementations of sort (which has an undefined behaviour
+	  // if 2 particles are equal). A consequence of this is that
+	  // stable cone search will consider these 2 seeds in an
+	  // undefined order. If the 2 resulting stable cones are too
+	  // close (deta<0.05, dphi<0.05) one will be accepted and the
+	  // other rejected. Which one depends on the ordering and is
+	  // thus undefined. If the 2 stable cones do not have the
+	  // same number of constituents this could affect the result
+	  // of the clustering.
+	  //
+	  // The line below helps debugging these cases by printing
+	  // the rejected stable cones
+	  //std::cout << "rejecting " << etaT << " " << phiT << " " << preJet->et() << (*tItr)->eta() << " " << (*tItr)->phi() << " " << (*tItr)->et() << std::endl;
 	  newJet = false;
 	  break;
 	}
       }
       if ( newJet ) {
 	m_jetOV->push_back( preJet );
+	// Debugging done by Gregory Soyez:
+	//
+	// Becase of the cut on the Et difference imposed on the
+	// ordering (line 80 of Jet.hh), the ordering of the input
+	// particles in Et is not robust agains different
+	// implementations of sort (which has an undefined behaviour
+	// if 2 particles are equal). A consequence of this is that
+	// stable cone search will consider these 2 seeds in an
+	// undefined order. If the 2 resulting stable cones are too
+	// close (deta<0.05, dphi<0.05) one will be accepted and the
+	// other rejected. Which one depends on the ordering and is
+	// thus undefined. If the 2 stable cones do not have the
+	// same number of constituents this could affect the result
+	// of the clustering.
+	//
+	// The line below helps debugging these cases by printing
+	// the accepted stable cones
+	//std::cout << "accepting " << etaT << " " << phiT << " " << preJet->et() << (*tItr)->eta() << " " << (*tItr)->phi() << " " << (*tItr)->et() << std::endl;
       }
       else {
 	delete preJet;

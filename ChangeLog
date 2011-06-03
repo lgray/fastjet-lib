@@ -1,3 +1,19 @@
+2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
+
+	* BUGS:
+	  added a comment about potential issues with plugins relying on
+	  Et ordering of the input particles (due to the undefined
+	  behaviour of sort(...) for equal entities). This applies for the
+	  TrackJet plugin, for which it happens when 2 particles have
+	  exactly the same Et (so it should not be too much of an issue
+	  for the final jets); and for the ATLAS cone plugin where the
+	  result could be affected in some situations (since 2 particles
+	  with an difference in Et < 0.001 are considered equal)
+
+	* plugins/ATLASCone/JetConeFinderTool.cc:
+	  added a comment about an instability in the ATLAS stable cone
+	  search due to the Et ordering
+
 2011-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/12-filter.cc: 
@@ -17,7 +33,8 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/Makefile.am (DIST_SUBDIRS):
-	  removed the usage examples
+	  removed the usage examples, since they are mostly covered by the
+	  examples
 
 	* include/fastjet/JetDefinition.hh:
 	* src/JetDefinition.cc (have_same_recombiner):

@@ -19,7 +19,7 @@ Other issues to be aware of
 
   - Pythia sometimes produces massive particles with pt=0; phi is then
     ill-defined, while the rapidity is finite and we make no
-    guarantees about how we treat it.
+    guarantees about how we treat the particle.
 
   - inputs that lie on a perfect grid in rapidity-phi (e.g. one
     interpretation of a calorimeter) cause many interparticle
@@ -34,6 +34,32 @@ Other issues to be aware of
     explicity, e.g. using information from the location of energy
     deposits in each calorimeter tower, so that the inputs are not on
     a perfect grid.
+
+. For some of the plugins (listed below), the result of the clustering
+  depends on how "sort" treats equal entities. Since this is
+  supposedly undefined, FastJet has no control over the different
+  results that one may obtain using those plugins.
+
+  - The ATLAS-Cone plugin: At the beginning of the stable-cone search,
+    the input particles are sorted in Et. In that sort, particles with
+    an Et difference below 0.001 are considered as having the same Et
+    (see line 80 of Jet.hh), resulting in the undefined behaviour
+    mentioned above.
+
+    A consequence of this is that, if 2 input particles have too
+    similar an Et, the stable cone search will consider them in an
+    undefined order. If the 2 resulting stable cones are too close
+    (deta<0.05, dphi<0.05) one will be accepted and the other
+    rejected. Which one depends on the ordering and is thus
+    undefined. If the 2 stable cones do not have the same constituents
+    this could affect the result of the clustering.
+
+  - In the TrackJet plugin, input particles are sorted in Et. If two
+    particles have the same Et (within machine precision), the order
+    in which they will be considered is undefined. Note however that to
+    have exactly the same pt, the particles are very likely to be
+    back-to-back. In that case, only the order of the clustering will
+    be affected but not the final jets.
 
 ----------------------------------------------------------------------
 Probably solved
