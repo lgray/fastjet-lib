@@ -2703,63 +2703,74 @@ in input, and therefore calculate $\rho$ themselves, do it according to
 \section{Jet transformers (substructure, taggers, etc...)}
 \label{sec:transformers}
 
-Performing post-clustering actions on jets has become very common: for
-example, various techniques have been introduced to tag boosted
-objects. We introduced (from \fastjet 3.x onwards) a common interface
-to ease the usage of these tools and the creation of new ones.
 
-Below, we first discuss generic considerations about these tools that
-we call {\ttt Transformer}'s, then we go through the list of the ones
-that have already been implemented. We then dig into the more
-technical aspects related to how they are implemented and how to add
-user-defined transformers.
+Performing post-clustering actions on jets has in recent years become
+quite widespread: for example, numerous techniques have been
+introduced to tag boosted hadronically objects, and various methods
+also exist for removing the underlying event and pileup from jets.
+%
+As of version 3.0, \fastjet provides a common interface for such
+tools, intended to help simplify their usage and to guide authors of
+new ones.
+
+Below, we first discuss generic considerations about these tools, which
+we call \ttt{Transformer}s. 
+%
+We then describe some that have already been implemented. 
+%
+Finally, we outline some of the techniques that can help when creating
+new transformers.
 
 
-\subsection{Generic considerations about \texttt{Transformer}'s}
+\subsection{Generic considerations about \texttt{Transformer}s}
 \label{sec:transformers-generic}
 
-The common interface to all the transformers is the following one:
+The common interface to all the transformers, declared in the
+\ttt{fastjet/tools/Transformer.hh} header, is the following:
 \begin{lstlisting}
-  class Transformer : public FunctionOfPseudoJet<PseudoJet>{
+  class Transformer : public FunctionOfPseudoJet<PseudoJet> {
   public:
-    // default ctor
-    Transformer(){}
-  
-    // default dtor
-    virtual ~Transformer(){}
-  
-    // description of the transformer
-    virtual std::string description() const;
-  
     // the default action of a Transformer: this returns a 0 PseudoJet
     // with a PseudoJetStructureBase structure
-    virtual PseudoJet apply(const PseudoJet & original) const;
+    virtual PseudoJet result(const PseudoJet & original) const = 0;
+  
+    // description of the transformer
+    virtual std::string description() const = 0;
   
     // information about the associated structure type
     typedef PseudoJetStructureBase StructureType;
+
+    // destructor is virtual so that it can be safely overloaded
+    virtual ~Transformer(){}
   };
 \end{lstlisting}
-
-This contains two concepts: first, the basic action of the transformer
-through \ttt{apply} would return a transformed jet from the one passed
-as an argument. Note that, in practice,
+It is essentially the same as that of the
+\ttt{FunctionOfPseudoJet<PseudoJet>} from which it derives (cf.\
+appendix~\ref{app:function-of-pj}).
+%
+While the action of a \ttt{Transformer} is to be implemented in the
+\ttt{result(...)} member function,
+%
+typically it will be accessed through the \ttt{operator()} function:
 \begin{lstlisting}
-  TOut operator()(const PseudoJet &pj) const;
-  vector<TOut> operator()(const vector<PseudoJet> &pjs) const;
+  /// just wraps result()
+  PseudoJet operator()(const PseudoJet &pj) const {return apply(pj);}
+  /// returns a vector of PseudoJet containing result(...) 
+  /// applied to each of input PseudoJets, 
+  vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
 \end{lstlisting}
-would equivalently return the action of the transformer on one or a
-vector of \ttt{PseudoJet}, since \ttt{Transformer} is declared as a
-function of \ttt{PseudoJet} returning a \ttt{PseudoJet} (see Appendix
-\ref{app:function-of-pj}):
+i.e.\
 \begin{lstlisting}
   MyTransformer transformer;
   PseudoJet transformed_jet = transformer(jet);
 \end{lstlisting}
-Then, transformers are likely to bring new structural information with
-the returned result. For a given transformer, say \ttt{MyTransformer},
-the new information that is not directly accessible from
-\ttt{PseudoJet} (like its \ttt{constituents}, \ttt{pieces} or
-\ttt{area} when they are available), coulb be accessed through
+Often, transformers provide new structural information that is to be
+associated with the returned result. 
+%
+For a given transformer, say \ttt{MyTransformer}, the new information
+that is not already directly accessible from \ttt{PseudoJet} (like its
+\ttt{constituents}, \ttt{pieces} or \ttt{area} when they are
+available), can be accessed through
 \begin{lstlisting}
   jet.structure_of<MyTransformer>()
 \end{lstlisting}
@@ -2770,7 +2781,7 @@ if \ttt{jet} is compatible with the structure provided by
 \ttt{MyTransformer}.
 
 
-\subsection{Jet Filtering using \texttt{Filter}}
+\subsection{Jet Filtering and Trimming using \texttt{Filter}}
 \label{sec:filtering}
 
 Filtering was first introduced in \cite{BDRS} to reduce the
@@ -2779,23 +2790,24 @@ Event. Originally, the idea was, starting from a jet obtained with a
 Cambridge-Aachen clustering, to uncluster it down to a smaller jet
 radius $R_{\rm filt}$ and only keep the 3 hardest of these subjets as
 the pieces of the final filtered jet, rejecting the others.
-
+%
 Similarly, trimming \cite{trimming} also unclusters a jet into subjets
 but selects the subjets to be kept based on a $p_t$ cut.
 
-Here, we decided to take the most generic approach by introducing
+The \ttt{Filter} class handles both
 \begin{lstlisting}
-  class Filter : public Transformer
+  class Filter : public Transformer {
     Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0);
     ...
   };
 \end{lstlisting}
-which would obtain the subjets by reclustering the jet's constituents
-with the jet definition \ttt{subjet\_def} and use \ttt{selector} to
-decide which of these subjets have to be kept. If \ttt{rho} is
-non-zero, each of the subjets will be subtracted (using the specified
-value for the background density) prior to the selection of the kept
-subjets.
+reclustering the jet's constituents
+with the jet definition \ttt{subjet\_def} and using \ttt{selector} to
+decide which of these subjets have to be kept. 
+%
+If \ttt{rho} is non-zero, each of the subjets will be subtracted
+(using the specified value for the background density) prior to the
+selection of the kept subjets.
 
 Two alternative constructors are supported:
 \begin{lstlisting}
@@ -2805,10 +2817,11 @@ Two alternative constructors are supported:
 In the first one, only the radius parameter is specified instead of
 the full subjet definition. For the second, one has to provide a
 (pointer to) a class derived from \ttt{FunctionOfPseudoJet<double>}
-that would dynamically compute the filtering radius as a function of
-the jet being filtered (as it was originally proposed in \cite{BDRS}
-where $R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}})$ depends on the object
-being filtered). In both cases, the Cambridge/Aachen algorithm is used.
+which dynamically computes the filtering radius as a function of the
+jet being filtered (as was originally used in \cite{BDRS} where
+$R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}})$, with $R_{b\bar b}$ the
+distance between the parents of the jet). In both cases, the
+Cambridge/Aachen algorithm is used.
 
 \paragraph{Constraints.} The jet being filtered must have
 constituents. Furthermore, if \ttt{rho} is non-zero, the input jet
@@ -2817,49 +2830,74 @@ explicit ghosts. If any of these requirements fail, an exception will
 be thrown.
 
 \paragraph{Structure of the result.} The \ttt{PseudoJet} resulting
-from the filtering will have an associated structure of type
-\ttt{FilteredJetStructure}, derived from
-\ttt{CompositeJetStructure}. On top of the subjets kept by the filter,
-available as its \ttt{pieces} (see Section \ref{sec:composite-jet}),
-we store the rejected pieces and the original (input) jet. They are
-accessible using
+from the filtering has the following additional structural
+information:
+% 
+% will have an associated structure of type
+% \ttt{FilteredJetStructure}, derived from
+% \ttt{CompositeJetStructure}. On top of the subjets kept by the filter,
+% available as its \ttt{pieces} (see Section \ref{sec:composite-jet}),
+% we store the rejected pieces and the original (input) jet. They are
+% accessible using
 \begin{lstlisting}
+  // the subjets (on the scale Rfilt) not kept by the filtering
   vector<PseudoJet> rejected = jet.structure_of<Filter>().rejected();
+  // the original jet before filtering
   PseudoJet original = jet.structure_of<Filter>().original();
 \end{lstlisting}
 
 \paragraph{Usage examples.} Filtering involving obtaining the subjets
-with the Cambridge/Aachen algorithm with radius $R_{/rm filt}$ and
-keeping the $n_{/rm filt}$ hardest subjets found can be achieved using
+with the Cambridge/Aachen algorithm with radius $R_{\rm filt}$ and
+keeping the $n_{\rm filt}$ hardest subjets found can be achieved using
 \begin{lstlisting}
   Filter filter(Rfilt, SelectorNHardest(nfilt));
 \end{lstlisting}
-Similarily, trimming, keeping the jets with a $p_t$ larger than a
-fixed fraction of the input jet, is done using
+Trimming, which keeps the subjets with a $p_t$ larger than a fixed
+fraction of the input jet, is done using
 \begin{lstlisting}
   Filter trimmer(subjet_def, SelectorPtFractionMin(pt_fraction_min));
 \end{lstlisting}
 
-\paragraph{Implementation note.} Generally speaking, the constituents
-of the input jet will be reclustered with the subjet definition to
-extract the subjets. The one exception is when both the clustering
-giving the input jet and the subjet definition use the
-Cambridge/Aachen algorithm. In that specific case one can use
-exclusive subjets of the input jets and avoid reclustering its
-constituents.
+\paragraph{Implementation note.}
+%
+Usually, the subjets are obtained simply by clustering the input jet's
+constistuents with the subjet definition.
+% 
+% constituents of the input jet are simply reclustered with
+% the subjet definition in order to extract the subjets.
+% 
+% 
+% Usually, the constituents of the input jet are simply reclustered with
+% the subjet definition in order to extract the subjets.
+%
+However, when the input jet was obtained with the Cambridge/Aachen
+algorithm and the subjet definition also involves the Cambridge/Aachen
+algorithm, the \ttt{Filter} uses the exclusive subjets of the input
+jet to avoid having recluster its constituents.
 
 %% Note on the constraints on the input / extra structural stuff: do
 %% we want to mention that in the previous section?
 
-\subsection{2-Pronged taggers}
+\subsection{2-pronged and 3-pronged taggers}
 \label{sec:2prongedtaggers}
 
+A number of the taggers developed to distinguish 2- or 3-pronged
+decays of massive objects from plain QCD jets naturally fall into the
+category of transformers.
+%
+Typically they search for one or more hard branchings within the jet
+and then return the part of the jet that has been identified as
+associated with those hard branchings.
+%
+They share the convention that if they were not able to identify
+suitable substructure, they return a \ttt{jet} that has the property
+\ttt{jet == 0}.
 
-Most of the taggers that investigate the substructure of boosted jets
-in order to discrinminate boosted vector bosons from QCD jets form
-another big class of \emph{jet transformers}. Given an input jet, they
-search for a 2-pronged structure inside it and thus naturally result
-in a ``tagged'' jet with new structural information.
+% Most of the taggers that investigate the substructure of boosted jets
+% in order to discrinminate boosted vector bosons from QCD jets form
+% another big class of \emph{jet transformers}. Given an input jet, they
+% search for a 2-pronged structure inside it and thus naturally result
+% in a ``tagged'' jet with new structural information.
 
 At the moment, we have implemented two of the taggers proposed for
 boosted Higgs reconstruction: the \ttt{MassDropTagger} introduced in
@@ -2868,6 +2906,7 @@ Ref. \cite{nsubtagger}. We refer the reader to these articles for an
 extensive description of the taggers and shall only give a very brief
 overview in what follows. 
 
+%......................................................................
 \subsubsection{The mass-drop tagger}
 
 Introduced in \cite{BDRS}, this tagger starts with a fat jet obtained
@@ -2877,7 +2916,7 @@ for boosted Higgs tagging). Tagging then proceeds as follows
 \item the last step of the clustering is undone: $j \to j_1,j_2$, with
   $m_{j_1} > m_{j_2}$,
 \item if there is a significant mass drop, $\mu \equiv m_{j_1}/m_j <
-  \mu_{/rm cut}$, and the splitting is sufficiently symmetric,
+  \mu_{\rm cut}$, and the splitting is sufficiently symmetric,
   $y\equiv {\rm min}(p_{tj_1}^2, p_{tj_2}^2)\Delta R_{j_1j_2}^2/m_j^2
   > y_{\rm cut}$, then $j$ is the resulting heavy particle candidate
   with $j_1$ and $j_2$ its subjets,
@@ -2887,18 +2926,24 @@ for boosted Higgs tagging). Tagging then proceeds as follows
 
 \paragraph{Constraints.} 
 
+[rest of documentation still to be written]
 
 \paragraph{Structure of the result.}
 
 
+%......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
+
 
 \paragraph{Constraints.}
 
 
 \paragraph{Structure of the result.}
 
+%......................................................................
+\subsubsection{The Johns-Hopkins top tagger}
 
+[still to be implemented]
 
 \subsection{User-defined transformers}
 \label{sec:transformerdetails}
