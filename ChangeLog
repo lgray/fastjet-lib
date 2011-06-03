@@ -1,5 +1,10 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/Makefile.am:
+	* example/11-boosted_higgs-new.cc:       ***   ADDED   ***
+	  added a new version of the boosted Higgs example using the new
+	  available tools: MassDropTagger and Filter
+
 	* example/12-filter.cc:
 	  take the 2nd and 3rd jets for the composite-jet example rather
 	  than the two hardest
