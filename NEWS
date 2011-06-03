@@ -40,7 +40,7 @@ Other changes
 - efficiency improvements in PtYPhiM and ghost generation
 - all uses of RangeDefinition now replaced by Selector. Old interfaces with 
   RangeDefinition retained for backwards compatibility, but deprecated.
-- added an example (09) to illustrate how to add user info to a PseudoJet
+- added an example (09) to illustrate how to add user-info to a PseudoJet
 - doxygen output now configured with an internal search engine
 
 Bug fixes
