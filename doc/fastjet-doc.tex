@@ -2078,7 +2078,7 @@ For each jet that passes the selection, \ttt{jet\_density\_class}'s
 is called\footnote{As explained in Appendix \ref{app:function-of-pj}
   describing functions of \ttt{PseudoJet}, user-defined density
   classes derived from \ttt{FunctionOfPseudoJet<double>} should
-  overload \ttt{FunctionOfPseudoJet<double>::apply()}.} and it returns
+  overload \ttt{FunctionOfPseudoJet<double>::result()}.} and it returns
 the quantity that substitutes $p_t/A$.
 %
 \comment{Do we discuss the \ttt{BackgroundJetPtMDensity} class as an
@@ -2754,7 +2754,7 @@ While the action of a \ttt{Transformer} is to be implemented in the
 typically it will be accessed through the \ttt{operator()} function:
 \begin{lstlisting}
   /// just wraps result()
-  PseudoJet operator()(const PseudoJet &pj) const {return apply(pj);}
+  PseudoJet operator()(const PseudoJet &pj) const {return result(pj);}
   /// returns a vector of PseudoJet containing result(...) 
   /// applied to each of input PseudoJets, 
   vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
