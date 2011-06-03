@@ -1,5 +1,15 @@
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 
+	* NEWS:
+	* include/fastjet/config_win.h (FASTJET_PACKAGE_STRING):
+	* configure.ac:
+	* doc/fastjet-doc.tex:
+	* Doxyfile-devel (PROJECT_NUMBER):
+	* Doxyfile (PROJECT_NUMBER):
+	  switched to version number 3.0beta1
+
+2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
+
 	Release of FastJet 3.0alpha3
 
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>

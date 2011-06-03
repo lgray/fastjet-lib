@@ -72,26 +72,26 @@ checklist for 3.0alpha3
 
 3.0a3  make sure it's committed
 
-X.Y.Z  rerun the nightly check
+3.0a3  rerun the nightly check
 
 3.0a3  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 3.0a3  compile manual
 3.0a3  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
 
 3.0a3  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
-X.Y.Z  update main web page & menu in devel area
+3.0a3  update main web page & menu in devel area
 
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
-X.Y.Z  update main web-page area
+3.0a3  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+3.0a3  update main web-page area
 
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+NONO!  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.0a3  make sure it's committed with the CHECKLIST
 
-X.Y.Z  check everything is OK
-X.Y.Z  reset the SISCone link to the trunk
-X.Y.Z  move the version number to X.Y.(Z+1)-devel
+3.0a3  check everything is OK
+3.0a3  reset the SISCone link to the trunk
+3.0a3  move the version number to X.Y.(Z+1)-devel
 
 ----------------------------------------------------------------------
 checklist for 3.0alpha2 (make a copy before editing!)
