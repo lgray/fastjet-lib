@@ -2253,7 +2253,6 @@ Note that \ttt{Subtractor} derives from
 \ttt{FunctionOfPseudoJet<PseudoJet>} (cf.\
 appendix~\ref{app:function-of-pj}).
 
-
 % Once a range has been specified, the following methods, belonging  to
 % the base class \ttt{ClusterSequenceAreaBase}, 
 % are available for extracting the diffuse noise level and its fluctuations:
@@ -2430,117 +2429,119 @@ appendix~\ref{app:function-of-pj}).
 \subsection{Example program with areas and subtraction}
 \label{sec:ex-prog-sub}
 
-\comment{This subsecction still relates to the version 2.x subtraction
-  interface in \fastjet.}
+See \ttt{example/07-subtraction-new.cc}.
 
-The following simplified example program clusters a series of input
-particles into jets, evaluates the median transverse momentum per unit
-area of the event (both for the standard area, and the alternative
-4-vector area), and performs the subtraction of the background noise
-from the hard jets.
-\begin{lstlisting}
-#include "fastjet/ClusterSequenceArea.hh"
-
-namespace fj = fastjet;
-using namespace std;
-
-int main (int argc, char ** argv) {
-
-  // select the jet algorithm (kt with R=0.7)
-  double R = 0.7;
-  fj::JetDefinition jet_def(fj::kt_algorithm,R);
-  // select the area type (active area with default ghosts)
-  fj::AreaDefinition area_def(fj::active_area);
-
-  // read in input particles
-  double px, py , pz, E;
-  vector<fj::PseudoJet> input_particles;
-  while (cin >> px >> py >> pz >> E) {
-    input_particles.push_back(fj::PseudoJet(px,py,pz,E)); 
-  }
-
-  // cluster the event, also obtaining area information
-  fj::ClusterSequenceArea csa(input_particles,jet_def,area_def);
-  
-  // get list of jets with pt > 5 GeV
-  vector<fj::PseudoJet> jets = csa.inclusive_jets(5.0);
-
-  // set the rapidity-azimuth range within which to study background
-  double rapmax = 4.0;
-  fj::RangeDefinition range(rapmax);
-  
-  // get median pt of all jets using standard area
-  double median_pt = csa.median_pt_per_unit_area(range);
-  // get median pt of all jets using area_4vector
-  double median_pt_4vect = csa.median_pt_per_unit_area_4vector(range);
-  
-  cout << "\n Median rho (pt per unit area) = " << median_pt << " GeV\n\n";
-  cout << " i     rap     phi      pt    area  pt_sub pt_sub_4vect " << endl; 
-  // perform subtraction, output results
-    for (unsigned i = 0; i < jets.size(); i++) {
-       // get area of jet i
-       double area = csa.area(jets[i]);
-       // get area_4vector of jet i
-       fj::PseudoJet area4vect = csa.area_4vector(jets[i]);
-       // standard subtraction
-       double pt_sub = jets[i].perp() - median_pt*area;
-       // 4-vector subtraction
-       fj::PseudoJet jet_sub = jets[i] - median_pt_4vect*area4vect;
-
-       // print out results
-       printf("%2u %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n",
-              i, jets[i].rap(), jets[i].phi(), jets[i].perp(), area,
-              pt_sub, jet_sub.perp());
-    }
-}
-\end{lstlisting}
-Note that the above listing ignores the issue of cases where the
-transverse momentum to be subtracted is larger than the jet's $p_t$.
-This occurs when the jet is not really a true hard jet, but rather
-mostly composed of the background contamination.  In such cases, the
-subtraction should not be performed, and the jet should be instead be
-discarded.
-
-For convenience, the above operations are pre-packaged together with a
-certain number of safety checks (in particular if the subtracted
-transverse momentum is too large, routines that return a jet, set all
-of its components to zero. Methods that are given a \ttt{RangeDefinition} object 
-in input, and therefore calculate $\rho$ themselves, do it according to 
-\ttt{area\_4vector}, unless a further input flag is present and \ttt{false}):
-\begin{lstlisting}
-  /// return a vector of all subtracted jets, using area_4vector, given rho.
-  /// Only inclusive_jets above ptmin are subtracted and returned.
-  /// The ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
-  /// i.e. not necessarily ordered in pt once subtracted
-  std::vector<PseudoJet> subtracted_jets(const double rho,
-                                         const double ptmin=0.0) const;
-
-  /// return a vector of subtracted jets, using area_4vector.
-  /// Only inclusive_jets above ptmin are subtracted and returned.
-  /// The ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
-  /// i.e. not necessarily ordered in pt once subtracted
-  std::vector<PseudoJet> subtracted_jets(const RangeDefinition & range, 
-                                         const double ptmin=0.0) const;
-
-  /// return a subtracted jet, using area_4vector, given rho
-  PseudoJet subtracted_jet(const PseudoJet & jet, const double rho) const;
-
-  /// return a subtracted jet, using area_4vector;  note
-  /// that this is potentially inefficient if repeatedly used for many
-  /// different jets, because rho will be recalculated each time around.
-  PseudoJet subtracted_jet(const PseudoJet & jet,
-                           const RangeDefinition & range) const;
-
-  /// return the subtracted pt, given rho
-  double subtracted_pt(const PseudoJet & jet, const double rho,
-	               bool use_area_4vector=false) const;
-
-  /// return the subtracted pt; note that this is
-  /// potentially inefficient if repeatedly used for many different
-  /// jets, because rho will be recalculated each time around.
-  double subtracted_pt(const PseudoJet & jet, const RangeDefinition & range,
-	               bool use_area_4vector=false) const;
-\end{lstlisting}
+% \comment{This subsecction still relates to the version 2.x subtraction
+%   interface in \fastjet.}
+% 
+% The following simplified example program clusters a series of input
+% particles into jets, evaluates the median transverse momentum per unit
+% area of the event (both for the standard area, and the alternative
+% 4-vector area), and performs the subtraction of the background noise
+% from the hard jets.
+% \begin{lstlisting}
+% #include "fastjet/ClusterSequenceArea.hh"
+% 
+% namespace fj = fastjet;
+% using namespace std;
+% 
+% int main (int argc, char ** argv) {
+% 
+%   // select the jet algorithm (kt with R=0.7)
+%   double R = 0.7;
+%   fj::JetDefinition jet_def(fj::kt_algorithm,R);
+%   // select the area type (active area with default ghosts)
+%   fj::AreaDefinition area_def(fj::active_area);
+% 
+%   // read in input particles
+%   double px, py , pz, E;
+%   vector<fj::PseudoJet> input_particles;
+%   while (cin >> px >> py >> pz >> E) {
+%     input_particles.push_back(fj::PseudoJet(px,py,pz,E)); 
+%   }
+% 
+%   // cluster the event, also obtaining area information
+%   fj::ClusterSequenceArea csa(input_particles,jet_def,area_def);
+%   
+%   // get list of jets with pt > 5 GeV
+%   vector<fj::PseudoJet> jets = csa.inclusive_jets(5.0);
+% 
+%   // set the rapidity-azimuth range within which to study background
+%   double rapmax = 4.0;
+%   fj::RangeDefinition range(rapmax);
+%   
+%   // get median pt of all jets using standard area
+%   double median_pt = csa.median_pt_per_unit_area(range);
+%   // get median pt of all jets using area_4vector
+%   double median_pt_4vect = csa.median_pt_per_unit_area_4vector(range);
+%   
+%   cout << "\n Median rho (pt per unit area) = " << median_pt << " GeV\n\n";
+%   cout << " i     rap     phi      pt    area  pt_sub pt_sub_4vect " << endl; 
+%   // perform subtraction, output results
+%     for (unsigned i = 0; i < jets.size(); i++) {
+%        // get area of jet i
+%        double area = csa.area(jets[i]);
+%        // get area_4vector of jet i
+%        fj::PseudoJet area4vect = csa.area_4vector(jets[i]);
+%        // standard subtraction
+%        double pt_sub = jets[i].perp() - median_pt*area;
+%        // 4-vector subtraction
+%        fj::PseudoJet jet_sub = jets[i] - median_pt_4vect*area4vect;
+% 
+%        // print out results
+%        printf("%2u %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n",
+%               i, jets[i].rap(), jets[i].phi(), jets[i].perp(), area,
+%               pt_sub, jet_sub.perp());
+%     }
+% }
+% \end{lstlisting}
+% Note that the above listing ignores the issue of cases where the
+% transverse momentum to be subtracted is larger than the jet's $p_t$.
+% This occurs when the jet is not really a true hard jet, but rather
+% mostly composed of the background contamination.  In such cases, the
+% subtraction should not be performed, and the jet should be instead be
+% discarded.
+% 
+% For convenience, the above operations are pre-packaged together with a
+% certain number of safety checks (in particular if the subtracted
+% transverse momentum is too large, routines that return a jet, set all
+% of its components to zero. Methods that are given a \ttt{RangeDefinition} object 
+% in input, and therefore calculate $\rho$ themselves, do it according to 
+% \ttt{area\_4vector}, unless a further input flag is present and \ttt{false}):
+% \begin{lstlisting}
+%   /// return a vector of all subtracted jets, using area_4vector, given rho.
+%   /// Only inclusive_jets above ptmin are subtracted and returned.
+%   /// The ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+%   /// i.e. not necessarily ordered in pt once subtracted
+%   std::vector<PseudoJet> subtracted_jets(const double rho,
+%                                          const double ptmin=0.0) const;
+% 
+%   /// return a vector of subtracted jets, using area_4vector.
+%   /// Only inclusive_jets above ptmin are subtracted and returned.
+%   /// The ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
+%   /// i.e. not necessarily ordered in pt once subtracted
+%   std::vector<PseudoJet> subtracted_jets(const RangeDefinition & range, 
+%                                          const double ptmin=0.0) const;
+% 
+%   /// return a subtracted jet, using area_4vector, given rho
+%   PseudoJet subtracted_jet(const PseudoJet & jet, const double rho) const;
+% 
+%   /// return a subtracted jet, using area_4vector;  note
+%   /// that this is potentially inefficient if repeatedly used for many
+%   /// different jets, because rho will be recalculated each time around.
+%   PseudoJet subtracted_jet(const PseudoJet & jet,
+%                            const RangeDefinition & range) const;
+% 
+%   /// return the subtracted pt, given rho
+%   double subtracted_pt(const PseudoJet & jet, const double rho,
+% 	               bool use_area_4vector=false) const;
+% 
+%   /// return the subtracted pt; note that this is
+%   /// potentially inefficient if repeatedly used for many different
+%   /// jets, because rho will be recalculated each time around.
+%   double subtracted_pt(const PseudoJet & jet, const RangeDefinition & range,
+% 	               bool use_area_4vector=false) const;
+% \end{lstlisting}
 
 
 %----------------------------------------------------------------------

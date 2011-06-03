@@ -1,5 +1,9 @@
 2011-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* doc/fastjet-doc.tex: 
+	  sorted out documentation of the subtraction (referring readers
+	  to the relevant example).
+
 	* tools/fastjet/tools/Transformer.hh (class Transformer): 
 	  clarified some comments
 
