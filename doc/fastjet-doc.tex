@@ -2259,7 +2259,7 @@ appendix~\ref{app:function-of-pj}).
 % \begin{lstlisting}
 %   // the median of (pt/area) for jets contained within range, 
 %   // making use also of the info on n_empty_jets
-%   double median_pt_per_unit_area(const RangeDefinition & range) const;
+%   double median_pt_per_unt_area(const RangeDefinition & range) const;
 % 
 %   // the median of (pt/area_4vector.perp()) for jets contained within range,
 %   // making use also of the info on n_empty_jets
@@ -2821,16 +2821,18 @@ the pieces of the final filtered jet, rejecting the others.
 Similarly, trimming \cite{trimming} also unclusters a jet into subjets
 but selects the subjets to be kept based on a $p_t$ cut.
 
-The \ttt{Filter} class handles both
+The \ttt{Filter} class, defined in \ttt{fastjet/tools/Filter.hh},
+handles both filtering and trimming. Its constructor
 \begin{lstlisting}
   class Filter : public Transformer {
     Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0);
     ...
   };
 \end{lstlisting}
-reclustering the jet's constituents
-with the jet definition \ttt{subjet\_def} and using \ttt{selector} to
-decide which of these subjets have to be kept. 
+allows one to specify a filter/trimmer that reclusters the jet's
+constituents with the jet definition \ttt{subjet\_def} and then
+applies \ttt{selector} on the \ttt{inclusive\_jets} resulting from the
+clustering to decide which of these (sub)jets have to be kept.
 %
 If \ttt{rho} is non-zero, each of the subjets will be subtracted
 (using the specified value for the background density) prior to the
@@ -2856,9 +2858,10 @@ must be the result of a \ttt{ClusterSequence} with area support and
 explicit ghosts. If any of these requirements fail, an exception will
 be thrown.
 
-\paragraph{Structure of the result.} The \ttt{PseudoJet} resulting
-from the filtering has the following additional structural
-information:
+\paragraph{Structure of the result.} The \ttt{pieces} of the resulting
+filtered/trimmed jet correspond to the subjets that were kept. 
+%
+Additional structural information is available as follows:
 % 
 % will have an associated structure of type
 % \ttt{FilteredJetStructure}, derived from
