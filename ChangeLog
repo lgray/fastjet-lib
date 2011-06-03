@@ -1,3 +1,9 @@
+2011-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* README: 
+	  mods for 3.0, including updated references, mention of new
+	  directories, etc.
+
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/Makefile.am:
