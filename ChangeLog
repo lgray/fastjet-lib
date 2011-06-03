@@ -2,7 +2,7 @@
 
 	* example/12-filter.cc:
 	  take the 2nd and 3rd jets for the composite-jet example rather
-	  than teh two hardest
+	  than the two hardest
 
 	* BUGS:
 	  added a comment about potential issues with plugins relying on
