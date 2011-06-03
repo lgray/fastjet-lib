@@ -96,13 +96,15 @@ public:
   /// default dtor
   virtual ~Transformer(){}
 
-  /// description of the transformer
-  /// This has to be implemented in derived classes
+  /// the result of the Transformer acting on the PseudoJet.
+  /// this _has_ to be overloaded in derived classes
+  /// \param original   the PseudoJet input to the Transformer
+  virtual PseudoJet result(const PseudoJet & original) const = 0;
+
+  /// This should be overloaded to return a description of the
+  /// Transformer
   virtual std::string description() const = 0;
 
-  /// the default action of a Transformer
-  /// This has to be implemented in derived classes
-  virtual PseudoJet result(const PseudoJet & original) const = 0;
 
   /// information about the associated structure type
   typedef PseudoJetStructureBase StructureType;

@@ -2226,7 +2226,33 @@ to reproduce that behaviour.
 \subsection{Background subtraction}
 \label{sec:subtractor}
 
-\comment{Fill this in with the new Subtractor}
+The \ttt{Subtractor} class is defined in
+\ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
+a background estimator:
+\begin{lstlisting}
+  BackgroundEstimator bge(....);
+  Subtractor subtractor(&bge);
+\end{lstlisting}
+The subtractor can then be used as follows:
+\begin{lstlisting}
+  PseudoJet jet;
+  vector<PseudoJet> jets;
+  // ...
+  PseudoJet subtracted_jet = subtractor(jet);
+  vector<PseudoJet> subtracted_jets = subtractor(jets);
+\end{lstlisting}
+The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
+%
+If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then the
+subtractor instead returns a jet with zero 4-momentum.
+%
+In both cases, the returned jet retains the user and structural
+information of the original jet.
+%
+Note that \ttt{Subtractor} derives from
+\ttt{FunctionOfPseudoJet<PseudoJet>} (cf.\
+appendix~\ref{app:function-of-pj}).
+
 
 % Once a range has been specified, the following methods, belonging  to
 % the base class \ttt{ClusterSequenceAreaBase}, 
@@ -2730,11 +2756,11 @@ The common interface to all the transformers, declared in the
 \begin{lstlisting}
   class Transformer : public FunctionOfPseudoJet<PseudoJet> {
   public:
-    // the default action of a Transformer: this returns a 0 PseudoJet
-    // with a PseudoJetStructureBase structure
+    // the result of the Transformer acting on the PseudoJet.
+    // this has to be overloaded in derived classes
     virtual PseudoJet result(const PseudoJet & original) const = 0;
   
-    // description of the transformer
+    // should be overloaded to return a description of the Transformer
     virtual std::string description() const = 0;
   
     // information about the associated structure type
