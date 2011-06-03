@@ -106,9 +106,6 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
       throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
   }
 
-  // deduce a recombiner from the jet
-  //const JetDefinition::Recombiner *recombiner = _deduced_recombiner(jet);
-
   // if we're dealing with a dynamic determination of the filtering
   // radius, do it now
   if (_Rfiltfunc)
@@ -154,15 +151,6 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   fs->_original_jet = jet;
   fs->_rejected = rejected;
   
-  // make sure the filtered jet has the same index (cluster and user)
-  // (i.e. "looks like") the original jet
-  // what about extra info? 
-  //
-  // TODO: do we want this: in principle, this could interfere with
-  //       the recombiner??
-  filtered_jet.set_cluster_hist_index(jet.cluster_hist_index());
-  filtered_jet.set_user_index(jet.user_index());
-
   return filtered_jet;
 }
 

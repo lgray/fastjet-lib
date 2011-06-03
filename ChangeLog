@@ -1,3 +1,12 @@
+2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
+
+	* example/11-boosted_higgs-new.cc:
+	  explicitly set the recombiner to use by the filter
+
+	* tools/Filter.cc (_finalise):
+	  do not reset the user and clust_seq_index of the result of the
+	  Filter to those of the original jet
+
 2011-06-03  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex: 

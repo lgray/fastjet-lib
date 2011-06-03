@@ -202,7 +202,8 @@ int main (int argc, char ** argv) {
   unsigned nfilt = 3;               // number of pieces we'll take
   cout << "Subjet separation (Rbb) = " << Rbb << ", Rfilt = " << Rfilt << endl;
 
-  Filter filter(Rfilt, SelectorNHardest(nfilt));
+  Filter filter(JetDefinition(cambridge_algorithm, Rfilt, &flav_recombiner),
+		SelectorNHardest(nfilt));
   PseudoJet filtered = filter(tagged);
 
   // now print out the filtered jets and reconstruct total 
