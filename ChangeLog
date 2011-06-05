@@ -1,7 +1,11 @@
 2011-06-05  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh: 
-	  rho(jet) was taking a copy rather than a const reference to the jet.
+	  rho(jet) was taking a copy rather than a const reference to the
+	  jet.  In the comments to set_rescaling_class, mentioned the
+	  BackgroundRescalingYPolynomial class as an example, and in the
+	  docuementation for the latter, included the rapidity dependence
+	  that we've been using the LHC7 Pythia8 4C tune
 
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 

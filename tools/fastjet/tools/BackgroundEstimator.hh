@@ -47,6 +47,17 @@ class BackgroundRescalingYPolynomial : public FunctionOfPseudoJet<double> {
 public:
   /// construct a background rescaling polynomial of the form
   /// a0 + a1*y + a2*y^2 + a3*y^3 + a4*y^4
+  ///
+  /// The following values give a reasonable reproduction of the
+  /// Pythia8 tune 4C background shape for pp collisions at
+  /// sqrt(s)=7TeV:
+  ///
+  /// - a0 =  1.157
+  /// - a1 =  0
+  /// - a2 = -0.0266
+  /// - a3 =  0
+  /// - a4 =  0.000048
+  ///
   BackgroundRescalingYPolynomial(double a0=1, 
 				 double a1=0, 
 				 double a2=0, 
@@ -401,6 +412,9 @@ public:
   /// is used both in the determination of the "global" rho (the pt/A
   /// of each jet is divided by this factor) and when asking for a
   /// local rho (the result is multiplied by this factor).
+  ///
+  /// The BackgroundRescalingYPolynomial class can be used to get a
+  /// rescaling that depends just on rapidity.
   void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) {
     _rescaling_class = rescaling_class;
     _uptodate = false;
