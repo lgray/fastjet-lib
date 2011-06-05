@@ -237,7 +237,7 @@ public:
   /// If the Selector associated with the range takes a reference jet
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
-  double rho(const PseudoJet jet) {
+  double rho(const PseudoJet & jet) {
     _recompute_if_needed(jet);
     double our_rho = _rho;
     if (_rescaling_class != 0) { 

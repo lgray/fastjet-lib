@@ -1,3 +1,8 @@
+2011-06-05  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	  rho(jet) was taking a copy rather than a const reference to the jet.
+
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 
 	* NEWS:
