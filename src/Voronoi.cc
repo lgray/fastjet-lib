@@ -233,12 +233,34 @@ Halfedge * VoronoiDiagramGenerator::ELleftbnd(Point *p){
   /* Use hash table to get close to desired halfedge */
   // use the hash function to find the place in the hash map that this
   // HalfEdge should be
-  bucket = (int)((p->x - xmin)/deltax * ELhashsize);	
+  // Gregory Soyez: the original code was 
+  //
+  //   bucket = (int)((p->x - xmin)/deltax * ELhashsize);	
+  //   // make sure that the bucket position in within the range of the
+  //   //hash array
+  //   if (bucket<0) bucket =0;
+  //   if (bucket>=ELhashsize) bucket = ELhashsize - 1;
+  //
+  // but this runs the risk of having a overflow which would 
+  // cause bucket to be truncated at 0 instead of ELhashsize - 1
+  // (or vice-versa)
+  // We fix this by performing the test immediately on the double
+  // We put in a extra bit of margin to be sure the conversion does
+  // not play dirty tricks on us
 
-  // make sure that the bucket position in within the range of the
-  //hash array
-  if (bucket<0) bucket =0;
-  if (bucket>=ELhashsize) bucket = ELhashsize - 1;
+  //const double safety_margin = 0.5*deltax/ELhashsize;
+  //const double &px = p->x;
+  //if (px < xmin+safety_margin){ bucket=0;}
+  //else if (px > xmax-safety_margin){ ELhashsize - 1;}
+  //else{ bucket= (int)((p->x - xmin)/deltax * ELhashsize);}
+
+  //const double &px = p->x;
+  if (p->x < xmin){ bucket=0;}
+  else if (p->x >= xmax){ bucket = ELhashsize - 1;}
+  else{
+    bucket= (int)((p->x - xmin)/deltax * ELhashsize);
+    if (bucket>=ELhashsize) bucket = ELhashsize - 1;  // the lower cut should be robust
+  }
 
   he = ELgethash(bucket);
 
@@ -561,11 +583,31 @@ void VoronoiDiagramGenerator::PQdelete(Halfedge *he)
 
 int VoronoiDiagramGenerator::PQbucket(Halfedge *he)
 {
+  // Gregory Soyez: the original code was 
+  //
+  //   bucket = (int)((he->ystar - ymin)/deltay * PQhashsize);
+  //   if (bucket<0) bucket = 0;
+  //   if (bucket>=PQhashsize) bucket = PQhashsize-1 ;
+  //   if (bucket < PQmin) PQmin = bucket;
+  //   return(bucket);
+  //
+  // but this runs the risk of having a overflow which would 
+  // cause bucket to be truncated at 0 instead of PQhashsize-1
+  // (or vice-versa)
+  // We fix this by performing the test immediately on the double
+  // We put in a extra bit of margin to be sure the conversion does
+  // not play dirty tricks on us
+
   int bucket;
 	
-  bucket = (int)((he->ystar - ymin)/deltay * PQhashsize);
-  if (bucket<0) bucket = 0;
-  if (bucket>=PQhashsize) bucket = PQhashsize-1 ;
+  double hey = he->ystar;
+  if (hey < ymin){ bucket = 0;}
+  else if (hey >= ymax){ bucket = PQhashsize-1;}
+  else {
+    bucket = (int)((hey - ymin)/deltay * PQhashsize);
+    if (bucket>=PQhashsize) bucket = PQhashsize-1 ;
+  }
+
   if (bucket < PQmin) PQmin = bucket;
   return(bucket);
 }
@@ -941,85 +983,82 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 		
       //if the lowest site has a smaller y value than the lowest vector intersection, process the site
       //otherwise process the vector intersection		
-      if (newsite != (Site *)NULL){
-	volatile double local_newsite_coord_y = newsite->coord.y;
-	volatile double local_newintstar_y = newintstar.y;
- 	if (PQempty() ||  local_newsite_coord_y < local_newintstar_y
-	    || ( local_newsite_coord_y == local_newintstar_y && newsite->coord.x < newintstar.x))
-	  {/* new site is smallest - this is a site event*/
-	    out_site(newsite);						//output the site
-	    lbnd = ELleftbnd(&(newsite->coord));				//get the first HalfEdge to the LEFT of the new site
-	    rbnd = ELright(lbnd);						//get the first HalfEdge to the RIGHT of the new site
-	    bot = rightreg(lbnd);						//if this halfedge has no edge, , bot = bottom site (whatever that is)
-	    e = bisect(bot, newsite);					//create a new edge that bisects 
-	    bisector = HEcreate(e, le);					//create a new HalfEdge, setting its ELpm field to 0			
-	    ELinsert(lbnd, bisector);					//insert this new bisector edge between the left and right vectors in a linked list	
+      if (newsite != (Site *)NULL  && (PQempty() || newsite->coord.y < newintstar.y
+				       || (newsite->coord.y == newintstar.y && newsite->coord.x < newintstar.x)))
+	{/* new site is smallest - this is a site event*/
+	  out_site(newsite);						//output the site
+	  lbnd = ELleftbnd(&(newsite->coord));				//get the first HalfEdge to the LEFT of the new site
+	  rbnd = ELright(lbnd);						//get the first HalfEdge to the RIGHT of the new site
+	  bot = rightreg(lbnd);						//if this halfedge has no edge, , bot = bottom site (whatever that is)
+	  e = bisect(bot, newsite);					//create a new edge that bisects 
+	  bisector = HEcreate(e, le);					//create a new HalfEdge, setting its ELpm field to 0			
+	  ELinsert(lbnd, bisector);					//insert this new bisector edge between the left and right vectors in a linked list	
 	    
-	    if ((p = intersect(lbnd, bisector)) != (Site *) NULL) 	//if the new bisector intersects with the left edge, remove the left edge's vertex, and put in the new one
-	      {	
-		PQdelete(lbnd);
-		PQinsert(lbnd, p, dist(p,newsite));
-	      };
-	    lbnd = bisector;						
-	    bisector = HEcreate(e, re);					//create a new HalfEdge, setting its ELpm field to 1
-	    ELinsert(lbnd, bisector);					//insert the new HE to the right of the original bisector earlier in the IF stmt
+	  if ((p = intersect(lbnd, bisector)) != (Site *) NULL) 	//if the new bisector intersects with the left edge, remove the left edge's vertex, and put in the new one
+	    {	
+	      PQdelete(lbnd);
+	      PQinsert(lbnd, p, dist(p,newsite));
+	    };
+	  lbnd = bisector;						
+	  bisector = HEcreate(e, re);					//create a new HalfEdge, setting its ELpm field to 1
+	  ELinsert(lbnd, bisector);					//insert the new HE to the right of the original bisector earlier in the IF stmt
 	    
-	    if ((p = intersect(bisector, rbnd)) != (Site *) NULL)	//if this new bisector intersects with the
-	      {	
-		PQinsert(bisector, p, dist(p,newsite));			//push the HE into the ordered linked list of vertices
-	      };
-	    newsite = nextone();	
-	  }
-	else if (!PQempty()) /* intersection is smallest - this is a vector event */			
-	  {	
-	    lbnd = PQextractmin();						//pop the HalfEdge with the lowest vector off the ordered list of vectors				
-	    llbnd = ELleft(lbnd);						//get the HalfEdge to the left of the above HE
-	    rbnd = ELright(lbnd);						//get the HalfEdge to the right of the above HE
-	    rrbnd = ELright(rbnd);						//get the HalfEdge to the right of the HE to the right of the lowest HE 
-	    bot = leftreg(lbnd);						//get the Site to the left of the left HE which it bisects
-	    top = rightreg(rbnd);						//get the Site to the right of the right HE which it bisects
+	  if ((p = intersect(bisector, rbnd)) != (Site *) NULL)	//if this new bisector intersects with the
+	    {	
+	      PQinsert(bisector, p, dist(p,newsite));			//push the HE into the ordered linked list of vertices
+	    };
+	  newsite = nextone();	
+	}
+      else if (!PQempty()) /* intersection is smallest - this is a vector event */			
+	{	
+	  lbnd = PQextractmin();						//pop the HalfEdge with the lowest vector off the ordered list of vectors				
+	  llbnd = ELleft(lbnd);						//get the HalfEdge to the left of the above HE
+	  rbnd = ELright(lbnd);						//get the HalfEdge to the right of the above HE
+	  rrbnd = ELright(rbnd);						//get the HalfEdge to the right of the HE to the right of the lowest HE 
+	  bot = leftreg(lbnd);						//get the Site to the left of the left HE which it bisects
+	  top = rightreg(rbnd);						//get the Site to the right of the right HE which it bisects
 	    
-	    out_triple(bot, top, rightreg(lbnd));		//output the triple of sites, stating that a circle goes through them
+	  out_triple(bot, top, rightreg(lbnd));		//output the triple of sites, stating that a circle goes through them
 	    
-	    v = lbnd->vertex;						//get the vertex that caused this event
-	    makevertex(v);							//set the vertex number - couldn't do this earlier since we didn't know when it would be processed
-	    endpoint(lbnd->ELedge,lbnd->ELpm,v);	//set the endpoint of the left HalfEdge to be this vector
-	    endpoint(rbnd->ELedge,rbnd->ELpm,v);	//set the endpoint of the right HalfEdge to be this vector
-	    ELdelete(lbnd);							//mark the lowest HE for deletion - can't delete yet because there might be pointers to it in Hash Map	
-	    PQdelete(rbnd);							//remove all vertex events to do with the  right HE
-	    ELdelete(rbnd);							//mark the right HE for deletion - can't delete yet because there might be pointers to it in Hash Map	
-	    pm = le;								//set the pm variable to zero
+	  v = lbnd->vertex;						//get the vertex that caused this event
+	  makevertex(v);							//set the vertex number - couldn't do this earlier since we didn't know when it would be processed
+	  endpoint(lbnd->ELedge,lbnd->ELpm,v);	//set the endpoint of the left HalfEdge to be this vector
+	  endpoint(rbnd->ELedge,rbnd->ELpm,v);	//set the endpoint of the right HalfEdge to be this vector
+	  ELdelete(lbnd);							//mark the lowest HE for deletion - can't delete yet because there might be pointers to it in Hash Map	
+	  PQdelete(rbnd);							//remove all vertex events to do with the  right HE
+	  ELdelete(rbnd);							//mark the right HE for deletion - can't delete yet because there might be pointers to it in Hash Map	
+	  pm = le;								//set the pm variable to zero
 	    
-	    if (bot->coord.y > top->coord.y)		//if the site to the left of the event is higher than the Site
-	      {										//to the right of it, then swap them and set the 'pm' variable to 1
-		temp = bot; 
-		bot = top; 
-		top = temp; 
-		pm = re;
-	      }
-	    e = bisect(bot, top);					//create an Edge (or line) that is between the two Sites. This creates
-	    //the formula of the line, and assigns a line number to it
-	    bisector = HEcreate(e, pm);				//create a HE from the Edge 'e', and make it point to that edge with its ELedge field
-	    ELinsert(llbnd, bisector);				//insert the new bisector to the right of the left HE
-	    endpoint(e, re-pm, v);					//set one endpoint to the new edge to be the vector point 'v'.
-	    //If the site to the left of this bisector is higher than the right
-	    //Site, then this endpoint is put in position 0; otherwise in pos 1
-	    deref(v);								//delete the vector 'v'
+	  if (bot->coord.y > top->coord.y)		//if the site to the left of the event is higher than the Site
+	    {										//to the right of it, then swap them and set the 'pm' variable to 1
+	      temp = bot; 
+	      bot = top; 
+	      top = temp; 
+	      pm = re;
+	    }
+	  e = bisect(bot, top);					//create an Edge (or line) that is between the two Sites. This creates
+	  //the formula of the line, and assigns a line number to it
+	  bisector = HEcreate(e, pm);				//create a HE from the Edge 'e', and make it point to that edge with its ELedge field
+	  ELinsert(llbnd, bisector);				//insert the new bisector to the right of the left HE
+	  endpoint(e, re-pm, v);					//set one endpoint to the new edge to be the vector point 'v'.
+	  //If the site to the left of this bisector is higher than the right
+	  //Site, then this endpoint is put in position 0; otherwise in pos 1
+	  deref(v);								//delete the vector 'v'
 	    
-	    //if left HE and the new bisector don't intersect, then delete the left HE, and reinsert it 
-	    if((p = intersect(llbnd, bisector)) != (Site *) NULL)
-	      {	
-		PQdelete(llbnd);
-		PQinsert(llbnd, p, dist(p,bot));
-	      };
+	  //if left HE and the new bisector don't intersect, then delete the left HE, and reinsert it 
+	  if((p = intersect(llbnd, bisector)) != (Site *) NULL)
+	    {	
+	      PQdelete(llbnd);
+	      PQinsert(llbnd, p, dist(p,bot));
+	    };
 	    
-	    //if right HE and the new bisector don't intersect, then reinsert it 
-	    if ((p = intersect(bisector, rrbnd)) != (Site *) NULL)
-	      {	
-		PQinsert(bisector, p, dist(p,bot));
-	      };
-	  }
-      } else break;
+	  //if right HE and the new bisector don't intersect, then reinsert it 
+	  if ((p = intersect(bisector, rrbnd)) != (Site *) NULL)
+	    {	
+	      PQinsert(bisector, p, dist(p,bot));
+	    };
+	}
+      else break;
     };
 
 	

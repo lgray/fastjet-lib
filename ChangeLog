@@ -1,3 +1,14 @@
+2011-06-14  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/Voronoi.cc:
+	  - fixed potential overflow issue when computing buckets in the
+	    hash: we compare the position to the boundaries before making
+	    the conversion to an int (avoids potential overflow issues)
+	  - fixed completion test in the main loop (if there were still
+	    some events to be processed in the priority queue after the
+	    last site was considered, the previous version was stopping,
+	    leaving an incomplete VD)
+
 2011-06-05  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh: 
