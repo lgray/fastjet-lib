@@ -57,6 +57,13 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// The other way of working this is a template class with an 
 /// internal typedef (http://bytes.com/topic/c/answers/60312-typedef-template)
 /// since templated typedefs don't work in standard C++
+///
+/// Note that some facilities that are present in the FastJet shared
+/// pointer (resetting use-count) are not handled by the TR1 shared
+/// pointer; and the FastJet SharedPtr has a different underlying data
+/// structure from the TR1 shared pointer, which prevents us from
+/// implementing some of TR1 features (notably assignment from shared
+/// pointers to a derived class).
 template<class T>
 class SharedPtr : public std::tr1::shared_ptr<T> {
 public:
@@ -122,15 +129,20 @@ public:
   
   /// overload the copy ctor so that it updates count
   /// \param  share : the object we want to copy
-  SharedPtr(SharedPtr const & share) : _ptr(NULL){
-    reset(share);
+  SharedPtr(SharedPtr const & share) : _ptr(share._get_container()){
+    if (_ptr!=NULL) (*_ptr)++;
   }
+  // old version
+  //  SharedPtr(SharedPtr const & share) : _ptr(NULL){
+  //    reset(share);
+  //  }
     
-  /// overload the copy ctor so that it updates count
-  /// \param  share : the object we want to copy
-  template<class Y> SharedPtr(SharedPtr<Y> const & share) : _ptr(NULL){
-    reset(share);
-  }
+  // will not work with the current structure
+  // /// overload the copy ctor so that it updates count
+  // /// \param  share : the object we want to copy
+  // template<class Y> SharedPtr(SharedPtr<Y> const & share) : _ptr(NULL){
+  //   reset(share);
+  // }
 
   /// default dtor
   ~SharedPtr(){
@@ -148,6 +160,7 @@ public:
     SharedPtr().swap(*this);
   }
   
+  // will not work with the current structure
   /// reset from a pointer
   template<class Y> void reset(Y * ptr){
     // // if we already are pointing to sth, be sure to decrease its count
@@ -162,6 +175,7 @@ public:
   /// \param  share : the object we want to copy
   /// Q? Do we need a non-template<Y> version as for the ctor and the assignment?
   template<class Y> void reset(SharedPtr<Y> const & share){
+  //void reset(SharedPtr const & share){
     // if we already are pointing to sth, be sure to decrease its count
     if (_ptr!=NULL){
       // in the specific case where we're having the same
@@ -206,8 +220,9 @@ public:
   /// indirection, get a reference to the stored pointer
   ///
   /// !!! WATCH OUT
-  /// It fails the requirement that the stored pointer must no be NULL!!
-  /// So you need explicitly to check the validity in your code
+  /// It fails to check the requirement that the stored pointer must
+  /// not be NULL!!  So you need explicitly to check the validity in
+  /// your code
   inline T& operator*() const{
     return *(_ptr->get());
   }
@@ -215,8 +230,9 @@ public:
   /// indirection, get the stored pointer
   ///
   /// !!! WATCH OUT
-  /// It fails the requirement that the stored pointer must no be NULL!!
-  /// So you need explicitly to check the validity in your code
+  /// It fails to check the requirement that the stored pointer must
+  /// not be NULL!!  So you need explicitly to check the validity in
+  /// your code
   inline T* operator->() const{
     if (_ptr==NULL) return NULL;
     return _ptr->get();

@@ -1,3 +1,8 @@
+2011-06-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/SharedPtr.hh: 
+	  speeded up the constructor from another SharedPtr.
+
 2011-06-14  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/Voronoi.cc:
@@ -26,7 +31,7 @@
 	* doc/fastjet-doc.tex:
 	* Doxyfile-devel (PROJECT_NUMBER):
 	* Doxyfile (PROJECT_NUMBER):
-	  switched to version number 3.0beta1
+	  switched to version number 3.0beta1-devel
 
 2011-06-03  Gregory Soyez  <soyez@fastjet.fr> & Gavin
 
