@@ -1266,8 +1266,12 @@ void ClusterSequence::_do_ij_recombination_step(
 			       const double & dij, 
 			       int & newjet_k) {
 
-  // create the new jet by recombining the first two
-  PseudoJet newjet;
+  // Create the new jet by recombining the first two.
+  //
+  // For efficiency reasons, use a ctr that initialises only the
+  // shared pointers, since the rest of the info will anyway be dealt
+  // with by the recombiner.
+  PseudoJet newjet(false); 
   _jet_def.recombiner()->recombine(_jets[jet_i], _jets[jet_j], newjet);
   _jets.push_back(newjet);
   // original version...

@@ -74,11 +74,32 @@ class PseudoJet {
   // cases better than just having the default constructor for the
   // internal shared pointer: see PJtiming.cc and the notes therein)
   PseudoJet() : _px(0), _py(0), _pz(0), _E(0) {_finish_init(); _reset_indices();}
+  
+
+
+//  /// GPS testing *********************
+//   PseudoJet(const PseudoJet & pj) : _structure(pj._structure),
+// 				    _user_info(pj._user_info),
+// 				    _px(pj._px),
+// 				    _py(pj._py),
+// 				    _pz(pj._pz),
+// 				    _E (pj._E ),
+//  				    _phi(pj._phi),
+// 				    _rap(pj._rap),
+// 				    _kt2(pj._kt2),
+// 				    _cluster_hist_index(pj._cluster_hist_index),
+// 				    _user_index(pj._user_index) {}
+
 
   /// construct a pseudojet from explicit components
   PseudoJet(const double px, const double py, const double pz, const double E);
+
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
-  template <class L> PseudoJet(const L & some_four_vector) ;
+  template <class L> PseudoJet(const L & some_four_vector);
+
+  // Constructor that performs minimal initialisation (only that of
+  // the shared pointers), of use in certain speed-critical contexts
+  PseudoJet(bool dummy) {}
 
   /// default (virtual) destructor
   virtual ~PseudoJet(){};
@@ -209,7 +230,7 @@ class PseudoJet {
   /// reset the 4-momentum according to the supplied components and
   /// put the user and history indices back to their default values
   inline void reset(double px, double py, double pz, double E);
-  
+
   /// reset the PseudoJet to be equal to psjet (including its
   /// indices); NB if the argument is derived from a PseudoJet then
   /// the "reset" used will be the templated version
@@ -812,7 +833,6 @@ private:
 template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
   reset(some_four_vector);
 }
-
 
 //----------------------------------------------------------------------
 inline void PseudoJet::_reset_indices() { 

@@ -1,10 +1,18 @@
 2011-06-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJet.hh: 
+	  introduced a new constructor that takes a bool as an argument;
+	  its value is ignored, while but its presence indicates that
+	  there should be no initialisation of anything other than the
+	  shared pointers.
+
 	* src/JetDefinition.cc (DefaultRecombiner::recombine): 
 
 	  replaced pab=pa+pb with pab.reset(x,y,z,E), which gives some
 	  speed gain when this is a time-critical step (a factor of 1.2 to
-	  1.7 in tests of CCN32-83 )
+	  1.7 in tests of CCN32-83). Also made use of the non-initialising
+	  constructor for the temporary result variable, to gain a few
+	  more percent in speed.
 
 2011-06-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
