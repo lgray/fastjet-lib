@@ -184,7 +184,13 @@ void JetDefinition::DefaultRecombiner::recombine(
 
   switch(_recomb_scheme) {
   case E_scheme:
-    pab = pa + pb; 
+    // a call to reset turns out to be somewhat more efficient
+    // than a sum and assignment
+    //pab = pa + pb; 
+    pab.reset(pa.px()+pb.px(),
+    	      pa.py()+pb.py(),
+    	      pa.pz()+pb.pz(),
+    	      pa.E ()+pb.E ());
     return;
   // all remaining schemes are massless recombinations and locally
   // we just set weights, while the hard work is done below...
