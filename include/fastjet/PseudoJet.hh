@@ -263,10 +263,26 @@ class PseudoJet {
     }
   }
 
+  /// reset the PseudoJet according to the specified pt, rapidity,
+  /// azimuth and mass (also resetting indices, etc.)
+  inline void reset_PtYPhiM(double pt, double y, double phi, double m=0.0) {
+    reset_momentum_PtYPhiM(pt, y, phi, m);
+    _reset_indices();
+  }
+
   /// reset the 4-momentum according to the supplied components 
   /// but leave all other information (indices, user info, etc.)
   /// untouched
   inline void reset_momentum(double px, double py, double pz, double E);
+
+  /// reset the 4-momentum according to the components of the supplied
+  /// PseudoJet, including cached components; note that the template
+  /// version (below) will be called for classes derived from PJ.
+  inline void reset_momentum(const PseudoJet & pj);
+
+  /// reset the 4-momentum according to the specified pt, rapidity,
+  /// azimuth and mass
+  void reset_momentum_PtYPhiM(double pt, double y, double phi, double m=0.0);
 
   /// reset the 4-momentum according to the supplied generic 4-vector
   /// (accessible via indexing, [0]==px,...[3]==E), but leave all
@@ -882,6 +898,15 @@ inline void PseudoJet::reset_momentum(double px, double py, double pz, double E)
   _finish_init();
 }
 
+inline void PseudoJet::reset_momentum(const PseudoJet & pj) {
+  _px  = pj._px ;
+  _py  = pj._py ;
+  _pz  = pj._pz ;
+  _E   = pj._E  ;
+  _phi = pj._phi;
+  _rap = pj._rap;
+  _kt2 = pj._kt2;
+}
 
 //-------------------------------------------------------------------------------
 // implementation of the templated accesses to the underlying structyre

@@ -1,3 +1,25 @@
+2011-06-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/JetDefinition.cc (DefaultRecombiner::preprocess): 
+	  modified some of the preprocessing code for non-E-scheme
+	  clustering and also got the recombination code to use
+	  reset_PtYPhiM; checked that results don't change.
+
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc
+	  (ClustSeqActAreaEG::_post_process): 
+	  tried to avoid some temporary PJs, but not clear this helps much.
+
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh: 
+	  added an extra couple of reserve statements, that give some
+	  speed gain in tests.
+
+	* src/PseudoJet.cc
+	* include/fastjet/PseudoJet.hh (PseudoJet::reset_momentum): 
+	  added reset_momentum(const PJ & );
+	  added PseudoJet::reset_momentum_PtYPhiM(...), 
+	        PseudoJet::reset_PtYPhiM(...),
+	  which can bring speed advantages in some cases (e.g. recombiner).
+	  
 2011-06-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 
@@ -13,6 +35,10 @@
 	  1.7 in tests of CCN32-83). Also made use of the non-initialising
 	  constructor for the temporary result variable, to gain a few
 	  more percent in speed.
+
+	* src/JetDefinition.cc (DefaultRecombiner::preprocess): 
+	  fixed this to use reset_momentum for non-E schemes (more
+	  efficient + touches neither user index nor user info).
 
 2011-06-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 

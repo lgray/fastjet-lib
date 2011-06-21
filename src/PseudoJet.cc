@@ -316,6 +316,18 @@ bool have_same_momentum(const PseudoJet & jeta, const PseudoJet & jetb) {
 
 
 //----------------------------------------------------------------------
+void PseudoJet::reset_momentum_PtYPhiM(double pt, double y, double phi, double m) {
+  double ptm = (m == 0) ? pt : sqrt(pt*pt+m*m);
+  double exprap = exp(y);
+  double pminus = ptm/exprap;
+  double pplus  = ptm*exprap;
+  double px = pt*cos(phi);
+  double py = pt*sin(phi);
+  reset_momentum(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
+  set_cached_rap_phi(y,phi);
+}
+
+//----------------------------------------------------------------------
 /// return a pseudojet with the given pt, y, phi and mass
 PseudoJet PtYPhiM(double pt, double y, double phi, double m) {
   double ptm = (m == 0) ? pt : sqrt(pt*pt+m*m);

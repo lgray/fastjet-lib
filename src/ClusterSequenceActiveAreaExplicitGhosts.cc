@@ -141,6 +141,19 @@ void ClustSeqActAreaEG::_post_process() {
   _area_4vectors.resize(_history.size());
   _is_pure_ghost.resize(_history.size());
   
+//   copy(_jets.begin(), _jets.begin()+_initial_n, _area_4vectors.begin());
+//   for (int i = 0; i < _initial_n; i++) {
+//     if (_is_pure_ghost[i]) {
+//       _areas[i] = _ghost_area;
+//       // normalise pt to be _ghost_area (NB we make use of fact that
+//       // for initial particles, jet and clust_hist index are the same).
+//       _area_4vectors[i] *= (_ghost_area/_jets[i].perp());
+//     } else {
+//       _areas[i] = 0;
+//       _area_4vectors[i].reset(0,0,0,0);
+//     }
+//   }
+  
   // First set up areas for the initial particles (ghost=_ghost_area,
   // real particles = 0); recall that _initial_n here is the number of
   // particles including ghosts
@@ -149,7 +162,9 @@ void ClustSeqActAreaEG::_post_process() {
       _areas[i] = _ghost_area;
       // normalise pt to be _ghost_area (NB we make use of fact that
       // for initial particles, jet and clust_hist index are the same).
-      _area_4vectors[i] = (_ghost_area/_jets[i].perp()) * _jets[i];
+      //_area_4vectors[i] = (_ghost_area/_jets[i].perp()) * _jets[i];
+      _area_4vectors[i] = _jets[i];
+      _area_4vectors[i] *= (_ghost_area/_jets[i].perp());
     } else {
       _areas[i] = 0;
       _area_4vectors[i] = PseudoJet(0.0,0.0,0.0,0.0);

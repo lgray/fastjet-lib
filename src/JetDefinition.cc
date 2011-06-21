@@ -222,13 +222,16 @@ void JetDefinition::DefaultRecombiner::recombine(
     if (phi_a - phi_b > pi)  phi_b += twopi;
     if (phi_a - phi_b < -pi) phi_b -= twopi;
     double phi_ab = (weighta * phi_a + weightb * phi_b)/(weighta+weightb);
-    
-    pab = PseudoJet(perp_ab*cos(phi_ab),
-		    perp_ab*sin(phi_ab),
-		    perp_ab*sinh(y_ab),
-		    perp_ab*cosh(y_ab));
+
+    // this is much more efficient...
+    pab.reset_PtYPhiM(perp_ab,y_ab,phi_ab);
+    // pab = PseudoJet(perp_ab*cos(phi_ab),
+    // 		    perp_ab*sin(phi_ab),
+    // 		    perp_ab*sinh(y_ab),
+    // 		    perp_ab*cosh(y_ab));
   } else { // weights are zero
-    pab = PseudoJet(0.0,0.0,0.0,0.0);
+    //pab = PseudoJet(0.0,0.0,0.0,0.0);
+    pab.reset(0.0, 0.0, 0.0, 0.0);
   }
 }
 
@@ -245,9 +248,11 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
       // these schemes (as in the ktjet implementation) need massless
       // initial 4-vectors with essentially E=|p|.
       double newE = sqrt(p.perp2()+p.pz()*p.pz());
-      int    user_index = p.user_index();
-      p = PseudoJet(p.px(), p.py(), p.pz(), newE);
-      p.set_user_index(user_index);
+      p.reset_momentum(p.px(), p.py(), p.pz(), newE);
+      // FJ2.x version
+      // int    user_index = p.user_index();
+      // p = PseudoJet(p.px(), p.py(), p.pz(), newE);
+      // p.set_user_index(user_index);
     }
     break;
   case Et_scheme:
@@ -256,9 +261,11 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
       // these schemes (as in the ktjet implementation) need massless
       // initial 4-vectors with essentially E=|p|.
       double rescale = p.E()/sqrt(p.perp2()+p.pz()*p.pz());
-      int    user_index = p.user_index();
-      p = PseudoJet(rescale*p.px(), rescale*p.py(), rescale*p.pz(), p.E());
-      p.set_user_index(user_index);
+      p.reset_momentum(rescale*p.px(), rescale*p.py(), rescale*p.pz(), p.E());
+      // FJ2.x version
+      // int    user_index = p.user_index();
+      // p = PseudoJet(rescale*p.px(), rescale*p.py(), rescale*p.pz(), p.E());
+      // p.set_user_index(user_index);
     }
     break;
   default:

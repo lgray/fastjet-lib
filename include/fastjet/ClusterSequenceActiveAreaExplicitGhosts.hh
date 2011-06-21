@@ -198,8 +198,11 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
   _initial_hard_n = _jets.size();
 
   if (ghost_spec != NULL) {
+    //std::cout << "about to reserve " << (_jets.size()+ghost_spec->n_ghosts())*2 << std::endl;
+    _jets.reserve((_jets.size()+ghost_spec->n_ghosts()));
     _add_ghosts(*ghost_spec);
   } else {
+    _jets.reserve(_jets.size()+ghosts->size());
     _add_ghosts(*ghosts, ghost_area);
   }
 
@@ -214,7 +217,8 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
 
   // this will ensure that we can still point to jets without
   // difficulties arising!
-  _jets.reserve(_jets.size()*2);
+  //std::cout << _jets.size() << " " << _jets.size()*2 << " " << _jets.max_size() << std::endl;
+  _jets.reserve(_jets.size()*2); //GPS tmp removed
 
   // run the clustering
   _initialise_and_run(jet_def,writeout_combinations);
