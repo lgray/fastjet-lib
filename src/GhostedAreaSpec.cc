@@ -78,11 +78,22 @@ void GhostedAreaSpec::_initialize() {
   // add on area-measuring dummy particles
   _drap = sqrt(_ghost_area);
   _dphi = _drap;
-  _nphi = int(ceil(twopi/_dphi)); _dphi = twopi/_nphi;
-  _nrap = int(ceil(_ghost_maxrap/_drap)); _drap = _ghost_maxrap / _nrap;
-  _actual_ghost_area = _dphi * _drap;
-  _n_ghosts   = (2*_nrap+1)*_nphi;
-
+  if (_fj2_placement) {
+    _nphi = int(ceil(twopi/_dphi)); _dphi = twopi/_nphi;
+    _nrap = int(ceil(_ghost_maxrap/_drap)); _drap = _ghost_maxrap / _nrap;
+    _actual_ghost_area = _dphi * _drap;
+    _n_ghosts   = (2*_nrap+1)*_nphi;
+  } else {
+    // for FJ3, update the ghost placement as follows
+    // - use nearest int rather than ceiling in determining number of
+    //   phi and rapidity locations, because this is more stable when
+    //   the user is trying to get an exact number based on the area
+    // - rather than placing ghosts up to maximum rapidity
+    _nphi = int(twopi/_dphi + 0.5); _dphi = twopi/_nphi;
+    _nrap = int(_ghost_maxrap/_drap + 0.5); _drap = _ghost_maxrap / _nrap;
+    _actual_ghost_area = _dphi * _drap;
+    _n_ghosts   = (2*_nrap)*_nphi;
+  }
   // checkpoint the status of the random number generator.
   checkpoint_random();
   //_random_generator.info(cerr);
@@ -91,8 +102,19 @@ void GhostedAreaSpec::_initialize() {
 //----------------------------------------------------------------------
 /// adds the ghost 4-momenta to the vector of PseudoJet's
 void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
+
+  double rap_offset;
+  int nrap_upper;
+  if (_fj2_placement) {
+    rap_offset  = 0.0;
+    nrap_upper  = _nrap;
+  } else {
+    rap_offset  = 0.5;
+    nrap_upper  = _nrap-1;
+  }
+
   // add momenta for ghosts
-  for (int irap = -_nrap; irap <= _nrap; irap++) {
+  for (int irap = -_nrap; irap <= nrap_upper; irap++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
      
       // include random offsets for all quantities
@@ -101,8 +123,10 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       // standard definition of phi; to preserve the same areas as fj2
       // we now generate a "phi_fj2", and then convert to a standard phi
       double phi_fj2 = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
-      double phi = 0.5*pi - phi_fj2;
-      double rap = irap * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
+      double phi;
+      if (_fj2_placement) phi = 0.5*pi - phi_fj2;
+      else                phi = phi_fj2;
+      double rap = (irap+rap_offset) * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
 	                                                 + _ghost_rap_offset ;
       double kt = _mean_ghost_kt*(1+(_our_rand()-0.5)*_kt_scatter);
 

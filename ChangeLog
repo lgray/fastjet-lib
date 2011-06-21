@@ -1,5 +1,23 @@
 2011-06-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* example/fastjet_areas.cc: 
+	  made a call set set_fj2_placement(true) so that make check
+	  continues to work.
+
+	* include/fastjet/GhostedAreaSpec.hh: 
+	* src/GhostedAreaSpec.cc: 
+	  Changed default ghost placement so that 
+
+	  - number of phi and rapidity intervals rounded to nearest
+	    integer (rather than up, which is less stable)
+	  - rapidities offset by sqrt(area)/2 so that total area of
+	    ghosts matches 2*rapmax.
+	  - phi placed sensibly (i.e. no longer reproduce funny FJ2 phi definition)
+
+          Old behaviour can be obtained by calling
+	  set_fj2_placement(true). The new behaviour produces ghosts that
+	  should match nicely onto centres of the GridJet tiles.
+	
 	* src/JetDefinition.cc (DefaultRecombiner::preprocess): 
 	  modified some of the preprocessing code for non-E-scheme
 	  clustering and also got the recombination code to use

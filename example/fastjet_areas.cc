@@ -101,6 +101,7 @@ int main (int argc, char ** argv) {
     // get an area definition
     fastjet::GhostedAreaSpec ghost_spec(ghost_etamax, active_area_repeats, 
                                         ghost_area);
+    ghost_spec.set_fj2_placement(true); // for make check to work
     area_def = fastjet::AreaDefinition(fastjet::passive_area,ghost_spec);
     //area_def = fastjet::AreaDefinition(fastjet::active_area,ghost_spec);
   } else {

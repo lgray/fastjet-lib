@@ -70,7 +70,7 @@ public:
                     _grid_scatter (gas::def_grid_scatter), 
                     _kt_scatter   (gas::def_kt_scatter), 
                     _mean_ghost_kt(gas::def_mean_ghost_kt),
-                    _actual_ghost_area(-1.0) {_initialize();};
+                    _fj2_placement(false) {_initialize();}
   
   /// explicit constructor
   explicit GhostedAreaSpec(double ghost_maxrap, 
@@ -87,7 +87,7 @@ public:
     _grid_scatter(grid_scatter),  
     _kt_scatter(kt_scatter), 
     _mean_ghost_kt(mean_ghost_kt),
-    _actual_ghost_area(-1.0) {_initialize();};
+    _fj2_placement(false) {_initialize();}
 
   /// explicit constructor
   explicit GhostedAreaSpec(double ghost_minrap, 
@@ -105,7 +105,7 @@ public:
     _grid_scatter(grid_scatter),  
     _kt_scatter(kt_scatter), 
     _mean_ghost_kt(mean_ghost_kt),
-    _actual_ghost_area(-1.0) {_initialize();};
+    _fj2_placement(false) {_initialize();}
 
 
   /// constructor based on a Selector
@@ -122,26 +122,45 @@ public:
   void _initialize();
 
   // for accessing values set by the user
-  inline double ghost_etamax() const {return _ghost_maxrap;};
-  inline double ghost_maxrap() const {return _ghost_maxrap;};
-  inline double ghost_area   () const {return _ghost_area   ;};
-  inline double grid_scatter() const {return _grid_scatter;};
-  inline double kt_scatter  () const {return _kt_scatter  ;};
-  inline double mean_ghost_kt() const {return _mean_ghost_kt  ;};
-  inline int    repeat      () const {return _repeat      ;};
+  inline double ghost_etamax() const {return _ghost_maxrap;}
+  inline double ghost_maxrap() const {return _ghost_maxrap;}
+  inline double ghost_area   () const {return _ghost_area   ;}
+  inline double grid_scatter() const {return _grid_scatter;}
+  inline double kt_scatter  () const {return _kt_scatter  ;}
+  inline double mean_ghost_kt() const {return _mean_ghost_kt  ;}
+  inline int    repeat      () const {return _repeat      ;}
+  inline bool   fj2_placement() const{return _fj2_placement;}
 
   // for accessing values 
-  inline double actual_ghost_area() const {return _actual_ghost_area;};
-  inline int    n_ghosts()          const {return _n_ghosts;};
+  inline double actual_ghost_area() const {return _actual_ghost_area;}
+  inline int    n_ghosts()          const {return _n_ghosts;}
 
   // when explicitly modifying values, sometimes call the initializer
-  inline void set_ghost_area   (double val) {_ghost_area    = val; _initialize();};
-  inline void set_ghost_etamax(double val) {_ghost_maxrap = val; _initialize();};
-  inline void set_ghost_maxrap(double val) {_ghost_maxrap = val; _initialize();};
-  inline void set_grid_scatter(double val) {_grid_scatter   = val; };
-  inline void set_kt_scatter  (double val) {_kt_scatter     = val; };
-  inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; };
-  inline void set_repeat      (int    val) {_repeat         = val; };
+  inline void set_ghost_area   (double val) {_ghost_area    = val; _initialize();}
+  inline void set_ghost_etamax(double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_ghost_maxrap(double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_grid_scatter(double val) {_grid_scatter   = val; }
+  inline void set_kt_scatter  (double val) {_kt_scatter     = val; }
+  inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; }
+  inline void set_repeat      (int    val) {_repeat         = val; }
+
+  /// if val is true, set ghost placement as it was in FastJet 2.X. The
+  /// main differences between FJ2 and FJ3 ghost placement are
+  ///
+  ///  - in FJ2 the rapidity spacing was
+  ///    ceil((maxrap-minrap)/sqrt(area)), while in FJ3 it is
+  ///    int((maxrap-minrap)/sqrt(area) + 0.5) [similarly for phi].
+  ///    The FJ3 option offers more stability when trying to specify a
+  ///    spacing that exactly fits the extent.
+  ///
+  /// - in FJ2, the ghosts are placed at the corners of grid cells
+  ///   (i.e. extending up to maxrap), while in FJ3 they are placed at
+  ///   the centres of grid cells (i.e. extending roughly up to
+  ///   maxrap-sqrt(area)). The FJ2 behaviour effectively skews the
+  ///   total area coverage when maxrap is small, by an amount
+  ///   sqrt(area)/(2*maxrap).
+  ///
+  inline void set_fj2_placement(bool  val) {_fj2_placement  = val; _initialize();}
 
   /// return nphi (ghosts layed out (-nrap, 0..nphi-1), (-nrap+1,0..nphi-1),
   /// ... (nrap,0..nphi-1)
@@ -174,7 +193,7 @@ public:
 
   /// very deprecated public access to a random number 
   /// from the internal generator
-  inline double random_at_own_risk() const {return _our_rand();};
+  inline double random_at_own_risk() const {return _our_rand();}
   /// very deprecated public access to the generator itself
   inline BasicRandom<double> & generator_at_own_risk() const {
     return _random_generator;}
@@ -189,6 +208,7 @@ private:
   double _grid_scatter;
   double _kt_scatter  ;
   double _mean_ghost_kt;
+  bool   _fj2_placement;
 
   Selector _selector;
 
@@ -201,7 +221,7 @@ private:
   static BasicRandom<double> _random_generator;
   //mutable BasicRandom<double> _random_generator;
 
-  inline double _our_rand() const {return _random_generator();};
+  inline double _our_rand() const {return _random_generator();}
   
 };
 
