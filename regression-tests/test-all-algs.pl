@@ -167,7 +167,18 @@ foreach $strat (@strat) {
   if ($error) {
     $OK = "*** BAD (crash?) ***"
   } elsif (exists($refResults{$name}) && $sum ne "unavailable") {
-    $OK = ($sum eq $refResults{$name}) ? "OK" : "*** BAD ***";
+    # we can have one or more reference results
+    if (ref($refResults{$name}) eq "ARRAY") {
+      $OK = "*** BAD ***";
+      foreach $ref (@{$refResults{$name}}) {
+	if ($sum eq $ref) {
+	  $OK = "OK";
+	  last;
+	}
+      }
+    } else {
+      $OK = ($sum eq $refResults{$name}) ? "OK" : "*** BAD ***";
+    }
   } else { 
     $OK = "-";
     if ($sum ne "unavailable") {$refResults{$name} = $sum;}
@@ -419,7 +430,8 @@ sub setRefResults {
   # old R def for eegenkt
   #"Pythia-PtMin50-LHC-10kev.dat,nev1000,eegenkt:0,R0.60" => "48cb5d5a8a5f636d07569745e5be29e4",
   #"Pythia-PtMin50-LHC-10kev.dat,nev1000,eegenkt:-1,R0.60" => "e54ecd5d535f2f3d7ddffc1bfd43462c",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,trackjet,R0.60" => "865e8763a52f63e43bb5ac781a8087f1",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,trackjet,R0.60" => 
+      ["865e8763a52f63e43bb5ac781a8087f1","ac8025d4f4a0349f3f9af6538ace8cbb"],
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,atlascone,R0.60" => "5efdfffa446604f043c0444bc09e0f8a",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cmsiterativecone,R0.60" => "31a543ee68e64eb67d5b242188cb7aab",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,jade:-excly:0.01,R0.60" => "b4aef5930856daafb294ddce66834bc7",

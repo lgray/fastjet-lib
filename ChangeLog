@@ -1,3 +1,13 @@
+2011-06-23  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl: 
+
+	  $refResults{$name} can now be a reference to an array of valid
+	  checksum results or a single checksum result. Exploited this for
+	  the trackjet 1000 run, including the result corresponding to the
+	  new recombination code (checked manually that differences are
+	  just at the level of rounding errors).
+
 2011-06-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_areas.cc: 
