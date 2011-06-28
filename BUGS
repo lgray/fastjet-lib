@@ -72,10 +72,10 @@ Other issues to be aware of
 Probably solved
 ---------------
 
-. Compilation issues have been reported under windows with the VC7.1
-  compiler. We have incorporated fixes proposed by Ivan Belyaev for
-  this, but do not have access to an appropriate machine to test it
-  ourselves. (NB: it in any case works with cygwin).
+1. Compilation issues have been reported under windows with the VC7.1
+   compiler. We have incorporated fixes proposed by Ivan Belyaev for
+   this, but do not have access to an appropriate machine to test it
+   ourselves. (NB: it in any case works with cygwin).
 
 
 
