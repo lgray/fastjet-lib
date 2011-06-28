@@ -1,5 +1,14 @@
 2011-06-28  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/Voronoi.hh:
+	* src/Voronoi.cc:0000000000000000000000000000000000000000000000000000
+	  imported the fixes to the Fortune/O'Sullivan code for the
+	  Voronoi diagram generator from the fastjet-2.4.X (2.4.4) branch:
+	  - dealt with nearly-degenerate parent points in "intersection"
+	  - handled coniciding particles (assign the full cell to the
+	    first of the coinciding particles + print a warning).
+	  - solved an overflow issue/
+
 	* regression-tests/test-all-algs.pl:
 	  updated the reference results using "stable_sort"
 

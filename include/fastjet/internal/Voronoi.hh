@@ -57,7 +57,7 @@
 * PURPOSE.
 */
 
-#include "fastjet/ClusterSequenceWithArea.hh"
+#include "fastjet/internal/LimitedWarning.hh"
 #include <vector>
 #include <math.h>
 #include <stdlib.h>
@@ -66,8 +66,6 @@
 #define DELETED -2
 #define le 0
 #define re 1
-
-//using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -326,6 +324,8 @@ private:
   GraphEdge* iteratorEdges;
   
   double minDistanceBetweenSites;
+
+  static LimitedWarning _warning_degeneracy;
 };
 
 int scomp(const void *p1,const void *p2);

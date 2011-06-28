@@ -61,6 +61,8 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE
 
+LimitedWarning VoronoiDiagramGenerator::_warning_degeneracy;
+
 VoronoiDiagramGenerator::VoronoiDiagramGenerator(){
   siteidx = 0;
   sites = NULL;
@@ -138,7 +140,28 @@ bool VoronoiDiagramGenerator::generateVoronoi(vector<Point> *_parent_sites,
   }
 	
   qsort(sites, nsites, sizeof (*sites), scomp);
-	
+
+  // Gregory Soyez
+  // 
+  // check if some of the particles are degenerate to avoid a crash.
+  //
+  // At the moment, we work under the assumption that they will be
+  // "clustered" later on, so we just keep the 1st one and discard the
+  // others
+  unsigned int offset=0;
+  for (int i=1;i<nsites;i++){
+    if (sites[i].coord.y==sites[i-1].coord.y && sites[i].coord.x==sites[i-1].coord.x){
+      offset++;
+    } else if (offset>0){
+      sites[i-offset] = sites[i];
+    }
+  }
+
+  if (offset>0){
+    nsites-=offset;
+    _warning_degeneracy.warn("VoronoiDiagramGenerator: two (or more) particles are degenerate in rapidity and azimuth, Voronoi cell assigned to the first of each set of degenerate particles.");
+  }
+
   siteidx = 0;
   geominit();
   double temp = 0;
@@ -247,12 +270,6 @@ Halfedge * VoronoiDiagramGenerator::ELleftbnd(Point *p){
   // We fix this by performing the test immediately on the double
   // We put in a extra bit of margin to be sure the conversion does
   // not play dirty tricks on us
-
-  //const double safety_margin = 0.5*deltax/ELhashsize;
-  //const double &px = p->x;
-  //if (px < xmin+safety_margin){ bucket=0;}
-  //else if (px > xmax-safety_margin){ ELhashsize - 1;}
-  //else{ bucket= (int)((p->x - xmin)/deltax * ELhashsize);}
 
   //const double &px = p->x;
   if (p->x < xmin){ bucket=0;}
@@ -418,13 +435,61 @@ Site* VoronoiDiagramGenerator::intersect(Halfedge *el1, Halfedge *el2, Point *p)
   // if the two edges bisect the same parent, return null
   if (e1->reg[1] == e2->reg[1]) 
     return (Site*) NULL;
+
+  // Gregory Soyez:
+  //	
+  // if the 2 parents are too close, the intersection is going to be
+  // computed from the "long edges" of the triangle which could causes
+  // large rounding errors. In this case, use the bisector of the 2
+  // parents to find the interaction point
+  // 
+  // The following replaces 
+  //   d = e1->a * e2->b - e1->b * e2->a;
+  //   if (-1.0e-10<d && d<1.0e-10) 
+  //     return (Site*) NULL;
+  //   	
+  //   xint = (e1->c*e2->b - e2->c*e1->b)/d;
+  //   yint = (e2->c*e1->a - e1->c*e2->a)/d;
+
+  double dx = e2->reg[1]->coord.x - e1->reg[1]->coord.x;
+  double dy = e2->reg[1]->coord.y - e1->reg[1]->coord.y;
+  double dxref = e1->reg[1]->coord.x - e1->reg[0]->coord.x;
+  double dyref = e1->reg[1]->coord.y - e1->reg[0]->coord.y;
+
+  if (dx*dx + dy*dy < 1e-14*(dxref*dxref+dyref*dyref)){
+    // make sure that the difference is positive
+    double adx = dx>0 ? dx : -dx;
+    double ady = dy>0 ? dy : -dy;
+    
+    // get the slope of the line
+    double a,b;
+    double c = (double)(e1->reg[1]->coord.x * dx + e1->reg[1]->coord.y * dy
+			+ (dx*dx + dy*dy)*0.5);
+    
+    if (adx>ady){
+      a = 1.0; b = dy/dx; c /= dx;
+    } else {
+      b = 1.0; a = dx/dy; c /= dy;
+    }
+
+    d = e1->a * b - e1->b * a;
+    if (-1.0e-10<d && d<1.0e-10) {
+      return (Site*) NULL;
+    }
 	
-  d = e1->a * e2->b - e1->b * e2->a;
-  if (-1.0e-10<d && d<1.0e-10) 
-    return (Site*) NULL;
+    xint = (e1->c*b - c*e1->b)/d;
+    yint = (c*e1->a - e1->c*a)/d;
+    
+  } else {	
+    d = e1->a * e2->b - e1->b * e2->a;
+    if (-1.0e-10<d && d<1.0e-10) {
+      return (Site*) NULL;
+    }
 	
-  xint = (e1->c*e2->b - e2->c*e1->b)/d;
-  yint = (e2->c*e1->a - e1->c*e2->a)/d;
+    xint = (e1->c*e2->b - e2->c*e1->b)/d;
+    yint = (e2->c*e1->a - e1->c*e2->a)/d;
+  }
+  // end of Gregory Soyez's modifications
 
   volatile double local_y1 = e1->reg[1]->coord.y;
   volatile double local_y2 = e2->reg[1]->coord.y;
