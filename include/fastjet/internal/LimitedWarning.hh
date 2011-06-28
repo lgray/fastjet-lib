@@ -32,8 +32,11 @@
 #ifndef __FASTJET_LIMITEDWARNING_HH__
 #define __FASTJET_LIMITEDWARNING_HH__
 
-#include<iostream>
-#include<string>
+#include "fastjet/internal/base.hh"
+#include <iostream>
+#include <string>
+
+FASTJET_BEGIN_NAMESPACE
 
 /// \if internal_doc
 /// @ingroup internal
@@ -66,5 +69,7 @@ private:
   static const int _max_warn_default = 5;
   
 };
+
+FASTJET_END_NAMESPACE
 
 #endif // __FASTJET_LIMITEDWARNING_HH__
