@@ -74,7 +74,7 @@ void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
   }
 
   // sort the particles into decreasing pt
-  sort(particle_list.begin(), particle_list.end());
+  stable_sort(particle_list.begin(), particle_list.end());
 
 
   // if we're using a recombination scheme different from the E scheme,

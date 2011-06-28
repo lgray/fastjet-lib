@@ -1,65 +1,72 @@
 Known bugs
 ----------
 
-. the CGAL N ln N methods cannot handle coincident points. Events with
-  more than one particle having identical rapidity,phi values should be 
-  clustered with an alternative strategy. If this poses a severe
-  issue to someone, it will be fixed.
+1. the CGAL N ln N methods cannot handle coincident points. Events with
+   more than one particle having identical rapidity,phi values should be 
+   clustered with an alternative strategy. If this poses a severe
+   issue to someone, it will be fixed.
 
 ----------------------------------------------------------------------
 Other issues to be aware of
 ---------------------------
 
-. Some algorithms can have ambiguities in the clustering steps and we
-  do not guarantee that different internal clustering strategies (or
-  different fastjet versions) will always resolve the ambiguities
-  identically. This issue doesn't arise with normal particle inputs.
+1. Some algorithms can have ambiguities in the clustering steps and we
+   do not guarantee that different internal clustering strategies (or
+   different fastjet versions) will always resolve the ambiguities
+   identically. This issue doesn't arise with normal particle inputs.
 
-  However:
+   However:
 
-  - Pythia sometimes produces massive particles with pt=0; phi is then
-    ill-defined, while the rapidity is finite and we make no
-    guarantees about how we treat the particle.
+   - Pythia sometimes produces massive particles with pt=0; phi is then
+     ill-defined, while the rapidity is finite and we make no
+     guarantees about how we treat the particle.
+  
+   - inputs that lie on a perfect grid in rapidity-phi (e.g. one
+     interpretation of a calorimeter) cause many interparticle
+     distances to be identical. In the kt, Cambridge/Aachen and anti-kt
+     algorithms, many dij can therefore also be identical. The choice
+     of which dij to take is then ambiguous and what fastjet actually
+     does may depend on: the compiler, the machine architecture
+     (because of rounding errors), the fastjet version.
+  
+     Physically this issue should not change the jets
+     much. Nevertheless, one might choose to break any degeneracy
+     explicity, e.g. using information from the location of energy
+     deposits in each calorimeter tower, so that the inputs are not on
+     a perfect grid.
 
-  - inputs that lie on a perfect grid in rapidity-phi (e.g. one
-    interpretation of a calorimeter) cause many interparticle
-    distances to be identical. In the kt, Cambridge/Aachen and anti-kt
-    algorithms, many dij can therefore also be identical. The choice
-    of which dij to take is then ambiguous and what fastjet actually
-    does may depend on: the compiler, the machine architecture
-    (because of rounding errors), the fastjet version.
-
-    Physically this issue should not change the jets
-    much. Nevertheless, one might choose to break any degeneracy
-    explicity, e.g. using information from the location of energy
-    deposits in each calorimeter tower, so that the inputs are not on
-    a perfect grid.
-
-. For some of the plugins (listed below), the result of the clustering
-  depends on how "sort" treats equal entities. Since this is
-  supposedly undefined, FastJet has no control over the different
-  results that one may obtain using those plugins.
-
-  - The ATLAS-Cone plugin: At the beginning of the stable-cone search,
-    the input particles are sorted in Et. In that sort, particles with
-    an Et difference below 0.001 are considered as having the same Et
-    (see line 80 of Jet.hh), resulting in the undefined behaviour
-    mentioned above.
-
-    A consequence of this is that, if 2 input particles have too
-    similar an Et, the stable cone search will consider them in an
-    undefined order. If the 2 resulting stable cones are too close
-    (deta<0.05, dphi<0.05) one will be accepted and the other
-    rejected. Which one depends on the ordering and is thus
-    undefined. If the 2 stable cones do not have the same constituents
-    this could affect the result of the clustering.
-
-  - In the TrackJet plugin, input particles are sorted in Et. If two
-    particles have the same Et (within machine precision), the order
-    in which they will be considered is undefined. Note however that to
-    have exactly the same pt, the particles are very likely to be
-    back-to-back. In that case, only the order of the clustering will
-    be affected but not the final jets.
+2. For some of the plugins (listed below), the result of the clustering
+   depends on how "sort" treats equal entities. Since this is
+   supposedly undefined, FastJet has no control over the different
+   results that one may obtain using those plugins.
+  
+   - The ATLAS-Cone plugin: At the beginning of the stable-cone search,
+     the input particles are sorted in Et. In that sort, particles with
+     an Et difference below 0.001 are considered as having the same Et
+     (see line 80 of Jet.hh), resulting in the undefined behaviour
+     mentioned above.
+  
+     A consequence of this is that, if 2 input particles have too
+     similar an Et, the stable cone search will consider them in an
+     undefined order. If the 2 resulting stable cones are too close
+     (deta<0.05, dphi<0.05) one will be accepted and the other
+     rejected. Which one depends on the ordering and is thus
+     undefined. If the 2 stable cones do not have the same constituents
+     this could affect the result of the clustering.
+  
+   - In the TrackJet plugin, input particles are sorted in Et. If two
+     particles have the same Et (within machine precision), the order
+     in which they will be considered is undefined. Note however that to
+     have exactly the same pt, the particles are very likely to be
+     back-to-back. In that case, only the order of the clustering will
+     be affected but not the final jets.
+  
+   Compared to the original code, we have replaced the use of 'sort'
+   by 'stable_sort' so that in case of such a degeneracy the order
+   would be the same as the one of the original particles and no
+   random behaviour is to be expected. Note however that this issue
+   could still happen if one changes the ordering of the input
+   particles.
 
 ----------------------------------------------------------------------
 Probably solved

@@ -108,14 +108,14 @@ public:
 
 template<class T>
 inline void sort_jet_list(Jet::jet_list_t &list){
-  std::sort(list.begin(),list.end(), T());
+  std::stable_sort(list.begin(),list.end(), T());
 }
 inline void sort_list_et(Jet::jet_list_t &list){
   //std::sort(list.begin(),list.end(),et_compare);
-  std::sort(list.begin(),list.end(), JetSorter_Et());
+  std::stable_sort(list.begin(),list.end(), JetSorter_Et());
 }
 inline void sort_list_pt(Jet::jet_list_t &list){
-  std::sort(list.begin(),list.end(),JetSorter_Pt());
+  std::stable_sort(list.begin(),list.end(),JetSorter_Pt());
 }
 
 Jet* jet_from_overlap(Jet* j1, Jet* j2);
