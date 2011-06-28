@@ -1,5 +1,8 @@
 2011-06-28  Gregory Soyez  <soyez@fastjet.fr>
 
+	* regression-tests/test-all-algs.pl:
+	  updated the reference results using "stable_sort"
+
 	* BUGS:
 	* plugins/ATLASCone/Jet.hh:
 	* plugins/TrackJet/TrackJetPlugin.cc:

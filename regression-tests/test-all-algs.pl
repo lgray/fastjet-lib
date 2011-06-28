@@ -399,7 +399,8 @@ sub setRefResults {
   #"Pythia-PtMin50-LHC-10kev.dat,nev100,eegenkt:0,R0.60" => "c210893596b56046573c60603e4a3e5b",
   #"Pythia-PtMin50-LHC-10kev.dat,nev100,eegenkt:-1,R0.60" => "905525747cad0344b6826514cd4cc618",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,trackjet,R0.60" => "bc388ed856a9f20ce6336201ce8f6afa",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,atlascone,R0.60" => "d5bc5a6427cc7af883b2329e45ee0d7a",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,atlascone,R0.60" => "5467ef8e5f63bf3206f781f8d85d2c42",
+  # "d5bc5a6427cc7af883b2329e45ee0d7a", # plain 'sort', gcc4.4
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cmsiterativecone,R0.60" => "afd780e095e04bce14dc8587d0736e48",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev100,jade:-excly:0.01,R0.60" => "7ce00dc7a5f676552c447fce5b8a0197",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,d0runicone,R0.60" => "62b7fc59816298800cb5aac3b3424d1c",
@@ -432,9 +433,10 @@ sub setRefResults {
   # old R def for eegenkt
   #"Pythia-PtMin50-LHC-10kev.dat,nev1000,eegenkt:0,R0.60" => "48cb5d5a8a5f636d07569745e5be29e4",
   #"Pythia-PtMin50-LHC-10kev.dat,nev1000,eegenkt:-1,R0.60" => "e54ecd5d535f2f3d7ddffc1bfd43462c",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,trackjet,R0.60" => 
-      ["865e8763a52f63e43bb5ac781a8087f1","ac8025d4f4a0349f3f9af6538ace8cbb"],
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,atlascone,R0.60" => "5efdfffa446604f043c0444bc09e0f8a",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,trackjet,R0.60" => "6ece27a60cc0f49071fd534ddc7de7b2",
+  #    ["865e8763a52f63e43bb5ac781a8087f1","ac8025d4f4a0349f3f9af6538ace8cbb"], # plain 'sort'
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,atlascone,R0.60" => "d9cdb2a3ad52496fc5a1a4b6bfc7a363",
+  # "5efdfffa446604f043c0444bc09e0f8a", # plain 'sort' gcc 4.4
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cmsiterativecone,R0.60" => "31a543ee68e64eb67d5b242188cb7aab",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,jade:-excly:0.01,R0.60" => "b4aef5930856daafb294ddce66834bc7",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,d0runicone,R0.60" => "a475ca9a5bdcf9278ccfe8854095dfef",
