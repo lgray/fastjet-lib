@@ -257,6 +257,8 @@ sub setDefaults {
   chomp $username;
   if ( $username eq "greg"){
       $dataDir="~/diska/jets/fastjet/data";
+  } elsif ( $username eq "gsalam"){
+      $dataDir=$ENV{HOME}."/work/fastjet/data";
   } else {
       $gavinHome = `echo ~salam`;
       chomp $gavinHome;

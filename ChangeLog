@@ -1,3 +1,9 @@
+2011-06-28  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* regression-tests/test-all-algs.pl: 
+	  updated this so that it looks for data file in the correct place
+	  on cern mac.
+
 2011-06-28  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/internal/LimitedWarning.hh:
