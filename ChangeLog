@@ -1,3 +1,9 @@
+2011-06-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/GhostedAreaSpec.cc (GhostedAreaSpec): 
+	  fixed non-initialisation of _fj2_placement in one of the several
+	  constructors. 
+
 2011-06-23  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl: 

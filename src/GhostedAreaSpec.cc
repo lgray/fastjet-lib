@@ -53,6 +53,7 @@ GhostedAreaSpec::GhostedAreaSpec(
     _grid_scatter(grid_scatter),  
     _kt_scatter(kt_scatter), 
     _mean_ghost_kt(mean_ghost_kt),
+    _fj2_placement(false),
     _selector(selector),
     _actual_ghost_area(-1.0)
   {
