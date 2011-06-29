@@ -43,7 +43,6 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // Filter class implementation
 //----------------------------------------------------------------------
 
-
 // class description
 string Filter::description() const {
   ostringstream ostr;
@@ -56,6 +55,8 @@ string Filter::description() const {
   return ostr.str();
 }
 
+// core functions
+//----------------------------------------------------------------------
 
 // return a vector of subjets, which are the ones that would be kept
 // by the filtering
@@ -87,25 +88,22 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   // make sure that the jet has constituents
   if (! jet.has_constituents())
     throw Error("Filter can only be applied on jets having constituents");
+
+  // for a whole variety of checks, we shall need the "recursive"
+  // pieces of the jet (the jet itself or recursing down to its most
+  // fundamental pieces).
+  // So we do compute these once and for all
+  all_pieces.clear();
+  if ((!_get_all_pieces(jet, all_pieces)) || (all_pieces.size()==0))
+    throw Error("Attempt to filter a jet that has no associated ClusterSequence or is not a superposition of jets associated with a ClusterSequence");
   
   // if rho!=0, make sure we have a CS that supports area and has
   // explicit ghosts 
-  // watch out: that will fail for a CompositeJet!!
-  // TODO: add support for composite jets
   if (_rho != 0.0){
     if (!jet.has_area())   
       throw Error("Attempt to filter and subtract (non-zero rho) without area info for the original jet");
 
-    // if (!jet.has_associated_cluster_sequence())
-    //   throw Error("Attempt to filter and subtract (non-zero rho) without a cluster sequence associated with the jet");
-    // 
-    // // note that the validated_csab() used in the next line will
-    // // automatically throw an error if there is no valis CSAB so we
-    // // just have to check for the explicit ghosts
-    // if (!jet.validated_csab()->has_explicit_ghosts())
-    //   throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
-
-    if (!_recursively_check_explicit_ghosts(jet))
+    if (!_check_explicit_ghosts())
       throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
   }
 
@@ -123,7 +121,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   //    superposition of C/A jets
   //  - the pieces agree with the recombination scheme of subjet_def
   //------------------------------------------------------------------
-  bool simple_cafilt = _check_ca(jet);
+  bool simple_cafilt = _check_ca();
  
   // extract the subjets
   //-------------------------------------------------------------------
@@ -137,104 +135,6 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 
   // order the filtered elements in pt
   filtered_elements = sorted_by_pt(filtered_elements);
-}
-
-
-// gather the information about what is kept and rejected under the
-// form of a PseudoJet with a special ClusterSequenceInfo
-PseudoJet Filter::_finalise(const PseudoJet & jet, 
-			    vector<PseudoJet> & kept, 
-			    vector<PseudoJet> & rejected) const {
-  // figure out which recombiner to use
-  const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
-
-  // create an appropriate structure and transfer the info to it
-  PseudoJet filtered_jet = join<StructureType>(kept, rec);
-  StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
-  fs->_original_jet = jet;
-  fs->_rejected = rejected;
-  
-  return filtered_jet;
-}
-
-
-// check if one can apply the simplification for C/A subjets
-bool Filter::_check_ca(const PseudoJet & jet) const{
-  if (_subjet_def.jet_algorithm() != cambridge_algorithm) return false;
-
-  vector<PseudoJet> all_pieces;
-  if (!(_recursively_check_ca(jet, all_pieces))) return false;
-  if (! all_pieces.size()) return 0; // just in case one passes a CompositeJet with 0 pieces!
-
-  // for now we know that all the pieces come from a C/A clustering
-  // (hence have an associated cluster sequence)
-  //
-  // We'll enforce that they all come from the same ClusterSequence
-  // (otherwise there may be interferences and we'd better recluster
-  // the whole set of constituents)
-  //
-  // Note that we're sure there's at least one piece
-  const ClusterSequence * cs_ref = all_pieces[0].associated_cluster_sequence();
-  for (unsigned int i=1; i<all_pieces.size(); i++)
-    if (all_pieces[i].associated_cluster_sequence() != cs_ref) return false;
-
-  // vector<PseudoJet>::iterator pit = all_pieces.begin(); // there's at least 1
-  // const ClusterSequence * cs_ref = pit->associated_cluster_sequence();
-  // while (++pit != all_pieces.end())
-  //   if (pit->associated_cluster_sequence() != cs_ref) return false;
-
-  // we also have to make sure that the filtering radius is not larger
-  // than any of the inter-pieces distance
-  double Rfilt2 = _subjet_def.R();
-  Rfilt2 *= Rfilt2;
-  for (unsigned int i=0; i<all_pieces.size()-1; i++){
-    for (unsigned int j=i+1; j<all_pieces.size(); j++){
-      if (all_pieces[i].squared_distance(all_pieces[j]) <  Rfilt2) return false;
-    }
-  }
-
-  return true;
-}
-	
-
-// check if the jet is obtained from C/A or a superposition of C/A pieces
-//
-// Note that if the jet has an associated cluster sequence that is no
-// longer valid, an error will be thrown
-bool Filter::_recursively_check_ca(const PseudoJet & jet, vector<PseudoJet> &cumulative_pieces) const{
-  if (jet.has_associated_cluster_sequence()){
-    cumulative_pieces.push_back(jet);
-    return jet.validated_cs()->jet_def().jet_algorithm() == cambridge_algorithm;
-  }
-
-  if (jet.has_pieces()){
-    const vector<PseudoJet> pieces = jet.pieces();
-    for (vector<PseudoJet>::const_iterator it=pieces.begin(); it!=pieces.end(); it++)
-      if (!_recursively_check_ca(*it, cumulative_pieces)) return false;
-    return true;
-  }
-
-  return false;
-}
-
-
-// check if the jet (or all its pieces) have explicit ghosts
-// (assuming the jet has area support
-//
-// Note that if the jet has an associated cluster sequence that is no
-// longer valid, an error will be thrown
-bool Filter::_recursively_check_explicit_ghosts(const PseudoJet & jet) const{
-  if (jet.has_associated_cluster_sequence())
-    return jet.validated_csab()->has_explicit_ghosts();
-
-  if (jet.has_pieces()){
-    const vector<PseudoJet> pieces = jet.pieces();
-    for (vector<PseudoJet>::const_iterator it=pieces.begin(); it!=pieces.end(); it++)
-      if (!_recursively_check_explicit_ghosts(*it)) return false;
-    return true;
-  }
-
-  return false;
 }
 
 // set the filtered elements in the simple case of C/A+C/A
@@ -328,6 +228,80 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
     // allow the cs to be deleted when it's no longer used
     cs->delete_self_when_unused();
   }
+}
+
+
+// gather the information about what is kept and rejected under the
+// form of a PseudoJet with a special ClusterSequenceInfo
+PseudoJet Filter::_finalise(const PseudoJet & jet, 
+			    vector<PseudoJet> & kept, 
+			    vector<PseudoJet> & rejected) const {
+  // figure out which recombiner to use
+  const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
+
+  // create an appropriate structure and transfer the info to it
+  PseudoJet filtered_jet = join<StructureType>(kept, rec);
+  StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
+  fs->_original_jet = jet;
+  fs->_rejected = rejected;
+  
+  return filtered_jet;
+}
+
+// various checks
+//----------------------------------------------------------------------
+
+// get the pieces down to the fundamental pieces
+bool Filter::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pieces) const{
+  if (jet.has_associated_cluster_sequence()){
+    all_pieces.push_back(jet);
+    return true;
+  }
+
+  if (jet.has_pieces()){
+    const vector<PseudoJet> pieces = jet.pieces();
+    for (vector<PseudoJet>::const_iterator it=pieces.begin(); it!=pieces.end(); it++)
+      if (!_get_all_pieces(*it, all_pieces)) return false;
+    return true;
+  }
+
+  return false;
+}
+
+// check if the jet (or all its pieces) have explicit ghosts
+// (assuming the jet has area support
+//
+// Note that if the jet has an associated cluster sequence that is no
+// longer valid, an error will be thrown
+bool Filter::_check_explicit_ghosts() const{
+  for (vector<PseudoJet>::const_iterator it=all_pieces.begin(); it!=all_pieces.end(); it++)
+    if (! it->validated_csab()->has_explicit_ghosts()) return false;
+  return true;
+}
+
+// check if one can apply the simplification for C/A subjets
+bool Filter::_check_ca() const{
+  if (_subjet_def.jet_algorithm() != cambridge_algorithm) return false;
+
+  // check that the 1st of all the pieces (we're sure there is at
+  // least one) is coming from a C/A clustering. Then check that all
+  // the following pieces share the same ClusterSequence
+  const ClusterSequence * cs_ref = all_pieces[0].associated_cluster_sequence();
+  if (cs_ref->jet_def().jet_algorithm() != cambridge_algorithm) return false;
+  for (unsigned int i=1; i<all_pieces.size(); i++)
+    if (all_pieces[i].associated_cluster_sequence() != cs_ref) return false;
+
+  // we also have to make sure that the filtering radius is not larger
+  // than any of the inter-pieces distance
+  double Rfilt2 = _subjet_def.R();
+  Rfilt2 *= Rfilt2;
+  for (unsigned int i=0; i<all_pieces.size()-1; i++){
+    for (unsigned int j=i+1; j<all_pieces.size(); j++){
+      if (all_pieces[i].squared_distance(all_pieces[j]) <  Rfilt2) return false;
+    }
+  }
+
+  return true;
 }
 
 //----------------------------------------------------------------------

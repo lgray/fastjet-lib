@@ -207,21 +207,18 @@ protected:
 
   // a series of checks
   //--------------------------------------------------------------------
-  /// check if one can apply the simplified trick for C/A subjets
-  bool _check_ca(const PseudoJet & jet) const;
+  /// get the pieces down to the fundamental pieces
+  bool _get_all_pieces(const PseudoJet &jet, std::vector<PseudoJet> &all_pieces) const;
 
-  /// check if the jet is obtained from C/A or a superposition of C/A pieces
-  ///
-  /// Note that if the jet has an associated cluster sequence that is no
-  /// longer valid, an error will be thrown
-  bool _recursively_check_ca(const PseudoJet & jet, std::vector<PseudoJet> & cumulative_pieces) const;
+  /// check if one can apply the simplified trick for C/A subjets
+  bool _check_ca() const;
 
   /// check if the jet (or all its pieces) have explicit ghosts
   /// (assuming the jet has area support
   ///
   /// Note that if the jet has an associated cluster sequence that is no
   /// longer valid, an error will be thrown
-  bool _recursively_check_explicit_ghosts(const PseudoJet & jet) const;
+  bool _check_explicit_ghosts() const;
 
   mutable JetDefinition _subjet_def; 
                                ///< the jet definition to use to extract the subjets
@@ -229,6 +226,9 @@ protected:
                                ///< a dynamic filtering radius function of the jet being filtered
   mutable Selector _selector;  ///< the subjet selection criterium
   double _rho;                 ///< the background density (used for subtraction when possible)
+
+  // internal useful variables
+  mutable std::vector<PseudoJet> all_pieces;
 };
 
 
