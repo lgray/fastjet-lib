@@ -61,9 +61,10 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g
 #
 # GS: it was previously using Gavin's environment variable. Until he
 # updates it, we're temporarily going to use a fixed path pointing to
-# my installation. Niote that CGAL is curently only tested on 64-bit
+# my installation. Note that CGAL is curently only tested on 64-bit
 # systems, so I'll use the 64-bit build
-$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_install';
+#$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_install';
+$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_gcc46_install';
 
 @setups = ();
 # for each setup we put the host ("" is current host), the config
@@ -87,7 +88,9 @@ push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_D
 push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
 push @setups, ["","--enable-allplugins --disable-monolithic", "", 10]; # test the non-monolithic build (all plugins in separate libs)
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
-push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 1000]; # with the intel compiler
+# 2011-06-29: remove the icpc checks, since icpc seems not to be able to handle the
+#             g++-4.6.0 STL that is now on all machines
+#push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 1000]; # with the intel compiler
 # maintain a check with gxx-3.4
 push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10]; # with gxx-3.4
 push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard machine, 32 bits

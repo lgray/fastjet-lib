@@ -1,3 +1,8 @@
+2011-06-29  Gavin SALAM  <salam@pallas.lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  removed icpc checks (issues with gcc-4.6.0 STL), updated CGAL_DIR
+
 2011-06-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/BackgroundEstimator.hh:
