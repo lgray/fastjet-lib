@@ -526,7 +526,8 @@ private:
   /// handle warning messages
   static LimitedWarning _warnings;
   static LimitedWarning _warnings_zero_area;
-  static LimitedWarning _warnings_relocation;
+  static LimitedWarning _warnings_empty_area;
+  //static LimitedWarning _warnings_relocation;
 };
 
 

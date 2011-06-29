@@ -1,10 +1,14 @@
 2011-06-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/BackgroundEstimator.hh:
+	* tools/BackgroundEstimator.cc (_median_and_stddev):
+	  same modification as below
+
 	* src/ClusterSequenceAreaBase.cc:
 	* include/fastjet/ClusterSequenceAreaBase.hh:
           dealt with a potential overflow when the estimated number of
 	  empty jets becomes large and negative:
-	   - we issue a warning when n_empty < -pt_over_areas_size/4
+	   - we issue a warning when n_empty < -pt_over_areas_size/4.0
 	   - we make sure int_nj_median <= pt_over_areas_size-2
 	  with int pt_over_areas_size = pt_over_areas.size(); this avoids
 	  the issue of subtraction and negation operations on unsigned

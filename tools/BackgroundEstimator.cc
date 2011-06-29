@@ -79,7 +79,7 @@ double BackgroundRescalingYPolynomial::result(const PseudoJet & jet) const {
 /// allow for warnings
 LimitedWarning BackgroundEstimator::_warnings;
 LimitedWarning BackgroundEstimator::_warnings_zero_area;
-
+LimitedWarning BackgroundEstimator::_warnings_empty_area;
 
 //---------------------------------------------------------------------
 // class BackgroundEstimator
@@ -320,6 +320,9 @@ void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vec
   int n_jets_used = sorted_quantity_vector.size();
   double total_njets = n_jets_used + _n_empty_jets;
 
+  if (n_empty_jets < -n_jets_used/4.0)
+    _warnings_empty_area.warn("BackgroundEstimator::_median_and_stddev(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
+
   for (int i = 0; i < 2; i++) {
     double nj_median_pos;
     if (do_fj2_calculation) {
@@ -329,12 +332,19 @@ void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vec
     }
 
     double nj_median_ratio;
-    if (nj_median_pos >= 0 && sorted_quantity_vector.size() > 1) {
+    if (nj_median_pos >= 0 && n_jets_used > 1) {
       int int_nj_median = int(nj_median_pos);
+
+     // avoid potential overflow issues
+      if (int_nj_median+1 > n_jets_used-1){
+	int_nj_median = n_jets_used-2;
+	nj_median_pos = n_jets_used-1;
+      }
+
       nj_median_ratio =
 	sorted_quantity_vector[int_nj_median] * (int_nj_median+1-nj_median_pos)
 	+ sorted_quantity_vector[int_nj_median+1] * (nj_median_pos - int_nj_median);
-    } else if (nj_median_pos > -0.5 && sorted_quantity_vector.size() >= 1 && !do_fj2_calculation) {
+    } else if (nj_median_pos > -0.5 && n_jets_used >= 1 && !do_fj2_calculation) {
       // in the LHS of this "bin", just keep a constant value (we could have
       // interpolated to zero, but this might misbehave in cases where all jets
       // are active, because it would go to zero too fast)
