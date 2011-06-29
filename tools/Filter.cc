@@ -96,13 +96,16 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     if (!jet.has_area())   
       throw Error("Attempt to filter and subtract (non-zero rho) without area info for the original jet");
 
-    if (!jet.has_associated_cluster_sequence())
-      throw Error("Attempt to filter and subtract (non-zero rho) without a cluster sequence associated with the jet");
+    // if (!jet.has_associated_cluster_sequence())
+    //   throw Error("Attempt to filter and subtract (non-zero rho) without a cluster sequence associated with the jet");
+    // 
+    // // note that the validated_csab() used in the next line will
+    // // automatically throw an error if there is no valis CSAB so we
+    // // just have to check for the explicit ghosts
+    // if (!jet.validated_csab()->has_explicit_ghosts())
+    //   throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
 
-    // note that the validated_csab() used in the next line will
-    // automatically throw an error if there is no valis CSAB so we
-    // just have to check for the explicit ghosts
-    if (!jet.validated_csab()->has_explicit_ghosts())
+    if (!_recursively_check_explicit_ghosts(jet))
       throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
   }
 
@@ -195,10 +198,13 @@ bool Filter::_check_ca(const PseudoJet & jet) const{
 	
 
 // check if the jet is obtained from C/A or a superposition of C/A pieces
+//
+// Note that if the jet has an associated cluster sequence that is no
+// longer valid, an error will be thrown
 bool Filter::_recursively_check_ca(const PseudoJet & jet, vector<PseudoJet> &cumulative_pieces) const{
-  if (jet.has_valid_cluster_sequence()){
+  if (jet.has_associated_cluster_sequence()){
     cumulative_pieces.push_back(jet);
-    return jet.associated_cluster_sequence()->jet_def().jet_algorithm() == cambridge_algorithm;
+    return jet.validated_cs()->jet_def().jet_algorithm() == cambridge_algorithm;
   }
 
   if (jet.has_pieces()){
@@ -212,6 +218,24 @@ bool Filter::_recursively_check_ca(const PseudoJet & jet, vector<PseudoJet> &cum
 }
 
 
+// check if the jet (or all its pieces) have explicit ghosts
+// (assuming the jet has area support
+//
+// Note that if the jet has an associated cluster sequence that is no
+// longer valid, an error will be thrown
+bool Filter::_recursively_check_explicit_ghosts(const PseudoJet & jet) const{
+  if (jet.has_associated_cluster_sequence())
+    return jet.validated_csab()->has_explicit_ghosts();
+
+  if (jet.has_pieces()){
+    const vector<PseudoJet> pieces = jet.pieces();
+    for (vector<PseudoJet>::const_iterator it=pieces.begin(); it!=pieces.end(); it++)
+      if (!_recursively_check_explicit_ghosts(*it)) return false;
+    return true;
+  }
+
+  return false;
+}
 
 // set the filtered elements in the simple case of C/A+C/A
 //

@@ -2,8 +2,9 @@
 
 	* tools/fastjet/tools/Filter.hh:
 	* tools/Filter.cc:
-	  added support for jet areas to the subjets for the case where
-	  the parent jet has area support and rho=0
+	  . added support for jet areas to the subjets for the case where
+	    the parent jet has area support and rho=0
+	  . added support for subtraction for composite jets
 
 	* include/fastjet/Selector.hh:
 	* src/Selector.cc:

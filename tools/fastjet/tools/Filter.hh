@@ -190,28 +190,38 @@ protected:
   void _set_filtered_elements(const PseudoJet & jet,
 			      std::vector<PseudoJet> & filtered_elements) const;
   
+  /// set the filtered elements in the simple case of C/A+C/A
+  void _set_filtered_elements_cafilt(const PseudoJet & jet,
+				     std::vector<PseudoJet> & filtered_elements,
+				     double Rfilt) const;
+
+  /// set the filtered elements in the generic re-clustering case
+  void _set_filtered_elements_generic(const PseudoJet & jet, 
+				      std::vector<PseudoJet> & filtered_elements) const;
+
   /// gather the information about what is kept and rejected under the
   /// form of a PseudoJet with a special ClusterSequenceInfo
   PseudoJet _finalise(const PseudoJet & jet, 
 		      std::vector<PseudoJet> & kept, 
 		      std::vector<PseudoJet> & rejected) const;
 
+  // a series of checks
+  //--------------------------------------------------------------------
   /// check if one can apply the simplified trick for C/A subjets
   bool _check_ca(const PseudoJet & jet) const;
 
   /// check if the jet is obtained from C/A or a superposition of C/A pieces
+  ///
+  /// Note that if the jet has an associated cluster sequence that is no
+  /// longer valid, an error will be thrown
   bool _recursively_check_ca(const PseudoJet & jet, std::vector<PseudoJet> & cumulative_pieces) const;
 
-  /// set the filtered elements in the simple case of C/A+C/A
-  void _set_filtered_elements_cafilt(
-    const PseudoJet & jet,
-    std::vector<PseudoJet> & filtered_elements,
-    double Rfilt) const;
-
-  /// set the filtered elements in the generic re-clustering case
-  void _set_filtered_elements_generic(
-    const PseudoJet & jet, 
-    std::vector<PseudoJet> & filtered_elements) const;
+  /// check if the jet (or all its pieces) have explicit ghosts
+  /// (assuming the jet has area support
+  ///
+  /// Note that if the jet has an associated cluster sequence that is no
+  /// longer valid, an error will be thrown
+  bool _recursively_check_explicit_ghosts(const PseudoJet & jet) const;
 
   mutable JetDefinition _subjet_def; 
                                ///< the jet definition to use to extract the subjets
