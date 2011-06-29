@@ -64,7 +64,8 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g
 # my installation. Note that CGAL is curently only tested on 64-bit
 # systems, so I'll use the 64-bit build
 #$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_install';
-$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_gcc46_install';
+#$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_gcc46_install';
+$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.8_gcc46_install';
 
 @setups = ();
 # for each setup we put the host ("" is current host), the config
