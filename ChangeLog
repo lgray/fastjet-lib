@@ -1,5 +1,10 @@
 2011-06-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Filter.cc:
+	  added support for jet areas to the subjets for the case where
+	  the parent jet has area support and rho=0
+
 	* include/fastjet/Selector.hh:
 	* src/Selector.cc:
 	  added support for &= and |=

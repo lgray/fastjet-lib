@@ -125,11 +125,11 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   // extract the subjets
   //-------------------------------------------------------------------
   if (simple_cafilt){
+    // first make sure that 'filtered_elemetns' is empty
+    filtered_elements.clear();
     _set_filtered_elements_cafilt(jet, filtered_elements, _subjet_def.R());
-  } else if (_rho != 0.0){
-    _set_filtered_elements_generic_subtracted(jet, filtered_elements);
   } else {
-   _set_filtered_elements_generic_unsubtracted(jet, filtered_elements);
+   _set_filtered_elements_generic(jet, filtered_elements);
   }
 
   // order the filtered elements in pt
@@ -258,54 +258,53 @@ void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet,
 
 // set the filtered elements in the generic re-clustering case (wo
 // subtraction)
-void Filter::_set_filtered_elements_generic_unsubtracted(const PseudoJet & jet, 
-							 vector<PseudoJet> & filtered_elements) const{
+void Filter::_set_filtered_elements_generic(const PseudoJet & jet, 
+					    vector<PseudoJet> & filtered_elements) const{
   // create a new, internal, ClusterSequence from the jet constituents
   // get the subjets directly from there
-  //---------------------------------------------------------------
-  ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
-  filtered_elements = cs->inclusive_jets();
-  // allow the cs to be deleted when it's no longer used
-  cs->delete_self_when_unused();
-}
-
-// set the filtered elements in the generic re-clustering case (with
-// subtraction)
-void Filter::_set_filtered_elements_generic_subtracted(const PseudoJet & jet, 
-						       vector<PseudoJet> & filtered_elements) const{
-  // create a new, internal, ClusterSequence from jet constituents
-  // 
-  // the difference is that we need to separate the ghosts to get a
-  // reliable area computation
+  //
+  // If the jet has area support then we separate the ghosts from the
+  // "regular" particles so the subjets will also haev area
+  // support. Note that we do this regardless of whether rho is zero
+  // or not.
   // ---------------------------------------------------------------
-  vector<PseudoJet> all_constituents = jet.constituents();
-  vector<PseudoJet> regular_constituents, ghosts;  
+  if (jet.has_area()){
+    vector<PseudoJet> all_constituents = jet.constituents();
+    vector<PseudoJet> regular_constituents, ghosts;  
 
-  for (vector<PseudoJet>::iterator it = all_constituents.begin(); 
-       it != all_constituents.end(); it++){
-    if (it->is_pure_ghost())
-      ghosts.push_back(*it);
-    else
-      regular_constituents.push_back(*it);
+    for (vector<PseudoJet>::iterator it = all_constituents.begin(); 
+	 it != all_constituents.end(); it++){
+      if (it->is_pure_ghost())
+	ghosts.push_back(*it);
+      else
+	regular_constituents.push_back(*it);
+    }
+
+    // figure the ghost area from the 1st ghost (if none, any value
+    // would probably do as the area will be 0 and subtraction will have
+    // no effect!)
+    double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
+    ClusterSequenceActiveAreaExplicitGhosts * csa
+      = new ClusterSequenceActiveAreaExplicitGhosts(regular_constituents, 
+						    _subjet_def, 
+						    ghosts, ghost_area);
+
+    // get the subjets: we use the subtracted or unsubtracted ones
+    // depending on rho
+    if (_rho != 0)
+      filtered_elements = csa->subtracted_jets(_rho);
+    else 
+      filtered_elements = csa->inclusive_jets();
+    
+    // allow the cs to be deleted when it's no longer used
+    csa->delete_self_when_unused();
+  } else {
+    ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
+    filtered_elements = cs->inclusive_jets();
+    // allow the cs to be deleted when it's no longer used
+    cs->delete_self_when_unused();
   }
-
-  // figure the ghost area from the 1st ghost (if none, any value
-  // would probably do as the area will be 0 and subtraction will have
-  // no effect!)
-  double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
-  ClusterSequenceActiveAreaExplicitGhosts * csa
-    = new ClusterSequenceActiveAreaExplicitGhosts(regular_constituents, 
-						  _subjet_def, 
-						  ghosts, ghost_area);
-      
-  // get the subjets
-  filtered_elements = csa->subtracted_jets(_rho);
-
-  // allow the cs to be deleted when it's no longer used
-  csa->delete_self_when_unused();
 }
-
-
 
 //----------------------------------------------------------------------
 // FilterInterface implementation 

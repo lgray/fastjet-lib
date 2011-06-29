@@ -208,13 +208,8 @@ protected:
     std::vector<PseudoJet> & filtered_elements,
     double Rfilt) const;
 
-  /// set the filtered elements in the generic re-clustering case (wo subtraction)
-  void _set_filtered_elements_generic_unsubtracted(
-    const PseudoJet & jet, 
-    std::vector<PseudoJet> & filtered_elements) const;
-
-  /// set the filtered elements in the generic re-clustering case (with subtraction)
-  void _set_filtered_elements_generic_subtracted(
+  /// set the filtered elements in the generic re-clustering case
+  void _set_filtered_elements_generic(
     const PseudoJet & jet, 
     std::vector<PseudoJet> & filtered_elements) const;
 
