@@ -91,7 +91,7 @@ push @setups, ["","--enable-allplugins --disable-monolithic", "", 10]; # test th
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
 # 2011-06-29: remove the icpc checks, since icpc seems not to be able to handle the
 #             g++-4.6.0 STL that is now on all machines
-#push @setups, ["","--enable-allcxxplugins CC=icc CXX=icpc --disable-debug", "", 1000]; # with the intel compiler
+push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc CFLAGS="-gcc-name=/usr/bin/gcc34" CXXFLAGS="-gcc-name=/usr/bin/gcc34 -gxx-name=/usr/bin/g++34" --disable-debug', "", 1000]; # with the intel compiler
 # maintain a check with gxx-3.4
 push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10]; # with gxx-3.4
 push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard machine, 32 bits
@@ -348,6 +348,7 @@ sub build_and_check($$$) {
   $cxx = "g++";
   # special compilers are deduced from the configure flag
   if ($config=~ /CXX=([^\s]+)/) { $cxx = $1; }
+  if ($config=~ /CXXFLAGS="([^"]+)"/) { $cxx .= " ".$1; }
   $compiler = `$cxx --version 2>&1 | head -1`; chomp $compiler;
 
   # start constructing the summary
