@@ -86,6 +86,7 @@ public:
   /// returns a description of the worker
   virtual std::string description() const {return "missing description";}
 
+
   //----------------------------------------------------------
   // operations for dealing with reference jets
   //----------------------------------------------------------
@@ -285,6 +286,13 @@ public:
     InvalidArea() : Error("Attempt to obtain area from Selector for which this is not meaningful") {}
   };
 
+  // some operators (applying directly on a Selector)
+  //----------------------------------------------------------------------
+  /// For 2 Selectors a and b, a &= b is eauivalent to a = a && b;
+  Selector & operator &=(const Selector & b);
+
+  /// For 2 Selectors a and b, a |= b is eauivalent to a = a || b;
+  Selector & operator |=(const Selector & b);
 
 
 protected:

@@ -1356,7 +1356,9 @@ protected:
   const RangeDefinition *_range;
 };
 
+
 // ctor from a RangeDefinition
+//----------------------------------------------------------------------
 //
 // This is provided for backward compatibility and will be removed in
 // a future major release of FastJet
@@ -1364,5 +1366,22 @@ Selector::Selector(const RangeDefinition &range) {
   _worker.reset(new SW_RangeDefinition(range));
 }
 
+
+// operators applying directly on a Selector
+//----------------------------------------------------------------------
+
+// operator &=
+// For 2 Selectors a and b, a &= b is eauivalent to a = a & b;
+Selector & Selector::operator &=(const Selector & b){
+  _worker.reset(new SW_And(*this, b));
+  return *this;
+}
+
+// operator &=
+// For 2 Selectors a and b, a &= b is eauivalent to a = a & b;
+Selector & Selector::operator |=(const Selector & b){
+  _worker.reset(new SW_Or(*this, b));
+  return *this;
+}
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
