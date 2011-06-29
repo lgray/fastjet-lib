@@ -300,6 +300,7 @@ private:
   /// handle warning messages
   static LimitedWarning _warnings;
   static LimitedWarning _warnings_zero_area;
+  static LimitedWarning _warnings_empty_area;
 
   /// check the jet algorithm is suitable (and if not issue a warning)
   void _check_jet_alg_good_for_median() const;

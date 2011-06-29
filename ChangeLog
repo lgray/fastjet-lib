@@ -1,3 +1,18 @@
+2011-06-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequenceAreaBase.cc:
+	* include/fastjet/ClusterSequenceAreaBase.hh:
+          dealt with a potential overflow when the estimated number of
+	  empty jets becomes large and negative:
+	   - we issue a warning when n_empty < -pt_over_areas_size/4
+	   - we make sure int_nj_median <= pt_over_areas_size-2
+	  with int pt_over_areas_size = pt_over_areas.size(); this avoids
+	  the issue of subtraction and negation operations on unsigned
+	  int, which give nonsense, and also eliminates inappropriate
+	  warnings about empty areas being too negative.
+	  (imported from FastJet 2.4.4)
+
+
 2011-06-28  Gregory & Thiago Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/internal/Voronoi.hh:
@@ -7,7 +22,7 @@
 	  - dealt with nearly-degenerate parent points in "intersection"
 	  - handled coniciding particles (assign the full cell to the
 	    first of the coinciding particles + print a warning).
-	  - solved an overflow issue/
+	  - solved an overflow issue.
 
 	* regression-tests/test-all-algs.pl:
 	  updated the reference results using "stable_sort"

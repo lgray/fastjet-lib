@@ -43,6 +43,7 @@ using namespace std;
 /// allow for warnings
 LimitedWarning ClusterSequenceAreaBase::_warnings;
 LimitedWarning ClusterSequenceAreaBase::_warnings_zero_area;
+LimitedWarning ClusterSequenceAreaBase::_warnings_empty_area;
 
 //----------------------------------------------------------------------
 /// return the total area, within the selector's range, that is free
@@ -251,12 +252,26 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   total_njets += n_empty;
   total_area  += empty_a;
 
+  // we need an int (rather than an unsigned int) with the size of the
+  // pt_over_areas array, because we'll often be doing subtraction of
+  // -1, negating it, etc. All of these operations go crazy with unsigned ints.
+  int pt_over_areas_size = pt_over_areas.size();
+  if (n_empty < -pt_over_areas_size/4)
+    _warnings_empty_area.warn("ClusterSequenceAreaBase::get_median_rho_and_sigma(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
+
   for (int i = 0; i < 2; i++) {
     double nj_median_pos = 
-      (pt_over_areas.size()-1 + n_empty)*posn[i] - n_empty;
+      (pt_over_areas_size-1.0 + n_empty)*posn[i] - n_empty;
     double nj_median_ratio;
-    if (nj_median_pos >= 0 && pt_over_areas.size() > 1) {
+    if (nj_median_pos >= 0 && pt_over_areas_size > 1) {
       int int_nj_median = int(nj_median_pos);
+ 
+     // avoid potential overflow issues
+      if (int_nj_median+1 > pt_over_areas_size-1){
+	int_nj_median = pt_over_areas_size-2;
+	nj_median_pos = pt_over_areas_size-1;
+      }
+
       nj_median_ratio = 
         pt_over_areas[int_nj_median] * (int_nj_median+1-nj_median_pos)
         + pt_over_areas[int_nj_median+1] * (nj_median_pos - int_nj_median);
