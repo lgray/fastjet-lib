@@ -109,8 +109,14 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 
   // if we're dealing with a dynamic determination of the filtering
   // radius, do it now
-  if (_Rfiltfunc)
-    _subjet_def = JetDefinition(cambridge_algorithm, (*_Rfiltfunc)(jet));
+  if ((_Rfilt>=0) || (_Rfiltfunc)){
+    const JetDefinition::Recombiner * common_recombiner = _get_common_recombiner();
+    double Rfilt = (_Rfiltfunc) ? (*_Rfiltfunc)(jet) : _Rfilt;
+    if (common_recombiner)
+      _subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
+    else
+      _subjet_def = JetDefinition(cambridge_algorithm, Rfilt);
+  }
 
   // get the jet definition to be use and whether we can apply our
   // simplified C/A+C/A filter
@@ -252,6 +258,9 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
 //----------------------------------------------------------------------
 
 // get the pieces down to the fundamental pieces
+// 
+// Note that this just checks that there is an associated CS to the
+// fundamental pieces, not that it is still valid
 bool Filter::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pieces) const{
   if (jet.has_associated_cluster_sequence()){
     all_pieces.push_back(jet);
@@ -268,11 +277,25 @@ bool Filter::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pieces
   return false;
 }
 
+// get the common recombiner to all pieces (NULL if none)
+//
+// Note that if the jet has an associated cluster sequence that is no
+// longer valid, an error will be thrown (needed since it could be the
+// 1st check called after the enumeration of the pieces)
+const JetDefinition::Recombiner* Filter::_get_common_recombiner() const{
+  const JetDefinition & jd_ref = all_pieces[0].validated_cs()->jet_def();
+  for (unsigned int i=1; i<all_pieces.size(); i++)
+    if (!all_pieces[i].validated_cs()->jet_def().has_same_recombiner(jd_ref)) return NULL;
+
+  return jd_ref.recombiner();
+}
+
 // check if the jet (or all its pieces) have explicit ghosts
 // (assuming the jet has area support
 //
 // Note that if the jet has an associated cluster sequence that is no
-// longer valid, an error will be thrown
+// longer valid, an error will be thrown (needed since it could be the
+// 1st check called after the enumeration of the pieces)
 bool Filter::_check_explicit_ghosts() const{
   for (vector<PseudoJet>::const_iterator it=all_pieces.begin(); it!=all_pieces.end(); it++)
     if (! it->validated_csab()->has_explicit_ghosts()) return false;
@@ -280,16 +303,32 @@ bool Filter::_check_explicit_ghosts() const{
 }
 
 // check if one can apply the simplification for C/A subjets
+//
+// This includes:
+//  - the subjet definition asks for C/A subjets
+//  - all the pieces share the same CS
+//  - that CS is C/A with the same recombiner as the subjet def
+//  - the filtering radius is not larger than any of the pairwise
+//    distance between the pieces
+//
+// Note that if the jet has an associated cluster sequence that is no
+// longer valid, an error will be thrown (needed since it could be the
+// 1st check called after the enumeration of the pieces)
 bool Filter::_check_ca() const{
   if (_subjet_def.jet_algorithm() != cambridge_algorithm) return false;
 
   // check that the 1st of all the pieces (we're sure there is at
   // least one) is coming from a C/A clustering. Then check that all
   // the following pieces share the same ClusterSequence
-  const ClusterSequence * cs_ref = all_pieces[0].associated_cluster_sequence();
+  const ClusterSequence * cs_ref = all_pieces[0].validated_cs();
   if (cs_ref->jet_def().jet_algorithm() != cambridge_algorithm) return false;
   for (unsigned int i=1; i<all_pieces.size(); i++)
-    if (all_pieces[i].associated_cluster_sequence() != cs_ref) return false;
+    if (all_pieces[i].validated_cs() != cs_ref) return false;
+
+  // check that the 1st peice has the same recombiner as the one used
+  // for the subjet clustering
+  // Note that since they share the same CS, checking the 2st one is enough
+  if (!cs_ref->jet_def().has_same_recombiner(_subjet_def)) return false;
 
   // we also have to make sure that the filtering radius is not larger
   // than any of the inter-pieces distance

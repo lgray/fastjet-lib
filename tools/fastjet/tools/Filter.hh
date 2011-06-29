@@ -152,21 +152,27 @@ public:
   /// obtained with a cluster sequence with area support and explicit
   /// ghosts
   Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0) : 
-    _subjet_def(subjet_def), _Rfiltfunc(0), _selector(selector), _rho(rho) {}
+    _subjet_def(subjet_def), _Rfiltfunc(0), _Rfilt(-1), _selector(selector), _rho(rho) {}
 
   /// Same as the full constructor (see above) but just specifying the radius
   /// By default, Cambridge-Aachen is used
+  /// If the jet (or all its pieces) is obtained with a non-default
+  /// recombiner, that one will be used
   ///  \param Rfilt   the filtering radius
   Filter(double Rfilt, Selector selector, double rho = 0.0) : 
-    _subjet_def(JetDefinition(cambridge_algorithm, Rfilt)), 
-    _Rfiltfunc(0), _selector(selector), _rho(rho) {}
+    _Rfiltfunc(0), _Rfilt(Rfilt), _selector(selector), _rho(rho) { 
+    if (_Rfilt<0)
+      throw Error("Attempt to create a Filter with a negative filtering radius");
+  }
 
   /// Same as the full constructor (see above) but just specifying a
   /// filtering radius that will depend on the jet being filtered
-  /// As for teh previous case, Cambridge-Aachen is used
+  /// As for the previous case, Cambridge-Aachen is used
+  /// If the jet (or all its pieces) is obtained with a non-default
+  /// recombiner, that one will be used
   ///  \param Rfilt_func   the filtering radius function of a PseudoJet
   Filter(FunctionOfPseudoJet<double> *Rfilt_func, Selector selector, double rho = 0.0) : 
-    _Rfiltfunc(Rfilt_func), _selector(selector), _rho(rho) {}
+    _Rfiltfunc(Rfilt_func), _Rfilt(-1), _selector(selector), _rho(rho) {}
 
   /// default dtor
   virtual ~Filter(){};
@@ -210,6 +216,9 @@ protected:
   /// get the pieces down to the fundamental pieces
   bool _get_all_pieces(const PseudoJet &jet, std::vector<PseudoJet> &all_pieces) const;
 
+  /// get the common recombiner to all pieces (NULL if none)
+  const JetDefinition::Recombiner* _get_common_recombiner() const;
+
   /// check if one can apply the simplified trick for C/A subjets
   bool _check_ca() const;
 
@@ -224,6 +233,7 @@ protected:
                                ///< the jet definition to use to extract the subjets
   FunctionOfPseudoJet<double> *_Rfiltfunc; 
                                ///< a dynamic filtering radius function of the jet being filtered
+  double _Rfilt;               ///< a constant specifying the subjet radius (with C/A)
   mutable Selector _selector;  ///< the subjet selection criterium
   double _rho;                 ///< the background density (used for subtraction when possible)
 
