@@ -74,7 +74,7 @@
 	* plugins/ATLASCone/Jet.hh:
 	* plugins/TrackJet/TrackJetPlugin.cc:
 	  used stable_sort instead of sort to avoid potential issue for
-	  "equal acses" (see "Other issues to be aware of", point 2 in
+	  "equal cases" (see "Other issues to be aware of", point 2 in
 	  BUGS). Note that this would solve the issues in BUGS but would
 	  still make the result dependent on the ordering of the particles
 	  in case of a degeneracy.
