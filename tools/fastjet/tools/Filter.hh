@@ -194,7 +194,8 @@ protected:
   /// [NB: this routine is work in progress as part of a transition to a Filter
   ///      that also works on jet collections]
   void _set_filtered_elements(const PseudoJet & jet,
-			      std::vector<PseudoJet> & filtered_elements) const;
+			      std::vector<PseudoJet> & filtered_elements,
+			      bool & discard_area) const;
   
   /// set the filtered elements in the simple case of C/A+C/A
   void _set_filtered_elements_cafilt(const PseudoJet & jet,
@@ -209,7 +210,8 @@ protected:
   /// form of a PseudoJet with a special ClusterSequenceInfo
   PseudoJet _finalise(const PseudoJet & jet, 
 		      std::vector<PseudoJet> & kept, 
-		      std::vector<PseudoJet> & rejected) const;
+		      std::vector<PseudoJet> & rejected,
+		      const bool discard_area) const;
 
   // a series of checks
   //--------------------------------------------------------------------

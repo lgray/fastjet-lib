@@ -66,7 +66,8 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   // NB: subjets is empty to begin with (see the comment for
   //     _set_filtered_elements_cafilt)
   vector<PseudoJet> subjets; 
-  _set_filtered_elements(jet, subjets);
+  bool discard_area;
+  _set_filtered_elements(jet, subjets, discard_area);
 
   // now build the vector of kept and rejected subjets
   vector<PseudoJet> kept, rejected;
@@ -76,13 +77,14 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   _selector.sift(subjets, kept, rejected);
 
   // gather the info under the form of a PseudoJet
-  return _finalise(jet, kept, rejected);
+  return _finalise(jet, kept, rejected, discard_area);
 }
 
 
 // sets filtered_elements to be all the subjets on which filtering will work
 void Filter::_set_filtered_elements(const PseudoJet & jet,
-				    vector<PseudoJet> & filtered_elements) const {
+				    vector<PseudoJet> & filtered_elements,
+				    bool & discard_area) const {
   // sanity checks
   //-------------------------------------------------------------------
   // make sure that the jet has constituents
@@ -131,10 +133,12 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 
   // extract the subjets
   //-------------------------------------------------------------------
+  discard_area = false;
   if (simple_cafilt){
     // first make sure that 'filtered_elemetns' is empty
     filtered_elements.clear();
     _set_filtered_elements_cafilt(jet, filtered_elements, _subjet_def.R());
+    discard_area = (_rho==0.0) && (jet.has_area()) && (!_check_explicit_ghosts());
   } else {
    _set_filtered_elements_generic(jet, filtered_elements);
   }
@@ -247,7 +251,8 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
 // form of a PseudoJet with a special ClusterSequenceInfo
 PseudoJet Filter::_finalise(const PseudoJet & jet, 
 			    vector<PseudoJet> & kept, 
-			    vector<PseudoJet> & rejected) const {
+			    vector<PseudoJet> & rejected,
+			    const bool discard_area) const {
   // figure out which recombiner to use
   const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
 
@@ -256,6 +261,13 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
   fs->_original_jet = jet;
   fs->_rejected = rejected;
+
+  if (discard_area){
+    // safety check: make sure there is an area to discard!!!
+    assert(fs->_area_4vector_ptr);
+    delete fs->_area_4vector_ptr;
+    fs->_area_4vector_ptr=0;
+  }
   
   return filtered_jet;
 }

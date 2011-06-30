@@ -1,5 +1,11 @@
 2011-06-30  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Filter.cc:
+	  For situations with C/A subjets with rho==0 and without explicit
+	  ghosts, removed the "area" support since one cannot trust the area
+	  of subjets without explicit ghosts.
+
 	* Doxyfile:
 	* Doxyfile-devel:
 	  fixed header path in the doc
