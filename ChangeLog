@@ -1,3 +1,9 @@
+2011-06-30  Gregory Soyez  <soyez@fastjet.fr>
+
+	* Doxyfile:
+	* Doxyfile-devel:
+	  fixed header path in the doc
+
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
 	* src/FunctionOfPseudoJet.cc: 
