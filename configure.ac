@@ -256,6 +256,9 @@ ACX_CHECK_PLUGIN(Jade, jade, JADE, yes)
 dnl D0RunICone
 ACX_CHECK_PLUGIN(D0RunICone, d0runicone, D0RUNICONE, no)
 
+dnl GridJet
+ACX_CHECK_PLUGIN(GridJet, gridjet, GRIDJET, yes)
+
 dnl end of plugin section --- don't modify this line
 
 dnl-------------------------------------------------------------------

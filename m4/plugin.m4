@@ -14,7 +14,8 @@ AC_DEFUN([ACX_INIT_PLUGINS],
     DEFAULT_ENABLE_EECAMBRIDGE="yes"
     DEFAULT_ENABLE_JADE="yes"
     DEFAULT_ENABLE_D0RUNICONE="no"
-    dnl end of default plugin settings --- don't modify this line
+    DEFAULT_ENABLE_GRIDJET="yes"
+dnl end of default plugin settings --- don't modify this line
 
     dnl declare the plugins for the config header
     AH_TEMPLATE(ENABLE_PLUGIN_SISCONE,          [checks if the SISCone plugin is enabled])
@@ -28,7 +29,8 @@ AC_DEFUN([ACX_INIT_PLUGINS],
     AH_TEMPLATE(ENABLE_PLUGIN_EECAMBRIDGE,      [checks if the EECambridge plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_JADE,             [checks if the Jade plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_D0RUNICONE,       [checks if the D0RunICone plugin is enabled])
-    dnl end of declare the plugins for the config header --- don't modify this line
+    AH_TEMPLATE(ENABLE_PLUGIN_GRIDJET, [checks if the GridJet plugin is enabled])
+dnl end of declare the plugins for the config header --- don't modify this line
 ])
 
 
@@ -60,7 +62,8 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="yes" 
     	DEFAULT_ENABLE_JADE="yes"
 	DEFAULT_ENABLE_D0RUNICONE="yes"
-        dnl end of set all default plugin settings to yes --- don't modify this line
+        DEFAULT_ENABLE_GRIDJET="yes"
+dnl end of set all default plugin settings to yes --- don't modify this line
     fi
     if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
         dnl set all default plugin settings to no
@@ -75,7 +78,8 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="no" 
     	DEFAULT_ENABLE_JADE="no"
 	DEFAULT_ENABLE_D0RUNICONE="no"
-        dnl end of set all default plugin settings to no --- don't modify this line
+        DEFAULT_ENABLE_GRIDJET="no"
+dnl end of set all default plugin settings to no --- don't modify this line
     fi
     AC_MSG_RESULT($ENABLE_ALLPLUGINS)
 ])
@@ -108,7 +112,8 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="yes" 
     	DEFAULT_ENABLE_JADE="yes"
 	DEFAULT_ENABLE_D0RUNICONE="yes"
-        dnl end of set all default cxx plugin settings to yes --- don't modify this line
+        DEFAULT_ENABLE_GRIDJET="yes"
+dnl end of set all default cxx plugin settings to yes --- don't modify this line
     fi
     if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
         dnl set all default cxx plugin settings to no
@@ -122,7 +127,8 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	DEFAULT_ENABLE_EECAMBRIDGE="no" 
     	DEFAULT_ENABLE_JADE="no"
 	DEFAULT_ENABLE_D0RUNICONE="no"
-        dnl end of set all default cxx plugin settings to no --- don't modify this line
+        DEFAULT_ENABLE_GRIDJET="no"
+dnl end of set all default cxx plugin settings to no --- don't modify this line
     fi
     AC_MSG_RESULT($ENABLE_ALLCXXPLUGINS)
 ])
@@ -186,5 +192,6 @@ AC_DEFUN([AC_PLUGIN_SUMMARY],
 	echo "           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE} 
 	echo "           PxCone            "${ENABLE_PXCONE}		  
 	echo "           TrackJet          "${ENABLE_TRACKJET}         
+	echo "           GridJet           "${ENABLE_GRIDJET}         
 	dnl end of show the plugins summary --- don't modify this line
 ])

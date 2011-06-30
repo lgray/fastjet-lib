@@ -6,7 +6,7 @@ default: cdfcones-lib siscone-lib jade-lib eecambridge-lib nesteddefs-lib
 
 
 # all cxx plugins (pxcone left out as it needs fortran ibs)
-allcxx: default atlas-lib cms-lib doruni-lib dorunii-lib trackjet-lib
+allcxx: gridjet default atlas-lib cms-lib doruni-lib dorunii-lib trackjet-lib
 
 # all plugins
 all: allcxx pxcone-lib
@@ -45,7 +45,12 @@ siscone-lib:
 trackjet-lib:
 	cd TrackJet && $(MAKE) -f makefile.static
 
+gridjet-lib:
+	cd GridJet clean:clean: $(MAKE) -f makefile.static
+
 clean:
+	cd GridJet clean:clean: $(MAKE) -f makefile.static $(MAKECMDGOALS)
+
 	cd ATLASCone        && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 	cd CDFCones         && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 	cd CMSIterativeCone && $(MAKE) -f makefile.static $(MAKECMDGOALS)
@@ -59,6 +64,8 @@ clean:
 	cd TrackJet         && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 
 distclean:
+	cd GridJet distclean:distclean: $(MAKE) -f makefile.static $(MAKECMDGOALS)
+
 	cd ATLASCone        && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 	cd CDFCones         && $(MAKE) -f makefile.static $(MAKECMDGOALS)
 	cd CMSIterativeCone && $(MAKE) -f makefile.static $(MAKECMDGOALS)

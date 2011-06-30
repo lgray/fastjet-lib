@@ -33,6 +33,9 @@ endif
 if BUILD_PLUGIN_D0RUNICONE
 SUBDIRS += D0RunICone
 endif
+if BUILD_PLUGIN_GRIDJET
+SUBDIRS += GridJet
+endif
 # end plugin section -- do not modify this line
 
 SUBDIRS += .
@@ -75,9 +78,12 @@ endif
 if BUILD_PLUGIN_D0RUNICONE
 libfastjetplugins_la_LIBADD += D0RunICone/libD0RunIConePlugin.la
 endif
+if BUILD_PLUGIN_GRIDJET
+libfastjetplugins_la_LIBADD += GridJet/libGridJetPlugin.la
+endif
 # end monolithic plugin section -- do not modify this line
 endif
 
-DIST_SUBDIRS = D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs
+DIST_SUBDIRS = GridJet D0RunICone CMSIterativeCone Jade EECambridge ATLASCone TrackJet SISCone CDFCones PxCone D0RunIICone NestedDefs
 
 EXTRA_DIST = makefile.static

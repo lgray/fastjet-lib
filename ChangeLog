@@ -1,3 +1,30 @@
+2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo + Gregory
+
+        * m4/plugin.m4
+        * Doxyfile
+        * src/genconfig.sh
+        * example/makefile.static
+        * example/fastjet_timing_plugins.cc
+        * example/Makefile.am
+        * configure.ac
+        * test-compare.sh
+        * Doxyfile-devel
+        * plugins/GridJet
+        * plugins/GridJet/fastjet
+        * plugins/GridJet/fastjet/GridJetPlugin.hh
+        * plugins/GridJet/fastjet/Makefile.am
+        * plugins/GridJet/makefile.static
+        * plugins/GridJet/Makefile.am
+        * plugins/GridJet/GridJetPlugin.cc
+        * plugins/SISCone/siscone
+        * plugins/makefile.static
+        * plugins/Makefile.am
+        * ChangeLog
+        * experimental/plugins/Makefile
+        * config.h.in
+	  Did most of the work of adding the GridJet plugin. Still not
+	  functional though. 
+	
 2011-06-30  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Filter.hh:

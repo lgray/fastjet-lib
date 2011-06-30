@@ -18,6 +18,9 @@
 /* The EECambridge plugin is enabled */
 #undef ENABLE_PLUGIN_EECAMBRIDGE
 
+/* The GridJet plugin is enabled */
+#undef ENABLE_PLUGIN_GRIDJET
+
 /* The Jade plugin is enabled */
 #undef ENABLE_PLUGIN_JADE
 

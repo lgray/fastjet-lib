@@ -113,7 +113,7 @@ cp clear_patterns.orig clear_patterns.tmp
 
 # note: algs specified as alg:name mean that 'name' has to be checked for the 
 #       availability of 'alg'
-for plugin_tag in siscone sisconespheri:siscone jetclu:cdfcones midpoint:cdfcones pxcone d0runiicone trackjet atlascone cmsiterativecone eecambridge@single-ee-event.dat:eecambridge eecambridge,-ycut,0.01@single-ee-event.dat:eecambridge jade,-excly,0.01@single-ee-event.dat:jade d0runipre96cone:d0runicone d0runicone:d0runicone ; do
+for plugin_tag in siscone sisconespheri:siscone jetclu:cdfcones midpoint:cdfcones pxcone d0runiicone trackjet atlascone cmsiterativecone eecambridge@single-ee-event.dat:eecambridge eecambridge,-ycut,0.01@single-ee-event.dat:eecambridge jade,-excly,0.01@single-ee-event.dat:jade d0runipre96cone:d0runicone d0runicone:d0runicone gridjet ; do
     plugin=${plugin_tag%%:*}
     tag=${plugin_tag##*:}
 
