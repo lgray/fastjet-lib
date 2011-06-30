@@ -37,6 +37,7 @@
 #include<cmath>
 #include <cstdlib>
 #include<cassert>
+#include<memory>
 //
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
 #include "fastjet/internal/Dnn4piCylinder.hh"
@@ -66,16 +67,16 @@ void ClusterSequence::_delaunay_cluster () {
   }
 
   // initialise our DNN structure with the set of points
-  DynamicNearestNeighbours * DNN;
+  auto_ptr<DynamicNearestNeighbours> DNN;
 #ifndef DROP_CGAL // strategy = NlnN* are not supported if we drop CGAL...
   bool verbose = false;
   bool ignore_nearest_is_mirror = (_Rparam < twopi);
   if (_strategy == NlnN4pi) {
-    DNN = new Dnn4piCylinder(points,verbose);
+    DNN.reset(new Dnn4piCylinder(points,verbose));
   } else if (_strategy == NlnN3pi) {
-    DNN = new Dnn3piCylinder(points,ignore_nearest_is_mirror,verbose);
+    DNN.reset(new Dnn3piCylinder(points,ignore_nearest_is_mirror,verbose));
   } else if (_strategy == NlnN) {
-    DNN = new Dnn2piCylinder(points,ignore_nearest_is_mirror,verbose);
+    DNN.reset(new Dnn2piCylinder(points,ignore_nearest_is_mirror,verbose));
   } else 
 #else
   if (_strategy == NlnN4pi || _strategy == NlnN3pi || _strategy == NlnN) {
@@ -100,7 +101,7 @@ void ClusterSequence::_delaunay_cluster () {
   // fill the map with the minimal (as far as we know) subset of Dij
   // distances (i.e. nearest neighbour ones).
   for (int ii = 0; ii < n; ii++) {
-    _add_ktdistance_to_map(ii, DijMap, DNN);
+    _add_ktdistance_to_map(ii, DijMap, DNN.get());
   }
 
   // run the clustering (go up to i=n-1, but then will stop half-way down,
@@ -192,13 +193,11 @@ void ClusterSequence::_delaunay_cluster () {
     vector<int>::iterator it = updated_neighbours.begin();
     for (; it != updated_neighbours.end(); ++it) {
       int ii = *it;
-      _add_ktdistance_to_map(ii, DijMap, DNN);
+      _add_ktdistance_to_map(ii, DijMap, DNN.get());
     }
       
   } // end clustering loop 
   
-  // remember to clean up!
-  delete DNN;
 }
 
 

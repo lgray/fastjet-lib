@@ -1,3 +1,9 @@
+2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* src/ClusterSequence_Delaunay.cc: 
+	  solved potential memory leak for rare cases when this throws an
+	  error (e.g. for coincident points) by using an auto_ptr for DNN.
+
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
         * m4/plugin.m4
