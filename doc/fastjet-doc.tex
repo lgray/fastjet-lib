@@ -1,18 +1,32 @@
+%% ----- FJ3THOUGHTS ----------------
+%%
+%% At various places in the text you'll find FJ3THOUGHTS tags, with
+%% suggestions for what to do to the manual as we progress towards
+%% an arXiv version of this manual.
+%%
+%% More general points are collected here
+%% - remove references to CLHEP and KtJet (other than in footnote and
+%%   to acknowledge their historical influence)
+%% - maybe remove section 4, since it's really covered by section 2
+%% - where do we place SR jet algs section 5? And why not move plugins closer?
+%% - where do jet algs go relative to sections 3.2/3.3 JD & CS?
+
+%----------------------------------------------------------------------
 %% TO DO before a 3.0:
-%% - make sure references to 3.0(alpha) are all dealt with
-%% - discuss UserInfo in section 3?
+%% - make sure references to 3.0(alpha) are all dealt with [done]
+%% - discuss UserInfo in section 3?                        [done]
+%% - List of features not yet documented in section 3.5 ->
+%%                        user-defined structural info appendix?
 %% - section 7.5 background subtraction
 %% - section 7.5 background estimation example
-%%
-%% TO DO for arXiv release?
-%% - rewrite abstract
-%% - move description of native jet algorithms to start of document?
-%%
-%% TO DOcument for 3.0alpha2
-%% - join(...) [done]
-%% - check UserInfo part up to date [done]
-%% - check substructure of jets part up to date [done]
-%% - tools
+%% - tools(?)
+%% - update spartyjet refs
+%% - transfer_from_sequence
+%% - transformers
+%% - check all the structure stuff in the body of the documentation
+%% - PJ == 0, PJ != 0
+%% - join: recombiner [done] + area [done] + template versions
+%% - intro to documention [at least before putting it on arXiv]
 %%
 %% TO DO:
 %%
@@ -21,6 +35,12 @@
 %%  . refs for trackjet and other plugins?
 %%
 %%  . issue of recomb. schemes and plugins.
+%%
+%% OLDER TO DOs
+%% TO DOcument for 3.0alpha2
+%% - join(...) [done]
+%% - check UserInfo part up to date [done]
+%% - check substructure of jets part up to date [done]
 \documentclass[12pt,a4]{article}
 
 
@@ -112,6 +132,29 @@
 \maketitle
 
 \begin{abstract}
+  %% ----- FJ3THOUGHTS ----------------
+  %% This should mention all main features, with a more equal weight
+  %% to the various components:
+  %% - C++ native fast sec.rec. & plugins for most cones
+  %% - jet areas
+  %% - background estimation facilities
+  %% - substructure
+  %% 
+  
+  % NEW VERSION:\\
+  % \fastjet is a package that provides access to a broad range of jet
+  % finding and analysis tools.
+  % %
+  % It includes efficient implementations of all widely-used $2\to 1$
+  % sequential recombination jet finders for pp and $e^+e^-$ collisions,
+  % as well as access to 3rd party jet finders through a plugin
+  % mechanism, including all currently-used cone algorithms.
+  % %
+  % Means are provided for manipulating jet substructure, intended to
+  % facilitate development of new substructure tools.
+  % %
+  % \fastjet also provides 
+
   \fastjet provides fast ($N\ln N, N^2$) implementations of the
   longitudinally invariant $k_t$, anti-$k_t$ and Cambridge/Aachen jet
   algorithms for $pp$ collisions, based in part on tools and methods
@@ -134,8 +177,24 @@
 %----------------------------------------------------------------------
 \section{Introduction}
 
+%% ----- FJ3THOUGHTS ----------------
+%% Start with some perspective (jet finding crucial to make sense of quarks)
+%% Aims 
+%% - provide a reliable, efficient set of implementations
+%% - facilities to allow 3rd parties to easily extend the functionality
+%% - implementations of some subset of useful collider-related tools,
+%%   including jet-area determination, background estimation and substructure
+%% - [ability to incorporate into other frameworks easily enough]
+%% This manual
+%% - not an explanation of the physics, for that see other refs
+%% - next section, intended to get you started quickly
+%% - then systematic explanation of the full range of features
+%% - also look at Doxygen and the examples
+%%
+%%
+
 This note documents the \fastjet package, which provides efficient
-geometrically-based implementations \cite{fastjet} for the longitudinally
+geometrically-based C++ implementations \cite{fastjet} for the longitudinally
 invariant $k_t$ \cite{ktexcl,ktincl}, inclusive Cambridge/Aachen
 \cite{CamOrig,CamWobisch} and anti-$k_t$\cite{antikt} jet algorithms. 
 It also provides access to
@@ -185,7 +244,7 @@ It also added a wrapper to \fastjet
 allowing one to run SISCone and some of the sequential recombination
 algorithms from Fortran programs.
 %
-In version 3.0(alpha1) a PseudoJet knows (where relevant) about its
+In version 3.0 a PseudoJet knows (where relevant) about its
 underlying ClusterSequence, allowing one to write {\em e.g.}
 \ttt{jet.constituents()}, and can be associated with extra information
 beyond just a user index. This version also adds the D0-Run I cone as
@@ -217,7 +276,7 @@ For the impatient, the \fastjet package can be set up and run as follows.
 \item Download the code and the unpack it
 \begin{verbatim}
  wget http://www.lpthe.jussieu.fr/~salam/fastjet/repo/fastjet-X.Y.Z.tar.gz 
- tar zxvf fastjet-X.Y.Z.tar.gz<br>
+ tar zxvf fastjet-X.Y.Z.tar.gz
  cd fastjet-X.Y.Z/
 \end{verbatim}
 
@@ -290,10 +349,10 @@ jet 1: 100 0 0
 %----------------------------------------------------------------------
 \section{Jet-finding interface}
 
-The \fastjet code is written in C++. From the point of view of simple
-usage its interface has a number of similarities to that of
-\ttt{KtJet} \cite{KtJet}, fundamental differences being highlighted
-below.
+% The \fastjet code is written in C++. From the point of view of simple
+% usage its interface has a number of similarities to that of
+% \ttt{KtJet} \cite{KtJet}, fundamental differences being highlighted
+% below.
 
 All classes are contained in the \ttt{fastjet} namespace. For basic
 usage, the user is exposed to three main classes:
@@ -308,10 +367,12 @@ sequence. \ttt{fastjet::ClusterSequence} is the class that carries out
 jet-clustering and provides access to the final jets.
 
 The class \ttt{fastjet::JetDefinition} contains a specification of how
-jet clustering is to be performed. Such a class was not present in
-version~1 of \fastjet (nor in \ktjet), but was found to be useful to
-`contain' the complexity of the interface as new features such as
-alternative jet algorithms and jet-area determination were introduced.
+jet clustering is to be performed. 
+
+% Such a class was not present in
+% version~1 of \fastjet (nor in \ktjet), but was found to be useful to
+% `contain' the complexity of the interface as new features such as
+% alternative jet algorithms and jet-area determination were introduced.
 
 
 %......................................................................
@@ -368,8 +429,8 @@ accessing the components
   valarray<double> four_mom() const;
 \end{lstlisting}}
 %
-There are two ways of associating information user information with a
-\ttt{PseudoJet}. 
+There are two ways of associating user information with a
+\ttt{PseudoJet}.
 %
 The simpler method is through an integer called the user index
 \begin{lstlisting}
@@ -379,25 +440,38 @@ The simpler method is through an integer called the user index
   /// return the user_index
   int user_index() const ;
 \end{lstlisting}
-A more powerful method involves a pointer to a derived class of
-\ttt{PseudoJet::UserInfoBase}. It is discussed in
-appendix~\ref{app:user-info}. 
+A more powerful method involves passing a pointer to a derived class
+of \ttt{PseudoJet::UserInfoBase}. The two essential calls are
+\begin{lstlisting}
+  /// set the pointer to user information (the PseudoJet will then own it)
+  void set_user_info(UserInfoBase * user_info);
+  /// retrieve a reference to a dynamic cast of type L of the user info
+  template<class L> const L & user_info() const;
+\end{lstlisting}
+Further details are given in appendix~\ref{app:user-info}.
 
 A \verb:PseudoJet: can be reset with
 \begin{lstlisting}
-  /// reset the 4-momentum according to the supplied components,
-  /// put the user and history indices back to their default values (-1
+  /// Reset the 4-momentum according to the supplied components, put the user
+  /// and history indices and user info back to their default values (-1, unset) 
   inline void reset(double px, double py, double pz, double E);
+  /// Reset just the 4-momentum according to the supplied components,
+  /// all other information is left unchanged
+  inline void reset_momentum(double px, double py, double pz, double E);
 \end{lstlisting}
 and similarly taking as argument a templated
 \verb:some_lorentz_vector: or a \verb:PseudoJet: (in the latter case,
-the user and internal indices are inherited).
+with \ttt{reset}, the user and internal indices and user-info are
+copied from the \PJ).
 
-Finally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are defined, with
-\ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and \ttt{*},
-\ttt{/} acting 
-on a \ttt{PseudoJet} and a \ttt{double} coefficient. Analogous
-\ttt{+=}, etc., operators, are also defined.
+Finally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are
+defined, with \ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and
+\ttt{*}, \ttt{/} acting on a \ttt{PseudoJet} and a \ttt{double}
+coefficient.
+%
+The
+%
+Analogous \ttt{+=}, etc., operators, are also defined.
 
 
 We also provide routines for taking an unsorted vector of
@@ -830,29 +904,38 @@ This can be accomplished with the function \ttt{join}:
 \begin{lstlisting}
   PseudoJet resonance = join(jet1,jet2); 
 \end{lstlisting}
-The 4-momenta are added, and in addition the \ttt{resonance} remembers
-that it came from \ttt{jet1} and \ttt{jet2}. So, for example, a call
-to \ttt{resonance.constituents()} will return the constituents of both
-\ttt{jet1} and \ttt{jet2}.
+The 4-momenta are added,\footnote{This corresponds to $E$-scheme
+  recombination. If the user wishes to have the jets joined with a
+  different recombination scheme he/she can pass
+  \ttt{JetDefinition::Recombiner} (cf.\ section~\ref{sec:recombiner})
+  as the last argument to \ttt{join(...)}.} and in addition the
+\ttt{resonance} remembers that it came from \ttt{jet1} and
+\ttt{jet2}. So, for example, a call to \ttt{resonance.constituents()}
+will return the constituents of both \ttt{jet1} and \ttt{jet2}.
 %
 It is possible to \ttt{join} 1, 2, 3 or 4 jets or a \ttt{vector} of
 jets.
+%
+If the jets being joined had areas (section~\ref{sec:areas}) then the
+joined jet will also have an area.
 
-For a jet formed in this way, one can find out which pieces it has
+
+
+For a jet formed with \ttt{join}, one can find out which pieces it has
 been composed from with the function
 \begin{lstlisting}
   vector<PseudoJet> pieces = resonance.pieces();
 \end{lstlisting}
-which, in the above example, would simply return a vector of size 2
+In the above example, this would simply return a vector of size 2
 containing \ttt{jet1} and \ttt{jet2}.
 %
-For jets not formed in this (or a related) way \ttt{pieces()} will
-throw an error.
+The \ttt{pieces()} function also works for jets that come from a \CS,
+returning two pieces if the jet has parents, zero otherwise.
 
 
 
 %......................................................................
-\paragraph{Inquiries as to available structural information.}
+\paragraph{Enquiries as to available structural information.}
 
 Whether or not a given jet has constituents, recursive substructure or
 pieces depends on how it was formed. 
@@ -863,7 +946,7 @@ it makes sense, say, to call \ttt{pieces()}.
 However if a jet is returned from some third-party code, it may not
 always be clear kinds of structural information it has. 
 %
-Accordingly a number of inquiry functions are available:
+Accordingly a number of enquiry functions are available:
 \begin{lstlisting}
   bool has_structure();         // returns true if it has some kind of structural info
   bool has_constituents();      // returns true if it has constituents 
@@ -871,16 +954,23 @@ Accordingly a number of inquiry functions are available:
   bool has_pieces();            // true if the jet can be broken up into pieces
   bool has_area();              // true if it has jet-area informaion
 \end{lstlisting}
-The dichotomy between cluster-sequence type structural information and
-\ttt{pieces} helps provide a distinction between different origins for
-structure --- either that arising diretly from a jet algorithm, or
-that applied a posteriori. 
+Asking (say) for the \ttt{pieces()} of a jet for which
+\ttt{has\_pieces()} returns false will cause an error to be thrown.
 %
-There is a balance between the usefulness of such a dichotomy and the
-added complication it brings.
+The structural information available for different kinds of jets is
+summarised in appendix~\ref{app:structure_table}.
+
+% The dichotomy between cluster-sequence type structural information and
+% \ttt{pieces} helps provide a distinction between different origins for
+% structure --- either that arising diretly from a jet algorithm, or
+% that applied a posteriori. 
+% %
+% The particular choice we have made is intended to represent a balance
+% between the usefulness of such a dichotomy and the added complication
+% it brings.
 %
-In this respect version 3.0alpha3 should be considered a snapshot of
-ongoing thought about the question.
+% In this respect version 3.0alpha3 should be considered a snapshot of
+% ongoing thought about the question.
 
 
 %......................................................................
@@ -924,9 +1014,10 @@ the original article that defines the algorithm, as well as to the
 
 For full details see the example program
 \ttt{example/fastjet\_example.cc} that is distributed with the
-\ttt{FastJet} code. For the reader who is familiar with \ttt{KtJet}
-\cite{KtJet}, the example program is also given as it would be written
-for \ttt{KtJet}, in the file \ttt{example/ktjet\_example.cc}.
+\ttt{FastJet} code. 
+% For the reader who is familiar with \ttt{KtJet}
+% \cite{KtJet}, the example program is also given as it would be written
+% for \ttt{KtJet}, in the file \ttt{example/ktjet\_example.cc}.
 
 A simplified version of the \fastjet example program is given below.
 
@@ -1119,7 +1210,7 @@ algorithm, which has a single distance:
   d_{ij} &= 2 \min(E_i^{2p}, E_j^{2p}) (1- \cos \theta_{ij})\,.
 \end{align}
 Note the difference in normalisation between the $d_{ij}$ in
-eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact in neither
+eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact that in neither
 case have we normalised to the total energy $Q$ in the event, contrary
 to the convention adopted originally in~\cite{eekt} (where the
 distance measure was called $y_{ij}$).
@@ -1168,7 +1259,7 @@ On request, we may in the future provide dedicated schemes for $\ee$
 collisions.
 
 \paragraph{User-defined schemes.} The user may define their own,
-custom recombination schemes, as described in Appendix~\ref{app:a}.
+custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
 
 
 
@@ -1266,7 +1357,7 @@ of jets, one should write
   vector<PseudoJet> allbut2hardest = (!SelectorNHardest(2))(jets);
 \end{lstlisting}
 with the brackets around the selector definition being now necessary due to
-\ttt{()} having in C++  higher precedence than boolean operators.
+\ttt{()} having higher precedence in C++ than boolean operators.
 
 
 %......................................................................
@@ -1395,11 +1486,16 @@ This behaves sensibly also for compound selectors.
 
 
 Selectors contain a certain amount of additional information that can
-provide useful hints in some contexts (for example, in anticipation of
-their future use for background estimation).
+provide useful hints to the functions using them.
+
+% (for example, in anticipation of
+% their use, discussed in section~\ref{sec:BackgroundEstimator}, for
+% background estimation).
 
 One such piece of information is a selector's rapidity extent,
-accessible through a \ttt{get\_rapidity\_extent(rapmin,rapmax)} call.
+accessible through a \ttt{get\_rapidity\_extent(rapmin,rapmax)} call,
+which is useful in the context of background estimation
+(section~\ref{sec:BackgroundEstimator}).
 %
 If it is not sensible to talk about a rapidity extent for a given
 selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
@@ -1463,13 +1559,14 @@ two \ttt{SelectorWorker} functions need to be overloaded:
 \end{lstlisting}
 For information on how to implement more advanced workers (for example
 workers that do not apply jet-by-jet, or that are relocatable), users
-may wish to examine the implementation of the existing workers and/or
-consult the authors.
+may wish to examine the extensive in-code documentation of
+\ttt{SelectorWorker}, the implementation of the existing workers
+and/or consult the authors.
 
-\comment{to come}:
-\begin{itemize}
-\item areas?
-\end{itemize}
+% \comment{to come}:
+% \begin{itemize}
+% \item areas?
+% \end{itemize}
 
 %======================================================================
 \section{Jet areas, background evaluation and subtraction}
@@ -1907,8 +2004,8 @@ the selected region as consisting of jets of zero $p_t$.
 Thus (roughly speaking), if more that half of the area covered by the
 selector is empty the median estimate for $\rho$ will be zero.
 %
-\comment{empty areas should be discussed more in comments to empty
-  area calls below --- check it's OK later}
+% \comment{empty areas should be discussed more in comments to empty
+%   area calls below --- check it's OK later}
 
 %......................................................................
 \subsubsection{Positional dependence of background}
@@ -2812,8 +2909,8 @@ if \ttt{jet} is compatible with the structure provided by
 \label{sec:filtering}
 
 Filtering was first introduced in \cite{BDRS} to reduce the
-sensitivity of the boosted Higgs jet to the Underlying
-Event. Originally, the idea was, starting from a jet obtained with a
+sensitivity of the boosted Higgs jet to the underlying
+event. Originally, the idea was, starting from a jet obtained with a
 Cambridge-Aachen clustering, to uncluster it down to a smaller jet
 radius $R_{\rm filt}$ and only keep the 3 hardest of these subjets as
 the pieces of the final filtered jet, rejecting the others.
@@ -2821,8 +2918,11 @@ the pieces of the final filtered jet, rejecting the others.
 Similarly, trimming \cite{trimming} also unclusters a jet into subjets
 but selects the subjets to be kept based on a $p_t$ cut.
 
+The use of filtering and trimming have been advocated in number of
+contexts, beyond just the realm of boosted object reconstruction.
+%
 The \ttt{Filter} class, defined in \ttt{fastjet/tools/Filter.hh},
-handles both filtering and trimming. Its constructor
+handles both operations. Its constructor
 \begin{lstlisting}
   class Filter : public Transformer {
     Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0);
@@ -2848,7 +2948,7 @@ the full subjet definition. For the second, one has to provide a
 (pointer to) a class derived from \ttt{FunctionOfPseudoJet<double>}
 which dynamically computes the filtering radius as a function of the
 jet being filtered (as was originally used in \cite{BDRS} where
-$R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}})$, with $R_{b\bar b}$ the
+$R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}/2})$, with $R_{b\bar b}$ the
 distance between the parents of the jet). In both cases, the
 Cambridge/Aachen algorithm is used.
 
@@ -2880,12 +2980,12 @@ Additional structural information is available as follows:
 with the Cambridge/Aachen algorithm with radius $R_{\rm filt}$ and
 keeping the $n_{\rm filt}$ hardest subjets found can be achieved using
 \begin{lstlisting}
-  Filter filter(Rfilt, SelectorNHardest(nfilt));
+   Filter filter(Rfilt, SelectorNHardest(nfilt));
 \end{lstlisting}
 Trimming, which keeps the subjets with a $p_t$ larger than a fixed
 fraction of the input jet, is done using
 \begin{lstlisting}
-  Filter trimmer(subjet_def, SelectorPtFractionMin(pt_fraction_min));
+   Filter trimmer(subjet_def, SelectorPtFractionMin(pt_fraction_min));
 \end{lstlisting}
 
 \paragraph{Implementation note.}
@@ -2903,7 +3003,7 @@ constistuents with the subjet definition.
 However, when the input jet was obtained with the Cambridge/Aachen
 algorithm and the subjet definition also involves the Cambridge/Aachen
 algorithm, the \ttt{Filter} uses the exclusive subjets of the input
-jet to avoid having recluster its constituents.
+jet to avoid having to recluster its constituents.
 
 %% Note on the constraints on the input / extra structural stuff: do
 %% we want to mention that in the previous section?
@@ -2929,12 +3029,12 @@ suitable substructure, they return a \ttt{jet} that has the property
 % search for a 2-pronged structure inside it and thus naturally result
 % in a ``tagged'' jet with new structural information.
 
-At the moment, we have implemented two of the taggers proposed for
-boosted Higgs reconstruction: the \ttt{MassDropTagger} introduced in
-\cite{BDRS} and a rest-frame \ttt{NSubjettinessTagger} from
-Ref. \cite{nsubtagger}. We refer the reader to these articles for an
-extensive description of the taggers and shall only give a very brief
-overview in what follows. 
+At the moment, we have implemented two of the taggers proposed for the
+reconstruction of boosted two-body decays: the \ttt{MassDropTagger}
+introduced in \cite{BDRS} and a rest-frame \ttt{NSubjettinessTagger}
+from Ref. \cite{nsubtagger}. We refer the reader to these articles for
+an extensive description of the taggers and shall only give a very
+brief overview in what follows.
 
 %......................................................................
 \subsubsection{The mass-drop tagger}
@@ -2944,22 +3044,52 @@ with a Cambridge/Aachen algorithm (originally, $R=1.2$ was suggested
 for boosted Higgs tagging). Tagging then proceeds as follows
 \begin{enumerate}
 \item the last step of the clustering is undone: $j \to j_1,j_2$, with
-  $m_{j_1} > m_{j_2}$,
+  $m_{j_1} > m_{j_2}$;
 \item if there is a significant mass drop, $\mu \equiv m_{j_1}/m_j <
   \mu_{\rm cut}$, and the splitting is sufficiently symmetric,
   $y\equiv {\rm min}(p_{tj_1}^2, p_{tj_2}^2)\Delta R_{j_1j_2}^2/m_j^2
   > y_{\rm cut}$, then $j$ is the resulting heavy particle candidate
-  with $j_1$ and $j_2$ its subjets,
+  with $j_1$ and $j_2$ its subjets;
 \item otherwise, redefine $j$ to be equal to $j_1$ and go back to step
   1.
 \end{enumerate}
+%
+The tagger can be constructed with
+\begin{lstlisting}
+   MassDropTagger(double $\mu$, double $y_\text{cut}$);
+\end{lstlisting}
+%\paragraph{Constraints.} 
+%
+This tagger will run with any jet that comes from a \CS. A warning
+will be issued if the \CS is not based on the C/A algorithm.
+%
+If the \ttt{JetDefinition} used in the \CS involved a non-default
+recombiner, that same recombiner will be used when joining the final
+two prongs to form the boosted particle candidate.
+%
 
-\paragraph{Constraints.} 
+For a jet that is returned by the tagger and has the property that
+\ttt{tagged\_jet != 0}, two enquiry functions can be used to return
+the actual value of $\mu$ and $y$ for the clustering that corresponds
+to the tagged structure:
+\begin{lstlisting}
+   tagged_jet.structure_of<MassDropTagger>.mu();
+   tagged_jet.structure_of<MassDropTagger>.y(); 
+\end{lstlisting}
 
-[rest of documentation still to be written]
-
-\paragraph{Structure of the result.}
-
+Note that in \cite{BDRS} the mass-drop element of the tagging was
+followed by a filtering stage using $\min(0.3, R_{jj}/2)$ as the
+reclustering radius and selecting the three hardest subjects. That can
+be achieved with
+\begin{lstlisting}
+   vector<PseudoJet> tagged_pieces = tagged_jet.pieces();
+   double Rfilt = min(0.3, 0.5 * pieces[0].delta_R(pieces[1]);
+   PseudoJet filtered_tagged_jet = Filter(Rfilt, SelectorNHardest(3))(tagged_jet);
+\end{lstlisting}
+%   Filter filter = Filter(Rfilt, SelectorNHardest(3));
+%   PseudoJet filtered_tagged_jet = filter(tagged_jet);
+(It is also possible to use the \ttt{Rfilt\_dyn} option to the filter
+discussed above).
 
 %......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
@@ -3691,7 +3821,7 @@ jet definition and then use either of
   void JetDefinition::set_recombination_scheme(RecombinationScheme recomb_scheme);
   void JetDefinition::set_recombiner(const Recombiner * recomb)
 \end{lstlisting}
-(cf.~sections~\ref{sec:recomb_schemes},\ref{app:a}) to modify the
+(cf.~sections~\ref{sec:recomb_schemes},\ref{sec:recombiner}) to modify the
 recombination scheme.
 
 The underlying code for this algorithm was written by the \fastjet
@@ -3819,7 +3949,7 @@ build system.
 
 %======================================================================
 \section{External Recombination Schemes}
-\label{app:a}
+\label{sec:recombiner}
 
 If the user wishes to introduce a new recombination scheme, she may
 do so writing a class derived from \ttt{JetDefinition::Recombiner}:
@@ -3954,7 +4084,7 @@ and later access the PDG id through the function
 \end{lstlisting}
 
 %======================================================================
-\section{Structural information for various inputs}
+\section{Structural information for various kinds of \texttt{PseudoJet}}
 \label{app:structure_table}
 
 \begin{table}[t]\centering

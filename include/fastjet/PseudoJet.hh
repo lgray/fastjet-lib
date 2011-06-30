@@ -544,15 +544,16 @@ class PseudoJet {
   const StructureType & structure() const;
 
   /// check if the PseudoJet has the structure resulting from a Transformer 
-  /// (that is, its structure is compatible with a Transformer::StructureType)
-  /// if there is no structure, false is returned
+  /// (that is, its structure is compatible with a Transformer::StructureType).
+  /// If there is no structure, false is returned.
   template<typename TransformerType>
   bool has_structure_of() const;
 
-  /// this is a helper to access an structuree created by a Transformer 
-  /// (that is, of type Transformer::StructureType)
-  /// NULL is returned if the corresponding type is not met
-  /// if there is no structure, an error is thrown
+  /// this is a helper to access any structure created by a Transformer 
+  /// (that is, of type Transformer::StructureType).
+  ///
+  /// If there is no structure, or if the structure is not compatible
+  /// with TransformerType, an error is thrown.
   template<typename TransformerType>
   const typename TransformerType::StructureType & structure_of() const;
 
