@@ -166,12 +166,19 @@ class ClusterSequence {
   /// exclusive sense) to exactly njets. 
   ///
   /// If there are fewer than njets particles in the ClusterSequence
-  /// then FastJet crashes since it is not able to return njets
-  /// exclusive jets.
+  /// an error is thrown
   std::vector<PseudoJet> exclusive_jets (const int & njets) const;
 
-  /// return the dmin corresponding to the recombination that went from
-  /// n+1 to n jets (sometimes known as d_{n n+1}).
+  /// return a vector of all jets when the event is clustered (in the
+  /// exclusive sense) to exactly njets. 
+  ///
+  /// If there are fewer than njets particles in the ClusterSequence
+  /// the function just returns however many particles there were.
+  std::vector<PseudoJet> exclusive_jets_up_to (const int & njets) const;
+
+  /// return the dmin corresponding to the recombination that went
+  /// from n+1 to n jets (sometimes known as d_{n n+1}). If the number
+  /// of particles in the event is <= njets, the function returns 0.
   double exclusive_dmerge (const int & njets) const;
 
   /// return the maximum of the dmin encountered during all recombinations 
@@ -217,18 +224,20 @@ class ClusterSequence {
                           const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
-  /// jet down to n subjets (or all constituents if there are fewer
-  /// than n).
+  /// jet down to nsub subjets. Throws an error if there are fewer than
+  /// nsub particles in the jet.
   ///
-  /// This requires n ln n time
-  ///
-  /// If the jet contains fewer than nsub particles (in which case it
-  /// is not possible to return nsub subjets) then the vector of
-  /// subjets that is returned is simply the list of particles (of
-  /// size < nsub). Note that this behaviour differs from that of
-  /// exclusive_jets().
+  /// This requires nsub ln nsub time
   std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
                                             int nsub) const;
+
+  /// return the list of subjets obtained by unclustering the supplied
+  /// jet down to nsub subjets (or all constituents if there are fewer
+  /// than nsub).
+  ///
+  /// This requires nsub ln nsub time
+  std::vector<PseudoJet> exclusive_subjets_up_to (const PseudoJet & jet, 
+						  int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.

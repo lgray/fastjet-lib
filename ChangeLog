@@ -6,6 +6,27 @@
 
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
+	* doc/fastjet-doc.tex: 
+        * src/ClusterSequenceStructure.cc
+        * src/PseudoJet.cc
+        * src/ClusterSequence.cc
+        * src/PseudoJetStructureBase.cc
+        * include/fastjet/ClusterSequenceStructure.hh
+        * include/fastjet/PseudoJet.hh
+        * include/fastjet/ClusterSequence.hh
+        * include/fastjet/PseudoJetStructureBase.hh
+
+          added exclusive_subjets_up_to(int) to CS & PJ, replaced
+	  exclusive_subjets(int) with exclusive_subjets_up_to(int) in CSS
+	  and PJSB and added exclusive_jets_up_to(int) to CS.
+	  
+	  We now consistently have the behaviour that
+	  exclusive_subjets(int) and exclusive_jets(int) throw errors if
+	  you request more subjets than there are available particles;
+	  exclusive_subjets_up_to(int) and exclusive_jets_up_to(int) in
+	  this case just return all available particles.
+
+	
 	* src/FunctionOfPseudoJet.cc: 
 	* include/fastjet/FunctionOfPseudoJet.hh: 
 	  removed the operator>(FOPJ<double> &, cut) [etc] functions for

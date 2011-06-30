@@ -625,11 +625,25 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const double & dcut) const {
 
 //----------------------------------------------------------------------
 // return the jets obtained by clustering the event to n jets.
+// Throw an error if there are fewer than n particles.
 vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
 
   // make sure the user does not ask for more than jets than there
   // were particles in the first place.
-  assert (njets <= _initial_n);
+  if (njets > _initial_n) {
+    ostringstream err;
+    err << "Requested " << njets << " exclusive jets, but there were only " 
+	<< _initial_n << " particles in the event";
+    throw Error(err.str());
+  }
+
+  return exclusive_jets_up_to(njets);
+}
+
+//----------------------------------------------------------------------
+// return the jets obtained by clustering the event to n jets.
+// If there are fewer than n particles, simply return all particles
+vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int & njets) const {
 
   // provide a warning when extracting exclusive jets for algorithms 
   // that does not support it explicitly.
@@ -654,6 +668,8 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
   // relation between stop_point, njets assumes one extra jet disappears
   // at each clustering.
   int stop_point = 2*_initial_n - njets;
+  // make sure it's safe when more jets are requested than there are particles
+  if (stop_point < _initial_n) stop_point = _initial_n;
 
   // some sanity checking to make sure that e+e- does not give us
   // surprises (should we ever implement e+e-)...
@@ -683,7 +699,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
   }
 
   // sanity check...
-  if (static_cast<int>(jets.size()) != njets) {
+  if (int(jets.size()) != min(_initial_n, njets)) {
     ostringstream err;
     err << "ClusterSequence::exclusive_jets: size of returned vector ("
 	 <<jets.size()<<") does not coincide with requested number of jets ("
@@ -754,19 +770,40 @@ int ClusterSequence::n_exclusive_subjets(const PseudoJet & jet,
 
 //----------------------------------------------------------------------
 /// return the list of subjets obtained by unclustering the supplied
-/// jet down to n subjets (or all constituents if there are fewer
-/// than n).
-std::vector<PseudoJet> ClusterSequence::exclusive_subjets 
-   (const PseudoJet & jet, int n) const {
+/// jet down to nsub subjets. Throws an error if there are fewer than
+/// nsub particles in the jet.
+std::vector<PseudoJet> ClusterSequence::exclusive_subjets
+   (const PseudoJet & jet, int nsub) const {
+  vector<PseudoJet> subjets = exclusive_subjets_up_to(jet, nsub);
+  if (int(subjets.size()) < nsub) {
+    ostringstream err;
+    err << "Requested " << nsub << " exclusive subjets, but there were only " 
+	<< subjets.size() << " particles in the jet";
+    throw Error(err.str());
+  }
+  return subjets;
+
+}
+
+//----------------------------------------------------------------------
+/// return the list of subjets obtained by unclustering the supplied
+/// jet down to nsub subjets (or all constituents if there are fewer
+/// than nsub).
+std::vector<PseudoJet> ClusterSequence::exclusive_subjets_up_to
+   (const PseudoJet & jet, int nsub) const {
 
   set<const history_element*> subhist;
 
+  // prepare the vector into which we'll put the result
+  vector<PseudoJet> subjets;
+  if (nsub <  0) throw Error("Requested a negative number of subjets. This is nonsensical.");
+  if (nsub == 0) return subjets;
+
   // get the set of history elements that correspond to subjets at
   // scale dcut
-  get_subhist_set(subhist, jet, -1.0, n);
+  get_subhist_set(subhist, jet, -1.0, nsub);
 
   // now transfer this into a sequence of jets
-  vector<PseudoJet> subjets;
   subjets.reserve(subhist.size());
   for (set<const history_element*>::iterator elem = subhist.begin(); 
        elem != subhist.end(); elem++) {

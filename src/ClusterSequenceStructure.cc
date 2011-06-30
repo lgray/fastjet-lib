@@ -196,8 +196,8 @@ int ClusterSequenceStructure::n_exclusive_subjets(const PseudoJet &reference, co
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-std::vector<PseudoJet> ClusterSequenceStructure::exclusive_subjets (const PseudoJet &reference, int nsub) const {
-  return validated_cs()->exclusive_subjets(reference, nsub);
+std::vector<PseudoJet> ClusterSequenceStructure::exclusive_subjets_up_to (const PseudoJet &reference, int nsub) const {
+  return validated_cs()->exclusive_subjets_up_to(reference, nsub);
 }
 
 // return the dij that was present in the merging nsub+1 -> nsub 

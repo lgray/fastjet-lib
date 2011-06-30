@@ -594,8 +594,22 @@ int PseudoJet::n_exclusive_subjets(const double & dcut) const {
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
+std::vector<PseudoJet> PseudoJet::exclusive_subjets_up_to (int nsub) const {
+  return validated_structure_ptr()->exclusive_subjets_up_to(*this, nsub);
+}
+
+//----------------------------------------------------------------------
+// Same as exclusive_subjets_up_to but throws an error if there are
+// fewer than nsub particles in the jet
 std::vector<PseudoJet> PseudoJet::exclusive_subjets (int nsub) const {
-  return validated_structure_ptr()->exclusive_subjets(*this, nsub);
+  vector<PseudoJet> subjets = exclusive_subjets_up_to(nsub);
+  if (int(subjets.size()) < nsub) {
+    ostringstream err;
+    err << "Requested " << nsub << " exclusive subjets, but there were only " 
+	<< subjets.size() << " particles in the jet";
+    throw Error(err.str());
+  }
+  return subjets;
 }
 
 //----------------------------------------------------------------------

@@ -709,12 +709,18 @@ to be stopped once it reaches the specified number of jets.
   vector<fastjet::PseudoJet> exclusive_jets (const double & dcut) const;
 
   /// return a vector of all jets when the event is clustered (in the
-  /// exclusive sense) to exactly njets.
+  /// exclusive sense) to exactly njets. Throws an error if the event
+  /// has fewer than njets particles.
   vector<fastjet::PseudoJet> exclusive_jets (const int & njets) const;
+
+  /// return a vector of all jets when the event is clustered (in the
+  /// exclusive sense) to exactly njets. If the event has fewer than
+  /// njets particles, it returns all available particles.
+  vector<fastjet::PseudoJet> exclusive_jets_up_to (const int & njets) const;
 \end{lstlisting}
-Note that these two member functions have the same name, and the
-compiler selects the correct one based on the type of the arguments,
-as is standard in C++.
+% Note that the first of these two member functions have the same name,
+% and the compiler selects the correct one based on the type of the
+% arguments, as is standard in C++.
 %
 The \ttt{fastjet::PseudoJet} vectors returned by the above routines can all be
 sorted with the routines described at the end of
@@ -831,6 +837,12 @@ the jet's constituents, cluster them separately and then carry out an
 The results should be identical. This second method is mandatory if
 one wishes to identify subjets with an algorithm that differs from the
 one used to find the original jets.
+%
+
+In analogy with the \ttt{exclusive\_jets(...)} functions of \CS, \PJ
+also has \ttt{exclusive\_subjets(int nsub)} and
+\ttt{exclusive\_subjets\_up\_to(int nsub)} functions.
+
 
 One can also make use of the following methods, which allow one to
 follow the merging sequence (and walk back through it):

@@ -642,14 +642,24 @@ class PseudoJet {
   int n_exclusive_subjets(const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
-  /// jet down to n subjets (or all constituents if there are fewer
-  /// than n).
+  /// jet down to nsub subjets. Throws an error if there are fewer than
+  /// nsub particles in the jet.
   ///
-  /// requires n ln n time
+  /// For ClusterSequence type jets, requires nsub ln nsub time
   ///
-  /// an Error is thrown if this PseudoJet has no currently valid
+  /// An Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
   std::vector<PseudoJet> exclusive_subjets (int nsub) const;
+
+  /// return the list of subjets obtained by unclustering the supplied
+  /// jet down to nsub subjets (or all constituents if there are fewer
+  /// than nsub).
+  ///
+  /// For ClusterSequence type jets, requires nsub ln nsub time
+  ///
+  /// An Error is thrown if this PseudoJet has no currently valid
+  /// associated ClusterSequence
+  std::vector<PseudoJet> exclusive_subjets_up_to (int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.

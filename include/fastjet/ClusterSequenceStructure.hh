@@ -180,7 +180,7 @@ public:
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
-  virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, const double & dcut) const;
+  virtual std::vector<PseudoJet> exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
   /// coefficient, but marginally more efficient than manually taking
@@ -191,14 +191,14 @@ public:
   virtual int n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
-  /// jet down to n subjets (or all constituents if there are fewer
-  /// than n).
+  /// jet down to nsub subjets (or all constituents if there are fewer
+  /// than nsub).
   ///
-  /// requires n ln n time
+  /// requires nsub ln nsub time
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
-  virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, int nsub) const;
+  virtual std::vector<PseudoJet> exclusive_subjets_up_to (const PseudoJet &reference, int nsub) const;
 
   /// return the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.

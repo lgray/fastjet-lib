@@ -162,7 +162,7 @@ int PseudoJetStructureBase::n_exclusive_subjets(const PseudoJet &reference, cons
 // than n).
 //
 // by default, an Error is thrown
-vector<PseudoJet> PseudoJetStructureBase::exclusive_subjets (const PseudoJet &reference, int nsub) const{
+vector<PseudoJet> PseudoJetStructureBase::exclusive_subjets_up_to (const PseudoJet &reference, int nsub) const{
   throw Error("This PseudoJet structure has no implementation for exclusive_subjets");
 }
 
