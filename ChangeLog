@@ -1,5 +1,8 @@
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* regression-tests/test-all-algs.pl: 
+	  added a -verbose option.
+
 	* test-script-output-orig.txt: 
 	  added gridjet output.
 

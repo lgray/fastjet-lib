@@ -33,6 +33,8 @@
 #
 #  -newperl          similar, but only for things that we don't yet have
 #
+#  -verbose          writes out a few extra details (e.g. the command being run). 
+#
 # Full (non-md5) results of a 1000 event run are to be found in
 # the (non svn) directory
 #
@@ -103,6 +105,8 @@ use Cwd;
 # set up the reference results
 &setRefResults;
 
+$verbose = "";
+
 # now allow user to play with things
 while ($arg = shift @ARGV) {
   if    ($arg eq "-nev"     ) {$nev = shift @ARGV;}
@@ -111,6 +115,7 @@ while ($arg = shift @ARGV) {
   elsif ($arg eq "-deposit" ) {$deposit = shift @ARGV;}
   elsif ($arg eq "-perl"    ) {$perlOut = "Perl Output:\n";}
   elsif ($arg eq "-newperl" ) {$perlOut = "New Perl Output:\n";}
+  elsif ($arg eq "-verbose" ) {$verbose = 1;}
   elsif ($arg eq "-strat" || $arg eq "-strategy")    {$defstrat = shift @ARGV;}
   else  {die "unrecognized argument $arg";}
 }
@@ -147,6 +152,7 @@ foreach $strat (@strat) {
     $cmdline = "$cmdline < $localdataFile ";
   }
   $strat =~ s/.*y /s/; # we'll need this in a clean form later
+  if ($verbose) {print "Running $cmdline\n";}
   $res = `$cmdline`;
   $error = $?;
 
