@@ -128,7 +128,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   //  - the pieces agree with the recombination scheme of subjet_def
   //------------------------------------------------------------------
   bool simple_cafilt = _check_ca();
- 
+
   // extract the subjets
   //-------------------------------------------------------------------
   if (simple_cafilt){
@@ -141,6 +141,9 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 
   // order the filtered elements in pt
   filtered_elements = sorted_by_pt(filtered_elements);
+
+  // clear temp pieces cached
+  all_pieces.clear();
 }
 
 // set the filtered elements in the simple case of C/A+C/A
@@ -197,8 +200,11 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
   // "regular" particles so the subjets will also haev area
   // support. Note that we do this regardless of whether rho is zero
   // or not.
+  //
+  // Note that to be able to separate the ghosts, one needs explicit
+  // ghosts!!
   // ---------------------------------------------------------------
-  if (jet.has_area()){
+  if ((jet.has_area()) && ((_rho!=0) || (_check_explicit_ghosts()))){
     vector<PseudoJet> all_constituents = jet.constituents();
     vector<PseudoJet> regular_constituents, ghosts;  
 
