@@ -82,34 +82,41 @@ public:
   }
 };
 
-
-// Selectors created from the ordering between a FunctionOfPseudoJet
-// and a constant
-//----------------------------------------------------------------------
-
-/// 'larger than' operator
-///
-/// Select jets for which the given function returns a reult larger
-/// than the specified constant
-Selector operator >(const FunctionOfPseudoJet<double> & fn, const double & cut);
-
-/// 'smaller than' operator
-///
-/// Select jets for which the given function returns a reult larger
-/// than the specified constant
-Selector operator <(const FunctionOfPseudoJet<double> & fn, const double & cut);
-
-/// 'larger or equal' operator
-///
-/// Select jets for which the given function returns a reult larger
-/// than the specified constant
-Selector operator >=(const FunctionOfPseudoJet<double> & fn, const double & cut);
-
-/// 'smaller or equal' operator
-///
-/// Select jets for which the given function returns a reult larger
-/// than the specified constant
-Selector operator <=(const FunctionOfPseudoJet<double> & fn, const double & cut);
+// The following functions will not be for FJ3.0, because passing a
+// reference does not work when the argument is a temporary, which can
+// lead to hard-to-diagnose run-time errors. A workaround is to to
+// have a pointer rather than a reference as argument, since this
+// provides a clearer signal to the user that the object must remain
+// in scope.
+//
+//
+// // Selectors created from the ordering between a FunctionOfPseudoJet
+// // and a constant
+// //----------------------------------------------------------------------
+// 
+// /// 'larger than' operator
+// ///
+// /// Select jets for which the given function returns a result larger
+// /// than the specified constant
+// Selector operator >(const FunctionOfPseudoJet<double> & fn, const double & cut);
+// 
+// /// 'smaller than' operator
+// ///
+// /// Select jets for which the given function returns a result smaller
+// /// than the specified constant
+// Selector operator <(const FunctionOfPseudoJet<double> & fn, const double & cut);
+// 
+// /// 'larger or equal' operator
+// ///
+// /// Select jets for which the given function returns a result larger or equal 
+// /// to the specified constant
+// Selector operator >=(const FunctionOfPseudoJet<double> & fn, const double & cut);
+// 
+// /// 'smaller or equal' operator
+// ///
+// /// Select jets for which the given function returns a result smaller or equal
+// /// to the specified constant
+// Selector operator <=(const FunctionOfPseudoJet<double> & fn, const double & cut);
 
 
 FASTJET_END_NAMESPACE
