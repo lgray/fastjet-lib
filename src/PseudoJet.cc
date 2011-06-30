@@ -314,9 +314,16 @@ bool have_same_momentum(const PseudoJet & jeta, const PseudoJet & jetb) {
     &&   jeta.E()  == jetb.E();
 }
 
+//----------------------------------------------------------------------
+void PseudoJet::set_cached_rap_phi(double rap, double phi) {
+  _rap = rap; _phi = phi;
+  if (_phi >= twopi) _phi -= twopi;
+  if (_phi < 0)      _phi += twopi;
+}
 
 //----------------------------------------------------------------------
 void PseudoJet::reset_momentum_PtYPhiM(double pt, double y, double phi, double m) {
+  assert(phi < 2*twopi && phi > -twopi);
   double ptm = (m == 0) ? pt : sqrt(pt*pt+m*m);
   double exprap = exp(y);
   double pminus = ptm/exprap;
@@ -330,6 +337,7 @@ void PseudoJet::reset_momentum_PtYPhiM(double pt, double y, double phi, double m
 //----------------------------------------------------------------------
 /// return a pseudojet with the given pt, y, phi and mass
 PseudoJet PtYPhiM(double pt, double y, double phi, double m) {
+  assert(phi < 2*twopi && phi > -twopi);
   double ptm = (m == 0) ? pt : sqrt(pt*pt+m*m);
   double exprap = exp(y);
   double pminus = ptm/exprap;

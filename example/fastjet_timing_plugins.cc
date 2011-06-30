@@ -212,7 +212,7 @@
 #include "fastjet/D0RunIpre96ConePlugin.hh"
 #include "fastjet/D0RunIConePlugin.hh"
 #endif
-#ifdef ENABLE_PLUGIN_GRIDJET
+#ifdef FASTJET_ENABLE_PLUGIN_GRIDJET
 #include "fastjet/GridJetPlugin.hh"
 #endif
 // end of installed plugins inclusion (don't delete this line)
@@ -421,12 +421,12 @@ int main (int argc, char ** argv) {
     is_unavailable("D0RunICone");
 #endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
   } else if (cmdline.present("-gridjet")) {
-#ifdef ENABLE_PLUGIN_GRIDJET
+#ifdef FASTJET_ENABLE_PLUGIN_GRIDJET
     double grid_ymax = 5.0;
     jet_def = fj::JetDefinition(new fj::GridJetPlugin(ktR*2.0, grid_ymax));
-#else  // ENABLE_PLUGIN_GRIDJET
+#else  // FASTJET_ENABLE_PLUGIN_GRIDJET
     is_unavailable("GridJet");
-#endif // ENABLE_PLUGIN_GRIDJET
+#endif // FASTJET_ENABLE_PLUGIN_GRIDJET
 // end of checking if one asks to run a plugin (don't delete this line)
   } else {
     cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]

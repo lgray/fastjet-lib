@@ -265,6 +265,7 @@ class PseudoJet {
 
   /// reset the PseudoJet according to the specified pt, rapidity,
   /// azimuth and mass (also resetting indices, etc.)
+  /// (phi should satisfy -2pi<phi<4pi)
   inline void reset_PtYPhiM(double pt, double y, double phi, double m=0.0) {
     reset_momentum_PtYPhiM(pt, y, phi, m);
     _reset_indices();
@@ -281,7 +282,7 @@ class PseudoJet {
   inline void reset_momentum(const PseudoJet & pj);
 
   /// reset the 4-momentum according to the specified pt, rapidity,
-  /// azimuth and mass
+  /// azimuth and mass (phi should satisfy -2pi<phi<4pi)
   void reset_momentum_PtYPhiM(double pt, double y, double phi, double m=0.0);
 
   /// reset the 4-momentum according to the supplied generic 4-vector
@@ -299,15 +300,12 @@ class PseudoJet {
   /// recalculations.
   ///
   /// - \param rap  rapidity
-  /// - \param phi  (in range -twopi...twopi)
+  /// - \param phi  (in range -twopi...4*pi)
   ///
   /// USE WITH CAUTION: there are no checks that the rapidity and
   /// azimuth supplied are sensible, nor does this reset the
   /// 4-momentum components if things don't match.
-  inline void set_cached_rap_phi(double rap, double phi) {
-    _rap = rap; _phi = phi;
-    if (_phi < 0) _phi += twopi;
-  }
+  void set_cached_rap_phi(double rap, double phi);
 
 
   //\} --- end of kin mod functions ------------------------------------
@@ -803,6 +801,7 @@ inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
 bool have_same_momentum(const PseudoJet &, const PseudoJet &);
 
 /// return a pseudojet with the given pt, y, phi and mass
+/// (phi should satisfy -2pi<phi<4pi)
 PseudoJet PtYPhiM(double pt, double y, double phi, double m = 0.0);
 
 //----------------------------------------------------------------------

@@ -1,5 +1,18 @@
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* test-script-output-orig.txt: 
+	  added gridjet output.
+
+	* example/fastjet_timing_plugins.cc: 
+	* test-compare.sh: 
+	  put a FASTJET_ in front of some preprocessor variables (had been
+	  missed in earlier tests).
+
+	* include/fastjet/PseudoJet.hh: 
+	* src/PseudoJet.cc (PtYPhiM, PseudoJet::set_cached_rap_phi): 
+	  can now legitimately be called with -2pi<phi<4pi (before was
+	  only up to 2pi) and now explicitly enfore this in PtYPhiM.
+
 	* src/ClusterSequence_Delaunay.cc: 
 	  solved potential memory leak for rare cases when this throws an
 	  error (e.g. for coincident points) by using an auto_ptr for DNN.

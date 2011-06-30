@@ -119,7 +119,7 @@ for plugin_tag in siscone sisconespheri:siscone jetclu:cdfcones midpoint:cdfcone
 
     tag_upper=`echo ${tag} | tr a-z A-Z`
 
-    if [[ -n `grep "define ENABLE_PLUGIN_${tag_upper}" include/fastjet/config_auto.h` ]]; then
+    if [[ -n `grep "define FASTJET_ENABLE_PLUGIN_${tag_upper}" include/fastjet/config_auto.h` ]]; then
 	tested_algs=${tested_algs}" "${plugin}
     else
 	untested_algs=${untested_algs}" "${plugin}
