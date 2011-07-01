@@ -1000,8 +1000,8 @@ always be clear what kinds of structural information it has.
 %
 Accordingly a number of enquiry functions are available:
 \begin{lstlisting}
-  bool has_structure();         // returns true if it has some kind of structural info
-  bool has_constituents();      // returns true if it has constituents 
+  bool has_structure();         // true if it has some kind of structural info
+  bool has_constituents();      // true if it has constituents 
   bool has_exclusive_subjets(); // true if there is cluster-sequence style subjet info
   bool has_pieces();            // true if the jet can be broken up into pieces
   bool has_area();              // true if it has jet-area informaion
@@ -2979,7 +2979,8 @@ typically it will be accessed through the \ttt{operator()} function:
   /// applied to each of input PseudoJets, 
   vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
 \end{lstlisting}
-i.e.\
+i.e.\ if we have a class \ttt{MyTransformer} derived from
+\ttt{Transformer} then it can be used as follows:
 \begin{lstlisting}
   MyTransformer transformer;
   PseudoJet transformed_jet = transformer(jet);
@@ -2995,9 +2996,11 @@ available), can be accessed through
   jet.structure_of<MyTransformer>()
 \end{lstlisting}
 which would give direct access to the structural information produced
-by \ttt{MyTransformer}. Using
-\ttt{jet.has\_structure\_of<MyTransformer>()}, it is possible to check
-if \ttt{jet} is compatible with the structure provided by
+by \ttt{MyTransformer}. This is illustrated below on a case-by-case basis
+for each of the transformers that we discuss.
+%
+Using \ttt{jet.has\_structure\_of<MyTransformer>()}, it is possible to
+check if \ttt{jet} is compatible with the structure provided by
 \ttt{MyTransformer}.
 
 

@@ -1,3 +1,6 @@
+#ifndef __FASTJET_BACKGROUND_ESTIMATOR_HH__
+#define __FASTJET_BACKGROUND_ESTIMATOR_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -28,12 +31,10 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_BACKGROUND_ESTIMATOR_HH__
-#define __FASTJET_BACKGROUND_ESTIMATOR_HH__
-
 #include <fastjet/ClusterSequenceAreaBase.hh>
 #include <fastjet/FunctionOfPseudoJet.hh>
 #include <fastjet/Selector.hh>
+#include <fastjet/tools/BackgroundEstimatorBase.hh>
 #include <iostream>
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
@@ -162,7 +163,8 @@ public:
 ///   ClusterSequenceArea class with explicit ghosts
 ///   (ActiveAreaExplicitGhosts). This is _recommended_!
 ///
-class BackgroundEstimator {
+/// \TODO NOTE: we might rename this class to JetMedianBackgroundEstimator
+class BackgroundEstimator : public BackgroundEstimatorBase {
 public:
   /// @name constructors and destructors
   //\{
@@ -226,7 +228,7 @@ public:
   //\{
   //----------------------------------------------------------------
 
-  /// get rho, the median background density oer unit area
+  /// get rho, the median background density per unit area
   double rho() const {
     if (_rho_range.takes_reference())
       throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
@@ -327,9 +329,15 @@ public:
 
   //}
 
-  /// @name configuring behaviour
+  /// @name setting a new event
   //\{
   //----------------------------------------------------------------
+
+  /// tell the background estimator that it has a new event, composed
+  /// of the specified particles.
+  virtual void set_particles(const std::vector<PseudoJet> & particles) {
+    throw Error("set_particles not yet implemented for BackgroundEstimator");
+  }
 
   /// (re)set the cluster sequence (with area support) to be used by
   /// future calls to rho() etc. 
@@ -341,7 +349,7 @@ public:
   ///    not occupied by jets). This is feasible if at least one of the following
   ///    conditions is satisfied:
   ///     ( i) the ClusterSequence has explicit ghosts
-  ///     (ii) the range has a computable area.
+  ///     (ii) the range selected has a computable area.
   ///  - the jet algorithm must be suited for median computation
   ///    (otherwise a warning will be issues)
   ///
@@ -360,6 +368,11 @@ public:
     _rho_range = rho_range_selector;
     _uptodate = false;
   }
+
+
+  /// @name configuring behaviour
+  //\{
+  //----------------------------------------------------------------
 
 
   /// Resets the class to its default state, including the choice to

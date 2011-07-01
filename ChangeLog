@@ -1,4 +1,16 @@
-2011-07-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+2011-07-01  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* tools/Makefile.am: 
+	* tools/fastjet/tools/Makefile.am: 
+	* tools/fastjet/tools/BackgroundEstimator.hh: 
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:  *** ADDED ***
+	* tools/GridMedianBackgroundEstimator.cc: *** ADDED ***
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh: *** ADDED ***
+
+	  Introduced a base class for background estimation, arranged for
+	  BackgroundEstimator to derive from it and also added
+	  GridMedianBackgroundEstimator (which is what has been used for
+	  some of the grid rho tests).
 
 	* example/fastjet_timing_plugins.cc (main): 
 	  switched grid_ymax to 4.99999999 to avoid rounding error issues
