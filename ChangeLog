@@ -1,5 +1,9 @@
 2011-07-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* example/fastjet_timing_plugins.cc (main): 
+	  switched grid_ymax to 4.99999999 to avoid rounding error issues
+	  in determining the number of grid cells in y (with R=0.4).
+
 	* include/fastjet/WrappedStructure.hh: 
 	  updated the exclusive_subjets_up_to here too.
 

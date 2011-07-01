@@ -422,7 +422,14 @@ int main (int argc, char ** argv) {
 #endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
   } else if (cmdline.present("-gridjet")) {
 #ifdef FASTJET_ENABLE_PLUGIN_GRIDJET
-    double grid_ymax = 5.0;
+    // we want a grid_ymax of 5.0, but when using R=0.4 (i.e. grid
+    // spacing of 0.8), this leads to 12.5 grid cells; depending on
+    // whether this is 12.499999999999 or 12.5000000....1 this gets
+    // converted either to 12 or 13, making the results sensitive to
+    // rounding errors.
+    //
+    // Instead we therefore takes 4.9999999999, which avoids this problem.
+    double grid_ymax = 4.9999999999;
     jet_def = fj::JetDefinition(new fj::GridJetPlugin(ktR*2.0, grid_ymax));
 #else  // FASTJET_ENABLE_PLUGIN_GRIDJET
     is_unavailable("GridJet");
