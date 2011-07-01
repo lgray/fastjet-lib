@@ -196,8 +196,8 @@ public:
   /// than n).
   ///
   /// By default, throws an Error
-  virtual std::vector<PseudoJet> exclusive_subjets (const PseudoJet &reference, int nsub) const{
-    return _structure->exclusive_subjets (reference, nsub);
+  virtual std::vector<PseudoJet> exclusive_subjets_up_to (const PseudoJet &reference, int nsub) const{
+    return _structure->exclusive_subjets_up_to (reference, nsub);
   }
 
   /// return the dij that was present in the merging nsub+1 -> nsub 

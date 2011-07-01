@@ -1,3 +1,8 @@
+2011-07-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/WrappedStructure.hh: 
+	  updated the exclusive_subjets_up_to here too.
+
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> [later, on the train]
 
 	* src/ClusterSequence.cc: 
