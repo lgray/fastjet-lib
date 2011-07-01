@@ -3312,6 +3312,15 @@ then on a jet returned by the \ttt{SimpleFilter} one can simply call
 \end{lstlisting}
 as with the fully fledged \ttt{Filter} of section~\ref{sec:filtering}.
 
+A second way of extending of adding information to an existing
+structure class is to ``wrap'' it. This can be done with the help of
+the \ttt{WrappedStructure} class. 
+\begin{lstlisting}
+   Class MyStructure: public WrappedStructure {
+     MyStructure(const SharedPtr<PseudoJetStructureBase> & structure) :
+                             WrappedStructure(structure), ... {...}
+   };
+\end{lstlisting}
 
 
 % In many cases transformers simply return a subjet from an existing \CS
