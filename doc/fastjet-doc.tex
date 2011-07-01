@@ -3205,29 +3205,138 @@ discussed above).
 \subsection{User-defined transformers}
 \label{sec:transformerdetails}
 
-In many cases transformers simply return a subjet from an existing \CS
-or alternatively join some number of subjets and return the result.
+To help understand how to create user-defined transformers, it is
+perhaps easiest to consider the example of a filtering/trimming class.
 %
-Two helpers are available to help the user take care of the structural
-information of the resulting jet while also adding additional
-information, for example about the kinematic variables such as $\mu$
-and $y$ in the \ttt{MassDropTagger} above.
-
-The first helper is a templated version of \ttt{join}:
+The simplest form of such a class is the following:%
+\footnote{The actual \texttt{Filter} class is somewhat more elaborate
+  than this, since it also handles areas, pileup subtraction and avoids
+  reclustering when the jet and subjet definitions are C/A based.}
+%
 \begin{lstlisting}
-   template<class DerivedFromCompositeJet> PseudoJet join([some jets]);
+   /// a simple class to carry out filtering and/or trimming
+   class SimpleFilter: public Transformer {
+   public:
+     SimpleFilter(const JetDefinition & subjet_def, const Selector & selector) :
+                                  _subjet_def(subjet_def), _selector(selector) {}
+   
+     virtual std::string description() const {
+       return "Filter that finds subjets with " + _subjet_def.description()
+              + ", using a (" + _selector.description() + ") selector" ;}
+     
+     virtual PseudoJet result(const PseudoJet & jet) const;
+   
+     // CompositeJetStructure is the structural type associated with the 
+     // join operation that we use shall use to create the returned jet below
+     typedef CompositeJetStructure StructureType;
+   
+   private:
+     JetDefinition _subjet_def;
+     Selector      _selector;
+   };
 \end{lstlisting}
-It works exactly as the usual \ttt{join} function,
-section~\ref{sec:composite-jet}, except that the class associated with
-the jet's underlying structure can now be chosen by the user to be
-\ttt{DerivedFromCompositeJet}.
+The function that does the work in this class is \ttt{result(...)}:
 %
-Specifically, it can be any class derived from
-\ttt{CompositeJetStructure}, which is the class performs the work of
-storing the information about the pieces of the resulting jet for the
-usual \ttt{join} function.
+\begin{lstlisting}
+   PseudoJet SimpleFilter::result(const PseudoJet & jet) const {
+     // get the subjets
+     ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
+     vector<PseudoJet> subjets = cs->inclusive_jets();
+     
+     // signal that the cluster sequence should delete itself when
+     // there are no longer any of its (sub)jets in scope anywhere
+     cs->delete_self_when_unused();
+     
+     // get the selected subjets 
+     vector<PseudoJet> selected_subjets = _selector(subjets);
+     // join them using the same recombiner as was used in the subjet_def
+     PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
+     return result;
+   }
+\end{lstlisting}
+This provides almost all the basic functionality that might be needed
+from a filter, including access to the \ttt{pieces()} of the filtered
+jet since it is formed with the \ttt{join(...)} function.
+%
+The one part that is potentially missing is that the user does not
+have any way of accessing information about the subjets that were not
+kept by the filter.
+%
+This requires adding to the structural information that underlies the
+returned jet.
+%
+The \ttt{join(...)}  function creates a structure of type
+\ttt{CompositeJetStructure}. There is also a templated version,
+\ttt{join<ClassDerivedFromCompositeJetStructure>(...)}, which allows
+the user to choose the structure created by the \ttt{join} function.
+%
+In this case we therefore create 
+\begin{lstlisting}
+   class SimpleFilterStructure: public CompositeJetStructure { 
+   public:
+     // the form of constructor expected by the join<...> function
+     SimpleFilterStructure(const vector<PseudoJet> & pieces, 
+                           const Recombiner *recombiner = 0) :
+                                      CompositeJetStructure(pieces, recombiner) {}
+     // provide access to the rejected subjets from the filtering
+     const vector<PseudoJet> & rejected() const {return _rejected;}
+   private: 
+     vector<PseudoJet> _rejected; 
+     friend class SimpleFilter;
+   };
+\end{lstlisting}
+and then replace the last few lines of the
+\ttt{SimpleFilter::result(...)} function with
+\begin{lstlisting}
+     // get the selected and rejected subjets
+     vector<PseudoJet> selected_subjets, rejected_subjets;
+     _selector.sift(subjets, selected_subjets, rejected_subjets);
 
-The second helper
+     // join the selected ones, now with a user-chosen structure
+     PseudoJet result = join<SimpleFilterStructure>(selected_subjets, *_subjet_def.recombiner());
+
+     // and then set the structure's additional elements
+     SimpleFilterStructure * structure = 
+                       dynamic_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
+     structure->_rejected = rejected_subjets;
+     return result;
+\end{lstlisting}
+Finally, with the replacement of the \ttt{typedef} in the
+\ttt{SimpleFilter} class with
+\begin{lstlisting}
+     typedef SimpleFilterStructure StructureType;
+\end{lstlisting}
+then on a jet returned by the \ttt{SimpleFilter} one can simply call
+\begin{lstlisting}
+  filtered_jet.structure_of<SimpleFilter>().rejected();
+\end{lstlisting}
+as with the fully fledged \ttt{Filter} of section~\ref{sec:filtering}.
+
+
+
+% In many cases transformers simply return a subjet from an existing \CS
+% or alternatively join some number of subjets and return the result.
+% %
+% Two helpers are available to help the user take care of the structural
+% information of the resulting jet while also adding additional
+% information, for example about the kinematic variables such as $\mu$
+% and $y$ in the \ttt{MassDropTagger} above.
+% 
+% The first helper is a templated version of \ttt{join}:
+% \begin{lstlisting}
+%    template<class DerivedFromCompositeJet> PseudoJet join([some jets]);
+% \end{lstlisting}
+% It works exactly as the usual \ttt{join} function,
+% section~\ref{sec:composite-jet}, except that the class associated with
+% the jet's underlying structure can now be chosen by the user to be
+% \ttt{DerivedFromCompositeJet}.
+% %
+% Specifically, it can be any class derived from
+% \ttt{CompositeJetStructure}, which is the class performs the work of
+% storing the information about the pieces of the resulting jet for the
+% usual \ttt{join} function.
+
+
 
 
 
