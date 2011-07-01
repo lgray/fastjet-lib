@@ -138,6 +138,11 @@ class ClusterSequence {
 			          const std::vector<L> & pseudojets,
 				  const JetDefinition & jet_def,
 				  const bool & writeout_combinations = false);
+  
+  /// copy constructor for a ClusterSequence
+  ClusterSequence (const ClusterSequence & cs) : _deletes_self_when_unused(false) {
+    transfer_from_sequence(cs);
+  }
 
   // virtual ClusterSequence destructor, in case any derived class
   // thinks of needing a destructor at some point
@@ -408,10 +413,11 @@ class ClusterSequence {
     virtual std::string description() const {return "This is a dummy extras class that contains no extra information! Derive from it if you want to use it to provide extra information from a plugin jet finder";}
   };
 
-  /// the plugin can associated some extra information with the
+  /// the plugin can associate some extra information with the
   /// ClusterSequence object by calling this function
   inline void plugin_associate_extras(std::auto_ptr<Extras> extras_in) {
-    _extras = extras_in;
+    //_extras = extras_in;
+    _extras.reset(extras_in.release());
   }
 
   /// returns true when the plugin is allowed to run the show.
@@ -560,7 +566,7 @@ public:
   ///
   /// When specified, the second argument is an action that will be
   /// applied on every jets in the resulting ClusterSequence
-  void transfer_from_sequence(ClusterSequence & from_seq,
+  void transfer_from_sequence(const ClusterSequence & from_seq,
 			      const FunctionOfPseudoJet<PseudoJet> * action_on_jets = 0);
 
   /// retrieve a shared pointer to the wrapper to this ClusterSequence
@@ -669,7 +675,8 @@ protected:
  private:
 
   bool _plugin_activated;
-  std::auto_ptr<Extras> _extras; // things the plugin might want to add
+  //std::auto_ptr<Extras> _extras; // things the plugin might want to add
+  SharedPtr<Extras> _extras; // things the plugin might want to add
 
   void _really_dumb_cluster ();
   void _delaunay_cluster ();

@@ -464,7 +464,7 @@ and similarly taking as argument a templated
 with \ttt{reset}, the user and internal indices and user-info are
 copied from the \PJ).
 
-Finally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are
+Additionally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are
 defined, with \ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and
 \ttt{*}, \ttt{/} acting on a \ttt{PseudoJet} and a \ttt{double}
 coefficient.
@@ -473,8 +473,16 @@ The
 %
 Analogous \ttt{+=}, etc., operators, are also defined.
 
+There are also equality testing operators: \ttt{(jet1 == jet2)}
+returns true if the two jets have identical 4-momenta, structural
+information and user information;
+%
+the \ttt{(jet == 0.0)} test returns true if all the components of the
+4-momentum are zero.
+%
+The \ttt{!=} operator works analogously.
 
-We also provide routines for taking an unsorted vector of
+Finally, we also provide routines for taking an unsorted vector of
 \ttt{fastjet::PseudoJet}s and returning a sorted vector,
 \begin{lstlisting}
   /// return a vector of jets sorted into decreasing transverse momentum
@@ -781,6 +789,38 @@ follows:
   vector<fastjet::PseudoJet> unclustered = clust_seq.unclustered_particles();
 \end{lstlisting}
 
+
+\paragraph{Copying and transforming a ClusterSequence.}
+%
+A standard copy constructor is available for {\CS}s. 
+%
+Additionally it is possible to copy the clustering history of a \CS
+while modifying the momenta of the jets, with the \CS member function
+\begin{lstlisting}
+   void transfer_from_sequence(const ClusterSequence & original_cs, 
+                               const FunctionOfPseudoJet<PseudoJet> * action_on_jets = 0);
+\end{lstlisting}
+\ttt{FunctionOfPseudoJet<PseudoJet>} is an abstract base class whose
+interface provides a \ttt{PseudoJet operator()(const PseudoJet \& jet)}
+function, i.e.\ a function of a \PJ that returns a \PJ, as discussed
+in appendix~\ref{app:function-of-pj}.
+%
+As the clustering history is copied to the target \CS, each \PJ in the
+target \CS is given by the result of applying this function to the
+corresponding \PJ in the original sequence.
+%
+One use case for this is if one wishes to obtain a Lorentz-boosted
+copy of a \CS, which can be achieved as follows
+\begin{lstlisting}
+   #include "fastjet/tools/Boost.hh"
+   //...
+   
+   ClusterSequence original_cs(...);
+   ClusterSequence boosted_cs;
+   Boost boost(some_jet_to_describe_the_boost);
+   boosted_cs.transfer_from_sequence(cs, &boost);
+\end{lstlisting}
+
 %......................................................................
 \subsection{Constituents and substructure of jets}
 
@@ -898,7 +938,7 @@ least one external object already associated with the \ClusterSequence
 at the time of the call.
 
 %......................................................................
-\subsection{Composite jets}
+\subsection{Composite jets, general considerations on jet structure}
 \label{sec:composite-jet}
 
 There are a number of cases where it is useful to be able to take two
@@ -919,8 +959,8 @@ This can be accomplished with the function \ttt{join}:
 The 4-momenta are added,\footnote{This corresponds to $E$-scheme
   recombination. If the user wishes to have the jets joined with a
   different recombination scheme he/she can pass
-  \ttt{JetDefinition::Recombiner} (cf.\ section~\ref{sec:recombiner})
-  as the last argument to \ttt{join(...)}.} and in addition the
+  \texttt{JetDefinition::Recombiner} (cf.\ section~\ref{sec:recombiner})
+  as the last argument to \texttt{join(...)}.} and in addition the
 \ttt{resonance} remembers that it came from \ttt{jet1} and
 \ttt{jet2}. So, for example, a call to \ttt{resonance.constituents()}
 will return the constituents of both \ttt{jet1} and \ttt{jet2}.
@@ -956,7 +996,7 @@ Generally a user will know how a given jet was formed, and so know if
 it makes sense, say, to call \ttt{pieces()}.  
 %
 However if a jet is returned from some third-party code, it may not
-always be clear kinds of structural information it has. 
+always be clear what kinds of structural information it has. 
 %
 Accordingly a number of enquiry functions are available:
 \begin{lstlisting}
@@ -971,6 +1011,51 @@ Asking (say) for the \ttt{pieces()} of a jet for which
 %
 The structural information available for different kinds of jets is
 summarised in appendix~\ref{app:structure_table}.
+
+%......................................................................
+\paragraph{Internal storage of structural information.}
+%
+The means by which information about a jet's a structure is stored is
+generally transparent to the user.
+%
+The main exception that arises is when the user wishes to create jets
+with a new kind of structure, for example when writing boosted-object
+taggers.
+%
+Here, we outline the approach adopted, deferring more advanced usage
+examples to section~\ref{sec:transformers} when we discuss
+transformers and taggers.
+
+To be able to efficiently access structural information, each \PJ has
+a shared pointer to a class of type \ttt{PseudoJetStructureBase}.
+%
+For plain {\PJ}s the pointer is null.
+%
+For {\PJ}s obtained from a \CS the pointer is to a class
+\ttt{ClusterSequenceStructure}, which derives from
+\ttt{PseudoJetStructureBase}.
+%
+For {\PJ}s obtained from a \ttt{join(...)} operation, the pointer is
+to a class \ttt{CompositeJetStructure}, again derived from
+\ttt{PseudoJetStructureBase}.
+%
+It is these classes that are responsible for answering structural
+queries about the jet, such as returning its constituents, or
+indicating whether it \ttt{has\_pieces()}.
+%
+Several calls are available for direct access to the internal structure
+storage, among them
+\begin{lstlisting}
+   const PseudoJetStructureBase* structure_ptr() const;
+   PseudoJetStructureBase*       structure_non_const_ptr();
+   template<typename StructureType> const StructureType & structure() const;
+\end{lstlisting}
+where the first two return simply the structure pointer, while the
+last one casts the pointer to the desired derived structure type
+
+% , in
+% order to facilitate access to structural information specific to a
+% given jet.
 
 % The dichotomy between cluster-sequence type structural information and
 % \ttt{pieces} helps provide a distinction between different origins for
@@ -988,10 +1073,9 @@ summarised in appendix~\ref{app:structure_table}.
 %......................................................................
 \paragraph{Features not yet documented}
 
-The following features still need documenting.
+\comment{The following features still need documenting. But check
+  they're not already discussed later}
 \begin{lstlisting}
-  PseudoJetStructureBase;
-  structure<StructureType>();
   has_structure_of<ToolName>();
   structure_of<ToolName>();
 \end{lstlisting}
@@ -3095,7 +3179,7 @@ reclustering radius and selecting the three hardest subjects. That can
 be achieved with
 \begin{lstlisting}
    vector<PseudoJet> tagged_pieces = tagged_jet.pieces();
-   double Rfilt = min(0.3, 0.5 * pieces[0].delta_R(pieces[1]);
+   double Rfilt = min(0.3, 0.5 * pieces[0].delta_R(pieces[1]));
    PseudoJet filtered_tagged_jet = Filter(Rfilt, SelectorNHardest(3))(tagged_jet);
 \end{lstlisting}
 %   Filter filter = Filter(Rfilt, SelectorNHardest(3));
@@ -3117,8 +3201,34 @@ discussed above).
 
 [still to be implemented]
 
+%......................................................................
 \subsection{User-defined transformers}
 \label{sec:transformerdetails}
+
+In many cases transformers simply return a subjet from an existing \CS
+or alternatively join some number of subjets and return the result.
+%
+Two helpers are available to help the user take care of the structural
+information of the resulting jet while also adding additional
+information, for example about the kinematic variables such as $\mu$
+and $y$ in the \ttt{MassDropTagger} above.
+
+The first helper is a templated version of \ttt{join}:
+\begin{lstlisting}
+   template<class DerivedFromCompositeJet> PseudoJet join([some jets]);
+\end{lstlisting}
+It works exactly as the usual \ttt{join} function,
+section~\ref{sec:composite-jet}, except that the class associated with
+the jet's underlying structure can now be chosen by the user to be
+\ttt{DerivedFromCompositeJet}.
+%
+Specifically, it can be any class derived from
+\ttt{CompositeJetStructure}, which is the class performs the work of
+storing the information about the pieces of the resulting jet for the
+usual \ttt{join} function.
+
+The second helper
+
 
 
 

@@ -1,3 +1,22 @@
+2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> [later, on the train]
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/ClusterSequence.hh: 
+
+	  Wrote an explicit copy constructor, which just uses
+	  transfer_from_sequence. Until now, there had been a default copy
+	  constructor, which failed to update the structural pointers
+	  within the copied jets (so they pointed to the wrong CS,
+	  i.e. the original one, and if the original CS went out of scope,
+	  the jets from the copy could no longer access their structure).
+
+	  Also modified transfer_from_sequence(...) so as to make its CS
+	  argument const. One side effect was that this required _extras
+	  to be converted from an auto_ptr to a SharedPtr, because until
+	  now the auto_ptr in the original CS was being zeroed as part of
+	  an ownership transfer (the call to set _extras from a plugin remains
+	  auto_ptr based for now).
+
 2011-06-30  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* regression-tests/test-all-algs.pl: 

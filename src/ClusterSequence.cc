@@ -470,7 +470,7 @@ double ClusterSequence::jet_scale_for_algorithm(
 //
 // The second argument is an action that will be applied on every
 // jets in the resulting ClusterSequence
-void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq,
+void ClusterSequence::transfer_from_sequence(const ClusterSequence & from_seq,
 					     const FunctionOfPseudoJet<PseudoJet> * action_on_jets){
 
   if (will_delete_self_when_unused()) 
@@ -495,10 +495,11 @@ void ClusterSequence::transfer_from_sequence(ClusterSequence & from_seq,
   else
     _jets     = from_seq._jets;
   _history  = from_seq._history;
-  // the following transfers ownership of the extras from the from_seq
+  // the following shares ownership of the extras with the from_seq;
+  // no transformations will be applied to the extras
   _extras   = from_seq._extras;
 
-  // transfer of ownership
+  // clean up existing structure
   if (_structure_shared_ptr()) {
     // If there are jets associated with an old version of the CS and
     // a new one, keeping track of when to delete the CS becomes more
