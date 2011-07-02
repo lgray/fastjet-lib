@@ -1,3 +1,9 @@
+2011-07-02  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  add -list option to get a list of the different setups that are
+	  encoded (together with their index, to facilitate usage of -only)
+
 2011-07-01  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/Makefile.am: 

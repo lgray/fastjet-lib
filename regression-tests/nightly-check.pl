@@ -6,6 +6,7 @@
 #    -mailgavin   sends mail to just gavin
 #    -verbose     output goes to screen even if we also ask for mail
 #    -only index  runs only the setup corresponding to the index that's requested
+#    -list        lists the different setups and the index of each
 #
 # Various other options provide access to internals for running checks
 # on remote hosts. The set of configurations that are run is given in
@@ -118,17 +119,27 @@ $origDir=getcwd();
 $tarName="";
 $verbose="";
 $only="";
+$listSetups="";
 while ($arg = shift @ARGV) {
   if    ($arg eq "-mail")      {$mail = 1;}
   elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr='salam@lpthe.jussieu.fr';}
   elsif ($arg eq "-verbose")   {$verbose = 1;}
   elsif ($arg eq "-only")      {$only = shift @ARGV;}
+  elsif ($arg eq "-list")      {$listSetups = 1;}
   # the following args are only for internal treatment of execution
   # on remote hosts
   elsif ($arg eq "-remote")    {$tmpDir  = shift @ARGV; $remote=1;}
   elsif ($arg eq "-tar")       {$tarName = shift @ARGV;}
   elsif ($arg eq "-orig")      {$origDir = shift @ARGV;}
   else {die "Unrecognized argument: $arg";}
+}
+
+# allow user to see what is planned
+if ($listSetups) {
+  for ($i = 0; $i <= $#setups; $i++) {
+    print "$i: ",join("; ", @{$setups[$i]}),"\n";
+  }
+  exit(0);
 }
 
 # for some remote hosts, need to remove leading "/misc?" from directory name
