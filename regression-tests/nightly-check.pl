@@ -5,7 +5,8 @@
 #    -mail        sends mail to all authors, otherwise output goes to screen
 #    -mailgavin   sends mail to just gavin
 #    -verbose     output goes to screen even if we also ask for mail
-#    -only index  runs only the setup corresponding to the index that's requested
+#    -only index  runs only the setup corresponding to the index that's 
+#                 requested (can also take a comma-separated list of indices)
 #    -list        lists the different setups and the index of each
 #
 # Various other options provide access to internals for running checks
@@ -118,13 +119,16 @@ $commandArgs=join(" ",@ARGV);
 $origDir=getcwd();
 $tarName="";
 $verbose="";
-$only="";
+%only=(); $only="";
 $listSetups="";
 while ($arg = shift @ARGV) {
   if    ($arg eq "-mail")      {$mail = 1;}
   elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr='salam@lpthe.jussieu.fr';}
   elsif ($arg eq "-verbose")   {$verbose = 1;}
-  elsif ($arg eq "-only")      {$only = shift @ARGV;}
+  elsif ($arg eq "-only")      {
+    $only = shift @ARGV;
+    foreach $index (split(",",$only)) {$only{$index} = 1;}
+  }
   elsif ($arg eq "-list")      {$listSetups = 1;}
   # the following args are only for internal treatment of execution
   # on remote hosts
@@ -218,7 +222,7 @@ MAIN: while (1) {
 
     # now run the rest, either remotely, or from setups array, or from a setup file
     for ($i = 0; $i <= $#setups; $i++) {
-      if ($only ne "" && $only != $i) {next;}
+      if ($only && ! exists($only{$i})) {next;}
       if ($setups[$i][0]) {
         # run test on a remote host 
         &message("* transferring execution to remote host $setups[$i][0]\n");

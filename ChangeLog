@@ -1,3 +1,8 @@
+2011-07-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  -only can now take a comma-separated list
+
 2011-07-02  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
