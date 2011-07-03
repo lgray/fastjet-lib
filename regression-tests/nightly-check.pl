@@ -104,6 +104,7 @@ push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard ma
 # karnak disabled 2011-03-23
 # karnak enabled 2011-04-06
 push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
+push @setups, ["karnak","--enable-allcxxplugins", "", 10]; # quicker version of all plugins on karnak (to help understand failures of late June 2011)
 push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
@@ -237,11 +238,16 @@ MAIN: while (1) {
         $ssh =~ s/^.*in the future\n//mg;   # because karnak's time is wrong
         $ssh =~ s/^.*slocate.db.*\n//mg;    # because zetes has out-of-date locate
         $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
-        if ($ssh || $?) {&fail("connection to $setups[$i][0]", $ssh);}
+        $ssherr = $?;
 
         # collect the results
-        $results  = `cat $tmpDir/messages 2>&1`;
-        $summary .= `cat $tmpDir/summary 2>&1`;
+        $results = "";
+        if (-e "$tmpDir/messages") {$results  = `cat $tmpDir/messages 2>&1`;}
+        if (-e "$tmpDir/summary") {$summary .= `cat $tmpDir/summary 2>&1`;}
+
+        # check for failures, in ssh or in results
+        if ($ssh || $ssherr) {
+          &fail("connection to $setups[$i][0]", $results."\n".$ssh);}
         if (!$results || $results =~ /Failed/ || $?) {
           &fail("execution on remote host", $results);
         } else {

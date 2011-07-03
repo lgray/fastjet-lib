@@ -1,7 +1,9 @@
 2011-07-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
-	  -only can now take a comma-separated list
+	  -only can now take a comma-separated list.
+	  Provided more output in cases where ssh reports failure
+	  (including the messages and summary outputs if they exist).
 
 2011-07-02  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
