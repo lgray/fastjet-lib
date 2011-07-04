@@ -1,3 +1,10 @@
+2011-07-04  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/trial-progs/README:               *** ADDED ***
+	* doc/trial-progs/checks-for-3.0b1.cc:  *** ADDED ***
+	  add the doc/trial-progs directory for internal testing
+	  of elements that will go into the documentation.
+
 2011-07-03  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
