@@ -3315,16 +3315,52 @@ then on a jet returned by the \ttt{SimpleFilter} one can simply call
 \end{lstlisting}
 as with the fully fledged \ttt{Filter} of section~\ref{sec:filtering}.
 
-A second way of extending of adding information to an existing
-structure class is to ``wrap'' it. This can be done with the help of
-the \ttt{WrappedStructure} class. 
+A second way of extending the structural information of an existing
+jet is to ``wrap'' it. This can be done with the help of the
+\ttt{WrappedStructure} class.
+%
 \begin{lstlisting}
-   Class MyStructure: public WrappedStructure {
-     MyStructure(const SharedPtr<PseudoJetStructureBase> & structure) :
-                             WrappedStructure(structure), ... {...}
+   /// a class to wrap and extend existing jet structures with  information about 
+   ///"rejected" pieces
+   class SimpleFilterWrappedStructure: public WrappedStructure {
+   public:
+     SimpleFilterWrappedStructure(const SharedPtr<PseudoJetStructureBase> & to_be_wrapped,
+                                  const vector<PseudoJet> & rejected_pieces) :
+                WrappedStructure(to_be_wrapped), _rejected(rejected_pieces) {}
+   
+     const vector<PseudoJet> & rejected() const {return _rejected;}
+   private:
+     vector<PseudoJet> _rejected;
    };
 \end{lstlisting}
+The \ttt{WrappedStructure}'s constructor takes a \ttt{SharedPtr} to an
+existing structure and simply redirects all standard structural
+queries to that existing structure. A class derived from it can then
+reimplement some of the standard queries, or implement non-standard
+ones, as done above with the \ttt{rejected()} call.
+%
+To use the wrapped class one might proceed as in the following lines:
+\begin{lstlisting}
+   // create a jet with some existing structure
+   PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
+   // create a new structure that wraps the existing one and supplements it with new info
+   SharedPtr<PseudoJetStructureBase> structure(new
+      SimpleFilterWrappedStructure(result.structure_shared_ptr(), rejected_subjets));
+   // assign the new structure to the original jet
+   result.set_structure_shared_ptr(structure);  
+\end{lstlisting}
+The \ttt{SharedPtr}s ensure that memory allocated for the structural
+information is released when no jet remains that refers to it.
+%
+For the above piece of code to be used in the \ttt{SimpleFilter} it
+would then suffice to include a
+\begin{lstlisting}
+  typedef SimpleFilterWrappedStructure StructureType;
+\end{lstlisting}
+line in the \ttt{SimpleFilter} class definition.
 
+\comment{Put in explanation of why we have WrappedStructure and
+  templated CompositeStructure}
 
 % In many cases transformers simply return a subjet from an existing \CS
 % or alternatively join some number of subjets and return the result.

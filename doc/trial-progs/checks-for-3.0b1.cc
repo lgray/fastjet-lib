@@ -12,6 +12,7 @@ using namespace fastjet;
 
 //----------------------------------------------------------------------
 class SimpleFilterStructure;
+class SimpleFilterWrappedStructure;
 
 class SimpleFilter: public Transformer {
 public:
@@ -28,7 +29,8 @@ public:
   // CompositeJetStructure is the structural type associated with the 
   // join operation that we use shall use to create the returned jet
   //typedef CompositeJetStructure StructureType;
-  typedef SimpleFilterStructure StructureType;
+  //typedef SimpleFilterStructure StructureType;
+  typedef SimpleFilterWrappedStructure StructureType;
 
 private:
   JetDefinition _subjet_def;
@@ -52,6 +54,7 @@ private:
 //   return result;
 // }
 
+/// solution #1 to getting a SimpleFilter Structure
 class SimpleFilterStructure: public CompositeJetStructure {
 public:
   SimpleFilterStructure(const std::vector<PseudoJet> & pieces, 
@@ -64,6 +67,38 @@ private:
   friend class SimpleFilter;
 };
 
+/// solution #2 to getting a SimpleFilter Structure
+class SimpleFilterWrappedStructure: public WrappedStructure {
+public:
+  SimpleFilterWrappedStructure(
+      const SharedPtr<PseudoJetStructureBase> & to_be_wrapped,
+      const vector<PseudoJet> & rejected_pieces) :
+    WrappedStructure(to_be_wrapped), _rejected(rejected_pieces) {}
+
+  const vector<PseudoJet> & rejected() const {return _rejected;}
+private:
+  vector<PseudoJet> _rejected;
+};
+
+
+// PseudoJet SimpleFilter::result(const PseudoJet & jet) const {
+//   // get the subjets
+//   ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
+//   vector<PseudoJet> subjets = cs->inclusive_jets();
+//   
+//   // indicate that the cluster sequence should delete itself when
+//   // there are no longer any of its (sub)jets in scope anywhere
+//   cs->delete_self_when_unused();
+//   
+//   // get the selected subjets 
+//   vector<PseudoJet> selected_subjets, rejected_subjets;
+//   _selector.sift(subjets, selected_subjets, rejected_subjets);
+//   // join them using the same recombiner as was used in the subjet_def
+//   PseudoJet result = join<SimpleFilterStructure>(selected_subjets, *_subjet_def.recombiner());
+//   SimpleFilterStructure * structure = dynamic_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
+//   structure->_rejected = rejected_subjets;
+//   return result;
+// }
 
 PseudoJet SimpleFilter::result(const PseudoJet & jet) const {
   // get the subjets
@@ -78,9 +113,11 @@ PseudoJet SimpleFilter::result(const PseudoJet & jet) const {
   vector<PseudoJet> selected_subjets, rejected_subjets;
   _selector.sift(subjets, selected_subjets, rejected_subjets);
   // join them using the same recombiner as was used in the subjet_def
-  PseudoJet result = join<SimpleFilterStructure>(selected_subjets, *_subjet_def.recombiner());
-  SimpleFilterStructure * structure = dynamic_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
-  structure->_rejected = rejected_subjets;
+  PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
+  SharedPtr<PseudoJetStructureBase> structure(new
+     SimpleFilterWrappedStructure(result.structure_shared_ptr(), 
+				  rejected_subjets));
+  result.set_structure_shared_ptr(structure);
   return result;
 }
 
@@ -151,7 +188,7 @@ int main() {
   cout << jets[0].perp() << " " << pass << " " << endl;
 
   cout << "----------- filtering -----------\n";
-  SimpleFilter filter(JetDefinition(antikt_algorithm, 0.1), SelectorNHardest(0));
+  SimpleFilter filter(JetDefinition(antikt_algorithm, 0.1), SelectorNHardest(1));
   cout << filter.description() << endl;
   PseudoJet filtered_jet = filter(jets[0]);
   cout << filtered_jet.perp() << " " << filtered_jet.pieces().size() 
