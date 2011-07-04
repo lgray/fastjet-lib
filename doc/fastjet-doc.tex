@@ -3359,8 +3359,14 @@ would then suffice to include a
 \end{lstlisting}
 line in the \ttt{SimpleFilter} class definition.
 
-\comment{Put in explanation of why we have WrappedStructure and
-  templated CompositeStructure}
+In choosing between the templated \ttt{join<...>} and
+\ttt{WrappedStructure} approaches to providing advanced structural
+information, two elements are worth considering: on one hand, the
+\ttt{WrappedStructure} can be used to extend arbitrary structural
+information; on the other, while \ttt{join<...>} is more limited in
+its scope, it involves fewer pointer indirections when accessing
+structural information and so may be a little more efficient.
+
 
 % In many cases transformers simply return a subjet from an existing \CS
 % or alternatively join some number of subjets and return the result.
