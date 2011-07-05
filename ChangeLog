@@ -1,5 +1,8 @@
 2011-07-05  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/Makefile.am:
+	  do not install config_win.h (just put it in the distribution)
+
 	* tools/fastjet/tools/MassDropTagger.hh:
 	* tools/MassDropTagger.cc:
 	  warned when the jet being tagged does not come from a
