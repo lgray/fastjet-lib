@@ -32,6 +32,7 @@
 #define __FASTJET_MASS_DROP_TAGGER_HH__
 
 #include <fastjet/tools/Transformer.hh>
+#include <fastjet/internal/LimitedWarning.hh>
 #include <fastjet/CompositeJetStructure.hh>
 
 FASTJET_BEGIN_NAMESPACE
@@ -112,6 +113,7 @@ public:
 
 protected:
   double _mu, _ycut;
+  static LimitedWarning _warnings_nonca;
 };
 
 

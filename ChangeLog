@@ -1,5 +1,10 @@
 2011-07-05  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/MassDropTagger.hh:
+	* tools/MassDropTagger.cc:
+	  warned when the jet being tagged does not come from a
+	  Cambridge/Aachen clustering
+
 	* testsuite/TestPseudoJet.hh (TestBase):
 	  added tests of PJ::has_structure_of<ClusterSequence>()
 

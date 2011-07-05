@@ -34,6 +34,8 @@
 
 FASTJET_BEGIN_NAMESPACE
 
+LimitedWarning MassDropTagger::_warnings_nonca;
+
 using namespace std;
 
 //----------------------------------------------------------------------
@@ -53,6 +55,14 @@ string MassDropTagger::description() const{
 //  - jet   the PseudoJet to tag
 PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
   PseudoJet j = jet;
+
+  // issue a warning if the jet is not obtained through a C/A
+  // clustering
+  if ((! j.has_associated_cluster_sequence()) ||
+      (! j.validated_cs()->jet_def().jet_algorithm() == cambridge_algorithm))
+    _warnings_nonca.warn("MassDropTagger should only be applied on jets from a Cambridge/Aachen clustering; use it with other algorithms at your own risk.");
+
+
   PseudoJet j1, j2;
   bool had_parents;
 
