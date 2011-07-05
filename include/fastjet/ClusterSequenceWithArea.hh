@@ -36,15 +36,12 @@
 // ClusterSequenceArea. The latter should now be used together with
 // the fastjet/ClusterSequenceArea.hh. ClusterSequenceWithArea is not
 // guaranteed to work in future release of FastJet
-#ifndef __BACKWARD_WARNING__
-#define __BACKWARD_WARNING__
 #warning This file includes fastjet/ClusterSequenceWithArea.hh, \
 a deprecated FastJet header provided only for backward compatibility. \
 This is not guaranteed to work in future releases of FastJet. \
 Please consider including fastjet/ClusterSequenceArea.hh directly. \
 Similarily, if you use the (deprecated) class ClusterSequenceWithArea, \
-please use the equivalent ClusterSequenceArea instead.
-#endif
+please switch to the equivalent ClusterSequenceArea instead.
 
 #include "fastjet/ClusterSequenceAreaBase.hh"
 
