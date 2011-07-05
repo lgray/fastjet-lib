@@ -1,3 +1,9 @@
+2011-07-05  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  added --disable-gridjet to the --disable-shared karnak run; also
+	  added a --disable-shared option to the g++-4.4 run on karnak.
+
 2011-07-04  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/trial-progs/README:               *** ADDED ***

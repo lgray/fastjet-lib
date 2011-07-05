@@ -105,9 +105,11 @@ push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard ma
 # karnak enabled 2011-04-06
 push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
-push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
+#push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins --disable-shared --disable-gridjet", "", 10]; # full monty on karnak minus gridjet since it seems to lead to some strange interference with other things
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
+push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10]; # full set with gcc 4.4 
 
 
 # process command-line
