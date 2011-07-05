@@ -1,5 +1,12 @@
 2011-07-05  Gregory Soyez  <soyez@fastjet.fr>
 
+	* testsuite/TestPseudoJet.hh (TestBase):
+	  added tests of PJ::has_structure_of<ClusterSequence>()
+
+	* include/fastjet/ClusterSequence.hh:
+	  included ClusterSequenceStructure so that CS::StructureType
+	  is well-defined and PJ::has_structure_of<ClusterSequence>() works.
+
 	* include/fastjet/ClusterSequenceWithArea.hh:
 	  declared as deprecated
 

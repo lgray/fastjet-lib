@@ -193,6 +193,9 @@ class TestPJCSaccess : public TestBase {
 		  "empty PseudoJet parents (=false)");
     VERIFY_THROWS(empty.has_child(dummy1),
 		  "empty PseudoJet child (=false)");
+    verify_equal(empty.has_structure_of<ClusterSequence>(), false,
+		 "empty PseudoJet has not the structure of a ClusterSequence (=false)");
+
 
     // test an input particle
     verify_equal(event[0].has_associated_cluster_sequence(), false, 
@@ -215,6 +218,8 @@ class TestPJCSaccess : public TestBase {
 		  "input particle parents (=throws)");
     VERIFY_THROWS(event[0].has_child(dummy1),
 		  "input particle child (=throws)");
+    verify_equal(event[0].has_structure_of<ClusterSequence>(), false,
+		 "input particle has the structure of a ClusterSequence (=false)");
 
     // test a jet
     verify_equal(jets[0].has_associated_cluster_sequence(), true, 
@@ -237,6 +242,8 @@ class TestPJCSaccess : public TestBase {
 		 "jet parents");
     verify_equal(jets[0].has_child(dummy1), false,
 		 "jet child (=false)");
+    verify_equal(jets[0].has_structure_of<ClusterSequence>(), true,
+		 "jet has the structure of a ClusterSequence (=true)");
 
     // test a jet's constituent
     PseudoJet constituent = jets[0].constituents()[0];
@@ -260,6 +267,8 @@ class TestPJCSaccess : public TestBase {
 		 "jet constituent has no parents");
     verify_equal(constituent.has_child(dummy1), true,
 		 "jet constituent child (=true)");
+    verify_equal(constituent.has_structure_of<ClusterSequence>(), true,
+		 "jet constituent has the structure of a ClusterSequence (=true)");
 
     // test a composite jet (from input particles)
     PseudoJet composite1 = join(event[0], event[1]);
@@ -283,6 +292,8 @@ class TestPJCSaccess : public TestBase {
 		  "composite (2 inputs) parents (=throws)");
     VERIFY_THROWS(composite1.has_child(dummy1),
 		  "composite (2 inputs) child (=throws)");
+    verify_equal(composite1.has_structure_of<ClusterSequence>(), false,
+		 "composite (2 inputs) has not the structure of a ClusterSequence (=false)");
 
     // test a composite jet (from CS jets)
     PseudoJet composite2 = join(jets[0], jets[1]);
@@ -307,6 +318,8 @@ class TestPJCSaccess : public TestBase {
 		  "composite (2 jets) parents (=throws)");
     VERIFY_THROWS(composite2.has_child(dummy1),
 		  "composite (2 jets) child (=throws)");
+    verify_equal(composite2.has_structure_of<ClusterSequence>(), false,
+		 "composite (2 jets) has not the structure of a ClusterSequence (=false)");
 
 
     // test a jet (after CS deletion)
@@ -332,7 +345,8 @@ class TestPJCSaccess : public TestBase {
 		 "post CS-deletion, jet parents (=throws)");
     VERIFY_THROWS(jets[0].has_child(dummy1),
 		 "post CS-deletion, jet child (=throws)");
-    
+    verify_equal(jets[0].has_structure_of<ClusterSequence>(), true,
+		 "post CS-deletion jet has the structure of a ClusterSequence (=true)");
     
     
 //     cout << jets[0].perp() << endl;

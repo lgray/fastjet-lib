@@ -47,6 +47,7 @@
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/internal/LimitedWarning.hh"
 #include "fastjet/FunctionOfPseudoJet.hh"
+#include "fastjet/ClusterSequenceStructure.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
