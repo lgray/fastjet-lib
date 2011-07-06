@@ -302,7 +302,7 @@ sub finish () {
   } elsif (!$remote) {
     &message("\nAll tests passed\n");
     # try to get more info about test results
-    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages)."[".$svnShortURL."@".$svnrev."]";
+    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages)." [".$svnShortURL."@".$svnrev."]";
   }
 
   # clean up
