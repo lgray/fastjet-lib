@@ -302,7 +302,7 @@ sub finish () {
   } elsif (!$remote) {
     &message("\nAll tests passed\n");
     # try to get more info about test results
-    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages)."[".$svnURL."@".$svnrev."]";
+    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages)."[".$svnShortURL."@".$svnrev."]";
   }
 
   # clean up
@@ -487,5 +487,7 @@ sub build_and_check($$$) {
     &message($testall);
   }
 
+  # return things to their initial state (and hopefully avoid "missing-directory" issues)
+  chdir $origDir;
   return 1;
 }
