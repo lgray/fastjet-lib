@@ -33,6 +33,7 @@
 #define __FASTJET_WRAPPED_STRUCTURE_HH__
 
 #include "fastjet/PseudoJetStructureBase.hh"
+#include "fastjet/Error.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

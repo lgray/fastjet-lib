@@ -1,3 +1,8 @@
+2011-07-06  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/WrappedStructure.hh:
+	  included Error.hh
+
 2011-07-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/Makefile.am:
