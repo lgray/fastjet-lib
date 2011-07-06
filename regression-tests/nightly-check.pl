@@ -106,8 +106,8 @@ push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard ma
 push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
 #push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
-push @setups, ["karnak","--enable-allcxxplugins --disable-shared --disable-gridjet", "", 10]; # full monty on karnak minus gridjet since it seems to lead to some strange interference with other things
-push @setups, ["karnak","--enable-allcxxplugins", "--shared=no", 10]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
+push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10]; # full set with gcc 4.4 
 
@@ -193,7 +193,15 @@ MAIN: while (1) {
     } else {
       &fail("svn update", $svnup);
     }
-    if (($svninfo = `svn info`) =~ /^Revision: ([0-9]+)/m) {
+    $svninfo = `svn info`;
+    if ($svninfo =~ /^URL: (.+)/m) {
+      $svnURL = $1;
+      &message("* svn URL: $svnURL\n");
+    } else {
+      &fail("getting svn URL",$svninfo);
+    }
+    ($svnShortURL = $svnURL) =~ s/.*salam.svn.fastjet.//;
+    if ($svninfo =~ /^Revision: ([0-9]+)/m) {
       $svnrev = $1;
       &message("* svn revision: $svnrev\n");
     } else {
@@ -209,7 +217,7 @@ MAIN: while (1) {
     }
     # some useful stuff for the summary
     $date=`date`; chomp($date);
-    $summary .= "SUMMARY: $date, svn revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
+    $summary .= "SUMMARY: $date, svn [.../$svnShortURL] revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
 
     #--- make dist ------------------------------------------------------
     &message("* running make dist");
@@ -224,7 +232,7 @@ MAIN: while (1) {
 
     # now run the rest, either remotely, or from setups array, or from a setup file
     for ($i = 0; $i <= $#setups; $i++) {
-      if ($only && ! exists($only{$i})) {next;}
+      if ($only ne "" && ! exists($only{$i})) {next;}
       if ($setups[$i][0]) {
         # run test on a remote host 
         &message("* transferring execution to remote host $setups[$i][0]\n");
@@ -294,7 +302,7 @@ sub finish () {
   } elsif (!$remote) {
     &message("\nAll tests passed\n");
     # try to get more info about test results
-    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages);
+    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages)."[".$svnURL."@".$svnrev."]";
   }
 
   # clean up
@@ -360,11 +368,23 @@ sub OKUnavail ($) {
 # it to check that the output is correct
 #
 # - $config:       the configure-time flags
-# - $link:         flags passed to fastjet-config at link time
+# - $link:         flags passed to fastjet-config at link time 
+#                  (anything after a ":" is passed to g++ as compile/link flags)
 # - $nev:          number of events to actually test
 #
 sub build_and_check($$$) {
   my ($config,$link,$nev) = @_;
+  
+  # separate the link flags into two pieces, before and after colon
+  my ($linkfj, $linkgcc);
+  if ($link =~ /(.*):(.*)/) {
+    $linkfj  = $1;
+    $linkgcc = $2;
+  } else {
+    $linkfj = $link;
+    $linkgcc = "-O";
+  }
+  
 
   # get info about the compiler
   $cxx = "g++";
@@ -449,7 +469,8 @@ sub build_and_check($$$) {
   #--- do external compilation -------------------
   chdir "../";
   &message("* compiling fastjet_timing_plugins externally (with $cxx, fastjet-config ... $link)\n");
-  $compile=`$cxx -O -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $link\` -o fastjet_timing_plugins 2>&1`;
+  &message("* command is: $cxx $linkgcc -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $linkfj\` -o fastjet_timing_plugins 2>&1");
+  $compile=`$cxx $linkgcc -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $linkfj\` -o fastjet_timing_plugins 2>&1`;
   if ($compile =~ /error[: ]/i || $?) {
     &fail("external compilation",$compile);
   }

@@ -1,3 +1,17 @@
+2011-07-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  added option to modify fastjet_timing_plugin compilation options
+	  (anything that appeats after a ":" in the "link" options).
+
+	  switched karnak non-shared tests over to -O2 compilation (with
+	  gridjet in), to work around the 4.0.1 non-caught throw issue.
+
+	  added output of the URL of the directory (to help with tracking
+	  whether we run on trunk or on a branch).
+
+	  fixed issue with -only 0
+
 2011-07-06  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/WrappedStructure.hh:
