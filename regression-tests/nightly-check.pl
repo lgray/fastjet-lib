@@ -109,7 +109,7 @@ push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on kar
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10]; # full set with gcc 4.4 
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10]; # full set with gcc 4.4 
+#push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10]; # full set with gcc 4.4 
 
 
 # process command-line
