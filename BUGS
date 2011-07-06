@@ -68,6 +68,9 @@ Other issues to be aware of
    could still happen if one changes the ordering of the input
    particles.
 
+3. Copy of ClusterSequenceArea (and the other CS area-related classes)
+   is not fully implemented.
+  
 ----------------------------------------------------------------------
 Probably solved
 ---------------
