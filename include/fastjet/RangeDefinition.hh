@@ -33,6 +33,7 @@
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Error.hh"
+#include "fastjet/internal/LimitedWarning.hh"
 #include<sstream>
 #include<iostream>
 #include<string>
@@ -49,10 +50,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class RangeDefinition {
 public:
   /// default constructor
-  RangeDefinition() {}
+  RangeDefinition() { _warn_deprecated(); }
 
   /// constructor for a range definition given by |y|<rapmax
-  RangeDefinition(double rapmax) {
+  RangeDefinition(double rapmax) {  _warn_deprecated(); 
                      assert ( rapmax > 0.0 );
                      _rapmax = rapmax;
 		     _rapmin = -rapmax;
@@ -68,6 +69,7 @@ public:
   /// rapmin <= y <= rapmax, phimin <= phi <= phimax
   RangeDefinition(double rapmin, double rapmax, 
                   double phimin = 0.0, double phimax = twopi) {
+                     _warn_deprecated(); 
                      assert ( rapmin < rapmax);
                      assert ( phimin < phimax);
                      assert ( phimin > -twopi );
@@ -164,6 +166,14 @@ protected:
 private:
   double _rapmin,_rapmax,_phimin,_phimax,_phispan;
 
+  static LimitedWarning _warnings_deprecated;
+
+  /// the use of RangeDefinition is deprecated since FastJet version
+  /// 3.0 onwards. Please use Selector instead.  
+  /// RangeDefinition is only provided for backward compatibility
+  /// reasons and is not guaranteed to work in future releases of
+  /// FastJet.
+  void _warn_deprecated() const; 
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

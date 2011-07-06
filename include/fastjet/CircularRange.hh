@@ -35,6 +35,15 @@
 #include "fastjet/RangeDefinition.hh"
 #include "fastjet/Error.hh"
 
+// for backwards compatibility: one should now use SelectorCircle,
+// defined in fastjet/Selector.hh, instead CircularRange
+#warning This file includes fastjet/CircularRange.hh, \
+a deprecated FastJet header provided only for backward compatibility. \
+This is not guaranteed to work in future releases of FastJet. \
+From FastJet 3.0 onwards, please consider using Selector, defined in \
+fastjet/Selector.hh, instead of RangeDefinition and, in particular, \
+SelectorCircle instead of CircularRange.
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 class CircularRange : public fastjet::RangeDefinition {
@@ -101,7 +110,6 @@ private:
   void _set_invalid_rapphi() {_phijet = _invalid_phi;}
   /// true if rap,phi are valid (tests only phi)
   bool _rapphi_are_valid() const {return _phijet != _invalid_phi;}
-
 };
 
 FASTJET_END_NAMESPACE

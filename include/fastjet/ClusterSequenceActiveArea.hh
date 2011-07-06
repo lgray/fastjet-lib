@@ -40,8 +40,8 @@
 
 //------------ backwards compatibility with version 2.1 -------------
 // for backwards compatibility make ActiveAreaSpec name available
-#include "fastjet/ActiveAreaSpec.hh"
-#include "fastjet/ClusterSequenceWithArea.hh"
+//#include "fastjet/ActiveAreaSpec.hh"
+//#include "fastjet/ClusterSequenceWithArea.hh"
 //--------------------------------------------------------------------
 
 

@@ -31,6 +31,19 @@
 
 #ifndef __FASTJET_ACTIVEAREASPEC_HH__
 #define __FASTJET_ACTIVEAREASPEC_HH__
+
+// for backwards compatibility fastjet/ActiveAreaSpec.hh provides the
+// ActiveAreSpec class that is equivalent to GhostedAreaSpec. The
+// latter should now be used (defined in the
+// fastjet/GhostedAreaSpec.hh header). ActiveAreaSpec is not
+// guaranteed to work in future release of FastJet
+#warning This file includes fastjet/ActiveAreaSpec.hh, \
+a deprecated FastJet header provided only for backward compatibility. \
+This is not guaranteed to work in future releases of FastJet. \
+Please consider including fastjet/GhostedAreaSpec.hh directly. \
+Similarily, if you use the (deprecated) class ActiveAreaSpec, \
+please switch to the equivalent GhostedAreaSpec instead.
+
 #include "fastjet/GhostedAreaSpec.hh"
 
 

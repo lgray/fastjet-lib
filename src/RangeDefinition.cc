@@ -34,8 +34,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
  
-/// calculate, and set in _total_area, the area with a numerical test
-/// takes a reasonable time with rapmax = 10, npoints = 100
+LimitedWarning RangeDefinition::_warnings_deprecated;
+
+// calculate, and set in _total_area, the area with a numerical test
+// takes a reasonable time with rapmax = 10, npoints = 100
 void RangeDefinition::_numerical_total_area(double rapmax, int npoints) {
 
       int count = 0;
@@ -52,6 +54,16 @@ void RangeDefinition::_numerical_total_area(double rapmax, int npoints) {
       }
 
       _total_area = double(count)/double(npoints*npoints)*2.0*twopi*rapmax;
+}
+
+
+// the use of RangeDefinition is deprecated since FastJet version
+// 3.0 onwards. Please use Selector instead.  
+// RangeDefinition is only provided for backward compatibility
+// reasons and is not guaranteed to work in future releases of
+// FastJet.
+void RangeDefinition::_warn_deprecated() const{
+  _warnings_deprecated.warn("The use of RangeDefinition is deprecated since FastJet version 3.0 onwards. Please consider using Selector (defined in fastjet/Selector.hh) instead. There is no guarantee that support for RangeDefinition will be provided in future releases of FastJet.");
 }
 
 FASTJET_END_NAMESPACE

@@ -19,6 +19,26 @@
 
 2011-07-05  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/CircularRange.hh:
+	* include/fastjet/RangeDefinition.hh:
+	* src/RangeDefinition.cc:
+	  declared RangeDefinition and Circular range as deprecated (use
+	  Selector and SenectorCircle instead)
+
+	* example/07-subtraction-new.cc:
+	* example/07-subtraction.cc:
+	  ActiveAreaSpec -> GhostedAreaSpec (the former being deprecated)
+
+	* include/fastjet/ActiveAreaSpec.hh:
+	  declared as deprecated
+
+	* include/fastjet/ClusterSequenceActiveArea.hh:
+	  do not include deprecated headers ClusterSequenceWithArea.hh
+	  and ActiveAreaSpec
+
+	* include/fastjet/ClusterSequenceWithArea.hh:
+	  removed an unnecessary #ifndef
+
 	* include/fastjet/Makefile.am:
 	  do not install config_win.h (just put it in the distribution)
 
