@@ -52,12 +52,11 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/ClusterSequenceArea.hh"
+#include "fastjet/ClusterSequence.hh"
 #include <iostream> // needed for io
 #include <sstream>  // needed for internal io
 #include <iomanip>  
 #include <cmath>
-#include <fastjet/tools/Filter.hh>
 
 using namespace std;
 using namespace fastjet;
@@ -144,10 +143,10 @@ int main (int argc, char ** argv) {
   double R = 1.2;
   FlavourRecombiner flav_recombiner; // for tracking flavour
   JetDefinition jet_def(cambridge_algorithm, R, &flav_recombiner);
-  AreaDefinition area_def(active_area, GhostedAreaSpec(5.0));
+
   
   // run the jet finding; find the hardest jet
-  ClusterSequenceArea cs(particles, jet_def, area_def);
+  ClusterSequence cs(particles, jet_def);
   vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
 
   cout << "Ran: " << jet_def.description() << endl << endl;
@@ -234,17 +233,6 @@ int main (int argc, char ** argv) {
   cout << "Filtered total is " << endl;
   cout << " " << filtered_total << endl;
 
-
-  Filter filter(JetDefinition(kt_algorithm, Rfilt, &flav_recombiner), SelectorNHardest(3));
-  PseudoJet filt = filter(this_jet);
-  cout << "Filtered jet is " << endl;
-  cout << " " << filt << endl;
-
-  filt = filter(join(parent1, parent2));
-  cout << "Filtered pieces are " << endl;
-  cout << " " << filt << endl;
-
-  cout << parent1.associated_cluster_sequence() << " " << filt.pieces()[0].associated_cluster_sequence() << endl;
 }
 
 
@@ -258,7 +246,5 @@ ostream & operator<<(ostream & ostr, PseudoJet & jet) {
        << " " << setw(6) <<  jet.phi()  
        << ", mass = " << setw(10) << jet.m()
        << ", btag = " << jet.user_index();
-  if (jet.has_area())
-    ostr << ", area = " << jet.area();
   return ostr;
 }
