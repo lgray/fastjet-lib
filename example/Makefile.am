@@ -19,7 +19,8 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  10-subjets \
  11-boosted_higgs \
  11-boosted_higgs-new \
- 12-filter
+ 12-filter \
+ 13-boosted_top
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -100,7 +101,7 @@ endif
 11_boosted_higgs_SOURCES = 11-boosted_higgs.cc
 11_boosted_higgs_SHORTNAME = 11
 11_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-11_boosted_higgs_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
+11_boosted_higgs_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate how to tag boosted higgs (using directly the tagger)
 11_boosted_higgs_new_SOURCES = 11-boosted_higgs-new.cc
@@ -113,6 +114,12 @@ endif
 12_filter_SHORTNAME = 12
 12_filter_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 12_filter_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
+
+# illustrate the use of the Filter
+13_boosted_top_SOURCES = 13-boosted_top.cc
+13_boosted_top_SHORTNAME = 13
+13_boosted_top_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+13_boosted_top_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
 
 
 # backward-compatible + make-check-related things

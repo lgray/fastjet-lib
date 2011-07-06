@@ -1,0 +1,183 @@
+//STARTHEADER
+// $Id$
+//
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet; if not, write to the Free Software
+//  Foundation, Inc.:
+//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//----------------------------------------------------------------------
+//ENDHEADER
+
+#include <fastjet/tools/JHTopTagger.hh>
+#include <fastjet/Error.hh>
+#include <fastjet/JetDefinition.hh>
+#include <fastjet/ClusterSequence.hh>
+#include <sstream>
+
+FASTJET_BEGIN_NAMESPACE
+
+using namespace std;
+
+//----------------------------------------------------------------------
+// JHTopTagger class implementation
+//----------------------------------------------------------------------
+
+LimitedWarning JHTopTagger::_warnings_nonca;
+
+//------------------------------------------------------------------------
+// description of the tagger
+string JHTopTagger::description() const{ 
+  ostringstream oss;
+  oss << "JHTopTagger with delta_p=" << _delta_p << " and delta_r=" << _delta_r;
+  return oss.str();
+}
+
+//------------------------------------------------------------------------
+// the tagging itself
+//  - jet   the PseudoJet to tag
+PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
+  // make sure that there is a "regular" cluster sequence associated
+  // with the jet. Note that we also check it is valid (to avoid a
+  // more criptic error later on)
+  if (!jet.has_valid_cluster_sequence()){
+    throw Error("JHTopTagger can only be applied on jets having an associated (and valid) ClusterSequence");
+  }
+
+  // warn if the jet has not been clutered with a Cambridge/Aachen
+  // algorithm
+  if (! jet.validated_cs()->jet_def().jet_algorithm() == cambridge_algorithm)
+    _warnings_nonca.warn("JHTopTagger should only be applied on jets from a Cambridge/Aachen clustering; use it with other algorithms at your own risk.");
+
+
+  _jet = &jet;
+
+  // do the first splitting
+  vector<PseudoJet> split0 = _split_once(jet);
+  if (! split0.size())
+    return PseudoJet();
+
+  // now try a second splitting on each of the resulting objects
+  vector<PseudoJet> subjets;
+  for (unsigned i = 0; i < 2; i++) {
+    vector<PseudoJet> split1 = _split_once(split0[i]);
+    if (split1.size() > 0) {
+      subjets.push_back(split1[0]);
+      subjets.push_back(split1[1]);
+    } else {
+      subjets.push_back(split0[i]);
+    }
+  }
+
+  // make sure things make sense
+  if (subjets.size() < 3)
+    return PseudoJet();
+
+  // now find the pair of objects that is closest 
+  // to the W mass
+  double dmW_min = 1e200;
+  int ii=-1, jj=-1;
+  for (unsigned i = 0 ; i < subjets.size()-1; i++) {
+    for (unsigned j = i+1 ; j < subjets.size(); j++) {
+      double dmW = abs(_mW - (subjets[i]+subjets[j]).m());
+      if (dmW < dmW_min) {
+	dmW_min = dmW; ii = i; jj = j;
+      }
+    }
+  }
+
+  // order the subjets in the following order:
+  //  - hardest of the W subjets
+  //  - softest of the W subjets
+  //  - hardest of the remaining subjets
+  //  - softest of the remaining subjets (if any)
+  if (ii>0) std::swap(subjets[ii], subjets[0]);
+  if (jj>1) std::swap(subjets[jj], subjets[1]);
+  if (subjets[0].perp2() < subjets[1].perp2()) std::swap(subjets[0], subjets[1]);
+  if ((subjets.size()>3) && (subjets[2].perp2() < subjets[3].perp2())) 
+    std::swap(subjets[2], subjets[3]);
+  
+  // create the result and its structure
+  const JetDefinition::Recombiner *rec
+    = jet.associated_cluster_sequence()->jet_def().recombiner();
+  PseudoJet result = join<JHTopStructure>(subjets,*rec);
+  JHTopStructure *s = (JHTopStructure*) result.structure_non_const_ptr();
+  s->_W = join(subjets[0], subjets[1], *rec);
+  if (subjets.size()>3)
+    s->_non_W = join(subjets[2], subjets[3], *rec);
+  else
+    s->_non_W = join(subjets[2], *rec);
+  s->_cos_theta_w = _cos_theta_W(result);
+
+  return result;
+}
+
+// runs the Johns Hopkins decomposition procedure
+vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & startjet) const{
+  PseudoJet this_jet = startjet;
+  PseudoJet p1, p2;
+  vector<PseudoJet> result;
+  while (this_jet.has_parents(p1, p2)) {
+    if (p2.perp2() > p1.perp2()) std::swap(p1,p2); // order with hardness
+    if (p1.perp() < _delta_p * _jet->perp()) break; // harder is too soft wrt original jet
+    if ( (abs(p2.rap()-p1.rap()) + abs(p2.delta_phi_to(p1))) < _delta_r) break; // distance is too small
+    if (p2.perp() < _delta_p * _jet->perp()) {
+      this_jet = p1; // softer is too soft wrt original, so ignore it
+      continue; 
+    }
+    //result.push_back(this_jet);
+    result.push_back(p1);
+    result.push_back(p2);
+    break;
+  }
+  return result;
+}
+
+
+// compute the W helicity angle
+//
+// The helicity angle is a standard observable in top decays, used to
+// determine the Lorentz structure of the top- W coupling [13]. It is
+// defined as the angle, measured in the rest frame of the
+// reconstructed W, between the reconstructed top's flight direction
+// and one of the W decay products. Normally, it is studied in
+// semi-leptonic top decays, where the charge of the lepton uniquely
+// identifies these decay products. In hadronic top decays there is an
+// ambiguity which we resolve by choosing the lower pT subjet, as
+// measured in the lab frame.
+double JHTopTagger::_cos_theta_W(const PseudoJet & result) const{
+  // the two jets of interest: top and lower-pt prong of W
+  const PseudoJet & W  = result.structure_of<JHTopTagger>().W();
+  PseudoJet W2  = result.structure_of<JHTopTagger>().W2();
+  PseudoJet top = result;
+  
+  // transform these jets into jets in the rest frame of the W
+  W2.unboost(W);
+  top.unboost(W);
+
+  return (W2.px()*top.px() + W2.py()*top.py() + W2.pz()*top.pz())/
+    sqrt(W2.modp2() * top.modp2());
+}
+
+
+FASTJET_END_NAMESPACE
+

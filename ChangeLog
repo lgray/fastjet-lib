@@ -1,3 +1,12 @@
+2011-07-06  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/13-boosted_top.cc:               *** ADDED ***
+	  added an example on how to use the JHTopTagger
+
+	* tools/JHTopTagger.cc:                    *** ADDED ***
+	* tools/fastjet/tools/JHTopTagger.hh:      *** ADDED ***
+	  added an implementation of the Johns Hopkins boosted top tagger
+
 2011-07-06  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
