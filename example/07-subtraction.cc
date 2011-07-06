@@ -105,7 +105,7 @@ int main (int argc, char ** argv) {
   // (with infinite acceptance) at least 2R beyond the region
   // where you plan to investigate jets.
   double ghost_maxrap = 6.0;
-  fastjet::ActiveAreaSpec area_spec(ghost_maxrap);
+  fastjet::GhostedAreaSpec area_spec(ghost_maxrap);
   fastjet::AreaDefinition area_def(fastjet::active_area, area_spec);
 
   // run the jet clustering with the above jet and area definitions
