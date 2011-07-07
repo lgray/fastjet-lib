@@ -85,7 +85,8 @@ if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
    SAVE_CXXFLAGS="$CXXFLAGS"
    CXXFLAGS="-Woverloaded-virtual"
    AC_LANG_PUSH(C++)
-   AC_COMPILE_IFELSE([int main(void){ return 0;}],[ac_overloaded_virtual_ok=yes],[ac_overloaded_virtual_ok=no])
+   AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main(void){ return 0;}])],
+       [ac_overloaded_virtual_ok=yes],[ac_overloaded_virtual_ok=no])
    AC_LANG_POP(C++)
    CXXFLAGS="$SAVE_CXXFLAGS"
    AC_MSG_RESULT([$ac_overloaded_virtual_ok])
@@ -160,7 +161,8 @@ AC_MSG_CHECKING([if $CXX supports -Wl,--enable-new-dtags flag])
 SAVE_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="-Werror -Wl,--enable-new-dtags"
 AC_LANG_PUSH(C++)
-AC_LINK_IFELSE([int main(void){ return 0;}],[ac_enable_new_dtags_ok=yes],[ac_enable_new_dtags_ok=no])
+AC_LINK_IFELSE([AC_LANG_SOURCE([int main(void){ return 0;}])],
+   [ac_enable_new_dtags_ok=yes],[ac_enable_new_dtags_ok=no])
 AC_LANG_POP(C++)
 CXXFLAGS="$SAVE_CXXFLAGS"
 AC_MSG_RESULT([$ac_enable_new_dtags_ok])
@@ -323,7 +325,8 @@ if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
    SAVE_CXXFLAGS="$CXXFLAGS"
    CXXFLAGS="-Werror -fno-inline"
    AC_LANG_PUSH(C++)
-   AC_LINK_IFELSE([int main(void){ return 0;}],[ac_support_no_inline=yes],[ac_support_no_inline=no])
+   AC_LINK_IFELSE([AC_LANG_SOURCE([int main(void){ return 0;}])],
+      [ac_support_no_inline=yes],[ac_support_no_inline=no])
    AC_LANG_POP(C++)
    CXXFLAGS="$SAVE_CXXFLAGS"
    AC_MSG_RESULT([$ac_support_no_inline])

@@ -1,5 +1,9 @@
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
+	* configure.ac:
+	  used AC_LANG_TEST(...) to enclose code excerpts (as advised by
+	  autoconf)
+
 	* include/fastjet/JetDefinition.hh:
 	* src/JetDefinition.cc:
 	  added delete_plugin_when_unused and
