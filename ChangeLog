@@ -1,3 +1,12 @@
+2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/07-subtraction-new.cc:
+	  used BGE::set_particles() + revised some of the comments
+
+	* tools/fastjet/tools/BackgroundEstimator.hh:
+	* tools/BackgroundEstimator.cc:
+	  added support for set_particles
+
 2011-07-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 

@@ -28,29 +28,8 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-// design questions?
-//
-//  - keep the option to define things with just a Selector and a list of particles
-//    HOWTO:
-//     . ClusterSequenceArea:
-//        o impose an area for the Selector
-//        o if not relocatable, take ghosts maxrap from there
-//          otherwise, get it from the maxrap of the particles
-//          warn in the doc that one should set a decent maxrap
-//        o use kt, R=0.6
-//        o active_area_explicit_ghosts
-//        o have functions that allow to control the maxrap, the ghost area, the alg, R
-//
-//     . have a SharedPtr<ClusterSequenceArea> initialised only in that case
-//       remove the const CSA & _csa;
-//     . access the cs using 
-//         dynamic_cast<ClusterSequenceArea*>(_csw()->cs());
-//       
-//
-//  - use a default Selector: SelectorStrip(2.0) * !SelectorNHardest(2)
-
 #include "fastjet/tools/BackgroundEstimator.hh"
-#include <fastjet/ClusterSequenceAreaBase.hh>
+#include <fastjet/ClusterSequenceArea.hh>
 #include <fastjet/ClusterSequenceStructure.hh>
 #include <iostream>
 
@@ -86,11 +65,27 @@ LimitedWarning BackgroundEstimator::_warnings_empty_area;
 // Class to estimate the density of the background per unit area
 //---------------------------------------------------------------------
 
-// default ctor
+//----------------------------------------------------------------------
+// ctors and dtors
+//----------------------------------------------------------------------
+// ctor that allows to set only the particles later on
+BackgroundEstimator::BackgroundEstimator(const Selector &rho_range,
+					 const JetDefinition &jet_def,
+					 const AreaDefinition &area_def)
+  : _rho_range(rho_range), _jet_def(jet_def), _area_def(area_def) {
+
+  // initialise things decently
+  reset();
+
+  // make a few checks
+  _check_jet_alg_good_for_median();
+}
+
+// ctor from a cluster sequence
 //  - csa        the ClusterSequenceArea to use
 //  - rho_range  the range over which jets will be considered
 BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range)
-  : _rho_range(rho_range){
+  : _rho_range(rho_range), _jet_def(JetDefinition()){
 
   // initialise things properly
   reset();
@@ -100,16 +95,18 @@ BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, con
 }
 
 
-
 //----------------------------------------------------------------------
 // ctor from a list of jets
 //  - jets        the set of jets to use for the computation
 //  - rho_range   the range over which jets will be considered
 BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
-  : _rho_range(rho_range){
+  : _rho_range(rho_range), _jet_def(JetDefinition()){
 
   // initialise things properly
   reset();
+
+  // get the jets (and make the required tests)
+  set_jets(jets);
 }
 
 
@@ -118,6 +115,33 @@ BackgroundEstimator::~BackgroundEstimator(){
 
 }
 
+
+//----------------------------------------------------------------------
+// setting a new event
+//----------------------------------------------------------------------
+void BackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
+  // make sure that we have been provided a genuine jet definition 
+  if (_jet_def.jet_algorithm() == undefined_jet_algorithm)
+    throw Error("BackgroundEstimator::set_particles can only be called if you set the jet (and area) definition explicitly through the class constructor");
+
+  // initialise things decently (including setting uptodate to false!)
+  reset();
+
+  // cluster the particles
+  // 
+  // One may argue that it is better to cache the particles and only
+  // do the clustering later but clustering the particles now has 2
+  // practical advantages:
+  //  - it allows to une only '_included_jets' in all that follows
+  //  - it avoids adding another flag to ensure particles are 
+  //    clustered only once
+  ClusterSequenceArea *csa = new ClusterSequenceArea(particles, _jet_def, _area_def);
+  _included_jets = csa->inclusive_jets();
+
+  // store the CS for later on
+  _csi = csa->structure_shared_ptr();
+  csa->delete_self_when_unused();
+}
 
 //----------------------------------------------------------------------
 void BackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & csa) {
@@ -182,6 +206,33 @@ void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 
 
 //----------------------------------------------------------------------
+// configuring behaviour
+//----------------------------------------------------------------------
+// reset to default values
+// 
+// set the variou options to their default values
+void BackgroundEstimator::reset(){
+  // set the remaining default parameters
+  set_use_area_4vector();  // true by default
+  set_provide_fj2_sigma(false);
+
+  // reset the computed values
+  _rho = _sigma = 0.0;
+  _n_jets_used = _n_empty_jets = 0;
+  _empty_area = _mean_area = 0.0;
+
+  _included_jets.clear();
+
+  _jet_density_class = 0; // null pointer
+  _rescaling_class = 0;   // null pointer
+
+  _uptodate = false;
+}
+
+
+//----------------------------------------------------------------------
+// computation of teh background properties
+//----------------------------------------------------------------------
 // for estimation using a relocatable selector (i.e. local range)
 // this allows to set its position. Note that this HAS to be called
 // before any attempt to compute the background properties
@@ -200,26 +251,6 @@ void BackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
 
   _recompute_if_needed();
 }
-
-// reset to default values
-// 
-// set the variou options to their default values
-void BackgroundEstimator::reset(){
-  // set the remaining default parameters
-  set_use_area_4vector();  // true by default
-  set_provide_fj2_sigma(false);
-
-  // reset the computed values
-  _rho = _sigma = 0.0;
-  _n_jets_used = _n_empty_jets = 0;
-  _empty_area = _mean_area = 0.0;
-
-  _jet_density_class = 0; // null pointer
-  _rescaling_class = 0;   // null pointer
-
-  _uptodate = false;
-}
-
 
 // do the actual job
 void BackgroundEstimator::_compute() const {
@@ -376,11 +407,18 @@ void BackgroundEstimator::_check_csa_alive() const{
 // background estimation (i.e. either kt or C/A).
 // Issue a warning otherwise
 void BackgroundEstimator::_check_jet_alg_good_for_median() const{
-  const ClusterSequence * cs = dynamic_cast<ClusterSequenceStructure*>(_csi())->validated_cs();
+  const JetDefinition * jet_def = &_jet_def;
 
-  if (cs->jet_def().jet_algorithm() != kt_algorithm
-      && cs->jet_def().jet_algorithm() != cambridge_algorithm
-      && cs->jet_def().jet_algorithm() != cambridge_for_passive_algorithm) {
+  // if no explicit jet def has been provided, fall back on the
+  // cluster sequence
+  if (_jet_def.jet_algorithm() == undefined_jet_algorithm){
+    const ClusterSequence * cs = dynamic_cast<ClusterSequenceStructure*>(_csi())->validated_cs();
+    jet_def = &(cs->jet_def());
+  }
+
+  if (jet_def->jet_algorithm() != kt_algorithm
+      && jet_def->jet_algorithm() != cambridge_algorithm
+      && jet_def->jet_algorithm() != cambridge_for_passive_algorithm) {
     _warnings.warn("BackgroundEstimator: jet_def being used may not be suitable for estimating diffuse backgrounds (good alternatives are kt, cam)");
   }
 }

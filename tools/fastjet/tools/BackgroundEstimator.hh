@@ -32,6 +32,7 @@
 //ENDHEADER
 
 #include <fastjet/ClusterSequenceAreaBase.hh>
+#include <fastjet/AreaDefinition.hh>
 #include <fastjet/FunctionOfPseudoJet.hh>
 #include <fastjet/Selector.hh>
 #include <fastjet/tools/BackgroundEstimatorBase.hh>
@@ -169,6 +170,18 @@ public:
   /// @name constructors and destructors
   //\{
   //----------------------------------------------------------------
+  /// Constructor that sets the rho range as well as the jet
+  /// definition and area definition to be used to cluster the
+  /// particles. Prior to the estimation of rho, one has to provide
+  /// the particles to cluster using set_particles(...)
+  ///
+  /// \param rho_range  the range over which jets will be considered
+  /// \param jet_def    the jet definition to use for the clustering
+  /// \param area_def   the area definition to use for the clustering
+  BackgroundEstimator(const Selector &rho_range,
+		      const JetDefinition &jet_def,
+		      const AreaDefinition &area_def);
+
   /// ctor from a ClusterSequenceAreaBase with area
   ///
   /// \param csa         the ClusterSequenceArea to use
@@ -335,9 +348,7 @@ public:
 
   /// tell the background estimator that it has a new event, composed
   /// of the specified particles.
-  virtual void set_particles(const std::vector<PseudoJet> & particles) {
-    throw Error("set_particles not yet implemented for BackgroundEstimator");
-  }
+  virtual void set_particles(const std::vector<PseudoJet> & particles);
 
   /// (re)set the cluster sequence (with area support) to be used by
   /// future calls to rho() etc. 
@@ -513,34 +524,36 @@ private:
   /// Issue a warning otherwise
   void _check_jet_alg_good_for_median() const;
   
-  // the information needed to do the computation
-  Selector _rho_range;                      ///< range to compute the background in
-  std::vector<PseudoJet> _included_jets;    ///< jets to be used
+  // the basic parameters of this class (passed through the variou ctors)
+  Selector _rho_range;                   ///< range to compute the background in
+  JetDefinition _jet_def;                ///< the jet def to use for teh clustering
+  AreaDefinition _area_def;              ///< the area def to use for teh clustering
+  std::vector<PseudoJet> _included_jets; ///< jets to be used
+  
+  // the tunable aprameters of the class
   bool _use_area_4vector;
   bool _provide_fj2_sigma;
-  PseudoJet _current_reference;
-
   const FunctionOfPseudoJet<double> * _jet_density_class;
   const FunctionOfPseudoJet<double> * _rescaling_class;
   //SharedPtr<BackgroundRescalingBase> _rescaling_class_sharedptr;
   
   // the actual results of the computation
-  mutable double _rho;		        ///< background estimated density per unit area
-  mutable double _sigma;	        ///< background estimated fluctuations
-  mutable double _mean_area;	        ///< mean area of the jets used to estimate the background
-  mutable unsigned int _n_jets_used;    ///< number of jets used to estimate the background
-  mutable double _n_empty_jets;         ///< number of empty (pure-ghost) jets
-  mutable double _empty_area;           ///< the empty (pure-ghost/unclustered) area!
+  mutable double _rho;		     ///< background estimated density per unit area
+  mutable double _sigma;	     ///< background estimated fluctuations
+  mutable double _mean_area;	     ///< mean area of the jets used to estimate the background
+  mutable unsigned int _n_jets_used; ///< number of jets used to estimate the background
+  mutable double _n_empty_jets;      ///< number of empty (pure-ghost) jets
+  mutable double _empty_area;        ///< the empty (pure-ghost/unclustered) area!
 
   // internal variables
-  SharedPtr<PseudoJetStructureBase> _csi;   ///< allows to check if _csa is still valid
-  mutable bool _uptodate;                   ///< true when the background computation is up-to-date
+  SharedPtr<PseudoJetStructureBase> _csi; ///< allows to check if _csa is still valid
+  PseudoJet _current_reference;           ///< current reference jet
+  mutable bool _uptodate;                 ///< true when the background computation is up-to-date
 
   /// handle warning messages
   static LimitedWarning _warnings;
   static LimitedWarning _warnings_zero_area;
   static LimitedWarning _warnings_empty_area;
-  //static LimitedWarning _warnings_relocation;
 };
 
 
