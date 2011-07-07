@@ -5,7 +5,7 @@
 /// fastjet example program, illustration of carrying out boosted
 /// top subjet ID analysis using the Johns Hopkins top tagger
 ///
-/// run it with    : ./13-boosted_higgs-new < data/boosted_top_event.dat
+/// run it with    : ./13-boosted_top < data/boosted_top_event.dat
 ///
 /// Source code: 13-boosted_top.cc
 //----------------------------------------------------------------------
@@ -100,8 +100,8 @@ int main (int argc, char ** argv) {
   vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
 
   cout << "Ran: " << jet_def.description() << endl << endl;
-  cout << "2 Hardest jet: " << jets[0] << endl
-       << "               " << jets[1] << endl << endl;
+  cout << "2 Hardest jets: " << jets[0] << endl
+       << "                " << jets[1] << endl << endl;
 
   if (jets[0].perp()<ptmin){
     cout << "No jet above the ptmin threshold" << endl;
@@ -109,8 +109,18 @@ int main (int argc, char ** argv) {
   }
 
   // now do jet tagging using the Johns Hopkins top tagger
-  // For simplicity, we just apply it on the harfest jet.
-  //----------------------------------------------------------
+  // For simplicity, we just apply it to the hardest jet.
+  //
+  // In addition to delta_p and delta_r, note that there are two
+  // further parameters to the JH top tagger that here are implicitly
+  // set to their defaults:
+  //
+  // - cos_theta_W_max (defaults to 0.7) 
+  // - mW (defaults to 80.4). 
+  //
+  // The value for mW implicitly assumes that momenta are passed in
+  // GeV.
+  // ----------------------------------------------------------
   JHTopTagger top_tagger(delta_p, delta_r);
   PseudoJet tagged = top_tagger(jets[0]);
 

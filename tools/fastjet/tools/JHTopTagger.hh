@@ -74,7 +74,7 @@ class JHTopStructure;
 ///             |y1-y2|+|phi1-phi2|) [0.19 by default]
 ///  - cos_theta_W_max: the maximal value for the polarisation angle
 ///                     of the W [0.7 by default]
-///  - mW: the W mass [81 by default]
+///  - mW: the W mass [80.4 by default]
 ///
 /// \section input Input conditions
 /// 
@@ -84,24 +84,37 @@ class JHTopStructure;
 ///    Cambridge/Aachen algorithm, a warning will be issued
 ///
 /// \section output Output/interface
-/// 
-///  The result of the tagger (when it finds a top candidate), has a
-///  JHTopStructure structure. This is basically a composite jet made
-///  of 3 or 4 pieces (the 3 or 4 subjets found by the tagging
-///  procedure).
 ///
-///  These subjets are arranged so that the first 2 are the ones
-///  associated with the W (the first one being teh hardest of the
-///  two), and, when there are 4 subjets, the 3rd one is harder than
-///  the 4th.
+/// A  JHTopTagger can be used as follows:
 ///
-///  The JHTopStructure also provides several methods to access extra
-///  useful information: W(), W1(), W2() return the W candidate (as a
-///  composite jet) and its 2 subjets; non_W returns the remaining
-///  subjets (as a composite jet); and cos_theta_W() gives access to
-///  the W helicity angle.
+/// \code
+///  JHTopTagger top_tagger(...);
+///  PseudoJet top_candidate = top_tagger(jet);
+///  if (top_candidate != 0) {
+///    double top_mass = top_candidate.m();
+///    double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
+///    // then place your cuts on top and W mass
+///  }
+/// \endcode
 ///
-///  See example 13-boosted_top.cc for a usage example of this tagger.
+/// Other information that is available from the structure_of<JHTopTagger>() 
+/// call is
+///
+/// - PseudoJet W1(): the harder of the two prongs of the W
+/// - PseudoJet W2(): the softer of the two prongs of the W
+/// - PseudoJet non_W(): the non-W subjet(s) of the top candidate (i.e. the b)
+/// - double cos_theta_W(): the W helicity angle
+///
+/// The top_candidate also has the following pieces:
+///
+/// - top_candidate.pieces()[0]: W1
+/// - top_candidate.pieces()[1]: W2
+/// - top_candidate.pieces()[2]: the harder of the non-W subjets
+/// - top_candidate.pieces()[3]: the softer of the non-W subjets (may not exist)
+///
+/// The W itself has two pieces (W1, W2).
+///
+/// See example 13-boosted_top.cc for a usage example of this tagger.
 ///
 class JHTopTagger : public Transformer{
 public:
@@ -118,7 +131,7 @@ public:
   /// The default values of all these parameters are taken from
   /// arXiv:0806:0848
   JHTopTagger(const double delta_p=0.10, const double delta_r=0.19, 
-	      double cos_theta_W_max=0.7, double mW=81.0)
+	      double cos_theta_W_max=0.7, double mW=80.4)
     : _delta_p(delta_p), _delta_r(delta_r),
       _cos_theta_W_max(cos_theta_W_max), _mW(mW){};
 
@@ -160,18 +173,18 @@ public:
     CompositeJetStructure(pieces, recombiner), _cos_theta_w(0.0){}
 
   /// direct access to the W subjet
-  inline PseudoJet W() const{ 
+  inline const PseudoJet & W() const{ 
     return _W;
   }
 
   /// direct access to the first W subjet (the hardest)
-  inline PseudoJet W1() const{
+  inline const PseudoJet & W1() const{
     assert(_pieces.size()>0);
     return _pieces[0];
   }
 
   /// direct access to the second W subjet
-  inline PseudoJet W2() const{
+  inline const PseudoJet & W2() const{
     assert(_pieces.size()>1);
     return _pieces[1];
   }
@@ -179,7 +192,7 @@ public:
   /// direct access to the non-W subjets
   /// it will have 1 or 2 pieces depending on whether the tagger has
   /// found 3 or 4 pieces
-  inline PseudoJet non_W() const{ 
+  inline const PseudoJet & non_W() const{ 
     return _non_W;
   }
 

@@ -1,10 +1,21 @@
+2011-07-07  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* example/13-boosted_top.cc: 
+	* tools/JHTopTagger.cc: 
+	* tools/fastjet/tools/JHTopTagger.hh: 
+
+	  changed default mW to 80.4; reworked some of the comments to
+	  help illustrate usage more explicitly; added mW and
+	  cost_theta_W_max to description() output. JHTopStructure.W()
+	  [etc] now returns a const reference rather than a copy.
+
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
-	  tested a series of autoconf version.
+	  tested a series of autoconf versions.
 	  To be on the safe side, set pre-required version number to 2.59
 	  as it is the lowest we could easily find (was 2.57). Note that
-	  this only impact the version used to produce configure.
+	  this only impacts the version used to produce configure.
 
 	* tools/fastjet/tools/JHTopTagger.hh:
 	  worked on the comments

@@ -48,7 +48,9 @@ LimitedWarning JHTopTagger::_warnings_nonca;
 // description of the tagger
 string JHTopTagger::description() const{ 
   ostringstream oss;
-  oss << "JHTopTagger with delta_p=" << _delta_p << " and delta_r=" << _delta_r;
+  oss << "JHTopTagger with delta_p=" << _delta_p << ", delta_r=" << _delta_r
+      << ", cos_theta_W_max=" << _cos_theta_W_max
+      << " and mW = " << _mW;
   return oss.str();
 }
 
