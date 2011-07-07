@@ -2436,8 +2436,9 @@ The subtractor can then be used as follows:
 \end{lstlisting}
 The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
 %
-If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then the
-subtractor instead returns a jet with zero 4-momentum.
+If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then
+the subtractor instead returns a jet with zero 4-momentum (so that
+.\ttt(subtracted\_jet==0) returns \ttt{true}).
 %
 In both cases, the returned jet retains the user and structural
 information of the original jet.
