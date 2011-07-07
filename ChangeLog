@@ -1,3 +1,8 @@
+2011-07-07  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  updated karnak gcc-4.4 tests to 4.4.3
+
 2011-07-06  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/13-boosted_top.cc:               *** ADDED ***
