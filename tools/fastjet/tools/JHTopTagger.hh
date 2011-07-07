@@ -72,8 +72,21 @@ class JHTopStructure;
 class JHTopTagger : public Transformer{
 public:
   /// default ctor
-  JHTopTagger(const double delta_p=0.10, const double delta_r=0.19, double mW=81.0)
-    : _delta_p(delta_p), _delta_r(delta_r), _mW(mW){};
+  /// The parameters are the following:
+  ///  \param delta_p          fractional pt cut imposed on the subjets
+  ///                          (computed as a fraction of the original jet)
+  ///  \param delta_r          minimal distance between 2 subjets
+  //                           (computed as |y1-y2|+|phi1-phi2|)
+  ///  \param cos_theta_W_max  the maximal value for the polarisation 
+  ///                          angle of the W
+  ///  \param mW               the W mass
+  ///
+  /// The default values of all these parameters are taken from
+  /// arXiv:0806:0848
+  JHTopTagger(const double delta_p=0.10, const double delta_r=0.19, 
+	      double cos_theta_W_max=0.7, double mW=81.0)
+    : _delta_p(delta_p), _delta_r(delta_r),
+      _cos_theta_W_max(cos_theta_W_max), _mW(mW){};
 
   /// description of the tagger
   virtual std::string description() const;
@@ -93,7 +106,7 @@ protected:
   double _cos_theta_W(const PseudoJet & result) const;
 
   mutable const PseudoJet * _jet;    ///< the jet being processed
-  double _delta_p, _delta_r, _mW;
+  double _delta_p, _delta_r, _cos_theta_W_max, _mW;
   static LimitedWarning _warnings_nonca;
 };
 

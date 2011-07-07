@@ -1,5 +1,9 @@
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/JHTopTagger.hh:
+	* tools/JHTopTagger.cc:
+	  added a cut on cos(theta_W) directly in the tagger.
+
 	* example/07-subtraction-new.cc:
 	  used BGE::set_particles() + revised some of the comments
 

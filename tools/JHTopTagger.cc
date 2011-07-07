@@ -128,6 +128,15 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
     s->_non_W = join(subjets[2], *rec);
   s->_cos_theta_w = _cos_theta_W(result);
 
+  // if the polarisation angle does not pass the cut, consider that
+  // the tagging has failed
+  //
+  // Note that we could perhaps ensure this cut before constructing
+  // the result structure but this has the advantage that the top
+  // 4-vector is already available and does not have to de re-computed
+  if (s->_cos_theta_w >= _cos_theta_W_max)
+    return PseudoJet();
+
   return result;
 }
 
