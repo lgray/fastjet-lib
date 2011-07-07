@@ -304,12 +304,21 @@ public:
 
   /// set the recombiner class to the one provided
   void set_recombiner(const Recombiner * recomb) {
+    if (_recombiner_shared()) _recombiner_shared.reset(recomb);
     _recombiner = recomb;
     _default_recombiner = DefaultRecombiner(external_scheme);
   }
 
+  /// allows to let the JetDefinition handle the deletion of the
+  /// recombiner when it is no longer used
+  void delete_recombiner_when_unused();
+
   /// return a pointer to the plugin 
   const Plugin * plugin() const {return _plugin;};
+
+  /// allows to let the JetDefinition handle the deletion of the
+  /// plugin when it is no longer used
+  void delete_plugin_when_unused();
 
   /// return information about the definition...
   JetAlgorithm jet_algorithm  () const {return _jet_algorithm  ;}
@@ -472,11 +481,13 @@ private:
   Strategy  _strategy  ;
 
   const Plugin * _plugin;
+  SharedPtr<const Plugin> _plugin_shared;
 
   // when we use our own recombiner it's useful to point to it here
   // so that we don't have to worry about deleting it etc...
   DefaultRecombiner _default_recombiner;
   const Recombiner * _recombiner;
+  SharedPtr<const Recombiner> _recombiner_shared;
 
 };
 

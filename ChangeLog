@@ -1,5 +1,10 @@
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/JetDefinition.hh:
+	* src/JetDefinition.cc:
+	  added delete_plugin_when_unused and
+	  delete_recombiner_when_unused for easier memory management
+
 	* fastjet-config.in:
 	* m4/plugin.m4:
 	* configure.ac:

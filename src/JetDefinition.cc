@@ -134,6 +134,10 @@ string JetDefinition::description() const {
 void JetDefinition::set_recombination_scheme(
                                RecombinationScheme recomb_scheme) {
   _default_recombiner = JetDefinition::DefaultRecombiner(recomb_scheme);
+
+  // do not forget to delete the existing recombiner if needed
+  if (_recombiner_shared()) _recombiner_shared.reset();
+
   _recombiner = 0;
 }
 
@@ -150,6 +154,28 @@ bool JetDefinition::has_same_recombiner(const JetDefinition &other_jd) const{
   return (scheme != external_scheme) 
     || (recombiner() == other_jd.recombiner());
 }
+
+/// allows to let the JetDefinition handle the deletion of the
+/// recombiner when it is no longer used
+void JetDefinition::delete_recombiner_when_unused(){
+  if (_recombiner == 0){
+    throw Error("tried to call JetDefinition::delete_recombiner_when_unused() for a JetDefinition without a user-defined recombination scheme");
+  }
+
+  _recombiner_shared.reset(_recombiner);
+}
+
+/// allows to let the JetDefinition handle the deletion of the
+/// plugin when it is no longer used
+void JetDefinition::delete_plugin_when_unused(){
+  if (_plugin == 0){
+    throw Error("tried to call JetDefinition::delete_plugin_when_unused() for a JetDefinition without a plugin");
+  }
+
+  _plugin_shared.reset(_plugin);
+}
+
+
 
 string JetDefinition::DefaultRecombiner::description() const {
   switch(_recomb_scheme) {
