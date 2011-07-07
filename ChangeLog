@@ -1,5 +1,11 @@
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
+	* configure.ac:
+	  tested a series of autoconf version.
+	  To be on the safe side, set pre-required version number to 2.59
+	  as it is the lowest we could easily find (was 2.57). Note that
+	  this only impact the version used to produce configure.
+
 	* tools/fastjet/tools/JHTopTagger.hh:
 	  worked on the comments
 

@@ -13,7 +13,13 @@ AM_CONFIG_HEADER(include/fastjet/config_raw.h:config.h.in)
 AX_PREFIX_CONFIG_H(include/fastjet/config_auto.h,FASTJET,include/fastjet/config_raw.h)
 
 dnl check autoconf version
-AC_PREREQ(2.57)
+dnl
+dnl 2011-07-07 tested explicitly to be working with
+dnl   autoconf-2.59 (lxplus)
+dnl   autoconf-2.61 (karnak)
+dnl   autoconf-2.65 (ipht)
+dnl   autoconf-2.68 (virtual&lpthe)
+AC_PREREQ(2.59)
 
 dnl load our M4 macro directory
 dnl  - this is recommended by latest versions of libtoolize
