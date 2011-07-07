@@ -47,27 +47,61 @@ class JHTopStructure;
 /// Hopkins" method from arXiv:0806.0848 (Kaplan, Rehermann, Schwartz
 /// and Tweedie)
 ///
-/// <FULL DESCRIPTION TO BE ADDED>
-///
-/// Implementation details: 
-///   - find the 3-pronged structure
-///   - apply kinematic constraints if needed
+///The tagger proceeds as follows:
+///  - start from a jet J obtained with the Cambridge/Aachen algorithm
+///  - undo the last iteration j -> j_1,j_2 (with pt_1>pt_2) until the
+///    two subjets satisfy pt_1 > delta_p pt_J (with pt_J the pt of
+///    the original jet) and |y_1 - y_2| + |phi_1 - phi_2| > delta_r.
+///  - if one of these criteria is not satisfied, carry on the
+///    procedure with j_1 (discarding j_2)
+///  - for each of the subjets found, repeat the procedure. If some
+///    new substructure is found, keep these 2 new subjets, otherwise
+///    keep the original subjet (found during the first iteration)
+///  - at this stage, one has at most 4 subjets. If one has less than
+///    3, the tagger has failed.
+///  - reconstruct the W from the 2 subjets with a mass closest to the
+///    W mass
+///  - impose that the W helicity angle is less than a threshold
+///    cos_theta_W_max.
 ///
 ///
 /// \section desc Options
 /// 
 /// The constructor has the following arguments:
-///  - The first argument is the minimal mass drop requested
-///  - The second argument is the maximal mass of the subjets
+///  - delta_p: the fractional pt cut imposed on the subjets (computed
+///             as a fraction of the original jet) [0.10 by default]
+///  - delta_r: the minimal distance between 2 subjets (computed as
+///             |y1-y2|+|phi1-phi2|) [0.19 by default]
+///  - cos_theta_W_max: the maximal value for the polarisation angle
+///                     of the W [0.7 by default]
+///  - mW: the W mass [81 by default]
 ///
 /// \section input Input conditions
 /// 
 ///  - the original jet must have an associated (and valid)
 ///    ClusterSequence
+///  - if the original jet has not been obtained with the
+///    Cambridge/Aachen algorithm, a warning will be issued
 ///
 /// \section output Output/interface
 /// 
-///  - 
+///  The result of the tagger (when it finds a top candidate), has a
+///  JHTopStructure structure. This is basically a composite jet made
+///  of 3 or 4 pieces (the 3 or 4 subjets found by the tagging
+///  procedure).
+///
+///  These subjets are arranged so that the first 2 are the ones
+///  associated with the W (the first one being teh hardest of the
+///  two), and, when there are 4 subjets, the 3rd one is harder than
+///  the 4th.
+///
+///  The JHTopStructure also provides several methods to access extra
+///  useful information: W(), W1(), W2() return the W candidate (as a
+///  composite jet) and its 2 subjets; non_W returns the remaining
+///  subjets (as a composite jet); and cos_theta_W() gives access to
+///  the W helicity angle.
+///
+///  See example 13-boosted_top.cc for a usage example of this tagger.
 ///
 class JHTopTagger : public Transformer{
 public:
@@ -76,7 +110,7 @@ public:
   ///  \param delta_p          fractional pt cut imposed on the subjets
   ///                          (computed as a fraction of the original jet)
   ///  \param delta_r          minimal distance between 2 subjets
-  //                           (computed as |y1-y2|+|phi1-phi2|)
+  ///                          (computed as |y1-y2|+|phi1-phi2|)
   ///  \param cos_theta_W_max  the maximal value for the polarisation 
   ///                          angle of the W
   ///  \param mW               the W mass

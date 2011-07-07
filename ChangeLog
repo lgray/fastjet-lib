@@ -1,5 +1,8 @@
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/JHTopTagger.hh:
+	  worked on the comments
+
 	* configure.ac:
 	  used AC_LANG_TEST(...) to enclose code excerpts (as advised by
 	  autoconf)
