@@ -23,7 +23,7 @@ This is FastJet @VERSION@ configuration tool.
 Usage:
   fastjet-config [--help] [--version] [--prefix] [--cxxflags] [--libs]
       [--shared[=yes|no]] [--plugins[=yes|no]] [--rpath[=yes|no]] [--runpath]
-      [--list-plugins]
+      [--list-plugins] [--config]
 
 The arguments can be either queries (one must be present):
 
@@ -58,6 +58,8 @@ or flags (optional):
 
   --list-plugins  list all the available plugins
 
+  --config     shows a summary of how FastJet was configured
+
 EOF
 else
   cat 1>&2 <<EOF
@@ -65,7 +67,7 @@ else
 This is FastJet @VERSION@ configuration tool.
 Usage:
   fastjet-config [--help] [--version] [--prefix] [--cxxflags] [--libs]
-      [--plugins[=yes|no]] [--list-plugins]
+      [--plugins[=yes|no]] [--list-plugins] [--config]
 
 The arguments can be either queries (one must be present):
 
@@ -81,6 +83,8 @@ or flags (optional):
                (default=no)
 
   --list-plugins  list all the available plugins
+
+  --config     shows a summary of how FastJet was configured
 
 EOF
 fi
@@ -144,7 +148,7 @@ write_error()
 #  - we then check for extra arguments and return the requested info
 #####################################################################
 # useful lists of arguments
-arg_query_list="version prefix list_plugins help" # cxxflags libs
+arg_query_list="version prefix list_plugins config help" # cxxflags libs
 arg_yesno_list="shared plugins rpath"
 
 # default behaviour for parameters
@@ -333,5 +337,8 @@ case $found_query in
 	echo "Available plugins: "
 	echo -n "  "
 	echo @LIST_ALL_PLUGINS@ | sed -e "s/ /\\`echo -e '\n\r  '`/g"
+	;;
+    config)
+	echo -e "@CONFIG_SUMMARY@"
 	;;
 esac

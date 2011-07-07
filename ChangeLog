@@ -1,5 +1,11 @@
 2011-07-07  Gregory Soyez  <soyez@fastjet.fr>
 
+	* fastjet-config.in:
+	* m4/plugin.m4:
+	* configure.ac:
+	  fastjet-config --config now prints a summary of the fastjet
+	  configuration
+
 	* tools/fastjet/tools/JHTopTagger.hh:
 	* tools/JHTopTagger.cc:
 	  added a cut on cos(theta_W) directly in the tagger.

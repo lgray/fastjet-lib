@@ -29,7 +29,7 @@ dnl end of default plugin settings --- don't modify this line
     AH_TEMPLATE(ENABLE_PLUGIN_EECAMBRIDGE,      [checks if the EECambridge plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_JADE,             [checks if the Jade plugin is enabled])
     AH_TEMPLATE(ENABLE_PLUGIN_D0RUNICONE,       [checks if the D0RunICone plugin is enabled])
-    AH_TEMPLATE(ENABLE_PLUGIN_GRIDJET, [checks if the GridJet plugin is enabled])
+    AH_TEMPLATE(ENABLE_PLUGIN_GRIDJET,          [checks if the GridJet plugin is enabled])
 dnl end of declare the plugins for the config header --- don't modify this line
 ])
 
@@ -181,6 +181,8 @@ dnl show a brief summary of what is enabled and what is not
 AC_DEFUN([AC_PLUGIN_SUMMARY],
 [
 	dnl show the plugins summary
+	dnl check if there is some provided commands to execute
+   	ifelse([$1],[],[
 	echo "  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}	  
 	echo "           Jade              "${ENABLE_JADE}		  
 	echo "           NestedDefs        "${ENABLE_NESTEDDEFS}	  
@@ -193,5 +195,20 @@ AC_DEFUN([AC_PLUGIN_SUMMARY],
 	echo "           PxCone            "${ENABLE_PXCONE}		  
 	echo "           TrackJet          "${ENABLE_TRACKJET}         
 	echo "           GridJet           "${ENABLE_GRIDJET}         
+	],[
+	CONFIG_SUMMARY+="  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}"\n"
+	CONFIG_SUMMARY+="           Jade              "${ENABLE_JADE}"\n"	  
+	CONFIG_SUMMARY+="           NestedDefs        "${ENABLE_NESTEDDEFS}"\n"  
+	CONFIG_SUMMARY+="           SISCone           "${ENABLE_SISCONE}"\n"
+	CONFIG_SUMMARY+="           CDFCones          "${ENABLE_CDFCONES}"\n"
+	CONFIG_SUMMARY+="           D0RunICone        "${ENABLE_D0RUNICONE}"\n"
+	CONFIG_SUMMARY+="           D0RunIICone       "${ENABLE_D0RUNIICONE}"\n"
+	CONFIG_SUMMARY+="           ATLASCone         "${ENABLE_ATLASCONE}"\n"
+	CONFIG_SUMMARY+="           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE}"\n"
+	CONFIG_SUMMARY+="           PxCone            "${ENABLE_PXCONE}"\n"
+	CONFIG_SUMMARY+="           TrackJet          "${ENABLE_TRACKJET}"\n"
+	CONFIG_SUMMARY+="           GridJet           "${ENABLE_GRIDJET}"\n"
+	])
+
 	dnl end of show the plugins summary --- don't modify this line
 ])

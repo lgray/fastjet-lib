@@ -376,31 +376,43 @@ dnl sample fortran wrapper
 dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( fortran_wrapper/Makefile )
 
-
 dnl-------------------------------------------------------------------
 dnl main library outputs
 dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( Makefile src/Makefile include/Makefile include/fastjet/Makefile include/fastjet/internal/Makefile )
 
 dnl-------------------------------------------------------------------
+dnl give a nice summary of the config
+dnl-------------------------------------------------------------------
+dnl echo ""
+dnl echo "Configuration summary:"
+dnl echo "----------------------"
+dnl echo "  Installation directory     "${prefix}
+dnl echo "  Shared libraries           "${enable_shared}
+dnl echo "  Static libraries           "${enable_static}
+dnl echo "  Debug flag                 "$ENABLE_DEBUG_FLAG
+dnl echo "  CGAL support               "${ENABLE_CGAL_FLAG}
+dnl AC_PLUGIN_SUMMARY
+dnl echo "  Monolithic plugins lib     "$monolithic
+
+CONFIG_SUMMARY=""
+CONFIG_SUMMARY+="Configuration summary:\n"
+CONFIG_SUMMARY+="----------------------\n"
+CONFIG_SUMMARY+="  Installation directory     "${prefix}"\n"
+CONFIG_SUMMARY+="  Shared libraries           "${enable_shared}"\n"
+CONFIG_SUMMARY+="  Static libraries           "${enable_static}"\n"
+CONFIG_SUMMARY+="  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"
+CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
+AC_PLUGIN_SUMMARY([yes])
+CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
+
+AC_SUBST(CONFIG_SUMMARY)
+
+dnl-------------------------------------------------------------------
 dnl finish with a nice message
 dnl-------------------------------------------------------------------
 AC_OUTPUT
-
-dnl-------------------------------------------------------------------
-dnl give a nice summary of the config
-dnl-------------------------------------------------------------------
-echo ""
-echo "Configuration summary:"
-echo "----------------------"
-echo "  Installation directory     "${prefix}
-echo "  Shared libraries           "${enable_shared}
-echo "  Static libraries           "${enable_static}
-echo "  Debug flag                 "$ENABLE_DEBUG_FLAG
-echo "  CGAL support               "${ENABLE_CGAL_FLAG}
-AC_PLUGIN_SUMMARY
-echo "  Monolithic plugins lib     "$monolithic
-echo ""
+echo -e "$CONFIG_SUMMARY"
 echo "---------------------------------------------------"
 echo "        IMPORTANT NOTICE TO FASTJET USERS          "
 echo "                                                   "
@@ -408,3 +420,4 @@ echo " When using the FastJet library, you can retrieve  "
 echo " compilation and link flags using fastjet-config.  "
 echo " Type 'fastjet-config --help' for more information "
 echo "---------------------------------------------------"
+
