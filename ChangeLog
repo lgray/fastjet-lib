@@ -1,3 +1,15 @@
+2011-07-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/Makefile.am:
+	* example/11-boosted_higgs-new.cc:      *** REMOVED ***
+	* example/12-boosted_higgs-new.cc:      ***  ADDED  ***
+	* example/11-boosted_higgs.cc:          *** REMOVED ***
+	* example/12-boosted_higgs.cc:          ***  ADDED  ***
+	* example/12-filter.cc:                 *** REMOVED ***
+	* example/11-filter.cc:                 ***  ADDED  ***
+	  inverted examples 11 ad 12 (so that the two "boosted taggers"
+	  examples have consecutive numbers
+
 2011-07-07  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* example/13-boosted_top.cc: 

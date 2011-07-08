@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 /// \file
-/// \page Example12 12 - boosted Higgs tagging
+/// Example12 12 - boosted Higgs tagging
 ///
 /// fastjet example program, illustration of carrying out boosted
 /// Higgs subjet ID analysis

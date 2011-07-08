@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 /// \file
-/// \page Example11 13 - boosted top tagging
+/// \page Example13 13 - boosted top tagging
 ///
 /// fastjet example program, illustration of carrying out boosted
 /// top subjet ID analysis using the Johns Hopkins top tagger

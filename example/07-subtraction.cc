@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 /// \file
-/// \page Example07 07 - subtracting jet background contamination
+/// Example07 07 - subtracting jet background contamination
 ///
 /// fastjet subtraction example program. 
 ///
