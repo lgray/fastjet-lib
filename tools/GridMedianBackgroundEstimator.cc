@@ -67,7 +67,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
 
 //----------------------------------------------------------------------
 double GridMedianBackgroundEstimator::rho() const {
-  return percentile(0.5) / _cell_area;
+  return _percentile(_scalar_pt, 0.5) / _cell_area;
 }
 
 //----------------------------------------------------------------------
@@ -75,29 +75,6 @@ double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
   _warning_rho_of_jet.warn("rho(jet) not yet implemented; currently just returns global rho");
   return rho();
 }
-
-//----------------------------------------------------------------------
-double GridMedianBackgroundEstimator::percentile(double perc) const {
-  assert(perc >= 0.0 && perc <= 1.0);
-  double n_empty_jets = 0.0; // for future inclusion of this in BGE
-  double percentile_position = _scalar_pt.size()*perc - n_empty_jets - 0.5;
-
-  if (percentile_position >= 0 && _scalar_pt.size() > 1) {
-    int int_percentile_pos = int(percentile_position);
-    double result =
-	_scalar_pt[int_percentile_pos] * (int_percentile_pos+1-percentile_position)
-	+ _scalar_pt[int_percentile_pos+1] * (percentile_position - int_percentile_pos);
-    return result;
-
-  } else if (percentile_position > -0.5 && _scalar_pt.size() >= 1) {
-    return _scalar_pt[0];
-
-  } else {
-    return 0.0;
-  }
-
-}
-
 
 //----------------------------------------------------------------------
 int GridMedianBackgroundEstimator::igrid(const PseudoJet & p) const {

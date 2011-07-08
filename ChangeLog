@@ -1,5 +1,14 @@
 2011-07-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/BackgroundEstimatorBase.cc:
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	* tools/JetMedianBackgroundEstimator.cc:
+	* tools/GridMedianBackgroundEstimator.cc:
+	  . moved _percentile and _median_and_stddev to the base class
+	  . added 'nempty' support to _percentile
+	  . made _median_and_stddev use _percentile
+
 	* tools/fastjet/tools/Subtractor.hh:
 	  Use a BackgroundEstimatorBase
 

@@ -475,23 +475,6 @@ public:
 
   //\}
 
-protected:
-
-  /// given a quantity in a vector (e.g. pt_over_area) and knowledge
-  /// about the number of empty jets, calculate the median and
-  /// stand_dev_if_gaussian (roughly from the 16th percentile)
-  ///
-  /// If do_fj2_calculation is set to true then this performs FastJet
-  /// 2.X estimation of the standard deviation, which has a spurious
-  /// offset in the limit of a small number of jets.
-  void _median_and_stddev(const std::vector<double> & quantity_vector, 
-			  double n_empty_jets, 
-			  double & median, 
-			  double & stand_dev_if_gaussian,
-			  bool do_fj2_calculation = false
-			  ) const;
-
-
 private:
 
   /// do the actual job
@@ -551,7 +534,6 @@ private:
   /// handle warning messages
   static LimitedWarning _warnings;
   static LimitedWarning _warnings_zero_area;
-  static LimitedWarning _warnings_empty_area;
 };
 
 

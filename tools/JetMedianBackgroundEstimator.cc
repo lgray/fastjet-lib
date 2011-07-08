@@ -58,7 +58,6 @@ double BackgroundRescalingYPolynomial::result(const PseudoJet & jet) const {
 /// allow for warnings
 LimitedWarning JetMedianBackgroundEstimator::_warnings;
 LimitedWarning JetMedianBackgroundEstimator::_warnings_zero_area;
-LimitedWarning JetMedianBackgroundEstimator::_warnings_empty_area;
 
 //---------------------------------------------------------------------
 // class JetMedianBackgroundEstimator
@@ -324,71 +323,6 @@ void JetMedianBackgroundEstimator::_compute() const {
   _uptodate = true;
 }
 
-//----------------------------------------------------------------------
-void JetMedianBackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vector, 
-					     double n_empty_jets, 
-					     double & median, 
-					     double & stand_dev_if_gaussian,
-					     bool do_fj2_calculation) const {
-
-  // this check is redundant (the code below behaves sensibly even
-  // with a zero size), but serves as a reminder of what happens if
-  // the quantity vector is zero-sized
-  if (quantity_vector.size() == 0) {
-    median = 0;
-    stand_dev_if_gaussian = 0;
-    return;
-  }
-
-  vector<double> sorted_quantity_vector = quantity_vector;
-  sort(sorted_quantity_vector.begin(), sorted_quantity_vector.end());
-
-  // now get the median & error, accounting for empty jets
-  // define the fractions of distribution at median, median-1sigma
-  double posn[2] = {0.5, (1.0-0.6827)/2.0};
-  double res[2];
-
-  int n_jets_used = sorted_quantity_vector.size();
-  double total_njets = n_jets_used + _n_empty_jets;
-
-  if (n_empty_jets < -n_jets_used/4.0)
-    _warnings_empty_area.warn("JetMedianBackgroundEstimator::_median_and_stddev(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
-
-  for (int i = 0; i < 2; i++) {
-    double nj_median_pos;
-    if (do_fj2_calculation) {
-      nj_median_pos = (total_njets-1)*posn[i] - n_empty_jets;
-    } else {
-      nj_median_pos = (total_njets)*posn[i] - n_empty_jets - 0.5;
-    }
-
-    double nj_median_ratio;
-    if (nj_median_pos >= 0 && n_jets_used > 1) {
-      int int_nj_median = int(nj_median_pos);
-
-     // avoid potential overflow issues
-      if (int_nj_median+1 > n_jets_used-1){
-	int_nj_median = n_jets_used-2;
-	nj_median_pos = n_jets_used-1;
-      }
-
-      nj_median_ratio =
-	sorted_quantity_vector[int_nj_median] * (int_nj_median+1-nj_median_pos)
-	+ sorted_quantity_vector[int_nj_median+1] * (nj_median_pos - int_nj_median);
-    } else if (nj_median_pos > -0.5 && n_jets_used >= 1 && !do_fj2_calculation) {
-      // in the LHS of this "bin", just keep a constant value (we could have
-      // interpolated to zero, but this might misbehave in cases where all jets
-      // are active, because it would go to zero too fast)
-      nj_median_ratio = sorted_quantity_vector[0];
-    } else {
-      nj_median_ratio = 0.0;
-    }
-    res[i] = nj_median_ratio;
-  }
-  
-  median = res[0];
-  stand_dev_if_gaussian = res[0] - res[1];
-}
 
 
 // check that the underlying structure is still alive;

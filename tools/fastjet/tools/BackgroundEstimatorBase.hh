@@ -95,6 +95,41 @@ public:
 
   //\}
 
+protected:
+  /// @name helpers for derived classes
+  ///
+  /// Note that these helpers are related to median-based estimation
+  /// of the background, so there is no guarantee that they will
+  /// remain in this base class in the long term
+  //\{
+  //----------------------------------------------------------------
+
+  /// given a quantity in a vector (e.g. pt_over_area) and knowledge
+  /// about the number of empty jets, calculate the median and
+  /// stand_dev_if_gaussian (roughly from the 16th percentile)
+  ///
+  /// If do_fj2_calculation is set to true then this performs FastJet
+  /// 2.X estimation of the standard deviation, which has a spurious
+  /// offset in the limit of a small number of jets.
+  void _median_and_stddev(const std::vector<double> & quantity_vector, 
+			  double n_empty_jets, 
+			  double & median, 
+			  double & stand_dev_if_gaussian,
+			  bool do_fj2_calculation = false
+			  ) const;
+
+  /// computes a percentile of a given _sorted_ vector
+  ///  \param sorted_quantity_vector   the vector contains the data sample
+  ///  \param perc                     the percentile to compute
+  ///  \param nempty                   an additional number of 0's
+  ///                                  (considered at the beginning of 
+  ///                                  the quantity vector)
+  double _percentile(const std::vector<double> &sorted_quantity_vector, 
+		     const double perc, const unsigned int nempty=0) const;
+
+  //\}
+
+  static LimitedWarning _warnings_empty_area;
 };
 
 

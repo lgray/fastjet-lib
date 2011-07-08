@@ -57,8 +57,6 @@ public:
 
 private:
   void setup_grid();
-  double percentile(double perc) const;
-
   int igrid(const PseudoJet & p) const;
 
   double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _cell_area;
