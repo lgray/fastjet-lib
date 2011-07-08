@@ -1,5 +1,11 @@
 2011-07-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/12-boosted_higgs-new.cc:        *** REMOVED ***
+	* example/12-boosted_higgs.cc:            ***  ADDED  ***
+	* example/07-subtraction-new.cc:          *** REMOVED ***
+	* example/07-subtraction.cc:              ***  ADDED  ***
+	  removed the "-old" of the new versions of the examples
+
 	* example/12-boosted_higgs.cc:            *** REMOVED ***
 	* example/12-boosted_higgs-old.cc:        ***  ADDED  ***
 	* example/07-subtraction.cc:              *** REMOVED ***

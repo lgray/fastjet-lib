@@ -13,13 +13,11 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  05-eplus_eminus \
  06-area \
  07-subtraction \
- 07-subtraction-new \
  08-selector \
  09-user_info \
  10-subjets \
  11-filter \
  12-boosted_higgs \
- 12-boosted_higgs-new \
  13-boosted_top
 
 check_PROGRAMS = fastjet_example fastjet_areas
@@ -70,14 +68,8 @@ endif
 # illustrate the background subtraction using jet areas
 07_subtraction_SOURCES = 07-subtraction.cc
 07_subtraction_SHORTNAME = 07
-07_subtraction_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
-07_subtraction_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
-
-# illustrate the background subtraction using jet areas in a more flexible way
-07_subtraction_new_SOURCES = 07-subtraction-new.cc
-07_subtraction_new_SHORTNAME = 07-new
-07_subtraction_new_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-07_subtraction_new_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
+07_subtraction_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+07_subtraction_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate the use of Selector's
 08_selector_SOURCES = 08-selector.cc
@@ -108,12 +100,6 @@ endif
 12_boosted_higgs_SHORTNAME = 12
 12_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 12_boosted_higgs_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
-
-# illustrate how to tag boosted higgs (using directly the tagger)
-12_boosted_higgs_new_SOURCES = 12-boosted_higgs-new.cc
-12_boosted_higgs_new_SHORTNAME = 12-new
-12_boosted_higgs_new_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-12_boosted_higgs_new_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate the use of the Filter
 13_boosted_top_SOURCES = 13-boosted_top.cc
