@@ -1724,7 +1724,7 @@ If jet areas are to be used to study the level of a diffuse noise
 which might be present in the event (like underlying event particles
 or pileup) and maybe subtract it from jets, two further classes are useful:
 \begin{lstlisting}
-   class fastjet::BackgroundEstimator
+   class fastjet::JetMedianBackgroundEstimator
    class fastjet::Subtractor
 \end{lstlisting}
 These classes are described in detail below and an example program is
@@ -2068,15 +2068,15 @@ sequence with area information and a \ttt{Selector} to specify the
 subset of jets that will be used for the background estimation.
 %
 The class that provides background estimation facilities is
-\ttt{BackgroundEstimator}. The simplest way to construct it is:
+\ttt{JetMedianBackgroundEstimator}. The simplest way to construct it is:
 \begin{lstlisting}
-   #include "fastjet/tools/BackgroundEstimator.hh"
+   #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
    // ...
 
-   // constructor for a BackgroundEstimator that will use the
+   // constructor for a JetMedianBackgroundEstimator that will use the
    // inclusive jets from csa that pass the cuts specified by
    // the selector in order to estimate the background density
-   BackgroundEstimator(const ClusterSequenceAreaBase & csa,
+   JetMedianBackgroundEstimator(const ClusterSequenceAreaBase & csa,
                        const Selector & selector);
 \end{lstlisting}
 If, for example, one wants to use all jets within $|y|<4.5$ to
@@ -2172,9 +2172,9 @@ One first creates an object that encodes the shape
 (for other shapes, derive a class from
 \ttt{FunctionOfPseudoJet<double>} --- see appendix
 \ref{app:function-of-pj}) and then one tells the
-\ttt{BackgroundEstimator} about the rescaling with the call
+\ttt{JetMedianBackgroundEstimator} about the rescaling with the call
 \begin{lstlisting}
-   // tell the BackgroundEstimator about the rescaling
+   // tell the JetMedianBackgroundEstimator about the rescaling
    set_rescaling_class(*rescaling);
 \end{lstlisting}
 Subsequent calls will then take the median of the distribution $p_t/A
@@ -2234,16 +2234,16 @@ to \ttt{rho} or \ttt{sigma} (as long as the cluster sequence or
 selector has not changed in the meantime).
 
 To allow flexibility in the user's workflow, there are a number of
-alternative constructors to \ttt{BackgroundEstimator}, together with
+alternative constructors to \ttt{JetMedianBackgroundEstimator}, together with
 elements to (re)set the cluster sequence and/or jets, and also the
 selector:
 \begin{lstlisting}
   // the estimator will use the supplied jets instead of inclusive jets from a ClusterSequence
-  BackgroundEstimator(const std::vector<PseudoJet> & jets, const Selector & rho_range);
+  JetMedianBackgroundEstimator(const std::vector<PseudoJet> & jets, const Selector & rho_range);
   // information about the ClusterSequence or jets will be set later
-  BackgroundEstimator(const Selector & rho_range);
+  JetMedianBackgroundEstimator(const Selector & rho_range);
   // information about the ClusterSequence/jets and Selector will be set later
-  BackgroundEstimator();
+  JetMedianBackgroundEstimator();
 
   // (re)set the cluster sequence to be used by future calls to rho() etc. 
   void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
@@ -2282,7 +2282,7 @@ the quantity that substitutes $p_t/A$.
 \subsubsection{Backwards compatibility}
 \label{sec:BGE-backwards}
 
-The \ttt{BackgroundEstimator} class is new to FastJet 3.0.
+The \ttt{JetMedianBackgroundEstimator} class is new to FastJet 3.0.
 %
 In FastJet versions 2.3 and 2.4, the background estimation tools were
 instead integrated into the \ttt{ClusterSequenceAreaBase} class.
@@ -2303,7 +2303,7 @@ transverse component of the 4-vector area in the denominator of
 $p_t/A$.
 %
 The transverse component gives the more accurate $\rho$ determination
-and that is now the default in \ttt{BackgroundEstimator}. 
+and that is now the default in \ttt{JetMedianBackgroundEstimator}. 
 %
 The behaviour can be changed with a call to
 \begin{lstlisting}
@@ -2312,7 +2312,7 @@ The behaviour can be changed with a call to
 %
 Finally, the calculation of $\sigma$ in Fastjet 2.x incorrectly
 handled the limit of a small number of jets. A call to
-\ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{BackgroundEstimator}
+\ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{JetMedianBackgroundEstimator}
 to reproduce that behaviour.
 
 
@@ -2423,7 +2423,7 @@ The \ttt{Subtractor} class is defined in
 \ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
 a background estimator:
 \begin{lstlisting}
-  BackgroundEstimator bge(....);
+  JetMedianBackgroundEstimator bge(....);
   Subtractor subtractor(&bge);
 \end{lstlisting}
 The subtractor can then be used as follows:

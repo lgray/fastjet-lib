@@ -40,112 +40,23 @@
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
-//----------------------------------------------------------------------
+
 /// @ingroup tools_background
-/// A background rescaling that is a simple polynomial in y
-class BackgroundRescalingYPolynomial : public FunctionOfPseudoJet<double> {
-public:
-  /// construct a background rescaling polynomial of the form
-  /// a0 + a1*y + a2*y^2 + a3*y^3 + a4*y^4
-  ///
-  /// The following values give a reasonable reproduction of the
-  /// Pythia8 tune 4C background shape for pp collisions at
-  /// sqrt(s)=7TeV:
-  ///
-  /// - a0 =  1.157
-  /// - a1 =  0
-  /// - a2 = -0.0266
-  /// - a3 =  0
-  /// - a4 =  0.000048
-  ///
-  BackgroundRescalingYPolynomial(double a0=1, 
-				 double a1=0, 
-				 double a2=0, 
-				 double a3=0, 
-				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
-
-  /// return the rescaling factor associated with this jet
-  virtual double result(const PseudoJet & jet) const;
-private:
-  double _a0, _a1, _a2, _a3, _a4;
-};
-
-
-//----------------------------------------------------------------------
-/// @ingroup tools
-/// Class that implements pt/area_4vector.perp() for background estimation
-class BackgroundJetPtDensity : public FunctionOfPseudoJet<double> {
-public:
-  virtual double result(const PseudoJet & jet) const {
-    return jet.perp() / jet.area_4vector().perp();
-  }
-  virtual std::string description() const {return "BackgroundJetPtDensity";}
-};
-
-
-//----------------------------------------------------------------------
-/// @ingroup tools_background
-/// Class that implements (scalar pt sum of jet)/(scalar area of jet)
-/// for background estimation. Optionally it can return a quantity
-/// based on the sum of pt^n, e.g. for use in subtracting
-/// fragementation function moments.
-class BackgroundJetScalarPtDensity : public FunctionOfPseudoJet<double> {
-public:
-  /// Default constructor provides background estimation with scalar pt sum
-  BackgroundJetScalarPtDensity() : _pt_power(1) {}
-
-  /// Constructor to provide background estimation based on 
-  /// \f$ sum_{i\in jet} p_{ti}^{n} \f$
-  BackgroundJetScalarPtDensity(double n) : _pt_power(n) {}
-
-  virtual double result(const PseudoJet & jet) const;
-
-  virtual std::string description() const {return "BackgroundScalarJetPtDensity";}
-
-private:
-  double _pt_power;
-};
-
-//----------------------------------------------------------------------
-/// @ingroup tools_background
-/// Class that implements
-/// \f$  \frac{1}{A} \sum_{i \in jet} (\sqrt{p_{ti}^2+m^2} - p_{ti}) \f$
-/// for background estimation.
+/// \class JetMedianBackgroundEstimator
 ///
-/// This is useful for correcting jet masses in cases where the event
-/// involves massive particles.
-class BackgroundJetPtMDensity : public FunctionOfPseudoJet<double> {
-public:
-  virtual double result(const PseudoJet & jet) const {
-    std::vector<PseudoJet> constituents = jet.constituents();
-    double scalar_ptm = 0;
-    for (unsigned i = 0; i < constituents.size(); i++) {
-      scalar_ptm += constituents[i].mperp() - constituents[i].perp();
-    }
-    return scalar_ptm / jet.area();
-  }
-
-  virtual std::string description() const {return "BackgroundPtMDensity";}
-};
-
-
-
-
-/// @ingroup tools_background
-/// \class BackgroundEstimator
-/// Class to estimate the density of the background per unit area
+/// Class to estimate the pt density of the background per unit area,
+/// using the median of the distribution of pt/area from jets that
+/// pass some selection criterion.
 ///
-/// For a given event, this class calculated the median of the
-/// distribution of pt/Area for all jets in the event that pass some
-/// selection criterion.
-///
-/// Events are passed either in the form of a ClusterSequenceArea (in
-/// which case the jets used as those returned by "inclusive_jets()")
+/// Events are passed either in the form of the event particles (in
+/// which they're clustered by the class), a ClusterSequenceArea (in
+/// which case the jets used are those returned by "inclusive_jets()")
 /// or directly as a set of jets.
 ///
 /// The selection criterion is typically a geometrical one (e.g. all
 /// jets with |y|<2) sometimes supplemented with some kinematical
-/// restriction (e.g. exclusion of the two hardest jets).
+/// restriction (e.g. exclusion of the two hardest jets). It is passed
+/// to the class through a Selector.
 ///
 /// Beware: 
 ///   by default, to correctly handle partially empty events, the
@@ -154,13 +65,17 @@ public:
 ///
 ///          range.total_area() - sum_{jets_in_range} jets.area()
 ///  
-///   For ranges with small areas, this can be innacurate (particularly 
+///   For ranges with small areas, this can be inaccurate (particularly 
 ///   relevant in dense events where empty_area should be zero and ends
 ///   up not being zero).
 ///
-///   This calculation of empty area can be avoided if you supply a
+///   This calculation of empty area can be avoided if a
 ///   ClusterSequenceArea class with explicit ghosts
-///   (ActiveAreaExplicitGhosts). This is _recommended_!
+///   (ActiveAreaExplicitGhosts) is used.  This is _recommended_
+///   unless speed requirements cause you to use Voronoi areas. For
+///   speedy background estimation you could also consider using
+///   GridMedianBackgroundEstimator.
+///
 ///
 class JetMedianBackgroundEstimator : public BackgroundEstimatorBase {
 public:
@@ -534,6 +449,97 @@ private:
   /// handle warning messages
   static LimitedWarning _warnings;
   static LimitedWarning _warnings_zero_area;
+};
+
+
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools_background
+/// A background rescaling that is a simple polynomial in y
+class BackgroundRescalingYPolynomial : public FunctionOfPseudoJet<double> {
+public:
+  /// construct a background rescaling polynomial of the form
+  /// a0 + a1*y + a2*y^2 + a3*y^3 + a4*y^4
+  ///
+  /// The following values give a reasonable reproduction of the
+  /// Pythia8 tune 4C background shape for pp collisions at
+  /// sqrt(s)=7TeV:
+  ///
+  /// - a0 =  1.157
+  /// - a1 =  0
+  /// - a2 = -0.0266
+  /// - a3 =  0
+  /// - a4 =  0.000048
+  ///
+  BackgroundRescalingYPolynomial(double a0=1, 
+				 double a1=0, 
+				 double a2=0, 
+				 double a3=0, 
+				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
+
+  /// return the rescaling factor associated with this jet
+  virtual double result(const PseudoJet & jet) const;
+private:
+  double _a0, _a1, _a2, _a3, _a4;
+};
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools_background
+/// Class that implements pt/area_4vector.perp() for background estimation
+class BackgroundJetPtDensity : public FunctionOfPseudoJet<double> {
+public:
+  virtual double result(const PseudoJet & jet) const {
+    return jet.perp() / jet.area_4vector().perp();
+  }
+  virtual std::string description() const {return "BackgroundJetPtDensity";}
+};
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools_background
+/// Class that implements (scalar pt sum of jet)/(scalar area of jet)
+/// for background estimation. Optionally it can return a quantity
+/// based on the sum of pt^n, e.g. for use in subtracting
+/// fragementation function moments.
+class BackgroundJetScalarPtDensity : public FunctionOfPseudoJet<double> {
+public:
+  /// Default constructor provides background estimation with scalar pt sum
+  BackgroundJetScalarPtDensity() : _pt_power(1) {}
+
+  /// Constructor to provide background estimation based on 
+  /// \f$ sum_{i\in jet} p_{ti}^{n} \f$
+  BackgroundJetScalarPtDensity(double n) : _pt_power(n) {}
+
+  virtual double result(const PseudoJet & jet) const;
+
+  virtual std::string description() const {return "BackgroundScalarJetPtDensity";}
+
+private:
+  double _pt_power;
+};
+
+//----------------------------------------------------------------------
+/// @ingroup tools_background
+/// Class that implements
+/// \f$  \frac{1}{A} \sum_{i \in jet} (\sqrt{p_{ti}^2+m^2} - p_{ti}) \f$
+/// for background estimation.
+///
+/// This is useful for correcting jet masses in cases where the event
+/// involves massive particles.
+class BackgroundJetPtMDensity : public FunctionOfPseudoJet<double> {
+public:
+  virtual double result(const PseudoJet & jet) const {
+    std::vector<PseudoJet> constituents = jet.constituents();
+    double scalar_ptm = 0;
+    for (unsigned i = 0; i < constituents.size(); i++) {
+      scalar_ptm += constituents[i].mperp() - constituents[i].perp();
+    }
+    return scalar_ptm / jet.area();
+  }
+
+  virtual std::string description() const {return "BackgroundPtMDensity";}
 };
 
 

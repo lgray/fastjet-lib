@@ -1,3 +1,9 @@
+2011-07-08  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh: 
+	  reordered classes so that JMBGE appears first and all the helper
+	  ones comes later. Reworked some of the comments a little.
+
 2011-07-08  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/GhostedAreaSpec.hh: 

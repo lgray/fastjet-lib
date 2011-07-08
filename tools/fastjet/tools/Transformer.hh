@@ -40,7 +40,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // forward declarations of what we will have down here
 class Transformer;
 
-/// @ingroup tools
+/// @ingroup tools_generic
 /// \class Transformer
 /// Base (abstract) class for a jet transformer.
 ///
