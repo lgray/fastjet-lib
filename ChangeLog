@@ -1,3 +1,12 @@
+2011-07-08  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/GhostedAreaSpec.hh: 
+	* include/fastjet/ActiveAreaSpec.hh: 
+	  moved typedef of ActiveAreaSpec into GhostedAreaSpec; that way
+	  people who used to get it indirectly still do, but anyone who
+	  used the header itself will get a warning, without that warning
+	  appearing indirectly from inclusion of other headers.
+
 2011-07-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/12-boosted_higgs-new.cc:        *** REMOVED ***

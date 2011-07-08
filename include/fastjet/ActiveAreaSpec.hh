@@ -44,15 +44,16 @@ Please consider including fastjet/GhostedAreaSpec.hh directly. \
 Similarily, if you use the (deprecated) class ActiveAreaSpec, \
 please switch to the equivalent GhostedAreaSpec instead.
 
+
 #include "fastjet/GhostedAreaSpec.hh"
 
+// NB: ActiveAreaSpec is left over from FJ 2.0 and 2.1;
+//     In FJ 2.3 and 2.4 it was just typedefed to GhostedAreaSpec.
+//     That's still the case in FJ 3.0, but the typedef has moved
+//     from this header into the GhostedAreaSpec.hh header. This way,
+//     anyone including ActiveAreaSpec.hh will get a deprecated warning, but
+//     people who relied on getting ActiveAreaSpec indirectly will not 
+//     have their code broken.
 
-FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
-
-/// just provide a typedef for backwards compatibility with programs
-/// based on versions 2.0 and 2.1 of fastjet
-typedef GhostedAreaSpec ActiveAreaSpec;
-
-FASTJET_END_NAMESPACE
 
 #endif // __FASTJET_ACTIVEAREASPEC_HH__

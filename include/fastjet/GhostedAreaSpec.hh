@@ -225,10 +225,12 @@ private:
   
 };
 
-////----------------------------------------------------------------------
-//class 1GhostPassiveAreaSpec : public GhostedAreaSpec {
-//public:
-//}
+/// just provide a typedef for backwards compatibility with programs
+/// based on versions 2.0 and 2.1 of fastjet. Since there is no
+/// easy way of telling people this is deprecated at compile or run
+/// time, we should be careful before removing this in the future.
+typedef GhostedAreaSpec ActiveAreaSpec;
+
 
 FASTJET_END_NAMESPACE
 
