@@ -162,8 +162,7 @@ public:
 ///   ClusterSequenceArea class with explicit ghosts
 ///   (ActiveAreaExplicitGhosts). This is _recommended_!
 ///
-/// \TODO NOTE: we might rename this class to JetMedianBackgroundEstimator
-class BackgroundEstimator : public BackgroundEstimatorBase {
+class JetMedianBackgroundEstimator : public BackgroundEstimatorBase {
 public:
   /// @name constructors and destructors
   //\{
@@ -176,9 +175,9 @@ public:
   /// \param rho_range  the range over which jets will be considered
   /// \param jet_def    the jet definition to use for the clustering
   /// \param area_def   the area definition to use for the clustering
-  BackgroundEstimator(const Selector &rho_range,
-		      const JetDefinition &jet_def,
-		      const AreaDefinition &area_def);
+  JetMedianBackgroundEstimator(const Selector &rho_range,
+			       const JetDefinition &jet_def,
+			       const AreaDefinition &area_def);
 
   /// ctor from a ClusterSequenceAreaBase with area
   ///
@@ -198,7 +197,8 @@ public:
   /// Note that selectors with e.g. hardest-jets exclusion do not have
   /// a well-defined area. For this reasons, it is STRONGLY advised to
   /// use an area with explicit ghosts.
-  BackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range);
+  JetMedianBackgroundEstimator(const ClusterSequenceAreaBase &csa, 
+			       const Selector &rho_range);
   
   /// ctor from a list of jets
   ///
@@ -212,7 +212,8 @@ public:
   ///    explicit ghosts is checked on the ClusterSequence shared by
   ///    the jets.
   ///  - As for the above ctor, the jet alg must be adequate
-  BackgroundEstimator(const std::vector<PseudoJet> &jets, const Selector &rho_range);
+  JetMedianBackgroundEstimator(const std::vector<PseudoJet> &jets, 
+			       const Selector &rho_range);
   
   /// Constructor that just sets the rho range. The CSA or jets
   /// actually used for estimating the background must be passed
@@ -220,18 +221,17 @@ public:
   ///
   /// \param rho_range   the range over which jets will be considered
   ///
-  BackgroundEstimator(const Selector &rho_range) : _rho_range(rho_range) {
-    reset();
-  }
+  JetMedianBackgroundEstimator(const Selector &rho_range)
+    : _rho_range(rho_range), _jet_def(JetDefinition()) { reset(); }
 
   /// default ctor. In order to use the BG estimator you then need to
   /// call set_selector(...) and also set_cluster_sequence(...) or
   /// set_jets(...)
-  BackgroundEstimator()  {reset();}
+  JetMedianBackgroundEstimator() : _jet_def(JetDefinition()){reset();}
   
 
   /// default dtor
-  ~BackgroundEstimator();
+  ~JetMedianBackgroundEstimator();
 
   //\}
 

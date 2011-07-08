@@ -42,7 +42,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/Selector.hh"
-#include "fastjet/tools/BackgroundEstimator.hh"
+#include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include "fastjet/tools/Subtractor.hh" 
 #include <iostream> // needed for io
 
@@ -156,7 +156,7 @@ int main (int argc, char ** argv) {
   AreaDefinition area_def_bkgd(active_area_explicit_ghosts, 
 			       GhostedAreaSpec(ghost_maxrap));
   Selector selector = SelectorAbsRapMax(4.5);
-  BackgroundEstimator bkgd_estimator(selector, jet_def_bkgd, area_def_bkgd);
+  JetMedianBackgroundEstimator bkgd_estimator(selector, jet_def_bkgd, area_def_bkgd);
 
   // To help manipulate the background estimator, we also provide a
   // transformer that allows to apply directly the background

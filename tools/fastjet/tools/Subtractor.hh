@@ -32,7 +32,7 @@
 #define __FASTJET_TOOLS_SUBTRACTOR_HH__
 
 #include <fastjet/tools/Transformer.hh> // to derive Subtractor from Transformer
-#include <fastjet/tools/BackgroundEstimator.hh> // used as a ctor argument
+#include <fastjet/tools/BackgroundEstimatorBase.hh> // used as a ctor argument
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
@@ -61,7 +61,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 class Subtractor : public Transformer{
 public:
   /// define a subtractor based on a BackgroundEstimator
-  Subtractor(BackgroundEstimator * bge) : 
+  Subtractor(BackgroundEstimatorBase * bge) : 
     _bge(bge) {}
 
   /// default dtor
@@ -81,7 +81,7 @@ public:
 protected:
   /// the tool used to estimate the background
   /// if has to be mutable in case its underlying selector takes a reference jet
-  mutable BackgroundEstimator * _bge;
+  mutable BackgroundEstimatorBase * _bge;
 };
 
 FASTJET_END_NAMESPACE

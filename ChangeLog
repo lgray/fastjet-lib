@@ -1,5 +1,14 @@
 2011-07-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Subtractor.hh:
+	  Use a BackgroundEstimatorBase
+
+	* tools/fastjet/tools/BackgroundEstimator.hh:          *** REMOVED ***
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh: ***  ADDED  ***
+	* tools/BackgroundEstimator.cc:                        *** REMOVED ***
+	* tools/JetMedianBackgroundEstimator.cc:               ***  ADDED  ***
+	  renamed BackgroundEstimator -> JetMedianBackgroundEstimator
+
 	* example/Makefile.am:
 	* example/11-boosted_higgs-new.cc:      *** REMOVED ***
 	* example/12-boosted_higgs-new.cc:      ***  ADDED  ***

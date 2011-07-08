@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/tools/BackgroundEstimator.hh"
+#include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include <fastjet/ClusterSequenceArea.hh>
 #include <fastjet/ClusterSequenceStructure.hh>
 #include <iostream>
@@ -56,12 +56,12 @@ double BackgroundRescalingYPolynomial::result(const PseudoJet & jet) const {
 }
 
 /// allow for warnings
-LimitedWarning BackgroundEstimator::_warnings;
-LimitedWarning BackgroundEstimator::_warnings_zero_area;
-LimitedWarning BackgroundEstimator::_warnings_empty_area;
+LimitedWarning JetMedianBackgroundEstimator::_warnings;
+LimitedWarning JetMedianBackgroundEstimator::_warnings_zero_area;
+LimitedWarning JetMedianBackgroundEstimator::_warnings_empty_area;
 
 //---------------------------------------------------------------------
-// class BackgroundEstimator
+// class JetMedianBackgroundEstimator
 // Class to estimate the density of the background per unit area
 //---------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ LimitedWarning BackgroundEstimator::_warnings_empty_area;
 // ctors and dtors
 //----------------------------------------------------------------------
 // ctor that allows to set only the particles later on
-BackgroundEstimator::BackgroundEstimator(const Selector &rho_range,
+JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const Selector &rho_range,
 					 const JetDefinition &jet_def,
 					 const AreaDefinition &area_def)
   : _rho_range(rho_range), _jet_def(jet_def), _area_def(area_def) {
@@ -84,7 +84,7 @@ BackgroundEstimator::BackgroundEstimator(const Selector &rho_range,
 // ctor from a cluster sequence
 //  - csa        the ClusterSequenceArea to use
 //  - rho_range  the range over which jets will be considered
-BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range)
+JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range)
   : _rho_range(rho_range), _jet_def(JetDefinition()){
 
   // initialise things properly
@@ -99,7 +99,7 @@ BackgroundEstimator::BackgroundEstimator(const ClusterSequenceAreaBase &csa, con
 // ctor from a list of jets
 //  - jets        the set of jets to use for the computation
 //  - rho_range   the range over which jets will be considered
-BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
+JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
   : _rho_range(rho_range), _jet_def(JetDefinition()){
 
   // initialise things properly
@@ -111,7 +111,7 @@ BackgroundEstimator::BackgroundEstimator(const vector<PseudoJet> &jets, const Se
 
 
 // default dtor
-BackgroundEstimator::~BackgroundEstimator(){
+JetMedianBackgroundEstimator::~JetMedianBackgroundEstimator(){
 
 }
 
@@ -119,10 +119,10 @@ BackgroundEstimator::~BackgroundEstimator(){
 //----------------------------------------------------------------------
 // setting a new event
 //----------------------------------------------------------------------
-void BackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
+void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
   // make sure that we have been provided a genuine jet definition 
   if (_jet_def.jet_algorithm() == undefined_jet_algorithm)
-    throw Error("BackgroundEstimator::set_particles can only be called if you set the jet (and area) definition explicitly through the class constructor");
+    throw Error("JetMedianBackgroundEstimator::set_particles can only be called if you set the jet (and area) definition explicitly through the class constructor");
 
   // initialise things decently (including setting uptodate to false!)
   reset();
@@ -144,7 +144,7 @@ void BackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
 }
 
 //----------------------------------------------------------------------
-void BackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & csa) {
+void JetMedianBackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & csa) {
   _csi = csa.structure_shared_ptr();
 
   // sanity checks
@@ -154,7 +154,7 @@ void BackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & c
 
   //  (ii) check that, if there are no explicit ghosts, the selector has a finite area
   if ((!csa.has_explicit_ghosts()) && (!_rho_range.has_finite_area())){
-    throw Error("BackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
+    throw Error("JetMedianBackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
 
   // get the initial list of jets
@@ -165,16 +165,16 @@ void BackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & c
 
 
 //----------------------------------------------------------------------
-void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
+void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
   
   if (! jets.size())
-    throw Error("BackgroundEstimator::BackgroundEstimator: At least one jet is needed to compute the background properties");
+    throw Error("JetMedianBackgroundEstimator::JetMedianBackgroundEstimator: At least one jet is needed to compute the background properties");
 
   // sanity checks
   //---------------
   //  (o) check that there is an underlying CS shared by all the jets
   if (! (jets[0].has_associated_cluster_sequence()) && (jets[0].has_area()))
-    throw Error("BackgroundEstimator::BackgroundEstimator: the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
+    throw Error("JetMedianBackgroundEstimator::JetMedianBackgroundEstimator: the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
 
   _csi = jets[0].structure_shared_ptr();
   ClusterSequenceStructure * csi = dynamic_cast<ClusterSequenceStructure*>(_csi());
@@ -182,10 +182,10 @@ void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 
   for (unsigned int i=1;i<jets.size(); i++){
     if (! jets[i].has_associated_cluster_sequence()) // area automatic if the next test succeeds
-      throw Error("BackgroundEstimator::set_jets(...): the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
+      throw Error("JetMedianBackgroundEstimator::set_jets(...): the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
 
     if (jets[i].structure_shared_ptr().get() != _csi.get())
-      throw Error("BackgroundEstimator::set_jets(...): all the jets used to estimate the background properties must share the same ClusterSequence");
+      throw Error("JetMedianBackgroundEstimator::set_jets(...): all the jets used to estimate the background properties must share the same ClusterSequence");
   }
 
   //  (i) check the alg is appropriate
@@ -193,7 +193,7 @@ void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 
   //  (ii) check that, if there are no explicit ghosts, the selector has a finite area
   if ((!csab->has_explicit_ghosts()) && (!_rho_range.has_finite_area())){
-    throw Error("BackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
+    throw Error("JetMedianBackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
 
 
@@ -211,7 +211,7 @@ void BackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 // reset to default values
 // 
 // set the variou options to their default values
-void BackgroundEstimator::reset(){
+void JetMedianBackgroundEstimator::reset(){
   // set the remaining default parameters
   set_use_area_4vector();  // true by default
   set_provide_fj2_sigma(false);
@@ -236,7 +236,7 @@ void BackgroundEstimator::reset(){
 // for estimation using a relocatable selector (i.e. local range)
 // this allows to set its position. Note that this HAS to be called
 // before any attempt to compute the background properties
-void BackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
+void JetMedianBackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
   // if the range is relocatable, handles its relocation
   if (_rho_range.takes_reference()){
     // check that the reference is not the same as the previous one
@@ -253,7 +253,7 @@ void BackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
 }
 
 // do the actual job
-void BackgroundEstimator::_compute() const {
+void JetMedianBackgroundEstimator::_compute() const {
   // check if the clustersequence is still valid
   _check_csa_alive();
 
@@ -286,7 +286,7 @@ void BackgroundEstimator::_compute() const {
       total_area  += this_area;
       _n_jets_used++;
     } else {
-      _warnings_zero_area.warn("BackgroundEstimator::_compute(...): discarded jet with zero area. Zero-area jets may be due to (i) too large a ghost area (ii) a jet being outside the ghost range (iii) the computation not being done using an appropriate algorithm (kt;C/A).");
+      _warnings_zero_area.warn("JetMedianBackgroundEstimator::_compute(...): discarded jet with zero area. Zero-area jets may be due to (i) too large a ghost area (ii) a jet being outside the ghost range (iii) the computation not being done using an appropriate algorithm (kt;C/A).");
     }
       
   }
@@ -325,7 +325,7 @@ void BackgroundEstimator::_compute() const {
 }
 
 //----------------------------------------------------------------------
-void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vector, 
+void JetMedianBackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vector, 
 					     double n_empty_jets, 
 					     double & median, 
 					     double & stand_dev_if_gaussian,
@@ -352,7 +352,7 @@ void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vec
   double total_njets = n_jets_used + _n_empty_jets;
 
   if (n_empty_jets < -n_jets_used/4.0)
-    _warnings_empty_area.warn("BackgroundEstimator::_median_and_stddev(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
+    _warnings_empty_area.warn("JetMedianBackgroundEstimator::_median_and_stddev(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
 
   for (int i = 0; i < 2; i++) {
     double nj_median_pos;
@@ -393,20 +393,20 @@ void BackgroundEstimator::_median_and_stddev(const vector<double> & quantity_vec
 
 // check that the underlying structure is still alive;
 // throw an error otherwise
-void BackgroundEstimator::_check_csa_alive() const{
+void JetMedianBackgroundEstimator::_check_csa_alive() const{
   ClusterSequenceStructure* csa = dynamic_cast<ClusterSequenceStructure*>(_csi());
   if (csa == 0) {
-    throw Error("BackgroundEstimator: there is no cluster sequence associated with the BackgroundEstimator");
+    throw Error("JetMedianBackgroundEstimator: there is no cluster sequence associated with the JetMedianBackgroundEstimator");
   }
   if (! dynamic_cast<ClusterSequenceStructure*>(_csi())->has_associated_cluster_sequence())
-    throw Error("BackgroundEstimator: modifications are no longer possible as the underlying ClusterSequence has gone out of scope");
+    throw Error("JetMedianBackgroundEstimator: modifications are no longer possible as the underlying ClusterSequence has gone out of scope");
 }
 
 
 // check that the algorithm used for the clustering is suitable for
 // background estimation (i.e. either kt or C/A).
 // Issue a warning otherwise
-void BackgroundEstimator::_check_jet_alg_good_for_median() const{
+void JetMedianBackgroundEstimator::_check_jet_alg_good_for_median() const{
   const JetDefinition * jet_def = &_jet_def;
 
   // if no explicit jet def has been provided, fall back on the
@@ -419,7 +419,7 @@ void BackgroundEstimator::_check_jet_alg_good_for_median() const{
   if (jet_def->jet_algorithm() != kt_algorithm
       && jet_def->jet_algorithm() != cambridge_algorithm
       && jet_def->jet_algorithm() != cambridge_for_passive_algorithm) {
-    _warnings.warn("BackgroundEstimator: jet_def being used may not be suitable for estimating diffuse backgrounds (good alternatives are kt, cam)");
+    _warnings.warn("JetMedianBackgroundEstimator: jet_def being used may not be suitable for estimating diffuse backgrounds (good alternatives are kt, cam)");
   }
 }
 
