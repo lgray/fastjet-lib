@@ -1,5 +1,11 @@
 2011-07-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/12-boosted_higgs.cc:            *** REMOVED ***
+	* example/12-boosted_higgs-old.cc:        ***  ADDED  ***
+	* example/07-subtraction.cc:              *** REMOVED ***
+	* example/07-subtraction-old.cc:          ***  ADDED  ***
+	  appended "-old" to the deprecated examples
+
 	* tools/BackgroundEstimatorBase.cc:
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
