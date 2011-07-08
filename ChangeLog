@@ -406,7 +406,7 @@
 	  still make the result dependent on the ordering of the particles
 	  in case of a degeneracy.
 
-2011-06-28  Gavin Salam  <gsalam@macth69.cern.ch>
+2011-06-28  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/test-all-algs.pl: 
 	  updated this so that it looks for data file in the correct place
@@ -2468,7 +2468,7 @@
 	  replaced assertions with exceptions; and tided up some comments
 	  in a few places.
 
-2011-01-26  Gavin Salam  <gsalam@macth69.cern.ch>
+2011-01-26  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl: 
 	  switched --enable-monolithic check over to --disable-monolithic 
