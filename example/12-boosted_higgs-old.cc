@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 /// \file
-/// Example12 12 - boosted Higgs tagging
+/// \page Example12old 12 - boosted Higgs tagging (old version)
 ///
 /// fastjet example program, illustration of carrying out boosted
 /// Higgs subjet ID analysis
@@ -16,9 +16,12 @@
 /// Rehermann, Schwartz & Tweedie) in searching for boosted tops
 /// (without b-tag assumptions).
 ///
-/// run it with    : ./12-boosted_higgs < data/HZ-event-Hmass115.dat
+/// Note that this example is deprecated --- see 12-boosted_higgs.cc
+/// for the newest version --- so it is not built by default
 ///
-/// Source code: 12-boosted_higgs.cc
+/// run it with    : ./12-boosted_higgs-old < data/HZ-event-Hmass115.dat
+///
+/// Source code: 12-boosted_higgs-old.cc
 //----------------------------------------------------------------------
 
 

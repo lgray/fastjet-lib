@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------
 
 //STARTHEADER
-// $Id: 07-subtraction.cc 1911 2011-01-28 18:18:24Z soyez $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //

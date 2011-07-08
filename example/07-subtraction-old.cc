@@ -1,12 +1,15 @@
 //----------------------------------------------------------------------
 /// \file
-/// Example07 07 - subtracting jet background contamination
+/// \page Example07old 07 - subtracting jet background contamination (old version)
 ///
 /// fastjet subtraction example program. 
 ///
-/// run it with    : ./07-subtraction < data/Pythia-Zp2jets-lhc-pileup-1ev.dat
+/// Note that this example is deprecated --- see 07-subtraction.cc
+/// for the newest version --- so it is not built by default
 ///
-/// Source code: 07-subtraction.cc
+/// run it with    : ./07-subtraction-old < data/Pythia-Zp2jets-lhc-pileup-1ev.dat
+///
+/// Source code: 07-subtraction-old.cc
 //----------------------------------------------------------------------
 
 //STARTHEADER

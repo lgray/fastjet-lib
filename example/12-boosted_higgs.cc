@@ -16,14 +16,14 @@
 /// Rehermann, Schwartz & Tweedie) in searching for boosted tops
 /// (without b-tag assumptions).
 ///
-/// run it with    : ./12-boosted_higgs-new < data/HZ-event-Hmass115.dat
+/// run it with    : ./12-boosted_higgs < data/HZ-event-Hmass115.dat
 ///
-/// Source code: 12-boosted_higgs-new.cc
+/// Source code: 12-boosted_higgs.cc
 //----------------------------------------------------------------------
 
 
 //STARTHEADER
-// $Id: 11-boosted_higgs.cc 2173 2011-05-20 15:05:31Z soyez $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //

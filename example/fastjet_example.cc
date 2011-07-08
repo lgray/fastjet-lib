@@ -10,12 +10,12 @@
 ///   - \subpage Example04
 ///   - \subpage Example05
 ///   - \subpage Example06
-///   - \subpage Example07
+///   - \subpage Example07 (\subpage Example07old "old version")
 ///   - \subpage Example08
 ///   - \subpage Example09
 ///   - \subpage Example10
 ///   - \subpage Example11
-///   - \subpage Example12
+///   - \subpage Example12 (\subpage Example12old "old version")
 ///   - \subpage Example13
 
 //STARTHEADER
