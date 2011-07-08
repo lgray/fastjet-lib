@@ -21,7 +21,7 @@
 	* example/07-subtraction-old.cc:          ***  ADDED  ***
 	  appended "-old" to the deprecated examples
 
-	* tools/BackgroundEstimatorBase.cc:
+	* tools/BackgroundEstimatorBase.cc:       ***  ADDED  ***
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
 	* tools/JetMedianBackgroundEstimator.cc:
