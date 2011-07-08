@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 /// \file
-/// \page Example12 12 - use of filtering
+/// \page Example11 11 - use of filtering
 ///
 /// fastjet example program illustrating the use of the fastjet::Filter class
 ///
@@ -11,9 +11,9 @@
 /// carrying a sufficient fraction of the pt of the jet
 /// (arXiv:0912.1342).
 ///
-/// run it with    : ./12-filter < data/single-event.dat
+/// run it with    : ./11-filter < data/single-event.dat
 ///
-/// Source code: 12-filter.cc
+/// Source code: 11-filter.cc
 //----------------------------------------------------------------------
 
 #include <fastjet/PseudoJet.hh>

@@ -17,9 +17,9 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  08-selector \
  09-user_info \
  10-subjets \
- 11-boosted_higgs \
- 11-boosted_higgs-new \
- 12-filter \
+ 11-filter \
+ 12-boosted_higgs \
+ 12-boosted_higgs-new \
  13-boosted_top
 
 check_PROGRAMS = fastjet_example fastjet_areas
@@ -97,23 +97,23 @@ endif
 10_subjets_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 10_subjets_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
+# illustrate the use of the Filter
+11_filter_SOURCES = 11-filter.cc
+11_filter_SHORTNAME = 11
+11_filter_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+11_filter_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
+
 # illustrate how to tag boosted higgs
-11_boosted_higgs_SOURCES = 11-boosted_higgs.cc
-11_boosted_higgs_SHORTNAME = 11
-11_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-11_boosted_higgs_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
+12_boosted_higgs_SOURCES = 12-boosted_higgs.cc
+12_boosted_higgs_SHORTNAME = 12
+12_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+12_boosted_higgs_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate how to tag boosted higgs (using directly the tagger)
-11_boosted_higgs_new_SOURCES = 11-boosted_higgs-new.cc
-11_boosted_higgs_new_SHORTNAME = 11-new
-11_boosted_higgs_new_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-11_boosted_higgs_new_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
-
-# illustrate the use of the Filter
-12_filter_SOURCES = 12-filter.cc
-12_filter_SHORTNAME = 12
-12_filter_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
-12_filter_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
+12_boosted_higgs_new_SOURCES = 12-boosted_higgs-new.cc
+12_boosted_higgs_new_SHORTNAME = 12-new
+12_boosted_higgs_new_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+12_boosted_higgs_new_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
 
 # illustrate the use of the Filter
 13_boosted_top_SOURCES = 13-boosted_top.cc

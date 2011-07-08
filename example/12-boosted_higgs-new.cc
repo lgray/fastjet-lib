@@ -1,13 +1,13 @@
 //----------------------------------------------------------------------
 /// \file
-/// \page Example11 11 - boosted Higgs tagging
+/// \page Example12 12 - boosted Higgs tagging
 ///
 /// fastjet example program, illustration of carrying out boosted
 /// Higgs subjet ID analysis
 ///
 /// It illustrates two kinds of functionality: 
 ///
-///  - following the decomposition of a jet into pieces
+///  - using a boosted higgs tagger
 ///  - following information on a b-tag through the jet
 ///
 /// This kind of functionality was used in arXiv:0802.2470
@@ -16,9 +16,9 @@
 /// Rehermann, Schwartz & Tweedie) in searching for boosted tops
 /// (without b-tag assumptions).
 ///
-/// run it with    : ./11-boosted_higgs-new < data/HZ-event-Hmass115.dat
+/// run it with    : ./12-boosted_higgs-new < data/HZ-event-Hmass115.dat
 ///
-/// Source code: 11-boosted_higgs-new.cc
+/// Source code: 12-boosted_higgs-new.cc
 //----------------------------------------------------------------------
 
 
