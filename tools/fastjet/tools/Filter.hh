@@ -45,7 +45,7 @@ class Filter;
 class FilterStructure;
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_generic
 /// \class Filter
 /// Class that helps perform filtering/trimming on jets, and optionally
 /// subtraction (if rho > 0).
@@ -246,7 +246,7 @@ protected:
 
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_generic
 /// \class FilterStructure
 /// Class to contain structure information for a filtered jet.
 class FilterStructure : public CompositeJetStructure {

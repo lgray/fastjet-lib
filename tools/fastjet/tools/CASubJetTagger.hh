@@ -42,7 +42,7 @@ class CASubJetTagger;
 class CASubJetStructure;
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// \class CASubJetTagger
 /// clean (almost parameter-free) tagger searching for the element in
 /// the clustering history that maximises a chosen distance
@@ -176,7 +176,7 @@ protected:
 
 
 //------------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// the structure returned by a CASubJetTagger
 ///
 /// Since this is directly an element of the ClusterSequence, we keep

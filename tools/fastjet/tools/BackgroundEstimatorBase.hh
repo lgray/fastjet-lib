@@ -41,7 +41,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 
 
-/// @ingroup tools
+/// @ingroup tools_background
 /// \class BackgroundEstimatorBase
 ///
 /// Abstract base class that provides the basic interface for classes

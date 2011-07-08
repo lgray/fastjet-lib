@@ -49,6 +49,10 @@
 /// \defgroup plugins          Plugins for non-native jet definitions
 /// \defgroup selectors        Selectors
 /// \defgroup tools            FastJet tools
+/// \{ \defgroup tools_generic     Generic tools
+///    \defgroup tools_background  Background estimation
+///    \defgroup tools_taggers     Boosted taggers
+/// \}
 /// \defgroup extra_info       Access to extra information
 /// \defgroup error_handling   Error handling
 /// \defgroup advanced_usage   Advanced usage

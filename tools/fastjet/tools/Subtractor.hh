@@ -38,7 +38,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_background
 /// \class Subtractor
 /// Class that helps performing jet background subtraction
 ///

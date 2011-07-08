@@ -41,7 +41,7 @@ class MassDropTagger;
 class MassDropStructure;
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// \class MassDropTagger
 /// Class that helps perform 2-pronged boosted tagging using
 /// the "mass-drop" technique
@@ -118,7 +118,7 @@ protected:
 
 
 //------------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// \class MassDropStructure
 /// the structure returned by the MassDropTagger transformer.
 ///

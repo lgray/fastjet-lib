@@ -37,7 +37,7 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// @ingroup tools
+/// @ingroup tools_generic
 /// \class Boost
 /// Class to boost a PseudoJet
 ///
@@ -60,7 +60,7 @@ protected:
   PseudoJet _jet_rest;  ///< the boost vector
 };
 
-/// @ingroup tools
+/// @ingroup tools_generic
 /// \class Unboost
 /// Class to un-boost a PseudoJet
 ///

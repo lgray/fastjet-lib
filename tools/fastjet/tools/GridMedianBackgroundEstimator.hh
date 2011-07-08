@@ -36,6 +36,7 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+/// @ingroup tools_background
 /// \class GridMedianBackgroundEstimator
 /// 
 /// Background Estimator based on the median pt/area of a set of grid

@@ -41,7 +41,7 @@ class JHTopTagger;
 class JHTopStructure;
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// \class JHTopTagger
 /// Class that helps perform boosted top tagging using the "Johns
 /// Hopkins" method from arXiv:0806.0848 (Kaplan, Rehermann, Schwartz
@@ -159,6 +159,7 @@ protected:
 
 
 //------------------------------------------------------------------------
+/// @ingroup tools_taggers
 /// \class JHTopStructure
 /// the structure returned by the JHTopTagger transformer.
 ///

@@ -42,7 +42,7 @@ class NSubjettinessTagger;
 class NSubjettinessStructure;
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// \class NSubjettinessTagger
 /// Class that helps perform 2-pronged boosted tagging using
 /// N-subjettiness
@@ -126,7 +126,7 @@ protected:
 
 
 //------------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_taggers
 /// \class NSubjettinessStructure
 /// the structure returned by the NSubjettinessTagger transformer.
 ///

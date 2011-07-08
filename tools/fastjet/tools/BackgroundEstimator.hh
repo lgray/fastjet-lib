@@ -40,10 +40,8 @@
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
-
-
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_background
 /// A background rescaling that is a simple polynomial in y
 class BackgroundRescalingYPolynomial : public FunctionOfPseudoJet<double> {
 public:
@@ -86,7 +84,7 @@ public:
 
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_background
 /// Class that implements (scalar pt sum of jet)/(scalar area of jet)
 /// for background estimation. Optionally it can return a quantity
 /// based on the sum of pt^n, e.g. for use in subtracting
@@ -109,7 +107,7 @@ private:
 };
 
 //----------------------------------------------------------------------
-/// @ingroup tools
+/// @ingroup tools_background
 /// Class that implements
 /// \f$  \frac{1}{A} \sum_{i \in jet} (\sqrt{p_{ti}^2+m^2} - p_{ti}) \f$
 /// for background estimation.
@@ -133,7 +131,7 @@ public:
 
 
 
-/// @ingroup tools
+/// @ingroup tools_background
 /// \class BackgroundEstimator
 /// Class to estimate the density of the background per unit area
 ///
