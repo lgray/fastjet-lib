@@ -1,3 +1,23 @@
+2011-07-13  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	* tools/BackgroundEstimatorBase.cc:
+	  . added support for rescaling
+	  . added a bunch of comments
+	  . moved BackgroundRescalingYPolynomial from
+	    JetMedianBackgroundEstimator
+
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	* tools/GridMedianBackgroundEstimator.cc:
+	  . dosumented the class
+	  . implemented support for rescaling (applied on each particles;
+	    set_rescaling needs to be called before set_particles)
+
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/JetMedianBackgroundEstimator.cc:
+	  . moved parts of the code from the header to the source
+	  . sorted out come of the comments
+
 2011-07-08  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh: 

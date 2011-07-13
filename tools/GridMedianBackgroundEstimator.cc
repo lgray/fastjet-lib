@@ -35,6 +35,78 @@ using namespace std;
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
+// setting a new event
+//----------------------------------------------------------------------
+// tell the background estimator that it has a new event, composed
+// of the specified particles.
+void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
+  fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
+  for (unsigned i = 0; i < particles.size(); i++) {
+    int j = igrid(particles[i]);
+    if (j >= 0){
+      if (_rescaling_class == 0)
+	_scalar_pt[j] += particles[i].perp();
+      else
+	_scalar_pt[j] += particles[i].perp()/(*_rescaling_class)(particles[i]);
+    }
+  }
+  sort(_scalar_pt.begin(), _scalar_pt.end());
+
+  _has_particles = true;
+}
+
+
+//----------------------------------------------------------------------
+// retrieving fundamental information
+//----------------------------------------------------------------------
+// get rho, the median background density per unit area
+double GridMedianBackgroundEstimator::rho() const {
+  return _percentile(_scalar_pt, 0.5) / _cell_area;
+}
+
+//----------------------------------------------------------------------
+// get rho, the background density per unit area, locally at the
+// position of a given jet. Note that this is not const, because a
+// user may then wish to query other aspects of the background that
+// could depend on the position of the jet last used for a rho(jet)
+// determination.
+double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
+  //_warning_rho_of_jet.warn("rho(jet) not yet implemented; currently just returns global rho");
+  double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
+  return rescaling*rho();
+}
+
+
+//----------------------------------------------------------------------
+// configuring the behaviour
+//----------------------------------------------------------------------
+// Set a pointer to a class that calculates the rescaling factor as
+// a function of the jet (position). Note that the rescaling factor
+// is used both in the determination of the "global" rho (the pt/A
+// of each jet is divided by this factor) and when asking for a
+// local rho (the result is multiplied by this factor).
+//
+// The BackgroundRescalingYPolynomial class can be used to get a
+// rescaling that depends just on rapidity.
+//
+// Note that this has to be called BEFORE any attempt to do an
+// actual computation
+void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) {
+  // The rescaling is taken into account when particles are set. So
+  // you need to call set_particles again if you set the rescaling
+  // class. We thus warn if there are already some available
+  // particles
+  if (_has_particles)
+    _warning_rescaling.warn("GridMedianBackgroundEstimator::set_rescaling_class(): trying to set the rescaling class when there are already particles that have been set is dangerous: the rescaling will not affect the already existing particles resulting in mis-estimation of rho. You need to call set_particles() again before proceeding with any background estimation.");
+  
+  BackgroundEstimatorBase::set_rescaling_class(rescaling_class);
+}
+
+
+//----------------------------------------------------------------------
+// protected material
+//----------------------------------------------------------------------
+// configure the grid
 void GridMedianBackgroundEstimator::setup_grid() {
   // this grid-definition code is becoming repetitive -- it should
   // probably be moved somewhere central...
@@ -55,28 +127,7 @@ void GridMedianBackgroundEstimator::setup_grid() {
 
 
 //----------------------------------------------------------------------
-void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
-  fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
-  for (unsigned i = 0; i < particles.size(); i++) {
-    int j = igrid(particles[i]);
-    if (j >= 0) _scalar_pt[j] += particles[i].perp();
-  }
-  sort(_scalar_pt.begin(), _scalar_pt.end());
-}
-
-
-//----------------------------------------------------------------------
-double GridMedianBackgroundEstimator::rho() const {
-  return _percentile(_scalar_pt, 0.5) / _cell_area;
-}
-
-//----------------------------------------------------------------------
-double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
-  _warning_rho_of_jet.warn("rho(jet) not yet implemented; currently just returns global rho");
-  return rho();
-}
-
-//----------------------------------------------------------------------
+// retrieve the grid cell index for a given PseudoJet
 int GridMedianBackgroundEstimator::igrid(const PseudoJet & p) const {
   // directly taking int does not work for values between -1 and 0
   // so use floor instead

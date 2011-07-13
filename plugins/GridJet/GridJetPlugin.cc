@@ -53,7 +53,7 @@ GridJetPlugin::GridJetPlugin (double requested_grid_spacing,
 
 void GridJetPlugin::setup_grid() {
   double ny_double = (_ymax-_ymin) / _requested_grid_spacing;
-  _ny = int(ny_double+0.5);
+  _ny = int(ny_double+0.49999);
   _dy = (_ymax-_ymin) / _ny;
   
   _nphi = int (twopi / _requested_grid_spacing + 0.5);
@@ -123,7 +123,7 @@ void GridJetPlugin::run_clustering(ClusterSequence & cs) const {
   // combine particles with whatever is in the grid
   for (int i = 0; i < nparticles; i++) {
     int igrd = igrid(cs.jets()[i]);
-    // cout << i << " " << cs.jets()[i].rap() << " " << cs.jets()[i].phi() 
+    //cout << i << " " << cs.jets()[i].rap() << " " << cs.jets()[i].phi() 
     // 	 << " " << igrd << " " << grid.size() << " " << _ntotal << endl;
     if (igrd < 0) continue;
     assert(igrd <= _ntotal);
@@ -134,6 +134,7 @@ void GridJetPlugin::run_clustering(ClusterSequence & cs) const {
       int k;
       cs.plugin_record_ij_recombination(grid[igrd], i, dij_or_diB, k);
       grid[igrd] = k; // grid takes jet index of new particle
+      //cout << "  res: " << cs.jets()[k].rap() << " " << cs.jets()[k].phi() << endl;
     }
   }
 

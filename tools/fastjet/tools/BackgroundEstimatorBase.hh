@@ -34,11 +34,10 @@
 #include <fastjet/ClusterSequenceAreaBase.hh>
 #include <fastjet/FunctionOfPseudoJet.hh>
 #include <fastjet/Selector.hh>
+#include <fastjet/Error.hh>
 #include <iostream>
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
-
-
 
 
 /// @ingroup tools_background
@@ -51,6 +50,21 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 ///
 class BackgroundEstimatorBase {
 public:
+  /// @ name  constructors and destructors
+  //\{
+  //----------------------------------------------------------------
+  BackgroundEstimatorBase() : _rescaling_class(0){};
+  //\}
+
+  /// @name setting a new event
+  //\{
+  //----------------------------------------------------------------
+
+  /// tell the background estimator that it has a new event, composed
+  /// of the specified particles.
+  virtual void set_particles(const std::vector<PseudoJet> & particles) = 0;
+
+  //\}
 
   /// @ name  retrieving fundamental information
   //\{
@@ -85,13 +99,19 @@ public:
   //\}
   
 
-  /// @name setting a new event
+  /// @name configuring the behaviour
   //\{
   //----------------------------------------------------------------
 
-  /// tell the background estimator that it has a new event, composed
-  /// of the specified particles.
-  virtual void set_particles(const std::vector<PseudoJet> & particles) = 0;
+  /// Set a pointer to a class that calculates the rescaling factor as
+  /// a function of the jet (position). Note that the rescaling factor
+  /// is used both in the determination of the "global" rho (the pt/A
+  /// of each jet is divided by this factor) and when asking for a
+  /// local rho (the result is multiplied by this factor).
+  ///
+  /// The BackgroundRescalingYPolynomial class can be used to get a
+  /// rescaling that depends just on rapidity.
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) { _rescaling_class = rescaling_class; }
 
   //\}
 
@@ -129,8 +149,43 @@ protected:
 
   //\}
 
+  const FunctionOfPseudoJet<double> * _rescaling_class;
   static LimitedWarning _warnings_empty_area;
 };
+
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools_background
+/// A background rescaling that is a simple polynomial in y
+class BackgroundRescalingYPolynomial : public FunctionOfPseudoJet<double> {
+public:
+  /// construct a background rescaling polynomial of the form
+  /// a0 + a1*y + a2*y^2 + a3*y^3 + a4*y^4
+  ///
+  /// The following values give a reasonable reproduction of the
+  /// Pythia8 tune 4C background shape for pp collisions at
+  /// sqrt(s)=7TeV:
+  ///
+  /// - a0 =  1.157
+  /// - a1 =  0
+  /// - a2 = -0.0266
+  /// - a3 =  0
+  /// - a4 =  0.000048
+  ///
+  BackgroundRescalingYPolynomial(double a0=1, 
+				 double a1=0, 
+				 double a2=0, 
+				 double a3=0, 
+				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
+
+  /// return the rescaling factor associated with this jet
+  virtual double result(const PseudoJet & jet) const;
+private:
+  double _a0, _a1, _a2, _a3, _a4;
+};
+
+
 
 
 

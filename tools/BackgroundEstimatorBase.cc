@@ -38,6 +38,13 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 LimitedWarning BackgroundEstimatorBase::_warnings_empty_area;
 
 //----------------------------------------------------------------------
+// given a quantity in a vector (e.g. pt_over_area) and knowledge
+// about the number of empty jets, calculate the median and
+// stand_dev_if_gaussian (roughly from the 16th percentile)
+//
+// If do_fj2_calculation is set to true then this performs FastJet
+// 2.X estimation of the standard deviation, which has a spurious
+// offset in the limit of a small number of jets.
 void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity_vector, 
 						 double n_empty_jets, 
 						 double & median, 
@@ -78,7 +85,14 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
   stand_dev_if_gaussian = res[0] - res[1];
 }
 
+
 //----------------------------------------------------------------------
+// computes a percentile of a given _sorted_ vector
+//  - sorted_quantity_vector   the vector contains the data sample
+//  - perc                     the percentile to compute
+//  - nempty                   an additional number of 0's
+//                             (considered at the beginning of 
+//                             the quantity vector)
 double BackgroundEstimatorBase::_percentile(const vector<double> &sorted_quantity_vector, const double perc, const unsigned int nempty) const {
   assert(perc >= 0.0 && perc <= 1.0);
   double percentile_position = sorted_quantity_vector.size()*perc - nempty - 0.5;

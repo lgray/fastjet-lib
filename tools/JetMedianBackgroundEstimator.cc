@@ -59,6 +59,8 @@ double BackgroundRescalingYPolynomial::result(const PseudoJet & jet) const {
 LimitedWarning JetMedianBackgroundEstimator::_warnings;
 LimitedWarning JetMedianBackgroundEstimator::_warnings_zero_area;
 
+
+
 //---------------------------------------------------------------------
 // class JetMedianBackgroundEstimator
 // Class to estimate the density of the background per unit area
@@ -80,6 +82,8 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const Selector &rho_r
   _check_jet_alg_good_for_median();
 }
 
+
+//----------------------------------------------------------------------
 // ctor from a cluster sequence
 //  - csa        the ClusterSequenceArea to use
 //  - rho_range  the range over which jets will be considered
@@ -109,15 +113,12 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const vector<PseudoJe
 }
 
 
-// default dtor
-JetMedianBackgroundEstimator::~JetMedianBackgroundEstimator(){
-
-}
-
 
 //----------------------------------------------------------------------
 // setting a new event
 //----------------------------------------------------------------------
+// tell the background estimator that it has a new event, composed
+// of the specified particles.
 void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
   // make sure that we have been provided a genuine jet definition 
   if (_jet_def.jet_algorithm() == undefined_jet_algorithm)
@@ -143,6 +144,23 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
 }
 
 //----------------------------------------------------------------------
+// (re)set the cluster sequence (with area support) to be used by
+// future calls to rho() etc. 
+//
+// \param csa  the cluster sequence area
+//
+// Pre-conditions: 
+//  - one should be able to estimate the "empty area" (i.e. the area
+//    not occupied by jets). This is feasible if at least one of the following
+//    conditions is satisfied:
+//     ( i) the ClusterSequence has explicit ghosts
+//     (ii) the range selected has a computable area.
+//  - the jet algorithm must be suited for median computation
+//    (otherwise a warning will be issues)
+//
+// Note that selectors with e.g. hardest-jets exclusion do not have
+// a well-defined area. For this reasons, it is STRONGLY advised to
+// use an area with explicit ghosts.
 void JetMedianBackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & csa) {
   _csi = csa.structure_shared_ptr();
 
@@ -164,6 +182,9 @@ void JetMedianBackgroundEstimator::set_cluster_sequence(const ClusterSequenceAre
 
 
 //----------------------------------------------------------------------
+// (re)set the jets (which must have area support) to be used by future
+// calls to rho() etc.; for the conditions that must be satisfied
+// by the jets, see the Constructor that takes jets.
 void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
   
   if (! jets.size())
@@ -201,6 +222,57 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 
   // ensure recalculation of quantities that need it
   _uptodate = false;
+}
+
+
+//----------------------------------------------------------------------
+// retrieving fundamental information
+//----------------------------------------------------------------
+
+// get rho, the median background density per unit area
+double JetMedianBackgroundEstimator::rho() const {
+  if (_rho_range.takes_reference())
+    throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
+  _recompute_if_needed();
+  return _rho;
+}
+
+// get sigma, the background fluctuations per unit area
+double JetMedianBackgroundEstimator::sigma() const {
+  if (_rho_range.takes_reference())
+    throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
+  _recompute_if_needed();
+  return _sigma;
+}
+
+// get rho, the median background density per unit area, locally at
+// the position of a given jet.
+//
+// If the Selector associated with the range takes a reference jet
+// (i.e. is relocatable), then for subsequent operations the
+// Selector has that jet set as its reference.
+double JetMedianBackgroundEstimator::rho(const PseudoJet & jet) {
+  _recompute_if_needed(jet);
+  double our_rho = _rho;
+  if (_rescaling_class != 0) { 
+    our_rho *= (*_rescaling_class)(jet);
+  }
+  return our_rho;
+}
+
+// get sigma, the background fluctuations per unit area,
+// locally at the position of a given jet.
+//
+// If the Selector associated with the range takes a reference jet
+// (i.e. is relocatable), then for subsequent operations the
+// Selector has that jet set as its reference.
+double JetMedianBackgroundEstimator::sigma(const PseudoJet &jet) {
+  _recompute_if_needed(jet);
+  double our_sigma = _sigma;
+  if (_rescaling_class != 0) { 
+    our_sigma *= (*_rescaling_class)(jet);
+  }
+  return our_sigma;
 }
 
 

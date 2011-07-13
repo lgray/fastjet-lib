@@ -42,30 +42,113 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// Background Estimator based on the median pt/area of a set of grid
 /// cells. 
 ///
-/// DOCUMENTATION STILL INCOMPLETE
+/// Description of the method:
+///   This background estimator works by projecting the event onto a
+///   grid in rapidity and azimuth. In each grid cell, the scalar pt
+///   sum of the particles in the cell is computed. The background
+///   density is then estimated by the median of (scalar pt sum/cell
+///   area) for all cells.
+///
+/// Parameters:
+///   The class takes 2 arguments: the size of the grid cells and the
+///   rapidity extent of the cells. Note that the size of the cell
+///   will be adjusted in azimuth to satisfy the 2pi periodicity and
+///   in rapidity to match the requested rapidity extent.
+///
+/// Rescaling:
+///   It is possible to use a rescaling profile. In that case, the
+///   profile needs to be set before setting the particles and it will
+///   be applied to each particles (i.e. not to each cell). 
+///   Note also that in that case you need to call rho(jet) instead of
+///   rho() [Without rescaling, both are identical]
+///
+/// Additional notes:
+///   This class implements rho but does not compute sigma.
+///
 class GridMedianBackgroundEstimator : public BackgroundEstimatorBase {
 public:
+  /// @ name  constructors and destructors
+  //\{
+  //----------------------------------------------------------------
+  /// default ctor
+  /// The arguments are as follows:
+
+  ///   \param requested_grid_spacing   size of the grid cell. The
+  ///            "real" cell size could differ due e.g. to the 2pi
+  ///             periodicity in azimuthal angle (size, not area)
+  ///   \param ymax            maximal rapidity extent of the grid
   GridMedianBackgroundEstimator(double requested_grid_spacing, double ymax) :
-  _ymin(-ymax), _ymax(ymax), 
-  _requested_grid_spacing(requested_grid_spacing) {setup_grid();}
-  
+    _ymin(-ymax), _ymax(ymax), 
+    _requested_grid_spacing(requested_grid_spacing),
+    _has_particles(false){setup_grid();}
+  //\}
+
+
+  /// @name setting a new event
+  //\{
+  //----------------------------------------------------------------
+
+  /// tell the background estimator that it has a new event, composed
+  /// of the specified particles.
   void set_particles(const std::vector<PseudoJet> & particles);
 
+  //\}
+
+  /// @ name  retrieving fundamental information
+  //\{
+  //----------------------------------------------------------------
+
+  /// get rho, the median background density per unit area
   double rho() const;
+
+  /// get rho, the background density per unit area, locally at the
+  /// position of a given jet. Note that this is not const, because a
+  /// user may then wish to query other aspects of the background that
+  /// could depend on the position of the jet last used for a rho(jet)
+  /// determination.
   double rho(const PseudoJet & jet);
+
+  //\}
+
+  /// @name configuring the behaviour
+  //\{
+  //----------------------------------------------------------------
+
+  /// Set a pointer to a class that calculates the rescaling factor as
+  /// a function of the jet (position). Note that the rescaling factor
+  /// is used both in the determination of the "global" rho (the pt/A
+  /// of each jet is divided by this factor) and when asking for a
+  /// local rho (the result is multiplied by this factor).
+  ///
+  /// The BackgroundRescalingYPolynomial class can be used to get a
+  /// rescaling that depends just on rapidity.
+  ///
+  /// Note that this has to be called BEFORE any attempt to do an
+  /// actual computation
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class);
+
+  //\}
+
 
 
 private:
+  /// configure the grid
   void setup_grid();
+
+  /// retrieve the grid cell index for a given PseudoJet
   int igrid(const PseudoJet & p) const;
 
+  // information about the grid
   double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _cell_area;
   int _ny, _nphi, _ntotal;
 
+  // information abotu the event
   std::vector<double> _scalar_pt;
+  bool _has_particles;
 
+  // various warnings to let people aware of potential dangers
   LimitedWarning _warning_rho_of_jet;
-
+  LimitedWarning _warning_rescaling;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

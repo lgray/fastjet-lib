@@ -146,29 +146,61 @@ public:
   
 
   /// default dtor
-  ~JetMedianBackgroundEstimator();
+  ~JetMedianBackgroundEstimator(){}
 
   //\}
+
+
+  /// @name setting a new event
+  //\{
+  //----------------------------------------------------------------
+
+  /// tell the background estimator that it has a new event, composed
+  /// of the specified particles.
+  virtual void set_particles(const std::vector<PseudoJet> & particles);
+
+  /// (re)set the cluster sequence (with area support) to be used by
+  /// future calls to rho() etc. 
+  ///
+  /// \param csa  the cluster sequence area
+  ///
+  /// Pre-conditions: 
+  ///  - one should be able to estimate the "empty area" (i.e. the area
+  ///    not occupied by jets). This is feasible if at least one of the following
+  ///    conditions is satisfied:
+  ///     ( i) the ClusterSequence has explicit ghosts
+  ///     (ii) the range selected has a computable area.
+  ///  - the jet algorithm must be suited for median computation
+  ///    (otherwise a warning will be issues)
+  ///
+  /// Note that selectors with e.g. hardest-jets exclusion do not have
+  /// a well-defined area. For this reasons, it is STRONGLY advised to
+  /// use an area with explicit ghosts.
+  void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
+
+  /// (re)set the jets (which must have area support) to be used by future
+  /// calls to rho() etc.; for the conditions that must be satisfied
+  /// by the jets, see the Constructor that takes jets.
+  void set_jets(const std::vector<PseudoJet> &jets);
+
+  /// (re)set the selector to be used for future calls to rho() etc.
+  void set_selector(const Selector & rho_range_selector) {
+    _rho_range = rho_range_selector;
+    _uptodate = false;
+  }
+
+  //\}
+
 
   /// @ name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
 
   /// get rho, the median background density per unit area
-  double rho() const {
-    if (_rho_range.takes_reference())
-      throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
-    _recompute_if_needed();
-    return _rho;
-  }
+  double rho() const;
 
   /// get sigma, the background fluctuations per unit area
-  double sigma() const {
-    if (_rho_range.takes_reference())
-      throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
-    _recompute_if_needed();
-    return _sigma;
-  }
+  double sigma() const;
 
   /// get rho, the median background density per unit area, locally at
   /// the position of a given jet.
@@ -176,14 +208,7 @@ public:
   /// If the Selector associated with the range takes a reference jet
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
-  double rho(const PseudoJet & jet) {
-    _recompute_if_needed(jet);
-    double our_rho = _rho;
-    if (_rescaling_class != 0) { 
-      our_rho *= (*_rescaling_class)(jet);
-    }
-    return our_rho;
-  }
+  double rho(const PseudoJet & jet);
 
   /// get sigma, the background fluctuations per unit area,
   /// locally at the position of a given jet.
@@ -191,14 +216,11 @@ public:
   /// If the Selector associated with the range takes a reference jet
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
-  double sigma(const PseudoJet &jet) {
-    _recompute_if_needed(jet);
-    double our_sigma = _sigma;
-    if (_rescaling_class != 0) { 
-      our_sigma *= (*_rescaling_class)(jet);
-    }
-    return our_sigma;
-  }
+  double sigma(const PseudoJet &jet);
+
+  /// returns true if this background estimator has support for
+  /// determination of sigma
+  virtual bool has_sigma() {return true;}
 
   //\}
   
@@ -255,49 +277,10 @@ public:
 
   //}
 
-  /// @name setting a new event
-  //\{
-  //----------------------------------------------------------------
-
-  /// tell the background estimator that it has a new event, composed
-  /// of the specified particles.
-  virtual void set_particles(const std::vector<PseudoJet> & particles);
-
-  /// (re)set the cluster sequence (with area support) to be used by
-  /// future calls to rho() etc. 
-  ///
-  /// \param csa  the cluster sequence area
-  ///
-  /// Pre-conditions: 
-  ///  - one should be able to estimate the "empty area" (i.e. the area
-  ///    not occupied by jets). This is feasible if at least one of the following
-  ///    conditions is satisfied:
-  ///     ( i) the ClusterSequence has explicit ghosts
-  ///     (ii) the range selected has a computable area.
-  ///  - the jet algorithm must be suited for median computation
-  ///    (otherwise a warning will be issues)
-  ///
-  /// Note that selectors with e.g. hardest-jets exclusion do not have
-  /// a well-defined area. For this reasons, it is STRONGLY advised to
-  /// use an area with explicit ghosts.
-  void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
-
-  /// (re)set the jets (which must have area support) to be used by future
-  /// calls to rho() etc.; for the conditions that must be satisfied
-  /// by the jets, see the Constructor that takes jets.
-  void set_jets(const std::vector<PseudoJet> &jets);
-
-  /// (re)set the selector to be used for future calls to rho() etc.
-  void set_selector(const Selector & rho_range_selector) {
-    _rho_range = rho_range_selector;
-    _uptodate = false;
-  }
-
 
   /// @name configuring behaviour
   //\{
   //----------------------------------------------------------------
-
 
   /// Resets the class to its default state, including the choice to
   /// use 4-vector areas.
@@ -352,8 +335,8 @@ public:
   ///
   /// The BackgroundRescalingYPolynomial class can be used to get a
   /// rescaling that depends just on rapidity.
-  void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) {
-    _rescaling_class = rescaling_class;
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) {
+    BackgroundEstimatorBase::set_rescaling_class(rescaling_class);
     _uptodate = false;
   }
 
@@ -430,7 +413,6 @@ private:
   bool _use_area_4vector;
   bool _provide_fj2_sigma;
   const FunctionOfPseudoJet<double> * _jet_density_class;
-  const FunctionOfPseudoJet<double> * _rescaling_class;
   //SharedPtr<BackgroundRescalingBase> _rescaling_class_sharedptr;
   
   // the actual results of the computation
@@ -452,37 +434,6 @@ private:
 };
 
 
-
-
-//----------------------------------------------------------------------
-/// @ingroup tools_background
-/// A background rescaling that is a simple polynomial in y
-class BackgroundRescalingYPolynomial : public FunctionOfPseudoJet<double> {
-public:
-  /// construct a background rescaling polynomial of the form
-  /// a0 + a1*y + a2*y^2 + a3*y^3 + a4*y^4
-  ///
-  /// The following values give a reasonable reproduction of the
-  /// Pythia8 tune 4C background shape for pp collisions at
-  /// sqrt(s)=7TeV:
-  ///
-  /// - a0 =  1.157
-  /// - a1 =  0
-  /// - a2 = -0.0266
-  /// - a3 =  0
-  /// - a4 =  0.000048
-  ///
-  BackgroundRescalingYPolynomial(double a0=1, 
-				 double a1=0, 
-				 double a2=0, 
-				 double a3=0, 
-				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
-
-  /// return the rescaling factor associated with this jet
-  virtual double result(const PseudoJet & jet) const;
-private:
-  double _a0, _a1, _a2, _a3, _a4;
-};
 
 
 //----------------------------------------------------------------------
