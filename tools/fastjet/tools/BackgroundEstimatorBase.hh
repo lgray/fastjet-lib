@@ -140,7 +140,7 @@ protected:
 
   /// computes a percentile of a given _sorted_ vector
   ///  \param sorted_quantity_vector   the vector contains the data sample
-  ///  \param perc                     the percentile to compute
+  ///  \param percentile               the percentile (defined between 0 and 1) to compute
   ///  \param nempty                   an additional number of 0's
   ///                                  (considered at the beginning of 
   ///                                  the quantity vector)

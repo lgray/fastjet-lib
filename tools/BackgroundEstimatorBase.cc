@@ -86,7 +86,7 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
 //----------------------------------------------------------------------
 // computes a percentile of a given _sorted_ vector of quantities
 //  - sorted_quantities        the (sorted) vector contains the data sample
-//  - perc                     the percentile to compute
+//  - percentile               the percentile (defined between 0 and 1) to compute
 //  - nempty                   an additional number of 0's
 //                             (considered at the beginning of 
 //                             the quantity vector)
