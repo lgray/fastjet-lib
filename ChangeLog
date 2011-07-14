@@ -1,3 +1,21 @@
+2011-07-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc: 
+	  added support for areas and background estimation (intended as a
+	  prelude to their inclusion in night checks).
+
+	* src/ClusterSequenceAreaBase.cc: 
+	  fixed warning message for large -ve area.
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh: 
+	* tools/BackgroundEstimatorBase.cc: 
+	  fixed bug whereby n_empty_jets was not being used in the new
+	  percentile determination code; fixed missing bits of fj2
+	  compliance (was present in earlier code, but got lost), moving
+	  it all into _percentile; put in the safety checks (for -ve empty
+	  area) that were already present in CSAB; fixed large -ve area
+	  warning message.
+
 2011-07-13  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/BackgroundEstimatorBase.hh:

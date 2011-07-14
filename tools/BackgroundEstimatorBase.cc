@@ -63,22 +63,19 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
   vector<double> sorted_quantity_vector = quantity_vector;
   sort(sorted_quantity_vector.begin(), sorted_quantity_vector.end());
 
-  // now get the median & error, accounting for empty jets
+  // empty area can sometimes be negative; with small ranges this can
+  // become pathological, so warn the user
+  int n_jets_used = sorted_quantity_vector.size();
+  if (n_empty_jets < -n_jets_used/4.0)
+    _warnings_empty_area.warn("BackgroundEstimatorBase::_median_and_stddev(...): the estimated empty area is suspiciously large and negative and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
+
+  // now get the median & error, accounting for empty jets;
   // define the fractions of distribution at median, median-1sigma
   double posn[2] = {0.5, (1.0-0.6827)/2.0};
   double res[2];
-
-  int n_jets_used = sorted_quantity_vector.size();
-  double total_njets = n_jets_used + n_empty_jets;
-
-  if (n_empty_jets < -n_jets_used/4.0)
-    _warnings_empty_area.warn("BackgroundEstimatorBase::_median_and_stddev(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
-
   for (int i = 0; i < 2; i++) {
-    res[i] = _percentile(sorted_quantity_vector,
-			 (do_fj2_calculation) ? ((total_njets-1)*posn[i]+0.5)/total_njets
-                                              : posn[i],
-                         n_empty_jets);
+    res[i] = _percentile(sorted_quantity_vector, posn[i], n_empty_jets, 
+			 do_fj2_calculation);
   }
   
   median = res[0];
@@ -87,29 +84,58 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
 
 
 //----------------------------------------------------------------------
-// computes a percentile of a given _sorted_ vector
-//  - sorted_quantity_vector   the vector contains the data sample
+// computes a percentile of a given _sorted_ vector of quantities
+//  - sorted_quantities        the (sorted) vector contains the data sample
 //  - perc                     the percentile to compute
 //  - nempty                   an additional number of 0's
 //                             (considered at the beginning of 
 //                             the quantity vector)
-double BackgroundEstimatorBase::_percentile(const vector<double> &sorted_quantity_vector, const double perc, const unsigned int nempty) const {
-  assert(perc >= 0.0 && perc <= 1.0);
-  double percentile_position = sorted_quantity_vector.size()*perc - nempty - 0.5;
+//  - do_fj2_calculation       carry out the calculation as it
+//                             was done in fj2 (suffers from "edge effects")
+double BackgroundEstimatorBase::_percentile(const vector<double> & sorted_quantities, 
+					    const double percentile, 
+					    const unsigned int nempty,
+					    const bool do_fj2_calculation
+					    ) const {
+  assert(percentile >= 0.0 && percentile <= 1.0);
 
-  if (percentile_position >= 0 && sorted_quantity_vector.size() > 1) {
-    int int_percentile_pos = int(percentile_position);
-    double result =
-	sorted_quantity_vector[int_percentile_pos] * (int_percentile_pos+1-percentile_position)
-	+ sorted_quantity_vector[int_percentile_pos+1] * (percentile_position - int_percentile_pos);
-    return result;
+  int quantities_size = sorted_quantities.size();
+  if (quantities_size == 0) return 0;
 
-  } else if (percentile_position > -0.5 && sorted_quantity_vector.size() >= 1) {
-    return sorted_quantity_vector[0];
-
+  double total_njets = quantities_size + nempty;
+  double percentile_pos;
+  if (do_fj2_calculation) {
+    percentile_pos = (total_njets-1)*percentile - nempty;
   } else {
-    return 0.0;
+    percentile_pos = (total_njets)*percentile - nempty - 0.5;
   }
+
+  double result;
+  if (percentile_pos >= 0 && quantities_size > 1) {
+    int int_percentile_pos = int(percentile_pos);
+
+    // avoid potential overflow issues
+    if (int_percentile_pos+1 > quantities_size-1){
+      int_percentile_pos = quantities_size-2;
+      percentile_pos = quantities_size-1;
+    }
+
+    result =
+      sorted_quantities[int_percentile_pos] * (int_percentile_pos+1-percentile_pos)
+      + sorted_quantities[int_percentile_pos+1] * (percentile_pos - int_percentile_pos);
+    
+
+  } else if (percentile_pos > -0.5 && quantities_size >= 1 
+	     && !do_fj2_calculation) {
+    // in the LHS of this "bin", just keep a constant value (we could have
+    // interpolated to zero, but this might misbehave in cases where all jets
+    // are active, because it would go to zero too fast)
+    result = sorted_quantities[0];
+  } else {
+    result = 0.0;
+  }
+  return result;
+
 
 }
 

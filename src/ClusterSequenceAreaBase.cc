@@ -257,7 +257,7 @@ void ClusterSequenceAreaBase::get_median_rho_and_sigma(
   // -1, negating it, etc. All of these operations go crazy with unsigned ints.
   int pt_over_areas_size = pt_over_areas.size();
   if (n_empty < -pt_over_areas_size/4.0)
-    _warnings_empty_area.warn("ClusterSequenceAreaBase::get_median_rho_and_sigma(...): the estimated empty area is suspiciously large and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
+    _warnings_empty_area.warn("ClusterSequenceAreaBase::get_median_rho_and_sigma(...): the estimated empty area is suspiciously large and negative and may lead to an over-estimation of rho. This may be due to (i) a rare statistical fluctuation or (ii) too small a range used to estimate the background properties.");
 
   for (int i = 0; i < 2; i++) {
     double nj_median_pos = 

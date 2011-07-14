@@ -97,6 +97,21 @@
 ///
 ///   -cones        show extra info about internal steps for SISCone
 ///
+///   -area         calculate areas. Additional options include
+///                   -area:active
+///                   -area:passive
+///                   -area:explicit
+///                   -area:voronoi Rfact
+///                   -area:repeat nrepeat
+///                   -ghost-area area
+///                   -ghost-maxrap maxrap
+///                   -area:fj2               place ghosts as in fj2
+///
+///   -bkgd         calculate the background density. Additional options include
+///                   -bkgd:csab       use the old ClusterSequenceAreaBase methods
+///                   -bkgd:jetmedian  use the new JetMedianBackgroundEstimator class
+///                   -bkgd:fj2        force jetmedian to calculate sigma as in fj2
+///
 /// Algorithms
 /// ----------
 ///   -kt           switch to the longitudinally invariant kt algorithm
@@ -163,9 +178,8 @@
 ///
 
 
-#include "fastjet/PseudoJet.hh"
-#include "fastjet/ClusterSequence.hh"
-#include "fastjet/GhostedAreaSpec.hh"
+#include "fastjet/ClusterSequenceArea.hh"
+#include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -231,6 +245,8 @@ void print_jets_and_sub (const vector<fj::PseudoJet> & jets, double dcut);
 string rootfile;
 CmdLine * cmdline_p;
 
+bool do_areas;
+
 /// sort and pretty print jets, with exact behaviour depending on 
 /// whether ee_print is true or not
 bool ee_print = false;
@@ -274,6 +290,40 @@ int main (int argc, char ** argv) {
   int    nev     = cmdline.int_val("-nev",1);
   bool   add_dense_coverage = cmdline.present("-dense");
   double ghost_maxrap = cmdline.value("-ghost-maxrap",5.0);
+  do_areas = cmdline.present("-area");
+  fj::AreaDefinition area_def;
+  if (do_areas) {
+    assert(!write); // it's incompatible
+    fj::GhostedAreaSpec ghost_spec(ghost_maxrap, 
+				   cmdline.value("-area:repeat", 1),
+				   cmdline.value("-ghost-area", 0.01));
+    if (cmdline.present("-area:fj2")) ghost_spec.set_fj2_placement(true);
+    if (cmdline.present("-area:explicit")) {
+      area_def = fj::AreaDefinition(fj::active_area_explicit_ghosts, ghost_spec);
+    } else if (cmdline.present("-area:passive")) {
+      area_def = fj::AreaDefinition(fj::passive_area, ghost_spec);
+    } else if (cmdline.present("-area:voronoi")) {
+      double Rfact = cmdline.value<double>("-area:voronoi");
+      area_def = fj::AreaDefinition(fj::voronoi_area, 
+				    fj::VoronoiAreaSpec(Rfact));
+    } else {
+      cmdline.present("-area:active"); // allow, but do not require, arg
+      area_def = fj::AreaDefinition(fj::active_area, ghost_spec);
+    }
+  }
+  bool do_bkgd = cmdline.present("-bkgd"); // background estimation
+  bool do_bkgd_csab = false, do_bkgd_jetmedian = false, do_bkgd_fj2 = false;
+  fj::Selector bkgd_range;
+  if (do_bkgd) {
+    assert(do_areas);
+    bkgd_range = fj::SelectorAbsRapMax(ghost_maxrap - ktR); 
+    if      (cmdline.present("-bkgd:csab"))      {do_bkgd_csab = true;}
+    else if (cmdline.present("-bkgd:jetmedian")) {do_bkgd_jetmedian = true;
+      do_bkgd_fj2 = cmdline.present("-bkgd:fj2");
+    } else {
+      throw fj::Error("with the -bkgd option, some particular background must be specified (csab or jetmedian)");
+    }
+  }
 
   bool show_cones = cmdline.present("-cones"); // only works for siscone
 
@@ -519,62 +569,68 @@ int main (int argc, char ** argv) {
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     int nparticles = jets.size();
     try {
-    fj::ClusterSequence clust_seq(jets,jet_def,write);
+    auto_ptr<fj::ClusterSequence> clust_seq;
+    if (do_areas) {
+      clust_seq.reset(new fj::ClusterSequenceArea(jets,jet_def,area_def));
+    } else {
+      clust_seq.reset(new fj::ClusterSequence(jets,jet_def,write));
+    }
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< nparticles << endl;
-    cout << "strategy used =  "<< clust_seq.strategy_string()<< endl;
-    cout << "Algorithm: " << jet_def.description() << " (" << fj::fastjet_version_string() << ")" << endl;
+    cout << "strategy used =  "<< clust_seq->strategy_string()<< endl;
+    if (iev == 0) cout << "Jet Definition: " << jet_def.description() << " (" << fj::fastjet_version_string() << ")" << endl;
+    if (do_areas && iev == 0) cout << "Area definition: " << area_def.description() << endl;
 
     // now provide some nice output...
     if (inclkt >= 0.0) {
-      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets(inclkt));
+      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq->inclusive_jets(inclkt));
       print_jets(jets, show_constituents);
 
     }
 
     if (excln > 0) {
       cout << "Printing "<<excln<<" exclusive jets\n";
-      print_jets(clust_seq.exclusive_jets(excln), show_constituents);
+      print_jets(clust_seq->exclusive_jets(excln), show_constituents);
     }
 
     if (excld > 0.0) {
       cout << "Printing exclusive jets for d = "<<excld<<"\n";
-      print_jets(clust_seq.exclusive_jets(excld), show_constituents);
+      print_jets(clust_seq->exclusive_jets(excld), show_constituents);
     }
 
     if (excly > 0.0) {
       cout << "Printing exclusive jets for ycut = "<<excly<<"\n";
-      print_jets(clust_seq.exclusive_jets_ycut(excly), show_constituents);
+      print_jets(clust_seq->exclusive_jets_ycut(excly), show_constituents);
     }
 
     if (get_all_dij) {
       for (int i = nparticles-1; i >= 0; i--) {
-        printf("d for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq.exclusive_dmerge(i));
+        printf("d for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq->exclusive_dmerge(i));
       }
     }
     if (get_all_yij) {
       for (int i = nparticles-1; i >= 0; i--) {
-        printf("y for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq.exclusive_ymerge(i));
+        printf("y for n = %4d -> %4d is %14.5e\n", i+1, i, clust_seq->exclusive_ymerge(i));
       }
     }
 
     // have the option of printing out the subjets (at scale dcut) of
     // each inclusive jet
     if (subdcut >= 0.0) {
-      print_jets_and_sub(clust_seq.inclusive_jets(), subdcut);
+      print_jets_and_sub(clust_seq->inclusive_jets(), subdcut);
     }
     
     // useful for testing that recombination sequences are unique
     if (unique_write) {
-      vector<int> unique_history = clust_seq.unique_history_order();
+      vector<int> unique_history = clust_seq->unique_history_order();
       // construct the inverse of the above mapping
-      vector<int> inv_unique_history(clust_seq.history().size());
+      vector<int> inv_unique_history(clust_seq->history().size());
       for (unsigned int i = 0; i < unique_history.size(); i++) {
 	inv_unique_history[unique_history[i]] = i;}
 
       for (unsigned int i = 0; i < unique_history.size(); i++) {
 	fj::ClusterSequence::history_element el = 
-	  clust_seq.history()[unique_history[i]];
+	  clust_seq->history()[unique_history[i]];
 	int uhp1 = el.parent1>=0 ? inv_unique_history[el.parent1] : el.parent1;
 	int uhp2 = el.parent2>=0 ? inv_unique_history[el.parent2] : el.parent2;
 	printf("%7d u %15.8e %7d u %7d u\n",i,el.dij,uhp1, uhp2);
@@ -586,7 +642,7 @@ int main (int argc, char ** argv) {
     // provide some complementary information for SISCone 
     if (show_cones) {
       const fj::SISConeExtras * extras = 
-        dynamic_cast<const fj::SISConeExtras *>(clust_seq.extras());
+        dynamic_cast<const fj::SISConeExtras *>(clust_seq->extras());
       cout << "most ambiguous split (difference in squared dist) = "
            << extras->most_ambiguous_split() << endl;
       vector<fastjet::PseudoJet> stable_cones(extras->stable_cones()); 
@@ -600,18 +656,45 @@ int main (int argc, char ** argv) {
       }
       
       // also show passes for jets
-      vector<fj::PseudoJet> sisjets = clust_seq.inclusive_jets();
+      vector<fj::PseudoJet> sisjets = clust_seq->inclusive_jets();
       printf("\n%15s %15s %15s %12s %8s %8s\n","rap","phi","pt","user-index","pass","nconst");
       for (unsigned i = 0; i < sisjets.size(); i++) {
         printf("%15.8f %15.8f %15.8f %12d %8d %8d\n",
                sisjets[i].rap(), sisjets[i].phi(), sisjets[i].perp(), 
 	       sisjets[i].user_index(), extras->pass(sisjets[i]),
-	       clust_seq.constituents(sisjets[i]).size()
+	       clust_seq->constituents(sisjets[i]).size()
 	       );
 	
       }
     }
 #endif // FASTJET_ENABLE_PLUGIN_SISCONE
+
+    if (do_bkgd) {
+      double rho, sigma, mean_area, empty_area, n_empty_jets;
+      fj::ClusterSequenceAreaBase * csab = 
+	dynamic_cast<fj::ClusterSequenceAreaBase *>(clust_seq.get());
+      if (do_bkgd_csab) {
+	csab->get_median_rho_and_sigma(bkgd_range, true, rho, sigma, mean_area);
+	empty_area = csab->empty_area(bkgd_range);
+	n_empty_jets = csab->n_empty_jets(bkgd_range);
+      } else  {
+	assert(do_bkgd_jetmedian);
+	fj::JetMedianBackgroundEstimator bge(bkgd_range);
+	bge.set_provide_fj2_sigma(do_bkgd_fj2);
+	bge.set_cluster_sequence(*csab);
+	rho = bge.rho();
+	sigma = bge.sigma();
+	mean_area = bge.mean_area();
+	empty_area = bge.empty_area();
+	n_empty_jets = bge.n_empty_jets();
+      }
+      cout << "  rho = " << rho 
+	   << ", sigma = " << sigma 
+	   << ", mean_area = " << mean_area
+	   << ", empty_area = " << empty_area
+	   << ", n_empty_jets = " << n_empty_jets
+	   << endl;
+    }
   } // try
   catch (fastjet::Error fjerr) {
     cout << "Caught fastjet error, exiting gracefully" << endl;
@@ -660,8 +743,13 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, bool show_constituents) {
   } else {
     jets = sorted_by_pt(jets_in);
     for (size_t j = 0; j < jets.size(); j++) {
-      printf("%5u %15.8f %15.8f %15.8f\n",
+      printf("%5u %15.8f %15.8f %15.8f",
 	     j,jets[j].rap(),jets[j].phi(),jets[j].perp());
+      // also print out the scalar area and the perp component of the
+      // 4-vector (just enough to check a reasonable 4-vector?)
+      if (do_areas) printf(" %15.8f %15.8f", jets[j].area(),
+			                     jets[j].area_4vector().perp());
+      cout << "\n";
 
       if (show_constituents) {
 	vector<fj::PseudoJet> const_jets = jets[j].constituents();
@@ -747,7 +835,7 @@ void print_jets_and_sub (const vector<fj::PseudoJet> & jets, double dcut) {
 
     if (cspoint != 0) delete cspoint;
 
-    //fj::ClusterSequence subseq(clust_seq.constituents(sorted_jets[i]),
+    //fj::ClusterSequence subseq(clust_seq->constituents(sorted_jets[i]),
     //                          fj::JetDefinition(fj::cambridge_algorithm, 0.4));
     //vector<fj::PseudoJet> subjets = sorted_by_pt(subseq.inclusive_jets());
     //for (unsigned int j = 0; j < subjets.size(); j++) {

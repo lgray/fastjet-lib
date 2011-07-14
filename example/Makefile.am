@@ -124,6 +124,8 @@ endif
 fastjet_timing_plugins_SOURCES = fastjet_timing_plugins.cc CmdLine.cc
 fastjet_timing_plugins_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include
 fastjet_timing_plugins_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
+fastjet_timing_plugins_CXXFLAGS += -I$(srcdir)/../tools
+fastjet_timing_plugins_LDADD += ../tools/libfastjettools.la 
 if BUILD_PLUGIN_SISCONE
 fastjet_timing_plugins_CXXFLAGS += -I$(srcdir)/../plugins/SISCone -I$(srcdir)/../plugins/SISCone/siscone
 fastjet_timing_plugins_LDADD += ../plugins/SISCone/libSISConePlugin.la ../plugins/SISCone/siscone/siscone/libsiscone.la ../plugins/SISCone/siscone/siscone/spherical/libsiscone_spherical.la
