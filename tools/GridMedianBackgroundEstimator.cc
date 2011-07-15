@@ -64,6 +64,19 @@ double GridMedianBackgroundEstimator::rho() const {
   return _percentile(_scalar_pt, 0.5) / _cell_area;
 }
 
+
+//----------------------------------------------------------------------
+// get sigma, the background fluctuations per unit area; must be
+// multipled by sqrt(area) to get fluctuations for a region of a
+// given area.
+double GridMedianBackgroundEstimator::sigma() const{
+  // watch out: by definition, our sigma is the standard deviation of
+  // the pt density multiplied by the square root of the cell area
+  return (_percentile(_scalar_pt, 0.5) -
+	  _percentile(_scalar_pt, (1.0-0.6827)/2.0)
+	  )/sqrt(_cell_area);
+}
+
 //----------------------------------------------------------------------
 // get rho, the background density per unit area, locally at the
 // position of a given jet. Note that this is not const, because a
@@ -75,6 +88,17 @@ double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
   double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
   return rescaling*rho();
 }
+
+
+//----------------------------------------------------------------------
+// get sigma, the background fluctuations per unit area, locally at
+// the position of a given jet. As for rho(jet), it is non-const.
+double GridMedianBackgroundEstimator::sigma(const PseudoJet & jet){
+  //_warning_rho_of_jet.warn("rho(jet) not yet implemented; currently just returns global rho");
+  double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
+  return rescaling*sigma();
+}
+
 
 
 //----------------------------------------------------------------------

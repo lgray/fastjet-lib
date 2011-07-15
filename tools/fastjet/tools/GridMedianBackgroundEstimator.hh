@@ -101,6 +101,11 @@ public:
   /// get rho, the median background density per unit area
   double rho() const;
 
+  /// get sigma, the background fluctuations per unit area; must be
+  /// multipled by sqrt(area) to get fluctuations for a region of a
+  /// given area.
+  double sigma() const;
+
   /// get rho, the background density per unit area, locally at the
   /// position of a given jet. Note that this is not const, because a
   /// user may then wish to query other aspects of the background that
@@ -108,6 +113,13 @@ public:
   /// determination.
   double rho(const PseudoJet & jet);
 
+  /// get sigma, the background fluctuations per unit area, locally at
+  /// the position of a given jet. As for rho(jet), it is non-const.
+  double sigma(const PseudoJet & jet);
+
+  /// returns true if this background estimator has support for
+  /// determination of sigma
+  bool has_sigma() {return true;}
   //\}
 
   /// @name configuring the behaviour

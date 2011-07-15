@@ -1,5 +1,9 @@
 2011-07-15  Gregory Soyez  <soyez@fastjet.fr> & Matteo
 
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	* tools/GridMedianBackgroundEstimator.cc:
+	  added the computation of sigma (and sigma(jet))
+
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/JetMedianBackgroundEstimator.cc:
 	  put the same description of rho_range everywhere
