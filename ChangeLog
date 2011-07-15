@@ -1,3 +1,9 @@
+2011-07-14  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh: 
+	* tools/BackgroundEstimatorBase.cc: 
+          fixed the comment in front of _percentile()
+
 2011-07-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/fastjet_timing_plugins.cc: 
