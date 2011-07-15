@@ -87,7 +87,7 @@ public:
   /// particles. Prior to the estimation of rho, one has to provide
   /// the particles to cluster using set_particles(...)
   ///
-  /// \param rho_range  the range over which jets will be considered
+  /// \param rho_range  the Selector specifying which jets will be considered
   /// \param jet_def    the jet definition to use for the clustering
   /// \param area_def   the area definition to use for the clustering
   JetMedianBackgroundEstimator(const Selector &rho_range,
@@ -97,8 +97,7 @@ public:
   /// ctor from a ClusterSequenceAreaBase with area
   ///
   /// \param csa         the ClusterSequenceArea to use
-  /// \param rho_range   a Selector that specifies the range over 
-  ///                    which jets will be considered 
+  /// \param rho_range   the Selector specifying which jets will be considered
   ///
   /// Pre-conditions: 
   ///  - one should be able to estimate the "empty area" (i.e. the area
@@ -118,7 +117,7 @@ public:
   /// ctor from a list of jets
   ///
   /// \param jets        the jets to use
-  /// \param rho_range   the range over which jets will be considered
+  /// \param rho_range   the Selector specifying which jets will be considered
   ///
   /// Pre-conditions:
   ///  - all the jets must come from the same cluster sequence
@@ -134,7 +133,7 @@ public:
   /// actually used for estimating the background must be passed
   /// later via set_cluster_sequence(...) or set_jets(...)
   ///
-  /// \param rho_range   the range over which jets will be considered
+  /// \param rho_range   the Selector specifying which jets will be considered
   ///
   JetMedianBackgroundEstimator(const Selector &rho_range)
     : _rho_range(rho_range), _jet_def(JetDefinition()) { reset(); }

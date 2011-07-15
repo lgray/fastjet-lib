@@ -1,3 +1,14 @@
+2011-07-15  Gregory Soyez  <soyez@fastjet.fr> & Matteo
+
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/JetMedianBackgroundEstimator.cc:
+	  put the same description of rho_range everywhere
+
+	* tools/fastjet/tools/JHTopTagger.hh:
+	* tools/fastjet/tools/MassDropTagger.hh:
+	* tools/fastjet/tools/Filter.hh:
+	  pointed the link to the correct example
+
 2011-07-14  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/BackgroundEstimatorBase.hh: 

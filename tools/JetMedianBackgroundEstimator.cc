@@ -86,7 +86,7 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const Selector &rho_r
 //----------------------------------------------------------------------
 // ctor from a cluster sequence
 //  - csa        the ClusterSequenceArea to use
-//  - rho_range  the range over which jets will be considered
+//  - rho_range  the Selector specifying which jets will be considered
 JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const ClusterSequenceAreaBase &csa, const Selector &rho_range)
   : _rho_range(rho_range), _jet_def(JetDefinition()){
 
@@ -100,8 +100,8 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const ClusterSequence
 
 //----------------------------------------------------------------------
 // ctor from a list of jets
-//  - jets        the set of jets to use for the computation
-//  - rho_range   the range over which jets will be considered
+//  - jets       the set of jets to use for the computation
+//  - rho_range  the Selector specifying which jets will be considered
 JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
   : _rho_range(rho_range), _jet_def(JetDefinition()){
 

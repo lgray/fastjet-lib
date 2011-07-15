@@ -114,7 +114,7 @@ class JHTopStructure;
 ///
 /// The W itself has two pieces (W1, W2).
 ///
-/// See example 13-boosted_top.cc for a usage example of this tagger.
+/// See also \subpage Example13  for a usage example.
 ///
 class JHTopTagger : public Transformer{
 public:

@@ -96,6 +96,7 @@ class MassDropStructure;
 ///  - the 'mu' and 'y' values corresponding to the unclustering step
 ///    that passed the tagger's cuts
 ///
+/// See also \subpage Example12  for a usage example.
 class MassDropTagger : public Transformer{
 public:
   /// default ctor

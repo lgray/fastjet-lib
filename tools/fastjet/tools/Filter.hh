@@ -131,7 +131,7 @@ class FilterStructure;
 /// C/A algorithm on the constituents, but instead makes use of the
 /// existent C/A cluster sequence in the original jet.
 ///
-/// See also \subpage Example12  for a usage example.
+/// See also \subpage Example11  for a usage example.
 class Filter : public Transformer{
 public:
   /// trivial ctor
