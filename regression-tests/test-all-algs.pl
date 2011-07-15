@@ -290,6 +290,13 @@ sub setDefaults {
      "cam" => "1:-4:-3:-1:2:12",
     );
 
+  # the different area configurations we'll consider
+  %areaConfigs = (
+    "kt"      => "-area:active,-area:explicit,-area:voronoi,-area:passive",
+    "cam"     => "-area:active,-area:explicit,-area:passive",
+    "antikt"  => "-area:active,-area:explicit,-area:passive",
+    "siscone:-f:0.75" => "-area:passive"
+      );
 
   # find out which executable to use based on what's locally
   # available, and failing that based on where we are

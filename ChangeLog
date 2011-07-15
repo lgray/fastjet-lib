@@ -1,3 +1,9 @@
+2011-07-15  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl (setDefaults): 
+	  added a bunch of "areaConfigs", indicating how we might run area
+	  tests. 
+
 2011-07-15  Gregory Soyez  <soyez@fastjet.fr> & Matteo
 
 	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
