@@ -1,3 +1,9 @@
+2011-07-16  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/test-all-algs.pl (setDefaults): 
+	  commented out areaConfigs for now, to prevent warnings, which
+	  give issues with the nightly check.
+
 2011-07-15  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl (setDefaults): 
