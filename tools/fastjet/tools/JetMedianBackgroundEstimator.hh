@@ -316,13 +316,14 @@ public:
   /// Set a pointer to a class that calculates the quantity whose
   /// median will be calculated; if the pointer is null then pt/area
   /// is used (as occurs also if this function is not called).
-  void set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class) {
-    _jet_density_class = jet_density_class;
-    _uptodate = false;
-  }
+  ///
+  /// Note that this is still <i>preliminary</i> in FastJet 3.0 and
+  /// that backward compatibility is not guaranteed in future releases
+  /// of FastJet
+  void set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class);
 
   /// return the pointer to the jet density class
-  const FunctionOfPseudoJet<double> *  jet_density_class() {
+  const FunctionOfPseudoJet<double> *  jet_density_class() const{
     return _jet_density_class;
   }
 
@@ -364,11 +365,6 @@ public:
 //     _rescaling_class_sharedptr = rescaling_class;
 //     _rescaling_class = _rescaling_class_sharedptr.get();
 //   }
-
-  /// return the pointer to the jet density class
-  const FunctionOfPseudoJet<double> *  rescaling_class() {
-    return _rescaling_class;
-  }
 
   //\}
 
@@ -430,6 +426,7 @@ private:
   /// handle warning messages
   static LimitedWarning _warnings;
   static LimitedWarning _warnings_zero_area;
+  static LimitedWarning _warnings_preliminary;
 };
 
 
@@ -437,7 +434,9 @@ private:
 
 //----------------------------------------------------------------------
 /// @ingroup tools_background
+/// \class BackgroundJetPtDensity
 /// Class that implements pt/area_4vector.perp() for background estimation
+/// <i>(this is a preliminary class)</i>.
 class BackgroundJetPtDensity : public FunctionOfPseudoJet<double> {
 public:
   virtual double result(const PseudoJet & jet) const {
@@ -449,10 +448,12 @@ public:
 
 //----------------------------------------------------------------------
 /// @ingroup tools_background
+/// \class BackgroundJetScalarPtDensity
 /// Class that implements (scalar pt sum of jet)/(scalar area of jet)
-/// for background estimation. Optionally it can return a quantity
-/// based on the sum of pt^n, e.g. for use in subtracting
-/// fragementation function moments.
+/// for background estimation <i>(this is a preliminary class)</i>.
+///
+/// Optionally it can return a quantity based on the sum of pt^n,
+/// e.g. for use in subtracting fragementation function moments.
 class BackgroundJetScalarPtDensity : public FunctionOfPseudoJet<double> {
 public:
   /// Default constructor provides background estimation with scalar pt sum
@@ -472,9 +473,11 @@ private:
 
 //----------------------------------------------------------------------
 /// @ingroup tools_background
+/// \class BackgroundJetPtMDensity
 /// Class that implements
 /// \f$  \frac{1}{A} \sum_{i \in jet} (\sqrt{p_{ti}^2+m^2} - p_{ti}) \f$
-/// for background estimation.
+/// for background estimation <i>(this is a preliminary class)</i>.
+/// 
 ///
 /// This is useful for correcting jet masses in cases where the event
 /// involves massive particles.

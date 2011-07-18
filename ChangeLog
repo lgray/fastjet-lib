@@ -1,3 +1,15 @@
+2011-07-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/JetMedianBackgroundEstimator.cc:
+	  . declared jet_density_class() and rescaling_class() as const
+	  . moved rescaling_class() to the base class
+	  . marked the density classes as preliminarry in doxygen
+	    (+ minor midifocations to doxugen declarations)
+	  . added a warning that this is still some preliminary work when
+	    one tries to set the density class
+
 2011-07-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/test-all-algs.pl (setDefaults): 

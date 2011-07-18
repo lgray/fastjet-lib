@@ -58,7 +58,7 @@ double BackgroundRescalingYPolynomial::result(const PseudoJet & jet) const {
 /// allow for warnings
 LimitedWarning JetMedianBackgroundEstimator::_warnings;
 LimitedWarning JetMedianBackgroundEstimator::_warnings_zero_area;
-
+LimitedWarning JetMedianBackgroundEstimator::_warnings_preliminary;
 
 
 //---------------------------------------------------------------------
@@ -301,8 +301,18 @@ void JetMedianBackgroundEstimator::reset(){
 }
 
 
+// Set a pointer to a class that calculates the quantity whose
+// median will be calculated; if the pointer is null then pt/area
+// is used (as occurs also if this function is not called).
+void JetMedianBackgroundEstimator::set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class) {
+  _warnings_preliminary.warn("JetMedianBackgroundEstimator::set_jet_density_class: density classes are still preliminary in FastJet 3.0. Their interface may differ in future releases (without guaranteeing backward compatibility).");
+  _jet_density_class = jet_density_class;
+  _uptodate = false;
+}
+
+
 //----------------------------------------------------------------------
-// computation of teh background properties
+// computation of the background properties
 //----------------------------------------------------------------------
 // for estimation using a relocatable selector (i.e. local range)
 // this allows to set its position. Note that this HAS to be called

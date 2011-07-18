@@ -113,6 +113,11 @@ public:
   /// rescaling that depends just on rapidity.
   virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) { _rescaling_class = rescaling_class; }
 
+  /// return the pointer to the jet density class
+  const FunctionOfPseudoJet<double> *  rescaling_class() const{
+    return _rescaling_class;
+  }
+
   //\}
 
 protected:
