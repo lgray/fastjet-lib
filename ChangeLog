@@ -1,5 +1,9 @@
 2011-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* Doxyfile:
+	  removed inline source and reference relations in class member
+	  documentation
+
 	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/JetMedianBackgroundEstimator.cc:
