@@ -85,32 +85,33 @@ $CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.8_gcc46_install';
 # - at least one run with pxcone
 
 
-push @setups, ["","", "", 10]; # out of the box
-#push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000]; # with CGAL & all plugins
-push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000]; # with CGAL & all plugins
-push @setups, ["","--enable-allplugins --disable-shared", "", 10]; # with static libs, and pxcone
-push @setups, ["","--enable-allplugins --disable-monolithic", "", 10]; # test the non-monolithic build (all plugins in separate libs)
-push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10]; # with static libs even though shared are built
+push @setups, ["","", "", 10, ""]; # out of the box
+#push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000, ""]; # with CGAL & all plugins
+push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, ""]; # with CGAL & all plugins
+push @setups, ["","--enable-allplugins --disable-shared", "", 10, ""]; # with static libs, and pxcone
+push @setups, ["","--enable-allplugins --disable-monolithic", "", 10, ""]; # test the non-monolithic build (all plugins in separate libs)
+push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10, ""]; # with static libs even though shared are built
 # 2011-06-29: remove the icpc checks, since icpc seems not to be able to handle the
 #             g++-4.6.0 STL that is now on all machines
-push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc CFLAGS="-gcc-name=/usr/bin/gcc34" CXXFLAGS="-gcc-name=/usr/bin/gcc34 -gxx-name=/usr/bin/g++34" --disable-debug', "", 1000]; # with the intel compiler
+push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc CFLAGS="-gcc-name=/usr/bin/gcc34" CXXFLAGS="-gcc-name=/usr/bin/gcc34 -gxx-name=/usr/bin/g++34" --disable-debug', "", 1000, ""]; # with the intel compiler
 # maintain a check with gxx-3.4
-push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10]; # with gxx-3.4
-push @setups, ["tycho","--enable-allcxxplugins", "", 1000]; # tycho: standard machine, 32 bits
+push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gxx-3.4
+push @setups, ["tycho","--enable-allcxxplugins", "", 1000, ""]; # tycho: standard machine, 32 bits
 # GPS 2011-03-17: zetes is down, so remove this test
-#push @setups, ["zetes", "--enable-allcxxplugins", "", 10]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
-#push @setups, ["karnak","FC=/usr/local/bin/gfortran-4.4", "", 10]; # out of the box on karnak (OS X 10.5)
+#push @setups, ["zetes", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
+#push @setups, ["karnak","FC=/usr/local/bin/gfortran-4.4", "", 10, ""]; # out of the box on karnak (OS X 10.5)
 # karnak reenabled 2010-12-20
 # karnak disabled 2011-03-23
 # karnak enabled 2011-04-06
-push @setups, ["karnak","", "", 10]; # out of the box on karnak (OS X 10.5)
-push @setups, ["karnak","--enable-allcxxplugins", "", 1000]; # full monty on karnak
-#push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10]; # full monty on karnak
-push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
-push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4.3", "", 10]; # full set with gcc 4.4 
-#push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10]; # full set with gcc 4.4 
-
+push @setups, ["karnak","", "", 10, ""]; # out of the box on karnak (OS X 10.5)
+push @setups, ["karnak","--enable-allcxxplugins", "", 1000, ""]; # full monty on karnak
+#push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10, ""]; # full monty on karnak
+push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
+push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
+push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4.3", "", 10, ""]; # full set with gcc 4.4 #push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10, ""]; # full set with gcc 4.4 
+# extra tests for areas
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # loaclly
+push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
 
 # process command-line
 $mail=0;
@@ -239,7 +240,7 @@ MAIN: while (1) {
 
         # first set up a file on remote host with the info of interest
         open(SETUP, "> $tmpDir/setup") || die "Could not write to $tmpDir/setup";
-        for ($j=1; $j <=3; $j++) {print SETUP $setups[$i][$j],"\n";}
+        for ($j=1; $j <=4; $j++) {print SETUP $setups[$i][$j],"\n";}
         close SETUP;
 
         # connect to remote host and run there
@@ -265,7 +266,7 @@ MAIN: while (1) {
       } else {
 
         # run the test locally
-        &build_and_check($setups[$i][1], $setups[$i][2], $setups[$i][3]) || last MAIN;
+        &build_and_check($setups[$i][1], $setups[$i][2], $setups[$i][3], $setups[$i][4]) || last MAIN;
 
       }
     }
@@ -274,10 +275,10 @@ MAIN: while (1) {
     # remote case, in which tmpDir is already there
     # read the instructions
     open(SETUP, "< $tmpDir/setup") || die "failed to read from $tmpDir/setup;";
-    for ($j=0; $j <= 2; $j++) {$setup[$j] = <SETUP>; chomp($setup[$j]);}
+    for ($j=0; $j <= 3; $j++) {$setup[$j] = <SETUP>; chomp($setup[$j]);}
     close SETUP;
     # execute them
-    &build_and_check($setup[0], $setup[1], $setup[2]) || last MAIN;
+    &build_and_check($setup[0], $setup[1], $setup[2], $setup[3]) || last MAIN;
   }
 
   #&build_and_check($configOpts, $fjlibOpts, $nevTestAll) || last;
@@ -372,8 +373,8 @@ sub OKUnavail ($) {
 #                  (anything after a ":" is passed to g++ as compile/link flags)
 # - $nev:          number of events to actually test
 #
-sub build_and_check($$$) {
-  my ($config,$link,$nev) = @_;
+sub build_and_check($$$$) {
+  my ($config,$link,$nev,$testargs) = @_;
   
   # separate the link flags into two pieces, before and after colon
   my ($linkfj, $linkgcc);
@@ -479,7 +480,7 @@ sub build_and_check($$$) {
   &message("* testing all algs\n");
   # use the original test-all-algs.pl prog, since it isn't distributed
   # in the tarball
-  $testall=`../regression-tests/test-all-algs.pl -nev $nev`;
+  $testall=`../regression-tests/test-all-algs.pl -nev $nev $testargs`;
   $summary .= "   status: ".&OKUnavail($testall)."\n\n";
   if ($testall =~ /\sBAD/i || $testall !~ /OK/ || $?) {
     &fail("testing all algs",$testall);

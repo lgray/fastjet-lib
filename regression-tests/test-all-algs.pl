@@ -35,6 +35,8 @@
 #
 #  -verbose          writes out a few extra details (e.g. the command being run). 
 #
+#  -areas            run area configurations
+#
 # Full (non-md5) results of a 1000 event run are to be found in
 # the (non svn) directory
 #
@@ -116,6 +118,7 @@ while ($arg = shift @ARGV) {
   elsif ($arg eq "-perl"    ) {$perlOut = "Perl Output:\n";}
   elsif ($arg eq "-newperl" ) {$perlOut = "New Perl Output:\n";}
   elsif ($arg eq "-verbose" ) {$verbose = 1;}
+  elsif ($arg eq "-areas"   ) {$areas   = 1;}
   elsif ($arg eq "-strat" || $arg eq "-strategy")    {$defstrat = shift @ARGV;}
   else  {die "unrecognized argument $arg";}
 }
@@ -125,6 +128,17 @@ while ($arg = shift @ARGV) {
 
 # now get the md5 sums
 foreach $alg (@algs) {
+
+# the area configurations to support
+@areaconfigs=();
+if ($areas){
+    if (exists($areaConfigs{$alg})){
+	@areaconfigs = split(",", $areaConfigs{$alg});
+    }
+} else {
+    @areaconfigs = ("");
+}
+# the strategies to support
 if ($defstrat ne "") {
   @strat = split(":",$defstrat);
 }
@@ -134,24 +148,29 @@ elsif (exists($strategies{$alg})) {
   @strat = ("")
 }
 foreach $strat (@strat) {
+    if ($strat ne "") {$stratcmd = "-strategy $strat"} else {$stratcmd=""}
+    $strat = "s$strat" ; # =~ s/.*y /s/; # we'll need this in a clean form later
+
+foreach $area (@areaconfigs) {
 
   # decide what output to use (jets for cone algs, unique_write for cam, sequence for others)
-  $out = &isCone($alg) ? "-incl 0" : (($alg =~ /^cam/) ? "-unique_write" : "-write");
+  $out = $areas ? "-incl 0" : &isCone($alg) ? "-incl 0" : (($alg =~ /^cam/) ? "-unique_write" : "-write");
 
   # decide from which file we get the events 
   $localdataFile = &isee($alg) ? $eedataFile : $dataFile;
 
   # get the command line
   ($algsp = $alg) =~ s/:/ /g;
-  if ($strat ne "") {$strat = "-strategy $strat"}
-  #$cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1 < $localdataFile";
-  $cmdline = "$execName -$algsp $strat -R $R $out -nev $nev 2>\&1";
+  if ($area ne "") {$areacmd = "-area $area"} else {$areacmd = ""}
+  $area =~ s/area://g;
+  $area =~ s/ /,/g;
+  #$cmdline = "$execName -$algsp $stratcmd -R $R $out -nev $nev 2>\&1 < $localdataFile";
+  $cmdline = "$execName -$algsp $stratcmd -R $R $areacmd $out -nev $nev 2>\&1";
   if ($localdataFile =~ /\.gz$/) {
     $cmdline = "gunzip -c $localdataFile | $cmdline";
   } else {
     $cmdline = "$cmdline < $localdataFile ";
   }
-  $strat =~ s/.*y /s/; # we'll need this in a clean form later
   if ($verbose) {print "Running $cmdline\n";}
   $res = `$cmdline`;
   $error = $?;
@@ -169,7 +188,7 @@ foreach $strat (@strat) {
   }
 
   # now generate output
-  $name = &fullName($alg);
+  $name = &fullName($alg,$area);
   if ($error) {
     $OK = "*** BAD (crash?) ***"
   } elsif (exists($refResults{$name}) && $sum ne "unavailable") {
@@ -223,6 +242,7 @@ foreach $strat (@strat) {
   $done{$name} = 1;
 }
 }
+}
 
 if ($perlOut) {print $perlOut;}
 
@@ -243,7 +263,7 @@ sub isee {
 
 #======================================================================
 sub fullName {
-  (my $alg) = @_;
+  (my $alg,$area) = @_;
   
   # decide from which file we get the events 
   $localdataFile = &isee($alg) ? $eedataFile : $dataFile;
@@ -253,6 +273,9 @@ sub fullName {
   #$sep = "\@";
   $sep = ",";
   my $res = sprintf("$dataTail%snev%d%s$alg%sR%.2f",$sep,$nev,$sep,$sep, $R);
+  if ($area ne ""){
+      $res = "$res$sep$area";
+  }
   return $res;
 }
 
@@ -290,13 +313,18 @@ sub setDefaults {
      "cam" => "1:-4:-3:-1:2:12",
     );
 
-  # # the different area configurations we'll consider
-  # %areaConfigs = (
-  #   "kt"      => "-area:active,-area:explicit,-area:voronoi,-area:passive",
-  #   "cam"     => "-area:active,-area:explicit,-area:passive",
-  #   "antikt"  => "-area:active,-area:explicit,-area:passive",
-  #   "siscone:-f:0.75" => "-area:passive"
-  #     );
+  # the different area configurations we'll consider
+  %areaConfigs = (
+#      "kt"     => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:voronoi 0.9,-area:explicit -area:fj2,-area:active -area:fj2,-area:passive -area:fj2,-area:explicit -area:repeat 2,-area:explicit -ghost-area 0.1,-area:explicit -ghost-maxrap 4.0",
+#      "cam"    => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
+#      "antikt" => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
+#      "siscone:-f:0.75" => "-area:passive"
+
+      "kt"      => "-area:active,-area:explicit,-area:voronoi 1.0,-area:passive",
+      "cam"     => "-area:active,-area:explicit,-area:passive",
+      "antikt"  => "-area:active,-area:explicit,-area:passive",
+      "siscone:-f:0.75" => "-area:passive"
+      );
 
   # find out which executable to use based on what's locally
   # available, and failing that based on where we are
@@ -318,6 +346,8 @@ sub setDefaults {
 
   $perlOut = "";
   $deposit = "";
+
+  $areas = 0;
 
   %done = ();
 
@@ -453,7 +483,33 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cmsiterativecone,R0.60" => "31a543ee68e64eb67d5b242188cb7aab",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,jade:-excly:0.01,R0.60" => "b4aef5930856daafb294ddce66834bc7",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,d0runicone,R0.60" => "a475ca9a5bdcf9278ccfe8854095dfef",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,d0runipre96cone,R0.60" => "d9e503ea1cb13767ca5decf53bb001d1"
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,d0runipre96cone,R0.60" => "d9e503ea1cb13767ca5decf53bb001d1",
+
+  # area, 100 ev results (only strategy 1)
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active" => "31e0fe8d8c81b803f9713cacbbf16938",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit" => "9a1f08c3d0d7e6e4f29687ea04e34087",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0" => "215ec264665d5a5d0220d4a8ca519ce0",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-passive" => "215ec264665d5a5d0220d4a8ca519ce0",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-active" => "52528032687595b40bb0e29a05020325",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit" => "549cca44efdfe827da4d13d65c2b3100",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-passive" => "d5379263f0c778de3be6e48d306434a9",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-active" => "0ecaebf9695875119ca508a50efa0a08",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-explicit" => "c4e895f2a8b383fbf1ac4aa4b28957cb",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-passive" => "0ecaebf9695875119ca508a50efa0a08",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,siscone:-f:0.75,R0.60,-passive" => "f374fa40e92420107a5d22bc6777c614",
+
+  # area, 1000 ev results (only strategy 1)
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active" => "cfeafd478cb06f6d4088db69332961f1",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit" => "66af0392ecb712f55b0e51d3083fd479",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0" => "2d86e328dad56a5b8711caef484af163",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-passive" => "2d86e328dad56a5b8711caef484af163",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-active" => "911048ad2b03b38e62d1f8ddb4d95095",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit" => "741df147c16e55768cba1b892b35721f",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-passive" => "9b95ee58eda1fc7cf827410c9e87eee9",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-active" => "16b4a7005ed6de5e826a0435f13ff48b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-explicit" => "81b2fa4fb07682b039f5a649959e9f0b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-passive" => "16b4a7005ed6de5e826a0435f13ff48b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive" => "84644868977ce3697b627e2c6da5c4df"
 );
 
   %refResultsOrig = %refResults;

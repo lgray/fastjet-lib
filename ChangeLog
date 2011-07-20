@@ -1,3 +1,9 @@
+2011-07-20  Gregory Soyez  <soyez@fastjet.fr>
+
+	* regression-tests/test-all-algs.pl:
+	* regression-tests/nightly-check.pl:
+	  added support for area tests
+
 2011-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* Doxyfile:
