@@ -98,28 +98,32 @@ public:
   //\{
   //----------------------------------------------------------------
 
-  /// get rho, the median background density per unit area
+  /// returns rho, the median background density per unit area
   double rho() const;
 
-  /// get sigma, the background fluctuations per unit area; must be
+  /// returns sigma, the background fluctuations per unit area; must be
   /// multipled by sqrt(area) to get fluctuations for a region of a
   /// given area.
   double sigma() const;
 
-  /// get rho, the background density per unit area, locally at the
+  /// returns rho, the background density per unit area, locally at the
   /// position of a given jet. Note that this is not const, because a
   /// user may then wish to query other aspects of the background that
   /// could depend on the position of the jet last used for a rho(jet)
   /// determination.
   double rho(const PseudoJet & jet);
 
-  /// get sigma, the background fluctuations per unit area, locally at
+  /// returns sigma, the background fluctuations per unit area, locally at
   /// the position of a given jet. As for rho(jet), it is non-const.
   double sigma(const PseudoJet & jet);
 
   /// returns true if this background estimator has support for
   /// determination of sigma
   bool has_sigma() {return true;}
+
+  /// returns the area of the grid cells (all identical, but
+  /// referred to as "mean" area for uniformity with JetMedianBGE).
+  double mean_area() const {return _cell_area;}
   //\}
 
   /// @name configuring the behaviour
@@ -149,6 +153,9 @@ private:
 
   /// retrieve the grid cell index for a given PseudoJet
   int igrid(const PseudoJet & p) const;
+
+  /// verify that particles have been set and throw an error if not
+  void verify_particles_set() const;
 
   // information about the grid
   double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _cell_area;

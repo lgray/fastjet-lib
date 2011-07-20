@@ -41,9 +41,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 //----------------------------------------------------------------------
-GridJetPlugin::GridJetPlugin (double requested_grid_spacing, 
-			      double ymax,
-			      const JetDefinition & post_jet_def) :
+GridJetPlugin::GridJetPlugin (double ymax,
+                              double requested_grid_spacing, 
+                              const JetDefinition & post_jet_def) :
   _ymin(-ymax), _ymax(ymax), 
   _requested_grid_spacing(requested_grid_spacing) ,
   _post_jet_def(post_jet_def)
@@ -52,6 +52,11 @@ GridJetPlugin::GridJetPlugin (double requested_grid_spacing,
 }
 
 void GridJetPlugin::setup_grid() {
+  // since we've exchanged the arguments of the constructor,
+  // there's a danger of calls with exchanged ymax,spacing arguments -- 
+  // the following check should catch most such situations.
+  assert(_ymax>0 && _ymax - _ymin >= _requested_grid_spacing);
+
   double ny_double = (_ymax-_ymin) / _requested_grid_spacing;
   _ny = int(ny_double+0.49999);
   _dy = (_ymax-_ymin) / _ny;

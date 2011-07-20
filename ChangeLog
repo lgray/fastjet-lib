@@ -1,4 +1,14 @@
-2011-07-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
+2011-07-20  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* plugins/GridJet/GridJetPlugin.cc: 
+	* plugins/GridJet/fastjet/GridJetPlugin.hh: exchanged rapidity
+	  extent and spacing in constructor (spacing now comes second),
+	  for consistency with the GridMedianBGE. Added a consistency
+	  check that extent>spacing to catch possible wrong order of
+	  arguments.
+
+	* example/fastjet_timing_plugins.cc: 
+	  added -bkgd:gridmedian option
 
 	* tools/JetMedianBackgroundEstimator.cc:
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
@@ -9,8 +19,12 @@
 	* tools/GridMedianBackgroundEstimator.cc: 
 	  exchanged ymax and grid_spacing arguments in constructor
 	  (grid_spacing now goes first, like the selector goes first
-	  elsewhere). 
+	  elsewhere). Added a consistency check that extent>spacing to
+	  catch possible wrong order of arguments.
 
+	  included a check that particles have been set (throw an error
+	  otherwise).
+	
 2011-07-20  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:

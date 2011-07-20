@@ -111,6 +111,7 @@
 ///                   -bkgd:csab       use the old ClusterSequenceAreaBase methods
 ///                   -bkgd:jetmedian  use the new JetMedianBackgroundEstimator class
 ///                   -bkgd:fj2        force jetmedian to calculate sigma as in fj2
+///                   -bkgd:gridmedian use GridMedianBackgroundEstimator with grid up to ghost_maxrap-ktR and grid spacing of 2ktR
 ///
 /// Algorithms
 /// ----------
@@ -180,6 +181,7 @@
 
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
+#include "fastjet/tools/GridMedianBackgroundEstimator.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -313,16 +315,18 @@ int main (int argc, char ** argv) {
   }
   bool do_bkgd = cmdline.present("-bkgd"); // background estimation
   bool do_bkgd_csab = false, do_bkgd_jetmedian = false, do_bkgd_fj2 = false;
+  bool do_bkgd_gridmedian = false;
   fj::Selector bkgd_range;
   if (do_bkgd) {
-    assert(do_areas);
     bkgd_range = fj::SelectorAbsRapMax(ghost_maxrap - ktR); 
     if      (cmdline.present("-bkgd:csab"))      {do_bkgd_csab = true;}
     else if (cmdline.present("-bkgd:jetmedian")) {do_bkgd_jetmedian = true;
       do_bkgd_fj2 = cmdline.present("-bkgd:fj2");
+    } else if (cmdline.present("-bkgd:gridmedian")) {do_bkgd_gridmedian = true;
     } else {
       throw fj::Error("with the -bkgd option, some particular background must be specified (csab or jetmedian)");
     }
+    assert(do_areas || do_bkgd_gridmedian);
   }
 
   bool show_cones = cmdline.present("-cones"); // only works for siscone
@@ -478,9 +482,9 @@ int main (int argc, char ** argv) {
     // converted either to 12 or 13, making the results sensitive to
     // rounding errors.
     //
-    // Instead we therefore takes 4.9999999999, which avoids this problem.
+    // Instead we therefore take 4.9999999999, which avoids this problem.
     double grid_ymax = 4.9999999999;
-    jet_def = fj::JetDefinition(new fj::GridJetPlugin(ktR*2.0, grid_ymax));
+    jet_def = fj::JetDefinition(new fj::GridJetPlugin(grid_ymax, ktR*2.0));
 #else  // FASTJET_ENABLE_PLUGIN_GRIDJET
     is_unavailable("GridJet");
 #endif // FASTJET_ENABLE_PLUGIN_GRIDJET
@@ -499,6 +503,7 @@ int main (int argc, char ** argv) {
 
   for (int iev = 0; iev < nev; iev++) {
   vector<fj::PseudoJet> jets;
+  vector<fj::PseudoJet> particles;
   string line;
   int  ndone = 0;
   while (getline(cin, line)) {
@@ -532,7 +537,7 @@ int main (int argc, char ** argv) {
       }
     }
     fj::PseudoJet psjet(fourvec);
-    if (abs(psjet.rap() < etamax)) {jets.push_back(psjet);}
+    if (abs(psjet.rap() < etamax)) {particles.push_back(psjet);}
   }
 
   // add a fake underlying event which is very soft, uniformly distributed
@@ -544,7 +549,7 @@ int main (int argc, char ** argv) {
     // for plots, reduce the scatter default of 1, to avoid "holes"
     // in the subsequent calorimeter view
     ghosted_area_spec.set_grid_scatter(0.5); 
-    ghosted_area_spec.add_ghosts(jets);
+    ghosted_area_spec.add_ghosts(particles);
     //----- old code ------------------
     // srand(2);
     // int nphi = 60;
@@ -561,19 +566,19 @@ int main (int argc, char ** argv) {
     // 	double py = kt*cos(phi);
     // 	//cout << kt<<" "<<eta<<" "<<phi<<"\n";
     // 	fj::PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
-    // 	jets.push_back(mom);
+    // 	particles.push_back(mom);
     //   }
     // }
   }
   
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
-    int nparticles = jets.size();
+    int nparticles = particles.size();
     try {
     auto_ptr<fj::ClusterSequence> clust_seq;
     if (do_areas) {
-      clust_seq.reset(new fj::ClusterSequenceArea(jets,jet_def,area_def));
+      clust_seq.reset(new fj::ClusterSequenceArea(particles,jet_def,area_def));
     } else {
-      clust_seq.reset(new fj::ClusterSequence(jets,jet_def,write));
+      clust_seq.reset(new fj::ClusterSequence(particles,jet_def,write));
     }
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< nparticles << endl;
@@ -677,8 +682,7 @@ int main (int argc, char ** argv) {
 	csab->get_median_rho_and_sigma(bkgd_range, true, rho, sigma, mean_area);
 	empty_area = csab->empty_area(bkgd_range);
 	n_empty_jets = csab->n_empty_jets(bkgd_range);
-      } else  {
-	assert(do_bkgd_jetmedian);
+      } else if (do_bkgd_jetmedian) {
 	fj::JetMedianBackgroundEstimator bge(bkgd_range);
 	bge.set_provide_fj2_sigma(do_bkgd_fj2);
 	bge.set_cluster_sequence(*csab);
@@ -687,6 +691,17 @@ int main (int argc, char ** argv) {
 	mean_area = bge.mean_area();
 	empty_area = bge.empty_area();
 	n_empty_jets = bge.n_empty_jets();
+      } else {
+	assert(do_bkgd_gridmedian);
+        double rapmin, rapmax;
+        bkgd_range.get_rapidity_extent(rapmin, rapmax);
+	fj::GridMedianBackgroundEstimator bge(rapmax, 2*ktR);
+        bge.set_particles(particles);
+        rho = bge.rho();
+        sigma = bge.sigma();
+        mean_area = bge.mean_area();
+        empty_area = 0;
+        n_empty_jets = 0;
       }
       cout << "  rho = " << rho 
 	   << ", sigma = " << sigma 

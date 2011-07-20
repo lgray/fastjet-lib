@@ -61,6 +61,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
 //----------------------------------------------------------------------
 // get rho, the median background density per unit area
 double GridMedianBackgroundEstimator::rho() const {
+  verify_particles_set();
   return _percentile(_scalar_pt, 0.5) / _cell_area;
 }
 
@@ -70,6 +71,7 @@ double GridMedianBackgroundEstimator::rho() const {
 // multipled by sqrt(area) to get fluctuations for a region of a
 // given area.
 double GridMedianBackgroundEstimator::sigma() const{
+  verify_particles_set();
   // watch out: by definition, our sigma is the standard deviation of
   // the pt density multiplied by the square root of the cell area
   return (_percentile(_scalar_pt, 0.5) -
@@ -84,7 +86,7 @@ double GridMedianBackgroundEstimator::sigma() const{
 // could depend on the position of the jet last used for a rho(jet)
 // determination.
 double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
-  //_warning_rho_of_jet.warn("rho(jet) not yet implemented; currently just returns global rho");
+  verify_particles_set();
   double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
   return rescaling*rho();
 }
@@ -94,11 +96,16 @@ double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
 // get sigma, the background fluctuations per unit area, locally at
 // the position of a given jet. As for rho(jet), it is non-const.
 double GridMedianBackgroundEstimator::sigma(const PseudoJet & jet){
-  //_warning_rho_of_jet.warn("rho(jet) not yet implemented; currently just returns global rho");
+  verify_particles_set();
   double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
   return rescaling*sigma();
 }
 
+//----------------------------------------------------------------------
+// verify that particles have been set and throw an error if not
+void GridMedianBackgroundEstimator::verify_particles_set() const {
+  if (!_has_particles) throw Error("GridMedianBackgroundEstimator::rho() or sigma() called without particles having been set");
+}
 
 
 //----------------------------------------------------------------------

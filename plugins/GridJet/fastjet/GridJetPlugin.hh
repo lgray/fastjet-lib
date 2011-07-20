@@ -41,16 +41,20 @@ class ClusterSequence;
 
 //----------------------------------------------------------------------
 //
-/// GridJetPlugin is a plugin for fastjet (v2.4 upwards)
+/// GridJetPlugin is a plugin for fastjet (v3.0 upwards)
 ///
 
 class GridJetPlugin : public JetDefinition::Plugin {
 public:
   /// Main constructor for the GridJetPlugin Plugin class.
   ///
-  /// \param ymax      The maximal rapidity extent of the grid
+  /// \param ymax           The maximal rapidity extent of the grid
   /// \param requested_grid_spacing The requested grid spacing
-  GridJetPlugin (double requested_grid_spacing, double ymax, 
+  /// \param post_jet_def   if present, and not == JetDefinition()
+  ///                       (which has undefined_jet_algorithm), then
+  ///                       run the post_jet_def on the result of the grid
+  ///                       clustering.
+  GridJetPlugin (double ymax, double requested_grid_spacing,
 		 const JetDefinition & post_jet_def = JetDefinition());
 
   /// copy constructor
