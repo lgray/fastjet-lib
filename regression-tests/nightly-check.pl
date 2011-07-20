@@ -113,8 +113,8 @@ push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/u
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # loaclly
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
 # extra tests for background estimation
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 100, "-strat 1 -bkgds"]; # loaclly
-push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 100, "-strat 1 -bkgds"]; # remotely
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # loaclly
+push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
 
 # process command-line
 $mail=0;
