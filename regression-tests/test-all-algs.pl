@@ -318,9 +318,9 @@ sub setDefaults {
   # the different area configurations we'll consider
   %areaConfigs = (
       "kt"     => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:voronoi 0.9,-area:explicit -area:fj2,-area:active -area:fj2,-area:passive -area:fj2,-area:explicit -area:repeat 2,-area:explicit -ghost-area 0.1,-area:explicit -ghost-maxrap 4.0",
-      "cam"    => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
-      "antikt" => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
-      "siscone:-f:0.75" => "-area:passive"
+      "cam"    => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:explicit -area:fj2",
+      "antikt" => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:explicit -area:fj2",
+      "siscone:-f:0.75" => "-area:passive,-area:passive -area:fj2"
 
 #      "kt"      => "-area:active,-area:explicit,-area:voronoi 1.0,-area:passive",
 #      "cam"     => "-area:active,-area:explicit,-area:passive",
@@ -507,12 +507,14 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit" => "549cca44efdfe827da4d13d65c2b3100",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-passive" => "d5379263f0c778de3be6e48d306434a9",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-voronoi,1.0" => "378aa776c344e9c9bdd0f3f07a117e98",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-fj2" => "b368f513f546e4f40e093390bc9505a3",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-active" => "0ecaebf9695875119ca508a50efa0a08",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-explicit" => "c4e895f2a8b383fbf1ac4aa4b28957cb",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-passive" => "0ecaebf9695875119ca508a50efa0a08",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-voronoi,1.0" => "5b9669a54aac68fc9c62ecb3b663503c",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-explicit,-fj2" => "b9feaabc5b0d071535c1af6bfacd1233",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,siscone:-f:0.75,R0.60,-passive" => "f374fa40e92420107a5d22bc6777c614",
-
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,siscone:-f:0.75,R0.60,-passive,-fj2" => "fc6da7685b78a98401d8e80caa8897d5",
 
   # area, 1000 ev results (only strategy 1)
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active" => "cfeafd478cb06f6d4088db69332961f1",
@@ -530,11 +532,14 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit" => "741df147c16e55768cba1b892b35721f",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-passive" => "9b95ee58eda1fc7cf827410c9e87eee9",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-voronoi,1.0" => "d91cd694340c47e431a0444ac233d31d",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-fj2" => "ee3dafe1f5be9ee4c7af48f5a5dfaf18",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-active" => "16b4a7005ed6de5e826a0435f13ff48b",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-explicit" => "81b2fa4fb07682b039f5a649959e9f0b",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-passive" => "16b4a7005ed6de5e826a0435f13ff48b",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-voronoi,1.0" => "e846d92e5150dd8f055d4aa4110a8cc4",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive" => "84644868977ce3697b627e2c6da5c4df"
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-explicit,-fj2" => "a27db35a91a061b8be9d4c6fe6ef76e7",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive" => "84644868977ce3697b627e2c6da5c4df",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive,-fj2" => "706092cb0ab1ae50ae9b0e5193201985"
 );
 
   %refResultsOrig = %refResults;
