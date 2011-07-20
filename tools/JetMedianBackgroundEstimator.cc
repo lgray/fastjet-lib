@@ -99,22 +99,6 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const ClusterSequence
 
 
 //----------------------------------------------------------------------
-// ctor from a list of jets
-//  - jets       the set of jets to use for the computation
-//  - rho_range  the Selector specifying which jets will be considered
-JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const vector<PseudoJet> &jets, const Selector &rho_range)
-  : _rho_range(rho_range), _jet_def(JetDefinition()){
-
-  // initialise things properly
-  reset();
-
-  // get the jets (and make the required tests)
-  set_jets(jets);
-}
-
-
-
-//----------------------------------------------------------------------
 // setting a new event
 //----------------------------------------------------------------------
 // tell the background estimator that it has a new event, composed
