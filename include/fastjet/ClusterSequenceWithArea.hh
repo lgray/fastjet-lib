@@ -36,7 +36,7 @@
 // ClusterSequenceArea. The latter should now be used together with
 // the fastjet/ClusterSequenceArea.hh. ClusterSequenceWithArea is not
 // guaranteed to work in future release of FastJet
-#warning This file includes fastjet/ClusterSequenceWithArea.hh, \
+#warning You have included fastjet/ClusterSequenceWithArea.hh, \
 a deprecated FastJet header provided only for backward compatibility. \
 This is not guaranteed to work in future releases of FastJet. \
 Please consider including fastjet/ClusterSequenceArea.hh directly. \

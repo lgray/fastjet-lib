@@ -61,7 +61,7 @@ class JHTopStructure;
 ///    3, the tagger has failed.
 ///  - reconstruct the W from the 2 subjets with a mass closest to the
 ///    W mass
-///  - impose that the W helicity angle is less than a threshold
+///  - impose that the W helicity angle be less than a threshold
 ///    cos_theta_W_max.
 ///
 ///
@@ -147,12 +147,12 @@ public:
 
 protected:
   /// runs the Johns Hopkins decomposition procedure
-  std::vector<PseudoJet> _split_once(const PseudoJet & startjet) const;
+  std::vector<PseudoJet> _split_once(const PseudoJet & jet_to_split,
+				     const PseudoJet & reference_jet) const;
 
   /// compute the W helicity angle
   double _cos_theta_W(const PseudoJet & result) const;
 
-  mutable const PseudoJet * _jet;    ///< the jet being processed
   double _delta_p, _delta_r, _cos_theta_W_max, _mW;
   static LimitedWarning _warnings_nonca;
 };

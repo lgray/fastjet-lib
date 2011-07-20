@@ -1,3 +1,13 @@
+2011-07-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/JHTopTagger.hh: 
+	* tools/JHTopTagger.cc: 
+	  removed the mutable _jet in JHTopTagger; other small changes to
+	  details of ways things are written.
+
+	* include/fastjet/ClusterSequenceWithArea.hh: 
+	  small change to C-preprocessor warning message
+
 2011-07-20  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* regression-tests/test-all-algs.pl: 

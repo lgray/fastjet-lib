@@ -3191,6 +3191,55 @@ be achieved with
 (It is also possible to use the \ttt{Rfilt\_dyn} option to the filter
 discussed above).
 
+
+%......................................................................
+\subsubsection{The Johns-Hopkins top tagger}
+
+The Johns Hopkins top tagger~\cite{Kaplan:2008ie} is available by
+including \ttt{fastjet/tools/JHTopTagger.hh}.
+%
+It recursively breaks a jet into pieces, finding up to 3 or 4 subjets
+and then looking for a $W$ candidate among them.
+%
+The parameters used to identify the relevant subjets include a
+momentum fraction cut and a minimal separation in Manhattan distance
+($|\Delta y| + |\Delta \phi|$) between subjets obtained from a
+declustering.
+
+%
+The tagger will run with any jet that comes from a \CS, however
+%
+to conform with the original formulation of~\cite{Kaplan:2008ie}, the
+\CS should be based on the C/A algorithm. A warning will be issued if
+this is not the case.
+%
+If the \ttt{JetDefinition} used in the \CS involves a non-default
+recombiner, that same recombiner will be used when joining the final
+two prongs to form the boosted particle candidate.
+%
+The tagger can be used as follows:
+\begin{lstlisting}
+   double delta_p = 0.10; // subjets must carry at least this fraction of the original jet's $p_t$
+   double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
+   double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
+   JHTopTagger top_tagger(delta_p, delta_r, cos_theta_W_max);
+   PseudoJet top_candidate = top_tagger(jet);
+   if (top_candidate != 0) {
+     double top_mass = top_candidate.m();
+     double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
+     // then place your cuts on top and W mass
+   }
+\end{lstlisting}
+Other information available through the
+\ttt{structure\_of<JHTopTagger>()} call includes: \ttt{W1()} and
+\ttt{W2()}, the harder and softer of the two $W$ subjets;
+\ttt{non\_W()}, the part of the top that has not been identified with
+a $W$ (i.e.\ the candidate for the $b$); and \ttt{cos\_theta\_W()}.
+%
+The \ttt{pieces()} function will return 3 or 4 pieces, where the first
+two are the two prongs of the $W$, while the third (and occasionally a
+softer fourth) is(are) the remaining subjet(s).
+
 %......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
 
@@ -3199,11 +3248,6 @@ discussed above).
 
 
 \paragraph{Structure of the result.}
-
-%......................................................................
-\subsubsection{The Johns-Hopkins top tagger}
-
-[still to be implemented]
 
 %......................................................................
 \subsection{User-defined transformers}
@@ -4846,6 +4890,12 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``A Brief Introduction to PYTHIA 8.1,''
   Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
   [arXiv:0710.3820 [hep-ph]].
+
+\bibitem{Kaplan:2008ie}
+  D.~E.~Kaplan, K.~Rehermann, M.~D.~Schwartz, B.~Tweedie,
+  %``Top Tagging: A Method for Identifying Boosted Hadronically Decaying Top Quarks,''
+  Phys.\ Rev.\ Lett.\  {\bf 101 } (2008)  142001
+  [arXiv:0806.0848 [hep-ph]].
 
 \end{thebibliography}
 

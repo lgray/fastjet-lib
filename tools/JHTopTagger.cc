@@ -33,6 +33,7 @@
 #include <fastjet/JetDefinition.hh>
 #include <fastjet/ClusterSequence.hh>
 #include <sstream>
+#include <limits>
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -71,17 +72,14 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
     _warnings_nonca.warn("JHTopTagger should only be applied on jets from a Cambridge/Aachen clustering; use it with other algorithms at your own risk.");
 
 
-  _jet = &jet;
-
   // do the first splitting
-  vector<PseudoJet> split0 = _split_once(jet);
-  if (! split0.size())
-    return PseudoJet();
+  vector<PseudoJet> split0 = _split_once(jet, jet);
+  if (split0.size() == 0) return PseudoJet();
 
   // now try a second splitting on each of the resulting objects
   vector<PseudoJet> subjets;
   for (unsigned i = 0; i < 2; i++) {
-    vector<PseudoJet> split1 = _split_once(split0[i]);
+    vector<PseudoJet> split1 = _split_once(split0[i], jet);
     if (split1.size() > 0) {
       subjets.push_back(split1[0]);
       subjets.push_back(split1[1]);
@@ -91,12 +89,10 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   }
 
   // make sure things make sense
-  if (subjets.size() < 3)
-    return PseudoJet();
+  if (subjets.size() < 3) return PseudoJet();
 
-  // now find the pair of objects that is closest 
-  // to the W mass
-  double dmW_min = 1e200;
+  // now find the pair of objects closest in mass to the W
+  double dmW_min = numeric_limits<double>::max();
   int ii=-1, jj=-1;
   for (unsigned i = 0 ; i < subjets.size()-1; i++) {
     for (unsigned j = i+1 ; j < subjets.size(); j++) {
@@ -121,7 +117,7 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   // create the result and its structure
   const JetDefinition::Recombiner *rec
     = jet.associated_cluster_sequence()->jet_def().recombiner();
-  PseudoJet result = join<JHTopStructure>(subjets,*rec);
+  PseudoJet result = join<JHTopStructure>(subjets, *rec);
   JHTopStructure *s = (JHTopStructure*) result.structure_non_const_ptr();
   s->_W = join(subjets[0], subjets[1], *rec);
   if (subjets.size()>3)
@@ -143,15 +139,16 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
 }
 
 // runs the Johns Hopkins decomposition procedure
-vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & startjet) const{
-  PseudoJet this_jet = startjet;
+vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & jet_to_split,
+					   const PseudoJet & reference_jet) const{
+  PseudoJet this_jet = jet_to_split;
   PseudoJet p1, p2;
   vector<PseudoJet> result;
   while (this_jet.has_parents(p1, p2)) {
     if (p2.perp2() > p1.perp2()) std::swap(p1,p2); // order with hardness
-    if (p1.perp() < _delta_p * _jet->perp()) break; // harder is too soft wrt original jet
+    if (p1.perp() < _delta_p * reference_jet.perp()) break; // harder is too soft wrt original jet
     if ( (abs(p2.rap()-p1.rap()) + abs(p2.delta_phi_to(p1))) < _delta_r) break; // distance is too small
-    if (p2.perp() < _delta_p * _jet->perp()) {
+    if (p2.perp() < _delta_p * reference_jet.perp()) {
       this_jet = p1; // softer is too soft wrt original, so ignore it
       continue; 
     }
