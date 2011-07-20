@@ -1,3 +1,16 @@
+2011-07-20  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* tools/JetMedianBackgroundEstimator.cc:
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	  for the CSAB,Selector constructor exchanged arguments, so it's
+	  now Selector,CSAB (that way Selector always comes first).
+
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh: 
+	* tools/GridMedianBackgroundEstimator.cc: 
+	  exchanged ymax and grid_spacing arguments in constructor
+	  (grid_spacing now goes first, like the selector goes first
+	  elsewhere). 
+
 2011-07-20  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:

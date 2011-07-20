@@ -132,6 +132,12 @@ void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJe
 //----------------------------------------------------------------------
 // configure the grid
 void GridMedianBackgroundEstimator::setup_grid() {
+
+  // since we've exchanged the arguments of the grid constructor,
+  // there's a danger of calls with exchanged ymax,spacing arguments -- 
+  // the following check should catch most such situations.
+  assert(_ymax>0 && _ymax - _ymin >= _requested_grid_spacing);
+
   // this grid-definition code is becoming repetitive -- it should
   // probably be moved somewhere central...
   double ny_double = (_ymax-_ymin) / _requested_grid_spacing;

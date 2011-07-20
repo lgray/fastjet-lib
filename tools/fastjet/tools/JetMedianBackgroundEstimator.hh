@@ -96,8 +96,8 @@ public:
 
   /// ctor from a ClusterSequenceAreaBase with area
   ///
-  /// \param csa         the ClusterSequenceArea to use
   /// \param rho_range   the Selector specifying which jets will be considered
+  /// \param csa         the ClusterSequenceArea to use
   ///
   /// Pre-conditions: 
   ///  - one should be able to estimate the "empty area" (i.e. the area
@@ -111,8 +111,8 @@ public:
   /// Note that selectors with e.g. hardest-jets exclusion do not have
   /// a well-defined area. For this reasons, it is STRONGLY advised to
   /// use an area with explicit ghosts.
-  JetMedianBackgroundEstimator(const ClusterSequenceAreaBase &csa, 
-			       const Selector &rho_range);
+  JetMedianBackgroundEstimator(const Selector &rho_range,
+                               const ClusterSequenceAreaBase &csa);
 
 
   /// Default constructor that optionally sets the rho range. The

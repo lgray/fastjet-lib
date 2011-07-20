@@ -73,11 +73,11 @@ public:
   /// default ctor
   /// The arguments are as follows:
 
+  ///   \param ymax            maximal rapidity extent of the grid
   ///   \param requested_grid_spacing   size of the grid cell. The
   ///            "real" cell size could differ due e.g. to the 2pi
   ///             periodicity in azimuthal angle (size, not area)
-  ///   \param ymax            maximal rapidity extent of the grid
-  GridMedianBackgroundEstimator(double requested_grid_spacing, double ymax) :
+  GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     _ymin(-ymax), _ymax(ymax), 
     _requested_grid_spacing(requested_grid_spacing),
     _has_particles(false){setup_grid();}
