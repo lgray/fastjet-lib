@@ -315,15 +315,15 @@ sub setDefaults {
 
   # the different area configurations we'll consider
   %areaConfigs = (
-#      "kt"     => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:voronoi 0.9,-area:explicit -area:fj2,-area:active -area:fj2,-area:passive -area:fj2,-area:explicit -area:repeat 2,-area:explicit -ghost-area 0.1,-area:explicit -ghost-maxrap 4.0",
-#      "cam"    => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
-#      "antikt" => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
-#      "siscone:-f:0.75" => "-area:passive"
-
-      "kt"      => "-area:active,-area:explicit,-area:voronoi 1.0,-area:passive",
-      "cam"     => "-area:active,-area:explicit,-area:passive",
-      "antikt"  => "-area:active,-area:explicit,-area:passive",
+      "kt"     => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:voronoi 0.9,-area:explicit -area:fj2,-area:active -area:fj2,-area:passive -area:fj2,-area:explicit -area:repeat 2,-area:explicit -ghost-area 0.1,-area:explicit -ghost-maxrap 4.0",
+      "cam"    => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
+      "antikt" => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0",
       "siscone:-f:0.75" => "-area:passive"
+
+#      "kt"      => "-area:active,-area:explicit,-area:voronoi 1.0,-area:passive",
+#      "cam"     => "-area:active,-area:explicit,-area:passive",
+#      "antikt"  => "-area:active,-area:explicit,-area:passive",
+#      "siscone:-f:0.75" => "-area:passive"
       );
 
   # find out which executable to use based on what's locally
@@ -490,25 +490,44 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit" => "9a1f08c3d0d7e6e4f29687ea04e34087",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0" => "215ec264665d5a5d0220d4a8ca519ce0",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-passive" => "215ec264665d5a5d0220d4a8ca519ce0",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,0.9" => "31f941fef9bac1a14b30f372b0b3251b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-fj2" => "4f52cd1c716131a8982ea79cbcc23290",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-fj2" => "fcc2fbc6a5fef61e83da2c7ebdf53f46",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-passive,-fj2" => "215ec264665d5a5d0220d4a8ca519ce0",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-repeat,2" => "9a1f08c3d0d7e6e4f29687ea04e34087",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-ghost-area,0.1" => "e69f568722c8ce83fc0783266f8bf617",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-ghost-maxrap,4.0" => "7ecb0d70643dc38c4208a92fbcac1b85",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-active" => "52528032687595b40bb0e29a05020325",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit" => "549cca44efdfe827da4d13d65c2b3100",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-passive" => "d5379263f0c778de3be6e48d306434a9",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-voronoi,1.0" => "378aa776c344e9c9bdd0f3f07a117e98",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-active" => "0ecaebf9695875119ca508a50efa0a08",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-explicit" => "c4e895f2a8b383fbf1ac4aa4b28957cb",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-passive" => "0ecaebf9695875119ca508a50efa0a08",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-voronoi,1.0" => "5b9669a54aac68fc9c62ecb3b663503c",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,siscone:-f:0.75,R0.60,-passive" => "f374fa40e92420107a5d22bc6777c614",
+
 
   # area, 1000 ev results (only strategy 1)
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active" => "cfeafd478cb06f6d4088db69332961f1",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit" => "66af0392ecb712f55b0e51d3083fd479",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0" => "2d86e328dad56a5b8711caef484af163",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-passive" => "2d86e328dad56a5b8711caef484af163",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,0.9" => "2ba8d1b311aad775d5482d9bfb33dc3a",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-fj2" => "860901000b0d2d270157138d3ed370dc",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active,-fj2" => "f9709d772ec5a1c5826524a891dd2a94",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-passive,-fj2" => "2d86e328dad56a5b8711caef484af163",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-repeat,2" => "66af0392ecb712f55b0e51d3083fd479",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-ghost-area,0.1" => "a5428690fcf1da5e7070d6f092345ea8",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-ghost-maxrap,4.0" => "6caad01ff496ed9b37a8ad8b5f1f9266",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-active" => "911048ad2b03b38e62d1f8ddb4d95095",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit" => "741df147c16e55768cba1b892b35721f",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-passive" => "9b95ee58eda1fc7cf827410c9e87eee9",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-voronoi,1.0" => "d91cd694340c47e431a0444ac233d31d",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-active" => "16b4a7005ed6de5e826a0435f13ff48b",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-explicit" => "81b2fa4fb07682b039f5a649959e9f0b",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-passive" => "16b4a7005ed6de5e826a0435f13ff48b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-voronoi,1.0" => "e846d92e5150dd8f055d4aa4110a8cc4",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive" => "84644868977ce3697b627e2c6da5c4df"
 );
 
