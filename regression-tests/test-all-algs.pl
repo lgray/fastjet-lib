@@ -37,6 +37,8 @@
 #
 #  -areas            run area configurations
 #
+#  -bkgd             run background estimations
+#
 # Full (non-md5) results of a 1000 event run are to be found in
 # the (non svn) directory
 #
@@ -119,6 +121,7 @@ while ($arg = shift @ARGV) {
   elsif ($arg eq "-newperl" ) {$perlOut = "New Perl Output:\n";}
   elsif ($arg eq "-verbose" ) {$verbose = 1;}
   elsif ($arg eq "-areas"   ) {$areas   = 1;}
+  elsif ($arg eq "-bkgds"   ) {$bkgds   = 1; $areas=0;} # bkgd superseeds areas
   elsif ($arg eq "-strat" || $arg eq "-strategy")    {$defstrat = shift @ARGV;}
   else  {die "unrecognized argument $arg";}
 }
@@ -138,6 +141,17 @@ if ($areas){
 } else {
     @areaconfigs = ("");
 }
+
+# the background estimation to support
+@bkgdconfigs=();
+if ($bkgds){
+    if (exists($bkgdConfigs{$alg})){
+	@bkgdconfigs = split(",", $bkgdConfigs{$alg});
+    }
+} else {
+    @bkgdconfigs = ("");
+}
+
 # the strategies to support
 if ($defstrat ne "") {
   @strat = split(":",$defstrat);
@@ -152,20 +166,26 @@ foreach $strat (@strat) {
     $strat = "s$strat" ; # =~ s/.*y /s/; # we'll need this in a clean form later
 
 foreach $area (@areaconfigs) {
+  if ($area ne "") {$areacmd = "-area $area"} else {$areacmd = ""}
+  $area =~ s/area://g;
+  $area =~ s/ /,/g;
+
+foreach $bkgd (@bkgdconfigs) {
+  if ($bkgd ne "") {$bkgdcmd = "-area -bkgd $bkgd"} else {$bkgdcmd = ""}
+  $bkgd =~ s/area://g;
+  $bkgd =~ s/bkgd://g;
+  $bkgd =~ s/ /,/g;
 
   # decide what output to use (jets for cone algs, unique_write for cam, sequence for others)
-  $out = $areas ? "-incl 0" : &isCone($alg) ? "-incl 0" : (($alg =~ /^cam/) ? "-unique_write" : "-write");
+  $out = $bkgd ? "" : $areas ? "-incl 0" : &isCone($alg) ? "-incl 0" : (($alg =~ /^cam/) ? "-unique_write" : "-write");
 
   # decide from which file we get the events 
   $localdataFile = &isee($alg) ? $eedataFile : $dataFile;
 
   # get the command line
   ($algsp = $alg) =~ s/:/ /g;
-  if ($area ne "") {$areacmd = "-area $area"} else {$areacmd = ""}
-  $area =~ s/area://g;
-  $area =~ s/ /,/g;
   #$cmdline = "$execName -$algsp $stratcmd -R $R $out -nev $nev 2>\&1 < $localdataFile";
-  $cmdline = "$execName -$algsp $stratcmd -R $R $areacmd $out -nev $nev 2>\&1";
+  $cmdline = "$execName -$algsp $stratcmd -R $R $areacmd $bkgdcmd $out -nev $nev 2>\&1";
   if ($localdataFile =~ /\.gz$/) {
     $cmdline = "gunzip -c $localdataFile | $cmdline";
   } else {
@@ -180,15 +200,17 @@ foreach $area (@areaconfigs) {
     $sum = "unavailable";
   } else {
     # remove all non-numerical lines [since these may change across versions]
+    # except the lines containing "rho = " when background estimation is requested
     $filtered = "";
     foreach $line (split("\n",$res)) {
       if ($line =~ /^ *[0-9]/) {$filtered .= $line."\n";}
+      if ($bkgds && $line =~ /rho = /) {$filtered .= $line."\n";}
     }
     $sum = $filtered eq "" ? "unavailable" :  md5_hex($filtered)
   }
 
   # now generate output
-  $name = &fullName($alg,$area);
+  $name = &fullName($alg,"$area$bkgd");
   if ($error) {
     $OK = "*** BAD (crash?) ***"
   } elsif (exists($refResults{$name}) && $sum ne "unavailable") {
@@ -240,9 +262,10 @@ foreach $area (@areaconfigs) {
   }
 
   $done{$name} = 1;
-}
-}
-}
+} # bkgd
+} # area
+} # strat
+} # alg
 
 if ($perlOut) {print $perlOut;}
 
@@ -263,7 +286,7 @@ sub isee {
 
 #======================================================================
 sub fullName {
-  (my $alg,$area) = @_;
+  (my $alg,$areabkgd) = @_;
   
   # decide from which file we get the events 
   $localdataFile = &isee($alg) ? $eedataFile : $dataFile;
@@ -273,8 +296,8 @@ sub fullName {
   #$sep = "\@";
   $sep = ",";
   my $res = sprintf("$dataTail%snev%d%s$alg%sR%.2f",$sep,$nev,$sep,$sep, $R);
-  if ($area ne ""){
-      $res = "$res$sep$area";
+  if ($areabkgd ne ""){
+      $res = "$res$sep$areabkgd";
   }
   return $res;
 }
@@ -321,11 +344,12 @@ sub setDefaults {
       "cam"    => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:explicit -area:fj2",
       "antikt" => "-area:active,-area:explicit,-area:passive,-area:voronoi 1.0,-area:explicit -area:fj2",
       "siscone:-f:0.75" => "-area:passive,-area:passive -area:fj2"
+      );
 
-#      "kt"      => "-area:active,-area:explicit,-area:voronoi 1.0,-area:passive",
-#      "cam"     => "-area:active,-area:explicit,-area:passive",
-#      "antikt"  => "-area:active,-area:explicit,-area:passive",
-#      "siscone:-f:0.75" => "-area:passive"
+  %bkgdConfigs = (
+      "kt" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:csab,-area:active -bkgd:csab,-area:voronoi 1.0 -bkgd:csab,-area:explicit -bkgd:jetmedian -bkgd:fj2,-area:explicit -bkgd:jetmedian -etamax 5.0 -ghost-maxrap 4.0,-area:active -bkgd:jetmedian -etamax 5.0 -ghost-maxrap 4.0,-area:voronoi 1.0 -bkgd:jetmedian -etamax 5.0 -ghost-maxrap 4.0,-area:explicit -bkgd:jetmedian -etamax 5.0,-area:active -bkgd:jetmedian -etamax 5.0,-area:voronoi 1.0 -bkgd:jetmedian -etamax 5.0",
+      "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian",
+      "antikt" => "-bkgd -bkgd:gridmedian"
       );
 
   # find out which executable to use based on what's locally
@@ -350,6 +374,7 @@ sub setDefaults {
   $deposit = "";
 
   $areas = 0;
+  $bkgds = 0;
 
   %done = ();
 
@@ -539,7 +564,26 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-voronoi,1.0" => "e846d92e5150dd8f055d4aa4110a8cc4",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-explicit,-fj2" => "a27db35a91a061b8be9d4c6fe6ef76e7",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive" => "84644868977ce3697b627e2c6da5c4df",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive,-fj2" => "706092cb0ab1ae50ae9b0e5193201985"
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,siscone:-f:0.75,R0.60,-passive,-fj2" => "706092cb0ab1ae50ae9b0e5193201985",
+
+  # background estimation, 100 ev results (only strategy 1)
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian" => "76a1b4b291461a6d855cdc7c9a4bfe77",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian" => "4e4d025bab689c2d98f10318f000dfc4",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian" => "0bcd976136d8d7ff9ec5c56be34ef8d9",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-csab" => "017511a0e37f43b776c980230f9a3bee",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-csab" => "c2d225beba88e0fb29a84eb1e33b9557",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-csab" => "9f213b2119656eeeb7bbd6fea6413827",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-fj2" => "017511a0e37f43b776c980230f9a3bee",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "450b94cefd3bc202683a4619aa4a8992",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "0b0ff0bb78e561891434119e910eee7e",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "27677482ad2426e6c88b9949de2da2e6",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-etamax,5.0" => "3c6fbf167c4347fa101e3f0be405c634",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian,-etamax,5.0" => "c07a3d3ac4d0aa95b24502a0a77712a6",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian,-etamax,5.0" => "437c4cbdef1052adf916fe967265c66e",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian" => "c81df2cfd3dde6bcf98d23297c31fba8",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-active,-jetmedian" => "bc6878256d7b055834b4314c391513eb",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-voronoi,1.0,-jetmedian" => "a1a8bc18859b84d767bc483a2936932b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,antikt,R0.60,-bkgd,-gridmedian" => "c70b84db6d20765ec343bc79b0da2c6c"
 );
 
   %refResultsOrig = %refResults;
