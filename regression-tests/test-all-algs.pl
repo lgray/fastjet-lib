@@ -302,7 +302,9 @@ sub setDefaults {
   @algs = ("kt", "cam", "antikt", "genkt:0.5", "siscone:-f:0.75","siscone:-f:0.50",  "jetclu", "pxcone",
             "d0runiicone", #GPS removed 2010-01-19, replace 2010-02-02
 	   "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
-	   "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01", "d0runicone", "d0runipre96cone");
+	   "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01", "d0runicone", "d0runipre96cone",
+           "gridjet"
+      );
 
 
   # for some algorithms we have multiple strategies to test
@@ -386,6 +388,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1,jade:-excly:0.01,R0.60" => "77ef328afb881e59866d8e72298b019b",
   "Pythia-PtMin50-LHC-10kev.dat,nev1,d0runicone,R0.60" => "49a06117d12d018c1c8aebbce38918fd",
   "Pythia-PtMin50-LHC-10kev.dat,nev1,d0runipre96cone,R0.60" => "ceb8fecf1bced37b378b749cf05a673c",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1,gridjet,R0.60" => "67cdcbf70da1ee0e49c91519b29b27e3",
 
   # 10 ev results
   "Pythia-PtMin50-LHC-10kev.dat,nev10,genkt:0.5,R0.60" => "f3befadd9c96dab695310b994dc5cda5",
@@ -415,6 +418,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,jade:-excly:0.01,R0.60" => "876ee902b4680c3ec1ef189a82308927",
   "Pythia-PtMin50-LHC-10kev.dat,nev10,d0runicone,R0.60" => "1c6eb67467c3354de464748d8bf67680",
   "Pythia-PtMin50-LHC-10kev.dat,nev10,d0runipre96cone,R0.60" => "178140344e6f6d536ee4f2b1e1ff1a13",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,gridjet,R0.60" => "7b278a890ffc454f48c01eeabb1d0aef",
 
   # 100 ev results
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60" => "15b23d6d954c796682214d598f526f6a",
@@ -448,6 +452,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev100,jade:-excly:0.01,R0.60" => "7ce00dc7a5f676552c447fce5b8a0197",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,d0runicone,R0.60" => "62b7fc59816298800cb5aac3b3424d1c",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,d0runipre96cone,R0.60" => "ba82d640e1763ad03956ee9428cb67e3",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,gridjet,R0.60" => "0cef78fa4910f6519642e8b7f5097a5b",
 
   # 1000 ev results
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60" => "ae0b4d26e5244cfb551d41097fad3543",
@@ -484,6 +489,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,jade:-excly:0.01,R0.60" => "b4aef5930856daafb294ddce66834bc7",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,d0runicone,R0.60" => "a475ca9a5bdcf9278ccfe8854095dfef",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,d0runipre96cone,R0.60" => "d9e503ea1cb13767ca5decf53bb001d1",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,gridjet,R0.60" => "e0788aaebe307721157b21255af7d235",
 
   # area, 100 ev results (only strategy 1)
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active" => "31e0fe8d8c81b803f9713cacbbf16938",

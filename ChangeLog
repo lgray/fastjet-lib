@@ -1,5 +1,9 @@
 2011-07-20  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* regression-tests/test-all-algs.pl: 
+	  added gridjet to default checks and also added the relevant
+	  checksums. 
+
 	* plugins/GridJet/GridJetPlugin.cc: 
 	* plugins/GridJet/fastjet/GridJetPlugin.hh: exchanged rapidity
 	  extent and spacing in constructor (spacing now comes second),
