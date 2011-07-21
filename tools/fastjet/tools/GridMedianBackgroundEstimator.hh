@@ -50,20 +50,17 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   area) for all cells.
 ///
 /// Parameters:
-///   The class takes 2 arguments: the size of the grid cells and the
-///   rapidity extent of the cells. Note that the size of the cell
+///   The class takes 2 arguments: the absolute rapidity extent of the 
+///   cells and the size of the grid cells. Note that the size of the cell
 ///   will be adjusted in azimuth to satisfy the 2pi periodicity and
 ///   in rapidity to match the requested rapidity extent.
 ///
 /// Rescaling:
-///   It is possible to use a rescaling profile. In that case, the
+///   It is possible to use a rescaling profile. In this case, the
 ///   profile needs to be set before setting the particles and it will
-///   be applied to each particles (i.e. not to each cell). 
-///   Note also that in that case you need to call rho(jet) instead of
-///   rho() [Without rescaling, both are identical]
-///
-/// Additional notes:
-///   This class implements rho but does not compute sigma.
+///   be applied to each particle (i.e. not to each cell). 
+///   Note also that in this case one needs to call rho(jet) instead of
+///   rho() [Without rescaling, they are identical]
 ///
 class GridMedianBackgroundEstimator : public BackgroundEstimatorBase {
 public:
@@ -73,7 +70,7 @@ public:
   /// default ctor
   /// The arguments are as follows:
 
-  ///   \param ymax            maximal rapidity extent of the grid
+  ///   \param ymax   maximal absolute rapidity extent of the grid
   ///   \param requested_grid_spacing   size of the grid cell. The
   ///            "real" cell size could differ due e.g. to the 2pi
   ///             periodicity in azimuthal angle (size, not area)
