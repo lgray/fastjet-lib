@@ -1992,6 +1992,11 @@ also be one of the constituents of a jet, in which case it will return
 \subsection{Background estimation}
 \label{sec:BackgroundEstimator}
 
+%% Thoughts for 3.0b1 documentation
+%% - keep first two paragraphs
+%% - 3rd needs modifying to account for grid
+%%
+
 Events with hard jets are often accompanied by a more diffuse
 ``background'' of relatively soft particles, for example from the
 underlying event (in $pp$ or PbPb collisions) or from pileup (in $pp$
@@ -2013,7 +2018,7 @@ contamination, as discussed below in section~\ref{sec:subtractor}.
 % one can determine the average level $\rho$ (transverse momentum per
 % unit area) of the background, and also subtract it from the hard jets.
 
-One of the difficulties in characterising the background is that it is
+One of the issues in characterising the background is that it is
 difficult to introduce a robust criterion to distinguish
 ``background'' jets from hard jets.
 %
@@ -2028,100 +2033,183 @@ avoids any need for introducing a $p_t$ scale to distinguish hard and
 background jets.
 
 
-Note that we recommend that you use only the $k_t$ or Cambridge/Aachen
-algorithms for calculating the UE/pileup density $\rho$ in this
-way. In particular, it is important to avoid algorithms with extreme
-behaviours for the areas. 
+The original form of this method used the $k_t$ or Cambridge/Aachen
+jet algorithms to find the jets.
 %
-Specifically, one should not use anti-$k_t$ (which has many jets with
-near-zero area), or SISCone (which can have jets with near-zero area,
-as well as monster jets with huge areas if the overlap parameter $f$
-is too small).
+These algorithms have the advantage that the resulting jets tend to
+have reasonably uniform areas (whereas anti-$k_t$ and SISCone suffer
+from jets with near zero areas or sometimes huge, ``monster'' jets,
+biasing the $\rho$ determination and are not recommended).
 %
-The choice of jet radius can also have an impact on the determination,
-especially for events that are relatively sparse.
+In the meantime an variant of the approach that has emerged is to
+cluster the particles into rectangular grid cells in $y$ and $\phi$
+and determine their median $p_t/A$.
 %
-We have found that a choice in the range $R=0.4-0.6$ is generally
-adequate~\cite{cs,Cacciari:2009dp} with a preference for larger values
-if the events are relatively sparse and smaller values if you expect
-your events to have many hard jets.
-
-% an appropriate value of $R$, typically of order 0.4--0.6,
-% see~\cite{cs,Cacciari:2009dp} for more details), its value can then be
-% used for UE/pileup subtraction in an analysis using any jet algorithm.
-
-
-%In contrast the $k_t$ and
-%Cambridge/Aachen algorithms are suitable.
-
-% Once $\rho$ has been determined using $k_t$ or Cambridge/Aachen (and
-% an appropriate value of $R$, typically of order 0.4--0.6,
-% see~\cite{cs,Cacciari:2009dp} for more details), its value can then be
-% used for UE/pileup subtraction in an analysis using any jet algorithm.
-
-
-% %......................................................................
-% \subsubsection{Background Estimation}
-
-Two elements are needed for FastJet's background estimation: a cluster
-sequence with area information and a \ttt{Selector} to specify the
-subset of jets that will be used for the background estimation.
+This has the advantage of simplicity and much greater speed. 
 %
-The class that provides background estimation facilities is
-\ttt{JetMedianBackgroundEstimator}. The simplest way to construct it is:
+One may worry that a hard jet will sometimes lie at a corner of
+multiple grid cells, inducing larger biases in the median than with a
+normal jet finder jets, however we have not found this to be an issue
+in practice.
+
+A choice that needs to be made in both the jet-based and grid-based
+variants of the median method is that of the jet radius or grid
+spacing.
+%
+For the jet-based case we have found that a choice in the range
+$R=0.4-0.6$ is generally adequate~\cite{cs,Cacciari:2009dp} with a
+preference for larger values if the events are relatively sparse and
+smaller values if you expect your events to have many hard jets.
+%
+The grid-based case has been less extensively explored, but initial
+studies suggest that grid spacings in the range $\delta y = \delta
+\phi \simeq 0.5-0.7$ are appropriate.
+
+
+%%3.0a3 Note that we recommend that you use only the $k_t$ or Cambridge/Aachen
+%%3.0a3 algorithms for calculating the UE/pileup density $\rho$ in this
+%%3.0a3 way. In particular, it is important to avoid algorithms with extreme
+%%3.0a3 behaviours for the areas. 
+%%3.0a3 %
+%%3.0a3 Specifically, one should not use anti-$k_t$ (which has many jets with
+%%3.0a3 near-zero area), or SISCone (which can have jets with near-zero area,
+%%3.0a3 as well as monster jets with huge areas if the overlap parameter $f$
+%%3.0a3 is too small).
+%%3.0a3 %
+%%3.0a3 The choice of jet radius can also have an impact on the determination,
+%%3.0a3 especially for events that are relatively sparse.
+%%3.0a3 %
+%%3.0a3 We have found that a choice in the range $R=0.4-0.6$ is generally
+%%3.0a3 adequate~\cite{cs,Cacciari:2009dp} with a preference for larger values
+%%3.0a3 if the events are relatively sparse and smaller values if you expect
+%%3.0a3 your events to have many hard jets.
+
+The simplest workflow for background estimation is first, outside the
+event loop, to create a background estimator.
+%
+For the jet-based method, one creates a
+\ttt{JetMedianBackgroundEstimator},
 \begin{lstlisting}
    #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
    // ...
 
-   // constructor for a JetMedianBackgroundEstimator that will use the
-   // inclusive jets from csa that pass the cuts specified by
-   // the selector in order to estimate the background density
-   JetMedianBackgroundEstimator(const ClusterSequenceAreaBase & csa,
-                       const Selector & selector);
+   JetMedianBackgroundEstimator bge(const Selector & selector,
+                                    const JetDefinition & jet_def,
+                                    const AreaDefinition & area_def);
 \end{lstlisting}
-If, for example, one wants to use all jets within $|y|<4.5$ to
-estimate the background, one should choose \ttt{selector =
-  SelectorAbsRapMax(4.5)}. The background density $\rho$ and its
-fluctuations $\sigma$ can then be accessed through the functions:
+where the selector is used to indicate which jets are used for
+background estimation (for simple use cases, one just specifies a
+rapidity range, e.g.\ \ttt{SelectorAbsRapMax(4.5)} to use all jets
+with $|y|<4.5$), together with a jet definition and an area definition
+(typically, an active area with explicit ghosts is
+recommended\footnote{With the $k_t$ algorithm, when the selector is
+  geometrical and selects only jets well within the range of event
+  particles, one may also use a Voronoi area (\ttt{effective\_Rfact =
+    0.9} is recommended), which has the advantage of being
+  deterministic and faster than ghosted areas.}).
+%
+For the grid based method one creates a
+\ttt{GridMedianBackgroundEstimator},
 \begin{lstlisting}
-   // the median of ($p_t$/area) for jets that pass the selection cut, 
-   // making use also of information on empty area in the event
-   double rho()   const; 
+   #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+   // ...
+
+   GridMedianBackgroundEstimator bge(double max_rapidity,
+                                     double requested_grid_spacing);
+\end{lstlisting}
+Both of these background estimators derive from a
+\ttt{BackgroundEstimatorBase} class.
+
+Then, for each event, one tells the background estimator about the
+event particles,
+\begin{lstlisting}
+  bge.set_particles(event_particles);
+\end{lstlisting}
+where \ttt{event\_particles} is a vector of \PJ, and then extracts the
+background density and a measure of its fluctuations with the two
+following calls 
+%
+\begin{lstlisting}
+   // the median of ($p_t$/area) for grid cells, or for jets that pass the selection cut, 
+   // making use also of information on empty area in the event (in the jets case)
+   rho = bge.rho(); 
 
    // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
    // which is obtained from the 1-sigma half-width of the distribution of pt/A.
    // To be precise it is defined such that a fraction (1-0.6827)/2 of the jets
    // (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
-   double sigma() const; 
+   sigma = bge.sigma(); 
 \end{lstlisting}
 Note that $\rho$ and $\sigma$ determinations count empty area within
-the selected region as consisting of jets of zero $p_t$.
+the relevant region as consisting of jets of zero $p_t$.
 %
 Thus (roughly speaking), if more that half of the area covered by the
-selector is empty the median estimate for $\rho$ will be zero.
-%
-% \comment{empty areas should be discussed more in comments to empty
-%   area calls below --- check it's OK later}
+jets selector or grid rapidity range is empty, the median estimate for
+$\rho$ will be zero.
+
+
+
+% %......................................................................
+% \subsubsection{Background Estimation}
+
+%%FJ3.0a3 Two elements are needed for FastJet's background estimation: a cluster
+%%FJ3.0a3 sequence with area information and a \ttt{Selector} to specify the
+%%FJ3.0a3 subset of jets that will be used for the background estimation.
+%%FJ3.0a3 %
+%%FJ3.0a3 The class that provides background estimation facilities is
+%%FJ3.0a3 \ttt{JetMedianBackgroundEstimator}. The simplest way to construct it is:
+%%FJ3.0a3 \begin{lstlisting}
+%%FJ3.0a3    #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
+%%FJ3.0a3    // ...
+%%FJ3.0a3 
+%%FJ3.0a3    // constructor for a JetMedianBackgroundEstimator that will use the
+%%FJ3.0a3    // inclusive jets from csa that pass the cuts specified by
+%%FJ3.0a3    // the selector in order to estimate the background density
+%%FJ3.0a3    JetMedianBackgroundEstimator(const ClusterSequenceAreaBase & csa,
+%%FJ3.0a3                        const Selector & selector);
+%%FJ3.0a3 \end{lstlisting}
+%%FJ3.0a3 If, for example, one wants to use all jets within $|y|<4.5$ to
+%%FJ3.0a3 estimate the background, one should choose \ttt{selector =
+%%FJ3.0a3   SelectorAbsRapMax(4.5)}. The background density $\rho$ and its
+%%FJ3.0a3 fluctuations $\sigma$ can then be accessed through the functions:
+%%FJ3.0a3 \begin{lstlisting}
+%%FJ3.0a3    // the median of ($p_t$/area) for jets that pass the selection cut, 
+%%FJ3.0a3    // making use also of information on empty area in the event
+%%FJ3.0a3    double rho()   const; 
+%%FJ3.0a3 
+%%FJ3.0a3    // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
+%%FJ3.0a3    // which is obtained from the 1-sigma half-width of the distribution of pt/A.
+%%FJ3.0a3    // To be precise it is defined such that a fraction (1-0.6827)/2 of the jets
+%%FJ3.0a3    // (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
+%%FJ3.0a3    double sigma() const; 
+%%FJ3.0a3 \end{lstlisting}
+%%FJ3.0a3 Note that $\rho$ and $\sigma$ determinations count empty area within
+%%FJ3.0a3 the selected region as consisting of jets of zero $p_t$.
+%%FJ3.0a3 %
+%%FJ3.0a3 Thus (roughly speaking), if more that half of the area covered by the
+%%FJ3.0a3 selector is empty the median estimate for $\rho$ will be zero.
 
 %......................................................................
 \subsubsection{Positional dependence of background}
 \label{sec:BGE-positional}
 
-One drawback of a $\rho$ estimate based on all jets from (say)
-$|y|<4.5$ is that the background density in $pp$ and heavy-ion
+One drawback of a $\rho$ estimate based on all jets or grid cells from
+(say) $|y|<4.5$ is that the background density in $pp$ and heavy-ion
 collisions usually has some non-negligible dependence on rapidity (and
 sometimes azimuth) and this information is not correctly accounted
 for.
 %
 Two techniques can help alleviate this problem.
 %
-The first involves the use of a more local range for the determination
-of $\rho$, with the help of a \ttt{Selector} that is able to take a
-reference jet, e.g. \ttt{SelectorStrip(}$\Delta y$\ttt{)}, a strip of
-half-width $\Delta y$ (which might be of order $1$) centred on
-whichever jet is set as its reference.
+The first, available for now only in the case of the jet-based
+estimator, involves the use of a more local range for the
+determination of $\rho$, with the help of a \ttt{Selector} that is
+able to take a reference jet, e.g. \ttt{SelectorStrip(}$\Delta
+y$\ttt{)}, a strip of half-width $\Delta y$ (which might be of order
+$1$) centred on whichever jet is set as its reference.
 %
-With this kind of selector, when the user calls either of the functions
+With this kind of selector, when the user calls either of the
+\ttt{JetMedianBackgroundEstimator} member functions
 \begin{lstlisting}
    double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
    double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
@@ -2164,6 +2252,8 @@ rapidity dependence from some number of pileup events and then carry
 out an event-by-event global $\rho$ determination taking into account
 that average shape.
 %
+This method is available for both grid and jet-based methods.
+%
 One first creates an object that encodes the shape
 \begin{lstlisting}
    // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
@@ -2171,10 +2261,11 @@ One first creates an object that encodes the shape
 \end{lstlisting}
 (for other shapes, derive a class from
 \ttt{FunctionOfPseudoJet<double>} --- see appendix
-\ref{app:function-of-pj}) and then one tells the
-\ttt{JetMedianBackgroundEstimator} about the rescaling with the call
+\ref{app:function-of-pj}) and then one tells the background estimator
+(whether jet or grid based) about the rescaling with the call
 \begin{lstlisting}
-   // tell the JetMedianBackgroundEstimator about the rescaling
+   // tell the JetMedianBackgroundEstimator or
+   // GridMedianBackgroundEstimator about the rescaling
    set_rescaling_class(*rescaling);
 \end{lstlisting}
 Subsequent calls will then take the median of the distribution $p_t/A
@@ -2200,11 +2291,12 @@ and \ttt{sigma()}.
 %%   // version.
 %%   virtual bool is_pure_ghost(const PseudoJet & jet) const ;
 %% 
-A number of enquiry functions are available to obtain information used
-internally within the median $\rho$ and $\sigma$ determination.
+In the case of the jet-based estimator, a number of enquiry functions
+are available to obtain information used internally within the median
+$\rho$ and $\sigma$ determination.
 \begin{lstlisting}
-   // Returns the mean area of the jets used to actually compute the background properties
-   // (including empty area and jets)
+   // Returns the mean area of the jets used to actually compute the background properties,
+   // including empty area and jets (available also in grid-based estimator)
    double mean_area() const;
    
    // returns the number of jets used to actually compute the background properties
@@ -2234,18 +2326,24 @@ to \ttt{rho} or \ttt{sigma} (as long as the cluster sequence or
 selector has not changed in the meantime).
 
 To allow flexibility in the user's workflow, there are a number of
-alternative constructors to \ttt{JetMedianBackgroundEstimator}, together with
-elements to (re)set the cluster sequence and/or jets, and also the
-selector:
+alternative constructors to \ttt{JetMedianBackgroundEstimator}.
+%
+These can come in useful if, for example, the user wishes to carry out
+multiple background estimations with the same particles but different
+selectors, or wishes to take care of the jet clustering themselves,
+e.g.\ because the results of that same jet clustering will be used in
+multiple contexts and it is more efficient to perform it just once:
 \begin{lstlisting}
-  // the estimator will use the supplied jets instead of inclusive jets from a ClusterSequence
-  JetMedianBackgroundEstimator(const std::vector<PseudoJet> & jets, const Selector & rho_range);
-  // information about the ClusterSequence or jets will be set later
+  // set just the selector, leaving all other information to be provided later
   JetMedianBackgroundEstimator(const Selector & rho_range);
-  // information about the ClusterSequence/jets and Selector will be set later
+  // create an estimator that uses the inclusive jets from the supplied cluster sequence
+  JetMedianBackgroundEstimator(const Selector & rho_range, 
+                               const ClusterSequenceAreaBase & csa);
+  // a default constructor that requires all information to be set later
   JetMedianBackgroundEstimator();
 
   // (re)set the cluster sequence to be used by future calls to rho() etc. 
+  // (as with the cluster-sequence based constructor, its inclusive jets are used)
   void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
   // (re)set the jets to be used by future calls to rho() etc. 
   void set_jets(const std::vector<PseudoJet> & jets);
@@ -2253,36 +2351,39 @@ selector:
   void set_selector(const Selector & rho_range_selector);
 \end{lstlisting}
 Jets passed to any of the above calls must originate from a common
-originate from a common \ttt{ClusterSequenceAreaBase} type class.
+\ttt{ClusterSequenceAreaBase} type class.
 
-Finally, there are cases where the user may wish to determine medians
-of quantities other than $p_t/A$. 
+%%TMP_REMOVED Finally, there are cases where the user may wish to determine medians
+%%TMP_REMOVED of quantities other than $p_t/A$. 
+%%TMP_REMOVED %
+%%TMP_REMOVED This may arise in estimating the hadron-mass contribution to pileup
+%%TMP_REMOVED contamination of jet masses, or in the determination of moments of
+%%TMP_REMOVED fragmentation functions.
+%%TMP_REMOVED %
+%%TMP_REMOVED For this purpose, the user may use the following call
+%%TMP_REMOVED \begin{lstlisting}
+%%TMP_REMOVED   void set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class);
+%%TMP_REMOVED \end{lstlisting}
+%%TMP_REMOVED For each jet that passes the selection, \ttt{jet\_density\_class}'s
+%%TMP_REMOVED \ttt{FunctionOfPseudoJet<double>::operator(PseudoJet \& jet)} function
+%%TMP_REMOVED is called\footnote{As explained in Appendix \ref{app:function-of-pj}
+%%TMP_REMOVED   describing functions of \ttt{PseudoJet}, user-defined density
+%%TMP_REMOVED   classes derived from \ttt{FunctionOfPseudoJet<double>} should
+%%TMP_REMOVED   overload \ttt{FunctionOfPseudoJet<double>::result()}.} and it returns
+%%TMP_REMOVED the quantity that substitutes $p_t/A$.
 %
-This may arise in estimating the hadron-mass contribution to pileup
-contamination of jet masses, or in the determination of moments of
-fragmentation functions.
-%
-For this purpose, the user may use the following call
-\begin{lstlisting}
-  void set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class);
-\end{lstlisting}
-For each jet that passes the selection, \ttt{jet\_density\_class}'s
-\ttt{FunctionOfPseudoJet<double>::operator(PseudoJet \& jet)} function
-is called\footnote{As explained in Appendix \ref{app:function-of-pj}
-  describing functions of \ttt{PseudoJet}, user-defined density
-  classes derived from \ttt{FunctionOfPseudoJet<double>} should
-  overload \ttt{FunctionOfPseudoJet<double>::result()}.} and it returns
-the quantity that substitutes $p_t/A$.
-%
-\comment{Do we discuss the \ttt{BackgroundJetPtMDensity} class as an
-  example here?}
+%\comment{Do we discuss the \ttt{BackgroundJetPtMDensity} class as an
+%  example here?}
+
+
 
 
 %......................................................................
 \subsubsection{Backwards compatibility}
 \label{sec:BGE-backwards}
 
-The \ttt{JetMedianBackgroundEstimator} class is new to FastJet 3.0.
+The \ttt{JetMedianBackgroundEstimator} and
+\ttt{GridMedianBackgroundEstimator} classes are new to FastJet 3.0.
 %
 In FastJet versions 2.3 and 2.4, the background estimation tools were
 instead integrated into the \ttt{ClusterSequenceAreaBase} class.
@@ -2314,6 +2415,17 @@ Finally, the calculation of $\sigma$ in Fastjet 2.x incorrectly
 handled the limit of a small number of jets. A call to
 \ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{JetMedianBackgroundEstimator}
 to reproduce that behaviour.
+
+Fastjet 2.x also placed the ghosts differently, resulting in different
+event-by-event rho estimates, and possibly a small systematic offset
+(scaling as the square-root of the ghost area) when ghosts and
+particles both covered identical (small) regions.
+%
+This offset is no longer present with the 3.0 ghost placement.
+%
+If the old behaviour is needed, a call to a specific
+\ttt{GhostedAreaSpec}'s \ttt{set\_fj2\_placement(true)} function
+causes ghosts to placed as in the 2.x series.
 
 
 % \subsubsection{Fixed range}
@@ -2423,7 +2535,7 @@ The \ttt{Subtractor} class is defined in
 \ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
 a background estimator:
 \begin{lstlisting}
-  JetMedianBackgroundEstimator bge(....);
+  JetMedianBackgroundEstimator bge(....); // or a grid-based estimator
   Subtractor subtractor(&bge);
 \end{lstlisting}
 The subtractor can then be used as follows:
@@ -2623,7 +2735,7 @@ appendix~\ref{app:function-of-pj}).
 \subsection{Example program with areas and subtraction}
 \label{sec:ex-prog-sub}
 
-See \ttt{example/07-subtraction-new.cc}.
+See \ttt{example/07-subtraction.cc}.
 
 % \comment{This subsecction still relates to the version 2.x subtraction
 %   interface in \fastjet.}
@@ -4114,6 +4226,38 @@ by Andy Buckley with input from Manuel Bahr and Rick Field.
 Note: this algorithm is believed to be Coll$_{3+1}$ unsafe. It is to
 be deprecated for new experimental or theoretical analyses.
 
+\subsubsection{GridJet}
+%
+GridJet allows you to define a grid and then cluster particles such
+that all particles in a common grid cell combine to form a jet.
+%
+Its main interest is in providing fast clustering for high
+multiplicities (the clustering time scales linearly with the number of
+particles).
+%
+The jets that it forms are not always physically meaningful: for
+example, a genuine physical jet may lie at the corner of 4 grid cells
+and so be split up somewhat arbitrarily into 4 pieces.
+%
+However for some purposes (such as background estimation) this
+drawback is offset by the greater uniformity of the area of the jets.
+%
+Its interface is as follows
+\begin{lstlisting}
+  #include ``fastjet/GridJetPlugin.hh''
+  // ...
+  GridJetPlugin (double ymax, double requested_grid_spacing);
+\end{lstlisting}
+creating a grid that covers $|y|<$\ttt{ymax} with a grid spacing close
+to the \ttt{requested\_grid\_spacing}: the spacings chosen in $\phi$
+and $y$ are those that are closest to the requested spacing while also
+giving an integer number of grid cells that fit exactly into the
+rapidity and $0<\phi <2\pi$ ranges.
+
+Note that for background estimation purposes the
+\ttt{GridMedianBackgroundEstimator} is much faster than using the
+\ttt{GridJetPlugin} with ghosts and a
+\ttt{JetMedianBackgroundEstimator}.
 
 %----------------------------------------------------------------------
 \subsection{Other plugins for $e^+e^-$}
