@@ -195,7 +195,7 @@ int main (int argc, char ** argv) {
   // first get separation between the subjets (called Rbb -- assuming
   // it's a Higgs!)
   //
-  // See example 12-filter for another way of implementing the dynamic
+  // See example 11-filter.cc for another way of implementing the dynamic
   // Rfilt used below
   double   Rbb = parent1.delta_R(parent2);
   double   Rfilt = min(Rbb/2, 0.3); // somewhat arbitrary choice
