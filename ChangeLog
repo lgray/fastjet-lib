@@ -1,3 +1,7 @@
+2011-07-21  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/JHTopTagger.hh:
+	  fixed documentation of the cos_theta_W member
 
 2011-07-21  Gregory Soyez  <soyez@fastjet.fr>
 

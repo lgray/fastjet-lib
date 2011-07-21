@@ -197,7 +197,7 @@ public:
     return _non_W;
   }
 
-  /// access to the associated N-subjettiness
+  /// access to the W helicity angle
   inline double cos_theta_W() const {return _cos_theta_w;}
 
 protected:
