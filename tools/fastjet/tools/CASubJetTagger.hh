@@ -39,7 +39,7 @@
 FASTJET_BEGIN_NAMESPACE
 
 class CASubJetTagger;
-class CASubJetStructure;
+class CASubJetTaggerStructure;
 
 //----------------------------------------------------------------------
 /// @ingroup tools_taggers
@@ -149,7 +149,7 @@ public:
   virtual PseudoJet result(const fastjet::PseudoJet & jet) const;
 
   /// the type of Structure returned
-  typedef CASubJetStructure StructureType;
+  typedef CASubJetTaggerStructure StructureType;
 
 protected:
   /// class that contains the result internally
@@ -183,12 +183,12 @@ protected:
 /// basically the original ClusterSequenceStructure (wrapped for
 /// memory-management reasons) and add information about the pt
 /// fraction and distance of the subjet structure
-class CASubJetStructure : public WrappedStructure{
+class CASubJetTaggerStructure : public WrappedStructure{
 public:
   /// default ctor
   ///  \param result_jet   the jet for which we have to keep the
   ///                      structure
-  CASubJetStructure(const PseudoJet & result_jet)
+  CASubJetTaggerStructure(const PseudoJet & result_jet)
     : WrappedStructure(result_jet.structure_shared_ptr()){}
 
   /// returns the scale choice asked for the maximisation

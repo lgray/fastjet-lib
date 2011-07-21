@@ -86,7 +86,7 @@ PseudoJet CASubJetTagger::result(const fastjet::PseudoJet & jet) const{
   if (result == PseudoJet()) return result;
 
   // otherwise sort out the structure
-  CASubJetStructure * s = new CASubJetStructure(result);
+  CASubJetTaggerStructure * s = new CASubJetTaggerStructure(result);
   s->_scale_choice = _scale_choice;
   s->_distance     = aux.aux_distance;
   s->_absolute_z   = _absolute_z_cut;

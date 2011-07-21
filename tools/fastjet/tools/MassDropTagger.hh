@@ -38,7 +38,7 @@
 FASTJET_BEGIN_NAMESPACE
 
 class MassDropTagger;
-class MassDropStructure;
+class MassDropTaggerStructure;
 
 //----------------------------------------------------------------------
 /// @ingroup tools_taggers
@@ -110,7 +110,7 @@ public:
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of the associated structure
-  typedef MassDropStructure StructureType;
+  typedef MassDropTaggerStructure StructureType;
 
 protected:
   double _mu, _ycut;
@@ -120,18 +120,18 @@ protected:
 
 //------------------------------------------------------------------------
 /// @ingroup tools_taggers
-/// \class MassDropStructure
+/// \class MassDropTaggerStructure
 /// the structure returned by the MassDropTagger transformer.
 ///
 /// See the MassDropTagger class description for the details of what
 /// is inside this structure
 ///
-class MassDropStructure : public CompositeJetStructure{
+class MassDropTaggerStructure : public CompositeJetStructure{
 public:
   /// ctor with initialisation
   ///  \param pieces  the pieces of the created jet
   ///  \param rec     the recombiner from the underlying cluster sequence
-  MassDropStructure(const std::vector<PseudoJet> & pieces, 
+  MassDropTaggerStructure(const std::vector<PseudoJet> & pieces, 
 		    const JetDefinition::Recombiner *recombiner = 0) :
     CompositeJetStructure(pieces, recombiner), _mu(0.0), _y(0.0){}
 

@@ -38,7 +38,7 @@
 FASTJET_BEGIN_NAMESPACE
 
 class JHTopTagger;
-class JHTopStructure;
+class JHTopTaggerStructure;
 
 //----------------------------------------------------------------------
 /// @ingroup tools_taggers
@@ -143,7 +143,7 @@ public:
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of the associated structure
-  typedef JHTopStructure StructureType;
+  typedef JHTopTaggerStructure StructureType;
 
 protected:
   /// runs the Johns Hopkins decomposition procedure
@@ -160,16 +160,16 @@ protected:
 
 //------------------------------------------------------------------------
 /// @ingroup tools_taggers
-/// \class JHTopStructure
+/// \class JHTopTaggerStructure
 /// the structure returned by the JHTopTagger transformer.
 ///
 /// See the JHTopTagger class description for the details of what
 /// is inside this structure
 ///
-class JHTopStructure : public CompositeJetStructure{
+class JHTopTaggerStructure : public CompositeJetStructure{
 public:
   /// ctor with pieces initialisation
-  JHTopStructure(std::vector<PseudoJet> pieces,
+  JHTopTaggerStructure(std::vector<PseudoJet> pieces,
 		 const JetDefinition::Recombiner *recombiner = 0) :
     CompositeJetStructure(pieces, recombiner), _cos_theta_w(0.0){}
 

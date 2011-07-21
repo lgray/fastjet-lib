@@ -1,5 +1,15 @@
 2011-07-21  Gregory Soyez  <soyez@fastjet.fr>
 
+	* fastjet/tools/MassDropTagger.hh:
+	* fastjet/tools/CASubJetTagger.hh:
+	* fastjet/tools/NSubjettinessTagger.hh:
+	* fastjet/tools/JHTopTagger.hh:
+	* JHTopTagger.cc:
+	* MassDropTagger.cc:
+	* CASubJetTagger.cc:
+	  Renamed the structure associated with XYZTagger,
+	  XYZTaggerStructure (was XYZStructure)
+
 	* tools/fastjet/tools/JHTopTagger.hh:
 	  fixed documentation of the cos_theta_W member
 

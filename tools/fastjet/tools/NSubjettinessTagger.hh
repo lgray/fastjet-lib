@@ -39,7 +39,7 @@
 FASTJET_BEGIN_NAMESPACE
 
 class NSubjettinessTagger;
-class NSubjettinessStructure;
+class NSubjettinessTaggerStructure;
 
 //----------------------------------------------------------------------
 /// @ingroup tools_taggers
@@ -116,7 +116,7 @@ public:
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of Structure returned
-  typedef NSubjettinessStructure StructureType;
+  typedef NSubjettinessTaggerStructure StructureType;
 
 protected:
   JetDefinition _subjet_def;
@@ -127,16 +127,16 @@ protected:
 
 //------------------------------------------------------------------------
 /// @ingroup tools_taggers
-/// \class NSubjettinessStructure
+/// \class NSubjettinessTaggerStructure
 /// the structure returned by the NSubjettinessTagger transformer.
 ///
 /// See the NSubjettinessTagger class description for the details of
 /// what is inside this structure
 ///
-class NSubjettinessStructure : public CompositeJetStructure{
+class NSubjettinessTaggerStructure : public CompositeJetStructure{
 public:
   /// ctor with pieces initialisation
-  NSubjettinessStructure(const std::vector<PseudoJet> & pieces) :
+  NSubjettinessTaggerStructure(const std::vector<PseudoJet> & pieces) :
     CompositeJetStructure(pieces), _tau2(0.0), _costhetas(1.0){}
 
   /// access to the associated N-subjettiness
