@@ -94,7 +94,7 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
 //                             was done in fj2 (suffers from "edge effects")
 double BackgroundEstimatorBase::_percentile(const vector<double> & sorted_quantities, 
 					    const double percentile, 
-					    const unsigned int nempty,
+					    const double nempty,
 					    const bool do_fj2_calculation
 					    ) const {
   assert(percentile >= 0.0 && percentile <= 1.0);

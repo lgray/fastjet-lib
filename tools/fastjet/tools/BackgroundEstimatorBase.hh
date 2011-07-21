@@ -153,7 +153,7 @@ protected:
   ///                                  was done in fj2 (suffers from "edge effects")
   double _percentile(const std::vector<double> & sorted_quantity_vector, 
 		     const double percentile, 
-		     const unsigned int nempty=0,
+		     const double nempty=0.0,
 		     const bool do_fj2_calculation = false) const;
 
   //\}

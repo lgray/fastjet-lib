@@ -1,3 +1,12 @@
+
+2011-07-21  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/BackgroundEstimatorBase.cc:
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	  declared the nempty argument of percentile(...) as a double
+	  instead of an unsigned int.
+
+
 2011-07-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/JHTopTagger.hh: 
@@ -7,6 +16,7 @@
 
 	* include/fastjet/ClusterSequenceWithArea.hh: 
 	  small change to C-preprocessor warning message
+
 
 2011-07-20  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
@@ -38,7 +48,7 @@
 
 	  included a check that particles have been set (throw an error
 	  otherwise).
-	
+
 2011-07-20  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
