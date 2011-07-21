@@ -44,11 +44,9 @@ class MassDropTaggerStructure;
 /// @ingroup tools_taggers
 /// \class MassDropTagger
 /// Class that helps perform 2-pronged boosted tagging using
-/// the "mass-drop" technique
-///
-/// This implements the boosted Higgs tagger introduced by Jonathan
+/// the "mass-drop" technique (with asymmetry cut) introduced by Jonathan
 /// Butterworth, Adam Davison, Mathieu Rubin and Gavin Salam in
-/// arXiv:0802.2470.
+/// arXiv:0802.2470 in the context of a boosted Higgs search.
 ///
 /// The tagger proceeds as follows:
 ///
@@ -59,23 +57,17 @@ class MassDropTaggerStructure;
 ///     them such as j1 is the most massive).
 ///  
 ///  2. if there is a mass drop, i.e. m_j1/m_j < mu_cut, and the
-///     splitting is sufficiently symmetric, \f${/rm
-///     min}(p_{tj1}^2,p_{tj2}^2)\Delta R_{j1,j2}^2 > y_{/rm cut}
+///     splitting is sufficiently symmetric, \f${\rm
+///     min}(p_{tj1}^2,p_{tj2}^2)\Delta R_{j1,j2}^2 > y_{\rm cut}
 ///     m_j^2\f$, keep j as the result of the tagger (with j1 and j2
 ///     its 2 subjets)
 ///
 ///  3. otherwise, redefine j to be equal to j1 and return to step 1.
 ///
-/// Note that in the original proposal, j1 and j2 were both required
+/// Note that in the original proposal, j1 and j2 are both required
 /// to be b-tagged and a filter (with Rfilt=min(0.3,Rbb/2) and
-/// n_filt=3) was applied to j to obtain the final "Higgs candidate".
-/// This filtering technique can always be done by defining a
-/// FunctionOfPseudoJet to compute dynamically Rfilt and then use the
-/// Filter
-///   RfiltDyn rfilt;
-///   Filter final_filter(&rfilt, SelectorNHardest(3));
-/// See the filter example to see explicitly how this can be done.
-/// 
+/// n_filt=3) is also applied to j to obtain the final "Higgs candidate".
+/// See the example \subpage Example12 for details.
 ///
 /// \section desc Options
 /// 
@@ -86,7 +78,7 @@ class MassDropTaggerStructure;
 ///
 /// \section input Input conditions
 /// 
-///  - one must be able to succesively "uncluster" the original jet
+///  - one must be able to successively "uncluster" the original jet
 ///    using "has_parents"
 ///
 /// \section output Output/structure

@@ -74,23 +74,6 @@ class PseudoJet {
   // cases better than just having the default constructor for the
   // internal shared pointer: see PJtiming.cc and the notes therein)
   PseudoJet() : _px(0), _py(0), _pz(0), _E(0) {_finish_init(); _reset_indices();}
-  
-
-
-//  /// GPS testing *********************
-//   PseudoJet(const PseudoJet & pj) : _structure(pj._structure),
-// 				    _user_info(pj._user_info),
-// 				    _px(pj._px),
-// 				    _py(pj._py),
-// 				    _pz(pj._pz),
-// 				    _E (pj._E ),
-//  				    _phi(pj._phi),
-// 				    _rap(pj._rap),
-// 				    _kt2(pj._kt2),
-// 				    _cluster_hist_index(pj._cluster_hist_index),
-// 				    _user_index(pj._user_index) {}
-
-
   /// construct a pseudojet from explicit components
   PseudoJet(const double px, const double py, const double pz, const double E);
 
@@ -868,21 +851,6 @@ inline void PseudoJet::_reset_indices() {
   _user_info.reset();
 }
 
-//----------------------------------------------------------------------
-/// specialization of the "reset" template for case where something
-/// is reset to a pseudojet -- it then takes the user and history
-/// indices from the psjet
-// template<> inline void PseudoJet::reset<PseudoJet>(const PseudoJet & psjet) {
-//   (*this) = psjet;
-// }
-
-////// fun and games...
-////template<class L> class FJVector : public L {
-//////  /** Default Constructor: create jet with no constituents */
-//////  Vector<L>();
-////
-////};
-////
 
 // taken literally from CLHEP
 inline double PseudoJet::m() const {

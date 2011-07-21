@@ -1,3 +1,15 @@
+2011-07-21  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* example/fastjet_subtraction.cc: 
+	  removed deprecated things
+
+	* NEWS: 
+	  prepared draft of news for 3.0b1
+
+	* include/fastjet/PseudoJet.hh:
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	  removed some old commented code.
+
 2011-07-21  Gregory Soyez  <soyez@fastjet.fr>
 
 	* fastjet/tools/MassDropTagger.hh:
@@ -306,7 +318,7 @@
 	* include/fastjet/RangeDefinition.hh:
 	* src/RangeDefinition.cc:
 	  declared RangeDefinition and Circular range as deprecated (use
-	  Selector and SenectorCircle instead)
+	  Selector and SelectorCircle instead)
 
 	* example/07-subtraction-new.cc:
 	* example/07-subtraction.cc:

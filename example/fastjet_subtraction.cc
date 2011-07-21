@@ -43,9 +43,7 @@
 //
 //----------------------------------------------------------------------
 #include "fastjet/PseudoJet.hh"
-//#include "fastjet/ClusterSequenceActiveArea.hh"
 #include "fastjet/ClusterSequenceArea.hh"
-//#include "../areas/ClusterSequencePassiveArea.hh"
 #include<iostream> // needed for io
 #include<sstream>  // needed for internal io
 #include<vector> 
@@ -114,9 +112,9 @@ int main (int argc, char ** argv) {
   double ghost_etamax = 6.0;
   int    active_area_repeats = 1;
   double ghost_area    = 0.01;
-  fastjet::ActiveAreaSpec area_spec(ghost_etamax, active_area_repeats, 
+  fastjet::GhostedAreaSpec ghost_spec(ghost_etamax, active_area_repeats, 
                                     ghost_area);
-  fastjet::AreaDefinition area_def(area_spec);
+  fastjet::AreaDefinition area_def(ghost_spec);
   //fastjet::AreaDefinition area_def(fastjet::VoronoiAreaSpec(1.0));
 
   // run the jet clustering with the above jet definition. hard event first
@@ -142,9 +140,7 @@ int main (int argc, char ** argv) {
   // repeat everything on the full event
 
   // run the jet clustering with the above jet definition
-  //fastjet::ClusterSequenceActiveArea clust_seq_full(full_event, jet_def, area_spec);
   fastjet::ClusterSequenceArea clust_seq_full(full_event, jet_def, area_def);
-  //fastjet::ClusterSequencePassiveArea clust_seq_full(full_event, jet_def,0.9);
 
   // extract the inclusive jets with pt > 20 GeV, sorted by pt
   ptmin = 20.0;

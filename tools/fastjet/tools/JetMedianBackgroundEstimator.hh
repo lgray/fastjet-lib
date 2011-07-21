@@ -321,31 +321,6 @@ public:
     _uptodate = false;
   }
 
-//   /// Set the class that calculates the rescaling factor as a function
-//   /// of the jet (position). Usage as for set_rescaling_class, but it just
-//   /// take a copy of the rescaling class, which must derive from BackgroundRescalingBase
-//   template<class T> void set_rescaling_class(const T & rescaling_class) {
-//     BackgroundRescalingBase * rescaling_class_copy = new T(rescaling_class);
-//     _rescaling_class_sharedptr.reset(rescaling_class_copy);
-//     _rescaling_class = rescaling_class_copy;
-//     _uptodate = false;
-//   }
-// 
-//   /// include a template for pointers that are derived from BackgroundRescalingBase
-//   template<class T> void set_rescaling_class(T * rescaling_class) {
-//     const BackgroundRescalingBase * brb = dynamic_cast<const BackgroundRescalingBase *>(rescaling_class);
-//     if (brb != 0) {
-//       set_rescaling_class(brb);
-//       return;
-//     } else {
-//       throw Error("set_rescaling called with a pointer that does not dynamic cast down to const BackgroundRescalingBase");
-//     }
-//   }
-// 
-//   void set_rescaling_class(SharedPtr<BackgroundRescalingBase> & rescaling_class) {
-//     _rescaling_class_sharedptr = rescaling_class;
-//     _rescaling_class = _rescaling_class_sharedptr.get();
-//   }
 
   //\}
 
