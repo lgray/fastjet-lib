@@ -56,7 +56,7 @@ string JHTopTagger::description() const{
 }
 
 //------------------------------------------------------------------------
-// the tagging itself
+// returns the tagged PseudoJet if successful, 0 otherwise
 //  - jet   the PseudoJet to tag
 PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   // make sure that there is a "regular" cluster sequence associated

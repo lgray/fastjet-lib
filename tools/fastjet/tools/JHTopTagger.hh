@@ -138,7 +138,7 @@ public:
   /// description of the tagger
   virtual std::string description() const;
 
-  /// the tagging itself
+  /// returns the tagged PseudoJet if successful, 0 otherwise
   ///  \param jet   the PseudoJet to tag
   virtual PseudoJet result(const PseudoJet & jet) const;
 
@@ -150,7 +150,7 @@ protected:
   std::vector<PseudoJet> _split_once(const PseudoJet & jet_to_split,
 				     const PseudoJet & reference_jet) const;
 
-  /// compute the W helicity angle
+  /// computes the W helicity angle
   double _cos_theta_W(const PseudoJet & result) const;
 
   double _delta_p, _delta_r, _cos_theta_W_max, _mW;
@@ -173,31 +173,31 @@ public:
 		 const JetDefinition::Recombiner *recombiner = 0) :
     CompositeJetStructure(pieces, recombiner), _cos_theta_w(0.0){}
 
-  /// direct access to the W subjet
+  /// returns the W subjet
   inline const PseudoJet & W() const{ 
     return _W;
   }
 
-  /// direct access to the first W subjet (the hardest)
+  /// returns the first W subjet (the hardest)
   inline const PseudoJet & W1() const{
     assert(_pieces.size()>0);
     return _pieces[0];
   }
 
-  /// direct access to the second W subjet
+  /// returns the second W subjet
   inline const PseudoJet & W2() const{
     assert(_pieces.size()>1);
     return _pieces[1];
   }
 
-  /// direct access to the non-W subjets
-  /// it will have 1 or 2 pieces depending on whether the tagger has
+  /// returns the non-W subjet
+  /// It will have 1 or 2 pieces depending on whether the tagger has
   /// found 3 or 4 pieces
   inline const PseudoJet & non_W() const{ 
     return _non_W;
   }
 
-  /// access to the W helicity angle
+  /// returns the W helicity angle
   inline double cos_theta_W() const {return _cos_theta_w;}
 
 protected:

@@ -97,7 +97,7 @@ public:
   /// description of the tagger
   virtual std::string description() const;
 
-  /// the tagging itself
+  /// returns the tagged PseudoJet if successful, 0 otherwise
   ///  \param jet   the PseudoJet to tag
   virtual PseudoJet result(const PseudoJet & jet) const;
 
@@ -127,11 +127,11 @@ public:
 		    const JetDefinition::Recombiner *recombiner = 0) :
     CompositeJetStructure(pieces, recombiner), _mu(0.0), _y(0.0){}
 
-  /// the mass-drop ratio, pieces[0].m()/jet.m(), for the splitting
+  /// returns the mass-drop ratio, pieces[0].m()/jet.m(), for the splitting
   /// that triggered the mass-drop condition
   inline double mu() const{return _mu;}
 
-  /// The value of y = (squared kt distance) / (squared mass) for the
+  /// returns the value of y = (squared kt distance) / (squared mass) for the
   /// splitting that triggered the mass-drop condition
   inline double y() const {return _y;}
 

@@ -113,6 +113,7 @@ public:
   virtual std::string description() const;
 
   /// action on a single jet
+  /// returns the tagged PseudoJet if successful, 0 otherwise
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of Structure returned
@@ -139,10 +140,10 @@ public:
   NSubjettinessTaggerStructure(const std::vector<PseudoJet> & pieces) :
     CompositeJetStructure(pieces), _tau2(0.0), _costhetas(1.0){}
 
-  /// access to the associated N-subjettiness
+  /// returns the associated N-subjettiness
   inline double tau2() const{return _tau2;}
 
-  /// access to the associated angle with the boosted axis
+  /// returns the associated angle with the boosted axis
   inline double costhetas() const {return _costhetas;}
 
 protected:

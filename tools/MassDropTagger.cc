@@ -51,7 +51,7 @@ string MassDropTagger::description() const{
 }
 
 //------------------------------------------------------------------------
-// the tagging itself
+// returns the tagged PseudoJet if successful, 0 otherwise
 //  - jet   the PseudoJet to tag
 PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
   PseudoJet j = jet;

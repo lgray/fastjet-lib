@@ -64,6 +64,7 @@ string CASubJetTagger::description() const{
 }
 
 // run the tagger on the given cs/jet
+// returns the tagged PseudoJet if successful, 0 otherwise
 //----------------------------------------------------------------------
 PseudoJet CASubJetTagger::result(const fastjet::PseudoJet & jet) const{
   // make sure that the jet results from a Cambridge/Aachen clustering

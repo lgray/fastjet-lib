@@ -52,6 +52,7 @@ string NSubjettinessTagger::description() const{
 
 //------------------------------------------------------------------------
 // action on a single jet
+// returns the tagged PseudoJet if successful, 0 otherwise
 PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
   // make sure that the jet has constituents
   if (!jet.has_constituents())
