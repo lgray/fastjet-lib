@@ -3004,6 +3004,20 @@ Using \ttt{jet.has\_structure\_of<MyTransformer>()}, it is possible to
 check if \ttt{jet} is compatible with the structure provided by
 \ttt{MyTransformer}.
 
+A number of the transformers that we discuss below are ``taggers'' for
+boosted objects.
+%
+In some cases they will determine that a given jet does not satisfy
+the tagging conditions (e.g., for a top tagger, because it seems not
+to be a top jet).
+%
+We will adopt the convention that in such cases the result of the
+transformer is a jet whose 4-momentum is zero, i.e.\ one that satisfies
+\ttt{jet == 0}.
+%
+Such a jet may still have structural information however (such
+information might, for example, indicate why the jet was not tagged).
+ 
 
 \subsection{Jet Filtering and Trimming using \texttt{Filter}}
 \label{sec:filtering}
