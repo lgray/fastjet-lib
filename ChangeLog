@@ -6,7 +6,10 @@
 	  mentioned the stable_sort in the documentation of the ATLASCone
 	  and TrackJet plugins.
 
-	  Also documented delete_recombiner_when_unused().
+	  Also documented delete_recombiner_when_unused(),
+	  delete_plugin_when_unused() and reshuffled some parts of the
+	  plugin section so that plugin use now comes before explanations
+	  about the structure of the plugin class.
 
 	* tools/fastjet/tools/MassDropTagger.hh: 
 	* tools/fastjet/tools/JHTopTagger.hh: 

@@ -3584,8 +3584,47 @@ any other jet algorithm\footnote{Except those that perform $3\to2$
 \subsection{Generic plugin use and construction}
 \label{sec:generic-plugin-use}
 
-Any plugin is to be derived from the abstract base class
-\ttt{fastjet::JetDefinition::Plugin},
+Plugins are classes derived from the abstract base class
+\ttt{fastjet::JetDefinition::Plugin}.
+%
+A \ttt{JetDefinition} can be constructed by providing a pointer to a
+\ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
+can then be used identically to the normal \ttt{JetDefinition} objects
+used in the previous sections:
+\begin{lstlisting}
+   // have some plugin class derived from the Plugin base class
+   class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
+
+   // create an instance of the CDFMidPointPlugin class 
+   CDFMidPointPlugin cdf_midpoint( [... options ...] );
+   // create the jet definition by passing a pointer to the plugin
+   fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
+
+   // then create a ClusterSequence with the input particles and jet_def,
+   // and use it to extract jets as usual
+   // ...
+\end{lstlisting}
+In cases where the plugin has been created with a \ttt{new} statement
+and the user does not wish to manage the deletion of the corresponding
+memory when the \ttt{JetDefinition} (and any copies) using the plugin
+goes out of scope, then the user may wish to call the
+\ttt{JetDefinition}'s \ttt{delete\_plugin\_when\_unused()} function,
+which tells the \ttt{JetDefinition} to acquire ownership of the
+pointer to the plugin and delete it when it is no longer needed.
+
+A number of plugins are provided with \fastjet, providing
+implementations of most of the jet algorithms used experimentally
+since the 1990's.
+%
+They are described in
+sections~\ref{sec:siscone-plugin}--\ref{sec:ee-cam}.
+%
+The code for them is to be found in \fastjet's \ttt{plugins/} directory.
+
+
+\paragraph{How plugins work.}
+%
+The base class from which plugins derive have the following structure:
 \begin{lstlisting}
   class JetDefinition::Plugin{
   public:
@@ -3618,23 +3657,30 @@ Any plugin is to be derived from the abstract base class
 
   };
 \end{lstlisting}
-A \ttt{JetDefinition} can be constructed by providing a pointer to a
-\ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
-can then be used identically to the normal \ttt{JetDefinition} objects
-used in the previous sections.
-\begin{lstlisting}
-   // have some plugin class derived from the Plugin base class
-   class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
-
-   // create an instance of the CDFMidPointPlugin class 
-   CDFMidPointPlugin cdf_midpoint( [... options ...] );
-   // create the jet definition
-   fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
-
-   // then create ClusterSequence with the input particles and jet_def,
-   // and use it to extract jets as usual
-\end{lstlisting}
-
+%% A \ttt{JetDefinition} can be constructed by providing a pointer to a
+%% \ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
+%% can then be used identically to the normal \ttt{JetDefinition} objects
+%% used in the previous sections.
+%% \begin{lstlisting}
+%%    // have some plugin class derived from the Plugin base class
+%%    class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
+%% 
+%%    // create an instance of the CDFMidPointPlugin class 
+%%    CDFMidPointPlugin cdf_midpoint( [... options ...] );
+%%    // create the jet definition
+%%    fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
+%% 
+%%    // then create ClusterSequence with the input particles and jet_def,
+%%    // and use it to extract jets as usual
+%% \end{lstlisting}
+%% In cases where the plugin has been created with a \ttt{new} statement
+%% and the user does not wish to manage the deletion of the corresponding
+%% memory when the \ttt{JetDefinition} (and any copies) using the
+%% plugin goes out of scope, then the user may wish to call the
+%% \ttt{delete\_plugin\_when\_unused()} function, which tells the
+%% \ttt{JetDefinition} to acquire ownership of the pointer to the
+%% plugin and delete it when it is no longer needed.
+%
 Any plugin class must define the \ttt{description} and
 \ttt{run\_clustering} member functions. The former just returns a
 textual description of the jet algorithm and its options (e.g.\ radius,
@@ -3719,14 +3765,6 @@ to the extra information:
 The user should carry out a dynamic cast so as to convert the extras
 back to the specific plugin extras class, as illustrated later for
 SISCone.
-
-A number of plugins are provided with \fastjet, providing
-implementations of most of the jet algorithms used experimentally
-since the 1990's.
-%
-They are described below. 
-%
-The code for them is to be found in \fastjet's \ttt{plugins/} directory.
 
 
 % Example plugin jet algorithms that are provided with \fastjet are the
@@ -4504,7 +4542,7 @@ The recombiner can also be set with a \ttt{set\_recombiner(...)} call.
 If the recombiner has been created with a \ttt{new} statement and the
 user does not wish to manage the deletion of the corresponding memory
 when the \ttt{JetDefinition} (and any copies) using the recombiner
-goes out of scope, then user may wish to call the
+goes out of scope, then the user may wish to call the
 \ttt{delete\_recombiner\_when\_unused()} function, which tells the
 \ttt{JetDefinition} to acquire ownership of the pointer to the
 recombiner and delete it when it is no longer needed.
