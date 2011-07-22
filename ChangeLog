@@ -1,3 +1,12 @@
+2011-07-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/Voronoi.hh:
+	* src/Voronoi.cc:
+	* src/ClusterSequenceVoronoiArea.cc:
+	  Renamed Point into VPoint to avoid any potential interference
+	  with the fastjet::Point defined in Triangulation.hh (note that
+	  both are only used internally)
+
 2011-07-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex: 

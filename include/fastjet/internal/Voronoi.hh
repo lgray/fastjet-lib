@@ -72,31 +72,31 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /**
  * \if internal_doc
  * @ingroup internal
- * \class Point
+ * \class VPoint
  * class to handle a 2d point
  * \endif
  */
-class Point{
+class VPoint{
 public:
   /// defailt ctor
-  Point() : x(0.0), y(0.0) {}
+  VPoint() : x(0.0), y(0.0) {}
 
   /// ctor with initialisation
-  Point(double _x, double _y) : x(_x), y(_y) {}
+  VPoint(double _x, double _y) : x(_x), y(_y) {}
 
   /// addition
-  inline Point operator + (const Point &p) const{
-    return Point(x+p.x, y+p.y);
+  inline VPoint operator + (const VPoint &p) const{
+    return VPoint(x+p.x, y+p.y);
   }
 
   /// subtraction
-  inline Point operator - (const Point &p) const{
-    return Point(x-p.x, y-p.y);
+  inline VPoint operator - (const VPoint &p) const{
+    return VPoint(x-p.x, y-p.y);
   }
 
   /// scalar multiplication
-  inline Point operator * (const double t) const{
-    return Point(x*t, y*t);
+  inline VPoint operator * (const double t) const{
+    return VPoint(x*t, y*t);
   }
 
   /// vector coordinates
@@ -105,19 +105,19 @@ public:
 
 
 /// norm of a vector
-inline double norm(const Point p){
+inline double norm(const VPoint p){
   return p.x*p.x+p.y*p.y;
 }
 
 
 /// 2D vector product
-inline double vector_product(const Point &p1, const Point &p2){
+inline double vector_product(const VPoint &p1, const VPoint &p2){
   return p1.x*p2.y-p1.y*p2.x;
 }
 
 
 /// scalar product
-inline double scalar_product(const Point &p1, const Point &p2){
+inline double scalar_product(const VPoint &p1, const VPoint &p2){
   return p1.x*p2.x+p1.y*p2.y;
 }
 
@@ -151,7 +151,7 @@ public:
  */
 class Site{
  public:
-  Point	coord;
+  VPoint	coord;
   int sitenbr;
   int refcnt;
 };
@@ -210,7 +210,7 @@ public:
   VoronoiDiagramGenerator();
   ~VoronoiDiagramGenerator();
 
-  bool generateVoronoi(std::vector<Point> *_parent_sites,
+  bool generateVoronoi(std::vector<VPoint> *_parent_sites,
 		       double minX, double maxX, double minY, double maxY, 
 		       double minDist=0);
 
@@ -227,7 +227,7 @@ public:
     return true;
   }
   
-  std::vector<Point> *parent_sites;
+  std::vector<VPoint> *parent_sites;
   int n_parent_sites;
 
 private:
@@ -241,7 +241,7 @@ private:
   Halfedge *HEcreate(), *ELleft(), *ELright(), *ELleftbnd();
   Halfedge *HEcreate(Edge *e,int pm);
   
-  Point PQ_min();
+  VPoint PQ_min();
   Halfedge *PQextractmin();	
   void freeinit(Freelist *fl,int size);
   void makefree(Freenode *curr,Freelist *fl);
@@ -253,7 +253,7 @@ private:
   void endpoint(Edge *e,int lr,Site * s);
 
   void ELdelete(Halfedge *he);
-  Halfedge *ELleftbnd(Point *p);
+  Halfedge *ELleftbnd(VPoint *p);
   Halfedge *ELright(Halfedge *he);
   void makevertex(Site *v);
   void out_triple(Site *s1, Site *s2,Site * s3);
@@ -270,12 +270,12 @@ private:
   int PQbucket(Halfedge *he);
   void clip_line(Edge *e);
   char *myalloc(unsigned n);
-  int right_of(Halfedge *el,Point *p);
+  int right_of(Halfedge *el,VPoint *p);
 
   Site *rightreg(Halfedge *he);
   Edge *bisect(Site *s1, Site *s2);
   double dist(Site *s,Site *t);
-  Site *intersect(Halfedge *el1, Halfedge *el2, Point *p=0);
+  Site *intersect(Halfedge *el1, Halfedge *el2, VPoint *p=0);
 
   void out_bisector(Edge *e);
   void out_ep(Edge *e);

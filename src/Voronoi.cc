@@ -90,7 +90,7 @@ VoronoiDiagramGenerator::~VoronoiDiagramGenerator(){
 
 
 
-bool VoronoiDiagramGenerator::generateVoronoi(vector<Point> *_parent_sites,
+bool VoronoiDiagramGenerator::generateVoronoi(vector<VPoint> *_parent_sites,
 					      double minX, double maxX, 
 					      double minY, double maxY, 
 					      double minDist){
@@ -249,7 +249,7 @@ Halfedge* VoronoiDiagramGenerator::ELgethash(int b){
   return (Halfedge*) NULL;
 }	
 
-Halfedge * VoronoiDiagramGenerator::ELleftbnd(Point *p){
+Halfedge * VoronoiDiagramGenerator::ELleftbnd(VPoint *p){
   int i, bucket;
   Halfedge *he;
 	
@@ -418,9 +418,9 @@ Edge * VoronoiDiagramGenerator::bisect(Site *s1, Site *s2){
 
 
 // create a new site where the HalfEdges el1 and el2 intersect - note
-// that the Point in the argument list is not used, don't know why
+// that the VPoint in the argument list is not used, don't know why
 // it's there
-Site* VoronoiDiagramGenerator::intersect(Halfedge *el1, Halfedge *el2, Point *p){
+Site* VoronoiDiagramGenerator::intersect(Halfedge *el1, Halfedge *el2, VPoint *p){
   Edge *e1,*e2, *e;
   Halfedge *el;
   double d, xint, yint;
@@ -520,7 +520,7 @@ Site* VoronoiDiagramGenerator::intersect(Halfedge *el1, Halfedge *el2, Point *p)
 //HERE
 
 /* returns 1 if p is to right of halfedge e */
-int VoronoiDiagramGenerator::right_of(Halfedge *el,Point *p)
+int VoronoiDiagramGenerator::right_of(Halfedge *el,VPoint *p)
 {
   Edge *e;
   Site *topsite;
@@ -685,9 +685,9 @@ int VoronoiDiagramGenerator::PQempty()
 }
 
 
-Point VoronoiDiagramGenerator::PQ_min()
+VPoint VoronoiDiagramGenerator::PQ_min()
 {
-  Point answer;
+  VPoint answer;
 	
   while(PQhash[PQmin].PQnext == (Halfedge *)NULL) {PQmin += 1;};
   answer.x = PQhash[PQmin].PQnext->vertex->coord.x;
@@ -1026,7 +1026,7 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 {
   Site *newsite, *bot, *top, *temp, *p;
   Site *v;
-  Point newintstar;
+  VPoint newintstar;
   int pm;
   Halfedge *lbnd, *rbnd, *llbnd, *rrbnd, *bisector;
   Edge *e;
@@ -1145,7 +1145,7 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 
 int scomp(const void *p1,const void *p2)
 {
-  Point *s1 = (Point*)p1, *s2=(Point*)p2;
+  VPoint *s1 = (VPoint*)p1, *s2=(VPoint*)p2;
   if(s1->y < s2->y) return(-1);
   if(s1->y > s2->y) return(1);
   if(s1->x < s2->x) return(-1);

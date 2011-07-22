@@ -68,7 +68,7 @@ private:
    * compute the intersection of one triangle with the circle
    * the area is returned
    */
-  double edge_circle_intersection(const Point &p0,
+  double edge_circle_intersection(const VPoint &p0,
 				  const GraphEdge &edge);
 
   /// get the area of a circle of radius R centred on the point 0 with
@@ -85,11 +85,11 @@ private:
  * compute the intersection of one triangle with the circle
  * the area is returned
  */
-double VAC::edge_circle_intersection(const Point &p0,
+double VAC::edge_circle_intersection(const VPoint &p0,
 				     const GraphEdge &edge){
-  Point p1(edge.x1-p0.x, edge.y1-p0.y);
-  Point p2(edge.x2-p0.x, edge.y2-p0.y);
-  Point pdiff = p2-p1;
+  VPoint p1(edge.x1-p0.x, edge.y1-p0.y);
+  VPoint p2(edge.x2-p0.x, edge.y2-p0.y);
+  VPoint pdiff = p2-p1;
 
   //fprintf(stdout, "\tpt(%f,%f)\n", p0.x, p0.y);
 
@@ -175,7 +175,7 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 
   assert(effective_R < 0.5*pi);
 
-  vector<Point> voronoi_particles;
+  vector<VPoint> voronoi_particles;
   vector<int> voronoi_indices;
 
   _effective_R         = effective_R;
@@ -194,7 +194,7 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
     if ((jet_it->perp2()) != 0.0 || (jet_it->E() != jet_it->pz())){
       // generate the corresponding point
       double rap = jet_it->rap(), phi = jet_it->phi();
-      voronoi_particles.push_back(Point(rap, phi));
+      voronoi_particles.push_back(VPoint(rap, phi));
       voronoi_indices.push_back(n_tot);
       n_added++;
 
@@ -202,11 +202,11 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
       // of the 0,2pi borders (because we are interested in any
       // voronoi edge within _R_effective of the other border)
       if (phi < 2*_effective_R) {
-	voronoi_particles.push_back(Point(rap,phi+twopi));
+	voronoi_particles.push_back(VPoint(rap,phi+twopi));
 	voronoi_indices.push_back(-1);
 	n_added++;
       } else if (twopi-phi < 2*_effective_R) {
-	voronoi_particles.push_back(Point(rap,phi-twopi));
+	voronoi_particles.push_back(VPoint(rap,phi-twopi));
 	voronoi_indices.push_back(-1);
 	n_added++;
       }
@@ -224,10 +224,10 @@ VAC::VoronoiAreaCalc(const vector<PseudoJet>::const_iterator &jet_begin,
 
   // add extreme cases (corner particles):
   double max_extend = 2*max(maxrap-minrap+4*_effective_R, twopi+8*_effective_R);
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap)-max_extend, pi));
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap)+max_extend, pi));
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap), pi-max_extend));
-  voronoi_particles.push_back(Point(0.5*(minrap+maxrap), pi+max_extend));
+  voronoi_particles.push_back(VPoint(0.5*(minrap+maxrap)-max_extend, pi));
+  voronoi_particles.push_back(VPoint(0.5*(minrap+maxrap)+max_extend, pi));
+  voronoi_particles.push_back(VPoint(0.5*(minrap+maxrap), pi-max_extend));
+  voronoi_particles.push_back(VPoint(0.5*(minrap+maxrap), pi+max_extend));
 
   // Build the VD
   VoronoiDiagramGenerator vdg;
