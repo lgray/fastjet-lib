@@ -145,8 +145,9 @@ public:
   /// Only relevant is called prior to run().
   void set_absolute_z_cut(bool abs_z_cut=true) {_absolute_z_cut = abs_z_cut;}
   
-  /// run the tagger on the given cs/jet
-  /// returns the tagged PseudoJet if successful, 0 otherwise
+  /// runs the tagger on the given jet and
+  /// returns the tagged PseudoJet if successful, or a PseudoJet==0 otherwise
+  /// (standard access is through operator()).
   virtual PseudoJet result(const fastjet::PseudoJet & jet) const;
 
   /// the type of Structure returned

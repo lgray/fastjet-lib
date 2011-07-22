@@ -1,3 +1,11 @@
+2011-07-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/MassDropTagger.hh: 
+	* tools/fastjet/tools/JHTopTagger.hh: 
+	* tools/fastjet/tools/CASubJetTagger.hh: 
+	* tools/fastjet/tools/NSubjettinessTagger.hh: 
+	  reowrked some doxygen comments a little.
+
 2011-07-21  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
 	* example/fastjet_subtraction.cc: 

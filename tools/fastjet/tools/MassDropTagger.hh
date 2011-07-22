@@ -97,7 +97,9 @@ public:
   /// description of the tagger
   virtual std::string description() const;
 
-  /// returns the tagged PseudoJet if successful, 0 otherwise
+  /// runs the tagger on the given jet and
+  /// returns the tagged PseudoJet if successful, a PseudoJet==0 otherwise
+  /// (standard access is through operator()).
   ///  \param jet   the PseudoJet to tag
   virtual PseudoJet result(const PseudoJet & jet) const;
 

@@ -112,8 +112,9 @@ public:
   /// tagger description
   virtual std::string description() const;
 
-  /// action on a single jet
-  /// returns the tagged PseudoJet if successful, 0 otherwise
+  /// runs the tagger on the given jet and
+  /// returns the tagged PseudoJet if successful, a PseudoJet==0 otherwise
+  /// (standard access is through operator()).
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of Structure returned
