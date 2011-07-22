@@ -1,5 +1,13 @@
 2011-07-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* doc/fastjet-doc.tex: 
+	  chnaged last paragraph of 9.1 (it didn't reflect the structure
+	  of the many plugins in the following two subsections). Also
+	  mentioned the stable_sort in the documentation of the ATLASCone
+	  and TrackJet plugins.
+
+	  Also documented delete_recombiner_when_unused().
+
 	* tools/fastjet/tools/MassDropTagger.hh: 
 	* tools/fastjet/tools/JHTopTagger.hh: 
 	* tools/fastjet/tools/CASubJetTagger.hh: 

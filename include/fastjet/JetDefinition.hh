@@ -309,8 +309,8 @@ public:
     _default_recombiner = DefaultRecombiner(external_scheme);
   }
 
-  /// allows to let the JetDefinition handle the deletion of the
-  /// recombiner when it is no longer used
+  /// calling this tells the JetDefinition to handle the deletion of
+  /// the recombiner when it is no longer used
   void delete_recombiner_when_unused();
 
   /// return a pointer to the plugin 

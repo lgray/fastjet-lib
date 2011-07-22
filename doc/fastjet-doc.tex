@@ -3720,17 +3720,26 @@ The user should carry out a dynamic cast so as to convert the extras
 back to the specific plugin extras class, as illustrated later for
 SISCone.
 
-Example plugin jet algorithms that are provided with \fastjet are the
-\ttt{CDFMidPointPlugin} illustrated above and also a
-\ttt{CDFJetCluPlugin}. These interface code available at
-\cite{CDFCones}. The \ttt{PxConePlugin} interfaces the PxCone code
-\cite{PxCone}.  All three of these cone jet algorithms, though widely
-used, are infrared or collinear unsafe (depending on the parameters).
+A number of plugins are provided with \fastjet, providing
+implementations of most of the jet algorithms used experimentally
+since the 1990's.
 %
-The \ttt{SISConePlugin}, described in detail below,
-interfaces the infrared safe seedless cone algorithm of
-\cite{SISCone}. Examples using these plugins and some further
-documentation are provided in the \ttt{plugins/} directory.
+They are described below. 
+%
+The code for them is to be found in \fastjet's \ttt{plugins/} directory.
+
+
+% Example plugin jet algorithms that are provided with \fastjet are the
+% \ttt{CDFMidPointPlugin} illustrated above and also a
+% \ttt{CDFJetCluPlugin}. These interface code available at
+% \cite{CDFCones}. The \ttt{PxConePlugin} interfaces the PxCone code
+% \cite{PxCone}.  All three of these cone jet algorithms, though widely
+% used, are infrared or collinear unsafe (depending on the parameters).
+% %
+% The \ttt{SISConePlugin}, described in detail below,
+% interfaces the infrared safe seedless cone algorithm of
+% \cite{SISCone}. Examples using these plugins and some further
+% documentation are provided in the \ttt{plugins/} directory.
 
 % Any attempt to call these functions from outside the plugin will cause
 % an error.
@@ -4127,7 +4136,14 @@ the preparation for the LHC.
 \end{lstlisting}
 $f$ is the overlap threshold
 
-The underlying code for this algorithm was extracted from SpartyJet \cite{SpartyJet}.
+The underlying code for this algorithm was extracted from SpartyJet
+\cite{SpartyJet}.
+%
+Since version 3.0 of \fastjet it is a slightly modified version that
+we distribute, where an internal \ttt{sort} function has been replaced
+with a \ttt{stable\_sort}, to ensure reproducibility of results across
+compilers and architectures (results are unchanged when the results of
+the sort are unambiguous).
 
 Note: this algorithm is IR$_{2+1}$ unsafe (in the limit of zero seed
 threshold). It is to be deprecated for new experimental or theoretical
@@ -4221,6 +4237,13 @@ combined in the procedure that constructs the jets.
 The underlying code for this algorithm was written by the \fastjet
 authors, based on code extracts from the Rivet implementation, written
 by Andy Buckley with input from Manuel Bahr and Rick Field.
+%
+Since version 3.0 of \fastjet it is a slightly modified version that
+we distribute, where an internal \ttt{sort} function has been replaced
+with a \ttt{stable\_sort}, to ensure reproducibility of results across
+compilers and architectures (results are unchanged when the results of
+the sort are unambiguous).
+
 
 % provided by Lars Sonnenschein.
 Note: this algorithm is believed to be Coll$_{3+1}$ unsafe. It is to
@@ -4469,10 +4492,22 @@ object derived from \ttt{JetDefinition::Recombiner} instead of the
                 const JetDefinition::Recombiner * recombiner,
                 Strategy strategy = Best);
 \end{lstlisting}
+%
 The derived class \ttt{JetDefinition::DefaultRecombiner} is what is
 used internally to implement the various recombination schemes if an
 external \ttt{Recombiner} is not provided. It provides a useful
 example of how to implement a new \ttt{Recombiner} class.
+%
+
+The recombiner can also be set with a \ttt{set\_recombiner(...)} call.
+%
+If the recombiner has been created with a \ttt{new} statement and the
+user does not wish to manage the deletion of the corresponding memory
+when the \ttt{JetDefinition} (and any copies) using the recombiner
+goes out of scope, then user may wish to call the
+\ttt{delete\_recombiner\_when\_unused()} function, which tells the
+\ttt{JetDefinition} to acquire ownership of the pointer to the
+recombiner and delete it when it is no longer needed.
 
 %======================================================================
 \section{User Info in PseudoJets}
