@@ -7,9 +7,8 @@ Summary of changes from v3.0alpha3 -> v3.0beta1:  XXX July 2011
 New features
 - Reorganised background estimation to have a JetMedianBackgroundEstimator
   and a GridMedianBackgroundEstimator (derived from BackgroundEstimatorBase)
-  [v3.0alpha3 behaviour is recovered by replacing
-           BackgroundEstimator -> JetMedianBackgroundEstimator , 
-   though the constructors have also been modified.]
+  [v3.0alpha3 behaviour is recovered by replacing BackgroundEstimator 
+   -> JetMedianBackgroundEstimator, and using a new order of constructor arguments]
 - Added the GridJetPlugin
 - added a Johns Hopkins top tagger (JHTopTagger)
 - to JetDefinition added delete_plugin_when_unused(), 
