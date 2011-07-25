@@ -307,7 +307,7 @@ using namespace std;
 int main () {
   vector<PseudoJet> particles;
   // an event with three particles:    px py pz    E
-  particles.push_back( PseudoJet(  100.0,  0.1,  0, 100.0) ); 
+  particles.push_back( PseudoJet(   99.0,  0.1,  0, 100.0) ); 
   particles.push_back( PseudoJet(    4.0, -0.1,  0,   5.0) ); 
   particles.push_back( PseudoJet(  -99.0,    0,  0,  99.0) );
 
@@ -350,8 +350,8 @@ The output will consist of a banner, followed by the lines
 Clustering with Longitudinally invariant anti-kt algorithm with R = 0.7 
 and E scheme recombination
         pt y phi
-jet 0: 104 0 0
-    constituent 0's pt: 100
+jet 0: 103 0 0
+    constituent 0's pt: 99.0001
     constituent 1's pt: 4.00125
 jet 1: 99 0 3.14159
     constituent 0's pt: 99
