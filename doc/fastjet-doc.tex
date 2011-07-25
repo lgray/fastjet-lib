@@ -307,9 +307,9 @@ using namespace std;
 int main () {
   vector<PseudoJet> particles;
   // an event with three particles:    px py pz    E
-  particles.push_back( PseudoJet(  95.0, 0, 0,  95.0) ); 
-  particles.push_back( PseudoJet(   5.0, 0, 0,   5.0) ); 
-  particles.push_back( PseudoJet(-100.0, 0, 0, 100.0) );
+  particles.push_back( PseudoJet(  95.0,  0.1, 0,  95.0) ); 
+  particles.push_back( PseudoJet(   5.0, -0.1, 0,   5.0) ); 
+  particles.push_back( PseudoJet(-100.0,    0, 0, 100.0) );
 
   // choose a jet definition
   double R = 0.7;
@@ -317,7 +317,7 @@ int main () {
 
   // run the clustering, extract the jets
   ClusterSequence cs(particles, jet_def);
-  vector<PseudoJet> jets = cs.inclusive_jets();
+  vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
 
   // print out some infos
   cout << "Clustering with " << jet_def.description() << endl;
@@ -353,8 +353,8 @@ and E scheme recombination
 jet 0: 100 0 3.14159
     constituent 0: 100 0 3.14159
 jet 1: 100 0 0
-    constituent 0: 95 0 0
-    constituent 1: 5 0 0
+    constituent 0: 95.0001 5.54016e-07 0.00105263
+    constituent 1: 5.001 0.00019996 6.26319
 \end{verbatim}
 
 More evolved example programs, illustrating many of the capabilites of \fastjet,
