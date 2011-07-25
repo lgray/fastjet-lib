@@ -307,9 +307,9 @@ using namespace std;
 int main () {
   vector<PseudoJet> particles;
   // an event with three particles:    px py pz    E
-  particles.push_back( PseudoJet(  95.0,  0.1, 0,  95.0) ); 
-  particles.push_back( PseudoJet(   5.0, -0.1, 0,   5.0) ); 
-  particles.push_back( PseudoJet(-100.0,    0, 0, 100.0) );
+  particles.push_back( PseudoJet(  94.0,  1.0, 0,  95.0) ); 
+  particles.push_back( PseudoJet(   4.0, -1.0, 0,   5.0) ); 
+  particles.push_back( PseudoJet( -98.0,    0, 0, 100.0) );
 
   // choose a jet definition
   double R = 0.7;
@@ -350,11 +350,11 @@ The output will consist of a banner, followed by the lines
 Clustering with Longitudinally invariant anti-kt algorithm with R = 0.7 
 and E scheme recombination
         pt y phi
-jet 0: 100 0 3.14159
-    constituent 0: 100 0 3.14159
-jet 1: 100 0 0
-    constituent 0: 95.0001 5.54016e-07 0.00105263
-    constituent 1: 5.001 0.00019996 6.26319
+jet 0: 98 0 3.14159
+    constituent 0: 98 0 3.14159
+jet 1: 98 0 0
+    constituent 0: 94.0053 0 0.0106379
+    constituent 1: 4.12311 0 6.03821
 \end{verbatim}
 
 More evolved example programs, illustrating many of the capabilites of \fastjet,
