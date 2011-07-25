@@ -4134,12 +4134,14 @@ build system.
 \section{User Info in PseudoJets}
 \label{app:user-info}
 
-One method for associating extra user information with a \ttt{PseudoJet} is
-via its user index (section~\ref{sec:PseudoJet}). This is
-adequate for encoding simple information (for example an input
-particle's barcode in a HepMC event), but can quickly show its
-limitations (for example, when simulating pileup, if an input particle
-can come from one of several HepMC events).
+One method for associating extra user information with a
+\ttt{PseudoJet} is via its user index
+(section~\ref{sec:PseudoJet}). This is adequate for encoding simple
+information (for example an input particle's barcode in a HepMC
+event), but can quickly show its limitations (for example, when
+simulating pileup one might have several HepMC events and it is then
+useful for each particle to additionally store information about which
+HepMC event it comes from).
 
 A second method for supplementing a \PJ with extra user information is for
 the user to derive a class from \ttt{PseudoJet::UserInfoBase} and
