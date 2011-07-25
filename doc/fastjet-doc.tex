@@ -481,17 +481,16 @@ A \verb:PseudoJet: can be reset with
 \end{lstlisting}
 and similarly taking as argument a templated
 \verb:some_lorentz_vector: or a \verb:PseudoJet: (in the latter case,
-with \ttt{reset}, the user and internal indices and user-info are
-copied from the \PJ).
+or when \verb:some_lorentz_vector: is of a type derived from
+\verb:PseudoJet:, \ttt{reset} also copies the user and internal indices and
+user-info).
 
 Additionally, the \ttt{+}, \ttt{-}, \ttt{*} and \ttt{/} operators are
 defined, with \ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and
 \ttt{*}, \ttt{/} acting on a \ttt{PseudoJet} and a \ttt{double}
 coefficient.
 %
-The
-%
-Analogous \ttt{+=}, etc., operators, are also defined.
+The analogous \ttt{+=}, etc., operators, are also defined.
 
 There are also equality testing operators: \ttt{(jet1 == jet2)}
 returns true if the two jets have identical 4-momenta, structural
@@ -1932,8 +1931,8 @@ significantly faster to compute than the active area.
 
 This is the main class\footnote{  
 \ttt{ClusterSequenceArea} makes use of one among
-\ttt{ClusterSequenceActiveArea}, 
 \ttt{ClusterSequenceActiveAreaExplicitGhosts}, 
+\ttt{ClusterSequenceActiveArea}, 
 \ttt{ClusterSequencePassiveArea},
 \ttt{ClusterSequence1GhostPassiveArea} or 
 \ttt{ClusterSequenceVoronoiArea} (all of them in the \ttt{fastjet}
@@ -2312,8 +2311,8 @@ the number of empty jets then being calculated based on the average
 jet area for ghost jets ($0.55\pi R^2$~\cite{CSSAreas}).
 %
 All four function above return a result corresponding to the last call
-to \ttt{rho} or \ttt{sigma} (as long as the cluster sequence or
-selector has not changed in the meantime).
+to \ttt{rho} or \ttt{sigma} (as long as the particles, cluster sequence or
+selector have not changed in the meantime).
 
 To allow flexibility in the user's workflow, there are a number of
 alternative constructors to \ttt{JetMedianBackgroundEstimator}.
@@ -2540,7 +2539,7 @@ The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
 %
 If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then
 the subtractor instead returns a jet with zero 4-momentum (so that
-.\ttt(subtracted\_jet==0) returns \ttt{true}).
+\ttt(subtracted\_jet==0) returns \ttt{true}).
 %
 In both cases, the returned jet retains the user and structural
 information of the original jet.
