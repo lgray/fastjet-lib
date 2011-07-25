@@ -279,8 +279,8 @@ public:
   friend class Filter;  // allow the filter to change the protected/private members
 
 protected:
-  PseudoJet _original_jet;
-  std::vector<PseudoJet> _rejected;
+  PseudoJet _original_jet;           ///< the original jet
+  std::vector<PseudoJet> _rejected;  ///< the subjets rejected by the filter
 };
 
 

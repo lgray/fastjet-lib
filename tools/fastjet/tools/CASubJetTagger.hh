@@ -208,12 +208,15 @@ public:
   /// pieces of this jet (normalised relative to the original jet)
   bool absolute_z() const {return _absolute_z;}
 
+  /// returns the original jet (before tagging)
+  const PseudoJet & original() const {return _original_jet;}
 
 protected:
   CASubJetTagger::ScaleChoice _scale_choice; ///< the user scale choice 
   double _distance;  ///< the maximal distance associated with the result
   bool _absolute_z;  ///< whether z is computed wrt to the original jet or not
   double _z;         ///< the transverse momentum fraction
+  PseudoJet _original_jet;  ///< the original jet (before tagging)
 
   friend class CASubJetTagger; ///< to allow setting the internal information
 };

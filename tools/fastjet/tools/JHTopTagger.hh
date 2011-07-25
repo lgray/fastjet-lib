@@ -202,10 +202,15 @@ public:
   /// returns the W helicity angle
   inline double cos_theta_W() const {return _cos_theta_w;}
 
+  /// returns the original jet (before tagging)
+  const PseudoJet & original() const {return _original_jet;}
+
+
 protected:
-  double _cos_theta_w;   ///< the W helicity angle
-  PseudoJet _W;          ///< the tagged W
-  PseudoJet _non_W;      ///< the remaining pieces
+  double _cos_theta_w;      ///< the W helicity angle
+  PseudoJet _W;             ///< the tagged W
+  PseudoJet _non_W;         ///< the remaining pieces
+  PseudoJet _original_jet;  ///< the original jet (before tagging)
 
   // allow the tagger to set these
   friend class JHTopTagger;

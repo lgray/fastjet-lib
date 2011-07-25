@@ -119,6 +119,7 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
     = jet.associated_cluster_sequence()->jet_def().recombiner();
   PseudoJet result = join<JHTopTaggerStructure>(subjets, *rec);
   JHTopTaggerStructure *s = (JHTopTaggerStructure*) result.structure_non_const_ptr();
+  s->_original_jet = jet;
   s->_W = join(subjets[0], subjets[1], *rec);
   if (subjets.size()>3)
     s->_non_W = join(subjets[2], subjets[3], *rec);

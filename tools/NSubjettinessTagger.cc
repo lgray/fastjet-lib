@@ -105,6 +105,7 @@ PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
     
   PseudoJet result = join<StructureType>(subjet_lab1,subjet_lab2);
   StructureType * s = (StructureType *) result.structure_non_const_ptr();
+  s->_original_jet = jet;
   s->_tau2 = tau2;
   s->_costhetas = max(ct0, ct1);
 

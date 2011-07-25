@@ -147,10 +147,14 @@ public:
   /// returns the associated angle with the boosted axis
   inline double costhetas() const {return _costhetas;}
 
+  /// returns the original jet (before tagging)
+  const PseudoJet & original() const {return _original_jet;}
+
 protected:
   double _tau2;      ///< the value of the N-subjettiness
   double _costhetas; ///< the minimal angle between the dijets
   		     ///< and the boost axis
+  PseudoJet _original_jet;  ///< the original jet (before tagging)
 
   // allow the tagger to set these
   friend class NSubjettinessTagger;
