@@ -1387,6 +1387,691 @@ custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
 
 
 
+
+
+%======================================================================
+\section{Plugin jet algorithms}
+\label{sec:plugins}
+
+It can be useful to have a common interface for a range of jet
+algorithms beyond the native ($k_t$, anti-$k_t$ and Cambridge/Aachen)
+algorithms, and it can also be useful to use the area-measurement
+tools for these other jet algorithms. In order to facilitate this, the
+\fastjet package provides a \emph{plugin} facility, allowing almost
+any other jet algorithm\footnote{Except those that perform $3\to2$
+  clusterings for which there is no unique mapping of particles into
+  jets (some particles are effectively shared among more than one
+  jet).} to be used within the same framework.
+
+%----------------------------------------------------------------------
+\subsection{Generic plugin use}
+\label{sec:generic-plugin-use}
+
+Plugins are classes derived from the abstract base class
+\ttt{fastjet::JetDefinition::Plugin}.
+%
+A \ttt{JetDefinition} can be constructed by providing a pointer to a
+\ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
+can then be used identically to the normal \ttt{JetDefinition} objects
+used in the previous sections:
+\begin{lstlisting}
+   // have some plugin class derived from the Plugin base class
+   class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
+
+   // create an instance of the CDFMidPointPlugin class 
+   CDFMidPointPlugin cdf_midpoint( [... options ...] );
+   // create the jet definition by passing a pointer to the plugin
+   fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
+
+   // then create a ClusterSequence with the input particles and jet_def,
+   // and use it to extract jets as usual
+   // ...
+\end{lstlisting}
+In cases where the plugin has been created with a \ttt{new} statement
+and the user does not wish to manage the deletion of the corresponding
+memory when the \ttt{JetDefinition} (and any copies) using the plugin
+goes out of scope, then the user may wish to call the
+\ttt{JetDefinition}'s \ttt{delete\_plugin\_when\_unused()} function,
+which tells the \ttt{JetDefinition} to acquire ownership of the
+pointer to the plugin and delete it when it is no longer needed.
+
+A number of plugins are provided with \fastjet, providing
+implementations of most of the jet algorithms used experimentally
+since the 1990's.
+%
+They are described in
+sections~\ref{sec:siscone-plugin}--\ref{sec:ee-cam}.
+%
+The code for them is to be found in \fastjet's \ttt{plugins/} directory.
+
+New user-defined plugins can also be implemented, as described 
+in section~\ref{sec:new-plugin}.
+
+%----------------------------------------------------------------------
+\subsection{SISCone Plugin}
+\label{sec:siscone-plugin}
+
+SISCone~\cite{SISCone} is an implementation of a cone type jet algorithm.
+As with most modern cone algorithms, it is divided into two parts:
+first it searches for stable cones; then, because a particle can
+appear in more than one stable cone, a `split--merge' procedure is
+applied, which ensures that no particle ends up in more than one jet.
+The stable cones are identified using an $\order{N^2 \ln N}$ seedless
+approach. This (and some care in the the `split--merge' procedure)
+ensures that the jets it produces are insensitive to additional soft
+particles and collinear splittings (i.e.\ the jets are infrared
+and collinear safe).
+
+The plugin library and include files are to be be found in the
+\verb:plugins/SISCone: directory, and the main header file is
+\verb:SISConePlugin.hh:. The \verb:SISConePlugin: class has a
+constructor with the following structure
+\begin{lstlisting}
+  SISConePlugin (double cone_radius,
+                 double overlap_threshold = 0.5,
+                 int    n_pass_max = 0,
+                 double protojet_ptmin = 0.0, 
+                 bool   caching = false,
+                 SISConePlugin::SplitMergeScale   
+                                split_merge_scale = SISConePlugin::SM_pttilde);
+\end{lstlisting}
+A cone centered at $y_c,\phi_c$ is stable if the sum of momenta of all
+particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
+\verb:cone_radius:^2$ has rapidity $y_c,\phi_c$.
+%
+The \verb:overlap_threshold: is the fraction of overlapping momentum
+above which two protojets are merged in a Tevatron Run~II type
+\cite{RunII-jet-physics} split--merge procedure.\footnote{Though its
+  default value is 0.5 (retained for backwards compatibility of the
+  interface) we strongly recommend using a higher value, e.g.\ 0.75,
+  especially in high-noise environments, in order to disfavour the
+  production of monster jets through repeated merge operations. } % 
+The
+radius and overlap parameters are a common feature of most modern cone
+algorithms. Because some event particles are not to be found in any
+stable cone \cite{EHT}, SISCone can carry out multiple stable-cone
+search passes (as advocated in \cite{TeV4LHC}): in each pass one
+searches for stable cones using just the subset of particles not
+present in any stable cone in earlier passes. Up to \verb:n_pass_max:
+passes are carried out, and the algorithm automatically stops at the
+highest pass that gives no new stable cones. The default of
+$\verb:n_pass_max: = 0$ is equivalent to setting it to $\infty$.
+Since concern has been expressed that an excessive number of stable
+cones may complicate cone jets in events with high
+noise~\cite{RunII-jet-physics}, the \verb:protojet_ptmin: parameter
+allows one to use only protojets with $p_t \ge \verb:protojet_ptmin:$
+in the split--merge phase (all others are thrown away).\footnote{Early
+  experience indicates that \ttt{protojet\_ptmin} is actually
+  perfectly adequate and that potential problems of massively
+  agglomerated jets that can occur in high-noise environments (for a
+  wide range of cone algorithms) can be addressed with a slightly
+  larger value of the \ttt{overlap\_threshold}, $ \gtrsim 0.6$.}
+
+In many cases SISCone's most time-consuming step is the search for
+stable cones. If one has multiple \verb:SISConePlugin:-based jet
+definitions, each with \verb:caching=true:, a check will be carried
+out whether the previously clustered event had the same set of
+particles and the same cone radius and number of passes. If it did,
+the stable cones are simply reused from the previous event, rather
+than being recalculated, and only the split--merge step is repeated,
+often leading to considerable speed gains.
+
+A final comment concerns the \verb:split_merge_scale:
+parameter. This controls both the scale used for ordering the
+protojets during the split--merge step during the split--merge step,
+and also the scale used to measure the degree of overlap between
+protojets. While various options have been implemented, 
+\begin{lstlisting}
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde };
+\end{lstlisting}
+we recommend using only the last of them $\tilde p_t = \sum_{i \in
+  \mathrm{jet}}|p_{t,i}|$, which is also the default scale. The other
+scales are included only for historical comparison purposes: $p_t$
+(used in several other codes) is IR unsafe for events whose hadronic
+component conserves momentum, $E_t$ (advocated in
+\cite{RunII-jet-physics}) is not boost-invariant, and $m_t = \sqrt{m^2
+  + p_t^2}$ is IR unsafe for events whose hadronic component conserves
+momentum and stems from the decay of two identical particles.
+
+
+An example of the use of the SISCone plugin would be as follows:
+\begin{lstlisting}
+  // define a SISCone plugin pointer
+  fastjet::SISConePlugin * plugin;
+
+  // allocate a new plugin for SISCone
+  double cone_radius = 0.7;
+  double overlap_threshold = 0.5;
+  plugin = new fastjet::SISConePlugin (cone_radius, overlap_threshold);
+
+  // create a jet-definition based on the plugin
+  fastjet::JetDefinition jet_def(plugin);
+
+  // prepare the set of particles
+  vector<fastjet::PseudoJet> particles;
+  read_input_particles(cin, particles); // or whatever you want here
+
+  // run the jet algorithm and look at the jets
+  fastjet::ClusterSequence clust_seq(particles, jet_def);
+  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
+  // then analyse the jets as for native FastJet jets
+
+  // only when you will no longer be using the jet definition, or
+  // ClusterSequence objects that involve it, may you delete the 
+  // plugin
+  delete plugin;
+\end{lstlisting}
+Note that the it makes no sense to ask for exclusive jets from a
+SISCone based \verb:ClusterSequence:.
+
+Some extra output information is appropriate for a cone algorithm that
+is not of relevance in clustering algorithms, through the
+\verb:extras: resource,
+\begin{lstlisting}
+   const fastjet::SISConeExtras * extras = 
+             dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
+\end{lstlisting}
+To determine the pass at which a given jet was found, one does the
+following
+\begin{lstlisting}
+   int pass = extras->pass(jet);
+\end{lstlisting}
+%
+The user may also obtain a list of the positions of original stable
+cones as follows:
+\begin{lstlisting}
+   vector<PseudoJet> stable_cones(extras->stable_cones());
+\end{lstlisting}
+The stable cones are represented as four-momenta, for which only the
+rapidity and azimuth are meaningful. The \verb:user_index(): indicates
+the pass at which a given stable cone was found.
+
+In the current version of SISCone, the \verb:user_index(): of a jet
+also corresponds to the pass at which it was found, however this
+manner of accessing the pass for a jet is \emph{deprecated} (for
+reasons related to the internal representation of jets, it fails for
+single-particle jets). It is retained in version 2.4 for backwards
+compatibility, but will be removed at some stage in the future.
+
+SISCone uses $E$-scheme recombination internally and also for
+constructing the final jets from the list of constituents. 
+%
+For the latter task, the user may instead instruct SISCone to use the
+jet-definition's own recombiner, with the command
+\begin{lstlisting}
+   plugin->set_use_jet_def_recombiner(true);
+\end{lstlisting}
+In this case the \verb:user_index(): no longer contains the
+information about the pass.
+
+
+
+%% the pass of a jet may is currently
+%% also contained in 
+%% 
+%% To determine the pass of a 
+%% 
+%% %
+%% \footnote{Owing to the
+%%   current internal representation of jets in \fastjet, this does not
+%%   work for jets consisting of a single particle --- the user index of
+%%   the jet is then just the user index originally attributed to that
+%%   particle (by default, $-1$).} %
+
+Since SISCone is infrared safe, it may meaningfully be used also with
+the \verb:ClusterSequenceArea: class. Note however that in that
+case ones loses the cone-specific information from the jets, because
+of the way \fastjet filters out the information relating to ghosts in
+the clustering. If the user needs both areas and cone-specific
+information, she/he may use the
+\verb:ClusterSequenceActiveAreaExplicitGhosts: class (for usage
+information, see the corresponding \verb:.hh: file). 
+
+A final remark concerns speed and memory requirements: as mentioned
+above, SISCone takes $\order{N^2 \ln N}$ time to find jets, and the
+memory use is $\order{N^2}$; taking $N=10^3$ as a reference point, it
+runs in a few tenths of a second, making it about 100 times slower
+than native \fastjet algorithms.
+%
+These are `expected' results, i.e.\ valid for a suitably random set of
+particles. In area determinations, the ghost particles are anything
+but random, and run times and memory usage are, in practice, somewhat
+larger than for a normal QCD event with the same number of particles.
+We therefore recommend running with not too small a \verb:ghost_area:
+(e.g.\ $\sim 0.05$) and using $\verb:grid_scatter:=1$, which helps to
+reduce the number of stable cones (and correspondingly, the time and
+memory usage of the subsequent split--merge step). An alternative, which
+has been found to be acceptable in most situations, is to use a passive
+area, since this is relatively fast to calculate with SISCone.
+
+
+%----------------------------------------------------------------------
+\subsection{Other plugins for $pp$ }
+\label{sec:other-pp-plugins}
+
+Not all plugins are enabled by default in \fastjet. At configuration
+time \verb:./configure.sh --help: will indicate which ones get enabled
+by default. To enable all plugins, run \verb|configure| with the
+argument \verb|--enable-allplugins|, while to enable all but PxCone
+(which requires fortran, and can introduce link-time issues) use
+\verb|--enable-allcxxplugins|.
+
+All plugins are in the \verb:fastjet: namespace. Below we show the
+file that needs to be included and the constructor for each plugin. 
+
+Except where stated, the usual way to access jets from these plugins
+is through \verb|ClusterSequence::inclusive_jets()|.
+
+Most of the algorithms listed below are either infrared (IR) or
+collinear unsafe. The details are indicated for each algorithm as
+follows: IR$_{n+1}$ means that the hard jets may be modified if, to an
+ensemble of $n$ hard particles in a common neighbourhood, one adds a
+single soft particle; Coll$_{n+1}$ means that for $n$ hard particles
+in a common neighbourhood, the collinear splitting of one of them may
+modify the hard jets.
+%
+The \fastjet authors (and numerous theory-experiment accords) advise
+against the use IR and collinear safe jet algorithms.  Interfaces to
+these algorithms have been provided mainly for legacy comparison
+purposes.
+
+As of \fastjet version 2.4, this section is partially incomplete (in
+particular it misses many references). This will hopefully evolve for
+future versions.
+
+
+
+\subsubsection{CDF Midpoint.} 
+One of the two algorithms used by CDF in Run~II of the Tevatron, based
+on \cite{RunII-jet-physics}. It is a midpoint-type iterative cone with
+a split--merge step.
+%
+\begin{lstlisting}
+  #include ``fastjet/CDFCones.hh''
+  ///...
+  CDFMidPointPlugin(double R, 
+                    double overlap_threshold,
+                    double seed_threshold = 1.0, 
+                    double cone_area_fraction = 1.0);
+\end{lstlisting}
+The overlap threshold ($f$) used by CDF is usually $0.5$, the seed
+threshold is $1$\,GeV and in most measurements the cone area fraction
+is $1$. With an area fraction $< 1$ this becomes the searchcone
+algorithm of \cite{EHT}.
+
+Further control over the plugin can be obtained by consulting the
+header file.
+
+The underlying code for this algorithm was taken from a webpage
+provided by Joey Huston (with minor modifications to ensure reasonable
+run times with optimising compilers for 32-bit intel processors ---
+these modifications do not affect the final jets).
+
+Note: this algorithm is IR$_{3+1}$ unsafe (in the limit of zero seed
+threshold~\cite{SISCone}; with \verb:cone_area_fraction:$\neq 1$ it
+becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}). It is to be deprecated for
+new experimental or theoretical analyses.
+
+\subsubsection{CDF JetClu}
+The other algorithm used by CDF during Run~II, as well as their main
+algorithm during Run~I.
+\begin{lstlisting}
+  #include ``fastjet/CDFCones.hh''
+  ///...
+  CDFJetCluPlugin (double   cone_radius, 
+		   double   overlap_threshold, 
+		   double   seed_threshold = 1.0,
+		   int      iratch = 1);
+\end{lstlisting}
+This is an iterative cone with split-merge and optional ``ratcheting''
+if \verb|iratch == 1| (particles that appear in one iteration fo a
+cone are retained in future iterations).
+%
+The overlap threshold is usually set to 0.75 in CDF analyses.
+
+Further control over the plugin can be obtained by consulting the
+header file.
+
+The underlying code for this algorithm was taken from a webpage
+provided by Joey Huston.
+
+Note: this algorithm is IR$_{2+1}$ unsafe (and some IR unsafety
+persists with non-zero seed threshold). It is to be deprecated for new
+experimental or theoretical analyses.
+%
+Note also that the underlying implementation groups particles ogether
+into calorimeter towers (with CDF-type geometry) before running the
+jet algorithm. 
+
+%......................................................................
+\subsubsection{\Dzero Run I cone}
+
+The main algorithm used by \Dzero in Run~I of the Tevatron, which is
+an  iterative cone algorithm with a split-merge. It comes in two versions
+\begin{lstlisting}
+  #include ``fastjet/D0RunIpre96ConePlugin.hh''
+  ///...
+  D0RunIpre96ConePlugin (double R, 
+                         double min_jet_Et, 
+                         double split_ratio = 0.5);
+\end{lstlisting}
+and
+\begin{lstlisting}
+  #include ``fastjet/D0RunIConePlugin.hh''
+  ///...
+  D0RunIConePlugin (double R, 
+                    double min_jet_Et, 
+                    double split_ratio = 0.5);
+\end{lstlisting}
+corresponding to versions of the algorithm used respectively before
+and after 1996. They differ only in the way the jet momenta are
+calculated, as described in \cite{Abbott:1997fc}.
+
+Instead of the seed threshold used in the CDF cones, the
+algorithm places a cut on the minimum $E_t$ of the cones during
+iteration (related to \verb|min_jet_Et|).
+%
+The \verb|split_ratio| is the same as the overlap threshold in other
+split-merge based algorithms (\Dzero usually use 0.5).
+%
+It is the \fastjet authors' understanding that the value 
+used for \verb|min_jet_Et| was 8\,GeV.
+
+The underlying code for this algorithm was provided by
+Lars Sonnenschein.
+
+
+Note: this algorithm is IR$_{2+1}$ unsafe. It is recommended that it
+be used only for the purpose of comparison with Run~I data from
+\Dzero.
+
+
+%......................................................................
+\subsubsection{\Dzero Run II cone}
+%
+The main algorithm used by \Dzero in Run~II of the Tevatron, which is
+a midpoint type iterative cone with split-merge.
+\begin{lstlisting}
+  #include ``fastjet/D0RunIIConePlugin.hh''
+  ///...
+  D0RunIIConePlugin (double R, 
+                     double min_jet_Et, 
+                     double split_ratio = 0.5);
+\end{lstlisting}
+The parameters have the same meaning as in the \Dzero Run~I cone and,
+once again, instead of a seed threshold there is a cut on the minimum
+$E_t$ of the cones during iteration (related to \verb|min_jet_Et|).
+%
+It is the \fastjet authors' understanding that two values have been
+used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
+6\,GeV (in more recent publications).
+
+
+% Instead of the seed threshold used in the CDF Midpoint cone, the
+% algorithm places a cut on the minimum $E_t$ of the cones during
+% iteration (related to \verb|min_jet_Et|).
+% %
+% The \verb|split_ratio| is the same as the overlap threshold in other
+% split-merge based algorithms (\Dzero usually use 0.5).
+% %
+% It is the \fastjet authors' understanding that two values have been
+% used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
+% 6\,GeV (in more recent publications).
+
+The underlying code for this algorithm was provided by
+Lars Sonnenschein.
+
+Note: this algorithm is IR$_{3+1}$ unsafe (IR$_{2+1}$ for jets with
+energy too close to \verb:min_jet_Et:). It is to be deprecated for new
+experimental or theoretical analyses.
+
+%......................................................................
+\subsubsection{ATLAS iterative cone}
+%
+The (iterative) cone (with split-merge) algorithm used by ATLAS during
+the preparation for the LHC. 
+\begin{lstlisting}
+  #include ``fastjet/AtlasConePlugin.hh''
+  ///...
+  ATLASConePlugin (double R, 
+                   double seedPt = 2.0, 
+                   double f = 0.5);
+\end{lstlisting}
+$f$ is the overlap threshold
+
+The underlying code for this algorithm was extracted from SpartyJet
+\cite{SpartyJet}.
+%
+Since version 3.0 of \fastjet it is a slightly modified version that
+we distribute, where an internal \ttt{sort} function has been replaced
+with a \ttt{stable\_sort}, to ensure reproducibility of results across
+compilers and architectures (results are unchanged when the results of
+the sort are unambiguous).
+
+Note: this algorithm is IR$_{2+1}$ unsafe (in the limit of zero seed
+threshold). It is to be deprecated for new experimental or theoretical
+analyses.
+
+%......................................................................
+\subsubsection{CMS iterative cone}
+%
+The (iterative) cone (with progressive removal) algorithm used by CMS during
+the preparation for the LHC. 
+\begin{lstlisting}
+  #include ``fastjet/CMSIterativeConePlugin.hh''
+  ///...
+  CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
+\end{lstlisting}
+
+
+The underlying code for this algorithm was extracted from the CMSSW
+web site, with certain small service routines having been rewritten by
+the FastJet authors. 
+%
+The resulting code was validated by clustering 1000 events with the
+original version of the CMS software and comparing the output to the
+clustering performed with the FastJet plugin. 
+%
+The jet contents were identical in all cases. However the jet momenta
+differed at a relative precision level of $10^{-7}$, related to the
+use of single-precision arithmetic at some internal stage of the CMS
+software (while the FastJet version is in double precision).
+
+
+Note: this algorithm is Coll$_{3+1}$ unsafe~\cite{antikt}. It is to be
+deprecated for new experimental or theoretical analyses.
+
+
+
+\subsubsection{PxCone}
+A fortran plugin for the PxCone algorithm, which is an iterative cone
+with midpoints and a split-drop procedure
+\begin{lstlisting}
+  #include ``fastjet/PxConePlugin.hh''
+  ///...
+  PxConePlugin (double  cone_radius      , 
+		double  min_jet_energy = 5.0  , 
+		double  overlap_threshold = 0.5,
+                bool    E_scheme_jets = false); 
+\end{lstlisting}
+with a threshold on the minimum cone transverse energy if it is to be
+included in the split-drop stage. 
+%
+If \verb|E_scheme_jets| is true then the plugin applies an $E$-scheme
+recombination to provide the momenta of the final jets (by default an
+$E_t$ type recombination scheme is used).
+
+The base code for this plugin is written in Fortran and, on some
+systems, problems have been reported at the link stage due to mixing
+Fortran and C++.
+%
+The Fortran code has been modified by the \fastjet authors to provide
+the same jets regardless of the order of the input particles.
+%
+This involved a small modification of the midpoint procedure, which
+can have a minor effect on the final jets and should make the algorithm
+correspond to the description of \cite{Seymour:2006vv}.
+
+The underlying code for this algorithm was taken from a google search
+for PxCone!
+
+Note: this algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
+new experimental or theoretical analyses.
+
+
+\subsubsection{TrackJet}
+%
+This algorithm has been used at the Tevatron for identifying jets from
+charged-particle tracks in underlying-event studies (a citation is
+needed here!).
+%
+\begin{lstlisting}
+  #include ``fastjet/TrackJetPlugin.hh''
+  ///...
+  TrackJetPlugin (double radius, 
+		  RecombinationScheme jet_recombination_scheme=pt_scheme, 
+		  RecombinationScheme track_recombination_scheme=pt_scheme);
+\end{lstlisting}
+Two recombination schemes are involved: the first one indicates how
+momenta are recombined to provide the final jets (once particle-jet
+assignments are known), the second one indicates how momenta are
+combined in the procedure that constructs the jets.
+
+The underlying code for this algorithm was written by the \fastjet
+authors, based on code extracts from the Rivet implementation, written
+by Andy Buckley with input from Manuel Bahr and Rick Field.
+%
+Since version 3.0 of \fastjet it is a slightly modified version that
+we distribute, where an internal \ttt{sort} function has been replaced
+with a \ttt{stable\_sort}, to ensure reproducibility of results across
+compilers and architectures (results are unchanged when the results of
+the sort are unambiguous).
+
+
+% provided by Lars Sonnenschein.
+Note: this algorithm is believed to be Coll$_{3+1}$ unsafe. It is to
+be deprecated for new experimental or theoretical analyses.
+
+\subsubsection{GridJet}
+%
+GridJet allows you to define a grid and then cluster particles such
+that all particles in a common grid cell combine to form a jet.
+%
+Its main interest is in providing fast clustering for high
+multiplicities (the clustering time scales linearly with the number of
+particles).
+%
+The jets that it forms are not always physically meaningful: for
+example, a genuine physical jet may lie at the corner of 4 grid cells
+and so be split up somewhat arbitrarily into 4 pieces.
+%
+However for some purposes (such as background estimation) this
+drawback is offset by the greater uniformity of the area of the jets.
+%
+Its interface is as follows
+\begin{lstlisting}
+  #include ``fastjet/GridJetPlugin.hh''
+  // ...
+  GridJetPlugin (double ymax, double requested_grid_spacing);
+\end{lstlisting}
+creating a grid that covers $|y|<$\ttt{ymax} with a grid spacing close
+to the \ttt{requested\_grid\_spacing}: the spacings chosen in $\phi$
+and $y$ are those that are closest to the requested spacing while also
+giving an integer number of grid cells that fit exactly into the
+rapidity and $0<\phi <2\pi$ ranges.
+
+Note that for background estimation purposes the
+\ttt{GridMedianBackgroundEstimator} is much faster than using the
+\ttt{GridJetPlugin} with ghosts and a
+\ttt{JetMedianBackgroundEstimator}.
+
+%----------------------------------------------------------------------
+\subsection{Other plugins for $e^+e^-$}
+\label{sec:other-ee-plugins}
+
+%......................................................................
+\subsubsection{Cambridge algorithm}
+\label{sec:ee-cam}
+The original $\ee$ cambridge~\cite{CamOrig} algorithm is provided as a plugin:
+\begin{lstlisting}
+  #include ``fastjet/EECambridgePlugin.hh''
+  ///...
+  EECambridgePlugin (double ycut);
+\end{lstlisting}
+This algorithms performs sequential recombination of the pair of
+particles that is closest in angle, except when $y_{ij} =
+\frac{2\min(E_i^2,E_j^2)}{Q^2}(1-\cos\theta) > y_{cut}$, in which case
+the less energetic of $i$ and $j$ is labelled a jet, and the other
+member of the pair remains free to cluster.
+
+To access the jets, the user should use the \verb|inclusive_jets()|,
+\ie as they would for the majority of the $pp$ algorithms.
+
+The underlying code for this algorithm was written by the \fastjet
+authors.
+
+%......................................................................
+\subsubsection{Jade algorithm}
+\label{sec:ee-jade}
+The JADE algorithm~\cite{Bartel:1986ua,Bethke:1988zc}, a sequential
+recombination algorithm with distance measure $d_{ij} = 2E_i E_j
+(1-\cos\theta)$, is available through
+\begin{lstlisting}
+  #include ``fastjet/JadePlugin.hh''
+  ///...
+  JadePlugin ();
+\end{lstlisting}
+To access the jets at a given $y_{cut} = d_{cut}/Q^2$, the user 
+should call \verb|ClusterSequence::exclusive_jets_ycut(double ycut)|.
+
+Note: the JADE algorithm has been used with various recombination
+schemes. The current plugin will use whatever recombination scheme the
+user specifies with for the jet definition. The default $E$-scheme is
+what was used in the original JADE publication \cite{Bartel:1986ua}.
+%
+To modify the recombination scheme, the user may first construct the
+jet definition and then use either of 
+\begin{lstlisting}
+  void JetDefinition::set_recombination_scheme(RecombinationScheme recomb_scheme);
+  void JetDefinition::set_recombiner(const Recombiner * recomb)
+\end{lstlisting}
+(cf.~sections~\ref{sec:recomb_schemes},\ref{sec:recombiner}) to modify the
+recombination scheme.
+
+The underlying code for this algorithm was written by the \fastjet
+authors.
+
+
+
+%% %----------------------------------------------------------------------
+%% \subsection{Summary of algorithms}
+%% \label{sec:summary-algorithms}
+%% 
+%% \begin{tabular}{lr|l|c|c|c|c}
+%%   \multicolumn{7}{c}{Native algorithms}\\\hline
+%%   alg.                   &  &  \ttt{JetAlgorithm}        & proc.    & params & speed & mem.
+%%   \\\hline                                                           
+%%   Long.\ inv.\ $k_t$ &\cite{} & \ttt{kt\_algorithm} & pp            & $R$    &  $N \ln N$ & $N$ \\
+%%   Cambridge/Aachen &\cite{} & \ttt{cambridge\_algorithm} & pp       & $R$    &  $N \ln N$ & $N$\\
+%%   anti-$k_t$ &\cite{} & \ttt{antikt\_algorithm} & pp                & $R$    &  $Nn^{1/2}$ & $N$ \\
+%%   generalised $k_t$ &\cite{} & \ttt{genkt\_algorithm} & pp          & $R,p$  &  $N \ln N$ -- $Nn^{1/2}$ & $N$
+%%   \\ \hline                                                          
+%%   $e^+e^-$ $k_t$ &\cite{} & \ttt{ee\_kt\_algorithm} & $\ee$         & $-$    &  $N^2$ & $N$ \\
+%%   $e^+e^-$ gen-$k_t$ &\cite{} & \ttt{ee\_genkt\_algorithm} & $\ee$  & $R,p$  &  $N^2$ & $N$ \\
+%% \end{tabular}
+%% 
+%% 
+%% \begin{tabular}{lr|c|c|c|c}
+%%   \multicolumn{6}{c}{Plugin algorithms}\\\hline
+%%   alg.                   &          & proc.    & params & speed & mem.\\
+%%   SISConePlugin & \cite{} & pp & $R,f,\ldots$ & $N n \ln n$ & $N^2$
+%%   \\\hline                                                           
+%% \end{tabular}
+
+
+
+
+
 %======================================================================
 \section{Selectors}
 
@@ -3376,686 +4061,6 @@ softer fourth) is(are) the remaining subjet(s).
 
 
 
-
-
-%======================================================================
-\section{Plugin jet algorithms}
-\label{sec:plugins}
-
-It can be useful to have a common interface for a range of jet
-algorithms beyond the native ($k_t$, anti-$k_t$ and Cambridge/Aachen)
-algorithms, and it can also be useful to use the area-measurement
-tools for these other jet algorithms. In order to facilitate this, the
-\fastjet package provides a \emph{plugin} facility, allowing almost
-any other jet algorithm\footnote{Except those that perform $3\to2$
-  clusterings for which there is no unique mapping of particles into
-  jets (some particles are effectively shared among more than one
-  jet).} to be used within the same framework.
-
-%----------------------------------------------------------------------
-\subsection{Generic plugin use}
-\label{sec:generic-plugin-use}
-
-Plugins are classes derived from the abstract base class
-\ttt{fastjet::JetDefinition::Plugin}.
-%
-A \ttt{JetDefinition} can be constructed by providing a pointer to a
-\ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
-can then be used identically to the normal \ttt{JetDefinition} objects
-used in the previous sections:
-\begin{lstlisting}
-   // have some plugin class derived from the Plugin base class
-   class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
-
-   // create an instance of the CDFMidPointPlugin class 
-   CDFMidPointPlugin cdf_midpoint( [... options ...] );
-   // create the jet definition by passing a pointer to the plugin
-   fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
-
-   // then create a ClusterSequence with the input particles and jet_def,
-   // and use it to extract jets as usual
-   // ...
-\end{lstlisting}
-In cases where the plugin has been created with a \ttt{new} statement
-and the user does not wish to manage the deletion of the corresponding
-memory when the \ttt{JetDefinition} (and any copies) using the plugin
-goes out of scope, then the user may wish to call the
-\ttt{JetDefinition}'s \ttt{delete\_plugin\_when\_unused()} function,
-which tells the \ttt{JetDefinition} to acquire ownership of the
-pointer to the plugin and delete it when it is no longer needed.
-
-A number of plugins are provided with \fastjet, providing
-implementations of most of the jet algorithms used experimentally
-since the 1990's.
-%
-They are described in
-sections~\ref{sec:siscone-plugin}--\ref{sec:ee-cam}.
-%
-The code for them is to be found in \fastjet's \ttt{plugins/} directory.
-
-New user-defined plugins can also be implemented, as described 
-in section~\ref{sec:new-plugin}.
-
-%----------------------------------------------------------------------
-\subsection{SISCone Plugin}
-\label{sec:siscone-plugin}
-
-SISCone~\cite{SISCone} is an implementation of a cone type jet algorithm.
-As with most modern cone algorithms, it is divided into two parts:
-first it searches for stable cones; then, because a particle can
-appear in more than one stable cone, a `split--merge' procedure is
-applied, which ensures that no particle ends up in more than one jet.
-The stable cones are identified using an $\order{N^2 \ln N}$ seedless
-approach. This (and some care in the the `split--merge' procedure)
-ensures that the jets it produces are insensitive to additional soft
-particles and collinear splittings (i.e.\ the jets are infrared
-and collinear safe).
-
-The plugin library and include files are to be be found in the
-\verb:plugins/SISCone: directory, and the main header file is
-\verb:SISConePlugin.hh:. The \verb:SISConePlugin: class has a
-constructor with the following structure
-\begin{lstlisting}
-  SISConePlugin (double cone_radius,
-                 double overlap_threshold = 0.5,
-                 int    n_pass_max = 0,
-                 double protojet_ptmin = 0.0, 
-                 bool   caching = false,
-                 SISConePlugin::SplitMergeScale   
-                                split_merge_scale = SISConePlugin::SM_pttilde);
-\end{lstlisting}
-A cone centered at $y_c,\phi_c$ is stable if the sum of momenta of all
-particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
-\verb:cone_radius:^2$ has rapidity $y_c,\phi_c$.
-%
-The \verb:overlap_threshold: is the fraction of overlapping momentum
-above which two protojets are merged in a Tevatron Run~II type
-\cite{RunII-jet-physics} split--merge procedure.\footnote{Though its
-  default value is 0.5 (retained for backwards compatibility of the
-  interface) we strongly recommend using a higher value, e.g.\ 0.75,
-  especially in high-noise environments, in order to disfavour the
-  production of monster jets through repeated merge operations. } % 
-The
-radius and overlap parameters are a common feature of most modern cone
-algorithms. Because some event particles are not to be found in any
-stable cone \cite{EHT}, SISCone can carry out multiple stable-cone
-search passes (as advocated in \cite{TeV4LHC}): in each pass one
-searches for stable cones using just the subset of particles not
-present in any stable cone in earlier passes. Up to \verb:n_pass_max:
-passes are carried out, and the algorithm automatically stops at the
-highest pass that gives no new stable cones. The default of
-$\verb:n_pass_max: = 0$ is equivalent to setting it to $\infty$.
-Since concern has been expressed that an excessive number of stable
-cones may complicate cone jets in events with high
-noise~\cite{RunII-jet-physics}, the \verb:protojet_ptmin: parameter
-allows one to use only protojets with $p_t \ge \verb:protojet_ptmin:$
-in the split--merge phase (all others are thrown away).\footnote{Early
-  experience indicates that \ttt{protojet\_ptmin} is actually
-  perfectly adequate and that potential problems of massively
-  agglomerated jets that can occur in high-noise environments (for a
-  wide range of cone algorithms) can be addressed with a slightly
-  larger value of the \ttt{overlap\_threshold}, $ \gtrsim 0.6$.}
-
-In many cases SISCone's most time-consuming step is the search for
-stable cones. If one has multiple \verb:SISConePlugin:-based jet
-definitions, each with \verb:caching=true:, a check will be carried
-out whether the previously clustered event had the same set of
-particles and the same cone radius and number of passes. If it did,
-the stable cones are simply reused from the previous event, rather
-than being recalculated, and only the split--merge step is repeated,
-often leading to considerable speed gains.
-
-A final comment concerns the \verb:split_merge_scale:
-parameter. This controls both the scale used for ordering the
-protojets during the split--merge step during the split--merge step,
-and also the scale used to measure the degree of overlap between
-protojets. While various options have been implemented, 
-\begin{lstlisting}
-  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde };
-\end{lstlisting}
-we recommend using only the last of them $\tilde p_t = \sum_{i \in
-  \mathrm{jet}}|p_{t,i}|$, which is also the default scale. The other
-scales are included only for historical comparison purposes: $p_t$
-(used in several other codes) is IR unsafe for events whose hadronic
-component conserves momentum, $E_t$ (advocated in
-\cite{RunII-jet-physics}) is not boost-invariant, and $m_t = \sqrt{m^2
-  + p_t^2}$ is IR unsafe for events whose hadronic component conserves
-momentum and stems from the decay of two identical particles.
-
-
-An example of the use of the SISCone plugin would be as follows:
-\begin{lstlisting}
-  // define a SISCone plugin pointer
-  fastjet::SISConePlugin * plugin;
-
-  // allocate a new plugin for SISCone
-  double cone_radius = 0.7;
-  double overlap_threshold = 0.5;
-  plugin = new fastjet::SISConePlugin (cone_radius, overlap_threshold);
-
-  // create a jet-definition based on the plugin
-  fastjet::JetDefinition jet_def(plugin);
-
-  // prepare the set of particles
-  vector<fastjet::PseudoJet> particles;
-  read_input_particles(cin, particles); // or whatever you want here
-
-  // run the jet algorithm and look at the jets
-  fastjet::ClusterSequence clust_seq(particles, jet_def);
-  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
-  // then analyse the jets as for native FastJet jets
-
-  // only when you will no longer be using the jet definition, or
-  // ClusterSequence objects that involve it, may you delete the 
-  // plugin
-  delete plugin;
-\end{lstlisting}
-Note that the it makes no sense to ask for exclusive jets from a
-SISCone based \verb:ClusterSequence:.
-
-Some extra output information is appropriate for a cone algorithm that
-is not of relevance in clustering algorithms, through the
-\verb:extras: resource,
-\begin{lstlisting}
-   const fastjet::SISConeExtras * extras = 
-             dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
-\end{lstlisting}
-To determine the pass at which a given jet was found, one does the
-following
-\begin{lstlisting}
-   int pass = extras->pass(jet);
-\end{lstlisting}
-%
-The user may also obtain a list of the positions of original stable
-cones as follows:
-\begin{lstlisting}
-   vector<PseudoJet> stable_cones(extras->stable_cones());
-\end{lstlisting}
-The stable cones are represented as four-momenta, for which only the
-rapidity and azimuth are meaningful. The \verb:user_index(): indicates
-the pass at which a given stable cone was found.
-
-In the current version of SISCone, the \verb:user_index(): of a jet
-also corresponds to the pass at which it was found, however this
-manner of accessing the pass for a jet is \emph{deprecated} (for
-reasons related to the internal representation of jets, it fails for
-single-particle jets). It is retained in version 2.4 for backwards
-compatibility, but will be removed at some stage in the future.
-
-SISCone uses $E$-scheme recombination internally and also for
-constructing the final jets from the list of constituents. 
-%
-For the latter task, the user may instead instruct SISCone to use the
-jet-definition's own recombiner, with the command
-\begin{lstlisting}
-   plugin->set_use_jet_def_recombiner(true);
-\end{lstlisting}
-In this case the \verb:user_index(): no longer contains the
-information about the pass.
-
-
-
-%% the pass of a jet may is currently
-%% also contained in 
-%% 
-%% To determine the pass of a 
-%% 
-%% %
-%% \footnote{Owing to the
-%%   current internal representation of jets in \fastjet, this does not
-%%   work for jets consisting of a single particle --- the user index of
-%%   the jet is then just the user index originally attributed to that
-%%   particle (by default, $-1$).} %
-
-Since SISCone is infrared safe, it may meaningfully be used also with
-the \verb:ClusterSequenceArea: class. Note however that in that
-case ones loses the cone-specific information from the jets, because
-of the way \fastjet filters out the information relating to ghosts in
-the clustering. If the user needs both areas and cone-specific
-information, she/he may use the
-\verb:ClusterSequenceActiveAreaExplicitGhosts: class (for usage
-information, see the corresponding \verb:.hh: file). 
-
-A final remark concerns speed and memory requirements: as mentioned
-above, SISCone takes $\order{N^2 \ln N}$ time to find jets, and the
-memory use is $\order{N^2}$; taking $N=10^3$ as a reference point, it
-runs in a few tenths of a second, making it about 100 times slower
-than native \fastjet algorithms.
-%
-These are `expected' results, i.e.\ valid for a suitably random set of
-particles. In area determinations, the ghost particles are anything
-but random, and run times and memory usage are, in practice, somewhat
-larger than for a normal QCD event with the same number of particles.
-We therefore recommend running with not too small a \verb:ghost_area:
-(e.g.\ $\sim 0.05$) and using $\verb:grid_scatter:=1$, which helps to
-reduce the number of stable cones (and correspondingly, the time and
-memory usage of the subsequent split--merge step). An alternative, which
-has been found to be acceptable in most situations, is to use a passive
-area, since this is relatively fast to calculate with SISCone.
-
-
-%----------------------------------------------------------------------
-\subsection{Other plugins for $pp$ }
-\label{sec:other-pp-plugins}
-
-Not all plugins are enabled by default in \fastjet. At configuration
-time \verb:./configure.sh --help: will indicate which ones get enabled
-by default. To enable all plugins, run \verb|configure| with the
-argument \verb|--enable-allplugins|, while to enable all but PxCone
-(which requires fortran, and can introduce link-time issues) use
-\verb|--enable-allcxxplugins|.
-
-All plugins are in the \verb:fastjet: namespace. Below we show the
-file that needs to be included and the constructor for each plugin. 
-
-Except where stated, the usual way to access jets from these plugins
-is through \verb|ClusterSequence::inclusive_jets()|.
-
-Most of the algorithms listed below are either infrared (IR) or
-collinear unsafe. The details are indicated for each algorithm as
-follows: IR$_{n+1}$ means that the hard jets may be modified if, to an
-ensemble of $n$ hard particles in a common neighbourhood, one adds a
-single soft particle; Coll$_{n+1}$ means that for $n$ hard particles
-in a common neighbourhood, the collinear splitting of one of them may
-modify the hard jets.
-%
-The \fastjet authors (and numerous theory-experiment accords) advise
-against the use IR and collinear safe jet algorithms.  Interfaces to
-these algorithms have been provided mainly for legacy comparison
-purposes.
-
-As of \fastjet version 2.4, this section is partially incomplete (in
-particular it misses many references). This will hopefully evolve for
-future versions.
-
-
-
-\subsubsection{CDF Midpoint.} 
-One of the two algorithms used by CDF in Run~II of the Tevatron, based
-on \cite{RunII-jet-physics}. It is a midpoint-type iterative cone with
-a split--merge step.
-%
-\begin{lstlisting}
-  #include ``fastjet/CDFCones.hh''
-  ///...
-  CDFMidPointPlugin(double R, 
-                    double overlap_threshold,
-                    double seed_threshold = 1.0, 
-                    double cone_area_fraction = 1.0);
-\end{lstlisting}
-The overlap threshold ($f$) used by CDF is usually $0.5$, the seed
-threshold is $1$\,GeV and in most measurements the cone area fraction
-is $1$. With an area fraction $< 1$ this becomes the searchcone
-algorithm of \cite{EHT}.
-
-Further control over the plugin can be obtained by consulting the
-header file.
-
-The underlying code for this algorithm was taken from a webpage
-provided by Joey Huston (with minor modifications to ensure reasonable
-run times with optimising compilers for 32-bit intel processors ---
-these modifications do not affect the final jets).
-
-Note: this algorithm is IR$_{3+1}$ unsafe (in the limit of zero seed
-threshold~\cite{SISCone}; with \verb:cone_area_fraction:$\neq 1$ it
-becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}). It is to be deprecated for
-new experimental or theoretical analyses.
-
-\subsubsection{CDF JetClu}
-The other algorithm used by CDF during Run~II, as well as their main
-algorithm during Run~I.
-\begin{lstlisting}
-  #include ``fastjet/CDFCones.hh''
-  ///...
-  CDFJetCluPlugin (double   cone_radius, 
-		   double   overlap_threshold, 
-		   double   seed_threshold = 1.0,
-		   int      iratch = 1);
-\end{lstlisting}
-This is an iterative cone with split-merge and optional ``ratcheting''
-if \verb|iratch == 1| (particles that appear in one iteration fo a
-cone are retained in future iterations).
-%
-The overlap threshold is usually set to 0.75 in CDF analyses.
-
-Further control over the plugin can be obtained by consulting the
-header file.
-
-The underlying code for this algorithm was taken from a webpage
-provided by Joey Huston.
-
-Note: this algorithm is IR$_{2+1}$ unsafe (and some IR unsafety
-persists with non-zero seed threshold). It is to be deprecated for new
-experimental or theoretical analyses.
-%
-Note also that the underlying implementation groups particles ogether
-into calorimeter towers (with CDF-type geometry) before running the
-jet algorithm. 
-
-%......................................................................
-\subsubsection{\Dzero Run I cone}
-
-The main algorithm used by \Dzero in Run~I of the Tevatron, which is
-an  iterative cone algorithm with a split-merge. It comes in two versions
-\begin{lstlisting}
-  #include ``fastjet/D0RunIpre96ConePlugin.hh''
-  ///...
-  D0RunIpre96ConePlugin (double R, 
-                         double min_jet_Et, 
-                         double split_ratio = 0.5);
-\end{lstlisting}
-and
-\begin{lstlisting}
-  #include ``fastjet/D0RunIConePlugin.hh''
-  ///...
-  D0RunIConePlugin (double R, 
-                    double min_jet_Et, 
-                    double split_ratio = 0.5);
-\end{lstlisting}
-corresponding to versions of the algorithm used respectively before
-and after 1996. They differ only in the way the jet momenta are
-calculated, as described in \cite{Abbott:1997fc}.
-
-Instead of the seed threshold used in the CDF cones, the
-algorithm places a cut on the minimum $E_t$ of the cones during
-iteration (related to \verb|min_jet_Et|).
-%
-The \verb|split_ratio| is the same as the overlap threshold in other
-split-merge based algorithms (\Dzero usually use 0.5).
-%
-It is the \fastjet authors' understanding that the value 
-used for \verb|min_jet_Et| was 8\,GeV.
-
-The underlying code for this algorithm was provided by
-Lars Sonnenschein.
-
-
-Note: this algorithm is IR$_{2+1}$ unsafe. It is recommended that it
-be used only for the purpose of comparison with Run~I data from
-\Dzero.
-
-
-%......................................................................
-\subsubsection{\Dzero Run II cone}
-%
-The main algorithm used by \Dzero in Run~II of the Tevatron, which is
-a midpoint type iterative cone with split-merge.
-\begin{lstlisting}
-  #include ``fastjet/D0RunIIConePlugin.hh''
-  ///...
-  D0RunIIConePlugin (double R, 
-                     double min_jet_Et, 
-                     double split_ratio = 0.5);
-\end{lstlisting}
-The parameters have the same meaning as in the \Dzero Run~I cone and,
-once again, instead of a seed threshold there is a cut on the minimum
-$E_t$ of the cones during iteration (related to \verb|min_jet_Et|).
-%
-It is the \fastjet authors' understanding that two values have been
-used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
-6\,GeV (in more recent publications).
-
-
-% Instead of the seed threshold used in the CDF Midpoint cone, the
-% algorithm places a cut on the minimum $E_t$ of the cones during
-% iteration (related to \verb|min_jet_Et|).
-% %
-% The \verb|split_ratio| is the same as the overlap threshold in other
-% split-merge based algorithms (\Dzero usually use 0.5).
-% %
-% It is the \fastjet authors' understanding that two values have been
-% used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
-% 6\,GeV (in more recent publications).
-
-The underlying code for this algorithm was provided by
-Lars Sonnenschein.
-
-Note: this algorithm is IR$_{3+1}$ unsafe (IR$_{2+1}$ for jets with
-energy too close to \verb:min_jet_Et:). It is to be deprecated for new
-experimental or theoretical analyses.
-
-%......................................................................
-\subsubsection{ATLAS iterative cone}
-%
-The (iterative) cone (with split-merge) algorithm used by ATLAS during
-the preparation for the LHC. 
-\begin{lstlisting}
-  #include ``fastjet/AtlasConePlugin.hh''
-  ///...
-  ATLASConePlugin (double R, 
-                   double seedPt = 2.0, 
-                   double f = 0.5);
-\end{lstlisting}
-$f$ is the overlap threshold
-
-The underlying code for this algorithm was extracted from SpartyJet
-\cite{SpartyJet}.
-%
-Since version 3.0 of \fastjet it is a slightly modified version that
-we distribute, where an internal \ttt{sort} function has been replaced
-with a \ttt{stable\_sort}, to ensure reproducibility of results across
-compilers and architectures (results are unchanged when the results of
-the sort are unambiguous).
-
-Note: this algorithm is IR$_{2+1}$ unsafe (in the limit of zero seed
-threshold). It is to be deprecated for new experimental or theoretical
-analyses.
-
-%......................................................................
-\subsubsection{CMS iterative cone}
-%
-The (iterative) cone (with progressive removal) algorithm used by CMS during
-the preparation for the LHC. 
-\begin{lstlisting}
-  #include ``fastjet/CMSIterativeConePlugin.hh''
-  ///...
-  CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
-\end{lstlisting}
-
-
-The underlying code for this algorithm was extracted from the CMSSW
-web site, with certain small service routines having been rewritten by
-the FastJet authors. 
-%
-The resulting code was validated by clustering 1000 events with the
-original version of the CMS software and comparing the output to the
-clustering performed with the FastJet plugin. 
-%
-The jet contents were identical in all cases. However the jet momenta
-differed at a relative precision level of $10^{-7}$, related to the
-use of single-precision arithmetic at some internal stage of the CMS
-software (while the FastJet version is in double precision).
-
-
-Note: this algorithm is Coll$_{3+1}$ unsafe~\cite{antikt}. It is to be
-deprecated for new experimental or theoretical analyses.
-
-
-
-\subsubsection{PxCone}
-A fortran plugin for the PxCone algorithm, which is an iterative cone
-with midpoints and a split-drop procedure
-\begin{lstlisting}
-  #include ``fastjet/PxConePlugin.hh''
-  ///...
-  PxConePlugin (double  cone_radius      , 
-		double  min_jet_energy = 5.0  , 
-		double  overlap_threshold = 0.5,
-                bool    E_scheme_jets = false); 
-\end{lstlisting}
-with a threshold on the minimum cone transverse energy if it is to be
-included in the split-drop stage. 
-%
-If \verb|E_scheme_jets| is true then the plugin applies an $E$-scheme
-recombination to provide the momenta of the final jets (by default an
-$E_t$ type recombination scheme is used).
-
-The base code for this plugin is written in Fortran and, on some
-systems, problems have been reported at the link stage due to mixing
-Fortran and C++.
-%
-The Fortran code has been modified by the \fastjet authors to provide
-the same jets regardless of the order of the input particles.
-%
-This involved a small modification of the midpoint procedure, which
-can have a minor effect on the final jets and should make the algorithm
-correspond to the description of \cite{Seymour:2006vv}.
-
-The underlying code for this algorithm was taken from a google search
-for PxCone!
-
-Note: this algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
-new experimental or theoretical analyses.
-
-
-\subsubsection{TrackJet}
-%
-This algorithm has been used at the Tevatron for identifying jets from
-charged-particle tracks in underlying-event studies (a citation is
-needed here!).
-%
-\begin{lstlisting}
-  #include ``fastjet/TrackJetPlugin.hh''
-  ///...
-  TrackJetPlugin (double radius, 
-		  RecombinationScheme jet_recombination_scheme=pt_scheme, 
-		  RecombinationScheme track_recombination_scheme=pt_scheme);
-\end{lstlisting}
-Two recombination schemes are involved: the first one indicates how
-momenta are recombined to provide the final jets (once particle-jet
-assignments are known), the second one indicates how momenta are
-combined in the procedure that constructs the jets.
-
-The underlying code for this algorithm was written by the \fastjet
-authors, based on code extracts from the Rivet implementation, written
-by Andy Buckley with input from Manuel Bahr and Rick Field.
-%
-Since version 3.0 of \fastjet it is a slightly modified version that
-we distribute, where an internal \ttt{sort} function has been replaced
-with a \ttt{stable\_sort}, to ensure reproducibility of results across
-compilers and architectures (results are unchanged when the results of
-the sort are unambiguous).
-
-
-% provided by Lars Sonnenschein.
-Note: this algorithm is believed to be Coll$_{3+1}$ unsafe. It is to
-be deprecated for new experimental or theoretical analyses.
-
-\subsubsection{GridJet}
-%
-GridJet allows you to define a grid and then cluster particles such
-that all particles in a common grid cell combine to form a jet.
-%
-Its main interest is in providing fast clustering for high
-multiplicities (the clustering time scales linearly with the number of
-particles).
-%
-The jets that it forms are not always physically meaningful: for
-example, a genuine physical jet may lie at the corner of 4 grid cells
-and so be split up somewhat arbitrarily into 4 pieces.
-%
-However for some purposes (such as background estimation) this
-drawback is offset by the greater uniformity of the area of the jets.
-%
-Its interface is as follows
-\begin{lstlisting}
-  #include ``fastjet/GridJetPlugin.hh''
-  // ...
-  GridJetPlugin (double ymax, double requested_grid_spacing);
-\end{lstlisting}
-creating a grid that covers $|y|<$\ttt{ymax} with a grid spacing close
-to the \ttt{requested\_grid\_spacing}: the spacings chosen in $\phi$
-and $y$ are those that are closest to the requested spacing while also
-giving an integer number of grid cells that fit exactly into the
-rapidity and $0<\phi <2\pi$ ranges.
-
-Note that for background estimation purposes the
-\ttt{GridMedianBackgroundEstimator} is much faster than using the
-\ttt{GridJetPlugin} with ghosts and a
-\ttt{JetMedianBackgroundEstimator}.
-
-%----------------------------------------------------------------------
-\subsection{Other plugins for $e^+e^-$}
-\label{sec:other-ee-plugins}
-
-%......................................................................
-\subsubsection{Cambridge algorithm}
-\label{sec:ee-cam}
-The original $\ee$ cambridge~\cite{CamOrig} algorithm is provided as a plugin:
-\begin{lstlisting}
-  #include ``fastjet/EECambridgePlugin.hh''
-  ///...
-  EECambridgePlugin (double ycut);
-\end{lstlisting}
-This algorithms performs sequential recombination of the pair of
-particles that is closest in angle, except when $y_{ij} =
-\frac{2\min(E_i^2,E_j^2)}{Q^2}(1-\cos\theta) > y_{cut}$, in which case
-the less energetic of $i$ and $j$ is labelled a jet, and the other
-member of the pair remains free to cluster.
-
-To access the jets, the user should use the \verb|inclusive_jets()|,
-\ie as they would for the majority of the $pp$ algorithms.
-
-The underlying code for this algorithm was written by the \fastjet
-authors.
-
-%......................................................................
-\subsubsection{Jade algorithm}
-\label{sec:ee-jade}
-The JADE algorithm~\cite{Bartel:1986ua,Bethke:1988zc}, a sequential
-recombination algorithm with distance measure $d_{ij} = 2E_i E_j
-(1-\cos\theta)$, is available through
-\begin{lstlisting}
-  #include ``fastjet/JadePlugin.hh''
-  ///...
-  JadePlugin ();
-\end{lstlisting}
-To access the jets at a given $y_{cut} = d_{cut}/Q^2$, the user 
-should call \verb|ClusterSequence::exclusive_jets_ycut(double ycut)|.
-
-Note: the JADE algorithm has been used with various recombination
-schemes. The current plugin will use whatever recombination scheme the
-user specifies with for the jet definition. The default $E$-scheme is
-what was used in the original JADE publication \cite{Bartel:1986ua}.
-%
-To modify the recombination scheme, the user may first construct the
-jet definition and then use either of 
-\begin{lstlisting}
-  void JetDefinition::set_recombination_scheme(RecombinationScheme recomb_scheme);
-  void JetDefinition::set_recombiner(const Recombiner * recomb)
-\end{lstlisting}
-(cf.~sections~\ref{sec:recomb_schemes},\ref{sec:recombiner}) to modify the
-recombination scheme.
-
-The underlying code for this algorithm was written by the \fastjet
-authors.
-
-
-
-%% %----------------------------------------------------------------------
-%% \subsection{Summary of algorithms}
-%% \label{sec:summary-algorithms}
-%% 
-%% \begin{tabular}{lr|l|c|c|c|c}
-%%   \multicolumn{7}{c}{Native algorithms}\\\hline
-%%   alg.                   &  &  \ttt{JetAlgorithm}        & proc.    & params & speed & mem.
-%%   \\\hline                                                           
-%%   Long.\ inv.\ $k_t$ &\cite{} & \ttt{kt\_algorithm} & pp            & $R$    &  $N \ln N$ & $N$ \\
-%%   Cambridge/Aachen &\cite{} & \ttt{cambridge\_algorithm} & pp       & $R$    &  $N \ln N$ & $N$\\
-%%   anti-$k_t$ &\cite{} & \ttt{antikt\_algorithm} & pp                & $R$    &  $Nn^{1/2}$ & $N$ \\
-%%   generalised $k_t$ &\cite{} & \ttt{genkt\_algorithm} & pp          & $R,p$  &  $N \ln N$ -- $Nn^{1/2}$ & $N$
-%%   \\ \hline                                                          
-%%   $e^+e^-$ $k_t$ &\cite{} & \ttt{ee\_kt\_algorithm} & $\ee$         & $-$    &  $N^2$ & $N$ \\
-%%   $e^+e^-$ gen-$k_t$ &\cite{} & \ttt{ee\_genkt\_algorithm} & $\ee$  & $R,p$  &  $N^2$ & $N$ \\
-%% \end{tabular}
-%% 
-%% 
-%% \begin{tabular}{lr|c|c|c|c}
-%%   \multicolumn{6}{c}{Plugin algorithms}\\\hline
-%%   alg.                   &          & proc.    & params & speed & mem.\\
-%%   SISConePlugin & \cite{} & pp & $R,f,\ldots$ & $N n \ln n$ & $N^2$
-%%   \\\hline                                                           
-%% \end{tabular}
 
 %======================================================================
 \section{Compilation notes}
