@@ -127,7 +127,7 @@ public:
   /// (only relevant if set prior to calling run())
   void set_dr_min(double drmin) {_dr2_min = drmin*drmin;}
 
-  /// the tagger's description
+  /// returns a textual description of the tagger
   virtual std::string description() const;
 
   /// If (abs_z_cut) is set to false (the default) then for a

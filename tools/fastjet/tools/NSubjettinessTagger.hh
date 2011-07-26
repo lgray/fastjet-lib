@@ -109,7 +109,7 @@ public:
     : _subjet_def(subjet_def), _t2cut(tau2cut), _costscut(costhetascut),
       _use_exclusive(use_exclusive){};
 
-  /// tagger description
+  /// returns a textual description of the tagger 
   virtual std::string description() const;
 
   /// runs the tagger on the given jet and

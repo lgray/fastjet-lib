@@ -1,3 +1,20 @@
+2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * example/07-subtraction.cc
+          tools/GridMedianBackgroundEstimator.cc
+          tools/JetMedianBackgroundEstimator.cc
+          tools/fastjet/tools/BackgroundEstimatorBase.hh
+          tools/fastjet/tools/JetMedianBackgroundEstimator.hh
+          tools/fastjet/tools/GridMedianBackgroundEstimator.hh
+          added description() to base class and derived ones. Modified
+	  subtraction example accordingly.
+
+        * tools/fastjet/tools/MassDropTagger.hh
+          tools/fastjet/tools/CASubJetTagger.hh
+          tools/fastjet/tools/NSubjettinessTagger.hh
+          tools/fastjet/tools/JHTopTagger.hh
+          made doxygen comment to description() uniform through the taggers
+	   
 2011-07-25  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * tools/CASubJetTagger.cc

@@ -295,6 +295,20 @@ void JetMedianBackgroundEstimator::set_jet_density_class(const FunctionOfPseudoJ
 }
 
 
+
+//----------------------------------------------------------------------
+// description
+//----------------------------------------------------------------------
+string JetMedianBackgroundEstimator::description() const { 
+  ostringstream desc;
+  desc << "JetMedianBackgroundEstimator, using " << _jet_def.description() 
+       << " with " << _area_def.description() 
+       << " and selecting jets with " << _rho_range.description();
+  return desc.str();
+}       
+
+
+
 //----------------------------------------------------------------------
 // computation of the background properties
 //----------------------------------------------------------------------

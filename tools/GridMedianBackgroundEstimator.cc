@@ -109,6 +109,17 @@ void GridMedianBackgroundEstimator::verify_particles_set() const {
 
 
 //----------------------------------------------------------------------
+// description
+//----------------------------------------------------------------------
+string GridMedianBackgroundEstimator::description() const { 
+  ostringstream desc;
+  desc << "GridMedianBackgroundEstimator, with grid extension |y| < " << _ymax 
+       << " and requested grid spacing = " << _requested_grid_spacing;
+  return desc.str();
+}       
+
+
+//----------------------------------------------------------------------
 // configuring the behaviour
 //----------------------------------------------------------------------
 // Set a pointer to a class that calculates the rescaling factor as

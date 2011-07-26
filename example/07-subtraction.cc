@@ -148,14 +148,16 @@ int main (int argc, char ** argv) {
   //    extend sufficiently far in rapidity to cover the jets used in
   //    the computation of the background (see also the comment below)
   //  - A Selector specifying the range over which we will keep the
-  //    jets entering the estimation of the background, You should
+  //    jets entering the estimation of the background (you should
   //    thus make sure the ghosts extend far enough in rapidity to
-  //    cover the range, a warning will be issued otherwise.
+  //    cover the range, a warning will be issued otherwise).
+  //    In this particular example, the two hardest jets in the event
+  //    are removed from the background estimation
   // ----------------------------------------------------------
   JetDefinition jet_def_bkgd(kt_algorithm, 0.4);
   AreaDefinition area_def_bkgd(active_area_explicit_ghosts, 
 			       GhostedAreaSpec(ghost_maxrap));
-  Selector selector = SelectorAbsRapMax(4.5);
+  Selector selector = SelectorAbsRapMax(4.5) * (!SelectorNHardest(2));
   JetMedianBackgroundEstimator bkgd_estimator(selector, jet_def_bkgd, area_def_bkgd);
 
   // To help manipulate the background estimator, we also provide a
@@ -185,9 +187,7 @@ int main (int argc, char ** argv) {
   cout << endl;
 
   cout << "Background estimation:" << endl;
-  cout << "  Ran       " << jet_def_bkgd.description() << endl;
-  cout << "  Area:     " << area_def_bkgd.description() << endl;
-  cout << "  Selector: " << selector.description() << endl;
+  cout << "  " << bkgd_estimator.description() << endl << endl;;
   cout << "  Giving, for the full event" << endl;
   cout << "    rho   = " << bkgd_estimator.rho()   << endl;
   cout << "    sigma = " << bkgd_estimator.sigma() << endl;

@@ -94,7 +94,7 @@ public:
   /// default ctor
   MassDropTagger(const double mu=0.67, const double ycut=0.09) : _mu(mu), _ycut(ycut){};
 
-  /// description of the tagger
+  /// returns a textual description of the tagger
   virtual std::string description() const;
 
   /// runs the tagger on the given jet and

@@ -135,7 +135,7 @@ public:
     : _delta_p(delta_p), _delta_r(delta_r),
       _cos_theta_W_max(cos_theta_W_max), _mW(mW){};
 
-  /// description of the tagger
+  /// returns a textual description of the tagger
   virtual std::string description() const;
 
   /// runs the tagger on the given jet and

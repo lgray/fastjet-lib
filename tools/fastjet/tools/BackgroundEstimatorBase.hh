@@ -120,6 +120,15 @@ public:
 
   //\}
 
+  /// @name description
+  //\{
+  //----------------------------------------------------------------
+
+  /// returns a textual description of the background estimator
+  virtual std::string description() const = 0;
+
+  //\}
+
 protected:
   /// @name helpers for derived classes
   ///

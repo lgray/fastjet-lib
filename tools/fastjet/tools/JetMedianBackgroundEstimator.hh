@@ -321,8 +321,17 @@ public:
     _uptodate = false;
   }
 
+  //\}
+
+  /// @name description
+  //\{
+  //----------------------------------------------------------------
+
+  /// returns a textual description of the background estimator
+  std::string description() const;
 
   //\}
+
 
 private:
 
