@@ -92,10 +92,9 @@ PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
     = jet.associated_cluster_sequence()->jet_def().recombiner();
   PseudoJet result = join<StructureType>(j1,j2,*rec);
   StructureType * s = (StructureType *) result.structure_non_const_ptr();
-  s->_original_jet = jet;
+//  s->_original_jet = jet;
   s->_mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
   s->_y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
-  s->_original_jet = jet;
 
   return result;
 }

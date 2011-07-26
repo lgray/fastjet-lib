@@ -137,13 +137,13 @@ public:
   /// splitting that triggered the mass-drop condition
   inline double y() const {return _y;}
 
-  /// returns the original jet (before tagging)
-  const PseudoJet & original() const {return _original_jet;}
+//  /// returns the original jet (before tagging)
+//  const PseudoJet & original() const {return _original_jet;}
 
 protected:
   double _mu;              ///< the value of the mass-drop parameter
   double _y;               ///< the value of the asymmetry parameter
-  PseudoJet _original_jet; ///< the original jet (before tagging)
+//  PseudoJet _original_jet; ///< the original jet (before tagging)
 
   // allow the tagger to set these
   friend class MassDropTagger;

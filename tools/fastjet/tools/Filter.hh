@@ -268,9 +268,9 @@ public:
   /// @name The filter-specific information
   //------------------------------------------------------------------
 
-  /// returns the original jet (the first of the original jets
-  /// if you filtered a collection of jets)
-  const PseudoJet & original() const {return _original_jet;}
+//  /// returns the original jet (the first of the original jets
+//  /// if you filtered a collection of jets)
+//  const PseudoJet & original() const {return _original_jet;}
 
   /// returns the subjets that were not kept during the filtering procedure
   /// (subtracted if the filter requests it, and valid in the original cs)
@@ -279,7 +279,7 @@ public:
   friend class Filter;  // allow the filter to change the protected/private members
 
 protected:
-  PseudoJet _original_jet;           ///< the original jet
+//  PseudoJet _original_jet;           ///< the original jet
   std::vector<PseudoJet> _rejected;  ///< the subjets rejected by the filter
 };
 

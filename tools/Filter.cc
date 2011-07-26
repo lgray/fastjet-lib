@@ -259,7 +259,7 @@ PseudoJet Filter::_finalise(const PseudoJet & jet,
   // create an appropriate structure and transfer the info to it
   PseudoJet filtered_jet = join<StructureType>(kept, rec);
   StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
-  fs->_original_jet = jet;
+//  fs->_original_jet = jet;
   fs->_rejected = rejected;
 
   if (discard_area){

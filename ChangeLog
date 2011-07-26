@@ -1,5 +1,19 @@
 2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
+        * tools/fastjet/tools/MassDropTagger.hh
+          tools/fastjet/tools/CASubJetTagger.hh
+          tools/fastjet/tools/NSubjettinessTagger.hh
+          tools/fastjet/tools/JHTopTagger.hh
+          tools/fastjet/tools/Filter.hh
+          tools/MassDropTagger.cc
+          tools/CASubJetTagger.cc
+          tools/NSubjettinessTagger.cc
+          tools/JHTopTagger.cc
+          tools/Filter.cc
+          commented out _original_jet and function returning it
+	  
+2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
         * example/07-subtraction.cc
           tools/GridMedianBackgroundEstimator.cc
           tools/JetMedianBackgroundEstimator.cc
