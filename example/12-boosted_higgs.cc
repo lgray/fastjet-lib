@@ -155,13 +155,13 @@ int main (int argc, char ** argv) {
   cout << "Ran: " << jet_def.description() << endl << endl;
   cout << "Hardest jet: " << jets[0] << endl << endl;
 
-  // now do jet tagging using a mass drop taggers
+  // now do jet tagging using a mass drop tagger
   //
   // Note: if you prefer, you may as well use a CASubJetTagger
   //    CASubJetTagger ca_tagger;
   //    PseudoJet tagged = ca_tagger(jets[0]);
-  // This requires including fastjet/tools/CASubJetTagger.hh In that
-  // case, you wouls also need to adapt the 2 lines below accessing
+  // This requires including fastjet/tools/CASubJetTagger.hh 
+  // You also need to adapt the 2 lines below accessing
   // the extra structural information provided by the tagger
   //----------------------------------------------------------
   MassDropTagger md_tagger(0.667, 0.09);
@@ -187,7 +187,7 @@ int main (int argc, char ** argv) {
   //----------------------------------------------------------
   //
   // [there are two ways of doing this; here we directly use the
-  // exsiting cluster sequence and find the exclusive subjets of
+  // existing cluster sequence and find the exclusive subjets of
   // this_jet (i.e. work backwards within the cs starting from
   // this_jet); alternatively one can recluster just the
   // constituents of the jet]

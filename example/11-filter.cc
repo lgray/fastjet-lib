@@ -4,7 +4,7 @@
 ///
 /// fastjet example program illustrating the use of the fastjet::Filter class
 ///
-/// To do that, we apply different filter examples on a either the
+/// To do that, we apply different filter examples on either the
 /// hardest jet of the given event or the composition of the two
 /// hardest jets: a filter keeping a fixed number of subjets (as in
 /// arXiv:0802.2470), and a "trimmer" i.e. a filter keeping subjets
@@ -126,7 +126,7 @@ int main (int argc, char ** argv) {
       
       cout << "Resulting jet : " << j.description() << endl;
       cout << "  rap = " << j.rap() << ", phi = " << j.phi() << ", pt = " << j.perp() << endl;
-      cout << "  #pieces: " << j.pieces().size() << endl;
+      cout << "  # of pieces: " << j.pieces().size() << endl;
       
       // access properties specific to the Filter
       //
@@ -136,7 +136,7 @@ int main (int argc, char ** argv) {
       // filter (using structure_of())
       assert(j.has_structure_of<Filter>());
       const Filter::StructureType & fj_struct = j.structure_of<Filter>();
-      cout << "  #rejected pieces: " << fj_struct.rejected().size() << endl;
+      cout << "  # of rejected pieces: " << fj_struct.rejected().size() << endl;
     }
     cout << endl;
   }

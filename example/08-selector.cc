@@ -4,10 +4,6 @@
 ///
 /// fastjet sample program to illustrate the use of fastjet::Selector
 ///
-/// Note that to use fastjet::Selector (and fastjet tools), you need the
-/// fastjettools library. It is included by default by
-///   fastjet-config --libs
-///
 /// run it with    : ./08-selector < data/single-event.dat
 ///
 /// Source code: 08-selector.cc
@@ -64,7 +60,7 @@ int main (int argc, char ** argv) {
   }
 
   // Selector application #1: keep particles within a given acceptance
-  // e.g. all particles with 1<|y|<2.5, all particles with pt>1 for |y|<1
+  // e.g. all particles with 1<|y|<2.5, and all particles with pt>1 for |y|<1
   //----------------------------------------------------------
   fastjet::Selector particle_selector = fastjet::SelectorAbsRapRange(1.0,2.5)
     || (fastjet::SelectorAbsRapMax(1.0) && fastjet::SelectorPtMin(1.0));
@@ -89,11 +85,11 @@ int main (int argc, char ** argv) {
   // Note that this nicely illustrates that you should watch out that
   // Selectors do not necessarily commute.
   //
-  // The && operator behaves like a logical and i.e. keeps objects
+  // The && operator behaves like a logical and, i.e. it keeps objects
   // that satisfy both criteria (independently). It does commute.
   //
   // The * operator applies Selectors successively (starting from the
-  // rightmost as in a usual operator product). Here, order may matter.
+  // rightmost one as in a usual operator product). Here, order may matter.
   //----------------------------------------------------------
   fastjet::Selector jet_selector = fastjet::SelectorNHardest(5) * fastjet::SelectorAbsRapMax(2.0);
   vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(jet_selector(clust_seq.inclusive_jets()));

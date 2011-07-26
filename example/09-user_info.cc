@@ -68,8 +68,8 @@ using namespace fastjet;
 //------------------------------------------------------------------------
 // the user information
 // 
-// To associate extra information to a PseudoJet, one first have to
-// create a class, derived from fastjet::UserInfoBase that contains
+// To associate extra information to a PseudoJet, one first has to
+// create a class, derived from fastjet::UserInfoBase, that contains
 // that information.
 //
 // In our simple example, we shall use 2 informations
@@ -99,7 +99,7 @@ protected:
 // Select pi0 and photons
 //
 // This shows how we can build a Selector that uses the user-defined
-// iformation to select particles that are either pi0's or photons
+// information to select particles that are either pi0's or photons
 // (we choose this purely for simplicity).
 // 
 // To create a user-defined fastjet::Selector, the first step is to

@@ -3,7 +3,9 @@
 /// \page Example13 13 - boosted top tagging
 ///
 /// fastjet example program, illustration of carrying out boosted
-/// top subjet ID analysis using the Johns Hopkins top tagger
+/// top subjet ID analysis using the Johns Hopkins top tagger as
+/// introduced in arXiv:0806.0848 (Kaplan, Rehermann, Schwartz
+/// and Tweedie)
 ///
 /// run it with    : ./13-boosted_top < data/boosted_top_event.dat
 ///
@@ -96,7 +98,7 @@ int main (int argc, char ** argv) {
   // find the jets
   // ----------------------------------------------------------
   JetDefinition jet_def(cambridge_algorithm, R);
-    ClusterSequence cs(particles, jet_def);
+  ClusterSequence cs(particles, jet_def);
   vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());
 
   cout << "Ran: " << jet_def.description() << endl << endl;

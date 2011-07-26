@@ -4,7 +4,7 @@
 ///
 /// fastjet example program to show how to access subjets;
 /// 
-/// See also 11-boosted_higgs.cc to see the use of subjets for
+/// See also 12-boosted_higgs.cc to see the use of subjets for
 /// identifying boosted higgs (and other objects)
 ///
 /// run it with    : ./10-subjets < data/single-event.dat
