@@ -1030,73 +1030,6 @@ Asking (say) for the \ttt{pieces()} of a jet for which
 The structural information available for different kinds of jets is
 summarised in appendix~\ref{app:structure_table}.
 
-%......................................................................
-\paragraph{Internal storage of structural information.}
-%
-The means by which information about a jet's a structure is stored is
-generally transparent to the user.
-%
-The main exception that arises is when the user wishes to create jets
-with a new kind of structure, for example when writing boosted-object
-taggers.
-%
-Here, we outline the approach adopted, deferring more advanced usage
-examples to section~\ref{sec:transformers} when we discuss
-transformers and taggers.
-
-To be able to efficiently access structural information, each \PJ has
-a shared pointer to a class of type \ttt{fastjet::PseudoJetStructureBase}.
-%
-For plain {\PJ}s the pointer is null.
-%
-For {\PJ}s obtained from a \CS the pointer is to a class
-\ttt{fastjet::ClusterSequenceStructure}, which derives from
-\ttt{PseudoJetStructureBase}.
-%
-For {\PJ}s obtained from a \ttt{join(...)} operation, the pointer is
-to a class \ttt{fastjet::CompositeJetStructure}, again derived from
-\ttt{PseudoJetStructureBase}.
-%
-It is these classes that are responsible for answering structural
-queries about the jet, such as returning its constituents, or
-indicating whether it \ttt{has\_pieces()}.
-%
-Several calls are available for direct access to the internal structure
-storage, among them
-\begin{lstlisting}
-   const PseudoJetStructureBase* structure_ptr() const;
-   PseudoJetStructureBase*       structure_non_const_ptr();
-   template<typename StructureType> const StructureType & structure() const;
-\end{lstlisting}
-where the first two return simply the structure pointer, while the
-last one casts the pointer to the desired derived structure type
-
-% , in
-% order to facilitate access to structural information specific to a
-% given jet.
-
-% The dichotomy between cluster-sequence type structural information and
-% \ttt{pieces} helps provide a distinction between different origins for
-% structure --- either that arising diretly from a jet algorithm, or
-% that applied a posteriori. 
-% %
-% The particular choice we have made is intended to represent a balance
-% between the usefulness of such a dichotomy and the added complication
-% it brings.
-%
-% In this respect version 3.0alpha3 should be considered a snapshot of
-% ongoing thought about the question.
-
-
-%......................................................................
-\paragraph{Features not yet documented}
-
-\comment{The following features still need documenting. But check
-  they're not already discussed later}
-\begin{lstlisting}
-  has_structure_of<ToolName>();
-  structure_of<ToolName>();
-\end{lstlisting}
 
 
 %----------------------------------------------------------------------
@@ -2169,9 +2102,54 @@ with the brackets around the selector definition being now necessary due to
 \ttt{()} having higher precedence in C++ than boolean operators.
 
 
+A user can obtain information on what a given \ttt{Selector} does by
+calling its \ttt{description()} member function. 
+%
+This behaves sensibly also for compound selectors.
+
+New selectors can be implemented as described in
+section~\ref{sec:new-selectors}.
+
+
+%......................................................................
+\subsubsection{Other information about selectors}
+
+
+Selectors contain a certain amount of additional information that can
+provide useful hints to the functions using them.
+
+% (for example, in anticipation of
+% their use, discussed in section~\ref{sec:BackgroundEstimator}, for
+% background estimation).
+
+One such piece of information is a selector's rapidity extent,
+accessible through a \ttt{get\_rapidity\_extent(rapmin,rapmax)} call,
+which is useful in the context of background estimation
+(section~\ref{sec:BackgroundEstimator}).
+%
+If it is not sensible to talk about a rapidity extent for a given
+selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
+returned are the largest (negative and positive) numbers that can be
+represented as doubles.
+
+%\comment{Is discussion of areas not too detailed?}
+
+Selectors may also have areas associated with them (in analogy with
+jet areas, section~\ref{sec:areas}).
+%
+The \ttt{has\_area()} member function returns true if a selector has a
+meaningful (finite) area; The \ttt{area()} function returns this area.
+%
+In some cases the area may be computed using ghosts (by default with
+ghosts of area $0.01$; the user can specify a different ghost area as
+an argument to the \ttt{area} function).
+
+
 
 %......................................................................
 \subsection{Available selectors}
+
+\subsubsection{Absolute kinematical cuts}
 
 A number of selectors have been implemented following the naming
 convention \ttt{Selector}{\it\{Var\}\{LimitType\}}. 
@@ -2198,14 +2176,16 @@ Following a similar naming convention, there are also
 \ttt{SelectorPhiRange(}$\phi_{\min},\phi_{\max}$\ttt{)} and
 \ttt{SelectorRapPhiRange(}$y_{\min},y_{\max},\phi_{\min},\phi_{\max}$\ttt{)}.
 
-Mostly for completeness, there is a \ttt{SelectorIdentity} which
-selects everything. And, as a helper for the situations where ghost
-areas are computed using explicit ghosts, \ttt{SelectorIsPureGhost}
-selects only pure-ghost jets.
+% Mostly for completeness, there is a \ttt{SelectorIdentity} which
+% selects everything. And, as a helper for the situations where ghost
+% areas are computed using explicit ghosts, \ttt{SelectorIsPureGhost}
+% selects only pure-ghost jets.
 
-In addition there are also some selectors that take a \emph{reference jet}. 
+\subsubsection{Relative kinematical cuts}
+
+Some selectors take a \emph{reference jet}. 
 %
-These have been developed because it is often useful for a selector to
+They have been developed because it is often useful for a selector to
 make its decision based on information about some other jet. 
 %
 For example one might wish to select all jets within some distance of
@@ -2216,7 +2196,17 @@ That reference jet may change from event to event, or even from one
 invocation of the Selector to the next, even though the Selector is
 fundamentally performing the same underlying type of action.
 
-One example of a selector that takes a reference jet is:
+The available selectors of this kind are:
+\begin{lstlisting}
+   SelectorCircle($R$)                   // a circle of radius R around the reference jet
+   SelectorDoughnut($R_{in}$, $R_{out}$)          // a doughnut between $R_{in}$ and $R_{out}$
+   SelectorStrip(half_width)           // a rapidity strip 2*half_width large 
+   SelectorRectangle(half_rap_width, half_phi_width) // a rectangle in rapidity and phi
+   SelectorPtFractionMin($f$)            // $p_t$ larger than $f p_t^{ref}$
+\end{lstlisting}
+%
+One example of selectors taking a reference jet is the following. 
+First, one constructs the selector, 
 \begin{lstlisting}
   Selector sel = SelectorCircle(1.0);
 \end{lstlisting}
@@ -2244,17 +2234,11 @@ the member function
 Attempting to set a reference for a Selector that returns \ttt{false}
 here will cause an exception to be thrown.
 %
-The other selectors taking a reference that are available by default
-are \ttt{SelectorStrip}, \ttt{SelectorDoughnut}, 
-\ttt{SelectorRectangle} and \ttt{SelectorPtFractionMin}.
+%The other selectors taking a reference that are available by default
+%are \ttt{SelectorStrip}, \ttt{SelectorDoughnut}, 
+%\ttt{SelectorRectangle} and \ttt{SelectorPtFractionMin}.
 
-A user can obtain information on what a given \ttt{Selector} does by
-calling its \ttt{description()} member function. 
-%
-This behaves sensibly also for compound selectors.
 
-New selectors can be implemented as described in
-section~\ref{sec:new-selectors}.
 
 % \begin{lstlisting}
 %   SelectorPtMin(double ptmin);                    
@@ -2293,47 +2277,18 @@ section~\ref{sec:new-selectors}.
 %   SelectorRapPhiRange(double rapmin, double rapmax, double phimin, double phimax);
 % \end{lstlisting}
 
+\subsubsection{Other selectors}
 
-%......................................................................
-\subsection{Other information about selectors}
+The following selectors are also available:
 
-
-Selectors contain a certain amount of additional information that can
-provide useful hints to the functions using them.
-
-% (for example, in anticipation of
-% their use, discussed in section~\ref{sec:BackgroundEstimator}, for
-% background estimation).
-
-One such piece of information is a selector's rapidity extent,
-accessible through a \ttt{get\_rapidity\_extent(rapmin,rapmax)} call,
-which is useful in the context of background estimation
-(section~\ref{sec:BackgroundEstimator}).
-%
-If it is not sensible to talk about a rapidity extent for a given
-selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
-returned are the largest (negative and positive) numbers that can be
-represented as doubles.
-
-%\comment{Is discussion of areas not too detailed?}
-
-Selectors may also have areas associated with them (in analogy with
-jet areas, section~\ref{sec:areas}).
-%
-The \ttt{has\_area()} member function returns true if a selector has a
-meaningful (finite) area; The \ttt{area()} function returns this area.
-%
-In some cases the area may be computed using ghosts (by default with
-ghosts of area $0.01$; the user can specify a different ghost area as
-an argument to the \ttt{area} function).
+\begin{lstlisting}
+  SelectorNHardest($n$)      //  selects the $n$ hardest jets in an event
+  SelectorIsPureGhost()    //  selects jets that are made exclusively of ghost particles
+  SelectorIdentity()       //  selects everything. Included for completeness
+\end{lstlisting}
 
 
 
-
-% \comment{to come}:
-% \begin{itemize}
-% \item areas?
-% \end{itemize}
 
 %======================================================================
 \section{Jet areas, background evaluation and subtraction}
@@ -3877,9 +3832,9 @@ Additional structural information is available as follows:
 \begin{lstlisting}
   // the subjets (on the scale Rfilt) not kept by the filtering
   vector<PseudoJet> rejected = jet.structure_of<Filter>().rejected();
-  // the original jet before filtering
-  PseudoJet original = jet.structure_of<Filter>().original();
 \end{lstlisting}
+%  // the original jet before filtering
+%  PseudoJet original = jet.structure_of<Filter>().original();
 
 \paragraph{Usage examples.} Filtering involving obtaining the subjets
 with the Cambridge/Aachen algorithm with radius $R_{\rm filt}$ and
@@ -4303,6 +4258,76 @@ composite jet made from such jets. All other area calls
 ClusterSequence (or the pieces in case of a composite jet) and throw
 an error if the jet is not associated with a
 \ttt{ClusterSequenceAreaBase}.
+
+%......................................................................
+\paragraph{Internal storage of structural information.}
+%
+The means by which information about a jet's a structure is stored is
+generally transparent to the user.
+%
+The main exception that arises is when the user wishes to create jets
+with a new kind of structure, for example when writing boosted-object
+taggers.
+%
+Here, we simply outline the approach adopted. For concrete usage
+examples one can consult section~\ref{sec:transformers} and appendix \ref{sec:transformerdetails},
+where we discuss transformers and taggers.
+
+To be able to efficiently access structural information, each \PJ has
+a shared pointer to a class of type \ttt{fastjet::PseudoJetStructureBase}.
+%
+For plain {\PJ}s the pointer is null.
+%
+For {\PJ}s obtained from a \CS the pointer is to a class
+\ttt{fastjet::ClusterSequenceStructure}, which derives from
+\ttt{PseudoJetStructureBase}.
+%
+For {\PJ}s obtained from a \ttt{join(...)} operation, the pointer is
+to a class \ttt{fastjet::CompositeJetStructure}, again derived from
+\ttt{PseudoJetStructureBase}.
+%
+It is these classes that are responsible for answering structural
+queries about the jet, such as returning its constituents, or
+indicating whether it \ttt{has\_pieces()}.
+%
+Several calls are available for direct access to the internal structure
+storage, among them
+\begin{lstlisting}
+   const PseudoJetStructureBase* structure_ptr() const;
+   PseudoJetStructureBase*       structure_non_const_ptr();
+   template<typename StructureType> const StructureType & structure() const;
+\end{lstlisting}
+where the first two return simply the structure pointer, while the
+last one casts the pointer to the desired derived structure type.
+
+% , in
+% order to facilitate access to structural information specific to a
+% given jet.
+
+% The dichotomy between cluster-sequence type structural information and
+% \ttt{pieces} helps provide a distinction between different origins for
+% structure --- either that arising diretly from a jet algorithm, or
+% that applied a posteriori. 
+% %
+% The particular choice we have made is intended to represent a balance
+% between the usefulness of such a dichotomy and the added complication
+% it brings.
+%
+% In this respect version 3.0alpha3 should be considered a snapshot of
+% ongoing thought about the question.
+
+
+%......................................................................
+% \paragraph{Features not yet documented}
+% 
+% \comment{The following features still need documenting. But check
+%   they're not already discussed later}
+% \begin{lstlisting}
+%   has_structure_of<ToolName>();
+%   structure_of<ToolName>();
+% \end{lstlisting}
+
+
 
 %======================================================================
 \section{Functions of a \texttt{PseudoJet}}

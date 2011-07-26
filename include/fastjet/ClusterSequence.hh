@@ -82,6 +82,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  * - ClusterSequenceArea: with the help of an AreaDefinition, provides
  *   jets that also contain information about their area.
  *
+ * \section Tools Selected additional tools
+ *
+ * - JetMedianBackgroundEstimator: with the help of a Selector, a JetDefinition and
+ *   an AreaDefinition, allows one to estimate the background noise density in an event
+ *
+ * - Transformer: class from which are derived various tools for manipulating jets and 
+ *   accessing their substructure. Examples are Subtractor, Filter, and various taggers.
+ *
  * \section further_info Further information
  *
  * - Selected classes ordered by topics can be found under the <a

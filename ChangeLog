@@ -1,5 +1,13 @@
 2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
+        * doc/fastjet-doc.tex
+	  Moved Internal pseudojet structure to appendix, revised Selectors.
+	  
+	* Doxyfile
+	  added "Selected additional tools" to Doxygen main page
+	  
+2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
         * tools/fastjet/tools/MassDropTagger.hh
           tools/fastjet/tools/CASubJetTagger.hh
           tools/fastjet/tools/NSubjettinessTagger.hh
