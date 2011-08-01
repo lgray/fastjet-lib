@@ -2929,8 +2929,10 @@ factor of \ttt{rescaling}$(y_\ttt{jet})$.
 %
 Note that any overall factor in the rescaling function cancels out for
 \ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
-and \ttt{sigma()}, which can therefore be meaningless and should not be used in the
-presence of a rescaling \comment{should we explicitly throw?}.
+and \ttt{sigma()} (which are in any case less meaningful when a
+rapidity dependence is being assumed for the background).
+%, which can therefore be meaningless and should not be used in the
+%presence of a rescaling \comment{should we explicitly throw?}.
 
 %......................................................................
 \subsection{Other facilities}
