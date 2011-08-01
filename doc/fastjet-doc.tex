@@ -2638,7 +2638,7 @@ also be one of the constituents of a jet, in which case it will return
 \verb|true| if that constituent is a ghost.
 
 %----------------------------------------------------------------------
-\section{Background eatimation and subtraction}
+\section{Background estimation and subtraction}
 \label{sec:BackgroundEstimator}
 
 %% Thoughts for 3.0b1 documentation
@@ -3199,6 +3199,9 @@ a background estimator:
   JetMedianBackgroundEstimator bge(....); // or a grid-based estimator
   Subtractor subtractor(&bge);
 \end{lstlisting}
+(it is also possible to construct the Subtractor with a fixed value
+for $\rho$).
+%
 The subtractor can then be used as follows:
 \begin{lstlisting}
   PseudoJet jet;

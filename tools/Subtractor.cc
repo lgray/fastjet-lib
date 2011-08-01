@@ -29,15 +29,30 @@
 //ENDHEADER
 
 #include "fastjet/tools/Subtractor.hh"
+#include <cassert>
+#include <sstream>
+using namespace std;
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
+
+Subtractor::Subtractor(double rho) : _bge(0), _rho(rho) {
+  assert(_rho>0.0);
+}
 
 PseudoJet Subtractor::result(const PseudoJet & jet) const {
   if (!jet.has_area()){
     throw Error("Trying to subtract a jet without area support");
   }
   
-  double rho = _bge->rho(jet);
+  double rho;
+  if (_bge != 0) {
+    rho = _bge->rho(jet);
+  } else if (_rho != _invalid_rho) {
+    rho = _rho;
+  } else {
+    throw Error("default Subtractor does not have any information about the background, which is needed to perform the subtraction");
+  }
+
   PseudoJet subtracted_jet = jet;
   PseudoJet area4vect = jet.area_4vector();
   // sanity check
@@ -51,6 +66,19 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
     subtracted_jet *= 0;
   }
   return subtracted_jet;
+}
+
+//----------------------------------------------------------------------
+std::string Subtractor::description() const{
+  if (_bge != 0) {
+    return "Subtractor that uses the following background estimator to determine rho: "+_bge->description();
+  } else if (_rho != _invalid_rho) {
+    ostringstream ostr;
+    ostr << "Subtractor that uses a fixed value of rho = " << _rho;
+    return ostr.str();
+  } else {
+    return "Uninitialised subtractor";
+  }
 }
 
 FASTJET_END_NAMESPACE

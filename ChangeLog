@@ -1,7 +1,12 @@
-2011-08-01  Gavin SALAM  <salam@lpthe.jussieu.fr>
+2011-08-01  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
-	* src/Selector.cc: 
-	* include/fastjet/Selector.hh: 
+	* tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	  worked a bit on the documentation and allowed for construction
+	  with a constant value of rho. Added a sensible description().
+
+	* src/Selector.cc:
+	* include/fastjet/Selector.hh:
 	  changed some documentation and argument names in parts related
 	  to selector areas.
 
@@ -9,10 +14,10 @@
 
         * doc/fastjet-doc.tex
 	  Moved Internal pseudojet structure to appendix, revised Selectors.
-	  
+
 	* Doxyfile
 	  added "Selected additional tools" to Doxygen main page
-	  
+
 2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * tools/fastjet/tools/MassDropTagger.hh

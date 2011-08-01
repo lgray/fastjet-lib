@@ -147,7 +147,7 @@ double Selector::area(double ghost_area) const{
   // generate a set of "ghosts"
   double rapmin, rapmax;
   get_rapidity_extent(rapmin, rapmax);
-  GhostedAreaSpec ghost_spec(rapmin, rapmax, 1, cell_area);
+  GhostedAreaSpec ghost_spec(rapmin, rapmax, 1, ghost_area);
   std::vector<PseudoJet> ghosts;
   ghost_spec.add_ghosts(ghosts);
   
