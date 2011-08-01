@@ -162,7 +162,7 @@
   implementation of the $\ee$ $k_t$ algorithm.
   %
   Further jet algorithms, including most of the other commonly used
-  $pp$ and $\ee$ algorithms, can be accessed from the FastJet
+  $pp$ and $\ee$ algorithms, can be accessed from the \fastjet
   interface using a plugin mechanism.
   %
   \fastjet also provides ways of determining jet areas.
@@ -249,7 +249,7 @@ underlying ClusterSequence, allowing one to write {\em e.g.}
 \ttt{jet.constituents()}, and can be associated with extra information
 beyond just a user index. This version also adds the D0-Run I cone as
 a new plugin and support for native jet algorithms to be run with
-$R>\pi/2$. It also brings the first of a series of FastJet tools to
+$R>\pi/2$. It also brings the first of a series of \fastjet tools to
 help with advanced jet analyses, namely the Selector class.
 %
 The current implementation of the $pp$ sequential-recombination
@@ -906,7 +906,7 @@ For any \PseudoJet that results from a clustering, the user can
 obtain information about its constituents, internal substructure,
 etc., through  member functions of the \PseudoJet
 class. \footnote{This is a new development in version 3 of
-  FastJet. In earlier versions, access to information about a jet's
+  \fastjet. In earlier versions, access to information about a jet's
   contents had to be made through its \CS. Those forms of access,
   though not documented here, will be retained throughout the 3.X
   series.}
@@ -1815,16 +1815,16 @@ the preparation for the LHC.
 
 The underlying code for this algorithm was extracted from the CMSSW
 web site, with certain small service routines having been rewritten by
-the FastJet authors. 
+the \fastjet authors. 
 %
 The resulting code was validated by clustering 1000 events with the
 original version of the CMS software and comparing the output to the
-clustering performed with the FastJet plugin. 
+clustering performed with the \fastjet plugin. 
 %
 The jet contents were identical in all cases. However the jet momenta
 differed at a relative precision level of $10^{-7}$, related to the
 use of single-precision arithmetic at some internal stage of the CMS
-software (while the FastJet version is in double precision).
+software (while the \fastjet version is in double precision).
 
 
 Note: this algorithm is Coll$_{3+1}$ unsafe~\cite{antikt}. It is to be
@@ -2303,7 +2303,7 @@ here will cause an exception to be thrown.
 The following selectors are also available:
 
 \begin{lstlisting}
-  SelectorNHardest($n$)      //  selects the $n$ hardest jets in an event
+  SelectorNHardest($n$)      //  selects the $n$ hardest jets
   SelectorIsPureGhost()    //  selects jets that are made exclusively of ghost particles
   SelectorIdentity()       //  selects everything. Included for completeness
 \end{lstlisting}
@@ -2671,13 +2671,13 @@ One of the issues in characterising the background is that it is
 difficult to introduce a robust criterion to distinguish
 ``background'' jets from hard jets.
 %
-The main method that is available in FastJet involves the
+The main method that is available in \fastjet involves the
 determination of the distribution of $p_t/A$ for the jets in a given
 event (or region of the event) and then taking the median of the
 distribution as an estimate of $\rho$, as proposed in~\cite{cs} and
 studied in detail also in~\cite{Cacciari:2009dp}.
 %
-This is insensitive to the presence of a handful of hard jets, and
+This is largely insensitive to the presence of a handful of hard jets, and
 avoids any need for introducing a $p_t$ scale to distinguish hard and
 background jets.
 
@@ -2749,7 +2749,8 @@ For the jet-based method, one creates a
 where the selector is used to indicate which jets are used for
 background estimation (for simple use cases, one just specifies a
 rapidity range, e.g.\ \ttt{SelectorAbsRapMax(4.5)} to use all jets
-with $|y|<4.5$), together with a jet definition and an area definition
+with $|y|<4.5$), together with a jet definition (typically, 
+the $k_t$ or Cambridge/Aachen jet algorithm with $R = 0.4 - 0.6$) and an area definition
 (typically, an active area with explicit ghosts is
 recommended\footnote{With the $k_t$ algorithm one may also use a Voronoi area (\ttt{effective\_Rfact =
     0.9} is recommended), which has the advantage of being
@@ -2767,6 +2768,8 @@ For the grid based method one creates a
    GridMedianBackgroundEstimator bge(double max_rapidity,
                                      double requested_grid_spacing);
 \end{lstlisting}
+where, as already mentioned above, one can use a grid spacing $\delta y = \delta
+\phi \simeq 0.5-0.7$.
 Both of these background estimators derive from a
 \ttt{fastjet::BackgroundEstimatorBase} class.
 
@@ -2904,19 +2907,20 @@ that average shape.
 %
 This method is available for both grid and jet-based methods.
 %
-One first creates an object that encodes the shape
+One first creates an object that encodes the shape, e.g.
 \begin{lstlisting}
    // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
    fastjet::BackgroundRescalingYPolynomial rescaling(1.16, 0, -0.023, 0, 0.000041);
 \end{lstlisting}
-(for other shapes, derive a class from
+(for other shapes, e.g. parametrization of elliptic flow in heavy ion collisions,
+with both rapidity and azimuth dependence, derive a class from
 \ttt{FunctionOfPseudoJet<double>} --- see appendix
 \ref{app:function-of-pj}) and then one tells the background estimator
 (whether jet or grid based) about the rescaling with the call
 \begin{lstlisting}
    // tell the JetMedianBackgroundEstimator or
    // GridMedianBackgroundEstimator about the rescaling
-   set_rescaling_class(*rescaling);
+   bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
 Subsequent calls will then take the median of the distribution $p_t/A
 / \ttt{rescaling}(y)$ (rather than $p_t/A$) and any calls to
@@ -2925,7 +2929,8 @@ factor of \ttt{rescaling}$(y_\ttt{jet})$.
 %
 Note that any overall factor in the rescaling function cancels out for
 \ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
-and \ttt{sigma()}.
+and \ttt{sigma()}, which can therefore be meaningless and should not be used in the
+presence of a rescaling \comment{should we explicitly throw?}.
 
 %......................................................................
 \subsection{Other facilities}
@@ -2975,32 +2980,40 @@ All four function above return a result corresponding to the last call
 to \ttt{rho} or \ttt{sigma} (as long as the particles, cluster sequence or
 selector have not changed in the meantime).
 
-To allow flexibility in the user's workflow, there are a number of
-alternative constructors to \ttt{JetMedianBackgroundEstimator}.
+To allow flexibility in the user's workflow, 
+alternative constructors to \ttt{JetMedianBackgroundEstimator} are provided.
 %
 These can come in useful if, for example, the user wishes to carry out
 multiple background estimations with the same particles but different
 selectors, or wishes to take care of the jet clustering themselves,
 e.g.\ because the results of that same jet clustering will be used in
-multiple contexts and it is more efficient to perform it just once:
+multiple contexts and it is more efficient to perform it just once. These
+contructors are:
 \begin{lstlisting}
-  // set just the selector, leaving all other information to be provided later
-  JetMedianBackgroundEstimator(const Selector & rho_range);
   // create an estimator that uses the inclusive jets from the supplied cluster sequence
   JetMedianBackgroundEstimator(const Selector & rho_range, 
                                const ClusterSequenceAreaBase & csa);
   // a default constructor that requires all information to be set later
   JetMedianBackgroundEstimator();
-
+\end{lstlisting}
+In the first case, the background estimator already has all the information it
+needs. Instead, if the default constructor has been used, one can then employ
+\begin{lstlisting}
+  // (re)set the selector to be used for future calls to rho() etc.
+  void set_selector(const Selector & rho_range_selector);
   // (re)set the cluster sequence to be used by future calls to rho() etc. 
   // (as with the cluster-sequence based constructor, its inclusive jets are used)
   void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
+\end{lstlisting}
+to set the rest of the necessary information. If a list of jets is already
+available, they can be submitted to the background estimator in place os a cluster
+sequence:
+\begin{lstlisting}
   // (re)set the jets to be used by future calls to rho() etc. 
   void set_jets(const std::vector<PseudoJet> & jets);
-  // (re)set the selector to be used for future calls to rho() etc.
-  void set_selector(const Selector & rho_range_selector);
 \end{lstlisting}
-Jets passed to any of the above calls must originate from a common
+Note that the
+jets passed via the \ttt{set\_jets()} call above must all originate from a common
 \ttt{ClusterSequenceAreaBase} type class.
 
 %%TMP_REMOVED Finally, there are cases where the user may wish to determine medians
@@ -3033,9 +3046,9 @@ Jets passed to any of the above calls must originate from a common
 \label{sec:BGE-backwards}
 
 The \ttt{JetMedianBackgroundEstimator} and
-\ttt{GridMedianBackgroundEstimator} classes are new to FastJet 3.0.
+\ttt{GridMedianBackgroundEstimator} classes are new to \fastjet 3.
 %
-In FastJet versions 2.3 and 2.4, the background estimation tools were
+In \fastjet versions 2.3 and 2.4, the background estimation tools were
 instead integrated into the \ttt{ClusterSequenceAreaBase} class.
 %
 Rather than using Selectors to specify the jets used in the background
@@ -3061,17 +3074,18 @@ The behaviour can be changed with a call to
   void set_use_area_4vector(bool use_it = true);
 \end{lstlisting}
 %
-Finally, the calculation of $\sigma$ in Fastjet 2.x incorrectly
-handled the limit of a small number of jets. A call to
+Finally, the calculation of $\sigma$ in \fastjet 2.x incorrectly
+handled the limit of a small number of jets. This is now fixed in \fastjet 3, but 
+a call to
 \ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{JetMedianBackgroundEstimator}
 to reproduce that behaviour.
 
-Fastjet 2.x also placed the ghosts differently, resulting in different
+\fastjet 2.x also placed the ghosts differently, resulting in different
 event-by-event rho estimates, and possibly a small systematic offset
 (scaling as the square-root of the ghost area) when ghosts and
 particles both covered identical (small) regions.
 %
-This offset is no longer present with the 3.0 ghost placement.
+This offset is no longer present with the \fastjet 3 ghost placement.
 %
 If the old behaviour is needed, a call to a specific
 \ttt{GhostedAreaSpec}'s \ttt{set\_fj2\_placement(true)} function
@@ -3181,7 +3195,8 @@ causes ghosts to placed as in the 2.x series.
 \subsection{Background subtraction}
 \label{sec:subtractor}
 
-A common use of an estimation of the background is to subtract it from the
+A common use of an estimation of the background is to subtract its contamination 
+from the
 transverse momentum of hard jets, in the form
 \begin{equation}
 p_{t,jet}^{sub} = p_{t,jet}^{raw} - \rho A_{jet} 
@@ -3218,8 +3233,11 @@ the subtractor instead returns a jet with zero 4-momentum (so that
 %
 In both cases, the returned jet retains the user and structural
 information of the original jet.
-%
-Note that \ttt{Subtractor} derives from
+
+An example program is given in \ttt{example/07-subtraction.cc}.
+
+Note that \ttt{Subtractor} derives from the \ttt{Transformer} class (see
+section~\ref{sec:transformers}) and hence from 
 \ttt{FunctionOfPseudoJet<PseudoJet>} (cf.\
 appendix~\ref{app:function-of-pj}).
 
@@ -3399,7 +3417,7 @@ appendix~\ref{app:function-of-pj}).
 %\subsection{Example program with areas and subtraction}
 %\label{sec:ex-prog-sub}
 
-An example program is given in \ttt{example/07-subtraction.cc}.
+% An example program is given in \ttt{example/07-subtraction.cc}.
 
 % \comment{This subsecction still relates to the version 2.x subtraction
 %   interface in \fastjet.}
@@ -3706,7 +3724,7 @@ quite widespread: for example, numerous techniques have been
 introduced to tag boosted hadronically objects, and various methods
 also exist for removing the underlying event and pileup from jets.
 %
-As of version 3.0, \fastjet provides a common interface for such
+\fastjet 3 provides a common interface for such
 tools, intended to help simplify their usage and to guide authors of
 new ones.
 
@@ -3727,8 +3745,49 @@ section~\ref{sec:transformerdetails}.
 \subsection{Generic considerations about \texttt{Transformer}s}
 \label{sec:transformers-generic}
 
-The common interface to all the transformers, declared in the
-\ttt{fastjet/tools/Transformer.hh} header, is the following:
+A transformer derived from \ttt{Transformer}, e.g. the
+ class \ttt{MyTransformer}, will generally be used as follows:
+\begin{lstlisting}
+  MyTransformer transformer;
+  PseudoJet transformed_jet = transformer(jet);
+\end{lstlisting}
+Often, transformers provide new structural information that is to be
+associated with the returned result. 
+%
+For a given transformer, say \ttt{MyTransformer}, the new information
+that is not already directly accessible from \ttt{PseudoJet} (like its
+\ttt{constituents}, \ttt{pieces} or \ttt{area} when they are
+available), can be accessed through
+\begin{lstlisting}
+  transformed_jet.structure_of<MyTransformer>()
+\end{lstlisting}
+which would give direct access to the structural information produced
+by \ttt{MyTransformer}. This is illustrated below on a case-by-case basis
+for each of the transformers that we discuss.
+%
+Using the boolean function
+\ttt{transformed\_jet.has\_structure\_of<MyTransformer>()} it is possible to
+check if \ttt{transformed\_jet} is compatible with the structure provided by
+\ttt{MyTransformer}.
+
+A number of the transformers that we discuss below are ``taggers'' for
+boosted objects.
+%
+In some cases they will determine that a given jet does not satisfy
+the tagging conditions (e.g., for a top tagger, because it seems not
+to be a top jet).
+%
+We will adopt the convention that in such cases the result of the
+transformer is a jet whose 4-momentum is zero, i.e.\ one that satisfies
+\ttt{jet == 0}.
+%
+Such a jet may still have structural information however (such
+information might, for example, indicate why the jet was not tagged).
+
+
+The behaviour described above is obtained via the following
+declaration of the \ttt{Transformer} base class, declared in the
+\ttt{fastjet/tools/Transformer.hh} header:
 \begin{lstlisting}
   class Transformer : public FunctionOfPseudoJet<PseudoJet> {
   public:
@@ -3761,43 +3820,7 @@ typically it will be accessed through the \ttt{operator()} function:
   /// applied to each of input PseudoJets, 
   vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
 \end{lstlisting}
-i.e.\ if we have a class \ttt{MyTransformer} derived from
-\ttt{Transformer} then it can be used as follows:
-\begin{lstlisting}
-  MyTransformer transformer;
-  PseudoJet transformed_jet = transformer(jet);
-\end{lstlisting}
-Often, transformers provide new structural information that is to be
-associated with the returned result. 
-%
-For a given transformer, say \ttt{MyTransformer}, the new information
-that is not already directly accessible from \ttt{PseudoJet} (like its
-\ttt{constituents}, \ttt{pieces} or \ttt{area} when they are
-available), can be accessed through
-\begin{lstlisting}
-  jet.structure_of<MyTransformer>()
-\end{lstlisting}
-which would give direct access to the structural information produced
-by \ttt{MyTransformer}. This is illustrated below on a case-by-case basis
-for each of the transformers that we discuss.
-%
-Using \ttt{jet.has\_structure\_of<MyTransformer>()}, it is possible to
-check if \ttt{jet} is compatible with the structure provided by
-\ttt{MyTransformer}.
 
-A number of the transformers that we discuss below are ``taggers'' for
-boosted objects.
-%
-In some cases they will determine that a given jet does not satisfy
-the tagging conditions (e.g., for a top tagger, because it seems not
-to be a top jet).
-%
-We will adopt the convention that in such cases the result of the
-transformer is a jet whose 4-momentum is zero, i.e.\ one that satisfies
-\ttt{jet == 0}.
-%
-Such a jet may still have structural information however (such
-information might, for example, indicate why the jet was not tagged).
  
 
 \subsection{Jet Filtering and Trimming using \texttt{Filter}}
@@ -3824,8 +3847,26 @@ handles both operations. Its constructor
     ...
   };
 \end{lstlisting}
-allows one to specify a filter/trimmer that reclusters the jet's
-constituents with the jet definition \ttt{subjet\_def} and then
+allows one to create a filter/trimmer that reclusters the jet's
+constituents with the jet definition \ttt{subjet\_def}\footnote{
+%\paragraph{Implementation note.}
+%
+%Usually, the subjets are obtained simply by clustering the input jet's
+%constistuents with the subjet definition.
+% 
+% constituents of the input jet are simply reclustered with
+% the subjet definition in order to extract the subjets.
+% 
+% 
+% Usually, the constituents of the input jet are simply reclustered with
+% the subjet definition in order to extract the subjets.
+%
+When the input jet was obtained with the Cambridge/Aachen
+algorithm and the subjet definition also involves the Cambridge/Aachen
+algorithm, the \ttt{Filter} uses the exclusive subjets of the input
+jet to avoid having to recluster its constituents.
+} 
+and then
 applies \ttt{selector} on the \ttt{inclusive\_jets} resulting from the
 clustering to decide which of these (sub)jets have to be kept.
 %
@@ -3833,28 +3874,37 @@ If \ttt{rho} is non-zero, each of the subjets will be subtracted
 (using the specified value for the background density) prior to the
 selection of the kept subjets.
 
-Two alternative constructors are supported:
+Two additional constructors are also supported:
 \begin{lstlisting}
   Filter(double Rfilt, Selector selector, double rho = 0.0);
   Filter(FunctionOfPseudoJet<double> * Rfilt_dyn, Selector selector, double rho = 0.0);
 \end{lstlisting}
 In the first one, only the radius parameter is specified instead of
-the full subjet definition. For the second, one has to provide a
+the full subjet definition. 
+In the second, one has to provide a
 (pointer to) a class derived from \ttt{FunctionOfPseudoJet<double>}
 which dynamically computes the filtering radius as a function of the
 jet being filtered (as was originally used in \cite{BDRS} where
 $R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}/2})$, with $R_{b\bar b}$ the
 distance between the parents of the jet). In both cases, the
-Cambridge/Aachen algorithm is used.
+Cambridge/Aachen algorithm is used to recluster the constituents of the jet that
+the filter is applied to. 
+ 
 
-\paragraph{Constraints.} The jet being filtered must have
-constituents. Furthermore, if \ttt{rho} is non-zero, the input jet
-must be the result of a \ttt{ClusterSequence} with area support and
-explicit ghosts. If any of these requirements fail, an exception will
-be thrown.
+%\paragraph{Usage and structure of the result.} 
 
-\paragraph{Structure of the result.} The \ttt{pieces()} of the resulting
-filtered/trimmed jet correspond to the subjets that were kept. 
+A simple filter, giving the subjets obtained clustering
+with the Cambridge/Aachen algorithm with radius $R_{\rm filt}$ and
+keeping the $n_{\rm filt}$ hardest subjets found, can be set up and applied using
+\begin{lstlisting}
+  Filter filter(Rfilt, SelectorNHardest(nfilt));
+  PseudoJet filtered_jet = filter(jet);
+\end{lstlisting}
+The \ttt{pieces()} of the resulting
+filtered/trimmed jet correspond to the subjets that were kept:
+\begin{lstlisting}
+  vector<PseudoJet> kept = filtered_jet.pieces();
+\end{lstlisting} 
 %
 Additional structural information is available as follows:
 % 
@@ -3866,42 +3916,29 @@ Additional structural information is available as follows:
 % accessible using
 \begin{lstlisting}
   // the subjets (on the scale Rfilt) not kept by the filtering
-  vector<PseudoJet> rejected = jet.structure_of<Filter>().rejected();
+  vector<PseudoJet> rejected = filtered_jet.structure_of<Filter>().rejected();
 \end{lstlisting}
 %  // the original jet before filtering
 %  PseudoJet original = jet.structure_of<Filter>().original();
 
-\paragraph{Usage examples.} Filtering involving obtaining the subjets
-with the Cambridge/Aachen algorithm with radius $R_{\rm filt}$ and
-keeping the $n_{\rm filt}$ hardest subjets found can be achieved using
-\begin{lstlisting}
-   Filter filter(Rfilt, SelectorNHardest(nfilt));
-\end{lstlisting}
+
+%\paragraph{More usage examples.}
 Trimming, which keeps the subjets with a $p_t$ larger than a fixed
-fraction of the input jet, is done using
+fraction of the input jet, can be obtained defining
 \begin{lstlisting}
-   Filter trimmer(subjet_def, SelectorPtFractionMin(pt_fraction_min));
+   Filter trimmer(Rfilt, SelectorPtFractionMin(pt_fraction_min));
 \end{lstlisting}
+and then applying \ttt{trimmer} similarly to \ttt{filter} above.
 
-\paragraph{Implementation note.}
-%
-Usually, the subjets are obtained simply by clustering the input jet's
-constistuents with the subjet definition.
-% 
-% constituents of the input jet are simply reclustered with
-% the subjet definition in order to extract the subjets.
-% 
-% 
-% Usually, the constituents of the input jet are simply reclustered with
-% the subjet definition in order to extract the subjets.
-%
-However, when the input jet was obtained with the Cambridge/Aachen
-algorithm and the subjet definition also involves the Cambridge/Aachen
-algorithm, the \ttt{Filter} uses the exclusive subjets of the input
-jet to avoid having to recluster its constituents.
+%\paragraph{Constraints.} 
+Note that the jet being filtered must have
+constituents. Furthermore, if \ttt{rho} is non-zero, the input jet
+must be the result of a \ttt{ClusterSequence} with area support and
+explicit ghosts. If any of these requirements fail, an exception will
+be thrown.
 
-%% Note on the constraints on the input / extra structural stuff: do
-%% we want to mention that in the previous section?
+
+
 
 \subsection{2-pronged and 3-pronged taggers}
 \label{sec:2prongedtaggers}
@@ -3927,9 +3964,9 @@ suitable substructure, they return a \ttt{jet} that has the property
 At the moment, we have implemented two of the taggers proposed for the
 reconstruction of boosted two-body decays: the \ttt{fastjet::MassDropTagger}
 introduced in \cite{BDRS} and a rest-frame \ttt{fastjet::NSubjettinessTagger}
-from Ref. \cite{nsubtagger}. The boosted top tagger from~\cite{Kaplan:2008ie},
+from Ref. \cite{nsubtagger}. For the three-body decays, the boosted top tagger from~\cite{Kaplan:2008ie},
 \ttt{fastjet::JHTopTagger}, as well as a subjet tagger for the Cambridge-Aachen jet algorithm as
-introduced in~\cite{Butterworth:2009qa}, \ttt{fastjet::CASubJetTagger}, are also
+introduced in~\cite{Butterworth:2009qa}, \ttt{fastjet::CASubJetTagger}, are 
 available.
 We refer the reader to the original papers for
 an extensive description of the taggers and shall only give a very
@@ -3955,8 +3992,13 @@ for boosted Higgs tagging). Tagging then proceeds as follows
 %
 The tagger can be constructed with
 \begin{lstlisting}
-   MassDropTagger(double $\mu$, double $y_\text{cut}$);
+   MassDropTagger mdtagger(double $\mu$, double $y_\text{cut}$);
 \end{lstlisting}
+and applied using
+\begin{lstlisting}
+   PseudoJet tagged_jet = mdtagger(jet);
+\end{lstlisting}
+
 %\paragraph{Constraints.} 
 %
 This tagger will run with any jet that comes from a \CS. A warning
@@ -3988,7 +4030,7 @@ be achieved with
 %   Filter filter = Filter(Rfilt, SelectorNHardest(3));
 %   PseudoJet filtered_tagged_jet = filter(tagged_jet);
 (It is also possible to use the \ttt{Rfilt\_dyn} option to the filter
-discussed above).
+discussed in section~\ref{sec:filtering}).
 
 
 %......................................................................
@@ -4368,7 +4410,7 @@ last one casts the pointer to the desired derived structure type.
 \section{Functions of a \texttt{PseudoJet}}
 \label{app:function-of-pj}
 
-A concept that is new to \fastjet v3.0 is that of a
+A concept that is new to \fastjet 3 is that of a
 \ttt{fastjet::FunctionOfPseudoJet}.
 %
 Functions of \ttt{PseudoJet}s arise in many contexts: many
