@@ -1,3 +1,10 @@
+%% TO DO as of 2011-08-01
+%%
+%% - move Transformer definition (section 9.1) into appendix
+%% - rewrite abstract
+%% - rewrite intro
+%% - check appendices
+
 %% ----- FJ3THOUGHTS ----------------
 %%
 %% At various places in the text you'll find FJ3THOUGHTS tags, with
@@ -155,18 +162,34 @@
   % %
   % \fastjet also provides 
 
-  \fastjet provides fast ($N\ln N, N^2$) implementations of the
-  longitudinally invariant $k_t$, anti-$k_t$ and Cambridge/Aachen jet
-  algorithms for $pp$ collisions, based in part on tools and methods
-  from the Computational Geometry community, as well as a native
-  implementation of the $\ee$ $k_t$ algorithm.
+  \fastjet is a \ttt{C++} package that provides access to a broad
+  range of jet finding and analysis tools.
   %
-  Further jet algorithms, including most of the other commonly used
-  $pp$ and $\ee$ algorithms, can be accessed from the \fastjet
-  interface using a plugin mechanism.
+  It includes efficient native implementations of all widely-used $2\to 1$
+  sequential recombination jet algorithms for $pp$ and $e^+e^-$
+  collisions, as well as access to 3rd party jet algorithms through a
+  plugin mechanism, including all currently-used cone algorithms.
   %
-  \fastjet also provides ways of determining jet areas.
-  % 
+  \fastjet also provides means to facilitate the manipulation of jet
+  subtructure, including some common boosted heavy-object taggers, as
+  well as tools for estimation of pileup and underlying event noise
+  levels, determination of jet areas and subtraction or suppression
+  of noise in jets.
+
+
+
+  % \fastjet provides fast ($N\ln N, N^2$) implementations of the
+  % longitudinally invariant $k_t$, anti-$k_t$ and Cambridge/Aachen jet
+  % algorithms for $pp$ collisions, based in part on tools and methods
+  % from the Computational Geometry community, as well as a native
+  % implementation of the $\ee$ $k_t$ algorithm.
+  % %
+  % Further jet algorithms, including most of the other commonly used
+  % $pp$ and $\ee$ algorithms, can be accessed from the \fastjet
+  % interface using a plugin mechanism.
+  % %
+  % \fastjet also provides ways of determining jet areas.
+  % % 
 \end{abstract}
 
 %----------------------------------------------------------------------
@@ -4086,11 +4109,14 @@ softer fourth) is(are) the remaining subjet(s).
 %......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
 
+The description of the interface to the $N$-subjettiness
+tagger~\cite{nsubtagger} will follow in a later version of this
+manual.
 
-\paragraph{Constraints.}
+%\paragraph{Constraints.}
 
 
-\paragraph{Structure of the result.}
+%\paragraph{Structure of the result.}
 
 
 
