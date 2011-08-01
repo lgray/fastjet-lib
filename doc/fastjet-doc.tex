@@ -1622,7 +1622,7 @@ area, since this is relatively fast to calculate with SISCone.
 \label{sec:other-pp-plugins}
 
 Not all plugins are enabled by default in \fastjet. At configuration
-time \verb:./configure.sh --help: will indicate which ones get enabled
+time \verb:./configure --help: will indicate which ones get enabled
 by default. To enable all plugins, run \verb|configure| with the
 argument \verb|--enable-allplugins|, while to enable all but PxCone
 (which requires fortran, and can introduce link-time issues) use
@@ -4133,7 +4133,8 @@ Compilation and installation make use of the standard
   % make install
 \end{verbatim}
 procedure. Explanations of available options are given in the
-\ttt{INSTALL} file in the top directory.
+\ttt{INSTALL} file in the top directory, and a list can also be obtained running
+\ttt{./configure --help}.
 
 In order to access the \ttt{NlnN} strategy for the $k_t$ algorithm the
 library needs to be compiled with the Computational Geometry
