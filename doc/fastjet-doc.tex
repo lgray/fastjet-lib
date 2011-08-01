@@ -252,7 +252,7 @@ a new plugin and support for native jet algorithms to be run with
 $R>\pi/2$. It also brings the first of a series of FastJet tools to
 help with advanced jet analyses, namely the Selector class.
 %
-The current implementation of the $pp$ sequential-recombinaion
+The current implementation of the $pp$ sequential-recombination
 algorithms is restricted to 
 the so-called $\Delta R$ distance measure (recommended in
 \cite{RunII-jet-physics}), with a choice of recombination schemes. The
@@ -306,7 +306,7 @@ using namespace std;
 
 int main () {
   vector<PseudoJet> particles;
-  // an event with three particles:    px py pz    E
+  // an event with three particles:   px    py  pz      E
   particles.push_back( PseudoJet(   99.0,  0.1,  0, 100.0) ); 
   particles.push_back( PseudoJet(    4.0, -0.1,  0,   5.0) ); 
   particles.push_back( PseudoJet(  -99.0,    0,  0,  99.0) );
@@ -385,7 +385,7 @@ usage, the user is exposed to three main classes:
 internal indices to situate it in the context of a jet-clustering
 sequence. \ttt{ClusterSequence} is the class that carries out
 jet-clustering and provides access to the final jets.
-
+%
 The class \ttt{JetDefinition} contains a specification of how
 jet clustering is to be performed. 
 
@@ -460,7 +460,7 @@ The simpler method is through an integer called the user index
   /// return the user_index
   int user_index() const ;
 \end{lstlisting}
-A more powerful method involves passing a pointer to a derived class
+A more powerful method, new in \fastjet 3, involves passing a pointer to a derived class
 of \ttt{PseudoJet::UserInfoBase}. The two essential calls are
 \begin{lstlisting}
   /// set the pointer to user information (the PseudoJet will then own it)
@@ -555,9 +555,10 @@ internal or testing purposes.
 \ttt{R} specifies the value of $R$ that appears in
 eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{eq:dij_eegenkt}).
 %
-The recombination scheme should be one of those listed in
-table~\ref{tab:RecombSchemes}. If it is omitted the $E$-scheme is
-chosen.
+%The recombination scheme should be one of those listed in
+%table~\ref{tab:RecombSchemes}. If it is omitted the $E$-scheme is
+%chosen.
+
 %
 \begin{table}
   \centering
@@ -602,6 +603,15 @@ will be thrown with an explanatory message.
 
 The default constructor for \verb:JetDefinition: sets the jet
 algorithm to \verb:undefined_jet_algorithm:.
+
+The recombination scheme is set by an \texttt{enum} of type
+\texttt{RecombinationScheme}, and it is related to the choice of how to
+recombine the 4-momenta of \texttt{PseudoJet}s during the clustering procedure.
+The default in \fastjet is the $E$-scheme, where the four components of
+two 4-vectors are
+simply added. This scheme is used when no explicit choice is made in the
+constructor. The list of available recombination schemes is given in
+table~\ref{tab:RecombSchemes}, and more details are given in section~\ref{sec:recomb_schemes}.
 
 The strategy selects the algorithmic strategy to use while clustering
 and is an \texttt{enum} of type \texttt{Strategy} with
@@ -831,13 +841,63 @@ One use case for this is if one wishes to obtain a Lorentz-boosted
 copy of a \CS, which can be achieved as follows
 \begin{lstlisting}
    #include "fastjet/tools/Boost.hh"
-   //...
-   
+   // ...
    ClusterSequence original_cs(...);
    ClusterSequence boosted_cs;
    Boost boost(some_jet_to_describe_the_boost);
    boosted_cs.transfer_from_sequence(cs, &boost);
 \end{lstlisting}
+
+
+%......................................................................
+\subsection{Recombination schemes}
+\label{sec:recomb_schemes}
+
+When merging particles (i.e. \ttt{PseudoJet}s) during 
+the clustering procedure, one must
+specify how to combine the momenta. The simplest procedure
+($E$-scheme) simply adds the four-vectors. This has been advocated as
+a standard in~\cite{RunII-jet-physics}, and is the default option in
+\fastjet. Other choices are listed in
+table~\ref{tab:RecombSchemes}, and are described below.
+
+
+
+\paragraph{Other schemes for $\boldsymbol{pp}$ collisions.} Other
+schemes provided by earlier $k_t$-clustering implementations
+\cite{KtJet} are the $p_t$, $p_t^2$, $E_t$ and $E_t^2$ schemes. They
+all incorporate a `preprocessing' stage to make the initial momenta
+massless (rescaling the energy to be equal to the 3-momentum for the
+$p_t$ and $p_t^2$ schemes, rescaling to the 3-momentum to be equal to
+the energy in the $E_t$ and $E_t^2$ schemes). Then for all schemes the
+recombination $p_r$ of $p_i$ and $p_j$ is a massless 4-vector
+satisfying
+\begin{subequations}
+  \begin{align}
+    p_{t,r} &= p_{t,i} + p_{t,j}\,,\\
+    \phi_r &= (w_i \phi_i + w_j \phi_j)/(w_i + w_j)\,,\\
+    y_r &= (w_i y_i + w_j y_j)/(w_i + w_j)\,,
+  \end{align}
+\end{subequations}
+where $w_i$ is $p_{t,i}$ for the $p_t$ and $E_t$ schemes, and is
+$p_{t,i}^2$ for the $p_t^2$ and $E_t^2$ schemes. 
+
+Note that for massive particles the schemes defined in the previous
+paragraph are not invariant under longitudinal boosts. We therefore
+also introduce boost-invariant $p_t$ and $p_t^2$ schemes, which are
+identical to the normal $p_t$ and $p_t^2$ schemes, except that they
+omit the preprocessing stage.
+
+\paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
+On request, we may in the future provide dedicated schemes for $\ee$
+collisions.
+
+\paragraph{User-defined schemes.} The user may define their own,
+custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
+
+
+
+
 
 %......................................................................
 \subsection{Constituents and substructure of jets}
@@ -1274,50 +1334,6 @@ distance measure was called $y_{ij}$).
 
 
 
-%......................................................................
-\subsection{Recombination schemes}
-\label{sec:recomb_schemes}
-
-When merging particles in step 2 of the clustering procedure, one must
-specify how to combine the momenta. The simplest procedure
-($E$-scheme) simply adds the four-vectors. This has been advocated as
-a standard in~\cite{RunII-jet-physics}, and is the default option in
-\fastjet. 
-
-
-
-\paragraph{Other schemes for $\boldsymbol{pp}$ collisions.} Other
-schemes provided by earlier $k_t$-clustering implementations
-\cite{KtJet} are the $p_t$, $p_t^2$, $E_t$ and $E_t^2$ schemes. They
-all incorporate a `preprocessing' stage to make the initial momenta
-massless (rescaling the energy to be equal to the 3-momentum for the
-$p_t$ and $p_t^2$ schemes, rescaling to the 3-momentum to be equal to
-the energy in the $E_t$ and $E_t^2$ schemes). Then for all schemes the
-recombination $p_r$ of $p_i$ and $p_j$ is a massless 4-vector
-satisfying
-\begin{subequations}
-  \begin{align}
-    p_{t,r} &= p_{t,i} + p_{t,j}\,,\\
-    \phi_r &= (w_i \phi_i + w_j \phi_j)/(w_i + w_j)\,,\\
-    y_r &= (w_i y_i + w_j y_j)/(w_i + w_j)\,,
-  \end{align}
-\end{subequations}
-where $w_i$ is $p_{t,i}$ for the $p_t$ and $E_t$ schemes, and is
-$p_{t,i}^2$ for the $p_t^2$ and $E_t^2$ schemes. 
-
-Note that for massive particles the schemes defined in the previous
-paragraph are not invariant under longitudinal boosts. We therefore
-also introduce boost-invariant $p_t$ and $p_t^2$ schemes, which are
-identical to the normal $p_t$ and $p_t^2$ schemes, except that they
-omit the preprocessing stage.
-
-\paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
-On request, we may in the future provide dedicated schemes for $\ee$
-collisions.
-
-\paragraph{User-defined schemes.} The user may define their own,
-custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
-
 
 
 
@@ -1621,7 +1637,7 @@ a split--merge step.
 %
 \begin{lstlisting}
   #include ``fastjet/CDFCones.hh''
-  ///...
+  // ...
   CDFMidPointPlugin(double R, 
                     double overlap_threshold,
                     double seed_threshold = 1.0, 
@@ -1650,7 +1666,7 @@ The other algorithm used by CDF during Run~II, as well as their main
 algorithm during Run~I.
 \begin{lstlisting}
   #include ``fastjet/CDFCones.hh''
-  ///...
+  // ...
   CDFJetCluPlugin (double   cone_radius, 
 		   double   overlap_threshold, 
 		   double   seed_threshold = 1.0,
@@ -1683,7 +1699,7 @@ The main algorithm used by \Dzero in Run~I of the Tevatron, which is
 an  iterative cone algorithm with a split-merge. It comes in two versions
 \begin{lstlisting}
   #include ``fastjet/D0RunIpre96ConePlugin.hh''
-  ///...
+  // ...
   D0RunIpre96ConePlugin (double R, 
                          double min_jet_Et, 
                          double split_ratio = 0.5);
@@ -1691,7 +1707,7 @@ an  iterative cone algorithm with a split-merge. It comes in two versions
 and
 \begin{lstlisting}
   #include ``fastjet/D0RunIConePlugin.hh''
-  ///...
+  // ...
   D0RunIConePlugin (double R, 
                     double min_jet_Et, 
                     double split_ratio = 0.5);
@@ -1726,7 +1742,7 @@ The main algorithm used by \Dzero in Run~II of the Tevatron, which is
 a midpoint type iterative cone with split-merge.
 \begin{lstlisting}
   #include ``fastjet/D0RunIIConePlugin.hh''
-  ///...
+  // ...
   D0RunIIConePlugin (double R, 
                      double min_jet_Et, 
                      double split_ratio = 0.5);
@@ -1765,7 +1781,7 @@ The (iterative) cone (with split-merge) algorithm used by ATLAS during
 the preparation for the LHC. 
 \begin{lstlisting}
   #include ``fastjet/AtlasConePlugin.hh''
-  ///...
+  // ...
   ATLASConePlugin (double R, 
                    double seedPt = 2.0, 
                    double f = 0.5);
@@ -1792,7 +1808,7 @@ The (iterative) cone (with progressive removal) algorithm used by CMS during
 the preparation for the LHC. 
 \begin{lstlisting}
   #include ``fastjet/CMSIterativeConePlugin.hh''
-  ///...
+  // ...
   CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
 \end{lstlisting}
 
@@ -1821,7 +1837,7 @@ A fortran plugin for the PxCone algorithm, which is an iterative cone
 with midpoints and a split-drop procedure
 \begin{lstlisting}
   #include ``fastjet/PxConePlugin.hh''
-  ///...
+  // ...
   PxConePlugin (double  cone_radius      , 
 		double  min_jet_energy = 5.0  , 
 		double  overlap_threshold = 0.5,
@@ -1860,7 +1876,7 @@ needed here!).
 %
 \begin{lstlisting}
   #include ``fastjet/TrackJetPlugin.hh''
-  ///...
+  // ...
   TrackJetPlugin (double radius, 
 		  RecombinationScheme jet_recombination_scheme=pt_scheme, 
 		  RecombinationScheme track_recombination_scheme=pt_scheme);
@@ -1928,7 +1944,7 @@ Note that for background estimation purposes the
 The original $\ee$ cambridge~\cite{CamOrig} algorithm is provided as a plugin:
 \begin{lstlisting}
   #include ``fastjet/EECambridgePlugin.hh''
-  ///...
+  // ...
   EECambridgePlugin (double ycut);
 \end{lstlisting}
 This algorithms performs sequential recombination of the pair of
@@ -1951,7 +1967,7 @@ recombination algorithm with distance measure $d_{ij} = 2E_i E_j
 (1-\cos\theta)$, is available through
 \begin{lstlisting}
   #include ``fastjet/JadePlugin.hh''
-  ///...
+  // ...
   JadePlugin ();
 \end{lstlisting}
 To access the jets at a given $y_{cut} = d_{cut}/Q^2$, the user 
@@ -2007,9 +2023,7 @@ authors.
 
 %======================================================================
 \section{Selectors}
-
-%----------------------------------------------------------------------
-\subsection{Essential usage}
+\label{sect:selectors}
 
 Analyses often place constraints (cuts) on jets' transverse momenta,
 rapidity, maybe consider only some $N$ hardest jets, etc.
@@ -2024,9 +2038,13 @@ through
   #include "fastjet/Selector.hh"
 \end{lstlisting}
 
-As an example of how it is used, if have a vector of jets, \ttt{jets},
+%----------------------------------------------------------------------
+\subsection{Essential usage}
+
+
+As an example of how \texttt{Selector}s are used, suppose that we  have a vector of jets, \ttt{jets},
 and wish to select those that have rapidities $|y|<2.5$ and transverse
-momenta above $20\GeV$, then we might write the following:
+momenta above $20\GeV$. We might write the following:
 \begin{lstlisting}
   Selector select_rapidity = SelectorAbsRapMax(2.5);
   Selector select_pt       = SelectorPtMin(20.0);
@@ -2077,8 +2095,8 @@ corresponding logical combination of each of the selectors'
 results. Thus, here only jets that are among the 2 hardest of the
 whole ensemble and that have $|y|<2.5$ will be selected.
 %
-If one wishes to first apply a rapidity cut, and then find the 2
-hardest among those jets that pass the rapidity cut, then one may
+If one wishes to first apply a rapidity cut, and {\sl then} find the 2
+hardest among those jets that pass the rapidity cut, then one should
 instead use the \ttt{*} operator:
 \begin{lstlisting}
   SelectorNHardest(2)  *  SelectorAbsRapMax(2.5)
@@ -2291,7 +2309,7 @@ The following selectors are also available:
 
 
 %======================================================================
-\section{Jet areas, background evaluation and subtraction}
+\section{Jet areas}
 \label{sec:areas}
 
 Since a jet is made up of only a finite number of particles, one needs
@@ -2617,7 +2635,7 @@ also be one of the constituents of a jet, in which case it will return
 \verb|true| if that constituent is a ghost.
 
 %----------------------------------------------------------------------
-\subsection{Background estimation}
+\section{Background eatimation and subtraction}
 \label{sec:BackgroundEstimator}
 
 %% Thoughts for 3.0b1 documentation
@@ -2720,7 +2738,7 @@ For the jet-based method, one creates a
 \ttt{fastjet::JetMedianBackgroundEstimator},
 \begin{lstlisting}
    #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
-
+   // ...
    JetMedianBackgroundEstimator bge(const Selector & selector,
                                     const JetDefinition & jet_def,
                                     const AreaDefinition & area_def);
@@ -2742,7 +2760,7 @@ For the grid based method one creates a
 \ttt{fastjet::GridMedianBackgroundEstimator},
 \begin{lstlisting}
    #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
-
+   // ...
    GridMedianBackgroundEstimator bge(double max_rapidity,
                                      double requested_grid_spacing);
 \end{lstlisting}
@@ -2819,7 +2837,7 @@ $\rho$ will be zero, as expected and appropriate for quiet events.
 %%FJ3.0a3 selector is empty the median estimate for $\rho$ will be zero.
 
 %......................................................................
-\subsubsection{Positional dependence of background}
+\subsection{Positional dependence of background}
 \label{sec:BGE-positional}
 
 One drawback of a $\rho$ estimate based on all jets or grid cells from
@@ -2907,7 +2925,7 @@ Note that any overall factor in the rescaling function cancels out for
 and \ttt{sigma()}.
 
 %......................................................................
-\subsubsection{Other facilities}
+\subsection{Other facilities}
 \label{sec:BGE-other-facilities}
 
 %% Finally, the base class \ttt{ClusterSequenceAreaBase} contains virtual methods (usually
@@ -3008,7 +3026,7 @@ Jets passed to any of the above calls must originate from a common
 
 
 %......................................................................
-\subsubsection{Backwards compatibility}
+\subsection{Backwards compatibility}
 \label{sec:BGE-backwards}
 
 The \ttt{JetMedianBackgroundEstimator} and
@@ -3160,7 +3178,18 @@ causes ghosts to placed as in the 2.x series.
 \subsection{Background subtraction}
 \label{sec:subtractor}
 
-The \ttt{Subtractor} class is defined in
+A common use of an estimation of the background is to subtract it from the
+transverse momentum of hard jets, in the form
+\begin{equation}
+p_{t,jet}^{sub} = p_{t,jet}^{raw} - \rho A_{jet} 
+\end{equation}
+or its 4-vector version
+\begin{equation}
+p_{\mu,jet}^{sub} = p_{\mu,jet}^{raw} - \rho A_{\mu,jet} \, ,
+\end{equation}
+as first advocated in~\cite{cs}.
+
+To this end, the \ttt{Subtractor} class is defined in
 \ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
 a background estimator:
 \begin{lstlisting}
@@ -3179,7 +3208,7 @@ The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
 %
 If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then
 the subtractor instead returns a jet with zero 4-momentum (so that
-\ttt(subtracted\_jet==0) returns \ttt{true}).
+\ttt{(subtracted\_jet==0)} returns \ttt{true}).
 %
 In both cases, the returned jet retains the user and structural
 information of the original jet.
