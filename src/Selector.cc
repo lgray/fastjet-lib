@@ -138,7 +138,7 @@ double Selector::area() const{
 }
 
 // implementation of the Selector's area function
-double Selector::area(double cell_area) const{
+double Selector::area(double ghost_area) const{
   if (! is_geometric()) throw InvalidArea();
   
   // has area will already check we've got a valid worker

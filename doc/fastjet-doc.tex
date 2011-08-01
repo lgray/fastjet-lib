@@ -604,9 +604,9 @@ will be thrown with an explanatory message.
 The default constructor for \verb:JetDefinition: sets the jet
 algorithm to \verb:undefined_jet_algorithm:.
 
-The recombination scheme is set by an \texttt{enum} of type
-\texttt{RecombinationScheme}, and it is related to the choice of how to
-recombine the 4-momenta of \texttt{PseudoJet}s during the clustering procedure.
+The recombination scheme is set by an \ttt{enum} of type
+\ttt{RecombinationScheme}, and it is related to the choice of how to
+recombine the 4-momenta of \ttt{PseudoJet}s during the clustering procedure.
 The default in \fastjet is the $E$-scheme, where the four components of
 two 4-vectors are
 simply added. This scheme is used when no explicit choice is made in the
@@ -614,25 +614,25 @@ constructor. The list of available recombination schemes is given in
 table~\ref{tab:RecombSchemes}, and more details are given in section~\ref{sec:recomb_schemes}.
 
 The strategy selects the algorithmic strategy to use while clustering
-and is an \texttt{enum} of type \texttt{Strategy} with
+and is an \ttt{enum} of type \ttt{Strategy} with
 potentially interesting values listed in table~\ref{tab:Strategies}.
 %
 \begin{table}
   \begin{center}
     \begin{tabular}{l|l}\hline
-      \texttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N
+      \ttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N
       \lesssim 50$)\\
-      \texttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
+      \ttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
       N \lesssim 400$)\\ 
-      \texttt{N2MinHeapTiled} & a tiled $N^2$ algorithm with a heap for
+      \ttt{N2MinHeapTiled} & a tiled $N^2$ algorithm with a heap for
       tracking the minimum of \\& $d_{ij}$ (fastest for $400 \lesssim
       N \lesssim 15000$)\\ 
-      \texttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
+      \ttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
       N \gtrsim 15000$)\\ 
-      \texttt{NlnNCam} & based on Chan's $N\ln N$ closest pairs
+      \ttt{NlnNCam} & based on Chan's $N\ln N$ closest pairs
       algorithm (fastest for \\&$ 
       N \gtrsim 6000$), suitable only for the Cambridge jet algorithm\\ 
-      \texttt{Best} & automatic selection of the best of these based on
+      \ttt{Best} & automatic selection of the best of these based on
       $N$ and $R$\\\hline 
     \end{tabular}
     \caption{The more interesting of the various algorithmic
@@ -660,20 +660,20 @@ geometry algorithm for dynamic maintenance of closest pairs
 and is suitable only for the Cambridge algorithm whose distance
 measure is purely geometrical.
 
-The \texttt{N2Plain} strategy uses a ``nearest-neighbour heuristic''
+The \ttt{N2Plain} strategy uses a ``nearest-neighbour heuristic''
 \cite{Anderberg} approach to maintaining the geometrical
-nearest-neighbour graph; \texttt{N2Tiled} tiles the $y-\phi$ cylinder
+nearest-neighbour graph; \ttt{N2Tiled} tiles the $y-\phi$ cylinder
 to limit the set of points over which nearest-neighbours are searched
 for,%
 \footnote{Tiling is a textbook approach in computational geometry,
   where it is often referred to as bucketing. It has been used also in
   certain cone jet algorithms, notably at trigger level and in
   \cite{Sonnenschein}.} %
-and \texttt{N2MinHeapTiled} differs only in that it uses an $N\ln N$
+and \ttt{N2MinHeapTiled} differs only in that it uses an $N\ln N$
 (rather than $N^2$) data structure for maintaining in order the subset
 of the $d_{ij}$ that involves nearest neighbours.
 %
-The \texttt{NlnN} strategy uses CGAL's Delaunay Triangulation
+The \ttt{NlnN} strategy uses CGAL's Delaunay Triangulation
 \cite{CGAL} for the maintenance of the nearest-neighbour graph.
 %
 Note that $N \ln N$ performance of is an \emph{expected} result, and
@@ -685,16 +685,16 @@ result to hold (this however has a significant impact only for $N
 \gtrsim 10^5$).
 
 
-If \texttt{strategy} is omitted then the \texttt{Best} option is set.
+If \ttt{strategy} is omitted then the \ttt{Best} option is set.
 Note that the $N$ ranges quoted above for which a given strategy is
 optimal hold for $R=1$; the general $R$ dependence can be significant
 (and non-trivial), for example for the Cambridge/Aachen jet algorithm
 with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2MinHeapTiled} strategy
 only for $N\gtrsim 37000$. While some attempt has been made to account
 for the $R$-dependence in the choice of the strategy with the
-``\texttt{Best}'' option, there may exist specific regions of $N$ and
+``\ttt{Best}'' option, there may exist specific regions of $N$ and
 $R$ in which a manual choice of strategy can give faster execution.
-Furthermore the \texttt{NlnNCam} strategy's timings may depend
+Furthermore the \ttt{NlnNCam} strategy's timings may depend
 strongly on the size of the cache, and the transitions that have been
 adopted are based on a cache size of $2$~MB. Finally for a given $N$
 and $R$, the optimal strategy may also depend on the event structure. 
@@ -709,7 +709,7 @@ to the member function
 \subsection{fastjet::ClusterSequence}
 \label{sec:ClusterSequence}
 
-To run the jet clustering, create a \texttt{ClusterSequence}
+To run the jet clustering, create a \ttt{ClusterSequence}
 object,\footnote{The analogue of \ktjet's \ttt{KtEvent}.}  through the
 following constructor
 \begin{lstlisting}
@@ -729,7 +729,7 @@ function should be used
   /// algorithm) with pt >= ptmin. 
   vector<PseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
 \end{lstlisting}
-where \texttt{ptmin} may be omitted (then implicitly taking value
+where \ttt{ptmin} may be omitted (then implicitly taking value
 $0$).
 
 There are two ways of accessing exclusive jets,\footnote{In contrast
@@ -2042,7 +2042,7 @@ through
 \subsection{Essential usage}
 
 
-As an example of how \texttt{Selector}s are used, suppose that we  have a vector of jets, \ttt{jets},
+As an example of how \ttt{Selector}s are used, suppose that we  have a vector of jets, \ttt{jets},
 and wish to select those that have rapidities $|y|<2.5$ and transverse
 momenta above $20\GeV$. We might write the following:
 \begin{lstlisting}
@@ -2149,14 +2149,17 @@ If it is not sensible to talk about a rapidity extent for a given
 selector (e.g.\ for \ttt{SelectorPtMin}) the rapidity limits that are
 returned are the largest (negative and positive) numbers that can be
 represented as doubles.
+%
+The function \ttt{is\_geometric()} returns true if the selector places
+constraints only on rapidity and azimuth.
 
 %\comment{Is discussion of areas not too detailed?}
 
 Selectors may also have areas associated with them (in analogy with
 jet areas, section~\ref{sec:areas}).
 %
-The \ttt{has\_area()} member function returns true if a selector has a
-meaningful (finite) area; The \ttt{area()} function returns this area.
+The \ttt{has\_finite\_area()} member function returns true if a selector has a
+meaningful finite area; The \ttt{area()} function returns this area.
 %
 In some cases the area may be computed using ghosts (by default with
 ghosts of area $0.01$; the user can specify a different ghost area as
@@ -2187,8 +2190,8 @@ the variable, an upper limit or a range, corresponding to the choices
 %
 A couple of examples are
 \begin{lstlisting}
-   SelectorPtMin(25.0)          // Selects $p_t>25\GeV$
-   SelectorRapRange(1.9,4.9)    // Selects $1.9<y<4.9$
+   SelectorPtMin(25.0)        // Selects $p_t>25$ (units are user's default for momenta)
+   SelectorRapRange(1.9,4.9)  // Selects $1.9<y<4.9$
 \end{lstlisting}
 Following a similar naming convention, there are also
 \ttt{SelectorPhiRange(}$\phi_{\min},\phi_{\max}$\ttt{)} and

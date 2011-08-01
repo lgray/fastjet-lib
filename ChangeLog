@@ -1,3 +1,10 @@
+2011-08-01  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* src/Selector.cc: 
+	* include/fastjet/Selector.hh: 
+	  changed some documentation and argument names in parts related
+	  to selector areas.
+
 2011-07-26  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * doc/fastjet-doc.tex

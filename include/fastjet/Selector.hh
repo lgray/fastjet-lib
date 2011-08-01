@@ -200,7 +200,8 @@ public:
   /// For each jet that does not pass the cuts, this routine sets the 
   /// pointer to 0. 
   ///
-  /// It does not assume that the PseudoJet* passed as argumetn are not NULL
+  /// It is legitimate for some (or all) of the pointers that are
+  /// passed to already be NULL.
   virtual void nullify_non_selected(std::vector<const PseudoJet *> & jets) const {
     validated_worker()->terminator(jets);
   }
@@ -210,18 +211,20 @@ public:
     return validated_worker()->get_rapidity_extent(rapmin, rapmax);
   }
 
-  /// return a textual description of the selector
+  /// returns a textual description of the selector
   std::string description() const {
     return validated_worker()->description();
   }
 
-  /// check if it is a geometric selector (i.e. one that only puts
+  /// returns true if it is a geometric selector (i.e. one that only puts
   /// constraints on rapidities and azimuthal angles)
   bool is_geometric() const{
     return validated_worker()->is_geometric();
   }
 
-  /// check if it has a meaningful and finite area
+  /// returns true if it has a meaningful and finite area (i.e. the
+  /// Selector has the property that is_geometric() returns true and
+  /// the rapidity extent is finite).
   bool has_finite_area() const{
     return validated_worker()->has_finite_area();
   }
@@ -229,17 +232,22 @@ public:
   /// returns the rapidity-phi area associated with the Selector
   /// (throws InvalidArea if the area does not make sense).
   ///
-  /// The argument passed is the requested cell area, which is used
-  /// for obtaining a Monte Carlo type estimate of the area in case
-  /// the Selector does not have an analytically known error. The
-  /// Monte Carlo estimate involves a time penalty proportional to
-  /// rapidity extent of the Selector.
-  ///
-  double area(double cell_area) const;
-
-  /// estimate of area, which will use the default ghost area from
-  /// the ghosted_area_spec
+  /// If the result is not known analytically, the area will be
+  /// estimated using a pseudo Monte Carlo method (as for jet areas),
+  /// using the default ghost area from the GhostedAreaSpec class
+  /// (0.01). The Monte Carlo estimate involves a time penalty
+  /// proportional to the ratio of the rapidity extent of the Selector
+  /// divided by the ghost area.
   double area() const;
+
+  /// returns the rapidity-phi area associated with the Selector
+  /// (throws InvalidArea if the area does not make sense).
+  ///
+  /// The behaviour is the as with the area() call, but with the
+  /// ability to additionally specify the ghost area to be used in the
+  /// case of a Monte Carlo area evaluation.
+  ///
+  double area(double ghost_area) const;
 
   /// returns a (reference to) the underlying worker's shared pointer
   const SharedPtr<SelectorWorker> & worker() const {return _worker;}
