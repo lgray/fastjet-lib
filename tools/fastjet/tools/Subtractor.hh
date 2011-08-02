@@ -91,7 +91,14 @@ protected:
   /// the fixed value of rho to use if the user has selected that option
   double _rho;
 
-  static const double _invalid_rho;// = -1.0;
+  /// a value of rho that is used as a default to label that the stored
+  /// rho is not valid for subtraction. 
+  //
+  // NB: there are two reasons for not having the value written here:
+  // 1) that it caused problems on karnak with g++ 4.0.1 and 2) that
+  // we anyway like -infinity as a default, and since that's a function,
+  // that's not allowed in an include file.
+  static const double _invalid_rho;
 };
 
 FASTJET_END_NAMESPACE

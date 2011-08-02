@@ -1,9 +1,13 @@
 2011-08-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh: 
+	  added a virtual destructor that does nothing.
+
 	* tools/fastjet/tools/Subtractor.hh:
 	* tools/Subtractor.cc:
 	  tried moving a const static invalid_rho definition into the .cc
-	  file to work around problems on karnak.
+	  file to work around problems on karnak. Changed the value so
+	  that it's equal to -infinity.
 
 2011-08-01  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 

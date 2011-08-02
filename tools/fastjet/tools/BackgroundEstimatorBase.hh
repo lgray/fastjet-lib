@@ -53,8 +53,12 @@ public:
   /// @ name  constructors and destructors
   //\{
   //----------------------------------------------------------------
-  BackgroundEstimatorBase() : _rescaling_class(0){};
+  BackgroundEstimatorBase() : _rescaling_class(0) {}
   //\}
+
+  /// a default virtual destructor that does nothing
+  virtual ~BackgroundEstimatorBase() {}
+
 
   /// @name setting a new event
   //\{
