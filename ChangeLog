@@ -1,5 +1,11 @@
 2011-08-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* tools/fastjet/tools/TopTaggerBase.hh:  *** ADDED ***
+	* tools/fastjet/tools/JHTopTagger.hh: 
+	* tools/JHTopTagger.cc: 
+	  experimenting with a structure whereby the JHTopTagger derives
+	  from a TopTaggerBase, as requested by Chris Vermilion.
+
 	* tools/fastjet/tools/BackgroundEstimatorBase.hh: 
 	  added a virtual destructor that does nothing.
 

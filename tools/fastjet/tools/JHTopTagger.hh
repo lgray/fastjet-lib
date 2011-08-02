@@ -182,14 +182,14 @@ public:
   }
 
   /// returns the first W subjet (the harder)
-  inline const PseudoJet & W1() const{
-    //assert(_pieces.size()>0);
+  inline PseudoJet W1() const{
+    //assert(W().pieces().size()>0);
     return W().pieces()[0];
   }
   
   /// returns the second W subjet
-  inline const PseudoJet & W2() const{
-    //assert(_pieces.size()>1);
+  inline PseudoJet W2() const{
+    //assert(W().pieces().size()>1);
     return W().pieces()[1];
   }
 
