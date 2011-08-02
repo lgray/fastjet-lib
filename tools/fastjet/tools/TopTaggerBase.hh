@@ -2,7 +2,7 @@
 #define __FASTJET_TOP_TAGGER_BASE_HH__
 
 //STARTHEADER
-// $Id: JHTopTagger.hh 2474 2011-07-26 13:13:54Z cacciari $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
