@@ -1,3 +1,6 @@
+#ifndef __FASTJET_JH_TOP_TAGGER_HH__
+#define __FASTJET_JH_TOP_TAGGER_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -28,10 +31,8 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_JH_TOP_TAGGER_HH__
-#define __FASTJET_JH_TOP_TAGGER_HH__
 
-#include <fastjet/tools/Transformer.hh>
+#include <fastjet/tools/TopTaggerBase.hh>
 #include <fastjet/CompositeJetStructure.hh>
 #include <fastjet/internal/LimitedWarning.hh>
 
@@ -116,7 +117,7 @@ class JHTopTaggerStructure;
 ///
 /// See also \subpage Example13  for a usage example.
 ///
-class JHTopTagger : public Transformer{
+class JHTopTagger : public TopTaggerBase {
 public:
   /// default ctor
   /// The parameters are the following:
@@ -168,7 +169,7 @@ protected:
 /// See the JHTopTagger class description for the details of what
 /// is inside this structure
 ///
-class JHTopTaggerStructure : public CompositeJetStructure{
+class JHTopTaggerStructure : public CompositeJetStructure, public TopTaggerBaseStructure {
 public:
   /// ctor with pieces initialisation
   JHTopTaggerStructure(std::vector<PseudoJet> pieces,
@@ -177,26 +178,38 @@ public:
 
   /// returns the W subjet
   inline const PseudoJet & W() const{ 
-    return _W;
-  }
-
-  /// returns the first W subjet (the hardest)
-  inline const PseudoJet & W1() const{
-    assert(_pieces.size()>0);
     return _pieces[0];
   }
 
+  /// returns the first W subjet (the harder)
+  inline const PseudoJet & W1() const{
+    //assert(_pieces.size()>0);
+    return W().pieces()[0];
+  }
+  
   /// returns the second W subjet
   inline const PseudoJet & W2() const{
-    assert(_pieces.size()>1);
-    return _pieces[1];
+    //assert(_pieces.size()>1);
+    return W().pieces()[1];
   }
+
+  // /// returns the first W subjet (the harder)
+  // inline const PseudoJet & W1() const{
+  //   assert(_pieces.size()>0);
+  //   return _pieces[0];
+  // }
+  // 
+  // /// returns the second W subjet
+  // inline const PseudoJet & W2() const{
+  //   assert(_pieces.size()>1);
+  //   return _pieces[1];
+  // }
 
   /// returns the non-W subjet
   /// It will have 1 or 2 pieces depending on whether the tagger has
   /// found 3 or 4 pieces
   inline const PseudoJet & non_W() const{ 
-    return _non_W;
+    return _pieces[1];
   }
 
   /// returns the W helicity angle
@@ -208,8 +221,8 @@ public:
 
 protected:
   double _cos_theta_w;      ///< the W helicity angle
-  PseudoJet _W;             ///< the tagged W
-  PseudoJet _non_W;         ///< the remaining pieces
+  //PseudoJet _W;             ///< the tagged W
+  //PseudoJet _non_W;         ///< the remaining pieces
 //  PseudoJet _original_jet;  ///< the original jet (before tagging)
 
   // allow the tagger to set these
@@ -220,5 +233,5 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif  //  __FASTJET_JADE_DISTANCE_TAGGER_HH__
+#endif  //  __FASTJET_JH_TOP_TAGGER_HH__
 

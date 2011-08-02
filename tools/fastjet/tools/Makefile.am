@@ -6,5 +6,5 @@ toolsinclude_HEADERS = \
   Transformer.hh Boost.hh \
   Filter.hh Subtractor.hh \
   MassDropTagger.hh NSubjettinessTagger.hh CASubJetTagger.hh \
-  JHTopTagger.hh
+  JHTopTagger.hh TopTaggerBase.hh
 

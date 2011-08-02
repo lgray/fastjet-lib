@@ -117,14 +117,16 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   // create the result and its structure
   const JetDefinition::Recombiner *rec
     = jet.associated_cluster_sequence()->jet_def().recombiner();
-  PseudoJet result = join<JHTopTaggerStructure>(subjets, *rec);
+
+  PseudoJet W = join(subjets[0], subjets[1], *rec);
+  PseudoJet non_W;
+  if (subjets.size()>3) {
+    non_W = join(subjets[2], subjets[3], *rec);
+  } else {
+    non_W = join(subjets[2], *rec);
+  }
+  PseudoJet result = join<JHTopTaggerStructure>(W, non_W, *rec);
   JHTopTaggerStructure *s = (JHTopTaggerStructure*) result.structure_non_const_ptr();
-//  s->_original_jet = jet;
-  s->_W = join(subjets[0], subjets[1], *rec);
-  if (subjets.size()>3)
-    s->_non_W = join(subjets[2], subjets[3], *rec);
-  else
-    s->_non_W = join(subjets[2], *rec);
   s->_cos_theta_w = _cos_theta_W(result);
 
   // if the polarisation angle does not pass the cut, consider that
@@ -133,10 +135,35 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   // Note that we could perhaps ensure this cut before constructing
   // the result structure but this has the advantage that the top
   // 4-vector is already available and does not have to de re-computed
-  if (s->_cos_theta_w >= _cos_theta_W_max)
-    return PseudoJet();
+  if (s->_cos_theta_w >= _cos_theta_W_max ||
+      ! _top_selector.pass(result) || ! _W_selector.pass(W)
+      ) {
+    result *= 0.0;
+  }
 
   return result;
+
+  // // old version
+  // PseudoJet result = join<JHTopTaggerStructure>(subjets, *rec);
+  // JHTopTaggerStructure *s = (JHTopTaggerStructure*) result.structure_non_const_ptr();
+  // //  s->_original_jet = jet;
+  // s->_W = join(subjets[0], subjets[1], *rec);
+  // if (subjets.size()>3)
+  //   s->_non_W = join(subjets[2], subjets[3], *rec);
+  // else
+  //   s->_non_W = join(subjets[2], *rec);
+  // s->_cos_theta_w = _cos_theta_W(result);
+  // 
+  // // if the polarisation angle does not pass the cut, consider that
+  // // the tagging has failed
+  // //
+  // // Note that we could perhaps ensure this cut before constructing
+  // // the result structure but this has the advantage that the top
+  // // 4-vector is already available and does not have to de re-computed
+  // if (s->_cos_theta_w >= _cos_theta_W_max)
+  //   return PseudoJet();
+  // 
+  // return result;
 }
 
 // runs the Johns Hopkins decomposition procedure
@@ -176,7 +203,9 @@ vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & jet_to_split,
 double JHTopTagger::_cos_theta_W(const PseudoJet & result) const{
   // the two jets of interest: top and lower-pt prong of W
   const PseudoJet & W  = result.structure_of<JHTopTagger>().W();
-  PseudoJet W2  = result.structure_of<JHTopTagger>().W2();
+  vector<PseudoJet> W_pieces = W.pieces();
+  assert(W_pieces[0].perp2() >= W_pieces[1].perp2());
+  PseudoJet W2  = W_pieces[1];
   PseudoJet top = result;
   
   // transform these jets into jets in the rest frame of the W
