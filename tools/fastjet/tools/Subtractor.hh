@@ -91,7 +91,7 @@ protected:
   /// the fixed value of rho to use if the user has selected that option
   double _rho;
 
-  static const double _invalid_rho = -1.0;
+  static const double _invalid_rho;// = -1.0;
 };
 
 FASTJET_END_NAMESPACE

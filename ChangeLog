@@ -1,3 +1,10 @@
+2011-08-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/Subtractor.cc:
+	  tried moving a const static invalid_rho definition into the .cc
+	  file to work around problems on karnak.
+
 2011-08-01  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/Subtractor.cc:

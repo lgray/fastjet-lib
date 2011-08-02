@@ -35,6 +35,9 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
+const double Subtractor::_invalid_rho = -1.0;
+
+
 Subtractor::Subtractor(double rho) : _bge(0), _rho(rho) {
   assert(_rho>0.0);
 }
