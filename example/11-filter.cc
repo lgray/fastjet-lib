@@ -21,6 +21,10 @@
 #include <fastjet/Selector.hh>
 #include <iostream>
 #include "fastjet/tools/Filter.hh"
+// the following includes are only needed when combining filtering with subtraction
+#include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+#include "fastjet/ClusterSequenceArea.hh"
+#include "fastjet/tools/Subtractor.hh"
 
 #include <cstdio>   // needed for io
 
@@ -67,7 +71,10 @@ int main (int argc, char ** argv) {
   // get the resulting jets ordered in pt
   //----------------------------------------------------------
   JetDefinition jet_def(cambridge_algorithm, 1.2);
-  ClusterSequence clust_seq(input_particles, jet_def);
+  // the use of a ClusterSequenceArea (instead of a plain ClusterSequence)
+  // is only needed because we will later combine filtering with area-based
+  // subtraction
+  ClusterSequenceArea clust_seq(input_particles, jet_def, AreaDefinition(active_area_explicit_ghosts));
   vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(5.0));
 
   // label the columns
@@ -109,6 +116,19 @@ int main (int argc, char ** argv) {
 
   // Filtering with a pt cut as for trimming (arXiv:0912.1342)
   filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtFractionMin(0.03)));
+
+  // Filtering with subtraction of the background 
+  GridMedianBackgroundEstimator bkgd(4.5, 0.55); // uses particles up to |y|=4.5
+  bkgd.set_particles(input_particles);
+  double rho = bkgd.rho();
+  filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3), rho));
+
+  //Subtractor subtractor(&bkgd);
+  Subtractor subtractor(rho);
+  Filter filt(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3));
+  filt.set_subtractor(&subtractor);
+  filters.push_back(filt);
+
 
   // apply the various filters on the test PseudoJet
   // and show the result

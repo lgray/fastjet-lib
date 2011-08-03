@@ -51,9 +51,15 @@ string Filter::description() const {
     ostr << "Cambridge/Aachen algorithm with dynamic Rfilt";
   else
     ostr << _subjet_def.description();
-  ostr<< ", and selection " << _selector.description();
+  ostr<< ", selection " << _selector.description();
+  if (_subtractor) {
+    ostr << ", subtractor: " << _subtractor->description();
+  } else if (_rho != 0) {
+    ostr << ", subtracting with rho = " << _rho;
+  }
   return ostr.str();
 }
+
 
 // core functions
 //----------------------------------------------------------------------
@@ -99,14 +105,14 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   if ((!_get_all_pieces(jet, all_pieces)) || (all_pieces.size()==0))
     throw Error("Attempt to filter a jet that has no associated ClusterSequence or is not a superposition of jets associated with a ClusterSequence");
   
-  // if rho!=0, make sure we have a CS that supports area and has
+  // if the filter uses subtraction, make sure we have a CS that supports area and has
   // explicit ghosts 
-  if (_rho != 0.0){
+  if (_uses_subtraction()) {
     if (!jet.has_area())   
-      throw Error("Attempt to filter and subtract (non-zero rho) without area info for the original jet");
+      throw Error("Attempt to filter and subtract (non-zero rho or subtractor) without area info for the original jet");
 
     if (!_check_explicit_ghosts())
-      throw Error("Attempt to filter and subtract (non-zero rho) without explicit ghosts");
+      throw Error("Attempt to filter and subtract (non-zero rho or subtractor) without explicit ghosts");
   }
 
   // if we're dealing with a dynamic determination of the filtering
@@ -135,10 +141,10 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   //-------------------------------------------------------------------
   discard_area = false;
   if (simple_cafilt){
-    // first make sure that 'filtered_elemetns' is empty
+    // first make sure that 'filtered_elements' is empty
     filtered_elements.clear();
     _set_filtered_elements_cafilt(jet, filtered_elements, _subjet_def.R());
-    discard_area = (_rho==0.0) && (jet.has_area()) && (!_check_explicit_ghosts());
+    discard_area = (!_uses_subtraction()) && (jet.has_area()) && (!_check_explicit_ghosts());
   } else {
    _set_filtered_elements_generic(jet, filtered_elements);
   }
@@ -175,10 +181,15 @@ void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet,
     // subtract the jets if needed
     // Note that this one would work on pieces!!
     //-----------------------------------------------------------------
-    if (_rho != 0.0){
+    if (_uses_subtraction()){
       const ClusterSequenceAreaBase * csab = jet.validated_csab();
-      for (unsigned int i=0;i<local_fe.size();i++)
-	local_fe[i] = csab->subtracted_jet(local_fe[i], _rho);
+      for (unsigned int i=0;i<local_fe.size();i++) {
+        if (_subtractor) {
+          local_fe[i] = (*_subtractor)(local_fe[i]);
+        } else {
+          local_fe[i] = csab->subtracted_jet(local_fe[i], _rho);
+        }
+      }
     }
 
     copy(local_fe.begin(), local_fe.end(), back_inserter(filtered_elements));
@@ -201,14 +212,14 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
   // get the subjets directly from there
   //
   // If the jet has area support then we separate the ghosts from the
-  // "regular" particles so the subjets will also haev area
+  // "regular" particles so the subjets will also have area
   // support. Note that we do this regardless of whether rho is zero
   // or not.
   //
   // Note that to be able to separate the ghosts, one needs explicit
   // ghosts!!
   // ---------------------------------------------------------------
-  if ((jet.has_area()) && ((_rho!=0) || (_check_explicit_ghosts()))){
+  if ((jet.has_area()) && ((_uses_subtraction()) || (_check_explicit_ghosts()))){
     vector<PseudoJet> all_constituents = jet.constituents();
     vector<PseudoJet> regular_constituents, ghosts;  
 
@@ -230,12 +241,17 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
 						    ghosts, ghost_area);
 
     // get the subjets: we use the subtracted or unsubtracted ones
-    // depending on rho
-    if (_rho != 0)
-      filtered_elements = csa->subtracted_jets(_rho);
-    else 
+    // depending on rho or _subtractor being non-zero
+    if (_uses_subtraction()) {
+      if (_subtractor) {
+        filtered_elements = (*_subtractor)(csa->inclusive_jets());
+      } else {
+        filtered_elements = csa->subtracted_jets(_rho);
+      }
+    } else {
       filtered_elements = csa->inclusive_jets();
-    
+    }
+
     // allow the cs to be deleted when it's no longer used
     csa->delete_self_when_unused();
   } else {
