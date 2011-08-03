@@ -51,24 +51,29 @@ class TopTaggerBaseStructure;
 class TopTaggerBase : public Transformer {
 public:
   TopTaggerBase() : _top_selector(SelectorIdentity()),
-                    _W_selector(SelectorIdentity()) {}
+                    _W_selector(SelectorIdentity()),
+                    _top_selector_set(false),
+                    _W_selector_set(false)              {}
 
   /// the type of the associated structure
   typedef TopTaggerBaseStructure StructureType;
 
   /// sets the selector that is applied to the top candidate
-  void set_top_selector(const Selector & sel) {_top_selector = sel;}
+  void set_top_selector(const Selector & sel) {_top_selector = sel; _top_selector_set = true;}
   /// sets  the selector that is applied to the W candidate
-  void set_W_selector  (const Selector & sel) {_W_selector   = sel;}
+  void set_W_selector  (const Selector & sel) {_W_selector   = sel; _W_selector_set = true;}
   
   /// returns a description of the top and W selectors
   virtual std::string description_of_selectors() const {
-    return "top selector = "+_top_selector.description()
-      +" and W selector = "+_W_selector.description();
+    std::string result;
+    if (_top_selector_set) result = ", top selector: "+_top_selector.description();
+    if (_W_selector_set) result += ", W selector: "+_W_selector.description();
+    return result;
   }
 
 protected:
   Selector _top_selector, _W_selector;
+  bool _top_selector_set, _W_selector_set;
 };
 
 

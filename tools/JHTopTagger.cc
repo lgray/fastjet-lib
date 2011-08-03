@@ -52,6 +52,7 @@ string JHTopTagger::description() const{
   oss << "JHTopTagger with delta_p=" << _delta_p << ", delta_r=" << _delta_r
       << ", cos_theta_W_max=" << _cos_theta_W_max
       << " and mW = " << _mW;
+  oss << description_of_selectors();
   return oss.str();
 }
 
@@ -66,7 +67,7 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
     throw Error("JHTopTagger can only be applied on jets having an associated (and valid) ClusterSequence");
   }
 
-  // warn if the jet has not been clutered with a Cambridge/Aachen
+  // warn if the jet has not been clustered with a Cambridge/Aachen
   // algorithm
   if (! jet.validated_cs()->jet_def().jet_algorithm() == cambridge_algorithm)
     _warnings_nonca.warn("JHTopTagger should only be applied on jets from a Cambridge/Aachen clustering; use it with other algorithms at your own risk.");

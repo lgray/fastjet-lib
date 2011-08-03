@@ -1,7 +1,21 @@
 2011-08-03  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* AUTHORS:
+	* doc/fastjet-doc.tex:
+	  a common (and longer) acknowledgements list now present in both
+	  files. Still not complete.
+
+	* src/Selector.cc: 
+	* include/fastjet/Selector.hh: 
+	  renamed SelectorM{Max,Min,Range} -> SelectorMass{Max,Min,Range},
+	  to enhance code readability (as found when handling top tagging
+	  examples).
+
 	* tools/fastjet/tools/JHTopTagger.hh: 
-	  worked on the documentation so that it corresponds to the new structure
+	* tools/JHTopTagger.cc: 
+	  worked on the documentation so that it corresponds to the new
+	  structure; description now include details of the top and W mass
+	  selectors if they're present.
 
 2011-08-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 

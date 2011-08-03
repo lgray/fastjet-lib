@@ -49,6 +49,7 @@
 #include <cmath>
 
 #include <fastjet/ClusterSequence.hh>
+#include <fastjet/Selector.hh>
 #include <fastjet/tools/JHTopTagger.hh>
 
 using namespace std;
@@ -124,6 +125,9 @@ int main (int argc, char ** argv) {
   // GeV.
   // ----------------------------------------------------------
   JHTopTagger top_tagger(delta_p, delta_r);
+  top_tagger.set_top_selector(SelectorMassRange(150,200));
+  top_tagger.set_W_selector  (SelectorMassRange( 65, 95));
+
   PseudoJet tagged = top_tagger(jets[0]);
 
   cout << "Ran the following top tagger: " << top_tagger.description() << endl;
@@ -134,12 +138,12 @@ int main (int argc, char ** argv) {
   }
 
   cout << "Found top substructure from the hardest jet:" << endl;
-  cout << "  top candidate: " << tagged << endl;
-  cout << "  W   candidate: " << tagged.structure_of<JHTopTagger>().W() << endl;
-  cout << "  W   subjet 1 : " << tagged.structure_of<JHTopTagger>().W1() << endl;
-  cout << "  W   subjet 2 : " << tagged.structure_of<JHTopTagger>().W2() << endl;
-  cout << "  non-W subjets: " << tagged.structure_of<JHTopTagger>().non_W() << endl;
-  cout << "  cos(theta_W) = " << tagged.structure_of<JHTopTagger>().cos_theta_W() << endl << endl;
+  cout << "  top candidate:     " << tagged << endl;
+  cout << "  |_ W   candidate:  " << tagged.structure_of<JHTopTagger>().W() << endl;
+  cout << "  |  |_  W subjet 1: " << tagged.structure_of<JHTopTagger>().W1() << endl;
+  cout << "  |  |_  W subjet 2: " << tagged.structure_of<JHTopTagger>().W2() << endl;
+  cout << "  |  cos(theta_W) =  " << tagged.structure_of<JHTopTagger>().cos_theta_W() << endl;
+  cout << "  |_ non-W subjet:   " << tagged.structure_of<JHTopTagger>().non_W() << endl;
 }
 
 

@@ -22,6 +22,7 @@ Bug fixes and other changes
   makes results stable across machine architectures & compilers, cf BUGS)
 - fixed bugs in Voronoi areas (as in v.2.4.4) 
 - fixed bugs in handling of empty areas in background estimator (as in 2.4.4)
+- renamed SelectorMXXX -> SelectorMassXXX
 - exclusive_[sub]jets(njets) now consistenty throws an error if it
   can't deliver njets; exclusive_[sub]jets_upto(njets) gives up to njets
 - deprecated ClusterSequenceWithArea and ActiveAreaSpec

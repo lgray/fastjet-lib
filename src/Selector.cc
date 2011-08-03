@@ -695,21 +695,21 @@ class QuantityM2 : public QuantitySquareBase{
 public:
   QuantityM2(double m) : QuantitySquareBase(m){}
   virtual double operator()(const PseudoJet & jet ) const { return jet.m2();}
-  virtual string description() const {return "m";}
+  virtual string description() const {return "mass";}
 };  
 
-// returns a selector for a minimum m
-Selector SelectorMMin(double mmin) {
+// returns a selector for a minimum mass
+Selector SelectorMassMin(double mmin) {
   return Selector(new SW_QuantityMin<QuantityM2>(mmin));
 }
 
-// returns a selector for a maximum m
-Selector SelectorMMax(double mmax) {
+// returns a selector for a maximum mass
+Selector SelectorMassMax(double mmax) {
   return Selector(new SW_QuantityMax<QuantityM2>(mmax));
 }
 
-// returns a selector for a m range
-Selector SelectorMRange(double mmin, double mmax) {
+// returns a selector for a mass range
+Selector SelectorMassRange(double mmin, double mmax) {
   return Selector(new SW_QuantityRange<QuantityM2>(mmin, mmax));
 }
 

@@ -388,9 +388,9 @@ Selector SelectorEMin(double Emin);                      ///< select objects wit
 Selector SelectorEMax(double Emax);                      ///< select objects with E <= Emax
 Selector SelectorERange(double Emin, double Emax);       ///< select objects with Emin <= E <= Emax
 
-Selector SelectorMMin(double Mmin);                      ///< select objects with M >= Mmin
-Selector SelectorMMax(double Mmax);                      ///< select objects with M <= Mmax
-Selector SelectorMRange(double Mmin, double Mmax);       ///< select objects with Mmin <= M <= Mmax
+Selector SelectorMassMin(double Mmin);                      ///< select objects with Mass >= Mmin
+Selector SelectorMassMax(double Mmax);                      ///< select objects with Mass <= Mmax
+Selector SelectorMassRange(double Mmin, double Mmax);       ///< select objects with Mmin <= Mass <= Mmax
 
 Selector SelectorRapMin(double rapmin);                  ///< select objects with rap >= rapmin
 Selector SelectorRapMax(double rapmax);                  ///< select objects with rap <= rapmax

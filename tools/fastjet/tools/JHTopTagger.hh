@@ -78,13 +78,19 @@ class JHTopTaggerStructure;
 /// A  JHTopTagger can be used as follows:
 ///
 /// \code
-///  JHTopTagger top_tagger(...);
-///  PseudoJet top_candidate = top_tagger(jet); // jet should come from a Cambridge/Aachen clustering
-///  if (top_candidate != 0) {
-///    double top_mass = top_candidate.m();
-///    double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
-///    // then place your cuts on top and W mass
-///  }
+///    double delta_p = 0.10; // subjets must carry at least this fraction of the original jet's $p_t$
+///    double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
+///    double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
+///    JHTopTagger top_tagger(delta_p, delta_r, cos_theta_W_max);
+///    // indicate the acceptable range of top, W masses (default: no limits)
+///    top_tagger.set_top_selector(SelectorMassRange(150,200));
+///    top_tagger.set_W_selector  (SelectorMassRange( 65, 95));
+///    // now try and tag a jet
+///    PseudoJet top_candidate = top_tagger(jet);  // jet should come from a Cambridge/Aachen clustering
+///    if (top_candidate != 0) { // successful tagging
+///      double top_mass = top_candidate.m();
+///      double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
+///    }
 /// \endcode
 ///
 /// The full set of information available from the structure_of<JHTopTagger>() 

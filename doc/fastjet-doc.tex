@@ -2201,7 +2201,7 @@ convention \ttt{Selector}{\it\{Var\}\{LimitType\}}.
 The {\it\{Var\}} indicates which variable is being cut on, and can be
 one of 
 \begin{lstlisting}
-       pt, Et, E, M, Rap, AbsRap, Eta, AbsEta
+       pt, Et, E, Mass, Rap, AbsRap, Eta, AbsEta
 \end{lstlisting}
 %\ttt{pt}, \ttt{Et}, \ttt{E}, \ttt{M}, \ttt{Rap}, \ttt{AbsRap}, \ttt{Eta}, \ttt{AbsEta}.
 %
@@ -2297,9 +2297,9 @@ here will cause an exception to be thrown.
 %   SelectorEMax(double Emax);                      
 %   SelectorERange(double Emin, double Emax);       
 %   
-%   SelectorMMin(double Mmin);                      
-%   SelectorMMax(double Mmax);                      
-%   SelectorMRange(double Mmin, double Mmax);       
+%   SelectorMassMin(double Mmin);                      
+%   SelectorMassMax(double Mmax);                      
+%   SelectorMassRange(double Mmin, double Mmax);       
 %   
 %   SelectorRapMin(double rapmin);                  
 %   SelectorRapMax(double rapmax);                  
@@ -4061,8 +4061,8 @@ discussed in section~\ref{sec:filtering}).
 %......................................................................
 \subsubsection{The Johns-Hopkins top tagger}
 
-The Johns Hopkins top tagger~\cite{Kaplan:2008ie} is available by
-including \ttt{fastjet/tools/JHTopTagger.hh}.
+The Johns Hopkins top tagger~\cite{Kaplan:2008ie} is through the
+\ttt{fastjet/tools/JHTopTagger.hh} header.
 %
 It recursively breaks a jet into pieces, finding up to 3 or 4 subjets
 and then looking for a $W$ candidate among them.
@@ -4085,15 +4085,18 @@ two prongs to form the boosted particle candidate.
 %
 The tagger can be used as follows:
 \begin{lstlisting}
-   double delta_p = 0.10; // subjets must carry at least this fraction of the original jet's $p_t$
+   double delta_p = 0.10; // subjets must carry at least this fraction of original jet's $p_t$
    double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
    double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
    JHTopTagger top_tagger(delta_p, delta_r, cos_theta_W_max);
-   PseudoJet top_candidate = top_tagger(jet);
-   if (top_candidate != 0) {
+   // indicate the acceptable range of top, W masses 
+   top_tagger.set_top_selector(SelectorMassRange(150,200));
+   top_tagger.set_W_selector  (SelectorMassRange( 65, 95));
+   // now try and tag a jet
+   PseudoJet top_candidate = top_tagger(jet); // jet should come from a C/A clustering
+   if (top_candidate != 0) { // successful tagging
      double top_mass = top_candidate.m();
      double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
-     // then place your cuts on top and W mass
    }
 \end{lstlisting}
 Other information available through the
@@ -4102,9 +4105,16 @@ Other information available through the
 \ttt{non\_W()}, the part of the top that has not been identified with
 a $W$ (i.e.\ the candidate for the $b$); and \ttt{cos\_theta\_W()}.
 %
-The \ttt{pieces()} function will return 3 or 4 pieces, where the first
-two are the two prongs of the $W$, while the third (and occasionally a
-softer fourth) is(are) the remaining subjet(s).
+The \ttt{top\_candidate.pieces()} call will return 2 pieces, where the
+first is the $W$ candidate (identical to
+\ttt{structure\_of<JHTopTagger>().W()}), while the second is the
+remainder of the top jet (i.e.\ \ttt{non\_W}).
+%
+
+Note the above calls to \ttt{set\_top\_selector()} and
+\ttt{set\_W\_selector()}. If these calls are not made, then the tagger
+places no cuts on the top or $W$ candidate masses and it is then the
+user's responsibility to verify that they are in a suitable range.
 
 %......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
@@ -4168,23 +4178,28 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 %======================================================================
 \section*{Acknowledgements}
 
-We wish to thank Timothy Chan for helpful exchanges about the details
-of his dynamic closest pair algorithm. We thank Markus Wobisch and
-Andreas Oehler for comments on the documentation, and Sebastian Sapeta
-for bug reports and testing of beta-version of the code, as well as to
-Juan Rojo for discussions related to various features of the code.
-
-%% Who else
-%% Belyaev for windows compilation
-%% ????
-
-We are grateful to CDF, Joey Huston, Lars Sonnenschein and Mike
-Seymour for providing permission to distribute their cone jet
-algorithm codes as plugins for fastjet and to Salvatore Rappoccio for
-assistance in validating the CMS cone.
+Many people have provided bug reports, suggestions for development and
+in some cases explicit code for plugin algorithms. We would in
+particular like to thank
 %
-We thank Andy Buckley for numerous comments on the documentation and
-build system.
+% The list below should be identical to that in the AUTHORS file
+%
+Vanya Belyaev,
+Andy Buckley,
+Timothy Chan,
+Pierre-Antoine Delsart,
+Joey Huston,
+Sue Ann Koay,
+Andreas Oehler,
+Sal Rappoccio,
+Juan Rojo,
+Sebastian Sapeta,
+Mike Seymour,
+Jessie Shelton,
+Lars Sonnenschein,
+Chris Vermilion,
+Markus Wobisch.
+
 
 \appendix
 
