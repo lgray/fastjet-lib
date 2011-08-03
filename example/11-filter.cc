@@ -2,14 +2,14 @@
 /// \file
 /// \page Example11 11 - use of filtering
 ///
-/// fastjet example program illustrating the use of the fastjet::Filter class
+/// fastjet example program to illustrate the use of the fastjet::Filter class
 ///
-/// To do that, we apply different filter examples on either the
-/// hardest jet of the given event or the composition of the two
-/// hardest jets: a filter keeping a fixed number of subjets (as in
-/// arXiv:0802.2470), and a "trimmer" i.e. a filter keeping subjets
-/// carrying a sufficient fraction of the pt of the jet
-/// (arXiv:0912.1342).
+/// We apply different filter examples to either the hardest jet of the given event, 
+/// or to the composition of the two hardest jets: 
+///   - two examples of a filter keeping a fixed number of subjets (as in arXiv:0802.2470)
+///   - a "trimmer" i.e. a filter keeping subjets carrying at least a given 
+///     fraction of the pt of the jet (arXiv:0912.1342).
+///   - two examples of filter in combination with background subtraction
 ///
 /// run it with    : ./11-filter < data/single-event.dat
 ///
@@ -55,7 +55,7 @@ private:
   double _Rmax, _deltaR_factor;
 };
 
-/// an example program showing how to use fastjet
+/// an example program showing how to use Filter in FastJet
 int main (int argc, char ** argv) {
   // read in input particles
   //----------------------------------------------------------
@@ -94,71 +94,91 @@ int main (int argc, char ** argv) {
     return 1;
   }
 
-  // the sample PseudoJet that we shall filter
+  // the sample PseudoJet that we will filter
   //  - the hardest jet of the event
-  //  - the composition of the 2 hardest jets (showing that the Filter
-  //    can also be applied on a CompositeJet)
+  //  - the composition of the second and third hardest jets 
+  ///   (this shows that the Filter can also be applied to a composite jet)
   //----------------------------------------------------------
   vector<PseudoJet> candidates;
   candidates.push_back(inclusive_jets[0]);
   candidates.push_back(join(inclusive_jets[1],inclusive_jets[2]));
 
-  // create a few filters
+
+  // create 5 filters
   //----------------------------------------------------------
   vector<Filter> filters;
-
-  // the Aachen/Cambridge filter with Rfilt=0.3
+  
+  // 1.
+  // the Cambridge/Aachen filter with Rfilt=0.3 (simpliefied version of arXiv:0802.2470)
   filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3)));
 
-  // the Aachen/Cambridge filter with Rfilt=min(0.3, 0.5*Rbb) as in arXiv:0802.2470
+  // 2.
+  // the Cambridge/Aachen filter with Rfilt=min(0.3, 0.5*Rbb) as in arXiv:0802.2470
   SharedPtr<DynamicRfilt> dynamic_Rfilt(new DynamicRfilt(0.3, 0.5));
   filters.push_back(Filter(dynamic_Rfilt.get(), SelectorNHardest(3)));
 
+  // 3.
   // Filtering with a pt cut as for trimming (arXiv:0912.1342)
   filters.push_back(Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtFractionMin(0.03)));
 
-  // Filtering with subtraction of the background 
+  // 4.
+  // First example of filtering with subtraction of the background: provide rho
+  // First, estimate the background for the given event
   GridMedianBackgroundEstimator bkgd(4.5, 0.55); // uses particles up to |y|=4.5
   bkgd.set_particles(input_particles);
   double rho = bkgd.rho();
+  // Then, define the filter
   filters.push_back(Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3), rho));
 
-  //Subtractor subtractor(&bkgd);
-  Subtractor subtractor(rho);
+  // 5.
+  // Second example of filtering with subtraction of the background: set a subtractor
+  // First, define a subtractor from a background estimator
+  Subtractor subtractor(&bkgd);
+  // Then, define the filter
   Filter filt(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3));
+  // Finally, tell the filter about the subtractor
   filt.set_subtractor(&subtractor);
   filters.push_back(filt);
 
 
-  // apply the various filters on the test PseudoJet
+  // apply the various filters to the test PseudoJet
   // and show the result
   //----------------------------------------------------------
+
+  // print out original jet candidates
+  cout << "\nOriginal jets that will be filtered: " << endl;
   for (vector<PseudoJet>::iterator jit=candidates.begin(); jit!=candidates.end(); jit++){
     const PseudoJet & c = *jit;
-    cout << "Original jet : " << c.description() << endl;
-    cout << "  rap = " << c.rap() << ", phi = " << c.phi() << ", pt = " << c.perp() << endl;
+    cout << "  rap = " << c.rap() << ", phi = " << c.phi() << ", pt = " << c.perp() 
+         << "  [" << c.description() << "]" <<  endl;
+  }
 
-    for (vector<Filter>::iterator it=filters.begin(); it!=filters.end(); it++){
-      const Filter & f = *it;
+  // loop on filters
+  for (vector<Filter>::iterator it=filters.begin(); it!=filters.end(); it++){
+    const Filter & f = *it;
+    cout << "\nUsing filter: " << f.description() << endl;
+    
+    // loop on jet candidates
+    for (vector<PseudoJet>::iterator jit=candidates.begin(); jit!=candidates.end(); jit++){
+      const PseudoJet & c = *jit;
       
-      cout << "Applying filter: " << f.description() << endl;
+      // apply filter j to jet c      
       PseudoJet j = f(c);
-      
-      cout << "Resulting jet : " << j.description() << endl;
-      cout << "  rap = " << j.rap() << ", phi = " << j.phi() << ", pt = " << j.perp() << endl;
-      cout << "  # of pieces: " << j.pieces().size() << endl;
       
       // access properties specific to the Filter
       //
       // We first make sure that the jet indeed has a structure
       // compatible with the result of a Filter (using
-      // has_structure_of()), then retrieve the pieces rejected by the
+      // has_structure_of()), and then retrieve the pieces rejected by the
       // filter (using structure_of())
       assert(j.has_structure_of<Filter>());
       const Filter::StructureType & fj_struct = j.structure_of<Filter>();
-      cout << "  # of rejected pieces: " << fj_struct.rejected().size() << endl;
+      
+      // write out result
+      cout << "  rap = " << j.rap() << ", phi = " << j.phi() << ", pt = " << j.perp() 
+           << "  [kept: " << j.pieces().size() << ", rejected: "
+	   << fj_struct.rejected().size() << "]" << endl;
     }
-    cout << endl;
   }
 
   return 0;

@@ -1,8 +1,9 @@
 2011-08-03  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* example/11-filter.cc: 
-	  work in progress on supplementing filter example with subtraction.
-
+	  Added examples of filters with subtraction.
+          Revamped the output.
+	  
 	* tools/fastjet/tools/Filter.hh: 
 	* tools/Filter.cc: 
 	  added a set_subtractor(...) option to the Filter.
