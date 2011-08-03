@@ -1,3 +1,8 @@
+2011-08-03  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* tools/fastjet/tools/JHTopTagger.hh: 
+	  worked on the documentation so that it corresponds to the new structure
+
 2011-08-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/fastjet/tools/TopTaggerBase.hh:  *** ADDED ***
