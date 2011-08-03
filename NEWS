@@ -13,7 +13,7 @@ New features
 - added a Johns Hopkins top tagger (JHTopTagger)
 - to JetDefinition added delete_plugin_when_unused(), 
   delete_recombiner_when_unused()
-- improved Filter (for area and recombiner support)
+- improved Filter (for area and recombiner support, also works with a subtractor)
 - added a --config flag to fastjet-config
 
 Bug fixes and other changes
