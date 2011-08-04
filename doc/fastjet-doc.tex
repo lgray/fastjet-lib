@@ -1674,7 +1674,7 @@ algorithm of \cite{EHT}.
 Further control over the plugin can be obtained by consulting the
 header file.
 
-The underlying code for this algorithm was taken from a webpage
+The underlying code for this algorithm was taken from a webpage~\cite{CDFCones} 
 provided by Joey Huston (with minor modifications to ensure reasonable
 run times with optimising compilers for 32-bit intel processors ---
 these modifications do not affect the final jets).
@@ -1705,7 +1705,7 @@ Further control over the plugin can be obtained by consulting the
 header file.
 
 The underlying code for this algorithm was taken from a webpage
-provided by Joey Huston.
+provided by Joey Huston.~\cite{CDFCones} 
 
 Note: this algorithm is IR$_{2+1}$ unsafe (and some IR unsafety
 persists with non-zero seed threshold). It is to be deprecated for new
@@ -1885,7 +1885,7 @@ can have a minor effect on the final jets and should make the algorithm
 correspond to the description of \cite{Seymour:2006vv}.
 
 The underlying code for this algorithm was taken from a google search
-for PxCone!
+for PxCone!~\cite{PxCone}
 
 Note: this algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
 new experimental or theoretical analyses.
@@ -2098,6 +2098,14 @@ This is the case specifically for \ttt{SelectorNHardest(unsigned
   int n)}, which, acting on an ensemble of jets, selects the $n$ with
 largest transverse momenta. If there are fewer than $n$ jets, then all
 jets pass.
+
+When a selector is applied to an ensemble of jets one can also use
+\begin{lstlisting}
+  Selector::sift(vector<PseudoJet> & jets, 
+                 vector<PseudoJet> & jets_that_pass, 
+		 vector<PseudoJet> & jets_that_fail)		 
+\end{lstlisting}
+to obtain the vectors of \ttt{PseudoJet}s that pass or fail the selection.
 
 For selectors that apply jet-by-jet, the selectors on either
 side of the logical operators \ttt{\&\&} and \ttt{||} naturally
@@ -3810,43 +3818,6 @@ Such a jet may still have structural information however (such
 information might, for example, indicate why the jet was not tagged).
 
 
-The behaviour described above is obtained via the following
-declaration of the \ttt{Transformer} base class, declared in the
-\ttt{fastjet/tools/Transformer.hh} header:
-\begin{lstlisting}
-  class Transformer : public FunctionOfPseudoJet<PseudoJet> {
-  public:
-    // the result of the Transformer acting on the PseudoJet.
-    // this has to be overloaded in derived classes
-    virtual PseudoJet result(const PseudoJet & original) const = 0;
-  
-    // should be overloaded to return a description of the Transformer
-    virtual std::string description() const = 0;
-  
-    // information about the associated structure type
-    typedef PseudoJetStructureBase StructureType;
-
-    // destructor is virtual so that it can be safely overloaded
-    virtual ~Transformer(){}
-  };
-\end{lstlisting}
-It is essentially the same as that of the
-\ttt{FunctionOfPseudoJet<PseudoJet>} from which it derives (cf.\
-appendix~\ref{app:function-of-pj}).
-%
-While the action of a \ttt{Transformer} is to be implemented in the
-\ttt{result(...)} member function,
-%
-typically it will be accessed through the \ttt{operator()} function:
-\begin{lstlisting}
-  /// just wraps result()
-  PseudoJet operator()(const PseudoJet &pj) const {return result(pj);}
-  /// returns a vector of PseudoJet containing result(...) 
-  /// applied to each of input PseudoJets, 
-  vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
-\end{lstlisting}
-
- 
 
 \subsection{Jet Filtering and Trimming using \texttt{Filter}}
 \label{sec:filtering}
@@ -3962,11 +3933,8 @@ must be the result of a \ttt{ClusterSequence} with area support and
 explicit ghosts. If any of these requirements fail, an exception will
 be thrown.
 
-
-
-
-\subsection{2-pronged and 3-pronged taggers}
-\label{sec:2prongedtaggers}
+\subsection{Taggers}
+\label{sec:taggers}
 
 A number of the taggers developed to distinguish 2- or 3-pronged
 decays of massive objects from plain QCD jets naturally fall into the
@@ -3986,6 +3954,10 @@ suitable substructure, they return a \ttt{jet} that has the property
 % search for a 2-pronged structure inside it and thus naturally result
 % in a ``tagged'' jet with new structural information.
 
+%\subsection{2-pronged taggers}
+%\label{sec:2prongedtaggers}
+
+
 At the moment, we have implemented two of the taggers proposed for the
 reconstruction of boosted two-body decays: the \ttt{fastjet::MassDropTagger}
 introduced in \cite{BDRS} and a rest-frame \ttt{fastjet::NSubjettinessTagger}
@@ -3995,14 +3967,15 @@ introduced in~\cite{Butterworth:2009qa}, \ttt{fastjet::CASubJetTagger}, are
 available.
 We refer the reader to the original papers for
 an extensive description of the taggers and shall only give a very
-brief overview in what follows.
+brief overview in what follows of some of the implemented taggers.
 
 %......................................................................
 \subsubsection{The mass-drop tagger}
 
-Introduced in \cite{BDRS}, this tagger starts with a fat jet obtained
+Introduced in \cite{BDRS} for the purpose of identifying a boosted Higgs
+decaying into a $b\bar b$ pair, this is a 2-pronged tagger. It starts with a fat jet obtained
 with a Cambridge/Aachen algorithm (originally, $R=1.2$ was suggested
-for boosted Higgs tagging). Tagging then proceeds as follows
+for boosted Higgs tagging). Tagging then proceeds as follows:
 \begin{enumerate}
 \item the last step of the clustering is undone: $j \to j_1,j_2$, with
   $m_{j_1} > m_{j_2}$;
@@ -4017,6 +3990,8 @@ for boosted Higgs tagging). Tagging then proceeds as follows
 %
 The tagger can be constructed with
 \begin{lstlisting}
+   #include "fastjet/tools/MassDropTagger.hh"
+   // ...
    MassDropTagger mdtagger(double $\mu$, double $y_\text{cut}$);
 \end{lstlisting}
 and applied using
@@ -4061,8 +4036,8 @@ discussed in section~\ref{sec:filtering}).
 %......................................................................
 \subsubsection{The Johns-Hopkins top tagger}
 
-The Johns Hopkins top tagger~\cite{Kaplan:2008ie} is through the
-\ttt{fastjet/tools/JHTopTagger.hh} header.
+The Johns Hopkins top tagger~\cite{Kaplan:2008ie} is a 3-pronged tagger
+specifically designed to identify top quarks.
 %
 It recursively breaks a jet into pieces, finding up to 3 or 4 subjets
 and then looking for a $W$ candidate among them.
@@ -4085,6 +4060,8 @@ two prongs to form the boosted particle candidate.
 %
 The tagger can be used as follows:
 \begin{lstlisting}
+   #include "fastjet/tools/JHTopTagger.hh"
+   // ...
    double delta_p = 0.10; // subjets must carry at least this fraction of original jet's $p_t$
    double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
    double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
@@ -4116,17 +4093,45 @@ Note the above calls to \ttt{set\_top\_selector()} and
 places no cuts on the top or $W$ candidate masses and it is then the
 user's responsibility to verify that they are in a suitable range.
 
+Note further that  \ttt{JHTopTagger} does not derive directly from 
+ from \ttt{Transformer}, but from the
+\ttt{fastjet::TopTaggerBase} class instead. This class (which itself derives
+from \ttt{Transformer}) has been provided in the intent of suggesting a common
+interface for all the top taggers. In particular, \ttt{TopTaggerBase} provides
+(via the associated structure)
+\begin{lstlisting}
+  top_candidate.structure_of<TopTaggerBase>().W()
+  top_candidate.structure_of<TopTaggerBase>().non_W()
+\end{lstlisting}
+and standardizes the fact that the resulting top candidate is a \ttt{PseudoJet}
+made of these two pieces.
+
+The benefits of the choice of providing a base class for top taggers will of course be
+more evident when more than a single top tagger will have been implemented.
+
+%......................................................................
+\subsubsection{The Cambridge/Aachen subjet tagger}
+
+The Cambridge/Aachen subjet
+tagger~\cite{Butterworth:2009qa}, a 3-pronged tagger, can be obtained through the include
+\begin{lstlisting}
+  #include "fastjet/tools/CASubjetTagger.hh"
+\end{lstlisting}
+Its description will follow in a later version of
+this manual.
+
+
 %......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
 
-The description of the interface to the $N$-subjettiness
-tagger~\cite{nsubtagger} will follow in a later version of this
-manual.
-
-%\paragraph{Constraints.}
-
-
-%\paragraph{Structure of the result.}
+The $N$-subjettiness
+tagger~\cite{nsubtagger}, meant to identify a highly boosted color
+singlet particle decaying to $N$ partons, can be obtained through the include
+\begin{lstlisting}
+  #include "fastjet/tools/NSubjettinessTagger.hh"s
+\end{lstlisting}
+Its description will follow in a later version of
+this manual.
 
 
 
@@ -4828,6 +4833,46 @@ and/or consult the authors.
 \subsection{User-defined transformers}
 \label{sec:transformerdetails}
 
+
+
+All transformers are derived from  the \ttt{Transformer} base class, 
+declared in the \ttt{fastjet/tools/Transformer.hh} header:
+\begin{lstlisting}
+  class Transformer : public FunctionOfPseudoJet<PseudoJet> {
+  public:
+    // the result of the Transformer acting on the PseudoJet.
+    // this has to be overloaded in derived classes
+    virtual PseudoJet result(const PseudoJet & original) const = 0;
+  
+    // should be overloaded to return a description of the Transformer
+    virtual std::string description() const = 0;
+  
+    // information about the associated structure type
+    typedef PseudoJetStructureBase StructureType;
+
+    // destructor is virtual so that it can be safely overloaded
+    virtual ~Transformer(){}
+  };
+\end{lstlisting}
+It is essentially the same as that of the
+\ttt{FunctionOfPseudoJet<PseudoJet>} from which it derives (cf.\
+appendix~\ref{app:function-of-pj}).
+%
+While the action of a \ttt{Transformer} is to be implemented in the
+\ttt{result(...)} member function,
+%
+typically it will be accessed through the \ttt{operator()} function:
+\begin{lstlisting}
+  /// just wraps result()
+  PseudoJet operator()(const PseudoJet &pj) const {return result(pj);}
+  /// returns a vector of PseudoJet containing result(...) 
+  /// applied to each of input PseudoJets, 
+  vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
+\end{lstlisting}
+
+ 
+
+
 To help understand how to create user-defined transformers, it is
 perhaps easiest to consider the example of a filtering/trimming class.
 %
@@ -5115,6 +5160,7 @@ structural information and so may be a little more efficient.
 % with a rigid boundary in rapidity and/or azimuth).
 
 %======================================================================
+
 \begin{thebibliography}{99}
 
 \bibitem{fastjet}
@@ -5187,21 +5233,6 @@ G.~C.~Blazey {\it et al.},
 hep-ex/0005012.
 %%CITATION = HEP-EX 0005012;%%
 
-\bibitem{eekt}
-  S.~Catani, Y.~L.~Dokshitzer, M.~Olsson, G.~Turnock and B.~R.~Webber,
-  %``New clustering algorithm for multi - jet cross-sections in e+ e-
-  %annihilation,''
-  Phys.\ Lett.\ B {\bf 269}, 432 (1991);
-
-
-\bibitem{KtJet}
-  \url{http://hepforge.cedar.ac.uk/ktjet/};
-  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
-  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
-  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
-  [hep-ph/0210022].
-  %%CITATION = HEP-PH 0210022;%%
-
 %\cite{Buttar:2008jx}
 \bibitem{Buttar:2008jx}
   C.~Buttar {\it et al.},
@@ -5239,6 +5270,83 @@ J.-D.~Boissonnat {\it et al.},
 % Triangulations in CGAL
 Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
 
+
+\bibitem{KtJet}
+  \url{http://hepforge.cedar.ac.uk/ktjet/};
+  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
+  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
+  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
+  [hep-ph/0210022].
+  %%CITATION = HEP-PH 0210022;%%
+
+\bibitem{eekt}
+  S.~Catani, Y.~L.~Dokshitzer, M.~Olsson, G.~Turnock and B.~R.~Webber,
+  %``New clustering algorithm for multi - jet cross-sections in e+ e-
+  %annihilation,''
+  Phys.\ Lett.\ B {\bf 269}, 432 (1991);
+
+
+\bibitem{EHT}
+  S.~D.~Ellis, J.~Huston and M.~Tonnesmann,
+  %``On building better cone jet algorithms,''
+in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
+  Particle Physics (Snowmass 2001) } ed. N.~Graf, p. P513
+%in {\it  the Proceedings of APS / DPF / DPB Summer Study on the
+%Future of Particle Physics (Snowmass 2001), Snowmass, Colorado, 30
+%Jun - 21 Jul 2001, pp P513}
+  [hep-ph/0111434].
+  %%CITATION = HEP-PH 0111434;%%
+
+\bibitem{TeV4LHC}
+  TeV4LHC QCD Working Group {\it et al.},
+  %``Tevatron-for-LHC report of the QCD working group,''
+  hep-ph/0610012.
+  %%CITATION = HEP-PH 0610012;%%
+
+
+\bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
+
+% \bibitem{Huth:1990mi}
+%   J.~E.~Huth {\it et al.},
+%   % ``Toward a standardization of jet definitions,''
+%   % 
+%   FNAL-C-90-249-E, published in the proceedings of the 1990 Summer
+%   Study on High Energy Physics, Research Directions for the Decade,
+%   Snowmass, Colorado, June 25 -- July 13, 1990.
+%   %%CITATION = FNAL-C-90-249-E;%%
+
+\bibitem{Abbott:1997fc}
+  B.~Abbott {\it et al.} [D0 Collaboration],
+  %``Fixed cone jet definitions in D0 and R(sep),''
+  FERMILAB-PUB-97-242-E.
+
+\bibitem{SpartyJet} P.A.~Delsart, K.~Geerlings and J.~Huston, SpartyJet,
+  \url{http://www.pa.msu.edu/~huston/SpartyJet/SpartyJet.html}
+
+\bibitem{Seymour:2006vv}
+  M.~H.~Seymour and C.~Tevlin,
+  %``A comparison of two different jet algorithms for the top mass
+  %reconstruction at the LHC,''
+  JHEP {\bf 0611} (2006) 052
+  [arXiv:hep-ph/0609100].
+  %%CITATION = JHEPA,0611,052;%%
+
+\bibitem{PxCone} L.~A.~del~Pozo and M.~H.~Seymour, unpublished.
+
+\bibitem{Bartel:1986ua}
+  W.~Bartel {\it et al.}  [JADE Collaboration],
+  %``Experimental Studies On Multi - Jet Production In E+ E- Annihilation At
+  %Petra Energies,''
+  Z.\ Phys.\ C {\bf 33} (1986) 23; 
+  %%CITATION = ZEPYA,C33,23;%%
+
+\bibitem{Bethke:1988zc}
+  S.~Bethke {\it et al.}  [JADE Collaboration],
+  %``Experimental Investigation Of The Energy Dependence Of The Strong Coupling
+  %Strength,''
+  Phys.\ Lett.\ B {\bf 213} (1988) 235.
+  %%CITATION = PHLTA,B213,235;%%
+
 \bibitem{CSSAreas} 
   M.~Cacciari, G.~P.~Salam and G.~Soyez,
   %``The Catchment Area of Jets,''
@@ -5257,6 +5365,18 @@ Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
   S.~Fortune,
   %''A sweepline algorithm for Voronoi diagrams,''
   Algorithmica {\bf 2} (1987) 1.
+
+\bibitem{Cacciari:2009dp}
+  M.~Cacciari, G.~P.~Salam, S.~Sapeta,
+  %``On the characterisation of the underlying event,''
+  JHEP {\bf 1004 } (2010)  065.
+  [arXiv:0912.4926 [hep-ph]].
+
+\bibitem{Sjostrand:2007gs}
+  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
+  %``A Brief Introduction to PYTHIA 8.1,''
+  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
+  [arXiv:0710.3820 [hep-ph]].
 
 
 \bibitem{BDRS}
@@ -5281,87 +5401,6 @@ Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
   [arXiv:1011.1493 [hep-ph]].
   %%CITATION = PHRVA,D83,011502;%%
 
-
-\bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
-
-\bibitem{PxCone} L.~A.~del~Pozo and M.~H.~Seymour, unpublished.
-
-
-\bibitem{EHT}
-  S.~D.~Ellis, J.~Huston and M.~Tonnesmann,
-  %``On building better cone jet algorithms,''
-in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
-  Particle Physics (Snowmass 2001) } ed. N.~Graf, p. P513
-%in {\it  the Proceedings of APS / DPF / DPB Summer Study on the
-%Future of Particle Physics (Snowmass 2001), Snowmass, Colorado, 30
-%Jun - 21 Jul 2001, pp P513}
-  [hep-ph/0111434].
-  %%CITATION = HEP-PH 0111434;%%
-
-\bibitem{TeV4LHC}
-  TeV4LHC QCD Working Group {\it et al.},
-  %``Tevatron-for-LHC report of the QCD working group,''
-  hep-ph/0610012.
-  %%CITATION = HEP-PH 0610012;%%
-
-\bibitem{EppsteinHierarchical}
-  %%David Eppstein
-  D.~Eppstein
-  %``Fast hierarchical clustering and other applications of dynamic
-  %closest pairs,''
-  J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
-
-\bibitem{Seymour:2006vv}
-  M.~H.~Seymour and C.~Tevlin,
-  %``A comparison of two different jet algorithms for the top mass
-  %reconstruction at the LHC,''
-  JHEP {\bf 0611} (2006) 052
-  [arXiv:hep-ph/0609100].
-  %%CITATION = JHEPA,0611,052;%%
-
-\bibitem{Bartel:1986ua}
-  W.~Bartel {\it et al.}  [JADE Collaboration],
-  %``Experimental Studies On Multi - Jet Production In E+ E- Annihilation At
-  %Petra Energies,''
-  Z.\ Phys.\ C {\bf 33} (1986) 23; 
-  %%CITATION = ZEPYA,C33,23;%%
-
-\bibitem{Bethke:1988zc}
-  S.~Bethke {\it et al.}  [JADE Collaboration],
-  %``Experimental Investigation Of The Energy Dependence Of The Strong Coupling
-  %Strength,''
-  Phys.\ Lett.\ B {\bf 213} (1988) 235.
-  %%CITATION = PHLTA,B213,235;%%
-
-\bibitem{SpartyJet} P.A.~Delsart, K.~Geerlings and J.~Huston, SpartyJet,
-  \url{http://www.pa.msu.edu/~huston/SpartyJet/SpartyJet.html}
-
-\bibitem{Huth:1990mi}
-  J.~E.~Huth {\it et al.},
-  % ``Toward a standardization of jet definitions,''
-  % 
-  FNAL-C-90-249-E, published in the proceedings of the 1990 Summer
-  Study on High Energy Physics, Research Directions for the Decade,
-  Snowmass, Colorado, June 25 -- July 13, 1990.
-  %%CITATION = FNAL-C-90-249-E;%%
-
-\bibitem{Abbott:1997fc}
-  B.~Abbott {\it et al.} [D0 Collaboration],
-  %``Fixed cone jet definitions in D0 and R(sep),''
-  FERMILAB-PUB-97-242-E.
-
-\bibitem{Cacciari:2009dp}
-  M.~Cacciari, G.~P.~Salam, S.~Sapeta,
-  %``On the characterisation of the underlying event,''
-  JHEP {\bf 1004 } (2010)  065.
-  [arXiv:0912.4926 [hep-ph]].
-
-\bibitem{Sjostrand:2007gs}
-  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
-  %``A Brief Introduction to PYTHIA 8.1,''
-  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
-  [arXiv:0710.3820 [hep-ph]].
-
 \bibitem{Kaplan:2008ie}
   D.~E.~Kaplan, K.~Rehermann, M.~D.~Schwartz, B.~Tweedie,
   %``Top Tagging: A Method for Identifying Boosted Hadronically Decaying Top Quarks,''
@@ -5375,10 +5414,15 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   Phys.\ Rev.\ Lett.\  {\bf 103 } (2009)  241803.
   [arXiv:0906.0728 [hep-ph]].
 
+\bibitem{EppsteinHierarchical}
+  %%David Eppstein
+  D.~Eppstein
+  %``Fast hierarchical clustering and other applications of dynamic
+  %closest pairs,''
+  J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
+
 \end{thebibliography}
 
-
-
-
-
 \end{document}
+
+
