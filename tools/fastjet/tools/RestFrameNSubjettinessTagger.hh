@@ -1,3 +1,6 @@
+#ifndef __FASTJET_RESTFRAMENSUBJETTINESS_TAGGER_HH__
+#define __FASTJET_RESTFRAMENSUBJETTINESS_TAGGER_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -28,9 +31,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#ifndef __FASTJET_NSUBJETTINESS_TAGGER_HH__
-#define __FASTJET_NSUBJETTINESS_TAGGER_HH__
-
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/JetDefinition.hh>
 #include <fastjet/CompositeJetStructure.hh>
@@ -38,19 +38,20 @@
 
 FASTJET_BEGIN_NAMESPACE
 
-class NSubjettinessTagger;
-class NSubjettinessTaggerStructure;
+class RestFrameNSubjettinessTagger;
+class RestFrameNSubjettinessTaggerStructure;
 
 //----------------------------------------------------------------------
 /// @ingroup tools_taggers
-/// \class NSubjettinessTagger
+/// \class RestFrameNSubjettinessTagger
 /// Class that helps perform 2-pronged boosted tagging using
-/// N-subjettiness
+/// a reclustering in the jet's rest frame, supplemented with a cut on N-subjettiness
+/// (and a decay angle)
 ///
-/// This is the implementation of the N-Subjettiness tagger introduced
+/// This is the implementation of the rest-frame N-Subjettiness tagger introduced
 /// by Ji-Hun Kim in arXiv:1011.1493.
 ///
-/// To tag a fat jet, we proceed as follows:
+/// To tag a fat jet, the tagger proceeds as follows:
 ///
 ///  - boost its constituents into the rest frame of the jet
 ///
@@ -73,9 +74,9 @@ class NSubjettinessTaggerStructure;
 ///    both large enough: \f$\cos(\theta_s)<c_\theta^{\rm cut}\f$ 
 ///    [0.8 by default]
 ///
-/// Note that in the original version, the jets are reconstructed
+/// Note that in the original version, the jets to be tagged were reconstructed
 /// using SISCone with R=0.8 and f=0.75. Also, b-tagging was imposed
-/// on the 2 subjets found in the tagging procedure.
+/// on the 2 subjets found in the rest-frame tagging procedure.
 ///
 /// \section desc Options
 /// 
@@ -99,10 +100,10 @@ class NSubjettinessTaggerStructure;
 ///  - the tau2 and maximal cos(theta_s) values computed during the
 ///    tagging
 ///
-class NSubjettinessTagger : public Transformer{
+class RestFrameNSubjettinessTagger : public Transformer{
 public:
   /// ctor with arguments (see the class description above)
-  NSubjettinessTagger(const JetDefinition subjet_def, 
+  RestFrameNSubjettinessTagger(const JetDefinition subjet_def, 
 		      const double tau2cut=0.08, 
 		      const double costhetascut=0.8,
 		      const bool use_exclusive = false)
@@ -118,7 +119,7 @@ public:
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of Structure returned
-  typedef NSubjettinessTaggerStructure StructureType;
+  typedef RestFrameNSubjettinessTaggerStructure StructureType;
 
 protected:
   JetDefinition _subjet_def;
@@ -129,16 +130,16 @@ protected:
 
 //------------------------------------------------------------------------
 /// @ingroup tools_taggers
-/// \class NSubjettinessTaggerStructure
-/// the structure returned by the NSubjettinessTagger transformer.
+/// \class RestFrameNSubjettinessTaggerStructure
+/// the structure returned by the RestFrameNSubjettinessTagger transformer.
 ///
-/// See the NSubjettinessTagger class description for the details of
+/// See the RestFrameNSubjettinessTagger class description for the details of
 /// what is inside this structure
 ///
-class NSubjettinessTaggerStructure : public CompositeJetStructure{
+class RestFrameNSubjettinessTaggerStructure : public CompositeJetStructure{
 public:
   /// ctor with pieces initialisation
-  NSubjettinessTaggerStructure(const std::vector<PseudoJet> & pieces) :
+  RestFrameNSubjettinessTaggerStructure(const std::vector<PseudoJet> & pieces) :
     CompositeJetStructure(pieces), _tau2(0.0), _costhetas(1.0){}
 
   /// returns the associated N-subjettiness
@@ -157,9 +158,9 @@ protected:
 //  PseudoJet _original_jet;  ///< the original jet (before tagging)
 
   // allow the tagger to set these
-  friend class NSubjettinessTagger;
+  friend class RestFrameNSubjettinessTagger;
 };
 
 FASTJET_END_NAMESPACE
-#endif  //  __FASTJET_NSUBJETTINESS_TAGGER_HH__
+#endif  //  __FASTJET_RESTFRAMENSUBJETTINESS_TAGGER_HH__
 

@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include <fastjet/tools/NSubjettinessTagger.hh>
+#include <fastjet/tools/RestFrameNSubjettinessTagger.hh>
 #include <fastjet/tools/Boost.hh>
 #include <fastjet/ClusterSequence.hh>
 #include <sstream>
@@ -37,15 +37,17 @@ using namespace fastjet;
 using namespace std;
 
 //------------------------------------------------------------------------
-// NSubjettinessTagger class implementation
+// RestFrameNSubjettinessTagger class implementation
 //------------------------------------------------------------------------
 
 //------------------------------------------------------------------------
 // tagger description
-string NSubjettinessTagger::description() const{ 
+string RestFrameNSubjettinessTagger::description() const{ 
   ostringstream oss;
-  oss << "NSubjettiness cut with tau_2<" << _t2cut 
-      << " and cos(theta_s)<" << _costscut;
+  oss << "RestFrameNSubjettiness tagger that performs clustering in the jet rest frame with " 
+      << _subjet_def.description() 
+      << ", supplemented with cuts tau_2 < " << _t2cut 
+      << " and cos(theta_s) < " << _costscut;
   return oss.str();
 }
 
@@ -53,7 +55,7 @@ string NSubjettinessTagger::description() const{
 //------------------------------------------------------------------------
 // action on a single jet
 // returns the tagged PseudoJet if successful, 0 otherwise
-PseudoJet NSubjettinessTagger::result(const PseudoJet & jet) const{
+PseudoJet RestFrameNSubjettinessTagger::result(const PseudoJet & jet) const{
   // make sure that the jet has constituents
   if (!jet.has_constituents())
     throw("The jet you try to tag needs to have accessible constituents");

@@ -5,6 +5,6 @@ toolsinclude_HEADERS = \
   GridMedianBackgroundEstimator.hh \
   Transformer.hh Boost.hh \
   Filter.hh Subtractor.hh \
-  MassDropTagger.hh NSubjettinessTagger.hh CASubJetTagger.hh \
+  MassDropTagger.hh RestFrameNSubjettinessTagger.hh CASubJetTagger.hh \
   JHTopTagger.hh TopTaggerBase.hh
 
