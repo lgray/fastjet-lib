@@ -1636,7 +1636,7 @@ new experimental or theoretical analyses.
 
 \subsubsection{CDF JetClu}
 The other algorithm used by CDF during Run~II, as well as their main
-algorithm during Run~I.
+algorithm during Run~I~\cite{Abe:1991ui}.
 \begin{lstlisting}
   #include ``fastjet/CDFCones.hh''
   // ...
@@ -1646,7 +1646,7 @@ algorithm during Run~I.
 		   int      iratch = 1);
 \end{lstlisting}
 This is an iterative cone with split-merge and optional ``ratcheting''
-if \verb|iratch == 1| (particles that appear in one iteration fo a
+if \verb|iratch == 1| (particles that appear in one iteration of a
 cone are retained in future iterations).
 %
 The overlap threshold is usually set to 0.75 in CDF analyses.
@@ -1668,8 +1668,9 @@ jet algorithm.
 %......................................................................
 \subsubsection{\Dzero Run I cone}
 
-The main algorithm used by \Dzero in Run~I of the Tevatron, which is
-an  iterative cone algorithm with a split-merge. It comes in two versions
+The main algorithm used by \Dzero in Run~I of the
+Tevatron~\cite{Abbott:1997fc}, which is an iterative cone algorithm
+with a split-merge. It comes in two versions
 \begin{lstlisting}
   #include ``fastjet/D0RunIpre96ConePlugin.hh''
   // ...
@@ -5212,9 +5213,9 @@ estimation, means to navigate the ClusterSequence and a new build system
 % broader range of areas and tools to help navigate the ClusterSequence.
 %
 Version 2.4 included the new version 2.0 of SISCone, as well as
-plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone and a
-range of $e^+e^-$ algorithms, and also further tools to help
-investigate jet substructure.
+plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone,
+TrackJet and a range of $e^+e^-$ algorithms, and also further tools to
+help investigate jet substructure.
 %
 It also added a wrapper to \fastjet 
 allowing one to run SISCone and some of the sequential recombination
@@ -5231,8 +5232,8 @@ It  brought the first of a series of \fastjet tools to help with
 advanced jet analyses, namely the Selector class, filters, taggers and
 new background estimation classes.
 %
-Version~3 also added the D0-Run I cone plugin and support for native
-jet algorithms to be run with $R>\pi/2$.
+Version~3 also added the D0-Run I cone~\cite{Abbott:1997fc} plugin and
+support for native jet algorithms to be run with $R>\pi/2$.
 
 % 
 % %
