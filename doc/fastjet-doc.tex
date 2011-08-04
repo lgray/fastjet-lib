@@ -848,8 +848,8 @@ A standard copy constructor is available for {\CS}s.
 Additionally it is possible to copy the clustering history of a \CS
 while modifying the momenta of the jets, with the \CS member function
 \begin{lstlisting}
-   void transfer_from_sequence(const ClusterSequence & original_cs, 
-                               const FunctionOfPseudoJet<PseudoJet> * action_on_jets = 0);
+  void transfer_from_sequence(const ClusterSequence & original_cs, 
+                              const FunctionOfPseudoJet<PseudoJet> * action_on_jets = 0);
 \end{lstlisting}
 \ttt{fastjet::FunctionOfPseudoJet<PseudoJet>} is an abstract base class whose
 interface provides a \ttt{PseudoJet operator()(const PseudoJet \& jet)}
@@ -863,12 +863,12 @@ corresponding \PJ in the original sequence.
 One use case for this is if one wishes to obtain a Lorentz-boosted
 copy of a \CS, which can be achieved as follows
 \begin{lstlisting}
-   #include "fastjet/tools/Boost.hh"
-   // ...
-   ClusterSequence original_cs(...);
-   ClusterSequence boosted_cs;
-   Boost boost(some_jet_to_describe_the_boost);
-   boosted_cs.transfer_from_sequence(cs, &boost);
+  #include "fastjet/tools/Boost.hh"
+  // ...
+  ClusterSequence original_cs(...);
+  ClusterSequence boosted_cs;
+  Boost boost(some_jet_to_describe_the_boost);
+  boosted_cs.transfer_from_sequence(cs, &boost);
 \end{lstlisting}
 
 
@@ -1387,17 +1387,17 @@ A \ttt{JetDefinition} can be constructed by providing a pointer to a
 can then be used identically to the normal \ttt{JetDefinition} objects
 used in the previous sections:
 \begin{lstlisting}
-   // have some plugin class derived from the Plugin base class
-   class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
+  // have some plugin class derived from the Plugin base class
+  class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
 
-   // create an instance of the CDFMidPointPlugin class 
-   CDFMidPointPlugin cdf_midpoint( [... options ...] );
-   // create the jet definition by passing a pointer to the plugin
-   fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
+  // create an instance of the CDFMidPointPlugin class 
+  CDFMidPointPlugin cdf_midpoint( [... options ...] );
+  // create the jet definition by passing a pointer to the plugin
+  fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
 
-   // then create a ClusterSequence with the input particles and jet_def,
-   // and use it to extract jets as usual
-   // ...
+  // then create a ClusterSequence with the input particles and jet_def,
+  // and use it to extract jets as usual
+  // ...
 \end{lstlisting}
 In cases where the plugin has been created with a \ttt{new} statement
 and the user does not wish to manage the deletion of the corresponding
@@ -1540,19 +1540,19 @@ Some extra output information is appropriate for a cone algorithm that
 is not of relevance in clustering algorithms, through the
 \verb:extras: resource,
 \begin{lstlisting}
-   const fastjet::SISConeExtras * extras = 
-             dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
+  const fastjet::SISConeExtras * extras = 
+            dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
 \end{lstlisting}
 To determine the pass at which a given jet was found, one does the
 following
 \begin{lstlisting}
-   int pass = extras->pass(jet);
+  int pass = extras->pass(jet);
 \end{lstlisting}
 %
 The user may also obtain a list of the positions of original stable
 cones as follows:
 \begin{lstlisting}
-   vector<PseudoJet> stable_cones(extras->stable_cones());
+  vector<PseudoJet> stable_cones(extras->stable_cones());
 \end{lstlisting}
 The stable cones are represented as four-momenta, for which only the
 rapidity and azimuth are meaningful. The \verb:user_index(): indicates
@@ -1571,7 +1571,7 @@ constructing the final jets from the list of constituents.
 For the latter task, the user may instead instruct SISCone to use the
 jet-definition's own recombiner, with the command
 \begin{lstlisting}
-   plugin->set_use_jet_def_recombiner(true);
+  plugin->set_use_jet_def_recombiner(true);
 \end{lstlisting}
 In this case the \verb:user_index(): no longer contains the
 information about the pass.
@@ -2221,8 +2221,8 @@ the variable, an upper limit or a range, corresponding to the choices
 %
 A couple of examples are
 \begin{lstlisting}
-   SelectorPtMin(25.0)        // Selects $p_t>25$ (units are user's default for momenta)
-   SelectorRapRange(1.9,4.9)  // Selects $1.9<y<4.9$
+  SelectorPtMin(25.0)        // Selects $p_t>25$ (units are user's default for momenta)
+  SelectorRapRange(1.9,4.9)  // Selects $1.9<y<4.9$
 \end{lstlisting}
 Following a similar naming convention, there are also
 \ttt{SelectorPhiRange(}$\phi_{\min},\phi_{\max}$\ttt{)} and
@@ -2250,11 +2250,11 @@ fundamentally performing the same underlying type of action.
 
 The available selectors of this kind are:
 \begin{lstlisting}
-   SelectorCircle($R$)                   // a circle of radius R around the reference jet
-   SelectorDoughnut($R_{in}$, $R_{out}$)          // a doughnut between $R_{in}$ and $R_{out}$
-   SelectorStrip(half_width)           // a rapidity strip 2*half_width large 
-   SelectorRectangle(half_rap_width, half_phi_width) // a rectangle in rapidity and phi
-   SelectorPtFractionMin($f$)            // $p_t$ larger than $f p_t^{ref}$
+  SelectorCircle($R$)                   // a circle of radius R around the reference jet
+  SelectorDoughnut($R_{in}$, $R_{out}$)          // a doughnut between $R_{in}$ and $R_{out}$
+  SelectorStrip(half_width)           // a rapidity strip 2*half_width large 
+  SelectorRectangle(half_rap_width, half_phi_width) // a rectangle in rapidity and phi
+  SelectorPtFractionMin($f$)            // $p_t$ larger than $f p_t^{ref}$
 \end{lstlisting}
 %
 One example of selectors taking a reference jet is the following. 
@@ -2394,16 +2394,16 @@ calculate.
 To summarise, in order to access the areas of the jets the user is exposed to two main
 classes:
 \begin{lstlisting}
-   class fastjet::AreaDefinition;
-   class fastjet::ClusterSequenceArea;
+  class fastjet::AreaDefinition;
+  class fastjet::ClusterSequenceArea;
 \end{lstlisting}
 
 If jet areas are to be used to study the level of a diffuse noise
 which might be present in the event (like underlying event particles
 or pileup) and maybe subtract it from jets, two further classes are useful:
 \begin{lstlisting}
-   class fastjet::JetMedianBackgroundEstimator
-   class fastjet::Subtractor
+  class fastjet::JetMedianBackgroundEstimator
+  class fastjet::Subtractor
 \end{lstlisting}
 These classes are described in detail below and an example program is
 given in \ttt{example/07-subtraction.cc}.
@@ -2771,9 +2771,9 @@ event loop, to create a background estimator.
 For the jet-based method, one creates a
 \ttt{fastjet::JetMedianBackgroundEstimator},
 \begin{lstlisting}
-   #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
-   // ...
-   JetMedianBackgroundEstimator bge(const Selector & selector,
+  #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
+  // ...
+  JetMedianBackgroundEstimator bge(const Selector & selector,
                                     const JetDefinition & jet_def,
                                     const AreaDefinition & area_def);
 \end{lstlisting}
@@ -2794,9 +2794,9 @@ recommended\footnote{With the $k_t$ algorithm one may also use a Voronoi area (\
 For the grid based method one creates a
 \ttt{fastjet::GridMedianBackgroundEstimator},
 \begin{lstlisting}
-   #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
-   // ...
-   GridMedianBackgroundEstimator bge(double max_rapidity,
+  #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+  // ...
+  GridMedianBackgroundEstimator bge(double max_rapidity,
                                      double requested_grid_spacing);
 \end{lstlisting}
 where, as already mentioned above, one can use a grid spacing $\delta y = \delta
@@ -2814,15 +2814,15 @@ background density and a measure of its fluctuations with the two
 following calls 
 %
 \begin{lstlisting}
-   // the median of ($p_t$/area) for grid cells, or for jets that pass the selection cut, 
-   // making use also of information on empty area in the event (in the jets case)
-   rho = bge.rho(); 
+  // the median of ($p_t$/area) for grid cells, or for jets that pass the selection cut, 
+  // making use also of information on empty area in the event (in the jets case)
+  rho = bge.rho(); 
 
-   // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
-   // which is obtained from the 1-sigma half-width of the distribution of pt/A.
-   // To be precise it is defined such that a fraction (1-0.6827)/2 of the jets
-   // (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
-   sigma = bge.sigma(); 
+  // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
+  // which is obtained from the 1-sigma half-width of the distribution of pt/A.
+  // To be precise it is defined such that a fraction (1-0.6827)/2 of the jets
+  // (including empty jets) have $p_t/A < \rho - \sigma \sqrt{\langle A \rangle}$
+  sigma = bge.sigma(); 
 \end{lstlisting}
 Note that $\rho$ and $\sigma$ determinations count empty area within
 the relevant region as consisting of jets of zero $p_t$.
@@ -2895,8 +2895,8 @@ $1$) centred on whichever jet is set as its reference.
 With this kind of selector, when the user calls either of the
 \ttt{JetMedianBackgroundEstimator} member functions
 \begin{lstlisting}
-   double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
-   double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
+  double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
+  double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
 \end{lstlisting}
 a \ttt{selector.set\_reference(jet)} call is made to centre the
 selector on the specified jet. Then only the jets
@@ -2918,7 +2918,7 @@ One can attempt to remove some given number of hard jets before
 carrying out the median estimation, e.g.\ with a \ttt{selector} such
 as
 \begin{lstlisting}
-   selector = SelectorStrip($\Delta y$) * (!SelectorNHardest(2))
+  selector = SelectorStrip($\Delta y$) * (!SelectorNHardest(2))
 \end{lstlisting}
 which removes the 2 hardest jets globally and then, of the remainder,
 takes the ones within the strip. This is however not always very
@@ -2940,8 +2940,8 @@ This method is available for both grid and jet-based methods.
 %
 One first creates an object that encodes the shape, e.g.
 \begin{lstlisting}
-   // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
-   fastjet::BackgroundRescalingYPolynomial rescaling(1.16, 0, -0.023, 0, 0.000041);
+  // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
+  fastjet::BackgroundRescalingYPolynomial rescaling(1.16, 0, -0.023, 0, 0.000041);
 \end{lstlisting}
 (for other shapes, e.g. parametrization of elliptic flow in heavy ion collisions,
 with both rapidity and azimuth dependence, derive a class from
@@ -2949,9 +2949,9 @@ with both rapidity and azimuth dependence, derive a class from
 \ref{app:function-of-pj}) and then one tells the background estimator
 (whether jet or grid based) about the rescaling with the call
 \begin{lstlisting}
-   // tell the JetMedianBackgroundEstimator or
-   // GridMedianBackgroundEstimator about the rescaling
-   bge.set_rescaling_class(&rescaling);
+  // tell the JetMedianBackgroundEstimator or
+  // GridMedianBackgroundEstimator about the rescaling
+  bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
 Subsequent calls will then take the median of the distribution $p_t/A
 / \ttt{rescaling}(y)$ (rather than $p_t/A$) and any calls to
@@ -2983,20 +2983,20 @@ In the case of the jet-based estimator, a number of enquiry functions
 are available to obtain information used internally within the median
 $\rho$ and $\sigma$ determination.
 \begin{lstlisting}
-   // Returns the mean area of the jets used to actually compute the background properties,
-   // including empty area and jets (available also in grid-based estimator)
-   double mean_area() const;
+  // Returns the mean area of the jets used to actually compute the background properties,
+  // including empty area and jets (available also in grid-based estimator)
+  double mean_area() const;
    
-   // returns the number of jets used to actually compute the background properties
-   // (including empty jets)
-   unsigned int n_jets_used() const;
+  // returns the number of jets used to actually compute the background properties
+  // (including empty jets)
+  unsigned int n_jets_used() const;
    
-   // Returns the estimate of the area (within the range defined by the selector) that
-   // is not occupied by jets.
-   double empty_area() const;
+  // Returns the estimate of the area (within the range defined by the selector) that
+  // is not occupied by jets.
+  double empty_area() const;
    
-   // Returns the number of empty jets used when computing the background properties. 
-   double n_empty_jets() const;
+  // Returns the number of empty jets used when computing the background properties. 
+  double n_empty_jets() const;
 \end{lstlisting}
 For area definitions with explicit ghosts the last two functions
 return $0$.
@@ -3835,15 +3835,14 @@ but selects the subjets to be kept based on a $p_t$ cut.
 The use of filtering and trimming have been advocated in number of
 contexts, beyond just the realm of boosted object reconstruction.
 %
-The \ttt{fastjet::Filter} class, defined in \ttt{fastjet/tools/Filter.hh},
-handles both operations. Its constructor
+The \ttt{fastjet::Filter} class derives from \ttt{Transformer}, and can be
+instantiated using
 \begin{lstlisting}
-  class Filter : public Transformer {
-    Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0);
-    ...
-  };
+  #include "fastjet/tools/Filter.hh"
+  // ...
+  Filter filter(JetDefinition subjet_def, Selector selector, double rho);
 \end{lstlisting}
-allows one to create a filter/trimmer that reclusters the jet's
+to obtain a filter/trimmer that reclusters the jet's
 constituents with the jet definition \ttt{subjet\_def}\footnote{
 %\paragraph{Implementation note.}
 %
@@ -3868,9 +3867,18 @@ clustering to decide which of these (sub)jets have to be kept.
 %
 If \ttt{rho} is non-zero, each of the subjets will be subtracted
 (using the specified value for the background density) prior to the
-selection of the kept subjets.
+selection of the kept subjets. Alternatively, the user can set a
+\ttt{Subtractor} (see section~\ref{sec:subtractor}), e.g.
+\begin{lstlisting}
+  GridMedianBackgroundEstimator bge(...);
+  Subtractor sub(&bge);
+  filter.set_subtractor(sub);
+\end{lstlisting}
+When this is done, the subtraction operation  will be performed using the
+\ttt{Subtractor}, independently of the value of \ttt{rho}.
 
-Two additional constructors are also supported:
+If the jet definition to be used to recluster the jet's constituents is to employ 
+the Cambridge/Aachen algorithm, two additional constructors are available:
 \begin{lstlisting}
   Filter(double Rfilt, Selector selector, double rho = 0.0);
   Filter(FunctionOfPseudoJet<double> * Rfilt_dyn, Selector selector, double rho = 0.0);
@@ -3882,14 +3890,11 @@ In the second, one has to provide a
 which dynamically computes the filtering radius as a function of the
 jet being filtered (as was originally used in \cite{BDRS} where
 $R_{\rm filt}={\rm min}(0.3,R_{b\bar{b}/2})$, with $R_{b\bar b}$ the
-distance between the parents of the jet). In both cases, the
-Cambridge/Aachen algorithm is used to recluster the constituents of the jet that
-the filter is applied to. 
- 
+distance between the parents of the jet). 
 
 %\paragraph{Usage and structure of the result.} 
 
-A simple filter, giving the subjets obtained clustering
+As an example, a simple filter, giving the subjets obtained clustering
 with the Cambridge/Aachen algorithm with radius $R_{\rm filt}$ and
 keeping the $n_{\rm filt}$ hardest subjets found, can be set up and applied using
 \begin{lstlisting}
@@ -3922,14 +3927,15 @@ Additional structural information is available as follows:
 Trimming, which keeps the subjets with a $p_t$ larger than a fixed
 fraction of the input jet, can be obtained defining
 \begin{lstlisting}
-   Filter trimmer(Rfilt, SelectorPtFractionMin(pt_fraction_min));
+  Filter trimmer(Rfilt, SelectorPtFractionMin(pt_fraction_min));
 \end{lstlisting}
 and then applying \ttt{trimmer} similarly to \ttt{filter} above.
 
 %\paragraph{Constraints.} 
 Note that the jet being filtered must have
-constituents. Furthermore, if \ttt{rho} is non-zero, the input jet
-must be the result of a \ttt{ClusterSequence} with area support and
+constituents. Furthermore, if \ttt{rho} is non-zero or if a \ttt{Subtractor} is
+set, the input jet
+must be the result of a cluster sequence with area support and
 explicit ghosts. If any of these requirements fail, an exception will
 be thrown.
 
@@ -3990,13 +3996,13 @@ for boosted Higgs tagging). Tagging then proceeds as follows:
 %
 The tagger can be constructed with
 \begin{lstlisting}
-   #include "fastjet/tools/MassDropTagger.hh"
-   // ...
-   MassDropTagger mdtagger(double $\mu$, double $y_\text{cut}$);
+  #include "fastjet/tools/MassDropTagger.hh"
+  // ...
+  MassDropTagger mdtagger(double $\mu$, double $y_\text{cut}$);
 \end{lstlisting}
 and applied using
 \begin{lstlisting}
-   PseudoJet tagged_jet = mdtagger(jet);
+  PseudoJet tagged_jet = mdtagger(jet);
 \end{lstlisting}
 
 %\paragraph{Constraints.} 
@@ -4014,8 +4020,8 @@ For a jet that is returned by the tagger and has the property that
 the actual value of $\mu$ and $y$ for the clustering that corresponds
 to the tagged structure:
 \begin{lstlisting}
-   tagged_jet.structure_of<MassDropTagger>.mu();
-   tagged_jet.structure_of<MassDropTagger>.y(); 
+  tagged_jet.structure_of<MassDropTagger>.mu();
+  tagged_jet.structure_of<MassDropTagger>.y(); 
 \end{lstlisting}
 
 Note that in \cite{BDRS} the mass-drop element of the tagging was
@@ -4023,9 +4029,9 @@ followed by a filtering stage using $\min(0.3, R_{jj}/2)$ as the
 reclustering radius and selecting the three hardest subjects. That can
 be achieved with
 \begin{lstlisting}
-   vector<PseudoJet> tagged_pieces = tagged_jet.pieces();
-   double Rfilt = min(0.3, 0.5 * pieces[0].delta_R(pieces[1]));
-   PseudoJet filtered_tagged_jet = Filter(Rfilt, SelectorNHardest(3))(tagged_jet);
+  vector<PseudoJet> tagged_pieces = tagged_jet.pieces();
+  double Rfilt = min(0.3, 0.5 * pieces[0].delta_R(pieces[1]));
+  PseudoJet filtered_tagged_jet = Filter(Rfilt, SelectorNHardest(3))(tagged_jet);
 \end{lstlisting}
 %   Filter filter = Filter(Rfilt, SelectorNHardest(3));
 %   PseudoJet filtered_tagged_jet = filter(tagged_jet);
@@ -4060,21 +4066,21 @@ two prongs to form the boosted particle candidate.
 %
 The tagger can be used as follows:
 \begin{lstlisting}
-   #include "fastjet/tools/JHTopTagger.hh"
-   // ...
-   double delta_p = 0.10; // subjets must carry at least this fraction of original jet's $p_t$
-   double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
-   double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
-   JHTopTagger top_tagger(delta_p, delta_r, cos_theta_W_max);
-   // indicate the acceptable range of top, W masses 
-   top_tagger.set_top_selector(SelectorMassRange(150,200));
-   top_tagger.set_W_selector  (SelectorMassRange( 65, 95));
-   // now try and tag a jet
-   PseudoJet top_candidate = top_tagger(jet); // jet should come from a C/A clustering
-   if (top_candidate != 0) { // successful tagging
-     double top_mass = top_candidate.m();
-     double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
-   }
+  #include "fastjet/tools/JHTopTagger.hh"
+  // ...
+  double delta_p = 0.10; // subjets must carry at least this fraction of original jet's $p_t$
+  double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
+  double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
+  JHTopTagger top_tagger(delta_p, delta_r, cos_theta_W_max);
+  // indicate the acceptable range of top, W masses 
+  top_tagger.set_top_selector(SelectorMassRange(150,200));
+  top_tagger.set_W_selector  (SelectorMassRange( 65, 95));
+  // now try and tag a jet
+  PseudoJet top_candidate = top_tagger(jet); // jet should come from a C/A clustering
+  if (top_candidate != 0) { // successful tagging
+    double top_mass = top_candidate.m();
+    double W_mass   = top_candidate.structure_of<JHTopTagger>().W().m();
+  }
 \end{lstlisting}
 Other information available through the
 \ttt{structure\_of<JHTopTagger>()} call includes: \ttt{W1()} and
@@ -4419,9 +4425,9 @@ indicating whether it \ttt{has\_pieces()}.
 Several calls are available for direct access to the internal structure
 storage, among them
 \begin{lstlisting}
-   const PseudoJetStructureBase* structure_ptr() const;
-   PseudoJetStructureBase*       structure_non_const_ptr();
-   template<typename StructureType> const StructureType & structure() const;
+  const PseudoJetStructureBase* structure_ptr() const;
+  PseudoJetStructureBase*       structure_non_const_ptr();
+  template<typename StructureType> const StructureType & structure() const;
 \end{lstlisting}
 where the first two return simply the structure pointer, while the
 last one casts the pointer to the desired derived structure type.
@@ -4485,11 +4491,11 @@ section~\ref{sec:BGE-positional}.
 To help provide a uniform interface for functions of a \PseudoJet,
 \fastjet provides the following template base class:
 \begin{lstlisting}
-   // a generic function of a PseudoJet
-   template<typename TOut> class FunctionOfPseudoJet{
-     // the action of the function (this _has_ to be overloaded in derived classes)
-     virtual TOut result(const PseudoJet &pj) const = 0;
-   };
+  // a generic function of a PseudoJet
+  template<typename TOut> class FunctionOfPseudoJet{
+    // the action of the function (this _has_ to be overloaded in derived classes)
+    virtual TOut result(const PseudoJet &pj) const = 0;
+  };
 \end{lstlisting}
 Derived classes should implement the \ttt{result(...)} function. 
 %
@@ -4882,45 +4888,45 @@ The simplest form of such a class is the following:%
   reclustering when the jet and subjet definitions are C/A based.}
 %
 \begin{lstlisting}
-   /// a simple class to carry out filtering and/or trimming
-   class SimpleFilter: public Transformer {
-   public:
-     SimpleFilter(const JetDefinition & subjet_def, const Selector & selector) :
-                                  _subjet_def(subjet_def), _selector(selector) {}
-   
-     virtual std::string description() const {
-       return "Filter that finds subjets with " + _subjet_def.description()
-              + ", using a (" + _selector.description() + ") selector" ;}
+  /// a simple class to carry out filtering and/or trimming
+  class SimpleFilter: public Transformer {
+  public:
+    SimpleFilter(const JetDefinition & subjet_def, const Selector & selector) :
+                                 _subjet_def(subjet_def), _selector(selector) {}
+  
+    virtual std::string description() const {
+      return "Filter that finds subjets with " + _subjet_def.description()
+             + ", using a (" + _selector.description() + ") selector" ;}
      
-     virtual PseudoJet result(const PseudoJet & jet) const;
+    virtual PseudoJet result(const PseudoJet & jet) const;
    
-     // CompositeJetStructure is the structural type associated with the 
-     // join operation that we use shall use to create the returned jet below
-     typedef CompositeJetStructure StructureType;
+    // CompositeJetStructure is the structural type associated with the 
+    // join operation that we use shall use to create the returned jet below
+    typedef CompositeJetStructure StructureType;
    
-   private:
-     JetDefinition _subjet_def;
-     Selector      _selector;
-   };
+  private:
+    JetDefinition _subjet_def;
+    Selector      _selector;
+  };
 \end{lstlisting}
 The function that does the work in this class is \ttt{result(...)}:
 %
 \begin{lstlisting}
-   PseudoJet SimpleFilter::result(const PseudoJet & jet) const {
-     // get the subjets
-     ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
-     vector<PseudoJet> subjets = cs->inclusive_jets();
+  PseudoJet SimpleFilter::result(const PseudoJet & jet) const {
+    // get the subjets
+    ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
+    vector<PseudoJet> subjets = cs->inclusive_jets();
      
-     // signal that the cluster sequence should delete itself when
-     // there are no longer any of its (sub)jets in scope anywhere
-     cs->delete_self_when_unused();
+    // signal that the cluster sequence should delete itself when
+    // there are no longer any of its (sub)jets in scope anywhere
+    cs->delete_self_when_unused();
      
-     // get the selected subjets 
-     vector<PseudoJet> selected_subjets = _selector(subjets);
-     // join them using the same recombiner as was used in the subjet_def
-     PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
-     return result;
-   }
+    // get the selected subjets 
+    vector<PseudoJet> selected_subjets = _selector(subjets);
+    // join them using the same recombiner as was used in the subjet_def
+    PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
+    return result;
+  }
 \end{lstlisting}
 This provides almost all the basic functionality that might be needed
 from a filter, including access to the \ttt{pieces()} of the filtered
@@ -4940,39 +4946,39 @@ the user to choose the structure created by the \ttt{join} function.
 %
 In this case we therefore create 
 \begin{lstlisting}
-   class SimpleFilterStructure: public CompositeJetStructure { 
-   public:
-     // the form of constructor expected by the join<...> function
-     SimpleFilterStructure(const vector<PseudoJet> & pieces, 
-                           const Recombiner *recombiner = 0) :
-                                      CompositeJetStructure(pieces, recombiner) {}
-     // provide access to the rejected subjets from the filtering
-     const vector<PseudoJet> & rejected() const {return _rejected;}
-   private: 
-     vector<PseudoJet> _rejected; 
-     friend class SimpleFilter;
-   };
+  class SimpleFilterStructure: public CompositeJetStructure { 
+  public:
+    // the form of constructor expected by the join<...> function
+    SimpleFilterStructure(const vector<PseudoJet> & pieces, 
+                          const Recombiner *recombiner = 0) :
+                                     CompositeJetStructure(pieces, recombiner) {}
+    // provide access to the rejected subjets from the filtering
+    const vector<PseudoJet> & rejected() const {return _rejected;}
+  private: 
+    vector<PseudoJet> _rejected; 
+    friend class SimpleFilter;
+  };
 \end{lstlisting}
 and then replace the last few lines of the
 \ttt{SimpleFilter::result(...)} function with
 \begin{lstlisting}
-     // get the selected and rejected subjets
-     vector<PseudoJet> selected_subjets, rejected_subjets;
-     _selector.sift(subjets, selected_subjets, rejected_subjets);
+  // get the selected and rejected subjets
+  vector<PseudoJet> selected_subjets, rejected_subjets;
+  _selector.sift(subjets, selected_subjets, rejected_subjets);
 
-     // join the selected ones, now with a user-chosen structure
-     PseudoJet result = join<SimpleFilterStructure>(selected_subjets, *_subjet_def.recombiner());
+  // join the selected ones, now with a user-chosen structure
+  PseudoJet result = join<SimpleFilterStructure>(selected_subjets, *_subjet_def.recombiner());
 
-     // and then set the structure's additional elements
-     SimpleFilterStructure * structure = 
-                       dynamic_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
-     structure->_rejected = rejected_subjets;
-     return result;
+  // and then set the structure's additional elements
+  SimpleFilterStructure * structure = 
+        	    dynamic_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
+  structure->_rejected = rejected_subjets;
+  return result;
 \end{lstlisting}
 Finally, with the replacement of the \ttt{typedef} in the
 \ttt{SimpleFilter} class with
 \begin{lstlisting}
-     typedef SimpleFilterStructure StructureType;
+  typedef SimpleFilterStructure StructureType;
 \end{lstlisting}
 then on a jet returned by the \ttt{SimpleFilter} one can simply call
 \begin{lstlisting}
@@ -4985,18 +4991,18 @@ jet is to ``wrap'' it. This can be done with the help of the
 \ttt{WrappedStructure} class.
 %
 \begin{lstlisting}
-   /// a class to wrap and extend existing jet structures with  information about 
-   ///"rejected" pieces
-   class SimpleFilterWrappedStructure: public WrappedStructure {
-   public:
-     SimpleFilterWrappedStructure(const SharedPtr<PseudoJetStructureBase> & to_be_wrapped,
-                                  const vector<PseudoJet> & rejected_pieces) :
-                WrappedStructure(to_be_wrapped), _rejected(rejected_pieces) {}
-   
-     const vector<PseudoJet> & rejected() const {return _rejected;}
-   private:
-     vector<PseudoJet> _rejected;
-   };
+  /// a class to wrap and extend existing jet structures with  information about 
+  ///"rejected" pieces
+  class SimpleFilterWrappedStructure: public WrappedStructure {
+  public:
+    SimpleFilterWrappedStructure(const SharedPtr<PseudoJetStructureBase> & to_be_wrapped,
+				 const vector<PseudoJet> & rejected_pieces) :
+	       WrappedStructure(to_be_wrapped), _rejected(rejected_pieces) {}
+  
+    const vector<PseudoJet> & rejected() const {return _rejected;}
+  private:
+    vector<PseudoJet> _rejected;
+  };
 \end{lstlisting}
 The \ttt{WrappedStructure}'s constructor takes a \ttt{SharedPtr} to an
 existing structure and simply redirects all standard structural
@@ -5006,13 +5012,13 @@ ones, as done above with the \ttt{rejected()} call.
 %
 To use the wrapped class one might proceed as in the following lines:
 \begin{lstlisting}
-   // create a jet with some existing structure
-   PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
-   // create a new structure that wraps the existing one and supplements it with new info
-   SharedPtr<PseudoJetStructureBase> structure(new
-      SimpleFilterWrappedStructure(result.structure_shared_ptr(), rejected_subjets));
-   // assign the new structure to the original jet
-   result.set_structure_shared_ptr(structure);  
+  // create a jet with some existing structure
+  PseudoJet result = join(selected_subjets, *_subjet_def.recombiner());
+  // create a new structure that wraps the existing one and supplements it with new info
+  SharedPtr<PseudoJetStructureBase> structure(new
+     SimpleFilterWrappedStructure(result.structure_shared_ptr(), rejected_subjets));
+  // assign the new structure to the original jet
+  result.set_structure_shared_ptr(structure);  
 \end{lstlisting}
 The \ttt{SharedPtr}s ensure that memory allocated for the structural
 information is released when no jet remains that refers to it.
