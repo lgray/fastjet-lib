@@ -3965,16 +3965,43 @@ suitable substructure, they return a \ttt{jet} that has the property
 %\label{sec:2prongedtaggers}
 
 
-At the moment, we have implemented two of the taggers proposed for the
-reconstruction of boosted two-body decays: the \ttt{fastjet::MassDropTagger}
-introduced in \cite{BDRS} and a rest-frame \ttt{fastjet::NSubjettinessTagger}
-from Ref. \cite{nsubtagger}. For the three-body decays, the boosted top tagger from~\cite{Kaplan:2008ie},
-\ttt{fastjet::JHTopTagger}, as well as a subjet tagger for the Cambridge-Aachen jet algorithm as
-introduced in~\cite{Butterworth:2009qa}, \ttt{fastjet::CASubJetTagger}, are 
-available.
-We refer the reader to the original papers for
-an extensive description of the taggers and shall only give a very
-brief overview in what follows of the  taggers included in \fastjet.
+At the moment, we have implemented only a small set of taggers. 
+%
+These include one main two-body tagger, the
+\ttt{fastjet::MassDropTagger} introduced in \cite{BDRS} and one main
+boosted top tagger, \ttt{fastjet::JHTopTagger} from \cite{Kaplan:2008ie}.
+%
+In addition, to help provide a more complete set of examples of coding
+methods to which users may refer when writing their own taggers, we
+have also included the
+%
+\ttt{fastjet::CASubJetTagger} introduced in~\cite{Butterworth:2009qa},
+which illustrates the use of a \ttt{WrappedStructure} (cf.\
+section~\ref{sec:transformerdetails}) and the
+rest-frame \ttt{fastjet::RestFrameNSubjettinessTagger}
+from Ref.~\cite{nsubtagger}, which makes use of facilities to boost a
+cluster sequence.
+
+
+% two of the taggers proposed for the
+% reconstruction of boosted two-body decays: the \ttt{fastjet::MassDropTagger}
+% introduced in \cite{BDRS} and a rest-frame \ttt{fastjet::RestFrameNSubjettinessTagger}
+% from Ref. \cite{nsubtagger}. For the three-body decays, the boosted top tagger from~\cite{Kaplan:2008ie},
+% \ttt{fastjet::JHTopTagger}, as well as a subjet tagger for the Cambridge-Aachen jet algorithm as
+% introduced in~\cite{Butterworth:2009qa}, \ttt{fastjet::CASubJetTagger}, are 
+% available.
+
+We refer the reader to the original papers for a more extensive
+description of the physics use of these taggers.
+
+More taggers may be provided in the future, either through native
+implementations or, potentially, through a ``contrib'' type area.
+%
+Users are invited to contact the \fastjet authors for further
+information in this regard.
+
+%  and shall only give a very
+% brief overview in what follows of the  taggers included in \fastjet.
 
 %......................................................................
 \subsubsection{The mass-drop tagger}
@@ -4101,7 +4128,7 @@ places no cuts on the top or $W$ candidate masses and it is then the
 user's responsibility to verify that they are in a suitable range.
 
 Note further that  \ttt{JHTopTagger} does not derive directly from 
- from \ttt{Transformer}, but from the
+\ttt{Transformer}, but from the
 \ttt{fastjet::TopTaggerBase} class instead. This class (which itself derives
 from \ttt{Transformer}) has been included to provide a proposed common
 interface for all the top taggers. In particular, \ttt{TopTaggerBase} provides
@@ -4121,8 +4148,8 @@ evident once more than a single top tagger has been implemented.
 
 The Cambridge/Aachen subjet
 tagger~\cite{Butterworth:2009qa}, originally implemented in a
-3-pronged context,b is really a generic 2-body tagger, which can also be
-used recursively to obtained multi-prong tagging.
+3-pronged context, is really a generic 2-body tagger, which can also be
+used in a nested fashion to obtained multi-pronged tagging.
 %
 It can be obtained through the include
 \begin{lstlisting}
@@ -4135,11 +4162,11 @@ this manual.
 %......................................................................
 \subsubsection{The rest-frame $N$-subjettiness tagger}
 
-The $N$-subjettiness
+The rest-frame $N$-subjettiness
 tagger~\cite{nsubtagger}, meant to identify a highly boosted color
 singlet particle decaying to $2$ partons, can be obtained through the include
 \begin{lstlisting}
-  #include "fastjet/tools/NSubjettinessTagger.hh"s
+  #include "fastjet/tools/RestFrameNSubjettinessTagger.hh"
 \end{lstlisting}
 Its description will follow in a later version of
 this manual.
