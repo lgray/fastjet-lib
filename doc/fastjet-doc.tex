@@ -232,56 +232,6 @@ the fastjet interface using a ``plugin'' facility.
 % the implementation so that they may study it in more detail than was
 % exposed in \cite{fastjet}. 
 
-The implementation of the inclusive Cambridge algorithm and of jet
-areas are new features of version~2 of \fastjet; other changes include
-a new interface,\footnote{The old one though retained through v2 is
-  deprecated and will be removed in v3} and new algorithmic strategies
-that can provide a factor of two improvement in speed for events whose
-number $N$ of particles $\sim 10^4$. Choices of recombination schemes
-and plugins are new features of version 2.1.  Version 2.2 introduces a
-broader set of area measures and the anti-$k_t$
-algorithm~\cite{antikt}.
-%
-% We anticipate that the \fastjet facilities may also be made available
-% at a later date with a more developed interface as part of the planned
-% multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
-%
-A plugin facility allows one to access external jet algorithms through
-the \fastjet interface, and overlays \fastjet features such as areas
-onto the external jet algorithms.
-%
-Plugins are included for the fortran PxCone code and for the CDF C++
-JetClu and MidPoint cone jet algorithms (all infrared unsafe), as well as
-the recent Seedless Infrared-Safe Cone (SISCone) jet
-algorithm~\cite{SISCone}. 
-%
-Version 2.3 introduced a new build system (GNU autotools), a
-broader range of areas and tools to help navigate the ClusterSequence.
-%
-Version 2.4 included the new version 2.0 of SISCone, as well as
-plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone and a
-range of $e^+e^-$ algorithms, and also further tools to help
-investigate jet substructure.
-%
-It also added a wrapper to \fastjet 
-allowing one to run SISCone and some of the sequential recombination
-algorithms from Fortran programs.
-%
-In version 3.0 a PseudoJet knows (where relevant) about its
-underlying ClusterSequence, allowing one to write {\em e.g.}
-\ttt{jet.constituents()}, and can be associated with extra information
-beyond just a user index. This version also adds the D0-Run I cone as
-a new plugin and support for native jet algorithms to be run with
-$R>\pi/2$. It also brings the first of a series of \fastjet tools to
-help with advanced jet analyses, namely the Selector class.
-%
-The current implementation of the $pp$ sequential-recombination
-algorithms is restricted to 
-the so-called $\Delta R$ distance measure (recommended in
-\cite{RunII-jet-physics}), with a choice of recombination schemes. The
-$k_t$ algorithm has both exclusive \cite{ktexcl} and inclusive modes
-\cite{ktincl}, the latter currently being in more widespread use,
-though the exclusive mode may have physical advantages in certain cases.
 
 %% There are a range of variants possible for the above jet algorithms.
 %% For the $k_t$ jet algorithm, \fastjet implements the so-called $\Delta
@@ -1885,7 +1835,7 @@ can have a minor effect on the final jets and should make the algorithm
 correspond to the description of \cite{Seymour:2006vv}.
 
 The underlying code for this algorithm was taken from a google search
-for PxCone!~\cite{PxCone}
+for PxCone!~\cite{PxCone}. It is also described in ref.~\cite{Seymour:2006vv}.
 
 Note: this algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
 new experimental or theoretical analyses.
@@ -5208,6 +5158,108 @@ structural information and so may be a little more efficient.
 
 %======================================================================
 
+\section{FastJet history}
+\label{sec:fastjet-history}
+
+Version 1 of \fastjet provided the first fast implementation of the
+longitudinally invariant $k_t$ clustering~\cite{ktexcl,ktincl}, based
+on the factorisation of momentum and geometry in that algorithm's
+distance measure~\cite{fastjet}.
+
+
+Version 2.0 brought
+%
+the implementation of the inclusive Cambridge/Aachen algorithm
+\cite{CamOrig,CamWobisch} and of jet areas and background
+estimation~\cite{cs,CSSAreas}; other changes include a new
+interface,\footnote{The old one was retained through v2} and new
+algorithmic strategies that could provide a factor of two improvement
+in speed for events whose number $N$ of particles was $\sim 10^4$.
+%
+Choices of recombination schemes and plugins for external jet
+algorithms were new features of version 2.1.  
+%
+The initial set of plugins included SISCone~\cite{SISCone}, the CDF
+midpoint~\cite{RunII-jet-physics} and JetClu~\cite{Abe:1991ui} cones
+and PxCone.
+%
+The plugins helped provide a uniform interface to a range of different
+jet algorithms and made it possible to overlay \fastjet features such as areas
+onto the external jet algorithms.
+%
+Version 2.2 never made it beyond the beta-release stage, but
+introduced a number of the features that eventually were released in 2.3.
+%
+The final 2.3 release included the anti-$k_t$ algorithm~\cite{antikt},
+a broader set of area measures, improved access to background
+estimation, means to navigate the ClusterSequence and a new build system
+(GNU autotools).
+%
+% We anticipate that the \fastjet facilities may also be made available
+% at a later date with a more developed interface as part of the planned
+% multi-purpose \texttt{HepJet} jet-finding package~\cite{HepJet}.
+%
+% A plugin facility allows one to access external jet algorithms through
+% the \fastjet interface, and overlays \fastjet features such as areas
+% onto the external jet algorithms.
+% %
+% Plugins are included for the fortran PxCone code and for the CDF C++
+% JetClu and MidPoint cone jet algorithms (all infrared unsafe), as well as
+% the recent Seedless Infrared-Safe Cone (SISCone) jet
+% algorithm~\cite{SISCone}. 
+%
+% Version 2.3 consolidated the changes of 2.2beta, introduced a new build system (GNU autotools), a
+% broader range of areas and tools to help navigate the ClusterSequence.
+%
+Version 2.4 included the new version 2.0 of SISCone, as well as
+plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone and a
+range of $e^+e^-$ algorithms, and also further tools to help
+investigate jet substructure.
+%
+It also added a wrapper to \fastjet 
+allowing one to run SISCone and some of the sequential recombination
+algorithms from Fortran programs.
+
+A major practical change in version 3.0 was that PseudoJet acquired knowledge
+(where relevant) about its underlying ClusterSequence, allowing one to
+write {\em e.g.}  \ttt{jet.constituents()}
+%
+and it became possible to associate extra information with a
+PseudoJet beyond just a user index.
+%
+It  brought the first of a series of \fastjet tools to help with
+advanced jet analyses, namely the Selector class, filters, taggers and
+new background estimation classes.
+%
+Version~3 also added the D0-Run I cone plugin and support for native
+jet algorithms to be run with $R>\pi/2$.
+
+% 
+% %
+% Additionally it brought Selectors, revamped the background estimation
+% structure with the introduction of the JetMedianBackgroundEstimator
+% and GridMedianBackgroundEstimator classes;
+% %
+% it introduced Transformers, such as the Filter and a number of boosted
+% object taggers, the join(...) function and means to represent jets
+% with structure other than that originating from a ClusterSequence.
+% %
+
+%
+
+
+% 
+% The current implementation of the $pp$ sequential-recombination
+% algorithms is restricted to 
+% the so-called $\Delta R$ distance measure (recommended in
+% \cite{RunII-jet-physics}), with a choice of recombination schemes. The
+% $k_t$ algorithm has both exclusive \cite{ktexcl} and inclusive modes
+% \cite{ktincl}, the latter currently being in more widespread use,
+% though the exclusive mode may have physical advantages in certain cases.
+% 
+
+%======================================================================
+
 \begin{thebibliography}{99}
 
 \bibitem{fastjet}
@@ -5401,6 +5453,14 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   [arXiv:0802.1188 [hep-ph]].
   %%CITATION = ARXIV:0802.1188;%%
 
+\bibitem{Seymour:2006vv}
+  M.~H.~Seymour and C.~Tevlin,
+  ``A comparison of two different jet algorithms for the top mass
+  reconstruction at the LHC,''
+  JHEP {\bf 0611} (2006) 052
+  [arXiv:hep-ph/0609100].
+  %%CITATION = JHEPA,0611,052;%%
+
 
 \bibitem{cs}
   M.~Cacciari and G.~P.~Salam,
@@ -5473,6 +5533,14 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Boosted objects: A Probe of beyond the Standard Model physics,''
   Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1661.
   [arXiv:1012.5412 [hep-ph]].
+
+\bibitem{Abe:1991ui}
+  F.~Abe {\it et al.}  [CDF Collaboration],
+  ``The Topology of three jet events in $\bar{p}p$ collisions at $\sqrt{s} =
+  1.8$ TeV,''
+  Phys.\ Rev.\ D {\bf 45} (1992) 1448.
+  %%CITATION = PHRVA,D45,1448;%%
+
 \end{thebibliography}
 
 \end{document}
