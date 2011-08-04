@@ -3877,7 +3877,7 @@ selection of the kept subjets. Alternatively, the user can set a
 When this is done, the subtraction operation  will be performed using the
 \ttt{Subtractor}, independently of the value of \ttt{rho}.
 
-If the jet definition to be used to recluster the jet's constituents is to employ 
+If the jet definition to be used to recluster the jet's constituents is 
 the Cambridge/Aachen algorithm, two additional constructors are available:
 \begin{lstlisting}
   Filter(double Rfilt, Selector selector, double rho = 0.0);
@@ -3935,16 +3935,17 @@ and then applying \ttt{trimmer} similarly to \ttt{filter} above.
 Note that the jet being filtered must have
 constituents. Furthermore, if \ttt{rho} is non-zero or if a \ttt{Subtractor} is
 set, the input jet
-must be the result of a cluster sequence with area support and
+must come from a cluster sequence with area support and
 explicit ghosts. If any of these requirements fail, an exception will
 be thrown.
 
-\subsection{Taggers}
+\subsection{Boosted-object taggers}
 \label{sec:taggers}
 
 A number of the taggers developed to distinguish 2- or 3-pronged
-decays of massive objects from plain QCD jets naturally fall into the
-category of transformers.
+decays of massive objects from plain QCD jets (see the review
+\cite{Abdesselam:2010pt}) naturally fall into the category of
+transformers.
 %
 Typically they search for one or more hard branchings within the jet
 and then return the part of the jet that has been identified as
@@ -3973,13 +3974,13 @@ introduced in~\cite{Butterworth:2009qa}, \ttt{fastjet::CASubJetTagger}, are
 available.
 We refer the reader to the original papers for
 an extensive description of the taggers and shall only give a very
-brief overview in what follows of some of the implemented taggers.
+brief overview in what follows of the  taggers included in \fastjet.
 
 %......................................................................
 \subsubsection{The mass-drop tagger}
 
 Introduced in \cite{BDRS} for the purpose of identifying a boosted Higgs
-decaying into a $b\bar b$ pair, this is a 2-pronged tagger. It starts with a fat jet obtained
+decaying into a $b\bar b$ pair, this is a general 2-pronged tagger. It starts with a fat jet obtained
 with a Cambridge/Aachen algorithm (originally, $R=1.2$ was suggested
 for boosted Higgs tagging). Tagging then proceeds as follows:
 \begin{enumerate}
@@ -4102,7 +4103,7 @@ user's responsibility to verify that they are in a suitable range.
 Note further that  \ttt{JHTopTagger} does not derive directly from 
  from \ttt{Transformer}, but from the
 \ttt{fastjet::TopTaggerBase} class instead. This class (which itself derives
-from \ttt{Transformer}) has been provided in the intent of suggesting a common
+from \ttt{Transformer}) has been included to provide a proposed common
 interface for all the top taggers. In particular, \ttt{TopTaggerBase} provides
 (via the associated structure)
 \begin{lstlisting}
@@ -4112,14 +4113,18 @@ interface for all the top taggers. In particular, \ttt{TopTaggerBase} provides
 and standardizes the fact that the resulting top candidate is a \ttt{PseudoJet}
 made of these two pieces.
 
-The benefits of the choice of providing a base class for top taggers will of course be
-more evident when more than a single top tagger will have been implemented.
+The benefits of the base class for top taggers will of course be more
+evident once more than a single top tagger has been implemented.
 
 %......................................................................
 \subsubsection{The Cambridge/Aachen subjet tagger}
 
 The Cambridge/Aachen subjet
-tagger~\cite{Butterworth:2009qa}, a 3-pronged tagger, can be obtained through the include
+tagger~\cite{Butterworth:2009qa}, originally implemented in a
+3-pronged context,b is really a generic 2-body tagger, which can also be
+used recursively to obtained multi-prong tagging.
+%
+It can be obtained through the include
 \begin{lstlisting}
   #include "fastjet/tools/CASubjetTagger.hh"
 \end{lstlisting}
@@ -4132,7 +4137,7 @@ this manual.
 
 The $N$-subjettiness
 tagger~\cite{nsubtagger}, meant to identify a highly boosted color
-singlet particle decaying to $N$ partons, can be obtained through the include
+singlet particle decaying to $2$ partons, can be obtained through the include
 \begin{lstlisting}
   #include "fastjet/tools/NSubjettinessTagger.hh"s
 \end{lstlisting}
@@ -4860,14 +4865,23 @@ declared in the \ttt{fastjet/tools/Transformer.hh} header:
     virtual ~Transformer(){}
   };
 \end{lstlisting}
-It is essentially the same as that of the
-\ttt{FunctionOfPseudoJet<PseudoJet>} from which it derives (cf.\
-appendix~\ref{app:function-of-pj}).
+Relative to the \ttt{FunctionOfPseudoJet<PseudoJet>} (cf.\
+appendix~\ref{app:function-of-pj}) from which it derives, the
+\ttt{Transformer}'s main additional feature is that the jets resulting
+from the transformation are generally expected to have standard
+structural information, e.g.\ constituents, and will often have
+supplemental structural information, which the \ttt{StructureType}
+\ttt{typedef} helps access.
+% 
+% It is essentially the same as that of the
+% \ttt{FunctionOfPseudoJet<PseudoJet>} from which it derives (cf.\
+% appendix~\ref{app:function-of-pj}).
 %
-While the action of a \ttt{Transformer} is to be implemented in the
-\ttt{result(...)} member function,
+As for a \ttt{FunctionOfPseudoJet<PseudoJet>}, the action of a
+\ttt{Transformer} is to be implemented in the \ttt{result(...)} member
+function,
 %
-typically it will be accessed through the \ttt{operator()} function:
+though typically it will be used through the \ttt{operator()} function:
 \begin{lstlisting}
   /// just wraps result()
   PseudoJet operator()(const PseudoJet &pj) const {return result(pj);}
@@ -5427,6 +5441,11 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
 
+\bibitem{Abdesselam:2010pt}
+  A.~Abdesselam, E.~B.~Kuutmann, U.~Bitenc, G.~Brooijmans, J.~Butterworth, P.~Bruckman de Renstrom, D.~Buarque Franzosi, R.~Buckingham {\it et al.},
+  %``Boosted objects: A Probe of beyond the Standard Model physics,''
+  Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1661.
+  [arXiv:1012.5412 [hep-ph]].
 \end{thebibliography}
 
 \end{document}
