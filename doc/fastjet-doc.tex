@@ -252,7 +252,7 @@ For the impatient, the \fastjet package can be set up and run as follows.
  tar zxvf fastjet-X.Y.Z.tar.gz
  cd fastjet-X.Y.Z/
 \end{verbatim}
-(replacing of course \ttt{X.Y.Z} with the appropriate version number).
+(replacing \ttt{X.Y.Z} with the appropriate version number).
 
 \item Compile and install (choose your own preferred prefix), and when 
 you're done go back to the original directory
@@ -302,8 +302,7 @@ int main () {
                    << jets[i].rap() << " " << jets[i].phi() << endl;
     vector<PseudoJet> constituents = jets[i].constituents();
     for (unsigned j = 0; j < constituents.size(); j++) {
-      cout << "    constituent " << j << ": "<< constituents[j].perp() << " " 
-           << constituents[j].rap() << " " << constituents[j].phi() << endl; 
+      cout << "    constituent " << j << "'s pt: "<< constituents[j].perp() << endl;
     }
   }
 }
