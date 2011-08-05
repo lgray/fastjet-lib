@@ -229,7 +229,7 @@ fi
 
 dnl SISCone
 ACX_CHECK_PLUGIN(SISCone, siscone, SISCONE, yes,
-	         [CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lsiscone -lsiscone_spherical"
+	         [CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lsiscone_spherical -lsiscone"
                   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libsiscone.a \${installationdir}/lib/libsiscone_spherical.a"])
 AC_CONFIG_SUBDIRS(plugins/SISCone/siscone)
 

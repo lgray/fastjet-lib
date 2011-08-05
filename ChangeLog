@@ -1,3 +1,10 @@
+2011-08-05  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* configure.ac: 
+	  exchanged order of -lsiscone and -lsiscone_spherical in
+	  fastjet-config --libs (spherical first now), because the
+	  spherical one needs elements from the standard one.
+
 2011-08-04  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/Makefile.am: 
