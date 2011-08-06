@@ -1,9 +1,10 @@
 #!/bin/bash
 #
-# This is the base script for retreiving all information
-# regarding compiling and linking programs using FastJet
-# just use fastjet-config without arguments for usage
-# details
+# @configure_input@
+#
+# This is the base script for retrieving all information
+# regarding compiling and linking programs using FastJet.
+# Run ./fastjet-config without arguments for usage details
 #########################################################
 
 # the list of plugins is dynamic so we need the following
