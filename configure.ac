@@ -407,7 +407,11 @@ dnl echo "  Monolithic plugins lib     "$monolithic
 CONFIG_SUMMARY=""
 CONFIG_SUMMARY+="Configuration summary:\n"
 CONFIG_SUMMARY+="----------------------\n"
+if [[ "x${prefix}" == "xNONE" ]] ; then
+CONFIG_SUMMARY+="  Installation directory     /usr/local\n"
+else
 CONFIG_SUMMARY+="  Installation directory     "${prefix}"\n"
+fi
 CONFIG_SUMMARY+="  Shared libraries           "${enable_shared}"\n"
 CONFIG_SUMMARY+="  Static libraries           "${enable_static}"\n"
 CONFIG_SUMMARY+="  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"

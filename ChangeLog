@@ -1,6 +1,10 @@
 2011-08-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
+	  print "/usr/local" instead of "NONE" as installation dir
+	  if none is specified.
+
+	* configure.ac:
 	* fastjet-config.in:
 	  replaced "echo -e" with the more portable "printf"
 
