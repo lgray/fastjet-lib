@@ -398,6 +398,18 @@ class PseudoJet {
     return dynamic_cast<const L &>(* _user_info.get());
   }
 
+  /// returns true if the PseudoJet has user information
+  bool has_user_info() const{
+    return _user_info.get();
+  }
+
+  /// returns true if the PseudoJet has user information than can be
+  /// cast to the template argument type.
+  template<class L>
+  bool has_user_info() const{
+    return _user_info.get() && dynamic_cast<const L *>(_user_info.get());
+  }
+
   /// retrieve a pointer to the (const) user information
   const UserInfoBase * user_info_ptr() const{
     if (!_user_info()) return NULL;

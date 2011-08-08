@@ -4237,8 +4237,17 @@ provide the following member function for convenience:
 \end{lstlisting}
 which casts the extra info to type \ttt{L}.
 %
-If the cast fails, or the extra info has not been set, an error
-will be thrown.
+If the cast fails, or the user info has not been set, an error
+will be thrown.\footnote{%
+  For clustering with explicit ghosts, even if the particles being
+  clustered have user information, the ghosts will not. 
+  %
+  The user should take care therefore not to ask for user information
+  about the ghosts, e.g.\ using the \texttt{PseudoJet::is\_pure\_ghost()}
+  or \texttt{PseudoJet::has\_user\_info<L>()} calls.
+  %
+  The \texttt{SelectorIsPureGhost()} can also be used for this purpose.
+}
 
 The user may wonder why we have used shared pointers internally (i.e.\
 have ownership transferred to the \ttt{PseudoJet}) rather than normal

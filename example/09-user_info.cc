@@ -229,7 +229,7 @@ int main (int argc, char ** argv) {
       // of scope causing a double-free corruption error. Instead do
       // p2.user_info_shared_ptr() = p.user_info_shared_ptr();
       p.set_user_info(new MyUserInfo(pdg_id, vertex_number));
-      PseudoJet p2;
+      PseudoJet p2; // defined only to make the above documentation consistent!
 
       input_particles.push_back(p);
       continue;
