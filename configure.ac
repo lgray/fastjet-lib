@@ -421,7 +421,7 @@ dnl-------------------------------------------------------------------
 dnl finish with a nice message
 dnl-------------------------------------------------------------------
 AC_OUTPUT
-echo -e "$CONFIG_SUMMARY"
+printf "$CONFIG_SUMMARY"
 echo "---------------------------------------------------"
 echo "        IMPORTANT NOTICE TO FASTJET USERS          "
 echo "                                                   "

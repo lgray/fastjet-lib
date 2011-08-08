@@ -1,3 +1,9 @@
+2011-08-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	* fastjet-config.in:
+	  replaced "echo -e" with the more portable "printf"
+
 2011-08-08  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/TopTaggerBase.hh: 
