@@ -1,3 +1,9 @@
+2011-08-08  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/fastjet/tools/TopTaggerBase.hh: 
+	  added note about need to derive top tagger structures also from
+	  something related to PseudoJetStructureBase
+
 2011-08-05  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* configure.ac: 
