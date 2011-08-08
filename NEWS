@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
-Summary of changes from v3.0alpha3 -> v3.0beta1:  XXX July 2011
+Summary of changes from v3.0alpha3 -> v3.0beta1:  XX August 2011
 ================================================================
 New features
 - Reorganised background estimation to have a JetMedianBackgroundEstimator
@@ -10,7 +10,7 @@ New features
   [v3.0alpha3 behaviour is recovered by replacing BackgroundEstimator 
    -> JetMedianBackgroundEstimator, and using a new order of constructor arguments]
 - Added the GridJetPlugin
-- added a Johns Hopkins top tagger (JHTopTagger)
+- added a TopTaggerBase and a Johns Hopkins top tagger (JHTopTagger)
 - to JetDefinition added delete_plugin_when_unused(), 
   delete_recombiner_when_unused()
 - improved Filter (for area and recombiner support, also works with a subtractor)
@@ -23,12 +23,14 @@ Bug fixes and other changes
 - fixed bugs in Voronoi areas (as in v.2.4.4) 
 - fixed bugs in handling of empty areas in background estimator (as in 2.4.4)
 - renamed SelectorMXXX -> SelectorMassXXX
+- renamed NSubjettinessTagger -> RestFrameNSubjettinessTagger
 - exclusive_[sub]jets(njets) now consistenty throws an error if it
   can't deliver njets; exclusive_[sub]jets_upto(njets) gives up to njets
 - deprecated ClusterSequenceWithArea and ActiveAreaSpec
   (ClusterSequenceWithArea no longer available from
   ClusterSequenceArea.hh header)
-- deprecated RangeDefinition & CircularRange
+- deprecated RangeDefinition & CircularRange; use Selector instead
+- reorganisation of substantial parts of the manual
 
 
 ================================================================

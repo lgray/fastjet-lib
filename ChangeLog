@@ -1,3 +1,8 @@
+2011-08-08  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* plugins/GridJet/fastjet/GridJetPlugin.hh:
+	  expanded the documentation a little.
+
 2011-08-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:

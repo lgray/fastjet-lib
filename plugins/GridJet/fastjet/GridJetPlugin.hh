@@ -41,9 +41,13 @@ class ClusterSequence;
 
 //----------------------------------------------------------------------
 //
-/// GridJetPlugin is a plugin for fastjet (v3.0 upwards)
+/// GridJetPlugin is a plugin for fastjet (v3.0 upwards) that clusters
+/// particles such that all particles in a given cell of a
+/// rectangular rapidity-phi grid end up in a common "jet".
 ///
-
+/// This is not intended for use as a regular jet clustering algorithm, 
+/// but is rather provided for comparison purposes with the 
+/// GridMedianBackgroundEstimator (which is even faster).
 class GridJetPlugin : public JetDefinition::Plugin {
 public:
   /// Main constructor for the GridJetPlugin Plugin class.

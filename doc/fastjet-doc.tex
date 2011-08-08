@@ -2715,6 +2715,8 @@ studies suggest that grid spacings in the range $\delta y = \delta
 %%3.0a3 if the events are relatively sparse and smaller values if you expect
 %%3.0a3 your events to have many hard jets.
 
+\subsection{General Usage}
+
 The simplest workflow for background estimation is first, outside the
 event loop, to create a background estimator.
 %
@@ -2724,8 +2726,8 @@ For the jet-based method, one creates a
   #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
   // ...
   JetMedianBackgroundEstimator bge(const Selector & selector,
-                                    const JetDefinition & jet_def,
-                                    const AreaDefinition & area_def);
+                                   const JetDefinition & jet_def,
+                                   const AreaDefinition & area_def);
 \end{lstlisting}
 where the selector is used to indicate which jets are used for
 background estimation (for simple use cases, one just specifies a
@@ -2747,7 +2749,7 @@ For the grid based method one creates a
   #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
   // ...
   GridMedianBackgroundEstimator bge(double max_rapidity,
-                                     double requested_grid_spacing);
+                                    double requested_grid_spacing);
 \end{lstlisting}
 where, as already mentioned above, one can use a grid spacing $\delta y = \delta
 \phi \simeq 0.5-0.7$.
