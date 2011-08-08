@@ -343,6 +343,7 @@ case $found_query in
 	echo "This is FastJet version @PACKAGE_VERSION@"
 	echo ""
 	echo "Configuration invocation was"
+	echo ""
 	echo "  @CONFIGURE_INVOCATION@"
 	echo ""
 	printf "@CONFIG_SUMMARY@"
