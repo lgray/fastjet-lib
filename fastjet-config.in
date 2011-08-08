@@ -340,6 +340,11 @@ case $found_query in
 	echo @LIST_ALL_PLUGINS@ | sed -e "s/ /\\`printf '\n\r  '`/g"
 	;;
     config)
+	echo "This is FastJet version @PACKAGE_VERSION@"
+	echo ""
+	echo "Configuration invocation was"
+	echo "  @CONFIGURE_INVOCATION@"
+	echo ""
 	printf "@CONFIG_SUMMARY@"
 	;;
 esac

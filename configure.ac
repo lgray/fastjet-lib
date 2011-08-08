@@ -418,8 +418,11 @@ CONFIG_SUMMARY+="  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"
 CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
 AC_PLUGIN_SUMMARY([yes])
 CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
-
 AC_SUBST(CONFIG_SUMMARY)
+
+
+CONFIGURE_INVOCATION=`printf "$0 $ac_configure_args" | sed s/\'//g`
+AC_SUBST(CONFIGURE_INVOCATION)
 
 dnl-------------------------------------------------------------------
 dnl finish with a nice message

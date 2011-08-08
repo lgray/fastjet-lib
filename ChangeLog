@@ -11,7 +11,9 @@
 
 	* configure.ac:
 	* fastjet-config.in:
-	  replaced "echo -e" with the more portable "printf"
+	  . replaced "echo -e" with the more portable "printf"
+	  . added the configuration invocation arguments to the summary
+	    printted for fastjet-config --config
 
 2011-08-08  Gavin Salam  <salam@lpthe.jussieu.fr>
 
