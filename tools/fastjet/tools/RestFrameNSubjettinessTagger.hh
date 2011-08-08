@@ -98,7 +98,8 @@ class RestFrameNSubjettinessTaggerStructure;
 ///  - the 2 subjets are kept as pieces if some substructure is found,
 ///    otherwise a single 0-momentum piece
 ///  - the tau2 and maximal cos(theta_s) values computed during the
-///    tagging
+///    tagging can be obtained via the resulting jet's structure_of<...>() 
+///    function
 ///
 class RestFrameNSubjettinessTagger : public Transformer{
 public:
