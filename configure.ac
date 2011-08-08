@@ -421,7 +421,7 @@ CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
 AC_SUBST(CONFIG_SUMMARY)
 
 
-CONFIGURE_INVOCATION=`printf "$0 $ac_configure_args" | sed s/\'//g`
+CONFIGURE_INVOCATION="$0 $ac_configure_args"
 AC_SUBST(CONFIGURE_INVOCATION)
 
 dnl-------------------------------------------------------------------
