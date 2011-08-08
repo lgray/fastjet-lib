@@ -4246,7 +4246,7 @@ pointers.
 %
 An example use case where the difference is important is if, for
 example, one wishes to write a \ttt{Recombiner} that sets the
-\ttt{user\_info} in the recombined \PJ.. 
+\ttt{user\_info} in the recombined \PJ.
 %
 Since this is likely to be new information, the \ttt{Recombiner} will
 have to allocate some memory for it. 
@@ -4273,8 +4273,8 @@ The shared pointer type in \fastjet is a template class called
 It behaves almost identically to the \ttt{C++0x} \ttt{shared\_ptr}.\footnote{
 %
 Internally it has been designed somewhat differently, in order
-to limit the memory footprint of the PseudoJet that contains it. One
-consequence of this is that dynamic casts of SharedPtr's are not
+to limit the memory footprint of the \PJ that contains it. One
+consequence of this is that dynamic casts of \ttt{SharedPtr}'s are not
 supported.}
 %
 The end-user should not usually need to manipulate the
@@ -4328,7 +4328,7 @@ and later access the PDG id through the function
 \midrule                       
 \ttt{has\_parents(...)}
                      && \throws & from CS & \throws & from CS & \throws  & \throws \\ 
-\ttt{has\_child(..)} && \throws & from CS & \throws & from CS & \throws  & \throws \\ 
+\ttt{has\_child(...)}&& \throws & from CS & \throws & from CS & \throws  & \throws \\ 
 \ttt{contains(...)}  && \throws & from CS & \throws & from CS & \throws  & \throws \\ 
 \bottomrule
 \end{tabular}
@@ -4371,7 +4371,7 @@ the jet is obtained from a \ttt{ClusterSequenceAreaBase} or is a
 composite jet made from such jets. All other area calls
 (\ttt{validated\_csab()}, \ttt{area()}, \ttt{area\_error()},
 \ttt{area\_4vector()}) will return the information from the
-ClusterSequence (or the pieces in case of a composite jet) and throw
+\ttt{ClusterSequence} (or the pieces in case of a composite jet) and throw
 an error if the jet is not associated with a
 \ttt{ClusterSequenceAreaBase}.
 
@@ -4730,7 +4730,7 @@ SISCone in section~\ref{sec:siscone-plugin}.
 \label{sec:new-seq-rec}
 
 To enable users to more easily build plugins for new sequential
-recombination algorithms, fastjet also provides a class \verb|NNH|,
+recombination algorithms, \fastjet also provides a class \verb|NNH|,
 which provides users with access to an implementation of the
 nearest-neighbour heuristic for establishing and maintaining
 information about the closest pair of objects in a dynamic set of
@@ -4748,7 +4748,7 @@ It underlies the implementations of the Jade and $\ee$ Cambridge
 plugins.
 %
 The interested user should consult those codes for more information,
-as well as the header for the NNH class.
+as well as the header for the \verb|NNH| class.
 
 
 
