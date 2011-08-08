@@ -4259,7 +4259,7 @@ In contrast, with a shared pointer the memory is handled automatically.\footnote
   The user may also wonder why we didn't simply write a templated
   version of \PJ in order to contain extra information.
   % 
-  The answer here is that to introduce a templated \PJ would then imply
+  The answer here is that to introduce a templated \PJ would imply
   that every other class in \fastjet should then also be templated. 
 }
 
@@ -4813,11 +4813,14 @@ two \ttt{SelectorWorker} functions need to be overloaded:
   virtual std::string description() const {return "missing description";}
 \end{lstlisting}
 For information on how to implement more advanced workers (for example
-workers that do not apply jet-by-jet, or that are relocatable), users
+workers that do not apply jet-by-jet, or that take a reference), users
 may wish to examine the extensive in-code documentation of
 \ttt{SelectorWorker}, the implementation of the existing workers
 and/or consult the authors.
-
+%
+A point to be aware of in the case of constructors that take a
+reference is the need to implement the \ttt{SelectorWorker::copy()}
+function.
 
 %......................................................................
 \subsection{User-defined transformers}
@@ -4964,7 +4967,7 @@ and then replace the last few lines of the
 
   // and then set the structure's additional elements
   SimpleFilterStructure * structure = 
-        	    dynamic_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
+        	    static_cast<SimpleFilterStructure *>(result.structure_non_const_ptr());
   structure->_rejected = rejected_subjets;
   return result;
 \end{lstlisting}
