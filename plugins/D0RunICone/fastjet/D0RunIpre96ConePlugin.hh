@@ -42,7 +42,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// @ingroup plugins
 /// \class D0RunIpre96ConePlugin
 ///
-/// A plugin for fastjet (v2.4 upwards) that provides an interface to
+/// A plugin for fastjet (v3.0 upwards) that provides an interface to
 /// the pre 1996 D0 version of Run-I cone algorithm
 ///
 /// The D0 code has been taken from Lars Sonnenschein's web-space
