@@ -60,16 +60,16 @@ checklist for 3.0beta1 (make a copy before editing!)
 
 3.0beta1  ensure NEWS is up to date (and has the correct release date!)
 
-X.Y.Z  make sure siscone points to a tag, not trunk
+3.0beta1  make sure siscone points to a tag, not trunk
        cd ../plugins/SISCone; svn propedit svn:externals .; svn up
 
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0beta1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-X.Y.Z  make check 
+3.0beta1  make check 
 
-X.Y.Z  make distcheck
+3.0beta1  make distcheck
 
-X.Y.Z  make sure it's committed
+3.0beta1  make sure it's committed
 
 X.Y.Z  rerun the nightly check
 
