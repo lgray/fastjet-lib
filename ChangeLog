@@ -1,3 +1,17 @@
+2011-08-09  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* doc/fastjet-doc.tex:
+	* Doxyfile:
+	* Doxyfile-devel:
+	  set the version number to 3.0beta1 in preparation of the release
+
+2011-08-09  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* NEWS:
+	  prepared the NEWS for the release of FastJet-3.0beta1
+
 2011-08-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* CHECKLIST:
