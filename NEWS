@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
-Summary of changes from v2.4 -> v3.0beta1:  09 August 2011
+Summary of changes from v2.4 -> v3.0beta1:  10 August 2011
 ================================================================
 
 FastJet 3.0beta1 includes the majority of the features expected for
@@ -69,13 +69,13 @@ the 3.0 series:
 
 
 ================================================================
-Summary of changes from v3.0alpha3 -> v3.0beta1:  09 August 2011
+Summary of changes from v3.0alpha3 -> v3.0beta1:  10 August 2011
 ================================================================
 New features
 - Reorganised background estimation to have a JetMedianBackgroundEstimator
   and a GridMedianBackgroundEstimator (derived from BackgroundEstimatorBase)
-  [v3.0alpha3 behaviour is recovered by replacing BackgroundEstimator 
-   -> JetMedianBackgroundEstimator, and using a new order of constructor arguments]
+  [v3.0alpha3 programs should replace BackgroundEstimator 
+   -> JetMedianBackgroundEstimator, and use a new order of constructor arguments]
 - Added the GridJetPlugin
 - added a TopTaggerBase and a Johns Hopkins top tagger (JHTopTagger)
 - to JetDefinition added delete_plugin_when_unused(), 
