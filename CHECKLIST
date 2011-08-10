@@ -13,7 +13,7 @@ checklist for X.Y.Z (make a copy before editing!)
 X.Y.Z  make sure version number in configure.ac is correct
 
 X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-X.Y.Z  update doxygen (including the devel) version number + check dirs are declared for new plugins
+X.Y.Z  update doxygen (including the devel) version number + check dirs are declared for new plugins + check in the class list that all classes are prefixed by 'fastjet::'
 X.Y.Z  version number in manual
 
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
@@ -50,44 +50,44 @@ X.Y.Z  reset the SISCone link to the trunk
 X.Y.Z  move the version number to X.Y.(Z+1)-devel
 
 ----------------------------------------------------------------------
-checklist for 3.0beta1 (make a copy before editing!)
+checklist for 3.0beta1
 -----------------------
-3.0beta1  make sure version number in configure.ac is correct
+3.0b1  make sure version number in configure.ac is correct
 
-3.0beta1  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-3.0beta1  update doxygen (including the devel) version number + check dirs are declared for new plugins
-3.0beta1  version number in manual
+3.0b1  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+3.0b1  update doxygen (including the devel) version number + check dirs are declared for new plugins
+3.0b1  version number in manual
 
-3.0beta1  ensure NEWS is up to date (and has the correct release date!)
+3.0b1  ensure NEWS is up to date (and has the correct release date!)
 
-3.0beta1  make sure siscone points to a tag, not trunk
+3.0b1  make sure siscone points to a tag, not trunk
        cd ../plugins/SISCone; svn propedit svn:externals .; svn up
 
-3.0beta1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0b1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-3.0beta1  make check 
+3.0b1  make check 
 
-3.0beta1  make distcheck
+3.0b1  make distcheck
 
-3.0beta1  make sure it's committed
+3.0b1  make sure it's committed
 
-X.Y.Z  rerun the nightly check
+3.0b1  rerun the nightly check
 
-X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
-X.Y.Z  update main web page & menu in devel area
+3.0b1  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+3.0b1  compile manual
+3.0b1  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+3.0b1  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+3.0b1  update main web page & menu in devel area
 
 3.0b1  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
-X.Y.Z  update main web-page area
+3.0b1  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.0b1  make sure it's committed with the CHECKLIST
 
-X.Y.Z  check everything is OK
+3.0b1  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
 X.Y.Z  move the version number to X.Y.(Z+1)-devel
 
