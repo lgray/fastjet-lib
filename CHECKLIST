@@ -79,7 +79,7 @@ X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastje
 X.Y.Z  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
 X.Y.Z  update main web page & menu in devel area
 
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+3.0b1  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
 X.Y.Z  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
