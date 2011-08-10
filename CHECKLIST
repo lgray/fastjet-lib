@@ -89,7 +89,7 @@ X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
 
 3.0b1  check everything is OK
 3.0b1  reset the SISCone link to the trunk
-X.Y.Z  move the version number to X.Y.(Z+1)-devel
+3.0b1  move the version number to X.Y.(Z+1)-devel
 
 
 ----------------------------------------------------------------------
