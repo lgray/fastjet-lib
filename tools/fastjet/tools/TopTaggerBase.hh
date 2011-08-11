@@ -31,13 +31,17 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
+#include <fastjet/internal/base.hh>
 #include <fastjet/tools/Transformer.hh>
 
 FASTJET_BEGIN_NAMESPACE
 
+class TopTaggerBase;
 class TopTaggerBaseStructure;
 
 //----------------------------------------------------------------------
+/// @ingroup tools_taggers
+/// \class TopTaggerBase
 /// A base class that provides a common interface for top taggers
 /// that are able to return a W (in addition to the top itself).
 ///
@@ -78,6 +82,8 @@ protected:
 
 
 //----------------------------------------------------------------------
+/// @ingroup tools_taggers
+/// \class TopTaggerBaseStructure
 /// class that specifies the structure common to all top taggers
 ///
 /// Note that this specifies only the W, non_W part of the

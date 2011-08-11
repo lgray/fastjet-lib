@@ -1,3 +1,8 @@
+2011-08-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/TopTaggerBase.hh:
+	  fixed some doxygen comments
+
 2011-08-10  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
