@@ -57,7 +57,7 @@ public:
   /// virtual dummy dtor
   virtual ~Error() {}
 
-  /// the error ,essage
+  /// the error message
   std::string message() const {return _message;}
 
   /// controls whether the error message (and the backtrace) is

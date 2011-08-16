@@ -32,7 +32,7 @@
 #define __FASTJET_MASS_DROP_TAGGER_HH__
 
 #include <fastjet/tools/Transformer.hh>
-#include <fastjet/internal/LimitedWarning.hh>
+#include <fastjet/LimitedWarning.hh>
 #include <fastjet/CompositeJetStructure.hh>
 
 FASTJET_BEGIN_NAMESPACE

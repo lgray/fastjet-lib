@@ -33,7 +33,7 @@
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/Error.hh"
-#include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/LimitedWarning.hh"
 #include<sstream>
 #include<iostream>
 #include<string>

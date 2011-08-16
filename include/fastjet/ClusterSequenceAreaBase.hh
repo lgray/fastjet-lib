@@ -32,7 +32,7 @@
 #define __FASTJET_CLUSTERSEQUENCEAREABASE_HH__
 
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/LimitedWarning.hh"
 #include "fastjet/Selector.hh"
 
 FASTJET_BEGIN_NAMESPACE

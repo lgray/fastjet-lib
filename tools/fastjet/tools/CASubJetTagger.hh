@@ -34,7 +34,7 @@
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/WrappedStructure.hh>
 #include <fastjet/tools/Transformer.hh>
-#include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/LimitedWarning.hh"
 
 FASTJET_BEGIN_NAMESPACE
 

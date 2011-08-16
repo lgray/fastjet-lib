@@ -1,3 +1,6 @@
+#ifndef __FASTJET_INTERNALLIMITEDWARNING_HH__
+#define __FASTJET_INTERNALLIMITEDWARNING_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -29,47 +32,13 @@
 //ENDHEADER
 
 
-#ifndef __FASTJET_LIMITEDWARNING_HH__
-#define __FASTJET_LIMITEDWARNING_HH__
 
-#include "fastjet/internal/base.hh"
-#include <iostream>
-#include <string>
+// we have moved LimitedWarning.hh one directory up; still allow
+// old form of access
+#include "fastjet/LimitedWarning.hh"
 
-FASTJET_BEGIN_NAMESPACE
+#warning *** You have included fastjet/internal/LimitedWarning.hh. \
+Access to LimitedWarning through this header is deprecated as of FJ3.0. \
+Please instead use fastjet/LimitedWarning.hh
 
-/// \if internal_doc
-/// @ingroup internal
-/// \class LimitedWarning
-/// class to provide facilities for giving warnings up to some maximum
-/// number of times
-/// \endif
-class LimitedWarning {
-public:
-  
-  /// constructor that provides a default maximum number of warnings
-  LimitedWarning() : _max_warn(_max_warn_default), _n_warn_so_far(0) {}
-
-  /// constructor that provides a used-set max number of warnings
-  LimitedWarning(int max_warn) : _max_warn(max_warn), _n_warn_so_far(0) {}
-
-  /// output a warning to ostr
-  void warn(const std::string & warning, std::ostream & ostr = std::cerr) {
-    if (_n_warn_so_far < _max_warn) {
-      ostr << "WARNING: ";
-      ostr << warning;
-      _n_warn_so_far++;
-      if (_n_warn_so_far == _max_warn) ostr << " (LAST SUCH WARNING)";
-      ostr << std::endl;
-    }
-  }
-
-private:
-  int _max_warn, _n_warn_so_far;
-  static const int _max_warn_default = 5;
-  
-};
-
-FASTJET_END_NAMESPACE
-
-#endif // __FASTJET_LIMITEDWARNING_HH__
+#endif // __FASTJET_INTERNALLIMITEDWARNING_HH__

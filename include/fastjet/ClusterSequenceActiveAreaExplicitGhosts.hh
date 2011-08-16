@@ -34,7 +34,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequenceAreaBase.hh"
 #include "fastjet/GhostedAreaSpec.hh"
-#include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/LimitedWarning.hh"
 #include<iostream>
 #include<vector>
 #include <cstdio>

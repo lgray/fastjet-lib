@@ -45,7 +45,7 @@
 #include "fastjet/Error.hh"
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/SharedPtr.hh"
-#include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/LimitedWarning.hh"
 #include "fastjet/FunctionOfPseudoJet.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 

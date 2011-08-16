@@ -1,3 +1,20 @@
+2011-08-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* include/fastjet/internal/LimitedWarning.hh:
+	* include/fastjet/LimitedWarning.hh: *** ADDED ***
+	* src/LimitedWarning.cc:             *** ADDED ***
+	  moved LimitedWarning from internal to standard include space;
+	  added two static functions:
+	  - LimitedWarning::set_default_stream(...)
+	  - LimitedWarning::summary(...) // for summary of all warnings issued
+          Also moved the class into the error_handling part of doxygen
+
+	* <many other classes>
+	  changed them to access limited warning through the new location
+	
+	* include/fastjet/Error.hh (Error):
+	  typo in comments
+
 2011-08-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/TopTaggerBase.hh:

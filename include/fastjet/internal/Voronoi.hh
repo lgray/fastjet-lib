@@ -57,7 +57,7 @@
 * PURPOSE.
 */
 
-#include "fastjet/internal/LimitedWarning.hh"
+#include "fastjet/LimitedWarning.hh"
 #include <vector>
 #include <math.h>
 #include <stdlib.h>

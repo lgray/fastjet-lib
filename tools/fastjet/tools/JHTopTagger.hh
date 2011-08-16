@@ -34,7 +34,7 @@
 
 #include <fastjet/tools/TopTaggerBase.hh>
 #include <fastjet/CompositeJetStructure.hh>
-#include <fastjet/internal/LimitedWarning.hh>
+#include <fastjet/LimitedWarning.hh>
 
 FASTJET_BEGIN_NAMESPACE
 
