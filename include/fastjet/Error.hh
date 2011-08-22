@@ -1,3 +1,6 @@
+#ifndef __FASTJET_ERROR_HH__
+#define __FASTJET_ERROR_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -28,11 +31,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-
-
-#ifndef __FASTJET_ERROR_HH__
-#define __FASTJET_ERROR_HH__
-
 #include<iostream>
 #include<string>
 #include "fastjet/internal/base.hh"
@@ -41,7 +39,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup error_handling
 /// \class Error
-/// base class corresponding to errors that will be thrown by fastjet
+/// base class corresponding to errors that can be thrown by FastJet
 class Error {
 public:
   /// default constructors
@@ -49,9 +47,9 @@ public:
 
   /// ctor from an error message
   ///   \param message to be printed
-  /// Note: by default, in addition to the error message, the
-  /// backtrace will be displayed (showing the last few calls before
-  /// the error)
+  /// Note: in addition to the error message, one can choose to print the
+  /// backtrace (showing the last few calls before the error) by 
+  /// using set_print_backtrace(true). The default is "false".
   Error(const std::string & message);
 
   /// virtual dummy dtor
@@ -60,18 +58,25 @@ public:
   /// the error message
   std::string message() const {return _message;}
 
-  /// controls whether the error message (and the backtrace) is
-  /// printed out or not
+  /// controls whether the error message (and the backtrace, if its printing is enabled) 
+  /// is printed out or not
   static void set_print_errors(bool print_errors) {_print_errors = print_errors;}
 
-  /// controls whether the error message (and the backtrace) is
-  /// printed out or not
-  static void set_backtrace(bool enabled) {_print_backtrace = enabled;}
+  /// controls whether the backtrace is printed out with the error message or not.
+  /// The default is "false".
+  static void set_print_backtrace(bool enabled) {_print_backtrace = enabled;}
+
+  /// sets the default output stream for all errors (by default
+  /// NULL, indicating that errors go to cerr)
+  static void set_default_stream(std::ostream * ostr) {
+    _default_ostr = ostr;
+  }
 
 private:
-  std::string _message;         ///< error message
-  static bool _print_errors;    ///< do we print anything?
-  static bool _print_backtrace; ///< do we show the backtrace?
+  std::string _message;                ///< error message
+  static bool _print_errors;           ///< do we print anything?
+  static bool _print_backtrace;        ///< do we print the backtrace?
+  static std::ostream * _default_ostr; ///< the output stream (cerr if not set)
 };
 
 

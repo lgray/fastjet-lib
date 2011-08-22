@@ -1,4 +1,4 @@
-2011-08-16  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+2011-08-22  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
 	* plugins/D0RunICone/fastjet/D0RunIBaseConePlugin.hh:
 	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
@@ -6,7 +6,23 @@
 	  put "v3.0 or later" in all three files. Perhaps not necessary
 	  for the base class, but seems sensible to have the same everywhere. 
 	  Also modified slightly the doxygen comments.
-	  	  
+	
+	* include/fastjet/Error.hh
+	  renamed set_backtrace() -> set_print_backtrace(), fixed
+	  its doxygen comment
+	  Reworked some doxygen comments, also to reflect the fact 
+	  that printing of backtrace is "off" by default
+
+	* include/fastjet/Error.hh
+	* include/fastjet/Error.cc
+	  added set_default_stream() for a user-set output stream
+	  for errors
+
+	* include/fastjet/LimitedWarning.cc
+	  added ostr.flush() in warn(), so as to get something written
+	  to a file even in the event of the program aborting because of an
+	  error
+	    	  
 2011-08-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* include/fastjet/internal/LimitedWarning.hh:

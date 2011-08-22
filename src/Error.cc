@@ -44,6 +44,7 @@ using namespace std;
 
 bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
+ostream * Error::_default_ostr = 0;
 
 Error::Error(const std::string & message) {
   _message = message; 
@@ -68,7 +69,13 @@ Error::Error(const std::string & message) {
     }
 #endif
 
-    std::cerr << oss.str();
+    // output error message either to cerr or to the user-set stream
+    if (_default_ostr) { *_default_ostr << oss.str();
+                          // get something written to file even 
+			  // if the program aborts
+                          _default_ostr->flush(); }
+    else               { std::cerr << oss.str(); }
+    
   }
 }
 

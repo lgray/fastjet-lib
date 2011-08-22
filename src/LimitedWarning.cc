@@ -63,6 +63,7 @@ void LimitedWarning::warn(const std::string & warning, std::ostream & ostr) {
     // user can easily insert their own printout, e.g. event number
     // before the warning string).
     ostr << warnstr.str();
+    ostr.flush(); // get something written to file even if the program aborts
   }
 
   // maintain the count, but do not allow overflow
