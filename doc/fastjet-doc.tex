@@ -5179,6 +5179,69 @@ structural information and so may be a little more efficient.
 
 %======================================================================
 
+\section{Error handling}
+\label{sec:error-handling}
+
+\fastjet provides warning and error messages through the classes
+\ttt{fastjet::LimitedWarning} and \ttt{fastjet::Error} respectively.
+Both are handled internally, and a user does not normally need to interact with them.
+They do, however, provide some customization facilities, especially in terms of
+redirection of their output.
+
+Each different kind of warning is written out a maximum number of times  (the current
+default is 5) before its output is suppressed. The program is allowed to continue. It is
+possible to obtain at the end of the run (or whenever one wishes to do so) a summary of
+all the warnings, both explicit or supressed, by defining and using a
+\ttt{LimitedWarning}  object as follows:
+\begin{lstlisting}
+  #include "fastjet/LimitedWarning.hh"
+  // ...
+  LimitedWarning warnings;
+  // ...
+  cout << warnings.summary() << endl;
+\end{lstlisting}
+
+The throwing of an \ttt{Error} aborts the program. One can use
+\begin{lstlisting}
+  /// controls whether the error message (and the backtrace, if its printing is enabled) 
+  /// is printed out or not
+  static void set_print_errors(bool print_errors);
+
+  /// controls whether the backtrace is printed out with the error message or not.
+  /// The default is "false".
+  static void set_print_backtrace(bool enabled);
+\end{lstlisting}
+to control whether an error message is printed (default = \ttt{true}) and whether a full
+backtrace is also given (default = \ttt{false}).
+
+The output of both \ttt{LimitedWarning} and \ttt{Error}, which by default
+goes to \ttt{std::cerr}, can be redirected to a file using the 
+\ttt{set\_default\_stream(std::ostream * ostr)} function. For instance,
+\begin{lstlisting}
+  #include "fastjet/LimitedWarning.hh"
+  #include "fastjet/Error.hh"
+  #include <iostream>
+  #include <fstream>
+  // ...
+  ofstream myerr("warnings-and-errors.txt");
+  LimitedWarning warnings;
+  warnings.set_default_stream(&myerr);
+  Error errors;
+  errors.set_default_stream(&myerr);
+  errors.set_print_backtrace(true);
+  // ...
+  cout << warnings.summary() << endl;
+ 
+\end{lstlisting}
+will send the output of both classes to the file \ttt{warnings-and-errors.txt} (as well
+as provide the backtrace of errors).
+Note that the output of \ttt{warnings.summary()} still goes to standard output, and will
+only be present if the program has not aborted earlier due to an error.
+
+
+
+%======================================================================
+
 \section{FastJet history}
 \label{sec:fastjet-history}
 
