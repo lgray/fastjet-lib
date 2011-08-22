@@ -1,3 +1,12 @@
+2011-08-16  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+	* plugins/D0RunICone/fastjet/D0RunIBaseConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh:
+	  put "v3.0 or later" in all three files. Perhaps not necessary
+	  for the base class, but seems sensible to have the same everywhere. 
+	  Also modified slightly the doxygen comments.
+	  	  
 2011-08-16  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* include/fastjet/internal/LimitedWarning.hh:

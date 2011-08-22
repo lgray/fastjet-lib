@@ -42,14 +42,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// @ingroup internal
 /// \class D0RunIBaseConePlugin
 ///
-/// D0RunIConePlugin is a plugin for fastjet (v2.4 upwards) that
-/// provides an interface to the D0 version of Run-I cone algorithm
+/// D0RunIBaseConePlugin is base class for a plugin for FastJet (v3.0 or later) 
+/// that provides an interface to the D0 version of Run-I cone algorithm
 ///
 /// Note that this base class is purely virtual and thus needs to be
 /// overloaded. In practice this means that you should use one of
 /// D0RunIConePlugin or D0RunIpre96ConePlugin.
 ///
-/// The D0 code has been taken from Lars Sonnenschein's web-space
+/// The D0 code has been obtained from Lars Sonnenschein's web-space
 /// http://www-d0.fnal.gov/~sonne/D0RunIcone.tgz
 ///
 /// The version of the D0 Run I code distributed here has been
