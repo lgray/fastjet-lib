@@ -1,3 +1,13 @@
+2011-08-29  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/LimitedWarning.cc (LimitedWarning::warn): 
+	* include/fastjet/LimitedWarning.hh (class LimitedWarning): 
+	  bug fix: previously when the max warning count was set to zero, 
+	  there would be one summary entry for each call to the warning. 
+	  Fixed this by zeroing the summary pointer in the constructor and
+	  using its zero status to decide whether to allocate it or not.
+
+
 2011-08-22  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
 	* plugins/D0RunICone/fastjet/D0RunIBaseConePlugin.hh:

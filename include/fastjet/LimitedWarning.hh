@@ -48,10 +48,10 @@ class LimitedWarning {
 public:
   
   /// constructor that provides a default maximum number of warnings
-  LimitedWarning() : _max_warn(_max_warn_default), _n_warn_so_far(0) {}
+  LimitedWarning() : _max_warn(_max_warn_default), _n_warn_so_far(0), _this_warning_summary(0) {}
 
   /// constructor that provides a user-set max number of warnings
-  LimitedWarning(int max_warn) : _max_warn(max_warn), _n_warn_so_far(0) {}
+  LimitedWarning(int max_warn) : _max_warn(max_warn), _n_warn_so_far(0), _this_warning_summary(0) {}
 
   /// outputs a warning to standard error (or the user's default
   /// warning stream if set)

@@ -46,7 +46,7 @@ void LimitedWarning::warn(const std::string & warning) {
 }
 
 void LimitedWarning::warn(const std::string & warning, std::ostream & ostr) {
-  if (_n_warn_so_far == 0) {
+  if (_this_warning_summary == 0) {
     // prepare the information for the summary
     _global_warnings_summary.push_back(Summary(warning, 0));
     _this_warning_summary = & (_global_warnings_summary.back());
