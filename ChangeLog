@@ -1,3 +1,26 @@
+2011-08-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* fortran_wrapper/fastjetfortran.cc: 
+	  replaced RangeDefinition with a Selector (is more uptodate and
+	  avoids a deprecated warning).
+
+	* fortran_wrapper/Makefile.alt: 
+	  changed FC and F77 to refer to gfortran without a path (to avoid
+	  risk of picking up one that differs from the user's default choice)
+
+	* include/fastjet/LimitedWarning.hh: 
+	* src/LimitedWarning.cc: 
+	  added set_default_max_warn(...) static member function;
+	  changed interface to warn(warning, ostr) so that ostr must
+	  now be a pointer; if it's null there is no output; 
+	  similarly if the default stream is null there's no output
+	  (unless a different stream is requested in an individual warn call).
+
+	* src/Error.cc: 
+	* include/fastjet/Error.hh: 
+	  changed meaning of a null default stream choice, so that it now
+	  suppressed output (as with change to LimitedWarning).
+
 2011-08-29  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/LimitedWarning.cc (LimitedWarning::warn): 

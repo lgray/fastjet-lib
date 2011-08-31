@@ -31,7 +31,7 @@
 #include <iostream>
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
-#include "fastjet/RangeDefinition.hh"
+#include "fastjet/Selector.hh"
 #include "fastjet/SISConePlugin.hh"
 
 using namespace std;
@@ -428,7 +428,7 @@ void fastjetglobalrhoandsigma_(const double & rapmin, const double & rapmax,
                     dynamic_cast<const ClusterSequenceAreaBase *>(cs.get());
   if (csab != 0) {
       // we have areas and can use csab to access all the area-related info
-      RangeDefinition range(rapmin,rapmax,phimin,phimax);
+    Selector range =  SelectorRapRange(rapmin,rapmax) && SelectorPhiRange(phimin,phimax);
       bool use_area_4vector = false;
       csab->get_median_rho_and_sigma(range,use_area_4vector,rho,sigma,meanarea);
   } else {

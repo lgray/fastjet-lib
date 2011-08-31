@@ -36,16 +36,17 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE
 
-ostream * LimitedWarning::_default_ostr = 0;
+ostream * LimitedWarning::_default_ostr = &cerr;
 std::list< LimitedWarning::Summary > LimitedWarning::_global_warnings_summary;
+int LimitedWarning::_max_warn_default = 5;
+
 
 /// output a warning to ostr
 void LimitedWarning::warn(const std::string & warning) {
-  if (_default_ostr) warn(warning, *_default_ostr);
-  else               warn(warning, std::cerr);
+  warn(warning, _default_ostr);
 }
 
-void LimitedWarning::warn(const std::string & warning, std::ostream & ostr) {
+void LimitedWarning::warn(const std::string & warning, std::ostream * ostr) {
   if (_this_warning_summary == 0) {
     // prepare the information for the summary
     _global_warnings_summary.push_back(Summary(warning, 0));
@@ -62,8 +63,10 @@ void LimitedWarning::warn(const std::string & warning, std::ostream & ostr) {
     // arrange for the whole warning to be output in one go (that way
     // user can easily insert their own printout, e.g. event number
     // before the warning string).
-    ostr << warnstr.str();
-    ostr.flush(); // get something written to file even if the program aborts
+    if (ostr) {
+      (*ostr) << warnstr.str();
+      ostr->flush(); // get something written to file even if the program aborts
+    }
   }
 
   // maintain the count, but do not allow overflow

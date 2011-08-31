@@ -5237,7 +5237,9 @@ goes to \ttt{std::cerr}, can be redirected to a file using the
 \end{lstlisting}
 will send the output of both classes to the file
 \ttt{warnings-and-errors.txt} (as well as provide the backtrace of
-errors).  Note that the output of \ttt{LimitedWarning::summary()}
+errors).  
+%
+Note that the output of \ttt{LimitedWarning::summary()}
 still goes to standard output, and will only be present if the program
 did not abort earlier due to an error.
 

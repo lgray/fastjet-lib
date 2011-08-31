@@ -58,12 +58,18 @@ public:
   void warn(const std::string & warning);
 
   /// outputs a warning to the specified stream
-  void warn(const std::string & warning, std::ostream & ostr);
+  void warn(const std::string & warning, std::ostream * ostr);
 
   /// sets the default output stream for all warnings (by default
-  /// NULL, indicating that warnings go to cerr)
+  /// cerr; passing a null pointer prevents warnings from being output)
   static void set_default_stream(std::ostream * ostr) {
     _default_ostr = ostr;
+  }
+
+  /// sets the default maximum number of warnings of a given kind
+  /// before warning messages are silenced.
+  static void set_default_max_warn(int max_warn) {
+    _max_warn_default = max_warn;
   }
 
   /// returns a summary of all the warnings that came through the
@@ -72,7 +78,7 @@ public:
 
 private:
   int _max_warn, _n_warn_so_far;
-  static const int _max_warn_default = 5;
+  static int _max_warn_default;
   static std::ostream * _default_ostr;
   typedef std::pair<std::string, unsigned int> Summary;
   static std::list< Summary > _global_warnings_summary;

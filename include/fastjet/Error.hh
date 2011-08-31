@@ -66,8 +66,8 @@ public:
   /// The default is "false".
   static void set_print_backtrace(bool enabled) {_print_backtrace = enabled;}
 
-  /// sets the default output stream for all errors (by default
-  /// NULL, indicating that errors go to cerr)
+  /// sets the default output stream for all errors; by default
+  /// cerr; if it's null then error output is suppressed.
   static void set_default_stream(std::ostream * ostr) {
     _default_ostr = ostr;
   }
