@@ -5188,17 +5188,18 @@ Both are handled internally, and a user does not normally need to interact with 
 They do, however, provide some customization facilities, especially in terms of
 redirection of their output.
 
-Each different kind of warning is written out a maximum number of times  (the current
-default is 5) before its output is suppressed. The program is allowed to continue. It is
-possible to obtain at the end of the run (or whenever one wishes to do so) a summary of
-all the warnings, both explicit or supressed, by defining and using a
-\ttt{LimitedWarning}  object as follows:
+Each different kind of warning is written out a maximum number of
+times (the current default is 5) before its output is suppressed. The
+program is allowed to continue. 
+%
+At the end of the run (or at any other stage) it is possible to obtain
+a summary of all warnings encoutered, both explicit or supressed,
+through the following static member function of the LimitedWarning
+class:
 \begin{lstlisting}
   #include "fastjet/LimitedWarning.hh"
   // ...
-  LimitedWarning warnings;
-  // ...
-  cout << warnings.summary() << endl;
+  cout << LimitedWarning::summary() << endl;
 \end{lstlisting}
 
 The throwing of an \ttt{Error} aborts the program. One can use
@@ -5211,8 +5212,11 @@ The throwing of an \ttt{Error} aborts the program. One can use
   /// The default is "false".
   static void set_print_backtrace(bool enabled);
 \end{lstlisting}
-to control whether an error message is printed (default = \ttt{true}) and whether a full
-backtrace is also given (default = \ttt{false}).
+to control whether an error message is printed (default = \ttt{true})
+and whether a full backtrace is also given (default = \ttt{false}).
+%
+Switching off the printing of error messages can be useful, for
+example, if the user expects to repeatedly catch \fastjet errors.
 
 The output of both \ttt{LimitedWarning} and \ttt{Error}, which by default
 goes to \ttt{std::cerr}, can be redirected to a file using the 
@@ -5223,20 +5227,19 @@ goes to \ttt{std::cerr}, can be redirected to a file using the
   #include <iostream>
   #include <fstream>
   // ...
-  ofstream myerr("warnings-and-errors.txt");
-  LimitedWarning warnings;
-  warnings.set_default_stream(&myerr);
-  Error errors;
-  errors.set_default_stream(&myerr);
-  errors.set_print_backtrace(true);
+  ostream * myerr = new ofstream("warnings-and-errors.txt");
+  LimitedWarning::set_default_stream(myerr);
+  Error::set_default_stream(myerr);
+  Error::set_print_backtrace(true);
   // ...
-  cout << warnings.summary() << endl;
+  cout << LimitedWarning::summary() << endl;
  
 \end{lstlisting}
-will send the output of both classes to the file \ttt{warnings-and-errors.txt} (as well
-as provide the backtrace of errors).
-Note that the output of \ttt{warnings.summary()} still goes to standard output, and will
-only be present if the program has not aborted earlier due to an error.
+will send the output of both classes to the file
+\ttt{warnings-and-errors.txt} (as well as provide the backtrace of
+errors).  Note that the output of \ttt{LimitedWarning::summary()}
+still goes to standard output, and will only be present if the program
+did not abort earlier due to an error.
 
 
 
