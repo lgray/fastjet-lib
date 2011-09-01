@@ -88,9 +88,9 @@ int main (int argc, char ** argv) {
   }
 
   // simple test to avoid that the example below crashes:
-  // make sure there is at least 2 jets above our 5 GeV
-  if (inclusive_jets.size()<2){
-    cout << "Please provide an event with at least 2 jets above 5 GeV" << endl;
+  // make sure there is at least 3 jets above our 5 GeV
+  if (inclusive_jets.size()<3){
+    cout << "Please provide an event with at least 3 jets above 5 GeV" << endl;
     return 1;
   }
 

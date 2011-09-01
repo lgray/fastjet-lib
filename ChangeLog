@@ -1,3 +1,9 @@
+2011-09-01  Gregory Soyez  <soyez@fastjet.fr> + Matteo
+
+	* example/11-filter.cc (main):
+	  fixed comment+requirement to have at least 3 (and not 2) jets
+	  above 5 GeV
+
 2011-08-31  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* fortran_wrapper/fastjetfortran.cc: 
