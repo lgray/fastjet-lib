@@ -1,5 +1,17 @@
 2011-09-01  Gregory Soyez  <soyez@fastjet.fr> + Matteo
 
+	* tools/fastjet/tools/Pruner.hh:     *** ADDED ***
+	* tools/Pruner.cc:                   *** ADDED ***
+	* tools/fastjet/tools/Makefile.am:
+	* tools/Makefile.am:
+	  added a Pruner transformer (arXiv:0903.5081) using an internal
+	  PruningPlugin and PruningRecombiner. Note that the
+	  implementation differs from the FastPrune plugin from
+	  arXiv:0903.5081: for uniformity we provide Pruner as a
+	  Transformer rather than a Plugin (as a consequence, our internal
+	  Plugin just reclusters the constituents of a single jet and not
+	  the whole event as in FastPrune).
+
 	* example/11-filter.cc (main):
 	  fixed comment+requirement to have at least 3 (and not 2) jets
 	  above 5 GeV
