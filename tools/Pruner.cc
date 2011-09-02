@@ -28,8 +28,9 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include <fastjet/ClusterSequence.hh>
 #include "fastjet/tools/Pruner.hh"
+#include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
+#include "fastjet/Selector.hh"
 #include <cassert>
 #include <algorithm>
 #include <sstream>
@@ -42,34 +43,42 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 // class Pruner
-// transformer that prunes a jet
-//
-// long description TBA
 //----------------------------------------------------------------------
 // action on a single jet
 PseudoJet Pruner::result(const PseudoJet &jet) const{
-  // at the moment we only deal with jets that have an associated
-  // cluster sequence and we do not support area
-  if (!jet.has_associated_cluster_sequence()){
-    throw Error("Pruner: at the moment Pruner only handles jets with an associated ClusterSequence");
+  // pruning can only be applied on jets which have constituents
+  if (!jet.has_constituents()){
+    throw Error("Pruner: trying to apply the Pruner on a jet which has no constituents");
   }
 
+  // if the jet has area support and there are explicit ghosts, we can
+  // transfer that support to the internal re-clustering
+  bool do_areas = jet.has_area() && _check_explicit_ghosts(jet);
+
   // build the pruning plugin
-  PruningPlugin * pruning_plugin = 
-    new PruningPlugin(JetDefinition(_jet_def.jet_algorithm(), 999.99, _jet_def.recombiner()),
-		      _zcut, _Rcut);
+  double Rcut = (_Rcut_dyn) ? (*_Rcut_dyn)(jet) : _Rcut_factor * 2.0*jet.m()/jet.perp();
+  double zcut = (_zcut_dyn) ? (*_zcut_dyn)(jet) : _zcut;
+  PruningPlugin * pruning_plugin = new PruningPlugin(_jet_def, zcut, Rcut);
 
   // now recluster the constituents of the jet with that plugin
   JetDefinition internal_jet_def(pruning_plugin);
-  ClusterSequence * cs = new ClusterSequence(jet.constituents(), internal_jet_def);
-  vector<PseudoJet> jets = cs->inclusive_jets();
-  if (jets.size()!=1){
-    ostringstream oss;
-    oss << "Pruner: found " << jets.size() << " jets during re-clustering. Aborting (to be improved!)";
-    throw Error(oss.str());
+  ClusterSequence * cs;
+  if (do_areas){
+    vector<PseudoJet> particles, ghosts;
+    SelectorIsPureGhost().sift(jet.constituents(), ghosts, particles);
+    // figure the ghost area from the 1st ghost (if none, any value
+    // would probably do as the area will be 0 and subtraction will have
+    // no effect!)
+    double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
+    cs = new ClusterSequenceActiveAreaExplicitGhosts(particles, internal_jet_def, 
+						     ghosts, ghost_area);
+  } else {
+    cs = new ClusterSequence(jet.constituents(), internal_jet_def);
   }
   
-  PseudoJet result = jets[0];
+  PseudoJet result = SelectorNHardest(1)(cs->inclusive_jets())[0];
+  PrunerStructure * s = new PrunerStructure(result);
+  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
   
   // make sure things remain persistent when leaving
   internal_jet_def.delete_plugin_when_unused();
@@ -78,34 +87,53 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   return result;  
 }
 
-//----------------------------------------------------------------------
+// check if the jet has explicit_ghosts (knowing that tghere is an
+// area support)
+bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
+  // if the jet comes from a Clustering check explicit ghosts in that
+  // clustering
+  if (jet.has_associated_cluster_sequence())
+    return jet.validated_csab()->has_explicit_ghosts();
+
+  // if the jet has pieces, recurse in the pieces
+  if (jet.has_pieces()){
+    vector<PseudoJet> pieces = jet.pieces();
+    for (unsigned int i=0;i<pieces.size(); i++)
+      if (!_check_explicit_ghosts(pieces[i])) return false;
+  }
+
+  // return false for any other (unknown) structure
+  return false;
+}
+
+
 // transformer description
 std::string Pruner::description() const{
   ostringstream oss;
   oss << "Pruner with jet definition " << _jet_def.description()
-      << ", Rcut=" << _Rcut
+      << ", Rcut_factor=" << _Rcut_factor
       << "and zcut=" << _zcut;
   return oss.str();
 }
 
 
 
+//----------------------------------------------------------------------
+// class PrunerStructure
+//----------------------------------------------------------------------
+
+// return the other jets that may have been found along with the
+// result of the pruning
+// The resulting vector is sorted in pt
+vector<PseudoJet> PrunerStructure::extra_jets() const{ 
+  return sorted_by_pt((!SelectorNHardest(1))(validated_cs()->inclusive_jets()));;
+}
+
 
 //----------------------------------------------------------------------
 // class PruningRecombiner
-// recombiner thet objects that are not vetoed by pruning
-//
-// This recombiner only recombine objects (i and j) that pass one of
-// the following two criteria:
-//
-//  - the geometric distance between i and j is smaller than 'Rcut'
-//  - the transverse momenta of i and j are at least 'zcut' p_t(i+j)
-//
-// If both these criteria fail, the hardest jet is kept and the
-// softest rejected
 //----------------------------------------------------------------------
 
-//----------------------------------------------------------------------
 // decide whether to recombine things or not
 void PruningRecombiner::recombine(const PseudoJet &pa, 
 				  const PseudoJet &pb,
@@ -137,6 +165,7 @@ void PruningRecombiner::recombine(const PseudoJet &pa,
   }
 }
 
+// description
 string PruningRecombiner::description() const{
   ostringstream oss;
   oss << "Pruning recombiner with Rcut=" << sqrt(_Rcut2)
@@ -150,8 +179,8 @@ string PruningRecombiner::description() const{
 
 //----------------------------------------------------------------------
 // class PruningPlugin
-// create a cluster sequence based on the pruning
 //----------------------------------------------------------------------
+// the actual clustering work for the plugin
 void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   // declare a pruning recombiner
   PruningRecombiner pruning_recombiner(_zcut, _Rcut, _jet_def.recombiner());
@@ -240,6 +269,7 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   }
 }
 
+// returns the plugin description
 string PruningPlugin::description() const{
   ostringstream oss;
   oss << "Pruning plugin with jet definition " << _jet_def.description()
@@ -248,6 +278,7 @@ string PruningPlugin::description() const{
   return oss.str();
 }
 
+// recursively marks history element i and its parents as rejected
 void PruningPlugin::_recursively_mark_as_rejected(const unsigned int i,
       const vector<ClusterSequence::history_element> & hist, 
       vector<bool> & kept) const{

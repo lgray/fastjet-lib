@@ -32,6 +32,7 @@
 //ENDHEADER
 
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/WrappedStructure.hh"
 #include "fastjet/tools/Transformer.hh"
 #include <iostream>
 #include <string>
@@ -40,6 +41,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // fwd declarations
 class Pruner;
+class PrunerStructure;
 class PruningRecombiner;
 class PruningPlugin;
 
@@ -56,28 +58,55 @@ class PruningPlugin;
 /// and j are only recombined if one of the following two criteria is
 /// satisfied:
 ///  - the geometric distance between i and j is smaller than 'Rcut'
+///    with Rcut = Rcut_factor*2m/pt (with Rcut_factor a parameter of
+///    the Pruner and m and pt obtained from the jet being pruned)
 ///  - the transverse momenta of i and j are at least 'zcut' p_t(i+j)
 /// If both these criteria fail, the hardest of i and j is kept and
 /// the softest rejected. The provider 'recombiner' is used when the
 /// test is passed.
 ///
-/// The jet definition passed to the constructor specifies which
-/// algorithm and recombination scheme have to be used to recluster
-/// the jet constituents. The radius of that internal clustering is
-/// internally overwritten to a large value to ensure that a single
-/// jet is found by the internal clustering (as a precaution, an error
-/// is thrown if this is not the case)
+/// Instead of passing Rcut_factor and zcut, one may alternatively
+/// pass two (pointers to) functions of PseudoJet that woud
+/// dynamically compute the Rcut and zcut to be used for the jet being
+/// pruned.
 ///
+/// When the jet being pruned has area support and explicit ghosts,
+/// the internal clustering also provides area (otherwise, the
+/// constituents are clustered with a regular clustering)
+///
+/// If the re-clustering finds more than a single jet, the hardest of
+/// these jets is retured as the result of the Pruner. The other jets
+/// can be accessed through
+///   result.structure_of<Pruner>().extra_jets();
+///
+/// The constituents of the original jet that have been vetoed by
+/// pruning are obtained using
+///   result.structure_of<Pruner>().rejected();
 /// 
+/// Apart from these two specificities, the jet resulting of treh
+/// Pruner behaves like a regular jet in the "internal"
+/// ClusterSequence (its constituents are the "unpruned" ones)
 //----------------------------------------------------------------------
 class Pruner : public Transformer{
 public:
   /// ctor
+  ///  \param jet_def     the jet definition for the internal clustering
+  ///  \param zcut        pt-fraction cut in the pruning
+  ///  \param Rcut_factor the angular distance cut in the pruning will be
+  ///                     Rcut_factor * 2m/pt
+  Pruner(const JetDefinition &jet_def, double zcut, double Rcut_factor)
+    : _jet_def(jet_def), _zcut(zcut), _Rcut_factor(Rcut_factor),
+      _zcut_dyn(0), _Rcut_dyn(0){}
+
+  /// alternative (dynamic) ctor
   ///  \param jet_def the jet definition for the internal clustering
-  ///  \param zcut    pt-fraction cut in the pruning
-  ///  \param Rcut    angular distance cut in the pruning
-  Pruner(const JetDefinition &jet_def, double zcut, double Rcut)
-    : _jet_def(jet_def), _zcut(zcut), _Rcut(Rcut) {}
+  ///  \param zcut_dyn    dynamic pt-fraction cut in the pruning
+  ///  \param Rcut_dyn    dynamic angular distance cut in the pruning
+  Pruner(const JetDefinition &jet_def, 
+	 FunctionOfPseudoJet<double> *zcut_dyn,
+	 FunctionOfPseudoJet<double> *Rcut_dyn)
+    : _jet_def(jet_def), _zcut(0), _Rcut_factor(0),
+      _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn) {}
 
   /// action on a single jet
   virtual PseudoJet result(const PseudoJet &jet) const;
@@ -87,13 +116,50 @@ public:
 
   /// the result has the structure of a jet in the internal
   /// ClusterSequence
-  typedef StructureType ClusterSequenceStructure;
+  typedef PrunerStructure StructureType;
 
 private:
+  /// check if the jet has explicit_ghosts (knowing that tghere is an
+  /// area support)
+  bool _check_explicit_ghosts(const PseudoJet &jet) const;
+
   JetDefinition _jet_def; ///< the internal jet definition (only the 
                           ///< algorithm and the recombiner< are used)
   double _zcut;		  ///< the pt-fraction cut
-  double _Rcut;           ///< the angular distance cut
+  double _Rcut_factor;    ///< the angular distance cut
+  FunctionOfPseudoJet<double> *_zcut_dyn; ///< dynamic zcut
+  FunctionOfPseudoJet<double> *_Rcut_dyn; ///< dynamic Rcut
+};
+
+
+//----------------------------------------------------------------------
+/// @ingroup tools_generic
+/// \class PrunerStructure
+/// The structure associated with a PseudoJet thas has gone through a
+/// Pruner transformer
+//----------------------------------------------------------------------
+class PrunerStructure : public WrappedStructure{
+public:
+  /// default ctor
+  ///  \param result_jet  the jet for which we have to keep the structure
+  PrunerStructure(const PseudoJet & result_jet)
+    : WrappedStructure(result_jet.structure_shared_ptr()){}
+
+  /// description
+  virtual std::string description() const{ return "Pruned PseudoJet";}
+
+  /// return the constituents that have been rejected
+  std::vector<PseudoJet> rejected() const{ 
+    return validated_cs()->unclustered_particles();
+  }
+
+  /// return the other jets that may have been found along with the
+  /// result of the pruning
+  /// The resulting vector is sorted in pt
+  std::vector<PseudoJet> extra_jets() const;
+
+protected:
+  friend class Pruner; ///< to allow setting the internal information
 };
 
 //----------------------------------------------------------------------

@@ -1,5 +1,24 @@
 2011-09-02  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/Pruner.cc:
+	* tools/fastjet/tools/Pruner.hh:
+	  . fixed a wring typedef syntax in Pruner
+          . used the radius of the specified jet definition to do the
+	    re-clustering (updated commentrs accordingly)
+	  . used Rcut_factor instead of Rcut in the Pruner. The Rcut is
+	    determined from the jet being pruned using Rcut_factor * 2m/pt
+	  . replaced the requirement that the jet must have an associated
+	    CS by the requirement that the jet must have constituents
+	  . added a PrunerStructure that allows to access the rejected
+	    constituents and the other jets that may have been found
+	    during the re-clustering.
+	  . added support for areas (provided the jet being pruned has
+	    explicit ghosts)
+	  . allowed the Rcut and zcut to be functions of the PseudoJet
+	    being pruned
+
+2011-09-02  Gregory Soyez  <soyez@fastjet.fr>
+
 	* include/fastjet/RangeDefinition.hh:
 	* tools/RestFrameNSubjettinessTagger.cc:
 	* tools/CASubJetTagger.cc:
