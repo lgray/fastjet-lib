@@ -57,7 +57,7 @@ string CASubJetTagger::description() const{
   case mass_drop_distance:   oss << "mass_drop_distance";   break;
   case dot_product_distance: oss << "dot_product_distance"; break;
   default:
-    throw fastjet::Error("unrecognized scale choice");
+    throw Error("unrecognized scale choice");
   }
 
   return oss.str();
@@ -66,7 +66,7 @@ string CASubJetTagger::description() const{
 // run the tagger on the given cs/jet
 // returns the tagged PseudoJet if successful, 0 otherwise
 //----------------------------------------------------------------------
-PseudoJet CASubJetTagger::result(const fastjet::PseudoJet & jet) const{
+PseudoJet CASubJetTagger::result(const PseudoJet & jet) const{
   // make sure that the jet results from a Cambridge/Aachen clustering
   if (jet.validated_cs()->jet_def().jet_algorithm() != cambridge_algorithm)
     _non_ca_warnings.warn("CASubJetTagger should only be applied on jets from a Cambridge/Aachen clustering; use it with other algorithms at your own risk");
@@ -102,9 +102,9 @@ PseudoJet CASubJetTagger::result(const fastjet::PseudoJet & jet) const{
 
 ///----------------------------------------------------------------------
 /// work through the jet, establishing a distance at each branching
-inline void CASubJetTagger::_recurse_through_jet(const fastjet::PseudoJet & jet, JetAux &aux, const PseudoJet & original_jet) const {
+inline void CASubJetTagger::_recurse_through_jet(const PseudoJet & jet, JetAux &aux, const PseudoJet & original_jet) const {
 
-  fastjet::PseudoJet parent1, parent2;
+  PseudoJet parent1, parent2;
   if (! jet.has_parents(parent1, parent2)) return;
 
   /// make sure the objects are not _too_ close together
@@ -140,7 +140,7 @@ inline void CASubJetTagger::_recurse_through_jet(const fastjet::PseudoJet & jet,
     dist = dot_product(parent1, parent2);
     break;
   default:
-    throw fastjet::Error("unrecognized scale choice");
+    throw Error("unrecognized scale choice");
   }
 
   // check the z cut

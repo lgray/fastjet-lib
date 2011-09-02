@@ -148,7 +148,7 @@ public:
   /// runs the tagger on the given jet and
   /// returns the tagged PseudoJet if successful, or a PseudoJet==0 otherwise
   /// (standard access is through operator()).
-  virtual PseudoJet result(const fastjet::PseudoJet & jet) const;
+  virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// the type of Structure returned
   typedef CASubJetTaggerStructure StructureType;
@@ -157,10 +157,10 @@ protected:
   /// class that contains the result internally
   class JetAux {
   public:
-    fastjet::PseudoJet jet;          //< the subjet (immediate parent of splitting)
-    double             aux_distance; //< the auxiliary distance between its two subjets
-    double             delta_r;      //< the angular distance between its two subjets
-    double             z;            //< the transverse momentum fraction
+    PseudoJet jet;          //< the subjet (immediate parent of splitting)
+    double    aux_distance; //< the auxiliary distance between its two subjets
+    double    delta_r;      //< the angular distance between its two subjets
+    double    z;            //< the transverse momentum fraction
   };
 
 

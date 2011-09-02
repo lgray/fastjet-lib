@@ -33,8 +33,9 @@
 #include <fastjet/ClusterSequence.hh>
 #include <sstream>
 
-using namespace fastjet;
 using namespace std;
+
+FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //------------------------------------------------------------------------
 // RestFrameNSubjettinessTagger class implementation
@@ -116,3 +117,6 @@ PseudoJet RestFrameNSubjettinessTagger::result(const PseudoJet & jet) const{
 
   return result;
 }
+
+
+FASTJET_END_NAMESPACE

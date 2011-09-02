@@ -106,7 +106,7 @@ public:
        std::ostringstream err;
        err << description() << 
          "\nThis range is not localizable. set_position() should not be used on it.";         
-       throw fastjet::Error(err.str()); 
+       throw Error(err.str()); 
      } else {
        _rapjet = rap;
        _phijet = phi;
