@@ -165,7 +165,7 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   // we could just browse the history of the internal CS and deide to
   // do only the recombinations when none of the two objects being
   // recombined are in the "rejected" list of the recombiner (*). That
-  // would have the side effect that ff 2 particles are recombined and
+  // would have the side effect that if 2 particles are recombined and
   // the result is later vetoed, an orphaned part of the CS will be
   // floating around. We will proceed differently and discard the
   // clustering of 2 particles if any of their child is vetoed later
@@ -176,8 +176,8 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   // elements rejected by the pruning recombiner, set that element
   // _and its recursive parents_ to false.
   //
-  // (*) note that the number in that list appear in the same order
-  //     than in the history, so the search is trivial
+  // (*) note that the numbers in that list appear in the same order
+  //     as in the history, so the search is trivial
   vector<bool> kept(internal_hist.size(), true);
 
   const vector<unsigned int> &pr_rej = pruning_recombiner.rejected();
