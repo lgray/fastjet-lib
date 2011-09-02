@@ -189,22 +189,29 @@ public:
   ///  \param zcut   transverse momentum fraction cut
   ///  \param Rcut   separation cut
   ///  \param recomb pointer to a recombiner to use to cluster pairs
-  ///  \param kept   pointer to a vector that will remember what is
-  ///                kept and rejected (it MUST be large enough and
-  ///                initialised to true)
   PruningRecombiner(double zcut, double Rcut, 
 		    const JetDefinition::Recombiner *recombiner)
     : _zcut2(zcut*zcut), _Rcut2(Rcut*Rcut), 
       _recombiner(recombiner){}
 
-  /// decide whether to recombine things or not
+  /// perform a recombination taking into account the pruning
+  /// conditions
   virtual void recombine(const PseudoJet &pa, 
 			 const PseudoJet &pb,
 			 PseudoJet &pab) const;
 
+  /// returns the description of the recombiner
   virtual std::string description() const;
 
+  /// return the history indices that have been pruned away
   const std::vector<unsigned int> & rejected() const{ return _rejected;}
+
+  /// clears the list of rejected indices
+  ///
+  /// If one decides to use this recombiner standalone, one has to
+  /// call this after each clustering in order for the rejected() vector
+  /// to remain sensible and not grow to infinite size.
+  void clear_rejected(){ _rejected.clear();}
 
 private:
   double _zcut2;  ///< transverse momentum fraction cut 
