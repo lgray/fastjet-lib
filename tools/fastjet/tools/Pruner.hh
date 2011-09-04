@@ -61,9 +61,9 @@ class PruningPlugin;
 ///    with Rcut = Rcut_factor*2m/pt (with Rcut_factor a parameter of
 ///    the Pruner and m and pt obtained from the jet being pruned)
 ///  - the transverse momenta of i and j are at least 'zcut' p_t(i+j)
-/// If both these criteria fail, the hardest of i and j is kept and
-/// the softest rejected. The provider 'recombiner' is used when the
-/// test is passed.
+/// If both these criteria fail, i and j are not recombined, the 
+/// hardest of i and j is kept and the softest rejected. 
+/// The provider 'recombiner' is instead used when the test is passed.
 ///
 /// Instead of passing Rcut_factor and zcut, one may alternatively
 /// pass two (pointers to) functions of PseudoJet that woud
@@ -83,7 +83,7 @@ class PruningPlugin;
 /// pruning are obtained using
 ///   result.structure_of<Pruner>().rejected();
 /// 
-/// Apart from these two specificities, the jet resulting of treh
+/// Apart from these two specificities, the jet resulting of the
 /// Pruner behaves like a regular jet in the "internal"
 /// ClusterSequence (its constituents are the "unpruned" ones)
 //----------------------------------------------------------------------
