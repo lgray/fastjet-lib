@@ -86,7 +86,7 @@ class PruningPlugin;
 ///
 /// Instead of using Rcut_factor and zcut, one can alternatively
 /// construct a Pruner by passing two (pointers to) functions of 
-/// PseudoJet that would dynamically compute the Rcut and zcut to 
+/// PseudoJet that dynamically compute the Rcut and zcut to 
 /// be used for the jet being pruned.
 ///
 /// When the jet being pruned has area support and explicit ghosts,
@@ -132,7 +132,7 @@ private:
   JetDefinition _jet_def; ///< the internal jet definition (only the 
                           ///< algorithm and the recombiner< are used)
   double _zcut;		  ///< the pt-fraction cut
-  double _Rcut_factor;    ///< the angular distance cut
+  double _Rcut_factor;    ///< the angular separation cut factor
   FunctionOfPseudoJet<double> *_zcut_dyn; ///< dynamic zcut
   FunctionOfPseudoJet<double> *_Rcut_dyn; ///< dynamic Rcut
 };
@@ -192,7 +192,7 @@ class PruningRecombiner : public JetDefinition::Recombiner{
 public:
   /// ctor
   ///  \param zcut   transverse momentum fraction cut
-  ///  \param Rcut   separation cut
+  ///  \param Rcut   angular separation cut
   ///  \param recomb pointer to a recombiner to use to cluster pairs
   PruningRecombiner(double zcut, double Rcut, 
 		    const JetDefinition::Recombiner *recombiner)
@@ -220,7 +220,7 @@ public:
 
 private:
   double _zcut2;  ///< transverse momentum fraction cut (squared)
-  double _Rcut2;  ///< separation cut (squared)
+  double _Rcut2;  ///< angular separation cut (squared)
   const JetDefinition::Recombiner *_recombiner; ///< the underlying recombiner to use
   mutable std::vector<unsigned int> _rejected;  ///< list of rejected history indices
 };
@@ -247,7 +247,7 @@ public:
   ///  \param jet_def the jet definition to be used for the 
   ///                 internal clustering
   ///  \param zcut    transverse momentum fraction cut
-  ///  \param Rcut    separation cut
+  ///  \param Rcut    angular separation cut
   PruningPlugin(const JetDefinition &jet_def, double zcut, double Rcut)
     : _jet_def(jet_def), _zcut(zcut), _Rcut(Rcut){}
 
@@ -268,7 +268,7 @@ private:
 
   JetDefinition _jet_def; ///< the internal jet definition
   double _zcut;           ///< transverse momentum fraction cut 
-  double _Rcut;           ///< separation cut
+  double _Rcut;           ///< angular separation cut
 };
 
 

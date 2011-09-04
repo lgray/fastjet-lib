@@ -1,7 +1,8 @@
 2011-09-04  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/Pruner.hh:
-          Some work on the doxygen comments
+	* tools/Pruner.cc:
+          Some work on the doxygen comments and the description functions
 	  
 2011-09-02  Gregory Soyez  <soyez@fastjet.fr>
 

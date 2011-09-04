@@ -46,9 +46,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //----------------------------------------------------------------------
 // action on a single jet
 PseudoJet Pruner::result(const PseudoJet &jet) const{
-  // pruning can only be applied on jets which have constituents
+  // pruning can only be applied to jets that have constituents
   if (!jet.has_constituents()){
-    throw Error("Pruner: trying to apply the Pruner on a jet which has no constituents");
+    throw Error("Pruner: trying to apply the Pruner transformer to a jet that has no constituents");
   }
 
   // if the jet has area support and there are explicit ghosts, we can
@@ -111,8 +111,8 @@ bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
 std::string Pruner::description() const{
   ostringstream oss;
   oss << "Pruner with jet_definition = " << _jet_def.description()
+      << ", zcut = " << _zcut
       << ", Rcut_factor = " << _Rcut_factor
-      << ", and zcut = " << _zcut;
   return oss.str();
 }
 
@@ -168,9 +168,9 @@ void PruningRecombiner::recombine(const PseudoJet &pa,
 // description
 string PruningRecombiner::description() const{
   ostringstream oss;
-  oss << "Pruning recombiner with Rcut=" << sqrt(_Rcut2)
-      << ", zcut=" << sqrt(_zcut2)
-      << " and an underlying recombiner " << _recombiner->description();
+  oss << "Pruning recombiner with zcut = " << sqrt(_zcut2)
+      << ", Rcut = " << sqrt(_Rcut2)
+      << ", and underlying recombiner = " << _recombiner->description();
   return oss.str();
 }
 
@@ -273,8 +273,8 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
 string PruningPlugin::description() const{
   ostringstream oss;
   oss << "Pruning plugin with jet_definition = " << _jet_def.description()
+      << ", zcut = " << _zcut
       << ", Rcut = " << _Rcut
-      << ", and zcut = " << _zcut;
   return oss.str();
 }
 
