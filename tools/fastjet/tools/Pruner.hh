@@ -55,37 +55,43 @@ class PruningPlugin;
 /// 
 /// Briefly, the jet's constituents are reclustered using a
 /// user-specified jet definition. During the clustering, objects i
-/// and j are only recombined if one of the following two criteria is
-/// satisfied:
+/// and j are only recombined if at least one of the following two 
+/// criteria is satisfied:
+///
 ///  - the geometric distance between i and j is smaller than 'Rcut'
 ///    with Rcut = Rcut_factor*2m/pt (with Rcut_factor a parameter of
 ///    the Pruner and m and pt obtained from the jet being pruned)
 ///  - the transverse momenta of i and j are at least 'zcut' p_t(i+j)
+///
 /// If both these criteria fail, i and j are not recombined, the 
-/// hardest of i and j is kept and the softest rejected. 
-/// The provider 'recombiner' is instead used when the test is passed.
+/// hardest of i and j is kept, and the softest is rejected. 
 ///
-/// Instead of passing Rcut_factor and zcut, one may alternatively
-/// pass two (pointers to) functions of PseudoJet that woud
-/// dynamically compute the Rcut and zcut to be used for the jet being
-/// pruned.
-///
-/// When the jet being pruned has area support and explicit ghosts,
-/// the internal clustering also provides area (otherwise, the
-/// constituents are clustered with a regular clustering)
-///
-/// If the re-clustering finds more than a single jet, the hardest of
-/// these jets is retured as the result of the Pruner. The other jets
-/// can be accessed through
-///   result.structure_of<Pruner>().extra_jets();
+/// Pruner works by reclustering the constituents of a single jet. 
+/// The jet resulting from the use of the Pruner transformer behaves 
+/// like a regular jet in the "internal" ClusterSequence (its 
+/// constituents being the "unpruned", or "not pruned away", particles.)
 ///
 /// The constituents of the original jet that have been vetoed by
-/// pruning are obtained using
+/// pruning (i.e. have been 'pruned away') can be accessed using
+///
 ///   result.structure_of<Pruner>().rejected();
-/// 
-/// Apart from these two specificities, the jet resulting of the
-/// Pruner behaves like a regular jet in the "internal"
-/// ClusterSequence (its constituents are the "unpruned" ones)
+///
+/// If the re-clustering happens to find more than a single jet (this 
+/// should normally not happen if the radius of the jet definition used
+/// for the reclustering has been set large enough), the hardest of these 
+/// jets is retured as the result of the Pruner. The other jets can be 
+/// accessed through
+///
+///   result.structure_of<Pruner>().extra_jets();
+///
+/// Instead of using Rcut_factor and zcut, one can alternatively
+/// construct a Pruner by passing two (pointers to) functions of 
+/// PseudoJet that would dynamically compute the Rcut and zcut to 
+/// be used for the jet being pruned.
+///
+/// When the jet being pruned has area support and explicit ghosts,
+/// the resulting pruned jet will likewise have area.
+///
 //----------------------------------------------------------------------
 class Pruner : public Transformer{
 public:
@@ -168,15 +174,14 @@ protected:
 /// \class PruningRecombiner
 /// recombines the objects that are not vetoed by pruning
 ///
-/// This recombiner only recombine objects (i and j) that pass one of
-/// the following two criteria:
+/// This recombiner only recombines, using the provided 'recombiner',
+/// objects (i and j) that pass at least one of the following two criteria:
 ///
 ///  - the geometric distance between i and j is smaller than 'Rcut'
 ///  - the transverse momenta of i and j are at least 'zcut' p_t(i+j)
 ///
 /// If both these criteria fail, the hardest of i and j is kept and
-/// the softest rejected. The provider 'recombiner' is used when the
-/// test is passed.
+/// the softest is rejected.
 ///
 /// Note that this in not meant for standalone use [in particular
 /// because it could lead to memory issues due to the rejected indices
@@ -214,8 +219,8 @@ public:
   void clear_rejected(){ _rejected.clear();}
 
 private:
-  double _zcut2;  ///< transverse momentum fraction cut 
-  double _Rcut2;  ///< separation cut
+  double _zcut2;  ///< transverse momentum fraction cut (squared)
+  double _Rcut2;  ///< separation cut (squared)
   const JetDefinition::Recombiner *_recombiner; ///< the underlying recombiner to use
   mutable std::vector<unsigned int> _rejected;  ///< list of rejected history indices
 };
@@ -231,7 +236,7 @@ private:
 /// See PruningRecombiner for a description of what pruning does.
 ///
 /// Note that this is an internal FastJet class used by the Pruner
-/// transformer and not meant to be used as a standalone clustering
+/// transformer and it is not meant to be used as a standalone clustering
 /// tool.
 ///
 /// \endif
@@ -262,8 +267,8 @@ private:
        std::vector<bool> & kept) const;
 
   JetDefinition _jet_def; ///< the internal jet definition
-  double _zcut;  ///< transverse momentum fraction cut 
-  double _Rcut;  ///< separation cut
+  double _zcut;           ///< transverse momentum fraction cut 
+  double _Rcut;           ///< separation cut
 };
 
 
