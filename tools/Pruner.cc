@@ -87,7 +87,7 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   return result;  
 }
 
-// check if the jet has explicit_ghosts (knowing that tghere is an
+// check if the jet has explicit_ghosts (knowing that there is an
 // area support)
 bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
   // if the jet comes from a Clustering check explicit ghosts in that
@@ -110,9 +110,9 @@ bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
 // transformer description
 std::string Pruner::description() const{
   ostringstream oss;
-  oss << "Pruner with jet definition " << _jet_def.description()
-      << ", Rcut_factor=" << _Rcut_factor
-      << "and zcut=" << _zcut;
+  oss << "Pruner with jet_definition = " << _jet_def.description()
+      << ", Rcut_factor = " << _Rcut_factor
+      << ", and zcut = " << _zcut;
   return oss.str();
 }
 
@@ -191,13 +191,13 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   ClusterSequence internal_cs(input_cs.jets(), jet_def);
   const vector<ClusterSequence::history_element> & internal_hist = internal_cs.history();
 
-  // we could just browse the history of the internal CS and deide to
+  // we could just browse the history of the internal CS and decide to
   // do only the recombinations when none of the two objects being
   // recombined are in the "rejected" list of the recombiner (*). That
   // would have the side effect that if 2 particles are recombined and
   // the result is later vetoed, an orphaned part of the CS will be
-  // floating around. We will proceed differently and discard the
-  // clustering of 2 particles if any of their child is vetoed later
+  // floating around. We will therefore proceed differently and discard the
+  // clustering of 2 particles if any of their childs is vetoed later
   // on in the clustering.
   //
   // this is achieved by building a vector, initially filled with
@@ -272,9 +272,9 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
 // returns the plugin description
 string PruningPlugin::description() const{
   ostringstream oss;
-  oss << "Pruning plugin with jet definition " << _jet_def.description()
-      << ", Rcut=" << _Rcut
-      << "and zcut=" << _zcut;
+  oss << "Pruning plugin with jet_definition = " << _jet_def.description()
+      << ", Rcut = " << _Rcut
+      << ", and zcut = " << _zcut;
   return oss.str();
 }
 
