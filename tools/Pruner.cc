@@ -112,7 +112,7 @@ std::string Pruner::description() const{
   ostringstream oss;
   oss << "Pruner with jet_definition = " << _jet_def.description()
       << ", zcut = " << _zcut
-      << ", Rcut_factor = " << _Rcut_factor
+      << ", Rcut_factor = " << _Rcut_factor;
   return oss.str();
 }
 
@@ -274,7 +274,7 @@ string PruningPlugin::description() const{
   ostringstream oss;
   oss << "Pruning plugin with jet_definition = " << _jet_def.description()
       << ", zcut = " << _zcut
-      << ", Rcut = " << _Rcut
+      << ", Rcut = " << _Rcut;
   return oss.str();
 }
 
