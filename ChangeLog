@@ -1,3 +1,24 @@
+2011-09-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc:
+	  added an "orphaned()" member that returns all the objects in the
+	  ClusterSequence that have not made it into a jet (i.e. that have
+	  no child and are not a recombination with the beam)
+
+	* src/Selector.cc:
+	* include/fastjet/Selector.hh:
+	  added SelectorIsZero that selects PseudoJet's with zero momentum
+
+	* tools/Pruner.cc (PruningPlugin):
+	  when a branch of the internal ClsuterSequence is vetoed, keep it
+	  until the point where is has been vetoed (instead of leaving its
+	  constituents unclustered)
+
+	* BUGS:
+	  added a mention about the known assertion violation we noticed
+	  in CGAL 3.7, 3.8 and 3,9-beta and that will be fixed in CGAL 3.9
+
 2011-09-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Pruner.cc:

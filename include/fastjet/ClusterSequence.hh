@@ -559,6 +559,12 @@ public:
   /// cone type algorithms it can be non-null;
   std::vector<PseudoJet> unclustered_particles() const;
 
+  /// return the list of objects in the ClusterSequence that did not make
+  /// it into one of the final jets. This includes unclustered particles
+  /// but also intermediate objects in the clustering history that have
+  /// no child.
+  std::vector<PseudoJet> orphaned() const;
+
   /// returns true if the object (jet or particle) is contained by (ie
   /// belongs to) this cluster sequence.
   ///

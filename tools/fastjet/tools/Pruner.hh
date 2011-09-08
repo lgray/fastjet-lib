@@ -71,8 +71,8 @@ class PruningPlugin;
 /// like a regular jet in the "internal" ClusterSequence (its 
 /// constituents being the "unpruned", or "not pruned away", particles.)
 ///
-/// The constituents of the original jet that have been vetoed by
-/// pruning (i.e. have been 'pruned away') can be accessed using
+/// The jets of the original jet that have been vetoed by pruning
+/// (i.e. have been 'pruned away') can be accessed using
 ///
 ///   result.structure_of<Pruner>().rejected();
 ///
@@ -156,7 +156,7 @@ public:
 
   /// return the constituents that have been rejected
   std::vector<PseudoJet> rejected() const{ 
-    return validated_cs()->unclustered_particles();
+    return validated_cs()->orphaned();
   }
 
   /// return the other jets that may have been found along with the

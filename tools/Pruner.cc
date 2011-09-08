@@ -191,34 +191,15 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   ClusterSequence internal_cs(input_cs.jets(), jet_def);
   const vector<ClusterSequence::history_element> & internal_hist = internal_cs.history();
 
-  // we could just browse the history of the internal CS and decide to
-  // do only the recombinations when none of the two objects being
-  // recombined are in the "rejected" list of the recombiner (*). That
-  // would have the side effect that if 2 particles are recombined and
-  // the result is later vetoed, an orphaned part of the CS will be
-  // floating around. We will therefore proceed differently and discard the
-  // clustering of 2 particles if any of their childs is vetoed later
-  // on in the clustering.
-  //
-  // this is achieved by building a vector, initially filled with
-  // "true", of the history elements to be kept. For each of the
-  // elements rejected by the pruning recombiner, set that element
-  // _and its recursive parents_ to false.
-  //
-  // (*) note that the numbers in that list appear in the same order
-  //     as in the history, so the search is trivial
+  // transfer the list of "orphaned" elements into a bool vector
   vector<bool> kept(internal_hist.size(), true);
-
   const vector<unsigned int> &pr_rej = pruning_recombiner.rejected();
-  for (vector<unsigned int>::const_reverse_iterator rit=pr_rej.rbegin();
-       rit!=pr_rej.rend(); rit++){
-    if (kept[*rit]) _recursively_mark_as_rejected(*rit, internal_hist, kept);
-  }
+  for (unsigned int i=0;i<pr_rej.size(); i++) kept[pr_rej[i]]=false;
 
-  // now reconstruct the final CS
+  // browse the history, keeping only the elements that have not been
+  // vetoed.
   //
-  // We map the internal CS to the input one (watch out: this is done
-  // using history indices)
+  // In the process we build a map for the history indices
   vector<unsigned int> internal2input(internal_hist.size());
   for (unsigned int i=0; i<input_cs.jets().size(); i++)
     internal2input[i] = i;
@@ -230,9 +211,6 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
     if (he.parent2 == ClusterSequence::BeamJet){
       int internal_jetp_index = internal_hist[he.parent1].jetp_index;
       int internal_hist_index = internal_cs.jets()[internal_jetp_index].cluster_hist_index();
-
-      // a safekeeper in case everything in that jet is rejected
-      if (!kept[internal_hist_index]) continue; 
 
       int input_jetp_index = input_cs.history()[internal2input[internal_hist_index]].jetp_index;
 

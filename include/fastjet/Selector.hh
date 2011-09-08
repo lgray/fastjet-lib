@@ -452,6 +452,9 @@ Selector SelectorPtFractionMin(double fraction);
 // additional (mostly helper) selectors
 //----------------------------------------------------------------------
 
+/// select PseudoJet with 0 momentum
+Selector SelectorIsZero();
+
 /// select objects that are (or are only made of) ghosts.
 /// PseudoJets for which has_area() are considered non-pure-ghost.
 Selector SelectorIsPureGhost();

@@ -1316,10 +1316,33 @@ Selector SelectorPtFractionMin(double fraction){
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
+/// helper for selecting the 0-momentum jets
+class SW_IsZero : public SelectorWorker {
+public:
+  /// ctor
+  SW_IsZero(){}
+
+  /// return true if the jet has zero momentum
+  virtual bool pass(const PseudoJet & jet) const {
+    return jet==0;
+  }
+  
+  /// rereturns a description of the worker
+  virtual string description() const { return "zero";}
+};
+
+
+// select objects with zero momentum
+Selector SelectorIsZero(){
+  return Selector(new SW_IsZero());
+}
+
+
+//----------------------------------------------------------------------
 /// helper for selecting the pure ghost
 class SW_IsPureGhost : public SelectorWorker {
 public:
-  /// ctor with specification of the number of objects to keep
+  /// ctor
   SW_IsPureGhost(){}
 
   /// return true if the jet is a pure-ghost jet
@@ -1331,7 +1354,7 @@ public:
     return jet.is_pure_ghost();
   }
   
-  /// returns a description of the worker
+  /// rereturns a description of the worker
   virtual string description() const { return "pure ghost";}
 };
 
