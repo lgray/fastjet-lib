@@ -1,3 +1,28 @@
+2011-09-12  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* tools/fastjet/tools/JHTopTagger.hh: 
+	* tools/fastjet/tools/MassDropTagger.hh: 
+	  small changes to comments
+
+	* tools/fastjet/tools/Filter.hh: 
+	  reworked the doxygen documentation.
+
+	* tools/fastjet/tools/Transformer.hh (class Transformer): 
+	  rewrote the main doxygen comment, aiming it at users rather than
+	  developers.
+
+	* tools/Pruner.cc: 
+	* tools/fastjet/tools/Pruner.hh: 
+	  - worked on the comments a bit + switched it over to
+	    childless_pseudojets();
+	  - moved constructor with dynamic Rcut and zcut to .cc file and
+	    asserted that the two pointers are non-zero.
+	  - got description working in case of dynamic Rcut and zcut
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/ClusterSequence.hh: 
+	  renamed CS::orphaned() -> CS::childless_pseudojets()
+
 2011-09-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/ClusterSequence.hh:
@@ -34,14 +59,14 @@
 
 	* tools/Pruner.cc:
 	* tools/fastjet/tools/Pruner.hh:
-	  . fixed a wring typedef syntax in Pruner
+	  . fixed a wrong typedef syntax in Pruner
           . used the radius of the specified jet definition to do the
-	    re-clustering (updated commentrs accordingly)
+	    re-clustering (updated comments accordingly)
 	  . used Rcut_factor instead of Rcut in the Pruner. The Rcut is
 	    determined from the jet being pruned using Rcut_factor * 2m/pt
 	  . replaced the requirement that the jet must have an associated
 	    CS by the requirement that the jet must have constituents
-	  . added a PrunerStructure that allows to access the rejected
+	  . added a PrunerStructure that allows access to the rejected
 	    constituents and the other jets that may have been found
 	    during the re-clustering.
 	  . added support for areas (provided the jet being pruned has

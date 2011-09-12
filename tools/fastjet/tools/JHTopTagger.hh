@@ -44,8 +44,8 @@ class JHTopTaggerStructure;
 //----------------------------------------------------------------------
 /// @ingroup tools_taggers
 /// \class JHTopTagger
-/// Class that helps perform boosted top tagging using the "Johns
-/// Hopkins" method from arXiv:0806.0848 (Kaplan, Rehermann, Schwartz
+/// Class that helps perform boosted top tagging using the "Johns Hopkins"
+/// method from arXiv:0806.0848 (Kaplan, Rehermann, Schwartz
 /// and Tweedie)
 ///
 ///The tagger proceeds as follows:
@@ -78,7 +78,7 @@ class JHTopTaggerStructure;
 /// A  JHTopTagger can be used as follows:
 ///
 /// \code
-///    double delta_p = 0.10; // subjets must carry at least this fraction of the original jet's $p_t$
+///    double delta_p = 0.10; // subjets must carry at least this fraction of the original jet's p_t
 ///    double delta_r = 0.19; // subjets must be separated by at least this Manhattan distance
 ///    double cos_theta_W_max = 0.7; // the maximal allowed value of the W helicity angle
 ///    JHTopTagger top_tagger(delta_p, delta_r, cos_theta_W_max);
@@ -145,7 +145,7 @@ public:
   ///  \param jet   the PseudoJet to tag
   virtual PseudoJet result(const PseudoJet & jet) const;
 
-  /// the type of the associated structure
+  // the type of the associated structure
   typedef JHTopTaggerStructure StructureType;
 
 protected:

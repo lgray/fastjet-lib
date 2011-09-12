@@ -87,8 +87,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  * - JetMedianBackgroundEstimator: with the help of a Selector, a JetDefinition and
  *   an AreaDefinition, allows one to estimate the background noise density in an event
  *
- * - Transformer: class from which are derived various tools for manipulating jets and 
- *   accessing their substructure. Examples are Subtractor, Filter, and various taggers.
+ * - Transformer: class from which are derived various tools for
+ *   manipulating jets and accessing their substructure. Examples are
+ *   Subtractor, Filter, Pruner and various taggers (e.g. JHTopTagger
+ *   and MassDropTagger).
  *
  * \section further_info Further information
  *
@@ -559,11 +561,11 @@ public:
   /// cone type algorithms it can be non-null;
   std::vector<PseudoJet> unclustered_particles() const;
 
-  /// return the list of objects in the ClusterSequence that did not make
-  /// it into one of the final jets. This includes unclustered particles
-  /// but also intermediate objects in the clustering history that have
-  /// no child.
-  std::vector<PseudoJet> orphaned() const;
+  /// Return the list of pseudojets in the ClusterSequence that do not
+  /// have children (and are not among the inclusive jets). They may
+  /// result from a clustering step or may be one of the pseudojets
+  /// returned by unclustered_particles().
+  std::vector<PseudoJet> childless_pseudojets() const;
 
   /// returns true if the object (jet or particle) is contained by (ie
   /// belongs to) this cluster sequence.

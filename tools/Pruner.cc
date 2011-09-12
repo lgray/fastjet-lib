@@ -44,6 +44,21 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //----------------------------------------------------------------------
 // class Pruner
 //----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+// alternative (dynamic) ctor
+//  \param jet_def the jet definition for the internal clustering
+//  \param zcut_dyn    dynamic pt-fraction cut in the pruning
+//  \param Rcut_dyn    dynamic angular distance cut in the pruning
+Pruner::Pruner(const JetDefinition &jet_def, 
+	 FunctionOfPseudoJet<double> *zcut_dyn,
+	 FunctionOfPseudoJet<double> *Rcut_dyn)
+  : _jet_def(jet_def), _zcut(0), _Rcut_factor(0),
+    _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn) {
+  assert(_zcut_dyn != 0 && _Rcut_dyn != 0);
+}
+
+//----------------------------------------------------------------------
 // action on a single jet
 PseudoJet Pruner::result(const PseudoJet &jet) const{
   // pruning can only be applied to jets that have constituents
@@ -66,8 +81,8 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   if (do_areas){
     vector<PseudoJet> particles, ghosts;
     SelectorIsPureGhost().sift(jet.constituents(), ghosts, particles);
-    // figure the ghost area from the 1st ghost (if none, any value
-    // would probably do as the area will be 0 and subtraction will have
+    // determine the ghost area from the 1st ghost (if none, any value
+    // will do, as the area will be 0 and subtraction will have
     // no effect!)
     double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
     cs = new ClusterSequenceActiveAreaExplicitGhosts(particles, internal_jet_def, 
@@ -110,9 +125,14 @@ bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
 // transformer description
 std::string Pruner::description() const{
   ostringstream oss;
-  oss << "Pruner with jet_definition = " << _jet_def.description()
-      << ", zcut = " << _zcut
-      << ", Rcut_factor = " << _Rcut_factor;
+  oss << "Pruner with jet_definition = " << _jet_def.description();
+  if (_zcut_dyn) {
+    oss << ", dynamic zcut (" << _zcut_dyn->description() << ")"
+	<< ", dynamic Rcut (" << _Rcut_dyn->description() << ")";
+  } else {
+    oss << ", zcut = " << _zcut
+	<< ", Rcut_factor = " << _Rcut_factor;
+  }
   return oss.str();
 }
 
@@ -146,10 +166,10 @@ void PruningRecombiner::recombine(const PseudoJet &pa,
     pab=p; return;
   }
 
-  // check which is the softest
   double pt2a = pa.perp2();
   double pt2b = pb.perp2();
 
+  // check which is the softest
   if (pt2a < pt2b){
     if (pt2a<_zcut2*p.perp2()){
       pab = pb; _rejected.push_back(pa.cluster_hist_index());
@@ -191,7 +211,7 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
   ClusterSequence internal_cs(input_cs.jets(), jet_def);
   const vector<ClusterSequence::history_element> & internal_hist = internal_cs.history();
 
-  // transfer the list of "orphaned" elements into a bool vector
+  // transfer the list of "childless" elements into a bool vector
   vector<bool> kept(internal_hist.size(), true);
   const vector<unsigned int> &pr_rej = pruning_recombiner.rejected();
   for (unsigned int i=0;i<pr_rej.size(); i++) kept[pr_rej[i]]=false;

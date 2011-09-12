@@ -48,41 +48,47 @@ class PruningPlugin;
 //----------------------------------------------------------------------
 /// @ingroup tools_generic
 /// \class Pruner
-/// transformer that prunes a jet
+/// Transformer that prunes a jet
 ///
 /// This transformer prunes a jet according to the ideas presented in 
 /// arXiv:0903.5081 (S.D. Ellis, C.K. Vermilion and J.R. Walsh). 
 /// 
-/// Briefly, the jet's constituents are reclustered using a
-/// user-specified jet definition. During the clustering, objects i
-/// and j are only recombined if at least one of the following two 
-/// criteria is satisfied:
+/// The jet's constituents are reclustered with a user-specified jet
+/// definition, with the modification that objects i and j are only
+/// recombined if at least one of the following two criteria is
+/// satisfied:
 ///
 ///  - the geometric distance between i and j is smaller than 'Rcut'
-///    with Rcut = Rcut_factor*2m/pt (with Rcut_factor a parameter of
+///    with Rcut = Rcut_factor*2m/pt (Rcut_factor is a parameter of
 ///    the Pruner and m and pt obtained from the jet being pruned)
 ///  - the transverse momenta of i and j are at least 'zcut' p_t(i+j)
 ///
 /// If both these criteria fail, i and j are not recombined, the 
-/// hardest of i and j is kept, and the softest is rejected. 
+/// harder of i and j is kept, and the softer is rejected. 
 ///
-/// Pruner works by reclustering the constituents of a single jet. 
-/// The jet resulting from the use of the Pruner transformer behaves 
-/// like a regular jet in the "internal" ClusterSequence (its 
-/// constituents being the "unpruned", or "not pruned away", particles.)
+/// Usage: 
+/// \code
+///    Pruner pruner(jet_def, zcut, Rcut_factor);
+///    PseudoJet pruned_jet = pruner(jet);
+/// \endcode
 ///
-/// The jets of the original jet that have been vetoed by pruning
+/// The pruned_jet has a valid associated cluster sequence. In addition
+/// the subjets of the original jet that have been vetoed by pruning
 /// (i.e. have been 'pruned away') can be accessed using
 ///
-///   result.structure_of<Pruner>().rejected();
+/// \code
+///   vector<PseudoJet> rejected_subjets = pruned_jet.structure_of<Pruner>().rejected();
+/// \endcode
 ///
-/// If the re-clustering happens to find more than a single jet (this 
-/// should normally not happen if the radius of the jet definition used
-/// for the reclustering has been set large enough), the hardest of these 
-/// jets is retured as the result of the Pruner. The other jets can be 
-/// accessed through
+/// If the re-clustering happens to find more than a single inclusive
+/// jet (this should normally not happen if the radius of the jet
+/// definition used for the reclustering was set large enough),
+/// the hardest of these jets is retured as the result of the
+/// Pruner. The other jets can be accessed through
 ///
-///   result.structure_of<Pruner>().extra_jets();
+/// \code
+///   vector<PseudoJet> extra_jets = pruned_jet.structure_of<Pruner>().extra_jets();
+/// \endcode
 ///
 /// Instead of using Rcut_factor and zcut, one can alternatively
 /// construct a Pruner by passing two (pointers to) functions of 
@@ -110,22 +116,19 @@ public:
   ///  \param Rcut_dyn    dynamic angular distance cut in the pruning
   Pruner(const JetDefinition &jet_def, 
 	 FunctionOfPseudoJet<double> *zcut_dyn,
-	 FunctionOfPseudoJet<double> *Rcut_dyn)
-    : _jet_def(jet_def), _zcut(0), _Rcut_factor(0),
-      _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn) {}
+	 FunctionOfPseudoJet<double> *Rcut_dyn);
 
   /// action on a single jet
   virtual PseudoJet result(const PseudoJet &jet) const;
 
-  /// transformer description
+  /// description
   virtual std::string description() const;
-
-  /// the result has the structure of a jet in the internal
-  /// ClusterSequence
+  
+  // the type of the associated structure
   typedef PrunerStructure StructureType;
 
 private:
-  /// check if the jet has explicit_ghosts (knowing that tghere is an
+  /// check if the jet has explicit_ghosts (knowing that there is an
   /// area support)
   bool _check_explicit_ghosts(const PseudoJet &jet) const;
 
@@ -156,7 +159,7 @@ public:
 
   /// return the constituents that have been rejected
   std::vector<PseudoJet> rejected() const{ 
-    return validated_cs()->orphaned();
+    return validated_cs()->childless_pseudojets();
   }
 
   /// return the other jets that may have been found along with the

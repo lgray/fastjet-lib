@@ -72,9 +72,9 @@ class MassDropTaggerStructure;
 /// \section desc Options
 /// 
 /// The constructor has the following arguments:
-///  - The first argument is minimal mass drop required (mu_cut) [0.67
+///  - The first argument is the minimal mass drop that is required (mu_cut) [0.67
 ///    by default]
-///  - The second argument is asymmetry cut (y_cut) [0.09 by default]
+///  - The second argument is the asymmetry cut (y_cut) [0.09 by default]
 ///
 /// \section input Input conditions
 /// 

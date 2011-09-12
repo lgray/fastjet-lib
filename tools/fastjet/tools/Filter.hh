@@ -47,91 +47,49 @@ class FilterStructure;
 //----------------------------------------------------------------------
 /// @ingroup tools_generic
 /// \class Filter
-/// Class that helps perform filtering/trimming on jets, and optionally
-/// subtraction (if rho > 0).
+/// Class that helps perform filtering (Butterworth, Davison, Rubin
+/// and Salam, arXiv:0802.2470) and trimming (Krohn, Thaler and Wang,
+/// arXiv:0912.1342) on jets, optionally in conjunction with
+/// subtraction (Cacciari and Salam, arXiv:0707.1378).
 ///
-/// Though the original version was applied on Cambridge/Aachen jets,
-/// this one takes any jet (that has constituents) and reclusters it
-/// with a given algorithm. A user-provided Selector is applied to
-/// decide which of the subjets are kept to produce the filtered jet
-/// (others are discarded).
+/// For example, to apply filtering that reclusters a jet's
+/// constituents with the Cambridge/Aachen jet algorithm with R=0.3
+/// and then selects the 3 hardest subjets, one can use the following
+/// code:
+/// \code
+///    Filter filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3));
+///    PseudoJet filtered_jet = filter(original_jet);
+/// \endcode
 ///
+/// To obtain trimming, involving for example the selection of all
+/// subjets carrying at least 3% of the original jet's pt, the
+/// selector would be replaced by SelectorPtFractionMin(0.03).
 ///
-/// \section desc Options
+/// To additionally perform subtraction on the subjets prior to
+/// selection, either include a 3rd argument specifying the background
+/// density rho, or call the set_subtractor(...) member function.  If
+/// subtraction is requested, the original jet must be the result of a
+/// clustering with active area with explicit ghosts support or a
+/// merging of such pieces.
+///
+/// The information on the subjets that were kept and rejected can be
+/// obtained using:
+/// \code
+///    vector<PseudoJet> kept_subjets = filtered_jet.pieces();
+///    vector<PseudoJet> rejected_subjets = filtered_jet.structure_of<Filter>().rejected();
+/// \endcode
+///
+/// \section impl Implementation Note
 /// 
-/// The constructor has the following arguments:
-///  - The first argument is the jet definition to be used to
-///    recluster the constituents of the jet to be filtered.
-///  - The second argument is a Selector specifying the condition for
-///    a subjet to be kept. If the selector takes a reference, the jet
-///    being filtered is used.
-///  - As an optional 3rd argument, one can pass a value of rho (the
-///    estimated background per unit area) in which case, every subjet
-///    is subtracted before the selection condition is applied.
+/// If the original jet was defined with the Cambridge/Aachen
+/// algorithm (or is made of pieces each of which comes from the C/A
+/// alg) and the filtering definition is C/A, then the filter does not
+/// rerun the C/A algorithm on the constituents, but instead makes use
+/// of the existent C/A cluster sequence in the original jet. This
+/// increases the speed of the filter.
 ///
+/// See also \subpage Example11 for a further usage example.
 ///
-/// \section input Input conditions
-/// 
-///  - the original jet must have constituents
-///  - if rho>0, the jet must be the result of a Clustering with
-///    active area with explicit ghosts support or a merging of
-///    such pieces
-///
-/// \section output Output/structure
-/// 
-///  - a copy of the original jet is kept
-///  - kept pieces are stored under the form of a "CompositeJet"
-///  - rejected pieces are also stored in the structure
-///
-/// \section usage Usage Examples
-/// 
-/// Filtering as proposed in arXiv:0802.2470 for boosted object
-/// reconstruction (and used also in arXiv:0810.1304 for dijet
-/// reconstructions) involves two parameters, the filtering radius,
-/// Rfilt, and the number of subjets you wish to keep, nfilt. To get a
-/// filter of this kind define
-///
-///    Filter filter(JetDefinition(cambridge_algorithm,Rfilt),
-///                  SelectorNHardest(nfilt));
-///
-/// You apply it as follows
-///
-///    PseudoJet filtered_jet = filter(jet);
-///
-/// To get trimming defined with respect to a jet's pt,
-/// arXiv:0912.1342, you need an Rtrim to define subjets and a
-/// pt_fraction_min to decide which subjets to keep:
-///
-///    Filter trimmer(JetDefinition(cambridge_algorithm,Rfilt),
-///                   SelectorPtFractionMin(pt_fraction_min));
-///
-/// You then apply it as before
-///
-///    PseudoJet trimmed_jet = trimmer(jet);
-///
-/// You can then find out which pieces were filtered or trimmed jet is
-/// made of by calling
-/// 
-///    trimmed_jet.pieces()
-///
-/// Trimming defined with respect to an event's effective mass can
-/// be carried out with a SelectorPtMin(...) selector.
-///
-/// More sophisticated filters/trimmers can easily be obtained by
-/// combining Selectors.
-///
-/// [MORE INFO, E.G. ON PIECES REJECTED, SHOULD FOLLOW]
-///
-///
-/// \section impl Implementation
-/// 
-/// If the jet was defined with the cambridge/aachen algorithm (or is
-/// made of pieces each of which comes from the C/A alg) and the
-/// filtering definition is C/A, then the filter does not rerun the
-/// C/A algorithm on the constituents, but instead makes use of the
-/// existent C/A cluster sequence in the original jet.
-///
-/// See also \subpage Example11  for a usage example.
 class Filter : public Transformer{
 public:
   /// trivial ctor
@@ -191,6 +149,7 @@ public:
   /// class description
   virtual std::string description() const;
 
+  // the type of the associated structure
   typedef FilterStructure StructureType;
 
 private:

@@ -42,51 +42,31 @@ class Transformer;
 
 /// @ingroup tools_generic
 /// \class Transformer
+///
 /// Base (abstract) class for a jet transformer.
 ///
-/// The idea of a transformer is that applied to a jet, it somehow
-/// modifies its momentum and/or contents. If applied to a vector of
-/// jets, the Transformer is applied to each one individually.
+/// A transformer, when it acts on a jet, returns a modified version
+/// of that jet, one that may have a different momentum and/or
+/// different internal structure.
 ///
-/// This class here is a base class that provides a basic template on
-/// which actual Transformers may be built (one example is a tagger).
+/// The typical usage of a class derived from Transformer is
+/// \code
+///   SomeTransformer transformer(...);
+///   PseudoJet transformed_jet = transformer(original_jet);
+///   // or
+///   vector<PseudoJet> transformed_jets = transformer(original_jets);
+/// \endcode
 ///
-/// Any new transformer must implement result(), but its action can
-/// equivalently be accessed through the operator() that works either
-/// on a single PseudoJet or on a vector of PseudoJet.
+/// For many transformers, the transformed jets have
+/// transformer-specific information that can be accessed through the
 ///
-/// In addition many transformers will want to associated extra
-/// information on the resulting jet's substructure, by setting a
-/// shared pointer to some class derived from PseudoJetStructureBase.
-/// It is the user's responsability to implement this and also set up
-/// a typedef so that DerivedTransformer::StructureType is the
-/// corresponding Structure type. See any of the derived transformers
-/// already implemented for explicit examples). 
-/// 
-/// This associated information about the structure of the PseudoJet
-/// can then be accessed using either
-///   p.structure<DerivedStructureType>()
-/// or
-///   p.extra_properties<DerivedTransformer>()
-/// which both return a reference to the associated structure.
+/// \code
+///   transformed_jet.structure_of<SomeTransformer>().transformer_specific_info();
+/// \endcode
 ///
-/// To check if the structure associated to a given PseudoJet is
-/// compatible with the one produced by a DerivedTransformer, one can
-/// also use
-///   if (p.has_properties_of<DerivedTransformer>()) ...;
-///
-/// [.......comments still under preparation......]
-///
-/// transformation on them and return the list of modified jets This
-/// base class sets the fundamental requirements for all the
-/// transformers.
-/// 
-/// Similarly, to gain access to the information relative to the
-/// transformation, a "transformed" PseudoJet will have a
-/// corresponding PropertyInterface. Any transformer thus must
-/// provide (at least) 2 classes:
-///  - the transformer itself (derived from Transformer)
-///  - the associated property class (derived from TransformerInterface see below)
+/// See the description of the Filter class for a more detailed usage
+/// example. See the FastJet manual to find out how to implement
+/// new transformers.
 ///
 class Transformer : public FunctionOfPseudoJet<PseudoJet>{
 public:
@@ -105,8 +85,11 @@ public:
   /// Transformer
   virtual std::string description() const = 0;
 
-
-  /// information about the associated structure type
+  /// A typedef that is needed to ensure that the
+  /// PseudoJet::structure_of() template function works
+  //
+  // Make sure you reimplement this appropriately in any
+  // derived classes
   typedef PseudoJetStructureBase StructureType;
 };
 

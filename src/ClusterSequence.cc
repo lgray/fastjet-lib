@@ -1251,11 +1251,11 @@ vector<PseudoJet> ClusterSequence::unclustered_particles() const {
 }
 
 //======================================================================
-// return the list of objects in the ClusterSequence that did not make
-// it into one of the final jets. This includes unclustered particles
-// but also intermediate objects in the clustering history that have
-// no child and are not a recombination with the beam.
-vector<PseudoJet> ClusterSequence::orphaned() const {
+/// Return the list of pseudojets in the ClusterSequence that do not
+/// have children (and are not among the inclusive jets). They may
+/// result from a clustering step or may be one of the pseudojets
+/// returned by unclustered_particles().
+vector<PseudoJet> ClusterSequence::childless_pseudojets() const {
   vector<PseudoJet> unclustered;
   for (unsigned i = 0; i < _history.size() ; i++) {
     if ((_history[i].child == Invalid) && (_history[i].parent2 != BeamJet))
