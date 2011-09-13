@@ -170,7 +170,7 @@ public:
   //\}
 
 
-  /// @ name  retrieving fundamental information
+  /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
 
@@ -202,7 +202,7 @@ public:
 
   //\}
   
-  /// @ name  retrieving additional useful information
+  /// @name  retrieving additional useful information
   //\{
   //----------------------------------------------------------------
   /// Returns the mean area of the jets used to actually compute the

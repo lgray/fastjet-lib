@@ -125,7 +125,7 @@ enum JetAlgorithm {
 /// recipe without the parameters) backward-compatible with old JetFinder
 typedef JetAlgorithm JetFinder;
 
-/// provide other possible names for the Cambridge/Aachen algorithm?
+/// provide other possible names for the Cambridge/Aachen algorithm
 const JetAlgorithm aachen_algorithm = cambridge_algorithm;
 const JetAlgorithm cambridge_aachen_algorithm = cambridge_algorithm;
 

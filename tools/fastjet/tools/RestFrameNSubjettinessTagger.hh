@@ -44,10 +44,7 @@ class RestFrameNSubjettinessTaggerStructure;
 /// \class RestFrameNSubjettinessTagger
 /// Class that helps perform 2-pronged boosted tagging using
 /// a reclustering in the jet's rest frame, supplemented with a cut on N-subjettiness
-/// (and a decay angle)
-///
-/// This is the implementation of the rest-frame N-Subjettiness tagger introduced
-/// by Ji-Hun Kim in arXiv:1011.1493.
+/// (and a decay angle), as discussed by Ji-Hun Kim in arXiv:1011.1493.
 ///
 /// To tag a fat jet, the tagger proceeds as follows:
 ///
@@ -59,7 +56,7 @@ class RestFrameNSubjettinessTaggerStructure;
 ///
 ///  - keep the 2 most energetic subjets (\f$q_{1,2}\f$) and compute
 ///    the 2-subjettiness
-///    \f[
+///    \f[ 
 ///      \tau_2^j = \frac{2}{m_{\rm jet}^2}\,
 ///                 \sum_{k\in {\rm jet}} {\rm min}(q_1.p_k,q_2.p_k)
 ///    \f]

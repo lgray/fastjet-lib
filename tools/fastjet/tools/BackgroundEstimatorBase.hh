@@ -48,7 +48,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 ///
 class BackgroundEstimatorBase {
 public:
-  /// @ name  constructors and destructors
+  /// @name  constructors and destructors
   //\{
   //----------------------------------------------------------------
   BackgroundEstimatorBase() : _rescaling_class(0) {}
@@ -68,7 +68,7 @@ public:
 
   //\}
 
-  /// @ name  retrieving fundamental information
+  /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
 

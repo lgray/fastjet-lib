@@ -62,12 +62,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///
 class GridMedianBackgroundEstimator : public BackgroundEstimatorBase {
 public:
-  /// @ name  constructors and destructors
+  /// @name  constructors and destructors
   //\{
   //----------------------------------------------------------------
-  /// default ctor
-  /// The arguments are as follows:
-
   ///   \param ymax   maximal absolute rapidity extent of the grid
   ///   \param requested_grid_spacing   size of the grid cell. The
   ///            "real" cell size could differ due e.g. to the 2pi
@@ -89,7 +86,7 @@ public:
 
   //\}
 
-  /// @ name  retrieving fundamental information
+  /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
 

@@ -83,7 +83,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  * \section Tools Selected additional tools
  *
  * - JetMedianBackgroundEstimator: with the help of a Selector, a JetDefinition and
- *   an AreaDefinition, allows one to estimate the background noise density in an event
+ *   an AreaDefinition, allows one to estimate the background noise density in an event; for a simpler, quicker, effective alternative, use GridMedianBackgroundEstimator
  *
  * - Transformer: class from which are derived various tools for
  *   manipulating jets and accessing their substructure. Examples are

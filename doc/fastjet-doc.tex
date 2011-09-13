@@ -216,15 +216,58 @@
 %%
 %%
 
-This note documents the \fastjet package, which provides efficient
-geometrically-based C++ implementations \cite{fastjet} for the longitudinally
-invariant $k_t$ \cite{ktexcl,ktincl}, inclusive Cambridge/Aachen
-\cite{CamOrig,CamWobisch} and anti-$k_t$\cite{antikt} jet algorithms. 
-It also provides access to
-tools that allow one to determine the areas of individual jets, which
-is of importance when correcting for underlying event and pileup
-contamination. Finally external jet algorithms can be accessed through
-the fastjet interface using a ``plugin'' facility.
+Jets are the collimated sprays of hadrons that result from the
+fragmentation of a high-energy quark or gluon.
+%
+Jet finders identify these sprays of particles, grouping particles into
+``jets'' according to some well-defined algorithm.
+%
+Jet finding is applied not only to hadronic final states, but also to
+partonic final states that come out of perturbative QCD calculations.
+%
+Jets are useful both as observables that stand in for the naive
+concept of partons and as tools for comparing experimental and
+theoretical results.
+
+There are two broad groups of jet algorithms: sequential recombination
+algorithms usually carry out successive mergings of pairs of particles
+until some stopping condition is reached; cone algorithms define jets
+based on cones in phase space containing the bulk of an event's energy
+flow.
+
+FastJet is a C++ package that provides efficient implementations of
+many sequential recombination algorithms, through the computational
+strategies of~\cite{fastjet}.
+%
+It also provides a common interface to many legacy and current cone
+algorithms, in large part through suitably wrapped versions of 3rd
+party code (``plugins'').
+
+In addition to its basic jet-finding capabilities, FastJet provides
+access to a number of more advanced functionalities.
+%
+These include tools for the determination of jet areas, facilities to
+estimate the level of noise in a given event due to underlying events
+and pileup, and the subtraction of that noise from individual jets.
+%
+Another set of tools helps analyse the substructure of jets, including
+a number of widely used boosted heavy-object taggers and
+substructure-based noise-suppression classes.
+
+
+% This note documents the \fastjet package, which provides efficient
+% geometrically-based C++ implementations \cite{fastjet} for a number of
+% sequential recombination jet algorithms, as well as plugins for many
+% widely used cone algorithms.
+% 
+% the longitudinally
+% invariant $k_t$ \cite{ktexcl,ktincl}, inclusive Cambridge/Aachen
+% \cite{CamOrig,CamWobisch} and anti-$k_t$\cite{antikt} jet algorithms. 
+% It also provides access to
+% tools that allow one to determine the areas of individual jets, which
+% is of importance when correcting for underlying event and pileup
+% contamination. Finally external jet algorithms can be accessed through
+% the fastjet interface using a ``plugin'' facility.
 
 % This release has two aims: (a) to enable people with an immediate need
 % for speed in $k_t$ jet-finding to have immediate access to fast
@@ -1162,9 +1205,12 @@ the original article that defines the algorithm, as well as to the
 
 %......................................................................
 \subsection[$k_t$ jet algorithm]{$\boldsymbol{k_t}$ jet algorithm}
-The definition of the inclusive $k_t$ jet algorithm that is coded is as
-follows (and corresponds to \cite{ktincl}, modulo small changes of
-notation): 
+%
+The longitudinally invariant $k_t$ jet algorithm \cite{ktexcl,ktincl}
+comes in inclusive and exclusive variants.
+%
+The inclusive variant (corresponding to \cite{ktincl}, modulo small
+changes of notation) is formulated as follows:
 \begin{itemize}
 \item[1.] For each pair of particles $i$, $j$ work out the $k_t$
   distance 
@@ -1184,20 +1230,33 @@ notation):
   a final jet and remove it from the list.
 \item[3.] Repeat from step 1 until no particles are left.
 \end{itemize}
-The exclusive longitudinally invariant $k_t$ jet algorithm
-\cite{ktexcl} is similar except that (a) when a $d_{iB}$ 
-is the smallest value, that particle is considered to become part of
-the beam jet (i.e.\ is discarded) and (b) clustering is stopped when
-all $d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. In the
-exclusive mode $R$ is commonly set to $1$.
+The exclusive variant of the longitudinally invariant $k_t$ jet
+algorithm \cite{ktexcl} is similar, except that (a) when a $d_{iB}$ is
+the smallest value, that particle is considered to become part of the
+beam jet (i.e.\ is discarded) and (b) clustering is stopped when all
+$d_{ij}$ and $d_{iB}$ are above some $d_{cut}$. In the exclusive mode
+$R$ is commonly set to $1$.
+
+The inclusive and exclusive variants are both obtained through 
+\begin{lstlisting}
+   JetDefinition jet_def(kt_algorithm, R);
+   ClusterSequence cs(particles, jet_def);
+\end{lstlisting}
+The clustering sequence is identical in the inclusive and exclusive
+cases and the jets can then be obtained as follows:
+\begin{lstlisting}
+   vector<PseudoJet> inclusive_kt_jets = cs.inclusive_jets();
+   vector<PseudoJet> exclusive_kt_jets = cs.exclusive_jets(dcut);
+\end{lstlisting}
 
 %......................................................................
 \subsection{Cambridge/Aachen jet algorithm}
 
-Currently the $pp$ Cambridge/Aachen jet algorithm is provided only in an
-inclusive version~\cite{CamWobisch}, whose formulation is identical to
-that of the $k_t$ 
-jet algorithm, except as regards the distance measures, which are:
+Currently the $pp$ Cambridge/Aachen (C/A) jet
+algorithm~\cite{CamOrig,CamWobisch} is provided only in an inclusive
+version~\cite{CamWobisch}, whose formulation is identical to that of
+the $k_t$ jet algorithm, except as regards the distance measures,
+which are:
 \begin{subequations}
   \label{eq:dij_cam}
   \begin{align}
@@ -1205,7 +1264,14 @@ jet algorithm, except as regards the distance measures, which are:
     d_{iB} &= 1\,.
   \end{align}
 \end{subequations}
-Attempting to extract exclusive jets from the Cambridge/Aachen with a
+To use this algorithm, define 
+\begin{lstlisting}
+   JetDefinition jet_def(cambridge_algorithm, R);
+\end{lstlisting}
+and then extract inclusive jets from the cluster sequence.
+
+Attempting to extract exclusive jets from the Cambridge/Aachen
+algorithm with a
 $d_{cut}$ parameter simply provides the set of jets obtained up to the
 point where all $d_{ij},d_{iB} > d_{cut}$. Having clustered with some
 given $R$, this can actually be an effective way of viewing the event
@@ -1238,6 +1304,13 @@ While being a sequential recombination algorithm like $k_t$ and
 Cambridge/Aachen, the anti-$k_t$ algorithm behaves in some sense like a
 `perfect' cone algorithm, in that its hard jets are exactly
 circular on the $y$-$\phi$ cylinder~\cite{antikt}.
+%
+To use this algorithm, define 
+\begin{lstlisting}
+   JetDefinition jet_def(antikt_algorithm, R);
+\end{lstlisting}
+and then extract inclusive jets from the cluster sequence.
+
 
 %......................................................................
 \subsection[Generalised-$k_t$ jet algorithm]{Generalised $\boldsymbol{k_t}$ jet algorithm}
@@ -1256,6 +1329,12 @@ following distance measure:
 For specific values of $p$, it reduces to one or other of the
 algorithms list above, $k_t$ ($p=1$), Cambridge/Aachen ($p=0$) and
 anti-$k_t$ ($p=-1$). 
+%
+To use this algorithm, define 
+\begin{lstlisting}
+  JetDefinition jet_def(genkt_algorithm, R, p);
+\end{lstlisting}
+and then extract inclusive jets from the cluster sequence.
 
 %......................................................................
 \subsection[Generalised $k_t$ algorithm for $e^+e^-$ collisions]
@@ -1289,6 +1368,13 @@ With the choice $p=-1$ this provides a simple, infrared and collinear
 safe way of obtaining a cone-like algorithm for $e^+e^-$ collisions,
 since hard well-separated jets have a circular profile on the $3$D
 sphere, with opening half-angle $R$.
+%
+To use this form of the algorithm, define 
+\begin{lstlisting}
+   JetDefinition jet_def(ee_genkt_algorithm, R, p);
+\end{lstlisting}
+and then extract inclusive jets from the cluster sequence.
+
 
 If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
 then the $d_{iB}$ will be smallest only if the event
@@ -1305,6 +1391,12 @@ eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact that in neithe
 case have we normalised to the total energy $Q$ in the event, contrary
 to the convention adopted originally in~\cite{eekt} (where the
 distance measure was called $y_{ij}$).
+%
+To use this form of the algorithm, define 
+\begin{lstlisting}
+   JetDefinition jet_def(ee_kt_algorithm);
+\end{lstlisting}
+and then extract exclusive jets from the cluster sequence.
 
 
 
@@ -5349,7 +5441,6 @@ support for native jet algorithms to be run with $R>\pi/2$.
 % 
 
 %======================================================================
-
 \begin{thebibliography}{99}
 
 \bibitem{fastjet}
@@ -5358,6 +5449,60 @@ support for native jet algorithms to be run with $R>\pi/2$.
   Phys.\ Lett.\ B {\bf 641} (2006) 57
   [hep-ph/0512210].
   %%CITATION = HEP-PH 0512210;%%
+
+%\cite{Buttar:2008jx}
+\bibitem{Buttar:2008jx}
+  C.~Buttar {\it et al.},
+  %``Standard Model Handles and Candles Working Group: Tools and Jets Summary
+  %Report,''
+  arXiv:0803.0678 [hep-ph].
+  %%CITATION = ARXIV:0803.0678;%%
+
+
+\bibitem{Chan}
+  T.~M.~Chan,
+  ``Closest-point problems simplified on the RAM,''
+  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
+  p.~472 (2002).
+
+
+\bibitem{Anderberg}
+  M.~R.~Anderberg, 
+  Cluster Analysis for Applications,
+  (Number 19 in Probability and Mathematical Statistics, Academic
+  Press, New York, 1973).
+
+
+\bibitem{Sonnenschein}
+  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
+  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
+
+\bibitem{CGAL}
+%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
+A.~Fabri {\it et al.},
+%On the design of CGAL a computational geometry algorithms library
+Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
+%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
+J.-D.~Boissonnat {\it et al.},
+% Triangulations in CGAL
+Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
+
+
+%\cite{Blazey:2000qt}
+\bibitem{RunII-jet-physics}
+G.~C.~Blazey {\it et al.},
+%``Run II jet physics,''
+hep-ex/0005012.
+%%CITATION = HEP-EX 0005012;%%
+
+
+\bibitem{KtJet}
+  \url{http://hepforge.cedar.ac.uk/ktjet/};
+  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
+  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
+  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
+  [hep-ph/0210022].
+  %%CITATION = HEP-PH 0210022;%%
 
 
 \bibitem{ktexcl}
@@ -5402,6 +5547,12 @@ DESY-THESIS-2000-049.
   [arXiv:0802.1189 [hep-ph]].
   %%CITATION = ARXIV:0802.1189;%%
 
+\bibitem{eekt}
+  S.~Catani, Y.~L.~Dokshitzer, M.~Olsson, G.~Turnock and B.~R.~Webber,
+  %``New clustering algorithm for multi - jet cross-sections in e+ e-
+  %annihilation,''
+  Phys.\ Lett.\ B {\bf 269}, 432 (1991);
+
 
 %\bibitem{HepJet} \texttt{HepJet} is being planned in collaboration
 %  with authors of \ttt{KtJet} \cite{KtJet}.
@@ -5413,66 +5564,6 @@ DESY-THESIS-2000-049.
   [arXiv:0704.0292 [hep-ph]]; 
   %%CITATION = arXiv:0704.0292;%%
 standalone code available from \url{http://projects.hepforge.org/siscone}.
-
-
-%\cite{Blazey:2000qt}
-\bibitem{RunII-jet-physics}
-G.~C.~Blazey {\it et al.},
-%``Run II jet physics,''
-hep-ex/0005012.
-%%CITATION = HEP-EX 0005012;%%
-
-%\cite{Buttar:2008jx}
-\bibitem{Buttar:2008jx}
-  C.~Buttar {\it et al.},
-  %``Standard Model Handles and Candles Working Group: Tools and Jets Summary
-  %Report,''
-  arXiv:0803.0678 [hep-ph].
-  %%CITATION = ARXIV:0803.0678;%%
-
-
-\bibitem{Chan}
-  T.~M.~Chan,
-  ``Closest-point problems simplified on the RAM,''
-  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
-  p.~472 (2002).
-
-
-\bibitem{Anderberg}
-  M.~R.~Anderberg, 
-  Cluster Analysis for Applications,
-  (Number 19 in Probability and Mathematical Statistics, Academic
-  Press, New York, 1973).
-
-
-\bibitem{Sonnenschein}
-  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
-  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
-
-\bibitem{CGAL}
-%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
-A.~Fabri {\it et al.},
-%On the design of CGAL a computational geometry algorithms library
-Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
-%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
-J.-D.~Boissonnat {\it et al.},
-% Triangulations in CGAL
-Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
-
-
-\bibitem{KtJet}
-  \url{http://hepforge.cedar.ac.uk/ktjet/};
-  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
-  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
-  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
-  [hep-ph/0210022].
-  %%CITATION = HEP-PH 0210022;%%
-
-\bibitem{eekt}
-  S.~Catani, Y.~L.~Dokshitzer, M.~Olsson, G.~Turnock and B.~R.~Webber,
-  %``New clustering algorithm for multi - jet cross-sections in e+ e-
-  %annihilation,''
-  Phys.\ Lett.\ B {\bf 269}, 432 (1991);
 
 
 \bibitem{EHT}
@@ -5494,6 +5585,13 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
 
 
 \bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
+
+\bibitem{Abe:1991ui}
+  F.~Abe {\it et al.}  [CDF Collaboration],
+  ``The Topology of three jet events in $\bar{p}p$ collisions at $\sqrt{s} =
+  1.8$ TeV,''
+  Phys.\ Rev.\ D {\bf 45} (1992) 1448.
+  %%CITATION = PHRVA,D45,1448;%%
 
 % \bibitem{Huth:1990mi}
 %   J.~E.~Huth {\it et al.},
@@ -5590,13 +5688,11 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   [arXiv:0912.1342 [hep-ph]].
   %%CITATION = JHEPA,1002,084;%%
 
-\bibitem{nsubtagger}
-  J.~H.~Kim,
-  %``Rest Frame Subjet Algorithm With SISCone Jet For Fully Hadronic Decaying
-  %Higgs Search,''
-  Phys.\ Rev.\  D {\bf 83} (2011) 011502
-  [arXiv:1011.1493 [hep-ph]].
-  %%CITATION = PHRVA,D83,011502;%%
+\bibitem{Abdesselam:2010pt}
+  A.~Abdesselam, E.~B.~Kuutmann, U.~Bitenc, G.~Brooijmans, J.~Butterworth, P.~Bruckman de Renstrom, D.~Buarque Franzosi, R.~Buckingham {\it et al.},
+  %``Boosted objects: A Probe of beyond the Standard Model physics,''
+  Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1661.
+  [arXiv:1012.5412 [hep-ph]].
 
 \bibitem{Kaplan:2008ie}
   D.~E.~Kaplan, K.~Rehermann, M.~D.~Schwartz, B.~Tweedie,
@@ -5611,6 +5707,14 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   Phys.\ Rev.\ Lett.\  {\bf 103 } (2009)  241803.
   [arXiv:0906.0728 [hep-ph]].
 
+\bibitem{nsubtagger}
+  J.~H.~Kim,
+  %``Rest Frame Subjet Algorithm With SISCone Jet For Fully Hadronic Decaying
+  %Higgs Search,''
+  Phys.\ Rev.\  D {\bf 83} (2011) 011502
+  [arXiv:1011.1493 [hep-ph]].
+  %%CITATION = PHRVA,D83,011502;%%
+
 \bibitem{EppsteinHierarchical}
   %%David Eppstein
   D.~Eppstein
@@ -5618,20 +5722,9 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
 
-\bibitem{Abdesselam:2010pt}
-  A.~Abdesselam, E.~B.~Kuutmann, U.~Bitenc, G.~Brooijmans, J.~Butterworth, P.~Bruckman de Renstrom, D.~Buarque Franzosi, R.~Buckingham {\it et al.},
-  %``Boosted objects: A Probe of beyond the Standard Model physics,''
-  Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1661.
-  [arXiv:1012.5412 [hep-ph]].
-
-\bibitem{Abe:1991ui}
-  F.~Abe {\it et al.}  [CDF Collaboration],
-  ``The Topology of three jet events in $\bar{p}p$ collisions at $\sqrt{s} =
-  1.8$ TeV,''
-  Phys.\ Rev.\ D {\bf 45} (1992) 1448.
-  %%CITATION = PHRVA,D45,1448;%%
-
 \end{thebibliography}
+
+
 
 \end{document}
 
