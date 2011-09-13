@@ -1,7 +1,7 @@
 //STARTHEADER
 // $Id: CMSIterativeConePlugin.cc 1504 2009-04-10 13:39:48Z salam $
 //
-// Copyright (c) 2007-2009, Matteo Cacciari, Gavin Salam and Gregory Soyez [for the plugin]
+// Copyright (c) 2007-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 // Copyright (c) ????-????, CMS [for the iterative-cone code itself]
 //
 //----------------------------------------------------------------------
@@ -23,9 +23,7 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with FastJet; if not, write to the Free Software
-//  Foundation, Inc.:
-//      59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//  along with FastJet. If not, see <http://www.gnu.org/licenses/>.
 //----------------------------------------------------------------------
 //ENDHEADER
 

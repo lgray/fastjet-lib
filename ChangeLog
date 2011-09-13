@@ -1,3 +1,11 @@
+2011-09-13  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* all files: 
+	  Changed the GPL pointer to be to the website
+	  http://www.gnu.org/licenses/ rather than a physical address.
+	  Updated the copyright line to make sure Gregory is always
+	  included and have the latest date as 2011.
+
 2011-09-12  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/fastjet/tools/JHTopTagger.hh: 
