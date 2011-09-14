@@ -3807,23 +3807,22 @@ also exist for removing the underlying event and pileup from jets.
 \fastjet 3 provides a common interface for such
 tools, intended to help simplify their usage and to guide authors of
 new ones.
-
+%
 Below, we first discuss generic considerations about these tools, which
 we call \ttt{fastjet::Transformer}s. 
 %
 We then describe some that have already been implemented. 
 %
-
 %Finally, we outline some of the techniques that can help when creating
 %new transformers.
-
+%
 New user-defined transformers can be implemented as described in 
 section~\ref{sec:transformerdetails}.
 
 
 
-\subsection{Generic considerations about \texttt{Transformer}s}
-\label{sec:transformers-generic}
+%\subsection{Generic considerations about \texttt{Transformer}s}
+%\label{sec:transformers-generic}
 
 A transformer derived from \ttt{Transformer}, e.g. the
  class \ttt{MyTransformer}, will generally be used as follows:
@@ -3865,8 +3864,12 @@ Such a jet may still have structural information however (such
 information might, for example, indicate why the jet was not tagged).
 
 
+\subsection{Noise-removal transformers}
 
-\subsection{Jet Filtering and Trimming using \texttt{Filter}}
+The \ttt{Subtrator} transformer defined in \ref{sec:subtractor} belongs to this
+category. Others are described in the following.
+
+\subsubsection{Jet Filtering and Trimming using \texttt{Filter}}
 \label{sec:filtering}
 
 Filtering was first introduced in \cite{BDRS} to reduce the
@@ -3882,14 +3885,15 @@ but selects the subjets to be kept based on a $p_t$ cut.
 The use of filtering and trimming have been advocated in number of
 contexts, beyond just the realm of boosted object reconstruction.
 %
-The \ttt{fastjet::Filter} class derives from \ttt{Transformer}, and can be
-instantiated using
+The \ttt{fastjet::Filter} class derives from \ttt{Transformer}, and one can construct,
+using a \ttt{JetDefinition}, a \ttt{Selector} and (optionally) a
+value for the background density,
 \begin{lstlisting}
   #include "fastjet/tools/Filter.hh"
   // ...
-  Filter filter(JetDefinition subjet_def, Selector selector, double rho);
+  Filter filter(subjet_def, selector, rho);
 \end{lstlisting}
-to obtain a filter/trimmer that reclusters the jet's
+a filter/trimmer that reclusters the jet's
 constituents with the jet definition \ttt{subjet\_def}\footnote{
 %\paragraph{Implementation note.}
 %
@@ -3986,6 +3990,70 @@ must come from a cluster sequence with area support and
 explicit ghosts. If any of these requirements fail, an exception will
 be thrown.
 
+\subsubsection{Jet pruning}
+\label{sec:pruning}
+
+Pruning was introduced in \cite{Ellis:2009su}. Its aim is similar in part to that of filtering,
+namely reducing the contamination of soft noise in a jet while retaining the
+bulk of the hard perturbative radiation, though it is worth noting that, when
+used together with a mass cut, it can effectively also play the role of a
+tagger. The noise removal is achieved in pruning in a way which differs from filtering: 
+instead of unclustering a jet and selecting only part of
+its subjets, pruning works by reclustering its constituents and 
+vetoing soft and large-angle recombinations between pseudojets $i$ and
+$j$. In practice, recombinations are vetoed in the clustering sequence 
+when neither of the following criteria are met:
+\begin{enumerate}
+\item the geometric distance between $i$ and $j$ is smaller than a parameter
+\ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times 2m/p_t$ 
+\item $p_t^i, p_t^j >$~\ttt{zcut}$\times
+p_t^{i+j}$
+\end{enumerate}
+If both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
+and $j$ is kept, and the softer is rejected.
+\ttt{Rcut\_factor} and \ttt{zcut} are parameters of the pruning algorithm, and
+$m$ and $p_t$ are the mass and the transverse momentum of the jet being pruned.
+
+The \ttt{fastjet::Pruner} class, derived from \ttt{Transformer}, can be used as
+follows, using a \ttt{JetDefinition} and two \ttt{double} parameters:
+\begin{lstlisting}
+  #include "fastjet/tools/Pruner.hh"
+  // ...
+  Pruner pruner(subjet_def,  zcut,  Rcut_factor);
+  // ...
+  PseudoJet pruned_jet = pruner(jet);
+\end{lstlisting}
+The \ttt{pruned\_jet} will have a valid associated cluster sequence, so that one
+can, for instance, ask for its constituents with
+\ttt{pruned\_jet.constituents()}.
+%
+In addition, the subjets that have been rejected by the pruning algorithm (i.e.
+have been `pruned away') can be obtained with
+\begin{lstlisting}
+   vector<PseudoJet> rejected_subjets = pruned_jet.structure_of<Pruner>().rejected();
+\end{lstlisting}
+and each of these subjets will also have a valid associated clustering sequence.
+
+The jet definition \ttt{subjet\_def} used in hte \ttt{Pruner} to recluster the
+constituents of a jet should normally have a radius large enough to ensure that
+all its constituents are reclustered into a single jet. Should this not happen,
+pruning is applied to the hardest of the jets found, and the others can be
+retrieved using
+\begin{lstlisting}
+   vector<PseudoJet> extra_jets = pruned_jet.structure_of<Pruner>().extra_jets();
+\end{lstlisting}
+
+Finally, note that a second constructor for \ttt{Pruner} exists, that allows one
+to construct the pruner using functions that compute dynamycally \ttt{zcut} and
+\ttt{Rcut} for the jet being pruned:
+\begin{lstlisting}
+   Pruner (const JetDefinition &jet_def, 
+           FunctionOfPseudoJet< double > *zcut_dyn, 
+	   FunctionOfPseudoJet< double > *Rcut_dyn);
+\end{lstlisting}
+
+
+
 \subsection{Boosted-object taggers}
 \label{sec:taggers}
 
@@ -4016,7 +4084,11 @@ At the moment, we have implemented only a small set of taggers.
 %
 These include one main two-body tagger, the
 \ttt{fastjet::MassDropTagger} introduced in \cite{BDRS} and one main
-boosted top tagger, \ttt{fastjet::JHTopTagger} from \cite{Kaplan:2008ie}.
+boosted top tagger, \ttt{fastjet::JHTopTagger} from \cite{Kaplan:2008ie} (Note
+that \ttt{JHTopTagger} derives from the \ttt{fastjet::TopTaggerBase} class, 
+expressely included
+to provide a common framework for all top taggers capable of also returning a
+$W$).
 %
 In addition, to help provide a more complete set of examples of coding
 methods to which users may refer when writing their own taggers, we
@@ -5687,6 +5759,13 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   JHEP {\bf 1002} (2010) 084
   [arXiv:0912.1342 [hep-ph]].
   %%CITATION = JHEPA,1002,084;%%
+
+%\cite{Ellis:2009su}
+\bibitem{Ellis:2009su}
+  S.~D.~Ellis, C.~K.~Vermilion, J.~R.~Walsh,
+  %``Techniques for improved heavy particle searches with jet substructure,''
+  Phys.\ Rev.\  {\bf D80 } (2009)  051501.
+  [arXiv:0903.5081 [hep-ph]].
 
 \bibitem{Abdesselam:2010pt}
   A.~Abdesselam, E.~B.~Kuutmann, U.~Bitenc, G.~Brooijmans, J.~Butterworth, P.~Bruckman de Renstrom, D.~Buarque Franzosi, R.~Buckingham {\it et al.},
