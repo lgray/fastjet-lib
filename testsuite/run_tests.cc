@@ -6,6 +6,7 @@
 #include "TestBase.hh"
 #include "TestPseudoJet.hh"
 #include "TestSubStructure.hh"
+#include "TestGroomerAreas.hh"
 #include <iomanip>
 #include "CmdLine.hh"
 
@@ -28,6 +29,7 @@ int main(int argc, char** argv) {
   tests.push_back(new TestPJAssignment());
   tests.push_back(new TestPJCSaccess());
   tests.push_back(new TestSubStructure());
+  tests.push_back(new TestGroomerAreas());
 
   // loop over the tests
   for (unsigned i = 0; i < tests.size(); i++) {
