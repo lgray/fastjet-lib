@@ -278,17 +278,5 @@ string PruningPlugin::description() const{
   return oss.str();
 }
 
-// recursively marks history element i and its parents as rejected
-void PruningPlugin::_recursively_mark_as_rejected(const unsigned int i,
-      const vector<ClusterSequence::history_element> & hist, 
-      vector<bool> & kept) const{
-  //cout << "rejecting " << i << endl;
-  kept[i]=false;
-  if (hist[i].parent1 != ClusterSequence::InexistentParent){
-    _recursively_mark_as_rejected(hist[i].parent1, hist, kept);
-    _recursively_mark_as_rejected(hist[i].parent2, hist, kept);
-  }      
-}
-
 
 FASTJET_END_NAMESPACE

@@ -1,5 +1,8 @@
 2011-09-16  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* tools/Pruner.cc (and .hh): 
+	  removed _recursively_mark_as_rejected, since no longer needed. 
+
 	* include/fastjet/JetDefinition.hh: 
 	* include/fastjet/JetDefinition.cc: 
 	  changed hard-coded limit for R of 1000 into

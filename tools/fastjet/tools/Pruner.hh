@@ -99,7 +99,6 @@ class PruningPlugin;
 //----------------------------------------------------------------------
 class Pruner : public Transformer{
 public:
-  /// ctor
   ///  \param jet_def     the jet definition for the internal clustering
   ///  \param zcut        pt-fraction cut in the pruning
   ///  \param Rcut_factor the angular distance cut in the pruning will be
@@ -262,11 +261,6 @@ public:
   virtual double R() const {return _jet_def.R();}
 
 private:
-  /// recursively marks history element i and its parents as rejected
-  void _recursively_mark_as_rejected(const unsigned int i,
-       const std::vector<ClusterSequence::history_element> & hist, 
-       std::vector<bool> & kept) const;
-
   JetDefinition _jet_def; ///< the internal jet definition
   double _zcut;           ///< transverse momentum fraction cut 
   double _Rcut;           ///< angular separation cut
