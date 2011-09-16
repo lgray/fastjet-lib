@@ -8,6 +8,7 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Pruner.hh"
+#include "fastjet/tools/MassDropTagger.hh"
 
 /// class to test some of the basic features of the CASubJetTagger
 class TestGroomerAreas : public TestBase {
@@ -21,7 +22,9 @@ class TestGroomerAreas : public TestBase {
     PseudoJet jet = SelectorNHardest(1)(csa.inclusive_jets())[0];
 
     vector<PseudoJet> pieces = jet.pieces();
+    assert(pieces.size() == 2); // if this fails, it's because event is silly
     PseudoJet jet2 = join(jet.pieces());
+    assert(pieces[0].pieces().size() == 2); // if this fails, it's because event is silly
     PseudoJet jet3 = join(join(pieces[0].pieces()),pieces[1]);
 
     // cout << jet.has_associated_cluster_sequence() << endl;
@@ -42,6 +45,10 @@ class TestGroomerAreas : public TestBase {
     _pass_test &= check_groomer(jet2, pruner, "1+1-piece     jet, pruner");
     _pass_test &= check_groomer(jet3, pruner, "(1+1)+1-piece jet, pruner");
     
+    _correct_area = -1.0;
+    MassDropTagger mdtagger(0.5, 0.0); // the jet ought to pass!
+    _pass_test &= check_groomer(jet, mdtagger,"1-piece       jet, MDtagger");
+
     return _pass_test;
   }
 
