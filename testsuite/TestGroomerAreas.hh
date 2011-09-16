@@ -17,7 +17,8 @@ class TestGroomerAreas : public TestBase {
   bool run_test () {
     JetDefinition jet_def(kt_algorithm, 1.0);
     AreaDefinition area_def(active_area_explicit_ghosts);
-    ClusterSequenceArea csa(default_event(), jet_def, area_def);
+    vector<PseudoJet> event = default_event();
+    ClusterSequenceArea csa(event, jet_def, area_def);
     
     PseudoJet jet = SelectorNHardest(1)(csa.inclusive_jets())[0];
 
@@ -69,6 +70,69 @@ class TestGroomerAreas : public TestBase {
   
   double _correct_area;
 };
+
+
+//======================================================================
+typedef JetDefinition::DefaultRecombiner DefRecomb;
+
+class FlavourRecombiner : public  DefRecomb {
+public:
+  FlavourRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 
+    DefRecomb(recomb_scheme) {};
+
+  virtual std::string description() const {
+    return DefRecomb::description()+" (with user index addition)";}
+
+  /// recombine pa and pb and put result into pab
+  virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
+                         PseudoJet & pab) const {
+    DefRecomb::recombine(pa,pb,pab);
+    // Note: see the above discussion for the fact that we consider
+    // negative user indices as "0"
+    pab.set_user_index(max(pa.user_index(),0) + max(pb.user_index(),0));
+  }
+};
+
+/// class to test some things that happen with Groomers and Recombiners
+/// put together
+class TestGroomerRecombiners : public TestBase {
+  std::string short_name()  const {return "TestGroomerRecombiners";}
+
+  bool run_test () {
+    // put some tests here along the lines of what's below...
+    
+    // JetDefinition jet_def(kt_algorithm, 1.0);
+    // vector<PseudoJet> event = default_event();
+    // for (unsigned i = 0; i < event.size(); i++) {
+    //   event[i].set_user_index(i);
+    // }
+    // ClusterSequence * cs = new ClusterSequence(event, jet_def);
+    // 
+    // 
+    // PseudoJet jet = SelectorNHardest(1)(cs->inclusive_jets())[0];
+    // 
+    // //Filter filter(0.3,SelectorNHardest(2));
+    // Pruner filter(kt_algorithm, 0.1, 0.5);
+    // //Pruner filter(JetDefinition(kt_algorithm,1000.0), 0.1, 0.5);
+    // PseudoJet filtered_jet = filter(jet);
+    // cout << filtered_jet.pieces()[0].validated_cs()->jet_def().description()
+    // 	 << endl;
+    // delete cs;
+    // cout << filtered_jet.pieces()[0].validated_cs()->jet_def().description()
+    // 	 << endl;
+    // 
+    // JetDefinition jet_def_reco(kt_algorithm, 1.0, new FlavourRecombiner());
+    // ClusterSequence * cs_reco = new ClusterSequence(event, jet_def_reco);
+    // PseudoJet jet_reco = SelectorNHardest(1)(cs_reco->inclusive_jets())[0];
+    // cout << jet_reco.user_index() << endl;
+    // filtered_jet = filter(jet_reco);
+    // cout << jet_reco.user_index() << " " << filtered_jet.user_index() << endl;
+    // cout << filtered_jet.pieces()[0].validated_cs()->jet_def().description()
+    // 	 << endl;
+    return true;
+  }
+};
+
 
 
 #endif // __TESTGROOMERAREAS_HH__

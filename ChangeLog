@@ -1,7 +1,22 @@
 2011-09-16  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
+	* tools/Filter.cc: 
+	  fixed a bug whereby the recombiner in the internal jet def may
+	  point to a default recombiner that gets deleted before retuning
+	  the filtered jet to the user; see also the BUGS file for a
+	  residual issue in the case of recombiners that delete
+	  themselves.
+
 	* tools/Pruner.cc (and .hh): 
-	  removed _recursively_mark_as_rejected, since no longer needed. 
+	  - added "minimal" constructor that takes a jet_alg (rather than
+	    jet_def), automatically sets the R to
+	    JetDefinition::max_allowable_R and deduces the recombiner
+	    from the jet that is being Pruned.
+	  - removed _recursively_mark_as_rejected, since no longer needed. 
+	  - added a "return true" in _check_explicit_ghosts to fix a bug 
+	    in the case of jets with pieces, so that areas were not available 
+	  - fixed a bug whereby internal pruning plugin was being deleted 
+	    too early
 
 	* include/fastjet/JetDefinition.hh: 
 	* include/fastjet/JetDefinition.cc: 

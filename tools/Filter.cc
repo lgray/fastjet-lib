@@ -31,6 +31,7 @@
 #include <cassert>
 #include <algorithm>
 #include <sstream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -116,10 +117,17 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   // if we're dealing with a dynamic determination of the filtering
   // radius, do it now
   if ((_Rfilt>=0) || (_Rfiltfunc)){
-    const JetDefinition::Recombiner * common_recombiner = _get_common_recombiner();
     double Rfilt = (_Rfiltfunc) ? (*_Rfiltfunc)(jet) : _Rfilt;
-    if (common_recombiner)
-      _subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
+    const JetDefinition::Recombiner * common_recombiner = _get_common_recombiner();
+    if (common_recombiner) {
+      if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
+	RecombinationScheme scheme = 
+	  static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
+	_subjet_def = JetDefinition(cambridge_algorithm, Rfilt, scheme);
+      } else {
+	_subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
+      }
+    }
     else
       _subjet_def = JetDefinition(cambridge_algorithm, Rfilt);
   }

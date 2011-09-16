@@ -30,14 +30,15 @@ int main(int argc, char** argv) {
   tests.push_back(new TestPJCSaccess());
   tests.push_back(new TestSubStructure());
   tests.push_back(new TestGroomerAreas());
+  tests.push_back(new TestGroomerRecombiners());
 
   // loop over the tests
   for (unsigned i = 0; i < tests.size(); i++) {
-    bool pass = tests[i]->run_test();
-
     // allow the user to concentrate on one test series
     if (only.size() != 0 && (only != tests[i]->short_name() &&
 			     "Test"+only != tests[i]->short_name())) continue;
+
+    bool pass = tests[i]->run_test();
 
     if (pass) {
       cout << setw(4) << i << "  PASS: " << tests[i]->short_name() <<endl;

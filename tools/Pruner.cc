@@ -32,6 +32,7 @@
 #include <cassert>
 #include <algorithm>
 #include <sstream>
+#include <typeinfo>
 
 using namespace std;
 
@@ -52,7 +53,7 @@ Pruner::Pruner(const JetDefinition &jet_def,
 	 FunctionOfPseudoJet<double> *zcut_dyn,
 	 FunctionOfPseudoJet<double> *Rcut_dyn)
   : _jet_def(jet_def), _zcut(0), _Rcut_factor(0),
-    _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn) {
+    _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn), _get_recombiner_from_jet(false)  {
   assert(_zcut_dyn != 0 && _Rcut_dyn != 0);
 }
 
@@ -71,10 +72,40 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   // build the pruning plugin
   double Rcut = (_Rcut_dyn) ? (*_Rcut_dyn)(jet) : _Rcut_factor * 2.0*jet.m()/jet.perp();
   double zcut = (_zcut_dyn) ? (*_zcut_dyn)(jet) : _zcut;
-  PruningPlugin * pruning_plugin = new PruningPlugin(_jet_def, zcut, Rcut);
+  PruningPlugin * pruning_plugin;
+  // for some constructors, we get the recombiner from the 
+  // input jet -- some acrobatics are needed (see plans for FJ3.1
+  // for a hopefully better solution).
+  if (_get_recombiner_from_jet) {
+    const JetDefinition::Recombiner * common_recombiner = 
+                                              _get_common_recombiner(jet);
+    cout << common_recombiner << endl;
+    if (common_recombiner) {
+      JetDefinition jet_def = _jet_def;
+      if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
+	RecombinationScheme scheme = 
+	  static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
+	jet_def.set_recombination_scheme(scheme);
+      } else {
+	jet_def.set_recombiner(common_recombiner);
+      }
+      pruning_plugin = new PruningPlugin(jet_def, zcut, Rcut);
+    } else {
+      // if there wasn't a common recombiner, we just use the default
+      // recombiner that was in _jet_def
+      pruning_plugin = new PruningPlugin(_jet_def, zcut, Rcut);
+    }
+  } else {
+    pruning_plugin = new PruningPlugin(_jet_def, zcut, Rcut);
+  }
 
   // now recluster the constituents of the jet with that plugin
   JetDefinition internal_jet_def(pruning_plugin);
+  // flag the plugin for automatic deletion _before_ we make
+  // copies (so that as long as the copies are also present
+  // it doesn't get deleted).
+  internal_jet_def.delete_plugin_when_unused();
+
   ClusterSequence * cs;
   if (do_areas){
     vector<PseudoJet> particles, ghosts;
@@ -98,7 +129,6 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   // up memory once the "result" reaches the end of its life in the user's
   // code. (The CS deletes itself when the result goes out of scope and
   // that also triggers deletion of the plugin)
-  internal_jet_def.delete_plugin_when_unused();
   cs->delete_self_when_unused();
 
   return result;  
@@ -117,17 +147,48 @@ bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
     vector<PseudoJet> pieces = jet.pieces();
     for (unsigned int i=0;i<pieces.size(); i++)
       if (!_check_explicit_ghosts(pieces[i])) return false;
+    // never returned false, so we're OK.
+    return true;
   }
 
   // return false for any other (unknown) structure
   return false;
 }
 
+// see if there is a common recombiner among the pieces; if there
+// is return a pointer to it; otherwise, return NULL.
+// 
+// NB: this way of doing things is not ideal, because quite some work
+//     is needed to get a correct handling of the final recombiner
+//     (e.g. default v. non-default). In future add
+//     set_recombiner(jet_def) to JetDefinition, maybe also add
+//     an invalid_scheme to the default recombiner and then 
+//     do all the work below directly with a JetDefinition directly
+//     together with JD::has_same_recombiner(...)
+const JetDefinition::Recombiner * Pruner::_get_common_recombiner(const PseudoJet &jet) const{
+  if (jet.has_associated_cluster_sequence())
+    return jet.validated_cs()->jet_def().recombiner();
+
+  // if the jet has pieces, recurse in the pieces
+  if (jet.has_pieces()){
+    vector<PseudoJet> pieces = jet.pieces();
+    if (pieces.size() == 0) return 0;
+    const JetDefinition::Recombiner * reco = _get_common_recombiner(pieces[0]);
+    for (unsigned int i=1;i<pieces.size(); i++)
+      if (_get_common_recombiner(pieces[i]) != reco) return 0;
+    // never returned false, so we're OK.
+    return reco;
+  }
+
+  // return false for any other (unknown) structure
+  return 0;
+}
+
 
 // transformer description
 std::string Pruner::description() const{
   ostringstream oss;
-  oss << "Pruner with jet_definition = " << _jet_def.description();
+  oss << "Pruner with jet_definition = (" << _jet_def.description() << ")";
   if (_zcut_dyn) {
     oss << ", dynamic zcut (" << _zcut_dyn->description() << ")"
 	<< ", dynamic Rcut (" << _Rcut_dyn->description() << ")";
@@ -272,8 +333,8 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
 // returns the plugin description
 string PruningPlugin::description() const{
   ostringstream oss;
-  oss << "Pruning plugin with jet_definition = " << _jet_def.description()
-      << ", zcut = " << _zcut
+  oss << "Pruning plugin with jet_definition = (" << _jet_def.description()
+      <<"), zcut = " << _zcut
       << ", Rcut = " << _Rcut;
   return oss.str();
 }

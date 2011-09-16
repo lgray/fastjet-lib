@@ -104,8 +104,24 @@ public:
   ///  \param Rcut_factor the angular distance cut in the pruning will be
   ///                     Rcut_factor * 2m/pt
   Pruner(const JetDefinition &jet_def, double zcut, double Rcut_factor)
-    : _jet_def(jet_def), _zcut(zcut), _Rcut_factor(Rcut_factor),
-      _zcut_dyn(0), _Rcut_dyn(0){}
+    : _jet_def(jet_def),
+      _zcut(zcut), _Rcut_factor(Rcut_factor),
+      _zcut_dyn(0), _Rcut_dyn(0), _get_recombiner_from_jet(false) {}
+
+  /// minimal constructor, which takes a jet algorithm rather than a
+  /// jet definition, sets the radius to JetDefinition::max_allowable_R
+  /// (functionally equivalent to infinity) and also tries to set 
+  /// a recombiner based on the one in the jet definition of the
+  /// particular jet being pruned.
+  ///
+  ///  \param jet_alg     the jet algorithm for the internal clustering
+  ///  \param zcut        pt-fraction cut in the pruning
+  ///  \param Rcut_factor the angular distance cut in the pruning will be
+  ///                     Rcut_factor * 2m/pt
+  Pruner(const JetAlgorithm jet_alg, double zcut, double Rcut_factor) 
+    : _jet_def(jet_alg, JetDefinition::max_allowable_R),
+      _zcut(zcut), _Rcut_factor(Rcut_factor),
+      _zcut_dyn(0), _Rcut_dyn(0), _get_recombiner_from_jet(true) {}
 
   /// alternative (dynamic) ctor
   ///  \param jet_def the jet definition for the internal clustering
@@ -129,12 +145,19 @@ private:
   /// area support)
   bool _check_explicit_ghosts(const PseudoJet &jet) const;
 
-  JetDefinition _jet_def; ///< the internal jet definition (only the 
-                          ///< algorithm and the recombiner< are used)
+  /// return a pointer to a "common" recombiner if there is one,
+  /// alternatively a null pointer.
+  const JetDefinition::Recombiner * _get_common_recombiner(const PseudoJet &jet) const;
+
+  JetDefinition _jet_def; ///< the internal jet definition
   double _zcut;		  ///< the pt-fraction cut
   double _Rcut_factor;    ///< the angular separation cut factor
   FunctionOfPseudoJet<double> *_zcut_dyn; ///< dynamic zcut
   FunctionOfPseudoJet<double> *_Rcut_dyn; ///< dynamic Rcut
+  bool   _get_recombiner_from_jet; ///< true for minimal constructor,
+                                   ///< causes recombiner to be set equal 
+                                   ///< to that already used in the jet 
+                                   ///< (if it can be deduced)
 };
 
 
