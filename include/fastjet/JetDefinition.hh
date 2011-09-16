@@ -158,7 +158,6 @@ enum RecombinationScheme {
 
 
 
-
 // forward declaration, needed in order to specify interface for the
 // plugin.
 class ClusterSequence;
@@ -296,6 +295,14 @@ public:
 //    set_extra_param(0.0); // make sure it's defined
 //  }
 
+  
+  /// R values larger than max_allowable_R are not allowed.
+  ///
+  /// We use a value of 1000, substantially smaller than
+  /// numeric_limits<double>::max(), to leave room for the convention
+  /// within PseudoJet of setting unphysical (infinite) rapidities to
+  /// +-(MaxRap + abs(pz())), where MaxRap is 10^5.
+  const static double max_allowable_R = 1000.0;
 
   /// set the recombination scheme to the one provided
   void set_recombination_scheme(RecombinationScheme);

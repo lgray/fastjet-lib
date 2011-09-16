@@ -53,10 +53,14 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
                    // Any value > 2 would have done here
   } else {
     // We maintain some limit on R because particles with pt=0, m=0
-    // can have rapidities O(10000) and one doesn't want the
+    // can have rapidities O(100000) and one doesn't want the
     // clustering to start including them as if their rapidities were
     // physical.
-    assert ( R < 1000.0);
+    if (R > max_allowable_R) {
+      ostringstream oss;
+      oss << "Requested R = " << R << " for jet definition is larger than max_allowable_R = " << max_allowable_R;
+      throw Error(oss.str());
+    }
   }
 
   // cross-check the number of parameters that were declared in setting up the

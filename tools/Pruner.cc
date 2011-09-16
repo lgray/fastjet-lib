@@ -93,7 +93,11 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   PrunerStructure * s = new PrunerStructure(result);
   result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
   
-  // make sure things remain persistent when leaving
+  // make sure things remain persistent -- i.e. tell the jet definition
+  // and the cluster sequence that it is their responsibility to clean 
+  // up memory once the "result" reaches the end of its life in the user's
+  // code. (The CS deletes itself when the result goes out of scope and
+  // that also triggers deletion of the plugin)
   internal_jet_def.delete_plugin_when_unused();
   cs->delete_self_when_unused();
 

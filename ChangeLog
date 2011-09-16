@@ -1,3 +1,12 @@
+2011-09-16  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
+
+	* include/fastjet/JetDefinition.hh: 
+	* include/fastjet/JetDefinition.cc: 
+	  changed hard-coded limit for R of 1000 into
+	  JetDefinition::max_allowable_R, with extra comments;
+	  replaced assertion with throw for when the condition is not
+	  satisfied. 
+
 2011-09-13  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/fastjet/tools/RestFrameNSubjettinessTagger.hh: 

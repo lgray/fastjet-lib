@@ -975,7 +975,9 @@ public:
     if (jets.size() < _n) return;
 
     // do we want to first chech if things are already ordered before
-    // going through the ordering process?
+    // going through the ordering process? For now, no. Maybe carry
+    // out timing tests at some point to establish the optimal
+    // strategy.
 
     vector<double> minus_pt2(jets.size());
     vector<unsigned int> indices(jets.size());
