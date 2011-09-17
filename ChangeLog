@@ -1,3 +1,10 @@
+2011-09-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/JetDefinition.cc: 
+	* include/fastjet/JetDefinition.hh:
+	  moved max_allowable_R value into .cc file to try and resolve
+	  problem on karnak.
+
 2011-09-16  Gavin Salam  <salam@lpthe.jussieu.fr> + Matteo
 
 	* tools/Filter.cc: 

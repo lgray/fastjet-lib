@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
   tests.push_back(new TestPJCSaccess());
   tests.push_back(new TestSubStructure());
   tests.push_back(new TestGroomerAreas());
-  tests.push_back(new TestGroomerRecombiners());
+  //tests.push_back(new TestGroomerRecombiners()); not for now -- it's empty
 
   // loop over the tests
   for (unsigned i = 0; i < tests.size(); i++) {
