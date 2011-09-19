@@ -4005,9 +4005,10 @@ $j$. In practice, recombinations are vetoed in the clustering sequence
 when neither of the following criteria are met:
 \begin{enumerate}
 \item the geometric distance between $i$ and $j$ is smaller than a parameter
-\ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times 2m/p_t$ 
+\ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times 2m/p_t$, with
+$m$ and $p_t$ taken from the jet as a whole;
 \item $p_t^i, p_t^j >$~\ttt{zcut}$\times
-p_t^{i+j}$
+p_t^{i+j}$.
 \end{enumerate}
 When both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
 and $j$ is kept, and the softer is rejected.
@@ -4034,7 +4035,7 @@ have been `pruned away') can be obtained with
 \end{lstlisting}
 and each of these subjets will also have a valid associated clustering sequence.
 
-When using the constructor above, the jet radius used by the pruning clustering 
+When using the constructor given above, the jet radius used by the pruning clustering 
 sequence is set internally to the functional equivalent of infinity. Alternatively, 
 a pruner transformer can be constructed with a \ttt{JetDefinition} instead of just a
 \ttt{JetAlgorithm}:
@@ -4042,19 +4043,20 @@ a pruner transformer can be constructed with a \ttt{JetDefinition} instead of ju
   JetDefinition pruner_jetdef(jet_algorithm, Rpruner);
   Pruner pruner(pruner_jetdef, zcut, Rcut_factor);
 \end{lstlisting}
-In this case, the jet definition \ttt{pruner\_jetdef} should normally have a radius
+In this situation, the jet definition \ttt{pruner\_jetdef} should normally have a radius
 \ttt{Rpruner}
 large enough to ensure that
 all the constituents of the jet being pruned are reclustered into a single jet. 
-Should this not happen,
-pruning is applied to the hardest of the jets found, and the others can be
-retrieved using
+%
+If this is not the case, pruning is applied to the entire clustering
+and it is the hardest resulting pruned jet that is returned; the
+others can be retrieved using
 \begin{lstlisting}
   vector<PseudoJet> extra_jets = pruned_jet.structure_of<Pruner>().extra_jets();
 \end{lstlisting}
 
 Finally, note that a third constructor for \ttt{Pruner} exists, that allows one
-to construct the pruner using functions that compute dynamycally \ttt{zcut} and
+to construct the pruner using functions that dynamycally compute \ttt{zcut} and
 \ttt{Rcut} for the jet being pruned:
 \begin{lstlisting}
   Pruner (const JetDefinition &jet_def, 
