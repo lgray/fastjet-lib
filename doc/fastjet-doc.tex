@@ -4009,17 +4009,17 @@ when neither of the following criteria are met:
 \item $p_t^i, p_t^j >$~\ttt{zcut}$\times
 p_t^{i+j}$
 \end{enumerate}
-If both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
+When both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
 and $j$ is kept, and the softer is rejected.
 \ttt{Rcut\_factor} and \ttt{zcut} are parameters of the pruning algorithm, and
 $m$ and $p_t$ are the mass and the transverse momentum of the jet being pruned.
 
 The \ttt{fastjet::Pruner} class, derived from \ttt{Transformer}, can be used as
-follows, using a \ttt{JetDefinition} and two \ttt{double} parameters:
+follows, using a \ttt{JetAlgorithm} and two \ttt{double} parameters:
 \begin{lstlisting}
   #include "fastjet/tools/Pruner.hh"
   // ...
-  Pruner pruner(subjet_def,  zcut,  Rcut_factor);
+  Pruner pruner(jet_algorithm, zcut, Rcut_factor);
   // ...
   PseudoJet pruned_jet = pruner(jet);
 \end{lstlisting}
@@ -4030,26 +4030,36 @@ can, for instance, ask for its constituents with
 In addition, the subjets that have been rejected by the pruning algorithm (i.e.
 have been `pruned away') can be obtained with
 \begin{lstlisting}
-   vector<PseudoJet> rejected_subjets = pruned_jet.structure_of<Pruner>().rejected();
+  vector<PseudoJet> rejected_subjets = pruned_jet.structure_of<Pruner>().rejected();
 \end{lstlisting}
 and each of these subjets will also have a valid associated clustering sequence.
 
-The jet definition \ttt{subjet\_def} used in hte \ttt{Pruner} to recluster the
-constituents of a jet should normally have a radius large enough to ensure that
-all its constituents are reclustered into a single jet. Should this not happen,
+When using the constructor above, the jet radius used by the pruning clustering 
+sequence is set internally to the functional equivalent of infinity. Alternatively, 
+a pruner transformer can be constructed with a \ttt{JetDefinition} instead of just a
+\ttt{JetAlgorithm}:
+\begin{lstlisting}
+  JetDefinition pruner_jetdef(jet_algorithm, Rpruner);
+  Pruner pruner(pruner_jetdef, zcut, Rcut_factor);
+\end{lstlisting}
+In this case, the jet definition \ttt{pruner\_jetdef} should normally have a radius
+\ttt{Rpruner}
+large enough to ensure that
+all the constituents of the jet being pruned are reclustered into a single jet. 
+Should this not happen,
 pruning is applied to the hardest of the jets found, and the others can be
 retrieved using
 \begin{lstlisting}
-   vector<PseudoJet> extra_jets = pruned_jet.structure_of<Pruner>().extra_jets();
+  vector<PseudoJet> extra_jets = pruned_jet.structure_of<Pruner>().extra_jets();
 \end{lstlisting}
 
-Finally, note that a second constructor for \ttt{Pruner} exists, that allows one
+Finally, note that a third constructor for \ttt{Pruner} exists, that allows one
 to construct the pruner using functions that compute dynamycally \ttt{zcut} and
 \ttt{Rcut} for the jet being pruned:
 \begin{lstlisting}
-   Pruner (const JetDefinition &jet_def, 
-           FunctionOfPseudoJet< double > *zcut_dyn, 
-	   FunctionOfPseudoJet< double > *Rcut_dyn);
+  Pruner (const JetDefinition &jet_def, 
+          FunctionOfPseudoJet< double > *zcut_dyn, 
+	  FunctionOfPseudoJet< double > *Rcut_dyn);
 \end{lstlisting}
 
 
