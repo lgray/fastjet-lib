@@ -1,3 +1,14 @@
+2011-09-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* include/fastjet/internal/Triangulation.hh: 
+	  moved the include guards.
+
+	* tools/Makefile.am: 
+	* tools/JHTopTagger.cc: 
+	* tools/TopTaggerBase.cc (_cos_theta_W): *** ADDED ***
+	  moved the _cos_theta_W(...) call into a new file
+	  TopTaggerBase.cc (also modified the .hh files)
+
 2011-09-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/JetDefinition.cc: 

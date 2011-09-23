@@ -1,3 +1,7 @@
+#ifndef DROP_CGAL // in case we do not have the code for CGAL
+#ifndef __FASTJET_TRIANGULATION__
+#define __FASTJET_TRIANGULATION__
+
 //STARTHEADER
 // $Id$
 //
@@ -26,10 +30,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-
-#ifndef DROP_CGAL // in case we do not have the code for CGAL
-#ifndef __FASTJET_TRIANGULATION__
-#define __FASTJET_TRIANGULATION__
 
 // file: examples/Triangulation_2/Voronoi.C
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
