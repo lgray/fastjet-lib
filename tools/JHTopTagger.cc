@@ -188,32 +188,6 @@ vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & jet_to_split,
 }
 
 
-// compute the W helicity angle
-//
-// The helicity angle is a standard observable in top decays, used to
-// determine the Lorentz structure of the top- W coupling [13]. It is
-// defined as the angle, measured in the rest frame of the
-// reconstructed W, between the reconstructed top's flight direction
-// and one of the W decay products. Normally, it is studied in
-// semi-leptonic top decays, where the charge of the lepton uniquely
-// identifies these decay products. In hadronic top decays there is an
-// ambiguity which we resolve by choosing the lower pT subjet, as
-// measured in the lab frame.
-double JHTopTagger::_cos_theta_W(const PseudoJet & result) const{
-  // the two jets of interest: top and lower-pt prong of W
-  const PseudoJet & W  = result.structure_of<JHTopTagger>().W();
-  vector<PseudoJet> W_pieces = W.pieces();
-  assert(W_pieces[0].perp2() >= W_pieces[1].perp2());
-  PseudoJet W2  = W_pieces[1];
-  PseudoJet top = result;
-  
-  // transform these jets into jets in the rest frame of the W
-  W2.unboost(W);
-  top.unboost(W);
-
-  return (W2.px()*top.px() + W2.py()*top.py() + W2.pz()*top.pz())/
-    sqrt(W2.modp2() * top.modp2());
-}
 
 
 FASTJET_END_NAMESPACE

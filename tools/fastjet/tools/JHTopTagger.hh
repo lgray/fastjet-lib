@@ -151,9 +151,6 @@ protected:
   std::vector<PseudoJet> _split_once(const PseudoJet & jet_to_split,
 				     const PseudoJet & reference_jet) const;
 
-  /// computes the W helicity angle
-  double _cos_theta_W(const PseudoJet & result) const;
-
   double _delta_p, _delta_r, _cos_theta_W_max, _mW;
   static LimitedWarning _warnings_nonca;
 };

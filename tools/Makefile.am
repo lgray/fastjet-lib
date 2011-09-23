@@ -9,6 +9,6 @@ libfastjettools_la_SOURCES = \
   GridMedianBackgroundEstimator.cc \
   Filter.cc Pruner.cc Subtractor.cc\
   MassDropTagger.cc RestFrameNSubjettinessTagger.cc CASubJetTagger.cc \
-  JHTopTagger.cc
+  JHTopTagger.cc TopTaggerBase.cc
 
 # EXTRA_DIST = makefile.static 

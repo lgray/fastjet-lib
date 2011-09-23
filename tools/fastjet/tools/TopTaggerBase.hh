@@ -74,6 +74,9 @@ public:
   }
 
 protected:
+  /// computes the W helicity angle
+  double _cos_theta_W(const PseudoJet & result) const;
+
   Selector _top_selector, _W_selector;
   bool _top_selector_set, _W_selector_set;
 };
