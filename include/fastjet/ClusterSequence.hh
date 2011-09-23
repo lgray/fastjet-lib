@@ -125,19 +125,19 @@ class ClusterSequence {
   /// default constructor
   ClusterSequence () : _deletes_self_when_unused(false) {}
 
-  /// create a clustersequence starting from the supplied set
-  /// of pseudojets and clustering them with the long-invariant
-  /// kt algorithm (E-scheme recombination) with the supplied
-  /// value for R.
-  ///
-  /// If strategy=DumbN3 a very stupid N^3 algorithm is used for the
-  /// clustering; otherwise strategy = NlnN* uses cylinders algorithms
-  /// with some number of pi coverage. If writeout_combinations=true a
-  /// summary of the recombination sequence is written out
-  template<class L> ClusterSequence (const std::vector<L> & pseudojets, 
-		   const double & R = 1.0,
-		   const Strategy & strategy = Best,
-		   const bool & writeout_combinations = false);
+//   /// create a clustersequence starting from the supplied set
+//   /// of pseudojets and clustering them with the long-invariant
+//   /// kt algorithm (E-scheme recombination) with the supplied
+//   /// value for R.
+//   ///
+//   /// If strategy=DumbN3 a very stupid N^3 algorithm is used for the
+//   /// clustering; otherwise strategy = NlnN* uses cylinders algorithms
+//   /// with some number of pi coverage. If writeout_combinations=true a
+//   /// summary of the recombination sequence is written out
+//   template<class L> ClusterSequence (const std::vector<L> & pseudojets, 
+// 		   const double & R = 1.0,
+// 		   const Strategy & strategy = Best,
+// 		   const bool & writeout_combinations = false);
 
 
   /// create a clustersequence starting from the supplied set
@@ -449,12 +449,12 @@ class ClusterSequence {
 
 
 public:
-  /// set the default (static) jet finder across all current and future
-  /// ClusterSequence objects -- deprecated and obsolescent (i.e. may be
-  /// suppressed in a future release).
-  static void set_jet_algorithm (JetAlgorithm jet_algorithm) {_default_jet_algorithm = jet_algorithm;}
-  /// same as above for backward compatibility
-  static void set_jet_finder (JetAlgorithm jet_algorithm)    {_default_jet_algorithm = jet_algorithm;}
+//DEP   /// set the default (static) jet finder across all current and future
+//DEP   /// ClusterSequence objects -- deprecated and obsolescent (i.e. may be
+//DEP   /// suppressed in a future release).
+//DEP   static void set_jet_algorithm (JetAlgorithm jet_algorithm) {_default_jet_algorithm = jet_algorithm;}
+//DEP   /// same as above for backward compatibility
+//DEP   static void set_jet_finder (JetAlgorithm jet_algorithm)    {_default_jet_algorithm = jet_algorithm;}
 
 
   /// \ingroup extra_info
@@ -597,7 +597,7 @@ public:
 
 
 protected:
-  static JetAlgorithm _default_jet_algorithm;
+//DEP  static JetAlgorithm _default_jet_algorithm;
   JetDefinition _jet_def;
 
   /// transfer the vector<L> of input jets into our own vector<PseudoJet>
@@ -611,12 +611,12 @@ protected:
   void _initialise_and_run (const JetDefinition & jet_def,
 			    const bool & writeout_combinations);
 
-  /// This is an alternative routine for initialising and running the
-  /// clustering, provided for legacy purposes. The jet finder is that
-  /// specified in the static member _default_jet_algorithm.
-  void _initialise_and_run (const double & R,
-			    const Strategy & strategy,
-			    const bool & writeout_combinations);
+//DEP   /// This is an alternative routine for initialising and running the
+//DEP   /// clustering, provided for legacy purposes. The jet finder is that
+//DEP   /// specified in the static member _default_jet_algorithm.
+//DEP   void _initialise_and_run (const double & R,
+//DEP 			    const Strategy & strategy,
+//DEP 			    const bool & writeout_combinations);
 
   /// fills in the various member variables with "decanted" options from
   /// the jet_definition and writeout_combinations variables
@@ -930,21 +930,21 @@ template<class L> void ClusterSequence::_transfer_input_jets(
   
 }
 
-//----------------------------------------------------------------------
-// initialise from some generic type... Has to be made available
-// here in order for it the template aspect of it to work...
-template<class L> ClusterSequence::ClusterSequence (
-			          const std::vector<L> & pseudojets,
-				  const double & R,
-				  const Strategy & strategy,
-				  const bool & writeout_combinations) {
-
-  // transfer the initial jets (type L) into our own array
-  _transfer_input_jets(pseudojets);
-
-  // run the clustering
-  _initialise_and_run(R,strategy,writeout_combinations);
-}
+// //----------------------------------------------------------------------
+// // initialise from some generic type... Has to be made available
+// // here in order for it the template aspect of it to work...
+// template<class L> ClusterSequence::ClusterSequence (
+// 			          const std::vector<L> & pseudojets,
+// 				  const double & R,
+// 				  const Strategy & strategy,
+// 				  const bool & writeout_combinations) {
+// 
+//   // transfer the initial jets (type L) into our own array
+//   _transfer_input_jets(pseudojets);
+// 
+//   // run the clustering
+//   _initialise_and_run(R,strategy,writeout_combinations);
+// }
 
 
 //----------------------------------------------------------------------

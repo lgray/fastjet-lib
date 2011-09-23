@@ -5524,6 +5524,44 @@ support for native jet algorithms to be run with $R>\pi/2$.
 % though the exclusive mode may have physical advantages in certain cases.
 % 
 
+\section{Deprecated and removed features}
+
+\begin{table}
+  \centering
+  \begin{tabular}{lccl}\toprule
+    Feature, class or include file
+                    & Dep. & Rem.  & Suggested replacement\\\midrule
+    FjClusterSequence.hh 
+                    & 2.0   & 3.0  & fastjet/ClusterSequence.hh\\
+    FjPseudoJet.hh  & 2.0   & 3.0  & fastjet/PseudoJet.hh\\\midrule
+    %----------------------------------------------------------------------
+    CS::set\_jet\_finder(...)    & 2.1 & 3.0 & JetDefinition \\
+    CS::set\_jet\_algorithm(...) & 2.1 & 3.0 & JetDefinition \\
+    CS::CS(particles, R, ...)    & 2.1 & 3.0 & CS::CS(particles, jet\_def)\\
+    \midrule
+    %----------------------------------------------------------------------
+    %<PluginName>Plugin.hh \#include ``PluginName.hh''
+    %               & 2.3    & 3.0  & \#include ``fastjet/PluginName.hh''\\
+    SISConePlugin.hh  
+                   & 2.3    & 3.0  & fastjet/SISConePlugin.hh (idem.\ other plugins)\\
+    ActiveAreaSpec  & 2.3   &  --  & AreaDefinition \& GhostedAreaSpec\\
+    ClusterSequenceWithArea 
+                    & 2.3   &  --  & ClusterSequenceArea\\\midrule
+    RangeDefinition & 3.0   &  --  & Selector(s)        \\
+    CircularRange   & 3.0   &  --  & SelectorCircle     \\
+    CSAB::median\_pt\_per\_unit\_area(...)
+                   & 3.0    & --   & BackgroundEstimator\\
+    CSAB::parabolic\_pt\_per\_unit\_area(...)
+                   & 3.0    & --   & BackgroundEstimator (cf.\ section \ref{sec:BGE-positional})\\
+                   \bottomrule
+  \end{tabular}
+  \caption{Summary of interfaces and features of earlier versions that have been
+    deprecated and/or removed. For brevity we have used the following
+    abbreviations: Dep. = version since which a feature has been
+    deprecated, Rem. = version where removed, CS = ClusterSequence, CSAB =
+    ClusterSequenceAreaBase.} 
+\end{table}
+
 %======================================================================
 \begin{thebibliography}{99}
 

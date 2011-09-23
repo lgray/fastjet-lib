@@ -44,9 +44,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-//// initialised static member has to go in the .cc code
-JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
-//
+//DEP //// initialised static member has to go in the .cc code
+//DEP JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
+//DEP //
 
 
 // destructor that guarantees proper bookkeeping for the CS Structure
@@ -94,15 +94,15 @@ void ClusterSequence::signal_imminent_self_deletion() const {
   _deletes_self_when_unused = false;
 }
 
-//----------------------------------------------------------------------
-void ClusterSequence::_initialise_and_run (
-				  const double & R,
-				  const Strategy & strategy,
-				  const bool & writeout_combinations) {
-
-  JetDefinition jet_def(_default_jet_algorithm, R, strategy);
-  _initialise_and_run(jet_def, writeout_combinations);
-}
+//DEP //----------------------------------------------------------------------
+//DEP void ClusterSequence::_initialise_and_run (
+//DEP 				  const double & R,
+//DEP 				  const Strategy & strategy,
+//DEP 				  const bool & writeout_combinations) {
+//DEP 
+//DEP   JetDefinition jet_def(_default_jet_algorithm, R, strategy);
+//DEP   _initialise_and_run(jet_def, writeout_combinations);
+//DEP }
 
 
 //----------------------------------------------------------------------
