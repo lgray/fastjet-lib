@@ -1,3 +1,13 @@
+2011-09-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/JetMedianBackgroundEstimator.cc (set_particles):
+	  Bug fixed: simply set _uptodate to faslse instead of calling
+	  reset(). This avoids that in code like
+	    jmbge.set_rescaling_class(...);
+	    jmbge.set_particles(...)\
+	  the 2nd call resets the rescaling class to NULL (erasing the
+	  effect of the 1st one)
+
 2011-09-23  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
 	* include/fastjet/ClusterSequence.hh: 

@@ -107,7 +107,8 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
     throw Error("JetMedianBackgroundEstimator::set_particles can only be called if you set the jet (and area) definition explicitly through the class constructor");
 
   // initialise things decently (including setting uptodate to false!)
-  reset();
+  //reset();
+  _uptodate=false;
 
   // cluster the particles
   // 
