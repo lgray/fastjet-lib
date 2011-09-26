@@ -79,7 +79,6 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   if (_get_recombiner_from_jet) {
     const JetDefinition::Recombiner * common_recombiner = 
                                               _get_common_recombiner(jet);
-    cout << common_recombiner << endl;
     if (common_recombiner) {
       JetDefinition jet_def = _jet_def;
       if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
