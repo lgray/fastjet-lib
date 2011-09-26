@@ -2,7 +2,7 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
-Summary of changes from v2.4 -> v3.0beta1:  10 August 2011
+Summary of changes from v2.4.4 -> v3.0.0:  XX September 2011
 ================================================================
 
 FastJet 3.0beta1 includes the majority of the features expected for
@@ -15,21 +15,22 @@ stable. The major new features relative to the 2.4.x series are:
 
 - Selectors, which allow easy communication of cuts across different functions
 
-- Filtering, Trimming and a few boosted object taggers included
+- Filtering, trimming, pruning and a few boosted object taggers included
   natively as part of a new "Transformers" framework.
 
 - New background estimation interface, with
   JetMedianBackgroundEstimator and GridMedianBackgroundEstimator
   classes.
 
-- Improved doxygen and examples
+- Improved doxygen and examples.
 
 - Many smaller changes, including aids for easier memory management,
-  two new plugins, enhanced fortran wrappers and elimination of the
-  R<pi /2 restriction on native jet algorithms 
+  output of error and warning messages, new plugins (GridJet and two
+  D0RunICone plugins), enhanced fortran wrappers and elimination of
+  the R<pi/2 restriction on native jet algorithms.
 
 See below for a more complete list of changes, including those
-relative to the alpha releases.
+relative to the beta releases.
 
 In a few places, behaviour has changed from the 2.4.X series to
 the 3.0 series:
@@ -45,7 +46,7 @@ the 3.0 series:
   call ghost_area_spec.set_fj2_placement(true) to reinstate old behaviour
 
 - CS::exclusive_subjets used to silently return fewer subjets than
-  requested if there were too particles in a jet; to be consistent
+  requested if there were too few particles in a jet; to be consistent
   with exclusive_jets(...) it now throws an exception; use
   exclusive_jets_up_to(...) and exclusive_subjets_up_to(...) to avoid
   the exception.
@@ -58,15 +59,28 @@ the 3.0 series:
   include/FjClusterSequence.hh), and some classes are deprecated:
   ClusterSequenceWithArea (use ClusterSequenceArea instead),
   ActiveAreaSpec (use GhostedAreaSpec instead), and RangeDefinition
-  and CircularRange (use Selector instead)
+  and CircularRange (use Selector instead); see appendix G in
+  manual for further small removals.
 
 - the plugins are by default built in a single 'libfastjetplugin'
   library. This is transparent if you use the fastjet-config script.
   The previous behaviour (each plugin in its own library) can be
   recovered by passing the --disable-monolithic option to configure.
 
+================================================================
+Summary of changes from v3.0beta1 -> v3.0.0:  XX September 2011
+================================================================
+New features:
+- addition of Pruner class
+- control of Error and warning output, including public LimitedWarning class
+- addition of SelectorIsZero
+- ClusterSequence::childless_pseudojets()
 
-
+Bug fixes and other changes
+- JetMedianBackgroundEstimator::set_particles(...) no longer reset other parameters
+- fixed issue with persistency of internal recombiner in Filter
+- removed deprecated ClusterSequence constructor with R (rather than jet def)
+  and also CS::set_jet_algorithm(...), CS::set_jet_def(...)
 
 ================================================================
 Summary of changes from v3.0alpha3 -> v3.0beta1:  10 August 2011
