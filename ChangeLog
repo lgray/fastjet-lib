@@ -9,7 +9,6 @@
 	* src/GhostedAreaSpec.cc:
 	  added warning for when set_fj2_placement(true) is called.
 
->>>>>>> .r2606
 2011-09-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc (set_particles):
