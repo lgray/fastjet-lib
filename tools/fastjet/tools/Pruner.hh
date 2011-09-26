@@ -99,20 +99,10 @@ class PruningPlugin;
 //----------------------------------------------------------------------
 class Pruner : public Transformer{
 public:
-  ///  \param jet_def     the jet definition for the internal clustering
-  ///  \param zcut        pt-fraction cut in the pruning
-  ///  \param Rcut_factor the angular distance cut in the pruning will be
-  ///                     Rcut_factor * 2m/pt
-  Pruner(const JetDefinition &jet_def, double zcut, double Rcut_factor)
-    : _jet_def(jet_def),
-      _zcut(zcut), _Rcut_factor(Rcut_factor),
-      _zcut_dyn(0), _Rcut_dyn(0), _get_recombiner_from_jet(false) {}
-
-  /// minimal constructor, which takes a jet algorithm rather than a
-  /// jet definition, sets the radius to JetDefinition::max_allowable_R
-  /// (functionally equivalent to infinity) and also tries to set 
-  /// a recombiner based on the one in the jet definition of the
-  /// particular jet being pruned.
+  /// minimal constructor, which takes a jet algorithm, sets the radius
+  /// to JetDefinition::max_allowable_R (practically equivalent to
+  /// infinity) and also tries to use a recombiner based on the one in
+  /// the jet definition of the particular jet being pruned.
   ///
   ///  \param jet_alg     the jet algorithm for the internal clustering
   ///  \param zcut        pt-fraction cut in the pruning
@@ -123,7 +113,23 @@ public:
       _zcut(zcut), _Rcut_factor(Rcut_factor),
       _zcut_dyn(0), _Rcut_dyn(0), _get_recombiner_from_jet(true) {}
 
-  /// alternative (dynamic) ctor
+
+  /// alternative ctor in which the full reclustering jet definition can
+  /// be specified.
+  ///
+  ///  \param jet_def     the jet definition for the internal clustering
+  ///  \param zcut        pt-fraction cut in the pruning
+  ///  \param Rcut_factor the angular distance cut in the pruning will be
+  ///                     Rcut_factor * 2m/pt
+  Pruner(const JetDefinition &jet_def, double zcut, double Rcut_factor)
+    : _jet_def(jet_def),
+      _zcut(zcut), _Rcut_factor(Rcut_factor),
+      _zcut_dyn(0), _Rcut_dyn(0), _get_recombiner_from_jet(false) {}
+
+
+  /// alternative ctor in which the pt-fraction cut and angular distance
+  /// cut are functions of the jet being pruned.
+  ///
   ///  \param jet_def the jet definition for the internal clustering
   ///  \param zcut_dyn    dynamic pt-fraction cut in the pruning
   ///  \param Rcut_dyn    dynamic angular distance cut in the pruning
