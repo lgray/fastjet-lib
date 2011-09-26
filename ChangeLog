@@ -1,7 +1,7 @@
 2011-09-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc (set_particles):
-	  Bug fixed: simply set _uptodate to faslse instead of calling
+	  Bug fixed: simply set _uptodate to false instead of calling
 	  reset(). This avoids that in code like
 	    jmbge.set_rescaling_class(...);
 	    jmbge.set_particles(...)\
