@@ -35,6 +35,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/internal/BasicRandom.hh"
 #include "fastjet/Selector.hh"
+#include "fastjet/LimitedWarning.hh"
 
 // 
 #define STATIC_GENERATOR 1
@@ -158,7 +159,8 @@ public:
   ///   total area coverage when maxrap is small, by an amount
   ///   sqrt(area)/(2*maxrap).
   ///
-  inline void set_fj2_placement(bool  val) {_fj2_placement  = val; _initialize();}
+  /// FJ2 placement is now deprecated.
+  void set_fj2_placement(bool  val);
 
   /// return nphi (ghosts layed out (-nrap, 0..nphi-1), (-nrap+1,0..nphi-1),
   /// ... (nrap,0..nphi-1)
@@ -218,6 +220,8 @@ private:
   std::vector<int> _random_checkpoint;
   static BasicRandom<double> _random_generator;
   //mutable BasicRandom<double> _random_generator;
+
+  static LimitedWarning _warn_fj2_placement_deprecated;
 
   inline double _our_rand() const {return _random_generator();}
   

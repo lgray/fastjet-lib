@@ -5494,7 +5494,7 @@ and it became possible to associate extra information with a
 PseudoJet beyond just a user index.
 %
 It  brought the first of a series of \fastjet tools to help with
-advanced jet analyses, namely the Selector class, filters, taggers and
+advanced jet analyses, namely the Selector class, filters, pruners, taggers and
 new background estimation classes.
 %
 Version~3 also added the D0-Run I cone~\cite{Abbott:1997fc} plugin and
@@ -5525,6 +5525,16 @@ support for native jet algorithms to be run with $R>\pi/2$.
 % 
 
 \section{Deprecated and removed features}
+\label{sec:deprecated}
+
+While we generally aim to maintain backwards compatibility for
+software written with old versions of FastJet, there are occasions
+where old interfaces or functionality no longer meet the standards that
+are demanded of a program that is increasingly widely used.
+%
+Table~\ref{tab:deprecated} lists the cases where such considerations
+have led us to deprecate and/or remove functionality.
+
 
 \begin{table}
   \centering
@@ -5547,22 +5557,35 @@ support for native jet algorithms to be run with $R>\pi/2$.
     ActiveAreaSpec  & 2.3   &  --  & AreaDefinition \& GhostedAreaSpec\\
     ClusterSequenceWithArea 
                     & 2.3   &  --  & ClusterSequenceArea\\\midrule
+    %----------------------------------------------------------------------
+    default $f=0.5$ in some cone plugins
+                    & --    &  2.4 & include $f$ explicitly in c'tor\\
+    default $R=1$ in JetDefinition
+                    & --    &  2.4 & include $R$ explicitly in c'tor\\
+    \midrule %------------------------------------------------------------
+    % ghost placement
     RangeDefinition & 3.0   &  --  & Selector(s)        \\
     CircularRange   & 3.0   &  --  & SelectorCircle     \\
     CSAB::median\_pt\_per\_unit\_area(...)
                    & 3.0    & --   & BackgroundEstimator\\
     CSAB::parabolic\_pt\_per\_unit\_area(...)
                    & 3.0    & --   & BackgroundEstimator (cf.\ section \ref{sec:BGE-positional})\\
-                   \bottomrule
+    GAS::set\_fj2\_placement(...)
+                   & 3.0    & --   & use new default ghost placement instead\\
+    \bottomrule %=========================================================
   \end{tabular}
   \caption{Summary of interfaces and features of earlier versions that have been
     deprecated and/or removed. For brevity we have used the following
     abbreviations: Dep. = version since which a feature has been
-    deprecated, Rem. = version where removed, CS = ClusterSequence, CSAB =
-    ClusterSequenceAreaBase.} 
+    deprecated, c'tor = constructor, Rem. = version where removed, CS
+    = ClusterSequence, CSAB = ClusterSequenceAreaBase, GAS =
+    GhostedAreaSpec.
+    \label{tab:deprecated}
+  } 
 \end{table}
 
 %======================================================================
+\newpage
 \begin{thebibliography}{99}
 
 \bibitem{fastjet}
