@@ -7,8 +7,9 @@ Summary of changes from v2.4.4 -> v3.0.0:  XX September 2011
 
 The major new features relative to the 2.4.x series are:
 
-- Filtering, trimming, pruning and a few boosted object taggers included
-  natively as part of a new "Transformers" framework.
+- Filtering, trimming, pruning and a few boosted object taggers
+  included natively as part of a new "Transformers" framework (built
+  in a new libfastjettools library included by fastjet-config --libs).
 
 - PseudoJets are aware of their structure, e.g. you can ask for jet.constituents()
 
