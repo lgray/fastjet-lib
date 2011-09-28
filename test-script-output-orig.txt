@@ -42,35 +42,35 @@ jet #        rapidity             phi              pt  n constituents
     8      3.42713139      5.74362063      5.17254118       13
     9     -4.83615264      2.20502275      5.02711586       12
 #--------------------------------------------------------------------------
-#                      FastJet release 2.4-devel
+#                         FastJet release 3.0.0
 #            Written by M. Cacciari, G.P. Salam and G. Soyez            
 #                         http://www.fastjet.fr                         
 #								      	   
 # Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  
-# clustering using fast geometric algorithms, with area measures and optional
-# external jet-finder plugins.                                          
-# Please cite Phys. Lett. B641 (2006) [hep-ph/0512210] if you use this code.
+# clustering using fast geometric algorithms, with jet areas and optional
+# external jet-finder plugins. If you use this code towards a scientific 
+# publication please cite Phys. Lett. B641 (2006) [hep-ph/0512210] and   
+# M. Cacciari, G.P. Salam and G. Soyez, http://fastjet.fr/              
 #								      	   
 # This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM 
-# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code 
-# and CGAL: http://www.cgal.org/.
+# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code.
 #-------------------------------------------------------------------------
 Jet definition was: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
-Area definition was: Passive area (optimal alg. based on jet.def.), where relevant with ghosts of area 0.0473947 (had requested 0.05), placed up to y = 7, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
-Strategy adopted by FastJet was N2Tiled
+Area definition was: Active area (hidden ghosts) with ghosts of area 0.00997331 (had requested 0.01), placed up to y = 6, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
+Strategy adopted by FastJet was N2MinHeapTiled
 
 Printing inclusive jets with pt > 5 GeV
 ---------------------------------------
  ijet   rap      phi        Pt         area  +-   err
-    0  -0.86731  2.90511    983.387    2.592 +-  0.000
-    1   0.22380  6.04226    910.288    4.141 +-  0.000
-    2  -1.16521  6.04589     70.789    4.141 +-  0.000
-    3  -2.34732  1.25431     10.723    2.826 +-  0.000
-    4  -1.19480  0.80734      8.293    2.533 +-  0.000
-    5  -1.71897  4.01955      8.164    2.898 +-  0.000
-    6  -4.71909  4.09174      5.573    4.315 +-  0.000
-    7   3.42713  5.74362      5.173    3.586 +-  0.000
-    8  -4.83615  2.20502      5.027    4.985 +-  0.000
+    0  -0.86731  2.90511    983.387    2.553 +-  0.000
+    1   0.22380  6.04226    910.288    4.169 +-  0.000
+    2  -1.16521  6.04589     70.789    4.199 +-  0.000
+    3  -2.34732  1.25431     10.723    2.932 +-  0.000
+    4  -1.19480  0.80734      8.293    2.334 +-  0.000
+    5  -1.71897  4.01955      8.164    2.822 +-  0.000
+    6  -4.71909  4.09174      5.573    4.209 +-  0.000
+    7   3.42713  5.74362      5.173    3.570 +-  0.000
+    8  -4.83615  2.20502      5.027    4.298 +-  0.000
 
 Number of unclustered particles: 0
 kt:#--------------------------------------------------------------------------

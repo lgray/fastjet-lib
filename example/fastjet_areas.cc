@@ -86,22 +86,16 @@ int main (int argc, char ** argv) {
   fastjet::AreaDefinition area_def;
   bool use_voronoi = false;
   if (!use_voronoi) {
-    double ghost_etamax = 7.0;
-    double ghost_area    = 0.05;
+    double ghost_etamax = 6.0;
+    double ghost_area    = 0.01;
     int    active_area_repeats = 1;
-    // alternative settings for more precision:
-    // reducing ghost area gives better sensitivity to the exact edges of the jet
-    //double ghost_area    = 0.01;
-    // increasing the repeats is useful in sparse events
-    //int    active_area_repeats = 100; 
 
     // now create the object that holds info about ghosts, and from that
     // get an area definition
     fastjet::GhostedAreaSpec ghost_spec(ghost_etamax, active_area_repeats, 
                                         ghost_area);
-    ghost_spec.set_fj2_placement(true); // for make check to work
-    area_def = fastjet::AreaDefinition(fastjet::passive_area,ghost_spec);
-    //area_def = fastjet::AreaDefinition(fastjet::active_area,ghost_spec);
+    area_def = fastjet::AreaDefinition(fastjet::active_area,ghost_spec);
+    //area_def = fastjet::AreaDefinition(fastjet::passive_area,ghost_spec);
   } else {
     double effective_Rfact = 1.0;
     area_def = fastjet::VoronoiAreaSpec(effective_Rfact);

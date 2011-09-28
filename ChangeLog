@@ -1,5 +1,10 @@
 2011-09-28  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
+	* example/fastjet_areas.cc:
+	* test-script-output-orig.txt:
+	  switched "make check" area test over to active area (new ghost
+	  placement). 
+
 	* example/07 upwards-*.cc updates:
 	  added using namespace fastjet and removed redundant fastjet::
 
