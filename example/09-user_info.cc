@@ -67,7 +67,7 @@ using namespace fastjet;
 // the user information
 // 
 // To associate extra information to a PseudoJet, one first has to
-// create a class, derived from fastjet::UserInfoBase, that contains
+// create a class, derived from UserInfoBase, that contains
 // that information.
 //
 // In our simple example, we shall use 2 informations
@@ -100,10 +100,10 @@ protected:
 // information to select particles that are either pi0's or photons
 // (we choose this purely for simplicity).
 // 
-// To create a user-defined fastjet::Selector, the first step is to
+// To create a user-defined Selector, the first step is to
 // create its associated "worker" class, i.e. to derive a class from
-// fastjet::SelectorWorker. Then (see below), we just write a function
-// (SelectorIsPi0Gamma()) that creates a fastjet::Selector with the
+// SelectorWorker. Then (see below), we just write a function
+// (SelectorIsPi0Gamma()) that creates a Selector with the
 // appropriate worker class.
 class SW_IsPi0Gamma : public SelectorWorker{
 public:
@@ -194,7 +194,7 @@ Selector SelectorVertexNumber(const int & vertex_number){
 int main (int argc, char ** argv) {
   // read in input particles
   //----------------------------------------------------------
-  vector<fastjet::PseudoJet> input_particles;
+  vector<PseudoJet> input_particles;
   
   double px, py , pz, E;
   string str;
@@ -244,18 +244,18 @@ int main (int argc, char ** argv) {
   // a jet algorithm with a given radius parameter
   //----------------------------------------------------------
   double R = 0.6;
-  fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, R);
+  JetDefinition jet_def(antikt_algorithm, R);
 
 
   // run the jet clustering with the above jet definition
   //----------------------------------------------------------
-  fastjet::ClusterSequence clust_seq(input_particles, jet_def);
+  ClusterSequence clust_seq(input_particles, jet_def);
 
 
   // get the resulting jets ordered in pt
   //----------------------------------------------------------
   double ptmin = 25.0;
-  vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(ptmin));
+  vector<PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(ptmin));
 
 
   // tell the user what was done

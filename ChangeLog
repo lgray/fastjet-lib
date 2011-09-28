@@ -1,5 +1,8 @@
 2011-09-28  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
+	* example/07 upwards-*.cc updates:
+	  added using namespace fastjet and removed redundant fastjet::
+
 	* example/14-groomers.cc:
 	  small changes to comments + addition of header
 

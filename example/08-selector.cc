@@ -43,22 +43,25 @@
 #include <cstdio>   // needed for io
 
 using namespace std;
+using namespace fastjet;
 
 int main (int argc, char ** argv) {
   
   // read in input particles
   //----------------------------------------------------------
-  vector<fastjet::PseudoJet> input_particles;
+  vector<PseudoJet> input_particles;
   
   double px, py , pz, E;
   while (cin >> px >> py >> pz >> E) {
-    // create a fastjet::PseudoJet with these components and put it onto
-    // back of the input_particles vector
-    input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
+    // create a PseudoJet with these components and put it onto
+    // the back of the input_particles vector
+    input_particles.push_back(PseudoJet(px,py,pz,E)); 
   }
 
   // Selector application #1: keep particles within a given acceptance
   // e.g. all particles with 1<|y|<2.5, and all particles with pt>1 for |y|<1
+  // (we include the (redundant) fastjet:: prefix just as a reminder that this
+  // is the namespace where Selector is to be found).
   //----------------------------------------------------------
   fastjet::Selector particle_selector = fastjet::SelectorAbsRapRange(1.0,2.5)
     || (fastjet::SelectorAbsRapMax(1.0) && fastjet::SelectorPtMin(1.0));
@@ -70,12 +73,12 @@ int main (int argc, char ** argv) {
   // a jet algorithm with a given radius parameter
   //----------------------------------------------------------
   double R = 0.6;
-  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, R);
+  JetDefinition jet_def(kt_algorithm, R);
 
 
   // run the jet clustering with the above jet definition
   //----------------------------------------------------------
-  fastjet::ClusterSequence clust_seq(input_particles, jet_def);
+  ClusterSequence clust_seq(input_particles, jet_def);
 
 
   // get the 5 hardest jets within |y|<2 
@@ -89,8 +92,8 @@ int main (int argc, char ** argv) {
   // The * operator applies Selectors successively (starting from the
   // rightmost one as in a usual operator product). Here, order may matter.
   //----------------------------------------------------------
-  fastjet::Selector jet_selector = fastjet::SelectorNHardest(5) * fastjet::SelectorAbsRapMax(2.0);
-  vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(jet_selector(clust_seq.inclusive_jets()));
+  Selector jet_selector = SelectorNHardest(5) * SelectorAbsRapMax(2.0);
+  vector<PseudoJet> inclusive_jets = sorted_by_pt(jet_selector(clust_seq.inclusive_jets()));
 
 
   // tell the user what was done

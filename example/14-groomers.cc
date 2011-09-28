@@ -63,7 +63,7 @@ int main (int argc, char ** argv) {
   
   double px, py , pz, E;
   while (cin >> px >> py >> pz >> E) {
-    // create a fastjet::PseudoJet with these components and put it onto
+    // create a PseudoJet with these components and put it onto
     // back of the input_particles vector
     input_particles.push_back(PseudoJet(px,py,pz,E)); 
   }
@@ -72,7 +72,8 @@ int main (int argc, char ** argv) {
   //----------------------------------------------------------
   JetDefinition jet_def(cambridge_algorithm, 1.5);
   ClusterSequence clust_seq(input_particles, jet_def);
-  vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(5.0));
+  vector<PseudoJet> inclusive_jets = 
+                             sorted_by_pt(clust_seq.inclusive_jets(5.0));
 
   // label the columns
   printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "mass");
@@ -93,22 +94,26 @@ int main (int argc, char ** argv) {
 
   // We will groom the two hardest jets of the event
   //----------------------------------------------------------
-  vector<PseudoJet> candidates;
-  candidates.push_back(inclusive_jets[0]);
-  candidates.push_back(inclusive_jets[1]);
-
+  vector<PseudoJet> candidates = SelectorNHardest(2)(inclusive_jets);
 
   // create 3 groomers
   //----------------------------------------------------------
   vector<Transformer *> groomers;
   
   // 1.
-  // the Cambridge/Aachen filter with Rfilt=0.3 (simpliefied version of arXiv:0802.2470)
-  groomers.push_back(new Filter(JetDefinition(cambridge_algorithm, 0.3), SelectorNHardest(3)));
+  // the Cambridge/Aachen filter with Rfilt=0.3 
+  // (simplified version of arXiv:0802.2470)
+  double Rfilt = 0.3;
+  unsigned int nfilt = 3;
+  groomers.push_back(new Filter(JetDefinition(cambridge_algorithm, Rfilt), 
+                                SelectorNHardest(nfilt) ) );
 
   // 2.
   // Filtering with a pt cut as for trimming (arXiv:0912.1342)
-  groomers.push_back(new Filter(JetDefinition(kt_algorithm, 0.2), SelectorPtFractionMin(0.03)));
+  double Rtrim = 0.2;
+  double ptfrac = 0.03;
+  groomers.push_back(new Filter(JetDefinition(kt_algorithm, Rtrim), 
+                                SelectorPtFractionMin(ptfrac) ) );
 
   // 3.
   // Pruning (arXiv:0903.5081)
@@ -164,6 +169,9 @@ int main (int argc, char ** argv) {
 	   << n_rejected << "]" << endl;
     }
   }
+
+  // a bit of memory cleaning
+  for (unsigned int i=0; i < groomers.size(); i++) delete groomers[i];
 
   return 0;
 }

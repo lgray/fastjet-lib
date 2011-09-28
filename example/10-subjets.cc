@@ -45,18 +45,19 @@
 #include <cstdio>   // needed for io
 
 using namespace std;
+using namespace fastjet;
 
 int main (int argc, char ** argv) {
   
   // read in input particles
   //----------------------------------------------------------
-  vector<fastjet::PseudoJet> input_particles;
+  vector<PseudoJet> input_particles;
   
   double px, py , pz, E;
   while (cin >> px >> py >> pz >> E) {
-    // create a fastjet::PseudoJet with these components and put it onto
+    // create a PseudoJet with these components and put it onto
     // back of the input_particles vector
-    input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
+    input_particles.push_back(PseudoJet(px,py,pz,E)); 
   }
   
 
@@ -64,15 +65,15 @@ int main (int argc, char ** argv) {
   // for subjet studies, Cambridge/Aachen is the natural algorithm
   //----------------------------------------------------------
   double R = 1.0;
-  fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, R);
+  JetDefinition jet_def(cambridge_algorithm, R);
 
 
   // run the jet clustering with the above jet definition
   // and get the jets above 5 GeV
   //----------------------------------------------------------
-  fastjet::ClusterSequence clust_seq(input_particles, jet_def);
+  ClusterSequence clust_seq(input_particles, jet_def);
   double ptmin = 6.0;
-  vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(ptmin));
+  vector<PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(ptmin));
 
   // extract the subjets at a smaller angular scale (Rsub=0.5)
   //
@@ -97,7 +98,7 @@ int main (int argc, char ** argv) {
   // show the jets and their subjets
   for (unsigned int i = 0; i < inclusive_jets.size(); i++) {
     // get the subjets
-    vector<fastjet::PseudoJet> subjets = sorted_by_pt(inclusive_jets[i].exclusive_subjets(dcut));
+    vector<PseudoJet> subjets = sorted_by_pt(inclusive_jets[i].exclusive_subjets(dcut));
 
     cout << endl;
     // print the jet and its subjets

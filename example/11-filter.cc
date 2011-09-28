@@ -94,7 +94,7 @@ int main (int argc, char ** argv) {
   
   double px, py , pz, E;
   while (cin >> px >> py >> pz >> E) {
-    // create a fastjet::PseudoJet with these components and put it onto
+    // create a PseudoJet with these components and put it onto
     // back of the input_particles vector
     input_particles.push_back(PseudoJet(px,py,pz,E)); 
   }
@@ -105,8 +105,9 @@ int main (int argc, char ** argv) {
   // the use of a ClusterSequenceArea (instead of a plain ClusterSequence)
   // is only needed because we will later combine filtering with area-based
   // subtraction
-  ClusterSequenceArea clust_seq(input_particles, jet_def, AreaDefinition(active_area_explicit_ghosts));
-  vector<fastjet::PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(5.0));
+  ClusterSequenceArea clust_seq(input_particles, jet_def, 
+                                AreaDefinition(active_area_explicit_ghosts));
+  vector<PseudoJet> inclusive_jets = sorted_by_pt(clust_seq.inclusive_jets(5.0));
 
   // label the columns
   printf("%5s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt");
