@@ -18,7 +18,8 @@ noinst_PROGRAMS = fastjet_example fastjet_areas fastjet_timing_plugins\
  10-subjets \
  11-filter \
  12-boosted_higgs \
- 13-boosted_top
+ 13-boosted_top \
+ 14-groomers
 
 check_PROGRAMS = fastjet_example fastjet_areas
 
@@ -89,7 +90,7 @@ endif
 10_subjets_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 10_subjets_LDADD = ../src/libfastjet.la $(CGAL_LIBS)
 
-# illustrate the use of the Filter
+# illustrate the use of Filter
 11_filter_SOURCES = 11-filter.cc
 11_filter_SHORTNAME = 11
 11_filter_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
@@ -101,11 +102,17 @@ endif
 12_boosted_higgs_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 12_boosted_higgs_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la $(CGAL_LIBS)
 
-# illustrate the use of the Filter
+# illustrate how to tag boosted top
 13_boosted_top_SOURCES = 13-boosted_top.cc
 13_boosted_top_SHORTNAME = 13
 13_boosted_top_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
 13_boosted_top_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
+
+# illustrate how to use various groomers in a unified manner
+14_groomers_SOURCES = 14-groomers.cc
+14_groomers_SHORTNAME = 14
+14_groomers_CXXFLAGS = $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I$(srcdir)/../include -I$(srcdir)/../tools
+14_groomers_LDADD = ../tools/libfastjettools.la ../src/libfastjet.la  $(CGAL_LIBS)
 
 
 # backward-compatible + make-check-related things

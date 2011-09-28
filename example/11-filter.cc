@@ -162,7 +162,7 @@ int main (int argc, char ** argv) {
     for (vector<PseudoJet>::iterator jit=candidates.begin(); jit!=candidates.end(); jit++){
       const PseudoJet & c = *jit;
       
-      // apply filter j to jet c      
+      // apply filter f to jet c      
       PseudoJet j = f(c);
       
       // access properties specific to the Filter
