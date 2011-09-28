@@ -2,18 +2,46 @@
 /// \file
 /// \page Example14 14 - unified use of transformers
 ///
-/// fastjet example program to illustrate the use of the fastjet::Filter
-/// and fastjet::Pruner classes in a unified way through their derivation from 
-/// fastjet::Transformer
-
-/// The two hardest jets in a boosted top event, clustered with an (abnormally)
-/// large R, are successively groomed using different tools. One can notice the 
-/// reduction in the mass of the jets after grooming.
+/// fastjet example program to illustrate the use of the
+/// fastjet::Filter and fastjet::Pruner classes in a unified way
+/// through their derivation from fastjet::Transformer
+///
+/// The two hardest jets in a boosted top event, clustered with an
+/// (abnormally) large R, are then groomed using different tools. One
+/// notes the reduction in the mass of the jets after grooming.
 ///
 /// run it with    : ./14-groomers < data/boosted_top_event.dat
 ///
 /// Source code: 14-groomers.cc
 //----------------------------------------------------------------------
+
+//STARTHEADER
+// $Id$
+//
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet. If not, see <http://www.gnu.org/licenses/>.
+//----------------------------------------------------------------------
+//ENDHEADER
 
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/ClusterSequence.hh>

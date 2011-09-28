@@ -2,11 +2,14 @@
 /// \file
 /// \page Example11 11 - use of filtering
 ///
-/// fastjet example program to illustrate the use of the fastjet::Filter class
+/// fastjet example program to illustrate the use of the
+/// fastjet::Filter class
 ///
-/// We apply different filter examples to either the hardest jet of the given event, 
-/// or to the composition of the two hardest jets: 
-///   - two examples of a filter keeping a fixed number of subjets (as in arXiv:0802.2470)
+/// We apply different filter examples to either the hardest jet of
+/// the given event, or to the composition of the two hardest jets:
+///
+///   - two examples of a filter keeping a fixed number of subjets (as 
+///     in arXiv:0802.2470)
 ///   - a "trimmer" i.e. a filter keeping subjets carrying at least a given 
 ///     fraction of the pt of the jet (arXiv:0912.1342).
 ///   - two examples of filter in combination with background subtraction
@@ -15,6 +18,34 @@
 ///
 /// Source code: 11-filter.cc
 //----------------------------------------------------------------------
+
+//STARTHEADER
+// $Id$
+//
+// Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
+//
+//----------------------------------------------------------------------
+// This file is part of FastJet.
+//
+//  FastJet is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  The algorithms that underlie FastJet have required considerable
+//  development and are described in hep-ph/0512210. If you use
+//  FastJet as part of work towards a scientific publication, please
+//  include a citation to the FastJet paper.
+//
+//  FastJet is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with FastJet. If not, see <http://www.gnu.org/licenses/>.
+//----------------------------------------------------------------------
+//ENDHEADER
 
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/ClusterSequence.hh>

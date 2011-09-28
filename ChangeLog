@@ -1,3 +1,11 @@
+2011-09-28  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
+
+	* example/14-groomers.cc:
+	  small changes to comments + addition of header
+
+	* example/11-filter.cc:
+	  addition of header
+
 2011-09-28  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * example/14-groomers.cc ** ADDED **
