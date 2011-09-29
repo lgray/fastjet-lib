@@ -50,8 +50,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //  \param zcut_dyn    dynamic pt-fraction cut in the pruning
 //  \param Rcut_dyn    dynamic angular distance cut in the pruning
 Pruner::Pruner(const JetDefinition &jet_def, 
-	 FunctionOfPseudoJet<double> *zcut_dyn,
-	 FunctionOfPseudoJet<double> *Rcut_dyn)
+         FunctionOfPseudoJet<double> *zcut_dyn,
+         FunctionOfPseudoJet<double> *Rcut_dyn)
   : _jet_def(jet_def), _zcut(0), _Rcut_factor(0),
     _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn), _get_recombiner_from_jet(false)  {
   assert(_zcut_dyn != 0 && _Rcut_dyn != 0);
@@ -82,11 +82,11 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
     if (common_recombiner) {
       JetDefinition jet_def = _jet_def;
       if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
-	RecombinationScheme scheme = 
-	  static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
-	jet_def.set_recombination_scheme(scheme);
+        RecombinationScheme scheme = 
+          static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
+        jet_def.set_recombination_scheme(scheme);
       } else {
-	jet_def.set_recombiner(common_recombiner);
+        jet_def.set_recombiner(common_recombiner);
       }
       pruning_plugin = new PruningPlugin(jet_def, zcut, Rcut);
     } else {
@@ -114,7 +114,7 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
     // no effect!)
     double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
     cs = new ClusterSequenceActiveAreaExplicitGhosts(particles, internal_jet_def, 
-						     ghosts, ghost_area);
+                                                     ghosts, ghost_area);
   } else {
     cs = new ClusterSequence(jet.constituents(), internal_jet_def);
   }
@@ -190,10 +190,10 @@ std::string Pruner::description() const{
   oss << "Pruner with jet_definition = (" << _jet_def.description() << ")";
   if (_zcut_dyn) {
     oss << ", dynamic zcut (" << _zcut_dyn->description() << ")"
-	<< ", dynamic Rcut (" << _Rcut_dyn->description() << ")";
+        << ", dynamic Rcut (" << _Rcut_dyn->description() << ")";
   } else {
     oss << ", zcut = " << _zcut
-	<< ", Rcut_factor = " << _Rcut_factor;
+        << ", Rcut_factor = " << _Rcut_factor;
   }
   return oss.str();
 }
@@ -218,8 +218,8 @@ vector<PseudoJet> PrunerStructure::extra_jets() const{
 
 // decide whether to recombine things or not
 void PruningRecombiner::recombine(const PseudoJet &pa, 
-				  const PseudoJet &pb,
-				  PseudoJet &pab) const{
+                                  const PseudoJet &pb,
+                                  PseudoJet &pab) const{
   PseudoJet p;
   _recombiner->recombine(pa, pb, p);
 
@@ -297,7 +297,7 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
       int input_jetp_index = input_cs.history()[internal2input[internal_hist_index]].jetp_index;
 
       // cout << "Beam recomb for internal " << internal_hist_index
-      // 	   << " (input jet index=" << input_jetp_index << endl;
+      //            << " (input jet index=" << input_jetp_index << endl;
 
       input_cs.plugin_record_iB_recombination(input_jetp_index, he.dij);
       continue;
@@ -307,24 +307,24 @@ void PruningPlugin::run_clustering(ClusterSequence &input_cs) const{
     if (!kept[he.parent1]){ // 1 is rejected, we keep only 2
       internal2input[i]=internal2input[he.parent2];
       // cout << "rejecting internal " << he.parent1
-      // 	   << ", mapping internal " << i 
-      // 	   << " to internal " << he.parent2
-      // 	   << " i.e. " << internal2input[i] << endl;
+      //            << ", mapping internal " << i 
+      //            << " to internal " << he.parent2
+      //            << " i.e. " << internal2input[i] << endl;
     } else if (!kept[he.parent2]){ // 2 is rejected, we keep only 1
       internal2input[i]=internal2input[he.parent1];
       // cout << "rejecting internal " << he.parent2 
-      // 	   << ", mapping internal " << i 
-      // 	   << " to internal " << he.parent1
-      // 	   << " i.e. " << internal2input[i] << endl;
+      //            << ", mapping internal " << i 
+      //            << " to internal " << he.parent1
+      //            << " i.e. " << internal2input[i] << endl;
     } else { // do the recombination
       int new_index;
       input_cs.plugin_record_ij_recombination(input_cs.history()[internal2input[he.parent1]].jetp_index,
-					      input_cs.history()[internal2input[he.parent2]].jetp_index,
-					      he.dij, internal_cs.jets()[he.jetp_index], new_index);
+                                              input_cs.history()[internal2input[he.parent2]].jetp_index,
+                                              he.dij, internal_cs.jets()[he.jetp_index], new_index);
       internal2input[i]=input_cs.jets()[new_index].cluster_hist_index();
       // cout << "merging " << internal2input[he.parent1] << " (int: " << he.parent1 << ")"
-      // 	   << " and "    << internal2input[he.parent2] << " (int: " << he.parent2 << ")"
-      // 	   << " into "   << internal2input[i] << " (int: " << i << ")" << endl;
+      //      << " and "    << internal2input[he.parent2] << " (int: " << he.parent2 << ")"
+      //      << " into "   << internal2input[i] << " (int: " << i << ")" << endl;
     }
   }
 }
