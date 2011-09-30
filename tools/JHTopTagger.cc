@@ -97,7 +97,7 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
     for (unsigned j = i+1 ; j < subjets.size(); j++) {
       double dmW = abs(_mW - (subjets[i]+subjets[j]).m());
       if (dmW < dmW_min) {
-	dmW_min = dmW; ii = i; jj = j;
+        dmW_min = dmW; ii = i; jj = j;
       }
     }
   }
@@ -167,7 +167,7 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
 
 // runs the Johns Hopkins decomposition procedure
 vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & jet_to_split,
-					   const PseudoJet & reference_jet) const{
+                                           const PseudoJet & reference_jet) const{
   PseudoJet this_jet = jet_to_split;
   PseudoJet p1, p2;
   vector<PseudoJet> result;

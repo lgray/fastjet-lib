@@ -130,7 +130,7 @@ public:
   /// The default values of all these parameters are taken from
   /// arXiv:0806:0848
   JHTopTagger(const double delta_p=0.10, const double delta_r=0.19, 
-	      double cos_theta_W_max=0.7, double mW=80.4)
+              double cos_theta_W_max=0.7, double mW=80.4)
     : _delta_p(delta_p), _delta_r(delta_r),
       _cos_theta_W_max(cos_theta_W_max), _mW(mW){};
 
@@ -149,7 +149,7 @@ public:
 protected:
   /// runs the Johns Hopkins decomposition procedure
   std::vector<PseudoJet> _split_once(const PseudoJet & jet_to_split,
-				     const PseudoJet & reference_jet) const;
+                                     const PseudoJet & reference_jet) const;
 
   double _delta_p, _delta_r, _cos_theta_W_max, _mW;
   static LimitedWarning _warnings_nonca;
@@ -168,7 +168,7 @@ class JHTopTaggerStructure : public CompositeJetStructure, public TopTaggerBaseS
 public:
   /// ctor with pieces initialisation
   JHTopTaggerStructure(std::vector<PseudoJet> pieces,
-		 const JetDefinition::Recombiner *recombiner = 0) :
+                 const JetDefinition::Recombiner *recombiner = 0) :
     CompositeJetStructure(pieces, recombiner), _cos_theta_w(0.0){}
 
   /// returns the W subjet

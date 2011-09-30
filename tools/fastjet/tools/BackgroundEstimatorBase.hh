@@ -148,11 +148,11 @@ protected:
   /// 2.X estimation of the standard deviation, which has a spurious
   /// offset in the limit of a small number of jets.
   void _median_and_stddev(const std::vector<double> & quantity_vector, 
-			  double n_empty_jets, 
-			  double & median, 
-			  double & stand_dev_if_gaussian,
-			  bool do_fj2_calculation = false
-			  ) const;
+                          double n_empty_jets, 
+                          double & median, 
+                          double & stand_dev_if_gaussian,
+                          bool do_fj2_calculation = false
+                          ) const;
 
   /// computes a percentile of a given _sorted_ vector
   ///  \param sorted_quantity_vector   the vector contains the data sample
@@ -163,9 +163,9 @@ protected:
   ///  \param do_fj2_calculation       carry out the calculation as it
   ///                                  was done in fj2 (suffers from "edge effects")
   double _percentile(const std::vector<double> & sorted_quantity_vector, 
-		     const double percentile, 
-		     const double nempty=0.0,
-		     const bool do_fj2_calculation = false) const;
+                     const double percentile, 
+                     const double nempty=0.0,
+                     const bool do_fj2_calculation = false) const;
 
   //\}
 
@@ -194,10 +194,10 @@ public:
   /// - a4 =  0.000048
   ///
   BackgroundRescalingYPolynomial(double a0=1, 
-				 double a1=0, 
-				 double a2=0, 
-				 double a3=0, 
-				 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
+                                 double a1=0, 
+                                 double a2=0, 
+                                 double a3=0, 
+                                 double a4=0) : _a0(a0), _a1(a1), _a2(a2), _a3(a3), _a4(a4) {}
 
   /// return the rescaling factor associated with this jet
   virtual double result(const PseudoJet & jet) const;

@@ -44,10 +44,10 @@ LimitedWarning BackgroundEstimatorBase::_warnings_empty_area;
 // 2.X estimation of the standard deviation, which has a spurious
 // offset in the limit of a small number of jets.
 void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity_vector, 
-						 double n_empty_jets, 
-						 double & median, 
-						 double & stand_dev_if_gaussian,
-						 bool do_fj2_calculation) const {
+                                                 double n_empty_jets, 
+                                                 double & median, 
+                                                 double & stand_dev_if_gaussian,
+                                                 bool do_fj2_calculation) const {
 
   // this check is redundant (the code below behaves sensibly even
   // with a zero size), but serves as a reminder of what happens if
@@ -73,7 +73,7 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
   double res[2];
   for (int i = 0; i < 2; i++) {
     res[i] = _percentile(sorted_quantity_vector, posn[i], n_empty_jets, 
-			 do_fj2_calculation);
+                         do_fj2_calculation);
   }
   
   median = res[0];
@@ -91,10 +91,10 @@ void BackgroundEstimatorBase::_median_and_stddev(const vector<double> & quantity
 //  - do_fj2_calculation       carry out the calculation as it
 //                             was done in fj2 (suffers from "edge effects")
 double BackgroundEstimatorBase::_percentile(const vector<double> & sorted_quantities, 
-					    const double percentile, 
-					    const double nempty,
-					    const bool do_fj2_calculation
-					    ) const {
+                                            const double percentile, 
+                                            const double nempty,
+                                            const bool do_fj2_calculation
+                                            ) const {
   assert(percentile >= 0.0 && percentile <= 1.0);
 
   int quantities_size = sorted_quantities.size();
@@ -124,7 +124,7 @@ double BackgroundEstimatorBase::_percentile(const vector<double> & sorted_quanti
     
 
   } else if (percentile_pos > -0.5 && quantities_size >= 1 
-	     && !do_fj2_calculation) {
+             && !do_fj2_calculation) {
     // in the LHS of this "bin", just keep a constant value (we could have
     // interpolated to zero, but this might misbehave in cases where all jets
     // are active, because it would go to zero too fast)

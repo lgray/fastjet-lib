@@ -100,9 +100,9 @@ class RestFrameNSubjettinessTagger : public Transformer{
 public:
   /// ctor with arguments (see the class description above)
   RestFrameNSubjettinessTagger(const JetDefinition subjet_def, 
-		      const double tau2cut=0.08, 
-		      const double costhetascut=0.8,
-		      const bool use_exclusive = false)
+                      const double tau2cut=0.08, 
+                      const double costhetascut=0.8,
+                      const bool use_exclusive = false)
     : _subjet_def(subjet_def), _t2cut(tau2cut), _costscut(costhetascut),
       _use_exclusive(use_exclusive){};
 
@@ -150,7 +150,7 @@ public:
 protected:
   double _tau2;      ///< the value of the N-subjettiness
   double _costhetas; ///< the minimal angle between the dijets
-  		     ///< and the boost axis
+                     ///< and the boost axis
 //  PseudoJet _original_jet;  ///< the original jet (before tagging)
 
   // allow the tagger to set these

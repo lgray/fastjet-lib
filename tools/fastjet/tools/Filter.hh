@@ -155,24 +155,24 @@ private:
   /// [NB: this routine is work in progress as part of a transition to a Filter
   ///      that also works on jet collections]
   void _set_filtered_elements(const PseudoJet & jet,
-			      std::vector<PseudoJet> & filtered_elements,
-			      bool & discard_area) const;
+                              std::vector<PseudoJet> & filtered_elements,
+                              bool & discard_area) const;
   
   /// set the filtered elements in the simple case of C/A+C/A
   void _set_filtered_elements_cafilt(const PseudoJet & jet,
-				     std::vector<PseudoJet> & filtered_elements,
-				     double Rfilt) const;
+                                     std::vector<PseudoJet> & filtered_elements,
+                                     double Rfilt) const;
 
   /// set the filtered elements in the generic re-clustering case
   void _set_filtered_elements_generic(const PseudoJet & jet, 
-				      std::vector<PseudoJet> & filtered_elements) const;
+                                      std::vector<PseudoJet> & filtered_elements) const;
 
   /// gather the information about what is kept and rejected under the
   /// form of a PseudoJet with a special ClusterSequenceInfo
   PseudoJet _finalise(const PseudoJet & jet, 
-		      std::vector<PseudoJet> & kept, 
-		      std::vector<PseudoJet> & rejected,
-		      const bool discard_area) const;
+                      std::vector<PseudoJet> & kept, 
+                      std::vector<PseudoJet> & rejected,
+                      const bool discard_area) const;
 
   // a series of checks
   //--------------------------------------------------------------------
@@ -220,7 +220,7 @@ public:
   /// We just share the original ClusterSequenceWrapper and initialise
   /// the rest
   FilterStructure(const std::vector<PseudoJet> & pieces, 
-		  const JetDefinition::Recombiner *rec = 0)
+                  const JetDefinition::Recombiner *rec = 0)
     : CompositeJetStructure(pieces, rec){}
 
   /// virtual dtor to allow further overloading  

@@ -1,3 +1,9 @@
+2011-09-29  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/*.cc: 
+	* tools/fastjet/tools/*.hh:
+	  replaced tabs with spaces
+
 2011-09-28  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
 	* example/fastjet_areas.cc:
@@ -14,6 +20,7 @@
 	* example/11-filter.cc:
 	  addition of header
 
+>>>>>>> .r2615
 2011-09-28  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * example/14-groomers.cc ** ADDED **

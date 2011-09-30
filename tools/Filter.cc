@@ -88,8 +88,8 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
 
 // sets filtered_elements to be all the subjets on which filtering will work
 void Filter::_set_filtered_elements(const PseudoJet & jet,
-				    vector<PseudoJet> & filtered_elements,
-				    bool & discard_area) const {
+                                    vector<PseudoJet> & filtered_elements,
+                                    bool & discard_area) const {
   // sanity checks
   //-------------------------------------------------------------------
   // make sure that the jet has constituents
@@ -121,11 +121,11 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     const JetDefinition::Recombiner * common_recombiner = _get_common_recombiner();
     if (common_recombiner) {
       if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
-	RecombinationScheme scheme = 
-	  static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
-	_subjet_def = JetDefinition(cambridge_algorithm, Rfilt, scheme);
+        RecombinationScheme scheme = 
+          static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
+        _subjet_def = JetDefinition(cambridge_algorithm, Rfilt, scheme);
       } else {
-	_subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
+        _subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
       }
     }
     else
@@ -167,8 +167,8 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
 // WATCH OUT: this could be recursively called, so filtered elements
 //            of 'jet' are APPENDED to 'filtered_elements'
 void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet, 
-					   vector<PseudoJet> & filtered_elements, 
-					   double Rfilt) const{
+                                           vector<PseudoJet> & filtered_elements, 
+                                           double Rfilt) const{
   // we know that the jet is either a C/A jet or a superposition of
   // such pieces
   if (jet.has_associated_cluster_sequence()){
@@ -213,7 +213,7 @@ void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet,
 // set the filtered elements in the generic re-clustering case (wo
 // subtraction)
 void Filter::_set_filtered_elements_generic(const PseudoJet & jet, 
-					    vector<PseudoJet> & filtered_elements) const{
+                                            vector<PseudoJet> & filtered_elements) const{
   // create a new, internal, ClusterSequence from the jet constituents
   // get the subjets directly from there
   //
@@ -230,11 +230,11 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
     vector<PseudoJet> regular_constituents, ghosts;  
 
     for (vector<PseudoJet>::iterator it = all_constituents.begin(); 
-	 it != all_constituents.end(); it++){
+         it != all_constituents.end(); it++){
       if (it->is_pure_ghost())
-	ghosts.push_back(*it);
+        ghosts.push_back(*it);
       else
-	regular_constituents.push_back(*it);
+        regular_constituents.push_back(*it);
     }
 
     // figure the ghost area from the 1st ghost (if none, any value
@@ -243,8 +243,8 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
     double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
     ClusterSequenceActiveAreaExplicitGhosts * csa
       = new ClusterSequenceActiveAreaExplicitGhosts(regular_constituents, 
-						    _subjet_def, 
-						    ghosts, ghost_area);
+                                                    _subjet_def, 
+                                                    ghosts, ghost_area);
 
     // get the subjets: we use the subtracted or unsubtracted ones
     // depending on rho or _subtractor being non-zero
@@ -272,9 +272,9 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
 // gather the information about what is kept and rejected under the
 // form of a PseudoJet with a special ClusterSequenceInfo
 PseudoJet Filter::_finalise(const PseudoJet & jet, 
-			    vector<PseudoJet> & kept, 
-			    vector<PseudoJet> & rejected,
-			    const bool discard_area) const {
+                            vector<PseudoJet> & kept, 
+                            vector<PseudoJet> & rejected,
+                            const bool discard_area) const {
   // figure out which recombiner to use
   const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
 

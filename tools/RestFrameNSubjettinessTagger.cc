@@ -86,7 +86,7 @@ PseudoJet RestFrameNSubjettinessTagger::result(const PseudoJet & jet) const{
   double tau2 = 0.0;
   for (unsigned int i=0; i<rest_input.size(); i++)
     tau2 += min(dot_product(rest_input[i], j0), 
-		dot_product(rest_input[i], j1));
+                dot_product(rest_input[i], j1));
 
   tau2 *= (2.0/jet.m2());
 

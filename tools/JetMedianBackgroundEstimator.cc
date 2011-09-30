@@ -69,8 +69,8 @@ LimitedWarning JetMedianBackgroundEstimator::_warnings_preliminary;
 //----------------------------------------------------------------------
 // ctor that allows to set only the particles later on
 JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const Selector &rho_range,
-					 const JetDefinition &jet_def,
-					 const AreaDefinition &area_def)
+                                         const JetDefinition &jet_def,
+                                         const AreaDefinition &area_def)
   : _rho_range(rho_range), _jet_def(jet_def), _area_def(area_def) {
 
   // initialise things decently
@@ -353,12 +353,12 @@ void JetMedianBackgroundEstimator::_compute() const {
     if (this_area>0){
       double median_input;
       if (_jet_density_class == 0) {
-	median_input = current_jet.perp()/this_area;
+        median_input = current_jet.perp()/this_area;
       } else {
-	median_input = (*_jet_density_class)(current_jet);
+        median_input = (*_jet_density_class)(current_jet);
       }
       if (_rescaling_class != 0) {
-	median_input /= (*_rescaling_class)(current_jet);
+        median_input /= (*_rescaling_class)(current_jet);
       }
       vector_for_median.push_back(median_input);
       total_area  += this_area;
@@ -392,7 +392,7 @@ void JetMedianBackgroundEstimator::_compute() const {
 
   double stand_dev;
   _median_and_stddev(vector_for_median, _n_empty_jets, _rho, stand_dev, 
-		     _provide_fj2_sigma);
+                     _provide_fj2_sigma);
 
   // process and store the results (_rho was already stored above)
   _mean_area  = total_area / total_njets;

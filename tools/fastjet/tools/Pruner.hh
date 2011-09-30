@@ -134,8 +134,8 @@ public:
   ///  \param zcut_dyn    dynamic pt-fraction cut in the pruning
   ///  \param Rcut_dyn    dynamic angular distance cut in the pruning
   Pruner(const JetDefinition &jet_def, 
-	 FunctionOfPseudoJet<double> *zcut_dyn,
-	 FunctionOfPseudoJet<double> *Rcut_dyn);
+         FunctionOfPseudoJet<double> *zcut_dyn,
+         FunctionOfPseudoJet<double> *Rcut_dyn);
 
   /// action on a single jet
   virtual PseudoJet result(const PseudoJet &jet) const;
@@ -156,7 +156,7 @@ private:
   const JetDefinition::Recombiner * _get_common_recombiner(const PseudoJet &jet) const;
 
   JetDefinition _jet_def; ///< the internal jet definition
-  double _zcut;		  ///< the pt-fraction cut
+  double _zcut;        	  ///< the pt-fraction cut
   double _Rcut_factor;    ///< the angular separation cut factor
   FunctionOfPseudoJet<double> *_zcut_dyn; ///< dynamic zcut
   FunctionOfPseudoJet<double> *_Rcut_dyn; ///< dynamic Rcut

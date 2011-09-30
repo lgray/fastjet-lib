@@ -43,9 +43,9 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
     int j = igrid(particles[i]);
     if (j >= 0){
       if (_rescaling_class == 0)
-	_scalar_pt[j] += particles[i].perp();
+        _scalar_pt[j] += particles[i].perp();
       else
-	_scalar_pt[j] += particles[i].perp()/(*_rescaling_class)(particles[i]);
+        _scalar_pt[j] += particles[i].perp()/(*_rescaling_class)(particles[i]);
     }
   }
   sort(_scalar_pt.begin(), _scalar_pt.end());
@@ -73,8 +73,8 @@ double GridMedianBackgroundEstimator::sigma() const{
   // watch out: by definition, our sigma is the standard deviation of
   // the pt density multiplied by the square root of the cell area
   return (_percentile(_scalar_pt, 0.5) -
-	  _percentile(_scalar_pt, (1.0-0.6827)/2.0)
-	  )/sqrt(_cell_area);
+          _percentile(_scalar_pt, (1.0-0.6827)/2.0)
+          )/sqrt(_cell_area);
 }
 
 //----------------------------------------------------------------------

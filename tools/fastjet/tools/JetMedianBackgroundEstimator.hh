@@ -89,8 +89,8 @@ public:
   /// \param jet_def    the jet definition to use for the clustering
   /// \param area_def   the area definition to use for the clustering
   JetMedianBackgroundEstimator(const Selector &rho_range,
-			       const JetDefinition &jet_def,
-			       const AreaDefinition &area_def);
+                               const JetDefinition &jet_def,
+                               const AreaDefinition &area_def);
 
   /// ctor from a ClusterSequenceAreaBase with area
   ///
@@ -374,9 +374,9 @@ private:
   //SharedPtr<BackgroundRescalingBase> _rescaling_class_sharedptr;
   
   // the actual results of the computation
-  mutable double _rho;		     ///< background estimated density per unit area
-  mutable double _sigma;	     ///< background estimated fluctuations
-  mutable double _mean_area;	     ///< mean area of the jets used to estimate the background
+  mutable double _rho;               ///< background estimated density per unit area
+  mutable double _sigma;             ///< background estimated fluctuations
+  mutable double _mean_area;         ///< mean area of the jets used to estimate the background
   mutable unsigned int _n_jets_used; ///< number of jets used to estimate the background
   mutable double _n_empty_jets;      ///< number of empty (pure-ghost) jets
   mutable double _empty_area;        ///< the empty (pure-ghost/unclustered) area!

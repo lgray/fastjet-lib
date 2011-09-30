@@ -117,7 +117,7 @@ public:
 
   /// just constructs
   CASubJetTagger(ScaleChoice scale_choice = jade_distance,
-		 double      z_threshold  = 0.1)
+                 double      z_threshold  = 0.1)
     : _scale_choice(scale_choice), _z_threshold(z_threshold),
       _dr2_min(0.0), _absolute_z_cut(false){};
 
@@ -163,8 +163,8 @@ protected:
 
 
   void _recurse_through_jet(const PseudoJet & current_jet, 
-			    JetAux &aux_max,
-			    const PseudoJet & original_jet) const;
+                            JetAux &aux_max,
+                            const PseudoJet & original_jet) const;
 
   ScaleChoice _scale_choice;
   double      _z_threshold;
