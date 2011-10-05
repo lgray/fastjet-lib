@@ -49,7 +49,7 @@ FASTJET_BEGIN_NAMESPACE
 //---------------------------------------------------
 
 /// \if internal_doc
-/// \class integral type 
+/// \class integral_type 
 /// a generic construct that promotes a generic value of a generic type
 /// as a type
 ///

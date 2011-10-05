@@ -1,5 +1,8 @@
 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/IsBase.hh:
+	  fised a typo in a class name in a doxygen comment
+
 	* src/genconfig.sh:
 	  added the FASTJET_ prefix for the GridJet plugin
 
