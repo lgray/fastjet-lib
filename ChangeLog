@@ -1,5 +1,15 @@
 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/SISCone"
+	  switched to SISCone 2.0.3
+	
+	* doc/fastjet-doc.tex:
+	* include/fastjet/config_win.h:
+	* Doxyfile-devel:
+	* Doxyfile:
+	* configure.ac:
+	  switched version number to 3.0.0
+
 	* plugins/D0RunICone/inline_maths.h:
 	* plugins/D0RunICone/HepEntityI.h:
 	* plugins/D0RunICone/ConeClusterAlgo.hpp:

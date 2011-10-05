@@ -1,5 +1,5 @@
-#define FASTJET_PACKAGE_STRING  "FastJet 3.0beta2-devel"
-#define FASTJET_PACKAGE_VERSION  "3.0beta2-devel"
+#define FASTJET_PACKAGE_STRING  "FastJet 3.0.0"
+#define FASTJET_PACKAGE_VERSION  "3.0.0"
 
 /* The ATLASCone plugin is disabled by default*/
 #undef FASTJET_ENABLE_PLUGIN_ATLASCONE 
@@ -35,6 +35,6 @@
 #undef FASTJET_ENABLE_PLUGIN_TRACKJET
 
 /* The GridJet plugin is enabled by default */
-#define ENABLE_PLUGIN_GRIDJET
+#define FASTJET_ENABLE_PLUGIN_GRIDJET
 
 /* end of plugin section */

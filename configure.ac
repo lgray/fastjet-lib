@@ -1,4 +1,4 @@
-AC_INIT([FastJet],[3.0beta2-devel])
+AC_INIT([FastJet],[3.0.0])
 AC_CONFIG_SRCDIR([src/JetDefinition.cc])
 AM_INIT_AUTOMAKE(tar-ustar)
 
