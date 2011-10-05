@@ -65,9 +65,9 @@ X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 
 X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-X.Y.Z  make check 
+3.0.0  make check 
 
-X.Y.Z  make distcheck
+3.0.0  make distcheck
 
 X.Y.Z  make sure it's committed
 
