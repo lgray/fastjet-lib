@@ -2,6 +2,9 @@
 #define  D0RunIconeJets_HepEntity_class
 
 #include "inline_maths.h"
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
 
 namespace d0runi{
 
@@ -116,5 +119,7 @@ class HepEntityI {
 //end of class HepEntityI;
 
 } // end of namespace d0runi
+
+FASTJET_END_NAMESPACE
 
 #endif

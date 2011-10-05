@@ -3,6 +3,9 @@
 
 #include <cmath>
 #include <cerrno>
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
 
 //using namespace std;
 
@@ -124,6 +127,7 @@ inline double eta(double p, double pz) {
 } //end usename inline_maths
 } //end usename d0runi
 
+FASTJET_END_NAMESPACE
 
 
 #endif

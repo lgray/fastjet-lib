@@ -1,5 +1,14 @@
 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/D0RunICone/inline_maths.h:
+	* plugins/D0RunICone/HepEntityI.h:
+	* plugins/D0RunICone/ConeClusterAlgo.hpp:
+	* plugins/D0RunICone/HepEntityIpre96.h:
+	  put the d0runi namespace inside the FastJet namespace
+
+	* plugins/D0RunICone/ConeClusterAlgo.hpp:
+          reverted a misordered #endif and namespace }
+
 	* include/fastjet/internal/IsBase.hh:
 	  fised a typo in a class name in a doxygen comment
 
@@ -28,7 +37,7 @@
 	* example/11-filter.cc:
 	  addition of header
 
->>>>>>> .r2615
+
 2011-09-28  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * example/14-groomers.cc ** ADDED **

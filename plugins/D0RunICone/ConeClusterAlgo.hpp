@@ -50,6 +50,9 @@
 #include <iostream>
 
 #include "inline_maths.h"
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
 
 namespace d0runi{
 
@@ -883,9 +886,12 @@ makeClusters(//const EnergyClusterReco* r,
   }
 
 }// end 
-#endif  //  CONECLUSTERALGO_H
-
 
 } //namespace d0runi
+
+FASTJET_END_NAMESPACE
+
+#endif  //  CONECLUSTERALGO_H
+
 
 

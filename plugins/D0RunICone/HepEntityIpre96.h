@@ -3,6 +3,9 @@
 
 #include "inline_maths.h"
 #include "HepEntityI.h"
+#include <fastjet/internal/base.hh>
+
+FASTJET_BEGIN_NAMESPACE
 
 namespace d0runi{
 
@@ -127,5 +130,7 @@ class HepEntityIpre96 : public HepEntityI {
 //end of class HepEntityIpre96;
 
 } // end of namespace d0runi
+
+FASTJET_END_NAMESPACE
 
 #endif
