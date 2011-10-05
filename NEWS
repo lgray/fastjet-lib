@@ -9,44 +9,47 @@ Changes relative to the 2.4.x series include:
 
 Addition of FastJet tools:
 
-  - new "Transformers" framework for jets post-clustering manipulation
-  - Filtering, trimming, pruning and a few boosted object taggers as native Transformers
-  - New background estimation and subtraction interface, with
+  * Filtering, trimming, pruning and a few boosted object taggers as
+    part of a new native "Transformers" framework for post-clustering
+    manipulation of jets
+
+  * New background estimation and subtraction interface, with
     JetMedianBackgroundEstimator, GridMedianBackgroundEstimator and Subtractor. 
   
 New functionality:
   
-  - PseudoJets are aware of their structure (e.g. one can use jet.constituents())
-  - It is possible to associate arbitrary user information with a PseudoJet.
-  - Selectors, which allow easy communication of cuts across different functions 
+  * Enhancement of the PseudoJet class so that jets are now aware of their
+    internal structure (e.g. one can use jet.constituents()).
+  * It is possible to associate arbitrary user information with a PseudoJet.
+  * Selectors, which allow easy communication of cuts across different functions 
   
 Other changes:
 
-  - Improved doxygen and examples
-  - aids for easier memory management
-  - elimination of the R<pi/2 restriction on native jet algorithms
-  - control of Error and warning output, including public LimitedWarning class
-  - new plugins (GridJet and two D0RunICone plugins)
-  - enhanced fortran wrappers 
+  * Improved doxygen and examples
+  * aids for easier memory management
+  * elimination of the R<pi/2 restriction on native jet algorithms
+  * control of Error and warning output, including public LimitedWarning class
+  * new plugins (GridJet and two D0RunICone plugins)
+  * enhanced fortran wrappers 
 
 Interface modifications (May break backwards compatibility):
 
-  - by default a JetDefinition is initialised to undefined_jet_algorithm 
+  * by default a JetDefinition is initialised to undefined_jet_algorithm 
     instead of kt_algorithm with a radius of 1.
-  - JetDefinition::DefaultRecombiner sets the user index of the result
+  * JetDefinition::DefaultRecombiner sets the user index of the result
     of the recombination to -1 (the default for a PseudoJet;
     previously was being set to 0)
-  - ghosts are placed more sensibly in 3.0 than in the 2.X series;
+  * ghosts are placed more sensibly in 3.0 than in the 2.X series;
     call ghost_area_spec.set_fj2_placement(true) to reinstate old behaviour
-  - CS::exclusive_subjets used to silently return fewer subjets than
+  * CS::exclusive_subjets used to silently return fewer subjets than
     requested if there were too few particles in a jet; to be
     consistent with exclusive_jets(...) it now throws an exception;
     use exclusive_jets_up_to(...) and exclusive_subjets_up_to(...) to
     avoid the exception.
-  - ATLASCone and TrackJet plugins use stable_sort instead of sort for
+  * ATLASCone and TrackJet plugins use stable_sort instead of sort for
     more stable behaviour across architectures and compiler versions;
     this can change clustering results in events with degeneracies.
-  - some legacy headers have been removed (include/FjPseudoJet.hh and
+  * some legacy headers have been removed (include/FjPseudoJet.hh and
     include/FjClusterSequence.hh), and some classes are deprecated:
     ClusterSequenceWithArea (use ClusterSequenceArea instead),
     ActiveAreaSpec (use GhostedAreaSpec instead), and RangeDefinition
@@ -55,28 +58,28 @@ Interface modifications (May break backwards compatibility):
 
 Configure modifications
 
-  - the plugins are by default built in a single 'libfastjetplugin'
+  * the plugins are by default built in a single 'libfastjetplugin'
     library. This is transparent if you use the fastjet-config
     script. The previous behaviour (each plugin in its own library)
     can be recovered by passing the --disable-monolithic option to
     configure.
-  - an additional library, libfastjettools, contains tools like
+  * an additional library, libfastjettools, contains tools like
     boosted object taggers, filters, etc. It is included by default
     with "fastjet-config --libs" 
 
    
 New features relative to 3.0beta1:
 
-  - addition of Pruner class
-  - control of Error and warning output, including public LimitedWarning class
-  - addition of SelectorIsZero
-  - ClusterSequence::childless_pseudojets() 
+  * addition of Pruner class
+  * control of Error and warning output, including public LimitedWarning class
+  * addition of SelectorIsZero
+  * ClusterSequence::childless_pseudojets() 
     
 Bug fixes and other changes relative to 3.0beta1:
    
-  - JetMedianBackgroundEstimator::set_particles(...) no longer resets other parameters
-  - fixed issue with persistency of internal recombiner in Filter
-  - removed deprecated ClusterSequence constructor with R (rather than
+  * JetMedianBackgroundEstimator::set_particles(...) no longer resets other parameters
+  * fixed issue with persistency of internal recombiner in Filter
+  * removed deprecated ClusterSequence constructor with R (rather than
     jet def) and also CS::set_jet_algorithm(...), CS::set_jet_def(...) 
 
 
