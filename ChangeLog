@@ -1,3 +1,8 @@
+2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/genconfig.sh:
+	  added the FASTJET_ prefix for the GridJet plugin
+
 2011-09-29  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/*.cc: 

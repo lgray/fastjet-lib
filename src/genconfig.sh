@@ -52,7 +52,7 @@ cat >> $configfile <<EOF
 #undef FASTJET_ENABLE_PLUGIN_TRACKJET
 
 /* The GridJet plugin is enabled by default */
-#define ENABLE_PLUGIN_GRIDJET
+#define FASTJET_ENABLE_PLUGIN_GRIDJET
 
 /* end of plugin section */
 EOF
