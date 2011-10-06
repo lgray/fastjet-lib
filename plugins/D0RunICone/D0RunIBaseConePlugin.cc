@@ -26,18 +26,19 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
+// D0 stuff
+// apparently this has to go first to avoid a problem with gcc-4.0.1 builds on Macs
+#include <list>
+#include "ConeClusterAlgo.hpp"
+#include "HepEntityIpre96.h"
+#include "HepEntityI.h"
+
 #include "fastjet/D0RunIBaseConePlugin.hh"
 #include "fastjet/D0RunIpre96ConePlugin.hh"
 #include "fastjet/D0RunIConePlugin.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/Error.hh"
 #include <sstream>
-
-// D0 stuff
-#include <list>
-#include "ConeClusterAlgo.hpp"
-#include "HepEntityIpre96.h"
-#include "HepEntityI.h"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

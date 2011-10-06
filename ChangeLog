@@ -1,8 +1,12 @@
 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+	  inverted the order of the include files (apparently, this goes
+	  around an anonymous enum bug in gcc-4.0.1 on Macs)
+
 	* plugins/SISCone"
 	  switched to SISCone 2.0.3
-	
+
 	* doc/fastjet-doc.tex:
 	* include/fastjet/config_win.h:
 	* Doxyfile-devel:
