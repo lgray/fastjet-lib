@@ -67,11 +67,11 @@ X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
 3.0.0  make check 
 
-3.0.0  make distcheck
+X.Y.Z  make distcheck
 
 X.Y.Z  make sure it's committed
 
-X.Y.Z  rerun the nightly check
+3.0.0  rerun the nightly check
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
