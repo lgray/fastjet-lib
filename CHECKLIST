@@ -58,20 +58,20 @@ checklist for 3.0.0
 3.0.0  update doxygen (including the devel) version number + check dirs are declared for new plugins + check in the class list that all classes are prefixed by 'fastjet::'
 3.0.0  version number in manual
 
-X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
+3.0.0  ensure NEWS is up to date (and has the correct release date!)
 
 3.0.0  make sure siscone points to a tag, not trunk
        cd ../plugins/SISCone; svn propedit svn:externals .; svn up
 
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0.0  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
 3.0.0  make check 
 
-X.Y.Z  make distcheck
+3.0.0  make distcheck
 
-X.Y.Z  make sure it's committed
+3.0.0  make sure it's committed
 
-3.0.0  rerun the nightly check
+X.Y.Z  rerun the nightly check
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
