@@ -1,17 +1,16 @@
 -------------------------------------
-Installation instructions for fastjet
--------------------------------------
+Installation instructions for FastJet
+------------------------------------- 
 
-As of version 2.2beta1-devel, fastjet has moved over to the use of
-autotools (for a few versions thereafter, the old build system will be
-retained in parallel, see below). 
-
-First configure fastjet for your local machine and needs with
+FastJet can be configured, built and installed using the standard sequence
 
 % ./configure [options]
+% make
+% make check   (optional)
+% make install
 
-The full list of possible options can be obtained with ./configure
---help; some useful ones include:
+The full list of configuration options can be obtained with ./configure --help. 
+Some useful ones include:
 
    --prefix=<where-you-wish-to-install>   (default=/usr/local)
 		    specify location where FastJet will be installed
@@ -70,23 +69,14 @@ The full list of possible options can be obtained with ./configure
     etc.            many more plugins available: --help option lists
                     them
 
-Then compile and install:
-
-% make
-% make install
-
-To check that your compilation is giving answers as expected, type
-
-% make check
 
 As well as installing the libraries and headers, "make install" also
 installs ${prefix}/bin/fastjet-config; assuming this is in your path,
 then you can compile a program that uses fastjet as follows
 
-% g++ myprog.cc `fastjet-config --cxxflags` \
-                `fastjet-config --libs --plugins` -o myprog
+% g++ myprog.cc `fastjet-config --cxxflags --libs --plugins` -o myprog
 
-the --plugins option is only needed if you want access to plugins!
+The --plugins option is only needed if you want access to plugins.
 If shared libraries are built, they will be used by default. You can
 still switch to the static libraries by adding the --shared=no option.
 Other examples of the usage of this are given in the Makefile.alt file
@@ -95,15 +85,16 @@ in the example directory.
 
 Note on the --enable-foo usage
 ------------------------------
-each --enable-foo option can also be specified using
---enable-foo=yes. If, instead you want to disable the 
-option, you can use --enable-foo=no or --disable-foo 
+Each --enable-foo option can also be specified using --enable-foo=yes. 
+If, instead you want to disable the  option, you can use --enable-foo=no 
+or --disable-foo.
+
 
 Note for SVN users -- developers only
 ------------------
 If you download a subversion copy of FastJet (currently restricted to
-the developers), you first need to generate all configuration
-files. This is done by using
+the developers), you first need to generate all configuration files. 
+This is done by using
 
 % autoreconf --install
 % ./configure [configure option]
@@ -120,6 +111,7 @@ Remarks:
 - using the autogen.sh script automatically runs ./configure 
   (with the specified options)
 
+
 ======================================================================
 OLD (NON-AUTOTOOLS) BUILD SYSTEM
 ======================================================================
@@ -129,7 +121,7 @@ Quick method
 
 Run the following to build FastJet and its plugins and to test them.
 
-./test-static.sh
+% ./test-static.sh
 
 ------------------
 Longer description
@@ -161,24 +153,24 @@ the user to set this variable during the install process.
 
 Then in the src/ directory do
 
-  make -f makefile.static
-  make -f makefile.static install
+%  make -f makefile.static
+%  make -f makefile.static install
 
 which places the fastjet library in lib/. 
 
 To build the cone jet-finder plugins, you should go to the plugin
 directory and type
   
-  make -f makefile.static
-  make -f makefile.static pxcone      
+%  make -f makefile.static
+%  make -f makefile.static pxcone      
                    // OPTIONAL --  if you want fortran pxcone plugin
                    // to be compiled too -- make sure you also set
                    // G77LIBDIR in the main Makefile
 
 To run the example program cd to the example directory and do
 
-  make -f makefile.static fastjet_example
-  ./fastjet_example < data/single-event.dat
+%  make -f makefile.static fastjet_example
+%  ./fastjet_example < data/single-event.dat
 
 The output (without CGAL) should be 
 
@@ -230,34 +222,22 @@ jet #        rapidity             phi              pt  n constituents
 Additionally the example/ directory contains the following other
 programs
 
-ktjet_example		
+- ktjet_example		
 	same example program, but written with ktjet, to illustrate
 	similarities and differences with fastjet_example. For
 	compilation to work please set the KTJET_INCLUDE and
 	KTJET_LIBRARY variables in the fastjet main Makefile.
 
-fastjet_timing
-ktjet_timing
+- ktjet_timing
+- fastjet_timing_plugins
 	programs for testing output and timings of the two programs --
 	may be run with a variety of command-line options to control
-	behaviour -- see the beginning of fastjet_timing.cc for
+	behaviour -- see the beginning of fastjet_timing_plugins.cc for
 	further information.
 
-fastjet_timing_plugins
-        similar to fastjet_timing, but also works for plugins
-
-fastjet_areas
+- fastjet_areas
 	example program for evaluating the areas of the jets in 
 	a single event (it reads in the same input file as fastjet_example)
 
-fastjet_subtraction
-	example program which uses the areas calculated by FastJet
-	for each jet to perform the subtraction of the background generated
-	by a number of pileup events. Sample input files for production
-	at high luminosity at the LHC of a Z boson, an hypotetical Z', 
-	or a dijet event with a ptmin = 100 GeV are in example/data/
- 
-fastjet_example_v1_interface
-        same as fastjet_example, but using the (now deprecated) interface
-	of FastJet v1.0. It still compiles correctly with v2.0, backward
-	compatibility having been ensured.
+- A number of examples named 01-XXX.cc, 02-YYY.cc, etc, where FastJet features
+  are illustrated in increasing order of complexity.
