@@ -94,9 +94,9 @@ checklist for 3.0.0
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
-X.Y.Z  make distcheck
+3.0.0  rerun the nightly check
 
-X.Y.Z  rerun the nightly check
+X.Y.Z  make distcheck
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
