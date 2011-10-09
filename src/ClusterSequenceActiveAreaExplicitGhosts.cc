@@ -161,7 +161,11 @@ void ClustSeqActAreaEG::_post_process() {
       // normalise pt to be _ghost_area (NB we make use of fact that
       // for initial particles, jet and clust_hist index are the same).
       //_area_4vectors[i] = (_ghost_area/_jets[i].perp()) * _jets[i];
-      //_area_4vectors[i] = _jets[i];
+      
+      // NB: we use reset_momentum here, to ensure that the area 4
+      // vectors do not acquire any structure (the structure would not
+      // be meaningful for an area, and it messes up the use count (->
+      // memory leaks if the user call delete_self_when_unused).
       _area_4vectors[i].reset_momentum(_jets[i]);
       _area_4vectors[i] *= (_ghost_area/_jets[i].perp());
     } else {
