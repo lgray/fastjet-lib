@@ -1,3 +1,16 @@
+2011-10-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	  changed link to fastjet main page in doxygen main page.
+
+	* Doxyfile (PROJECT_NUMBER): 
+	* doc/fastjet-doc.tex: 
+	* configure.ac: 
+	  switched version over to 3.0.1-devel
+
+	* plugins/SISCone: 
+	  switched it back to trunk
+
 2011-10-09  Gregory Soyez  <soyez@fastjet.fr> & Matteo & Gavin
 
 	Release of FastJet 3.0.0

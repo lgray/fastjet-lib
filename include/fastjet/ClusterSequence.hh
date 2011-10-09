@@ -104,7 +104,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  * #fastjet documentation
  * 
  * - For further information and normal documentation, see the main <a
- * href="http://www.lpthe.jussieu.fr/~salam/fastjet">FastJet</a> page.
+ * href="http://fastjet.fr/">FastJet</a> page.
  *
  * \section examples Examples
  *   See our \subpage Examples page
