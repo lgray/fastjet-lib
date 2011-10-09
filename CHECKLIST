@@ -23,11 +23,23 @@ X.Y.Z  make sure siscone points to a tag, not trunk
 
 X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
+
 X.Y.Z  make check 
 
-X.Y.Z  make distcheck
+X.Y.Z  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+       and make sure "grep LEAK.SUMMARY out" returns nothing and there
+       are no other errors.
 
-X.Y.Z  make sure it's committed
+X.Y.Z  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+X.Y.Z  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+X.Y.Z  make distcheck
 
 X.Y.Z  rerun the nightly check
 
@@ -65,11 +77,22 @@ checklist for 3.0.0
 
 3.0.0  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-3.0.0  make check 
+X.Y.Z  make check 
 
-3.0.0  make distcheck
+X.Y.Z  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+       and make sure "grep LEAK.SUMMARY out" returns nothing and there
+       are no other errors.
 
-3.0.0  make sure it's committed
+X.Y.Z  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+X.Y.Z  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+X.Y.Z  make distcheck
 
 X.Y.Z  rerun the nightly check
 

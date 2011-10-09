@@ -2,6 +2,21 @@
 
 	Release of FastJet 3.0.0
 
+2011-10-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc (ClustSeqActAreaEG::_post_process): 
+          replaced area_4vectors[i] = _jets[i] with 
+          _area_4vectors[i].reset_momentum(_jets[i]);
+	  so that areas are structure-free (and so they don't mess
+	  up the use count, leading to potential memory leaks). Checked
+	  this solves the leak found in the 11-filter example.
+
+	* NEWS: updated release date
+
+	* BUGS: fixed some wording in a few places.
+	 
+	* CHECKLIST included a line for checks on the examples.
+
 2011-10-09  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
      
         * INSTALL: reworked a bit the initial part, updated the list
@@ -9,12 +24,12 @@
 
 2011-10-08  Gregory Soyez  <soyez@fastjet.fr>
 
-	* TODO: removed done itemd
+	* TODO: removed done items
 
 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
-	  inverted the order of the include files (apparently, this goes
+	  inverted the order of the include files (this works
 	  around an anonymous enum bug in gcc-4.0.1 on Macs)
 
 	* plugins/SISCone"
