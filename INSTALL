@@ -123,6 +123,11 @@ Run the following to build FastJet and its plugins and to test them.
 
 % ./test-static.sh
 
+(NB: this no longer works as of FastJet 2.4, but the files have been
+left in place in case somebody prefers a non-autotools solution and
+wishes to update it.)
+
+
 ------------------
 Longer description
 ------------------

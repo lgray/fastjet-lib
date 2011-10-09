@@ -11,6 +11,9 @@
 	  up the use count, leading to potential memory leaks). Checked
 	  this solves the leak found in the 11-filter example.
 
+	* INSTALL: added a note about the old compilation system not
+	  working. 
+
 	* NEWS: updated release date
 
 	* BUGS: fixed some wording in a few places.
