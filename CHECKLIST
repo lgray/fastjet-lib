@@ -105,15 +105,15 @@ checklist for 3.0.0
 3.0.0  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-3.0.0
 3.0.0  update main web page & menu in devel area
 
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.0
-X.Y.Z  update main web-page area
+3.0.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.0
+3.0.0  update main web-page area
 
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+3.0.0  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.0.0       
 
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.0.0  make sure it's committed with the CHECKLIST
 
-X.Y.Z  check everything is OK
+3.0.0  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
 X.Y.Z  move the version number to X.Y.(Z+1)-devel
 
