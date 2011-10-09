@@ -78,9 +78,9 @@ checklist for 3.0.0
 
 3.0.0  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
 
-X.Y.Z  make check 
+3.0.0  make check 
 
-X.Y.Z  within zsh, in the examples directory, do 
+3.0.0  within zsh, in the examples directory, do 
          echo >! out
          for a in [01]*.cc
          (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
@@ -88,7 +88,7 @@ X.Y.Z  within zsh, in the examples directory, do
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
 
-X.Y.Z  go to testsuite; make with an installation of the current version;
+3.0.0  go to testsuite; make with an installation of the current version;
          ./run_tests
 
 X.Y.Z  make sure it's committed (before distcheck; so that all files
