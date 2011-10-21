@@ -1,3 +1,8 @@
+2011-10-21  Gregory Soyez  <soyez@fastjet.fr>
+
+	* BUGS:
+	  mention the release of CGAL-3.9
+
 2011-10-09  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

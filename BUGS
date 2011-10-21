@@ -17,11 +17,11 @@ Known bugs
      File: .../include/CGAL/Triangulation_2.h
 
    This is due to an excessively conservative check in versions 3.7,
-   3.8, and 3.9-beta1 of CGAL that will be fixed in the forthcoming
-   release 3.9.  Note also that versions<=3.6.1 do not show that
-   behaviour. If you encounter this problem, please switch to an
-   appropriate version of CGAL. [thanks to the CGAL development team
-   and to Olivier Devillers in particular for the quick fix.]
+   3.8, and 3.9-beta1 of CGAL that has been fixed in CGAL-3.9. Note
+   also that versions<=3.6.1 do not show that behaviour. If you
+   encounter this problem, please switch to an appropriate version of
+   CGAL. [thanks to the CGAL development team and to Olivier Devillers
+   in particular for the quick fix.]
 
 3. Filter and Pruner may lead to a crash in the following contorted
    situation:
