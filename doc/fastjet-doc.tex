@@ -2080,6 +2080,22 @@ The following selectors are also available:
 \section{Jet areas}
 \label{sec:areas}
 
+Jet areas are obtained by clustering with the class
+\ttt{ClusterSequenceArea} (rather than \ttt{ClusterSequence}, from
+which it is derived). Its constructor takes an \ttt{AreaDefinition}
+argument in addition to the list of particles and the
+\ttt{JetDefinition}. A typical usage would look like the following:
+\begin{lstlisting}
+  #include "fastjet/ClusterSequenceArea.hh"
+  // ...
+  double ghost_maxrap = 6.0;
+  AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+  ClusterSequenceArea clust_seq(input_particles, jet_def, area_def);
+  vector<PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets());
+  double area_hardest_jet = jets[0].area();
+\end{lstlisting}
+
+
 Since a jet is made up of only a finite number of particles, one needs
 a specific definition in order to make its {\sl area} (i.e. the
 surface in the $y$-$\phi$ plane over which it extends) an unambiguous
@@ -2106,18 +2122,6 @@ in~\cite{CSSAreas} and they are implemented in \fastjet:
   (but not for Cambridge/Aachen or anti-$k_t$, nor in general for any
   other algorithm) the Voronoi area of a jet coincides with its passive area.
 \end{itemize}
-The area can be calculated either as a scalar, or as a 4-vector.
-Essentially the scalar case corresponds to counting the number of
-ghosts in the jet, while the $4$-vector case corresponds to summing
-their 4-vectors (normalised such that for a narrow jet, the transverse
-component of the $4$-vector is equal to the scalar area).
-
-Jet areas are obtained by clustering with the class
-\ttt{ClusterSequenceArea} (rather than \ttt{ClusterSequence}, from
-which it is derived). Its constructor takes an \ttt{AreaDefinition}
-argument in addition to the list of particles and the
-\ttt{JetDefinition}.
-
 It is worth noting that in the limit of very densely populated events,
 all area definitions tend to the same value~\cite{CSSAreas}. It might
 therefore be advantageous to select a Voronoi area type, rather than
@@ -2125,22 +2129,38 @@ an active one, when using areas for phenomenological tasks like pileup
 subtraction~\cite{cs}, as it generally requires less CPU time to
 calculate.
 
+The area can be calculated either as a scalar, or as a 4-vector.
+Essentially the scalar case corresponds to counting the number of
+ghosts in the jet, while the $4$-vector case corresponds to summing
+their 4-vectors (normalised such that for a narrow jet, the transverse
+component of the $4$-vector is equal to the scalar area).
+
 To summarise, in order to access the areas of the jets the user is exposed to two main
 classes:
 \begin{lstlisting}
   class fastjet::AreaDefinition;
   class fastjet::ClusterSequenceArea;
 \end{lstlisting}
-
-If jet areas are to be used to study the level of a diffuse noise
-which might be present in the event (like underlying event particles
-or pileup) and maybe subtract it from jets, two further classes are useful:
-\begin{lstlisting}
-  class fastjet::JetMedianBackgroundEstimator
-  class fastjet::Subtractor
-\end{lstlisting}
 These classes are described in detail below and an example program is
-given in \ttt{example/07-subtraction.cc}.
+given in \ttt{example/06-area.cc}.
+
+%% When jet areas are to be used to study the level of a diffuse noise
+%% which might be present in the event (like underlying event particles
+%% or pileup) and maybe subtract it from jets, two further classes are useful:
+%% \begin{lstlisting}
+%%   class fastjet::JetMedianBackgroundEstimator
+%%   class fastjet::Subtractor
+%% \end{lstlisting}
+%% These classes are described in detail below and an example program is
+%% given in \ttt{example/07-subtraction.cc}.
+
+When jet areas are to be used to study the level of a diffuse noise
+which might be present in the event (like underlying event particles
+or pileup) and maybe subtract it from jets, further classes (like
+\ttt{fastjet::JetMedianBackgroundEstimator} and
+\ttt{fastjet::Subtractor}) are useful. This topic is discussed in
+Section \ref{sec:BackgroundEstimator} and an example program is given
+in \ttt{example/07-subtraction.cc}.
 
 
 
@@ -2354,8 +2374,12 @@ significantly faster to compute than the active area.
 %----------------------------------------------------------------------
 \subsection{fastjet::ClusterSequenceArea}
 
-This is the main class\footnote{  
-\ttt{ClusterSequenceArea} makes use of one among
+This is the class
+%
+\footnote{  
+\ttt{ClusterSequenceArea} is derived from
+\ttt{fastjet::ClusterSequenceAreaBase} (itself derived from
+\ttt{ClusterSequence}) and makes use of one among
 \ttt{ClusterSequenceActiveAreaExplicitGhosts}, 
 \ttt{ClusterSequenceActiveArea}, 
 \ttt{ClusterSequencePassiveArea},
@@ -2363,22 +2387,39 @@ This is the main class\footnote{
 \ttt{ClusterSequenceVoronoiArea} (all of them in the \ttt{fastjet}
 namespace of course), according to the choice
 made with \ttt{AreaDefinition}. The user might of course also use these
-classes directly.} to which the user is exposed 
-for accessing cluster sequences that include
-information about jet areas.  It is derived from
-\ttt{fastjet::ClusterSequenceAreaBase} (itself derived from
-\ttt{ClusterSequence}) and includes the methods
+classes directly.}
+%
+used for producing a cluster sequence that also calculates jet areas.
+It is constructed using 
+\begin{lstlisting}
+  template<class L> ClusterSequenceArea(const std::vector<L> & input_particles, 
+                                        const JetDefinition & jet_def,
+	                                const AreaDefinition & area_def);
+\end{lstlisting}
+and includes the methods
 \begin{lstlisting}
   /// return a reference to the area definition
-  virtual const fastjet::AreaDefinition & area_def() const ; 
+  virtual const fastjet::AreaDefinition & area_def() const; 
 
+  /// return the total area, corresponding to the given selector, that is free of jets.
+  ///
+  /// The selector needs to have a finite area and be applicable jet by jet.
+  /// Note this would always return 0 if active_area_explicit_ghosts is used.
+  virtual double empty_area(const Selector & selector) const;
+\end{lstlisting}
+
+As long as an instance of this class is in scope, a user can access
+information about the area of its jets using the following methods of
+\ttt{PseudoJet}:
+
+\begin{lstlisting}
   /// return the area associated with the given jet
-  virtual double area (const PseudoJet & jet) const ;
+  double area = jet.area();
 
   /// return the error (uncertainty) associated with the determination
   /// of the area of the jet; returns 0 when the repeat value = 1, and
   /// also for the active_area_explicit_ghosts and certain passive areas
-  virtual double area_error (const PseudoJet & jet) const ;
+  double area_error = jet.area_error();
 
   /// return a PseudoJet whose 4-vector is defined by the following integral
   ///
@@ -2388,18 +2429,14 @@ information about jet areas.  It is derived from
   /// rapidity ($y$), azimuth ($\phi$) and $p_t=1$, while $\Theta$("$y,\phi$ inside jet boundary")
   /// is a function that is 1 when $y,\phi$ define a direction inside the
   /// jet boundary and 0 otherwise.
-  ///
-  virtual PseudoJet area_4vector(const PseudoJet & jet) const ;
+  PseudoJet area_4vector = jet.area_4vector();
+
+  /// true if a jet is made exclusively of ghosts (and the AreaType is
+  /// active_area_explicit_ghosts)
+  /// It also applies for constituents of a jet, in which case it will
+  /// return true for ghosts.
+  bool is_pure_ghost = jet.is_pure_ghost();
 \end{lstlisting}
-When the \verb|AreaType| is \verb|active_area_explicit_ghosts|, one
-may additionally use the following function 
-\begin{lstlisting}
-  /// true if a jet is made exclusively of ghosts
-  virtual bool is_pure_ghost(const PseudoJet & jet) const;
-\end{lstlisting}
-to determine whether a jet is made purely of ghosts. Its argument can
-also be one of the constituents of a jet, in which case it will return
-\verb|true| if that constituent is a ghost.
 
 %----------------------------------------------------------------------
 \section{Background estimation and subtraction}

@@ -1,3 +1,16 @@
+2011-10-28  Gregory Soyez  <soyez@fastjet.fr> & Matteo
+
+	* doc/fastjet-doc.tex:
+	  reworked Section 7 (jet areas):
+	   - rephrased slightly the introduction (mostly added a brief
+	     usage example) to avoid being too technical
+	   - reorganised the description of ClusterSequenceArea to reflect
+	     the fact that jet-area information can directly be accessed
+	     through PseudoJet.
+
+	* include/fastjet/ClusterSequenceArea.hh:
+	  fixed a typo in the Doxygen comments
+
 2011-10-21  Gregory Soyez  <soyez@fastjet.fr>
 
 	* BUGS:

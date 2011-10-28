@@ -104,7 +104,7 @@ public:
   /// return the total area, corresponding to the given selector, that
   /// is free of jets
   ///
-  /// The selector need to have a finite area and be applicable jet by
+  /// The selector needs to have a finite area and be applicable jet by
   /// jet (see the BackgroundEstimator and Subtractor tools for more
   /// advanced usage)
   virtual double empty_area(const Selector & selector) const {
@@ -116,7 +116,7 @@ public:
   /// based on measured properties of ghost jets with kt and cam. Note
   /// that the number returned is a double.
   ///
-  /// The selector need to have a finite area and be applicable jet by
+  /// The selector needs to have a finite area and be applicable jet by
   /// jet (see the BackgroundEstimator and Subtractor tools for more
   /// advanced usage)
   virtual double n_empty_jets(const Selector & selector) const {
@@ -138,7 +138,7 @@ public:
   /// additionally checks compatibility between "selector" and region in which
   /// ghosts are thrown.
   ///
-  /// The selector need to have a finite area and be applicable jet by
+  /// The selector needs to have a finite area and be applicable jet by
   /// jet (see the BackgroundEstimator and Subtractor tools for more
   /// advanced usage)
   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
