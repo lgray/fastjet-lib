@@ -2503,7 +2503,9 @@ The grid-based case has been less extensively explored, but initial
 studies suggest that grid spacings in the range $\delta y = \delta
 \phi \simeq 0.5-0.7$ are appropriate.
 
-\subsection{General Usage}
+\subsection{General Usage}\label{sec:bkg_general_usage}
+
+\subsubsection{Background estimation}\label{sec:bkg_estim_usage}
 
 The simplest workflow for background estimation is first, outside the
 event loop, to create a background estimator.
@@ -2572,6 +2574,55 @@ jets selector or grid rapidity range is empty, the median estimate for
 $\rho$ will be zero, as expected and appropriate for quiet events.
 
 
+%----------------------------------------------------------------------
+\subsubsection{Background subtraction}\label{sec:subtractor}
+
+A common use of an estimation of the background is to subtract its contamination 
+from the
+transverse momentum of hard jets, in the form
+\begin{equation}
+p_{t,jet}^{sub} = p_{t,jet}^{raw} - \rho A_{jet} 
+\end{equation}
+or its 4-vector version
+\begin{equation}
+p_{\mu,jet}^{sub} = p_{\mu,jet}^{raw} - \rho A_{\mu,jet} \, ,
+\end{equation}
+as first advocated in~\cite{cs}.
+
+To this end, the \ttt{Subtractor} class is defined in
+\ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
+a background estimator:
+\begin{lstlisting}
+  JetMedianBackgroundEstimator bge(....); // or a grid-based estimator
+  Subtractor subtractor(&bge);
+\end{lstlisting}
+(it is also possible to construct the Subtractor with a fixed value
+for $\rho$).
+%
+The subtractor can then be used as follows:
+\begin{lstlisting}
+  PseudoJet jet;
+  vector<PseudoJet> jets;
+  // ...
+  PseudoJet subtracted_jet = subtractor(jet);
+  vector<PseudoJet> subtracted_jets = subtractor(jets);
+\end{lstlisting}
+The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
+%
+If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then
+the subtractor instead returns a jet with zero 4-momentum (so that
+\ttt{(subtracted\_jet==0)} returns \ttt{true}).
+%
+In both cases, the returned jet retains the user and structural
+information of the original jet.
+
+An example program is given in \ttt{example/07-subtraction.cc}.
+
+Note that \ttt{Subtractor} derives from the \ttt{Transformer} class (see
+section~\ref{sec:transformers}) and hence from 
+\ttt{FunctionOfPseudoJet<PseudoJet>} (cf.\
+appendix~\ref{app:function-of-pj}).
+
 
 
 %......................................................................
@@ -2584,28 +2635,31 @@ collisions usually has some non-negligible dependence on rapidity (and
 sometimes azimuth) and this information is not correctly accounted
 for.
 %
-Two techniques can help alleviate this problem.
-%
-The first, available for now only in the case of the jet-based
-estimator, involves the use of a more local range for the
-determination of $\rho$, with the help of a \ttt{Selector} that is
-able to take a reference jet, e.g. \ttt{SelectorStrip(}$\Delta
-y$\ttt{)}, a strip of half-width $\Delta y$ (which might be of order
-$1$) centred on whichever jet is set as its reference.
-%
-With this kind of selector, when the user calls either of the
-\ttt{JetMedianBackgroundEstimator} member functions
+Two techniques (described below) can help alleviate this problem, and
+the properties of the background are then obtained through the methods
+(available for both \ttt{JetMedianBackgroundEstimator} and
+\ttt{GridMedianBackgroundEstimator})
 \begin{lstlisting}
   double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
   double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
 \end{lstlisting}
-a \ttt{selector.set\_reference(jet)} call is made to centre the
-selector on the specified jet. Then only the jets
-that pass the cut specified by this newly positioned \ttt{selector}
-are used to estimate $\rho$ or $\sigma$.\footnote{If the selector does
-  not take a reference jet, then these calls give identical
-  results to the plain \texttt{rho()} and \texttt{sigma()} calls, unless a
-  manual rapidity rescaling is in effect.}
+
+The first technique, ``local selector'', available for now only in
+the case of the jet-based estimator, involves the use of a more local
+range for the determination of $\rho$, with the help of a
+\ttt{Selector} that is able to take a reference jet,
+e.g. \ttt{SelectorStrip(}$\Delta y$\ttt{)}, a strip of half-width
+$\Delta y$ (which might be of order $1$) centred on whichever jet is
+set as its reference.
+%
+With this kind of selector, when the user calls either \ttt{rho(jet)}
+or \ttt{sigma(jet)} a \ttt{selector.set\_reference(jet)} call is made
+to centre the selector on the specified jet. Then only the jets that
+pass the cut specified by this newly positioned \ttt{selector} are
+used to estimate $\rho$ or $\sigma$.\footnote{If the selector does not
+  take a reference jet, then these calls give identical results to the
+  plain \texttt{rho()} and \texttt{sigma()} calls, unless a manual
+  rapidity rescaling is in effect.}
 %
 This method is adequate if the number of jets that pass the selector
 is much larger than the number of hard jets in the range (otherwise
@@ -2629,13 +2683,14 @@ remove.\footnote{If you use non-geometric selectors in determining
   determination of the empty area. If it does not, an error will be
   thrown.}
 
-In unpublished studies for the case of $pp$ pileup events (with
-Pythia~8.145, tune 4C for the pileup~\cite{Sjostrand:2007gs}), we have
-found that an alternative method that is adequate for handling the
-rapidity dependence is to parametrise the average shape of the
-rapidity dependence from some number of pileup events and then carry
-out an event-by-event global $\rho$ determination taking into account
-that average shape.
+The second technique, ``rescaling'', was suggested by unpublished
+studies for the case of $pp$ pileup events (with Pythia~8.145, tune 4C
+for the pileup~\cite{Sjostrand:2007gs}). We have found that an
+alternative method that is adequate for handling the rapidity
+dependence is to parametrise the average shape of the rapidity
+dependence from some number of pileup events and then carry out an
+event-by-event global $\rho$ determination taking into account that
+average shape.
 %
 This method is available for both grid and jet-based methods.
 %
@@ -2650,8 +2705,7 @@ with both rapidity and azimuth dependence, derive a class from
 \ref{app:function-of-pj}) and then one tells the background estimator
 (whether jet or grid based) about the rescaling with the call
 \begin{lstlisting}
-  // tell the JetMedianBackgroundEstimator or
-  // GridMedianBackgroundEstimator about the rescaling
+  // tell JetMedianBackgroundEstimator or GridMedianBackgroundEstimator about the rescaling
   bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
 Subsequent calls will then take the median of the distribution $p_t/A
@@ -2791,55 +2845,6 @@ If the old behaviour is needed, a call to a specific
 causes ghosts to placed as in the 2.x series.
 
 
-%----------------------------------------------------------------------
-\subsection{Background subtraction}
-\label{sec:subtractor}
-
-A common use of an estimation of the background is to subtract its contamination 
-from the
-transverse momentum of hard jets, in the form
-\begin{equation}
-p_{t,jet}^{sub} = p_{t,jet}^{raw} - \rho A_{jet} 
-\end{equation}
-or its 4-vector version
-\begin{equation}
-p_{\mu,jet}^{sub} = p_{\mu,jet}^{raw} - \rho A_{\mu,jet} \, ,
-\end{equation}
-as first advocated in~\cite{cs}.
-
-To this end, the \ttt{Subtractor} class is defined in
-\ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
-a background estimator:
-\begin{lstlisting}
-  JetMedianBackgroundEstimator bge(....); // or a grid-based estimator
-  Subtractor subtractor(&bge);
-\end{lstlisting}
-(it is also possible to construct the Subtractor with a fixed value
-for $\rho$).
-%
-The subtractor can then be used as follows:
-\begin{lstlisting}
-  PseudoJet jet;
-  vector<PseudoJet> jets;
-  // ...
-  PseudoJet subtracted_jet = subtractor(jet);
-  vector<PseudoJet> subtracted_jets = subtractor(jets);
-\end{lstlisting}
-The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
-%
-If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then
-the subtractor instead returns a jet with zero 4-momentum (so that
-\ttt{(subtracted\_jet==0)} returns \ttt{true}).
-%
-In both cases, the returned jet retains the user and structural
-information of the original jet.
-
-An example program is given in \ttt{example/07-subtraction.cc}.
-
-Note that \ttt{Subtractor} derives from the \ttt{Transformer} class (see
-section~\ref{sec:transformers}) and hence from 
-\ttt{FunctionOfPseudoJet<PseudoJet>} (cf.\
-appendix~\ref{app:function-of-pj}).
 
 
 %======================================================================

@@ -8,6 +8,13 @@
 	     the fact that jet-area information can directly be accessed
 	     through PseudoJet.
 
+	  reworked Section 8 (background estim+subtraction):
+	   - moved the section about the subtraction higher up (in Section
+	     on general usage)
+	   - positional dependence: made explicit that rho(jet) and
+	     sigma(jet) work for both the JMBGE and the GMBGE, as well as
+	     for both techniques (selector-based and rescaling-based)
+
 	* include/fastjet/ClusterSequenceArea.hh:
 	  fixed a typo in the Doxygen comments
 
