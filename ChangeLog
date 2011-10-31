@@ -1,3 +1,20 @@
+2011-10-31  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* doc/fastjet-doc.tex:
+	  - moved strategies into an appendix of their own; we should add
+	    timing fig. there
+	  - documented deprecation of JetFinder and JD(jet_alg, R,
+	    strategy) in relevant appendix
+	  - various other small changes up to end of section 3.3; 
+	    next question is whether to move reco-schemes into an
+	    appendix. 
+
+	* include/fastjet/JetDefinition.hh: 
+	  removed some old commented code
+
+	* src/PseudoJet.cc (description): 
+	  fixed typo in default description
+
 2011-10-28  Gregory Soyez  <soyez@fastjet.fr> & Matteo
 
 	* doc/fastjet-doc.tex:

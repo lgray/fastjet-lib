@@ -385,9 +385,9 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 string PseudoJet::description() const{
   // the "default" case of a PJ which does not belong to any cluster sequence
   if (!_structure())
-    return "standard PseudoJet (with no associated Clustering information)";
+    return "standard PseudoJet (with no associated clustering information)";
   
-  // for all the other cases, the descition comes from the structure
+  // for all the other cases, the description comes from the structure
   return _structure()->description();
 }
 

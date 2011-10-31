@@ -29,6 +29,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{url}
 \usepackage[breaklinks=true]{hyperref}
 %\usepackage[colorlinks=true]{hyperref}
@@ -75,6 +76,8 @@
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
 % ttt includes some resizing of text so that things look nicer inline
 \newcommand{\ttt}[1]{{\small\texttt{#1}}}
+%\newcommand{\ttt}[1]{\scalebox{0.9}{\texttt{#1}}}
+%\newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\comment}[1]{\textbf{[#1]}}
 \newcommand{\order}[1]{{\cal O}\left(#1\right)}
 \newcommand{\ie}{{\it i.e.}\ }
@@ -185,7 +188,7 @@ For the impatient, the \fastjet package can be set up and run as follows.
 \begin{itemize}
 \item Download the code and the unpack it
 \begin{verbatim}
- wget http://fastjet.fr/repo/fastjet-X.Y.Z.tar.gz 
+ curl -O http://fastjet.fr/repo/fastjet-X.Y.Z.tar.gz 
  tar zxvf fastjet-X.Y.Z.tar.gz
  cd fastjet-X.Y.Z/
 \end{verbatim}
@@ -271,12 +274,12 @@ are available in the \ttt{example/} subdirectory of the
 \fastjet distribution.
 
 %----------------------------------------------------------------------
-\section{Jet-finding interface}
+\section{Core classes}
 
 All classes are contained in the \ttt{fastjet} namespace. For brevity this namespace
 will usually not be explicitly written below, with the possible exception of the first
 appearance of a \fastjet class, and code excerpts will
-assume that a \ttt{using namespace fastjet;} is present in the user
+assume that a ``\ttt{using namespace fastjet;}'' statement is present in the user
 code.
 For basic
 usage, the user is exposed to three main classes:
@@ -287,11 +290,13 @@ usage, the user is exposed to three main classes:
 \end{lstlisting}
 \ttt{PseudoJet} provides a jet object with a four-momentum and some
 internal indices to situate it in the context of a jet-clustering
-sequence. \ttt{ClusterSequence} is the class that carries out
-jet-clustering and provides access to the final jets.
+sequence. 
 %
 The class \ttt{JetDefinition} contains a specification of how
 jet clustering is to be performed. 
+%
+\ttt{ClusterSequence} is the class that carries out
+jet-clustering and provides access to the final jets.
 
 
 %......................................................................
@@ -308,13 +313,17 @@ following constructors
 \end{lstlisting}
 where the second form allows the initialisation to be obtained from
 any class \ttt{T} that allows subscripting to return the components of
-the momentum (running from $0\ldots3$ in the order $p_x,p_y,p_z,E$),
-for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
-  \ttt{PseudoJet} is the analogue of \ktjet's \ttt{KtLorentzVector}.
-  A significant difference is that it is not derived from
-  \ttt{HepLorentzVector} (so as to allow compilation even without
-  \clhep).}
-%
+the momentum (running from $0\ldots3$ in the order $p_x,p_y,p_z,E$).
+%%
+%% GPS+MC: removed references to CLHEP and KtJet because 
+%%         no longer so widely used
+%%
+% for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
+%   \ttt{PseudoJet} is the analogue of \ktjet's \ttt{KtLorentzVector}.
+%   A significant difference is that it is not derived from
+%   \ttt{HepLorentzVector} (so as to allow compilation even without
+%   \clhep).}
+% %
 The default constructor for a \PJ sets the momentum components to
 zero.
 
@@ -389,7 +398,13 @@ defined, with \ttt{+}, \ttt{-} acting on pairs of \ttt{PseudoJet}s and
 \ttt{*}, \ttt{/} acting on a \ttt{PseudoJet} and a \ttt{double}
 coefficient.
 %
-The analogous \ttt{+=}, etc., operators, are also defined.
+The analogous \ttt{+=}, etc., operators, are also defined.\footnote{
+  The \texttt{+}, \texttt{-} operators return a \texttt{PseudoJet}
+  with default user information; the \texttt{*} and \texttt{/} operators
+  return a \texttt{PseudoJet} with the same user information as the
+  original \texttt{PseudoJet}; the 
+  \texttt{+=}, \texttt{-=}, etc., operators all preserve the user
+  information of the \texttt{PseudoJet} on the LHS of the operator.  }
 
 There are also equality testing operators: \ttt{(jet1 == jet2)}
 returns true if the two jets have identical 4-momenta, structural
@@ -415,6 +430,10 @@ Finally, we also provide routines for taking an unsorted vector of
 These will typically be used on the jets returned by
 \ttt{ClusterSequence}.
 
+A number of further \PJ member functions provide access to information
+on a jet's structure. They are documented below in
+sections~\ref{sec:constituents} and \ref{sec:composite-jet}.
+
 %......................................................................
 \subsection{fastjet::JetDefinition}
 \label{sec:JetDefinition}
@@ -424,9 +443,7 @@ of how to carry out the clustering. According to the Les Houches convention
 detailed in~\cite{Buttar:2008jx}, a `jet definition' should include the 
 jet algorithm name, its parameters (often the radius $R$) and the 
 recombination scheme.
-Its constructor is\footnote{The v.
-  2.0 constructor, without the recombination scheme argument, still
-  remains valid.}
+Its constructor is
 %
 \begin{lstlisting}
   JetDefinition(fastjet::JetAlgorithm jet_algorithm,
@@ -436,23 +453,61 @@ Its constructor is\footnote{The v.
 \end{lstlisting}
 %
 The jet algorithm is one of the entries of the \ttt{JetAlgorithm}
-\ttt{enum}\footnote{As of v2.3, the \ttt{JetAlgorithm} name replaces the old \ttt{JetFinder}
+\ttt{enum}:\footnote{As of v2.3, the \ttt{JetAlgorithm} name replaces the old \ttt{JetFinder}
 one, in keeping with the Les Houches convention. Backward compatibility is
 assured at the user level by a typedef and a doubling of the methods names.
 Backward compatibility (with versions $<$ 2.3) is however broken for 
 user-written derived classes of \ttt{ClusterSequence}, as the protected 
 variables \ttt{\_default\_jet\_finder} and  \ttt{\_jet\_finder} have been 
-replaced by \ttt{\_default\_jet\_algorithm} and \ttt{\_jet\_algorithm}.}: 
+replaced by \ttt{\_default\_jet\_algorithm} and \ttt{\_jet\_algorithm}.}
 \begin{lstlisting}
   enum JetAlgorithm {kt_algorithm, cambridge_algorithm,
                      antikt_algorithm, genkt_algorithm,
                      ee_kt_algorithm, ee_genkt_algorithm, ...};
 \end{lstlisting}
-where the $\ldots$ represent additional values that are present for
-internal or testing purposes.
+Each option is described in detail in
+section~\ref{sec:native-algs}.
 %
-\ttt{R} specifies the value of $R$ that appears in
-eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{eq:dij_eegenkt}).
+The $\ldots$ represent
+additional values that are present for 
+internal or testing purposes. They include
+\ttt{plugin\_algorithm} set when plugins are used
+(section~\ref{sec:plugins}) and  \ttt{undefined\_jet\_algorithm}, 
+which is the value set in \ttt{JetDefinition}'s default constructor.
+%}
+
+
+The parameter \ttt{R} specifies the value of $R$ that appears in
+eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{eq:dij_eegenkt})
+\comment{and intro}.  
+%
+For one algorihm, \verb:ee_kt_algorithm:, there is no $R$ parameter,
+so the constructor is to be called without the \verb:R: argument.
+% \begin{lstlisting}
+%   JetDefinition(JetAlgorithm jet_algorithm,
+%                 RecombinationScheme recomb_scheme = E_scheme,
+%                 Strategy strategy = Best);
+% \end{lstlisting}
+%
+For the generalised $k_t$ algorithm and its $e^+e^-$ version, one
+requires $R$ and (immediately after $R$) an extra
+parameter $p$.
+%, and the following constructor should then be used
+% %
+% \begin{lstlisting}
+%   JetDefinition(JetAlgorithm jet_algorithm,
+%                 double R,
+%                 double p,
+%                 RecombinationScheme recomb_scheme = E_scheme,
+%                 Strategy strategy = Best);
+% \end{lstlisting}
+%
+If the user calls a constructor with the incorrect number of arguments
+for the requested jet algorithm, a \ttt{fastjet::Error()} exception
+will be thrown with an explanatory message.
+%
+Details are to be found in sections~\ref{sec:genkt} and
+\ref{sec:ee-algs}. 
 
 %
 \begin{table}
@@ -472,33 +527,6 @@ eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{
   \label{tab:RecombSchemes}
 \end{table}
 
-For one algorihm, \verb:ee_kt_algorithm:, there is no $R$ parameter,
-so the constructor is to be called without the \verb:R: argument:
-\begin{lstlisting}
-  JetDefinition(JetAlgorithm jet_algorithm,
-                RecombinationScheme recomb_scheme = E_scheme,
-                Strategy strategy = Best);
-\end{lstlisting}
-%
-For the generalised $k_t$ algorithm and its $e^+e^-$ version, one
-requires $R$ and an extra
-parameter $p$, and the following constructor should then be used
-%
-\begin{lstlisting}
-  JetDefinition(JetAlgorithm jet_algorithm,
-                double R,
-                double p,
-                RecombinationScheme recomb_scheme = E_scheme,
-                Strategy strategy = Best);
-\end{lstlisting}
-%
-If the user calls a constructor with the incorrect number of arguments
-for the requested jet algorithm, a \verb!fastjet::Error()! exception
-will be thrown with an explanatory message.
-
-The default constructor for \verb:JetDefinition: sets the jet
-algorithm to \verb:undefined_jet_algorithm:.
-
 The recombination scheme is set by an \ttt{enum} of type
 \ttt{RecombinationScheme}, and it is related to the choice of how to
 recombine the 4-momenta of \ttt{PseudoJet}s during the clustering procedure.
@@ -506,107 +534,32 @@ The default in \fastjet is the $E$-scheme, where the four components of
 two 4-vectors are
 simply added. This scheme is used when no explicit choice is made in the
 constructor. The list of available recombination schemes is given in
-table~\ref{tab:RecombSchemes}, and more details are given in section~\ref{sec:recomb_schemes}.
+table~\ref{tab:RecombSchemes}, and more details are given in
+section~\ref{sec:recomb_schemes}.
 
 The strategy selects the algorithmic strategy to use while clustering
-and is an \ttt{enum} of type \ttt{Strategy} with
-potentially interesting values listed in table~\ref{tab:Strategies}.
+and is an \ttt{enum} of type \ttt{Strategy}. The default option of
+\ttt{Best} automatically determines and selects a strategy that
+should be close to optimal in speed for each event, based on its
+multiplicity. 
 %
-\begin{table}
-  \begin{center}
-    \begin{tabular}{l|l}\hline
-      \ttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N
-      \lesssim 50$)\\
-      \ttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
-      N \lesssim 400$)\\ 
-      \ttt{N2MinHeapTiled} & a tiled $N^2$ algorithm with a heap for
-      tracking the minimum of \\& $d_{ij}$ (fastest for $400 \lesssim
-      N \lesssim 15000$)\\ 
-      \ttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
-      N \gtrsim 15000$)\\ 
-      \ttt{NlnNCam} & based on Chan's $N\ln N$ closest pairs
-      algorithm (fastest for \\&$ 
-      N \gtrsim 6000$), suitable only for the Cambridge jet algorithm\\ 
-      \ttt{Best} & automatic selection of the best of these based on
-      $N$ and $R$\\\hline 
-    \end{tabular}
-    \caption{The more interesting of the various algorithmic
-      strategies for clustering. Other strategies are given
-      \ttt{JetDefinition.hh} --- note however that strategies not
-      listed in the above table may disappear in future releases.
-      %
-      For jet algorithms with spherical distance measures (those whose
-      name starts with ``\ttt{ee\_}''), only the \ttt{N2Plain} strategy is
-      available.  }
-    \label{tab:Strategies}
-  \end{center}
-\end{table}
-%
-Nearly all strategies are based on the factorisation of energy and
-geometrical distance components of the $d_{ij}$
-measure~\cite{fastjet}. In particular they involve the dynamic
-maintenance of a nearest-neighbour graph for the geometrical
-distances.  They apply equally well to any of the internally
-implemented jet algorithms.
-%
-The one exception is \ttt{NlnNCam}, which is based on a computational
-geometry algorithm for dynamic maintenance of closest pairs
-\cite{Chan} (rather than the more involved nearest neighbour graph),
-and is suitable only for the Cambridge algorithm whose distance
-measure is purely geometrical.
-
-The \ttt{N2Plain} strategy uses a ``nearest-neighbour heuristic''
-\cite{Anderberg} approach to maintaining the geometrical
-nearest-neighbour graph; \ttt{N2Tiled} tiles the $y-\phi$ cylinder
-to limit the set of points over which nearest-neighbours are searched
-for,%
-\footnote{Tiling is a textbook approach in computational geometry,
-  where it is often referred to as bucketing. It has been used also in
-  certain cone jet algorithms, notably at trigger level and in
-  \cite{Sonnenschein}.} %
-and \ttt{N2MinHeapTiled} differs only in that it uses an $N\ln N$
-(rather than $N^2$) data structure for maintaining in order the subset
-of the $d_{ij}$ that involves nearest neighbours.
-%
-The \ttt{NlnN} strategy uses CGAL's Delaunay Triangulation
-\cite{CGAL} for the maintenance of the nearest-neighbour graph.
-%
-Note that $N \ln N$ performance of is an \emph{expected} result, and
-it holds in practice for the $k_t$ and Cambridge algorithms, while for
-anti-$k_t$ and generalised-$k_t$ with $p<0$, hub-and-spoke
-(bicycle-wheel!) type configurations emerge dynamically during the
-clustering and these break the conditions needed for the expected
-result to hold (this however has a significant impact only for $N
-\gtrsim 10^5$).
-
-
-If \ttt{strategy} is omitted then the \ttt{Best} option is set.
-Note that the $N$ ranges quoted above for which a given strategy is
-optimal hold for $R=1$; the general $R$ dependence can be significant
-(and non-trivial), for example for the Cambridge/Aachen jet algorithm
-with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2MinHeapTiled} strategy
-only for $N\gtrsim 37000$. While some attempt has been made to account
-for the $R$-dependence in the choice of the strategy with the
-``\ttt{Best}'' option, there may exist specific regions of $N$ and
-$R$ in which a manual choice of strategy can give faster execution.
-Furthermore the \ttt{NlnNCam} strategy's timings may depend
-strongly on the size of the cache, and the transitions that have been
-adopted are based on a cache size of $2$~MB. Finally for a given $N$
-and $R$, the optimal strategy may also depend on the event structure. 
+A discussion of the main available strategies together with their
+performance is given in appendix~\ref{app:strategies}.
 
 A textual description of the jet definition can be obtained by a call
-to the member function
-\begin{lstlisting}
-  std::string description(); 
-\end{lstlisting}
+to the member function \ttt{std::string description();}
+% \begin{lstlisting}
+%   std::string description(); 
+% \end{lstlisting}
 
 %......................................................................
 \subsection{fastjet::ClusterSequence}
 \label{sec:ClusterSequence}
 
 To run the jet clustering, create a \ttt{ClusterSequence}
-object,\footnote{The analogue of \ktjet's \ttt{KtEvent}.}  through the
-following constructor
+object,
+%\footnote{The analogue of \ktjet's \ttt{KtEvent}.}  
+through the following constructor
 \begin{lstlisting}
   template<class L> ClusterSequence(const std::vector<L> & input_particles,
                                     const JetDefinition & jet_def); 
@@ -617,8 +570,17 @@ used to initialise a \ttt{PseudoJet} and \ttt{jet\_def} contains
 the full specification of the clustering (see Section
 \ref{sec:JetDefinition}).
 
-If the user wishes to access inclusive jets, the following member
-function should be used
+%......................................................................
+\subsubsection{Accessing inclusive jets}
+
+Inclusive jets correspond to all objects that have undergone a
+``beam'' clustering (i.e. $d_{iB}$ recombination) in the description
+around Eq.(\comment{InIntro}).
+%
+For nearly all hadron-collider algorithms, the ``inclusive'' jets are
+the ones usually just referred to as the ``jets''.
+
+To access inclusive jets, the following member function should be used
 \begin{lstlisting}
   /// return a vector of all jets (in the sense of the inclusive
   /// algorithm) with pt >= ptmin. 
@@ -627,10 +589,14 @@ function should be used
 where \ttt{ptmin} may be omitted (then implicitly taking value
 $0$).
 
-There are two ways of accessing exclusive jets,\footnote{In contrast
-  to \ktjet the class constructor is the same for the inclusive and
-  exclusive cases. This choice has been made because the clustering
-  sequence is identical in the two cases.} one where one specifies
+%......................................................................
+\subsubsection{Accessing exclusive jets}
+There are two ways of accessing exclusive jets,
+%\footnote{In contrast
+%  to \ktjet the class constructor is the same for the inclusive and
+%  exclusive cases. This choice has been made because the clustering
+%  sequence is identical in the two cases.} 
+one where one specifies
 $d_{cut}$, the other where one specifies that the clustering is taken
 to be stopped once it reaches the specified number of jets.
 \begin{lstlisting}
@@ -700,14 +666,39 @@ following methods:
 which are relevant for use with the $\ee$ $k_t$ algorithm and with the
 Jade plugin (section~\ref{sec:ee-jade}).
 
-\paragraph{Unclustered particles.}  User-supplied plugin jet algorithms
-(see section~\ref{sec:plugins}) may have the property that not all
-particles are clustered into jets. In such a case it can be useful to
-obtain the list of unclustered particles. This can be done as
-follows:
+%......................................................................
+\subsubsection{Other functionality}
+
+\paragraph{Unclustered particles.}  
+%
+Some jet algorithms (e.g.\ a number of the plugins in
+section~\ref{sec:plugins}) have the property that not all particles
+necessarily participate in the clustering.
+%
+In other cases, particles may take part in the clustering, but not end
+up in any final inclusive jet.
+%
+Two member functions are provided to obtain the list of these
+particles.
+%
+One uses 
 \begin{lstlisting}
   vector<PseudoJet> unclustered = clust_seq.unclustered_particles();
 \end{lstlisting}
+to obtain the list of particles that never took part in the clustering.
+%
+The following call additionally returns objects that are the result of
+clustering but that never made it into a inclusive jet (i.e.\ into a
+``beam'' recombination):
+\begin{lstlisting}
+  vector<PseudoJet> childless = clust_seq.childless_pseudojets();
+\end{lstlisting}
+A practical example where this is relevant is with plugins that
+perform pruning~\cite{Ellis:2009su}, since they include a condition for
+vetoing certain recombinations.%
+\footnote{To obtain the list of all initial particles that never end up in any
+  inclusive jet, one should simply concatenate the vectors of
+  constituents of all the childless \texttt{PseudoJet}s.}
 
 
 \paragraph{Copying and transforming a ClusterSequence.}
@@ -715,19 +706,23 @@ follows:
 A standard copy constructor is available for {\CS}s. 
 %
 Additionally it is possible to copy the clustering history of a \CS
-while modifying the momenta of the jets, with the \CS member function
+while modifying the momenta of the \ttt{PseudoJet}s at all (initial,
+intermediate, final) stages of the clustering, with the \CS member
+function
 \begin{lstlisting}
   void transfer_from_sequence(const ClusterSequence & original_cs, 
                               const FunctionOfPseudoJet<PseudoJet> * action_on_jets = 0);
 \end{lstlisting}
 \ttt{fastjet::FunctionOfPseudoJet<PseudoJet>} is an abstract base class whose
 interface provides a \ttt{PseudoJet operator()(const PseudoJet \& jet)}
-function, i.e.\ a function of a \PJ that returns a \PJ, as discussed
-in appendix~\ref{app:function-of-pj}.
+function, i.e.\ a function of a \PJ that returns a \PJ (cf.\ 
+appendix~\ref{app:function-of-pj}).
 %
 As the clustering history is copied to the target \CS, each \PJ in the
-target \CS is given by the result of applying this function to the
-corresponding \PJ in the original sequence.
+target \CS is set to the result of
+\ttt{action\_on\_jet(original\_pseudojet)}. 
+% applying this function to the
+% corresponding \PJ in the original sequence.
 %
 One use case for this is if one wishes to obtain a Lorentz-boosted
 copy of a \CS, which can be achieved as follows
@@ -736,10 +731,9 @@ copy of a \CS, which can be achieved as follows
   // ...
   ClusterSequence original_cs(...);
   ClusterSequence boosted_cs;
-  Boost boost(some_jet_to_describe_the_boost);
+  Boost boost(boost_4momentum);
   boosted_cs.transfer_from_sequence(cs, &boost);
 \end{lstlisting}
-
 
 %......................................................................
 \subsection{Recombination schemes}
@@ -793,6 +787,7 @@ custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
 
 %......................................................................
 \subsection{Constituents and substructure of jets}
+\label{sec:constituents}
 
 For any \PseudoJet that results from a clustering, the user can
 obtain information about its constituents, internal substructure,
@@ -958,11 +953,13 @@ always be clear what kinds of structural information it has.
 %
 Accordingly a number of enquiry functions are available:
 \begin{lstlisting}
-  bool has_structure();         // true if it has some kind of structural info
-  bool has_constituents();      // true if it has constituents 
+  bool has_structure();         // true if the jet has some kind of structural info
+  bool has_constituents();      // true if the jet has constituents 
   bool has_exclusive_subjets(); // true if there is cluster-sequence style subjet info
   bool has_pieces();            // true if the jet can be broken up into pieces
-  bool has_area();              // true if it has jet-area informaion
+  bool has_area();              // true if the jet has jet-area informaion
+  string description();         // returns a textual description of the type
+                                // of structural info associated with the jet
 \end{lstlisting}
 Asking (say) for the \ttt{pieces()} of a jet for which
 \ttt{has\_pieces()} returns false will cause an error to be thrown.
@@ -998,7 +995,9 @@ the original article that defines the algorithm, as well as to the
 
 
 
+%======================================================================
 \section{\fastjet native jet algorithms}
+\label{sec:native-algs}
 
 %......................................................................
 \subsection[$k_t$ jet algorithm]{$\boldsymbol{k_t}$ jet algorithm}
@@ -3389,6 +3388,101 @@ University and Brookhaven National Laboratory.
 \appendix
 
 %======================================================================
+\section{Clustering strategies and performance}
+\label{app:strategies}
+
+The constructor for a \ttt{JetDefinition} takes a strategy argument
+(cf.\ section~\ref{sec:JetDefinition}), which selects the algorithmic
+strategy to use while clustering.
+%
+It is an \ttt{enum} of type \ttt{Strategy} with relevant
+values listed in table~\ref{tab:Strategies}.
+%
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|l}\hline
+      \ttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N
+      \lesssim 50$)\\
+      \ttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
+      N \lesssim 400$)\\ 
+      \ttt{N2MinHeapTiled} & a tiled $N^2$ algorithm with a heap for
+      tracking the minimum of \\& $d_{ij}$ (fastest for $400 \lesssim
+      N \lesssim 15000$)\\ 
+      \ttt{NlnN} & the Voronoi-based $N\ln N$ algorithm (fastest for $
+      N \gtrsim 15000$)\\ 
+      \ttt{NlnNCam} & based on Chan's $N\ln N$ closest pairs
+      algorithm (fastest for \\&$ 
+      N \gtrsim 6000$), suitable only for the Cambridge jet algorithm\\ 
+      \ttt{Best} & automatic selection of the best of these based on
+      $N$ and $R$\\\hline 
+    \end{tabular}
+    \caption{The more interesting of the various algorithmic
+      strategies for clustering. Other strategies are given
+      \ttt{JetDefinition.hh} --- note however that strategies not
+      listed in the above table may disappear in future releases.
+      %
+      For jet algorithms with spherical distance measures (those whose
+      name starts with ``\ttt{ee\_}''), only the \ttt{N2Plain} strategy is
+      available.  }
+    \label{tab:Strategies}
+  \end{center}
+\end{table}
+%
+Nearly all strategies are based on the factorisation of energy and
+geometrical distance components of the $d_{ij}$
+measure~\cite{fastjet}. In particular they involve the dynamic
+maintenance of a nearest-neighbour graph for the geometrical
+distances.  They apply equally well to any of the internally
+implemented jet algorithms.
+%
+The one exception is \ttt{NlnNCam}, which is based on a computational
+geometry algorithm for dynamic maintenance of closest pairs
+\cite{Chan} (rather than the more involved nearest neighbour graph),
+and is suitable only for the Cambridge algorithm whose distance
+measure is purely geometrical.
+
+The \ttt{N2Plain} strategy uses a ``nearest-neighbour heuristic''
+\cite{Anderberg} approach to maintaining the geometrical
+nearest-neighbour graph; \ttt{N2Tiled} tiles the $y-\phi$ cylinder
+to limit the set of points over which nearest-neighbours are searched
+for,%
+\footnote{Tiling is a textbook approach in computational geometry,
+  where it is often referred to as bucketing. It has been used also in
+  certain cone jet algorithms, notably at trigger level and in
+  \cite{Sonnenschein}.} %
+and \ttt{N2MinHeapTiled} differs only in that it uses an $N\ln N$
+(rather than $N^2$) data structure for maintaining in order the subset
+of the $d_{ij}$ that involves nearest neighbours.
+%
+The \ttt{NlnN} strategy uses CGAL's Delaunay Triangulation
+\cite{CGAL} for the maintenance of the nearest-neighbour graph.
+%
+Note that $N \ln N$ performance of is an \emph{expected} result, and
+it holds in practice for the $k_t$ and Cambridge algorithms, while for
+anti-$k_t$ and generalised-$k_t$ with $p<0$, hub-and-spoke
+(bicycle-wheel!) type configurations emerge dynamically during the
+clustering and these break the conditions needed for the expected
+result to hold (this however has a significant impact only for $N
+\gtrsim 10^5$).
+
+
+If \ttt{strategy} is omitted then the \ttt{Best} option is set.
+Note that the $N$ ranges quoted above for which a given strategy is
+optimal hold for $R=1$; the general $R$ dependence can be significant
+(and non-trivial), for example for the Cambridge/Aachen jet algorithm
+with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2MinHeapTiled} strategy
+only for $N\gtrsim 37000$. While some attempt has been made to account
+for the $R$-dependence in the choice of the strategy with the
+``\ttt{Best}'' option, there may exist specific regions of $N$ and
+$R$ in which a manual choice of strategy can give faster execution.
+Furthermore the \ttt{NlnNCam} strategy's timings may depend
+strongly on the size of the cache, and the transitions that have been
+adopted are based on a cache size of $2$~MB. Finally for a given $N$
+and $R$, the optimal strategy may also depend on the event structure. 
+
+
+\comment{PUT A FIGURE WITH TIMING? Just have SISCone, $k_t$, C/A and
+  anti-$k_t$}.
 
 
 %======================================================================
@@ -4310,18 +4404,20 @@ have led us to deprecate and/or remove functionality.
     CS::set\_jet\_finder(...)    & 2.1 & 3.0 & JetDefinition \\
     CS::set\_jet\_algorithm(...) & 2.1 & 3.0 & JetDefinition \\
     CS::CS(particles, R, ...)    & 2.1 & 3.0 & CS::CS(particles, jet\_def)\\
+    JD(jet\_alg, R, strategy)    & 2.1 & -   & JD(jet\_alg, R, recomb\_scheme, strategy)\\
     \midrule
     %----------------------------------------------------------------------
+    JetFinder       & 2.3    & -   & JetAlgorithm \\
     SISConePlugin.hh  
-                   & 2.3    & 3.0  & fastjet/SISConePlugin.hh (idem.\ other plugins)\\
+                    & 2.3    & 3.0  & fastjet/SISConePlugin.hh (idem.\ other plugins)\\
     ActiveAreaSpec  & 2.3   &  --  & AreaDefinition \& GhostedAreaSpec\\
     ClusterSequenceWithArea 
                     & 2.3   &  --  & ClusterSequenceArea\\\midrule
     %----------------------------------------------------------------------
     default $f=0.5$ in some cone plugins
-                    & --    &  2.4 & include $f$ explicitly in c'tor\\
+                    & --    &  2.4 & include $f$ explicitly in constructor\\
     default $R=1$ in JetDefinition
-                    & --    &  2.4 & include $R$ explicitly in c'tor\\
+                    & --    &  2.4 & include $R$ explicitly in constructor\\
     \midrule %------------------------------------------------------------
     RangeDefinition & 3.0   &  --  & Selector(s)        \\
     CircularRange   & 3.0   &  --  & SelectorCircle     \\
@@ -4336,8 +4432,8 @@ have led us to deprecate and/or remove functionality.
   \caption{Summary of interfaces and features of earlier versions that have been
     deprecated and/or removed. For brevity we have used the following
     abbreviations: Dep. = version since which a feature has been
-    deprecated, c'tor = constructor, Rem. = version where removed, CS
-    = ClusterSequence, CSAB = ClusterSequenceAreaBase, GAS =
+    deprecated, Rem. = version where removed, CS
+    = ClusterSequence, JD = JetDefinition, CSAB = ClusterSequenceAreaBase, GAS =
     GhostedAreaSpec.
     \label{tab:deprecated}
   } 

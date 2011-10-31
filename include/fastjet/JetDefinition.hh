@@ -283,18 +283,6 @@ public:
                 Strategy strategy,
                 RecombinationScheme recomb_scheme = E_scheme,
                 int nparameters = 1);
-// :
-//    _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
-//    // the largest sensible value for R
-//    if (jet_algorithm != ee_kt_algorithm &&
-//	jet_algorithm != ee_genkt_algorithm) assert(_Rparam <= 0.5*pi);
-//    assert(_jet_algorithm != plugin_algorithm &&
-//           _strategy   != plugin_strategy);
-//    _plugin = NULL;
-//    set_recombination_scheme(recomb_scheme);
-//    set_extra_param(0.0); // make sure it's defined
-//  }
-
   
   /// R values larger than max_allowable_R are not allowed.
   ///
