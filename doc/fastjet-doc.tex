@@ -1495,7 +1495,7 @@ uses\footnote{ In versions of \fastjet prior to 3.0.1, a jet's user
 One may also obtain a list of the positions of original stable
 cones as follows:
 \begin{lstlisting}
-  vector<PseudoJet> stable_cones = extras->stable_cones();
+  const vector<PseudoJet> & stable_cones = extras->stable_cones();
 \end{lstlisting}
 The stable cones are represented as PseudoJets, for which only the
 rapidity and azimuth are meaningful. The \verb:user_index(): indicates
@@ -1516,6 +1516,8 @@ jet-definition's own recombiner, with the command
 \begin{lstlisting}
   plugin->set_use_jet_def_recombiner(true);
 \end{lstlisting}
+For this to work, \ttt{plugin} must explicitly be of type
+\ttt{SISConePlugin *} rather than \ttt{JetDefinition::Plugin *}. 
 
 Since SISCone is infrared safe, it may meaningfully be used also with
 the \verb:ClusterSequenceArea: class. Note however that in that
