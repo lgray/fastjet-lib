@@ -509,33 +509,18 @@ will be thrown with an explanatory message.
 Details are to be found in sections~\ref{sec:genkt} and
 \ref{sec:ee-algs}. 
 
-%
-\begin{table}
-  \centering
-  \begin{tabular}{|l|}\hline
-    \verb|E_scheme|     \\\hline
-    \verb|pt_scheme|    \\\hline
-    \verb|pt2_scheme|   \\\hline
-    \verb|Et_scheme|    \\\hline
-    \verb|Et2_scheme|   \\\hline
-    \verb|BIpt_scheme|  \\\hline
-    \verb|BIpt2_scheme| \\\hline
-  \end{tabular}
-  \caption{Members of the \ttt{RecombinationScheme} enum; the last two
-    refer to boost-invariant version of the $p_t$ and $p_t^2$ schemes
-    (as defined in section~\ref{sec:recomb_schemes}).}
-  \label{tab:RecombSchemes}
-\end{table}
-
 The recombination scheme is set by an \ttt{enum} of type
 \ttt{RecombinationScheme}, and it is related to the choice of how to
 recombine the 4-momenta of \ttt{PseudoJet}s during the clustering procedure.
 The default in \fastjet is the $E$-scheme, where the four components of
-two 4-vectors are
-simply added. This scheme is used when no explicit choice is made in the
-constructor. The list of available recombination schemes is given in
-table~\ref{tab:RecombSchemes}, and more details are given in
+two 4-vectors are simply added.
+%
+This scheme is used when no explicit choice is made in the
+constructor. 
+%
+Further recombination schemes are described below in
 section~\ref{sec:recomb_schemes}.
+
 
 The strategy selects the algorithmic strategy to use while clustering
 and is an \ttt{enum} of type \ttt{Strategy}. The default option of
@@ -739,15 +724,39 @@ copy of a \CS, which can be achieved as follows
 \subsection{Recombination schemes}
 \label{sec:recomb_schemes}
 
+
+%
+
 When merging particles (i.e. \ttt{PseudoJet}s) during 
 the clustering procedure, one must
 specify how to combine the momenta. The simplest procedure
-($E$-scheme) simply adds the four-vectors. This has been advocated as
-a standard in~\cite{RunII-jet-physics}, and is the default option in
-\fastjet. Other choices are listed in
+($E$-scheme) simply adds the four-vectors. 
+%
+This has been advocated as a standard in~\cite{RunII-jet-physics}, was
+the main scheme in use during Run~II of the Tevatron, is currently
+used by the LHC experiments, and is the default option in \fastjet.
+%
+Other choices are listed in
 table~\ref{tab:RecombSchemes}, and are described below.
 
 
+
+\begin{table}
+  \centering
+  \begin{tabular}{|l|}\hline
+    \ttt{E\_scheme}     \\\hline
+    \ttt{pt\_scheme}    \\\hline
+    \ttt{pt2\_scheme}   \\\hline
+    \ttt{Et\_scheme}    \\\hline
+    \ttt{Et2\_scheme}   \\\hline
+    \ttt{BIpt\_scheme}  \\\hline
+    \ttt{BIpt2\_scheme} \\\hline
+  \end{tabular}
+  \caption{Members of the \ttt{RecombinationScheme} enum; the last two
+    refer to boost-invariant version of the $p_t$ and $p_t^2$ schemes
+    (as defined in section~\ref{sec:recomb_schemes}).}
+  \label{tab:RecombSchemes}
+\end{table}
 
 \paragraph{Other schemes for $\boldsymbol{pp}$ collisions.} Other
 schemes provided by earlier $k_t$-clustering implementations
@@ -769,10 +778,12 @@ where $w_i$ is $p_{t,i}$ for the $p_t$ and $E_t$ schemes, and is
 $p_{t,i}^2$ for the $p_t^2$ and $E_t^2$ schemes. 
 
 Note that for massive particles the schemes defined in the previous
-paragraph are not invariant under longitudinal boosts. We therefore
-also introduce boost-invariant $p_t$ and $p_t^2$ schemes, which are
-identical to the normal $p_t$ and $p_t^2$ schemes, except that they
-omit the preprocessing stage.
+paragraph are not invariant under longitudinal boosts. 
+%
+As a workaround for this issue, we propose boost-invariant $p_t$ and
+$p_t^2$ schemes, which are identical to the normal $p_t$ and $p_t^2$
+schemes, except that they omit the preprocessing stage. They are
+available as \ttt{BIpt\_scheme} and \ttt{BIpt2\_scheme}.
 
 \paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
 On request, we may in the future provide dedicated schemes for $\ee$
@@ -792,15 +803,15 @@ custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
 For any \PseudoJet that results from a clustering, the user can
 obtain information about its constituents, internal substructure,
 etc., through  member functions of the \PseudoJet
-class. \footnote{This is a new development in version 3 of
+class.\footnote{This is a new development in version 3 of
   \fastjet. In earlier versions, access to information about a jet's
   contents had to be made through its \CS. Those forms of access,
   though not documented here, will be retained throughout the 3.X
   series.}
 
-\paragraph{Jet constituents}
-For example the constituents of a give \PseudoJet \verb|jet| can be
-obtained as
+\paragraph{Jet constituents.}
+The constituents of a given \PseudoJet \verb|jet| can be
+obtained through
 \begin{lstlisting}
   vector<PseudoJet> constituents = jet.constituents();
 \end{lstlisting}
@@ -857,6 +868,7 @@ follow the merging sequence (and walk back through it):
   bool has_partner(PseudoJet & partner) const;
 \end{lstlisting}
 
+\paragraph{Accessibility of structural information.}
 If any of the above functions are used with a \PseudoJet that is not
 associated with a \ClusterSequence, an error will be thrown. 
 %
@@ -869,26 +881,39 @@ One can establish the status of a \PseudoJet's associated cluster
 sequence with the following enquiry functions:
 \begin{lstlisting}
   // returns true if this PseudoJet has an associated (and valid) ClusterSequence.
-  bool has_associated_cluster_sequence() const;
+  bool has_valid_cluster_sequence() const;
 
-  // get a (const) pointer to the parent ClusterSequence (NULL if inexistent) 
-  const ClusterSequence* associated_cluster_sequence() const; 
+  // get a (const) pointer to the parent ClusterSequence (throws if inexistent 
+  // or no longer valid) 
+  const ClusterSequence* validated_cluster_sequence() const; 
 \end{lstlisting}
+There are also \ttt{has\_associated\_cluster\_sequence()} and
+\ttt{associated\_cluster\_sequence()} member functions. The first
+returns true even when the cluster sequence is not valid, and the
+second returns a null pointer in that case.
+%
+Further information is to be found in
+appendix~\ref{app:structure_table}.
 
-There are contexts in which, within some function, you might create a
+There are contexts in which, within some function, one might create a
 \ClusterSequence, obtain a jet from it and then return that jet from
 the function. For the user to be able to access the information about
 the jet's internal structure, the \ClusterSequence must not have gone
 out of scope and/or been deleted.
 %
 To aid with potential memory management issues in this case, as long
-as you have created the \ClusterSequence via a \ttt{new} operation,
-then you can tell the \ClusterSequence that it should be automatically
+the \ClusterSequence was created via a \ttt{new} operation,
+then one can tell the \ClusterSequence that it should be automatically
 deleted after the last external object (jet, etc.)  associated with it
-has disappeared. The call to do this is
+has disappeared. 
+%
+The call to do this is
 \ttt{ClusterSequence::delete\_self\_when\_unused()}. There must be at
 least one external object already associated with the \ClusterSequence
-at the time of the call.
+at the time of the call (e.g. a jet, subjet or jet constituent).
+%
+Note that \ClusterSequence tends to be a large object, so this should be
+used with care.
 
 %......................................................................
 \subsection{Composite jets, general considerations on jet structure}
@@ -990,8 +1015,8 @@ jet-finding.\footnote{While we devote significant effort to ensuring
 %
 We recommend also that the main elements of the
 \ttt{jet\_def.description()} be provided, together with citations to
-the original article that defines the algorithm, as well as to the
-\fastjet paper~\cite{fastjet}.
+the original article that defines the algorithm, as well as to this
+manual and, optionally, the original \fastjet paper~\cite{fastjet}.
 
 
 
@@ -1009,16 +1034,18 @@ The inclusive variant (corresponding to \cite{ktincl}, modulo small
 changes of notation) is formulated as follows:
 \begin{itemize}
 \item[1.] For each pair of particles $i$, $j$ work out the $k_t$
-  distance 
+  distance\footnote{In the soft, small angle limit for $i$, the $k_t$
+    distance is the (squared) transverse momentum of $i$ relative to $j$.}
   \begin{equation}
     \label{eq:dij}
-    d_{ij} = \min(k_{ti}^2,{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2
+    d_{ij} = \min(p_{ti}^2,{p_{tj}^2}) \, \Delta R_{ij}^2 / R^2
   \end{equation}
   with $\Delta R_{ij}^2 = (y_i-y_j)^2 + (\phi_i-\phi_j)^2$,
-  where $k_{ti}$, $y_i$ and $\phi_i$ are the transverse momentum,
-  rapidity and azimuth of particle $i$ and $R$ is a jet-radius
-  parameter usually taken of order $1$; for each parton $i$ also work
-  out the beam distance $d_{iB} = k_{ti}^2$.
+  where $p_{ti}$, $y_i$ and $\phi_i$ are the transverse momentum (with
+  respect to the beam direction),
+  rapidity and azimuth of particle $i$. $R$ is a jet-radius
+  parameter usually taken of order $1$. For each parton $i$ also work
+  out the beam distance $d_{iB} = p_{ti}^2$.
 \item[2.] Find the minimum $d_{\min}$ of all the $d_{ij},d_{iB}$. If
   $d_{\min}$ is a $d_{ij}$ merge particles $i$ and $j$ into a single
   particle, summing their four-momenta (this is $E$-scheme
@@ -1086,17 +1113,17 @@ are given in section~\ref{sec:ee-cam}.
 
 %......................................................................
 \subsection[Anti-$k_t$ jet algorithm]{Anti-$\boldsymbol{k_t}$ jet algorithm}
-This new algorithm, introduced and studied in~\cite{antikt}, is defined
+This algorithm, introduced and studied in~\cite{antikt}, is defined
 exactly like the standard $k_t$ algorithm, except for the distance
 measures which are now given by
 \begin{subequations}
     \label{eq:dij_antikt}
   \begin{eqnarray}
-    &&d_{ij} = \min(1/k_{ti}^2,1/{k_{tj}^2}) \, \Delta R_{ij}^2 / R^2 \, , \\
-    &&d_{iB} = 1/k_{ti}^2 \, .
+    &&d_{ij} = \min(1/p_{ti}^2,1/{p_{tj}^2}) \, \Delta R_{ij}^2 / R^2 \, , \\
+    &&d_{iB} = 1/p_{ti}^2 \, .
   \end{eqnarray}
 \end{subequations}
-While being a sequential recombination algorithm like $k_t$ and
+While it is a sequential recombination algorithm like $k_t$ and
 Cambridge/Aachen, the anti-$k_t$ algorithm behaves in some sense like a
 `perfect' cone algorithm, in that its hard jets are exactly
 circular on the $y$-$\phi$ cylinder~\cite{antikt}.
@@ -1106,7 +1133,10 @@ To use this algorithm, define
    JetDefinition jet_def(antikt_algorithm, R);
 \end{lstlisting}
 and then extract inclusive jets from the cluster sequence.
-
+%
+We advise against the use of exclusive jets in the context of the
+anti-$k_t$ algorithm, because of the lack of physically meaningful
+hierarchy in the clustering sequence.
 
 %......................................................................
 \subsection[Generalised-$k_t$ jet algorithm]{Generalised $\boldsymbol{k_t}$ jet algorithm}
@@ -1118,8 +1148,8 @@ following distance measure:
 \begin{subequations}
   \label{eq:dij_genkt}
   \begin{eqnarray}
-    &&d_{ij} = \min(k_{ti}^{2p},k_{tj}^{2p}) \, \Delta R_{ij}^2 / R^2 \, , \\
-    &&d_{iB} = k_{ti}^{2p} \, .
+    &&d_{ij} = \min(p_{ti}^{2p},p_{tj}^{2p}) \, \Delta R_{ij}^2 / R^2 \, , \\
+    &&d_{iB} = p_{ti}^{2p} \, .
   \end{eqnarray}
 \end{subequations}
 For specific values of $p$, it reduces to one or other of the
@@ -1130,7 +1160,8 @@ To use this algorithm, define
 \begin{lstlisting}
   JetDefinition jet_def(genkt_algorithm, R, p);
 \end{lstlisting}
-and then extract inclusive jets from the cluster sequence.
+and then extract inclusive jets from the cluster sequence (or, for
+$p\ge 0$, also the exclusive jets).
 
 %......................................................................
 \subsection[Generalised $k_t$ algorithm for $e^+e^-$ collisions]
@@ -1145,6 +1176,7 @@ section \ref{sec:genkt}. We define the two following distances:
 \begin{subequations}
   \label{eq:dij_eegenkt}
 \begin{align}
+  \label{eq:dij_eegenkt_ij}
   d_{ij} &= \min(E_i^{2p}, E_j^{2p}) \frac{(1- \cos
     \theta_{ij})}{(1-\cos R)}\,,\\
   d_{iB} &= E_i^{2p}\,,
@@ -1171,16 +1203,31 @@ To use this form of the algorithm, define
 \end{lstlisting}
 and then extract inclusive jets from the cluster sequence.
 
+For values of $R > \pi$, \fastjet replaces the factor $(1-\cos R)$ in
+the denominator of eq.~(\ref{eq:dij_eegenkt_ij}) with $(3+\cos
+R)$. With this choice (as long as $R < 3\pi$), the only time a $d_{iB}$ will
+be relevant is when there is just a single particle in the event.
+%
+The \ttt{inclusive\_jets(...)} will then always return a single jet
+consisting of all the particles in the event. 
+%
+In such a context it is only the \ttt{exclusive\_jets(...)} call that
+provides non-trivial information.
 
-If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
-then the $d_{iB}$ will be smallest only if the event
-consists of a single particle, and thus with the additional choice of
-$p=1$ the clustering sequence will correspond to that of the $e^+e^-$
-$k_t$ algorithm~\cite{eekt}, often referred to also as the Durham
-algorithm, which has a single distance:
+% If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
+% then the $d_{iB}$ will be smallest only if the event
+% consists of a single particle.
+
+%......................................................................
+\subsection[$k_t$ algorithm for $e^+e^-$ collisions]
+{$\boldsymbol{k_t}$ algorithm for $\boldsymbol{e^+e^-}$ collisions}
+\label{sec:ee-algs}
+
+The $e^+e^-$ $k_t$ algorithm~\cite{eekt}, often referred to also as
+the Durham algorithm,  has a single distance:
 \begin{align}
   \label{eq:dij_eekt}
-  d_{ij} &= 2 \min(E_i^{2p}, E_j^{2p}) (1- \cos \theta_{ij})\,.
+  d_{ij} &= 2 \min(E_i^{2}, E_j^{2}) (1- \cos \theta_{ij})\,.
 \end{align}
 Note the difference in normalisation between the $d_{ij}$ in
 eqs.~(\ref{eq:dij_eegenkt}) and (\ref{eq:dij_eekt}), and the fact that in neither
@@ -1188,12 +1235,22 @@ case have we normalised to the total energy $Q$ in the event, contrary
 to the convention adopted originally in~\cite{eekt} (where the
 distance measure was called $y_{ij}$).
 %
-To use this form of the algorithm, define 
+To use the $e^+e^-$ $k_t$  algorithm, define 
 \begin{lstlisting}
    JetDefinition jet_def(ee_kt_algorithm);
 \end{lstlisting}
 and then extract exclusive jets from the cluster sequence.
 
+%
+Note that the \ttt{ee\_genkt\_algorithm} with $ \pi < R < 3\pi$ and
+$p=1$ gives a clustering sequence that is identical to that of the
+\ttt{ee\_kt\_algorithm}.
+%
+The normalisation of the $d_{ij}$'s will however be different.
+
+% With $R > \pi$ and the additional choice of $p=1$, the clustering
+% sequence will correspond to that of the $e^+e^-$ $k_t$
+% algorithm~\cite{eekt}, often referred to also as the Durham algorithm
 
 
 
@@ -1206,13 +1263,33 @@ and then extract exclusive jets from the cluster sequence.
 
 It can be useful to have a common interface for a range of jet
 algorithms beyond the native ($k_t$, anti-$k_t$ and Cambridge/Aachen)
-algorithms, and it can also be useful to use the area-measurement
-tools for these other jet algorithms. In order to facilitate this, the
+algorithms, notably for the many cone algorithms that are in
+existence. 
+%
+It can also be useful to be able to use \fastjet features such as
+area-measurement tools for these other jet algorithms.
+%
+In order to facilitate this, the
 \fastjet package provides a \emph{plugin} facility, allowing almost
-any other jet algorithm\footnote{Except those that perform $3\to2$
-  clusterings for which there is no unique mapping of particles into
-  jets (some particles are effectively shared among more than one
-  jet).} to be used within the same framework.
+any other jet algorithm\footnote{Except those for which one particle
+  may be assigned to more than one jet, e.g.\ algorithms such as
+  ARCLUS~\cite{Lonnblad:1992qd}, which performs $3\to2$
+  clustering.} to be used within the same framework.
+
+Generic plugin use is described in the next subsection.
+%
+The plugins distributed with \fastjet are described afterwards in
+sections~\ref{sec:siscone-plugin}--\ref{sec:other-ee-plugins}.
+%
+They are all accessible within the \ttt{fastjet} namespace and their code
+is to be found in \fastjet's \ttt{plugins/} directory.
+%
+New user-defined plugins can also be implemented, as described 
+in section~\ref{sec:new-plugin}. 
+%
+Some third-party plugins are linked to from the tools page at
+\url{http://fastjet.fr/}$\,$.
+
 
 %----------------------------------------------------------------------
 \subsection{Generic plugin use}
@@ -1224,45 +1301,58 @@ Plugins are classes derived from the abstract base class
 A \ttt{JetDefinition} can be constructed by providing a pointer to a
 \ttt{JetDefinition::Plugin}; the resulting \ttt{JetDefinition} object
 can then be used identically to the normal \ttt{JetDefinition} objects
-used in the previous sections:
+used in the previous sections.
+%
+We illustrate this with an example based on the SISCone plugin:
 \begin{lstlisting}
-  // have some plugin class derived from the Plugin base class
-  class CDFMidPointPlugin : public fastjet::JetDefinition::Plugin {...};
+  #include "fastjet/SISConePlugin.hh"
 
-  // create an instance of the CDFMidPointPlugin class 
-  CDFMidPointPlugin cdf_midpoint( [... options ...] );
-  // create the jet definition by passing a pointer to the plugin
-  fastjet::JetDefinition jet_def = fastjet::JetDefinition( & cdf_midpoint);
+  // allocate a new plugin for SISCone (for other plugins, simply
+  // replace the appropriate parameters and plugin name)
+  double cone_radius = 0.7;
+  double overlap_threshold = 0.75;
+  JetDefinition::Plugin * plugin = new SISConePlugin(cone_radius, overlap_threshold);
 
-  // then create a ClusterSequence with the input particles and jet_def,
-  // and use it to extract jets as usual
-  // ...
+  // create a jet definition based on the plugin
+  JetDefinition jet_def(plugin);
+
+  // run the jet algorithm and extract the jets
+  ClusterSequence clust_seq(particles, jet_def);
+  vector<PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
+
+  // then analyse the jets as for native FastJet algorithms
+  ...
+
+  // only when you will no longer be using the jet definition, or
+  // ClusterSequence objects that involve it, may you delete the plugin
+  delete plugin;
 \end{lstlisting}
-In cases where the plugin has been created with a \ttt{new} statement
-and the user does not wish to manage the deletion of the corresponding
-memory when the \ttt{JetDefinition} (and any copies) using the plugin
-goes out of scope, then the user may wish to call the
-\ttt{JetDefinition}'s \ttt{delete\_plugin\_when\_unused()} function,
-which tells the \ttt{JetDefinition} to acquire ownership of the
-pointer to the plugin and delete it when it is no longer needed.
+% \begin{lstlisting}
+%   // create an instance of a plugin
+%   JetDefinition::Plugin * plugin = new SomePluginAlgorithm(...);
+%   // use it to initialise a jet definition
+%   JetDefinition jet_def(plugin);
+% 
+%   // then create a ClusterSequence with the input particles and jet_def, and
+%   // use it to extract jets as usual; don't forget to delete the plugin afterwards
+% \end{lstlisting}
+In cases such as this where the plugin has been created with a
+\ttt{new} statement and the user does not wish to manage the deletion
+of the corresponding memory when the \ttt{JetDefinition} (and any
+copies) using the plugin goes out of scope, then the user may wish to
+call the \ttt{JetDefinition}'s \ttt{delete\_plugin\_when\_unused()}
+function, which tells the \ttt{JetDefinition} to acquire ownership of
+the pointer to the plugin and delete it when it is no longer needed.
 
-A number of plugins are provided with \fastjet, providing
-implementations of most of the jet algorithms used experimentally
-since the 1990's.
-%
-They are described in
-sections~\ref{sec:siscone-plugin}--\ref{sec:ee-cam}.
-%
-The code for them is to be found in \fastjet's \ttt{plugins/} directory.
-
-New user-defined plugins can also be implemented, as described 
-in section~\ref{sec:new-plugin}.
 
 %----------------------------------------------------------------------
 \subsection{SISCone Plugin}
 \label{sec:siscone-plugin}
 
-SISCone~\cite{SISCone} is an implementation of a cone type jet algorithm.
+SISCone~\cite{SISCone} is an implementation of a stable-cone jet
+algorithm with a split--merge step (SC-SM in the notation
+of~\cite{Salam:2009jx}).
+%
 As with most modern cone algorithms, it is divided into two parts:
 first it searches for stable cones; then, because a particle can
 appear in more than one stable cone, a `split--merge' procedure is
@@ -1279,7 +1369,7 @@ The plugin library and include files are to be be found in the
 constructor with the following structure
 \begin{lstlisting}
   SISConePlugin (double cone_radius,
-                 double overlap_threshold = 0.5,
+                 double overlap_threshold,
                  int    n_pass_max = 0,
                  double protojet_ptmin = 0.0, 
                  bool   caching = false,
@@ -1292,11 +1382,7 @@ particles $i$ satisfying $\Delta y_{ic}^2 + \Delta \phi_{ic}^2 <
 %
 The \verb:overlap_threshold: is the fraction of overlapping momentum
 above which two protojets are merged in a Tevatron Run~II type
-\cite{RunII-jet-physics} split--merge procedure.\footnote{Though its
-  default value is 0.5 (retained for backwards compatibility of the
-  interface) we strongly recommend using a higher value, e.g.\ 0.75,
-  especially in high-noise environments, in order to disfavour the
-  production of monster jets through repeated merge operations. } % 
+\cite{RunII-jet-physics} split--merge procedure.
 The
 radius and overlap parameters are a common feature of most modern cone
 algorithms. Because some event particles are not to be found in any
@@ -1307,16 +1393,19 @@ present in any stable cone in earlier passes. Up to \verb:n_pass_max:
 passes are carried out, and the algorithm automatically stops at the
 highest pass that gives no new stable cones. The default of
 $\verb:n_pass_max: = 0$ is equivalent to setting it to $\infty$.
-Since concern has been expressed that an excessive number of stable
-cones may complicate cone jets in events with high
-noise~\cite{RunII-jet-physics}, the \verb:protojet_ptmin: parameter
-allows one to use only protojets with $p_t \ge \verb:protojet_ptmin:$
-in the split--merge phase (all others are thrown away).\footnote{Early
-  experience indicates that \ttt{protojet\_ptmin} is actually
-  perfectly adequate and that potential problems of massively
-  agglomerated jets that can occur in high-noise environments (for a
-  wide range of cone algorithms) can be addressed with a slightly
-  larger value of the \ttt{overlap\_threshold}, $ \gtrsim 0.6$.}
+
+Concern had at some point been expressed that an excessive number of
+stable cones might complicate cone jets in events with high
+noise~\cite{RunII-jet-physics}, and in particular lead to large
+``monster'' jets.
+%
+The \verb:protojet_ptmin: parameter allows one to use only protojets
+with $p_t \ge \verb:protojet_ptmin:$ in the split--merge phase (all
+others are thrown away), so as to limit this issue.
+%
+A large value of the split--merge overlap threshold, e.g.\ $0.75$,
+also helps to disfavour the production of these monster jets through
+repeated merge operations.
 
 In many cases SISCone's most time-consuming step is the search for
 stable cones. If one has multiple \verb:SISConePlugin:-based jet
@@ -1345,64 +1434,79 @@ component conserves momentum, $E_t$ (advocated in
 momentum and stems from the decay of two identical particles.
 
 
-An example of the use of the SISCone plugin would be as follows:
-\begin{lstlisting}
-  // define a SISCone plugin pointer
-  fastjet::SISConePlugin * plugin;
-
-  // allocate a new plugin for SISCone
-  double cone_radius = 0.7;
-  double overlap_threshold = 0.5;
-  plugin = new fastjet::SISConePlugin (cone_radius, overlap_threshold);
-
-  // create a jet-definition based on the plugin
-  fastjet::JetDefinition jet_def(plugin);
-
-  // prepare the set of particles
-  vector<fastjet::PseudoJet> particles;
-  read_input_particles(cin, particles); // or whatever you want here
-
-  // run the jet algorithm and look at the jets
-  fastjet::ClusterSequence clust_seq(particles, jet_def);
-  vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
-  // then analyse the jets as for native FastJet jets
-
-  // only when you will no longer be using the jet definition, or
-  // ClusterSequence objects that involve it, may you delete the 
-  // plugin
-  delete plugin;
-\end{lstlisting}
-Note that the it makes no sense to ask for exclusive jets from a
+An example of the use of the SISCone plugin was given in
+section~\ref{sec:generic-plugin-use}. 
+%
+As can be seen there, SISCone jets are to be obtained by requesting
+inclusive jets from the cluster sequence.
+%
+Note that it makes no sense to ask for exclusive jets from a
 SISCone based \verb:ClusterSequence:.
 
-Some extra output information is appropriate for a cone algorithm that
-is not of relevance in clustering algorithms, through the
-\verb:extras: resource,
+% would be as follows:
+% \begin{lstlisting}
+%   // define a SISCone plugin pointer
+%   fastjet::SISConePlugin * plugin;
+% 
+%   // allocate a new plugin for SISCone
+%   double cone_radius = 0.7;
+%   double overlap_threshold = 0.5;
+%   plugin = new fastjet::SISConePlugin (cone_radius, overlap_threshold);
+% 
+%   // create a jet-definition based on the plugin
+%   fastjet::JetDefinition jet_def(plugin);
+% 
+%   // prepare the set of particles
+%   vector<fastjet::PseudoJet> particles;
+%   read_input_particles(cin, particles); // or whatever you want here
+% 
+%   // run the jet algorithm and look at the jets
+%   fastjet::ClusterSequence clust_seq(particles, jet_def);
+%   vector<fastjet::PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
+%   // then analyse the jets as for native FastJet jets
+% 
+%   // only when you will no longer be using the jet definition, or
+%   // ClusterSequence objects that involve it, may you delete the 
+%   // plugin
+%   delete plugin;
+% \end{lstlisting}
+
+Some cone algorithms provide information beyond that simply about the
+jets.
+%
+Such additional information, where available, can be accessed with the
+help of the \ttt{ClusterSequence::extras()} function.
+%
+In the case of SISCone, one can access that information as follows:
 \begin{lstlisting}
   const fastjet::SISConeExtras * extras = 
             dynamic_cast<const fastjet::SISConeExtras *>(clust_seq.extras());
 \end{lstlisting}
-To determine the pass at which a given jet was found, one does the
-following
+To determine the pass at which a given jet was found, one then
+uses\footnote{ In versions of \fastjet prior to 3.0.1, a jet's user
+  index indicated the pass at which it had been found. The
+  value was however incorrectly set for single-particle
+  jets. The current choice is to leave the user index unchanged from
+  its default.}
 \begin{lstlisting}
   int pass = extras->pass(jet);
 \end{lstlisting}
 %
-The user may also obtain a list of the positions of original stable
+One may also obtain a list of the positions of original stable
 cones as follows:
 \begin{lstlisting}
-  vector<PseudoJet> stable_cones(extras->stable_cones());
+  vector<PseudoJet> stable_cones = extras->stable_cones();
 \end{lstlisting}
-The stable cones are represented as four-momenta, for which only the
+The stable cones are represented as PseudoJets, for which only the
 rapidity and azimuth are meaningful. The \verb:user_index(): indicates
 the pass at which a given stable cone was found.
 
-In the current version of SISCone, the \verb:user_index(): of a jet
-also corresponds to the pass at which it was found, however this
-manner of accessing the pass for a jet is \emph{deprecated} (for
-reasons related to the internal representation of jets, it fails for
-single-particle jets). It is retained in version 2.4 for backwards
-compatibility, but will be removed at some stage in the future.
+% In the current version of SISCone, the \verb:user_index(): of a jet
+% also corresponds to the pass at which it was found, however this
+% manner of accessing the pass for a jet is \emph{deprecated} (for
+% reasons related to the internal representation of jets, it fails for
+% single-particle jets). It is retained in version 2.4 for backwards
+% compatibility, but will be removed at some stage in the future.
 
 SISCone uses $E$-scheme recombination internally and also for
 constructing the final jets from the list of constituents. 
@@ -1412,9 +1516,6 @@ jet-definition's own recombiner, with the command
 \begin{lstlisting}
   plugin->set_use_jet_def_recombiner(true);
 \end{lstlisting}
-In this case the \verb:user_index(): no longer contains the
-information about the pass.
-
 
 Since SISCone is infrared safe, it may meaningfully be used also with
 the \verb:ClusterSequenceArea: class. Note however that in that
@@ -3662,7 +3763,7 @@ For area-related calls, \ttt{has\_area()} will be \ttt{false} unless
 the jet is obtained from a \ttt{ClusterSequenceAreaBase} or is a
 composite jet made from such jets. All other area calls
 (\ttt{validated\_csab()}, \ttt{area()}, \ttt{area\_error()},
-\ttt{area\_4vector()}) will return the information from the
+\ttt{area\_4vector()}, \ttt{is\_pure\_ghost()}) will return the information from the
 \ttt{ClusterSequence} (or the pieces in case of a composite jet) and throw
 an error if the jet is not associated with a
 \ttt{ClusterSequenceAreaBase}.
@@ -4713,6 +4814,16 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
 
+\bibitem{Lonnblad:1992qd}
+  L.~Lonnblad,
+  %``ARCLUS: A New jet clustering algorithm inspired by the color dipole model,''
+  Z.\ Phys.\  {\bf C58 } (1993)  471-478.
+
+\bibitem{Salam:2009jx}
+  G.~P.~Salam,
+  %``Towards Jetography,''
+  Eur.\ Phys.\ J.\  {\bf C67 } (2010)  637-686
+  [arXiv:0906.1833 [hep-ph]].
 \end{thebibliography}
 
 

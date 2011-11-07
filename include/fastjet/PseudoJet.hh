@@ -466,7 +466,7 @@ class PseudoJet {
   bool has_associated_cluster_sequence() const;
 
   /// returns true if this PseudoJet has an associated and still
-  /// valid ClusterSequence.
+  /// valid(ated) ClusterSequence.
   bool has_valid_cluster_sequence() const;
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
@@ -475,12 +475,21 @@ class PseudoJet {
 
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error
+  inline const ClusterSequence * validated_cluster_sequence() const {
+    return validated_cs();
+  }
+
+  /// shorthand for validated_cluster_sequence()
   const ClusterSequence * validated_cs() const;
 
   /// if the jet has valid area information then return a pointer to
   /// the associated ClusterSequenceAreaBase object; otherwise throw an error
-  const ClusterSequenceAreaBase * validated_csab() const;
+  inline const ClusterSequenceAreaBase * validated_cluster_sequence_area_base() const {
+    return validated_csab();
+  }
 
+  /// shorthand for validated_cluster_sequence_area_base()
+  const ClusterSequenceAreaBase * validated_csab() const;
   //\}
 
   //-------------------------------------------------------------

@@ -173,7 +173,8 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 	// create the new jet by hand so that we can adjust its user index
 	PseudoJet newjet = clust_seq.jets()[jet_i] + clust_seq.jets()[jet_j];
 	// set the user index to be the pass in which the jet was discovered
-	newjet.set_user_index(jet.pass);
+       // *** The following line was commented for 3.0.1 ***
+	//newjet.set_user_index(jet.pass);
 	clust_seq.plugin_record_ij_recombination(jet_i, jet_j, dij, newjet, jet_k);
       }
 

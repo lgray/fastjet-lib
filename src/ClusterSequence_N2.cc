@@ -98,11 +98,6 @@ template<> double ClusterSequence::_bj_dist(
     - jeta->ny*jetb->ny
     - jeta->nz*jetb->nz;
   dist *= 2; // distance is _2_*min(Ei^2,Ej^2)*(1-cos theta)
-  //cout << "Dist = " << dist << ": " 
-  //     << jeta->nx << " "
-  //     << jeta->ny << " "
-  //     << jeta->nz << " "
-  //     <<endl;
   return dist;
 }
 

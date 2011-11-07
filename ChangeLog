@@ -1,3 +1,14 @@
+2011-11-07  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* plugins/SISCone/SISConeSphericalPlugin.cc (run_clustering):
+	* plugins/SISCone/SISConePlugin.cc (run_clustering):
+	  jets' user indices are no longer set to the pass from which they
+	  come. 
+
+	* include/fastjet/PseudoJet.hh (P): 
+	  added validated_cluster_sequence() and
+	  validated_cluster_sequence_area_base(). 
+
 2011-10-31  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* doc/fastjet-doc.tex:
