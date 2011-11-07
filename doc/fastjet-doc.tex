@@ -1290,6 +1290,13 @@ in section~\ref{sec:new-plugin}.
 Some third-party plugins are linked to from the tools page at
 \url{http://fastjet.fr/}$\,$.
 
+Not all plugins are enabled by default in \fastjet. At configuration
+time \verb:./configure --help: will indicate which ones get enabled
+by default. To enable all plugins, run \verb|configure| with the
+argument \verb|--enable-allplugins|, while to enable all but PxCone
+(which requires a Fortran compiler, and can introduce link-time issues) use
+\verb|--enable-allcxxplugins|.
+
 
 %----------------------------------------------------------------------
 \subsection{Generic plugin use}
@@ -1547,48 +1554,47 @@ area, since this is relatively fast to calculate with SISCone.
 
 
 %----------------------------------------------------------------------
-\subsection{Other plugins for $pp$ }
+\subsection{Other plugins for hadron colliders }
 \label{sec:other-pp-plugins}
 
-Not all plugins are enabled by default in \fastjet. At configuration
-time \verb:./configure --help: will indicate which ones get enabled
-by default. To enable all plugins, run \verb|configure| with the
-argument \verb|--enable-allplugins|, while to enable all but PxCone
-(which requires fortran, and can introduce link-time issues) use
-\verb|--enable-allcxxplugins|.
+% All plugins are in the \verb:fastjet: namespace. Below we show the
+% file that needs to be included and the constructor for each plugin. 
 
-All plugins are in the \verb:fastjet: namespace. Below we show the
-file that needs to be included and the constructor for each plugin. 
 
-Except where stated, the usual way to access jets from these plugins
-is through \verb|ClusterSequence::inclusive_jets()|.
-
-Most of the algorithms listed below are either infrared (IR) or
-collinear unsafe. The details are indicated for each algorithm as
-follows: IR$_{n+1}$ means that the hard jets may be modified if, to an
-ensemble of $n$ hard particles in a common neighbourhood, one adds a
-single soft particle; Coll$_{n+1}$ means that for $n$ hard particles
-in a common neighbourhood, the collinear splitting of one of them may
-modify the hard jets.
+Most of the algorithms listed below are cone algorithms. 
+%
+They are usually either infrared (IR) or collinear unsafe.
+%
+The details are indicated for each algorithm as follows (again
+following the notation of Ref.~\cite{Salam:2009jx}): IR$_{n+1}$ means
+that the hard jets may be modified if, to an ensemble of $n$ hard
+particles in a common neighbourhood, one adds a single soft particle;
+Coll$_{n+1}$ means that for $n$ hard particles in a common
+neighbourhood, the collinear splitting of one of them may modify the
+hard jets.
 %
 The \fastjet authors (and numerous theory-experiment accords) advise
-against the use IR and collinear safe jet algorithms.  Interfaces to
+against the use of IR and/or collinear unsafe jet algorithms.  Interfaces to
 these algorithms have been provided mainly for legacy comparison
 purposes.
 
-As of \fastjet version 2.4, this section is partially incomplete (in
-particular it misses many references). This will hopefully evolve for
-future versions.
+Except where stated, the usual way to access jets from these plugins
+is through \ttt{ClusterSequence::inclusive\_jets()}.
+
+% As of \fastjet version 2.4, this section is partially incomplete (in
+% particular it misses many references). This will hopefully evolve for
+% future versions.
 
 
 
-\subsubsection{CDF Midpoint.} 
-One of the two algorithms used by CDF in Run~II of the Tevatron, based
+\subsubsection{CDF Midpoint} 
+%
+This is one of the two cone algorithms used by CDF in Run~II of the Tevatron, based
 on \cite{RunII-jet-physics}. It is a midpoint-type iterative cone with
 a split--merge step.
 %
 \begin{lstlisting}
-  #include ``fastjet/CDFCones.hh''
+  #include "fastjet/CDFCones.hh"
   // ...
   CDFMidPointPlugin(double R, 
                     double overlap_threshold,
@@ -1596,51 +1602,70 @@ a split--merge step.
                     double cone_area_fraction = 1.0);
 \end{lstlisting}
 The overlap threshold ($f$) used by CDF is usually $0.5$, the seed
-threshold is $1$\,GeV and in most measurements the cone area fraction
-is $1$. With an area fraction $< 1$ this becomes the searchcone
+threshold is $1$\,GeV. 
+%
+With a cone area fraction $\alpha < 1$, the search for stable
+cones is performed with a radius that is $R \times
+\sqrt{\alpha}$, i.e.\ it becomes the searchcone
 algorithm of \cite{EHT}.
+%
+CDF has used both $\alpha = 0.25$ and $\alpha = 1.0$.
+%
+It is our understanding that the particular choice of $\alpha$ is not
+always clearly documented in the corresponding publications.
 
 Further control over the plugin can be obtained by consulting the
 header file.
 
-The underlying code for this algorithm was taken from a webpage~\cite{CDFCones} 
-provided by Joey Huston (with minor modifications to ensure reasonable
-run times with optimising compilers for 32-bit intel processors ---
-these modifications do not affect the final jets).
+The original underlying code for this algorithm was provided on a
+webpage belonging to Joey Huston~\cite{CDFCones} (with minor
+modifications to ensure reasonable run times with optimising compilers
+for 32-bit intel processors --- these modifications do not affect the
+final jets).
 
-Note: this algorithm is IR$_{3+1}$ unsafe (in the limit of zero seed
-threshold~\cite{SISCone}; with \verb:cone_area_fraction:$\neq 1$ it
-becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}). It is to be deprecated for
-new experimental or theoretical analyses.
+This algorithm is IR$_{3+1}$ unsafe in the limit of zero seed
+threshold~\cite{SISCone} (with $\alpha \neq 1$ it
+becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}).
+%
+With a non-zero seed threshold (and no preclustering into calorimeter
+towers) it is collinear unsafe.
+
+%
+%It is to be deprecated for new experimental or theoretical analyses.
 
 \subsubsection{CDF JetClu}
-The other algorithm used by CDF during Run~II, as well as their main
-algorithm during Run~I~\cite{Abe:1991ui}.
+
+JetClu is the other cone algorithm used by CDF during Run~II, as well
+as their main algorithm during Run~I~\cite{Abe:1991ui}. 
+%
+It is an iterative cone with split-merge and optional ``ratcheting''
+if \ttt{iratch == 1} (particles that appear in one iteration of a cone
+are retained in future iterations).
+%
+It can be obtained as follows:
 \begin{lstlisting}
-  #include ``fastjet/CDFCones.hh''
+  #include "fastjet/CDFCones.hh"
   // ...
   CDFJetCluPlugin (double   cone_radius, 
 		   double   overlap_threshold, 
 		   double   seed_threshold = 1.0,
 		   int      iratch = 1);
 \end{lstlisting}
-This is an iterative cone with split-merge and optional ``ratcheting''
-if \verb|iratch == 1| (particles that appear in one iteration of a
-cone are retained in future iterations).
 %
 The overlap threshold is usually set to 0.75 in CDF analyses.
-
+%
 Further control over the plugin can be obtained by consulting the
 header file.
 
-The underlying code for this algorithm was taken from a webpage
-provided by Joey Huston.~\cite{CDFCones} 
+The original underlying code for this algorithm was provided on a
+webpage belonging to Joey Huston~\cite{CDFCones}.
 
-Note: this algorithm is IR$_{2+1}$ unsafe (and some IR unsafety
-persists with non-zero seed threshold). It is to be deprecated for new
-experimental or theoretical analyses.
+This algorithm is IR$_{2+1}$ unsafe (for zero seed threshold; some
+IR unsafety persists with non-zero seed threshold). 
+%It is to be
+%deprecated for new experimental or theoretical analyses.
 %
-Note also that the underlying implementation groups particles ogether
+Note also that the underlying implementation groups particles together
 into calorimeter towers (with CDF-type geometry) before running the
 jet algorithm. 
 
@@ -1651,7 +1676,7 @@ The main algorithm used by \Dzero in Run~I of the
 Tevatron~\cite{Abbott:1997fc}, which is an iterative cone algorithm
 with a split-merge. It comes in two versions
 \begin{lstlisting}
-  #include ``fastjet/D0RunIpre96ConePlugin.hh''
+  #include "fastjet/D0RunIpre96ConePlugin.hh"
   // ...
   D0RunIpre96ConePlugin (double R, 
                          double min_jet_Et, 
@@ -1659,7 +1684,7 @@ with a split-merge. It comes in two versions
 \end{lstlisting}
 and
 \begin{lstlisting}
-  #include ``fastjet/D0RunIConePlugin.hh''
+  #include "fastjet/D0RunIConePlugin.hh"
   // ...
   D0RunIConePlugin (double R, 
                     double min_jet_Et, 
@@ -1694,7 +1719,7 @@ be used only for the purpose of comparison with Run~I data from
 The main algorithm used by \Dzero in Run~II of the Tevatron, which is
 a midpoint type iterative cone with split-merge.
 \begin{lstlisting}
-  #include ``fastjet/D0RunIIConePlugin.hh''
+  #include "fastjet/D0RunIIConePlugin.hh"
   // ...
   D0RunIIConePlugin (double R, 
                      double min_jet_Et, 
@@ -1721,7 +1746,7 @@ experimental or theoretical analyses.
 The (iterative) cone (with split-merge) algorithm used by ATLAS during
 the preparation for the LHC. 
 \begin{lstlisting}
-  #include ``fastjet/AtlasConePlugin.hh''
+  #include "fastjet/AtlasConePlugin.hh"
   // ...
   ATLASConePlugin (double R, 
                    double seedPt = 2.0, 
@@ -1748,7 +1773,7 @@ analyses.
 The (iterative) cone (with progressive removal) algorithm used by CMS during
 the preparation for the LHC. 
 \begin{lstlisting}
-  #include ``fastjet/CMSIterativeConePlugin.hh''
+  #include "fastjet/CMSIterativeConePlugin.hh"
   // ...
   CMSIterativeConePlugin (double ConeRadius, double SeedThreshold=0.0);
 \end{lstlisting}
@@ -1777,7 +1802,7 @@ deprecated for new experimental or theoretical analyses.
 A fortran plugin for the PxCone algorithm, which is an iterative cone
 with midpoints and a split-drop procedure
 \begin{lstlisting}
-  #include ``fastjet/PxConePlugin.hh''
+  #include "fastjet/PxConePlugin.hh"
   // ...
   PxConePlugin (double  cone_radius      , 
 		double  min_jet_energy = 5.0  , 
@@ -1816,7 +1841,7 @@ charged-particle tracks in underlying-event studies (a citation is
 needed here!).
 %
 \begin{lstlisting}
-  #include ``fastjet/TrackJetPlugin.hh''
+  #include "fastjet/TrackJetPlugin.hh"
   // ...
   TrackJetPlugin (double radius, 
 		  RecombinationScheme jet_recombination_scheme=pt_scheme, 
@@ -1860,7 +1885,7 @@ drawback is offset by the greater uniformity of the area of the jets.
 %
 Its interface is as follows
 \begin{lstlisting}
-  #include ``fastjet/GridJetPlugin.hh''
+  #include "fastjet/GridJetPlugin.hh"
   // ...
   GridJetPlugin (double ymax, double requested_grid_spacing);
 \end{lstlisting}
@@ -1884,7 +1909,7 @@ Note that for background estimation purposes the
 \label{sec:ee-cam}
 The original $\ee$ cambridge~\cite{CamOrig} algorithm is provided as a plugin:
 \begin{lstlisting}
-  #include ``fastjet/EECambridgePlugin.hh''
+  #include "fastjet/EECambridgePlugin.hh"
   // ...
   EECambridgePlugin (double ycut);
 \end{lstlisting}
@@ -1907,7 +1932,7 @@ The JADE algorithm~\cite{Bartel:1986ua,Bethke:1988zc}, a sequential
 recombination algorithm with distance measure $d_{ij} = 2E_i E_j
 (1-\cos\theta)$, is available through
 \begin{lstlisting}
-  #include ``fastjet/JadePlugin.hh''
+  #include "fastjet/JadePlugin.hh"
   // ...
   JadePlugin ();
 \end{lstlisting}
