@@ -289,6 +289,9 @@ if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
       fi
    fi
    AC_PROG_FC
+   if test "x$FC" == "x"; then
+      AC_MSG_ERROR([Fortran compiler required to build PxCone but not found or not functional])
+   fi
    AC_FC_LIBRARY_LDFLAGS
    F77=$FC
    AM_FFLAGS=$AM_FCFLAGS

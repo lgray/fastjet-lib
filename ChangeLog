@@ -1,3 +1,10 @@
+2011-11-07  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac (AC_PROG_FC):
+	  when searching for a Fortran compiler, make sure one is actually
+	  found or exit with an error message.
+
+
 2011-11-07  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
 	* plugins/SISCone/SISConeSphericalPlugin.cc (run_clustering):
