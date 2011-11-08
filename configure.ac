@@ -232,6 +232,12 @@ ACX_CHECK_PLUGIN(SISCone, siscone, SISCONE, yes,
 	         [CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -lsiscone_spherical -lsiscone"
                   CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/libsiscone.a \${installationdir}/lib/libsiscone_spherical.a"])
 AC_CONFIG_SUBDIRS(plugins/SISCone/siscone)
+dnl alternatively, to build SISCone directly from the FastJet build
+dnl system, comment out the previoous lines and uncomment the ones
+dnl below. Note that the main drawback of that method is that the
+dnl SISCone version number need to be hardcoded in config.h.siscone.in
+dnl   AC_CONFIG_HEADER(config.siscone.in.h:plugins/SISCone/siscone/siscone/config.h.in)
+dnl   AC_CONFIG_FILES(plugins/SISCone/siscone/Makefile plugins/SISCone/siscone/siscone/Makefile plugins/SISCone/siscone/siscone/spherical/Makefile plugins/SISCone/siscone/examples/Makefile plugins/SISCone/siscone/examples/events/Makefile)
 
 dnl CDFCones
 ACX_CHECK_PLUGIN(CDFCones, cdfcones, CDFCONES, yes)

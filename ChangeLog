@@ -1,3 +1,19 @@
+2011-11-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* autogen.sh:
+	* configure.ac:
+	* config.h.siscone.in:    *** ADDED ***
+	  added the necessary steps to configure/build SISCone directly
+	  from the FastJet configure/build system. This has mailny the
+	  advantage to reduce the size of the distribution (1.7MB instead
+	  of 2.0MB) and save a bit of time during configuration. However
+	  it comes at teh expense that we have to hardcode the SISCone
+	  version in a new configuration (auto)header --- since it would
+	  no longer be obtained from SISCone's configure.ac. Therefore, we
+	  stick to the old situation and comment out the inclusion of
+	  SISCone configuration into FastJet's.
+	
+
 2011-11-07  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac (AC_PROG_FC):

@@ -118,6 +118,9 @@ xlc )
 esac
 
 # recursively generate configure & makefile.in for all configure.ac found
+#
+# alternative where SISCone is built directly from the FastJet build systen
+# for coin in $srcdir
 for coin in $srcdir `find $srcdir/plugins -name configure.ac -print`
 do 
   dr=`dirname $coin`
