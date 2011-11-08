@@ -179,7 +179,51 @@ Another set of tools helps analyse the substructure of jets, including
 a number of widely used boosted heavy-object taggers and
 substructure-based noise-suppression classes.
 
+\begin{itemize}
+\item mission statement:
+  \begin{itemize}
+  \item provide robust, efficient access to the majority of widely
+    used jet algorithms
+  \item framework for tools' interfaces \& some core tools
+  \item idea of extensible.
+  \end{itemize}
+\item Two kinds of algorithm in FJ
+  \begin{itemize}
+  \item Native; many of them involve a certain kind of distance
+    measure ($d_{ij} = ...$); and fast tricks
+  \item External: plugins (though some written by us); restriction on
+    2 to 1
+  \item interface and some helpers for writing your own
+  \end{itemize}
+\item we provide a number of features beyond core jet-finding. 
+\item Areas -- usable (in principle) with any jet finder
+\item Features beyond the jet-finding
+  \begin{itemize}
+  \item background estimators
+  \item tools, including subtractors
+  \end{itemize}
+\item 
+\item subtraction/bkgd-estimation/tools
+\item many other codes before did one or two algs, e.g. KtClus,
+  ArClus, CamJet
+\item computational strategies (factorising geometry and momentum);
+  state our algorithm briefly?
+\end{itemize}
 
+% svn co ......
+
+%-- workflow 1 --
+% bzr branch 
+% ... work ...
+% bzr push
+
+%-- workflow 2 --
+% svn checkout
+% bzr 
+
+% svn checkout
+% auto-tools
+% make 
 
 \section{Quick-start guide}
 
