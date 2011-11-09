@@ -236,7 +236,7 @@ dnl alternatively, to build SISCone directly from the FastJet build
 dnl system, comment out the previoous lines and uncomment the ones
 dnl below. Note that the main drawback of that method is that the
 dnl SISCone version number need to be hardcoded in config.h.siscone.in
-dnl   AC_CONFIG_HEADER(config.siscone.in.h:plugins/SISCone/siscone/siscone/config.h.in)
+dnl   AM_CONFIG_HEADER(config.siscone.in.h:plugins/SISCone/siscone/siscone/config.h.in)
 dnl   AC_CONFIG_FILES(plugins/SISCone/siscone/Makefile plugins/SISCone/siscone/siscone/Makefile plugins/SISCone/siscone/siscone/spherical/Makefile plugins/SISCone/siscone/examples/Makefile plugins/SISCone/siscone/examples/events/Makefile)
 
 dnl CDFCones
