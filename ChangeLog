@@ -1,3 +1,9 @@
+2011-11-09  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* plugins/PxCone/README: 
+	  added copy of email from Mike Seymour granting authorization to
+	  distribute under GPLv2.
+
 2011-11-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* autogen.sh:
@@ -13,7 +19,6 @@
 	  stick to the old situation and comment out the inclusion of
 	  SISCone configuration into FastJet's.
 	
-
 2011-11-07  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac (AC_PROG_FC):
