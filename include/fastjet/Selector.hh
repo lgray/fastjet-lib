@@ -93,7 +93,8 @@ public:
   virtual bool takes_reference() const { return false;}
 
   /// sets the reference jet for the selector
-  virtual void set_reference(const PseudoJet & reference){
+  /// NB: "reference" is commented to avoid unused-variable compiler warnings
+  virtual void set_reference(const PseudoJet & /*reference*/){
     throw Error("set_reference(...) cannot be used for a selector worker that does not take a reference");
   }
 

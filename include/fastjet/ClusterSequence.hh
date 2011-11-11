@@ -49,67 +49,6 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-//----------------------------------------------------------------------
-// here's where we put the main page for fastjet (as explained in the
-// Doxygen faq)
-// We put in inside te fastjet namespace to have the links without
-// having to specify (fastjet::)
-//......................................................................
-/** \mainpage FastJet code documentation
- *
- * These pages provide automatically generated documentation for the 
- * FastJet package.
- * 
- * \section useful_classes The most useful classes
- *
- * Many of the facilities of FastJet can be accessed through the three
- * following classes:
- *
- * - PseudoJet: the basic class for holding the 4-momentum of a
- *   particle or a jet.
- *
- * - JetDefinition: the combination of a #JetAlgorithm and its
- *   associated parameters.
- *
- * - ClusterSequence: constructed with a vector of input (PseudoJet)
- *   particles and a JetDefinition, it computes and stores the
- *   information on how the input particles are clustered into jets.
- *
- * \section advanced_classes Selected more advanced classes
- *
- * - ClusterSequenceArea: with the help of an AreaDefinition, provides
- *   jets that also contain information about their area.
- *
- * \section Tools Selected additional tools
- *
- * - JetMedianBackgroundEstimator: with the help of a Selector, a JetDefinition and
- *   an AreaDefinition, allows one to estimate the background noise density in an event; for a simpler, quicker, effective alternative, use GridMedianBackgroundEstimator
- *
- * - Transformer: class from which are derived various tools for
- *   manipulating jets and accessing their substructure. Examples are
- *   Subtractor, Filter, Pruner and various taggers (e.g. JHTopTagger
- *   and MassDropTagger).
- *
- * \section further_info Further information
- *
- * - Selected classes ordered by topics can be found under the <a
- * href="modules.html">modules</a> tab.
- *
- * - The complete list of classes is available under the  <a
- * href="annotated.html">classes</a> tab.
- * 
- * - For non-class material (<a href="namespacefastjet.html#enum-members">enums</a>,
- * <a href="namespacefastjet.html#typedef-members">typedefs</a>, 
- * <a href="namespacefastjet.html#func-members">functions</a>), see the 
- * #fastjet documentation
- * 
- * - For further information and normal documentation, see the main <a
- * href="http://fastjet.fr/">FastJet</a> page.
- *
- * \section examples Examples
- *   See our \subpage Examples page
- */
-//----------------------------------------------------------------------
 
 // forward declaration
 class ClusterSequenceStructure;

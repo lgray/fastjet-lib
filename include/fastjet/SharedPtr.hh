@@ -304,10 +304,12 @@ public:
     inline long use_count() const {return _count;}
 
     /// postfix incrementation
-    inline long operator++(int unused){return _count++;}
+    /// NB: dummy arg is unnamed to avoid unused-variable compiler warnings
+    inline long operator++(int ){return _count++;}
 
     /// postfix decrementation
-    inline long operator--(int unused){return _count--;}
+    /// NB: dummy arg is unnamed to avoid unused-variable compiler warnings
+    inline long operator--(int ){return _count--;}
 
     /// prefix incrementation
     inline long operator++(){return ++_count;}

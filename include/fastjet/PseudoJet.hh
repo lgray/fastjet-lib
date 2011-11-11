@@ -80,7 +80,9 @@ class PseudoJet {
 
   // Constructor that performs minimal initialisation (only that of
   // the shared pointers), of use in certain speed-critical contexts
-  PseudoJet(bool dummy) {}
+  //
+  // NB: "dummy" is commented to avoid unused-variable compiler warnings
+  PseudoJet(bool /* dummy */) {}
 
   /// default (virtual) destructor
   virtual ~PseudoJet(){};

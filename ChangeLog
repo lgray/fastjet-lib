@@ -1,3 +1,16 @@
+2011-11-11  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence.cc: 
+	  moved main page of doxygen documentation into .cc file
+	  to avoid big recompilation at every change.
+
+	* include/fastjet/Selector.hh: 
+	* include/fastjet/PseudoJet.hh: 
+	* include/fastjet/SharedPtr.hh: 
+	* include/fastjet/PseudoJetStructureBase.hh: 	
+	  commented out unused dummy arguments to avoid compiler warnings.
+	
 2011-11-09  Gavin Salam  <gsalam@macth69.cern.ch>
 
 	* plugins/PxCone/README: 

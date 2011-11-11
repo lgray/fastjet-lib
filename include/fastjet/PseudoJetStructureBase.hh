@@ -187,12 +187,16 @@ public:
   /// return true if the structure supports pieces. 
   ///
   /// false by default
-  virtual bool has_pieces(const PseudoJet &reference) const {return false;}
+  /// NB: "reference" is commented to avoid unused-variable compiler warnings
+  virtual bool has_pieces(const PseudoJet & /* reference */) const {
+    return false;}
 
   /// retrieve the pieces building the jet. 
   ///
-  /// By default, throws an Error
-  virtual std::vector<PseudoJet> pieces(const PseudoJet &reference) const;
+  /// By default, throws an Error.
+  /// NB: "reference" is commented to avoid unused-variable compiler warnings
+  virtual std::vector<PseudoJet> pieces(const PseudoJet & /* reference */
+                                        ) const;
 
 
   // the following ones require a computation of the area in the
