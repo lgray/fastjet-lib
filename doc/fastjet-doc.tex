@@ -170,8 +170,8 @@ jet definition.
 %
 Suitable jet definitions can be applied to particles,
 calorimeter towers, or even to the partonic events of perturbative QCD
-calculations, with the feature that the jets resulting from the
-various different kinds of input are not just physically close to the
+calculations, with the feature that the jets resulting from these
+different kinds of input are not just physically close to the
 concept of partons, but can be meaningfully be compared to each other.
 
 Jet finding dates back to seminal work by Sterman and
@@ -208,9 +208,9 @@ where the same particle is to be found in multiple stable cones (e.g.\
 via split--merge procedures).
 
 One of the aims of the \fastjet C++ library is to provide
-straightforward, efficient access to the majority of widely used
-sequential-recombination and cone-type jet algorithms, both for
-hadron-hadron and $e^+e^-$ colliders.
+straightforward, efficient implementations for the majority of widely
+used sequential-recombination algorithms, both for hadron-hadron and
+$e^+e^-$ colliders, and easy access also to cone-type jet algorithms.
 
 To help introduce the terminology used throughout \fastjet and this
 manual, let us consider the $k_t$ algorithm for hadron
@@ -218,7 +218,7 @@ colliders~\cite{ktexcl,ktincl}.
 %
 This was the first jet algorithm to be implemented in \fastjet and its
 structure, together with that of other sequential recombination
-algorithms, has played a key in the design of \fastjet's interface.
+algorithms, has played a key role in the design of \fastjet's interface.
 %
 % As concerns sequential recombination algorithms, the main challenge
 % that would be faced by a user wishing to write their own
@@ -242,8 +242,8 @@ beam
   d_{iB} = d_{ji} = p_{ti}^2\,.
 \end{equation}
 %
-$R$ in eq.~(\ref{eq:dij-illustr}) is a parameter of the algorithm that
-determines its angular reach.
+$R$ in eq.~(\ref{eq:dij-illustr}), usually called the jet radius, is a
+parameter of the algorithm that determines its angular reach.
 %
 In the original, so-called ``exclusive'' formulation of the $k_t$
 algorithm~\cite{ktexcl} (generally used with $R=1$), one identifies
@@ -251,9 +251,9 @@ the smallest of the $d_{ij}$ and $d_{iB}$.
 %
 If it is a $d_{ij}$ one replaces $i$ and $j$ with a single new object
 whose momentum is $p_i + p_j$ --- often this object is called a
-``pseudojet'', since it is neither a particle, nor yet a full jet.  In
-\fastjet we will use this name to denote any generic object with
-4-momentum.
+``pseudojet'', since it is neither a particle, nor yet a full
+jet.\footnote{In \fastjet we actually will use PseudoJet to denote any
+  generic object with 4-momentum.}
 %
 If instead the smallest distance is a $d_{iB}$, then one removes $i$
 from the list of particles/pseudojets and declares it to be part of
@@ -320,7 +320,13 @@ calculate, and since one must identify the smallest of these
 $\order{N^2}$ distances at each of $\order{N}$ iterations of the
 algorithm, original implementations of the $k_t$
 algorithm~\cite{KtClus,KtJet} involved $\order{N^3}$ operations to
-perform the clustering, which quickly becomes prohibitive.
+perform the clustering.
+%
+In practice this translates to about 1\,s for $N=1000$. Given that
+events with pileup can have multiplicities significantly in excess of
+1000 and that it can be necessary to cluster hundreds of millions of
+events, this quickly becomes prohibitive, all the more so in
+time-critical contexts such as online triggers.
 %
 To alleviate this problem, \fastjet makes use of the
 observation~\cite{fastjet} that the smallest pairwise distance remains
@@ -354,6 +360,8 @@ implementations, also partially based on geometry, which help optimise
 clustering speed up to moderately large multiplicities, $N \lesssim
 30000$.
 %
+The timing for $N=1000$ is thus reduced to a few milliseconds.
+%
 The same techniques apply to a range of sequential recombination
 algorithms, described in section~\ref{sec:native-algs}.
 
@@ -377,12 +385,12 @@ At the time of writing, sequential recombination jet algorithms are
 the main kind of algorithm in use at CERN's Large Hadron Collider
 (LHC), notably the anti-$k_t$ algorithm~\cite{antikt}, which simply
 replaces $p_{ti,j}^2$ with $p_{ti,j}^{-2}$ in
-eqs.~(\ref{eq:dij-illustr},\ref{eq:diB-illustr}), and they were also
-widely used at HERA and LEP.
+eqs.~(\ref{eq:dij-illustr},\ref{eq:diB-illustr}). Sequential
+recombination algorithms were also widely used at HERA and LEP.
 %
 However at Fermilab's Tevatron, and in much preparatory LHC work, cone
 algorithms were used for nearly all studies.
-%
+
 The main challenge that would be faced by a user wishing to write
 their own implementation of a given cone algorithm comes from the
 large number of details that enter into a full specification of a cone
@@ -408,20 +416,15 @@ algorithms.
 Many plugins (and the corresponding third party code) are distributed
 with \fastjet. 
 %
-Together with the native algorithms, they ensure easy access to all
-jet algorithms used at colliders in the past decade
-(section~\ref{sec:plugins}).
+Together with the natively-implemented sequential-recombination
+algorithms, they ensure easy access to all jet algorithms used at
+colliders in the past decade (section~\ref{sec:plugins}).
 %
 The distribution of this codebase is complemented with some limited
 curatorial activity, e.g.\ solving bugs that become apparent when
 updating compiler versions, providing a common build infrastructure,
 etc.
 %
-\comment{NB: the above phrasing is intended to avoid risk of
-  third-party cone authors saying ``that's my code you've got in
-  there, I too should be an author of \fastjet''. I.e. we provide an
-  uniform interface to the code, distribute it for convenience, and do
-  a little curation. But it is not our code.}
 
 In the past few years, research into jets has evolved significantly
 beyond the question of just ``finding'' jets.
@@ -433,7 +436,7 @@ The first is that the LHC starts to probe momentum scales that are far
 above the the electroweak scale, $M_{EW}$, e.g.\ in the search for new
 particles or the study of high-energy $WW$ scattering.
 %
-However, even in events at scales $\gg M_{EW}$, there can
+However, even in events with transverse momenta $\gg M_{EW}$, there can
 simultaneously be hadronic physics occurring on the electroweak scale
 (e.g.\ hadronic $W$ decays).
 %
@@ -453,7 +456,7 @@ interfaces that differ from one tool to the next.
 Furthermore, the facilities provided with version 2 of \fastjet did not
 always easily accommodate tools to manipulate and transform jets.
 %
-Version 3 of \fastjet aims to improve this situation, providing example
+Version 3 of \fastjet aims to improve this situation, providing 
 implementations of the most common jet substructure tools\footnote{To
   some extent there is overlap here with SpartyJet~\cite{SpartyJet},
   however we believe there are benefits to being able to easily carry
@@ -487,7 +490,8 @@ contamination~\cite{CSSAreas}.
 %
 Together with a determination of the level of pileup or underlying
 event in a specific event, one can then perform event-by-event and
-jet-by-jet subtraction of the contamination~\cite{cs}.
+jet-by-jet subtraction of the
+contamination~\cite{cs,Cacciari:2010te}. 
 %
 \fastjet allows jet clustering to be performed in such a way that the
 jet areas are determined at the same time as the jets are identified,
@@ -512,8 +516,14 @@ section~\ref{sec:quick-start}, while the core classes
 (\ttt{PseudoJet}, \ttt{JetDefinition} and \ttt{ClusterSequence}) are
 described in section~\ref{sec:core-classes}.
 %
-Additionally, extensive online ``doxygen'' documentation is available
-online at \url{http://fastjet.fr}.
+For more advanced usage, one of the design considerations in \fastjet
+has been to favour user extensibility, for example through plugins,
+selectors, tools, etc. This is one of the topics covered in the
+appendices.
+%
+Further information is also available from the extensive online
+``doxygen'' documentation, available online at
+\url{http://fastjet.fr}.
 
 
 % \hrule %-----------------------------------------------------
