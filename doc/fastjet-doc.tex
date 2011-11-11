@@ -3054,7 +3054,7 @@ Events with hard jets are often accompanied by a more diffuse
 underlying event (in $pp$ or PbPb collisions) or from pileup (in $pp$
 collisions).
 %
-For many physical applications, it is often useful to be able to
+For many physical applications, it is useful to be able to
 estimate characteristics of the background on an event-by-event basis,
 for example the $p_t$ per unit area ($\rho$), or fluctuations from
 point to point ($\sigma$).
@@ -3081,9 +3081,10 @@ The original form of this method used the $k_t$ or Cambridge/Aachen
 jet algorithms to find the jets.
 %
 These algorithms have the advantage that the resulting jets tend to
-have reasonably uniform areas (whereas anti-$k_t$ and SISCone suffer
-from jets with near zero areas or sometimes huge, ``monster'' jets,
-biasing the $\rho$ determination and are not recommended).
+have reasonably uniform areas\footnote{Whereas anti-$k_t$ and SISCone
+  suffer from jets with near zero areas or, for SISCone, sometimes
+  huge, ``monster'' jets, biasing the $\rho$ determination. They are
+  therefore not recommended.}
 %
 In the meantime a variant of the approach that has emerged is to
 cluster the particles into rectangular grid cells in $y$ and $\phi$
@@ -3093,22 +3094,8 @@ This has the advantage of simplicity and much greater speed.
 %
 One may worry that a hard jet will sometimes lie at a corner of
 multiple grid cells, inducing larger biases in the median than with a
-normal jet finder jets, however we have (preliminarly)  found this not to be an issue
-in practice, and further tests are planned in order to quantify these
-effects more precisely.
-
-A choice that needs to be made in both the jet-based and grid-based
-variants of the median method is that of the jet radius or grid
-spacing.
-%
-For the jet-based case we have found that a choice in the range
-$R=0.4-0.6$ is generally adequate~\cite{cs,Cacciari:2009dp} with a
-preference for larger values if the events are relatively sparse and
-smaller values if you expect your events to have many hard jets.
-%
-The grid-based case has been less extensively explored, but initial
-studies suggest that grid spacings in the range $\delta y = \delta
-\phi \simeq 0.5-0.7$ are appropriate.
+normal jet finder jets, however we have found this not
+to be an issue in practice~\cite{GridMedianLH}.
 
 \subsection{General Usage}\label{sec:bkg_general_usage}
 
@@ -3129,17 +3116,25 @@ For the jet-based method, one creates a
 where the selector is used to indicate which jets are used for
 background estimation (for simple use cases, one just specifies a
 rapidity range, e.g.\ \ttt{SelectorAbsRapMax(4.5)} to use all jets
-with $|y|<4.5$), together with a jet definition (typically, 
-the $k_t$ or Cambridge/Aachen jet algorithm with $R = 0.4 - 0.6$) and an area definition
-(typically, an active area with explicit ghosts is
-recommended\footnote{With the $k_t$ algorithm one may also use a Voronoi area (\ttt{effective\_Rfact =
-    0.9} is recommended), which has the advantage of being
-  deterministic and faster than ghosted areas. In this case however one must use
-  a selector which is
-  geometrical and selects only jets well within the range of event
-  particles. When using ghosts, instead, the selector can go up right to the edge of
-  the acceptance, if the ghosts also only go right up to the edge.}).
+with $|y|<4.5$), together with a jet definition  and an area
+definition. 
 %
+We have found that the $k_t$ or Cambridge/Aachen jet algorithm with $R
+= 0.4 - 0.6$ generally provide adequate background estimates, with
+the lower range of $R$ values to be preferred if the events are likely
+to be busy.
+%
+Regarding the area definition, an active area with explicit ghosts is
+recommended\footnote{With the $k_t$ algorithm one may also use a
+  Voronoi area (\ttt{effective\_Rfact = 0.9} is recommended), which
+  has the advantage of being deterministic and faster than ghosted
+  areas. In this case however one must use a selector which is
+  geometrical and selects only jets well within the range of event
+  particles. When using ghosts, instead, the selector can go up right
+  to the edge of the acceptance, if the ghosts also only go right up
+  to the edge.}).
+%
+
 For the grid based method one creates a
 \ttt{fastjet::GridMedianBackgroundEstimator},
 \begin{lstlisting}
@@ -3148,13 +3143,16 @@ For the grid based method one creates a
   GridMedianBackgroundEstimator bge(double max_rapidity,
                                     double requested_grid_spacing);
 \end{lstlisting}
-where, as already mentioned above, one can use a grid spacing $\delta y = \delta
-\phi \simeq 0.5-0.7$.
-Both of these background estimators derive from a
-\ttt{fastjet::BackgroundEstimatorBase} class.
+We have found grid spacings in the range $0.5-0.7$ to be adequate,
+with lower values preferred for events that are likely to have high
+multiplicities.
 
-Then, for each event, one tells the background estimator about the
-event particles,
+Both of the above background estimators derive from a
+\ttt{fastjet::BackgroundEstimatorBase} class and the remaining
+functionality is common to both.
+%
+In particular, for each event, one tells the background estimator
+about the event particles,
 \begin{lstlisting}
   bge.set_particles(event_particles);
 \end{lstlisting}
@@ -3180,6 +3178,19 @@ Thus (roughly speaking), if more that half of the area covered by the
 jets selector or grid rapidity range is empty, the median estimate for
 $\rho$ will be zero, as expected and appropriate for quiet events.
 
+% A choice that needs to be made in both the jet-based and grid-based
+% variants of the median method is that of the jet radius or grid
+% spacing.
+% %
+% For the jet-based case we have found that a choice in the range
+% $R=0.4-0.6$ is generally adequate~\cite{cs,Cacciari:2009dp} with a
+% preference for larger values if the events are relatively sparse and
+% smaller values if you expect your events to have many hard jets.
+% %
+% While the grid-based case has been less extensively explored, initial
+% studies suggest that grid spacings in the range $\delta y = \delta
+% \phi \simeq 0.5-0.7$ are appropriate.
+
 
 %----------------------------------------------------------------------
 \subsubsection{Background subtraction}\label{sec:subtractor}
@@ -3194,7 +3205,7 @@ or its 4-vector version
 \begin{equation}
 p_{\mu,jet}^{sub} = p_{\mu,jet}^{raw} - \rho A_{\mu,jet} \, ,
 \end{equation}
-as first advocated in~\cite{cs}.
+as first proposed in~\cite{cs}.
 
 To this end, the \ttt{Subtractor} class is defined in
 \ttt{include/tools/Subtractor.hh}. Its constructor takes a pointer to
@@ -3251,7 +3262,11 @@ the properties of the background are then obtained through the methods
   double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
 \end{lstlisting}
 
-The first technique, ``local selector'', available for now only in
+
+%......................................................................
+\subsubsection{Local estimation}
+
+The first technique, ``local estimation'', available for now only in
 the case of the jet-based estimator, involves the use of a more local
 range for the determination of $\rho$, with the help of a
 \ttt{Selector} that is able to take a reference jet,
@@ -3290,12 +3305,21 @@ remove.\footnote{If you use non-geometric selectors in determining
   determination of the empty area. If it does not, an error will be
   thrown.}
 
-The second technique, ``rescaling'', was suggested by unpublished
-studies for the case of $pp$ pileup events (with Pythia~8.145, tune 4C
-for the pileup~\cite{Sjostrand:2007gs}). We have found that an
-alternative method that is adequate for handling the rapidity
-dependence is to parametrise the average shape of the rapidity
-dependence from some number of pileup events and then carry out an
+%......................................................................
+\subsubsection{Rescaling method}
+
+A second technique to account for positional dependence of the
+background is ``rescaling''.
+% , was suggested by unpublished
+% studies for the case of $pp$ pileup events 
+%(with Pythia~8.145, tune 4C
+%for the pileup~\cite{Sjostrand:2007gs}). 
+% We have found that an
+% alternative method that is adequate for handling the rapidity
+% dependence is to 
+%
+One parametrises the average shape of the rapidity
+dependence from some number of pileup events and then carries out an
 event-by-event global $\rho$ determination taking into account that
 average shape.
 %
@@ -3324,6 +3348,11 @@ Note that any overall factor in the rescaling function cancels out for
 \ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
 and \ttt{sigma()} (which are in any case less meaningful when a
 rapidity dependence is being assumed for the background).
+
+In ongoing studies \cite{GridMedianLH}, we have found that the
+rescaling method generally performs comparably to local estimation in
+many respects, but with reduced sensitivity to biases in events with
+high multiplicities of hard jets.
 
 %......................................................................
 \subsection{Other facilities}
@@ -3363,6 +3392,10 @@ All four function above return a result corresponding to the last call
 to \ttt{rho} or \ttt{sigma} (as long as the particles, cluster sequence or
 selector have not changed in the meantime).
 
+
+\comment{should remaining part stay here? Go to Appendix since it's a
+  bit technical? Maybe easiest to leave it here}
+%
 To allow flexibility in the user's workflow, 
 alternative constructors to \ttt{JetMedianBackgroundEstimator} are provided.
 %
@@ -3400,56 +3433,6 @@ jets passed via the \ttt{set\_jets()} call above must all originate from a commo
 \ttt{ClusterSequenceAreaBase} type class.
 
 
-
-%......................................................................
-\subsection{Backwards compatibility}
-\label{sec:BGE-backwards}
-
-The \ttt{JetMedianBackgroundEstimator} and
-\ttt{GridMedianBackgroundEstimator} classes are new to \fastjet 3.
-%
-In \fastjet versions 2.3 and 2.4, the background estimation tools were
-instead integrated into the \ttt{ClusterSequenceAreaBase} class.
-%
-Rather than using Selectors to specify the jets used in the background
-estimation, they used the \ttt{RangeDefinition} class.
-%
-For the purpose of backwards compatibility, these facilities will
-remain present in all 3.0.x versions.
-%
-Note that \ttt{ClusterSequenceAreaBase} now actually uses a Selector
-in its background estimation interface, and that a
-\ttt{RangeDefinition} is automatically converted to a Selector.
-
-An explicit argument in $\rho$-determination calls in \fastjet 2.4
-concerned the choice between the use of scalar areas and the
-transverse component of the 4-vector area in the denominator of
-$p_t/A$.
-%
-The transverse component gives the more accurate $\rho$ determination
-and that is now the default in \ttt{JetMedianBackgroundEstimator}. 
-%
-The behaviour can be changed with a call to
-\begin{lstlisting}
-  void set_use_area_4vector(bool use_it = true);
-\end{lstlisting}
-%
-Finally, the calculation of $\sigma$ in \fastjet 2.x incorrectly
-handled the limit of a small number of jets. This is now fixed in \fastjet 3, but 
-a call to
-\ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{JetMedianBackgroundEstimator}
-to reproduce that behaviour.
-
-\fastjet 2.x also placed the ghosts differently, resulting in different
-event-by-event rho estimates, and possibly a small systematic offset
-(scaling as the square-root of the ghost area) when ghosts and
-particles both covered identical (small) regions.
-%
-This offset is no longer present with the \fastjet 3 ghost placement.
-%
-If the old behaviour is needed, a call to a specific
-\ttt{GhostedAreaSpec}'s \ttt{set\_fj2\_placement(true)} function
-causes ghosts to placed as in the 2.x series.
 
 
 
@@ -4926,9 +4909,10 @@ did not abort earlier due to an error.
 
 %======================================================================
 
-\section{\fastjet history}
+\section{Evolution of FastJet across versions}
 \label{sec:fastjet-history}
 
+\subsection{History}
 Version 1 of \fastjet provided the first fast implementation of the
 longitudinally invariant $k_t$ clustering~\cite{ktexcl,ktincl}, based
 on the factorisation of momentum and geometry in that algorithm's
@@ -4988,7 +4972,8 @@ Version~3 also added the D0-Run I cone~\cite{Abbott:1997fc} plugin and
 support for native jet algorithms to be run with $R>\pi/2$.
 
 
-\section{Deprecated and removed features}
+%......................................................................
+\subsection{Deprecated and removed features}
 \label{sec:deprecated}
 
 While we generally aim to maintain backwards compatibility for
@@ -5046,6 +5031,58 @@ have led us to deprecate and/or remove functionality.
     \label{tab:deprecated}
   } 
 \end{table}
+
+%......................................................................
+\subsection{Backwards compatibility of background estimation facilities}
+\label{sec:BGE-backwards}
+
+The \ttt{JetMedianBackgroundEstimator} and
+\ttt{GridMedianBackgroundEstimator} classes are new to \fastjet 3.
+%
+In \fastjet versions 2.3 and 2.4, the background estimation tools were
+instead integrated into the \ttt{ClusterSequenceAreaBase} class.
+%
+Rather than using Selectors to specify the jets used in the background
+estimation, they used the \ttt{RangeDefinition} class.
+%
+For the purpose of backwards compatibility, these facilities will
+remain present in all 3.0.x versions.
+%
+Note that \ttt{ClusterSequenceAreaBase} now actually uses a Selector
+in its background estimation interface, and that a
+\ttt{RangeDefinition} is automatically converted to a Selector.
+
+An explicit argument in $\rho$-determination calls in \fastjet 2.4
+concerned the choice between the use of scalar areas and the
+transverse component of the 4-vector area in the denominator of
+$p_t/A$.
+%
+The transverse component gives the more accurate $\rho$ determination
+and that is now the default in \ttt{JetMedianBackgroundEstimator}. 
+%
+The behaviour can be changed with a call to
+\begin{lstlisting}
+  void set_use_area_4vector(bool use_it = true);
+\end{lstlisting}
+%
+Finally, the calculation of $\sigma$ in \fastjet 2.x incorrectly
+handled the limit of a small number of jets. This is now fixed in \fastjet 3, but 
+a call to
+\ttt{set\_provide\_fj2\_sigma(true)} causes \ttt{JetMedianBackgroundEstimator}
+to reproduce that behaviour.
+
+\fastjet 2.x also placed the ghosts differently, resulting in different
+event-by-event rho estimates, and possibly a small systematic offset
+(scaling as the square-root of the ghost area) when ghosts and
+particles both covered identical (small) regions.
+%
+This offset is no longer present with the \fastjet 3 ghost placement.
+%
+If the old behaviour is needed, a call to a specific
+\ttt{GhostedAreaSpec}'s \ttt{set\_fj2\_placement(true)} function
+causes ghosts to placed as in the 2.x series.
+
+
 
 %======================================================================
 \newpage
@@ -5374,8 +5411,11 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
 \bibitem{Weinzierl:2011jx}
   S.~Weinzierl,
   %``The SISCone jet algorithm optimised for low particle multiplicities,''
-  
-  [arXiv:1108.1934 [hep-ph]].
+  arXiv:1108.1934 [hep-ph].
+
+\bibitem{GridMedianLH} M.~Cacciari, G.~P.~Salam and G.~Soyez, contribution in
+  preparation to proceedings of ``Workshop on TeV Colliders'', Les
+  Houches, June 2011.
 
 \end{thebibliography}
 
