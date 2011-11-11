@@ -997,10 +997,11 @@ the full specification of the clustering (see Section
 
 Inclusive jets correspond to all objects that have undergone a
 ``beam'' clustering (i.e. $d_{iB}$ recombination) in the description
-around Eq.(\comment{InIntro}).
+following Eq.~(\ref{eq:diB-illustr}).
 %
-For nearly all hadron-collider algorithms, the ``inclusive'' jets are
-the ones usually just referred to as the ``jets''.
+For nearly all hadron-collider algorithms, the ``inclusive'' jets
+above some given transverse momentum cut are the ones usually just
+referred to as the ``jets''.
 
 To access inclusive jets, the following member function should be used
 \begin{lstlisting}
@@ -1008,8 +1009,22 @@ To access inclusive jets, the following member function should be used
   /// algorithm) with pt >= ptmin. 
   vector<PseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
 \end{lstlisting}
-where \ttt{ptmin} may be omitted (then implicitly taking value
-$0$).
+where \ttt{ptmin} may be omitted, then implicitly taking the value
+zero.
+%
+Note that the order in which the inclusive jets are provided depends
+on the jet algorithm. To obtain a specific ordering, such as
+decreasing $p_t$, the user should perform a sort themselves, e.g.\
+with \ttt{sorted\_by\_pt(...)} function.
+
+With a zero transverse momentum cut, the number of jets found in the
+event is not an infrared safe quantity (adding a single soft particle
+can lead to one extra soft jet).
+%
+However it can still be useful to talk of all the objects returned by
+\ttt{inclusive\_jets()} as being ``jets'', e.g. in the context of the
+estimation underlying-event and pileup densities, cf.\
+section~\ref{sec:BackgroundEstimator}. 
 
 %......................................................................
 \subsubsection{Accessing exclusive jets}
@@ -1989,6 +2004,11 @@ memory usage of the subsequent split--merge step). An alternative, which
 has been found to be acceptable in most situations, is to use a passive
 area, since this is relatively fast to calculate with SISCone.
 
+Note that the underlying implementation of SISCone is optimized for
+large $N$.
+%
+An alternative implementation that is faster for $N \lesssim 10$ was
+presented in~\cite{Weinzierl:2011jx}. 
 
 %----------------------------------------------------------------------
 \subsection{Other plugins for hadron colliders }
@@ -2109,9 +2129,9 @@ jet algorithm.
 %......................................................................
 \subsubsection{\Dzero Run I cone}
 
-The main algorithm used by \Dzero in Run~I of the
-Tevatron~\cite{Abbott:1997fc}, which is an iterative cone algorithm
-with a split-merge. It comes in two versions
+This is the main algorithm used by \Dzero in Run~I of the
+Tevatron~\cite{Abbott:1997fc}. It is an iterative cone algorithm
+with a split-merge step. It comes in two versions
 \begin{lstlisting}
   #include "fastjet/D0RunIpre96ConePlugin.hh"
   // ...
@@ -2139,7 +2159,8 @@ The \verb|split_ratio| is the same as the overlap threshold in other
 split-merge based algorithms (\Dzero usually use 0.5).
 %
 It is the \fastjet authors' understanding that the value 
-used for \verb|min_jet_Et| was 8\,GeV.
+used for \verb|min_jet_Et| was 8\,GeV, corresponding to a cut of
+$4\GeV$ on cones.
 
 The underlying code for this algorithm was provided by
 Lars Sonnenschein.
@@ -2153,8 +2174,8 @@ be used only for the purpose of comparison with Run~I data from
 %......................................................................
 \subsubsection{\Dzero Run II cone}
 %
-The main algorithm used by \Dzero in Run~II of the Tevatron, which is
-a midpoint type iterative cone with split-merge.
+This is the main algorithm used by \Dzero in Run~II of the
+Tevatron. It is a midpoint type iterative cone with split-merge step.
 \begin{lstlisting}
   #include "fastjet/D0RunIIConePlugin.hh"
   // ...
@@ -2180,8 +2201,8 @@ experimental or theoretical analyses.
 %......................................................................
 \subsubsection{ATLAS iterative cone}
 %
-The (iterative) cone (with split-merge) algorithm used by ATLAS during
-the preparation for the LHC. 
+This iterative cone algorithm, with a split-merge step, was used by
+ATLAS during the preparation for the LHC.
 \begin{lstlisting}
   #include "fastjet/AtlasConePlugin.hh"
   // ...
@@ -2191,8 +2212,8 @@ the preparation for the LHC.
 \end{lstlisting}
 $f$ is the overlap threshold
 
-The underlying code for this algorithm was extracted from SpartyJet
-\cite{SpartyJet}.
+The underlying code for this algorithm was extracted from an early
+version of SpartyJet \cite{SpartyJet}.
 %
 Since version 3.0 of \fastjet it is a slightly modified version that
 we distribute, where an internal \ttt{sort} function has been replaced
@@ -2207,8 +2228,8 @@ analyses.
 %......................................................................
 \subsubsection{CMS iterative cone}
 %
-The (iterative) cone (with progressive removal) algorithm used by CMS during
-the preparation for the LHC. 
+This iterative cone algorithm with progressive removal was used by CMS
+during the preparation for the LHC.
 \begin{lstlisting}
   #include "fastjet/CMSIterativeConePlugin.hh"
   // ...
@@ -2236,8 +2257,9 @@ deprecated for new experimental or theoretical analyses.
 
 
 \subsubsection{PxCone}
-A fortran plugin for the PxCone algorithm, which is an iterative cone
-with midpoints and a split-drop procedure
+
+The PxCone algorithm is an iterative cone with midpoints and a
+split-drop procedure:
 \begin{lstlisting}
   #include "fastjet/PxConePlugin.hh"
   // ...
@@ -2246,8 +2268,8 @@ with midpoints and a split-drop procedure
 		double  overlap_threshold = 0.5,
                 bool    E_scheme_jets = false); 
 \end{lstlisting}
-with a threshold on the minimum cone transverse energy if it is to be
-included in the split-drop stage. 
+It includes a threshold on the minimum transverse energy for a cone
+(jet) to be included in the split-drop stage.
 %
 If \verb|E_scheme_jets| is true then the plugin applies an $E$-scheme
 recombination to provide the momenta of the final jets (by default an
@@ -2264,18 +2286,18 @@ This involved a small modification of the midpoint procedure, which
 can have a minor effect on the final jets and should make the algorithm
 correspond to the description of \cite{Seymour:2006vv}.
 
-The underlying code for this algorithm was taken from a google search
-for PxCone!~\cite{PxCone}. It is also described in ref.~\cite{Seymour:2006vv}.
+The underlying code for this algorithm was written by Luis del Pozo
+and Michael Seymour~\cite{PxCone}.  It is also described in
+ref.~\cite{Seymour:2006vv}.
 
-Note: this algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
+This algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
 new experimental or theoretical analyses.
 
 
 \subsubsection{TrackJet}
 %
 This algorithm has been used at the Tevatron for identifying jets from
-charged-particle tracks in underlying-event studies (a citation is
-needed here!).
+charged-particle tracks in underlying-event studies~\cite{Affolder:2001xt}.
 %
 \begin{lstlisting}
   #include "fastjet/TrackJetPlugin.hh"
@@ -2297,10 +2319,8 @@ Since version 3.0 of \fastjet it is a slightly modified version that
 we distribute, where an internal \ttt{sort} function has been replaced
 with a \ttt{stable\_sort}, to ensure reproducibility of results across
 compilers and architectures (results are unchanged when the results of
-the sort are unambiguous).
+the sort are unambiguous, which is the usual case).
 
-
-% provided by Lars Sonnenschein.
 Note: this algorithm is believed to be Coll$_{3+1}$ unsafe. It is to
 be deprecated for new experimental or theoretical analyses.
 
@@ -2338,13 +2358,13 @@ Note that for background estimation purposes the
 \ttt{JetMedianBackgroundEstimator}.
 
 %----------------------------------------------------------------------
-\subsection{Other plugins for $e^+e^-$}
+\subsection{Plugins for $e^+e^-$ collisions}
 \label{sec:other-ee-plugins}
 
 %......................................................................
 \subsubsection{Cambridge algorithm}
 \label{sec:ee-cam}
-The original $\ee$ cambridge~\cite{CamOrig} algorithm is provided as a plugin:
+The original $\ee$ Cambridge~\cite{CamOrig} algorithm is provided as a plugin:
 \begin{lstlisting}
   #include "fastjet/EECambridgePlugin.hh"
   // ...
@@ -2387,12 +2407,38 @@ jet definition and then use either of
   void JetDefinition::set_recombination_scheme(RecombinationScheme recomb_scheme);
   void JetDefinition::set_recombiner(const Recombiner * recomb)
 \end{lstlisting}
-(cf.~sections~\ref{sec:recomb_schemes},\ref{sec:recombiner}) to modify the
+(cf.~sections~\ref{sec:recomb_schemes}, \ref{sec:recombiner}) to modify the
 recombination scheme.
 
 The underlying code for this algorithm was written by the \fastjet
 authors.
 
+%......................................................................
+\subsubsection{Spherical SISCone algorithm}
+\label{sec:spherical-siscone}
+
+The spherical SISCone algorithm is an extension~\cite{SpheriSISCone}
+to spherical coordinates of the hadron-collider SISCone
+algorithm~\cite{SISCone}.
+\begin{lstlisting}
+  #include "fastjet/SISConeSphericalPlugin.hh"
+  // ...
+  SISConeSphericalPlugin(double R, 
+                         double overlap\_threshold
+			 double protojet_Emin = 0.0, 
+			 bool   caching = false,
+			 SISConeSphericalPlugin::SplitMergeScale  
+                           split_merge_scale = SISConeSphericalPlugin::SM_Etilde,
+			 double split_merge_stopping_scale = 0.0);
+\end{lstlisting}
+The functionality follows directly that of \ttt{SISConePlugin}.
+
+Note that the underlying implementation of spherical SISCone is
+optimized for large $N$. 
+%
+An alternative implementation that is faster for $N \lesssim 10$ was
+presented in~\cite{Weinzierl:2011jx}. That reference also contains a
+nice description of the algorithm.
 
 
 %======================================================================
@@ -2446,7 +2492,7 @@ There are also selectors that only make sense applied to an ensemble
 of jets. 
 %
 This is the case specifically for \ttt{SelectorNHardest(unsigned
-  int n)}, which, acting on an ensemble of jets, selects the $n$ with
+  int n)}, which, acting on an ensemble of jets, selects the $n$ jets with
 largest transverse momenta. If there are fewer than $n$ jets, then all
 jets pass.
 
@@ -2576,7 +2622,7 @@ Following a similar naming convention, there are also
 
 Some selectors take a \emph{reference jet}. 
 %
-They have been developed because it is often useful for a selector to
+They have been developed because it is can be useful for a selector to
 make its decision based on information about some other jet. 
 %
 For example one might wish to select all jets within some distance of
@@ -2644,15 +2690,19 @@ The following selectors are also available:
 \section{Jet areas}
 \label{sec:areas}
 
-Jet areas are obtained by clustering with the class
-\ttt{ClusterSequenceArea} (rather than \ttt{ClusterSequence}, from
-which it is derived). Its constructor takes an \ttt{AreaDefinition}
+Jet areas provide a measure of a jet's susceptibility to soft
+contamination. 
+%
+In \fastjet, they are obtained by clustering with the class
+\ttt{ClusterSequenceArea} (derived from \ttt{ClusterSequence}). 
+%
+Its constructor takes an \ttt{AreaDefinition}
 argument in addition to the list of particles and the
 \ttt{JetDefinition}. A typical usage would look like the following:
 \begin{lstlisting}
   #include "fastjet/ClusterSequenceArea.hh"
   // ...
-  double ghost_maxrap = 6.0;
+  double ghost_maxrap = 5.0; // e.g. if particles go up to y=5
   AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
   ClusterSequenceArea clust_seq(input_particles, jet_def, area_def);
   vector<PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets());
@@ -2682,9 +2732,9 @@ in~\cite{CSSAreas} and they are implemented in \fastjet:
   constituent particles. The Voronoi area of a particle is obtained by
   determining the Voronoi diagram for the event as a whole, and
   intersecting the Voronoi cell of the particle with a circle of
-  radius $R$ centred on the particle. Note that for the $k_t$ algorithm
-  (but not for Cambridge/Aachen or anti-$k_t$, nor in general for any
-  other algorithm) the Voronoi area of a jet coincides with its passive area.
+  radius $R$ centred on the particle. Note that for the $k_t$
+  algorithm (but not ingeneral for other algorithms) the Voronoi area
+  of a jet coincides with its passive area.
 \end{itemize}
 It is worth noting that in the limit of very densely populated events,
 all area definitions tend to the same value~\cite{CSSAreas}. It might
@@ -2743,7 +2793,7 @@ and
   AreaDefinition(fastjet::VoronoiAreaSpec voronoi_spec);
 \end{lstlisting}
 for the Voronoi area. A default constructor exists, and provides an
-active area with a \ttt{ghost\_spec} that is suitable for a majority
+active area with a \ttt{ghost\_spec} that is acceptable for a majority
 of area measurements with clustering algorithms and typical Tevatron
 and LHC rapidity coverage.
 
@@ -2776,18 +2826,24 @@ defined by the \ttt{AreaType} \ttt{enum}:
                  passive_area, 
                  [...]};
 \end{lstlisting}
-The two active variants give identical results. The second one
-explicitly includes the ghosts when the user requests the constituents
-of a jet. The first of the passive variants explicitly runs through the
-procedure mentioned above, \ie it clusters the events with one ghost
-at a time, and repeats this for very many ghosts. This can be quite
-slow, so we also provide the \ttt{passive\_area} option, which makes
-use of information specific to the jet algorithm in order to speed up the
-passive-area determination.\footnote{This ability is provided for $k_t$,
+The two active variants give identical results. 
+%
+The second one explicitly includes the ghosts when the user requests
+the constituents of a jet. 
+%
+The first of the passive variants
+explicitly runs through the procedure mentioned above, \ie it clusters
+the events with one ghost at a time, and repeats this for very many
+ghosts. This can be quite slow, so we also provide the
+\ttt{passive\_area} option, which makes use of information specific to
+the jet algorithm in order to speed up the passive-area
+determination.\footnote{This ability is provided for $k_t$,
   Cambridge/Aachen, anti-$k_t$ and the SISCone plugin. In the case of
   $k_t$ it is actually a Voronoi area that is used, since this can be
-  shown to be equivalent to the passive area~\cite{CSSAreas}. For
-  other algorithms it defaults back to the
+  shown to be equivalent to the passive area~\cite{CSSAreas} (though
+  some approximations are made for 4-vector areas). 
+  %
+  For other algorithms it defaults back to the
   \ttt{one\_ghost\_passive\_area} approach.}
 
 In order to carry out a clustering with a ghosted area determination,
@@ -2819,18 +2875,24 @@ above to be suitable for most applications.
 For sparse events, the set of ghost particles that end up in a given
 jet is not unique, and depends on the degeneracy-breaking random
 shifts added to the ghost positions, as compared to a perfect grid
-distribution. To obtain a reliable area one may then repeat the
-area determination several times, the number of times being specified
-by the \ttt{repeat} variable. For hadron-level events a value of
+distribution. To obtain a reliable area one may then repeat the area
+determination several times, the number of times being specified by
+the \ttt{repeat} variable.
+%
+For hadron-level events a value of
 $5$ is sufficient to give jet areas that are determined to within a
-few percent. In practice it is usually satisfactory even to set
+few percent. 
+%
+In practice it is usually satisfactory even to set
 \ttt{repeat}~$=1$ and this is the default since it runs faster. For
 events with a dense distribution of true 
 particles, there is no degeneracy in the ghost clustering and there is
 no need at all to use \ttt{repeat}~$>1$.
 %
-If \ttt{repeat} $ > 1$, a statistical uncertainty on the area, given by
-$\sigma/\sqrt{\ttt{repeat}-1}$, is provided for each jet.
+If \ttt{repeat} $ > 1$, a statistical uncertainty on the area is
+available for each jet, through the \ttt{jet.area\_error()} call, and
+it is calculated as the standard deviation of areas obtained for that
+jet, divided by $\sqrt{\ttt{repeat}-1}$.
 %
 Note that the \ttt{repeat} value is ignored (\ie taken to be 1) for
 \ttt{active\_area\_explicit\_ghosts} and meaningless for the passive
@@ -2843,31 +2905,17 @@ position of the ghosts on the $y$-$\phi$ grid and of their
 transverse momentum; and \ttt{mean\_ghost\_kt} which is the average transverse
 momentum of the ghosts.
 
-Even after the initialisation, the parameters can be modified by
+After initialisation, the parameters can be modified and retrieved
+respectively with calls such as \ttt{set\_ghost\_area(...)} and
+\ttt{ghost\_maxrap()} (similarly for the other parameters).
+%
+A textual description of the \ttt{GhostedAreaSpec} can be obtained as
+follows:
 \begin{lstlisting}
-  void set_ghost_area	 (double ) ;
-  void set_ghost_etamax  (double ) ;
-  void set_ghost_maxrap  (double ) ;
-  void set_grid_scatter  (double ) ;
-  void set_kt_scatter	 (double ) ;
-  void set_mean_ghost_kt (double ) ;
-  void set_repeat	 (int	 ) ;
-\end{lstlisting}
-and information about the \ttt{GhostedAreaSpec} in use can be retrieved as follows:
-\begin{lstlisting}
-  /// for a summary
   std::string description() const;
-
-  double ghost_etamax  () const ;
-  double ghost_maxrap  () const ;
-  double ghost_area    () const ;
-  double grid_scatter  () const ;
-  double kt_scatter    () const ;
-  double mean_ghost_kt () const ;
-  int	 repeat        () const ;
 \end{lstlisting}
 
-An alternative constructor
+Finally, an alternative constructor
 \begin{lstlisting}
   GhostedAreaSpec(const Selector & selector, 
                   int    repeat        = 1,
@@ -2888,7 +2936,7 @@ the boundary of the acceptance, it will ensure that the area measures
 sensitivity to contamination only in the region where contamination by
 particles can effectively take place.
 %
-This is often more useful information than the geometrical area.
+This information is often more useful than the geometrical area.
 
 \subsubsection{Voronoi Areas}
 \label{sec:voronoi-areas}
@@ -2962,13 +3010,12 @@ It is constructed using
 \end{lstlisting}
 and includes the methods
 \begin{lstlisting}
-  /// return a reference to the area definition
+  /// Return a reference to the area definition
   virtual const fastjet::AreaDefinition & area_def() const; 
 
-  /// return the total area, corresponding to the given selector, that is free of jets.
-  ///
+  /// Returns an estimate of the area contained within the selector that is free of jets. 
   /// The selector needs to have a finite area and be applicable jet by jet.
-  /// Note this would always return 0 if active_area_explicit_ghosts is used.
+  /// The function returns 0 if active_area_explicit_ghosts was used.
   virtual double empty_area(const Selector & selector) const;
 \end{lstlisting}
 
@@ -2977,28 +3024,24 @@ information about the area of its jets using the following methods of
 \ttt{PseudoJet}:
 
 \begin{lstlisting}
-  /// return the area associated with the given jet
+  /// Returns the area associated with the given jet
   double area = jet.area();
 
-  /// return the error (uncertainty) associated with the determination
-  /// of the area of the jet; returns 0 when the repeat value = 1, and
-  /// also for the active_area_explicit_ghosts and certain passive areas
+  /// Returns the error (uncertainty) associated with the determination of the
+  /// area of the jet; gives zero when the repeat=1 and for passive/Voronoi areas
   double area_error = jet.area_error();
 
-  /// return a PseudoJet whose 4-vector is defined by the following integral
+  /// Returns a PseudoJet whose 4-vector is defined by the following integral
   ///
   ///       $\int dy d\phi$ PseudoJet($y$,$\phi$,$p_t=1$) * $\Theta$("$y,\phi$ inside jet boundary")
   ///
-  /// where PseudoJet($y$,$\phi$,$p_t=1$) is a 4-vector with the given
-  /// rapidity ($y$), azimuth ($\phi$) and $p_t=1$, while $\Theta$("$y,\phi$ inside jet boundary")
-  /// is a function that is 1 when $y,\phi$ define a direction inside the
-  /// jet boundary and 0 otherwise.
+  /// where PseudoJet($y$,$\phi$,$p_t=1$) is a 4-vector with the given rapidity ($y$),
+  /// azimuth ($\phi$) and $p_t=1$, while $\Theta$("$y,\phi$ inside jet boundary") is 1 
+  /// when $y,\phi$ define a direction inside the jet boundary and 0 otherwise.
   PseudoJet area_4vector = jet.area_4vector();
 
-  /// true if a jet is made exclusively of ghosts (and the AreaType is
-  /// active_area_explicit_ghosts)
-  /// It also applies for constituents of a jet, in which case it will
-  /// return true for ghosts.
+  /// When using active_area_explicit_ghosts, returns true for jets made 
+  /// exclusively of ghosts and for ghost constituents.
   bool is_pure_ghost = jet.is_pure_ghost();
 \end{lstlisting}
 
@@ -5319,6 +5362,20 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Jets and QCD: A Historical Review of the Discovery of the Quark and Gluon Jets and its Impact on QCD,''
   Eur.\ Phys.\ J.\  {\bf H36 } (2011)  245-326.
   [arXiv:1012.2288 [hep-ph]].
+
+\bibitem{Affolder:2001xt}
+  T.~Affolder {\it et al.} [ CDF Collaboration ],
+  %``Charged jet evolution and the underlying event in $p\bar{p}$ collisions at 1.8 TeV,''
+  Phys.\ Rev.\  {\bf D65 } (2002)  092002.
+
+\bibitem{SpheriSISCone} G.~P.~Salam and G.~Soyez, 2008,
+  unpublished. \comment{Gregory: Can you remember the date}
+
+\bibitem{Weinzierl:2011jx}
+  S.~Weinzierl,
+  %``The SISCone jet algorithm optimised for low particle multiplicities,''
+  
+  [arXiv:1108.1934 [hep-ph]].
 
 \end{thebibliography}
 
