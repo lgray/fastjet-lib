@@ -187,7 +187,7 @@ public:
   /// For each jet that does not pass the cuts, this routine sets the 
   /// pointer to 0. 
   virtual void terminator(vector<const PseudoJet *> & jets) const {
-    // everyything passes, hence nothing to nullify
+    // everything passes, hence nothing to nullify
     return;
   }
   
