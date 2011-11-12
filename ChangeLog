@@ -1,3 +1,8 @@
+2011-11-12  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/SharedPtr.hh: 
+	  fixed typo in comment.
+
 2011-11-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

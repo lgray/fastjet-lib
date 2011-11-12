@@ -318,7 +318,7 @@ public:
     inline long operator--(){return --_count;}
 
     /// force the count to be set to a specified value
-    ///   \param count   the value that we ned to reset to
+    ///   \param count   the value that we need to reset to
     void set_count(const long & count){
       _count = count;
     }
