@@ -1,4 +1,18 @@
+2011-11-13  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/PseudoJetStructureBase.cc:
+	  commented out the name of unused parameters in a few methods to
+	  remove a compiler warning coming with -Wunused-parameter (and
+	  -Wextra)
+
+	* src/Selector.cc (SelectorWorker):
+	  removed the name of unused parameters in a few methods to remove
+	  a compiler warning coming with -Wunused-parameter (and -Wextra)
+
 2011-11-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/Selector.cc (SelectorWorker):
+	  typo in comment
 
 	* include/fastjet/SharedPtr.hh (SharedPtr):
 	  . in the postfix increment and decrement operators, replaced

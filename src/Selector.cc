@@ -180,13 +180,13 @@ public:
   SW_Identity(){}
 
   /// just let everything pass
-  virtual bool pass(const PseudoJet & jet) const {
+  virtual bool pass(const PseudoJet &) const {
     return true;
   }
 
   /// For each jet that does not pass the cuts, this routine sets the 
   /// pointer to 0. 
-  virtual void terminator(vector<const PseudoJet *> & jets) const {
+  virtual void terminator(vector<const PseudoJet *> &) const {
     // everything passes, hence nothing to nullify
     return;
   }
@@ -962,7 +962,7 @@ public:
   /// pass makes no sense here normally the parent selector will throw
   /// an error but for internal use in the SW, we'll throw one from
   /// here by security
-  virtual bool pass(const PseudoJet & jet) const {
+  virtual bool pass(const PseudoJet &) const {
     if (!applies_jet_by_jet())
       throw Error("Cannot apply this selector worker to an individual jet");
     return false;
