@@ -266,7 +266,7 @@ public:
   }
 
   /// force the count to be set to a specified value
-  ///   \param count   the value that we ned to reset to
+  ///   \param count   the value that we need to reset to
   void set_count(const long & count){
     if (_ptr==NULL) return;
     _ptr->set_count(count);
