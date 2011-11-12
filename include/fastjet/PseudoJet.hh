@@ -466,21 +466,26 @@ class PseudoJet {
   //-------------------------------------------------------------
   /// returns true if this PseudoJet has an associated ClusterSequence.
   bool has_associated_cluster_sequence() const;
+  /// shorthand for has_associated_cluster_sequence()
+  bool has_associated_cs() const {return has_associated_cluster_sequence();}
 
   /// returns true if this PseudoJet has an associated and still
   /// valid(ated) ClusterSequence.
   bool has_valid_cluster_sequence() const;
+  /// shorthand for has_valid_cluster_sequence()
+  bool has_valid_cs() const {return has_valid_cluster_sequence();}
 
   /// get a (const) pointer to the parent ClusterSequence (NULL if
   /// inexistent)
   const ClusterSequence* associated_cluster_sequence() const;
+  // shorthand for associated_cluster_sequence()
+  const ClusterSequence* associated_cs() const {return associated_cluster_sequence();}
 
   /// if the jet has a valid associated cluster sequence then return a
   /// pointer to it; otherwise throw an error
   inline const ClusterSequence * validated_cluster_sequence() const {
     return validated_cs();
   }
-
   /// shorthand for validated_cluster_sequence()
   const ClusterSequence * validated_cs() const;
 

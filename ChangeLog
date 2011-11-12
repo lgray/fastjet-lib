@@ -1,5 +1,9 @@
 2011-11-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* include/fastjet/PseudoJet.hh: 
+	  added a bunch of shorthands such as has_valid_cs() so as to
+	  coincide with table 3.
+
 	* include/fastjet/SharedPtr.hh: 
 	  fixed typo in comment.
 

@@ -4151,7 +4151,7 @@ class:
 \end{lstlisting}
 It is important to be aware that the function
 \ttt{set\_user\_info(...)} transfers ownership of the pointer to the
-\ttt{PseudoJet}. This is achieved with the help of a shared
+\ttt{PseudoJet}. This is achieved internally with the help of a shared
 pointer. Copies of the \ttt{PseudoJet} will point to the same
 \ttt{user\_info}. When the \ttt{PseudoJet} and all its copies go out
 of scope the \ttt{user\_info} will be deleted.
@@ -4162,7 +4162,7 @@ provide the following member function for convenience:
 \begin{lstlisting}
   template<class L> const L & user_info() const;
 \end{lstlisting}
-which casts the extra info to type \ttt{L}.
+which explicitly performs the cast of the extra info to type \ttt{L}.
 %
 If the cast fails, or the user info has not been set, an error
 will be thrown.\footnote{%
@@ -4170,7 +4170,7 @@ will be thrown.\footnote{%
   clustered have user information, the ghosts will not. 
   %
   The user should take care therefore not to ask for user information
-  about the ghosts, e.g.\ using the \texttt{PseudoJet::is\_pure\_ghost()}
+  about the ghosts, e.g.\ with the help of the \texttt{PseudoJet::is\_pure\_ghost()}
   or \texttt{PseudoJet::has\_user\_info<L>()} calls.
   %
   The \texttt{SelectorIsPureGhost()} can also be used for this purpose.
@@ -4250,7 +4250,7 @@ and later access the PDG id through the function
 \ttt{associated\_cs()}     
                      && NULL    &  CS     &  NULL   &  CS     & NULL     & NULL    \\
 \midrule                       
-\ttt{has\_validated\_cs()}
+\ttt{has\_valid\_cs()}
                      && false   & true    &  false  & true    & false    & false   \\
 \ttt{validated\_cs()}&& \throws &  CS     & \throws &  CS     & \throws  & \throws \\
 \midrule                       
@@ -4313,7 +4313,7 @@ an error if the jet is not associated with a
 %......................................................................
 \paragraph{Internal storage of structural information.}
 %
-The means by which information about a jet's a structure is stored is
+The means by which information about a jet's structure is stored is
 generally transparent to the user.
 %
 The main exception that arises is when the user wishes to create jets
@@ -4347,9 +4347,10 @@ storage, among them
   const PseudoJetStructureBase* structure_ptr() const;
   PseudoJetStructureBase*       structure_non_const_ptr();
   template<typename StructureType> const StructureType & structure() const;
+  template<typename TaggerType> const TaggerType::StructureType & structure_of() const;
 \end{lstlisting}
 where the first two return simply the structure pointer, while the
-last one casts the pointer to the desired derived structure type.
+last two cast the pointer to the desired derived structure type.
 
 
 
@@ -4424,8 +4425,8 @@ with additional arguments.
 \subsection{External Recombination Schemes}
 \label{sec:recombiner}
 
-If the user wishes to introduce a new recombination scheme, she may
-do so writing a class derived from \ttt{JetDefinition::Recombiner}:
+A user who wishes to introduce a new recombination scheme may
+do so by writing a class derived from \ttt{JetDefinition::Recombiner}:
 \begin{lstlisting}
   class JetDefinition::Recombiner {
   public:
@@ -4484,14 +4485,12 @@ The base class from which plugins derive has the following structure:
 \begin{lstlisting}
   class JetDefinition::Plugin{
   public:
-    /// return a textual description of the jet-definition implemented
-    /// in this plugin
+    /// returns a textual description of the jet-definition implemented in this plugin
     virtual std::string description() const = 0;
   
-    /// given a ClusterSequence that has been filled up with initial
-    /// particles, the following function should fill up the rest of the
-    /// ClusterSequence, using the following member functions of
-    /// ClusterSequence:
+    /// given a ClusterSequence that has been filled up with initial particles, 
+    /// the following function should fill up the rest of the ClusterSequence, 
+    /// using the following member functions of ClusterSequence:
     ///   - plugin_do_ij_recombination(...)
     ///   - plugin_do_iB_recombination(...)
     virtual void run_clustering(ClusterSequence &) const = 0;
@@ -4500,13 +4499,13 @@ The base class from which plugins derive has the following structure:
     virtual ~Plugin() {};
 
     //------- ignore what follows for simple usage! ---------
-    /// return true if there is passive areas can be efficiently determined by
+    /// returns true if passive areas can be efficiently determined by
     /// (a) setting the ghost_separation scale (see below)
     /// (b) clustering with many ghosts with $p_t$ $\ll$ ghost_separation_scale
     /// (c) counting how many ghosts end up in a given jet
     virtual bool supports_ghosted_passive_areas() const {return false;}
 
-    /// set the ghost separation scale for passive area determinations
+    /// sets the ghost separation scale for passive area determinations
     /// in future runs (NB: const, so should set internal mutable var)
     virtual void set_ghost_separation_scale(double scale) const;
     virtual double ghost_separation_scale() const;
@@ -4525,14 +4524,11 @@ using namespace fastjet;
 
 void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) {
   
-  // when run_clustering is called, the clust_seq has already been
-  // filled with the initial particles, which are available through the 
-  // jets() array
+  // when run_clustering is called, the clust_seq.jets() has already been
+  // filled with the initial particles
   const vector<PseudoJet> & initial_particles = clust_seq.jets();
 
-  // it is up to the user to do their own clustering on these initial
-  // particles
-
+  // it is up to the user to do their own clustering on these initial particles
   // ...
 \end{lstlisting}
 Once the plugin has run its own clustering it must transfer the
@@ -4544,28 +4540,24 @@ not allowed to modify \ttt{clust\_seq.jets()} itself. Instead it must
 tell \ttt{clust\_seq} what recombinations have occurred, via the
 following (\ttt{ClusterSequence} member) functions
 \begin{lstlisting}
-  /// record the fact that there has been a recombination between
-  /// jets()[jet_i] and jets()[jet_k], with the specified dij, and
-  /// return the index (newjet_k) allocated to the new jet, whose
-  /// momentum is assumed to be the 4-vector sum of that of jet_i and
-  /// jet_j
-  void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, 
-				      int & newjet_k);
+  /// record the fact that there has been a recombination between jets()[jet_i] 
+  /// and jets()[jet_j], with the specified dij, and return the index (newjet_k) 
+  /// allocated to the new jet. The recombined PseudoJet is determined by 
+  /// applying the JetDefinition's recombiner to the two input jets.
+  /// (By default E-scheme recombination, i.e. a 4-vector sum)
+  void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, int & newjet_k);
 
-  /// as for the simpler variant of plugin_record_ij_recombination,
-  /// except that the new jet is attributed the momentum and
-  /// user_index of newjet
+  /// as for the simpler variant of plugin_record_ij_recombination, except 
+  /// that the new jet is attributed the momentum and user information of newjet
   void plugin_record_ij_recombination(int jet_i, int jet_j, double dij, 
-				      const PseudoJet & newjet, 
-				      int & newjet_k);
+				      const PseudoJet & newjet, int & newjet_k);
 
-  /// record the fact that there has been a recombination between
-  /// jets()[jet_i] and the beam, with the specified diB; when looking
-  /// for inclusive jets, any iB recombination will returned to the user 
-  /// as a jet.
+  /// record the fact that there has been a recombination between jets()[jet_i] 
+  /// and the "beam", with the specified diB; this jet will then be returned to
+  /// the user when they request inclusive_jets() from the cluster sequence.
   void plugin_record_iB_recombination(int jet_i, double diB);
 \end{lstlisting}
-These \ttt{dij} recombination functions return the index
+The \ttt{dij} recombination functions return the index
 \ttt{newjet\_k} of the newly formed pseudojet. The plugin may need to
 keep track of this index in order to specify subsequent
 recombinations.
