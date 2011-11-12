@@ -128,7 +128,7 @@ public:
   /// overload the copy ctor so that it updates count
   /// \param  share : the object we want to copy
   SharedPtr(SharedPtr const & share) : _ptr(share._get_container()){
-    if (_ptr!=NULL) (*_ptr)++;
+    if (_ptr!=NULL) ++(*_ptr);
   }
   // old version
   //  SharedPtr(SharedPtr const & share) : _ptr(NULL){
@@ -191,8 +191,7 @@ public:
     // copy the container
     _ptr = share._get_container();  // Note: automatically set it to NULL if share is empty
     
-    if (_ptr!=NULL)
-      (*_ptr)++;
+    if (_ptr!=NULL) ++(*_ptr);
   }
   
   /// overload the = operator so that it updates count
@@ -303,22 +302,24 @@ public:
     /// return the count
     inline long use_count() const {return _count;}
 
-    /// postfix incrementation
-    /// NB: dummy arg is unnamed to avoid unused-variable compiler warnings
-    inline long operator++(int ){return _count++;}
-
-    /// postfix decrementation
-    /// NB: dummy arg is unnamed to avoid unused-variable compiler warnings
-    inline long operator--(int ){return _count--;}
-
-    /// prefix incrementation
+    /// prefix increment operator
     inline long operator++(){return ++_count;}
 
-    /// prefix decrementation
+    /// prefix decrement operator
     inline long operator--(){return --_count;}
 
+    /// postfix increment operator
+    /// The "dummy" int argument is just a C++ trick to differentiate
+    /// it from the prefix increment
+    inline long operator++(int){return _count++;}
+
+    /// postfix decrement operator
+    /// The "dummy" int argument is just a C++ trick to differentiate
+    /// it from the prefix decrement
+    inline long operator--(int){return _count--;}
+
     /// force the count to be set to a specified value
-    ///   \param count   the value that we need to reset to
+    ///   \param count   the value that we ned to reset to
     void set_count(const long & count){
       _count = count;
     }

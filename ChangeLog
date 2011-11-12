@@ -1,3 +1,13 @@
+2011-11-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/SharedPtr.hh (SharedPtr):
+	  . in the postfix increment and decrement operators, replaced
+	    "int unused" by "int" to avoid a compiler warning. Note that
+	    this dummy var is just a C++ trick to differentiate the
+	    postfix from the prefix operators.
+	  . used the prefix operator instead of the postfix one whenever
+	    possible
+
 2011-11-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/fastjet/tools/Filter.hh: 
