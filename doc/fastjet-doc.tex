@@ -3477,9 +3477,8 @@ available), can be accessed through
 \begin{lstlisting}
   transformed_jet.structure_of<MyTransformer>()
 \end{lstlisting}
-which would give direct access to the structural information produced
-by \ttt{MyTransformer}. This is illustrated below on a case-by-case basis
-for each of the transformers that we discuss.
+This is illustrated below on a case-by-case basis for each of the
+transformers that we discuss.
 %
 Using the boolean function
 \ttt{transformed\_jet.has\_structure\_of<MyTransformer>()} it is possible to
@@ -3503,26 +3502,33 @@ information might, for example, indicate why the jet was not tagged).
 
 \subsection{Noise-removal transformers}
 
-The \ttt{Subtrator} transformer defined in \ref{sec:subtractor} belongs to this
-category. Others are described in the following.
+In section \ref{sec:subtractor} we already saw one transformer for
+noise removal, i.e.\ \ttt{Subtrator}. 
+%
+Others have emerged in the context of jet substructure studies and are
+described here.
+%
 
 \subsubsection{Jet Filtering and Trimming using \texttt{Filter}}
 \label{sec:filtering}
 
 Filtering was first introduced in \cite{BDRS} to reduce the
-sensitivity of the boosted Higgs jet to the underlying
-event. Originally, the idea was, starting from a jet obtained with a
-Cambridge-Aachen clustering, to uncluster it down to a smaller jet
-radius $R_{\rm filt}$ and only keep the 3 hardest of these subjets as
-the pieces of the final filtered jet, rejecting the others.
+sensitivity of a boosted Higgs-candidate jet to the underlying event. 
+%
+Given some starting jet obtained with a Cambridge-Aachen clustering
+(followed by some Higgs-specific declustering), filtering unclustered
+the jet down to a smaller jet radius $R_{\rm filt}$ and only kept the
+3 hardest of these subjets as the pieces of the final filtered jet,
+rejecting the others.
 %
 Similarly, trimming \cite{trimming} also unclusters a jet into subjets
 but selects the subjets to be kept based on a $p_t$ cut.
-
+%
 The use of filtering and trimming have been advocated in number of
 contexts, beyond just the realm of boosted object reconstruction.
-%
-The \ttt{fastjet::Filter} class derives from \ttt{Transformer}, and one can construct,
+
+The \ttt{fastjet::Filter} class derives from \ttt{Transformer}, and
+can be construct 
 using a \ttt{JetDefinition}, a \ttt{Selector} and (optionally) a
 value for the background density,
 \begin{lstlisting}
@@ -3530,8 +3536,8 @@ value for the background density,
   // ...
   Filter filter(subjet_def, selector, rho);
 \end{lstlisting}
-a filter/trimmer that reclusters the jet's
-constituents with the jet definition \ttt{subjet\_def}\footnote{
+This reclusters the jet's constituents with the jet definition
+\ttt{subjet\_def}\footnote{
 %
 When the input jet was obtained with the Cambridge/Aachen
 algorithm and the subjet definition also involves the Cambridge/Aachen
@@ -3542,7 +3548,7 @@ and then
 applies \ttt{selector} on the \ttt{inclusive\_jets} resulting from the
 clustering to decide which of these (sub)jets have to be kept.
 %
-If \ttt{rho} is non-zero, each of the subjets will be subtracted
+If \ttt{rho} is non-zero, each of the subjets is subtracted
 (using the specified value for the background density) prior to the
 selection of the kept subjets. Alternatively, the user can set a
 \ttt{Subtractor} (see section~\ref{sec:subtractor}), e.g.
@@ -3551,8 +3557,9 @@ selection of the kept subjets. Alternatively, the user can set a
   Subtractor sub(&bge);
   filter.set_subtractor(sub);
 \end{lstlisting}
-When this is done, the subtraction operation  will be performed using the
-\ttt{Subtractor}, independently of the value of \ttt{rho}.
+When this is done, the subtraction operation is performed using the
+\ttt{Subtractor}, independently of whether a value had been set for
+\ttt{rho}.
 
 If the jet definition to be used to recluster the jet's constituents is 
 the Cambridge/Aachen algorithm, two additional constructors are available:
@@ -3596,37 +3603,67 @@ fraction of the input jet, can be obtained defining
 \end{lstlisting}
 and then applying \ttt{trimmer} similarly to \ttt{filter} above.
 
-Note that the jet being filtered must have
-constituents. Furthermore, if \ttt{rho} is non-zero or if a \ttt{Subtractor} is
-set, the input jet
-must come from a cluster sequence with area support and
-explicit ghosts. If any of these requirements fail, an exception will
-be thrown.
+Note that the jet being filtered must have constituents. Furthermore,
+if \ttt{rho} is non-zero or if a \ttt{Subtractor} is set, the input
+jet must come from a cluster sequence with area support and explicit
+ghosts. If any of these requirements fail, an exception is thrown.
 
+%......................................................................
 \subsubsection{Jet pruning}
 \label{sec:pruning}
 
-Pruning was introduced in \cite{Ellis:2009su}. Its aim is similar in part to that of filtering,
-namely reducing the contamination of soft noise in a jet while retaining the
-bulk of the hard perturbative radiation, though it is worth noting that, when
-used together with a mass cut, it can effectively also play the role of a
-tagger. The noise removal is achieved in pruning in a way which differs from filtering: 
-instead of unclustering a jet and selecting only part of
-its subjets, pruning works by reclustering its constituents and 
-vetoing soft and large-angle recombinations between pseudojets $i$ and
-$j$. In practice, recombinations are vetoed in the clustering sequence 
-when neither of the following criteria are met:
+Pruning was introduced in \cite{Ellis:2009su}. 
+%
+It works by reclustering a jet's constituents with some given
+sequential recombination algorithm, but vetoing soft and large-angle
+recombinations between pseudojets $i$ and $j$, specifically when the
+two following conditions are met
+%
 \begin{enumerate}
-\item the geometric distance between $i$ and $j$ is smaller than a parameter
-\ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times 2m/p_t$, with
-$m$ and $p_t$ taken from the jet as a whole;
-\item $p_t^i, p_t^j >$~\ttt{zcut}$\times
-p_t^{i+j}$.
+\item the geometric distance between $i$ and $j$ is larger than a
+  parameter \ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times
+  2m/p_t$, where $m$ and $p_t$ are the mass and transverse momentum of
+  the original jet being pruned;
+\item one of $p_t^i, p_t^j $ is $<$~\ttt{zcut}$\times p_t^{i+j}$.
 \end{enumerate}
-When both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
-and $j$ is kept, and the softer is rejected.
-\ttt{Rcut\_factor} and \ttt{zcut} are parameters of the pruning algorithm, and
-$m$ and $p_t$ are the mass and the transverse momentum of the jet being pruned.
+When the veto condition occurs, the softer of $i$ and $j$ is
+discarded, while the harder one continues to participate in the
+clustering.
+
+Pruning bears similarity to filtering in that it reduces the
+contamination of soft noise in a jet while aiming to retainin hard
+perturbative radiation within the jet.
+%
+However, because by default the parameters for the noise removal
+depend on the original mass of the jet, the type of radiation that is
+discarded depends significantly on the initial jet structure.
+%
+As a result pruning, in its default form, is better thought of as a
+noise-removing boosted-object tagger (to be used in conjunction with a
+pruned-jet mass cut) rather than a generic noise-removal procedure.
+%
+
+% when used together with a mass cut, it also plays the role of
+% a boosted-object tagger.
+% %
+% The noise removal is achieved in pruning in a way which differs from filtering: 
+% instead of unclustering a jet and selecting only part of
+% its subjets, 
+% 
+% 
+% In practice, recombinations are vetoed in the clustering sequence 
+% when neither of the following criteria are met:
+% \begin{enumerate}
+% \item the geometric distance between $i$ and $j$ is smaller than a parameter
+% \ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times 2m/p_t$, with
+% $m$ and $p_t$ taken from the jet as a whole;
+% \item $p_t^i, p_t^j >$~\ttt{zcut}$\times
+% p_t^{i+j}$.
+% \end{enumerate}
+% When both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
+% and $j$ is kept, and the softer is rejected.
+% \ttt{Rcut\_factor} and \ttt{zcut} are parameters of the pruning algorithm, and
+% $m$ and $p_t$ are the mass and the transverse momentum of the jet being pruned.
 
 The \ttt{fastjet::Pruner} class, derived from \ttt{Transformer}, can be used as
 follows, using a \ttt{JetAlgorithm} and two \ttt{double} parameters:
@@ -3669,7 +3706,7 @@ others can be retrieved using
 \end{lstlisting}
 
 Finally, note that a third constructor for \ttt{Pruner} exists, that allows one
-to construct the pruner using functions that dynamycally compute \ttt{zcut} and
+to construct the pruner using functions that dynamically compute \ttt{zcut} and
 \ttt{Rcut} for the jet being pruned:
 \begin{lstlisting}
   Pruner (const JetDefinition &jet_def, 
@@ -3696,7 +3733,7 @@ suitable substructure, they return a \ttt{jet} that has the property
 \ttt{jet == 0}.
 
 
-At the moment, we have implemented only a small set of taggers. 
+At the time of writing, we provide only a small set of taggers.
 %
 These include one main two-body tagger, the
 \ttt{fastjet::MassDropTagger} introduced in \cite{BDRS} and one main
@@ -3712,7 +3749,7 @@ have also included the
 %
 \ttt{fastjet::CASubJetTagger} introduced in~\cite{Butterworth:2009qa},
 which illustrates the use of a \ttt{WrappedStructure} (cf.\
-section~\ref{sec:transformerdetails}) and the
+appendix~\ref{sec:transformerdetails}) and the
 rest-frame \ttt{fastjet::RestFrameNSubjettinessTagger}
 from Ref.~\cite{nsubtagger}, which makes use of facilities to boost a
 cluster sequence.
@@ -3876,8 +3913,8 @@ It can be obtained through the include
 \begin{lstlisting}
   #include "fastjet/tools/CASubjetTagger.hh"
 \end{lstlisting}
-Its description will follow in a later version of
-this manual.
+As it is less widely used than the taggers mentioned above, we refer
+the user to the online doxygen documentation for further details.
 
 
 %......................................................................
@@ -3889,8 +3926,8 @@ singlet particle decaying to $2$ partons, can be obtained through the include
 \begin{lstlisting}
   #include "fastjet/tools/RestFrameNSubjettinessTagger.hh"
 \end{lstlisting}
-Its description will follow in a later version of
-this manual.
+As it is less widely used than the taggers mentioned above, we refer
+the user to the online doxygen documentation for further details.
 
 
 
@@ -3910,31 +3947,46 @@ procedure. Explanations of available options are given in the
 \ttt{INSTALL} file in the top directory, and a list can also be obtained running
 \ttt{./configure --help}.
 
-In order to access the \ttt{NlnN} strategy for the $k_t$ algorithm the
-library needs to be compiled with the Computational Geometry
-Algorithms Library \ttt{CGAL} \cite{CGAL}.\footnote{This same strategy
-  gives $N\ln N$ performance for Cambridge/Aachen and $N^{3/2}$
-  performance for anti-$k_t$ (whose sequence for jet clustering
-  triggers a worst-case scenario for the underlying computational
-  geometry methods.)}  At configure time the \verb|--enable-cgal|
-option may be used to specify that CGAL support should be included.
-
-\ttt{CGAL} may be obtained in source form from
-\url{http://www.cgal.org/}. Under linux, with CGAL versions 3.2 and
-3.3, after compilation and installation, the user will be encouraged
-to set an environment variable \ttt{CGAL\_MAKEFILE}, which points to
-the Makefile generated by \ttt{CGAL} at install time, which contains
-various definitions of locations of include files. The user may
-specify the location of this file to \fastjet either through the above
-environment variable, or with the \verb|--with-cgalmakefile=...|
-configuration option.
+In order to access the \ttt{NlnN} strategy for the $k_t$ algorithm,
+the \fastjet library needs to be compiled with support for the
+Computational Geometry Algorithms Library \ttt{CGAL} \cite{CGAL}. This
+same strategy gives $N\ln N$ performance for Cambridge/Aachen and
+$N^{3/2}$ performance for anti-$k_t$ (whose sequence for jet
+clustering triggers a worst-case scenario for the underlying
+computational geometry methods.)
 %
-For CGAL 3.4 the user should instead specify \verb|--with-cgaldir=...|
-unless the CGAL files are installed in a standard location.
-
+CGAL can be enabled with the \verb|--enable-cgal| at the
+\ttt{configure} stage.
+%
+\ttt{CGAL} may be obtained in source form from
+\url{http://www.cgal.org/} and is also available in binary form for
+many common Linux distributions.
+%
+For CGAL versions 3.4 and higher, the user can specify
+\verb|--with-cgaldir=...| if the CGAL files are not installed in a
+standard location. \comment{do we mention issues with 3.7 and 3.8?}
+% \footnote{For clustering problems with near
+%   degeneracies, there are known issues with CGAL versions 3.7 and
+%   3.8. }
 
 The \ttt{NlnNCam} strategy does not require CGAL, since it is based on
 a considerably simpler computational-geometry structure~\cite{Chan}.
+
+
+%% older methods here are not really relevant any more -- and
+%% anyway documented in INSTALL
+% \ttt{CGAL} may be obtained in source form from
+% \url{http://www.cgal.org/}. Under linux, with CGAL versions 3.2 and
+% 3.3, after compilation and installation, the user will be encouraged
+% to set an environment variable \ttt{CGAL\_MAKEFILE}, which points to
+% the Makefile generated by \ttt{CGAL} at install time, which contains
+% various definitions of locations of include files. The user may
+% specify the location of this file to \fastjet either through the above
+% environment variable, or with the \verb|--with-cgalmakefile=...|
+% configuration option.
+% %
+
+
 
 
 
