@@ -3070,7 +3070,7 @@ The main method that is available in \fastjet involves the
 determination of the distribution of $p_t/A$ for the jets in a given
 event (or region of the event) and then taking the median of the
 distribution as an estimate of $\rho$, as proposed in~\cite{cs} and
-studied in detail also in~\cite{Cacciari:2009dp}.
+studied in detail also in~\cite{Cacciari:2009dp,GridMedianLH}.
 %
 This is largely insensitive to the presence of a handful of hard jets, and
 avoids any need for introducing a $p_t$ scale to distinguish hard and
@@ -3122,7 +3122,7 @@ definition.
 We have found that the $k_t$ or Cambridge/Aachen jet algorithm with $R
 = 0.4 - 0.6$ generally provide adequate background estimates, with
 the lower range of $R$ values to be preferred if the events are likely
-to be busy.
+to be busy~\cite{Cacciari:2009dp,GridMedianLH}.
 %
 Regarding the area definition, an active area with explicit ghosts is
 recommended\footnote{With the $k_t$ algorithm one may also use a
@@ -3143,9 +3143,9 @@ For the grid based method one creates a
   GridMedianBackgroundEstimator bge(double max_rapidity,
                                     double requested_grid_spacing);
 \end{lstlisting}
-We have found grid spacings in the range $0.5-0.7$ to be adequate,
-with lower values preferred for events that are likely to have high
-multiplicities.
+We have found grid spacings in the range $0.5-0.7$ to be
+adequate~\cite{GridMedianLH}, with lower values preferred for events
+that are likely to have high multiplicities.
 
 Both of the above background estimators derive from a
 \ttt{fastjet::BackgroundEstimatorBase} class and the remaining
@@ -4235,6 +4235,9 @@ and later access the PDG id through the function
 \begin{lstlisting}
   particle.user_info<MyInfo>().pdg_id();
 \end{lstlisting}
+More advanced examples can be provided on request, including code that
+helps handle particle classes from third party tools such as
+Pythia~8~\cite{Sjostrand:2007gs}.
 
 %======================================================================
 \section{Structural information for various kinds of \texttt{PseudoJet}}
@@ -5134,69 +5137,41 @@ causes ghosts to placed as in the 2.x series.
 
 %======================================================================
 \newpage
+
 \begin{thebibliography}{99}
 
-\bibitem{fastjet}
-  M.~Cacciari and G.~P.~Salam,
-  %``Dispelling the N**3 myth for the k(t) jet-finder,''
-  Phys.\ Lett.\ B {\bf 641} (2006) 57
-  [hep-ph/0512210].
-  %%CITATION = HEP-PH 0512210;%%
+\bibitem{StermanWeinberg}
+  G.~Sterman and S.~Weinberg,
+  ``Jets From Quantum Chromodynamics,''
+  Phys.\ Rev.\ Lett.\  {\bf 39} (1977) 1436.
+  %%CITATION = PRLTA,39,1436;%%
 
-%\cite{Buttar:2008jx}
-\bibitem{Buttar:2008jx}
-  C.~Buttar {\it et al.},
-  %``Standard Model Handles and Candles Working Group: Tools and Jets Summary
-  %Report,''
-  arXiv:0803.0678 [hep-ph].
-  %%CITATION = ARXIV:0803.0678;%%
+\bibitem{Moretti:1998qx}
+  S.~Moretti, L.~Lonnblad and T.~Sjostrand,
+   ``New and old jet clustering algorithms for electron positron events,''
+  JHEP {\bf 9808} (1998) 001
+  [arXiv:hep-ph/9804296].
+  %% CITATION = JHEPA,9808,001;%%
 
+\bibitem{Ellis:2007ib}
+  S.~D.~Ellis, J.~Huston, K.~Hatakeyama, P.~Loch and M.~Tonnesmann,
+  ``Jets in Hadron-Hadron Collisions,''
+  Prog.\ Part.\ Nucl.\ Phys.\  {\bf 60} (2008) 484
+  [arXiv:0712.2447 [hep-ph]].
+  %%CITATION = PPNPD,60,484;%%
 
-\bibitem{Chan}
-  T.~M.~Chan,
-  ``Closest-point problems simplified on the RAM,''
-  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
-  p.~472 (2002).
-
-
-\bibitem{Anderberg}
-  M.~R.~Anderberg, 
-  Cluster Analysis for Applications,
-  (Number 19 in Probability and Mathematical Statistics, Academic
-  Press, New York, 1973).
+\bibitem{Salam:2009jx}
+  G.~P.~Salam,
+  %``Towards Jetography,''
+  Eur.\ Phys.\ J.\  {\bf C67 } (2010)  637-686
+  [arXiv:0906.1833 [hep-ph]].
 
 
-\bibitem{Sonnenschein}
-  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
-  %% link verified GPS 2011-11-12
-  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
-
-\bibitem{CGAL}
-%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
-A.~Fabri {\it et al.},
-%On the design of CGAL a computational geometry algorithms library
-Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
-%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
-J.-D.~Boissonnat {\it et al.},
-% Triangulations in CGAL
-Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
-
-
-%\cite{Blazey:2000qt}
-\bibitem{RunII-jet-physics}
-G.~C.~Blazey {\it et al.},
-%``Run II jet physics,''
-hep-ex/0005012.
-%%CITATION = HEP-EX 0005012;%%
-
-
-\bibitem{KtJet}
-  \url{http://hepforge.cedar.ac.uk/ktjet/};
-  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
-  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
-  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
-  [hep-ph/0210022].
-  %%CITATION = HEP-PH 0210022;%%
+\bibitem{Ali:2010tw}
+  A.~Ali, G.~Kramer,
+  %``Jets and QCD: A Historical Review of the Discovery of the Quark and Gluon Jets and its Impact on QCD,''
+  Eur.\ Phys.\ J.\  {\bf H36 } (2011)  245-326.
+  [arXiv:1012.2288 [hep-ph]].
 
 
 \bibitem{ktexcl}
@@ -5212,6 +5187,96 @@ hep-ex/0005012.
   %\prd{48}{1993}{3160} 
   [hep-ph/9305266]. 
   %%CITATION = HEP-PH 9305266;%%
+
+\bibitem{KtClus}
+  M. Seymour,
+  \url{http://hepwww.rl.ac.uk/theory/seymour/ktclus/}.
+
+
+\bibitem{KtJet}
+  \url{http://hepforge.cedar.ac.uk/ktjet/};
+  J.~M.~Butterworth, J.~P.~Couchman, B.~E.~Cox and B.~M.~Waugh,
+  %``KtJet: A C++ implementation of the K(T) clustering algorithm,''
+  Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
+  [hep-ph/0210022].
+  %%CITATION = HEP-PH 0210022;%%
+
+\bibitem{fastjet}
+  M.~Cacciari and G.~P.~Salam,
+  %``Dispelling the N**3 myth for the k(t) jet-finder,''
+  Phys.\ Lett.\ B {\bf 641} (2006) 57
+  [hep-ph/0512210].
+  %%CITATION = HEP-PH 0512210;%%
+
+\bibitem{CGAL}
+%Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
+A.~Fabri {\it et al.},
+%On the design of CGAL a computational geometry algorithms library
+Softw.~Pract.~Exper.~ {\bf 30} (2000) 1167;
+%Jean-Daniel Boissonnat, Olivier Devillers, Sylvain Pion, Monique Teillaud and Mariette Yvinec
+J.-D.~Boissonnat {\it et al.},
+% Triangulations in CGAL
+Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
+  
+\bibitem{antikt}
+  M.~Cacciari, G.~P.~Salam and G.~Soyez,
+  %``The anti-k_t jet clustering algorithm,''
+  JHEP {\bf 0804} (2008) 063
+  [arXiv:0802.1189 [hep-ph]].
+  %%CITATION = ARXIV:0802.1189;%%
+
+\bibitem{Abdesselam:2010pt}
+  A.~Abdesselam, E.~B.~Kuutmann, U.~Bitenc, G.~Brooijmans, J.~Butterworth, P.~Bruckman de Renstrom, D.~Buarque Franzosi, R.~Buckingham {\it et al.},
+  %``Boosted objects: A Probe of beyond the Standard Model physics,''
+  Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1661.
+  [arXiv:1012.5412 [hep-ph]].
+
+\bibitem{SpartyJet} P.A.~Delsart, K.~Geerlings, J.~Huston,
+  B.~Martin and C.~Vermilion, SpartyJet,
+  \url{http://projects.hepforge.org/spartyjet}
+
+\bibitem{CSSAreas} 
+  M.~Cacciari, G.~P.~Salam and G.~Soyez,
+  %``The Catchment Area of Jets,''
+  JHEP {\bf 0804} (2008) 005,
+  [arXiv:0802.1188 [hep-ph]].
+  %%CITATION = ARXIV:0802.1188;%%
+
+\bibitem{cs}
+  M.~Cacciari and G.~P.~Salam,
+  %``Pileup subtraction using jet areas,''
+  Phys.\ Lett.\  B {\bf 659} (2008) 119
+  [arXiv:0707.1378 [hep-ph]].
+  %%CITATION = PHLTA,B659,119;%%
+
+\bibitem{Cacciari:2010te}
+  M.~Cacciari, J.~Rojo, G.~P.~Salam, G.~Soyez,
+  %``Jet Reconstruction in Heavy Ion Collisions,''
+  Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1539.
+  [arXiv:1010.1759 [hep-ph]].
+
+%\cite{Buttar:2008jx}
+\bibitem{Buttar:2008jx}
+  C.~Buttar {\it et al.},
+  %``Standard Model Handles and Candles Working Group: Tools and Jets Summary
+  %Report,''
+  arXiv:0803.0678 [hep-ph].
+  %%CITATION = ARXIV:0803.0678;%%
+
+%\cite{Ellis:2009su}
+\bibitem{Ellis:2009su}
+  S.~D.~Ellis, C.~K.~Vermilion, J.~R.~Walsh,
+  %``Techniques for improved heavy particle searches with jet substructure,''
+  Phys.\ Rev.\  {\bf D80 } (2009)  051501.
+  [arXiv:0903.5081 [hep-ph]].
+
+
+%\cite{Blazey:2000qt}
+\bibitem{RunII-jet-physics}
+G.~C.~Blazey {\it et al.},
+%``Run II jet physics,''
+hep-ex/0005012.
+%%CITATION = HEP-EX 0005012;%%
 
 \bibitem{CamOrig}
   Y.~L.~Dokshitzer, G.~D.~Leder, S.~Moretti and B.~R.~Webber,
@@ -5233,19 +5298,17 @@ hep-ex/0005012.
   %positron proton collisions at s**(1/2) = 300-GeV,''
 DESY-THESIS-2000-049.
 %\href{http://www.slac.stanford.edu/spires/find/hep/www?r=desy-thesis-2000-049}{SPIRES entry}
-  
-\bibitem{antikt}
-  M.~Cacciari, G.~P.~Salam and G.~Soyez,
-  %``The anti-k_t jet clustering algorithm,''
-  JHEP {\bf 0804} (2008) 063
-  [arXiv:0802.1189 [hep-ph]].
-  %%CITATION = ARXIV:0802.1189;%%
 
 \bibitem{eekt}
   S.~Catani, Y.~L.~Dokshitzer, M.~Olsson, G.~Turnock and B.~R.~Webber,
   %``New clustering algorithm for multi - jet cross-sections in e+ e-
   %annihilation,''
   Phys.\ Lett.\ B {\bf 269}, 432 (1991);
+
+\bibitem{Lonnblad:1992qd}
+  L.~Lonnblad,
+  %``ARCLUS: A New jet clustering algorithm inspired by the color dipole model,''
+  Z.\ Phys.\  {\bf C58 } (1993)  471-478.
 
 
 %\bibitem{HepJet} \texttt{HepJet} is being planned in collaboration
@@ -5277,6 +5340,11 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   hep-ph/0610012.
   %%CITATION = HEP-PH 0610012;%%
 
+\bibitem{Weinzierl:2011jx}
+  S.~Weinzierl,
+  %``The SISCone jet algorithm optimised for low particle multiplicities,''
+  arXiv:1108.1934 [hep-ph].
+
 
 \bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
 
@@ -5292,10 +5360,6 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Fixed cone jet definitions in D0 and R(sep),''
   FERMILAB-PUB-97-242-E.
 
-\bibitem{SpartyJet} P.A.~Delsart, K.~Geerlings, J.~Huston,
-  B.~Martin and C.~Vermilion, SpartyJet,
-  \url{http://projects.hepforge.org/spartyjet}
-
 \bibitem{Seymour:2006vv}
   M.~H.~Seymour and C.~Tevlin,
   %``A comparison of two different jet algorithms for the top mass
@@ -5305,6 +5369,11 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %%CITATION = JHEPA,0611,052;%%
 
 \bibitem{PxCone} L.~A.~del~Pozo and M.~H.~Seymour, unpublished.
+
+\bibitem{Affolder:2001xt}
+  T.~Affolder {\it et al.} [ CDF Collaboration ],
+  %``Charged jet evolution and the underlying event in $p\bar{p}$ collisions at 1.8 TeV,''
+  Phys.\ Rev.\  {\bf D65 } (2002)  092002.
 
 \bibitem{Bartel:1986ua}
   W.~Bartel {\it et al.}  [JADE Collaboration],
@@ -5320,19 +5389,8 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   Phys.\ Lett.\ B {\bf 213} (1988) 235.
   %%CITATION = PHLTA,B213,235;%%
 
-\bibitem{CSSAreas} 
-  M.~Cacciari, G.~P.~Salam and G.~Soyez,
-  %``The Catchment Area of Jets,''
-  JHEP {\bf 0804} (2008) 005,
-  [arXiv:0802.1188 [hep-ph]].
-  %%CITATION = ARXIV:0802.1188;%%
-
-\bibitem{cs}
-  M.~Cacciari and G.~P.~Salam,
-  %``Pileup subtraction using jet areas,''
-  Phys.\ Lett.\  B {\bf 659} (2008) 119
-  [arXiv:0707.1378 [hep-ph]].
-  %%CITATION = PHLTA,B659,119;%%
+\bibitem{SpheriSISCone} G.~P.~Salam and G.~Soyez, 2008,
+  unpublished. \comment{Gregory: Can you remember the date}
 
 \bibitem{Fortune}
   S.~Fortune,
@@ -5345,11 +5403,9 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   JHEP {\bf 1004 } (2010)  065.
   [arXiv:0912.4926 [hep-ph]].
 
-\bibitem{Sjostrand:2007gs}
-  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
-  %``A Brief Introduction to PYTHIA 8.1,''
-  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
-  [arXiv:0710.3820 [hep-ph]].
+\bibitem{GridMedianLH} M.~Cacciari, G.~P.~Salam and G.~Soyez, contribution in
+  preparation to proceedings of ``Workshop on TeV Colliders'', Les
+  Houches, June 2011.
 
 
 \bibitem{BDRS}
@@ -5365,19 +5421,6 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   JHEP {\bf 1002} (2010) 084
   [arXiv:0912.1342 [hep-ph]].
   %%CITATION = JHEPA,1002,084;%%
-
-%\cite{Ellis:2009su}
-\bibitem{Ellis:2009su}
-  S.~D.~Ellis, C.~K.~Vermilion, J.~R.~Walsh,
-  %``Techniques for improved heavy particle searches with jet substructure,''
-  Phys.\ Rev.\  {\bf D80 } (2009)  051501.
-  [arXiv:0903.5081 [hep-ph]].
-
-\bibitem{Abdesselam:2010pt}
-  A.~Abdesselam, E.~B.~Kuutmann, U.~Bitenc, G.~Brooijmans, J.~Butterworth, P.~Bruckman de Renstrom, D.~Buarque Franzosi, R.~Buckingham {\it et al.},
-  %``Boosted objects: A Probe of beyond the Standard Model physics,''
-  Eur.\ Phys.\ J.\  {\bf C71 } (2011)  1661.
-  [arXiv:1012.5412 [hep-ph]].
 
 \bibitem{Kaplan:2008ie}
   D.~E.~Kaplan, K.~Rehermann, M.~D.~Schwartz, B.~Tweedie,
@@ -5400,71 +5443,38 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   [arXiv:1011.1493 [hep-ph]].
   %%CITATION = PHRVA,D83,011502;%%
 
+
+\bibitem{Chan}
+  T.~M.~Chan,
+  ``Closest-point problems simplified on the RAM,''
+  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
+  p.~472 (2002).
+
+
+\bibitem{Anderberg}
+  M.~R.~Anderberg, 
+  Cluster Analysis for Applications,
+  (Number 19 in Probability and Mathematical Statistics, Academic
+  Press, New York, 1973).
+
+
+\bibitem{Sonnenschein}
+  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
+  %% link verified GPS 2011-11-12
+  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
+
+\bibitem{Sjostrand:2007gs}
+  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
+  %``A Brief Introduction to PYTHIA 8.1,''
+  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
+  [arXiv:0710.3820 [hep-ph]].
+
 \bibitem{EppsteinHierarchical}
   %%David Eppstein
   D.~Eppstein
   %``Fast hierarchical clustering and other applications of dynamic
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
-
-\bibitem{Lonnblad:1992qd}
-  L.~Lonnblad,
-  %``ARCLUS: A New jet clustering algorithm inspired by the color dipole model,''
-  Z.\ Phys.\  {\bf C58 } (1993)  471-478.
-
-\bibitem{Salam:2009jx}
-  G.~P.~Salam,
-  %``Towards Jetography,''
-  Eur.\ Phys.\ J.\  {\bf C67 } (2010)  637-686
-  [arXiv:0906.1833 [hep-ph]].
-
-\bibitem{StermanWeinberg}
-  G.~Sterman and S.~Weinberg,
-  ``Jets From Quantum Chromodynamics,''
-  Phys.\ Rev.\ Lett.\  {\bf 39} (1977) 1436.
-  %%CITATION = PRLTA,39,1436;%%
-
-\bibitem{Ellis:2007ib}
-  S.~D.~Ellis, J.~Huston, K.~Hatakeyama, P.~Loch and M.~Tonnesmann,
-  ``Jets in Hadron-Hadron Collisions,''
-  Prog.\ Part.\ Nucl.\ Phys.\  {\bf 60} (2008) 484
-  [arXiv:0712.2447 [hep-ph]].
-  %%CITATION = PPNPD,60,484;%%
-
-\bibitem{Moretti:1998qx}
-  S.~Moretti, L.~Lonnblad and T.~Sjostrand,
-   ``New and old jet clustering algorithms for electron positron events,''
-  JHEP {\bf 9808} (1998) 001
-  [arXiv:hep-ph/9804296].
-  %% CITATION = JHEPA,9808,001;%%
-
-\bibitem{KtClus}
-  M. Seymour,
-  \url{http://hepwww.rl.ac.uk/theory/seymour/ktclus/}.
-
-
-\bibitem{Ali:2010tw}
-  A.~Ali, G.~Kramer,
-  %``Jets and QCD: A Historical Review of the Discovery of the Quark and Gluon Jets and its Impact on QCD,''
-  Eur.\ Phys.\ J.\  {\bf H36 } (2011)  245-326.
-  [arXiv:1012.2288 [hep-ph]].
-
-\bibitem{Affolder:2001xt}
-  T.~Affolder {\it et al.} [ CDF Collaboration ],
-  %``Charged jet evolution and the underlying event in $p\bar{p}$ collisions at 1.8 TeV,''
-  Phys.\ Rev.\  {\bf D65 } (2002)  092002.
-
-\bibitem{SpheriSISCone} G.~P.~Salam and G.~Soyez, 2008,
-  unpublished. \comment{Gregory: Can you remember the date}
-
-\bibitem{Weinzierl:2011jx}
-  S.~Weinzierl,
-  %``The SISCone jet algorithm optimised for low particle multiplicities,''
-  arXiv:1108.1934 [hep-ph].
-
-\bibitem{GridMedianLH} M.~Cacciari, G.~P.~Salam and G.~Soyez, contribution in
-  preparation to proceedings of ``Workshop on TeV Colliders'', Les
-  Houches, June 2011.
 
 \end{thebibliography}
 
