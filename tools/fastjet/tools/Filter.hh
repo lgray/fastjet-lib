@@ -84,10 +84,14 @@ class FilterStructure;
 /// alg) and the filtering definition is C/A, then the filter does not
 /// rerun the C/A algorithm on the constituents, but instead makes use
 /// of the existent C/A cluster sequence in the original jet. This
-/// increases the speed of the filter.
+/// increases the speed of the filter. 
 ///
 /// See also \subpage Example11 for a further usage example.
 ///
+/// Support for areas, reuse of C/A cluster sequences, etc.,
+/// considerably complicates the implementation of Filter. For an
+/// explanation of how a simpler filter might be coded, see the
+/// "User-defined transformers" appendix of the manual.
 class Filter : public Transformer{
 public:
   /// trivial ctor

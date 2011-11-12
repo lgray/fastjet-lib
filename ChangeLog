@@ -1,5 +1,9 @@
 2011-11-12  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* tools/fastjet/tools/Filter.hh: 
+	  added reference to manual for a simple example of a Filter
+	  implementation.
+
 	* include/fastjet/PseudoJet.hh: 
 	  added a bunch of shorthands such as has_valid_cs() so as to
 	  coincide with table 3.
