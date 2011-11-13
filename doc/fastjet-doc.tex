@@ -216,7 +216,8 @@ To help introduce the terminology used throughout \fastjet and this
 manual, let us consider the $k_t$ algorithm for hadron
 colliders~\cite{ktexcl,ktincl}.
 %
-This was the first jet algorithm to be implemented in \fastjet and its
+This was the first jet algorithm to be implemented in
+\fastjet~\cite{fastjet} and its 
 structure, together with that of other sequential recombination
 algorithms, has played a key role in the design of \fastjet's interface.
 %
@@ -239,7 +240,7 @@ It also involves a distance measure between every particle $i$ and the
 beam
 \begin{equation}
   \label{eq:diB-illustr}
-  d_{iB} = d_{ji} = p_{ti}^2\,.
+  d_{iB} = p_{ti}^2\,.
 \end{equation}
 %
 $R$ in eq.~(\ref{eq:dij-illustr}), usually called the jet radius, is a
@@ -390,7 +391,7 @@ recombination algorithms were also widely used at HERA and LEP.
 %
 However at Fermilab's Tevatron, and in much preparatory LHC work, cone
 algorithms were used for nearly all studies.
-
+%
 The main challenge that would be faced by a user wishing to write
 their own implementation of a given cone algorithm comes from the
 large number of details that enter into a full specification of a cone
@@ -420,7 +421,7 @@ Together with the natively-implemented sequential-recombination
 algorithms, they ensure easy access to all jet algorithms used at
 colliders in the past decade (section~\ref{sec:plugins}).
 %
-The distribution of this codebase is complemented with some limited
+Our distribution of this codebase is complemented with some limited
 curatorial activity, e.g.\ solving bugs that become apparent when
 updating compiler versions, providing a common build infrastructure,
 etc.
@@ -5188,6 +5189,13 @@ causes ghosts to placed as in the 2.x series.
   [hep-ph/9305266]. 
   %%CITATION = HEP-PH 9305266;%%
 
+\bibitem{fastjet}
+  M.~Cacciari and G.~P.~Salam,
+  %``Dispelling the N**3 myth for the k(t) jet-finder,''
+  Phys.\ Lett.\ B {\bf 641} (2006) 57
+  [hep-ph/0512210].
+  %%CITATION = HEP-PH 0512210;%%
+
 \bibitem{KtClus}
   M. Seymour,
   \url{http://hepwww.rl.ac.uk/theory/seymour/ktclus/}.
@@ -5200,13 +5208,6 @@ causes ghosts to placed as in the 2.x series.
   Comput.\ Phys.\ Commun.\  {\bf 153}, 85 (2003)
   [hep-ph/0210022].
   %%CITATION = HEP-PH 0210022;%%
-
-\bibitem{fastjet}
-  M.~Cacciari and G.~P.~Salam,
-  %``Dispelling the N**3 myth for the k(t) jet-finder,''
-  Phys.\ Lett.\ B {\bf 641} (2006) 57
-  [hep-ph/0512210].
-  %%CITATION = HEP-PH 0512210;%%
 
 \bibitem{CGAL}
 %Andreas Fabri, Geert-Jan Giezeman, Lutz Kettner, Stefan Schirra and Sven Schonherr,
