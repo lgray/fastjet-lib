@@ -1,5 +1,9 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/Filter.cc (_get_all_pieces, ...):
+	  removed the internal mutable all_pieces variable and pass
+	  instead an argument to the appropriate functions
+
 	* plugins/D0RunICone/HepEntityIpre96.h:
 	* plugins/D0RunICone/HepEntityI.h:
 	* plugins/ATLASCone/Jet.hh:
