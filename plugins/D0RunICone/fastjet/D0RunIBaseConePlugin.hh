@@ -73,12 +73,12 @@ public:
   ///
   /// The remaining parameters of the algorithm are not to be modified if the algorithm
   /// is to correspond to the one actually used by D0.
-  D0RunIBaseConePlugin (double CONrad, 
-			double JETmne , 
-			double SPLifr = _DEFAULT_SPLifr) :
-    _CONErad           (CONrad                     ),
-    _JETmne            (JETmne                     ),
-    _SPLifr            (SPLifr                     ),
+  D0RunIBaseConePlugin (double CONrad_in, 
+			double JETmne_in, 
+			double SPLifr_in = _DEFAULT_SPLifr) :
+    _CONErad           (CONrad_in                  ),
+    _JETmne            (JETmne_in                  ),
+    _SPLifr            (SPLifr_in                  ),
     _TWOrad            (_DEFAULT_TWOrad            ),
     _D0_Angle          (_DEFAULT_D0_Angle          ),
     _Increase_Delta_R  (_DEFAULT_Increase_Delta_R  ),

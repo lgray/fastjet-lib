@@ -1,3 +1,12 @@
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * added a few parentheses suggested by the -Wparentheses gcc option
+ * 
+ */
+
 #include "JetCluAlgorithm.hh"
 #include "ClusterComparisons.hh"
 #include "Centroid.hh"
@@ -14,13 +23,13 @@ void JetCluAlgorithm::makeSeedTowers(std::vector<PhysicsTower>& towers, std::vec
 {
   for(int iEta = 4; iEta < 48; iEta++){
     bool seg24 = true;
-    if(iEta >= 8 && iEta < 14 || iEta >= 38 && iEta < 44)
+    if ((iEta >= 8 && iEta < 14) || (iEta >= 38 && iEta < 44))
       seg24 = false;
     for(int iPhi = 0; iPhi < 24; iPhi++){
       Cluster seed;
       for(std::vector<PhysicsTower>::iterator towerIter = towers.begin(); towerIter != towers.end(); towerIter++)
 	if(towerIter->iEta() == iEta &&
-	   (seg24 && towerIter->iPhi() == iPhi || !seg24 && (towerIter->iPhi() == 2*iPhi || towerIter->iPhi() == 2*iPhi + 1)))
+	   ((seg24 && towerIter->iPhi() == iPhi) || (!seg24 && (towerIter->iPhi() == 2*iPhi || towerIter->iPhi() == 2*iPhi + 1))))
 	  seed.addTower(*towerIter);
       if(seed.centroid.Et > _seedThreshold)
 	seedTowers.push_back(seed);
@@ -45,14 +54,14 @@ void JetCluAlgorithm::buildPreClusters(std::vector<Cluster>& seedTowers, std::ve
       if(dEta <= _coneRadius && dPhi <= _coneRadius){
 	int iEtaSeedTower = seedTowerIter->towerList.begin()->iEta();
 	int iPhiSeedTower = seedTowerIter->towerList.begin()->iPhi();
-	if(iEtaSeedTower >= 8 && iEtaSeedTower < 14 || iEtaSeedTower >= 38 && iEtaSeedTower < 44)
+	if ((iEtaSeedTower >= 8 && iEtaSeedTower < 14) || (iEtaSeedTower >= 38 && iEtaSeedTower < 44))
 	  iPhiSeedTower = iPhiSeedTower/2;
  	for(std::vector<PhysicsTower>::iterator preClusterTowerIter = preClusterIter->towerList.begin();
 	    preClusterTowerIter != preClusterIter->towerList.end() && !seedTowerAddedToPreCluster;
 	    preClusterTowerIter++){
 	  int iEtaPreClusterTower = preClusterTowerIter->iEta();
 	  int iPhiPreClusterTower = preClusterTowerIter->iPhi();
-	  if(iEtaPreClusterTower >= 8 && iEtaPreClusterTower < 14 || iEtaPreClusterTower >= 38 && iEtaPreClusterTower < 44)
+	  if ((iEtaPreClusterTower >= 8 && iEtaPreClusterTower < 14) || (iEtaPreClusterTower >= 38 && iEtaPreClusterTower < 44))
 	    iPhiPreClusterTower = iPhiPreClusterTower/2;
 	  int dIEta = abs(iEtaSeedTower - iEtaPreClusterTower);
 	  int dIPhi = abs(iPhiSeedTower - iPhiPreClusterTower);
@@ -253,8 +262,8 @@ void JetCluAlgorithm::splitAndMerge(std::vector<Cluster>& stableCones, std::vect
 		 removeFromStableCone1.size() == oldRemoveFromStableCone1.size() &&
 		 removeFromStableCone2.size() == oldRemoveFromStableCone2.size() &&
 		 (!removeFromStableCone1.size() || !removeFromStableCone2.size() ||
-		  removeFromStableCone1.centroid.isEqual(oldRemoveFromStableCone1.centroid) &&
-		  removeFromStableCone2.centroid.isEqual(oldRemoveFromStableCone2.centroid)))
+		  (removeFromStableCone1.centroid.isEqual(oldRemoveFromStableCone1.centroid) &&
+		   removeFromStableCone2.centroid.isEqual(oldRemoveFromStableCone2.centroid))))
 		iterCount = _maxIterations + 1;
 	    }
 	    for(std::vector<PhysicsTower>::iterator removeTowerIter1 = removeFromStableCone1.towerList.begin();

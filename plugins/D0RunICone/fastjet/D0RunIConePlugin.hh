@@ -74,8 +74,8 @@ public:
   /// The remaining parameters of the algorithm are not to be modified if the algorithm
   /// is to correspond to the one actually used by D0.
   ///
-  D0RunIConePlugin (double CONrad, double JETmne , double SPLifr = _DEFAULT_SPLifr)
-    : D0RunIBaseConePlugin(CONrad, JETmne , SPLifr){}
+  D0RunIConePlugin (double CONrad_in, double JETmne_in , double SPLifr_in = _DEFAULT_SPLifr)
+    : D0RunIBaseConePlugin(CONrad_in, JETmne_in , SPLifr_in){}
 
   // the things that are required by base class
   virtual std::string description () const;

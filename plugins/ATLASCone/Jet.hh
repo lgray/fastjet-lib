@@ -6,6 +6,15 @@
 #ifndef _JET_HH_
 #define _JET_HH_
 
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * removed some harmless warnings coming with the -Wshadow gcc option
+ * 
+ */
+
 #include "LorentzVector.hh"
 #include <list>
 #include <vector>
@@ -24,7 +33,7 @@ public :
   typedef std::vector<Jet*> jet_list_t;
   
   Jet(): LorentzVector(0,0,0,0) {}
-  Jet(double p1, double p2, double p3, double p0, int index=0): LorentzVector(p1,p2,p3,p0), m_index(index){}
+  Jet(double p1, double p2, double p3, double p0, int index_in=0): LorentzVector(p1,p2,p3,p0), m_index(index_in){}
   Jet(LorentzVector v): LorentzVector(v)  {m_index = 0;}
   Jet(Jet &j);
   Jet(Jet *j);

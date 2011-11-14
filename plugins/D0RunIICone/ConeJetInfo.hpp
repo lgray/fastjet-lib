@@ -15,6 +15,15 @@
 //    extracted from D0 software framework and modified to remove subsequent dependencies
 // --------------------------------------------------------------------------
 
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * changed the name of a few parameters to avoid a gcc -Wshadow warning
+ *
+ */
+
 //#define CONEJET_SPLITMERGE_MOD 100
 
 #include <fastjet/internal/base.hh>
@@ -31,9 +40,9 @@ class ConeJetInfo
 {
 public:
   ConeJetInfo(): _seedET(0.), _initial_jet_ET(0.), _nb_split_merge(0) {};
-  ConeJetInfo( float seedET): _seedET(seedET),  _nb_split_merge(0) {}; 
-  ConeJetInfo( float seedET, float initialET, int nb_split, int nb_merge): 
-    _seedET(seedET), _initial_jet_ET(initialET), 
+  ConeJetInfo( float seedET_in): _seedET(seedET_in),  _nb_split_merge(0) {}; 
+  ConeJetInfo( float seedET_in, float initialET_in, int nb_split, int nb_merge): 
+    _seedET(seedET_in), _initial_jet_ET(initialET_in), 
     _nb_split_merge(nb_merge + CONEJET_SPLITMERGE_MOD*nb_split) {};
   ~ConeJetInfo() {};
 

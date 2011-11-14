@@ -12,6 +12,15 @@ namespace d0runi{
 //This is an example class fulfilling the minimal requirements needed by the
 //D0 RunI cone jet algorithm implementation, which is an inlined template class
 
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * removed some harmless warnings coming with the -Wshadow gcc option
+ * 
+ */
+
 class HepEntityI {
 
  public:
@@ -25,16 +34,16 @@ class HepEntityI {
   }
 
 
-  HepEntityI(double E, double px, double py, double pz,
+  HepEntityI(double E_in, double px_in, double py_in, double pz_in,
 	     int index_in = -1) : index(index_in) {
     //Snowmass Et scheme    
-    double pt = sqrt(px*px+py*py);
-    double p = sqrt(pt*pt+pz*pz);
-    phi = inline_maths::phi(px,py);
+    double pt = sqrt(px_in*px_in+py_in*py_in);
+    double p = sqrt(pt*pt+pz_in*pz_in);
+    phi = inline_maths::phi(px_in,py_in);
     double theta = asin(pt/p);
     eta = inline_maths::eta(theta);
 
-    Et = E*sin(theta);
+    Et = E_in*sin(theta);
     
     return;
   }
@@ -91,14 +100,14 @@ class HepEntityI {
   }
 
 
-  inline void Fill(double E, double px, double py, double pz, int index_in) {
-    double pt = sqrt(px*px+py*py);
-    double p = sqrt(pt*pt+pz*pz);
-    phi = inline_maths::phi(px,py);
+  inline void Fill(double E_in, double px_in, double py_in, double pz_in, int index_in) {
+    double pt = sqrt(px_in*px_in+py_in*py_in);
+    double p = sqrt(pt*pt+pz_in*pz_in);
+    phi = inline_maths::phi(px_in,py_in);
     double theta = asin(pt/p);
     eta = inline_maths::eta(theta);
     
-    Et = E*sin(theta);
+    Et = E_in*sin(theta);
 
     index = index_in;
     

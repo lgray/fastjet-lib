@@ -1,5 +1,20 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/D0RunICone/HepEntityIpre96.h:
+	* plugins/D0RunICone/HepEntityI.h:
+	* plugins/ATLASCone/Jet.hh:
+	* plugins/ATLASCone/LorentzVector.hh:
+	* plugins/D0RunIICone/ILConeAlgorithm.hpp:
+	* plugins/D0RunIICone/ProtoJet.hpp:
+	* plugins/D0RunIICone/ConeJetInfo.hpp:
+	* plugins/CDFCones/CDFcode/LorentzVector.hh:
+	* include/fastjet/internal/Voronoi.hh:
+	* src/Voronoi.cc:
+	  added/started a history of Change on 3rd party code
+
+	* plugins/CDFCones/CDFcode/CalTower.hh (ctor):
+	  added a few () to get rid of a gcc warning
+
 	* src/ClusterSequence_DumbN3.cc (_really_dumb_cluster):
 	  marked as obsolete a part of the code that was associated with
 	  another obsolete part of the code
@@ -15,6 +30,27 @@
 	  replaced Tile * tile by Tile * tile_ptr to avoid a
 	  shadowing (gcc -Wshadow warning)
 
+	* example/09-user_info.cc (MyUserInfo ctor):
+	* example/fastjet_timing_plugins.cc (main):
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh (ctor):
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh (ctor):
+	* plugins/D0RunICone/fastjet/D0RunIBaseConePlugin.hh (ctor):
+	* plugins/D0RunICone/HepEntityIpre96.h (ctor, Fill):
+	* plugins/D0RunICone/HepEntityI.h (ctor, Fill):
+	* plugins/EECambridge/fastjet/EECambridgePlugin.hh (ctor):
+	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh (ctor):
+	* plugins/ATLASCone/Jet.hh (ctor):
+	* plugins/ATLASCone/LorentzVector.hh (ctor):
+	* plugins/D0RunIICone/ILConeAlgorithm.hpp (TemporaryJet ctor, midpoint):
+	* plugins/D0RunIICone/ProtoJet.hpp (ctor,setJet):
+	* plugins/D0RunIICone/ConeJetInfo.hpp (ctors):
+	* plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh (ctor):
+	* plugins/CDFCones/fastjet/CDFMidPointPlugin.hh (ctors):
+	* plugins/CDFCones/fastjet/CDFJetCluPlugin.hh (ctors):
+	* plugins/CDFCones/CDFcode/LorentzVector.hh (ctor):
+	* plugins/SISCone/fastjet/SISConePlugin.hh (ctors):
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh (ctor):
+	* include/fastjet/NNH.hh (init, other_init):
 	* tools/TopTaggerBase.cc (_cos_theta_W):
 	* tools/JHTopTagger.cc (result, _split_once):
 	* tools/CASubJetTagger.cc (result):

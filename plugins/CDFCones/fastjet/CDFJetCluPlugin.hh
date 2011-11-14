@@ -44,31 +44,30 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class CDFJetCluPlugin : public JetDefinition::Plugin {
 public:
   /// a compact constructor
-  CDFJetCluPlugin (double   cone_radius, 
-		   double   overlap_threshold, 
-		   double   seed_threshold = 1.0,
-		   int      iratch = 1) : 
-    _seed_threshold    ( seed_threshold    ),    
-    _cone_radius       ( cone_radius       ),
-    _adjacency_cut     (   2               ),
-    _max_iterations    ( 100               ),
-    _iratch            ( iratch            ),
-    _overlap_threshold ( overlap_threshold )  {}
+  CDFJetCluPlugin (double   cone_radius_in, 
+		   double   overlap_threshold_in, 
+		   double   seed_threshold_in = 1.0,
+		   int      iratch_in = 1) : 
+    _seed_threshold    ( seed_threshold_in    ),    
+    _cone_radius       ( cone_radius_in       ),
+    _adjacency_cut     (   2                  ),
+    _max_iterations    ( 100                  ),
+    _iratch            ( iratch_in            ),
+    _overlap_threshold ( overlap_threshold_in )  {}
 
   /// a constructor that looks like the one provided by CDF
-  CDFJetCluPlugin (
-                     double seed_threshold   ,	 
-		     double cone_radius      ,
-		     int    adjacency_cut    ,
-		     int    max_iterations   ,
-		     int    iratch           ,
-		     double overlap_threshold) :
-    _seed_threshold    (seed_threshold    ),    
-    _cone_radius       (cone_radius       ),
-    _adjacency_cut     (adjacency_cut     ),
-    _max_iterations    (max_iterations    ),
-    _iratch            (iratch            ),
-    _overlap_threshold (overlap_threshold )  {}
+  CDFJetCluPlugin (double seed_threshold_in   ,	 
+		   double cone_radius_in      ,
+		   int    adjacency_cut_in    ,
+		   int    max_iterations_in   ,
+		   int    iratch_in           ,
+		   double overlap_threshold_in) :
+    _seed_threshold    (seed_threshold_in    ),    
+    _cone_radius       (cone_radius_in       ),
+    _adjacency_cut     (adjacency_cut_in     ),
+    _max_iterations    (max_iterations_in    ),
+    _iratch            (iratch_in            ),
+    _overlap_threshold (overlap_threshold_in )  {}
 
   // some functions to return info about parameters
   double seed_threshold    () const {return _seed_threshold    ;}

@@ -162,16 +162,16 @@ private:
   /// such as pointers to neighbours, etc.
   class NNBJ : public BJ {
   public:
-    void init(const PseudoJet & jet, int index) {
+    void init(const PseudoJet & jet, int index_in) {
       BJ::init(jet);
-      other_init(index);
+      other_init(index_in);
     }
-    void init(const PseudoJet & jet, int index, I * info) {
+    void init(const PseudoJet & jet, int index_in, I * info) {
       BJ::init(jet, info);
-      other_init(index);
+      other_init(index_in);
     }
-    void other_init(int index) {
-      _index = index;
+    void other_init(int index_in) {
+      _index = index_in;
       NN_dist = BJ::beam_distance();
       NN = NULL;
     }

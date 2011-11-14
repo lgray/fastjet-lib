@@ -60,8 +60,8 @@ public:
   ///
   /// Finally, to agree with FastJet standards, we do not specify a default R,
   /// that in the ATLAS code is 0.7
-  ATLASConePlugin (double radius, double seedPt=2.0, double f=0.5)
-    : _radius(radius), _seedPt(seedPt), _f(f){}
+  ATLASConePlugin (double radius, double seedPt_in=2.0, double f_in=0.5)
+    : _radius(radius), _seedPt(seedPt_in), _f(f_in){}
 
   /// copy constructor
   ATLASConePlugin (const ATLASConePlugin & plugin) {

@@ -59,7 +59,7 @@ public:
   /// Main constructor for the EECambridge Plugin class.  
   /// It takes the dimensionless parameter ycut (the Q value for normalisation
   /// of the kt-distances is taken from the sum of all particle energies).
-  EECambridgePlugin (double ycut) : _ycut(ycut) {}
+  EECambridgePlugin (double ycut_in) : _ycut(ycut_in) {}
 
   /// copy constructor
   EECambridgePlugin (const EECambridgePlugin & plugin) {

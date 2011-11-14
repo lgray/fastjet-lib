@@ -14,7 +14,16 @@
 //    1-May-2007 Lars Sonnenschein
 //    extracted from D0 software framework and modified to remove subsequent dependencies 
 // ---------------------------------------------------------------------------
-// 
+
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * changed the name of a few parameters to avoid a gcc -Wshadow warning
+ *
+ */
+ 
 //#include "kinem_util/AnglesUtil.hpp"
 //#include "energycluster/ConeJetInfo.hpp"
 #include "ConeJetInfo.hpp"
@@ -101,9 +110,9 @@ ProtoJet<Item>::ProtoJet(float seedET) : _LItems(), _info(seedET) {
 }
 
 template<class Item>
-ProtoJet<Item>::ProtoJet(float seedET,float y,float phi) :  _LItems(), _info(seedET) { 
-  _y  = y; 
-  _phi= phi;
+ProtoJet<Item>::ProtoJet(float seedET,float y_in,float phi_in) :  _LItems(), _info(seedET) { 
+  _y  = y_in; 
+  _phi= phi_in;
   _pT = 0.0;
 }
 
@@ -124,10 +133,10 @@ void ProtoJet<Item>::addItem(const Item* tw) {
 }
 
 template<class Item>
-void ProtoJet<Item>::setJet(float y,float phi,float pT) {
-  _y  = y;
-  _phi= phi;
-  _pT = pT;
+void ProtoJet<Item>::setJet(float y_in,float phi_in,float pT_in) {
+  _y  = y_in;
+  _phi= phi_in;
+  _pT = pT_in;
 }
 
 template<class Item>

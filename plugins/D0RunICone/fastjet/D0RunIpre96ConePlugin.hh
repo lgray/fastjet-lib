@@ -75,8 +75,8 @@ public:
   /// is to correspond to the one actually used by D0.
   ///
   ///
-  D0RunIpre96ConePlugin (double CONrad, double JETmne , double SPLifr = _DEFAULT_SPLifr)
-    : D0RunIBaseConePlugin(CONrad, JETmne , SPLifr){}
+  D0RunIpre96ConePlugin (double CONrad_in, double JETmne_in , double SPLifr_in = _DEFAULT_SPLifr)
+    : D0RunIBaseConePlugin(CONrad_in, JETmne_in , SPLifr_in){}
 
   // the things that are required by base class
   virtual std::string description () const;

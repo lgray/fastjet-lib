@@ -75,12 +75,12 @@ public:
   /// The remaining parameters of the algorithm are not to be modified if the algorithm
   /// is to correspond to the one actually used by D0.
   //
-  D0RunIIConePlugin (double cone_radius, 
-                     double min_jet_Et , 
-                     double split_ratio = _DEFAULT_split_ratio) :
-    _cone_radius            (cone_radius            ),
-    _min_jet_Et             (min_jet_Et             ),
-    _split_ratio            (split_ratio            ),
+  D0RunIIConePlugin (double cone_radius_in, 
+                     double min_jet_Et_in , 
+                     double split_ratio_in = _DEFAULT_split_ratio) :
+    _cone_radius            (cone_radius_in                  ),
+    _min_jet_Et             (min_jet_Et_in                   ),
+    _split_ratio            (split_ratio_in                  ),
     _far_ratio              (_DEFAULT_far_ratio              ),
     _Et_min_ratio           (_DEFAULT_Et_min_ratio           ),
     _kill_duplicate         (_DEFAULT_kill_duplicate         ),

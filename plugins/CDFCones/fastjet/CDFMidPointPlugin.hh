@@ -109,20 +109,20 @@ public:
   ///    . SM_mt: transverse mass = sqrt(m^2+pt^2)
   ///
   CDFMidPointPlugin (
-                     double seed_threshold     ,	 
-		     double cone_radius        ,
-		     double cone_area_fraction ,
-		     int    max_pair_size      ,
-		     int    max_iterations     ,
-		     double overlap_threshold  ,
-                     SplitMergeScale sm_scale = SM_pt) :
-    _seed_threshold     (seed_threshold     ),    
-    _cone_radius        (cone_radius        ),
-    _cone_area_fraction (cone_area_fraction ),
-    _max_pair_size      (max_pair_size      ),
-    _max_iterations     (max_iterations     ),
-    _overlap_threshold  (overlap_threshold  ),
-    _sm_scale           (sm_scale)             {}
+                     double seed_threshold_in     ,	 
+		     double cone_radius_in        ,
+		     double cone_area_fraction_in ,
+		     int    max_pair_size_in      ,
+		     int    max_iterations_in     ,
+		     double overlap_threshold_in  ,
+                     SplitMergeScale sm_scale_in = SM_pt) :
+    _seed_threshold     (seed_threshold_in     ),    
+    _cone_radius        (cone_radius_in        ),
+    _cone_area_fraction (cone_area_fraction_in ),
+    _max_pair_size      (max_pair_size_in      ),
+    _max_iterations     (max_iterations_in     ),
+    _overlap_threshold  (overlap_threshold_in  ),
+    _sm_scale           (sm_scale_in)             {}
 
   /// a compact constructor
   ///
@@ -131,16 +131,16 @@ public:
   /// misleading people into using the value of 0.5 without thinking,
   /// which is known to have adverse effects in high-noise
   /// environments. A recommended value is 0.75.
-  CDFMidPointPlugin (double   cone_radius, 
-		     double   overlap_threshold,// = 0.5, 
-		     double   seed_threshold = 1.0,	     
-		     double   cone_area_fraction = 1.0) : 
-    _seed_threshold     (seed_threshold     ),    
-    _cone_radius        (cone_radius        ),
-    _cone_area_fraction (cone_area_fraction ),
-    _max_pair_size      (2                  ),
-    _max_iterations     (100                ),
-    _overlap_threshold  (overlap_threshold  ),
+  CDFMidPointPlugin (double   cone_radius_in, 
+		     double   overlap_threshold_in,// = 0.5, 
+		     double   seed_threshold_in = 1.0,	     
+		     double   cone_area_fraction_in = 1.0) : 
+    _seed_threshold     (seed_threshold_in     ),    
+    _cone_radius        (cone_radius_in        ),
+    _cone_area_fraction (cone_area_fraction_in ),
+    _max_pair_size      (2                     ),
+    _max_iterations     (100                   ),
+    _overlap_threshold  (overlap_threshold_in  ),
     _sm_scale           (SM_pt)                {}
 
 

@@ -586,8 +586,8 @@ int main (int argc, char ** argv) {
 
     // now provide some nice output...
     if (inclkt >= 0.0) {
-      vector<fj::PseudoJet> jets = sorted_by_pt(clust_seq->inclusive_jets(inclkt));
-      print_jets(jets, show_constituents);
+      vector<fj::PseudoJet> jets_local = sorted_by_pt(clust_seq->inclusive_jets(inclkt));
+      print_jets(jets_local, show_constituents);
 
     }
 

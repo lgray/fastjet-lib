@@ -92,51 +92,51 @@ public:
   /// now explicitly think about the value for this -- we recommend
   /// 0.75.
   ///
-  SISConePlugin (double cone_radius,
-                 double overlap_threshold,
-                 int    n_pass_max = 0,
-                 double protojet_ptmin = 0.0, 
-                 bool   caching = false,
-                 SplitMergeScale  split_merge_scale = SM_pttilde,
-                 double split_merge_stopping_scale = 0.0){
-    _cone_radius           = cone_radius;
-    _overlap_threshold     = overlap_threshold;
-    _n_pass_max            = n_pass_max;
-    _protojet_ptmin        = protojet_ptmin;
-    _caching               = caching;   
-    _split_merge_scale     = split_merge_scale;
-    _split_merge_stopping_scale = split_merge_stopping_scale;
+  SISConePlugin (double cone_radius_in,
+                 double overlap_threshold_in,
+                 int    n_pass_max_in = 0,
+                 double protojet_ptmin_in = 0.0, 
+                 bool   caching_in = false,
+                 SplitMergeScale  split_merge_scale_in = SM_pttilde,
+                 double split_merge_stopping_scale_in = 0.0){
+    _cone_radius           = cone_radius_in;
+    _overlap_threshold     = overlap_threshold_in;
+    _n_pass_max            = n_pass_max_in;
+    _protojet_ptmin        = protojet_ptmin_in;
+    _caching               = caching_in;   
+    _split_merge_scale     = split_merge_scale_in;
+    _split_merge_stopping_scale = split_merge_stopping_scale_in;
     _ghost_sep_scale       = 0.0;
     _use_pt_weighted_splitting = false;}
 
 
   /// Backwards compatible constructor for the SISCone Plugin class
-  SISConePlugin (double cone_radius,
-                 double overlap_threshold,
-                 int    n_pass_max,
-                 double protojet_ptmin, 
-                 bool   caching ,
-                 bool   split_merge_on_transverse_mass){
-    _cone_radius           = cone_radius;
-    _overlap_threshold     = overlap_threshold;
-    _n_pass_max            = n_pass_max;
-    _protojet_ptmin        = protojet_ptmin;
-    _caching               = caching;   
+  SISConePlugin (double cone_radius_in,
+                 double overlap_threshold_in,
+                 int    n_pass_max_in,
+                 double protojet_ptmin_in, 
+                 bool   caching_in,
+                 bool   split_merge_on_transverse_mass_in){
+    _cone_radius           = cone_radius_in;
+    _overlap_threshold     = overlap_threshold_in;
+    _n_pass_max            = n_pass_max_in;
+    _protojet_ptmin        = protojet_ptmin_in;
+    _caching               = caching_in;
     _split_merge_stopping_scale = 0.0;
-    _split_merge_scale     = split_merge_on_transverse_mass ? SM_mt : SM_pttilde;
+    _split_merge_scale     = split_merge_on_transverse_mass_in ? SM_mt : SM_pttilde;
     _ghost_sep_scale       = 0.0;}
   
   /// backwards compatible constructor for the SISCone Plugin class
   /// (avoid using this in future).
-  SISConePlugin (double cone_radius,
-                 double overlap_threshold,
-                 int    n_pass_max,
-                 bool   caching ) {
-    _cone_radius           = cone_radius;
-    _overlap_threshold     = overlap_threshold;
-    _n_pass_max            = n_pass_max;
+  SISConePlugin (double cone_radius_in,
+                 double overlap_threshold_in,
+                 int    n_pass_max_in,
+                 bool   caching_in) {
+    _cone_radius           = cone_radius_in;
+    _overlap_threshold     = overlap_threshold_in;
+    _n_pass_max            = n_pass_max_in;
     _protojet_ptmin        = 0.0;
-    _caching               = caching;   
+    _caching               = caching_in;   
     _split_merge_scale     = SM_mt;
     _split_merge_stopping_scale = 0.0;
     _ghost_sep_scale       = 0.0;

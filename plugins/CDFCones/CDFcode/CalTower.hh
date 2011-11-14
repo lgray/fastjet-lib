@@ -1,6 +1,15 @@
 #ifndef _CAL_TOWER_HH_
 #define _CAL_TOWER_HH_
 
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * added a few parentheses suggested by the -Wparentheses gcc option
+ * 
+ */
+
 #include <cmath>
 
 #ifndef M_PI
@@ -41,7 +50,7 @@ class CalTower
 	    break;
 	  }
       }
-      if(iEta >= 8 && iEta < 14 || iEta >= 38 && iEta < 44)
+      if ((iEta >= 8 && iEta < 14) || (iEta >= 38 && iEta < 44))
 	iPhi = int(phi/2/M_PI*48)%48;
       else
 	iPhi = int(phi/2/M_PI*24)%24;

@@ -40,6 +40,15 @@
 //
 // ---------------------------------------------------------------------------
 
+/* 
+ * History of Changes (since FastJet-3.0)
+ * 
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ *
+ *         * changed the name of a few parameters to avoid a gcc -Wshadow warning
+ *
+ */
+
 ///////////////////////////////////////////////////////////////////////////////
 #include <vector>
 #include <list>
@@ -204,8 +213,8 @@ private:
     
     TemporaryJet(float seedET) : ProtoJet<Item>(seedET) {;}
 
-    TemporaryJet(float seedET,float y,float phi) : 
-      ProtoJet<Item>(seedET,y,phi) {;}
+    TemporaryJet(float seedET,float y_in,float phi_in) : 
+      ProtoJet<Item>(seedET,y_in,phi_in) {;}
     
     ~TemporaryJet() {;}
     
@@ -214,31 +223,31 @@ private:
       return RDelta(this->_y,this->_phi,jet.y(),jet.phi()); 
     }
     
-    void midpoint(const TemporaryJet& jet,float & y, float & phi) const 
+    void midpoint(const TemporaryJet& jet,float & y_out, float & phi_out) const 
     {
       // Midpoint should probably be computed w/4-vectors but don't 
       // have that info.  Preserving Pt-weighted calculation - JPK
       float pTsum = this->_pT + jet.pT();
-      y = (this->_y*this->_pT + jet.y()*jet.pT())/pTsum;
+      y_out = (this->_y*this->_pT + jet.y()*jet.pT())/pTsum;
 
-      phi = (this->_phi*this->_pT + jet.phi()*jet.pT())/pTsum;
+      phi_out = (this->_phi*this->_pT + jet.phi()*jet.pT())/pTsum;
       // careful with phi-wrap area: convert from [0,2pi] to [-pi,pi]
       //ls: original D0 code, as of 23/Mar/2007
       //if ( abs(phi-this->_phi)>2.0 ) { // assumes cones R=1.14 or smaller, merge within 2R only  
       //ls: abs bug fixed 26/Mar/2007 
-      if ( fabs(phi-this->_phi)>2.0 ) { // assumes cones R=1.14 or smaller, merge within 2R only  
-        phi = fmod( this->_phi+PI, TWOPI);
-	if (phi < 0.0) phi += TWOPI;
-	phi -= PI;
+      if ( fabs(phi_out-this->_phi)>2.0 ) { // assumes cones R=1.14 or smaller, merge within 2R only  
+        phi_out = fmod( this->_phi+PI, TWOPI);
+	if (phi_out < 0.0) phi_out += TWOPI;
+	phi_out -= PI;
 
 	float temp=fmod( jet.phi()+PI, TWOPI);
 	if (temp < 0.0) temp += TWOPI;
 	temp -= PI;
 
-	phi = (phi*this->_pT + temp*jet.pT()) /pTsum;
+	phi_out = (phi_out*this->_pT + temp*jet.pT()) /pTsum;
       }
 
-      if ( phi < 0. ) phi += TWOPI;
+      if ( phi_out < 0. ) phi_out += TWOPI;
     }
     
 

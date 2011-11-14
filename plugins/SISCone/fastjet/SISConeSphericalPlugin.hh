@@ -104,20 +104,20 @@ public:
   /// Main constructor for the SISConeSpherical Plugin class.  
   ///
   ///
-  SISConeSphericalPlugin (double cone_radius,
-			  double overlap_threshold,
-			  int    n_pass_max = 0,
-			  double protojet_Emin = 0.0, 
-			  bool   caching = false,
-			  SplitMergeScale  split_merge_scale = SM_Etilde,
-			  double split_merge_stopping_scale = 0.0){
-    _cone_radius           =cone_radius;
-    _overlap_threshold     =overlap_threshold;
-    _n_pass_max            =n_pass_max;
-    _protojet_Emin         =protojet_Emin;
-    _caching               =caching;        
-    _split_merge_scale     =split_merge_scale;
-    _split_merge_stopping_scale = split_merge_stopping_scale;
+  SISConeSphericalPlugin (double cone_radius_in,
+			  double overlap_threshold_in,
+			  int    n_pass_max_in = 0,
+			  double protojet_Emin_in = 0.0, 
+			  bool   caching_in = false,
+			  SplitMergeScale  split_merge_scale_in = SM_Etilde,
+			  double split_merge_stopping_scale_in = 0.0){
+    _cone_radius           =cone_radius_in;
+    _overlap_threshold     =overlap_threshold_in;
+    _n_pass_max            =n_pass_max_in;
+    _protojet_Emin         =protojet_Emin_in;
+    _caching               =caching_in;
+    _split_merge_scale     =split_merge_scale_in;
+    _split_merge_stopping_scale = split_merge_stopping_scale_in;
     _ghost_sep_scale       = 0.0;
     _use_E_weighted_splitting = false;
   }

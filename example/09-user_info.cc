@@ -78,8 +78,8 @@ public:
   // default ctor
   //  - pdg_id        the PDG id of the particle
   //  - vertex_number theid of the vertex it originates from
-  MyUserInfo(const int & pdg_id, const int & vertex_number) :
-    _pdg_id(pdg_id), _vertex_number(vertex_number){}
+  MyUserInfo(const int & pdg_id_in, const int & vertex_number_in) :
+    _pdg_id(pdg_id_in), _vertex_number(vertex_number_in){}
 
   /// access to the PDG id
   int pdg_id() const { return _pdg_id;}
