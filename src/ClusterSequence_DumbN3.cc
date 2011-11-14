@@ -83,13 +83,13 @@ void ClusterSequence::_really_dumb_cluster () {
     // output recombination sequence
     // old "ktclus" way of labelling
     //cout <<n<< " "<< ii+1 << " with " << jj+1 << "; y = "<< ymin<<endl;
-    // new delaunay way of labelling
-    int jjindex_or_beam, iiindex;
-    if (jj < 0) {jjindex_or_beam = BeamJet; iiindex = indices[ii];} 
-    else {
-      jjindex_or_beam = max(indices[ii],indices[jj]);
-      iiindex =         min(indices[ii],indices[jj]);
-    }
+    //OBS // new delaunay way of labelling
+    //OBS int jjindex_or_beam, iiindex;
+    //OBS if (jj < 0) {jjindex_or_beam = BeamJet; iiindex = indices[ii];} 
+    //OBS else {
+    //OBS   jjindex_or_beam = max(indices[ii],indices[jj]);
+    //OBS   iiindex =         min(indices[ii],indices[jj]);
+    //OBS }
 
     // now recombine
     int newn = 2*jetsp.size() - n;

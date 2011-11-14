@@ -1,5 +1,9 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/ClusterSequence_DumbN3.cc (_really_dumb_cluster):
+	  marked as obsolete a part of the code that was associated with
+	  another obsolete part of the code
+
 	* tools/fastjet/tools/Filter.hh:
 	* tools/Filter.cc:
 	  removed all_pieces as the 2nd argument of get_all_pieces: this

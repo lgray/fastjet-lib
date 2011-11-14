@@ -211,36 +211,36 @@ private:
 //----------------------------------------------------------------------
 template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
            const std::vector<L> & pseudojets, 
-           const JetDefinition  & jet_def)
+           const JetDefinition  & jet_def_in)
  {
   
   ClusterSequenceAreaBase * _area_base_ptr;
   switch(_area_def.area_type()) {
   case active_area:
     _area_base_ptr = new ClusterSequenceActiveArea(pseudojets, 
-                                                   jet_def, 
+                                                   jet_def_in, 
                                                    _area_def.ghost_spec());
     break;
   case active_area_explicit_ghosts:
     if (_area_def.ghost_spec().repeat() != 1) 
       _explicit_ghosts_repeats_warnings.warn("Requested active area with explicit ghosts with repeat != 1; only 1 set of ghosts will be used");
     _area_base_ptr = new ClusterSequenceActiveAreaExplicitGhosts(pseudojets, 
-                                                   jet_def, 
+                                                   jet_def_in, 
                                                    _area_def.ghost_spec());
     break;
   case voronoi_area:
     _area_base_ptr = new ClusterSequenceVoronoiArea(pseudojets, 
-                                                   jet_def, 
+                                                   jet_def_in, 
                                                    _area_def.voronoi_spec());
     break;
   case one_ghost_passive_area:
     _area_base_ptr = new ClusterSequence1GhostPassiveArea(pseudojets, 
-						    jet_def, 
+						    jet_def_in, 
 						    _area_def.ghost_spec());
     break;
   case passive_area:
     _area_base_ptr = new ClusterSequencePassiveArea(pseudojets, 
-						    jet_def, 
+						    jet_def_in, 
 						    _area_def.ghost_spec());
     break;
   default:
