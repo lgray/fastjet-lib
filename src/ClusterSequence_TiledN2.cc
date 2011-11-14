@@ -436,15 +436,15 @@ void ClusterSequence::_tiled_N2_cluster() {
     // Initialise jetB's NN distance as well as updating it for 
     // other particles.
     for (int itile = 0; itile < n_near_tiles; itile++) {
-      Tile * tile = &_tiles[tile_union[itile]];
-      for (TiledJet * jetI = tile->head; jetI != NULL; jetI = jetI->next) {
+      Tile * tile_ptr = &_tiles[tile_union[itile]];
+      for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
 	  jetI->NN_dist = _R2;
 	  jetI->NN      = NULL;
 	  // now go over tiles that are neighbours of I (include own tile)
-	  for (Tile ** near_tile  = tile->begin_tiles; 
-	               near_tile != tile->end_tiles; near_tile++) {
+	  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
+	               near_tile != tile_ptr->end_tiles; near_tile++) {
 	    // and then over the contents of that tile
 	    for (TiledJet * jetJ  = (*near_tile)->head; 
                             jetJ != NULL; jetJ = jetJ->next) {
@@ -667,17 +667,17 @@ void ClusterSequence::_faster_tiled_N2_cluster() {
     // other particles.
     // Run over all tiles in our union 
     for (int itile = 0; itile < n_near_tiles; itile++) {
-      Tile * tile = &_tiles[tile_union[itile]];
-      tile->tagged = false; // reset tag, since we're done with unions
+      Tile * tile_ptr = &_tiles[tile_union[itile]];
+      tile_ptr->tagged = false; // reset tag, since we're done with unions
       // run over all jets in the current tile
-      for (TiledJet * jetI = tile->head; jetI != NULL; jetI = jetI->next) {
+      for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
 	  jetI->NN_dist = _R2;
 	  jetI->NN      = NULL;
 	  // now go over tiles that are neighbours of I (include own tile)
-	  for (Tile ** near_tile  = tile->begin_tiles; 
-	               near_tile != tile->end_tiles; near_tile++) {
+	  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
+	               near_tile != tile_ptr->end_tiles; near_tile++) {
 	    // and then over the contents of that tile
 	    for (TiledJet * jetJ  = (*near_tile)->head; 
                             jetJ != NULL; jetJ = jetJ->next) {
@@ -866,10 +866,10 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     // other particles.
     // Run over all tiles in our union 
     for (int itile = 0; itile < n_near_tiles; itile++) {
-      Tile * tile = &_tiles[tile_union[itile]];
-      tile->tagged = false; // reset tag, since we're done with unions
+      Tile * tile_ptr = &_tiles[tile_union[itile]];
+      tile_ptr->tagged = false; // reset tag, since we're done with unions
       // run over all jets in the current tile
-      for (TiledJet * jetI = tile->head; jetI != NULL; jetI = jetI->next) {
+      for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
 	  jetI->NN_dist = _R2;
@@ -879,8 +879,8 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	    jetI->label_minheap_update_needed();
 	    jets_for_minheap.push_back(jetI);}
 	  // now go over tiles that are neighbours of I (include own tile)
-	  for (Tile ** near_tile  = tile->begin_tiles; 
-	               near_tile != tile->end_tiles; near_tile++) {
+	  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
+	               near_tile != tile_ptr->end_tiles; near_tile++) {
 	    // and then over the contents of that tile
 	    for (TiledJet * jetJ  = (*near_tile)->head; 
                             jetJ != NULL; jetJ = jetJ->next) {

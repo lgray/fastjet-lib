@@ -1,5 +1,10 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/ClusterSequence_TiledN2.cc (_tiled_N2_cluster,
+	  _minheap_faster_tiled_N2_cluster, _faster_tiled_N2_cluster):
+	  replaced Tile * tile by Tile * tile_ptr to avoid a
+	  shadowing (gcc -Wshadow warning)
+
 	* src/Error.cc (ctor):
 	* src/ClusterSequence1GhostPassiveArea.cc (_initialise_and_run_1GPA):
 	* src/ClusterSequencePassiveArea.cc (_initialise_and_run_PA):
