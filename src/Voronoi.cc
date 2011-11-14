@@ -61,6 +61,14 @@
  *
  * Below are the list of changes implemented by the FastJet authors:
  *
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * removed 'plot' and 'triangulate' (were always 0)
+ *      * removed unused plot functions (openpl, circle, range, 
+ *        out_bisector, out_ep, out_vertex, out_site, out_triple)
+ *      * removed unused 'VPoint p' in 'intersect'
+ *
+ *
  * 2011-07-22  Gregory Soyez  <soyez@fastjet.fr>
  * 
  *      * replaced Point by VPoint (to avoid any potential conflict
@@ -92,6 +100,9 @@
  *      * generateVoronoi() takes a vector of Point instead of 2
  *        pointers
  * 
+ *      * added info about the parent sites to GraphEdge (and clip_line)
+ * 
+ *      * removed condition on minimal distance between sites
  */
 
 #include <stdio.h>
@@ -144,8 +155,6 @@ bool VoronoiDiagramGenerator::generateVoronoi(vector<VPoint> *_parent_sites,
   parent_sites = _parent_sites;
 
   nsites = n_parent_sites = parent_sites->size();
-  plot = 0;
-  triangulate = 0;	
   debug = 1;
   sorted = 0; 
   freeinit(&sfl, sizeof (Site));
@@ -221,7 +230,7 @@ bool VoronoiDiagramGenerator::generateVoronoi(vector<VPoint> *_parent_sites,
   borderMaxY = maxY;
 	
   siteidx = 0;
-  voronoi(triangulate);
+  voronoi();
 
   return true;
 }
@@ -460,7 +469,10 @@ Edge * VoronoiDiagramGenerator::bisect(Site *s1, Site *s2){
 // create a new site where the HalfEdges el1 and el2 intersect - note
 // that the VPoint in the argument list is not used, don't know why
 // it's there
-Site* VoronoiDiagramGenerator::intersect(Halfedge *el1, Halfedge *el2, VPoint *p){
+//
+// Gregory Soyez: removed the uinused point p
+Site* VoronoiDiagramGenerator::intersect(Halfedge *el1, Halfedge *el2
+					 /*, VPoint *p*/){
   Edge *e1,*e2, *e;
   Halfedge *el;
   double d, xint, yint;
@@ -632,7 +644,7 @@ void VoronoiDiagramGenerator::makevertex(Site *v)
 {
   v->sitenbr = nvertices;
   nvertices += 1;
-  out_vertex(v);
+  //GS unused plot: out_vertex(v);
 }
 
 
@@ -882,45 +894,51 @@ char * VoronoiDiagramGenerator::myalloc(unsigned n)
 }
 
 
-/* for those who don't have Cherry's plot */
-/* #include <plot.h> */
-void VoronoiDiagramGenerator::openpl(){}
-void VoronoiDiagramGenerator::circle(double x, double y, double radius){}
-void VoronoiDiagramGenerator::range(double minX, double minY, double maxX, double maxY){}
-
-
-
-void VoronoiDiagramGenerator::out_bisector(Edge *e)
-{
-	
-
-}
-
-
-void VoronoiDiagramGenerator::out_ep(Edge *e)
-{
-	
-	
-}
-
-void VoronoiDiagramGenerator::out_vertex(Site *v)
-{
-	
-}
-
-
-void VoronoiDiagramGenerator::out_site(Site *s)
-{
-  if(!triangulate & plot & !debug)
-    circle (s->coord.x, s->coord.y, cradius);
-	
-}
-
-
-void VoronoiDiagramGenerator::out_triple(Site *s1, Site *s2,Site * s3)
-{
-	
-}
+// unused plot functions
+//
+// /* for those who don't have Cherry's plot */
+// /* #include <plot.h> */
+// void VoronoiDiagramGenerator::openpl(){}
+// void VoronoiDiagramGenerator::circle(double x, double y, double radius){}
+// void VoronoiDiagramGenerator::range(double minX, double minY, double maxX, double maxY){}
+// 
+// 
+// 
+// void VoronoiDiagramGenerator::out_bisector(Edge *e)
+// {
+// 	
+// 
+// }
+// 
+// 
+// void VoronoiDiagramGenerator::out_ep(Edge *e)
+// {
+// 	
+// 	
+// }
+// 
+// void VoronoiDiagramGenerator::out_vertex(Site *v)
+// {
+// 	
+// }
+// 
+// 
+// void VoronoiDiagramGenerator::out_site(Site *s)
+// {
+//   // Gregory Soyez: 
+//   //   plot was always 0 so the expression below was always false
+//   //   and even if it was not, 'circle' does nothing!
+//   //
+//   // if(!triangulate & plot & !debug)
+//   //   circle (s->coord.x, s->coord.y, cradius);
+// 	
+// }
+// 
+// 
+// void VoronoiDiagramGenerator::out_triple(Site *s1, Site *s2,Site * s3)
+// {
+// 	
+// }
 
 
 
@@ -936,8 +954,8 @@ void VoronoiDiagramGenerator::plotinit()
   pymin = (double)(ymin - (d-dy)/2.0);
   pymax = (double)(ymax + (d-dy)/2.0);
   cradius = (double)((pxmax - pxmin)/350.0);
-  openpl();
-  range(pxmin, pymin, pxmax, pymax);
+  //GS unused: openpl();
+  //GS unused: range(pxmin, pymin, pxmax, pymax);
 }
 
 
@@ -1062,7 +1080,7 @@ void VoronoiDiagramGenerator::clip_line(Edge *e)
    Performance suffers if they are wrong; better to make nsites,
    deltax, and deltay too big than too small.  (?) */
 
-bool VoronoiDiagramGenerator::voronoi(int triangulate)
+bool VoronoiDiagramGenerator::voronoi()
 {
   Site *newsite, *bot, *top, *temp, *p;
   Site *v;
@@ -1073,7 +1091,7 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 	
   PQinitialize();
   bottomsite = nextone();
-  out_site(bottomsite);
+  //GS unused plot: out_site(bottomsite);
   bool retval = ELinitialize();
 
   if(!retval)
@@ -1091,7 +1109,7 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
       if (newsite != (Site *)NULL  && (PQempty() || newsite->coord.y < newintstar.y
 				       || (newsite->coord.y == newintstar.y && newsite->coord.x < newintstar.x)))
 	{/* new site is smallest - this is a site event*/
-	  out_site(newsite);						//output the site
+	  //GS unused plot: out_site(newsite);						//output the site
 	  lbnd = ELleftbnd(&(newsite->coord));				//get the first HalfEdge to the LEFT of the new site
 	  rbnd = ELright(lbnd);						//get the first HalfEdge to the RIGHT of the new site
 	  bot = rightreg(lbnd);						//if this halfedge has no edge, , bot = bottom site (whatever that is)
@@ -1123,7 +1141,7 @@ bool VoronoiDiagramGenerator::voronoi(int triangulate)
 	  bot = leftreg(lbnd);						//get the Site to the left of the left HE which it bisects
 	  top = rightreg(rbnd);						//get the Site to the right of the right HE which it bisects
 	    
-	  out_triple(bot, top, rightreg(lbnd));		//output the triple of sites, stating that a circle goes through them
+	  //GS unused plot: out_triple(bot, top, rightreg(lbnd));		//output the triple of sites, stating that a circle goes through them
 	    
 	  v = lbnd->vertex;						//get the vertex that caused this event
 	  makevertex(v);							//set the vertex number - couldn't do this earlier since we didn't know when it would be processed

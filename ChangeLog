@@ -2,6 +2,14 @@
 
 	* include/fastjet/internal/Voronoi.cc:
 	* src/Voronoi.cc:
+          - removed 'plot' and 'triangulate' (were always 0)
+          - removed unused plot functions (openpl, circle, range,
+            out_bisector, out_ep, out_vertex, out_site, out_triple)
+          - removed unused 'VPoint p' in 'intersect'
+	  - fixed missing changes in earlier history
+
+	* include/fastjet/internal/Voronoi.cc:
+	* src/Voronoi.cc:
 	  added a summary of changes compared to the original code by
 	  S. O'Sullivan
 

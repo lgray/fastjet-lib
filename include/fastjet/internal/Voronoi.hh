@@ -64,6 +64,14 @@
  *
  * Below are the list of changes implemented by the FastJet authors:
  *
+ * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * removed 'plot' and 'triangulate' (were always 0)
+ *      * removed unused plot functions (openpl, circle, range, 
+ *        out_bisector, out_ep, out_vertex, out_site, out_triple)
+ *      * removed unused 'VPoint p' in 'intersect'
+ * 
+ * 
  * 2011-07-22  Gregory Soyez  <soyez@fastjet.fr>
  * 
  *      * replaced Point by VPoint (to avoid any potential conflict
@@ -84,6 +92,10 @@
  * 
  *      * generateVoronoi() takes a vector of Point instead of 2
  *        pointers
+ * 
+ *      * added info about the parent sites to GraphEdge
+ * 
+ *      * removed condition on minimal distance between sites
  * 
  */
 
@@ -277,7 +289,9 @@ private:
   void makefree(Freenode *curr,Freelist *fl);
   void geominit();
   void plotinit();
-  bool voronoi(int triangulate);
+
+  // GS: removed the unused (always ==0) argument
+  bool voronoi(/*int triangulate*/);
   void ref(Site *v);
   void deref(Site *v);
   void endpoint(Edge *e,int lr,Site * s);
@@ -286,7 +300,6 @@ private:
   Halfedge *ELleftbnd(VPoint *p);
   Halfedge *ELright(Halfedge *he);
   void makevertex(Site *v);
-  void out_triple(Site *s1, Site *s2,Site * s3);
   
   void PQinsert(Halfedge *he,Site * v, double offset);
   void PQdelete(Halfedge *he);
@@ -295,7 +308,6 @@ private:
   Halfedge * ELgethash(int b);
   Halfedge *ELleft(Halfedge *he);
   Site *leftreg(Halfedge *he);
-  void out_site(Site *s);
   bool PQinitialize();
   int PQbucket(Halfedge *he);
   void clip_line(Edge *e);
@@ -305,25 +317,33 @@ private:
   Site *rightreg(Halfedge *he);
   Edge *bisect(Site *s1, Site *s2);
   double dist(Site *s,Site *t);
-  Site *intersect(Halfedge *el1, Halfedge *el2, VPoint *p=0);
 
-  void out_bisector(Edge *e);
-  void out_ep(Edge *e);
-  void out_vertex(Site *v);
+  // GS: 'p' is unused and always ==0 (see also comment by
+  //     S. O'Sullivan in the source file), so we remove it
+  Site *intersect(Halfedge *el1, Halfedge *el2 /*, VPoint *p=0*/);
+
   Site *nextone();
 
   void pushGraphEdge(double x1, double y1, double x2, double y2, 
 		     Site *s1, Site *s2);
 
-  void openpl();
-  void circle(double x, double y, double radius);
-  void range(double minX, double minY, double maxX, double maxY);
+  // Gregory Soyez: unused plotting methods
+  // void openpl();
+  // void circle(double x, double y, double radius);
+  // void range(double minX, double minY, double maxX, double maxY);
+  // 
+  // void out_bisector(Edge *e);
+  // void out_ep(Edge *e);
+  // void out_vertex(Site *v);
+  // void out_site(Site *s);
+  // 
+  // void out_triple(Site *s1, Site *s2,Site * s3);
 
   Freelist hfl;
   Halfedge *ELleftend, *ELrightend;
   int ELhashsize;
   
-  int triangulate, sorted, plot, debug;
+  int sorted, debug;
   double xmin, xmax, ymin, ymax, deltax, deltay;
   
   Site *sites;
