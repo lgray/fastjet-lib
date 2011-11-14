@@ -79,6 +79,9 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   vector<PseudoJet> subjets; 
   JetDefinition subjet_def;
   bool discard_area;
+  // NB: on return, subjet_def is set to the jet definition actually
+  //     used (so that we can make use of its recombination scheme 
+  //     when joining the jets to be kept).
   _set_filtered_elements(jet, subjets, subjet_def, discard_area);
 
   // now build the vector of kept and rejected subjets
