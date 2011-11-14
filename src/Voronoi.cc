@@ -54,6 +54,46 @@
  * PURPOSE.
  */
 
+/*
+ * This code, included in the FastJet distribution, was originally
+ * written by Stephan Fortune in C and adapted to C++ by Shane
+ * O'Sullivan under the terms repported above.
+ *
+ * Below are the list of changes implemented by the FastJet authors:
+ *
+ * 2011-07-22  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * replaced Point by VPoint (to avoid any potential conflict
+ *        with an already existing class Point in FastJet
+ * 
+ * 
+ * 2011-06-28  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * added support for situations with degenerate particles (we just
+ *        discard the particles degenerate wiht an already existing
+ *        one which is perfectly sufficient for our needs)
+ *      * in 'VoronoiDiagramGenerator::intersect', improved the numerical
+ *        precision in cases where the 2 parents are nearly degenerate
+ * 
+ * 
+ * 2011-06-14  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * fixed a potential overflow bug in VoronoiDiagramGenerator::PQbucket
+ * 
+ * 
+ * 2007-05-07  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * fied a few memory leaks
+ *
+ *      * put the code in the fastjet namespace
+ * 
+ *      * replaced float by double
+ * 
+ *      * generateVoronoi() takes a vector of Point instead of 2
+ *        pointers
+ * 
+ */
+
 #include <stdio.h>
 #include "fastjet/internal/Voronoi.hh"
 

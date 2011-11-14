@@ -1,5 +1,10 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/Voronoi.cc:
+	* src/Voronoi.cc:
+	  added a summary of changes compared to the original code by
+	  S. O'Sullivan
+
 	* example/14-groomers.cc:
 	* example/13-boosted_top.cc:
 	* example/12-boosted_higgs.cc:

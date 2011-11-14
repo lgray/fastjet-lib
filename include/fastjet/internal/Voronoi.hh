@@ -57,6 +57,36 @@
 * PURPOSE.
 */
 
+/*
+ * This code, included in the FastJet distribution, was originally
+ * written by Stephan Fortune in C and adapted to C++ by Shane
+ * O'Sullivan under the terms repported above.
+ *
+ * Below are the list of changes implemented by the FastJet authors:
+ *
+ * 2011-07-22  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * replaced Point by VPoint (to avoid any potential conflict
+ *        with an already existing class Point in FastJet
+ * 
+ * 
+ * 2008-04-01  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * declared ystar volatile in HalfEdge (apparently fixes a bug
+ *        related to VD computations with points on a grid)
+ * 
+ * 
+ * 2007-05-07  Gregory Soyez  <soyez@fastjet.fr>
+ * 
+ *      * put the code in the fastjet namespace
+ * 
+ *      * replaced float by double
+ * 
+ *      * generateVoronoi() takes a vector of Point instead of 2
+ *        pointers
+ * 
+ */
+
 #include "fastjet/LimitedWarning.hh"
 #include <vector>
 #include <math.h>
