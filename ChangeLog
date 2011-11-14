@@ -1,3 +1,11 @@
+2011-11-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* tools/Filter.cc: 
+	* tools/fastjet/tools/Filter.hh: 
+	  Reworked use of _subjet_def and _selector so that they are no
+	  longer mutable. Also arranged for description to be more
+	  accurate. 
+
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Filter.cc (_get_all_pieces, ...):

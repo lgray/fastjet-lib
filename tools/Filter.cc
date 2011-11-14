@@ -46,10 +46,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 string Filter::description() const {
   ostringstream ostr;
   ostr << "Filter with subjet_def = ";
-  if (_Rfiltfunc)
-    ostr << "Cambridge/Aachen algorithm with dynamic Rfilt";
-  else
+  if (_Rfiltfunc) {
+    ostr << "Cambridge/Aachen algorithm with dynamic Rfilt"
+         << " (recomb. scheme deduced from jet, or E-scheme if not unique)";
+  } else if (_Rfilt > 0) {
+    ostr << "Cambridge/Aachen algorithm with Rfilt = " 
+         << _Rfilt 
+         << " (recomb. scheme deduced from jet, or E-scheme if not unique)";
+  } else {
     ostr << _subjet_def.description();
+  }
   ostr<< ", selection " << _selector.description();
   if (_subtractor) {
     ostr << ", subtractor: " << _subtractor->description();
@@ -71,24 +77,27 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   // NB: subjets is empty to begin with (see the comment for
   //     _set_filtered_elements_cafilt)
   vector<PseudoJet> subjets; 
+  JetDefinition subjet_def;
   bool discard_area;
-  _set_filtered_elements(jet, subjets, discard_area);
+  _set_filtered_elements(jet, subjets, subjet_def, discard_area);
 
   // now build the vector of kept and rejected subjets
   vector<PseudoJet> kept, rejected;
-  // Note that the following line is the one requiring that _selector
-  // be declared as mutable
-  if (_selector.takes_reference()) _selector.set_reference(jet);
-  _selector.sift(subjets, kept, rejected);
+  // Note that in the following line we make a copy of the _selector
+  // to avoid issues with needing a mutable _selector
+  Selector selector_copy = _selector;
+  if (selector_copy.takes_reference()) selector_copy.set_reference(jet);
+  selector_copy.sift(subjets, kept, rejected);
 
   // gather the info under the form of a PseudoJet
-  return _finalise(jet, kept, rejected, discard_area);
+  return _finalise(jet, kept, rejected, subjet_def, discard_area);
 }
 
 
 // sets filtered_elements to be all the subjets on which filtering will work
 void Filter::_set_filtered_elements(const PseudoJet & jet,
                                     vector<PseudoJet> & filtered_elements,
+                                    JetDefinition & subjet_def,
                                     bool & discard_area) const {
   // sanity checks
   //-------------------------------------------------------------------
@@ -123,13 +132,15 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
       if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
         RecombinationScheme scheme = 
           static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
-        _subjet_def = JetDefinition(cambridge_algorithm, Rfilt, scheme);
+        subjet_def = JetDefinition(cambridge_algorithm, Rfilt, scheme);
       } else {
-        _subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
+        subjet_def = JetDefinition(cambridge_algorithm, Rfilt, common_recombiner);
       }
+    } else {
+      subjet_def = JetDefinition(cambridge_algorithm, Rfilt);
     }
-    else
-      _subjet_def = JetDefinition(cambridge_algorithm, Rfilt);
+  } else {
+    subjet_def = _subjet_def;
   }
 
   // get the jet definition to be use and whether we can apply our
@@ -149,7 +160,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   if (simple_cafilt){
     // first make sure that 'filtered_elements' is empty
     filtered_elements.clear();
-    _set_filtered_elements_cafilt(jet, filtered_elements, _subjet_def.R());
+    _set_filtered_elements_cafilt(jet, filtered_elements, subjet_def.R());
     // in the following case, areas can be erroneous and will be discarded
     discard_area = (!_uses_subtraction()) && (jet.has_area()) && (!_check_explicit_ghosts(all_pieces));
   } else {
@@ -159,7 +170,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     //  - the jet to have an area
     //  - subtraction requested or explicit ghosts
     bool do_areas = (jet.has_area()) && ((_uses_subtraction()) || (_check_explicit_ghosts(all_pieces))); 
-    _set_filtered_elements_generic(jet, filtered_elements, do_areas);
+    _set_filtered_elements_generic(jet, filtered_elements, subjet_def, do_areas);
   }
 
   // order the filtered elements in pt
@@ -218,6 +229,7 @@ void Filter::_set_filtered_elements_cafilt(const PseudoJet & jet,
 // subtraction)
 void Filter::_set_filtered_elements_generic(const PseudoJet & jet, 
                                             vector<PseudoJet> & filtered_elements,
+                                            const JetDefinition & subjet_def,
 					    bool do_areas) const{
   // create a new, internal, ClusterSequence from the jet constituents
   // get the subjets directly from there
@@ -242,13 +254,13 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
         regular_constituents.push_back(*it);
     }
 
-    // figure the ghost area from the 1st ghost (if none, any value
+    // figure out the ghost area from the 1st ghost (if none, any value
     // would probably do as the area will be 0 and subtraction will have
     // no effect!)
     double ghost_area = (ghosts.size()) ? ghosts[0].area() : 0.01;
     ClusterSequenceActiveAreaExplicitGhosts * csa
       = new ClusterSequenceActiveAreaExplicitGhosts(regular_constituents, 
-                                                    _subjet_def, 
+                                                    subjet_def, 
                                                     ghosts, ghost_area);
 
     // get the subjets: we use the subtracted or unsubtracted ones
@@ -266,7 +278,7 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
     // allow the cs to be deleted when it's no longer used
     csa->delete_self_when_unused();
   } else {
-    ClusterSequence * cs = new ClusterSequence(jet.constituents(), _subjet_def);
+    ClusterSequence * cs = new ClusterSequence(jet.constituents(), subjet_def);
     filtered_elements = cs->inclusive_jets();
     // allow the cs to be deleted when it's no longer used
     cs->delete_self_when_unused();
@@ -279,9 +291,10 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
 PseudoJet Filter::_finalise(const PseudoJet & /*jet*/, 
                             vector<PseudoJet> & kept, 
                             vector<PseudoJet> & rejected,
+                            const JetDefinition & subjet_def,
                             const bool discard_area) const {
   // figure out which recombiner to use
-  const JetDefinition::Recombiner &rec = *(_subjet_def.recombiner());
+  const JetDefinition::Recombiner &rec = *(subjet_def.recombiner());
 
   // create an appropriate structure and transfer the info to it
   PseudoJet filtered_jet = join<StructureType>(kept, rec);

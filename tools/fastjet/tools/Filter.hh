@@ -155,11 +155,12 @@ public:
   typedef FilterStructure StructureType;
 
 private:
-  /// sets filtered_elements to be all the subjets on which filtering will work
-  /// [NB: this routine is work in progress as part of a transition to a Filter
-  ///      that also works on jet collections]
+  /// Sets filtered_elements to be all the subjets on which filtering will work.
+  /// It also sets the subjet_def to be used in joining things (the bit of
+  /// subjet def that is of interest for later is the recombiner).
   void _set_filtered_elements(const PseudoJet & jet,
                               std::vector<PseudoJet> & filtered_elements,
+                              JetDefinition & subjet_def,
                               bool & discard_area) const;
   
   /// set the filtered elements in the simple case of C/A+C/A
@@ -170,6 +171,7 @@ private:
   /// set the filtered elements in the generic re-clustering case
   void _set_filtered_elements_generic(const PseudoJet & jet, 
                                       std::vector<PseudoJet> & filtered_elements,
+                                      const JetDefinition & subjet_def,
 				      bool do_areas) const;
 
   /// gather the information about what is kept and rejected under the
@@ -177,6 +179,7 @@ private:
   PseudoJet _finalise(const PseudoJet & jet, 
                       std::vector<PseudoJet> & kept, 
                       std::vector<PseudoJet> & rejected,
+                      const JetDefinition & subjet_def,
                       const bool discard_area) const;
 
   // a series of checks
@@ -199,12 +202,11 @@ private:
 
   bool _uses_subtraction() const {return (_subtractor || _rho != 0);}
 
-  mutable JetDefinition _subjet_def; 
-                               ///< the jet definition to use to extract the subjets
+  JetDefinition _subjet_def;   ///< the jet definition to use to extract the subjets
   FunctionOfPseudoJet<double> *_Rfiltfunc; 
                                ///< a dynamic filtering radius function of the jet being filtered
   double _Rfilt;               ///< a constant specifying the subjet radius (with C/A)
-  mutable Selector _selector;  ///< the subjet selection criterium
+  Selector _selector;  ///< the subjet selection criterium
   double _rho;                 ///< the background density (used for subtraction when possible)
   const Transformer * _subtractor; ///< for subtracting bkgd density from subjets
 };
