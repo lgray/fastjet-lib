@@ -47,9 +47,9 @@ using namespace std;
 // The jet passed to this function is expected to already have
 // the structure of a top, including a functional "W()" call;
 // the W must be made of two pieces.
-double TopTaggerBase::_cos_theta_W(const PseudoJet & result) const{
+double TopTaggerBase::_cos_theta_W(const PseudoJet & res) const{
   // the two jets of interest: top and lower-pt prong of W
-  const PseudoJet & W  = result.structure_of<TopTaggerBase>().W();
+  const PseudoJet & W  = res.structure_of<TopTaggerBase>().W();
   vector<PseudoJet> W_pieces = W.pieces();
   assert(W_pieces.size() == 2);
   //assert(W_pieces[0].perp2() >= W_pieces[1].perp2());
@@ -58,7 +58,7 @@ double TopTaggerBase::_cos_theta_W(const PseudoJet & result) const{
   PseudoJet W2 =  (W_pieces[0].perp2() < W_pieces[1].perp2())
                     ? W_pieces[0] 
                     : W_pieces[1];
-  PseudoJet top = result;
+  PseudoJet top = res;
   
   // transform these jets into jets in the rest frame of the W
   W2.unboost(W);

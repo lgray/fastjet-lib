@@ -131,7 +131,7 @@ string GridMedianBackgroundEstimator::description() const {
 //
 // Note that this has to be called BEFORE any attempt to do an
 // actual computation
-void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) {
+void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) {
   // The rescaling is taken into account when particles are set. So
   // you need to call set_particles again if you set the rescaling
   // class. We thus warn if there are already some available
@@ -139,7 +139,7 @@ void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJe
   if (_has_particles)
     _warning_rescaling.warn("GridMedianBackgroundEstimator::set_rescaling_class(): trying to set the rescaling class when there are already particles that have been set is dangerous: the rescaling will not affect the already existing particles resulting in mis-estimation of rho. You need to call set_particles() again before proceeding with any background estimation.");
   
-  BackgroundEstimatorBase::set_rescaling_class(rescaling_class);
+  BackgroundEstimatorBase::set_rescaling_class(rescaling_class_in);
 }
 
 

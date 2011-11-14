@@ -78,23 +78,23 @@ PseudoJet CASubJetTagger::result(const PseudoJet & jet) const{
   _recurse_through_jet(jet, aux, jet); // last arg remains original jet
 
   // create the result and its associated structure
-  PseudoJet result = aux.jet;
+  PseudoJet result_local = aux.jet;
 
   // the tagger is considered to have failed if aux has never been set
   // (in which case it will not have parents).
-  if (result == PseudoJet()) return result;
+  if (result_local == PseudoJet()) return result_local;
 
   // otherwise sort out the structure
-  CASubJetTaggerStructure * s = new CASubJetTaggerStructure(result);
+  CASubJetTaggerStructure * s = new CASubJetTaggerStructure(result_local);
 //  s->_original_jet = jet;
   s->_scale_choice = _scale_choice;
   s->_distance     = aux.aux_distance;
   s->_absolute_z   = _absolute_z_cut;
   s->_z            = aux.z;
 
-  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
+  result_local.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
 
-  return result;
+  return result_local;
 }
 
 

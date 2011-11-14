@@ -119,9 +119,9 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
     cs = new ClusterSequence(jet.constituents(), internal_jet_def);
   }
   
-  PseudoJet result = SelectorNHardest(1)(cs->inclusive_jets())[0];
-  PrunerStructure * s = new PrunerStructure(result);
-  result.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
+  PseudoJet result_local = SelectorNHardest(1)(cs->inclusive_jets())[0];
+  PrunerStructure * s = new PrunerStructure(result_local);
+  result_local.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
   
   // make sure things remain persistent -- i.e. tell the jet definition
   // and the cluster sequence that it is their responsibility to clean 
@@ -130,7 +130,7 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   // that also triggers deletion of the plugin)
   cs->delete_self_when_unused();
 
-  return result;  
+  return result_local;  
 }
 
 // check if the jet has explicit_ghosts (knowing that there is an

@@ -123,9 +123,9 @@ public:
   /// ctor with initialisation
   ///  \param pieces  the pieces of the created jet
   ///  \param rec     the recombiner from the underlying cluster sequence
-  MassDropTaggerStructure(const std::vector<PseudoJet> & pieces, 
+  MassDropTaggerStructure(const std::vector<PseudoJet> & pieces_in, 
                           const JetDefinition::Recombiner *recombiner = 0) :
-    CompositeJetStructure(pieces, recombiner), _mu(0.0), _y(0.0){}
+    CompositeJetStructure(pieces_in, recombiner), _mu(0.0), _y(0.0){}
 
   /// returns the mass-drop ratio, pieces[0].m()/jet.m(), for the splitting
   /// that triggered the mass-drop condition

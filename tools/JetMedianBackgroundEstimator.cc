@@ -287,9 +287,9 @@ void JetMedianBackgroundEstimator::reset(){
 // Set a pointer to a class that calculates the quantity whose
 // median will be calculated; if the pointer is null then pt/area
 // is used (as occurs also if this function is not called).
-void JetMedianBackgroundEstimator::set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class) {
+void JetMedianBackgroundEstimator::set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class_in) {
   _warnings_preliminary.warn("JetMedianBackgroundEstimator::set_jet_density_class: density classes are still preliminary in FastJet 3.0. Their interface may differ in future releases (without guaranteeing backward compatibility).");
-  _jet_density_class = jet_density_class;
+  _jet_density_class = jet_density_class_in;
   _uptodate = false;
 }
 

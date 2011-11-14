@@ -101,7 +101,7 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
   // fundamental pieces).
   // So we do compute these once and for all
   all_pieces.clear();
-  if ((!_get_all_pieces(jet, all_pieces)) || (all_pieces.size()==0))
+  if ((!_get_all_pieces(jet)) || (all_pieces.size()==0))
     throw Error("Attempt to filter a jet that has no associated ClusterSequence or is not a superposition of jets associated with a ClusterSequence");
   
   // if the filter uses subtraction, make sure we have a CS that supports area and has
@@ -301,7 +301,7 @@ PseudoJet Filter::_finalise(const PseudoJet & /*jet*/,
 // 
 // Note that this just checks that there is an associated CS to the
 // fundamental pieces, not that it is still valid
-bool Filter::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pieces) const{
+bool Filter::_get_all_pieces(const PseudoJet &jet) const{
   if (jet.has_associated_cluster_sequence()){
     all_pieces.push_back(jet);
     return true;
@@ -310,7 +310,7 @@ bool Filter::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pieces
   if (jet.has_pieces()){
     const vector<PseudoJet> pieces = jet.pieces();
     for (vector<PseudoJet>::const_iterator it=pieces.begin(); it!=pieces.end(); it++)
-      if (!_get_all_pieces(*it, all_pieces)) return false;
+      if (!_get_all_pieces(*it)) return false;
     return true;
   }
 

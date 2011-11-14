@@ -181,7 +181,7 @@ private:
   // a series of checks
   //--------------------------------------------------------------------
   /// get the pieces down to the fundamental pieces
-  bool _get_all_pieces(const PseudoJet &jet, std::vector<PseudoJet> &all_pieces) const;
+  bool _get_all_pieces(const PseudoJet &jet) const;
 
   /// get the common recombiner to all pieces (NULL if none)
   const JetDefinition::Recombiner* _get_common_recombiner() const;
@@ -223,9 +223,9 @@ public:
   /// constructor from an original ClusterSequenceInfo
   /// We just share the original ClusterSequenceWrapper and initialise
   /// the rest
-  FilterStructure(const std::vector<PseudoJet> & pieces, 
+  FilterStructure(const std::vector<PseudoJet> & pieces_in, 
                   const JetDefinition::Recombiner *rec = 0)
-    : CompositeJetStructure(pieces, rec){}
+    : CompositeJetStructure(pieces_in, rec){}
 
   /// virtual dtor to allow further overloading  
   virtual ~FilterStructure(){}

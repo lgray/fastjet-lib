@@ -124,9 +124,9 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   } else {
     non_W = join(subjets[2], *rec);
   }
-  PseudoJet result = join<JHTopTaggerStructure>(W, non_W, *rec);
-  JHTopTaggerStructure *s = (JHTopTaggerStructure*) result.structure_non_const_ptr();
-  s->_cos_theta_w = _cos_theta_W(result);
+  PseudoJet result_local = join<JHTopTaggerStructure>(W, non_W, *rec);
+  JHTopTaggerStructure *s = (JHTopTaggerStructure*) result_local.structure_non_const_ptr();
+  s->_cos_theta_w = _cos_theta_W(result_local);
 
   // if the polarisation angle does not pass the cut, consider that
   // the tagging has failed
@@ -135,12 +135,12 @@ PseudoJet JHTopTagger::result(const PseudoJet & jet) const{
   // the result structure but this has the advantage that the top
   // 4-vector is already available and does not have to de re-computed
   if (s->_cos_theta_w >= _cos_theta_W_max ||
-      ! _top_selector.pass(result) || ! _W_selector.pass(W)
+      ! _top_selector.pass(result_local) || ! _W_selector.pass(W)
       ) {
-    result *= 0.0;
+    result_local *= 0.0;
   }
 
-  return result;
+  return result_local;
 
   // // old version
   // PseudoJet result = join<JHTopTaggerStructure>(subjets, *rec);
@@ -170,7 +170,7 @@ vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & jet_to_split,
                                            const PseudoJet & reference_jet) const{
   PseudoJet this_jet = jet_to_split;
   PseudoJet p1, p2;
-  vector<PseudoJet> result;
+  vector<PseudoJet> result_local;
   while (this_jet.has_parents(p1, p2)) {
     if (p2.perp2() > p1.perp2()) std::swap(p1,p2); // order with hardness
     if (p1.perp() < _delta_p * reference_jet.perp()) break; // harder is too soft wrt original jet
@@ -180,11 +180,11 @@ vector<PseudoJet> JHTopTagger::_split_once(const PseudoJet & jet_to_split,
       continue; 
     }
     //result.push_back(this_jet);
-    result.push_back(p1);
-    result.push_back(p2);
+    result_local.push_back(p1);
+    result_local.push_back(p2);
     break;
   }
-  return result;
+  return result_local;
 }
 
 

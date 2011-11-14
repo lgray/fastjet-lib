@@ -1,10 +1,32 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Filter.cc:
+	  removed all_pieces as the 2nd argument of get_all_pieces: this
+	  is a member variable of the class so there is no need to pass it
+	  as an argument.
+
 	* src/ClusterSequence_TiledN2.cc (_tiled_N2_cluster,
 	  _minheap_faster_tiled_N2_cluster, _faster_tiled_N2_cluster):
 	  replaced Tile * tile by Tile * tile_ptr to avoid a
 	  shadowing (gcc -Wshadow warning)
 
+	* tools/TopTaggerBase.cc (_cos_theta_W):
+	* tools/JHTopTagger.cc (result, _split_once):
+	* tools/CASubJetTagger.cc (result):
+	* tools/RestFrameNSubjettinessTagger.cc (result):
+	* tools/fastjet/tools/JHTopTagger.hh (ctor):
+	* tools/fastjet/tools/TopTaggerBase.hh (description_of_selectors):
+	* tools/fastjet/tools/Boost.hh (result):
+	* tools/fastjet/tools/RestFrameNSubjettinessTagger.hh (ctor):
+	* tools/MassDropTagger.cc (result):
+	* tools/fastjet/tools/MassDropTagger.hh (ctor):
+	* tools/Pruner.cc (result):
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh (set_rescaling_class):
+	* tools/GridMedianBackgroundEstimator.cc (set_rescaling_class):
+	* tools/JetMedianBackgroundEstimator.cc (set_jet_density_class):
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh (set_rescaling_class):
+	* include/fastjet/ClusterSequenceArea.hh (initialize_and_run_cswa):
 	* src/Error.cc (ctor):
 	* src/ClusterSequence1GhostPassiveArea.cc (_initialise_and_run_1GPA):
 	* src/ClusterSequencePassiveArea.cc (_initialise_and_run_PA):

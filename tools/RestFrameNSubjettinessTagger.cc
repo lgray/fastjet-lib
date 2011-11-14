@@ -104,8 +104,8 @@ PseudoJet RestFrameNSubjettinessTagger::result(const PseudoJet & jet) const{
   PseudoJet subjet_lab1 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
   PseudoJet subjet_lab2 = cs_structure->jets()[cs_rest.history()[subjets[0].cluster_hist_index()].jetp_index];
     
-  PseudoJet result = join<StructureType>(subjet_lab1,subjet_lab2);
-  StructureType * s = (StructureType *) result.structure_non_const_ptr();
+  PseudoJet result_local = join<StructureType>(subjet_lab1,subjet_lab2);
+  StructureType * s = (StructureType *) result_local.structure_non_const_ptr();
 //  s->_original_jet = jet;
   s->_tau2 = tau2;
   s->_costhetas = max(ct0, ct1);
@@ -113,7 +113,7 @@ PseudoJet RestFrameNSubjettinessTagger::result(const PseudoJet & jet) const{
   // keep the rest-frame CS alive
   cs_structure->delete_self_when_unused();
 
-  return result;
+  return result_local;
 }
 
 

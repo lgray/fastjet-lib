@@ -135,8 +135,8 @@ protected:
 class RestFrameNSubjettinessTaggerStructure : public CompositeJetStructure{
 public:
   /// ctor with pieces initialisation
-  RestFrameNSubjettinessTaggerStructure(const std::vector<PseudoJet> & pieces) :
-    CompositeJetStructure(pieces), _tau2(0.0), _costhetas(1.0){}
+  RestFrameNSubjettinessTaggerStructure(const std::vector<PseudoJet> & pieces_in) :
+    CompositeJetStructure(pieces_in), _tau2(0.0), _costhetas(1.0){}
 
   /// returns the associated N-subjettiness
   inline double tau2() const{return _tau2;}

@@ -113,7 +113,7 @@ public:
   ///
   /// The BackgroundRescalingYPolynomial class can be used to get a
   /// rescaling that depends just on rapidity.
-  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) { _rescaling_class = rescaling_class; }
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) { _rescaling_class = rescaling_class_in; }
 
   /// return the pointer to the jet density class
   const FunctionOfPseudoJet<double> *  rescaling_class() const{

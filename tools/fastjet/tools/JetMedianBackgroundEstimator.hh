@@ -314,8 +314,8 @@ public:
   ///
   /// The BackgroundRescalingYPolynomial class can be used to get a
   /// rescaling that depends just on rapidity.
-  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) {
-    BackgroundEstimatorBase::set_rescaling_class(rescaling_class);
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) {
+    BackgroundEstimatorBase::set_rescaling_class(rescaling_class_in);
     _uptodate = false;
   }
 

@@ -67,10 +67,10 @@ public:
   
   /// returns a description of the top and W selectors
   virtual std::string description_of_selectors() const {
-    std::string result;
-    if (_top_selector_set) result = ", top selector: "+_top_selector.description();
-    if (_W_selector_set) result += ", W selector: "+_W_selector.description();
-    return result;
+    std::string descr;
+    if (_top_selector_set) descr = ", top selector: "+_top_selector.description();
+    if (_W_selector_set) descr += ", W selector: "+_W_selector.description();
+    return descr;
   }
 
 protected:

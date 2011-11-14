@@ -167,9 +167,9 @@ protected:
 class JHTopTaggerStructure : public CompositeJetStructure, public TopTaggerBaseStructure {
 public:
   /// ctor with pieces initialisation
-  JHTopTaggerStructure(std::vector<PseudoJet> pieces,
+  JHTopTaggerStructure(std::vector<PseudoJet> pieces_in,
                  const JetDefinition::Recombiner *recombiner = 0) :
-    CompositeJetStructure(pieces, recombiner), _cos_theta_w(0.0){}
+    CompositeJetStructure(pieces_in, recombiner), _cos_theta_w(0.0){}
 
   /// returns the W subjet
   inline const PseudoJet & W() const{ 
