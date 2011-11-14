@@ -62,7 +62,7 @@
 
 using namespace std;
 
-int main (int argc, char ** argv) {
+int main(){
 
 #ifdef FASTJET_ENABLE_PLUGIN_SISCONE
 

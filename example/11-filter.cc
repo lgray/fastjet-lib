@@ -87,7 +87,7 @@ private:
 };
 
 /// an example program showing how to use Filter in FastJet
-int main (int argc, char ** argv) {
+int main(){
   // read in input particles
   //----------------------------------------------------------
   vector<PseudoJet> input_particles;

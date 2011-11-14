@@ -61,7 +61,7 @@ using namespace std;
 void print_jets (const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
-int main (int argc, char ** argv) {
+int main () {
   
   vector<fastjet::PseudoJet> input_particles;
   
@@ -151,7 +151,7 @@ void print_jets (const vector<fastjet::PseudoJet> & unsorted_jets) {
     double area       = jets[j].area();
     double area_error = jets[j].area_error();
 
-    printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f\n",j,jets[j].rap(),
+    printf("%5lu %9.5f %8.5f %10.3f %8.3f +- %6.3f\n",j,jets[j].rap(),
 	   jets[j].phi(),jets[j].perp(), area, area_error);
   }
 

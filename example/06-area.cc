@@ -46,7 +46,7 @@
 using namespace std;
 
 /// an example program showing how to use fastjet
-int main (int argc, char ** argv) {
+int main(){
   
   // read in input particles
   //----------------------------------------------------------

@@ -62,7 +62,7 @@ ostream & operator<<(ostream &, const PseudoJet &);
 //----------------------------------------------------------------------
 // core of the program
 //----------------------------------------------------------------------
-int main (int argc, char ** argv) {
+int main(){
 
   vector<PseudoJet> particles;
 

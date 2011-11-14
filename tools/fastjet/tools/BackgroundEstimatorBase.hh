@@ -91,7 +91,7 @@ public:
 
   /// get sigma, the background fluctuations per unit area, locally at
   /// the position of a given jet. As for rho(jet), it is non-const.
-  virtual double sigma(const PseudoJet & jet) { 
+  virtual double sigma(const PseudoJet & /*jet*/) { 
     throw Error("sigma(jet) not supported for this Background Estimator");
   }
 

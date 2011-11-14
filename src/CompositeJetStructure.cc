@@ -92,7 +92,7 @@ bool CompositeJetStructure::has_constituents() const{
   return _pieces.size()!=0;
 }
 
-std::vector<PseudoJet> CompositeJetStructure::constituents(const PseudoJet &jet) const{
+std::vector<PseudoJet> CompositeJetStructure::constituents(const PseudoJet & /*jet*/) const{
   // recurse into the pieces that ahve constituents, just append the others
   // the following code automatically throws an Error if any of the
   // pieces has no constituents
@@ -109,7 +109,7 @@ std::vector<PseudoJet> CompositeJetStructure::constituents(const PseudoJet &jet)
   return all_constituents;
 }
 
-std::vector<PseudoJet> CompositeJetStructure::pieces(const PseudoJet &jet) const{
+std::vector<PseudoJet> CompositeJetStructure::pieces(const PseudoJet & /*jet*/) const{
   return _pieces;
 }
 
@@ -122,7 +122,7 @@ bool CompositeJetStructure::has_area() const{
 }
 
 // return the jet (scalar) area.
-double CompositeJetStructure::area(const PseudoJet &reference) const{
+double CompositeJetStructure::area(const PseudoJet & /*reference*/) const{
   if (! has_area())
     throw Error("One or more of this composite jet's pieces does not support area");
 
@@ -137,7 +137,7 @@ double CompositeJetStructure::area(const PseudoJet &reference) const{
 // of the area of this jet.
 // 
 // Be conservative: return the sum of the errors
-double CompositeJetStructure::area_error(const PseudoJet &reference) const{
+double CompositeJetStructure::area_error(const PseudoJet & /*reference*/) const{
   if (! has_area())
     throw Error("One or more of this composite jet's pieces does not support area");
 
@@ -149,7 +149,7 @@ double CompositeJetStructure::area_error(const PseudoJet &reference) const{
 }
 
 // return the jet 4-vector area.
-PseudoJet CompositeJetStructure::area_4vector(const PseudoJet &reference) const{
+PseudoJet CompositeJetStructure::area_4vector(const PseudoJet & /*reference*/) const{
   if (! has_area())
     throw Error("One or more of this composite jet's pieces does not support area");
 
@@ -159,7 +159,7 @@ PseudoJet CompositeJetStructure::area_4vector(const PseudoJet &reference) const{
 // true if this jet is made exclusively of ghosts.
 //
 // In this case, it will be true if all pieces are pure ghost
-bool CompositeJetStructure::is_pure_ghost(const PseudoJet &reference) const{
+bool CompositeJetStructure::is_pure_ghost(const PseudoJet & /*reference*/) const{
   for (unsigned i = 0; i < _pieces.size(); i++)
     if (! _pieces[i].is_pure_ghost()) return false;
 

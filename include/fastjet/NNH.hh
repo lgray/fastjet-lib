@@ -55,8 +55,8 @@ private:
 /// Specialisation of NNHInfo for cases where there is no extra info
 template<> class NNHInfo<_NoInfo>  {
 public:
-  NNHInfo()               {}
-  NNHInfo(_NoInfo * info) {}
+  NNHInfo()           {}
+  NNHInfo(_NoInfo * ) {}
   template<class NNBJ> void init_jet(NNBJ * briefjet, const fastjet::PseudoJet & jet, int index) { briefjet->init(jet, index);}
 };
 

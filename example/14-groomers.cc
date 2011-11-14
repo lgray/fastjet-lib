@@ -56,7 +56,7 @@ using namespace fastjet;
 using namespace std;
 
 /// an example program showing how to use Filter and Pruner in FastJet
-int main (int argc, char ** argv) {
+int main(){
   // read in input particles
   //----------------------------------------------------------
   vector<PseudoJet> input_particles;

@@ -71,7 +71,7 @@ using namespace std;
 void print_jets (const vector<fastjet::PseudoJet> &);
 
 /// an example program showing how to use fastjet
-int main (int argc, char ** argv) {
+int main () {
   
   vector<fastjet::PseudoJet> input_particles;
   

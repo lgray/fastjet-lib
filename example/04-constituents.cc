@@ -50,7 +50,7 @@
 using namespace std;
 
 /// an example program showing how to use fastjet
-int main (int argc, char ** argv) {
+int main(){
   
   // read in input particles
   //----------------------------------------------------------
@@ -107,7 +107,7 @@ int main (int argc, char ** argv) {
     // get the constituents of the jet
     vector<fastjet::PseudoJet> constituents = inclusive_jets[i].constituents();
 
-    printf("%5u %15.8f %15.8f %15.8f %8u\n",
+    printf("%5u %15.8f %15.8f %15.8f %8lu\n",
 	   i, inclusive_jets[i].rap(), inclusive_jets[i].phi(),
 	   inclusive_jets[i].perp(), constituents.size());
 

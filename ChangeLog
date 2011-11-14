@@ -1,4 +1,39 @@
+2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/14-groomers.cc:
+	* example/13-boosted_top.cc:
+	* example/12-boosted_higgs.cc:
+	* example/11-filter.cc:
+	* example/09-user_info.cc:
+	* example/08-selector.cc:
+	* example/07-subtraction.cc:
+	* example/06-area.cc:
+	* example/05-eplus_eminus.cc:
+	* example/04-constituents.cc:
+	* example/03-plugin.cc:
+	* example/02-jetdef.cc:
+	* example/01-basic.cc:
+	* example/fastjet_example.cc:
+	* example/fastjet_areas.cc:
+	* example/fastjet_timing_plugins.cc:
+	  . removed some unused method parameters
+	  . fixed format warnings for fprintf
+
+	* tools/Filter.cc:
+	* include/fastjet/ClusterSequenceVoronoiArea.hh:
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	  commented out unused method parameters
+	  removed extraneous ';'
+
+	* include/fastjet/NNH.hh:
+	  removed some unused method parameters
+
 2011-11-13  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/CompositeJetStructure.cc:
+	* src/JetDefinition.cc:
+	* include/fastjet/CompositeJetStructure.hh:
+	  commented out unused method parameters
 
 	* src/PseudoJetStructureBase.cc:
 	  commented out the name of unused parameters in a few methods to

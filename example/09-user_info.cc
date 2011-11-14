@@ -191,7 +191,7 @@ Selector SelectorVertexNumber(const int & vertex_number){
 
 //------------------------------------------------------------------------
 // The example code associating user-info to the particles in the event
-int main (int argc, char ** argv) {
+int main(){
   // read in input particles
   //----------------------------------------------------------
   vector<PseudoJet> input_particles;

@@ -63,19 +63,19 @@ public:
 
   /// return the area associated with the given jet
   virtual inline double area(const PseudoJet & jet) const {
-    return _voronoi_area[jet.cluster_hist_index()];};
+    return _voronoi_area[jet.cluster_hist_index()];}
 
   /// return a 4-vector area associated with the given jet -- stricly
   /// this is not the exact 4-vector area, but rather an approximation
   /// made of sums of centres of all Voronoi cells in jet, each
   /// contributing with a normalisation equal to the area of the cell
   virtual inline PseudoJet area_4vector(const PseudoJet & jet) const {
-    return _voronoi_area_4vector[jet.cluster_hist_index()];};
+    return _voronoi_area_4vector[jet.cluster_hist_index()];}
 
   /// return the error of the area associated with the given jet
   /// (0 by definition for a voronoi area)
-  virtual inline double area_error(const PseudoJet & jet) const {
-    return 0.0;};
+  virtual inline double area_error(const PseudoJet & /*jet*/) const {
+    return 0.0;}
 
   /// passive area calculator -- to be defined in the .cc file (it will do
   /// the true hard work)

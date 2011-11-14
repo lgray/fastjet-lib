@@ -271,7 +271,7 @@ void Filter::_set_filtered_elements_generic(const PseudoJet & jet,
 
 // gather the information about what is kept and rejected under the
 // form of a PseudoJet with a special ClusterSequenceInfo
-PseudoJet Filter::_finalise(const PseudoJet & jet, 
+PseudoJet Filter::_finalise(const PseudoJet & /*jet*/, 
                             vector<PseudoJet> & kept, 
                             vector<PseudoJet> & rejected,
                             const bool discard_area) const {

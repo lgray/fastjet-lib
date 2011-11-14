@@ -81,7 +81,7 @@ public:
   // information related to the pieces of the jet
   //-------------------------------------------------------------------
   /// true if it has pieces (always the case)
-  virtual bool has_pieces(const PseudoJet &jet) const {return true;};
+  virtual bool has_pieces(const PseudoJet & /*jet*/) const {return true;}
 
   /// returns the pieces
   virtual std::vector<PseudoJet> pieces(const PseudoJet &jet) const;

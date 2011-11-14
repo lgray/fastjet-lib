@@ -47,7 +47,7 @@
 using namespace std;
 using namespace fastjet;
 
-int main (int argc, char ** argv) {
+int main(){
   
   // read in input particles
   //----------------------------------------------------------
@@ -102,12 +102,12 @@ int main (int argc, char ** argv) {
 
     cout << endl;
     // print the jet and its subjets
-    printf("%5u      %15.8f %15.8f %15.8f %8u\n", i, 
+    printf("%5u      %15.8f %15.8f %15.8f %8lu\n", i, 
 	   inclusive_jets[i].rap(), inclusive_jets[i].phi(),
 	   inclusive_jets[i].perp(), inclusive_jets[i].constituents().size());
 
     for (unsigned int j=0; j<subjets.size(); j++)
-      printf("   sub%4u %15.8f %15.8f %15.8f %8u\n", j, 
+      printf("   sub%4u %15.8f %15.8f %15.8f %8lu\n", j, 
 	     subjets[j].rap(), subjets[j].phi(),
 	     subjets[j].perp(), subjets[j].constituents().size());
   }
