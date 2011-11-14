@@ -36,12 +36,12 @@ using namespace std;
 //----------------------------------------------------------------------
 /// global routine for initialising and running a general passive area
 void ClusterSequence1GhostPassiveArea::_initialise_and_run_1GPA (
-		const JetDefinition & jet_def,
+		const JetDefinition & jet_def_in,
 		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations) {
 
   bool continue_running;
-  _initialise_AA(jet_def,  area_spec, writeout_combinations, continue_running);
+  _initialise_AA(jet_def_in, area_spec, writeout_combinations, continue_running);
   if (continue_running) {
     _run_1GPA(area_spec);
     _postprocess_AA(area_spec);

@@ -71,8 +71,8 @@ class DnnError {
 public:
   // constructors
   DnnError() {;};
-  DnnError(const std::string & message) {
-    _message = message; std::cerr << message << std::endl;};
+  DnnError(const std::string & message_in) {
+    _message = message_in; std::cerr << message_in << std::endl;};
 
   std::string message() const {return _message;};
 

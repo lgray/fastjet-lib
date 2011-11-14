@@ -198,11 +198,11 @@ bool VoronoiDiagramGenerator::generateVoronoi(vector<VPoint> *_parent_sites,
   // "clustered" later on, so we just keep the 1st one and discard the
   // others
   unsigned int offset=0;
-  for (int i=1;i<nsites;i++){
-    if (sites[i].coord.y==sites[i-1].coord.y && sites[i].coord.x==sites[i-1].coord.x){
+  for (int is=1;is<nsites;is++){
+    if (sites[is].coord.y==sites[is-1].coord.y && sites[is].coord.x==sites[is-1].coord.x){
       offset++;
     } else if (offset>0){
-      sites[i-offset] = sites[i];
+      sites[is-offset] = sites[is];
     }
   }
 

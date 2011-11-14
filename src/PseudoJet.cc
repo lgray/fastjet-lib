@@ -46,12 +46,12 @@ using namespace std;
 
 //----------------------------------------------------------------------
 // another constructor...
-PseudoJet::PseudoJet(const double px, const double py, const double pz, const double E) {
+PseudoJet::PseudoJet(const double px_in, const double py_in, const double pz_in, const double E_in) {
   
-  _E  = E ;
-  _px = px;
-  _py = py;
-  _pz = pz;
+  _E  = E_in ;
+  _px = px_in;
+  _py = py_in;
+  _pz = pz_in;
 
   this->_finish_init();
 
@@ -260,12 +260,12 @@ PseudoJet & PseudoJet::boost(const PseudoJet & prest) {
   if (prest.px() == 0.0 && prest.py() == 0.0 && prest.pz() == 0.0) 
     return *this;
 
-  double m = prest.m();
-  assert(m != 0);
+  double m_local = prest.m();
+  assert(m_local != 0);
 
   double pf4  = (  px()*prest.px() + py()*prest.py()
-                 + pz()*prest.pz() + E()*prest.E() )/m;
-  double fn   = (pf4 + E()) / (prest.E() + m);
+                 + pz()*prest.pz() + E()*prest.E() )/m_local;
+  double fn   = (pf4 + E()) / (prest.E() + m_local);
   _px +=  fn*prest.px();
   _py +=  fn*prest.py();
   _pz +=  fn*prest.pz();
@@ -287,12 +287,12 @@ PseudoJet & PseudoJet::unboost(const PseudoJet & prest) {
   if (prest.px() == 0.0 && prest.py() == 0.0 && prest.pz() == 0.0) 
     return *this;
 
-  double m = prest.m();
-  assert(m != 0);
+  double m_local = prest.m();
+  assert(m_local != 0);
 
   double pf4  = ( -px()*prest.px() - py()*prest.py()
-                 - pz()*prest.pz() + E()*prest.E() )/m;
-  double fn   = (pf4 + E()) / (prest.E() + m);
+                 - pz()*prest.pz() + E()*prest.E() )/m_local;
+  double fn   = (pf4 + E()) / (prest.E() + m_local);
   _px -=  fn*prest.px();
   _py -=  fn*prest.py();
   _pz -=  fn*prest.pz();
@@ -313,23 +313,23 @@ bool have_same_momentum(const PseudoJet & jeta, const PseudoJet & jetb) {
 }
 
 //----------------------------------------------------------------------
-void PseudoJet::set_cached_rap_phi(double rap, double phi) {
-  _rap = rap; _phi = phi;
+void PseudoJet::set_cached_rap_phi(double rap_in, double phi_in) {
+  _rap = rap_in; _phi = phi_in;
   if (_phi >= twopi) _phi -= twopi;
   if (_phi < 0)      _phi += twopi;
 }
 
 //----------------------------------------------------------------------
-void PseudoJet::reset_momentum_PtYPhiM(double pt, double y, double phi, double m) {
-  assert(phi < 2*twopi && phi > -twopi);
-  double ptm = (m == 0) ? pt : sqrt(pt*pt+m*m);
-  double exprap = exp(y);
+void PseudoJet::reset_momentum_PtYPhiM(double pt_in, double y_in, double phi_in, double m_in) {
+  assert(phi_in < 2*twopi && phi_in > -twopi);
+  double ptm = (m_in == 0) ? pt_in : sqrt(pt_in*pt_in+m_in*m_in);
+  double exprap = exp(y_in);
   double pminus = ptm/exprap;
   double pplus  = ptm*exprap;
-  double px = pt*cos(phi);
-  double py = pt*sin(phi);
-  reset_momentum(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
-  set_cached_rap_phi(y,phi);
+  double px_local = pt_in*cos(phi_in);
+  double py_local = pt_in*sin(phi_in);
+  reset_momentum(px_local,py_local,0.5*(pplus-pminus),0.5*(pplus+pminus));
+  set_cached_rap_phi(y_in,phi_in);
 }
 
 //----------------------------------------------------------------------
@@ -437,8 +437,8 @@ const ClusterSequence * PseudoJet::validated_cs() const {
 
 //----------------------------------------------------------------------
 // set the associated structure
-void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure){
-  _structure = structure;
+void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure_in){
+  _structure = structure_in;
 }
 
 //----------------------------------------------------------------------

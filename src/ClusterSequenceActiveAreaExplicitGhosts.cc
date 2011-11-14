@@ -99,13 +99,13 @@ double ClustSeqActAreaEG::empty_area(const Selector & selector) const {
   }
 
   vector<PseudoJet> unclust = unclustered_particles();
-  double area = 0.0;
+  double area_local = 0.0;
   for (unsigned iu = 0; iu < unclust.size();  iu++) {
     if (is_pure_ghost(unclust[iu]) && selector.pass(unclust[iu])) {
-      area += _ghost_area;
+      area_local += _ghost_area;
     }
   }
-  return area;
+  return area_local;
 }
 
 //======================================================================

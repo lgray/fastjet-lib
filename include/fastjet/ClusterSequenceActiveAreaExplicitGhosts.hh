@@ -59,30 +59,30 @@ public:
   /// to be measured
   template<class L> ClusterSequenceActiveAreaExplicitGhosts
          (const std::vector<L> & pseudojets, 
-          const JetDefinition & jet_def,
+          const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec & ghost_spec,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
            std::vector<L> * ghosts = NULL;
-	   _initialise(pseudojets,jet_def,&ghost_spec,ghosts,0.0,
+	   _initialise(pseudojets,jet_def_in,&ghost_spec,ghosts,0.0,
                        writeout_combinations); }
 
   template<class L> ClusterSequenceActiveAreaExplicitGhosts
          (const std::vector<L> & pseudojets, 
-          const JetDefinition & jet_def,
+          const JetDefinition & jet_def_in,
           const std::vector<L> & ghosts,
           double ghost_area,
 	  const bool & writeout_combinations = false) 
 	   : ClusterSequenceAreaBase() {
            const GhostedAreaSpec * ghost_spec = NULL;
-	   _initialise(pseudojets,jet_def,ghost_spec,&ghosts,ghost_area,
+	   _initialise(pseudojets,jet_def_in,ghost_spec,&ghosts,ghost_area,
                        writeout_combinations); }
 
 
   /// does the actual work of initialisation
   template<class L> void _initialise
          (const std::vector<L> & pseudojets, 
-          const JetDefinition & jet_def,
+          const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec * ghost_spec,
 	  const std::vector<L> * ghosts,
 	  double                 ghost_area,
@@ -175,7 +175,7 @@ private:
 // here in order for the template aspect of it to work...
 template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
          (const std::vector<L> & pseudojets, 
-          const JetDefinition & jet_def,
+          const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec * ghost_spec,
 	  const std::vector<L> * ghosts,
 	  double                 ghost_area,
@@ -219,7 +219,7 @@ template<class L> void ClusterSequenceActiveAreaExplicitGhosts::_initialise
   _jets.reserve(_jets.size()*2); //GPS tmp removed
 
   // run the clustering
-  _initialise_and_run(jet_def,writeout_combinations);
+  _initialise_and_run(jet_def_in,writeout_combinations);
 
   // set up all other information
   _post_process();

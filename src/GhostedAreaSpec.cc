@@ -41,17 +41,17 @@ LimitedWarning GhostedAreaSpec::_warn_fj2_placement_deprecated;
 /// explicit constructor
 GhostedAreaSpec::GhostedAreaSpec(
                            const Selector & selector,
-                           int    repeat        ,
-                           double ghost_area    ,   
-                           double grid_scatter  , 
-                           double kt_scatter    ,   
-                           double mean_ghost_kt 
+                           int    repeat_in        ,
+                           double ghost_area_in    ,   
+                           double grid_scatter_in  , 
+                           double kt_scatter_in    ,   
+                           double mean_ghost_kt_in 
                           ): 
-    _repeat(repeat), 
-    _ghost_area(ghost_area), 
-    _grid_scatter(grid_scatter),  
-    _kt_scatter(kt_scatter), 
-    _mean_ghost_kt(mean_ghost_kt),
+    _repeat(repeat_in), 
+    _ghost_area(ghost_area_in), 
+    _grid_scatter(grid_scatter_in),  
+    _kt_scatter(kt_scatter_in), 
+    _mean_ghost_kt(mean_ghost_kt_in),
     _fj2_placement(false),
     _selector(selector),
     _actual_ghost_area(-1.0)
@@ -62,10 +62,10 @@ GhostedAreaSpec::GhostedAreaSpec(
     if (!_selector.has_finite_area()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must have a finite area");
     if (!_selector.applies_jet_by_jet()) throw Error("To construct a GhostedAreaSpec with a Selector, the selector must apply jet-by-jet");
     // get the internal rapidity extent from the selector
-    double ghost_maxrap, ghost_minrap;
-    _selector.get_rapidity_extent(ghost_minrap, ghost_maxrap);
-    _ghost_maxrap     = 0.5*(ghost_maxrap - ghost_minrap); 
-    _ghost_rap_offset = 0.5*(ghost_maxrap + ghost_minrap);
+    double ghost_maxrap_local, ghost_minrap_local;
+    _selector.get_rapidity_extent(ghost_minrap_local, ghost_maxrap_local);
+    _ghost_maxrap     = 0.5*(ghost_maxrap_local - ghost_minrap_local); 
+    _ghost_rap_offset = 0.5*(ghost_maxrap_local + ghost_minrap_local);
     
     _initialize();
   

@@ -72,48 +72,48 @@ public:
                     _fj2_placement(false) {_initialize();}
   
   /// explicit constructor
-  explicit GhostedAreaSpec(double ghost_maxrap, 
-                          int    repeat        = gas::def_repeat,
-                          double ghost_area    = gas::def_ghost_area,   
-                          double grid_scatter  = gas::def_grid_scatter, 
-                          double kt_scatter    = gas::def_kt_scatter,   
-                          double mean_ghost_kt = gas::def_mean_ghost_kt
+  explicit GhostedAreaSpec(double ghost_maxrap_in, 
+                          int    repeat_in        = gas::def_repeat,
+                          double ghost_area_in    = gas::def_ghost_area,   
+                          double grid_scatter_in  = gas::def_grid_scatter, 
+                          double kt_scatter_in    = gas::def_kt_scatter,   
+                          double mean_ghost_kt_in = gas::def_mean_ghost_kt
                           ): 
-    _ghost_maxrap(ghost_maxrap), 
+    _ghost_maxrap(ghost_maxrap_in), 
     _ghost_rap_offset(0.0),
-    _repeat(repeat), 
-    _ghost_area(ghost_area), 
-    _grid_scatter(grid_scatter),  
-    _kt_scatter(kt_scatter), 
-    _mean_ghost_kt(mean_ghost_kt),
+    _repeat(repeat_in), 
+    _ghost_area(ghost_area_in), 
+    _grid_scatter(grid_scatter_in),  
+    _kt_scatter(kt_scatter_in), 
+    _mean_ghost_kt(mean_ghost_kt_in),
     _fj2_placement(false) {_initialize();}
 
   /// explicit constructor
-  explicit GhostedAreaSpec(double ghost_minrap, 
-			   double ghost_maxrap, 
-                           int    repeat        = gas::def_repeat,
-                           double ghost_area    = gas::def_ghost_area,   
-                           double grid_scatter  = gas::def_grid_scatter, 
-                           double kt_scatter    = gas::def_kt_scatter,   
-                           double mean_ghost_kt = gas::def_mean_ghost_kt
+  explicit GhostedAreaSpec(double ghost_minrap_in, 
+			   double ghost_maxrap_in, 
+                           int    repeat_in        = gas::def_repeat,
+                           double ghost_area_in    = gas::def_ghost_area,   
+                           double grid_scatter_in  = gas::def_grid_scatter, 
+                           double kt_scatter_in    = gas::def_kt_scatter,   
+                           double mean_ghost_kt_in = gas::def_mean_ghost_kt
                           ): 
-    _ghost_maxrap    (0.5*(ghost_maxrap - ghost_minrap)), 
-    _ghost_rap_offset(0.5*(ghost_maxrap + ghost_minrap)),
-    _repeat(repeat), 
-    _ghost_area(ghost_area), 
-    _grid_scatter(grid_scatter),  
-    _kt_scatter(kt_scatter), 
-    _mean_ghost_kt(mean_ghost_kt),
+    _ghost_maxrap    (0.5*(ghost_maxrap_in - ghost_minrap_in)), 
+    _ghost_rap_offset(0.5*(ghost_maxrap_in + ghost_minrap_in)),
+    _repeat(repeat_in), 
+    _ghost_area(ghost_area_in), 
+    _grid_scatter(grid_scatter_in),  
+    _kt_scatter(kt_scatter_in), 
+    _mean_ghost_kt(mean_ghost_kt_in),
     _fj2_placement(false) {_initialize();}
 
 
   /// constructor based on a Selector
   explicit GhostedAreaSpec(const Selector & selector,
-                           int    repeat        = gas::def_repeat,
-                           double ghost_area    = gas::def_ghost_area,   
-                           double grid_scatter  = gas::def_grid_scatter, 
-                           double kt_scatter    = gas::def_kt_scatter,   
-                           double mean_ghost_kt = gas::def_mean_ghost_kt
+                           int    repeat_in        = gas::def_repeat,
+                           double ghost_area_in    = gas::def_ghost_area,   
+                           double grid_scatter_in  = gas::def_grid_scatter, 
+                           double kt_scatter_in    = gas::def_kt_scatter,   
+                           double mean_ghost_kt_in = gas::def_mean_ghost_kt
 			   );
 
 

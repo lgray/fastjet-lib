@@ -52,8 +52,8 @@ public:
   VoronoiAreaSpec() : _effective_Rfact(1.0) {};
   
   /// constructor that allows you to set effective_Rfact.
-  VoronoiAreaSpec(double effective_Rfact) : 
-    _effective_Rfact(effective_Rfact) {};
+  VoronoiAreaSpec(double effective_Rfact_in) : 
+    _effective_Rfact(effective_Rfact_in) {};
 
   /// return the value of effective_Rfact
   double effective_Rfact() const {return _effective_Rfact;}

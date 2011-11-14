@@ -891,14 +891,14 @@ template<class L> void ClusterSequence::_transfer_input_jets(
 /// four-momenta, with the jet definition specified by jet_def
 template<class L> ClusterSequence::ClusterSequence (
 			          const std::vector<L> & pseudojets,
-				  const JetDefinition & jet_def,
+				  const JetDefinition & jet_def_in,
 				  const bool & writeout_combinations) {
 
   // transfer the initial jets (type L) into our own array
   _transfer_input_jets(pseudojets);
 
   // run the clustering
-  _initialise_and_run(jet_def,writeout_combinations);
+  _initialise_and_run(jet_def_in,writeout_combinations);
 }
 
 

@@ -56,7 +56,7 @@ public:
   /// constructor based on JetDefinition and PassiveAreaSpec
   template<class L> ClusterSequencePassiveArea
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) ;
 
@@ -68,7 +68,7 @@ private:
 
   /// does the initialisation and running specific to the passive
   /// areas class
-  void _initialise_and_run_PA (const JetDefinition & jet_def,
+  void _initialise_and_run_PA (const JetDefinition & jet_def_in,
                                const GhostedAreaSpec & area_spec,
                                const bool & writeout_combinations = false);
 
@@ -79,7 +79,7 @@ private:
 
 template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea 
 (const std::vector<L> & pseudojets, 
- const JetDefinition & jet_def,
+ const JetDefinition & jet_def_in,
  const GhostedAreaSpec & area_spec,
  const bool & writeout_combinations) {
 
@@ -87,7 +87,7 @@ template<class L> ClusterSequencePassiveArea::ClusterSequencePassiveArea
   _transfer_input_jets(pseudojets);
 
   // run the clustering for passive areas
-  _initialise_and_run_PA(jet_def, area_spec, writeout_combinations);
+  _initialise_and_run_PA(jet_def_in, area_spec, writeout_combinations);
 
 }
 

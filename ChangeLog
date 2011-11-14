@@ -1,5 +1,43 @@
 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/Error.cc (ctor):
+	* src/ClusterSequence1GhostPassiveArea.cc (_initialise_and_run_1GPA):
+	* src/ClusterSequencePassiveArea.cc (_initialise_and_run_PA):
+	* src/ClusterSequenceVoronoiArea.cc (_initializeVA):
+	* include/fastjet/ClusterSequenceVoronoiArea.hh (ctor):
+	* src/Voronoi.cc (generateVoronoi):
+	* src/ClusterSequenceActiveArea.cc (_initialise_and_run_AA,
+	  _initialise_AA, _transfer_areas):
+	* src/GhostedAreaSpec.cc (ctor):
+	* src/PseudoJet.cc (ctor, boost, unboostm set_cached_rap_phi,
+          set_structure_shared_ptr, reset_momentum_PtYPhiM):
+	* src/JetDefinition.cc (ctor):
+	* include/fastjet/ClusterSequenceArea.hh (ctors):
+	* include/fastjet/AreaDefinition.hh (VoronoiAreaSpec):
+	* include/fastjet/ClusterSequence1GhostPassiveArea.hh (ctor):
+	* include/fastjet/ClusterSequencePassiveArea.hh (ctor):
+	* include/fastjet/ClusterSequenceActiveArea.hh (ctor):
+	* src/ClusterSequenceActiveAreaExplicitGhosts.cc (empty_area):
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh (ctors,
+	  _initialise):
+	* include/fastjet/ClusterSequenceAreaBase.hh (ctor):
+	* src/ClusterSequenceAreaBase.cc (subtracted_jets):
+	* src/Selector.cc (count, operator(), sift):
+	* include/fastjet/GhostedAreaSpec.hh (ctors):
+	* src/ClusterSequence.cc (_initialise_and_run, _decant_options,
+	  inclusive_jets, exclusive_jets_up_to, print_jets_for_root,
+	  particle_jet_indices):
+	* include/fastjet/ClusterSequence.hh (ctor):
+	* include/fastjet/Selector.hh (ctor):
+	* include/fastjet/JetDefinition.hh (ctors):
+	* include/fastjet/internal/DynamicNearestNeighbours.hh (ctor):
+	* include/fastjet/PseudoJet.hh (reset_PtYPhiM, reset, reset_momentum):
+	  added a '_in' suffix to some variables passed as argument to
+	  avoid a shadowing gcc warning, and a '_local' suffix for similar
+	  local variables.
+	  Note that these warnings were anyway harmless as they were
+	  shadowing unused methods.
+
 	* include/fastjet/internal/Voronoi.cc:
 	* src/Voronoi.cc:
           - removed 'plot' and 'triangulate' (were always 0)

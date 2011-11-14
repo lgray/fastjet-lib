@@ -249,8 +249,8 @@ class PseudoJet {
   /// reset the PseudoJet according to the specified pt, rapidity,
   /// azimuth and mass (also resetting indices, etc.)
   /// (phi should satisfy -2pi<phi<4pi)
-  inline void reset_PtYPhiM(double pt, double y, double phi, double m=0.0) {
-    reset_momentum_PtYPhiM(pt, y, phi, m);
+  inline void reset_PtYPhiM(double pt_in, double y_in, double phi_in, double m_in=0.0) {
+    reset_momentum_PtYPhiM(pt_in, y_in, phi_in, m_in);
     _reset_indices();
   }
 
@@ -885,20 +885,20 @@ inline double PseudoJet::m() const {
 }
 
 
-inline void PseudoJet::reset(double px, double py, double pz, double E) {
-  _px = px;
-  _py = py;
-  _pz = pz;
-  _E  = E;
+inline void PseudoJet::reset(double px_in, double py_in, double pz_in, double E_in) {
+  _px = px_in;
+  _py = py_in;
+  _pz = pz_in;
+  _E  = E_in;
   _finish_init();
   _reset_indices();
 }
 
-inline void PseudoJet::reset_momentum(double px, double py, double pz, double E) {
-  _px = px;
-  _py = py;
-  _pz = pz;
-  _E  = E;
+inline void PseudoJet::reset_momentum(double px_in, double py_in, double pz_in, double E_in) {
+  _px = px_in;
+  _py = py_in;
+  _pz = pz_in;
+  _E  = E_in;
   _finish_init();
 }
 

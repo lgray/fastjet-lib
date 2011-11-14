@@ -49,12 +49,12 @@ using namespace std;
 //----------------------------------------------------------------------
 /// global routine for running active area
 void ClusterSequenceActiveArea::_initialise_and_run_AA (
-		const JetDefinition & jet_def,
+		const JetDefinition & jet_def_in,
 		const GhostedAreaSpec & ghost_spec,
 		const bool & writeout_combinations) {
 
   bool continue_running;
-  _initialise_AA(jet_def,  ghost_spec, writeout_combinations, continue_running);
+  _initialise_AA(jet_def_in,  ghost_spec, writeout_combinations, continue_running);
   if (continue_running) {
     _run_AA(ghost_spec);
     _postprocess_AA(ghost_spec);
@@ -73,7 +73,7 @@ void ClusterSequenceActiveArea::_resize_and_zero_AA () {
 
 //---------------------------------a-------------------------------------
 void ClusterSequenceActiveArea::_initialise_AA (
-		const JetDefinition & jet_def,
+		const JetDefinition & jet_def_in,
 		const GhostedAreaSpec & ghost_spec,
 		const bool & writeout_combinations,
                 bool & continue_running) 
@@ -87,7 +87,7 @@ void ClusterSequenceActiveArea::_initialise_AA (
      
   // for future reference...
   _maxrap_for_area = ghost_spec.ghost_maxrap();
-  _safe_rap_for_area = _maxrap_for_area - jet_def.R();
+  _safe_rap_for_area = _maxrap_for_area - jet_def_in.R();
 
   // Make sure we'll have at least one repetition -- then we can
   // deduce the unghosted clustering sequence from one of the ghosted
@@ -97,13 +97,13 @@ void ClusterSequenceActiveArea::_initialise_AA (
   // NB: all decanting and filling of initial history will then
   // be carried out by base-class routine
   if (ghost_spec.repeat() <= 0) {
-    _initialise_and_run(jet_def, writeout_combinations);
+    _initialise_and_run(jet_def_in, writeout_combinations);
     continue_running = false;
     return;
   }
 
   // transfer all relevant info into internal variables
-  _decant_options(jet_def, writeout_combinations);
+  _decant_options(jet_def_in, writeout_combinations);
 
   // set up the history entries for the initial particles (those
   // currently in _jets)
@@ -592,15 +592,15 @@ void ClusterSequenceActiveArea::_transfer_areas(
       // need to look at parent to get the actual jet
       const PseudoJet & jet = 
   	  gs_jets[gs_history[parent1].jetp_index];
-      double area = ghosted_seq.area(jet);
+      double area_local = ghosted_seq.area(jet);
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
 
       if (ghosted_seq.is_pure_ghost(parent1)) {
         // record the existence of the pure ghost jet for future use
-        _ghost_jets.push_back(GhostJet(jet,area));
+        _ghost_jets.push_back(GhostJet(jet,area_local));
 	if (abs(jet.rap()) < _safe_rap_for_area) {
-	  _non_jet_area  += area;
-	  _non_jet_area2 += area*area;
+	  _non_jet_area  += area_local;
+	  _non_jet_area2 += area_local*area_local;
 	  _non_jet_number += 1;
 	}
       } else {
@@ -633,14 +633,14 @@ void ClusterSequenceActiveArea::_transfer_areas(
                                                ghosted_seq);
 
 	// set the area at this clustering stage
-	our_areas[hist_index]  = area; 
+	our_areas[hist_index]  = area_local; 
 	our_area_4vectors[hist_index]  = ext_area; 
 
 	// update the parent as well -- that way its area is the area
 	// immediately before clustering (i.e. resolve an ambiguity in
 	// the Cambridge case and ensure in the kt case that the original
 	// particles get a correct area)
-	our_areas[_history[hist_index].parent1] = area;
+	our_areas[_history[hist_index].parent1] = area_local;
 	our_area_4vectors[_history[hist_index].parent1] = ext_area;
 	
       }
@@ -674,8 +674,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
 
       // update area and our local index (maybe redundant since later
       // the descendants will reupdate it?)
-      double area  = ghosted_seq.area(jet);
-      our_areas[hist_index]  += area; 
+      double area_local  = ghosted_seq.area(jet);
+      our_areas[hist_index]  += area_local; 
 
       PseudoJet ext_area = ghosted_seq.area_4vector(jet);
 
@@ -720,8 +720,8 @@ void ClusterSequenceActiveArea::_transfer_areas(
   vector<PseudoJet> unclust = ghosted_seq.unclustered_particles();
   for (unsigned iu = 0; iu < unclust.size();  iu++) {
     if (ghosted_seq.is_pure_ghost(unclust[iu])) {
-      double area = ghosted_seq.area(unclust[iu]);
-      _unclustered_ghosts.push_back(GhostJet(unclust[iu],area));
+      double area_local = ghosted_seq.area(unclust[iu]);
+      _unclustered_ghosts.push_back(GhostJet(unclust[iu],area_local));
     }
   }
 

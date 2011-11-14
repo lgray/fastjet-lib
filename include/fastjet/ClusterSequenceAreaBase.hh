@@ -49,9 +49,9 @@ public:
   /// parent class
   template<class L> ClusterSequenceAreaBase
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const bool & writeout_combinations = false) :
-           ClusterSequence(pseudojets, jet_def, writeout_combinations) {}
+           ClusterSequence(pseudojets, jet_def_in, writeout_combinations) {}
 
 
   /// default constructor

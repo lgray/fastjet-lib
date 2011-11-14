@@ -170,11 +170,11 @@ void ClusterSequence::signal_imminent_self_deletion() const {
 
 //----------------------------------------------------------------------
 void ClusterSequence::_initialise_and_run (
-				  const JetDefinition & jet_def,
+				  const JetDefinition & jet_def_in,
 				  const bool & writeout_combinations) {
 
   // transfer all relevant info into internal variables
-  _decant_options(jet_def, writeout_combinations);
+  _decant_options(jet_def_in, writeout_combinations);
 
   // set up the history entries for the initial particles (those
   // currently in _jets)
@@ -236,10 +236,10 @@ void ClusterSequence::_initialise_and_run (
     int N = _jets.size();
     if (N <= 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
       _strategy = N2Plain;
-    } else if (N > 6200/pow(_Rparam,2.0) && jet_def.jet_algorithm() == cambridge_algorithm) {
+    } else if (N > 6200/pow(_Rparam,2.0) && _jet_def.jet_algorithm() == cambridge_algorithm) {
       _strategy = NlnNCam;
 #ifndef DROP_CGAL
-    } else if ((N > 16000/pow(_Rparam,1.15) && jet_def.jet_algorithm() != antikt_algorithm)
+    } else if ((N > 16000/pow(_Rparam,1.15) && _jet_def.jet_algorithm() != antikt_algorithm)
 	       || N > 35000/pow(_Rparam,1.15)) {
       _strategy = NlnN;
 #endif  // DROP_CGAL
@@ -266,9 +266,9 @@ void ClusterSequence::_initialise_and_run (
       _strategy = NlnN4pi;
 #endif    
     }
-    if (jet_def.strategy() != Best && _strategy != jet_def.strategy()) {
+    if (_jet_def.strategy() != Best && _strategy != _jet_def.strategy()) {
       ostringstream oss;
-      oss << "Cluster strategy " << strategy_string(jet_def.strategy())
+      oss << "Cluster strategy " << strategy_string(_jet_def.strategy())
 	  << " automatically changed to " << strategy_string()
 	  << " because the former is not supported for R = " << _Rparam
 	  << " >= 2pi";
@@ -358,18 +358,18 @@ void ClusterSequence::_print_banner() {
 
 //----------------------------------------------------------------------
 // transfer all relevant info into internal variables
-void ClusterSequence::_decant_options(const JetDefinition & jet_def,
+void ClusterSequence::_decant_options(const JetDefinition & jet_def_in,
                                       const bool & writeout_combinations) {
   // let the user know what's going on
   _print_banner();
 
   // make a local copy of the jet definition (for future use?)
-  _jet_def = jet_def;
+  _jet_def = jet_def_in;
   
   _writeout_combinations = writeout_combinations;
-  _jet_algorithm = jet_def.jet_algorithm();
-  _Rparam = jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
-  _strategy = jet_def.strategy();
+  _jet_algorithm = _jet_def.jet_algorithm();
+  _Rparam = _jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
+  _strategy = _jet_def.strategy();
 
   // disallow interference from the plugin
   _plugin_activated = false;
@@ -611,7 +611,7 @@ void ClusterSequence::plugin_record_ij_recombination(
 vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
   double dcut = ptmin*ptmin;
   int i = _history.size() - 1; // last jet
-  vector<PseudoJet> jets;
+  vector<PseudoJet> jets_local;
   if (_jet_algorithm == kt_algorithm) {
     while (i >= 0) {
       // with our specific definition of dij and diB (i.e. R appears only in 
@@ -621,7 +621,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       if (_history[i].parent2 == BeamJet && _history[i].dij >= dcut) {
 	// for beam jets
 	int parent1 = _history[i].parent1;
-	jets.push_back(_jets[_history[parent1].jetp_index]);}
+	jets_local.push_back(_jets[_history[parent1].jetp_index]);}
       i--;
     }
   } else if (_jet_algorithm == cambridge_algorithm) {
@@ -632,7 +632,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       if (_history[i].parent2 != BeamJet) {break;}
       int parent1 = _history[i].parent1;
       const PseudoJet & jet = _jets[_history[parent1].jetp_index];
-      if (jet.perp2() >= dcut) {jets.push_back(jet);}
+      if (jet.perp2() >= dcut) {jets_local.push_back(jet);}
       i--;
     }
   } else if (_jet_algorithm == plugin_algorithm 
@@ -648,12 +648,12 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
       if (_history[i].parent2 == BeamJet) {
 	int parent1 = _history[i].parent1;
 	const PseudoJet & jet = _jets[_history[parent1].jetp_index];
-	if (jet.perp2() >= dcut) {jets.push_back(jet);}
+	if (jet.perp2() >= dcut) {jets_local.push_back(jet);}
       }
       i--;
     }
   } else {throw Error("cs::inclusive_jets(...): Unrecognized jet algorithm");}
-  return jets;
+  return jets_local;
 }
 
 
@@ -747,29 +747,29 @@ vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int & njets) cons
   // which it refers were created before the stopping point -- if they
   // were then add them to the list, otherwise they are subsequent
   // recombinations of the jets that we are looking for.
-  vector<PseudoJet> jets;
+  vector<PseudoJet> jets_local;
   for (unsigned int i = stop_point; i < _history.size(); i++) {
     int parent1 = _history[i].parent1;
     if (parent1 < stop_point) {
-      jets.push_back(_jets[_history[parent1].jetp_index]);
+      jets_local.push_back(_jets[_history[parent1].jetp_index]);
     }
     int parent2 = _history[i].parent2;
     if (parent2 < stop_point && parent2 > 0) {
-      jets.push_back(_jets[_history[parent2].jetp_index]);
+      jets_local.push_back(_jets[_history[parent2].jetp_index]);
     }
     
   }
 
   // sanity check...
-  if (int(jets.size()) != min(_initial_n, njets)) {
+  if (int(jets_local.size()) != min(_initial_n, njets)) {
     ostringstream err;
     err << "ClusterSequence::exclusive_jets: size of returned vector ("
-	 <<jets.size()<<") does not coincide with requested number of jets ("
+	 <<jets_local.size()<<") does not coincide with requested number of jets ("
 	 <<njets<<")";
     throw Error(err.str());
   }
 
-  return jets;
+  return jets_local;
 }
 
 //----------------------------------------------------------------------
@@ -1096,15 +1096,15 @@ vector<PseudoJet> ClusterSequence::constituents (const PseudoJet & jet) const {
 ///   ...
 /// #END
 /// ... [i.e. above repeated]
-void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets, 
+void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets_in, 
                                           ostream & ostr) const {
-  for (unsigned i = 0; i < jets.size(); i++) {
+  for (unsigned i = 0; i < jets_in.size(); i++) {
     ostr << i  << " "
-         << jets[i].px() << " "
-         << jets[i].py() << " "
-         << jets[i].pz() << " "
-         << jets[i].E() << endl;
-    vector<PseudoJet> cst = constituents(jets[i]);
+         << jets_in[i].px() << " "
+         << jets_in[i].py() << " "
+         << jets_in[i].pz() << " "
+         << jets_in[i].E() << endl;
+    vector<PseudoJet> cst = constituents(jets_in[i]);
     for (unsigned j = 0; j < cst.size() ; j++) {
       ostr << " " << j << " "
            << cst[j].rap() << " "
@@ -1115,12 +1115,12 @@ void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets,
   }
 }
 
-void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets, 
+void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets_in, 
 					  const std::string & filename,
 					  const std::string & comment ) const {
   std::ofstream ostr(filename.c_str());
   if (comment != "") ostr << "# " << comment << endl;
-  print_jets_for_root(jets, ostr);
+  print_jets_for_root(jets_in, ostr);
 }
 
 
@@ -1142,7 +1142,7 @@ void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets,
 /// supplied), which of the supplied jets it belongs to; if it does
 /// not belong to any of the supplied jets, the index is set to -1;
 vector<int> ClusterSequence::particle_jet_indices(
-                        const vector<PseudoJet> & jets) const {
+                        const vector<PseudoJet> & jets_in) const {
 
   vector<int> indices(n_particles());
 
@@ -1152,9 +1152,9 @@ vector<int> ClusterSequence::particle_jet_indices(
 
   // then for each of the jets relabel its consituents as belonging to
   // that jet
-  for (unsigned ijet = 0; ijet < jets.size(); ijet++) {
+  for (unsigned ijet = 0; ijet < jets_in.size(); ijet++) {
 
-    vector<PseudoJet> jet_constituents(constituents(jets[ijet]));
+    vector<PseudoJet> jet_constituents(constituents(jets_in[ijet]));
 
     for (unsigned ip = 0; ip < jet_constituents.size(); ip++) {
       // a safe (if slightly redundant) way of getting the particle

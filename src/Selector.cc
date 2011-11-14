@@ -43,13 +43,13 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // implementation of the operator() acting on a vector of jets
 std::vector<PseudoJet> Selector::operator()(const std::vector<PseudoJet> & jets) const {
   std::vector<PseudoJet> result;
-  const SelectorWorker * worker = validated_worker();
-  if (worker->applies_jet_by_jet()) {
+  const SelectorWorker * worker_local = validated_worker();
+  if (worker_local->applies_jet_by_jet()) {
     //if (false) {
     // for workers that apply jet by jet, this is more efficient
     for (std::vector<PseudoJet>::const_iterator jet = jets.begin(); 
          jet != jets.end(); jet++) {
-      if (worker->pass(*jet)) result.push_back(*jet);
+      if (worker_local->pass(*jet)) result.push_back(*jet);
     }
   } else {
     // for workers that can only be applied to entire vectors,
@@ -58,7 +58,7 @@ std::vector<PseudoJet> Selector::operator()(const std::vector<PseudoJet> & jets)
     for (unsigned i = 0; i < jets.size(); i++) {
       jetptrs[i] = & jets[i];
     }
-    worker->terminator(jetptrs);
+    worker_local->terminator(jetptrs);
     for (unsigned i = 0; i < jetptrs.size(); i++) {
       if (jetptrs[i]) result.push_back(jets[i]);
     }
@@ -71,19 +71,19 @@ std::vector<PseudoJet> Selector::operator()(const std::vector<PseudoJet> & jets)
 // count the number of jets that pass the cuts
 unsigned int Selector::count(const std::vector<PseudoJet> & jets) const {
   unsigned n = 0;
-  const SelectorWorker * worker = validated_worker();
+  const SelectorWorker * worker_local = validated_worker();
   
   // separate strategies according to whether the worker applies jet by jet
-  if (worker->applies_jet_by_jet()) {
+  if (worker_local->applies_jet_by_jet()) {
     for (unsigned i = 0; i < jets.size(); i++) {
-      if (worker->pass(jets[i])) n++;
+      if (worker_local->pass(jets[i])) n++;
     }
   } else {
     std::vector<const PseudoJet *> jetptrs(jets.size());
     for (unsigned i = 0; i < jets.size(); i++) {
       jetptrs[i] = & jets[i];
     }
-    _worker->terminator(jetptrs);
+    worker_local->terminator(jetptrs);
     for (unsigned i = 0; i < jetptrs.size(); i++) {
       if (jetptrs[i]) n++;
     }
@@ -100,15 +100,15 @@ void Selector::sift(const std::vector<PseudoJet> & jets,
 		    std::vector<PseudoJet> & jets_that_pass,
 		    std::vector<PseudoJet> & jets_that_fail
 		    ) const {
-  const SelectorWorker * worker = validated_worker();
+  const SelectorWorker * worker_local = validated_worker();
   
   jets_that_pass.clear();
   jets_that_fail.clear();
   
   // separate strategies according to whether the worker applies jet by jet
-  if (worker->applies_jet_by_jet()) {
+  if (worker_local->applies_jet_by_jet()) {
     for (unsigned i = 0; i < jets.size(); i++) {
-      if (worker->pass(jets[i])) {
+      if (worker_local->pass(jets[i])) {
 	jets_that_pass.push_back(jets[i]);
       } else {
 	jets_that_fail.push_back(jets[i]);
@@ -119,7 +119,7 @@ void Selector::sift(const std::vector<PseudoJet> & jets,
     for (unsigned i = 0; i < jets.size(); i++) {
       jetptrs[i] = & jets[i];
     }
-    _worker->terminator(jetptrs);
+    worker_local->terminator(jetptrs);
     for (unsigned i = 0; i < jetptrs.size(); i++) {
       if (jetptrs[i]) {
 	jets_that_pass.push_back(jets[i]);

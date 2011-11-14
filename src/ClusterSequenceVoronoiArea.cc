@@ -290,18 +290,18 @@ void ClusterSequenceVoronoiArea::_initializeVA () {
 	   
   //  -- then the combined areas that arise from the clustering
   for (unsigned int i = n_particles(); i < _history.size(); i++) {
-    double area;
+    double area_local;
     PseudoJet area_4vect;
     if (_history[i].parent2 >= 0) {
-      area = _voronoi_area[_history[i].parent1] + 
-  	     _voronoi_area[_history[i].parent2];
+      area_local = _voronoi_area[_history[i].parent1] + 
+  	           _voronoi_area[_history[i].parent2];
       area_4vect = _voronoi_area_4vector[_history[i].parent1] + 
                    _voronoi_area_4vector[_history[i].parent2];
     } else {
-      area = _voronoi_area[_history[i].parent1];
+      area_local = _voronoi_area[_history[i].parent1];
       area_4vect = _voronoi_area_4vector[_history[i].parent1];
     }
-    _voronoi_area.push_back(area);
+    _voronoi_area.push_back(area_local);
     _voronoi_area_4vector.push_back(area_4vect);
   }
 

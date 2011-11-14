@@ -40,15 +40,15 @@ const double JetDefinition::max_allowable_R = 1000.0;
 //----------------------------------------------------------------------
 // [NB: implementation was getting complex, so in 2.4-devel moved it
 //  from .hh to .cc]
-JetDefinition::JetDefinition(JetAlgorithm jet_algorithm, 
-			     double R, 
-			     Strategy strategy,
-			     RecombinationScheme recomb_scheme,
+JetDefinition::JetDefinition(JetAlgorithm jet_algorithm_in, 
+			     double R_in, 
+			     Strategy strategy_in,
+			     RecombinationScheme recomb_scheme_in,
                              int nparameters) :
-  _jet_algorithm(jet_algorithm), _Rparam(R), _strategy(strategy) {
+  _jet_algorithm(jet_algorithm_in), _Rparam(R_in), _strategy(strategy_in) {
 
   // set R parameter or ensure its sensibleness, as appropriate
-  if (jet_algorithm == ee_kt_algorithm) {
+  if (_jet_algorithm == ee_kt_algorithm) {
     _Rparam = 4.0; // introduce a fictional R that ensures that
                    // our clustering sequence will not produce
                    // "beam" jets except when only a single particle remains.
@@ -58,9 +58,9 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
     // can have rapidities O(100000) and one doesn't want the
     // clustering to start including them as if their rapidities were
     // physical.
-    if (R > max_allowable_R) {
+    if (R_in > max_allowable_R) {
       ostringstream oss;
-      oss << "Requested R = " << R << " for jet definition is larger than max_allowable_R = " << max_allowable_R;
+      oss << "Requested R = " << R_in << " for jet definition is larger than max_allowable_R = " << max_allowable_R;
       throw Error(oss.str());
     }
   }
@@ -68,7 +68,7 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
   // cross-check the number of parameters that were declared in setting up the
   // algorithm (passed internally from the public constructors)
   ostringstream oss;
-  switch (jet_algorithm) {
+  switch (jet_algorithm_in) {
   case ee_kt_algorithm:
     if (nparameters != 0) oss << "ee_kt_algorithm should be constructed with 0 parameters but was called with " 
                               << nparameters << " parameter(s)\n";
@@ -81,7 +81,7 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
   default:
     if (nparameters != 1)
     oss << "The jet algorithm you requested ("
-        << jet_algorithm << ") should be constructed with 1 parameter but was called with " 
+        << jet_algorithm_in << ") should be constructed with 1 parameter but was called with " 
         << nparameters << " parameter(s)\n";
   }
   if (oss.str() != "") throw Error(oss.str()); 
@@ -90,7 +90,7 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm,
   assert (_strategy  != plugin_strategy);
 
   _plugin = NULL;
-  set_recombination_scheme(recomb_scheme);
+  set_recombination_scheme(recomb_scheme_in);
   set_extra_param(0.0); // make sure it's defined
 }
 

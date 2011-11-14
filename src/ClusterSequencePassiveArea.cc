@@ -39,13 +39,13 @@ using namespace std;
 /// correct in general, but that chooses an optimal approach for
 /// various special cases.
 void ClusterSequencePassiveArea::_initialise_and_run_PA (
-		const JetDefinition & jet_def,
+		const JetDefinition & jet_def_in,
 		const GhostedAreaSpec & area_spec,
 		const bool & writeout_combinations) {
 
-  if (jet_def.jet_algorithm() == kt_algorithm) {
+  if (jet_def_in.jet_algorithm() == kt_algorithm) {
     // first run the passive area
-    ClusterSequenceVoronoiArea csva(_jets,jet_def,VoronoiAreaSpec(1.0));
+    ClusterSequenceVoronoiArea csva(_jets,jet_def_in,VoronoiAreaSpec(1.0));
     // now set up and transfer relevant information    
     // first the clustering sequence
     transfer_from_sequence(csva);
@@ -59,34 +59,34 @@ void ClusterSequencePassiveArea::_initialise_and_run_PA (
       }
     }
 
-  } else if (jet_def.jet_algorithm() == cambridge_algorithm) {
+  } else if (jet_def_in.jet_algorithm() == cambridge_algorithm) {
     // run a variant of the cambridge algorithm that has been hacked
     // to deal with passive areas
-    JetDefinition tmp_jet_def = jet_def;
+    JetDefinition tmp_jet_def = jet_def_in;
     tmp_jet_def.set_jet_finder(cambridge_for_passive_algorithm);
     tmp_jet_def.set_extra_param(sqrt(area_spec.mean_ghost_kt()));
     _initialise_and_run_AA(tmp_jet_def, area_spec, writeout_combinations);
-    _jet_def = jet_def;
+    _jet_def = jet_def_in;
 
-  } else if (jet_def.jet_algorithm() == antikt_algorithm) {
+  } else if (jet_def_in.jet_algorithm() == antikt_algorithm) {
     // for the antikt algorithm, passive and active are identical
-    _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
+    _initialise_and_run_AA(jet_def_in, area_spec, writeout_combinations);
 
-  } else if (jet_def.jet_algorithm() == plugin_algorithm &&
-             jet_def.plugin()->supports_ghosted_passive_areas()) {
+  } else if (jet_def_in.jet_algorithm() == plugin_algorithm &&
+             jet_def_in.plugin()->supports_ghosted_passive_areas()) {
     // for some plugin algorithms, one can "prime" the algorithm with information
     // about the ghost scale, and then an "AA" run will actually give a passive
     // area
-    double ghost_sep_scale_store = jet_def.plugin()->ghost_separation_scale();
-    jet_def.plugin()->set_ghost_separation_scale(sqrt(area_spec.mean_ghost_kt()));
-    _initialise_and_run_AA(jet_def, area_spec, writeout_combinations);
+    double ghost_sep_scale_store = jet_def_in.plugin()->ghost_separation_scale();
+    jet_def_in.plugin()->set_ghost_separation_scale(sqrt(area_spec.mean_ghost_kt()));
+    _initialise_and_run_AA(jet_def_in, area_spec, writeout_combinations);
 
     // restore the original ghost_sep_scale
-    jet_def.plugin()->set_ghost_separation_scale(ghost_sep_scale_store);
+    jet_def_in.plugin()->set_ghost_separation_scale(ghost_sep_scale_store);
 
   } else {
     // for a generic algorithm, just run the 1GhostPassiveArea
-    _initialise_and_run_1GPA(jet_def, area_spec, writeout_combinations);
+    _initialise_and_run_1GPA(jet_def_in, area_spec, writeout_combinations);
   }
 }
 

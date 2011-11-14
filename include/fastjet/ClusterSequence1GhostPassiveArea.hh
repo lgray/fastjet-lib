@@ -60,7 +60,7 @@ public:
   /// constructor based on JetDefinition and 1GhostPassiveAreaSpec
   template<class L> ClusterSequence1GhostPassiveArea
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec & area_spec,
 	  const bool & writeout_combinations = false) ;
 
@@ -74,7 +74,7 @@ public:
 protected:
   /// does the initialisation and running specific to the passive
   /// areas class
-  void _initialise_and_run_1GPA (const JetDefinition & jet_def,
+  void _initialise_and_run_1GPA (const JetDefinition & jet_def_in,
                                const GhostedAreaSpec & area_spec,
                                const bool & writeout_combinations = false);
 
@@ -88,7 +88,7 @@ private:
 
 template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassiveArea 
 (const std::vector<L> & pseudojets, 
- const JetDefinition & jet_def,
+ const JetDefinition & jet_def_in,
  const GhostedAreaSpec & area_spec,
  const bool & writeout_combinations) {
 
@@ -96,7 +96,7 @@ template<class L> ClusterSequence1GhostPassiveArea::ClusterSequence1GhostPassive
   _transfer_input_jets(pseudojets);
 
   // run the clustering for passive areas
-  _initialise_and_run_1GPA(jet_def, area_spec, writeout_combinations);
+  _initialise_and_run_1GPA(jet_def_in, area_spec, writeout_combinations);
 
 }
 

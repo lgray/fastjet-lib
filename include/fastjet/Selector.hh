@@ -146,7 +146,7 @@ public:
   ///
   /// Note that the Selector takes ownership of the pointer to the
   /// worker (and so will delete automatically when appropriate).
-  Selector(SelectorWorker * worker) {_worker.reset(worker);}
+  Selector(SelectorWorker * worker_in) {_worker.reset(worker_in);}
 
 
   /// ctor from a RangeDefinition

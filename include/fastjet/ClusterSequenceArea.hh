@@ -51,25 +51,25 @@ public:
   /// main constructor
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const AreaDefinition & area_def_in)  : _area_def(area_def_in) {
-    initialize_and_run_cswa(pseudojets, jet_def);
+    initialize_and_run_cswa(pseudojets, jet_def_in);
   }
 
   /// constructor with a GhostedAreaSpec
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec & ghost_spec)   : _area_def(ghost_spec){
-    initialize_and_run_cswa(pseudojets, jet_def);
+    initialize_and_run_cswa(pseudojets, jet_def_in);
   }
 
   /// constructor with a VoronoiAreaSpec
   template<class L> ClusterSequenceArea
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const VoronoiAreaSpec & voronoi_spec)   : _area_def(voronoi_spec){
-    initialize_and_run_cswa(pseudojets, jet_def);
+    initialize_and_run_cswa(pseudojets, jet_def_in);
   }
 
   /// return a reference to the area definition

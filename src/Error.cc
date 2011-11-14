@@ -44,11 +44,11 @@ bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
 ostream * Error::_default_ostr = & cerr;
 
-Error::Error(const std::string & message) {
-  _message = message; 
+Error::Error(const std::string & message_in) {
+  _message = message_in; 
   if (_print_errors && _default_ostr){
     ostringstream oss;
-    oss << "fastjet::Error:  "<< message << endl;
+    oss << "fastjet::Error:  "<< message_in << endl;
 
     // only print the stack if execinfo is available and stack enabled
 #ifdef FASTJET_HAVE_EXECINFO_H

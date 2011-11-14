@@ -99,7 +99,7 @@ private:
 //----------------------------------------------------------------------
 template<class L> ClusterSequenceVoronoiArea::ClusterSequenceVoronoiArea
 (const std::vector<L> &pseudojets, 
- const JetDefinition &jet_def,
+ const JetDefinition &jet_def_in,
  const VoronoiAreaSpec & spec,
  const bool & writeout_combinations) :
   _effective_Rfact(spec.effective_Rfact()) {
@@ -108,7 +108,7 @@ template<class L> ClusterSequenceVoronoiArea::ClusterSequenceVoronoiArea
   _transfer_input_jets(pseudojets);
 
   // run the clustering
-  _initialise_and_run(jet_def,writeout_combinations);
+  _initialise_and_run(jet_def_in,writeout_combinations);
 
   // the jet clustering's already been done, now worry about areas...
   _initializeVA();

@@ -67,7 +67,7 @@ public:
   /// constructor based on JetDefinition and GhostedAreaSpec
   template<class L> ClusterSequenceActiveArea
          (const std::vector<L> & pseudojets, 
-	  const JetDefinition & jet_def,
+	  const JetDefinition & jet_def_in,
 	  const GhostedAreaSpec & ghost_spec,
 	  const bool & writeout_combinations = false) ;
 
@@ -209,7 +209,7 @@ private:
 
 template<class L> ClusterSequenceActiveArea::ClusterSequenceActiveArea 
 (const std::vector<L> & pseudojets, 
- const JetDefinition & jet_def,
+ const JetDefinition & jet_def_in,
  const GhostedAreaSpec & ghost_spec,
  const bool & writeout_combinations) {
 
@@ -217,7 +217,7 @@ template<class L> ClusterSequenceActiveArea::ClusterSequenceActiveArea
   _transfer_input_jets(pseudojets);
 
   // run the clustering for active areas
-  _initialise_and_run_AA(jet_def, ghost_spec, writeout_combinations);
+  _initialise_and_run_AA(jet_def_in, ghost_spec, writeout_combinations);
 
 }
 
