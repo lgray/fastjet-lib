@@ -346,8 +346,10 @@ template <class BJ, class I>  void NNH<BJ,I>::set_NN_nocross(
                  NNBJ * jet, NNBJ * begin, NNBJ * end) {
   double NN_dist = jet->beam_distance();
   NNBJ * NN      = NULL;
-  if (head < jet) {
-    for (NNBJ * jetB = head; jetB != jet; jetB++) {
+  // if (head < jet) {
+  //   for (NNBJ * jetB = head; jetB != jet; jetB++) {
+  if (begin < jet) {
+    for (NNBJ * jetB = begin; jetB != jet; jetB++) {
       double dist = jet->distance(jetB);
       if (dist < NN_dist) {
 	NN_dist = dist;
@@ -355,8 +357,10 @@ template <class BJ, class I>  void NNH<BJ,I>::set_NN_nocross(
       }
     }
   }
-  if (tail > jet) {
-    for (NNBJ * jetB = jet+1; jetB != tail; jetB++) {
+  // if (tail > jet) {
+  //   for (NNBJ * jetB = jet+1; jetB != tail; jetB++) {
+  if (end > jet) {
+    for (NNBJ * jetB = jet+1; jetB != end; jetB++) {
       double dist = jet->distance (jetB);
       if (dist < NN_dist) {
 	NN_dist = dist;

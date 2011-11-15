@@ -87,14 +87,14 @@ public:
   ///     momentum sum for the jets is carried out by direct
   ///     four-vector addition instead of p-scheme recombination.
   ///
-  PxConePlugin (double  cone_radius      , 
-		double  min_jet_energy = 5.0  , 
-		double  overlap_threshold = 0.5,
-                bool    E_scheme_jets = false) : 
-    _cone_radius        (cone_radius        ),
-    _min_jet_energy     (min_jet_energy     ),
-    _overlap_threshold  (overlap_threshold  ),
-    _E_scheme_jets      (E_scheme_jets      ) {}
+  PxConePlugin (double  cone_radius_in      , 
+		double  min_jet_energy_in = 5.0  , 
+		double  overlap_threshold_in = 0.5,
+                bool    E_scheme_jets_in = false) : 
+    _cone_radius        (cone_radius_in      ),
+    _min_jet_energy     (min_jet_energy_in   ),
+    _overlap_threshold  (overlap_threshold_in),
+    _E_scheme_jets      (E_scheme_jets_in    ) {}
 
 
   // some functions to return info about parameters ----------------

@@ -6,7 +6,7 @@
 // forward declaration of the siscone classes we'll need
 namespace siscone_spherical{
   class CSphsiscone;
-};
+}
 
 // questionable whether this should be in fastjet namespace or not...
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh

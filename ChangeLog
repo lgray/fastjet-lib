@@ -1,3 +1,24 @@
+2011-11-15  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence_TiledN2.cc (_minheap_faster_tiled_N2_cluster):
+	  added a note about a gcc "may-be-used-uninitialised" warning
+	  which is irrelevant.
+
+	* include/fastjet/NNH.hh (set_NN_nocross):
+	  replaced 'head' and 'tail' by the parameters 'begin' and 'end'
+	  (respectively). Note that all the calls to set_NN_nocross have
+	  begin==head and end==tail so this is equivalent. But it is cleaner
+	  and avoids a compiler warning.
+
+	* plugins/PxCone/fastjet/PxConePlugin.hh (ctor):
+	  renamed arguments to avoid shadowing class members
+
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
+	  removed extraneous ;
+
+	* src/CompositeJetStructure.cc (ctor):
+ 	  renamed a local var to avoid shadowing a class member
+
 2011-11-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* tools/Filter.cc: 

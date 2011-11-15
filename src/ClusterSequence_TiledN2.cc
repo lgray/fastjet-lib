@@ -853,6 +853,13 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
       }
       if (oldB.tile_index != jetA->tile_index && 
 	  oldB.tile_index != jetB->tile_index) {
+	// GS: the line below generates a warning that oldB.tile_index
+	// may be used uninitialised. However, to reach this point, we
+	// ned jetB != NULL (see test a few lines above) and is jetB
+	// !=NULL, one would have gone through "oldB = *jetB before
+	// (see piece of code ~20 line above), so the index is
+	// initialised. We do not do anything to avoid the warning to
+	// avoid any potential speed impact.
 	_add_untagged_neighbours_to_tile_union(oldB.tile_index,
 					       tile_union,n_near_tiles);
       }

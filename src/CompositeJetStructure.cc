@@ -47,15 +47,15 @@ CompositeJetStructure::CompositeJetStructure(const std::vector<PseudoJet> & init
   // deal with area support (cache the area if needed)
   //--------------------------------------------------
   // check if all the pieces have area, in which case store it
-  bool has_area = true;
+  bool has_area_local = true;
   for (vector<PseudoJet>::const_iterator pit=_pieces.begin(); pit!=_pieces.end(); pit++){
     if (!pit->has_area()){
-      has_area = false;
+      has_area_local = false;
       continue;
     }
   }
 
-  if (has_area){
+  if (has_area_local){
     _area_4vector_ptr = new PseudoJet();
     for (unsigned int i=0; i<_pieces.size(); i++){
       const PseudoJet & p = _pieces[i];
