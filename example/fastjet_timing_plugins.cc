@@ -180,6 +180,7 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+#include "fastjet/Selector.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -290,6 +291,11 @@ int main (int argc, char ** argv) {
   int    nev     = cmdline.int_val("-nev",1);
   bool   add_dense_coverage = cmdline.present("-dense");
   double ghost_maxrap = cmdline.value("-ghost-maxrap",5.0);
+
+  fj::Selector particles_sel = (cmdline.present("-nhardest"))
+    ? fj::SelectorNHardest(cmdline.value<unsigned int>("-nhardest"))
+    : fj::SelectorIdentity();
+
   do_areas = cmdline.present("-area");
   fj::AreaDefinition area_def;
   if (do_areas) {
@@ -568,6 +574,9 @@ int main (int argc, char ** argv) {
     //   }
     // }
   }
+
+  // select the particles that pass the selection cut
+  particles = particles_sel(particles);
   
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     int nparticles = particles.size();
