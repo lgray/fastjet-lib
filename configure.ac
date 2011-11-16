@@ -41,7 +41,8 @@ dnl if the user has not set CXXFLAGS, then set our own default
 dnl-------------------------------------------------------------------
 USE_CUSTOM_FLAGS="yes"
 if [[ "x$CXXFLAGS" == "x" ]]; then
-   CXXFLAGS="-O3 -Wall"
+   dnl try to put a high warning level
+   CXXFLAGS="-O3 -ansi -pedantic -Wall -Wextra -Wshadow"
    USE_CUSTOM_FLAGS="no"
 fi
 

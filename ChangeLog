@@ -1,5 +1,8 @@
 2011-11-16  Gregory Soyez  <soyez@fastjet.fr>
 
+	* configure.ac:
+	  increased the level of warnings in teh default compilation flags
+
 	* example/10-subjets.cc:
 	* example/04-constituents.cc:
 	* example/fastjet_timing_plugins.cc:
