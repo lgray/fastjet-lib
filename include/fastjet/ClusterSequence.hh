@@ -544,11 +544,17 @@ protected:
   template<class L> void _transfer_input_jets(
                                      const std::vector<L> & pseudojets);
 
-  /// This is the routine that will do all the initialisation and
+  /// This is what is called to do all the initialisation and
   /// then run the clustering (may be called by various constructors).
   /// It assumes _jets contains the momenta to be clustered.
   void _initialise_and_run (const JetDefinition & jet_def,
 			    const bool & writeout_combinations);
+
+  //// this performs the initialisation, minus the option-decanting
+  //// stage; for low multiplicity, initialising a few things in the
+  //// constructor, calling the decant_options_partial() and then this
+  //// is faster than going through _initialise_and_run.
+  void _initialise_and_run_no_decant();
 
 //DEP   /// This is an alternative routine for initialising and running the
 //DEP   /// clustering, provided for legacy purposes. The jet finder is that
@@ -561,6 +567,12 @@ protected:
   /// the jet_definition and writeout_combinations variables
   void _decant_options(const JetDefinition & jet_def,
                        const bool & writeout_combinations);
+
+  /// assuming that the jet definition, writeout_combinations and
+  /// _structure_shared_ptr have been set (e.g. in an initialiser list
+  /// in the constructor), it handles the remaining decanting of
+  /// options.
+  void _decant_options_partial();
 
   /// fill out the history (and jet cross refs) related to the initial
   /// set of jets (assumed already to have been "transferred"),
@@ -892,13 +904,19 @@ template<class L> void ClusterSequence::_transfer_input_jets(
 template<class L> ClusterSequence::ClusterSequence (
 			          const std::vector<L> & pseudojets,
 				  const JetDefinition & jet_def_in,
-				  const bool & writeout_combinations) {
+				  const bool & writeout_combinations) :
+  _jet_def(jet_def_in), _writeout_combinations(writeout_combinations),
+  _structure_shared_ptr(new ClusterSequenceStructure(this))
+{
 
   // transfer the initial jets (type L) into our own array
   _transfer_input_jets(pseudojets);
 
+  // transfer the remaining options
+  _decant_options_partial();
+
   // run the clustering
-  _initialise_and_run(jet_def_in,writeout_combinations);
+  _initialise_and_run_no_decant();
 }
 
 

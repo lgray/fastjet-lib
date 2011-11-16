@@ -1,3 +1,23 @@
+2011-11-16  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/ClusterSequence.hh (template): 
+	  constructor now uses an initialisation list for things like the
+	  _jet_def that are substantial and that one doesn't want to be
+	  initialising twice. Also introduced _decant_options_partial()
+	  and _initialise_and_run_no_decant(), which are now used directly
+	  in the constructor. The calls _decant_options(...) and
+	  _initialise_and_run(...) are maintained and just do the relevant
+	  extra bits and pieces before calling _decant_options_partial()
+	  and _initialise_and_run_no_decant() respectively. This shaves
+	  off about 0.1 microseconds (can be relevant at low N).
+
+	* src/JetDefinition.cc (JetDefinition::JetDefinition):
+	  removed function-wide ostringstream (for errors) in constructor,
+	  which was causing a 0.6 microsecond time penalty, and replaced
+	  it with oss's created only when an error condition is actually
+	  seen.
+
 2011-11-16  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/fastjet_timing_plugins.cc:

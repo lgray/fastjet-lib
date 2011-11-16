@@ -176,6 +176,13 @@ void ClusterSequence::_initialise_and_run (
   // transfer all relevant info into internal variables
   _decant_options(jet_def_in, writeout_combinations);
 
+  // now run
+  _initialise_and_run_no_decant();
+}
+
+//----------------------------------------------------------------------
+void ClusterSequence::_initialise_and_run_no_decant () {
+
   // set up the history entries for the initial particles (those
   // currently in _jets)
   _fill_initial_history();
@@ -370,13 +377,19 @@ void ClusterSequence::_print_banner() {
 // transfer all relevant info into internal variables
 void ClusterSequence::_decant_options(const JetDefinition & jet_def_in,
                                       const bool & writeout_combinations) {
+  // make a local copy of the jet definition (for future use)
+  _jet_def = jet_def_in;
+  _writeout_combinations = writeout_combinations;
+  // initialised the wrapper to the current CS
+  _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+}
+
+//----------------------------------------------------------------------
+// transfer all relevant info into internal variables
+void ClusterSequence::_decant_options_partial() {
   // let the user know what's going on
   _print_banner();
-
-  // make a local copy of the jet definition (for future use?)
-  _jet_def = jet_def_in;
   
-  _writeout_combinations = writeout_combinations;
   _jet_algorithm = _jet_def.jet_algorithm();
   _Rparam = _jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;
   _strategy = _jet_def.strategy();
@@ -385,7 +398,7 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def_in,
   _plugin_activated = false;
 
   // initialised the wrapper to the current CS
-  _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+  //_structure_shared_ptr.reset(new ClusterSequenceStructure(this));
   _update_structure_use_count(); // make sure it's correct already here
 }
 
