@@ -235,7 +235,8 @@ void ClusterSequence::_initialise_and_run (
   //-------------
   // 2011-11-15: lowered N2Plain -> N2Tiled switchover based on some
   //             new tests on an Intel Core 2 Duo T9400 @ 2.53 GHz
-  //             with 6MB cache
+  //             with 6MB cache; tests performed with lines such as
+  //             ./fastjet_timing_plugins -kt -nhardest 30 -repeat 50000 -strategy -3 -R 0.5 -nev 1  <  ../../data/Pythia-PtMin1000-LHC-1000ev.dat
   if (_strategy == Best) {
     int N = _jets.size();
     //if (N <= 55*max(0.5,min(1.0,_Rparam))) {// old empirical scaling with R
