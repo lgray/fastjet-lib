@@ -1,5 +1,9 @@
 2011-11-16  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/fastjet_timing_plugins.cc:
+	  added a -repeat-incl <ptmin> option to show the jets above ptmin
+	  at each repetition of the clustering
+
 	* configure.ac:
 	  increased the level of warnings in teh default compilation flags
 

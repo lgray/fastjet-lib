@@ -62,11 +62,17 @@
 ///
 ///   -repeat n     repeats each event n times
 ///
+///   -nhardest n   keep only the n hardest particles in the event
+///
 /// Output Options
 /// --------------
 ///
 ///   -incl ptmin   output of all inclusive jets with pt > ptmin is obtained
 ///                 with the -incl option.
+///
+///   -repeat-incl ptmin
+///                 same as -incl ptmin but do it for each repetition
+///                 of the clustering
 ///
 ///   -excld dcut   output of all exclusive jets as obtained in a clustering
 ///                 with dcut
@@ -278,6 +284,7 @@ int main (int argc, char ** argv) {
   double ktR   = cmdline.double_val("-r",1.0);
   ktR   = cmdline.double_val("-R",ktR); // allow -r and -R
   double inclkt = cmdline.double_val("-incl",-1.0);
+  double repeatinclkt = cmdline.double_val("-repeat-incl",-1.0);
   int    excln  = cmdline.int_val   ("-excln",-1);
   double excld  = cmdline.double_val("-excld",-1.0);
   double excly  = cmdline.double_val("-excly",-1.0);
@@ -587,6 +594,13 @@ int main (int argc, char ** argv) {
     } else {
       clust_seq.reset(new fj::ClusterSequence(particles,jet_def,write));
     }
+
+    // repetitive output
+    if (repeatinclkt >= 0.0) {
+      vector<fj::PseudoJet> jets_local = sorted_by_pt(clust_seq->inclusive_jets(inclkt));
+      print_jets(jets_local, show_constituents);
+    }
+
     if (irepeat != 0) {continue;}
     cout << "iev "<<iev<< ": number of particles = "<< nparticles << endl;
     cout << "strategy used =  "<< clust_seq->strategy_string()<< endl;
