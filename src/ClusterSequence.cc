@@ -234,7 +234,7 @@ void ClusterSequence::_initialise_and_run (
   // core] with 2MB of cache).
   //-------------
   // 2011-11-15: lowered N2Plain -> N2Tiled switchover based on some
-  //             further tests on an Intel Core 2 Duo T9400 @ 2.53 GHz
+  //             new tests on an Intel Core 2 Duo T9400 @ 2.53 GHz
   //             with 6MB cache
   if (_strategy == Best) {
     int N = _jets.size();
