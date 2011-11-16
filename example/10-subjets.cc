@@ -107,9 +107,10 @@ int main(){
 	   inclusive_jets[i].perp(), inclusive_jets[i].constituents().size());
 
     for (unsigned int j=0; j<subjets.size(); j++)
-      printf("   sub%4u %15.8f %15.8f %15.8f %8lu\n", j, 
+      printf("   sub%4u %15.8f %15.8f %15.8f %8u\n", j, 
 	     subjets[j].rap(), subjets[j].phi(),
-	     subjets[j].perp(), subjets[j].constituents().size());
+	     subjets[j].perp(), 
+	     (unsigned int) subjets[j].constituents().size());
   }
 
   return 0;

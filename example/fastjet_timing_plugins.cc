@@ -187,7 +187,7 @@
 #include<valarray>
 #include<vector>
 #include <cstdlib>
-#include<cstddef> // for size_t
+//#include<cstddef> // for size_t
 #include "CmdLine.hh"
 
 // get info on how fastjet was configured
@@ -671,10 +671,10 @@ int main (int argc, char ** argv) {
       vector<fj::PseudoJet> sisjets = clust_seq->inclusive_jets();
       printf("\n%15s %15s %15s %12s %8s %8s\n","rap","phi","pt","user-index","pass","nconst");
       for (unsigned i = 0; i < sisjets.size(); i++) {
-        printf("%15.8f %15.8f %15.8f %12d %8d %8lu\n",
+        printf("%15.8f %15.8f %15.8f %12d %8d %8u\n",
                sisjets[i].rap(), sisjets[i].phi(), sisjets[i].perp(), 
 	       sisjets[i].user_index(), extras->pass(sisjets[i]),
-	       clust_seq->constituents(sisjets[i]).size()
+	       (unsigned int) clust_seq->constituents(sisjets[i]).size()
 	       );
 	
       }
@@ -738,7 +738,7 @@ int main (int argc, char ** argv) {
 //------ HELPER ROUTINES -----------------------------------------------
 /// print a single jet
 void print_jet (const fj::PseudoJet & jet) {
-  int n_constituents = jet.constituents().size();
+  unsigned int n_constituents = jet.constituents().size();
   printf("%15.8f %15.8f %15.8f %8u\n",
          jet.rap(), jet.phi(), jet.perp(), n_constituents);
 }
@@ -749,13 +749,13 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, bool show_constituents) {
   vector<fj::PseudoJet> jets;
   if (ee_print) {
     jets = sorted_by_E(jets_in);
-    for (size_t j = 0; j < jets.size(); j++) {
-      printf("%5lu %15.8f %15.8f %15.8f %15.8f\n",
+    for (unsigned int j = 0; j < jets.size(); j++) {
+      printf("%5u %15.8f %15.8f %15.8f %15.8f\n",
 	     j,jets[j].px(),jets[j].py(),jets[j].pz(),jets[j].E());
       if (show_constituents) {
 	vector<fj::PseudoJet> const_jets = jets[j].constituents();
-	for (size_t k = 0; k < const_jets.size(); k++) {
-	  printf("        jet%03lu %15.8f %15.8f %15.8f %15.8f\n",j,const_jets[k].px(),
+	for (unsigned int k = 0; k < const_jets.size(); k++) {
+	  printf("        jet%03u %15.8f %15.8f %15.8f %15.8f\n",j,const_jets[k].px(),
 		 const_jets[k].py(),const_jets[k].pz(),const_jets[k].E());
 	}
 	cout << "\n\n";
@@ -764,8 +764,8 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, bool show_constituents) {
     }
   } else {
     jets = sorted_by_pt(jets_in);
-    for (size_t j = 0; j < jets.size(); j++) {
-      printf("%5lu %15.8f %15.8f %15.8f",
+    for (unsigned int j = 0; j < jets.size(); j++) {
+      printf("%5u %15.8f %15.8f %15.8f",
 	     j,jets[j].rap(),jets[j].phi(),jets[j].perp());
       // also print out the scalar area and the perp component of the
       // 4-vector (just enough to check a reasonable 4-vector?)
@@ -775,8 +775,8 @@ void print_jets(const vector<fj::PseudoJet> & jets_in, bool show_constituents) {
 
       if (show_constituents) {
 	vector<fj::PseudoJet> const_jets = jets[j].constituents();
-	for (size_t k = 0; k < const_jets.size(); k++) {
-	  printf("        jet%03lu %15.8f %15.8f %15.8f %5d\n",j,const_jets[k].rap(),
+	for (unsigned int k = 0; k < const_jets.size(); k++) {
+	  printf("        jet%03u %15.8f %15.8f %15.8f %5d\n",j,const_jets[k].rap(),
 		 const_jets[k].phi(),sqrt(const_jets[k].kt2()), const_jets[k].cluster_hist_index());
 	}
 	cout << "\n\n";
@@ -826,7 +826,7 @@ void print_jets_and_sub (const vector<fj::PseudoJet> & jets, double dcut) {
         && jet->perp2() < dcut) continue;
 
 
-    printf("%5lu       ",jet - sorted_jets.begin());
+    printf("%5u       ",(unsigned int) (jet - sorted_jets.begin()));
     print_jet(*jet);
     vector<fj::PseudoJet> subjets;
     fj::ClusterSequence * cspoint;

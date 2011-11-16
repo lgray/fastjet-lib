@@ -107,9 +107,9 @@ int main(){
     // get the constituents of the jet
     vector<fastjet::PseudoJet> constituents = inclusive_jets[i].constituents();
 
-    printf("%5u %15.8f %15.8f %15.8f %8lu\n",
+    printf("%5u %15.8f %15.8f %15.8f %8u\n",
 	   i, inclusive_jets[i].rap(), inclusive_jets[i].phi(),
-	   inclusive_jets[i].perp(), constituents.size());
+	   inclusive_jets[i].perp(), (unsigned int) constituents.size());
 
     printf("       ");
     for (unsigned int j=0; j<constituents.size(); j++){

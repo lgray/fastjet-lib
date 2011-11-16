@@ -1,3 +1,14 @@
+2011-11-16  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/10-subjets.cc:
+	* example/04-constituents.cc:
+	* example/fastjet_timing_plugins.cc:
+	* example/fastjet_areas.cc (print_jets):
+	  replaced/cast size_t by/to unsigned int
+	  (this is mostly to avoid a compiler warning related to the fact
+	  that size_t is equivalent to ungigned int on 32-bit machines and
+	  long unsigned int on 64)
+
 2011-11-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 

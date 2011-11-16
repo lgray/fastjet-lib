@@ -146,12 +146,12 @@ void print_jets (const vector<fastjet::PseudoJet> & unsorted_jets) {
   vector<fastjet::PseudoJet> jets = sorted_by_pt(unsorted_jets);  
 
   printf(" ijet   rap      phi        Pt         area  +-   err\n");
-  for (size_t j = 0; j < jets.size(); j++) {
+  for (unsigned int j = 0; j < jets.size(); j++) {
 
     double area       = jets[j].area();
     double area_error = jets[j].area_error();
 
-    printf("%5lu %9.5f %8.5f %10.3f %8.3f +- %6.3f\n",j,jets[j].rap(),
+    printf("%5u %9.5f %8.5f %10.3f %8.3f +- %6.3f\n",j,jets[j].rap(),
 	   jets[j].phi(),jets[j].perp(), area, area_error);
   }
 
