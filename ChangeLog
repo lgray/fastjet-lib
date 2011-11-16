@@ -3,6 +3,8 @@
 	* example/fastjet_timing_plugins.cc:
 	  added a -repeat-incl <ptmin> option to show the jets above ptmin
 	  at each repetition of the clustering
+	  [modified it so that teh jets are just extracted and sorted but
+	  not printed]
 
 	* configure.ac:
 	  increased the level of warnings in teh default compilation flags

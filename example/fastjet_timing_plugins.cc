@@ -597,8 +597,7 @@ int main (int argc, char ** argv) {
 
     // repetitive output
     if (repeatinclkt >= 0.0) {
-      vector<fj::PseudoJet> jets_local = sorted_by_pt(clust_seq->inclusive_jets(inclkt));
-      print_jets(jets_local, show_constituents);
+      vector<fj::PseudoJet> jets_local = sorted_by_pt(clust_seq->inclusive_jets(repeatinclkt));
     }
 
     if (irepeat != 0) {continue;}
