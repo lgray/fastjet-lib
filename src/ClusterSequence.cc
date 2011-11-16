@@ -232,9 +232,18 @@ void ClusterSequence::_initialise_and_run (
   // their R-dependence) are based on empirical observations for a
   // R=0.4, 0.7 and 1.0, running on toth (3.4GHz, Pentium IV D [dual
   // core] with 2MB of cache).
+  //-------------
+  // 2011-11-15: lowered N2Plain -> N2Tiled switchover based on some
+  //             further tests on an Intel Core 2 Duo T9400 @ 2.53 GHz
+  //             with 6MB cache
   if (_strategy == Best) {
     int N = _jets.size();
-    if (N <= 55*max(0.5,min(1.0,_Rparam))) {// empirical scaling with R
+    //if (N <= 55*max(0.5,min(1.0,_Rparam))) {// old empirical scaling with R
+    //----------------------
+    // 2011-11-15: new empirical scaling with R; NB: low-R N2Tiled
+    // could be significantly improved at low N by limiting the
+    // minimum size of tiles when R is small
+    if (min(1.0,max(0.1,_Rparam)*3.3)*N <= 30) {
       _strategy = N2Plain;
     } else if (N > 6200/pow(_Rparam,2.0) && _jet_def.jet_algorithm() == cambridge_algorithm) {
       _strategy = NlnNCam;

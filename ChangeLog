@@ -1,3 +1,11 @@
+2011-11-16  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	  lowered switchover point from N2Plain -> N2Tiled based on
+	  observations from Gregory and me on more modern computers than
+	  were used in the original studies (presumably larger cache is at
+	  play). 
+
 2011-11-15  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence_TiledN2.cc (_minheap_faster_tiled_N2_cluster):
