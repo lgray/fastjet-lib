@@ -1,3 +1,12 @@
+2011-11-17  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/internal/base.hh: 
+	  moved the doxygen group list out of base.hh and into
+	  ClusterSequence.cc; also added reference plugins where we mentioned
+	  JetDefinition (otherwise it's a fairly non-obvious two clicks
+	  away from the main page).
+
 2011-11-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence.cc (_decant_options):

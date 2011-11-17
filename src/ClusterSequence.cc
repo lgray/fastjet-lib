@@ -62,7 +62,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  *   particle or a jet.
  *
  * - JetDefinition: the combination of a #JetAlgorithm and its
- *   associated parameters.
+ *   associated parameters. Can also be initialised with a \ref plugins "plugin".  
  *
  * - ClusterSequence: constructed with a vector of input (PseudoJet)
  *   particles and a JetDefinition, it computes and stores the
@@ -102,14 +102,29 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
  * \section examples Examples
  *   See our \subpage Examples page
  */
+
+// define the doxygen groups
+/// \defgroup basic_classes    Fundamental FastJet classes
+/// \defgroup area_classes     Area-related classes
+/// \defgroup sec_area_classes Secondary area-related classes
+/// \defgroup plugins          Plugins for non-native jet definitions
+/// \defgroup selectors        Selectors
+/// \defgroup tools            FastJet tools
+/// \{ \defgroup tools_generic     Generic tools
+///    \defgroup tools_background  Background subtraction
+///    \defgroup tools_taggers     Taggers
+/// \}
+/// \defgroup extra_info       Access to extra information
+/// \defgroup error_handling   Error handling
+/// \defgroup advanced_usage   Advanced usage
+/// \if internal_doc
+/// \defgroup internal
+/// \endif
+
 //----------------------------------------------------------------------
 
 
 using namespace std;
-
-//DEP //// initialised static member has to go in the .cc code
-//DEP JetAlgorithm ClusterSequence::_default_jet_algorithm = kt_algorithm;
-//DEP //
 
 
 // destructor that guarantees proper bookkeeping for the CS Structure
