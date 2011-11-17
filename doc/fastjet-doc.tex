@@ -4044,7 +4044,7 @@ values listed in table~\ref{tab:Strategies}.
 %
 \begin{table}
   \begin{center}
-    \begin{tabular}{l|l}\hline
+    \begin{tabular}{ll}\toprule
       \ttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N
       \lesssim 50$)\\
       \ttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
@@ -4058,7 +4058,7 @@ values listed in table~\ref{tab:Strategies}.
       algorithm (fastest for \\&$ 
       N \gtrsim 6000$), suitable only for the Cambridge jet algorithm\\ 
       \ttt{Best} & automatic selection of the best of these based on
-      $N$ and $R$\\\hline 
+      $N$ and $R$\\\bottomrule
     \end{tabular}
     \caption{The more interesting of the various algorithmic
       strategies for clustering. Other strategies are given
@@ -4077,7 +4077,7 @@ geometrical distance components of the $d_{ij}$
 measure~\cite{fastjet}. In particular they involve the dynamic
 maintenance of a nearest-neighbour graph for the geometrical
 distances.  They apply equally well to any of the internally
-implemented jet algorithms.
+implemented hadron-collider jet algorithms.
 %
 The one exception is \ttt{NlnNCam}, which is based on a computational
 geometry algorithm for dynamic maintenance of closest pairs
@@ -4104,30 +4104,106 @@ The \ttt{NlnN} strategy uses CGAL's Delaunay Triangulation
 Note that $N \ln N$ performance of is an \emph{expected} result, and
 it holds in practice for the $k_t$ and Cambridge algorithms, while for
 anti-$k_t$ and generalised-$k_t$ with $p<0$, hub-and-spoke
-(bicycle-wheel!) type configurations emerge dynamically during the
+(or bicycle-wheel) type configurations emerge dynamically during the
 clustering and these break the conditions needed for the expected
 result to hold (this however has a significant impact only for $N
 \gtrsim 10^5$).
+%
+A further comment about the $N \ln N$ strategy is that it currently
+has the limitation that it cannot be used in events with perfectly
+collinear particles.
+%
+This is related to the fact that the underlying computation geometry
+structures cannot cleanly accomodate multiple particles in the same
+location, because of the degeneracies that are induced. 
+%
+A workaround for this problem may be provided on request.
 
-
-If \ttt{strategy} is omitted then the \ttt{Best} option is set.
-Note that the $N$ ranges quoted above for which a given strategy is
-optimal hold for $R=1$; the general $R$ dependence can be significant
-(and non-trivial), for example for the Cambridge/Aachen jet algorithm
-with $R=0.4$, \ttt{NlnNCam} beats the \ttt{N2MinHeapTiled} strategy
-only for $N\gtrsim 37000$. While some attempt has been made to account
-for the $R$-dependence in the choice of the strategy with the
-``\ttt{Best}'' option, there may exist specific regions of $N$ and
-$R$ in which a manual choice of strategy can give faster execution.
+If \ttt{strategy} is omitted then the \ttt{Best} option is set.  
+%
+Note that the $N$ ranges quoted in table~\ref{tab:Strategies} for
+which a given strategy is optimal hold for $R=1$; the general $R$
+dependence can be significant (and non-trivial).
+%
+For example for the Cambridge/Aachen jet algorithm with $R=0.4$,
+\ttt{NlnNCam} surpasses the \ttt{N2MinHeapTiled} strategy only for
+$N\gtrsim 37000$.
+%
+While some attempt has been made to account for the $R$-dependence in
+the choice of the strategy with the ``\ttt{Best}'' option, there may
+exist specific regions of $N$ and $R$ in which a manual choice of
+strategy can give faster execution.
+%
 Furthermore the \ttt{NlnNCam} strategy's timings may depend
-strongly on the size of the cache, and the transitions that have been
-adopted are based on a cache size of $2$~MB. Finally for a given $N$
-and $R$, the optimal strategy may also depend on the event structure. 
+strongly on the size of the cache
+%%%% OLD: and the transitions that have been adopted are 
+%%%%      based on a cache size of $2$~MB. 
+%%%% 2011-11-17: but seem to work OK also in Gregory's latest
+%%%%             6MB cache results       
+Finally for a given $N$ and $R$, the optimal strategy may also depend
+on the event structure.
 
+\begin{figure}[t]
+  \centering
+  % NB: use of 3_0_1 in file naming is to ensure that we can drop the
+  % file extension. That way both latex and pdflatex will find an
+  % appropriate figure.
+  \includegraphics[width=0.7\textwidth]{figs/timings_best_3_0_1}
+  \caption{Time required to perform the clustering of $N$ particles in
+    \fastjet 3.0.1 with the \ttt{Best} strategy. The anti-$k_t$,
+    $k_t$, and Cambridge/Aachen (C/A) native algorithms are shown,
+    together with the SISCone plugin.  All use $R=0.7$.
+    %%
+    Shown for an Intel I5 750 processor with 6~MB of
+    cache~\comment{CHECK}.
+    %%
+    For small $N$, $N$ was varied by taking a single hard dijet event
+    generated with Pythia~6~\cite{Sjostrand:2006za} and extracting the
+    $N$ hardest particles. 
+    %%
+    Large $N$ values were obtained by taking a single hard dijet event
+    and adding simulated minimum-bias events to it.  
+    %%
+    The results include the time to extract the inclusive jets with
+    $p_t > 5\GeV$ and sort them into decreasing $p_t$.  }
+\label{fig:timings}
+\end{figure}
 
-\comment{PUT A FIGURE WITH TIMING? Just have SISCone, $k_t$, C/A and
-  anti-$k_t$}.
+Illustrative timings for the \ttt{Best} strategy are shown as a
+function of $N$ in figure~\ref{fig:timings} for the anti-$k_t$, $k_t$
+and the Cambridge/Aachen algorithms. Results for the SISCone plugin
+are given for comparison purposes.
+%
+Kinks in the timings of the native algorithms are visible at the $N$
+values where there is a switch from one strategy to another.
+%
+There can be imperfections in this choice, e.g. as seen for the $k_t$
+algorithm near $N=20\,000$. 
+%
+While their impact is generally modest, depending on event structure
+there can be cases where a manual choice of strategy can have
+significant benefits.
+%
 
+We note that there are a few places where there remains scope for
+timing improvements. 
+%
+In particular at low $N$ the overheads related to copying and sorting
+of a vector of \ttt{PseudoJet} objects are substantial fraction of the
+total time, and could be reduced.
+%
+Additionally, for the Cambridge/Aachen algorithm at moderate to large
+$N$, the use of multiple grid sizes could bring an $\order{1}$
+benefit;
+%
+for the anti-$k_t$ algorithm one can envisage $\order{1}$ improvements
+at moderate to large $N$ when $N$ is dominated by ghost particles,
+making use of the fact that for the anti-$k_t$ algorithm one may
+neglect the ghosts' self clustering in the determination of hard jets'
+areas.
+%
+Should users have applications where such improvements would be
+critical, they are encouraged to contact the \fastjet authors.
 
 %======================================================================
 \section{User Info in PseudoJets}
@@ -5476,6 +5552,13 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Fast hierarchical clustering and other applications of dynamic
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
+
+\bibitem{Sjostrand:2006za}
+  T.~Sjostrand, S.~Mrenna and P.~Skands,
+  ``{\tt Pythia} 6.4 physics and manual,''
+  JHEP {\bf 0605} (2006) 026,
+  [arXiv:hep-ph/0603175].
+  %%CITATION = JHEPA,0605,026;%%
 
 \end{thebibliography}
 
