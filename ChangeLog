@@ -1,3 +1,10 @@
+2011-11-17  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence.cc (_decant_options):
+	  added a missing call to _decant_options_partial()
+	  (needed for proper initialisation as used e.g. in cases with
+	  area)
+
 2011-11-16  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 

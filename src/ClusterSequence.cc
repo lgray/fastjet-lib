@@ -382,6 +382,8 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def_in,
   _writeout_combinations = writeout_combinations;
   // initialised the wrapper to the current CS
   _structure_shared_ptr.reset(new ClusterSequenceStructure(this));
+
+  _decant_options_partial();
 }
 
 //----------------------------------------------------------------------
