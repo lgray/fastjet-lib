@@ -30,11 +30,11 @@
 	* example/fastjet_timing_plugins.cc:
 	  added a -repeat-incl <ptmin> option to show the jets above ptmin
 	  at each repetition of the clustering
-	  [modified it so that teh jets are just extracted and sorted but
+	  [modified it so that the jets are just extracted and sorted but
 	  not printed]
 
 	* configure.ac:
-	  increased the level of warnings in teh default compilation flags
+	  increased the level of warnings in the default compilation flags
 
 	* example/10-subjets.cc:
 	* example/04-constituents.cc:
@@ -304,7 +304,7 @@
 	  from the FastJet configure/build system. This has mailny the
 	  advantage to reduce the size of the distribution (1.7MB instead
 	  of 2.0MB) and save a bit of time during configuration. However
-	  it comes at teh expense that we have to hardcode the SISCone
+	  it comes at the expense that we have to hardcode the SISCone
 	  version in a new configuration (auto)header --- since it would
 	  no longer be obtained from SISCone's configure.ac. Therefore, we
 	  stick to the old situation and comment out the inclusion of
@@ -4186,7 +4186,7 @@
 	   - the support for deleter/allocator
 	   - the initialisation from a weak_ptr or auto_ptr
 	   - the {static,const,dynamic}_pointer_cast
-	  the implementation seems to match teh standard.
+	  the implementation seems to match the standard.
 
 	  Note, *_pointer_casts would require the constructor
 	    template<class Y>
