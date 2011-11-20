@@ -1,3 +1,9 @@
+2011-11-20  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	  put the extra warnings (-ansi 0pedantic -Wextra -Wshadow)
+	  under a --enable-extra-warnings configure flag
+
 2011-11-20  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/PseudoJet.hh: 

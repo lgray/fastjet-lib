@@ -41,8 +41,7 @@ dnl if the user has not set CXXFLAGS, then set our own default
 dnl-------------------------------------------------------------------
 USE_CUSTOM_FLAGS="yes"
 if [[ "x$CXXFLAGS" == "x" ]]; then
-   dnl try to put a high warning level
-   CXXFLAGS="-O3 -ansi -pedantic -Wall -Wextra -Wshadow"
+   CXXFLAGS="-O3 -Wall"
    USE_CUSTOM_FLAGS="no"
 fi
 
@@ -79,7 +78,7 @@ dnl-------------------------------------------------------------------
 dnl if the debug flag is set, build with -g
 dnl default is "yes"
 AC_ARG_ENABLE(debug,
-	[  --enable-debug         Turn on debug compiler information [default=yes]],
+	[  --enable-debug          Turn on debug compiler information [default=yes]],
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
 if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
@@ -100,6 +99,15 @@ if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
    if [[ "x${ac_overloaded_virtual_ok}" == "xyes" ]]; then
       AM_CXXFLAGS=${AM_CXXFLAGS}" -Woverloaded-virtual "
    fi
+fi
+
+dnl check if one wants a high level of warnings
+AC_ARG_ENABLE(extra-warnings,
+	[  --enable-extra-warnings Turn on additional compiler warnings [default=no]],
+	[ENABLE_DEBUG_FLAG="$enableval"],
+	[ENABLE_DEBUG_FLAG="no"])
+if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
+   AM_CXXFLAGS=${AM_CXXFLAGS}" -ansi -pedantic -Wextra -Wshadow "
 fi
 
 dnl-------------------------------------------------------------------
