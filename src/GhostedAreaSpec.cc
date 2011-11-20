@@ -44,14 +44,14 @@ GhostedAreaSpec::GhostedAreaSpec(
                            int    repeat_in        ,
                            double ghost_area_in    ,   
                            double grid_scatter_in  , 
-                           double kt_scatter_in    ,   
-                           double mean_ghost_kt_in 
+                           double pt_scatter_in    ,   
+                           double mean_ghost_pt_in 
                           ): 
     _repeat(repeat_in), 
     _ghost_area(ghost_area_in), 
     _grid_scatter(grid_scatter_in),  
-    _kt_scatter(kt_scatter_in), 
-    _mean_ghost_kt(mean_ghost_kt_in),
+    _pt_scatter(pt_scatter_in), 
+    _mean_ghost_pt(mean_ghost_pt_in),
     _fj2_placement(false),
     _selector(selector),
     _actual_ghost_area(-1.0)
@@ -136,13 +136,13 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       else                phi = phi_fj2;
       double rap = (irap+rap_offset) * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
 	                                                 + _ghost_rap_offset ;
-      double kt = _mean_ghost_kt*(1+(_our_rand()-0.5)*_kt_scatter);
+      double pt = _mean_ghost_pt*(1+(_our_rand()-0.5)*_pt_scatter);
 
       double exprap = exp(+rap);
-      double pminus = kt/exprap;
-      double pplus  = kt*exprap;
-      double px = kt*cos(phi);
-      double py = kt*sin(phi);
+      double pminus = pt/exprap;
+      double pplus  = pt*exprap;
+      double px = pt*cos(phi);
+      double py = pt*sin(phi);
       PseudoJet mom(px,py,0.5*(pplus-pminus),0.5*(pplus+pminus));
       // this call fills in the PseudoJet's cached rap,phi information,
       // based on pre-existing knowledge. Watch out: if you get the hint
@@ -168,8 +168,8 @@ string GhostedAreaSpec::description() const {
   else
     ostr << ", placed up to y = " << ghost_maxrap() ;
   ostr << ", scattered wrt to perfect grid by (rel) " << grid_scatter() 
-       << ", mean_ghost_kt = " << mean_ghost_kt()
-       << ", rel kt_scatter =  " << kt_scatter()
+       << ", mean_ghost_pt = " << mean_ghost_pt()
+       << ", rel pt_scatter =  " << pt_scatter()
        << ", n repetitions of ghost distributions =  " << repeat();
   return ostr.str();
 }

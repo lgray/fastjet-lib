@@ -128,22 +128,36 @@ class PseudoJet {
   double eta() const {return pseudorapidity();}
 
   /// returns the squared transverse momentum
-  inline double kt2() const {return _kt2;}
+  inline double pt2() const {return _kt2;}
+  /// returns the scalar transverse momentum
+  inline double  pt() const {return sqrt(_kt2);} 
   /// returns the squared transverse momentum
   inline double perp2() const {return _kt2;}  // like CLHEP
   /// returns the scalar transverse momentum
   inline double  perp() const {return sqrt(_kt2);}    // like CLHEP
+  /// returns the squared transverse momentum
+  inline double kt2() const {return _kt2;} // for bkwds compatibility
+
   /// returns the squared invariant mass // like CLHEP
   inline double  m2() const {return (_E+_pz)*(_E-_pz)-_kt2;}    
+  /// returns the invariant mass 
+  /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
+  inline double  m() const;    
+
   /// returns the squared transverse mass = kt^2+m^2
   inline double mperp2() const {return (_E+_pz)*(_E-_pz);}
   /// returns the transverse mass = sqrt(kt^2+m^2)
   inline double mperp() const {return sqrt(std::abs(mperp2()));}
-  /// returns the invariant mass 
-  /// (If m2() is negative then -sqrt(-m2()) is returned, as in CLHEP)
-  inline double  m() const;    
-  /// return px^2+py^2+pz^2
+  /// returns the squared transverse mass = kt^2+m^2
+  inline double mt2() const {return (_E+_pz)*(_E-_pz);}
+  /// returns the transverse mass = sqrt(kt^2+m^2)
+  inline double mt() const {return sqrt(std::abs(mperp2()));}
+
+  /// return the squared 3-vector modulus = px^2+py^2+pz^2
   inline double modp2() const {return _kt2+_pz*_pz;}
+  /// return the 3-vector modulus = sqrt(px^2+py^2+pz^2)
+  inline double modp() const {return sqrt(_kt2+_pz*_pz);}
+
   /// return the transverse energy
   inline double Et() const {return (_kt2==0) ? 0.0 : _E/sqrt(1.0+_pz*_pz/_kt2);}
   /// return the transverse energy squared

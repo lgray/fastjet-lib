@@ -48,8 +48,8 @@ namespace gas {
   const int    def_repeat        = 1;
   const double def_ghost_area    = 0.01;
   const double def_grid_scatter  = 1.0;
-  const double def_kt_scatter    = 0.1;
-  const double def_mean_ghost_kt = 1e-100;
+  const double def_pt_scatter    = 0.1;
+  const double def_mean_ghost_pt = 1e-100;
 }
 
 //----------------------------------------------------------------------
@@ -67,8 +67,8 @@ public:
                     _repeat       (gas::def_repeat), 
                     _ghost_area   (gas::def_ghost_area), 
                     _grid_scatter (gas::def_grid_scatter), 
-                    _kt_scatter   (gas::def_kt_scatter), 
-                    _mean_ghost_kt(gas::def_mean_ghost_kt),
+                    _pt_scatter   (gas::def_pt_scatter), 
+                    _mean_ghost_pt(gas::def_mean_ghost_pt),
                     _fj2_placement(false) {_initialize();}
   
   /// explicit constructor
@@ -76,16 +76,16 @@ public:
                           int    repeat_in        = gas::def_repeat,
                           double ghost_area_in    = gas::def_ghost_area,   
                           double grid_scatter_in  = gas::def_grid_scatter, 
-                          double kt_scatter_in    = gas::def_kt_scatter,   
-                          double mean_ghost_kt_in = gas::def_mean_ghost_kt
+                          double pt_scatter_in    = gas::def_pt_scatter,   
+                          double mean_ghost_pt_in = gas::def_mean_ghost_pt
                           ): 
     _ghost_maxrap(ghost_maxrap_in), 
     _ghost_rap_offset(0.0),
     _repeat(repeat_in), 
     _ghost_area(ghost_area_in), 
     _grid_scatter(grid_scatter_in),  
-    _kt_scatter(kt_scatter_in), 
-    _mean_ghost_kt(mean_ghost_kt_in),
+    _pt_scatter(pt_scatter_in), 
+    _mean_ghost_pt(mean_ghost_pt_in),
     _fj2_placement(false) {_initialize();}
 
   /// explicit constructor
@@ -94,16 +94,16 @@ public:
                            int    repeat_in        = gas::def_repeat,
                            double ghost_area_in    = gas::def_ghost_area,   
                            double grid_scatter_in  = gas::def_grid_scatter, 
-                           double kt_scatter_in    = gas::def_kt_scatter,   
-                           double mean_ghost_kt_in = gas::def_mean_ghost_kt
+                           double pt_scatter_in    = gas::def_pt_scatter,   
+                           double mean_ghost_pt_in = gas::def_mean_ghost_pt
                           ): 
     _ghost_maxrap    (0.5*(ghost_maxrap_in - ghost_minrap_in)), 
     _ghost_rap_offset(0.5*(ghost_maxrap_in + ghost_minrap_in)),
     _repeat(repeat_in), 
     _ghost_area(ghost_area_in), 
     _grid_scatter(grid_scatter_in),  
-    _kt_scatter(kt_scatter_in), 
-    _mean_ghost_kt(mean_ghost_kt_in),
+    _pt_scatter(pt_scatter_in), 
+    _mean_ghost_pt(mean_ghost_pt_in),
     _fj2_placement(false) {_initialize();}
 
 
@@ -112,8 +112,8 @@ public:
                            int    repeat_in        = gas::def_repeat,
                            double ghost_area_in    = gas::def_ghost_area,   
                            double grid_scatter_in  = gas::def_grid_scatter, 
-                           double kt_scatter_in    = gas::def_kt_scatter,   
-                           double mean_ghost_kt_in = gas::def_mean_ghost_kt
+                           double pt_scatter_in    = gas::def_pt_scatter,   
+                           double mean_ghost_pt_in = gas::def_mean_ghost_pt
 			   );
 
 
@@ -121,14 +121,17 @@ public:
   void _initialize();
 
   // for accessing values set by the user
-  inline double ghost_etamax() const {return _ghost_maxrap;}
-  inline double ghost_maxrap() const {return _ghost_maxrap;}
+  inline double ghost_etamax () const {return _ghost_maxrap;}
+  inline double ghost_maxrap () const {return _ghost_maxrap;}
   inline double ghost_area   () const {return _ghost_area   ;}
-  inline double grid_scatter() const {return _grid_scatter;}
-  inline double kt_scatter  () const {return _kt_scatter  ;}
-  inline double mean_ghost_kt() const {return _mean_ghost_kt  ;}
-  inline int    repeat      () const {return _repeat      ;}
-  inline bool   fj2_placement() const{return _fj2_placement;}
+  inline double grid_scatter () const {return _grid_scatter;}
+  inline double pt_scatter   () const {return _pt_scatter  ;}
+  inline double mean_ghost_pt() const {return _mean_ghost_pt  ;}
+  inline int    repeat       () const {return _repeat      ;}
+  inline bool   fj2_placement() const {return _fj2_placement;}
+
+  inline double kt_scatter   () const {return _pt_scatter  ;}
+  inline double mean_ghost_kt() const {return _mean_ghost_pt  ;}
 
   // for accessing values 
   inline double actual_ghost_area() const {return _actual_ghost_area;}
@@ -136,12 +139,15 @@ public:
 
   // when explicitly modifying values, sometimes call the initializer
   inline void set_ghost_area   (double val) {_ghost_area    = val; _initialize();}
-  inline void set_ghost_etamax(double val) {_ghost_maxrap = val; _initialize();}
-  inline void set_ghost_maxrap(double val) {_ghost_maxrap = val; _initialize();}
-  inline void set_grid_scatter(double val) {_grid_scatter   = val; }
-  inline void set_kt_scatter  (double val) {_kt_scatter     = val; }
-  inline void set_mean_ghost_kt(double val){_mean_ghost_kt  = val; }
-  inline void set_repeat      (int    val) {_repeat         = val; }
+  inline void set_ghost_etamax (double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_ghost_maxrap (double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_grid_scatter (double val) {_grid_scatter   = val; }
+  inline void set_pt_scatter   (double val) {_pt_scatter     = val; }
+  inline void set_mean_ghost_pt(double val) {_mean_ghost_pt  = val; }
+  inline void set_repeat       (int    val) {_repeat         = val; }
+
+  inline void set_kt_scatter   (double val) {_pt_scatter     = val; }
+  inline void set_mean_ghost_kt(double val) {_mean_ghost_pt  = val; }
 
   /// if val is true, set ghost placement as it was in FastJet 2.X. The
   /// main differences between FJ2 and FJ3 ghost placement are
@@ -206,8 +212,8 @@ private:
   int    _repeat      ;
   double _ghost_area   ;  
   double _grid_scatter;
-  double _kt_scatter  ;
-  double _mean_ghost_kt;
+  double _pt_scatter  ;
+  double _mean_ghost_pt;
   bool   _fj2_placement;
 
   Selector _selector;

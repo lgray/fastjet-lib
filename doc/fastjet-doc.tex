@@ -780,21 +780,28 @@ accessing the components
   double rapidity() const ; // returns the rapidity
   double pseudorapidity() const ; // returns the pseudo-rapidity
   double eta()      const ; // returns the pseudo-rapidity
-  double kt2()      const ; // returns the squared transverse momentum
+  double pt2()      const ; // returns the squared transverse momentum
+  double pt()       const ; // returns the transverse momentum
   double perp2()    const ; // returns the squared transverse momentum
   double perp()     const ; // returns the transverse momentum
   double m2()       const ; // returns squared invariant mass
   double m()        const ; // returns invariant mass ($-\sqrt{-m^2}$ if $m^2 < 0$)
+  double mt2()      const ; // returns the squared transverse mass = $k_t^2+m^2$
+  double mt()       const ; // returns the transverse mass
   double mperp2()   const ; // returns the squared transverse mass = $k_t^2+m^2$
   double mperp()    const ; // returns the transverse mass
   double operator[] (int i) const; // returns component i
   double operator() (int i) const; // returns component i
 
-  /// return a valarray containing the four-momentum (components 0--2
+  /// return a valarray containing the four-momentum (components 0-2
   /// are 3-momentum, component 3 is energy).
   valarray<double> four_mom() const;
-\end{lstlisting}}
+\end{lstlisting}} 
 %
+\noindent The reader may have observed that in some cases more than
+one name can be used to access the same quantity. This is intended to
+reflect the diversity of common usages within the community.
+
 There are two ways of associating user information with a
 \ttt{PseudoJet}.
 %
@@ -802,7 +809,6 @@ The simpler method is through an integer called the user index
 \begin{lstlisting}
   /// set the user_index, intended to allow the user to label the object (default is -1)
   void set_user_index(const int index);
-
   /// return the user_index
   int user_index() const ;
 \end{lstlisting}
@@ -2859,8 +2865,8 @@ constructor is
                   int    repeat        = 1,
                   double ghost_area    = 0.01, 
                   double grid_scatter  = 1.0, 
-                  double kt_scatter    = 0.1,
-                  double mean_ghost_kt = 1e-100);
+                  double pt_scatter    = 0.1,
+                  double mean_ghost_pt = 1e-100);
 \end{lstlisting}
 The ghosts are distributed on a uniform grid in $y$ and $\phi$, with
 small random fluctuations to avoid degeneracies. The
@@ -2901,9 +2907,9 @@ area in the $k_t$ algorithm, which just calculates the Voronoi area
 discussed below (since they are identical).
 
 Other variables that the user may wish to set are: \ttt{grid\_scatter}
-and \ttt{kt\_scatter}, which  are fractional random fluctuations of the
+and \ttt{pt\_scatter}, which  are fractional random fluctuations of the
 position of the ghosts on the $y$-$\phi$ grid and of their
-transverse momentum; and \ttt{mean\_ghost\_kt} which is the average transverse
+transverse momentum; and \ttt{mean\_ghost\_pt} which is the average transverse
 momentum of the ghosts.
 
 After initialisation, the parameters can be modified and retrieved
@@ -2922,8 +2928,8 @@ Finally, an alternative constructor
                   int    repeat        = 1,
                   double ghost_area    = 0.01, 
                   double grid_scatter  = 1.0, 
-                  double kt_scatter    = 0.1,
-                  double mean_ghost_kt = 1e-100);
+                  double pt_scatter    = 0.1,
+                  double mean_ghost_pt = 1e-100);
 \end{lstlisting}
 allows the user to have ghosts placed in the region specified by the
 \ttt{selector}, which must be purely geometrical and have finite

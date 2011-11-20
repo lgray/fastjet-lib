@@ -1,3 +1,16 @@
+2011-11-20  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/PseudoJet.hh: 
+	  added pt(), pt2(), mt() and mt2() methods.
+
+	* src/GhostedAreaSpec.cc: 
+	* include/fastjet/GhostedAreaSpec.hh: 
+	  switched kt -> pt in default function names; kept copies of
+	  functions with "kt" in name for backwards compatibility.
+
+	* test-script-output-orig.txt: 
+	  edits of kt -> pt given change in GAS.
+
 2011-11-17  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 

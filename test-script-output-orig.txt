@@ -56,7 +56,7 @@ jet #        rapidity             phi              pt  n constituents
 # Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code.
 #-------------------------------------------------------------------------
 Jet definition was: Longitudinally invariant kt algorithm with R = 1 and E scheme recombination
-Area definition was: Active area (hidden ghosts) with ghosts of area 0.00997331 (had requested 0.01), placed up to y = 6, scattered wrt to perfect grid by (rel) 1, mean_ghost_kt = 1e-100, rel kt_scatter =  0.1, n repetitions of ghost distributions =  1
+Area definition was: Active area (hidden ghosts) with ghosts of area 0.00997331 (had requested 0.01), placed up to y = 6, scattered wrt to perfect grid by (rel) 1, mean_ghost_pt = 1e-100, rel pt_scatter =  0.1, n repetitions of ghost distributions =  1
 Strategy adopted by FastJet was N2MinHeapTiled
 
 Printing inclusive jets with pt > 5 GeV
