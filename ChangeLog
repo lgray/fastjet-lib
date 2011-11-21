@@ -1,6 +1,8 @@
-2011-11-21  Gregory Soyez  <soyez@fastjet.fr>
+2011-11-21  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
-	* tools/MassDropTagger.cc:
+	* tools/MassDropTagger.cc (result):
+	  replaced m() by equivalent expressions using m2()
+
 	* tools/fastjet/tools/MassDropTagger.hh:
 	  used a WrappedStructure instead of a CompositeJetStructure for
 	  the base MassDropTaggerStructure class.

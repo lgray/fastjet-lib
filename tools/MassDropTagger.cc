@@ -69,13 +69,13 @@ PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
   // the case
   while ((had_parents = j.has_parents(j1,j2))) {
     // make parent1 the more massive jet
-    if (j1.m() < j2.m()) std::swap(j1,j2);
+    if (j1.m2() < j2.m2()) std::swap(j1,j2);
 
     // if we pass the conditions on the mass drop and its degree of
     // asymmetry (kt_dist/m^2 > rtycut [where kt_dist/m^2 \sim
     // z/(1-z)), then we've found something interesting, so exit the
     // loop
-    if ( (j1.m() < _mu*j.m()) && (j1.kt_distance(j2) > _ycut*j.m2()) )
+    if ( (j1.m2() < _mu*_mu*j.m2()) && (j1.kt_distance(j2) > _ycut*j.m2()) )
       break;
     else
       j = j1;
@@ -89,8 +89,8 @@ PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
   PseudoJet result_local = j;
   MassDropTaggerStructure * s = new MassDropTaggerStructure(result_local);
 //  s->_original_jet = jet;
-  s->_mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
-  s->_y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
+  s->_mu = (j.m2()!=0.0) ? sqrt(j1.m2()/j.m2()) : 0.0;
+  s->_y  = (j.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
 
   result_local.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
 
