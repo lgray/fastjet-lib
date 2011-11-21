@@ -86,13 +86,13 @@ PseudoJet MassDropTagger::result(const PseudoJet & jet) const{
     return PseudoJet();
 
   // create the result and its structure
-  const JetDefinition::Recombiner *rec
-    = jet.associated_cluster_sequence()->jet_def().recombiner();
-  PseudoJet result_local = join<StructureType>(j1,j2,*rec);
-  StructureType * s = (StructureType *) result_local.structure_non_const_ptr();
+  PseudoJet result_local = j;
+  MassDropTaggerStructure * s = new MassDropTaggerStructure(result_local);
 //  s->_original_jet = jet;
   s->_mu = (j.m()!=0.0) ? j1.m()/j.m() : 0.0;
   s->_y  = (j1.m2()!=0.0) ? j1.kt_distance(j2)/j.m2() : 0.0;
+
+  result_local.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
 
   return result_local;
 }

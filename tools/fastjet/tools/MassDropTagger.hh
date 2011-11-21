@@ -31,7 +31,7 @@
 
 #include <fastjet/tools/Transformer.hh>
 #include <fastjet/LimitedWarning.hh>
-#include <fastjet/CompositeJetStructure.hh>
+#include <fastjet/WrappedStructure.hh>
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -118,14 +118,13 @@ protected:
 /// See the MassDropTagger class description for the details of what
 /// is inside this structure
 ///
-class MassDropTaggerStructure : public CompositeJetStructure{
+class MassDropTaggerStructure : public WrappedStructure{
 public:
   /// ctor with initialisation
   ///  \param pieces  the pieces of the created jet
   ///  \param rec     the recombiner from the underlying cluster sequence
-  MassDropTaggerStructure(const std::vector<PseudoJet> & pieces_in, 
-                          const JetDefinition::Recombiner *recombiner = 0) :
-    CompositeJetStructure(pieces_in, recombiner), _mu(0.0), _y(0.0){}
+  MassDropTaggerStructure(const PseudoJet & result_jet) :
+    WrappedStructure(result_jet.structure_shared_ptr()), _mu(0.0), _y(0.0){}
 
   /// returns the mass-drop ratio, pieces[0].m()/jet.m(), for the splitting
   /// that triggered the mass-drop condition
