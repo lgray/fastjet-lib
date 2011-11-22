@@ -123,6 +123,9 @@ public:
   /// the plugin mechanism's standard way of accessing the jet radius
   virtual double R() const {return cone_radius();}
 
+  /// allow to disable the banner
+  void disable_banner() const {_first_time = false;}
+
 private:
 
   double _cone_radius       ;
@@ -130,6 +133,11 @@ private:
   double _overlap_threshold ;
 
   bool _E_scheme_jets;
+
+  static bool _first_time;
+
+  /// print a banner for reference to the 3rd-party code
+  void _print_banner() const;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

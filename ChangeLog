@@ -1,3 +1,24 @@
+2011-11-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/TrackJet/TrackJetPlugin.cc:
+	* plugins/TrackJet/fastjet/TrackJetPlugin.hh:
+	  added license information + print a banner at first usage
+
+	* plugins/PxCone/fastjet/PxConePlugin.hh:
+	* plugins/PxCone/PxConePlugin.cc:
+	  print a banner at first usage
+
+	* plugins/PxCone/README:
+	  mentioned the list of changes in pxcone.f
+
+	* plugins/CMSIterativeCone/SortByEt.h:
+	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc:
+	  inserted a proper license description and a list of changes
+	  compared to the original CMS code + print a banner at 1st use
+
+	* COPYING:
+	  added a series of license agreements for 3rd party plugins
+
 2011-11-21  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* tools/MassDropTagger.cc (result):

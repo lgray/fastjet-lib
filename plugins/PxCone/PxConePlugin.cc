@@ -39,6 +39,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
+bool PxConePlugin::_first_time = true;
+
 string PxConePlugin::description () const {
   ostringstream desc;
   
@@ -54,6 +56,8 @@ string PxConePlugin::description () const {
 
 
 void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner();
  
   // only have hh mode
   int mode = 2;
@@ -157,6 +161,22 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   delete[] ipass;
   delete[] ijmul;
   delete[] pjet;
+}
+
+// print a banner for reference to the 3rd-party code
+void PxConePlugin::_print_banner() const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  cout << "#-------------------------------------------------------------------------" << endl;
+  cout << "# You are running the PxCone plugin for FastJet (v2.1 onwards)            " << endl;
+  cout << "# Original code by the Luis Del Pozo, David Ward and Michael H. Seymour   " << endl;
+  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "#   M. H. Seymour and C. Tevlin, JHEP 0611 (2006) 052 [hep-ph/0609100].   " << endl;
+  cout << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  cout.flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

@@ -5,27 +5,55 @@
 // Copyright (c) ????-????, CMS [for the iterative-cone code itself]
 //
 //----------------------------------------------------------------------
-// This file is part of FastJet.
+// This file is part of FastJet. It contains code that has been
+// obtained from the CMS collaboration, revision 1.14 of the
+// CMSIterativeConeAlgorithm.cc file in CMSSW, see
+//   http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW/RecoJets/JetAlgorithms/src/CMSIterativeConeAlgorithm.cc?hideattic=0&revision=1.14&view=markup
 //
-//  FastJet is free software; you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation; either version 2 of the License, or
-//  (at your option) any later version.
+// Permission has been granted by the CMS collaboration to release it
+// in FastJet under the terms of the GNU Public License(v2) (see the
+// COPYING file in the main FastJet directory for details).
+// Changes from the original file are listed below.
 //
-//  The algorithms that underlie FastJet have required considerable
-//  development and are described in hep-ph/0512210. If you use
-//  FastJet as part of work towards a scientific publication, please
-//  include a citation to the FastJet paper.
+// FastJet is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 //
-//  FastJet is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// The algorithms that underlie FastJet have required considerable
+// development and are described in hep-ph/0512210. If you use
+// FastJet as part of work towards a scientific publication, please
+// include a citation to the FastJet paper.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with FastJet. If not, see <http://www.gnu.org/licenses/>.
+// FastJet is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with FastJet. If not, see <http://www.gnu.org/licenses/>.
 //----------------------------------------------------------------------
 //ENDHEADER
+
+// List of changes compared to the original CMS code (revision 1.14 of
+// CMSIterativeConeAlgorithm.cc)
+//
+// 2009-05-10  Gavin Salam  <salam@lpthe.jussieu.fr>
+//
+//        * added radius and seed threshold information in the plugin
+//          description
+//
+// 2009-01-06  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * Encapsulated the CMS code into a plugin for FastJet
+//        * inserted the deltaPhi and deltaR2 codes from 
+//            DataFormats/Math/interface/deltaPhi.h (rev 1.1)
+//            DataFormats/Math/interface/deltaR.h   (rev 1.2)
+//        * Adapted the code to use PseusoJet rather than 'InputItem'
+//          and 'InputCollection'
+//        * use the FastJet clustering history structures instead of
+//          the ProtoJet one used by CMS.
+
 
 // fastjet stuff
 #include "fastjet/ClusterSequence.hh"
@@ -61,7 +89,7 @@ T deltaR2 (T eta1, T phi1, T eta2, T phi2) {
 }
 
 //------------------------------------------------------
-
+bool CMSIterativeConePlugin::_first_time = true;
 
 string CMSIterativeConePlugin::description () const {
   ostringstream desc;
@@ -70,13 +98,8 @@ string CMSIterativeConePlugin::description () const {
 }
 
 void CMSIterativeConePlugin::run_clustering(ClusterSequence & clust_seq) const {
-
-  // This code is adapted from CMSIterativeConeAlgorithms.cc from the
-  // CMSSW software. 
-  // The adaptation is just meant to use 
-  //   - the FastJet 4-vectors instead of the CMS ones
-  //   - the FastJet clustering history structures instead of the 
-  //     ProtoJet one used by CMS.
+  // print a banner if we run this for the first time
+  _print_banner();
 
   //make a list of input objects ordered by ET
   //cout << "copying the list of particles" << endl;
@@ -194,8 +217,24 @@ void CMSIterativeConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
 
   } //loop over seeds ended
-
     
+}
+
+// print a banner for reference to the 3rd-party code
+void CMSIterativeConePlugin::_print_banner() const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  cout << "#-------------------------------------------------------------------------" << endl;
+  cout << "# You are running the CMS Iterative Cone plugin for FastJet (v2.4 onwards)" << endl;
+  cout << "# Original code by the CMS collaboration adapted to FastJet               " << endl;
+  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "#   G. L. Bayatian et al. [CMS Collaboration],                            " << endl;
+  cout << "#   CMS physics: Technical design report.                                 " << endl;
+  cout << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  cout.flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

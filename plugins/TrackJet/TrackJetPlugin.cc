@@ -4,7 +4,12 @@
 // Copyright (c) 2007-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
-// This file is part of FastJet.
+// This file is part of FastJet. It contains code that has been
+// obtained from the Rivet project by Leif Lonnblad, Andy Buckley and
+// Jon Butterworth. See http://www.hepforge.org/downloads/rivet.
+// Rivet is free software released under the terms of the GNU Public
+// License(v2).
+// Changes from the original file are listed below.
 //
 //  FastJet is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,6 +31,31 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
+// History of changes from the original TrackJet.cc file in Rivet <=1.1.2
+// 
+// 2011-01-28  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * Replaced the use of sort by stable_sort (see BUGS in the top
+//          FastJet dir)
+// 
+// 
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * Aligned the var names with the previous conventions
+// 
+//        * Put the plugin in the fastjet::trackjet namespace
+// 
+// 
+// 2009-01-06  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * Adapted the original code in a FastJet plugin class. 
+// 
+//        * Allowed for arbitrary recombination schemes (one for the
+//          recomstruction of the 'jet' --- i.e. summing the particles
+//          into a jet --- and one for the accumulation of particles in
+//          a 'track' --- i.e. the dynamics of the clustering)
+
+
 // fastjet stuff
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/TrackJetPlugin.hh"
@@ -41,6 +71,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
+//------------------------------------------------------------------
+// helper class to sort the particles in pt
+//------------------------------------------------------------------
 class TrackJetParticlePtr{
 public:
   TrackJetParticlePtr(int i_index, double i_perp2)
@@ -54,6 +87,12 @@ public:
   }
 };
 
+//------------------------------------------------------------------
+// implementation of the TrackJet plugin
+//------------------------------------------------------------------
+
+bool TrackJetPlugin::_first_time = true;
+
 string TrackJetPlugin::description () const {
   ostringstream desc;
   desc << "TrackJet algorithm with R = " << R();
@@ -61,6 +100,9 @@ string TrackJetPlugin::description () const {
 }
 
 void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner();
+
   // we first need to sort the particles in pt
   vector<TrackJetParticlePtr> particle_list;
 
@@ -144,6 +186,22 @@ void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
     clust_seq.plugin_record_iB_recombination(current_jet_index, _radius2);
   }
     
+}
+
+// print a banner for reference to the 3rd-party code
+void TrackJetPlugin::_print_banner() const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  cout << "#-------------------------------------------------------------------------" << endl;
+  cout << "# You are running the TrackJet plugin for FastJet (v2.4 upwards)          " << endl;
+  cout << "# This is based on the Rivet (v1.1.2) implementation of the TrackJet      " << endl;
+  cout << "# algorithm. Rivet is written by Leif Lonnblad, Andy Buckley and Jon      " << endl;
+  cout << "# Butterworth. See also http://www.hepforge.org/downloads/rivet.          " << endl;
+  cout << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  cout.flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

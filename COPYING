@@ -1,17 +1,80 @@
 FastJet is released under the GNU General Public License v2 (given
 below).
 
+----------------------------------------------------------------------
+CGAL
+----------------------------------------------------------------------
+
 Permission is specifically granted to link with CGAL (which is under a
 QPL license) and where relevant the plugins. 
 
+----------------------------------------------------------------------
+Plugins 
+----------------------------------------------------------------------
+
 For the plugin jet finders, the licensing situation is as follows:
 
+. ATLAS Cone: unknown (code from SpartyJet v1.20. GPLv2?)
+
 . CDF code: unknown (permission for distribution granted by J.Huston)
-. PxCone code: unknown (permission for distribution granted by M.H.Seymour)
-. SISCone code: GPL
 
 
-The "interface" part of the plugins are GPL.
+. CMS Iterative Cone: GPL(v2) (permission granted by R.Harris)
+
+  From: Robert M Harris <rharris@fnal.gov>
+  To: Gregory Soyez <soyez@fastjet.fr>, 
+      Matteo Cacciari <cacciari@lpthe.jussieu.fr>, 
+      Gavin Salam <salam@lpthe.jussieu.fr>
+  Cc: Daniele.Del.Re@cern.ch, 
+      Salvatore Rappoccio <rappoccio@gmail.com>, 
+      Robert M Harris <rharris@fnal.gov>
+  Subject: Re: CMS Iterative Cone license
+  Date: Mon, 21 Nov 2011 14:05:55 -0600
+  
+  Dear Gregory, Matteo and Gavin,
+    
+     As a jet object coordinator for the CMS collaboration, and having
+  consulted and obtained the consent of the other authors, I hereby
+  grant you permission to distribute our code for the CMS Iterative
+  Cone jet algorithm under the terms of the GNU Public License (v2).
+  
+  Best Regards,
+  Robert Harris
+
+  Code from http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW
+
+
+. PxCone code: GPL(v2) (permission granted by M.H.Seymour)
+
+  From: Mike Seymour <Michael.Seymour@cern.ch>
+  To: Gavin Salam <gavin.salam@cern.ch>
+  Subject: Re: PxCone licence
+  Date: Wed, 9 Nov 2011 15:15:08 +0000
+  
+  Dear Gavin, 
+
+  As an author of the PxCone code, and having checked that this is
+  acceptable with the other authors of PxCone (Luis Del Pozo and his
+  then PhD supervisor David Ward), I hereby grant you the right to
+  distribute PxCone together with FastJet under a GPL (v2) license.
+
+  Many thanks for dealing with this,
+  Mike. 
+
+
+. SISCone code: GPL(v2)
+
+
+. TrackJet: available under the GPL (v2) from Rivet (v1.1.2)
+  Rivet is written by Andy Buckley, Jon Butterworth and Leif Lonnblad
+  and is available from http://projects.hepforge.org/rivet/
+
+
+The "interface" part of the plugins are GPL (v2).
+
+----------------------------------------------------------------------
+References
+----------------------------------------------------------------------
 
 FastJet and SISCone are the result of original scientific research. If
 you use them in scientific work you are also encouraged to cite the

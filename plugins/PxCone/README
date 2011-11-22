@@ -6,6 +6,9 @@ While permission has been granted for pxcone to be distributed with
 fastjet, this was under the condition that it be made clear that pxcone
 is _not_ a supported product.
 
+Distribution permission is specified below and a list of changes from
+the original code can be found in the header of pxcone.f
+
 Compiling
 ---------
 Just type "make"
@@ -35,6 +38,5 @@ Mike.
 Michael H. Seymour.
 Professor of Particle Physics, University of Manchester
 Schuster: 6-10; +44 161 306 6480
-
 
 

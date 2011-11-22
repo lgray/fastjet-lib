@@ -79,11 +79,19 @@ public:
   /// here we return the R of the last alg in the list
   virtual double R() const {return _radius;}
 
+  /// allow to disable the banner
+  void disable_banner() const {_first_time = false;}
+
 private:
   double _radius, _radius2;
 
   JetDefinition::DefaultRecombiner _jet_recombiner;
   JetDefinition::DefaultRecombiner _track_recombiner;
+
+  static bool _first_time;
+
+  /// print a banner for reference to the 3rd-party code
+  void _print_banner() const;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh
