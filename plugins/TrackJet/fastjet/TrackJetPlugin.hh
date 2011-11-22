@@ -80,7 +80,7 @@ public:
   virtual double R() const {return _radius;}
 
   /// allow to disable the banner
-  void disable_banner() const {_first_time = false;}
+  void disable_banner() {_first_time = false;}
 
 private:
   double _radius, _radius2;

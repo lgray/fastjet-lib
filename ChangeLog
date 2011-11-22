@@ -1,3 +1,10 @@
+2011-11-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/PxCone/fastjet/PxConePlugin.hh:
+	* plugins/CMSIterativeCone/fastjet/CMSIterativeConePlugin.hh:
+	* plugins/TrackJet/fastjet/TrackJetPlugin.hh:
+	  removed an unwanted 'const'
+
 2011-11-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* plugins/PxCone/pxcone.f (PXCONE): 

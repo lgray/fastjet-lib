@@ -76,7 +76,7 @@ public:
   virtual double seed_threshold() const {return theSeedThreshold;}
 
   /// allow to disable the banner
-  void disable_banner() const {_first_time = false;}
+  void disable_banner() {_first_time = false;}
   
 private:
   double theConeRadius;     ///< cone radius
