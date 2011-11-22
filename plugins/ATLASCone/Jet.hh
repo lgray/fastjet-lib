@@ -1,19 +1,29 @@
-// file taken from SpartyJet v2.20.0
-// 
-// added #include <algorithms>
-
-
 #ifndef _JET_HH_
 #define _JET_HH_
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * removed some harmless warnings coming with the -Wshadow gcc option
- * 
- */
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from SpartyJet
+// v2.20.0 by Pierre-Antoine Delsart, Kurtis L. Geerlings, Joey
+// Huston, Brian T. Martin and Chris Vermilion
+// For details, see http://www.pa.msu.edu/~huston/SpartyJet/
+//                  http://projects.hepforge.org/spartyjet/
+//
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
+// History of changes from the original Jet.hh file in SpartyJet v2.20
+//  
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * removed some harmless warnings coming with the -Wshadow gcc option
+// 
+// 2011-06-28  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * used stable_sort instead of sort to fix some ordering issues
+// 
+// 2009-01-15  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::atlas namespace
 
 #include "LorentzVector.hh"
 #include <list>

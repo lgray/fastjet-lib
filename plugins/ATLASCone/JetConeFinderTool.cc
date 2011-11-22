@@ -1,17 +1,35 @@
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from SpartyJet
+// v2.20.0 by Pierre-Antoine Delsart, Kurtis L. Geerlings, Joey
+// Huston, Brian T. Martin and Chris Vermilion
+// For details, see http://www.pa.msu.edu/~huston/SpartyJet/
+//                  http://projects.hepforge.org/spartyjet/
+//
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
 //*******************************************************************************
 // Filename : JetConeFinderTool.cc 
 // Author   : Ambreesh Gupta
 // Created  : Nov, 2000
 //
 // Jan 2004: Use CLHEP units. Use phi = (-pi,pi].
-//
-// File taken from SpartyJet v2.20.0
-// Modifications:
-//   removed the string name in the ctor
-//   removed the Message m_log
-//   replaced StatusCode by an int (as defined previously)
-//   cleaned the comments
 //*******************************************************************************
+
+// History of changes from the original JetConeFinder.cc file in
+// SpartyJet v2.20
+//  
+// 2009-01-15  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::atlas namespace
+//
+// 2009-02-14  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * imported into FastJet
+//        * removed the string name in the ctor
+//        * removed the message logs
+//        * replaced StatusCode by int
+//        * cleaned the comments
 
 #include <iostream>
 

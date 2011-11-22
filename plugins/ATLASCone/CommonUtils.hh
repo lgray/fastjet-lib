@@ -1,4 +1,19 @@
-// File taken from SpartyJet v2.20.0
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from SpartyJet
+// v2.20.0 by Pierre-Antoine Delsart, Kurtis L. Geerlings, Joey
+// Huston, Brian T. Martin and Chris Vermilion
+// For details, see http://www.pa.msu.edu/~huston/SpartyJet/
+//                  http://projects.hepforge.org/spartyjet/
+//
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
+// History of changes from the original CommonUtils.hh file in
+// SpartyJet v2.20
+//  
+// 2009-01-15  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::atlas namespace
 
 #ifndef _JETCOMMONUTILS_HH_
 #define _JETCOMMONUTILS_HH_

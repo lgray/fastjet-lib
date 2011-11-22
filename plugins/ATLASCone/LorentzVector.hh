@@ -1,15 +1,22 @@
-// file taken from the CDF Plugin implementation
-// 
-// we've added et() and e() for easier use 
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from SpartyJet
+// v2.20.0 by Pierre-Antoine Delsart, Kurtis L. Geerlings, Joey
+// Huston, Brian T. Martin and Chris Vermilion
+// For details, see http://www.pa.msu.edu/~huston/SpartyJet/
+//                  http://projects.hepforge.org/spartyjet/
+//
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * removed some harmless warnings coming with the -Wshadow gcc option
- * 
- */
+// History of changes compared to the original LorentzVector.hh file
+// 
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * removed some harmless warnings coming with the -Wshadow gcc option
+// 
+// 2009-01-15  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::atlas namespace
 
 #ifndef _LORENTZ_VECTOR_HH_
 #define _LORENTZ_VECTOR_HH_

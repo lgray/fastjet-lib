@@ -43,6 +43,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
+bool ATLASConePlugin::_first_time = true;
+
 string ATLASConePlugin::description () const {
   ostringstream desc;
   desc << "ATLASCone plugin with R = "<< _radius 
@@ -52,6 +54,9 @@ string ATLASConePlugin::description () const {
 }
 
 void ATLASConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner();
+
 
   // transfer the list of PseudoJet into a atlas::Jet::jet_list_t
   //  jet_list_t is a vector<Jet*>
@@ -146,5 +151,24 @@ void ATLASConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // cout << "ATLASConePlugin: Bye" << endl;
   clear_list(particles_ptr);
 }
+
+// print a banner for reference to the 3rd-party code
+void ATLASConePlugin::_print_banner() const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  cout << "#-------------------------------------------------------------------------" << endl;
+  cout << "# You are running the ATLAS Cone plugin for FastJet (v2.4 onwards)        " << endl;
+  cout << "# Original code from SpartyJet adapted to FastJet                         " << endl;
+  cout << "# If you use this plugin, please cite                                     " << endl;
+  cout << "#   P.A. Delsart, K. Geerlings, J. Huston, B. Martin and C. Vermilion,    " << endl;
+  cout << "#   SpartyJet, http://projects.hepforge.org/spartyjet                     " << endl;
+  cout << "# in addition to the usual FastJet reference.                             " << endl;
+  cout << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  cout.flush();
+}
+
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

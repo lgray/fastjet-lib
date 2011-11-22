@@ -83,12 +83,19 @@ public:
   /// split-merge overlap threshold
   double f() const {return _f;}
 
+  /// allow to disable the banner
+  void disable_banner() {_first_time = false;}
+  
 private:
 
   double _radius;   ///< the cone radius
   double _seedPt;   ///< the pt seed threshold used in stable-cone search
   double _f;        ///< the overlap thresholod used in the split-merge
 
+  static bool _first_time;
+
+  /// print a banner for reference to the 3rd-party code
+  void _print_banner() const;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

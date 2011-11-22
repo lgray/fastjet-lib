@@ -1,5 +1,16 @@
 #ifndef JETREC_JETSPLITMERGETOOL_H
 #define JETREC_JETSPLITMERGETOOL_H
+
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from SpartyJet
+// v2.20.0 by Pierre-Antoine Delsart, Kurtis L. Geerlings, Joey
+// Huston, Brian T. Martin and Chris Vermilion
+// For details, see http://www.pa.msu.edu/~huston/SpartyJet/
+//                  http://projects.hepforge.org/spartyjet/
+//
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
 //******************************************************************************
 // Filename :  JetSplitMergeTool   
 // Author   :  Ambreesh Gupta
@@ -23,12 +34,21 @@
 // HISTORY
 //   05Nov01 agupta.  First version
 //   15Aug02 agupta.  Fix phi-wrapping. 
-//   
-// NOTES
-//   taken from SpartyJet v2.20.0
-//   removed the Message logs
-//   replaced StatusCode by int
 //*****************************************************************************
+
+
+// History of changes from the original JetSplitMergeTool.hh file in
+// SpartyJet v2.20
+// 
+// 2009-01-15  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::atlas namespace
+// 
+// 2009-02-14  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * imported into FastJet
+//        * removed the message logs
+//        * replaced StatusCode by int
 
 
 //class StoreGateSvc;

@@ -1,5 +1,23 @@
 2011-11-22  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh:
+	* plugins/ATLASCone/ATLASConePlugin.cc:
+	  added a banner
+
+	* plugins/ATLASCone/Makefile.am (libATLASConePlugin_la_SOURCES):
+	  removed empty source files
+
+	* plugins/ATLASCone/CommonUtils.hh:
+	* plugins/ATLASCone/JetConeFinderTool.cc:
+	* plugins/ATLASCone/JetConeFinderTool.hh:
+	* plugins/ATLASCone/JetDistances.hh:
+	* plugins/ATLASCone/Jet.cc:
+	* plugins/ATLASCone/Jet.hh:
+	* plugins/ATLASCone/JetSplitMergeTool.cc:
+	* plugins/ATLASCone/JetSplitMergeTool.hh:
+	* plugins/ATLASCone/LorentzVector.hh:
+	  added information about the file origin + a history of changes
+
 	* COPYING:
 	  added info about all plugins written by the FastJet authors
 

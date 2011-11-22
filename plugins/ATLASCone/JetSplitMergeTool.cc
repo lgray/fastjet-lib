@@ -1,3 +1,13 @@
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from SpartyJet
+// v2.20.0 by Pierre-Antoine Delsart, Kurtis L. Geerlings, Joey
+// Huston, Brian T. Martin and Chris Vermilion
+// For details, see http://www.pa.msu.edu/~huston/SpartyJet/
+//                  http://projects.hepforge.org/spartyjet/
+//
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
 //*******************************************************************************
 // Filename : JetSplitMergeTool.cxx 
 // Author   : Ambreesh Gupta
@@ -10,6 +20,21 @@
 //   replaced px() -> px, ... in the LorentzVector calls
 //   cleaned the comments
 //*******************************************************************************
+
+// History of changes from the original JetSplitMergeTool.cc file in
+// SpartyJet v2.20
+// 
+// 2009-01-15  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::atlas namespace
+// 
+// 2009-02-14  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * imported into FastJet
+//        * removed the string name in the ctor
+//        * removed the Message m_log
+//        * replaced px() -> px, ... in the LorentzVector calls
+//        * cleaned the comments
 
 #include <iostream>
 
