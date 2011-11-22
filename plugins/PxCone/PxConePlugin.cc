@@ -171,8 +171,9 @@ void PxConePlugin::_print_banner() const{
   cout << "#-------------------------------------------------------------------------" << endl;
   cout << "# You are running the PxCone plugin for FastJet (v2.1 onwards)            " << endl;
   cout << "# Original code by the Luis Del Pozo, David Ward and Michael H. Seymour   " << endl;
-  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "# If you use this plugin, please cite                                     " << endl;
   cout << "#   M. H. Seymour and C. Tevlin, JHEP 0611 (2006) 052 [hep-ph/0609100].   " << endl;
+  cout << "# in addition to the usual FastJet reference.                             " << endl;
   cout << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.

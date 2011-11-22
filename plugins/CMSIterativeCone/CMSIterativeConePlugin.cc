@@ -228,9 +228,10 @@ void CMSIterativeConePlugin::_print_banner() const{
   cout << "#-------------------------------------------------------------------------" << endl;
   cout << "# You are running the CMS Iterative Cone plugin for FastJet (v2.4 onwards)" << endl;
   cout << "# Original code by the CMS collaboration adapted to FastJet               " << endl;
-  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "# If you use this plugin, please cite                                     " << endl;
   cout << "#   G. L. Bayatian et al. [CMS Collaboration],                            " << endl;
   cout << "#   CMS physics: Technical design report.                                 " << endl;
+  cout << "# in addition to the usual FastJet reference.                             " << endl;
   cout << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.

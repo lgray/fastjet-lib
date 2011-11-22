@@ -172,8 +172,9 @@ void CDFJetCluPlugin::_print_banner() const{
   cout << "#-------------------------------------------------------------------------" << endl;
   cout << "# You are running the CDF JetClu plugin for FastJet (v2.1 upwards)        " << endl;
   cout << "# This is based on an implementation provided by Joey Huston.             " << endl;
-  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "# If you use this plugin, please cite                                     " << endl;
   cout << "#   F. Abe et al. [CDF Collaboration], Phys. Rev. D 45 (1992) 1448.       " << endl;
+  cout << "# in addition to the usual FastJet reference.                             " << endl;
   cout << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.

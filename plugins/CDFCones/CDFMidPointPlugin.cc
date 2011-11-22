@@ -160,8 +160,9 @@ void CDFMidPointPlugin::_print_banner() const{
   cout << "#-------------------------------------------------------------------------" << endl;
   cout << "# You are running the CDF MidPoint plugin for FastJet (v2.1 upwards)      " << endl;
   cout << "# This is based on an implementation provided by Joey Huston.             " << endl;
-  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "# If you use this plugin, please cite                                     " << endl;
   cout << "#   G. C. Blazey et al., hep-ex/0005012.                                  " << endl;
+  cout << "# in addition to the usual FastJet reference.                             " << endl;
   cout << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
