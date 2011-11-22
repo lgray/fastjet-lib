@@ -116,8 +116,8 @@
 
 \begin{abstract}
 
-  \fastjet is a \ttt{C++} package that provides access to a broad
-  range of jet finding and analysis tools.
+  \fastjet is a \ttt{C++} package that provides a broad range of jet
+  finding and analysis tools.
   %
   It includes efficient native implementations of all widely-used $2\to 1$
   sequential recombination jet algorithms for $pp$ and $e^+e^-$
@@ -178,24 +178,25 @@ Jet finding dates back to seminal work by Sterman and
 Weinberg~\cite{StermanWeinberg} and several reviews have been written
 describing the various kinds of jet finders, their different uses and
 properties, and even the history of the
-field, for example~\cite{Moretti:1998qx,Ellis:2007ib,Salam:2009jx,Ali:2010tw}.
+field, for example~\cite{Moretti:1998qx,RunII-jet-physics,Ellis:2007ib,Salam:2009jx,Ali:2010tw}.
 %
 It is possible to classify most jet algorithms into one of two broad
 classes: sequential recombination algorithms and cone algorithms.
-%
+
 Sequential recombination algorithms usually identify the pair of
 particles that are closest in some distance measure, recombine them,
 and then repeat the procedure over and again, until some stopping
-criterion is reached. The differences between them lie in the choice
-of distance measures and stopping criterion.
+criterion is reached. 
 %
 Generally, the distance measure is related to the structure of
-divergences in perturbative QCD.
+divergences in perturbative QCD and
 %
-Cone algorithms instead put together particles within specific conical
-angular regions, notably such that the momentum sum of the particles
-contained in a given cone coincides with the cone axis (a ``stable
-cone'').
+the various sequential recombination algorithms differ mainly in their
+particular choices of distance measure and stopping criterion.
+
+Cone algorithms put together particles within specific conical angular
+regions, notably such that the momentum sum of the particles contained
+in a given cone coincides with the cone axis (a ``stable cone'').
 %
 Because QCD radiation and hadronisation leaves the direction of a
 parton's energy flow essentially unchanged, the stable cones are
@@ -213,8 +214,8 @@ used sequential-recombination algorithms, both for hadron-hadron and
 $e^+e^-$ colliders, and easy access also to cone-type jet algorithms.
 
 To help introduce the terminology used throughout \fastjet and this
-manual, let us consider the $k_t$ algorithm for hadron
-colliders~\cite{ktexcl,ktincl}.
+manual, let us consider the longitudinally-invariant $k_t$ algorithm
+for hadron colliders~\cite{ktexcl,ktincl}.
 %
 This was the first jet algorithm to be implemented in
 \fastjet~\cite{fastjet} and its 
@@ -231,13 +232,13 @@ between all pairs of particles $i$ and $j$,
   \label{eq:dij-illustr}
   d_{ij} = d_{ji} = \min(p_{ti}^2, p_{tj}^2) \frac{\Delta R_{ij}^2}{R^2}\,,
 \end{equation}
-where $p_{ti}$ is the transverse momentum of particle $i$ and $\Delta
-R_{ij}^2 = (y_i - y_j)^2 + (\phi_i - \phi_j)^2$, with $y_i = \frac12
-\ln \frac{E_i + p_{zi}}{E_i - p_{zi}}$ and $\phi_i$ are respectively
-$i$'s rapidity and azimuth.
+where $p_{ti}$ is the transverse momentum of particle $i$ with respect
+to the beam ($z$) direction and $\Delta R_{ij}^2 = (y_i - y_j)^2 +
+(\phi_i - \phi_j)^2$, with $y_i = \frac12 \ln \frac{E_i + p_{zi}}{E_i
+  - p_{zi}}$ and $\phi_i$ respectively $i$'s rapidity and azimuth.
 %
-It also involves a distance measure between every particle $i$ and the
-beam
+The $k_t$ algorithm also involves a distance measure between every
+particle $i$ and the beam
 \begin{equation}
   \label{eq:diB-illustr}
   d_{iB} = p_{ti}^2\,.
@@ -250,7 +251,7 @@ In the original, so-called ``exclusive'' formulation of the $k_t$
 algorithm~\cite{ktexcl} (generally used with $R=1$), one identifies
 the smallest of the $d_{ij}$ and $d_{iB}$. 
 %
-If it is a $d_{ij}$ one replaces $i$ and $j$ with a single new object
+If it is a $d_{ij}$, one replaces $i$ and $j$ with a single new object
 whose momentum is $p_i + p_j$ --- often this object is called a
 ``pseudojet'', since it is neither a particle, nor yet a full
 jet.\footnote{In \fastjet we actually will use PseudoJet to denote any
@@ -326,7 +327,7 @@ perform the clustering.
 In practice this translates to about 1\,s for $N=1000$. Given that
 events with pileup can have multiplicities significantly in excess of
 1000 and that it can be necessary to cluster hundreds of millions of
-events, this quickly becomes prohibitive, all the more so in
+events, $N^3$ timing quickly becomes prohibitive, all the more so in
 time-critical contexts such as online triggers.
 %
 To alleviate this problem, \fastjet makes use of the
