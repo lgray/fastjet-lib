@@ -67,11 +67,17 @@ For the plugin jet finders, the licensing situation is as follows:
 
 
 . SISCone code: GPL(v2)
+  see http://projects.hepforge.org/siscone/ for details
 
 
 . TrackJet: available under the GPL (v2) from Rivet (v1.1.2)
   Rivet is written by Andy Buckley, Jon Butterworth and Leif Lonnblad
   and is available from http://projects.hepforge.org/rivet/
+
+
+. EECambridge, GridJet, Jade and NestedDefs have been written by the
+  FastJet authors and are thus distributed under the GNU Public
+  License (v2).
 
 
 The "interface" part of the plugins are GPL (v2).

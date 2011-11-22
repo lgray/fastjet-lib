@@ -1,5 +1,8 @@
 2011-11-22  Gregory Soyez  <soyez@fastjet.fr>
 
+	* COPYING:
+	  added info about all plugins written by the FastJet authors
+
 	* plugins/PxCone/PxConePlugin.cc (_print_banner):
 	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc (_print_banner):
 	* plugins/CDFCones/CDFJetCluPlugin.cc (_print_banner):
