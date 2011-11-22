@@ -1,14 +1,38 @@
 #ifndef _LORENTZ_VECTOR_HH_
 #define _LORENTZ_VECTOR_HH_
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * removed some harmless warnings coming with the -Wshadow gcc option
- * 
- */
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from
+// http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz
+//
+// Permission to distribute it with FastJet has been granted by Joey
+// Huston (see the COPYING file in the main FastJet directory for
+// details).
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
+// History of changes compared to the original LorentzVector.hh file
+// 
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * removed some harmless warnings coming with the -Wshadow gcc option
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::cdf namespace
+// 
+// 2008-01-15  Gregory Soyez  <soyez@fastjet.fr>
+// 
+// 	  * fixed issues with compilation under VC (definition of M_PI)
+// 
+// 2007-02-21  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * added option of choosing the scale used in the split-merge
+//          procedure (pt [default], Et or mt)
+// 
+// 2006-09-24  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * added JetClu+MidPoint to FastJet
 
 #include <cmath>
 

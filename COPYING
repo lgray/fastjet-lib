@@ -16,7 +16,11 @@ For the plugin jet finders, the licensing situation is as follows:
 
 . ATLAS Cone: unknown (code from SpartyJet v1.20. GPLv2?)
 
+
 . CDF code: unknown (permission for distribution granted by J.Huston)
+
+  See http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz
+  for the original code.
 
 
 . CMS Iterative Cone: GPL(v2) (permission granted by R.Harris)

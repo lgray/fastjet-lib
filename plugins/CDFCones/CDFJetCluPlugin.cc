@@ -41,6 +41,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 using namespace cdf;
 
+bool CDFJetCluPlugin::_first_time = true;
+
 string CDFJetCluPlugin::description () const {
   ostringstream desc;
   
@@ -57,6 +59,8 @@ string CDFJetCluPlugin::description () const {
 
 
 void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner();
  
   // create the physics towers needed by the CDF code
   vector<PhysicsTower> towers;
@@ -160,5 +164,20 @@ void CDFJetCluPlugin::run_clustering(ClusterSequence & clust_seq) const {
 }
 
 
+// print a banner for reference to the 3rd-party code
+void CDFJetCluPlugin::_print_banner() const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  cout << "#-------------------------------------------------------------------------" << endl;
+  cout << "# You are running the CDF JetClu plugin for FastJet (v2.1 upwards)        " << endl;
+  cout << "# This is based on an implementation provided by Joey Huston.             " << endl;
+  cout << "# If you use this plugin, please cite (on top of FastJet)                 " << endl;
+  cout << "#   F. Abe et al. [CDF Collaboration], Phys. Rev. D 45 (1992) 1448.       " << endl;
+  cout << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  cout.flush();
+}
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

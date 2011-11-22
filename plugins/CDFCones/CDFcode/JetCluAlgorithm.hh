@@ -1,6 +1,26 @@
 #ifndef _JETCLU_ALGORITHM_HH_
 #define _JETCLU_ALGORITHM_HH_
 
+//----------------------------------------------------------------------
+// This file distributed with FastJet has been obtained from
+// http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz
+//
+// Permission to distribute it with FastJet has been granted by Joey
+// Huston (see the COPYING file in the main FastJet directory for
+// details).
+// Changes from the original file are listed below.
+//----------------------------------------------------------------------
+
+// History of changes compared to the original JetCluAlgorithm.hh file
+// 
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * put the code in the fastjet::cdf namespace
+// 
+// 2006-09-24  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * added JetClu+MidPoint to FastJet
+
 #include "PhysicsTower.hh"
 #include "Cluster.hh"
 #include <vector>

@@ -84,7 +84,9 @@ public:
   /// the plugin mechanism's standard way of accessing the jet radius
   virtual double R() const {return cone_radius();}
                       
-
+  /// allow to disable the banner
+  void disable_banner() {_first_time = false;}
+  
 private:
 
   double _seed_threshold   ;
@@ -99,6 +101,10 @@ private:
   /// as ensure that the jet energy is unique
   void _insert_unique (PseudoJet & jet, std::map<double,int> & jetmap) const;
 
+  static bool _first_time;
+
+  /// print a banner for reference to the 3rd-party code
+  void _print_banner() const;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

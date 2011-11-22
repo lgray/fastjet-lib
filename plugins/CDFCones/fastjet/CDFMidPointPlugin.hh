@@ -158,6 +158,9 @@ public:
   virtual void run_clustering(ClusterSequence &) const;
   /// the plugin mechanism's standard way of accessing the jet radius
   virtual double R() const {return cone_radius();}
+                      
+  /// allow to disable the banner
+  void disable_banner() {_first_time = false;}
 
 private:
 
@@ -168,6 +171,11 @@ private:
   int    _max_iterations    ;
   double _overlap_threshold ;
   SplitMergeScale _sm_scale ;
+
+  static bool _first_time;
+
+  /// print a banner for reference to the 3rd-party code
+  void _print_banner() const;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
