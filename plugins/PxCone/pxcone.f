@@ -5,12 +5,16 @@
 *. PXCONE
 *. ------
 *.
-*.********** Pre Release Version 26.2.93
+*. Code downloaded from the following web page 
 *.
-*. Lifted from the following web page 
 *.   http://aliceinfo.cern.ch/alicvs/viewvc/JETAN/pxcone.F?view=markup&pathrev=v4-05-04
+*. 
+*. on 17/10/2006 by G. Salam. Permission subsequently granted by Michael
+*. H. Seymour (on behalf of the PxCone authors) for this code to be
+*. distributed together with FastJet under the terms of the GNU Public
+*. License v2 (see the file COPYING in the main FastJet directory).
 *.
-*. on 17/10/2006 by G. Salam.
+*.********** Pre Release Version 26.2.93
 *.
 *. Driver for the Cone  Jet finding algorithm of L.A. del Pozo.
 *. Based on algorithm from D.E. Soper.

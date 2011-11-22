@@ -1,3 +1,8 @@
+2011-11-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* plugins/PxCone/pxcone.f (PXCONE): 
+	  added some info about licensing in this file.
+
 2011-11-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/TrackJet/TrackJetPlugin.cc:
