@@ -1,3 +1,14 @@
+2011-11-22  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+
+	* example/10-subjets.cc: 
+	  sorted out residual warning.
+
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh: 
+	* plugins/D0RunICone/fastjet/D0RunIBaseConePlugin.hh
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh: 
+	  replaced CONrad -> CONErad.
+
 2011-11-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh:

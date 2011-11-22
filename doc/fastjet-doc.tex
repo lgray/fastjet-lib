@@ -202,6 +202,9 @@ One of the aims of the \fastjet C++ library is to provide
 straightforward, efficient implementations for the majority of widely
 used sequential-recombination algorithms, both for hadron-hadron and
 $e^+e^-$ colliders, and easy access also to cone-type jet algorithms.
+%
+It is distributed under the terms of version~2 of the GNU General Public License
+(GPL)~\cite{GPLv2}.
 
 To help introduce the terminology used throughout \fastjet and this
 manual, let us consider the longitudinally-invariant $k_t$ algorithm
@@ -1468,9 +1471,10 @@ jet-finding.\footnote{We devote significant effort to ensuring that
   clustering results, and that any other changes from one version to
   the next are clearly indicated.
   %
-  However, as per the terms of the GPL license, we are not able to
-  provide a warranty that \fastjet is free of bugs that might affect
-  your use of the program.
+  However, as per the terms of the GNU General Public License (v2),
+  under which \fastjet is released, we are not able to provide
+  a warranty that \fastjet is free of bugs that might affect your use
+  of the program.
   % 
   Accordingly it is important for physics publications to include a
   mention of the \fastjet version number used, in order to help trace
@@ -1606,7 +1610,7 @@ hierarchy in the clustering sequence.
 \label{sec:genkt}
 
 The ``generalised $k_t$'' algorithm again follows the same procedure,
-but depends on an additional continuous parameter $p$, with has the
+but depends on an additional continuous parameter $p$, and has the
 following distance measure:
 \begin{subequations}
   \label{eq:dij_genkt}
@@ -1634,7 +1638,7 @@ $p\ge 0$, also the exclusive jets).
 \fastjet also provides native implementations of clustering algorithms
 in spherical coordinates (specifically for $e^+e^-$ collisions) along
 the lines of the original $k_t$ algorithms~\cite{eekt}, but extended
-in analogy with the generalised $pp$ algorithm of~\cite{antikt} and
+following  the generalised $pp$ algorithm of~\cite{antikt} and
 section \ref{sec:genkt}. We define the two following distances:
 \begin{subequations}
   \label{eq:dij_eegenkt}
@@ -1790,7 +1794,7 @@ We illustrate this with an example based on the SISCone plugin:
   ClusterSequence clust_seq(particles, jet_def);
   vector<PseudoJet> inclusive_jets = clust_seq.inclusive_jets();
 
-  // then analyse the jets as for native \fastjet algorithms
+  // then analyse the jets as for native fastjet algorithms
   ...
 
   // only when you will no longer be using the jet definition, or
@@ -1830,8 +1834,8 @@ applied, which ensures that no particle ends up in more than one jet.
 The stable cones are identified using an $\order{N^2 \ln N}$ seedless
 approach. This (and some care in the the `split--merge' procedure)
 ensures that the jets it produces are insensitive to additional soft
-particles and collinear splittings (i.e.\ the jets are infrared
-and collinear safe).
+particles and collinear splittings, i.e.\ the algorithm is infrared
+and collinear safe.
 
 The plugin library and include files are to be be found in the
 \verb:plugins/SISCone: directory, and the main header file is
@@ -2005,15 +2009,26 @@ runs in a few tenths of a second, making it about 100 times slower
 than native \fastjet algorithms.
 %
 These are `expected' results, i.e.\ valid for a suitably random set of
-particles. In area determinations, the ghost particles are anything
-but random, and run times and memory usage are, in practice, somewhat
-larger than for a normal QCD event with the same number of particles.
-We therefore recommend running with not too small a \verb:ghost_area:
-(e.g.\ $\sim 0.05$) and using $\verb:grid_scatter:=1$, which helps to
-reduce the number of stable cones (and correspondingly, the time and
-memory usage of the subsequent split--merge step). An alternative, which
-has been found to be acceptable in most situations, is to use a passive
-area, since this is relatively fast to calculate with SISCone.
+particles.\footnote{%
+  In area determinations, the ghost particles are not entirely random,
+  but distributed close to a grid pattern, all with similar transverse
+  momenta.
+  %
+  Run times and memory usage are then, in practice, somewhat larger
+  than for a normal QCD event with the same number of particles.  
+  %
+  We therefore recommend running with not too small a
+  \texttt{ghost\_area} (e.g.\ $\sim 0.05$) and using
+  \texttt{grid\_scatter=1} (cf.\ section~\ref{sec:areas}), which helps
+  to reduce the number of stable cones (and correspondingly, the time
+  and memory usage of the subsequent split--merge step). 
+  %
+  An alternative, which has been found to be acceptable in many
+  situations, is to use a passive area, since this is relatively fast
+  to calculate with SISCone.
+  % 
+}
+
 
 Note that the underlying implementation of SISCone is optimized for
 large $N$.
@@ -2033,8 +2048,8 @@ Most of the algorithms listed below are cone algorithms.
 %
 They are usually either infrared (IR) or collinear unsafe.
 %
-The details are indicated for each algorithm as follows (again
-following the notation of Ref.~\cite{Salam:2009jx}): IR$_{n+1}$ means
+The details are indicated for each algorithm following the
+notation of Ref.~\cite{Salam:2009jx}: IR$_{n+1}$ means 
 that the hard jets may be modified if, to an ensemble of $n$ hard
 particles in a common neighbourhood, one adds a single soft particle;
 Coll$_{n+1}$ means that for $n$ hard particles in a common
@@ -2134,7 +2149,7 @@ IR unsafety persists with non-zero seed threshold).
 %deprecated for new experimental or theoretical analyses.
 %
 Note also that the underlying implementation groups particles together
-into calorimeter towers (with CDF-type geometry) before running the
+into calorimeter towers, with CDF-type geometry, before running the
 jet algorithm. 
 
 %......................................................................
@@ -2159,11 +2174,18 @@ and
                     double split_ratio = 0.5);
 \end{lstlisting}
 corresponding to versions of the algorithm used respectively before
-and after 1996. They differ only in the way the jet momenta are
-calculated, as described in \cite{Abbott:1997fc}.
+and after 1996.
+%
+They differ only in the recombination scheme used to determine the jet
+momenta once each jet's consistuents have been identified.
+%
+In the pre-1996 version, a hybrid between an $E$-like scheme and an
+$E_t$ scheme recombination is used, while in the post-1996 version it
+is just the $E_t$ scheme~\cite{Abbott:1997fc}.
 
-Instead of the seed threshold used in the CDF cones, the
-algorithm places a cut on the minimum $E_t$ of the cones during
+%Instead of the seed threshold used in the CDF cones, 
+
+The algorithm places a cut on the minimum $E_t$ of the cones during
 iteration (related to \verb|min_jet_Et|).
 %
 The \verb|split_ratio| is the same as the overlap threshold in other
@@ -2172,6 +2194,14 @@ split-merge based algorithms (\Dzero usually use 0.5).
 It is the \fastjet authors' understanding that the value 
 used for \verb|min_jet_Et| was 8\,GeV, corresponding to a cut of
 $4\GeV$ on cones.
+%
+The publication that describes this algorithm~\cite{Abbott:1997fc}
+mentions the use of a $1\GeV$ seed threshold applied to preclustered
+calorimeter towers in order to obtain the seeds for the stable cone
+finding. 
+%
+Such a threshold and the pre-clustering are not included in the code
+distributed with \fastjet.
 
 The underlying code for this algorithm was provided by
 Lars Sonnenschein.
@@ -2187,6 +2217,15 @@ be used only for the purpose of comparison with Run~I data from
 %
 This is the main algorithm used by \Dzero in Run~II of the
 Tevatron. It is a midpoint type iterative cone with split-merge step.
+%
+The \Dzero collaboration usually refers to
+Ref.~\cite{RunII-jet-physics} when introducing the algorithm in its
+articles.
+%
+That generic Tevatron document does not reflect all details of the
+actual \Dzero algorithm, and for a complementary description
+%
+the reader is referred to Ref.~\cite{arXiv:1110.3771}.
 \begin{lstlisting}
   #include "fastjet/D0RunIIConePlugin.hh"
   // ...
@@ -2194,13 +2233,24 @@ Tevatron. It is a midpoint type iterative cone with split-merge step.
                      double min_jet_Et, 
                      double split_ratio = 0.5);
 \end{lstlisting}
-The parameters have the same meaning as in the \Dzero Run~I cone and,
-once again, instead of a seed threshold there is a cut on the minimum
-$E_t$ of the cones during iteration (related to \verb|min_jet_Et|).
+The parameters have the same meaning as in the \Dzero Run~I
+cone. 
+%
+There is a cut on the minimum $E_t$ of the cones during iteration,
+which by default is half of \verb|min_jet_Et|.
 %
 It is the \fastjet authors' understanding that two values have been
 used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
 6\,GeV (in more recent publications).
+
+As concerns seed thresholds and preclustering, \Dzero describes them
+as being applied to calorimeter towers in data and Monte Carlo studies
+that include detector simulation~\cite{arXiv:1110.3771}.
+%
+However, for NLO calculations and Monte Carlo studies based on stable
+particles, no seed threshold is applied.
+%
+The code distributed with \fastjet does not allow for seed thresholds.
 
 The underlying code for this algorithm was provided by
 Lars Sonnenschein.
@@ -2224,7 +2274,8 @@ ATLAS during the preparation for the LHC.
 $f$ is the overlap threshold
 
 The underlying code for this algorithm was extracted from an early
-version of SpartyJet \cite{SpartyJet}.
+version of SpartyJet \cite{SpartyJet} (which itself was distributed
+under the GPL license).
 %
 Since version 3.0 of \fastjet it is a slightly modified version that
 we distribute, where an internal \ttt{sort} function has been replaced
@@ -2252,9 +2303,12 @@ The underlying code for this algorithm was extracted from the CMSSW
 web site, with certain small service routines having been rewritten by
 the \fastjet authors. 
 %
-The resulting code was validated by clustering 1000 events with the
-original version of the CMS software and comparing the output to the
-clustering performed with the \fastjet plugin. 
+Permission to redistribute the resulting code with \fastjet has been
+granted by CMS under the terms of the GPL license.
+%
+The code was validated by clustering 1000 events with the original
+version of the CMS software and comparing the output to the clustering
+performed with the \fastjet plugin.
 %
 The jet contents were identical in all cases. However the jet momenta
 differed at a relative precision level of $10^{-7}$, related to the
@@ -2298,8 +2352,12 @@ can have a minor effect on the final jets and should make the algorithm
 correspond to the description of \cite{Seymour:2006vv}.
 
 The underlying code for this algorithm was written by Luis del Pozo
-and Michael Seymour~\cite{PxCone}.  It is also described in
-ref.~\cite{Seymour:2006vv}.
+and Michael Seymour with input also from David Ward~\cite{PxCone}
+%
+and they have granted permission for their code to be distributed with
+\fastjet under the terms of the CPL license.
+% %
+% The PxCone algorithm is also described in ref.~\cite{Seymour:2006vv}.
 
 This algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
 new experimental or theoretical analyses.
@@ -2323,7 +2381,7 @@ assignments are known), the second one indicates how momenta are
 combined in the procedure that constructs the jets.
 
 The underlying code for this algorithm was written by the \fastjet
-authors, based on code extracts from the Rivet implementation, written
+authors, based on code extracts from the (GPL) Rivet implementation, written
 by Andy Buckley with input from Manuel Bahr and Rick Field.
 %
 Since version 3.0 of \fastjet it is a slightly modified version that
@@ -2368,6 +2426,10 @@ Note that for background estimation purposes the
 \ttt{GridJetPlugin} with ghosts and a
 \ttt{JetMedianBackgroundEstimator}.
 
+The underlying code for this algorithm was written by the \fastjet
+authors.
+
+
 %----------------------------------------------------------------------
 \subsection{Plugins for $e^+e^-$ collisions}
 \label{sec:other-ee-plugins}
@@ -2405,7 +2467,7 @@ recombination algorithm with distance measure $d_{ij} = 2E_i E_j
   JadePlugin ();
 \end{lstlisting}
 To access the jets at a given $y_{cut} = d_{cut}/Q^2$, the user 
-should call \verb|ClusterSequence::exclusive_jets_ycut(double ycut)|.
+should call \ttt{ClusterSequence::exclusive\_jets\_ycut(double ycut)}.
 
 Note: the JADE algorithm has been used with various recombination
 schemes. The current plugin will use whatever recombination scheme the
@@ -2460,7 +2522,7 @@ Analyses often place constraints (cuts) on jets' transverse momenta,
 rapidity, maybe consider only some $N$ hardest jets, etc.
 %
 There are situations in which it is convenient to be able to define
-a set of cuts in one part of a program and then have it used
+a basic set of jet cuts in one part of a program and then have it used
 elsewhere.
 %
 To allow for this, we provide a \ttt{fastjet::Selector} class, available
@@ -2494,8 +2556,10 @@ the selection cuts. The logical operations \ttt{\&\&}, \ttt{||} and
 \ttt{!} enable different selectors to be combined.
 %
 
-Nearly all selectors, like those above, apply jet by jet (they return
-\ttt{Selector::applies\_jet\_by\_jet()} true). For these, one can
+Nearly all selectors, like those above, apply jet by jet (the function
+\ttt{Selector::applies\_jet\_by\_jet()} returns \ttt{true}). 
+%
+For these, one can
 query whether a single jet passes the selection with the help of the
 function \ttt{bool Selector::pass(const PseudoJet \&)}.
 
@@ -2559,7 +2623,7 @@ with the brackets around the selector definition being now necessary due to
 \ttt{()} having higher precedence in C++ than boolean operators.
 
 
-A user can obtain information on what a given \ttt{Selector} does by
+A user can obtain a string describing a given \ttt{Selector}'s action by
 calling its \ttt{description()} member function. 
 %
 This behaves sensibly also for compound selectors.
@@ -2592,7 +2656,7 @@ Selectors may also have areas associated with them (in analogy with
 jet areas, section~\ref{sec:areas}).
 %
 The \ttt{has\_finite\_area()} member function returns true if a selector has a
-meaningful finite area; The \ttt{area()} function returns this area.
+meaningful finite area. The \ttt{area()} function returns this area.
 %
 In some cases the area may be computed using ghosts (by default with
 ghosts of area $0.01$; the user can specify a different ghost area as
@@ -5260,6 +5324,8 @@ causes ghosts to placed as in the 2.x series.
   Eur.\ Phys.\ J.\  {\bf H36 } (2011)  245-326.
   [arXiv:1012.2288 [hep-ph]].
 
+\bibitem{GPLv2} 
+  \url{http://www.gnu.org/licenses/gpl-2.0.html}
 
 \bibitem{ktexcl}
   S.~Catani, Y.~L.~Dokshitzer, M.~H.~Seymour and B.~R.~Webber,
@@ -5569,6 +5635,13 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Fast hierarchical clustering and other applications of dynamic
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
+
+
+\bibitem{arXiv:1110.3771}
+  V.~M.~Abazov {\it et al.} [D0 Collaboration],
+  %``Measurement of the inclusive jet cross section in $p \bar {p}$ collisions at $\sqrt{s}=1.96$ TeV,''
+  %Submitted to: Phys.Rev.D
+  arXiv:1110.3771 [hep-ex].
 
 
 \end{thebibliography}

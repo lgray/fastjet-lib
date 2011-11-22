@@ -102,9 +102,9 @@ int main(){
 
     cout << endl;
     // print the jet and its subjets
-    printf("%5u      %15.8f %15.8f %15.8f %8lu\n", i, 
+    printf("%5u      %15.8f %15.8f %15.8f %8d\n", i, 
 	   inclusive_jets[i].rap(), inclusive_jets[i].phi(),
-	   inclusive_jets[i].perp(), inclusive_jets[i].constituents().size());
+	   inclusive_jets[i].perp(), int(inclusive_jets[i].constituents().size()));
 
     for (unsigned int j=0; j<subjets.size(); j++)
       printf("   sub%4u %15.8f %15.8f %15.8f %8u\n", j, 

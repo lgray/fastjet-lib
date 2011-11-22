@@ -73,10 +73,10 @@ public:
   ///
   /// The remaining parameters of the algorithm are not to be modified if the algorithm
   /// is to correspond to the one actually used by D0.
-  D0RunIBaseConePlugin (double CONrad_in, 
+  D0RunIBaseConePlugin (double CONErad_in, 
 			double JETmne_in, 
 			double SPLifr_in = _DEFAULT_SPLifr) :
-    _CONErad           (CONrad_in                  ),
+    _CONErad           (CONErad_in                 ),
     _JETmne            (JETmne_in                  ),
     _SPLifr            (SPLifr_in                  ),
     _TWOrad            (_DEFAULT_TWOrad            ),

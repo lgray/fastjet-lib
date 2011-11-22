@@ -61,7 +61,7 @@ public:
   /// The D0RunIpre96ConePlugin constructor, which sets the "free" parameters of the
   /// algorithm:
   ///
-  ///  \param CONrad is the cone radius
+  ///  \param CONErad is the cone radius
   ///
   ///  \param JETmne is a minimum ET requirement on every iteration
   ///   (jet dropped if Et < JETmne * Et_min_ratio ).
@@ -75,8 +75,8 @@ public:
   /// is to correspond to the one actually used by D0.
   ///
   ///
-  D0RunIpre96ConePlugin (double CONrad_in, double JETmne_in , double SPLifr_in = _DEFAULT_SPLifr)
-    : D0RunIBaseConePlugin(CONrad_in, JETmne_in , SPLifr_in){}
+  D0RunIpre96ConePlugin (double CONErad_in, double JETmne_in , double SPLifr_in = _DEFAULT_SPLifr)
+    : D0RunIBaseConePlugin(CONErad_in, JETmne_in , SPLifr_in){}
 
   // the things that are required by base class
   virtual std::string description () const;
