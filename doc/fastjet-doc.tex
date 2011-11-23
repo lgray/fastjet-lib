@@ -346,9 +346,9 @@ to calculate and search for minima among a much smaller set of
 distances.
 %
 This is sufficiently powerful that with the help of the external
-Computational Geometry Algorithms Library (CGAL)~\cite{CGAL}, \fastjet
-achieves expected $N\ln N$ timing for many sequential recombination
-algorithms.
+Computational Geometry Algorithms Library (CGAL)~\cite{CGAL}
+(specifically, its Delaunay triangulation modules), \fastjet achieves
+expected $N\ln N$ timing for many sequential recombination algorithms.
 %
 This $N\ln N$ strategy is supplemented in \fastjet with several other
 implementations, also partially based on geometry, which help optimise
@@ -3689,8 +3689,10 @@ jets passed via the \ttt{set\_jets()} call above must all originate from a commo
 
 Performing post-clustering actions on jets has in recent years become
 quite widespread: for example, numerous techniques have been
-introduced to tag boosted hadronically objects, and various methods
-also exist for removing the underlying event and pileup from jets.
+introduced to tag boosted hadronically decaying objects, and various
+methods also exist for suppressing the underlying event and pileup in
+jets, beyond the subtraction approach discussed in
+section~\ref{sec:BackgroundEstimator}.
 %
 \fastjet 3 provides a common interface for such
 tools, intended to help simplify their usage and to guide authors of
@@ -3718,10 +3720,13 @@ associated with the returned result.
 For a given transformer, say \ttt{MyTransformer}, the new information
 that is not already directly accessible from \ttt{PseudoJet} (like its
 \ttt{constituents}, \ttt{pieces} or \ttt{area} when they are
-available), can be accessed through
+relevant), can be accessed through
 \begin{lstlisting}
   transformed_jet.structure_of<MyTransformer>()
 \end{lstlisting}
+which returns a reference to an object of type
+\ttt{MyTransformer::StructureType}.
+%
 This is illustrated below on a case-by-case basis for each of the
 transformers that we discuss.
 %
@@ -3741,8 +3746,8 @@ We will adopt the convention that in such cases the result of the
 transformer is a jet whose 4-momentum is zero, i.e.\ one that satisfies
 \ttt{jet == 0}.
 %
-Such a jet may still have structural information however (such
-information might, for example, indicate why the jet was not tagged).
+Such a jet may still have structural information however (e.g.\ to
+indicate why the jet was not tagged).
 
 
 \subsection{Noise-removal transformers}
@@ -3758,18 +3763,28 @@ described here.
 \label{sec:filtering}
 
 Filtering was first introduced in \cite{BDRS} to reduce the
-sensitivity of a boosted Higgs-candidate jet to the underlying event. 
+sensitivity of a boosted Higgs-candidate jet's mass to the underlying
+event.
 %
-Given some starting jet obtained with a Cambridge-Aachen clustering
-(followed by some Higgs-specific declustering), filtering unclustered
-the jet down to a smaller jet radius $R_{\rm filt}$ and only kept the
-3 hardest of these subjets as the pieces of the final filtered jet,
-rejecting the others.
+Generally speaking, filtering clusters a jet's constituents with a
+smaller-than-original jet radius $R_{\rm filt}$.
 %
-Similarly, trimming \cite{trimming} also unclusters a jet into subjets
-but selects the subjets to be kept based on a $p_t$ cut.
+It then keeps just the $n_{\rm filt}$ hardest of the resulting
+subjets, rejecting the others.
 %
-The use of filtering and trimming have been advocated in number of
+Trimming~\cite{trimming} is similar, but selects the subjets to be kept based on a
+$p_t$ cut.
+% 
+% Given some starting jet obtained with a Cambridge-Aachen clustering
+% (followed by some Higgs-specific declustering), filtering unclustered
+% the jet down to a smaller jet radius $R_{\rm filt}$ and only kept the
+% 3 hardest of these subjets as the pieces of the final filtered jet,
+% rejecting the others.
+% %
+% Similarly, trimming \cite{trimming} also unclusters a jet into subjets
+% 
+%
+The use of filtering and trimming has been advocated in number of
 contexts, beyond just the realm of boosted object reconstruction.
 
 The \ttt{fastjet::Filter} class derives from \ttt{Transformer}, and
@@ -3852,6 +3867,11 @@ Note that the jet being filtered must have constituents. Furthermore,
 if \ttt{rho} is non-zero or if a \ttt{Subtractor} is set, the input
 jet must come from a cluster sequence with area support and explicit
 ghosts. If any of these requirements fail, an exception is thrown.
+%
+In cases where the filter/trimmer has been defined with just a jet
+radius, the reclustering of the jet is performed with the same
+recombination scheme as was used in producing the original jet
+(assuming it can be uniquely determined).
 
 %......................................................................
 \subsubsection{Jet pruning}
@@ -3876,7 +3896,7 @@ discarded, while the harder one continues to participate in the
 clustering.
 
 Pruning bears similarity to filtering in that it reduces the
-contamination of soft noise in a jet while aiming to retainin hard
+contamination of soft noise in a jet while aiming to retain hard
 perturbative radiation within the jet.
 %
 However, because by default the parameters for the noise removal
@@ -3974,19 +3994,18 @@ and then return the part of the jet that has been identified as
 associated with those hard branchings.
 %
 They share the convention that if they were not able to identify
-suitable substructure, they return a \ttt{jet} that has the property
-\ttt{jet == 0}.
+suitable substructure, they return a \ttt{jet} with zero momentum,
+i.e.\ one that has the property \ttt{jet == 0}.
 
 
 At the time of writing, we provide only a small set of taggers.
 %
 These include one main two-body tagger, the
 \ttt{fastjet::MassDropTagger} introduced in \cite{BDRS} and one main
-boosted top tagger, \ttt{fastjet::JHTopTagger} from \cite{Kaplan:2008ie} (Note
-that \ttt{JHTopTagger} derives from the \ttt{fastjet::TopTaggerBase} class, 
-expressely included
-to provide a common framework for all top taggers capable of also returning a
-$W$).
+boosted top tagger, \ttt{fastjet::JHTopTagger} from
+\cite{Kaplan:2008ie} (\ttt{JHTopTagger} derives from the
+\ttt{fastjet::TopTaggerBase} class, expressely included to provide a
+common framework for all top taggers capable of also returning a $W$).
 %
 In addition, to help provide a more complete set of examples of coding
 methods to which users may refer when writing their own taggers, we
@@ -4032,7 +4051,7 @@ The tagger can be constructed with
 \begin{lstlisting}
   #include "fastjet/tools/MassDropTagger.hh"
   // ...
-  MassDropTagger mdtagger(double $\mu$, double $y_\text{cut}$);
+  MassDropTagger mdtagger(double $\mu_\text{cut}$, double $y_\text{cut}$);
 \end{lstlisting}
 and applied using
 \begin{lstlisting}
@@ -4209,7 +4228,9 @@ many common Linux distributions.
 %
 For CGAL versions 3.4 and higher, the user can specify
 \verb|--with-cgaldir=...| if the CGAL files are not installed in a
-standard location. \comment{do we mention issues with 3.7 and 3.8?}
+standard location.\footnote{For events with near degeneracies in their
+  Delaunay triangulation, issues have been found with versions 3.7 and
+  3.8 of CGAL. We recommend the use of earlier or later versions.}
 % \footnote{For clustering problems with near
 %   degeneracies, there are known issues with CGAL versions 3.7 and
 %   3.8. }
@@ -4279,9 +4300,9 @@ University and Brookhaven National Laboratory.
 \section{Clustering strategies and performance}
 \label{app:strategies}
 
-The constructor for a \ttt{JetDefinition} takes a strategy argument
+The constructor for a \ttt{JetDefinition} can take a strategy argument
 (cf.\ section~\ref{sec:JetDefinition}), which selects the algorithmic
-strategy to use while clustering.
+``strategy'' to use while clustering.
 %
 It is an \ttt{enum} of type \ttt{Strategy} with relevant
 values listed in table~\ref{tab:Strategies}.
@@ -4290,8 +4311,8 @@ values listed in table~\ref{tab:Strategies}.
   \begin{center}
     \begin{tabular}{ll}\toprule
       \ttt{N2Plain} & a plain $N^2$ algorithm (fastest for $N
-      \lesssim 50$)\\
-      \ttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $50 \lesssim
+      \lesssim 30$)\\
+      \ttt{N2Tiled} & a tiled $N^2$ algorithm (fastest for $30 \lesssim
       N \lesssim 400$)\\ 
       \ttt{N2MinHeapTiled} & a tiled $N^2$ algorithm with a heap for
       tracking the minimum of \\& $d_{ij}$ (fastest for $400 \lesssim
@@ -4326,7 +4347,7 @@ implemented hadron-collider jet algorithms.
 The one exception is \ttt{NlnNCam}, which is based on a computational
 geometry algorithm for dynamic maintenance of closest pairs
 \cite{Chan} (rather than the more involved nearest neighbour graph),
-and is suitable only for the Cambridge algorithm whose distance
+and is suitable only for the Cambridge algorithm, whose distance
 measure is purely geometrical.
 
 The \ttt{N2Plain} strategy uses a ``nearest-neighbour heuristic''
@@ -4367,11 +4388,11 @@ If \ttt{strategy} is omitted then the \ttt{Best} option is set.
 %
 Note that the $N$ ranges quoted in table~\ref{tab:Strategies} for
 which a given strategy is optimal hold for $R=1$; the general $R$
-dependence can be significant (and non-trivial).
+dependence can be significant and non-trivial.
 %
-For example for the Cambridge/Aachen jet algorithm with $R=0.4$,
-\ttt{NlnNCam} surpasses the \ttt{N2MinHeapTiled} strategy only for
-$N\gtrsim 37000$.
+% For example for the Cambridge/Aachen jet algorithm with $R=0.4$,
+% \ttt{NlnNCam} surpasses the \ttt{N2MinHeapTiled} strategy only for
+% $N\gtrsim 37000$.
 %
 While some attempt has been made to account for the $R$-dependence in
 the choice of the strategy with the ``\ttt{Best}'' option, there may
@@ -4433,7 +4454,7 @@ We note that there are a few places where there remains scope for
 timing improvements. 
 %
 In particular at low $N$ the overheads related to copying and sorting
-of a vector of \ttt{PseudoJet} objects are substantial fraction of the
+of a vector of \ttt{PseudoJet} objects are a substantial fraction of the
 total time, and could be reduced.
 %
 Additionally, for the Cambridge/Aachen algorithm at moderate to large
@@ -4456,11 +4477,13 @@ critical, they are encouraged to contact the \fastjet authors.
 One method for associating extra user information with a
 \ttt{PseudoJet} is via its user index
 (section~\ref{sec:PseudoJet}). This is adequate for encoding simple
-information (for example an input particle's barcode in a HepMC
-event), but can quickly show its limitations (for example, when
+information. such as an input particle's barcode in a HepMC
+event.
+%
+However, it can quickly show its limitations; for example, when
 simulating pileup one might have several HepMC events and it is then
 useful for each particle to additionally store information about which
-HepMC event it comes from).
+HepMC event it comes from.
 
 A second method for supplementing a \PJ with extra user information is for
 the user to derive a class from \ttt{PseudoJet::UserInfoBase} and
@@ -4470,14 +4493,16 @@ class:
   void set_user_info(UserInfoBase * user_info);
   const UserInfoBase* user_info_ptr() const;
 \end{lstlisting}
-It is important to be aware that the function
-\ttt{set\_user\_info(...)} transfers ownership of the pointer to the
-\ttt{PseudoJet}. This is achieved internally with the help of a shared
-pointer. Copies of the \ttt{PseudoJet} will point to the same
-\ttt{user\_info}. When the \ttt{PseudoJet} and all its copies go out
-of scope the \ttt{user\_info} will be deleted.
+The function \ttt{set\_user\_info(...)} transfers ownership of the
+pointer to the \ttt{PseudoJet}. 
 %
-Since nearly all practical uses of \ttt{user\_info} will require it
+This is achieved internally with the help of a shared pointer. Copies
+of the \ttt{PseudoJet} then point to the same \ttt{user\_info}.
+%
+When the \ttt{PseudoJet} and all its copies go out of scope, the
+\ttt{user\_info} is automatically deleted.
+%
+Since nearly all practical uses of \ttt{user\_info} require it
 to be cast to the relevant derived class of  \ttt{UserInfoBase}, we also
 provide the following member function for convenience:
 \begin{lstlisting}
@@ -4629,10 +4654,10 @@ For area-related calls, \ttt{has\_area()} will be \ttt{false} unless
 the jet is obtained from a \ttt{ClusterSequenceAreaBase} or is a
 composite jet made from such jets. All other area calls
 (\ttt{validated\_csab()}, \ttt{area()}, \ttt{area\_error()},
-\ttt{area\_4vector()}, \ttt{is\_pure\_ghost()}) will return the information from the
-\ttt{ClusterSequence} (or the pieces in case of a composite jet) and throw
-an error if the jet is not associated with a
-\ttt{ClusterSequenceAreaBase}.
+\ttt{area\_4vector()}, \ttt{is\_pure\_ghost()}) will return the
+information from the \ttt{ClusterSequenceAreaBase}, or from the pieces
+in case of a composite jet. An error will be thrown if the jet does
+not have area information.
 
 %......................................................................
 \paragraph{Internal storage of structural information.}
@@ -4690,14 +4715,14 @@ boosted-object taggers take a jet and return a modified version of a
 jet; background subtraction does the same; so does a simple Lorentz
 boost.
 %
-Another class of functions returns a floating-point number associated
-with the jet: for example jet shapes; but also the rescaling functions
+Other functions return a floating-point number associated
+with the jet: for example jet shapes, but also the rescaling functions
 used to provide local background estimates in
 section~\ref{sec:BGE-positional}.
 %
 
 To help provide a uniform interface for functions of a \PseudoJet,
-\fastjet provides the following template base class:
+\fastjet has the following template base class:
 \begin{lstlisting}
   // a generic function of a PseudoJet
   template<typename TOut> class FunctionOfPseudoJet{
@@ -4710,7 +4735,7 @@ Derived classes should implement the \ttt{result(...)} function.
 In addition it is good practice to overload the \ttt{description()}
 member,
 \begin{lstlisting}
-  virtual std::string description() const{ return "";}
+  virtual std::string description() const {return "";}
 \end{lstlisting}
 
 Usage of a \ttt{FunctionOfPseudoJet} is simplest through the
@@ -4728,10 +4753,10 @@ separately on each of the elements of the vector of
   the \ttt{PseudoJet} and \ttt{vector<PseudoJet>} versions would have
   had to be overloaded.}.
 
-This definition allows one for example to pass functions of
-\ttt{PseudoJet}s as arguments. This is {\em e.g.} used for the
-background rescalings in section~\ref{sec:BGE-positional} which are
-just derived from \ttt{FunctionOfPseudoJet<double>}. 
+The \ttt{FunctionOfPseudoJet} framework makes it straightforward to
+pass functions of \ttt{PseudoJet}s as arguments. This is, e.g.,
+used for the background rescalings in section~\ref{sec:BGE-positional},
+which are just derived from \ttt{FunctionOfPseudoJet<double>}.
 %
 It is also used for the \ttt{Transformer}s of
 section~\ref{sec:transformers}, which all derive from
@@ -4754,8 +4779,7 @@ do so by writing a class derived from \ttt{JetDefinition::Recombiner}:
 \begin{lstlisting}
   class JetDefinition::Recombiner {
   public:
-    /// return a textual description of the recombination scheme
-    /// implemented here
+    /// return a textual description of the recombination scheme implemented here
     virtual std::string description() const = 0;
     
     /// recombine pa and pb and put result into pab
@@ -4896,8 +4920,8 @@ plugin may call the \verb|ClusterSequence| member function:
 \begin{lstlisting}
   inline void plugin_associate_extras(std::auto_ptr<ClusterSequence::Extras> extras);
 \end{lstlisting}
-where \verb|ClusterSequence::Extras| is a dummy class  which the
-plugin should extend so as to provide the relevant information:
+where \verb|ClusterSequence::Extras| is an abstract base class, which
+the plugin should derive from so as to provide the relevant information:
 \begin{lstlisting}
   class ClusterSequence::Extras {
   public:
@@ -4909,7 +4933,7 @@ A method of \verb|ClusterSequence| then provides the user with access
 to the extra information:
 \begin{lstlisting}
   /// returns a pointer to the extras object (may be null) const
-  Extras * extras() const;
+  ClusterSequence::Extras * extras() const;
 \end{lstlisting}
 The user should carry out a dynamic cast so as to convert the extras
 back to the specific plugin extras class, as illustrated for
@@ -4928,8 +4952,8 @@ information about the closest pair of objects in a dynamic set of
 objects (see \cite{EppsteinHierarchical} for an introduction to this
 and other generic algorithms).
 %
-In good cases this allows one to construct clustering that runs in
-$N^2$ time, though its worst case can be as bad as $N^3$.
+In good cases (C/A-like) this allows one to construct clustering that runs in
+$N^2$ time, though its worst case can be as bad as $N^3$ (e.g.\ anti-$k_t$).
 %
 It is a templated class and the template argument should be a class
 that stores the minimal information for each jet so as to be able to
@@ -5158,7 +5182,7 @@ jet is to ``wrap'' it. This can be done with the help of the
 %
 \begin{lstlisting}
   #include "fastjet/WrappedStructure.hh"
-  /// a class to wrap and extend existing jet structures with  information about 
+  /// a class to wrap and extend existing jet structures with information about 
   /// "rejected" pieces
   class SimpleFilterWrappedStructure: public WrappedStructure {
   public:
@@ -5203,7 +5227,7 @@ information, two elements are worth considering: on one hand, the
 \ttt{WrappedStructure} can be used to extend arbitrary structural
 information; on the other, while \ttt{join<...>} is more limited in
 its scope, it involves fewer pointer indirections when accessing
-structural information and so may be a little more efficient.
+structural information and so may be marginally more efficient.
 
 
 
@@ -5214,8 +5238,10 @@ structural information and so may be a little more efficient.
 
 \fastjet provides warning and error messages through the classes
 \ttt{fastjet::LimitedWarning} and \ttt{fastjet::Error} respectively.
-Both are handled internally, and a user does not normally need to interact with them.
-They do, however, provide some customisation facilities, especially to
+%
+A user does not normally need to interact with them,
+%
+however, they do provide some customisation facilities, especially to
 redirect and summarise their output.
 
 Each different kind of warning is written out a maximum number of
@@ -5277,7 +5303,9 @@ present if the program did not abort earlier due to an error.
 With a suitable design of the output stream, the output redirection
 facility can also be used by the user to record additional information
 when an error or warning occurs, for example the event number.
-
+%
+One only \ttt{stream << string} type operation is performed for each
+warning or error, so as to help with formatting in such cases.
 
 %======================================================================
 
@@ -5320,7 +5348,8 @@ estimation, means to navigate the ClusterSequence and a new build system
 (GNU autotools).
 %
 %
-Version 2.4 included the new version 2.0 of SISCone, as well as
+Version 2.4 included the new version 2.0 of SISCone (including the
+spherical variant), as well as
 plugins to the \Dzero Run II cone, the ATLAS cone, the CMS cone,
 TrackJet and a range of $e^+e^-$ algorithms, and also further tools to
 help investigate jet substructure.
@@ -5329,16 +5358,17 @@ It also added a wrapper to \fastjet
 allowing one to run SISCone and some of the sequential recombination
 algorithms from Fortran programs.
 
-A major practical change in version 3.0 was that PseudoJet acquired knowledge
+A major practical change in version 3.0 was that \ttt{PseudoJet}
+acquired knowledge 
 (where relevant) about its underlying ClusterSequence, allowing one to
 write {\em e.g.}  \ttt{jet.constituents()}
 %
-and it became possible to associate extra information with a
-PseudoJet beyond just a user index.
+It also became possible to associate extra information with a
+\ttt{PseudoJet} beyond just a user index.
 %
-It  brought the first of a series of \fastjet tools to help with
-advanced jet analyses, namely the Selector class, filters, pruners, taggers and
-new background estimation classes.
+It brought the first of a series of \fastjet tools to help with
+advanced jet analyses, namely the \ttt{Selector} class, filters,
+  pruners, taggers and new background estimation classes.
 %
 Version~3 also added the D0-Run I cone~\cite{Abbott:1997fc} plugin and
 support for native jet algorithms to be run with $R>\pi/2$.
@@ -5414,15 +5444,15 @@ The \ttt{JetMedianBackgroundEstimator} and
 In \fastjet versions 2.3 and 2.4, the background estimation tools were
 instead integrated into the \ttt{ClusterSequenceAreaBase} class.
 %
-Rather than using Selectors to specify the jets used in the background
+Rather than using selectors to specify the jets used in the background
 estimation, they used the \ttt{RangeDefinition} class.
 %
 For the purpose of backwards compatibility, these facilities will
 remain present in all 3.0.x versions.
 %
-Note that \ttt{ClusterSequenceAreaBase} now actually uses a Selector
+Note that \ttt{ClusterSequenceAreaBase} now actually uses a selector
 in its background estimation interface, and that a
-\ttt{RangeDefinition} is automatically converted to a Selector.
+\ttt{RangeDefinition} is automatically converted to a selector.
 
 An explicit argument in $\rho$-determination calls in \fastjet 2.4
 concerned the choice between the use of scalar areas and the
@@ -5432,9 +5462,9 @@ $p_t/A$.
 The transverse component gives the more accurate $\rho$ determination
 and that is now the default in \ttt{JetMedianBackgroundEstimator}. 
 %
-The behaviour can be changed with a call to
+The behaviour can be changed with a member function call of the form 
 \begin{lstlisting}
-  void set_use_area_4vector(bool use_it = true);
+  set_use_area_4vector(false);
 \end{lstlisting}
 %
 Finally, the calculation of $\sigma$ in \fastjet 2.x incorrectly
@@ -5473,6 +5503,13 @@ causes ghosts to placed as in the 2.x series.
   JHEP {\bf 9808} (1998) 001
   [arXiv:hep-ph/9804296].
   %% CITATION = JHEPA,9808,001;%%
+
+%\cite{Blazey:2000qt}
+\bibitem{RunII-jet-physics}
+  G.~C.~Blazey {\it et al.},
+  % ``Run II jet physics,''
+  hep-ex/0005012.
+  %% CITATION = HEP-EX 0005012;%%
 
 \bibitem{Ellis:2007ib}
   S.~D.~Ellis, J.~Huston, K.~Hatakeyama, P.~Loch and M.~Tonnesmann,
@@ -5594,13 +5631,6 @@ Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
   [arXiv:0903.5081 [hep-ph]].
 
 
-%\cite{Blazey:2000qt}
-\bibitem{RunII-jet-physics}
-G.~C.~Blazey {\it et al.},
-%``Run II jet physics,''
-hep-ex/0005012.
-%%CITATION = HEP-EX 0005012;%%
-
 \bibitem{CamOrig}
   Y.~L.~Dokshitzer, G.~D.~Leder, S.~Moretti and B.~R.~Webber,
   %``Better jet clustering algorithms,''
@@ -5682,6 +5712,12 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   B.~Abbott {\it et al.} [D0 Collaboration],
   %``Fixed cone jet definitions in D0 and R(sep),''
   FERMILAB-PUB-97-242-E.
+
+\bibitem{arXiv:1110.3771}
+  V.~M.~Abazov {\it et al.} [D0 Collaboration],
+  %``Measurement of the inclusive jet cross section in $p \bar {p}$ collisions at $\sqrt{s}=1.96$ TeV,''
+  %Submitted to: Phys.Rev.D
+  arXiv:1110.3771 [hep-ex].
 
 \bibitem{Seymour:2006vv}
   M.~H.~Seymour and C.~Tevlin,
@@ -5806,12 +5842,6 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
 
-
-\bibitem{arXiv:1110.3771}
-  V.~M.~Abazov {\it et al.} [D0 Collaboration],
-  %``Measurement of the inclusive jet cross section in $p \bar {p}$ collisions at $\sqrt{s}=1.96$ TeV,''
-  %Submitted to: Phys.Rev.D
-  arXiv:1110.3771 [hep-ex].
 
 
 \end{thebibliography}
