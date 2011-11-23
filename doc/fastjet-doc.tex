@@ -915,7 +915,7 @@ replaced by \ttt{\_default\_jet\_algorithm} and \ttt{\_jet\_algorithm}.}
                      antikt_algorithm, genkt_algorithm,
                      ee_kt_algorithm, ee_genkt_algorithm, ...};
 \end{lstlisting}
-Each algorith is described in detail in section~\ref{sec:native-algs}.
+Each algorithm is described in detail in section~\ref{sec:native-algs}.
 %
 The $\ldots$ represent additional values that are present for 
 internal or testing purposes. They include
@@ -1467,13 +1467,13 @@ In line with recommendations for other programs in high-energy
 physics, the user should include this information in publications and
 plots so as to facilitate reproducibility of the
 jet-finding.\footnote{We devote significant effort to ensuring that
-  all versions of the \fastjet program give identical, correct
+  all versions of the \fastjet\ program give identical, correct
   clustering results, and that any other changes from one version to
   the next are clearly indicated.
   %
   However, as per the terms of the GNU General Public License (v2),
-  under which \fastjet is released, we are not able to provide
-  a warranty that \fastjet is free of bugs that might affect your use
+  under which \fastjet\ is released, we are not able to provide
+  a warranty that \fastjet\ is free of bugs that might affect your use
   of the program.
   % 
   Accordingly it is important for physics publications to include a
@@ -2244,7 +2244,7 @@ used for \verb|min_jet_Et|, 8\,GeV (in earlier publications) and
 6\,GeV (in more recent publications).
 
 As concerns seed thresholds and preclustering, \Dzero describes them
-as being applied to calorimeter towers in data and Monte Carlo studies
+as being applied to calorimeter towers in data and in Monte Carlo studies
 that include detector simulation~\cite{arXiv:1110.3771}.
 %
 However, for NLO calculations and Monte Carlo studies based on stable
@@ -3355,11 +3355,11 @@ An active area with explicit ghosts is generally
 recommended.\footnote{With the $k_t$ algorithm one may also use a
   Voronoi area (\ttt{effective\_Rfact = 0.9} is recommended), which
   has the advantage of being deterministic and faster than ghosted
-  areas. In this case however one must use a selector which is
+  areas. In this case however one must use a selector that is
   geometrical and selects only jets well within the range of event
   particles. When using ghosts, instead, the selector can go up right
   to the edge of the acceptance, if the ghosts also only go right up
-  to the edge, cf.\ the right-hand plot of
+  to the edge, as in the right-hand plot of
   fig.~\ref{fig:ghost-placement}.}
 %
 
@@ -3579,7 +3579,7 @@ from \ttt{FunctionOfPseudoJet<double>} --- see appendix
   // tell JetMedianBackgroundEstimator or GridMedianBackgroundEstimator about the rescaling
   bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
-Subsequent calls to \texttt{rho()} will return the median of the
+Subsequent calls to \ttt{rho()} will return the median of the
 distribution $p_t/A / \ttt{rescaling}(y)$ (rather than $p_t/A$).
 %
 Any calls to \ttt{rho(jet)} and \ttt{sigma(jet)} will include an
@@ -3637,7 +3637,7 @@ to \ttt{rho} or \ttt{sigma} (as long as the particles, cluster sequence or
 selector have not changed in the meantime).
 
 %......................................................................
-\subsubsection{Alternative workflows}
+\subsection{Alternative workflows}
 %\comment{should remaining part stay here? Go to Appendix since it's a
 %  bit technical? Maybe easiest to leave it here}
 %
