@@ -2788,28 +2788,42 @@ a specific definition in order to make its area an unambiguous
 concept. Three definitions of area have been proposed
 in~\cite{CSSAreas} and implemented in \fastjet:
 \begin{itemize}
-\item Active areas add a uniform background of extremely soft massless
+\item {\it Active} areas add a uniform background of extremely soft massless
   `ghost' particles to the event and allow them to participate in the
   clustering. The area of a given jet is proportional to the number of
-  ghosts it contains. Because the ghosts are extremely soft (and
-  sensible jet algorithms are infrared safe), the presence of the ghosts
-  does not affect the set of user particles that end up in a given
-  jet.
-\item Passive areas are defined as follows: one adds a single randomly
+  ghosts it contains. 
+  %
+  Because the ghosts are extremely soft (and sensible jet algorithms
+  are infrared safe), the presence of the ghosts does not affect the
+  set of user particles that end up in a given jet.
+  %
+  Active areas give a measure of a jet's sensitivity to diffuse
+  background noise.
+
+\item {\it Passive} areas are defined as follows: one adds a single randomly
   placed ghost at a time to the event. One examines which jet (if any)
   the ghost ends up in. One repeats the procedure many times and the
   passive area of a jet is then proportional to the probability of it
   containing the ghost.
-\item The Voronoi area of a jet is the sum of the Voronoi areas of its
+  %
+  Passive areas give a measure of a jet's sensitivity to point-like
+  background noise.
+
+\item The {\it Voronoi} area of a jet is the sum of the Voronoi areas of its
   constituent particles. The Voronoi area of a particle is obtained by
   determining the Voronoi diagram for the event as a whole, and
   intersecting the Voronoi cell of the particle with a circle of
   radius $R$ centred on the particle. Note that for the $k_t$
-  algorithm (but not ingeneral for other algorithms) the Voronoi area
+  algorithm (but not in general for other algorithms) the Voronoi area
   of a jet coincides with its passive area.
 \end{itemize}
-It is worth noting that in the limit of very densely populated events,
-all area definitions tend to the same value~\cite{CSSAreas}. 
+In the limit of very densely populated events, all area definitions
+lead to the same jet-area results~\cite{CSSAreas}.\footnote{This can
+  be useful when one area is particularly expensive to calculate: for
+  example active areas for SISCone tend to be memory and CPU
+  intensive; however, for dense events, they can be adequately
+  replaced with passive areas, which, for SISCone, are computationally
+  more straightforward.}
 %% GPS: To some extent a more precise recommendation comes later, so
 %% avoid it here.
 %%
@@ -2820,14 +2834,13 @@ all area definitions tend to the same value~\cite{CSSAreas}.
 % calculate.
 
 
-The area can be calculated either as a scalar, or as a 4-vector.
+The area of a jet can be calculated either as a scalar, or as a 4-vector.
 Essentially the scalar case corresponds to counting the number of
 ghosts in the jet; the $4$-vector case corresponds to summing their
 4-vectors, normalised such that for a narrow jet, the transverse
 component of the $4$-vector is equal to the scalar area.
 
-To access the areas of the jets, the user is exposed to two main
-classes:
+To access jet areas, the user is exposed to two main classes:
 \begin{lstlisting}
   class fastjet::AreaDefinition;
   class fastjet::ClusterSequenceArea;
@@ -2867,9 +2880,9 @@ Details are to be found below and an example program is given as
 %% These classes are described in detail below and an example program is
 %% given in \ttt{example/07-subtraction.cc}.
 
-When jet areas are to be used to study the level of a diffuse noise
-which might be present in the event (like underlying event particles
-or pileup) and maybe subtract it from jets, further classes (like
+When jet areas are to be used to establish the level of a diffuse noise
+that might be present in the event (like underlying event particles
+or pileup), and maybe subtract it from jets, further classes (like
 \ttt{fastjet::JetMedianBackgroundEstimator} and
 \ttt{fastjet::Subtractor}) are useful. This topic is discussed in
 Section \ref{sec:BackgroundEstimator} and an example program is given
@@ -2978,6 +2991,9 @@ If ghosts are placed only up to the particle acceptance, then the jet
 areas are clipped at that acceptance and correspond more closely
 to a measure of the jet's susceptibility to contamination from
 accepted soft particles.
+%
+This is relevant in particular for jets within a distance $R$ of the
+particle acceptance boundary.
 %
 The two choices are illustrated in fig.~\ref{fig:ghost-placement}.
 %
@@ -3214,7 +3230,7 @@ N$) Voronoi diagram generator for planar static point
 sets~\cite{Fortune}.
 
 One use for the Voronoi area is in background determination with the
-$k_t$ algorithm (below, section~\ref{sec:BackgroundEstimator}): with
+$k_t$ algorithm (see below, section~\ref{sec:BackgroundEstimator}): with
 the choice $\ttt{effective\_Rfact}\simeq0.9$ it provides an acceptable
 approximation to the $k_t$ algorithm's active area and is often
 significantly faster to compute than the active area.
@@ -3235,17 +3251,25 @@ determinations.
 This is the class
 %
 \footnote{  
-\ttt{ClusterSequenceArea} is derived from
-\ttt{ClusterSequenceAreaBase} (itself derived from
-\ttt{ClusterSequence}) and makes use of one among
-\ttt{ClusterSequenceActiveAreaExplicitGhosts}, 
-\ttt{ClusterSequenceActiveArea}, 
-\ttt{ClusterSequencePassiveArea},
-\ttt{ClusterSequence1GhostPassiveArea} or 
-\ttt{ClusterSequenceVoronoiArea} (all of them in the \ttt{fastjet}
-namespace of course), according to the choice
-made with \ttt{AreaDefinition}. The user might of course also use these
-classes directly.}
+  \texttt{ClusterSequenceArea} is derived from
+  \texttt{ClusterSequenceAreaBase} (itself derived from
+  \texttt{ClusterSequence}) and makes use of one among
+  \texttt{ClusterSequenceActiveAreaExplicitGhosts}, 
+  \texttt{ClusterSequenceActiveArea}, 
+  \texttt{ClusterSequencePassiveArea},
+  \texttt{ClusterSequence1GhostPassiveArea} or 
+  \texttt{ClusterSequenceVoronoiArea} (all of them in the \texttt{fastjet}
+  namespace of course), according to the choice
+  made with \texttt{AreaDefinition}. The user can also use these
+  classes directly.
+  %
+  \texttt{ClusterSequenceActiveAreaExplicitGhosts} is particularly
+  useful in that it allows the user to specify their own set of ghost
+  particles.
+  %
+  This is exploited to provide area support in a number of the
+  transformers of section~\ref{sec:transformers}.
+}
 %
 used for producing a cluster sequence that also calculates jet areas.
 Its constructor is
@@ -3371,11 +3395,16 @@ to be busy~\cite{Cacciari:2009dp,GridMedianLH}.
 %
 An active area with explicit ghosts is generally
 recommended.\footnote{With the $k_t$ algorithm one may also use a
-  Voronoi area (\ttt{effective\_Rfact = 0.9} is recommended), which
+  Voronoi area (\texttt{effective\_Rfact = 0.9} is recommended), which
   has the advantage of being deterministic and faster than ghosted
   areas. In this case however one must use a selector that is
   geometrical and selects only jets well within the range of event
-  particles. When using ghosts, instead, the selector can go up right
+  particles. 
+  %
+  E.g. if particles are present up to $|y| = y_{\max}$ one should only
+  use jets with $|y| \lesssim y_{\max} - R$.
+  %
+  When using ghosts, the selector can instead go right up
   to the edge of the acceptance, if the ghosts also only go right up
   to the edge, as in the right-hand plot of
   fig.~\ref{fig:ghost-placement}.}
