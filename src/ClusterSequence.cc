@@ -379,7 +379,7 @@ void ClusterSequence::_print_banner() {
 #else
   cout << "\n# ";
 #endif  // DROP_CGAL
-  cout << "and 3rd party plugin jet algorithms (see COPYING file for details).\n";
+  cout << "and 3rd party plugin jet algorithms. See COPYING file for details.\n";
   cout << "#--------------------------------------------------------------------------\n";
   // make sure we really have the output done.
   cout.flush();
