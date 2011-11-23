@@ -2864,7 +2864,7 @@ in \ttt{example/07-subtraction.cc}.
 
 
 %----------------------------------------------------------------------
-\subsection{\tt fastjet::AreaDefinition}
+\subsection{\tt AreaDefinition}
 
 Area definitions are contained in \ttt{AreaDefinition}
 class. Its two main constructors are:
@@ -2942,7 +2942,7 @@ the user should also create an object that specifies how to distribute
 the ghosts.\footnote{Or accept a default --- which uses the default
   values listed in the explicit constructor and $\texttt{ghost\_maxrap} =
   6$} %
-This is done via the class \ttt{fastjet::GhostedAreaSpec} whose
+This is done via the class \ttt{GhostedAreaSpec} whose
 constructor is
 \begin{lstlisting}
   GhostedAreaSpec(double ghost_maxrap, 
@@ -3212,13 +3212,13 @@ It is only these jets that should then be used for background
 determinations.
 
 %----------------------------------------------------------------------
-\subsection{\tt fastjet::ClusterSequenceArea}
+\subsection{\tt ClusterSequenceArea}
 
 This is the class
 %
 \footnote{  
 \ttt{ClusterSequenceArea} is derived from
-\ttt{fastjet::ClusterSequenceAreaBase} (itself derived from
+\ttt{ClusterSequenceAreaBase} (itself derived from
 \ttt{ClusterSequence}) and makes use of one among
 \ttt{ClusterSequenceActiveAreaExplicitGhosts}, 
 \ttt{ClusterSequenceActiveArea}, 
@@ -3230,16 +3230,16 @@ made with \ttt{AreaDefinition}. The user might of course also use these
 classes directly.}
 %
 used for producing a cluster sequence that also calculates jet areas.
-It is constructed using 
+Its constructor is
 \begin{lstlisting}
   template<class L> ClusterSequenceArea(const std::vector<L> & input_particles, 
                                         const JetDefinition & jet_def,
 	                                const AreaDefinition & area_def);
 \end{lstlisting}
-and includes the methods
+and the class includes the methods
 \begin{lstlisting}
   /// Return a reference to the area definition
-  virtual const fastjet::AreaDefinition & area_def() const; 
+  virtual const AreaDefinition & area_def() const; 
 
   /// Returns an estimate of the area contained within the selector that is free of jets. 
   /// The selector needs to have a finite area and be applicable jet by jet.
@@ -3250,13 +3250,12 @@ and includes the methods
 As long as an instance of this class is in scope, a user can access
 information about the area of its jets using the following methods of
 \ttt{PseudoJet}:
-
 \begin{lstlisting}
-  /// Returns the area associated with the given jet
+  /// Returns the scalar area associated with the given jet
   double area = jet.area();
 
   /// Returns the error (uncertainty) associated with the determination of the
-  /// area of the jet; gives zero when the repeat=1 and for passive/Voronoi areas
+  /// scalar area of the jet; gives zero when the repeat=1 and for passive/Voronoi areas
   double area_error = jet.area_error();
 
   /// Returns a PseudoJet whose 4-vector is defined by the following integral
@@ -3347,20 +3346,21 @@ rapidity range, e.g.\ \ttt{SelectorAbsRapMax(4.5)} to use all jets
 with $|y|<4.5$), together with a jet definition  and an area
 definition. 
 %
-We have found that the $k_t$ or Cambridge/Aachen jet algorithm with $R
+We have found that the $k_t$ or Cambridge/Aachen jet algorithms with $R
 = 0.4 - 0.6$ generally provide adequate background estimates, with
 the lower range of $R$ values to be preferred if the events are likely
 to be busy~\cite{Cacciari:2009dp,GridMedianLH}.
 %
-Regarding the area definition, an active area with explicit ghosts is
-recommended\footnote{With the $k_t$ algorithm one may also use a
+An active area with explicit ghosts is generally
+recommended.\footnote{With the $k_t$ algorithm one may also use a
   Voronoi area (\ttt{effective\_Rfact = 0.9} is recommended), which
   has the advantage of being deterministic and faster than ghosted
   areas. In this case however one must use a selector which is
   geometrical and selects only jets well within the range of event
   particles. When using ghosts, instead, the selector can go up right
   to the edge of the acceptance, if the ghosts also only go right up
-  to the edge.}).
+  to the edge, cf.\ the right-hand plot of
+  fig.~\ref{fig:ghost-placement}.}
 %
 
 For the grid based method one creates a
