@@ -3475,15 +3475,17 @@ appendix~\ref{app:function-of-pj}).
 \subsection{Positional dependence of background}
 \label{sec:BGE-positional}
 
-One drawback of a $\rho$ estimate based on all jets or grid cells from
-(say) $|y|<4.5$ is that the background density in $pp$ and heavy-ion
-collisions usually has some non-negligible dependence on rapidity (and
-sometimes azimuth) and this information is not correctly accounted
-for.
+The background density in $pp$ and heavy-ion collisions usually has
+some non-negligible dependence on rapidity (and sometimes azimuth).
 %
-Two techniques (described below) can help alleviate this problem, and
-the properties of the background are then obtained through the methods
-(available for both \ttt{JetMedianBackgroundEstimator} and
+This dependence is not accounted for in the standard estimate of
+$\rho$ based on all jets or grid cells from (say) $|y|<4.5$.
+%
+Two techniques are described below to help alleviate this problem.
+%
+In each case the properties of the background are to be obtained
+through the methods (available for both
+\ttt{JetMedianBackgroundEstimator} and
 \ttt{GridMedianBackgroundEstimator})
 \begin{lstlisting}
   double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
@@ -3493,6 +3495,7 @@ the properties of the background are then obtained through the methods
 
 %......................................................................
 \subsubsection{Local estimation}
+\label{sec:local-bkgd-estimation}
 
 The first technique, ``local estimation'', available for now only in
 the case of the jet-based estimator, involves the use of a more local
@@ -3504,12 +3507,14 @@ set as its reference.
 %
 With this kind of selector, when the user calls either \ttt{rho(jet)}
 or \ttt{sigma(jet)} a \ttt{selector.set\_reference(jet)} call is made
-to centre the selector on the specified jet. Then only the jets that
+to centre the selector on the specified jet. Then only the jets in the
+event that
 pass the cut specified by this newly positioned \ttt{selector} are
 used to estimate $\rho$ or $\sigma$.\footnote{If the selector does not
   take a reference jet, then these calls give identical results to the
-  plain \texttt{rho()} and \texttt{sigma()} calls, unless a manual
-  rapidity rescaling is in effect.}
+  plain \texttt{rho()} and \texttt{sigma()} calls (unless a manual
+  rapidity rescaling is also in effect, cf.\
+  section~\ref{sec:rescaled-bkgd-estimation}).}
 %
 This method is adequate if the number of jets that pass the selector
 is much larger than the number of hard jets in the range (otherwise
@@ -3526,15 +3531,17 @@ as
   selector = SelectorStrip($\Delta y$) * (!SelectorNHardest(2))
 \end{lstlisting}
 which removes the 2 hardest jets globally and then, of the remainder,
-takes the ones within the strip. This is however not always very
-effective, because one may not know how many hard jets to
-remove.\footnote{If you use non-geometric selectors in determining
-  $\rho$, the area must have explicit ghosts in order to simplify the
-  determination of the empty area. If it does not, an error will be
-  thrown.}
+takes the ones within the strip.\footnote{If you use non-geometric
+  selectors such as this in determining $\rho$, the area must have
+  explicit ghosts in order to simplify the determination of the empty
+  area. If it does not, an error will be thrown.}
+%
+This is however not always very effective, because one may not know
+how many hard jets to remove.
 
 %......................................................................
 \subsubsection{Rescaling method}
+\label{sec:rescaled-bkgd-estimation}
 
 A second technique to account for positional dependence of the
 background is ``rescaling''.
@@ -3546,55 +3553,64 @@ background is ``rescaling''.
 % alternative method that is adequate for handling the rapidity
 % dependence is to 
 %
-One parametrises the average shape of the rapidity
-dependence from some number of pileup events and then carries out an
-event-by-event global $\rho$ determination taking into account that
-average shape.
+First one parametrises the average shape of the rapidity
+dependence from some number of pileup events.
 %
-This method is available for both grid and jet-based methods.
+Then for subsequent event-by-event background determinations, one
+carries out a global $\rho$ determination and then applies the
+previously determined average rescaling function to that global
+determination to obtain an estimate for $\rho$ in the neighbourhood of
+a specific jet.
+
+The rescaling approach approach is available for both grid and
+jet-based methods.
 %
-One first creates an object that encodes the shape, e.g.
+To encode the background shape, one defines an object such as 
 \begin{lstlisting}
   // gives rescaling$(y) = 1.16 + 0\cdot y -0.023 \cdot y^2 + 0\cdot y^3 + 0.000041 \cdot y^4$
   fastjet::BackgroundRescalingYPolynomial rescaling(1.16, 0, -0.023, 0, 0.000041);
 \end{lstlisting}
-(for other shapes, e.g. parametrization of elliptic flow in heavy ion collisions,
-with both rapidity and azimuth dependence, derive a class from
-\ttt{FunctionOfPseudoJet<double>} --- see appendix
-\ref{app:function-of-pj}) and then one tells the background estimator
+(for other shapes, e.g. parametrization of elliptic flow in heavy ion
+collisions, with both rapidity and azimuth dependence, derive a class
+from \ttt{FunctionOfPseudoJet<double>} --- see appendix
+\ref{app:function-of-pj}). Then one tells the background estimator
 (whether jet or grid based) about the rescaling with the call
 \begin{lstlisting}
   // tell JetMedianBackgroundEstimator or GridMedianBackgroundEstimator about the rescaling
   bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
-Subsequent calls will then take the median of the distribution $p_t/A
-/ \ttt{rescaling}(y)$ (rather than $p_t/A$) and any calls to
-\ttt{rho(jet)} and \ttt{sigma(jet)} will include an additional
-factor of \ttt{rescaling}$(y_\ttt{jet})$.
+Subsequent calls to \texttt{rho()} will return the median of the
+distribution $p_t/A / \ttt{rescaling}(y)$ (rather than $p_t/A$).
+%
+Any calls to \ttt{rho(jet)} and \ttt{sigma(jet)} will include an
+additional factor of \ttt{rescaling}$(y_\ttt{jet})$.
 %
 Note that any overall factor in the rescaling function cancels out for
 \ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
 and \ttt{sigma()} (which are in any case less meaningful when a
 rapidity dependence is being assumed for the background).
 
-In ongoing studies \cite{GridMedianLH}, we have found that the
-rescaling method generally performs comparably to local estimation in
-many respects, but with reduced sensitivity to biases in events with
-high multiplicities of hard jets.
+In ongoing studies \cite{GridMedianLH}, we have found that despite its
+use of an average background shape, the rescaling method generally
+performs comparably to local estimation in terms of its residual $p_t$
+dispersion after subtraction.
+%
+Additionally, it has the advantage of reduced sensitivity to biases in
+events with high multiplicities of hard jets.
 
 %......................................................................
 \subsection{Other facilities}
 \label{sec:BGE-other-facilities}
 
-In the case of the jet-based estimator, a number of enquiry functions
-are available to obtain information used internally within the median
+The \ttt{JetMedianBackgroundEstimator} has a number of enquiry
+functions to access information used internally within the median
 $\rho$ and $\sigma$ determination.
 \begin{lstlisting}
   // Returns the mean area of the jets used to actually compute the background properties,
   // including empty area and jets (available also in grid-based estimator)
   double mean_area() const;
    
-  // returns the number of jets used to actually compute the background properties
+  // Returns the number of jets used to actually compute the background properties
   // (including empty jets)
   unsigned int n_jets_used() const;
    
@@ -3620,9 +3636,10 @@ All four function above return a result corresponding to the last call
 to \ttt{rho} or \ttt{sigma} (as long as the particles, cluster sequence or
 selector have not changed in the meantime).
 
-
-\comment{should remaining part stay here? Go to Appendix since it's a
-  bit technical? Maybe easiest to leave it here}
+%......................................................................
+\subsubsection{Alternative workflows}
+%\comment{should remaining part stay here? Go to Appendix since it's a
+%  bit technical? Maybe easiest to leave it here}
 %
 To allow flexibility in the user's workflow, 
 alternative constructors to \ttt{JetMedianBackgroundEstimator} are provided.
@@ -3650,8 +3667,8 @@ needs. Instead, if the default constructor has been used, one can then employ
   void set_cluster_sequence(const ClusterSequenceAreaBase & csa);
 \end{lstlisting}
 to set the rest of the necessary information. If a list of jets is already
-available, they can be submitted to the background estimator in place os a cluster
-sequence:
+available, they can be submitted to the background estimator in place
+of a cluster sequence:
 \begin{lstlisting}
   // (re)set the jets to be used by future calls to rho() etc. 
   void set_jets(const std::vector<PseudoJet> & jets);
