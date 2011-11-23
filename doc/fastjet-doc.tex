@@ -813,7 +813,9 @@ accessing the components
 %
 \noindent The reader may have observed that in some cases more than
 one name can be used to access the same quantity. This is intended to
-reflect the diversity of common usages within the community.
+reflect the diversity of common usages within the
+community.\footnote{The \texttt{pt()}, \texttt{pt2()}, \texttt{mt()},
+  \texttt{mt2()} names are available only from version 3.0.1 onwards.}
 
 There are two ways of associating user information with a
 \ttt{PseudoJet}.
@@ -3130,7 +3132,11 @@ $\ttt{repeat}=1$.\footnote{%
 
 After initialisation, the parameters can be modified and retrieved
 respectively with calls such as \ttt{set\_ghost\_area(...)} and
-\ttt{ghost\_maxrap()} (similarly for the other parameters).
+\ttt{ghost\_maxrap()} (similarly for the other
+parameters\footnote{In versions of \fastjet prior to 3.0.1, the names
+  \texttt{mean\_ghost\_kt} and \texttt{kt\_scatter} should be used
+  rather than \texttt{mean\_ghost\_pt} and \texttt{pt\_scatter}. The
+  former names will be maintained for the foreseeable future.}).
 %
 A textual description of the \ttt{GhostedAreaSpec} can be obtained, as
 usual, with a \ttt{description()} member function.
