@@ -85,7 +85,7 @@
 
 \newcommand{\throws}{{\it throws}}
 
-\title{FastJet user manual%
+\title{\sf FastJet user manual%
   \\ \large (for version
   3.0.1-devel%  %%%-VERSION-NUMBER
   )
@@ -537,7 +537,7 @@ has been to favour user extensibility, for example through plugins,
 selectors, tools, etc. This is one of the topics covered in the
 appendices.
 %
-Further information is also available from the extensive online
+Further information is also available from the extensive 
 ``doxygen'' documentation, available online at
 \url{http://fastjet.fr}.
 
@@ -707,6 +707,7 @@ int main () {
 \begin{verbatim}
  g++ short-example.cc -o short-example \
      `fastjet-install/bin/fastjet-config --cxxflags --libs --plugins`
+ ./short-example
 \end{verbatim}
 (watch out, once again, for the backquotes if you cut and paste from the PDF).
 \end{itemize}
