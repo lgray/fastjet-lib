@@ -363,27 +363,24 @@ void ClusterSequence::_print_banner() {
   if (!_first_time) {return;}
   _first_time = false;
   
-  
-  //Symp. Discr. Alg, p.472 (2002) and  CGAL (http://www.cgal.org);
-
   cout << "#--------------------------------------------------------------------------\n";
   cout << "#                         FastJet release " << fastjet_version << endl;
-  cout << "#            Written by M. Cacciari, G.P. Salam and G. Soyez            \n"; 
-  cout << "#                         http://www.fastjet.fr                         \n"; 
+  cout << "#                 M. Cacciari, G.P. Salam and G. Soyez                  \n"; 
+  cout << "#     A software package for jet finding and analysis at colliders      \n";
+  cout << "#                           http://fastjet.fr                           \n"; 
   cout << "#								      	   \n";
-  cout << "# Longitudinally invariant Kt, anti-Kt, and inclusive Cambridge/Aachen  \n";
-  cout << "# clustering using fast geometric algorithms, with jet areas and optional\n";
-  cout << "# external jet-finder plugins. If you use this code towards a scientific \n";
-  cout << "# publication please cite Phys. Lett. B641 (2006) [hep-ph/0512210] and   \n";
-  cout << "# M. Cacciari, G.P. Salam and G. Soyez, http://fastjet.fr/              \n";
+  cout << "# Please cite arXiv:1111.XXXX if you use this package for scientific    \n";
+  cout << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
   cout << "#								      	   \n";
-  cout << "# This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM \n";
-  cout << "# Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code" ;
+  cout << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";
+  cout << "# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code";
 #ifndef DROP_CGAL
-  cout << endl << "# and CGAL: http://www.cgal.org/";
+  cout << ",\n# CGAL ";
+#else
+  cout << "\n# ";
 #endif  // DROP_CGAL
-  cout << ".\n";
-  cout << "#-------------------------------------------------------------------------\n";
+  cout << "and 3rd party plugin jet algorithms (see COPYING file for details).\n";
+  cout << "#--------------------------------------------------------------------------\n";
   // make sure we really have the output done.
   cout.flush();
 }

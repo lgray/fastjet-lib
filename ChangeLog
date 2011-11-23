@@ -1,3 +1,8 @@
+2011-11-23  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc (ClusterSequence::_print_banner): 
+	  updated banner following morning's discussion.
+
 2011-11-22  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 
