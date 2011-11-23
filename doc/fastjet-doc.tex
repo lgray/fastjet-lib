@@ -2765,31 +2765,14 @@ The following selectors are also available:
 \section{Jet areas}
 \label{sec:areas}
 
-Jet areas provide a measure of a jet's susceptibility to soft
-contamination. 
-%
-In \fastjet, they are obtained by clustering with the class
-\ttt{ClusterSequenceArea} (derived from \ttt{ClusterSequence}). 
-%
-Its constructor takes an \ttt{AreaDefinition}
-argument in addition to the list of particles and the
-\ttt{JetDefinition}. A typical usage would look like the following:
-\begin{lstlisting}
-  #include "fastjet/ClusterSequenceArea.hh"
-  // ...
-  double ghost_maxrap = 5.0; // e.g. if particles go up to y=5
-  AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
-  ClusterSequenceArea clust_seq(input_particles, jet_def, area_def);
-  vector<PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets());
-  double area_hardest_jet = jets[0].area();
-\end{lstlisting}
-
+Jet areas provide a measure of the surface in the $y$-$\phi$ plane
+over which a jet extends, or, equivalently, a measure of a jet's
+susceptibility to soft contamination.
 
 Since a jet is made up of only a finite number of particles, one needs
-a specific definition in order to make its {\sl area} (i.e. the
-surface in the $y$-$\phi$ plane over which it extends) an unambiguous
+a specific definition in order to make its area an unambiguous
 concept. Three definitions of area have been proposed
-in~\cite{CSSAreas} and they are implemented in \fastjet:
+in~\cite{CSSAreas} and implemented in \fastjet:
 \begin{itemize}
 \item Active areas add a uniform background of extremely soft massless
   `ghost' particles to the event and allow them to participate in the
@@ -2798,7 +2781,7 @@ in~\cite{CSSAreas} and they are implemented in \fastjet:
   sensible jet algorithms are infrared safe), the presence of the ghosts
   does not affect the set of user particles that end up in a given
   jet.
-\item Passive areas are defined as follows. One adds a single randomly
+\item Passive areas are defined as follows: one adds a single randomly
   placed ghost at a time to the event. One examines which jet (if any)
   the ghost ends up in. One repeats the procedure many times and the
   passive area of a jet is then proportional to the probability of it
@@ -2812,26 +2795,53 @@ in~\cite{CSSAreas} and they are implemented in \fastjet:
   of a jet coincides with its passive area.
 \end{itemize}
 It is worth noting that in the limit of very densely populated events,
-all area definitions tend to the same value~\cite{CSSAreas}. It might
-therefore be advantageous to select a Voronoi area type, rather than
-an active one, when using areas for phenomenological tasks like pileup
-subtraction~\cite{cs}, as it generally requires less CPU time to
-calculate.
+all area definitions tend to the same value~\cite{CSSAreas}. 
+%% GPS: To some extent a more precise recommendation comes later, so
+%% avoid it here.
+%%
+% It might
+% therefore be advantageous to select a Voronoi area type, rather than
+% an active one, when using areas for phenomenological tasks like pileup
+% subtraction~\cite{cs}, as it generally requires less CPU time to
+% calculate.
+
 
 The area can be calculated either as a scalar, or as a 4-vector.
 Essentially the scalar case corresponds to counting the number of
-ghosts in the jet, while the $4$-vector case corresponds to summing
-their 4-vectors (normalised such that for a narrow jet, the transverse
-component of the $4$-vector is equal to the scalar area).
+ghosts in the jet; the $4$-vector case corresponds to summing their
+4-vectors, normalised such that for a narrow jet, the transverse
+component of the $4$-vector is equal to the scalar area.
 
-To summarise, in order to access the areas of the jets the user is exposed to two main
+To access the areas of the jets, the user is exposed to two main
 classes:
 \begin{lstlisting}
   class fastjet::AreaDefinition;
   class fastjet::ClusterSequenceArea;
 \end{lstlisting}
-These classes are described in detail below and an example program is
-given in \ttt{example/06-area.cc}.
+with input particles, a jet definition and an area definition being
+supplied to a \ttt{ClusterSequenceArea} in order to obtain jets with
+area information.
+%
+% 
+% In \fastjet, they are obtained by clustering with the class
+% \ttt{ClusterSequenceArea} (derived from \ttt{ClusterSequence}). 
+%
+% Its constructor takes an \ttt{AreaDefinition}
+% argument in addition to the list of particles and the
+% \ttt{JetDefinition}. 
+Typical usage would be as follows:
+\begin{lstlisting}
+  #include "fastjet/ClusterSequenceArea.hh"
+  // ...
+  double ghost_maxrap = 5.0; // e.g. if particles go up to y=5
+  AreaDefinition area_def(active_area, GhostedAreaSpec(ghost_maxrap));
+  ClusterSequenceArea clust_seq(input_particles, jet_def, area_def);
+  vector<PseudoJet> jets = sorted_by_pt(clust_seq.inclusive_jets());
+  double area_hardest_jet = jets[0].area();
+\end{lstlisting}
+Details are to be found below and an example program is given as
+\ttt{example/06-area.cc}.
+
 
 %% When jet areas are to be used to study the level of a diffuse noise
 %% which might be present in the event (like underlying event particles
@@ -2854,7 +2864,7 @@ in \ttt{example/07-subtraction.cc}.
 
 
 %----------------------------------------------------------------------
-\subsection{fastjet::AreaDefinition}
+\subsection{\tt fastjet::AreaDefinition}
 
 Area definitions are contained in \ttt{AreaDefinition}
 class. Its two main constructors are:
@@ -2872,21 +2882,25 @@ active area with a \ttt{ghost\_spec} that is acceptable for a majority
 of area measurements with clustering algorithms and typical Tevatron
 and LHC rapidity coverage.
 
-Information about the current \ttt{AreaDefinition} can be retrieved as
-follows:
-\begin{lstlisting}
-  /// return a description of the current area definition
-  std::string description() const ;
+Information about the current \ttt{AreaDefinition} can be retrieved
+with the help of \ttt{description()}, \ttt{area\_type()},
+\ttt{ghost\_spec()} and \ttt{voronoi\_spec()} member functions.
 
-  /// return info about the type of area being used by this defn
-  AreaType area_type() const ;
-
-  /// return a reference to the ghosted area spec (where relevant)
-  const GhostedAreaSpec  & ghost_spec()  const ;
-
-  /// return a reference to the voronoi area spec (where relevant)
-  const VoronoiAreaSpec & voronoi_spec() const ;
-\end{lstlisting}
+% as
+% follows:
+% \begin{lstlisting}
+%   /// returns a description of the current area definition
+%   std::string description() const ;
+% 
+%   /// returns info about the type of area being used by this defn
+%   AreaType area_type() const ;
+% 
+%   /// returns a reference to the ghosted area spec (where relevant)
+%   const GhostedAreaSpec  & ghost_spec()  const ;
+% 
+%   /// returns a reference to the voronoi area spec (where relevant)
+%   const VoronoiAreaSpec & voronoi_spec() const ;
+% \end{lstlisting}
 
 \subsubsection{Ghosted Areas (active and passive)}
 \label{sec:ghosted-areas}
@@ -2901,10 +2915,12 @@ defined by the \ttt{AreaType} \ttt{enum}:
                  passive_area, 
                  [...]};
 \end{lstlisting}
-The two active variants give identical results. 
+The two active variants give identical results for the areas of hard
+jets.
 %
 The second one explicitly includes the ghosts when the user requests
-the constituents of a jet. 
+the constituents of a jet and also leads to the presence of ``pure
+ghost'' jets.
 %
 The first of the passive variants
 explicitly runs through the procedure mentioned above, \ie it clusters
@@ -2919,99 +2935,224 @@ determination.\footnote{This ability is provided for $k_t$,
   some approximations are made for 4-vector areas). 
   %
   For other algorithms it defaults back to the
-  \ttt{one\_ghost\_passive\_area} approach.}
+  \texttt{one\_ghost\_passive\_area} approach.}
 
 In order to carry out a clustering with a ghosted area determination,
 the user should also create an object that specifies how to distribute
 the ghosts.\footnote{Or accept a default --- which uses the default
-  values listed in the explicit constructor and $\ttt{ghost\_maxrap} =
+  values listed in the explicit constructor and $\texttt{ghost\_maxrap} =
   6$} %
 This is done via the class \ttt{fastjet::GhostedAreaSpec} whose
 constructor is
 \begin{lstlisting}
   GhostedAreaSpec(double ghost_maxrap, 
-                  int    repeat        = 1,
-                  double ghost_area    = 0.01, 
-                  double grid_scatter  = 1.0, 
-                  double pt_scatter    = 0.1,
+                  int    repeat        = 1,   double ghost_area    = 0.01, 
+                  double grid_scatter  = 1.0, double pt_scatter    = 0.1,
                   double mean_ghost_pt = 1e-100);
 \end{lstlisting}
 The ghosts are distributed on a uniform grid in $y$ and $\phi$, with
-small random fluctuations to avoid degeneracies. The
-\ttt{ghost\_maxrap} defines the maximum rapidity up to which ghosts
-are generated --- typically jet areas will be reliable for jets up to
-rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. The \ttt{ghost\_area}
-is the area associated with a single ghost. The number of ghosts is
-inversely proportional to the ghost area, and so a smaller area leads
-to a longer CPU-time for clustering. However small ghost areas give
-more accurate results. We have found the default ghost area given
-above to be suitable for most applications.
+small random fluctuations to avoid clustering degeneracies.
 
-For sparse events, the set of ghost particles that end up in a given
-jet is not unique, and depends on the degeneracy-breaking random
-shifts added to the ghost positions, as compared to a perfect grid
-distribution. To obtain a reliable area one may then repeat the area
-determination several times, the number of times being specified by
-the \ttt{repeat} variable.
+The \ttt{ghost\_maxrap} variable defines the maximum rapidity up to
+which ghosts are generated.
 %
-For hadron-level events a value of
-$5$ is sufficient to give jet areas that are determined to within a
-few percent. 
+If one places ghosts well beyond the particle acceptance (at least $R$
+beyond it), then jet areas also stretch beyond the acceptance, giving
+a measure of the jet's full extent in rapidity and azimuth.
 %
-In practice it is usually satisfactory even to set
-\ttt{repeat}~$=1$ and this is the default since it runs faster. For
-events with a dense distribution of true 
-particles, there is no degeneracy in the ghost clustering and there is
-no need at all to use \ttt{repeat}~$>1$.
+If ghosts are placed only up to the particle acceptance, then the jet
+areas are clipped at that acceptance and correspond more closely
+to a measure of the jet's susceptibility to contamination from
+accepted soft particles.
 %
-If \ttt{repeat} $ > 1$, a statistical uncertainty on the area is
-available for each jet, through the \ttt{jet.area\_error()} call, and
-it is calculated as the standard deviation of areas obtained for that
+The two choices are illustrated in fig.~\ref{fig:ghost-placement}.
+%
+To define more complicated ghost acceptances it is possible to replace
+\ttt{ghost\_maxrap} with a \ttt{Selector}, which must be purely
+geometrical and have finite rapidity extent.
+
+% One may choose to place ghosts well beyond the acceptance for
+% particles so that jet-areas retain their geometric meaning even for
+% jets near the edge of the particle acceptance. In this case 
+% 
+%  --- typically jet areas will be reliable for jets
+% up to rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.48\textwidth]{figs/ghost-extent-y4}\hfill
+  \includegraphics[width=0.48\textwidth]{figs/ghost-extent-y3}
+  \caption{Two choices for ghost placement. The grey area in each plot
+    indicates
+    the region containing ghosts, while the dots are particles, which
+    here are accepted up to $|y|<3$. 
+    %
+    The circular regions indicate the areas that will be found for two
+    particular jets.  
+    %
+    In the left-hand case, with ghosts that extend well beyond the
+    acceptance for particles, jet areas are unaffected by the particle
+    acceptance; 
+    %
+    in the right-hand case, with ghosts placed only up to the
+    acceptance limit, jet areas are clipped at the edge of the
+    acceptance.  }
+  \label{fig:ghost-placement}
+\end{figure}
+
+The \ttt{ghost\_area} parameter in the \ttt{GhostedAreaSpec}
+constructor is the area associated with a single ghost. 
+%
+The number of ghosts is inversely proportional to the ghost area, and
+so a smaller area leads to a longer CPU-time for clustering. However
+small ghost areas give more accurate results. 
+%
+We have found the default ghost area given above to be adequate for
+most applications.
+%
+Smaller ghost areas are beneficial mainly for high-precision
+determinations of areas of jets with small $R$.
+
+By default, one set of ghosts is generated for each event that is
+clustered.
+%
+The small random fluctuations in ghost positions and $p_t$'s,
+introduced to break clustering degeneracies, mean that for repeated
+clustering of the same event a given hard jet's area will be different
+after each clustering.
+%
+This is especially true for sparse events, where a jet's particle
+content fails to accurately delineate the boundaries of the jet.
+%
+For the \texttt{active\_area} choice (and certain passive areas),
+specifying $\ttt{repeat} > 1$ causes \fastjet to directly cluster the
+same hard event with multiple ghost sets.
+%
+This results in a pseudo-Monte Carlo type evaluation of the jet areas.
+%
+A statistical uncertainty on the area is available for each jet,
+through the \ttt{jet.area\_error()} call.
+%
+It is calculated as the standard deviation of areas obtained for that
 jet, divided by $\sqrt{\ttt{repeat}-1}$.
 %
-Note that the \ttt{repeat} value is ignored (\ie taken to be 1) for
-\ttt{active\_area\_explicit\_ghosts} and meaningless for the passive
-area in the $k_t$ algorithm, which just calculates the Voronoi area
-discussed below (since they are identical).
+While there are situations in which this facility is useful, for most
+applications of jet areas it is sufficient to use
+$\ttt{repeat}=1$.\footnote{%
+  Several parameters are available to control the properties and
+  randomness of the ghosts: each ghost's position differs from an
+  exact grid vertex by a random amount distributed uniformly in the
+  range $\pm \frac12 \texttt{grid\_scatter}$ times the grid spacing in
+  both the rapidity and azimuth directions.
+  % 
+  Each ghosts's $p_t$ is distributed randomly in the range $(1 \pm \frac12
+  \texttt{pt\_scatter})$ times \texttt{mean\_ghost\_pt}.
+  %
+  For nearly all applications, it makes sense to use the default
+  values.
+  %
+  Facilities are also available to set and retrieve the seeds for the
+  random-number generator, notably through the
+  \texttt{set\_random\_status(...)} and
+  \texttt{get\_random\_status(...)} members of
+  \texttt{GhostedAreaSpec}.  }
 
-Other variables that the user may wish to set are: \ttt{grid\_scatter}
-and \ttt{pt\_scatter}, which  are fractional random fluctuations of the
-position of the ghosts on the $y$-$\phi$ grid and of their
-transverse momentum; and \ttt{mean\_ghost\_pt} which is the average transverse
-momentum of the ghosts.
+
+
+
+% The reason why \fastjet adds random fluctuations to the ghosts, giving
+% each one a different $p_t$ and a position slightly away from a grid
+% vertex is to the huge clustering degeneracies that would arise if all
+% the ghosts had identical $p_t$'s and each were placed at a grid vertex.
+% 
+% \fastjet places ghosts close to the vertices of a rapidity and azimuth
+% grid but not exactly on them.
+% %
+% The reason for this is that many jet algorithms have degeneracies in
+% the clustering order if particles are placed on an exact grid.
+% %
+% The use of an approximate grid breaks those degeneracies.
+% %
+% Each ghost's position differs from an exact grid vertex by a random
+% amount distributed uniformly in the range $\pm \frac12
+% \ttt{grid\_scatter}$ times the grid spacing in both the rapidity and
+% azimuth directions.
+% %
+% Each ghosts's $p_t$ is distributed randomly in the range $(1 \pm 0.5
+% \texttt{pt\_scatter})$ times \ttt{mean\_ghost\_pt}.
+% %
+% The values for the scatter and mean ghost $p_t$ can nearly always be
+% left at their defaults.
+% %
+% 
+% 
+% 
+% For sparse events, the set of ghost particles that end up in a given
+% jet is not unique, and depends on the degeneracy-breaking random
+% shifts added to the ghost positions, as compared to a perfect grid
+% distribution. To obtain a reliable area one may then repeat the area
+% determination several times, the number of times being specified by
+% the \ttt{repeat} variable.
+% %
+% For hadron-level events a value of
+% $5$ is sufficient to give jet areas that are determined to within a
+% few percent. 
+% %
+% In practice it is usually satisfactory even to set
+% \ttt{repeat}~$=1$ and this is the default since it runs faster. For
+% events with a dense distribution of true 
+% particles, there is no degeneracy in the ghost clustering and there is
+% no need at all to use \ttt{repeat}~$>1$.
+% %
+% If \ttt{repeat} $ > 1$, a statistical uncertainty on the area is
+% available for each jet, through the \ttt{jet.area\_error()} call, and
+% it is calculated as the standard deviation of areas obtained for that
+% jet, divided by $\sqrt{\ttt{repeat}-1}$.
+% %
+% Note that the \ttt{repeat} value is ignored (\ie taken to be 1) for
+% \ttt{active\_area\_explicit\_ghosts} and meaningless for the passive
+% area in the $k_t$ algorithm, which just calculates the Voronoi area
+% discussed below (since they are identical).
+% 
+% Other variables that the user may wish to set are: \ttt{grid\_scatter}
+% and \ttt{pt\_scatter}, which  are fractional random fluctuations of the
+% position of the ghosts on the $y$-$\phi$ grid and of their
+% transverse momentum; and \ttt{mean\_ghost\_pt} which is the average transverse
+% momentum of the ghosts.
 
 After initialisation, the parameters can be modified and retrieved
 respectively with calls such as \ttt{set\_ghost\_area(...)} and
 \ttt{ghost\_maxrap()} (similarly for the other parameters).
 %
-A textual description of the \ttt{GhostedAreaSpec} can be obtained as
-follows:
-\begin{lstlisting}
-  std::string description() const;
-\end{lstlisting}
+A textual description of the \ttt{GhostedAreaSpec} can be obtained, as
+usual, with a \ttt{description()} member function.
+% follows:
+% \begin{lstlisting}
+%   std::string description() const;
+% \end{lstlisting}
 
-Finally, an alternative constructor
-\begin{lstlisting}
-  GhostedAreaSpec(const Selector & selector, 
-                  int    repeat        = 1,
-                  double ghost_area    = 0.01, 
-                  double grid_scatter  = 1.0, 
-                  double pt_scatter    = 0.1,
-                  double mean_ghost_pt = 1e-100);
-\end{lstlisting}
-allows the user to have ghosts placed in the region specified by the
-\ttt{selector}, which must be purely geometrical and have finite
-rapidity extent.
-%
-This option is useful, for example, if one wishes to place ghosts in a
-manner that reflects a detector's acceptance for particles.
-%
-Though this will not give the ``true'' geometrical area of jets near
-the boundary of the acceptance, it will ensure that the area measures
-sensitivity to contamination only in the region where contamination by
-particles can effectively take place.
-%
-This information is often more useful than the geometrical area.
+% Finally, an alternative constructor
+% \begin{lstlisting}
+%   GhostedAreaSpec(const  Selector & selector, 
+%                   int    repeat        = 1,
+%                   double ghost_area    = 0.01, 
+%                   double grid_scatter  = 1.0, 
+%                   double pt_scatter    = 0.1,
+%                   double mean_ghost_pt = 1e-100);
+% \end{lstlisting}
+% allows the user to have ghosts placed in the region specified by the
+% \ttt{selector}, which must be purely geometrical and have finite
+% rapidity extent.
+% %
+% This option is useful, for example, if one wishes to place ghosts in a
+% manner that reflects a detector's acceptance for particles.
+% %
+% Though this will not give the ``true'' geometrical area of jets near
+% the boundary of the acceptance, it will ensure that the area measures
+% sensitivity to contamination only in the region where contamination by
+% particles can effectively take place.
+% %
+% This information is often more useful than the geometrical area.
 
 \subsubsection{Voronoi Areas}
 \label{sec:voronoi-areas}
@@ -3038,15 +3179,18 @@ factor \ttt{effective\_Rfact}) the radius of the circle which is
 intersected with the Voronoi cells. With $\ttt{effective\_Rfact} = 1$,
 for the $k_t$ algorithm, the Voronoi area is equivalent to the passive
 area.
-
+%
 Information about the specification in use is returned by
-\begin{lstlisting}
-  /// return the value of effective_Rfact
-  double effective_Rfact() const ;
+\ttt{effective\_Rfact()} and \ttt{description()} member functions.
+% 
+% \begin{lstlisting}
+%   /// return the value of effective_Rfact
+%   double effective_Rfact() const ;
+% 
+%   /// return a textual description of the area definition.
+%   std::string description() const ;
+% \end{lstlisting}
 
-  /// return a textual description of the area definition.
-  std::string description() const ;
-\end{lstlisting}
 The Voronoi areas are calculated with the help of Fortune's ($N \ln
 N$) Voronoi diagram generator for planar static point
 sets~\cite{Fortune}.
@@ -3054,12 +3198,21 @@ sets~\cite{Fortune}.
 One use for the Voronoi area is in background determination with the
 $k_t$ algorithm (below, section~\ref{sec:BackgroundEstimator}): with
 the choice $\ttt{effective\_Rfact}\simeq0.9$ it provides an acceptable
-approximation to the $k_t$ algorithm's active area that is often
+approximation to the $k_t$ algorithm's active area and is often
 significantly faster to compute than the active area.
-
+%
+Note that it is not currently possible to clip Voronoi areas with a
+given particle acceptance. 
+%
+As a result, given particles up to $|y|<y_{\max}$, only jets with $|y|
+\lesssim y_{\max} - R$ will have areas that reflect the jets'
+sensitivity to accepted particle contamination.
+%
+It is only these jets that should then be used for background
+determinations.
 
 %----------------------------------------------------------------------
-\subsection{fastjet::ClusterSequenceArea}
+\subsection{\tt fastjet::ClusterSequenceArea}
 
 This is the class
 %
