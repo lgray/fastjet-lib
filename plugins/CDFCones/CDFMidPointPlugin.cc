@@ -86,7 +86,7 @@ string CDFMidPointPlugin::description () const {
 
 void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner();
+  _print_banner(clust_seq.fastjet_banner_ostr);
  
   // create the physics towers needed by the CDF code
   vector<PhysicsTower> towers;
@@ -153,20 +153,23 @@ void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) const {
 }
 
 // print a banner for reference to the 3rd-party code
-void CDFMidPointPlugin::_print_banner() const{
+void CDFMidPointPlugin::_print_banner(ostream *ostr) const{
   if (! _first_time) return;
   _first_time=false;
 
-  cout << "#-------------------------------------------------------------------------" << endl;
-  cout << "# You are running the CDF MidPoint plugin for FastJet (v2.1 upwards)      " << endl;
-  cout << "# This is based on an implementation provided by Joey Huston.             " << endl;
-  cout << "# If you use this plugin, please cite                                     " << endl;
-  cout << "#   G. C. Blazey et al., hep-ex/0005012.                                  " << endl;
-  cout << "# in addition to the usual FastJet reference.                             " << endl;
-  cout << "#-------------------------------------------------------------------------" << endl;
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the CDF MidPoint plugin for FastJet (v2.1 upwards)      " << endl;
+  (*ostr) << "# This is based on an implementation provided by Joey Huston.             " << endl;
+  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
+  (*ostr) << "#   G. C. Blazey et al., hep-ex/0005012.                                  " << endl;
+  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
-  cout.flush();
+  ostr->flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

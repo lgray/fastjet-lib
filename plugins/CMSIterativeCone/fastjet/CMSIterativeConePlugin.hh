@@ -75,9 +75,6 @@ public:
   /// get the seed threshold
   virtual double seed_threshold() const {return theSeedThreshold;}
 
-  /// allow to disable the banner
-  void disable_banner() {_first_time = false;}
-  
 private:
   double theConeRadius;     ///< cone radius
   double theSeedThreshold;  ///< seed threshold
@@ -85,7 +82,7 @@ private:
   static bool _first_time;
 
   /// print a banner for reference to the 3rd-party code
-  void _print_banner() const;
+  void _print_banner(std::ostream *ostr) const;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

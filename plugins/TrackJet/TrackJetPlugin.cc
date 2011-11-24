@@ -101,7 +101,7 @@ string TrackJetPlugin::description () const {
 
 void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner();
+  _print_banner(clust_seq.fastjet_banner_ostr);
 
   // we first need to sort the particles in pt
   vector<TrackJetParticlePtr> particle_list;
@@ -189,19 +189,22 @@ void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
 }
 
 // print a banner for reference to the 3rd-party code
-void TrackJetPlugin::_print_banner() const{
+void TrackJetPlugin::_print_banner(ostream *ostr) const{
   if (! _first_time) return;
   _first_time=false;
 
-  cout << "#-------------------------------------------------------------------------" << endl;
-  cout << "# You are running the TrackJet plugin for FastJet (v2.4 upwards)          " << endl;
-  cout << "# This is based on the Rivet (v1.1.2) implementation of the TrackJet      " << endl;
-  cout << "# algorithm. Rivet is written by Leif Lonnblad, Andy Buckley and Jon      " << endl;
-  cout << "# Butterworth. See also http://www.hepforge.org/downloads/rivet.          " << endl;
-  cout << "#-------------------------------------------------------------------------" << endl;
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the TrackJet plugin for FastJet (v2.4 upwards)          " << endl;
+  (*ostr) << "# This is based on the Rivet (v1.1.2) implementation of the TrackJet      " << endl;
+  (*ostr) << "# algorithm. Rivet is written by Leif Lonnblad, Andy Buckley and Jon      " << endl;
+  (*ostr) << "# Butterworth. See also http://www.hepforge.org/downloads/rivet.          " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
-  cout.flush();
+  ostr->flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

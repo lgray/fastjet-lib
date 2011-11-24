@@ -55,7 +55,7 @@ string ATLASConePlugin::description () const {
 
 void ATLASConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner();
+  _print_banner(clust_seq.fastjet_banner_ostr);
 
 
   // transfer the list of PseudoJet into a atlas::Jet::jet_list_t
@@ -153,21 +153,24 @@ void ATLASConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 }
 
 // print a banner for reference to the 3rd-party code
-void ATLASConePlugin::_print_banner() const{
+void ATLASConePlugin::_print_banner(ostream *ostr) const{
   if (! _first_time) return;
   _first_time=false;
 
-  cout << "#-------------------------------------------------------------------------" << endl;
-  cout << "# You are running the ATLAS Cone plugin for FastJet (v2.4 onwards)        " << endl;
-  cout << "# Original code from SpartyJet adapted to FastJet                         " << endl;
-  cout << "# If you use this plugin, please cite                                     " << endl;
-  cout << "#   P.A. Delsart, K. Geerlings, J. Huston, B. Martin and C. Vermilion,    " << endl;
-  cout << "#   SpartyJet, http://projects.hepforge.org/spartyjet                     " << endl;
-  cout << "# in addition to the usual FastJet reference.                             " << endl;
-  cout << "#-------------------------------------------------------------------------" << endl;
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the ATLAS Cone plugin for FastJet (v2.4 onwards)        " << endl;
+  (*ostr) << "# Original code from SpartyJet adapted to FastJet                         " << endl;
+  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
+  (*ostr) << "#   P.A. Delsart, K. Geerlings, J. Huston, B. Martin and C. Vermilion,    " << endl;
+  (*ostr) << "#   SpartyJet, http://projects.hepforge.org/spartyjet                     " << endl;
+  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
-  cout.flush();
+  ostr->flush();
 }
 
 

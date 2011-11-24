@@ -127,6 +127,18 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 
+// The following variable can be modified from within user code
+// so as to redirect banners to an ostream other than cout.
+//
+// Please note that if you distribute 3rd party code
+// that links with FastJet, that 3rd party code is NOT
+// allowed to turn off the printing of FastJet banners
+// by default. This requirement reflects the spirit of
+// clause 2c of the GNU Public License (v2), under which
+// FastJet and its plugins are distributed.
+std::ostream * ClusterSequence::fastjet_banner_ostr = &cout;
+
+
 // destructor that guarantees proper bookkeeping for the CS Structure
 ClusterSequence::~ClusterSequence () {
   // set the pointer in the wrapper to this object to NULL to say that
@@ -362,27 +374,30 @@ void ClusterSequence::_print_banner() {
 
   if (!_first_time) {return;}
   _first_time = false;
-  
-  cout << "#--------------------------------------------------------------------------\n";
-  cout << "#                         FastJet release " << fastjet_version << endl;
-  cout << "#                 M. Cacciari, G.P. Salam and G. Soyez                  \n"; 
-  cout << "#     A software package for jet finding and analysis at colliders      \n";
-  cout << "#                           http://fastjet.fr                           \n"; 
-  cout << "#								      	   \n";
-  cout << "# Please cite arXiv:1111.XXXX if you use this package for scientific    \n";
-  cout << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
-  cout << "#								      	   \n";
-  cout << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";
-  cout << "# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code";
+
+  // make sure the user has not set the banner stream to NULL
+  if (!fastjet_banner_ostr) return;  
+
+  (*fastjet_banner_ostr) << "#--------------------------------------------------------------------------\n";
+  (*fastjet_banner_ostr) << "#                         FastJet release " << fastjet_version << endl;
+  (*fastjet_banner_ostr) << "#                 M. Cacciari, G.P. Salam and G. Soyez                  \n"; 
+  (*fastjet_banner_ostr) << "#     A software package for jet finding and analysis at colliders      \n";
+  (*fastjet_banner_ostr) << "#                           http://fastjet.fr                           \n"; 
+  (*fastjet_banner_ostr) << "#								      	   \n";
+  (*fastjet_banner_ostr) << "# Please cite arXiv:1111.XXXX if you use this package for scientific    \n";
+  (*fastjet_banner_ostr) << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
+  (*fastjet_banner_ostr) << "#								      	   \n";
+  (*fastjet_banner_ostr) << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";
+  (*fastjet_banner_ostr) << "# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code";
 #ifndef DROP_CGAL
-  cout << ",\n# CGAL ";
+  (*fastjet_banner_ostr) << ",\n# CGAL ";
 #else
-  cout << "\n# ";
+  (*fastjet_banner_ostr) << "\n# ";
 #endif  // DROP_CGAL
-  cout << "and 3rd party plugin jet algorithms. See COPYING file for details.\n";
-  cout << "#--------------------------------------------------------------------------\n";
+  (*fastjet_banner_ostr) << "and 3rd party plugin jet algorithms. See COPYING file for details.\n";
+  (*fastjet_banner_ostr) << "#--------------------------------------------------------------------------\n";
   // make sure we really have the output done.
-  cout.flush();
+  fastjet_banner_ostr->flush();
 }
 
 //----------------------------------------------------------------------

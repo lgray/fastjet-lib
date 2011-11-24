@@ -79,9 +79,6 @@ public:
   /// here we return the R of the last alg in the list
   virtual double R() const {return _radius;}
 
-  /// allow to disable the banner
-  void disable_banner() {_first_time = false;}
-
 private:
   double _radius, _radius2;
 
@@ -91,7 +88,7 @@ private:
   static bool _first_time;
 
   /// print a banner for reference to the 3rd-party code
-  void _print_banner() const;
+  void _print_banner(std::ostream *ostr) const;
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

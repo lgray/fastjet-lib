@@ -1,3 +1,25 @@
+2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/TrackJet/fastjet/TrackJetPlugin.hh:
+	* plugins/TrackJet/TrackJetPlugin.cc:
+	* plugins/PxCone/fastjet/PxConePlugin.hh:
+	* plugins/PxCone/PxConePlugin.cc:
+	* plugins/CMSIterativeCone/fastjet/CMSIterativeConePlugin.hh:
+	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc:
+	* plugins/CDFCones/fastjet/CDFMidPointPlugin.hh:
+	* plugins/CDFCones/fastjet/CDFJetCluPlugin.hh:
+	* plugins/CDFCones/CDFMidPointPlugin.cc:
+	* plugins/CDFCones/CDFJetCluPlugin.cc:
+	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh:
+	* plugins/ATLASCone/ATLASConePlugin.cc:
+	  print the banner in FJ's ClusterSequence::fastjet_banner_ostr
+	  + removed 'disable_banner()'
+
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc (_print_banner):
+	  added ClusterSequence::fastjet_banner_ostr. This is a (pointer
+	  to a) stream where the banner will be printed.
+
 2011-11-23  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc (ClusterSequence::_print_banner): 

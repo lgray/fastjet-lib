@@ -535,6 +535,18 @@ public:
   typedef ClusterSequenceStructure StructureType;
 
 
+  // The following variable can be modified from within user code
+  // so as to redirect banners to an ostream other than cout.
+  //
+  // Please note that if you distribute 3rd party code
+  // that links with FastJet, that 3rd party code is NOT
+  // allowed to turn off the printing of FastJet banners
+  // by default. This requirement reflects the spirit of
+  // clause 2c of the GNU Public License (v2), under which
+  // FastJet and its plugins are distributed.
+  //
+  static std::ostream * fastjet_banner_ostr;
+
 protected:
 //DEP  static JetAlgorithm _default_jet_algorithm;
   JetDefinition _jet_def;
@@ -1013,8 +1025,6 @@ template <class J> inline void ClusterSequence::_bj_set_NN_crosscheck(J * const 
   jet->NN = NN;
   jet->NN_dist = NN_dist;
 }
-
-
 
 FASTJET_END_NAMESPACE
 

@@ -99,7 +99,7 @@ string CMSIterativeConePlugin::description () const {
 
 void CMSIterativeConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner();
+  _print_banner(clust_seq.fastjet_banner_ostr);
 
   //make a list of input objects ordered by ET
   //cout << "copying the list of particles" << endl;
@@ -221,21 +221,24 @@ void CMSIterativeConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 }
 
 // print a banner for reference to the 3rd-party code
-void CMSIterativeConePlugin::_print_banner() const{
+void CMSIterativeConePlugin::_print_banner(ostream *ostr) const{
   if (! _first_time) return;
   _first_time=false;
 
-  cout << "#-------------------------------------------------------------------------" << endl;
-  cout << "# You are running the CMS Iterative Cone plugin for FastJet (v2.4 onwards)" << endl;
-  cout << "# Original code by the CMS collaboration adapted to FastJet               " << endl;
-  cout << "# If you use this plugin, please cite                                     " << endl;
-  cout << "#   G. L. Bayatian et al. [CMS Collaboration],                            " << endl;
-  cout << "#   CMS physics: Technical design report.                                 " << endl;
-  cout << "# in addition to the usual FastJet reference.                             " << endl;
-  cout << "#-------------------------------------------------------------------------" << endl;
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the CMS Iterative Cone plugin for FastJet (v2.4 onwards)" << endl;
+  (*ostr) << "# Original code by the CMS collaboration adapted to FastJet               " << endl;
+  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
+  (*ostr) << "#   G. L. Bayatian et al. [CMS Collaboration],                            " << endl;
+  (*ostr) << "#   CMS physics: Technical design report.                                 " << endl;
+  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
-  cout.flush();
+  ostr->flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
