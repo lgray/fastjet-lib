@@ -178,7 +178,7 @@ void D0RunIpre96ConePlugin::_print_banner(ostream *ostr) const{
   if (!ostr) return;  
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the D0 Run I (pre96) Cone plugin for FastJet (v2.4 onwards)" << endl;
+  (*ostr) << "# You are running the D0 Run I (pre96) Cone plugin for FastJet (v3.0 onwards)" << endl;
   (*ostr) << "# Original code provided by Lars Sonnenschein and adapted to FastJet      " << endl;
   (*ostr) << "# If you use this plugin, please cite                                     " << endl;
   (*ostr) << "#   B. Abbott et al. [D0 Collaboration], FERMILAB-PUB-97-242-E.           " << endl;
@@ -225,7 +225,7 @@ void D0RunIConePlugin::_print_banner(ostream *ostr) const{
   if (!ostr) return;  
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the D0 Run I Cone plugin for FastJet (v2.4 onwards)     " << endl;
+  (*ostr) << "# You are running the D0 Run I Cone plugin for FastJet (v3.0 onwards)     " << endl;
   (*ostr) << "# Original code provided by Lars Sonnenschein and adapted to FastJet      " << endl;
   (*ostr) << "# If you use this plugin, please cite                                     " << endl;
   (*ostr) << "#   B. Abbott et al. [D0 Collaboration], FERMILAB-PUB-97-242-E.           " << endl;
