@@ -1,3 +1,8 @@
+2011-11-24  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* NEWS: 
+	  prepared preliminary summary of changes
+
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/D0RunIICone/ILConeAlgorithm.hpp:
@@ -255,7 +260,7 @@
 	* plugins/CDFCones/CDFcode/LorentzVector.hh:
 	* include/fastjet/internal/Voronoi.hh:
 	* src/Voronoi.cc:
-	  added/started a history of Change on 3rd party code
+	  started/completed a history of Changes to 3rd party code
 
 	* plugins/CDFCones/CDFcode/CalTower.hh (ctor):
 	  added a few () to get rid of a gcc warning
