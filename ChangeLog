@@ -5,13 +5,25 @@
 
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc:
+	* plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+	* plugins/D0RunICone/HepEntityIpre96.h:
+	* plugins/D0RunICone/HepEntityI.h:
+	* plugins/D0RunICone/ConeClusterAlgo.hpp:
+	* plugins/D0RunICone/inline_maths.h:
 	* plugins/D0RunIICone/ILConeAlgorithm.hpp:
 	* plugins/D0RunIICone/ProtoJet.hpp:
 	* plugins/D0RunIICone/ConeSplitMerge.hpp:
 	* plugins/D0RunIICone/ConeJetInfo.hpp:
 	* plugins/D0RunIICone/HepEntity.h:
 	* plugins/D0RunIICone/inline_maths.h:
-	  added a history of Changes
+	  added a history of Changes + a banner
+
+	* COPYING:
+	  mentioned the origin of the D0 code
 
 	* plugins/TrackJet/fastjet/TrackJetPlugin.hh:
 	* plugins/TrackJet/TrackJetPlugin.cc:

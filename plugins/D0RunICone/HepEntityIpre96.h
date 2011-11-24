@@ -14,14 +14,16 @@ namespace d0runi{
 //D0 RunI cone jet algorithm implementation prior to 1996, which is an inlined template class
 //See FERMILAB-Pub-97-242-E for details
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * removed some harmless warnings coming with the -Wshadow gcc option
- * 
- */
+// History of changes in FastJet compared tothe original version of
+// HepEntity.h
+//
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+//
+//         * removed some harmless warnings coming with the -Wshadow gcc option
+// 
+// 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
 
 class HepEntityIpre96 : public HepEntityI {
 

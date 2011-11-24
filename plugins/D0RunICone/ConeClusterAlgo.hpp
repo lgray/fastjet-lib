@@ -39,6 +39,13 @@
 #ifndef  D0RunIconeJets_CONECLUSTERALGO_H
 #define  D0RunIconeJets_CONECLUSTERALGO_H
 
+// History of changes in FastJet compared tothe original version of
+// ConeClusterAlgo.hpp
+//
+// 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+
 
 //#include "EnergyClusterReco.hpp"
 #include <vector>

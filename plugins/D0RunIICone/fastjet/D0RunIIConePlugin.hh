@@ -154,6 +154,10 @@ private:
   const static int    _DEFAULT_merge_max               ;// = 10000; 
   const static double _DEFAULT_pT_min_nomerge          ;// = 0.   ;
 
+  static bool _first_time;
+
+  /// print a banner for reference to the 3rd-party code
+  void _print_banner(std::ostream *ostr) const;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

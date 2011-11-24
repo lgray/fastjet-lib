@@ -53,6 +53,7 @@ const double D0RunIIConePlugin::_DEFAULT_pT_min_second_protojet   = 0.   ;
 const int    D0RunIIConePlugin::_DEFAULT_merge_max                = 10000; 
 const double D0RunIIConePlugin::_DEFAULT_pT_min_nomerge           = 0.   ;
 
+bool D0RunIIConePlugin::_first_time = true;
 
 string D0RunIIConePlugin::description () const {
   ostringstream desc;
@@ -67,6 +68,8 @@ string D0RunIIConePlugin::description () const {
 
 
 void D0RunIIConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner(clust_seq.fastjet_banner_ostr);
  
   // create the entities needed by the D0 code
   vector<HepEntity> entities(clust_seq.jets().size());
@@ -136,6 +139,27 @@ void D0RunIIConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     clust_seq.plugin_record_iB_recombination(jet_k, d_iB);
 
   }
+}
+
+// print a banner for reference to the 3rd-party code
+void D0RunIIConePlugin::_print_banner(ostream *ostr) const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the D0 Run II Cone plugin for FastJet (v2.4 onwards)    " << endl;
+  (*ostr) << "# Original code provided by Lars Sonnenschein and adapted to FastJet      " << endl;
+  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
+  (*ostr) << "#   G. C. Blazey et al., hep-ex/0005012                                   " << endl;
+  (*ostr) << "#   V. M. Abazov et al. [D0 Collaboration], arXiv:1110.3771 [hep-ex]      " << endl; 
+  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  ostr->flush();
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

@@ -50,6 +50,10 @@ For the plugin jet finders, the licensing situation is as follows:
   Code from http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW
 
 
+. D0 RunI and RunII cone plugins: 
+  standalone version provided by Lars Sonnenschein
+
+
 . PxCone code: GPL(v2) (permission granted by M.H.Seymour)
 
   From: Mike Seymour <Michael.Seymour@cern.ch>

@@ -149,6 +149,8 @@ void D0RunIBaseConePlugin::run_clustering_worker(ClusterSequence & clust_seq) co
 //                                         //
 /////////////////////////////////////////////
 
+bool D0RunIpre96ConePlugin::_first_time=true;
+
 string D0RunIpre96ConePlugin::description () const {
   ostringstream desc;
   
@@ -161,9 +163,31 @@ string D0RunIpre96ConePlugin::description () const {
 }
 
 void D0RunIpre96ConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner(clust_seq.fastjet_banner_ostr);
+
   run_clustering_worker<HepEntityIpre96>(clust_seq);
 }
 
+// print a banner for reference to the 3rd-party code
+void D0RunIpre96ConePlugin::_print_banner(ostream *ostr) const{
+  if (! _first_time) return;
+  _first_time=false;
+
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the D0 Run I (pre96) Cone plugin for FastJet (v2.4 onwards)" << endl;
+  (*ostr) << "# Original code provided by Lars Sonnenschein and adapted to FastJet      " << endl;
+  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
+  (*ostr) << "#   B. Abbott et al. [D0 Collaboration], FERMILAB-PUB-97-242-E.           " << endl;
+  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  ostr->flush();
+}
 
 
 /////////////////////////////////////////////
@@ -171,6 +195,8 @@ void D0RunIpre96ConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 // D0RunIConePlugin implementation         //
 //                                         //
 /////////////////////////////////////////////
+
+bool D0RunIConePlugin::_first_time=true;
 
 string D0RunIConePlugin::description () const {
   ostringstream desc;
@@ -184,10 +210,31 @@ string D0RunIConePlugin::description () const {
 }
 
 void D0RunIConePlugin::run_clustering(ClusterSequence & clust_seq) const {
+  // print a banner if we run this for the first time
+  _print_banner(clust_seq.fastjet_banner_ostr);
+
   run_clustering_worker<HepEntityI>(clust_seq);
 }
 
+// print a banner for reference to the 3rd-party code
+void D0RunIConePlugin::_print_banner(ostream *ostr) const{
+  if (! _first_time) return;
+  _first_time=false;
 
+  // make sure the user has not set the banner stream to NULL
+  if (!ostr) return;  
+
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the D0 Run I Cone plugin for FastJet (v2.4 onwards)     " << endl;
+  (*ostr) << "# Original code provided by Lars Sonnenschein and adapted to FastJet      " << endl;
+  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
+  (*ostr) << "#   B. Abbott et al. [D0 Collaboration], FERMILAB-PUB-97-242-E.           " << endl;
+  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
+  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+
+  // make sure we really have the output done.
+  ostr->flush();
+}
 
 
 
