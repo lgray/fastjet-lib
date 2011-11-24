@@ -15,14 +15,18 @@
 //    extracted from D0 software framework and modified to remove subsequent dependencies
 // --------------------------------------------------------------------------
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * changed the name of a few parameters to avoid a gcc -Wshadow warning
- *
- */
+// History of Changes in FastJet compared tothe original version of
+// ConeJetInfo.hpp
+//
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+//
+//         * changed the name of a few parameters to avoid a gcc
+//           -Wshadow warning
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+ 
 
 //#define CONEJET_SPLITMERGE_MOD 100
 

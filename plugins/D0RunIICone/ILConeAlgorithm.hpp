@@ -40,14 +40,24 @@
 //
 // ---------------------------------------------------------------------------
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * changed the name of a few parameters to avoid a gcc -Wshadow warning
- *
- */
+// History of changes in FastJet compared tothe original version of
+// ProtoJet.hpp
+//
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * changed the name of a few parameters to avoid a gcc
+//          -Wshadow warning
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+//
+// 2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * moved the 'std::vector<ProtoJet<Item> > ilcv' structure
+//          containing the info about the final jets from a local
+//          variable to a class variable (for integration in the
+//          FastJet plugin core)
 
 ///////////////////////////////////////////////////////////////////////////////
 #include <vector>

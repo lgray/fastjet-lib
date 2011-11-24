@@ -31,6 +31,18 @@
 //    extracted from D0 software framework and modified to remove subsequent dependencies
 // ---------------------------------------------------------------------------
 //
+
+// History of changes in FastJet compared tothe original version of
+// ConeSplitMerge.hpp
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+//
+// 2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * replaced make_pair by std::make_pair
+
 #include <iostream>
 #include <map>
 #include <utility>

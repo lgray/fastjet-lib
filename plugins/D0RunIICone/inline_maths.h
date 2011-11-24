@@ -1,6 +1,13 @@
 #ifndef INLINE_MATHS
 #define INLINE_MATHS
 
+// History of changes in FastJet compared tothe original version of
+// inline_math.h
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+
 #include <cerrno>
 
 #include <fastjet/internal/base.hh>

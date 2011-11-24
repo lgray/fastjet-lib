@@ -13,6 +13,17 @@ namespace d0{
 //This is an example class fulfilling the minimal requirements needed by the
 //D0 RunII cone jet algorithm implementation, which is an inlined template class
 
+// History of changes in FastJet compared tothe original version of
+// HepEntity.h
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+//
+// 2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * added an index member
+
 class HepEntity {
 
  public:

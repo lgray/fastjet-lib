@@ -15,14 +15,21 @@
 //    extracted from D0 software framework and modified to remove subsequent dependencies 
 // ---------------------------------------------------------------------------
 
-/* 
- * History of Changes (since FastJet-3.0)
- * 
- * 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
- *
- *         * changed the name of a few parameters to avoid a gcc -Wshadow warning
- *
- */
+// History of changes in FastJet compared tothe original version of
+// ProtoJet.hpp
+//
+// 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * changed the name of a few parameters to avoid a gcc
+//          -Wshadow warning
+//
+// 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
+//
+//        * put the code in the fastjet::d0 namespace
+//
+// 2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+// 
+//        * replaced make_pair by std::make_pair
  
 //#include "kinem_util/AnglesUtil.hpp"
 //#include "energycluster/ConeJetInfo.hpp"

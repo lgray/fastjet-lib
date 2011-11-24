@@ -1,5 +1,13 @@
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/D0RunIICone/ILConeAlgorithm.hpp:
+	* plugins/D0RunIICone/ProtoJet.hpp:
+	* plugins/D0RunIICone/ConeSplitMerge.hpp:
+	* plugins/D0RunIICone/ConeJetInfo.hpp:
+	* plugins/D0RunIICone/HepEntity.h:
+	* plugins/D0RunIICone/inline_maths.h:
+	  added a history of Changes
+
 	* plugins/TrackJet/fastjet/TrackJetPlugin.hh:
 	* plugins/TrackJet/TrackJetPlugin.cc:
 	* plugins/PxCone/fastjet/PxConePlugin.hh:
