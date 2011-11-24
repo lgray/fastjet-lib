@@ -64,6 +64,11 @@
 ///
 ///   -nhardest n   keep only the n hardest particles in the event
 ///
+///   -file name    read from the corresponding file rather than stdin.
+///                 (The file will be reopened for each new jet alg.; in
+///                 constrast, if you use stdin, each new alg will take a
+///                 new event).
+/// 
 /// Output Options
 /// --------------
 ///
@@ -119,6 +124,8 @@
 ///
 /// Algorithms
 /// ----------
+///   -all-algs     runs all algorithms
+///
 ///   -kt           switch to the longitudinally invariant kt algorithm
 ///                 Note: this is the default one.
 ///
@@ -259,9 +266,11 @@ bool do_areas;
 bool ee_print = false;
 void print_jets(const vector<fj::PseudoJet> & jets, bool show_const = false);
 
+bool found_unavailable = false;
 void is_unavailable(const string & algname) {
   cerr << algname << " requested, but not available for this compilation" << endl;
-  exit(0);
+  found_unavailable = true;
+  //exit(0);
 }
 
 
@@ -298,6 +307,7 @@ int main (int argc, char ** argv) {
   int    nev     = cmdline.int_val("-nev",1);
   bool   add_dense_coverage = cmdline.present("-dense");
   double ghost_maxrap = cmdline.value("-ghost-maxrap",5.0);
+  bool   all_algs = cmdline.present("-all-algs");
 
   fj::Selector particles_sel = (cmdline.present("-nhardest"))
     ? fj::SelectorNHardest(cmdline.value<unsigned int>("-nhardest"))
@@ -360,22 +370,31 @@ int main (int argc, char ** argv) {
   // The following option causes the Cambridge algo to be used.
   // Note that currently the only output that works sensibly here is
   // "-incl 0"
-  fj::JetDefinition jet_def;
-  if (cmdline.present("-cam") || cmdline.present("-CA")) {
-    jet_def = fj::JetDefinition(fj::cambridge_algorithm, ktR, scheme, strategy);
-  } else if (cmdline.present("-antikt")) {
-    jet_def = fj::JetDefinition(fj::antikt_algorithm, ktR, scheme, strategy);
-  } else if (cmdline.present("-genkt")) {
-    double p = cmdline.value<double>("-genkt");
-    jet_def = fj::JetDefinition(fj::genkt_algorithm, ktR, p, scheme, strategy);
-  } else if (cmdline.present("-eekt")) {
-    jet_def = fj::JetDefinition(fj::ee_kt_algorithm);
-  } else if (cmdline.present("-eegenkt")) {
-    double p = cmdline.value<double>("-eegenkt");
-    jet_def = fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, scheme, strategy);
+  vector<fj::JetDefinition> jet_defs;
+  if (all_algs || cmdline.present("-cam") || cmdline.present("-CA")) {
+    jet_defs.push_back( fj::JetDefinition(fj::cambridge_algorithm, ktR, scheme, strategy));
+  } 
+  if (all_algs || cmdline.present("-antikt")) {
+    jet_defs.push_back( fj::JetDefinition(fj::antikt_algorithm, ktR, scheme, strategy));
+  } 
+  if (all_algs || cmdline.present("-genkt")) {
+    double p;
+    if (cmdline.present("-genkt")) p = cmdline.value<double>("-genkt");
+    else                           p = -0.5;
+    jet_defs.push_back( fj::JetDefinition(fj::genkt_algorithm, ktR, p, scheme, strategy));
+  } 
+  if (all_algs || cmdline.present("-eekt")) {
+    jet_defs.push_back( fj::JetDefinition(fj::ee_kt_algorithm));
+  } 
+  if (all_algs || cmdline.present("-eegenkt")) {
+    double p;
+    if (cmdline.present("-eegenkt")) p = cmdline.value<double>("-eegenkt");
+    else                             p = -0.5;
+    jet_defs.push_back( fj::JetDefinition(fj::ee_genkt_algorithm, ktR, p, scheme, strategy));
 
 // checking if one asks to run a plugin (don't delete this line)
-  } else if (cmdline.present("-midpoint")) {
+  } 
+  if (all_algs || cmdline.present("-midpoint")) {
 #ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
     typedef fj::CDFMidPointPlugin MPPlug; // for brevity
     double cone_area_fraction = 1.0;
@@ -386,35 +405,38 @@ int main (int argc, char ** argv) {
     if (cmdline.present("-sm-pt")) sm_scale = MPPlug::SM_pt; // default
     if (cmdline.present("-sm-mt")) sm_scale = MPPlug::SM_mt;
     if (cmdline.present("-sm-Et")) sm_scale = MPPlug::SM_Et;
-    jet_def = fj::JetDefinition( new fj::CDFMidPointPlugin (
+    jet_defs.push_back( fj::JetDefinition( new fj::CDFMidPointPlugin (
                                       seed_threshold, ktR, 
                                       cone_area_fraction, max_pair_size,
                                       max_iterations, overlap_threshold,
-                                      sm_scale));
+                                      sm_scale)));
 #else  // FASTJET_ENABLE_PLUGIN_CDFCONES
     is_unavailable("midpoint");
 #endif // FASTJET_ENABLE_PLUGIN_CDFCONES
-  } else if (cmdline.present("-pxcone")) {
+  } 
+  if (all_algs || cmdline.present("-pxcone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_PXCONE
     double min_jet_energy = 5.0;
-    jet_def = fj::JetDefinition( new fj::PxConePlugin (
+    jet_defs.push_back( fj::JetDefinition( new fj::PxConePlugin (
                                       ktR, min_jet_energy,
-                                      overlap_threshold));
+                                      overlap_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_PXCONE
     is_unavailable("pxcone");
 #endif // FASTJET_ENABLE_PLUGIN_PXCONE
-  } else if (cmdline.present("-jetclu")) {
+  } 
+  if (all_algs || cmdline.present("-jetclu")) {
 #ifdef FASTJET_ENABLE_PLUGIN_CDFCONES
-    jet_def = fj::JetDefinition( new fj::CDFJetCluPlugin (
-                                      ktR, overlap_threshold, seed_threshold));
+    jet_defs.push_back( fj::JetDefinition( new fj::CDFJetCluPlugin (
+                                                                    ktR, overlap_threshold, seed_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_CDFCONES
     is_unavailable("pxcone");
 #endif // FASTJET_ENABLE_PLUGIN_CDFCONES
-  } else if (cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
+  } 
+  if (all_algs || cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
 #ifdef FASTJET_ENABLE_PLUGIN_SISCONE
     typedef fj::SISConePlugin SISPlug; // for brevity
     int npass = cmdline.value("-npass",0);
-    if (cmdline.present("-siscone")) {
+    if (all_algs || cmdline.present("-siscone")) {
       double sisptmin = cmdline.value("-sisptmin",0.0);
       SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass,sisptmin);
       if (cmdline.present("-sm-pt")) plugin->set_split_merge_scale(SISPlug::SM_pt);
@@ -423,69 +445,79 @@ int main (int argc, char ** argv) {
       if (cmdline.present("-sm-pttilde")) plugin->set_split_merge_scale(SISPlug::SM_pttilde);
       // cause it to use the jet-definition's own recombiner
       plugin->set_use_jet_def_recombiner(true);
-      jet_def = fj::JetDefinition(plugin);
-    } else {
+      jet_defs.push_back( fj::JetDefinition(plugin));
+    } 
+    if (all_algs || cmdline.present("-sisconespheri")) {
       double sisEmin = cmdline.value("-sisEmin",0.0);
       fj::SISConeSphericalPlugin * plugin = 
 	new fj::SISConeSphericalPlugin(ktR, overlap_threshold,npass,sisEmin);
       if (cmdline.present("-ghost-sep")) {
 	plugin->set_ghost_separation_scale(cmdline.value<double>("-ghost-sep"));
       }
-      jet_def = fj::JetDefinition(plugin);
+      jet_defs.push_back( fj::JetDefinition(plugin));
     }
 #else  // FASTJET_ENABLE_PLUGIN_SISCONE
     is_unavailable("siscone");
 #endif // FASTJET_ENABLE_PLUGIN_SISCONE
-  } else if (cmdline.present("-d0runiicone")) {
+  } 
+  if (all_algs || cmdline.present("-d0runiicone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_D0RUNIICONE
     double min_jet_Et = 6.0; // was 8 GeV in earlier work
-    jet_def = fj::JetDefinition(new fj::D0RunIIConePlugin(ktR,min_jet_Et));
+    jet_defs.push_back( fj::JetDefinition(new fj::D0RunIIConePlugin(ktR,min_jet_Et)));
 #else  // FASTJET_ENABLE_PLUGIN_D0RUNIICONE
     is_unavailable("D0RunIICone");
 #endif // FASTJET_ENABLE_PLUGIN_D0RUNIICONE
-  } else if (cmdline.present("-trackjet")) {
+  } 
+  if (all_algs || cmdline.present("-trackjet")) {
 #ifdef FASTJET_ENABLE_PLUGIN_TRACKJET
-    jet_def = fj::JetDefinition(new fj::TrackJetPlugin(ktR));
+    jet_defs.push_back( fj::JetDefinition(new fj::TrackJetPlugin(ktR)));
 #else  // FASTJET_ENABLE_PLUGIN_TRACKJET
     is_unavailable("TrackJet");
 #endif // FASTJET_ENABLE_PLUGIN_TRACKJET
-  } else if (cmdline.present("-atlascone")) {
+  } 
+  if (all_algs || cmdline.present("-atlascone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_ATLASCONE
-    jet_def = fj::JetDefinition(new fj::ATLASConePlugin(ktR));
+    jet_defs.push_back( fj::JetDefinition(new fj::ATLASConePlugin(ktR)));
 #else  // FASTJET_ENABLE_PLUGIN_ATLASCONE
     is_unavailable("ATLASCone");
 #endif // FASTJET_ENABLE_PLUGIN_ATLASCONE
-  } else if (cmdline.present("-eecambridge")) {
+  } 
+  if (all_algs || cmdline.present("-eecambridge")) {
 #ifdef FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
-    jet_def = fj::JetDefinition(new fj::EECambridgePlugin(ycut));
+    jet_defs.push_back( fj::JetDefinition(new fj::EECambridgePlugin(ycut)));
 #else  // FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
     is_unavailable("EECambridge");
 #endif // FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
-  } else if (cmdline.present("-jade")) {
+  } 
+  if (all_algs || cmdline.present("-jade")) {
 #ifdef FASTJET_ENABLE_PLUGIN_JADE
-    jet_def = fj::JetDefinition(new fj::JadePlugin());
+    jet_defs.push_back( fj::JetDefinition(new fj::JadePlugin()));
 #else  // FASTJET_ENABLE_PLUGIN_JADE
     is_unavailable("Jade");
 #endif // FASTJET_ENABLE_PLUGIN_JADE
-  } else if (cmdline.present("-cmsiterativecone")) {
+  } 
+  if (all_algs || cmdline.present("-cmsiterativecone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
-    jet_def = fj::JetDefinition(new fj::CMSIterativeConePlugin(ktR,seed_threshold));
+    jet_defs.push_back( fj::JetDefinition(new fj::CMSIterativeConePlugin(ktR,seed_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
     is_unavailable("CMSIterativeCone");
 #endif // FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
-  } else if (cmdline.present("-d0runipre96cone")) {
+  } 
+  if (all_algs || cmdline.present("-d0runipre96cone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
-    jet_def = fj::JetDefinition(new fj::D0RunIpre96ConePlugin(ktR, seed_threshold, overlap_threshold));
+    jet_defs.push_back( fj::JetDefinition(new fj::D0RunIpre96ConePlugin(ktR, seed_threshold, overlap_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_D0RUNICONE
     is_unavailable("D0RunICone");
 #endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
-  } else if (cmdline.present("-d0runicone")) {
+  } 
+  if (all_algs || cmdline.present("-d0runicone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
-    jet_def = fj::JetDefinition(new fj::D0RunIConePlugin(ktR, seed_threshold, overlap_threshold));
+    jet_defs.push_back( fj::JetDefinition(new fj::D0RunIConePlugin(ktR, seed_threshold, overlap_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_D0RUNICONE
     is_unavailable("D0RunICone");
 #endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
-  } else if (cmdline.present("-gridjet")) {
+  } 
+  if (all_algs || cmdline.present("-gridjet")) {
 #ifdef FASTJET_ENABLE_PLUGIN_GRIDJET
     // we want a grid_ymax of 5.0, but when using R=0.4 (i.e. grid
     // spacing of 0.8), this leads to 12.5 grid cells; depending on
@@ -495,29 +527,37 @@ int main (int argc, char ** argv) {
     //
     // Instead we therefore take 4.9999999999, which avoids this problem.
     double grid_ymax = 4.9999999999;
-    jet_def = fj::JetDefinition(new fj::GridJetPlugin(grid_ymax, ktR*2.0));
+    jet_defs.push_back( fj::JetDefinition(new fj::GridJetPlugin(grid_ymax, ktR*2.0)));
 #else  // FASTJET_ENABLE_PLUGIN_GRIDJET
     is_unavailable("GridJet");
 #endif // FASTJET_ENABLE_PLUGIN_GRIDJET
 // end of checking if one asks to run a plugin (don't delete this line)
-  } else {
-    cmdline.present("-kt"); // kt is default, but allow user to specify it too [and ignore return value!]
-    jet_def = fj::JetDefinition(fj::kt_algorithm, ktR, strategy);
+  } 
+  if (all_algs || 
+      (jet_defs.size() == 0 && !found_unavailable)
+      || cmdline.present("-kt"))  {
+    jet_defs.push_back( fj::JetDefinition(fj::kt_algorithm, ktR, strategy));
   }
 
+  string filename = cmdline.value<string>("-file", "");
 
 
   if (!cmdline.all_options_used()) {cerr << 
       "Error: some options were not recognized"<<endl; 
     exit(-1);}
 
+  for (unsigned idef = 0; idef < jet_defs.size(); idef++) {
+  fj::JetDefinition & jet_def = jet_defs[idef];
+  istream * istr;
+  if (filename == "") istr = &cin;
+  else                istr = new ifstream(filename.c_str());
 
   for (int iev = 0; iev < nev; iev++) {
   vector<fj::PseudoJet> jets;
   vector<fj::PseudoJet> particles;
   string line;
   int  ndone = 0;
-  while (getline(cin, line)) {
+  while (getline(*istr, line)) {
       //cout << line<<endl;
     istringstream linestream(line);
     if (line == "#END") {
@@ -738,11 +778,14 @@ int main (int argc, char ** argv) {
 
   } // irepeat
   } // iev
-
   // if we've instantiated a plugin, delete it
   if (jet_def.strategy()==fj::plugin_strategy){
     delete jet_def.plugin();
   }
+  // close any file that we've opened
+  if (istr != &cin) delete istr;
+  } // jet_defs
+
 }
 
 

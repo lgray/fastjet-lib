@@ -1,5 +1,15 @@
 2011-11-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+	* example/fastjet_timing_plugins.cc: 
+	  added -all-algs option to run all algorithms and -file option to
+	  read events from a file. You can now also specify multiple
+	  algorithms, e.g. -kt -cam.
+	 
+	  NB: the algorithms loop is the outer one, and event-reading is
+	  done in an innter an iev loop; -all-algs must be used in
+	  conjunction with -file if you want the same set of particles to
+	  be used for each jet alg.
+
 	* include/fastjet/ClusterSequence.hh:
 	* src/ClusterSequence.hh:
         * plugins/D0RunIICone/D0RunIIConePlugin.cc
