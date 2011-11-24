@@ -1,3 +1,21 @@
+2011-11-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.hh:
+        * plugins/D0RunIICone/D0RunIIConePlugin.cc
+        * plugins/CDFCones/CDFMidPointPlugin.cc
+        * plugins/CDFCones/CDFJetCluPlugin.cc
+        * plugins/PxCone/PxConePlugin.cc
+        * plugins/SISCone/siscone
+        * plugins/CMSIterativeCone/CMSIterativeConePlugin.cc
+        * plugins/D0RunICone/D0RunIBaseConePlugin.cc
+        * plugins/TrackJet/TrackJetPlugin.cc
+        * plugins/ATLASCone/ATLASConePlugin.cc
+	  access to banner ostream is now through the cleaner
+	  CS::fastjet_banner_stream() member + renamed
+	  CS::fastjet_banner_ostr -> CS::_fastjet_banner_ostr and made it
+	  private.
+
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/D0RunICone/D0RunIBaseConePlugin.cc (_print_banner):
@@ -5,7 +23,7 @@
 
 2011-11-24  Gavin Salam  <salam@lpthe.jussieu.fr>
 
-	* NEWS: 
+	* NEWS:
 	  prepared preliminary summary of changes
 
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
@@ -42,7 +60,7 @@
 	* plugins/CDFCones/CDFJetCluPlugin.cc:
 	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh:
 	* plugins/ATLASCone/ATLASConePlugin.cc:
-	  print the banner in FJ's ClusterSequence::fastjet_banner_ostr
+	  print the banner to FJ's ClusterSequence::fastjet_banner_ostr
 	  + removed 'disable_banner()'
 
 	* include/fastjet/ClusterSequence.hh:
@@ -56,7 +74,6 @@
 	  updated banner following morning's discussion.
 
 2011-11-22  Gavin Salam  <salam@lpthe.jussieu.fr>
-
 
 	* example/10-subjets.cc: 
 	  sorted out residual warning.

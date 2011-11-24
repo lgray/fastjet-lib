@@ -136,7 +136,7 @@ using namespace std;
 // by default. This requirement reflects the spirit of
 // clause 2c of the GNU Public License (v2), under which
 // FastJet and its plugins are distributed.
-std::ostream * ClusterSequence::fastjet_banner_ostr = &cout;
+std::ostream * ClusterSequence::_fastjet_banner_ostr = &cout;
 
 
 // destructor that guarantees proper bookkeeping for the CS Structure
@@ -376,28 +376,29 @@ void ClusterSequence::_print_banner() {
   _first_time = false;
 
   // make sure the user has not set the banner stream to NULL
-  if (!fastjet_banner_ostr) return;  
+  ostream * ostr = _fastjet_banner_ostr;
+  if (!ostr) return;  
 
-  (*fastjet_banner_ostr) << "#--------------------------------------------------------------------------\n";
-  (*fastjet_banner_ostr) << "#                         FastJet release " << fastjet_version << endl;
-  (*fastjet_banner_ostr) << "#                 M. Cacciari, G.P. Salam and G. Soyez                  \n"; 
-  (*fastjet_banner_ostr) << "#     A software package for jet finding and analysis at colliders      \n";
-  (*fastjet_banner_ostr) << "#                           http://fastjet.fr                           \n"; 
-  (*fastjet_banner_ostr) << "#								      	   \n";
-  (*fastjet_banner_ostr) << "# Please cite arXiv:1111.XXXX if you use this package for scientific    \n";
-  (*fastjet_banner_ostr) << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
-  (*fastjet_banner_ostr) << "#								      	   \n";
-  (*fastjet_banner_ostr) << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";
-  (*fastjet_banner_ostr) << "# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code";
+  (*ostr) << "#--------------------------------------------------------------------------\n";
+  (*ostr) << "#                         FastJet release " << fastjet_version << endl;
+  (*ostr) << "#                 M. Cacciari, G.P. Salam and G. Soyez                  \n"; 
+  (*ostr) << "#     A software package for jet finding and analysis at colliders      \n";
+  (*ostr) << "#                           http://fastjet.fr                           \n"; 
+  (*ostr) << "#								      	   \n";
+  (*ostr) << "# Please cite arXiv:1111.XXXX if you use this package for scientific    \n";
+  (*ostr) << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
+  (*ostr) << "#								      	   \n";
+  (*ostr) << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";
+  (*ostr) << "# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code";
 #ifndef DROP_CGAL
-  (*fastjet_banner_ostr) << ",\n# CGAL ";
+  (*ostr) << ",\n# CGAL ";
 #else
-  (*fastjet_banner_ostr) << "\n# ";
+  (*ostr) << "\n# ";
 #endif  // DROP_CGAL
-  (*fastjet_banner_ostr) << "and 3rd party plugin jet algorithms. See COPYING file for details.\n";
-  (*fastjet_banner_ostr) << "#--------------------------------------------------------------------------\n";
+  (*ostr) << "and 3rd party plugin jet algorithms. See COPYING file for details.\n";
+  (*ostr) << "#--------------------------------------------------------------------------\n";
   // make sure we really have the output done.
-  fastjet_banner_ostr->flush();
+  ostr->flush();
 }
 
 //----------------------------------------------------------------------

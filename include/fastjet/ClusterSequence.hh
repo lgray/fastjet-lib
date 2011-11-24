@@ -534,18 +534,32 @@ public:
   /// the structure type associated with a jet belonging to a ClusterSequence
   typedef ClusterSequenceStructure StructureType;
 
+  /// \cond internal_doc
+  //  [this line must be left as is to hide the doxygen comment]
+  /// A call to this function modifies the stream
+  /// used to print banners (by default cout).
+  ///
+  /// Please note that if you distribute 3rd party code
+  /// that links with FastJet, that 3rd party code must not
+  /// use this call turn off the printing of FastJet banners
+  /// by default. This requirement reflects the spirit of
+  /// clause 2c of the GNU Public License (v2), under which
+  /// FastJet and its plugins are distributed.
+  static void set_fastjet_banner_stream(std::ostream * ostr) {_fastjet_banner_ostr = ostr;}
+  //  [this line must be left as is to hide the doxygen comment]
+  /// \endcond
 
-  // The following variable can be modified from within user code
-  // so as to redirect banners to an ostream other than cout.
-  //
-  // Please note that if you distribute 3rd party code
-  // that links with FastJet, that 3rd party code is NOT
-  // allowed to turn off the printing of FastJet banners
-  // by default. This requirement reflects the spirit of
-  // clause 2c of the GNU Public License (v2), under which
-  // FastJet and its plugins are distributed.
-  //
-  static std::ostream * fastjet_banner_ostr;
+  /// returns a pointer to the stream to be used to print banners
+  /// (cout by default)
+  static std::ostream * fastjet_banner_stream() {return _fastjet_banner_ostr;}
+
+private:
+  /// \cond internal_doc
+
+  /// contains the actual stream to use for banners 
+  static std::ostream * _fastjet_banner_ostr;
+
+  /// \endcond
 
 protected:
 //DEP  static JetAlgorithm _default_jet_algorithm;

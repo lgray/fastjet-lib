@@ -69,7 +69,7 @@ string D0RunIIConePlugin::description () const {
 
 void D0RunIIConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner(clust_seq.fastjet_banner_ostr);
+  _print_banner(clust_seq.fastjet_banner_stream());
  
   // create the entities needed by the D0 code
   vector<HepEntity> entities(clust_seq.jets().size());

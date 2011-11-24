@@ -101,7 +101,7 @@ string TrackJetPlugin::description () const {
 
 void TrackJetPlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner(clust_seq.fastjet_banner_ostr);
+  _print_banner(clust_seq.fastjet_banner_stream());
 
   // we first need to sort the particles in pt
   vector<TrackJetParticlePtr> particle_list;

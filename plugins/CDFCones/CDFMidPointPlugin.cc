@@ -86,7 +86,7 @@ string CDFMidPointPlugin::description () const {
 
 void CDFMidPointPlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner(clust_seq.fastjet_banner_ostr);
+  _print_banner(clust_seq.fastjet_banner_stream());
  
   // create the physics towers needed by the CDF code
   vector<PhysicsTower> towers;
