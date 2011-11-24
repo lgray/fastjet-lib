@@ -57,7 +57,7 @@
 /*
  * This code, included in the FastJet distribution, was originally
  * written by Stephan Fortune in C and adapted to C++ by Shane
- * O'Sullivan under the terms repported above.
+ * O'Sullivan under the terms reported above.
  *
  * Below are the list of changes implemented by the FastJet authors:
  *

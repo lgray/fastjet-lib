@@ -73,7 +73,7 @@ void ATLASConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     atlas::Jet *particle = new atlas::Jet(mom.px(), mom.py(), mom.pz(), mom.E(), i);
     particles_ptr.push_back(particle);
 
-    // then add it to the list of particles we'll use for teh clustering
+    // then add it to the list of particles we'll use for the clustering
     atlas::Jet *jet = new atlas::Jet;
     jet->set_index(particle->index());
     jet->addConstituent(particle);

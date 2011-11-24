@@ -1,31 +1,55 @@
 FastJet is released under the terms of the GNU General Public License
-v2, as are the majority of the plugins, as detailed below. 
+v2 (GPLv2). FastJet includes a significant body of third-party code,
+for example for third party plugin algorithms and for computational
+geometry methods. These too are usually released under the GPL or
+permissive licenses. Details are given below on a case-by-case basis.
 
-At the end of this document, you will find a copy of the GPLv2 license.
+A copy of the GPLv2 is to be found at the end of this file.
 
-----------------------------------------------------------------------
-CGAL
-----------------------------------------------------------------------
+While the GPL license grants you considerable freedom, please bear in
+mind that FastJet's use falls under guidelines similar to those that
+are standard for Monte Carlo event generators
+(http://www.montecarlonet.org/GUIDELINES). In particular, if you use
+this code as part of work towards a scientific publication, whether
+directly or contained within another program (e.g. Delphes, SpartyJet,
+Rivet, LHC collaboration software frameworks, etc.), you should
+include a citation to
 
-Permission is specifically granted to link with CGAL (which is under a
-QPL license) and where relevant the plugins. 
+  arXiv:1111.NNNN (FastJet User Manual)
+  and, optionally, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
 
-----------------------------------------------------------------------
+A number of other citations may also be relevant, for example for jet
+areas and subtraction, boosted object taggers, plugins and the
+underlying computational geometry methods and codes. Plugins generally
+indicate the appropriate reference in a banner. References for other
+features are to be found in the FastJet manual.
+
+
+======================================================================
 Plugins 
-----------------------------------------------------------------------
+======================================================================
 
 For the plugin jet finders, the licensing situation is as follows:
 
-. ATLAS Cone: unknown (code from SpartyJet v1.20. GPLv2?)
+----------------------------------------------------------------------
+. ATLAS Cone: the code was taken from SpartyJet v1.20. (GPLv2?)
+  Licensing situation currently undergoing confirmation.
 
-
-. CDF code: unknown (permission for distribution granted by J.Huston)
+----------------------------------------------------------------------
+. CDF code: originally provided by J.Huston 
 
   See http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz
   for the original code.
 
+  Informal agreement for distribution under the terms of the GPL was
+  obtained from Robert Roser on 13 April 2011. We are awaiting final
+  confirmation.
+  
 
-. CMS Iterative Cone: GPL(v2) (permission granted by R.Harris)
+----------------------------------------------------------------------
+. CMS Iterative Cone: 
+  Code taken from http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW
+  GPL(v2) (permission granted by R.Harris)
 
   From: Robert M Harris <rharris@fnal.gov>
   To: Gregory Soyez <soyez@fastjet.fr>, 
@@ -47,13 +71,13 @@ For the plugin jet finders, the licensing situation is as follows:
   Best Regards,
   Robert Harris
 
-  Code from http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW
 
-
+----------------------------------------------------------------------
 . D0 RunI and RunII cone plugins: 
-  standalone version provided by Lars Sonnenschein
+  Standalone version provided by Lars Sonnenschein. 
+  Licensing situation currently undergoing confirmation.
 
-
+----------------------------------------------------------------------
 . PxCone code: GPL(v2) (permission granted by M.H.Seymour)
 
   From: Mike Seymour <Michael.Seymour@cern.ch>
@@ -71,35 +95,51 @@ For the plugin jet finders, the licensing situation is as follows:
   Many thanks for dealing with this,
   Mike. 
 
-
+----------------------------------------------------------------------
 . SISCone code: GPL(v2)
   see http://projects.hepforge.org/siscone/ for details
 
-
+----------------------------------------------------------------------
 . TrackJet: available under the GPL (v2) from Rivet (v1.1.2)
-  Rivet is written by Andy Buckley, Jon Butterworth and Leif Lonnblad
-  and is available from http://projects.hepforge.org/rivet/
+  see http://projects.hepforge.org/rivet/
 
-
+----------------------------------------------------------------------
 . EECambridge, GridJet, Jade and NestedDefs have been written by the
   FastJet authors and are thus distributed under the GNU Public
   License (v2).
 
-
-The "interface" part of the plugins are GPL (v2).
-
 ----------------------------------------------------------------------
-References
-----------------------------------------------------------------------
+The "interface" parts of the plugins are GPL (v2).
 
-FastJet and SISCone are the result of original scientific research. If
-you use them in scientific work you are also encouraged to cite the
-papers which describe them.
+======================================================================
+CGAL
+======================================================================
 
-FastJet: M. Cacciari and G.P. Salam, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
-SISCone: G.P. Salam and G. Soyez, JHEP 0705 (2007) 086 [arXiv:0704.0292]
+CGAL is not distributed with FastJet. Some parts of CGAL are released
+under a QPL license. Given this license's compatibility issues with
+the GPL, and for the purpose of resolving any ambiguity on this point,
+we explicitly grant permission for FastJet to be linked with CGAL.
 
-----------------------------------------------------------------------
+======================================================================
+Fortune's Voronoi code
+======================================================================
+
+This code, Copyright(c)1994 by AT&T Bell Laboratories is distributed
+under a non-restrictive license that allows for copying, modification
+and distribution as long as the original copyright notice is left
+unchanged. Modifications made subsequently by Shane O'Sullivan and
+Gregory Soyez are distributed under similar conditions.
+
+======================================================================
+Chan's closest neighbour algorithm
+======================================================================
+
+The code for this has been written by the FastJet authors.
+
+
+======================================================================
+======================================================================
+======================================================================
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 

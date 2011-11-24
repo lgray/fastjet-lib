@@ -1,5 +1,15 @@
 2011-11-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
+
+	* COPYING: 
+	  have reworded this in various places to give a better overview
+	  at the start of the file and a discussion of references that's
+	  similar to what we have on the "About" page of the website.
+
+	* src/Voronoi.cc: 
+	* plugins/ATLASCone/ATLASConePlugin.cc: 
+	  typos
+
 	* example/fastjet_timing_plugins.cc: 
 	  added -all-algs option to run all algorithms and -file option to
 	  read events from a file. You can now also specify multiple
