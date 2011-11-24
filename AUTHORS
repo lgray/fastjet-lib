@@ -1,20 +1,11 @@
-FastJet was written and is developed/maintained by 
+FastJet was written and is maintained and developed by 
 
 Matteo Cacciari
 Gavin P. Salam
 Gregory Soyez
 
-see http://fastjet.fr/
-
-It provides longitudinally invariant Kt, and inclusive
-Cambridge/Aachen and anti-kt (etc.) clustering using fast geometric
-algorithms, with area measures and optional external jet-finder
-plugins. Please cite hep-ph/0512210 if you use this code. 
-
-This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
-Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code
-and CGAL: http://www.cgal.org/
-
+See http://fastjet.fr/ for further details, and the FastJet manual
+at http://arxiv.org/abs/1111.XXXX
 
 ----------------------------------------------------------------------
 
@@ -41,3 +32,9 @@ Lars Sonnenschein
 Hartmut Stadie
 Chris Vermilion
 Markus Wobisch 
+
+----------------------------------------------------------------------
+
+This package uses T.Chan's closest pair algorithm, Proc.13th ACM-SIAM
+Symp. Discr. Alg, p.472 (2002), S.Fortune's Voronoi algorithm and code,
+and CGAL: http://www.cgal.org/
