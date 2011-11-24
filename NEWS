@@ -4,8 +4,9 @@ Release Notes for fastjet
 ================================================================
 Summary of changes from v3.0.0 -> v3.0.1: DD/11/11
 ================================================================
-Version 3.0.1 has a significantly reworked manual (version to appear
-on arXiv), and a number of small additional changes, including :
+
+Version 3.0.1 includes further reorganisation of the manual (version to 
+appear on arXiv), and a number of small additional changes, including :
 
 * PseudoJet now has a pt() member function for transverse momentum
 * minor speed improvements (very low N + strategy choice for N ~ 20-50)
