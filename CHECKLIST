@@ -76,7 +76,7 @@ checklist for 3.0.1
 3.0.1  make sure siscone points to a tag, not trunk
        cd ../plugins/SISCone; svn propedit svn:externals .; svn up
 
-3.0.1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+3.0.1  mention the release in ChangeLog (just say "fastjet-3.0.1")
 
 
 3.0.1  make check 
@@ -100,13 +100,13 @@ checklist for 3.0.1
 3.0.1  make distcheck; record the md5sum here
        0bd9f4ad3f276d61c6548c0f6efcda20  fastjet-3.0.1.tar.gz
 
-3.0.1  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+X.Y.Z  copy distribution to web: cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
 3.0.1  compile manual
-3.0.1  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-3.0.1  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+3.0.1  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-3.0.1.pdf
+3.0.1  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-3.0.1
 3.0.1  update main web page & menu in devel area
 
-3.0.1  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.1
 
 NO NO  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
