@@ -150,6 +150,7 @@ void ATLASConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     
   // cout << "ATLASConePlugin: Bye" << endl;
   clear_list(particles_ptr);
+  clear_list(jets_ptr);
 }
 
 // print a banner for reference to the 3rd-party code
