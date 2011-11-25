@@ -98,7 +98,7 @@ checklist for 3.0.1
 3.0.1  rerun the nightly check
 
 3.0.1  make distcheck; record the md5sum here
-       0bd9f4ad3f276d61c6548c0f6efcda20  fastjet-3.0.1.tar.gz
+       a3c963e0c4c7c5847ef968681882ba2c fastjet-3.0.1-pre-arXiv.tar.gz (2122417 Nov 25 22:25)
 
 3.0.1  copy distribution to web: cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
 3.0.1  compile manual
