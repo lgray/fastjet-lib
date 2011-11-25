@@ -173,7 +173,7 @@ void CDFJetCluPlugin::_print_banner(ostream *ostr) const{
   if (!ostr) return;  
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the CDF JetClu plugin for FastJet (v2.1 upwards)        " << endl;
+  (*ostr) << "# You are running the CDF JetClu plugin for FastJet                       " << endl;
   (*ostr) << "# This is based on an implementation provided by Joey Huston.             " << endl;
   (*ostr) << "# If you use this plugin, please cite                                     " << endl;
   (*ostr) << "#   F. Abe et al. [CDF Collaboration], Phys. Rev. D 45 (1992) 1448.       " << endl;

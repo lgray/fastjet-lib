@@ -161,7 +161,7 @@ void CDFMidPointPlugin::_print_banner(ostream *ostr) const{
   if (!ostr) return;  
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the CDF MidPoint plugin for FastJet (v2.1 upwards)      " << endl;
+  (*ostr) << "# You are running the CDF MidPoint plugin for FastJet                     " << endl;
   (*ostr) << "# This is based on an implementation provided by Joey Huston.             " << endl;
   (*ostr) << "# If you use this plugin, please cite                                     " << endl;
   (*ostr) << "#   G. C. Blazey et al., hep-ex/0005012.                                  " << endl;

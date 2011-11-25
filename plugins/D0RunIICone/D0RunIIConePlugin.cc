@@ -149,14 +149,14 @@ void D0RunIIConePlugin::_print_banner(ostream *ostr) const{
   // make sure the user has not set the banner stream to NULL
   if (!ostr) return;  
 
-  (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the D0 Run II Cone plugin for FastJet (v2.4 onwards)    " << endl;
+  (*ostr) << "#--------------------------------------------------------------------------" << endl;
+  (*ostr) << "# You are running the D0 Run II Cone plugin for FastJet                    " << endl;
   (*ostr) << "# Original code provided by Lars Sonnenschein; interface by FastJet authors" << endl;
-  (*ostr) << "# If you use this plugin, please cite                                     " << endl;
-  (*ostr) << "#   G. C. Blazey et al., hep-ex/0005012                                   " << endl;
-  (*ostr) << "#   V. M. Abazov et al. [D0 Collaboration], arXiv:1110.3771 [hep-ex]      " << endl; 
-  (*ostr) << "# in addition to the usual FastJet reference.                             " << endl;
-  (*ostr) << "#-------------------------------------------------------------------------" << endl;
+  (*ostr) << "# If you use this plugin, please cite                                      " << endl;
+  (*ostr) << "#   G. C. Blazey et al., hep-ex/0005012                                    " << endl;
+  (*ostr) << "#   V. M. Abazov et al. [D0 Collaboration], arXiv:1110.3771 [hep-ex]       " << endl; 
+  (*ostr) << "# in addition to the usual FastJet reference.                              " << endl;
+  (*ostr) << "#--------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
   ostr->flush();

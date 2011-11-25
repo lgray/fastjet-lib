@@ -5,6 +5,15 @@
 
 2011-11-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc (_print_banner):
+	* plugins/PxCone/PxConePlugin.cc (_print_banner):
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc (_print_banner):
+	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc (_print_banner):
+	* plugins/CDFCones/CDFJetCluPlugin.cc (_print_banner):
+	* plugins/CDFCones/CDFMidPointPlugin.cc (_print_banner):
+	* plugins/ATLASCone/ATLASConePlugin.cc (_print_banner):
+	  removed the mention to a minimal FJ version (vX.Y upwards)
+
 	* plugins/SISCone/SISConeSphericalPlugin.cc:
 	* plugins/SISCone/SISConePlugin.cc:
 	  redirect the SISCone banner to the same stream as the FastJet

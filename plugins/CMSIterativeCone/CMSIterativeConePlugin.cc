@@ -229,7 +229,7 @@ void CMSIterativeConePlugin::_print_banner(ostream *ostr) const{
   if (!ostr) return;  
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the CMS Iterative Cone plugin for FastJet (v2.4 onwards)" << endl;
+  (*ostr) << "# You are running the CMS Iterative Cone plugin for FastJet               " << endl;
   (*ostr) << "# Original code by the CMS collaboration adapted by the FastJet authors   " << endl;
   (*ostr) << "# If you use this plugin, please cite                                     " << endl;
   (*ostr) << "#   G. L. Bayatian et al. [CMS Collaboration],                            " << endl;
