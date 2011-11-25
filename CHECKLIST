@@ -92,12 +92,13 @@ checklist for 3.0.1
 3.0.1  go to testsuite; make with an installation of the current version;
          ./run_tests
 
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.0.1  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
 X.Y.Z  rerun the nightly check
 
-X.Y.Z  make distcheck; record the md5sum here
+3.0.1  make distcheck; record the md5sum here
+       0bd9f4ad3f276d61c6548c0f6efcda20  fastjet-3.0.1.tar.gz
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
@@ -116,6 +117,9 @@ X.Y.Z  make sure it's committed with the CHECKLIST
 X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
 X.Y.Z  move the version number to X.Y.(Z+1)-devel
+
+X.Y.Z  untar; update arXiv number in banner, COPYING & AUTHORS, README
+       retar + gzip; record new md5sum.
 
 ----------------------------------------------------------------------
 checklist for 3.0.0
