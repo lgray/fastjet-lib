@@ -75,6 +75,8 @@ string SISConePlugin::description () const {
 // overloading the base class implementation
 void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
+  Csiscone::set_banner_stream(clust_seq.fastjet_banner_stream());
+
   Csiscone   local_siscone;
   Csiscone * siscone;
   
