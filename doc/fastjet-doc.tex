@@ -108,10 +108,10 @@
   \fastjet is a \ttt{C++} package that provides a broad range of jet
   finding and analysis tools.
   %
-  It includes efficient native implementations of all widely-used $2\to 1$
+  It includes efficient native implementations of all widely used $2\to 1$
   sequential recombination jet algorithms for $pp$ and $e^+e^-$
   collisions, as well as access to 3rd party jet algorithms through a
-  plugin mechanism, including all currently-used cone algorithms.
+  plugin mechanism, including all currently used cone algorithms.
   %
   \fastjet also provides means to facilitate the manipulation of jet
   substructure, including some common boosted heavy-object taggers, as
@@ -168,7 +168,7 @@ Weinberg~\cite{StermanWeinberg} and several reviews have been written
 describing the various kinds of jet finders, their different uses and
 properties, and even the history of the
 field, for example~\cite{Moretti:1998qx,RunII-jet-physics,Ellis:2007ib,Salam:2009jx,Ali:2010tw}.
-%
+
 It is possible to classify most jet algorithms into one of two broad
 classes: sequential recombination algorithms and cone algorithms.
 
@@ -177,10 +177,10 @@ particles that are closest in some distance measure, recombine them,
 and then repeat the procedure over and again, until some stopping
 criterion is reached. 
 %
-Generally, the distance measure is related to the structure of
-divergences in perturbative QCD and
+The distance measure is usually related to the structure of
+divergences in perturbative QCD.
 %
-the various sequential recombination algorithms differ mainly in their
+The various sequential recombination algorithms differ mainly in their
 particular choices of distance measure and stopping criterion.
 
 Cone algorithms put together particles within specific conical angular
@@ -192,10 +192,10 @@ parton's energy flow essentially unchanged, the stable cones are
 physically close in direction and energy to the original partons.
 %
 Differences between various cone algorithms are essentially to do with
-the strategy chosen to search for the stable cones (e.g.\ whether
+the strategy taken to search for the stable cones (e.g.\ whether
 iterative or exhaustive) and the procedure used to deal with cases
-where the same particle is to be found in multiple stable cones (e.g.\
-via split--merge procedures).
+where the same particle is found in multiple stable cones (e.g.\
+split--merge procedures).
 
 One of the aims of the \fastjet C++ library is to provide
 straightforward, efficient implementations for the majority of widely
@@ -279,7 +279,7 @@ Having seen these descriptions, the reader may wonder why a special
 library is needed for sequential-recombination jet finding. 
 %
 Indeed, the $k_t$ algorithm can be easily implemented in just a few
-lines of code.
+dozen lines of code.
 %
 The difficulty that arises, however, is that at hadron colliders,
 clustering is often performed with several hundreds or even thousands
