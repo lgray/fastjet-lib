@@ -122,8 +122,17 @@ X.Y.Z  update main web-page area (from ada):
        bzr merge ../fastjet-devel/
 
 X.Y.Z  just after 2am/8pm Sunday 27/11/11
-       untar; update arXiv number in banner, COPYING & AUTHORS, README
-       retar + gzip; record new md5sum.
+       update arXiv number in banner, COPYING & AUTHORS, README
+       sed -i "s/1111\.XXXX/1111.correct_number/" AUTHORS
+       sed -i "s/1111\.NNNN/1111.correct_number/" COPYING
+       sed -i "s/1111\.NNNN/1111.correct_number/" README
+       sed -i "s/1111\.XXXX/1111.correct_number/" src/ClusterSequence.cc
+       grep "1111" AUTHORS COPYING README src/ClusterSequence.cc
+X.Y.Z  svn diff; svn ci -m 'included arXiv number'
+X.Y.Z  make dist
+X.Y.Z  cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.1
+X.Y.Z  record new md5sum.
 
 X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
