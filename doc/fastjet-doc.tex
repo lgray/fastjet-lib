@@ -2882,10 +2882,10 @@ Details are to be found below and an example program is given as
 %% given in \ttt{example/07-subtraction.cc}.
 
 When jet areas are to be used to establish the level of a diffuse noise
-that might be present in the event (like underlying event particles
-or pileup), and maybe subtract it from jets, further classes (like
+that might be present in the event (e.g.\ from underlying event particles
+or pileup), and maybe subtract it from jets, further classes such as
 \ttt{fastjet::JetMedianBackgroundEstimator} and
-\ttt{fastjet::Subtractor}) are useful. This topic is discussed in
+\ttt{fastjet::Subtractor} are useful. This topic is discussed in
 Section \ref{sec:BackgroundEstimator} and an example program is given
 in \ttt{example/07-subtraction.cc}.
 
@@ -2894,7 +2894,7 @@ in \ttt{example/07-subtraction.cc}.
 %----------------------------------------------------------------------
 \subsection{\tt AreaDefinition}
 
-Area definitions are contained in \ttt{AreaDefinition}
+Area definitions are contained in the \ttt{AreaDefinition}
 class. Its two main constructors are:
 \begin{lstlisting}
   AreaDefinition(fastjet::AreaType area_type, 
