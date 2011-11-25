@@ -1,16 +1,3 @@
-
-
-%----------------------------------------------------------------------
-%% TO DO before arXiv version
-%% - check all the structure stuff in the body of the documentation
-%% - PJ == 0, PJ != 0
-%%
-%%  . document the cluster history structures?
-%%  
-%%  . refs for trackjet and other plugins?
-%%
-%%  . issue of recomb. schemes and plugins.
-%%
 \documentclass[12pt,a4]{article}
 
 
@@ -227,10 +214,6 @@ This was the first jet algorithm to be implemented in
 structure, together with that of other sequential recombination
 algorithms, has played a key role in the design of \fastjet's interface.
 %
-% As concerns sequential recombination algorithms, the main challenge
-% that would be faced by a user wishing to write their own
-% implementation is one of computational efficiency.
-%
 The $k_t$ algorithm involves a (symmetric) distance measure, $d_{ij}$,
 between all pairs of particles $i$ and $j$,
 \begin{equation}
@@ -302,26 +285,6 @@ The difficulty that arises, however, is that at hadron colliders,
 clustering is often performed with several hundreds or even thousands
 of particles.
 % 
-% 
-%  (and has been previously, e.g. in \cite{KtClus,KtJet}).
-% %
-% 
-% It is however less straightforward to provide an efficient
-% implementation
-% 
-% 
-%  \cite{KtClus,KtJet}.
-% 
-%  The difficulty is however to
-% provide an efficient implementation
-% 
-% To understand why this is not an entirely trivial exercise, why a user
-% is not necessarily better off simply writing their own code, let us
-% first consider the case of a specific sequential recombination
-% algorithm, 
-% %
-% 
-%
 Given $N$ particles, there are $N(N-1)/2$ $d_{ij}$ distances to
 calculate, and since one must identify the smallest of these
 $\order{N^2}$ distances at each of $\order{N}$ iterations of the
@@ -372,22 +335,6 @@ The timing for $N=1000$ is thus reduced to a few milliseconds.
 The same techniques apply to a range of sequential recombination
 algorithms, described in section~\ref{sec:native-algs}.
 
-
-%  which give identical clustering 
-% 
-% As is often the case in computational geometry problems, the
-% coefficient of $N \ln N$ turns out to be quite large, and to the 
-%  and so to
-% optimise performance \fastjet uses the geometry in a series of simpler
-% ways to achieve fast clustering 
-% 
-%  for moderate $N \lesssim 30000$.
-% 
-% 
-%  (though for $N \lesssim 30000$ \fastjet usually switches to
-% other strategies that are more efficient pre-asymptotically).
-
-
 At the time of writing, sequential recombination jet algorithms are
 the main kind of algorithm in use at CERN's Large Hadron Collider
 (LHC), notably the anti-$k_t$ algorithm~\cite{antikt}, which simply
@@ -419,7 +366,6 @@ algorithm.
 While each tends to involve a different interface, a different
 4-momentum type, etc.,
 %
-%To facilitate the use of a range of different algorithms, 
 \fastjet has a ``plugin'' mechanism, which makes it possible
 to provide a uniform interface to these different third party jet
 algorithms.
@@ -541,95 +487,6 @@ Further information is also available from the extensive
 ``doxygen'' documentation, available online at
 \url{http://fastjet.fr}.
 
-
-% \hrule %-----------------------------------------------------
-% 
-% 
-% Jets are the collimated sprays of hadrons that result from the
-% fragmentation of a high-energy quark or gluon.
-% %
-% Jet finders identify these sprays of particles, grouping particles into
-% ``jets'' according to some well-defined algorithm.
-% %
-% Jet finding is applied not only to hadronic final states, but also to
-% the partonic final states that are relevant in perturbative QCD
-% calculations.
-% %
-% Jets are useful both as observables that stand in for the naive
-% concept of partons and as tools for comparing experimental and
-% theoretical results.
-% 
-% There are two broad groups of jet algorithms: sequential recombination
-% algorithms usually carry out successive mergings of pairs of particles
-% until some stopping condition is reached; cone algorithms define jets
-% based on cones in phase space containing the bulk of an event's energy
-% flow.
-% 
-% \fastjet is a C++ package that provides efficient implementations of
-% many sequential recombination algorithms, through the computational
-% strategies of~\cite{fastjet}.
-% %
-% It also provides a common interface to many legacy and current cone
-% algorithms, in large part through suitably wrapped versions of 3rd
-% party code (``plugins'').
-% 
-% In addition to its basic jet-finding capabilities, \fastjet provides
-% access to a number of more advanced functionalities.
-% %
-% These include tools for the determination of jet areas, facilities to
-% estimate the level of noise in a given event due to underlying events
-% and pileup, and the subtraction of that noise from individual jets.
-% %
-% Another set of tools helps analyse the substructure of jets, including
-% a number of widely used boosted heavy-object taggers and
-% substructure-based noise-suppression classes.
-% 
-% \begin{itemize}
-% \item mission statement:
-%   \begin{itemize}
-%   \item provide robust, efficient access to the majority of widely
-%     used jet algorithms
-%   \item framework for tools' interfaces \& some core tools
-%   \item idea of extensible.
-%   \end{itemize}
-% \item Two kinds of algorithm in FJ
-%   \begin{itemize}
-%   \item Native; many of them involve a certain kind of distance
-%     measure ($d_{ij} = ...$); and fast tricks
-%   \item External: plugins (though some written by us); restriction on
-%     2 to 1
-%   \item interface and some helpers for writing your own
-%   \end{itemize}
-% \item we provide a number of features beyond core jet-finding. 
-% \item Areas -- usable (in principle) with any jet finder
-% \item Features beyond the jet-finding
-%   \begin{itemize}
-%   \item background estimators
-%   \item tools, including subtractors
-%   \end{itemize}
-% \item 
-% \item subtraction/bkgd-estimation/tools
-% \item many other codes before did one or two algs, e.g. KtClus,
-%   ArClus, CamJet
-% \item computational strategies (factorising geometry and momentum);
-%   state our algorithm briefly?
-% \item doxygen
-% \end{itemize}
-
-% svn co ......
-
-%-- workflow 1 --
-% bzr branch 
-% ... work ...
-% bzr push
-
-%-- workflow 2 --
-% svn checkout
-% bzr 
-
-% svn checkout
-% auto-tools
-% make 
 
 %======================================================================
 \section{Quick-start guide}
@@ -771,15 +628,6 @@ where the second form allows the initialisation to be obtained from
 any class \ttt{T} that allows subscripting to return the components of
 the momentum (running from $0\ldots3$ in the order $p_x,p_y,p_z,E$).
 %%
-%% GPS+MC: removed references to CLHEP and KtJet because 
-%%         no longer so widely used
-%%
-% for example the \ttt{CLHEP} \ttt{HepLorentzVector} class.\footnote{
-%   \ttt{PseudoJet} is the analogue of \ktjet's \ttt{KtLorentzVector}.
-%   A significant difference is that it is not derived from
-%   \ttt{HepLorentzVector} (so as to allow compilation even without
-%   \clhep).}
-% %
 The default constructor for a \PJ sets the momentum components to
 zero.
 
@@ -943,8 +791,6 @@ which is the value set in \ttt{JetDefinition}'s default constructor.
 The parameter \texttt{R} specifies the value of $R$ that appears in
 eq.~(\ref{eq:dij-illustr}) and in the various definitions of
 section~\ref{sec:native-algs}.
-% eqs.~(\ref{eq:dij},\ref{eq:dij_cam},\ref{eq:dij_antikt},\ref{eq:dij_genkt},\ref{eq:dij_eegenkt})
-% \comment{and intro}.  
 %
 For one algorihm, \verb:ee_kt_algorithm:, there is no $R$ parameter,
 so the constructor is to be called without the \verb:R: argument.
@@ -998,9 +844,6 @@ performance is given in appendix~\ref{app:strategies}.
 
 A textual description of the jet definition can be obtained by a call
 to the member function \ttt{std::string description()}.
-% \begin{lstlisting}
-%   std::string description(); 
-% \end{lstlisting}
 
 %......................................................................
 \subsection{\tt fastjet::ClusterSequence}
@@ -1008,7 +851,6 @@ to the member function \ttt{std::string description()}.
 
 To run the jet clustering, create a \ttt{ClusterSequence}
 object
-%\footnote{The analogue of \ktjet's \ttt{KtEvent}.}  
 through the following constructor
 \begin{lstlisting}
   template<class L> ClusterSequence(const std::vector<L> & input_particles,
@@ -1058,10 +900,6 @@ section~\ref{sec:BackgroundEstimator}.
 %......................................................................
 \subsubsection{Accessing exclusive jets}
 There are two ways of accessing exclusive jets,
-%\footnote{In contrast
-%  to \ktjet the class constructor is the same for the inclusive and
-%  exclusive cases. This choice has been made because the clustering
-%  sequence is identical in the two cases.} 
 one where one specifies
 $d_{cut}$, the other where one specifies that the clustering is taken
 to be stopped once it reaches the specified number of jets.
@@ -1079,11 +917,6 @@ to be stopped once it reaches the specified number of jets.
   /// available particles.
   vector<PseudoJet> exclusive_jets_up_to (const int & njets) const;
 \end{lstlisting}
-%
-%% GPS: redundant
-% The \ttt{PseudoJet} vectors returned by the above routines can all be
-% sorted with the routines described at the end of
-% section~\ref{sec:PseudoJet}.
 %
 The user may also wish just to obtain information about the number of
 jets in the exclusive algorithm:
@@ -1184,8 +1017,6 @@ appendix~\ref{app:function-of-pj}).
 As the clustering history is copied to the target \CS, each \PJ in the
 target \CS is set to the result of
 \ttt{action\_on\_jet(original\_pseudojet)}. 
-% applying this function to the
-% corresponding \PJ in the original sequence.
 %
 One use case for this is if one wishes to obtain a Lorentz-boosted
 copy of a \CS, which can be achieved as follows
@@ -1590,8 +1421,6 @@ distance measure and `freezes' pseudojets whose recombination would
 involve too large a value of the auxiliary distance measure. Details
 are given in section~\ref{sec:ee-cam}.
 
-%\comment{Say something about meaning of exclusive case here?}
-
 
 %......................................................................
 \subsection[Anti-$k_t$ jet algorithm]{Anti-$\boldsymbol{k_t}$ jet algorithm}
@@ -1696,10 +1525,6 @@ consisting of all the particles in the event.
 In such a context it is only the \ttt{exclusive\_jets(...)} call that
 provides non-trivial information.
 
-% If one imagines a (complex) value of $R$ such that $(1-\cos R) > 2$,
-% then the $d_{iB}$ will be smallest only if the event
-% consists of a single particle.
-
 %......................................................................
 \subsection[$k_t$ algorithm for $e^+e^-$ collisions]
 {$\boldsymbol{k_t}$ algorithm for $\boldsymbol{e^+e^-}$ collisions}
@@ -1729,14 +1554,6 @@ $p=1$ gives a clustering sequence that is identical to that of the
 \ttt{ee\_kt\_algorithm}.
 %
 The normalisation of the $d_{ij}$'s will however be different.
-
-% With $R > \pi$ and the additional choice of $p=1$, the clustering
-% sequence will correspond to that of the $e^+e^-$ $k_t$
-% algorithm~\cite{eekt}, often referred to also as the Durham algorithm
-
-
-
-
 
 
 %======================================================================
@@ -1816,15 +1633,7 @@ We illustrate this with an example based on the SISCone plugin:
   // ClusterSequence objects that involve it, may you delete the plugin
   delete plugin;
 \end{lstlisting}
-% \begin{lstlisting}
-%   // create an instance of a plugin
-%   JetDefinition::Plugin * plugin = new SomePluginAlgorithm(...);
-%   // use it to initialise a jet definition
-%   JetDefinition jet_def(plugin);
-% 
-%   // then create a ClusterSequence with the input particles and jet_def, and
-%   // use it to extract jets as usual; don't forget to delete the plugin afterwards
-% \end{lstlisting}
+%
 In cases such as this where the plugin has been created with a
 \ttt{new} statement and the user does not wish to manage the deletion
 of the corresponding memory when the \ttt{JetDefinition} (and any
@@ -1911,7 +1720,7 @@ protojets during the split--merge step during the split--merge step,
 and also the scale used to measure the degree of overlap between
 protojets. While various options have been implemented, 
 \begin{lstlisting}
-  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde };
+  enum SplitMergeScale {SM_pt, SM_Et, SM_mt, SM_pttilde};
 \end{lstlisting}
 we recommend using only the last of them $\tilde p_t = \sum_{i \in
   \mathrm{jet}}|p_{t,i}|$, which is also the default scale. The other
@@ -1990,13 +1799,6 @@ The stable cones are represented as PseudoJets, for which only the
 rapidity and azimuth are meaningful. The \verb:user_index(): indicates
 the pass at which a given stable cone was found.
 
-% In the current version of SISCone, the \verb:user_index(): of a jet
-% also corresponds to the pass at which it was found, however this
-% manner of accessing the pass for a jet is \emph{deprecated} (for
-% reasons related to the internal representation of jets, it fails for
-% single-particle jets). It is retained in version 2.4 for backwards
-% compatibility, but will be removed at some stage in the future.
-
 SISCone uses $E$-scheme recombination internally and also for
 constructing the final jets from the list of constituents. 
 %
@@ -2055,10 +1857,6 @@ presented in~\cite{Weinzierl:2011jx}.
 \subsection{Other plugins for hadron colliders }
 \label{sec:other-pp-plugins}
 
-% All plugins are in the \verb:fastjet: namespace. Below we show the
-% file that needs to be included and the constructor for each plugin. 
-
-
 Most of the algorithms listed below are cone algorithms. 
 %
 They are usually either infrared (IR) or collinear unsafe.
@@ -2078,10 +1876,6 @@ purposes.
 
 Except where stated, the usual way to access jets from these plugins
 is through \ttt{ClusterSequence::inclusive\_jets()}.
-
-% As of \fastjet version 2.4, this section is partially incomplete (in
-% particular it misses many references). This will hopefully evolve for
-% future versions.
 
 
 
@@ -2127,9 +1921,9 @@ becomes IR$_{2+1}$ unsafe~\cite{TeV4LHC}).
 %
 With a non-zero seed threshold (and no preclustering into calorimeter
 towers) it is collinear unsafe.
-
 %
-%It is to be deprecated for new experimental or theoretical analyses.
+It is to be
+deprecated for new experimental or theoretical analyses.
 
 \subsubsection{CDF JetClu}
 
@@ -2160,8 +1954,8 @@ webpage belonging to Joey Huston~\cite{CDFCones}.
 
 This algorithm is IR$_{2+1}$ unsafe (for zero seed threshold; some
 IR unsafety persists with non-zero seed threshold). 
-%It is to be
-%deprecated for new experimental or theoretical analyses.
+It is to be
+deprecated for new experimental or theoretical analyses.
 %
 Note also that the underlying implementation groups particles together
 into calorimeter towers, with CDF-type geometry, before running the
@@ -2198,8 +1992,6 @@ In the pre-1996 version, a hybrid between an $E$-like scheme and an
 $E_t$ scheme recombination is used, while in the post-1996 version it
 is just the $E_t$ scheme~\cite{Abbott:1997fc}.
 
-%Instead of the seed threshold used in the CDF cones, 
-
 The algorithm places a cut on the minimum $E_t$ of the cones during
 iteration (related to \verb|min_jet_Et|).
 %
@@ -2225,7 +2017,8 @@ Lars Sonnenschein.
 Note: this algorithm is IR$_{2+1}$ unsafe. It is recommended that it
 be used only for the purpose of comparison with Run~I data from
 \Dzero.
-
+%
+It is to be deprecated for new experimental or theoretical analyse
 
 %......................................................................
 \subsubsection{\Dzero Run II cone}
@@ -2372,7 +2165,6 @@ and Michael Seymour with input also from David Ward~\cite{PxCone}
 and they have granted permission for their code to be distributed with
 \fastjet under the terms of the GPL license.
 % %
-% The PxCone algorithm is also described in ref.~\cite{Seymour:2006vv}.
 
 This algorithm is IR$_{3+1}$ unsafe. It is to be deprecated for
 new experimental or theoretical analyses.
@@ -2420,6 +2212,8 @@ particles).
 The jets that it forms are not always physically meaningful: for
 example, a genuine physical jet may lie at the corner of 4 grid cells
 and so be split up somewhat arbitrarily into 4 pieces.
+%
+It is therefore not intended to be used for standard jet finding.
 %
 However for some purposes (such as background estimation) this
 drawback is offset by the greater uniformity of the area of the jets.
@@ -2825,15 +2619,6 @@ lead to the same jet-area results~\cite{CSSAreas}.\footnote{This can
   intensive; however, for dense events, they can be adequately
   replaced with passive areas, which, for SISCone, are computationally
   more straightforward.}
-%% GPS: To some extent a more precise recommendation comes later, so
-%% avoid it here.
-%%
-% It might
-% therefore be advantageous to select a Voronoi area type, rather than
-% an active one, when using areas for phenomenological tasks like pileup
-% subtraction~\cite{cs}, as it generally requires less CPU time to
-% calculate.
-
 
 The area of a jet can be calculated either as a scalar, or as a 4-vector.
 Essentially the scalar case corresponds to counting the number of
@@ -2850,13 +2635,6 @@ with input particles, a jet definition and an area definition being
 supplied to a \ttt{ClusterSequenceArea} in order to obtain jets with
 area information.
 %
-% 
-% In \fastjet, they are obtained by clustering with the class
-% \ttt{ClusterSequenceArea} (derived from \ttt{ClusterSequence}). 
-%
-% Its constructor takes an \ttt{AreaDefinition}
-% argument in addition to the list of particles and the
-% \ttt{JetDefinition}. 
 Typical usage would be as follows:
 \begin{lstlisting}
   #include "fastjet/ClusterSequenceArea.hh"
@@ -2870,16 +2648,6 @@ Typical usage would be as follows:
 Details are to be found below and an example program is given as
 \ttt{example/06-area.cc}.
 
-
-%% When jet areas are to be used to study the level of a diffuse noise
-%% which might be present in the event (like underlying event particles
-%% or pileup) and maybe subtract it from jets, two further classes are useful:
-%% \begin{lstlisting}
-%%   class fastjet::JetMedianBackgroundEstimator
-%%   class fastjet::Subtractor
-%% \end{lstlisting}
-%% These classes are described in detail below and an example program is
-%% given in \ttt{example/07-subtraction.cc}.
 
 When jet areas are to be used to establish the level of a diffuse noise
 that might be present in the event (e.g.\ from underlying event particles
@@ -2913,22 +2681,6 @@ and LHC rapidity coverage.
 Information about the current \ttt{AreaDefinition} can be retrieved
 with the help of \ttt{description()}, \ttt{area\_type()},
 \ttt{ghost\_spec()} and \ttt{voronoi\_spec()} member functions.
-
-% as
-% follows:
-% \begin{lstlisting}
-%   /// returns a description of the current area definition
-%   std::string description() const ;
-% 
-%   /// returns info about the type of area being used by this defn
-%   AreaType area_type() const ;
-% 
-%   /// returns a reference to the ghosted area spec (where relevant)
-%   const GhostedAreaSpec  & ghost_spec()  const ;
-% 
-%   /// returns a reference to the voronoi area spec (where relevant)
-%   const VoronoiAreaSpec & voronoi_spec() const ;
-% \end{lstlisting}
 
 \subsubsection{Ghosted Areas (active and passive)}
 \label{sec:ghosted-areas}
@@ -3001,13 +2753,6 @@ The two choices are illustrated in fig.~\ref{fig:ghost-placement}.
 To define more complicated ghost acceptances it is possible to replace
 \ttt{ghost\_maxrap} with a \ttt{Selector}, which must be purely
 geometrical and have finite rapidity extent.
-
-% One may choose to place ghosts well beyond the acceptance for
-% particles so that jet-areas retain their geometric meaning even for
-% jets near the edge of the particle acceptance. In this case 
-% 
-%  --- typically jet areas will be reliable for jets
-% up to rapidity $|y| \simeq \ttt{ghost\_maxrap} - R$. 
 
 \begin{figure}
   \centering
@@ -3090,67 +2835,6 @@ $\ttt{repeat}=1$.\footnote{%
 
 
 
-
-% The reason why \fastjet adds random fluctuations to the ghosts, giving
-% each one a different $p_t$ and a position slightly away from a grid
-% vertex is to the huge clustering degeneracies that would arise if all
-% the ghosts had identical $p_t$'s and each were placed at a grid vertex.
-% 
-% \fastjet places ghosts close to the vertices of a rapidity and azimuth
-% grid but not exactly on them.
-% %
-% The reason for this is that many jet algorithms have degeneracies in
-% the clustering order if particles are placed on an exact grid.
-% %
-% The use of an approximate grid breaks those degeneracies.
-% %
-% Each ghost's position differs from an exact grid vertex by a random
-% amount distributed uniformly in the range $\pm \frac12
-% \ttt{grid\_scatter}$ times the grid spacing in both the rapidity and
-% azimuth directions.
-% %
-% Each ghosts's $p_t$ is distributed randomly in the range $(1 \pm 0.5
-% \texttt{pt\_scatter})$ times \ttt{mean\_ghost\_pt}.
-% %
-% The values for the scatter and mean ghost $p_t$ can nearly always be
-% left at their defaults.
-% %
-% 
-% 
-% 
-% For sparse events, the set of ghost particles that end up in a given
-% jet is not unique, and depends on the degeneracy-breaking random
-% shifts added to the ghost positions, as compared to a perfect grid
-% distribution. To obtain a reliable area one may then repeat the area
-% determination several times, the number of times being specified by
-% the \ttt{repeat} variable.
-% %
-% For hadron-level events a value of
-% $5$ is sufficient to give jet areas that are determined to within a
-% few percent. 
-% %
-% In practice it is usually satisfactory even to set
-% \ttt{repeat}~$=1$ and this is the default since it runs faster. For
-% events with a dense distribution of true 
-% particles, there is no degeneracy in the ghost clustering and there is
-% no need at all to use \ttt{repeat}~$>1$.
-% %
-% If \ttt{repeat} $ > 1$, a statistical uncertainty on the area is
-% available for each jet, through the \ttt{jet.area\_error()} call, and
-% it is calculated as the standard deviation of areas obtained for that
-% jet, divided by $\sqrt{\ttt{repeat}-1}$.
-% %
-% Note that the \ttt{repeat} value is ignored (\ie taken to be 1) for
-% \ttt{active\_area\_explicit\_ghosts} and meaningless for the passive
-% area in the $k_t$ algorithm, which just calculates the Voronoi area
-% discussed below (since they are identical).
-% 
-% Other variables that the user may wish to set are: \ttt{grid\_scatter}
-% and \ttt{pt\_scatter}, which  are fractional random fluctuations of the
-% position of the ghosts on the $y$-$\phi$ grid and of their
-% transverse momentum; and \ttt{mean\_ghost\_pt} which is the average transverse
-% momentum of the ghosts.
-
 After initialisation, the parameters can be modified and retrieved
 respectively with calls such as \ttt{set\_ghost\_area(...)} and
 \ttt{ghost\_maxrap()} (similarly for the other
@@ -3161,10 +2845,6 @@ parameters\footnote{In versions of \fastjet prior to 3.0.1, the names
 %
 A textual description of the \ttt{GhostedAreaSpec} can be obtained, as
 usual, with the \ttt{description()} member function.
-% follows:
-% \begin{lstlisting}
-%   std::string description() const;
-% \end{lstlisting}
 
 % Finally, an alternative constructor
 % \begin{lstlisting}
@@ -3181,13 +2861,6 @@ usual, with the \ttt{description()} member function.
 % %
 % This option is useful, for example, if one wishes to place ghosts in a
 % manner that reflects a detector's acceptance for particles.
-% %
-% Though this will not give the ``true'' geometrical area of jets near
-% the boundary of the acceptance, it will ensure that the area measures
-% sensitivity to contamination only in the region where contamination by
-% particles can effectively take place.
-% %
-% This information is often more useful than the geometrical area.
 
 \subsubsection{Voronoi Areas}
 \label{sec:voronoi-areas}
@@ -3217,14 +2890,6 @@ area.
 %
 Information about the specification in use is returned by
 \ttt{effective\_Rfact()} and \ttt{description()} member functions.
-% 
-% \begin{lstlisting}
-%   /// return the value of effective_Rfact
-%   double effective_Rfact() const ;
-% 
-%   /// return a textual description of the area definition.
-%   std::string description() const ;
-% \end{lstlisting}
 
 The Voronoi areas are calculated with the help of Fortune's ($N \ln
 N$) Voronoi diagram generator for planar static point
@@ -3454,19 +3119,6 @@ Thus (roughly speaking), if more that half of the area covered by the
 jets selector or grid rapidity range is empty, the median estimate for
 $\rho$ will be zero, as expected and appropriate for quiet events.
 
-% A choice that needs to be made in both the jet-based and grid-based
-% variants of the median method is that of the jet radius or grid
-% spacing.
-% %
-% For the jet-based case we have found that a choice in the range
-% $R=0.4-0.6$ is generally adequate~\cite{cs,Cacciari:2009dp} with a
-% preference for larger values if the events are relatively sparse and
-% smaller values if you expect your events to have many hard jets.
-% %
-% While the grid-based case has been less extensively explored, initial
-% studies suggest that grid spacings in the range $\delta y = \delta
-% \phi \simeq 0.5-0.7$ are appropriate.
-
 
 %----------------------------------------------------------------------
 \subsubsection{Background subtraction}\label{sec:subtractor}
@@ -3593,13 +3245,6 @@ how many hard jets to remove.
 
 A second technique to account for positional dependence of the
 background is ``rescaling''.
-% , was suggested by unpublished
-% studies for the case of $pp$ pileup events 
-%(with Pythia~8.145, tune 4C
-%for the pileup~\cite{Sjostrand:2007gs}). 
-% We have found that an
-% alternative method that is adequate for handling the rapidity
-% dependence is to 
 %
 First one parametrises the average shape of the rapidity
 dependence from some number of pileup events.
@@ -3686,8 +3331,6 @@ selector have not changed in the meantime).
 
 %......................................................................
 \subsection{Alternative workflows}
-%\comment{should remaining part stay here? Go to Appendix since it's a
-%  bit technical? Maybe easiest to leave it here}
 %
 To allow flexibility in the user's workflow, 
 alternative constructors to \ttt{JetMedianBackgroundEstimator} are provided.
@@ -3823,15 +3466,6 @@ subjets, rejecting the others.
 Trimming~\cite{trimming} is similar, but selects the subjets to be kept based on a
 $p_t$ cut.
 % 
-% Given some starting jet obtained with a Cambridge-Aachen clustering
-% (followed by some Higgs-specific declustering), filtering unclustered
-% the jet down to a smaller jet radius $R_{\rm filt}$ and only kept the
-% 3 hardest of these subjets as the pieces of the final filtered jet,
-% rejecting the others.
-% %
-% Similarly, trimming \cite{trimming} also unclusters a jet into subjets
-% 
-%
 The use of filtering and trimming has been advocated in number of
 contexts, beyond just the realm of boosted object reconstruction.
 
@@ -3955,28 +3589,6 @@ As a result pruning, in its default form, is better thought of as a
 noise-removing boosted-object tagger (to be used in conjunction with a
 pruned-jet mass cut) rather than a generic noise-removal procedure.
 %
-
-% when used together with a mass cut, it also plays the role of
-% a boosted-object tagger.
-% %
-% The noise removal is achieved in pruning in a way which differs from filtering: 
-% instead of unclustering a jet and selecting only part of
-% its subjets, 
-% 
-% 
-% In practice, recombinations are vetoed in the clustering sequence 
-% when neither of the following criteria are met:
-% \begin{enumerate}
-% \item the geometric distance between $i$ and $j$ is smaller than a parameter
-% \ttt{Rcut}, with \ttt{Rcut} = \ttt{Rcut\_factor}$\times 2m/p_t$, with
-% $m$ and $p_t$ taken from the jet as a whole;
-% \item $p_t^i, p_t^j >$~\ttt{zcut}$\times
-% p_t^{i+j}$.
-% \end{enumerate}
-% When both these criteria fail, $i$ and $j$ are not recombined, the harder of $i$
-% and $j$ is kept, and the softer is rejected.
-% \ttt{Rcut\_factor} and \ttt{zcut} are parameters of the pruning algorithm, and
-% $m$ and $p_t$ are the mass and the transverse momentum of the jet being pruned.
 
 The \ttt{fastjet::Pruner} class, derived from \ttt{Transformer}, can be used as
 follows, using a \ttt{JetAlgorithm} and two \ttt{double} parameters:
@@ -4279,26 +3891,9 @@ For CGAL versions 3.4 and higher, the user can specify
 standard location.\footnote{For events with near degeneracies in their
   Delaunay triangulation, issues have been found with versions 3.7 and
   3.8 of CGAL. We recommend the use of earlier or later versions.}
-% \footnote{For clustering problems with near
-%   degeneracies, there are known issues with CGAL versions 3.7 and
-%   3.8. }
 
 The \ttt{NlnNCam} strategy does not require CGAL, since it is based on
 a considerably simpler computational-geometry structure~\cite{Chan}.
-
-
-%% older methods here are not really relevant any more -- and
-%% anyway documented in INSTALL
-% \ttt{CGAL} may be obtained in source form from
-% \url{http://www.cgal.org/}. Under linux, with CGAL versions 3.2 and
-% 3.3, after compilation and installation, the user will be encouraged
-% to set an environment variable \ttt{CGAL\_MAKEFILE}, which points to
-% the Makefile generated by \ttt{CGAL} at install time, which contains
-% various definitions of locations of include files. The user may
-% specify the location of this file to \fastjet either through the above
-% environment variable, or with the \verb|--with-cgalmakefile=...|
-% configuration option.
-% %
 
 
 
@@ -4439,10 +4034,6 @@ Note that the $N$ ranges quoted in table~\ref{tab:Strategies} for
 which a given strategy is optimal hold for $R=1$; the general $R$
 dependence can be significant and non-trivial.
 %
-% For example for the Cambridge/Aachen jet algorithm with $R=0.4$,
-% \ttt{NlnNCam} surpasses the \ttt{N2MinHeapTiled} strategy only for
-% $N\gtrsim 37000$.
-%
 While some attempt has been made to account for the $R$-dependence in
 the choice of the strategy with the ``\ttt{Best}'' option, there may
 exist specific regions of $N$ and $R$ in which a manual choice of
@@ -4450,10 +4041,6 @@ strategy can give faster execution.
 %
 Furthermore the \ttt{NlnNCam} strategy's timings may depend
 strongly on the size of the cache.
-%%%% OLD: and the transitions that have been adopted are 
-%%%%      based on a cache size of $2$~MB. 
-%%%% 2011-11-17: but seem to work OK also in Gregory's latest
-%%%%             6MB cache results       
 Finally for a given $N$ and $R$, the optimal strategy may also depend
 on the event structure.
 
@@ -4468,8 +4055,8 @@ on the event structure.
     $k_t$, and Cambridge/Aachen (C/A) native algorithms are shown,
     together with the SISCone plugin.  All use $R=0.7$.
     %%
-    Shown for an Intel I5 760 processor with 6~MB of
-    cache~\comment{CHECK}.
+    Shown for an Intel i5 760 processor with 8~MB of
+    cache.
     %%
     For small $N$, $N$ was varied by taking a single hard dijet event
     generated with Pythia~6~\cite{Sjostrand:2006za} and extracting the
@@ -5109,13 +4696,6 @@ function,
 %
 though typically it will be used through the \ttt{operator()}
 function, as discussed in appendix~\ref{app:function-of-pj}.
-% \begin{lstlisting}
-%   /// just wraps result()
-%   PseudoJet operator()(const PseudoJet &pj) const {return result(pj);}
-%   /// returns a vector of PseudoJet containing result(...) 
-%   /// applied to each of input PseudoJets, 
-%   vector<PseudoJet> operator()(const vector<PseudoJet> &pjs) const;
-% \end{lstlisting}
 
 To help understand how to create user-defined transformers, it is
 perhaps easiest to consider the example of a filtering/trimming class.
@@ -5713,9 +5293,6 @@ DESY-THESIS-2000-049.
   Z.\ Phys.\  {\bf C58 } (1993)  471-478.
 
 
-%\bibitem{HepJet} \texttt{HepJet} is being planned in collaboration
-%  with authors of \ttt{KtJet} \cite{KtJet}.
-
 \bibitem{SISCone}
   G.P.~Salam and G.~Soyez,
   %``A practical Seedless Infrared-Safe Cone jet algorithm,''
@@ -5748,7 +5325,8 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   arXiv:1108.1934 [hep-ph].
 
 
-\bibitem{CDFCones} The CDF code has been taken from \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
+\bibitem{CDFCones} The CDF code has been taken from \\
+  \url{http://www.pa.msu.edu/~huston/Les_Houches_2005/JetClu+Midpoint-StandAlone.tgz}\,.
 
 \bibitem{Abe:1991ui}
   F.~Abe {\it et al.}  [CDF Collaboration],
@@ -5797,8 +5375,8 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   Phys.\ Lett.\ B {\bf 213} (1988) 235.
   %%CITATION = PHLTA,B213,235;%%
 
-\bibitem{SpheriSISCone} G.~P.~Salam and G.~Soyez, 2008,
-  unpublished. \comment{Gregory: Can you remember the date}
+\bibitem{SpheriSISCone} G.~P.~Salam and G.~Soyez, April 2009,
+  unpublished. 
 
 \bibitem{Fortune}
   S.~Fortune,
