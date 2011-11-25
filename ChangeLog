@@ -1,3 +1,8 @@
+2011-11-25  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* plugins/TrackJet/TrackJetPlugin.cc (_print_banner): 
+	  rephrased the banner to reflect updated authorship info.
+
 2011-11-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/SISCone/SISConeSphericalPlugin.cc:

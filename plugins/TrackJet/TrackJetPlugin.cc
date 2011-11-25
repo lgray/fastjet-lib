@@ -197,10 +197,9 @@ void TrackJetPlugin::_print_banner(ostream *ostr) const{
   if (!ostr) return;  
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
-  (*ostr) << "# You are running the TrackJet plugin for FastJet (v2.4 upwards)          " << endl;
-  (*ostr) << "# This is based on the Rivet (v1.1.2) implementation of the TrackJet      " << endl;
-  (*ostr) << "# algorithm. Rivet is written by Leif Lonnblad, Andy Buckley and Jon      " << endl;
-  (*ostr) << "# Butterworth. See also http://www.hepforge.org/downloads/rivet.          " << endl;
+  (*ostr) << "# You are running the TrackJet plugin for FastJet. It is based on         " << endl;
+  (*ostr) << "# the implementation by Andy Buckley and Manuel Bahr that is to be        " << endl;
+  (*ostr) << "# found in Rivet 1.1.2. See http://www.hepforge.org/downloads/rivet.      " << endl;
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
 
   // make sure we really have the output done.
