@@ -1,5 +1,12 @@
 2011-11-25  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
+	Release of FastJet 3.0.1
+
+2011-11-25  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
+
+	* NEWS: 
+	  further small changes.
+
 	* plugins/TrackJet/TrackJetPlugin.cc (_print_banner): 
 	  rephrased the banner to reflect updated authorship info.
 

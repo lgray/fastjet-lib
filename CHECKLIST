@@ -63,6 +63,61 @@ X.Y.Z  reset the SISCone link to the trunk
 X.Y.Z  move the version number to X.Y.(Z+1)-devel
 
 ----------------------------------------------------------------------
+checklist for 3.0.1
+-------------------
+3.0.1  make sure version number in configure.ac is correct
+
+3.0.1  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
+3.0.1  update doxygen (including the devel) version number + check dirs are declared for new plugins + check in the class list that all classes are prefixed by 'fastjet::'
+3.0.1  version number in manual
+
+3.0.1  ensure NEWS is up to date (and has the correct release date!)
+
+3.0.1  make sure siscone points to a tag, not trunk
+       cd ../plugins/SISCone; svn propedit svn:externals .; svn up
+
+3.0.1  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
+
+
+3.0.1  make check 
+
+3.0.1  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+         grep -i error.summary out
+         grep LEAK.SUMMARY out
+       and make sure there are no errors (look through the file too)
+
+3.0.1  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+X.Y.Z  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+X.Y.Z  rerun the nightly check
+
+X.Y.Z  make distcheck; record the md5sum here
+
+X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+X.Y.Z  compile manual
+X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+X.Y.Z  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+X.Y.Z  update main web page & menu in devel area
+
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  update main web-page area
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+X.Y.Z  make sure it's committed with the CHECKLIST
+
+X.Y.Z  check everything is OK
+X.Y.Z  reset the SISCone link to the trunk
+X.Y.Z  move the version number to X.Y.(Z+1)-devel
+
+----------------------------------------------------------------------
 checklist for 3.0.0
 -------------------
 3.0.0  make sure version number in configure.ac is correct

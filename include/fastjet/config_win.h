@@ -1,5 +1,5 @@
-#define FASTJET_PACKAGE_STRING  "FastJet 3.0.1-devel"
-#define FASTJET_PACKAGE_VERSION  "3.0.1-devel"
+#define FASTJET_PACKAGE_STRING  "FastJet 3.0.1"
+#define FASTJET_PACKAGE_VERSION  "3.0.1"
 
 /* The ATLASCone plugin is disabled by default*/
 #undef FASTJET_ENABLE_PLUGIN_ATLASCONE 

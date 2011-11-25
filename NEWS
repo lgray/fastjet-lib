@@ -2,16 +2,15 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
-Summary of changes from v3.0.0 -> v3.0.1: DD/11/11
+Summary of changes from v3.0.0 -> v3.0.1: 25/11/11
 ================================================================
 
 Version 3.0.1 includes further reorganisation of the manual (version to 
 appear on arXiv), and a number of small additional changes, including :
 
-* PseudoJet now has a pt() member function for transverse momentum
+* PseudoJet now also has a pt() member function for transverse momentum
 * minor speed improvements (very low N + strategy choice for N ~ 20-50)
 * elimination of many compilation warnings found with -Wextra -Wshadow
-* fixed small inconsistencies between manual and code 
 * clarification of licenses for many of the plugins + new plugin banners
 * fixed a memory leak in the ATLASConePlugin
 

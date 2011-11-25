@@ -7,10 +7,12 @@ Gregory Soyez, provides a fast implementation of several
 longitudinally invariant sequential recombination jet algorithms, in
 particular the longitudinally invariant kt jet algorithm, the
 inclusive longitudinally invariant version of the Cambridge/Aachen
-jet-algorithm, and the inclusive anti-kt algorithm..
+jet-algorithm, and the inclusive anti-kt algorithm.
 
 The implementation is based on the geometrical methods described in
-M. Cacciari and G.P. Salam, Phys. Lett. B 641 (2006) 57 [hep-ph/0512210].
+M. Cacciari and G.P. Salam, Phys. Lett. B 641 (2006) 57
+[hep-ph/0512210]. The full FastJet manual is available as
+doc/fastjet-doc.tex and also as arXiv:1111.NNNN.
 
 Means are also provided for accessing external jet-algorithm software
 via a common (plugin) interface and the package notably includes
@@ -61,7 +63,6 @@ fortran_wrapper/  an illustration of how to use fastjet from fortran
 Known bugs
 ----------
 
-See the BUGS file as well as the web page,
-http://www.lpthe.jussieu.fr/~salam/fastjet/, for information
-discovered subsequent to the release.
+See the BUGS file as well as the web page, http://fastjet.fr/ for
+information discovered subsequent to the release.
 
