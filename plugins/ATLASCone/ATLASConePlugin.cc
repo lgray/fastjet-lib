@@ -162,7 +162,7 @@ void ATLASConePlugin::_print_banner(ostream *ostr) const{
 
   (*ostr) << "#-------------------------------------------------------------------------" << endl;
   (*ostr) << "# You are running the ATLAS Cone plugin for FastJet (v2.4 onwards)        " << endl;
-  (*ostr) << "# Original code from SpartyJet adapted to FastJet                         " << endl;
+  (*ostr) << "# Original code from SpartyJet; interface by the FastJet authors          " << endl;
   (*ostr) << "# If you use this plugin, please cite                                     " << endl;
   (*ostr) << "#   P.A. Delsart, K. Geerlings, J. Huston, B. Martin and C. Vermilion,    " << endl;
   (*ostr) << "#   SpartyJet, http://projects.hepforge.org/spartyjet                     " << endl;

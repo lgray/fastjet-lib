@@ -57,7 +57,7 @@ string PxConePlugin::description () const {
 
 void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // print a banner if we run this for the first time
-  _print_banner(clust_seq.fastjet_banner_stream());
+  //_print_banner(clust_seq.fastjet_banner_stream());
  
   // only have hh mode
   int mode = 2;

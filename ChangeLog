@@ -1,3 +1,14 @@
+2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/PxCone/PxConePlugin.cc:
+	  disabled the banner since the fortran code already has one
+
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc:
+	* plugins/ATLASCone/ATLASConePlugin.cc:
+	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc:
+	  modified banner message
+
 2011-11-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 
