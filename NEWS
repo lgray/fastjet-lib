@@ -12,8 +12,8 @@ appear on arXiv), and a number of small additional changes, including :
 * minor speed improvements (very low N + strategy choice for N ~ 20-50)
 * elimination of many compilation warnings found with -Wextra -Wshadow
 * fixed small inconsistencies between manual and code 
-* clarification of licenses for nearly all plugins + new plugin banners
-
+* clarification of licenses for many of the plugins + new plugin banners
+* fixed a memory leak in the ATLASConePlugin
 
 ================================================================
 Summary of changes from v2.4.4 -> v3.0.0:  09/10/11

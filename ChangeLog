@@ -10,7 +10,7 @@
 
 	* example/fastjet_timing_plugins.cc:
 	  inverted the ordering of some tests for the default jet alg to
-	  make sure that the -kt commanl-line option is processed.
+	  make sure that the -kt command-line option is processed.
 
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
 
@@ -24,7 +24,6 @@
 	  modified banner message
 
 2011-11-24  Gavin SALAM  <salam@lpthe.jussieu.fr>
-
 
 	* COPYING: 
 	  have reworded this in various places to give a better overview
