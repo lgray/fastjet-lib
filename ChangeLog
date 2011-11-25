@@ -1,3 +1,9 @@
+2011-11-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/fastjet_timing_plugins.cc:
+	  inverted the ordering of some tests for the default jet alg to
+	  make sure that the -kt commanl-line option is processed.
+
 2011-11-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/PxCone/PxConePlugin.cc:

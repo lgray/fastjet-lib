@@ -534,8 +534,8 @@ int main (int argc, char ** argv) {
 // end of checking if one asks to run a plugin (don't delete this line)
   } 
   if (all_algs || 
-      (jet_defs.size() == 0 && !found_unavailable)
-      || cmdline.present("-kt"))  {
+      cmdline.present("-kt") || 
+      (jet_defs.size() == 0 && !found_unavailable))  {
     jet_defs.push_back( fj::JetDefinition(fj::kt_algorithm, ktR, strategy));
   }
 
