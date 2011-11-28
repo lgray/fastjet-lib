@@ -1,3 +1,13 @@
+2011-11-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex: 
+	* Doxyfile (PROJECT_NUMBER): 
+	* include/fastjet/config_win.h (FASTJET_PACKAGE_STRING): 
+	* configure.ac: 
+	  version number becomes 3.0.2-devel
+	
+	* switched SISCone back over to trunk
+
 2011-11-25  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo & Gregory
 
 	Release of FastJet 3.0.1

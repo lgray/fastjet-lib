@@ -133,11 +133,11 @@ NO NO  send mail to: fastjet-announce@projects.hepforge.org
 3.0.1  cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
 3.0.1  record new md5sum.
       1c0654c23635c5d3190356f4af4d0ee4 fastjet-3.0.1.tar.gz 2122452 Nov 28 02:11
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.1
+3.0.1  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.1
 
-X.Y.Z  check everything is OK
-X.Y.Z  reset the SISCone link to the trunk
-X.Y.Z  move the version number to X.Y.(Z+1)-devel
+3.0.1  check everything is OK
+3.0.1  reset the SISCone link to the trunk
+3.0.1  move the version number to X.Y.(Z+1)-devel
 
 ----------------------------------------------------------------------
 checklist for 3.0.0
