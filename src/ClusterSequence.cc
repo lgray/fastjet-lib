@@ -385,7 +385,7 @@ void ClusterSequence::_print_banner() {
   (*ostr) << "#     A software package for jet finding and analysis at colliders      \n";
   (*ostr) << "#                           http://fastjet.fr                           \n"; 
   (*ostr) << "#								      	   \n";
-  (*ostr) << "# Please cite arXiv:1111.XXXX if you use this package for scientific    \n";
+  (*ostr) << "# Please cite arXiv:1111.6097 if you use this package for scientific    \n";
   (*ostr) << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
   (*ostr) << "#								      	   \n";
   (*ostr) << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";

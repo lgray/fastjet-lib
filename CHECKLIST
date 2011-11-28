@@ -121,14 +121,14 @@ NO NO  send mail to: fastjet-announce@projects.hepforge.org
        cd ~salam/www/fastjet3/
        bzr merge ../fastjet-devel/
 
-X.Y.Z  just after 2am/8pm Sunday 27/11/11
+3.0.1  just after 2am/8pm Sunday 27/11/11
        update arXiv number in banner, COPYING & AUTHORS, README
-       sed -i "s/1111\.XXXX/1111.correct_number/" AUTHORS
-       sed -i "s/1111\.NNNN/1111.correct_number/" COPYING
-       sed -i "s/1111\.NNNN/1111.correct_number/" README
-       sed -i "s/1111\.XXXX/1111.correct_number/" src/ClusterSequence.cc
+       sed -i "s/1111\.XXXX/1111.6097/" AUTHORS
+       sed -i "s/1111\.NNNN/1111.6097/" COPYING
+       sed -i "s/1111\.NNNN/1111.6097/" README
+       sed -i "s/1111\.XXXX/1111.6097/" src/ClusterSequence.cc
        grep "1111" AUTHORS COPYING README src/ClusterSequence.cc
-X.Y.Z  svn diff; svn ci -m 'included arXiv number'
+3.0.1  svn diff; svn ci -m 'included arXiv number'
 X.Y.Z  make dist
 X.Y.Z  cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.1
