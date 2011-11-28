@@ -1,3 +1,15 @@
+2011-11-29  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* mksnapshot.sh -> scripts/mksnapshot.sh
+	  clean up main directory by having maintenance scripts in the
+	  scripts/ directory.
+	
+	* tarit.sh -> scripts/old/tarit.sh
+	* tarit-areas.sh -> scripts/old/tarit-areas.sh
+	* svntagit.sh -> scripts/old/svntagit.sh
+	  these scripts were out of date in some way of other, so moved
+	  them out of the way
+
 2011-11-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex: 
