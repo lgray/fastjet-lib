@@ -129,10 +129,11 @@ NO NO  send mail to: fastjet-announce@projects.hepforge.org
        sed -i "s/1111\.XXXX/1111.6097/" src/ClusterSequence.cc
        grep "1111" AUTHORS COPYING README src/ClusterSequence.cc
 3.0.1  svn diff; svn ci -m 'included arXiv number'
-X.Y.Z  make dist
-X.Y.Z  cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
+3.0.1  make dist
+3.0.1  cp -p fastjet-3.0.1.tar.gz ~/www/fastjet/repository/
+3.0.1  record new md5sum.
+      1c0654c23635c5d3190356f4af4d0ee4 fastjet-3.0.1.tar.gz 2122452 Nov 28 02:11
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.1
-X.Y.Z  record new md5sum.
 
 X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
