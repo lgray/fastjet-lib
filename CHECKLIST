@@ -113,11 +113,11 @@ NO NO  send mail to: fastjet-announce@projects.hepforge.org
 
 3.0.1  make sure it's committed with the CHECKLIST
 
-X.Y.Z  just before 2am/8pm Sunday 27/11/11
+3.0.1  just before 2am/8pm Sunday 27/11/11
        cd ~salam/www/fastjet/repo
        ln -s fastjet-3.0.1-pre-arXiv.tar.gz fastjet-3.0.1.tar.gz
 
-X.Y.Z  update main web-page area (from ada):
+3.0.1  update main web-page area (from ada):
        cd ~salam/www/fastjet3/
        bzr merge ../fastjet-devel/
 
