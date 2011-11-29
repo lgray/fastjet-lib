@@ -43,6 +43,7 @@ diff doc/fastjet-doc.tex.bak doc/fastjet-doc.tex
 
 echo
 echo "------------ Recommended ChangeLog entry --------------------"
+# NB: -e option of echo ensures that \t translates to a tab character
 echo -e "\t* configure.ac:"
 echo -e "\t* include/fastjet/config_win.h:"
 echo -e "\t* Doxyfile:"
