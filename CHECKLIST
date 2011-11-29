@@ -10,19 +10,16 @@ to indicate you carried out the operation.
 ----------------------------------------------------------------------
 checklist for X.Y.Z (make a copy before editing!)
 -------------------
-X.Y.Z  make sure version number in configure.ac is correct
-
-X.Y.Z  generate config_win.h: cd src && ./genconfig.sh ../include/fastjet/config_win.h
-X.Y.Z  update doxygen (including the devel) version number + check dirs are declared for new plugins + check in the class list that all classes are prefixed by 'fastjet::'
-X.Y.Z  version number in manual
-
+X.Y.Z  update version number with ./scripts/set-version VERSION-NUMBER
+X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
+       the class list that all classes are prefixed by 'fastjet::'
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 
 X.Y.Z  make sure siscone points to a tag, not trunk
        cd ../plugins/SISCone; svn propedit svn:externals .; svn up
 
-X.Y.Z  mention the release in ChangeLog (just say "fastjet-X.Y.Z")
-
+X.Y.Z  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
 
 X.Y.Z  make check 
 
@@ -60,7 +57,8 @@ X.Y.Z  make sure it's committed with the CHECKLIST
 
 X.Y.Z  check everything is OK
 X.Y.Z  reset the SISCone link to the trunk
-X.Y.Z  move the version number to X.Y.(Z+1)-devel
+X.Y.Z  move the version number to X.Y.(Z+1)-devel with
+       scripts/set-version VERSION-NUMBER
 
 ----------------------------------------------------------------------
 checklist for 3.0.1

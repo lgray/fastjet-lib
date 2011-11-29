@@ -1,5 +1,18 @@
 2011-11-29  Gavin Salam  <salam@lpthe.jussieu.fr>
 
+	* CHECKLIST: 
+	  updated this to reflect the new scripts/set-version.sh script
+
+	* doc/fastjet-doc.tex
+	  added note about comment lines to be removed for automatic
+	  version changes
+
+	* scripts/set-version.sh (version): *** ADDED ***
+	  run 
+	    ./scripts/set-version.sh VERSION-NUMBER 
+	  to make all the changes needed to switch to a new
+	  version
+
 	* mksnapshot.sh -> scripts/mksnapshot.sh
 	  clean up main directory by having maintenance scripts in the
 	  scripts/ directory.
