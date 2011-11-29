@@ -41,4 +41,10 @@ echo "------------ Setting it in doc/fastjet-doc.tex --------------"
 sed -i.bak 's/^\( *\)[^%]*\(%.*VERSION-NUMBER.*\)/\1'$version'\2/' doc/fastjet-doc.tex
 diff doc/fastjet-doc.tex.bak doc/fastjet-doc.tex
 
-
+echo
+echo "------------ Recommended ChangeLog entry --------------------"
+echo -e "\t* configure.ac:"
+echo -e "\t* include/fastjet/config_win.h:"
+echo -e "\t* Doxyfile:"
+echo -e "\t* tex/fastjet-doc.tex:"
+echo -e "\t  changed version to $version"
