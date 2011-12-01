@@ -534,10 +534,21 @@ public:
   /// the structure type associated with a jet belonging to a ClusterSequence
   typedef ClusterSequenceStructure StructureType;
 
+  /// This is the function that is automatically called during
+  /// clustering to print the FastJet banner. Only the first call to
+  /// this function will result in the printout of the banner. Users
+  /// may wish to call this function themselves, during the
+  /// initialization phase of their program, in order to ensure that
+  /// the banner appears before other output. This call will not
+  /// affect 3rd-party banners, e.g. those from plugins.
+  static void print_banner();
+
   /// \cond internal_doc
   //  [this line must be left as is to hide the doxygen comment]
-  /// A call to this function modifies the stream
-  /// used to print banners (by default cout).
+  /// A call to this function modifies the stream used to print
+  /// banners (by default cout). If a null pointer is passed, banner
+  /// printout is suppressed. This affects all banners, including
+  /// those from plugins.
   ///
   /// Please note that if you distribute 3rd party code
   /// that links with FastJet, that 3rd party code must not
@@ -550,7 +561,9 @@ public:
   /// \endcond
 
   /// returns a pointer to the stream to be used to print banners
-  /// (cout by default)
+  /// (cout by default). This function is used by plugins to determine
+  /// where to direct their banners. Plugins should properly handle
+  /// the case where the pointer is null.
   static std::ostream * fastjet_banner_stream() {return _fastjet_banner_ostr;}
 
 private:
@@ -715,9 +728,6 @@ protected:
   void _add_ktdistance_to_map(const int & ii, 
 			      DistMap & DijMap,
   			      const DynamicNearestNeighbours * DNN);
-
-  /// for making sure the user knows what it is they're running...
-  void _print_banner();
 
 
   /// will be set by default to be true for the first run

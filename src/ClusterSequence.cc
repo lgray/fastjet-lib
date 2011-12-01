@@ -370,7 +370,7 @@ string fastjet_version_string() {
 
 //----------------------------------------------------------------------
 // prints a banner on the first call
-void ClusterSequence::_print_banner() {
+void ClusterSequence::print_banner() {
 
   if (!_first_time) {return;}
   _first_time = false;
@@ -418,7 +418,7 @@ void ClusterSequence::_decant_options(const JetDefinition & jet_def_in,
 // transfer all relevant info into internal variables
 void ClusterSequence::_decant_options_partial() {
   // let the user know what's going on
-  _print_banner();
+  print_banner();
   
   _jet_algorithm = _jet_def.jet_algorithm();
   _Rparam = _jet_def.R();  _R2 = _Rparam*_Rparam; _invR2 = 1.0/_R2;

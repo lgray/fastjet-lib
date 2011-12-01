@@ -278,6 +278,8 @@ void is_unavailable(const string & algname) {
 /// wrapped in fastjet
 int main (int argc, char ** argv) {
 
+  fj::ClusterSequence::print_banner();
+
   CmdLine cmdline(argc,argv);
   cmdline_p = &cmdline;
   // allow the use to specify the fj::Strategy either through the

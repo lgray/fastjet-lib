@@ -1,3 +1,16 @@
+2011-12-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/ClusterSequence.hh: 
+	  void _print_banner() -> static void print_banner(); i.e. it's
+	  now public and documented in doxygen.
+
+	* example/fastjet_timing_plugins.cc: 
+	  this now prints a banner early on
+
+	* doc/fastjet-doc.tex (section{Error handling}):
+	  added mention of CS::print_banner().
+
 2011-12-01  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:

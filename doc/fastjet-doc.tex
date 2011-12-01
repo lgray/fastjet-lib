@@ -4938,6 +4938,14 @@ when an error or warning occurs, for example the event number.
 One only \ttt{stream << string} type operation is performed for each
 warning or error, so as to help with formatting in such cases.
 
+As well as performing output of warnings and errors, \fastjet also
+outputs a banner the first time that clustering is performed.
+%
+If the user wishes to have the banner appear before the first
+clustering (e.g.\ during the initialisation phase of their program),
+they may call the static \ttt{ClusterSequence::print\_banner()}
+function.
+
 %======================================================================
 
 \section{Evolution of FastJet across versions}
