@@ -1,3 +1,8 @@
+2011-12-01  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	  issued an error message if no C++ compiler is found
+
 2011-11-29  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* CHECKLIST: 
