@@ -51,11 +51,13 @@ dnl-------------------------------------------------------------------
 dnl check useful programs
 dnl-------------------------------------------------------------------
 AC_PROG_CXX
-if test "x$CXX" == "x"; then
+AC_CHECK_PROG([cxx_found],[$CXX],[yes],[no])
+if test "x$cxx_found" == "xno"; then
    AC_MSG_ERROR([No functional C++ compiler found])
 fi
 AC_PROG_INSTALL
 AC_PROG_LN_S
+AC_PROG_SED
 AC_PROG_MAKE_SET
 
 AM_CXXFLAGS=""

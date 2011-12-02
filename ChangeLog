@@ -1,3 +1,11 @@
+2011-12-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	  . added a test for sed
+	  . added an explicit test that the C++ compiler returned by
+	    AC_PROG_CXX (g++ if none found!) really exists (in case g++
+	    is not installed)
+
 2011-12-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/ClusterSequence.cc: 
