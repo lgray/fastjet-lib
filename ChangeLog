@@ -1,3 +1,13 @@
+2011-12-03  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* ../contrib:                 *** ADDED ***
+	* ../contrib/vermilion/*      *** ADDED ***
+	* ../3rd_party_interfaces/ -> ../contrib/3rd_party_interfaces/
+
+	  set up some structure for our copy of contrib, including the
+	  code from Chris Vermilion + moved our pythia8 interface into
+	  there.
+
 2011-12-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
 	* RoadMap: 
