@@ -1,3 +1,9 @@
+2011-12-05  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	  fixed an issue in the "g++ presence test" to cover situations
+	  where the full path to the compiler is specified.
+
 2011-12-03  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* ../contrib:                 *** ADDED ***

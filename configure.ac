@@ -51,10 +51,15 @@ dnl-------------------------------------------------------------------
 dnl check useful programs
 dnl-------------------------------------------------------------------
 AC_PROG_CXX
-AC_CHECK_PROG([cxx_found],[$CXX],[yes],[no])
+
+dnl ensure CXX presence
+cxx_progname=$(basename $CXX)
+cxx_dirname=$(dirname $CXX)
+AC_CHECK_PROG([cxx_found],[$cxx_progname],[yes],[no].[$cxx_dirname$PATH_SEPARATOR$PATH])
 if test "x$cxx_found" == "xno"; then
    AC_MSG_ERROR([No functional C++ compiler found])
 fi
+
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_SED
