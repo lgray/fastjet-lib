@@ -13,10 +13,19 @@
 //   + add initial jet ET (i.e. before split/merge) 
 //    1-May-2007 Lars Sonnenschein
 //    extracted from D0 software framework and modified to remove subsequent dependencies
-// --------------------------------------------------------------------------
-
+//
+//
+// This file is distributed with FastJet under the terms of the GNU
+// General Public License (v2). Permission to do so has been granted
+// by Lars Sonnenschein and the D0 collaboration (see COPYING for
+// details)
+//
 // History of Changes in FastJet compared tothe original version of
 // ConeJetInfo.hpp
+//
+// 2011-12-13  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * added license information
 //
 // 2011-11-14  Gregory Soyez  <soyez@fastjet.fr>
 //
@@ -26,7 +35,9 @@
 // 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
 //
 //        * put the code in the fastjet::d0 namespace
- 
+//
+// --------------------------------------------------------------------------
+
 
 //#define CONEJET_SPLITMERGE_MOD 100
 

@@ -29,11 +29,19 @@
 //     + save initial jet ET before split/merge
 //    1-May-2007 Lars Sonnenschein
 //    extracted from D0 software framework and modified to remove subsequent dependencies
-// ---------------------------------------------------------------------------
 //
-
+//
+// This file is distributed with FastJet under the terms of the GNU
+// General Public License (v2). Permission to do so has been granted
+// by Lars Sonnenschein and the D0 collaboration (see COPYING for
+// details)
+//
 // History of changes in FastJet compared tothe original version of
 // ConeSplitMerge.hpp
+//
+// 2011-12-13  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * added license information
 //
 // 2009-01-17  Gregory Soyez  <soyez@fastjet.fr>
 //
@@ -42,6 +50,9 @@
 // 2007-12-14  Gavin Salam  <salam@lpthe.jussieu.fr>
 // 
 //        * replaced make_pair by std::make_pair
+//
+// ---------------------------------------------------------------------------
+
 
 #include <iostream>
 #include <map>

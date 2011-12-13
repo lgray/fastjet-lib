@@ -179,7 +179,8 @@ void D0RunIpre96ConePlugin::_print_banner(ostream *ostr) const{
 
   (*ostr) << "#--------------------------------------------------------------------------" << endl;
   (*ostr) << "# You are running the D0 Run I (pre96) Cone plugin for FastJet             " << endl;
-  (*ostr) << "# Original code provided by Lars Sonnenschein; interface by FastJet authors" << endl;
+  (*ostr) << "# Original code by the D0 collaboration, provided by Lars Sonnenschein;    " << endl;
+  (*ostr) << "# interface by FastJet authors                                             " << endl;
   (*ostr) << "# If you use this plugin, please cite                                      " << endl;
   (*ostr) << "#   B. Abbott et al. [D0 Collaboration], FERMILAB-PUB-97-242-E.            " << endl;
   (*ostr) << "# in addition to the usual FastJet reference.                              " << endl;

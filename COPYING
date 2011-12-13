@@ -75,7 +75,33 @@ For the plugin jet finders, the licensing situation is as follows:
 ----------------------------------------------------------------------
 . D0 RunI and RunII cone plugins: 
   Standalone version provided by Lars Sonnenschein. 
-  Licensing situation currently undergoing confirmation.
+  Permission to distribute it under the terms of the GPL(v2) granted
+  by Lars Sonnenschein on behalf of the D0 collaboration
+
+  From: Lars Sonnenschein <sonne@mail.cern.ch>
+  To: Gregory Soyez <soyez@fastjet.fr>
+  Cc: Matteo Cacciari <matteo.cacciari@cern.ch>, 
+      Gavin Salam <salam@lpthe.jussieu.fr>
+  Subject: Re: D0 cone license
+  Date: Mon, 12 Dec 2011 18:17:05 +0100
+  
+  Dear Gregory, all,
+  after some iterations with the D0 spoke persons and other programmers who 
+  have been involved in writing the C++ implementation within the D0 
+  software framework, the conclusion is that D0 grants the permission:
+  
+  "As an author of the D0 Run I and D0 Run II cone code, and having
+  consulted and obtained the consent of the other authors (D0 collaboration),
+  I hereby grant you permission to distribute my/our code for the
+  D0 Run I and Run II cone jet algorithms under the terms of the GNU 
+  General Public License (v2).".
+  
+  Citation and/or banner should then also give credit to the D0 
+  collaboration.
+  
+  Kind regards
+  Lars
+
 
 ----------------------------------------------------------------------
 . PxCone code: GPL(v2) (permission granted by M.H.Seymour)

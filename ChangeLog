@@ -1,3 +1,24 @@
+2011-12-13  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc:
+	  updated banner to five credit to the D0 collaboration
+
+	* COPYING:
+	* plugins/D0RunIICone/ProtoJet.hpp:
+	* plugins/D0RunIICone/inline_maths.h:
+	* plugins/D0RunIICone/ILConeAlgorithm.hpp:
+	* plugins/D0RunIICone/HepEntity.h:
+	* plugins/D0RunIICone/ConeSplitMerge.hpp:
+	* plugins/D0RunIICone/ConeJetInfo.hpp:
+	* plugins/D0RunICone/inline_maths.h:
+	* plugins/D0RunICone/HepEntityIpre96.h:
+	* plugins/D0RunICone/HepEntityI.h:
+	* plugins/D0RunICone/ConeClusterAlgo.hpp:
+	  added license information (Lars Sonnenschein and the D0
+	  collaboration granted us the permission to distribute the D0
+	  codes under the terms of the GPLv2
+
 2011-12-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:

@@ -1,12 +1,21 @@
 #ifndef INLINE_MATHS
 #define INLINE_MATHS
 
+// This file is distributed with FastJet under the terms of the GNU
+// General Public License (v2). Permission to do so has been granted
+// by Lars Sonnenschein and the D0 collaboration (see COPYING for
+// details)
+//
 // History of changes in FastJet compared tothe original version of
 // inline_math.h
 //
+// 2011-12-13  Gregory Soyez  <soyez@fastjet.fr>
+// 
+//        * added license information
+//
 // 2011-10-06  Gregory Soyez  <soyez@fastjet.fr>
 //
-//        * put the code in the fastjet::d0 namespace
+//        * put the code in the fastjet::d0runi namespace
 
 #include <cmath>
 #include <cerrno>
