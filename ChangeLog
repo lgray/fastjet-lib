@@ -1,3 +1,9 @@
+2011-12-16  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * configure.ac:
+          added test that prevents user from installing in the build
+          directory (copied from LHAPDF)
+
 2011-12-13  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
