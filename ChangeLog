@@ -1,3 +1,10 @@
+2012-01-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* fastjet-config.in:
+	  used @libdir@ instead of @prefix@/lib and @includedir@ instead
+	  of @prefix@/include for a correct treatment of non-standard
+	  installation location
+
 2011-12-16  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * configure.ac:
