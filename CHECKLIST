@@ -88,10 +88,10 @@ checklist for 3.0.2
 3.0.2  go to testsuite; make with an installation of the current version;
          ./run_tests
 
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.0.2  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
-X.Y.Z  [NO: rerun the nightly check]
+-----  [NO: rerun the nightly check; NOT DONE]
 
 X.Y.Z  make distcheck; record the md5sum here
 
