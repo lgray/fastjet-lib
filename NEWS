@@ -2,6 +2,16 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
+Summary of changes from v3.0.1 -> v3.0.2: 17/01/12
+================================================================
+
+This is a bug-fix release, including
+
+* small fixes to the build system and fastjet-config
+* further licence clarifications
+* included SISCone 2.0.5 (with small modifications to the build system)
+
+================================================================
 Summary of changes from v3.0.0 -> v3.0.1: 25/11/11
 ================================================================
 
