@@ -11,13 +11,13 @@ to indicate you carried out the operation.
 checklist for X.Y.Z (make a copy before editing!)
 -------------------
 X.Y.Z  run svn up
-X.Y.Z  update version number with ./scripts/set-version VERSION-NUMBER
+X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
 X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
        the class list that all classes are prefixed by 'fastjet::'
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 
 X.Y.Z  make sure siscone points to a tag, not trunk
-       cd ../plugins/SISCone; svn propedit svn:externals .; svn up
+       svn propedit svn:externals plugins/SISCone; svn up
 
 X.Y.Z  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-X.Y.Z"
@@ -40,7 +40,7 @@ X.Y.Z  make sure it's committed (before distcheck; so that all files
 
 X.Y.Z  rerun the nightly check
 
-X.Y.Z  make distcheck; record the md5sum here
+X.Y.Z  make distcheck; record the md5sum here (and revision number)
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
 X.Y.Z  compile manual
@@ -56,14 +56,17 @@ X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
 
 X.Y.Z  make sure it's committed with the CHECKLIST
 
-X.Y.Z  reset the SISCone link to the trunk
+X.Y.Z  reset the SISCone link to the trunk: 
+       svn propedit svn:externals plugins/SISCone; svn up
+
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
-       scripts/set-version VERSION-NUMBER
+       scripts/set-version.sh VERSION-NUMBER
+       and indicate this in the ChangeLog
 
 ----------------------------------------------------------------------
 checklist for 3.0.2
 -------------------
-3.0.2  update version number with ./scripts/set-version VERSION-NUMBER
+3.0.2  update version number with ./scripts/set-version.sh VERSION-NUMBER
 3.0.2  doxygen: check dirs are declared for new plugins + check in 
        the class list that all classes are prefixed by 'fastjet::'
 3.0.2  ensure NEWS is up to date (and has the correct release date!)
@@ -88,7 +91,7 @@ checklist for 3.0.2
          ./run_tests
 
 3.0.2  make sure it's committed (before distcheck; so that all files
-       have correct version numbers)
+       have correct version numbers). Revision 2820.
 
 -----  [NO: rerun the nightly check; NOT DONE]
 
@@ -107,11 +110,11 @@ checklist for 3.0.2
 -----  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       [NOT DONE]
 
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.0.2  make sure it's committed with the CHECKLIST
 
-X.Y.Z  reset the SISCone link to the trunk
+3.0.2  reset the SISCone link to the trunk: svn propedit svn:externals plugins/SISCone
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
-       scripts/set-version VERSION-NUMBER
+       scripts/set-version.sh VERSION-NUMBER
 
 ----------------------------------------------------------------------
 checklist for 3.0.1
