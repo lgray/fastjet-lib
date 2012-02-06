@@ -406,7 +406,7 @@ AC_CONFIG_FILES( example/Makefile example/data/Makefile example/root/Makefile )
 dnl-------------------------------------------------------------------
 dnl and the documentation
 dnl-------------------------------------------------------------------
-AC_CONFIG_FILES( doc/Makefile )
+AC_CONFIG_FILES( doc/Makefile doc/figs/Makefile )
 
 dnl-------------------------------------------------------------------
 dnl configuration script
