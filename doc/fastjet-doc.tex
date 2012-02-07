@@ -4051,8 +4051,9 @@ strategy can give faster execution.
 %
 Furthermore the \ttt{NlnNCam} strategy's timings may depend
 strongly on the size of the cache.
-Finally for a given $N$ and $R$, the optimal strategy may also depend
-on the event structure.
+%
+Finally for a given $N$ and $R$, the timings and the optimal strategy
+may also depend on the event structure.
 
 \begin{figure}[t]
   \centering
@@ -4076,7 +4077,11 @@ on the event structure.
     and adding simulated minimum-bias events to it.  
     %%
     The results include the time to extract the inclusive jets with
-    $p_t > 5\GeV$ and sort them into decreasing $p_t$.  }
+    $p_t > 5\GeV$ and sort them into decreasing $p_t$.
+    %
+    Note that timings observed in practice can differ from those given
+    here for events with substantially different distributions of
+    particles.  }
 \label{fig:timings}
 \end{figure}
 
