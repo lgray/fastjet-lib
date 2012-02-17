@@ -1,10 +1,60 @@
 2012-02-17  Gregory Soyez  <soyez@fastjet.fr> & Matteo
 
+	* reintegrated the modifications from the
+	  fastjet-3.0-CGAL-coincident branch. FastJet now allows for
+	  coincident points in the NlnN strategy (using CGAL)
+
+2012-02-17  Gregory Soyez  <soyez@fastjet.fr> & Matteo
+
 	* configure.ac:
         * include/fastjet/config_win.h:
         * Doxyfile:
         * tex/fastjet-doc.tex:
           changed version to 3.1.0-devel
+
+2012-02-16  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/DnnPlane.cc:
+	  added a comment about the commented out code which always uses
+	  CGAL's distance comparison
+
+	* include/fastjet/internal/DnnPlane.hh:
+	  Clarified a comment frow Gavin's query in its last commit.
+
+2012-02-16  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/internal/DnnPlane.hh:
+	* src/DnnPlane.cc:
+	  modified comments in a few places.
+
+2012-02-15  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/DnnPlane.hh:
+	* src/DnnPlane.cc:
+	  Fixed the longstanding issue that our NlnN strategies using CGAL
+	  were not supporting coincident points ("known bug 1" in earlier
+	  FastJet releases).
+
+	  This is achieved by adding a 'coincidence' integer to the
+	  SupoerVertex used in DnnPlane which keeps track of the
+	  coincidences reported by CGAL.
+
+	  In fixnig that issue, we became aware of rare situations where
+	  rounding errors in comparing distances (in situations with 3
+	  points a,b,c with dist(a,b)-dist(a,c)<<<1 and dist(b.c)<<<1)
+	  could create inconsistencies between our distamce comparison and
+	  CGAL's triangulation. This could is some particular setups lead
+	  to infinite loops in the Clustering. We fixed it by using
+	  explicitly CGAL's distance computation in these troublesome
+	  situations (we do not do it in general because it could
+	  introduce a 10-20% time penalty).
+
+	  Afterall, the new code has been tested to run nearly as fast as
+	  the previous one: 212.95s to cluster our reference 10000 events
+	  (with all 3 NlnN strategies3 times) compared to 211.46s with the
+	  code from the previous stable release (and 28.125s to read the
+	  events)) i.e. only a 0.7% penalty. And this is not worse in
+	  'grid' cases with real distance degeneracies.
 
 
 2012-02-08  Gavin Salam  <salam@lpthe.jussieu.fr>
