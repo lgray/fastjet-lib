@@ -1,3 +1,12 @@
+2012-02-17  Gregory Soyez  <soyez@fastjet.fr> & Matteo
+
+	* configure.ac:
+        * include/fastjet/config_win.h:
+        * Doxyfile:
+        * tex/fastjet-doc.tex:
+          changed version to 3.1.0-devel
+
+
 2012-02-08  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* example/
