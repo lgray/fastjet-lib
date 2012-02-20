@@ -119,9 +119,9 @@ fi
 dnl check if one wants a high level of warnings
 AC_ARG_ENABLE(extra-warnings,
 	[  --enable-extra-warnings Turn on additional compiler warnings [default=no]],
-	[ENABLE_DEBUG_FLAG="$enableval"],
-	[ENABLE_DEBUG_FLAG="no"])
-if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
+	[ENABLE_EXTRA_WARNINGS_FLAG="$enableval"],
+	[ENABLE_EXTRA_WARNINGS_FLAG="no"])
+if [[ "$ENABLE_EXTRA_WARNINGS_FLAG" == "yes" ]] ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" -ansi -pedantic -Wextra -Wshadow "
 fi
 
@@ -417,6 +417,51 @@ dnl-------------------------------------------------------------------
 dnl sample fortran wrapper
 dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( fortran_wrapper/Makefile )
+
+dnl-------------------------------------------------------------------
+dnl split the version number in major.minor.patch[prerelease] version
+dnl
+dnl We accordingly define FASTJET_VERSION_{MAJOR,MINOR,PATCHLEVEL} as
+dnl well as FASTJET_VERSION_NUMBER. The latter is a 5-digit integer of
+dnl the form 'XYYZZ' (for v X.Y.Z) that can be used to do version
+dnl number comparisons.
+dnl
+dnl We assume that the 3 numbers are present + an optional pre-release
+dnl tag. If the pre-release tag starts with a -, that - will be
+dnl removed. All version numbers should only be made of numbers.
+dnl
+dnl Note that there are multiple strategies one can adopt for
+dnl treatment of the pre-release tag (if any). Here we followed the
+dnl idea that, being a candidate release, pre-releases version number
+dnl will behave as their corresponiding stsable release. E.g. testing
+dnl that the version is at least 3.1.0 using
+dnl   #if FASTJET_VERSION_NUMBER >= 30100
+dnl     ...
+dnl   #endif
+dnl will give a positive anwser for FastJet 3.1.0a1.
+dnl-------------------------------------------------------------------
+versionmajor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]\+\)\.\([[^\.]]\+\)\.\([[^\.]]\+\).*/\1/'`
+versionminor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]\+\)\.\([[^\.]]\+\)\.\([[^\.]]\+\).*/\2/'`
+versionending=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]\+\)\.\([[^\.]]\+\)\.\([[^\.]]\+\)$/\3/'`
+versionpatchlevel=`echo $versionending | sed 's/^\([[0-9]]\+\).*/\1/'`
+versionprerelease=`echo $versionending | sed 's/^[[0-9-]]\+//'`
+versionnumber=`printf "%d%.2d%.2d" "$versionmajor" "$versionminor" "$versionpatchlevel"`
+
+AC_DEFINE_UNQUOTED([VERSION_MAJOR],      [$versionmajor],      [Major version of this package])
+AC_DEFINE_UNQUOTED([VERSION_MINOR],      [$versionminor],      [Minor version of this package])
+AC_DEFINE_UNQUOTED([VERSION_PATCHLEVEL], [$versionpatchlevel], [Patch version of this package])
+if [[ "x$versionprerelease" != "x" ]]; then
+   AC_DEFINE_UNQUOTED([VERSION_PRERELEASE], ["$versionprerelease"], [Pre-release version of this package])
+fi
+AC_DEFINE_UNQUOTED([VERSION_NUMBER], [$versionnumber], [Version of the package under the form XYYZZ (instead of X.Y.Z)])
+
+dnl AC_DEFINE_UNQUOTED([VERSION_IS(X,Y,Z)],
+dnl  [(FASTJET_VERSION_MAJOR == (X) && FASTJET_VERSION_MINOR == (Y) && FASTJET_VERSION_PATCHLEVEL == (Z))],
+dnl  [macro to require a precise version of FastJet (only works for FJ>=3.0.1)])
+dnl 
+dnl AC_DEFINE([VERSION_IS_AT_LEAST(X,Y,Z)],
+dnl  [(FASTJET_VERSION_MAJOR > (X) || (FASTJET_VERSION_MAJOR == (X) && (FASTJET_VERSION_MINOR > (Y) || (FASTJET_VERSION_MINOR == (Y) && (FASTJET_VERSION_PATCHLEVEL >= (Z))))))],
+dnl  [macro to require a minimal version of FastJet (only works for FJ>=3.0.1)])
 
 dnl-------------------------------------------------------------------
 dnl main library outputs

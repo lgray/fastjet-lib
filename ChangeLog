@@ -1,3 +1,30 @@
+2012-02-20  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/config_win.h:
+	  added the new version-number macros
+
+	* configure.ac:
+	* config.h.in:
+	* src/genconfig.sh:
+	  defined a series of macros to handle version numbers
+	    FASTJET_VERSION_{MAJOR,MINOR,PATCHLEVEL}
+	  and, above all,
+	    FASTJET_VERSION_NUMBER
+	  a 5-digit integer of the form XYYZZ (for version X.Y,Z) that
+	  allows to require specific versions of FastJet by using
+	    #if FASTJET_VERSION_NUMBER > 30100
+	      ....
+	    #endif
+	  For previous versions of FastJet, where this macro is not
+	  defined, it defaults to 0.
+
+	* configure.ac:
+	  fixed bug related to the --extra-warnings flag: it now sets its
+	  own internal variable (ENABLE_EXTRA_WARNINGS_FLAG rather than
+	  overwriting ENABLE_DEBG_FLAG. Now, enabling/disabling denug info
+	  should work fine again.
+
+
 2012-02-17  Gregory Soyez  <soyez@fastjet.fr> & Matteo
 
 	* reintegrated the modifications from the

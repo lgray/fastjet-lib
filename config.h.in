@@ -102,3 +102,18 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Major version of this package */
+#undef VERSION_MAJOR
+
+/* Minor version of this package */
+#undef VERSION_MINOR
+
+/* Version of the package under the form XYYZZ (instead of X.Y.Z) */
+#undef VERSION_NUMBER
+
+/* Patch version of this package */
+#undef VERSION_PATCHLEVEL
+
+/* Pre-release version of this package */
+#undef VERSION_PRERELEASE
