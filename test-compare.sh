@@ -64,7 +64,7 @@ fi
 # number
 packname=`grep '^ *AC_INIT' ${srcdir}/configure.ac | sed -e 's/AC_INIT(//' -e 's/\[//g' -e 's/\]//g' -e 's/)//'`
 packver=`echo $packname | sed 's/.*,//g'`
-winver=`grep VERSION ${srcdir}/include/fastjet/config_win.h | sed 's/.*VERSION *"//' | sed 's/"//'`
+winver=`grep FASTJET_PACKAGE_VERSION ${srcdir}/include/fastjet/config_win.h | sed 's/.*VERSION *"//' | sed 's/"//'`
 if [[ $winver != $packver ]]; then
   echo "ERROR: config_win.h version number not compatible with true version number"
   exit 1

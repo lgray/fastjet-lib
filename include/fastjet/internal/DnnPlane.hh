@@ -218,7 +218,7 @@ private:
   /// if a distance between a point and 2 others is smaller than this
   /// and the distance between the two points is also smaller than this
   /// then use CGAL to compare the distances. 
-  static const double DISTANCE_FOR_CGAL_CHECKS=1.0e-12;  
+  static const double DISTANCE_FOR_CGAL_CHECKS;  
   
 };
 

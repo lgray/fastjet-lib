@@ -38,6 +38,9 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+const double DnnPlane::DISTANCE_FOR_CGAL_CHECKS=1.0e-12;  
+
+
 /// Initialiser from a set of points on an Eta-Phi plane, where both
 /// eta and phi can have arbitrary ranges
 DnnPlane::DnnPlane(const vector<EtaPhi> & input_points, 

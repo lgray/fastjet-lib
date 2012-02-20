@@ -1,3 +1,13 @@
+2012-02-20  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
+
+	* test-compare.sh: 
+	  changed the grep to correctly check the windows version number.
+
+	* include/fastjet/internal/DnnPlane.hh (class DnnPlane): 
+	* src/DnnPlane.cc: 
+	  moved a const double value specification into the .hh to fix
+	  compilation issue with g++ 4.4.
+
 2012-02-20  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/config_win.h:
