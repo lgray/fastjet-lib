@@ -57,7 +57,7 @@ use English;
 $OUTPUT_AUTOFLUSH = 1;
 
 # things to configure
-$mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@cern.ch'; #  g@gavin.fr 
+$mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@lpthe.jussieu.fr'; #  g@gavin.fr 
 
 # the CGAL path
 #
