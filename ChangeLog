@@ -1,3 +1,20 @@
+2012-03-29  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* src/ClusterSequence_TiledN2.cc (_minheap_faster_tiled_N2_cluster): 
+	  development work to try out impact of keeping track of max NN
+	  distance within the tile. Currently just in the initial NN
+	  determination. For N=10^4, akt05, it saves 40-50% of the time in
+	  that calculation (10% overall). Line being used for speed checks is
+
+	    ./fastjet_timing_plugins -antikt -R 0.5 -combine 60 -repeat 100\
+	      < ~/work/fastjet/data/Pythia-1PtMin50+nMinBias-mansorted.dat
+
+	  Correctness tests come out OK on 10^3 events.
+
+	* include/fastjet/ClusterSequence.hh:
+	  additions to the Tile structure so that it can maintain info
+	  about tile centres and the max_NN_dist within a tile.
+
 2012-02-20  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 
 	* test-compare.sh: 

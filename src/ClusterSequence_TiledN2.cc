@@ -158,6 +158,11 @@ void ClusterSequence::_initialise_tiles() {
       tile->end_tiles = pptile;
       // finally make sure tiles are untagged
       tile->tagged = false;
+      // and ensure max distance is sensibly initialised
+      tile->max_NN_dist = 0;
+      // and also position of centre of tile
+      tile->eta_centre = (ieta+0.5)*_tile_size_eta;
+      tile->phi_centre = (iphi+0.5)*_tile_size_phi;
     }
   }
 
@@ -554,7 +559,6 @@ void ClusterSequence::_faster_tiled_N2_cluster() {
     // no need to do it for LH tiles, since they are implicitly done
     // when we set NN for both jetA and jetB on the RH tiles.
   }
-
   
   // now create the diJ (where J is i's NN) table -- remember that 
   // we differ from standard normalisation here by a factor of R2
@@ -720,7 +724,26 @@ void ClusterSequence::_faster_tiled_N2_cluster() {
   delete[] briefjets;
 }
 
+//----------------------------------------------------------------------
+/// returns a particle's distance to the edge of the specified tile
+double ClusterSequence::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
 
+  // Note the careful way of checking the minimum potential deta:
+  // unlike the phi case below, we don't calculate the distance to the
+  // centre and subtract spacing/2. This is because of issue of
+  // boundary tiles, which can extend far beyond spacing/2 in eta. 
+  // Using the positions of tile centers should instead be safe.
+  double deta;
+  if (_tiles[bj->tile_index].eta_centre == tile->eta_centre) deta = 0;
+  else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;                                          
+
+  double dphi = std::abs(bj->phi - tile->phi_centre);
+  if (dphi > pi) dphi = twopi-dphi;
+  dphi -= 0.5*_tile_size_phi;
+  if (dphi < 0) dphi = 0;
+
+  return dphi*dphi + deta*deta;
+}
 
 //----------------------------------------------------------------------
 /// run a tiled clustering, with our minheap for keeping track of the
@@ -748,7 +771,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
   TiledJet * head = briefjets; // a nicer way of naming start
 
   // set up the initial nearest neighbour information
-  vector<Tile>::const_iterator tile;
+  vector<Tile>::iterator tile;
   for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
     // first do it on this tile
     for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
@@ -758,38 +781,50 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
       }
     }
-    // then do it for RH tiles
+    for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
+      if (jetA->NN_dist > tile->max_NN_dist) tile->max_NN_dist = jetA->NN_dist;
+    }
+  }
+  for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
+    // then do it for RH tiles; 
     for (Tile ** RTile = tile->RH_tiles; RTile != tile->end_tiles; RTile++) {
       for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
-	for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
-	  double dist = _bj_dist(jetA,jetB);
-	  if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
-	  if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
-	}
+    	double dist_to_tile = _distance_to_tile(jetA, *RTile);
+    	// it only makes sense to do a tile if jetA is close enough to the Rtile
+    	// either for a jet in the Rtile to be closer to jetA than it's current NN
+    	// or if jetA could be closer to something in the Rtile than the largest
+	// NN distance within the RTile.
+	//
+	// GPS note: also tried approach where we perform only the
+	//           first test and run over all surrounding tiles
+	//           (not just RH ones). The test is passed less
+	//           frequently, but one is running over more tiles
+	//           and on balance, for the test event we used, it's
+	//           a bit slower.
+    	bool relevant_for_jetA  = dist_to_tile < jetA->NN_dist;
+    	bool relevant_for_RTile = dist_to_tile < (*RTile)->max_NN_dist;
+    	if (relevant_for_jetA || relevant_for_RTile) {
+    	  for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
+    	    double dist = _bj_dist(jetA,jetB);
+    	    if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
+    	    if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
+    	  }
+    	} 
       }
     }
     // no need to do it for LH tiles, since they are implicitly done
     // when we set NN for both jetA and jetB on the RH tiles.
   }
+  // Now update the max_NN_dist within each tile. Not strictly
+  // necessary, because existing max_NN_dist is an upper bound.  but
+  // costs little and may give some efficiency gain later.
+  for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
+    tile->max_NN_dist = 0;
+    for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
+      if (jetA->NN_dist > tile->max_NN_dist) tile->max_NN_dist = jetA->NN_dist;
+    }
+  }
 
-  
-  //// now create the diJ (where J is i's NN) table -- remember that 
-  //// we differ from standard normalisation here by a factor of R2
-  //// (corrected for at the end). 
-  //struct diJ_plus_link {
-  //  double     diJ; // the distance
-  //  TiledJet * jet; // the jet (i) for which we've found this distance
-  //                  // (whose NN will the J).
-  //};
-  //diJ_plus_link * diJ = new diJ_plus_link[n];
-  //jetA = head;
-  //for (int i = 0; i < n; i++) {
-  //  diJ[i].diJ = _bj_diJ(jetA); // kt distance * R^2
-  //  diJ[i].jet = jetA;  // our compact diJ table will not be in	     
-  //  jetA->diJ_posn = i; // one-to-one corresp. with non-compact jets,
-  //                      // so set up bi-directional correspondence here.
-  //  jetA++; // have jetA follow i 
-  //}
 
   vector<double> diJs(n);
   for (int i = 0; i < n; i++) {
@@ -855,7 +890,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	  oldB.tile_index != jetB->tile_index) {
 	// GS: the line below generates a warning that oldB.tile_index
 	// may be used uninitialised. However, to reach this point, we
-	// ned jetB != NULL (see test a few lines above) and is jetB
+	// need jetB != NULL (see test a few lines above) and if jetB
 	// !=NULL, one would have gone through "oldB = *jetB before
 	// (see piece of code ~20 line above), so the index is
 	// initialised. We do not do anything to avoid the warning to

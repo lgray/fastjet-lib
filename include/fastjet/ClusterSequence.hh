@@ -844,6 +844,10 @@ protected:
     TiledJet * head;    
     /// sometimes useful to be able to tag a tile
     bool     tagged;    
+    /// for all particles in the tile, this stores the largest of the
+    /// (squared) nearest-neighbour distances.
+    double max_NN_dist;
+    double eta_centre, phi_centre;
   };
   std::vector<Tile> _tiles;
   double _tiles_eta_min, _tiles_eta_max;
@@ -870,6 +874,7 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles) const;
   void _add_untagged_neighbours_to_tile_union(const int tile_index, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
+  double _distance_to_tile(const TiledJet * bj, const Tile *) const;
 
 
   //----------------------------------------------------------------------
