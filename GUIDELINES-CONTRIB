@@ -1,0 +1,82 @@
+Guidelines for the FastJet Contrib area
+---------------------------------------
+
+The FastJet contrib area is intended for developers of FastJet-related
+tools to provide easy access to their work in a common, publicly
+accessible location.
+
+If you wish to add code to the fastjet-contrib repository, please
+follow the guidelines indicated below.
+
+For further information about making contributions, please contact
+fastjet@projects.hepforge.org
+
+======================================================================
+Basic Requirements
+==================
+
+Each contribution must be in a directory of its own, ideally a
+subdirectory of plugins/ or tools/.
+
+Each contribution is the responsibility of its authors. The FastJet
+authors will not provide support. 
+
+Each contribution should be made available under the terms of the GNU
+General Public License (v2 or later), or if the author wishes, under a
+more permissive license.
+
+Each contribution should include the following files:
+
+ - COPYING: giving license information
+
+ - AUTHORS: names of authors, including current email addresses
+
+ - README: giving a basic explanation of the scope and usage of the
+   contrib and indication of which work should be cited by users of
+   your code. Please mention any external dependencies, e.g. ROOT,
+   GSL, Boost, etc. 
+
+ - an example program using the contrib tool or plugin, together with
+   a file containing the expected output.
+
+We also strongly encourage the presence of the following files:
+
+ - ChangeLog: with explanations of the main changes and when they were made
+ - VERSION: a version number, e.g. 1.0.x, which would be updated to
+   2.0.x in the event of a major change.
+
+======================================================================
+Build system
+============
+
+Each contribution should also include a Makefile. 
+
+ - The Makefile should prominently define a variable FASTJETCONFIG
+   near the beginning of the file. By default FASTJETCONFIG should be
+   set to fastjet-config, i.e. the contribution should build out of
+   the box if fastjet-config is in the user's path.
+
+ - The Makefile should include the targets "all" and "clean"; make all
+   should also build the example. There is no convention for "install"
+   at this stage.
+
+======================================================================
+General remarks
+===============
+
+Never commit an incomplete version or one that does not compile. If
+you need to have a working area for development, use a branch. If your
+contrib normally lives in trunk/plugins/XXX/, the branch should be
+branches/plugins-XXX-info-about-branch/
+
+The maintainers of the FastJet Contrib area reserve the right to
+reorganise the directory structure if it appears to be
+appropriate. They may occasionally fix minor bugs, but will generally
+aim to consult with the authors in such cases. Contributors should not
+commit modifications to parts of the contrib that are not theirs,
+without first consulting the relevant authors.
+
+
+
+
+
