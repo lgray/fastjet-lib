@@ -745,6 +745,26 @@ double ClusterSequence::_distance_to_tile(const TiledJet * bj, const Tile * tile
   return dphi*dphi + deta*deta;
 }
 
+
+//----------------------------------------------------------------------
+/// Like _add_neighbours_to_tile_union, but only adds neighbours if 
+/// their "tagged" status is false; when a neighbour is added its
+/// tagged status is set to true.
+inline void ClusterSequence::_add_untagged_neighbours_to_tile_union_using_max_info(
+               const TiledJet * jet, 
+	       vector<int> & tile_union, int & n_near_tiles)  {
+  const Tile & tile = _tiles[jet->tile_index];
+  for (Tile ** near_tile = _tiles[jet->tile_index].begin_tiles; 
+       near_tile != _tiles[jet->tile_index].end_tiles; near_tile++){
+    if (! (*near_tile)->tagged) {
+      (*near_tile)->tagged = true;
+      // get the tile number
+      tile_union[n_near_tiles] = *near_tile - & _tiles[0];
+      n_near_tiles++;
+    }
+  }
+}
+
 //----------------------------------------------------------------------
 /// run a tiled clustering, with our minheap for keeping track of the
 /// smallest dij
@@ -799,7 +819,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	//           first test and run over all surrounding tiles
 	//           (not just RH ones). The test is passed less
 	//           frequently, but one is running over more tiles
-	//           and on balance, for the test event we used, it's
+	//           and on balance, for the trial event we used, it's
 	//           a bit slower.
     	bool relevant_for_jetA  = dist_to_tile < jetA->NN_dist;
     	bool relevant_for_RTile = dist_to_tile < (*RTile)->max_NN_dist;
@@ -963,6 +983,10 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
       jets_for_minheap.pop_back();
       minheap.update(jetI-head, _bj_diJ(jetI));
       jetI->label_minheap_update_done();
+      // handle max_NN_dist update for all jets that might have
+      // seen a change (increase) of distance
+      Tile & tile = _tiles[jetI->tile_index];
+      if (tile.max_NN_dist < jetI->NN_dist) tile.max_NN_dist = jetI->NN_dist;
     }
     n--;
   }
@@ -970,6 +994,8 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
   // final cleaning up;
   delete[] briefjets;
 }
+
+
 
 
 FASTJET_END_NAMESPACE

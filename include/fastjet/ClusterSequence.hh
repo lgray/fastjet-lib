@@ -874,6 +874,8 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles) const;
   void _add_untagged_neighbours_to_tile_union(const int tile_index, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
+  void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
+		 std::vector<int> & tile_union, int & n_near_tiles);
   double _distance_to_tile(const TiledJet * bj, const Tile *) const;
 
 
