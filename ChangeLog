@@ -1,3 +1,11 @@
+2012-03-30  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_TiledN2.cc: 
+	  completed a first "draft" of the new tiling strategy that
+	  aims to avoid calculations with tiles that are too far away
+	  for the particular configuration of particles at hand.
+
 2012-03-30  Gavin Salam  <gsalam@macth69.cern.ch>
 
 	* example/fastjet_timing_plugins.cc (main): 

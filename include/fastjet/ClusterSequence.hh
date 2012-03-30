@@ -878,7 +878,7 @@ public: // GPS temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		 std::vector<int> & tile_union, int & n_near_tiles);
   double _distance_to_tile(const TiledJet * bj, const Tile *) const;
   void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
-
+  void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
   //----------------------------------------------------------------------
   /// fundamental structure for e+e- clustering
