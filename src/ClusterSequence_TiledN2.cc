@@ -1015,25 +1015,28 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     	double dist_to_tile = _distance_to_tile(jetB, *near_tile);
     	bool relevant_for_jetB  = dist_to_tile <= jetB->NN_dist;
     	bool relevant_for_near_tile = dist_to_tile < (*near_tile)->max_NN_dist;
-	for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
-	  double dist = _bj_dist(jetI,jetB);
-	  if (dist < jetI->NN_dist) {
-	    if (jetI != jetB) {
-	      jetI->NN_dist = dist;
-	      jetI->NN = jetB;
-	      // label jetI as needing heap action...
-	      if (!jetI->minheap_update_needed()) {
-		jetI->label_minheap_update_needed();
-		jets_for_minheap.push_back(jetI);
-	      }
-	    }
-	  }
-	  if (dist < jetB->NN_dist) {
-	    if (jetI != jetB) {
-	      jetB->NN_dist = dist;
-	      jetB->NN      = jetI;}
-	  }
-	}
+        if (relevant_for_jetB || relevant_for_near_tile) {
+          for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; 
+               jetI = jetI->next) {
+            double dist = _bj_dist(jetI,jetB);
+            if (dist < jetI->NN_dist) {
+              if (jetI != jetB) {
+                jetI->NN_dist = dist;
+                jetI->NN = jetB;
+                // label jetI as needing heap action...
+                if (!jetI->minheap_update_needed()) {
+                  jetI->label_minheap_update_needed();
+                  jets_for_minheap.push_back(jetI);
+                }
+              }
+            }
+            if (dist < jetB->NN_dist) {
+              if (jetI != jetB) {
+                jetB->NN_dist = dist;
+                jetB->NN      = jetI;}
+            }
+          }
+        }
       }
     }
     // for (int itile = 0; itile < n_near_tiles; itile++) {
