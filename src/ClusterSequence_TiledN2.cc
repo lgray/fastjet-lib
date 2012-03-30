@@ -39,6 +39,9 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/MinHeap.hh"
 
+//--------TMPTMPTMPTMPTMP-----GPS TEMP--------------------
+#include <iomanip>
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
@@ -747,23 +750,71 @@ double ClusterSequence::_distance_to_tile(const TiledJet * bj, const Tile * tile
 
 
 //----------------------------------------------------------------------
-/// Like _add_neighbours_to_tile_union, but only adds neighbours if 
-/// their "tagged" status is false; when a neighbour is added its
-/// tagged status is set to true.
+/// Like _add_neighbours_to_tile_union, but adds tiles that are
+/// "neighbours" of a jet (rather than a tile) and only if a
+/// neighbouring tile's max_NN_dist is >= the distance between the jet
+/// and the nearest point on the tile. It ignores tiles that have
+/// already been tagged.
 inline void ClusterSequence::_add_untagged_neighbours_to_tile_union_using_max_info(
                const TiledJet * jet, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
-  const Tile & tile = _tiles[jet->tile_index];
-  for (Tile ** near_tile = _tiles[jet->tile_index].begin_tiles; 
-       near_tile != _tiles[jet->tile_index].end_tiles; near_tile++){
-    if (! (*near_tile)->tagged) {
-      (*near_tile)->tagged = true;
-      // get the tile number
-      tile_union[n_near_tiles] = *near_tile - & _tiles[0];
-      n_near_tiles++;
-    }
+  Tile & tile = _tiles[jet->tile_index];
+  
+  for (Tile ** near_tile = tile.begin_tiles; near_tile != tile.end_tiles; near_tile++){
+    if ((*near_tile)->tagged) continue;
+    double dist = _distance_to_tile(jet, *near_tile);
+    // cout << "      max info looked at tile " << *near_tile - &_tiles[0] 
+    // 	 << ", dist = " << dist << " " << (*near_tile)->max_NN_dist
+    // 	 << endl;
+    if (dist > (*near_tile)->max_NN_dist) continue;
+
+    // cout << "      max info tagged tile " << *near_tile - &_tiles[0] << endl;
+    (*near_tile)->tagged = true;
+    // get the tile number
+    tile_union[n_near_tiles] = *near_tile - & _tiles[0];
+    n_near_tiles++;
   }
 }
+
+//--------TMPTMPTMPTMPTMP-----GPS TEMP--------------------
+ostream & operator<<(ostream & ostr, const ClusterSequence::TiledJet & jet) {
+  ostr << "j" << setw(3) << jet._jets_index << ":pt2,rap,phi=" ; ostr.flush();
+  ostr     << jet.kt2 << ","; ostr.flush();
+  ostr     << jet.eta << ","; ostr.flush();
+  ostr     << jet.phi; ostr.flush();
+  ostr     << ", tile=" << jet.tile_index; ostr.flush();
+  return ostr;
+}
+
+
+
+//----------------------------------------------------------------------
+/// looks at distance between jetX and jetI and updates the NN
+/// information if relevant; also pushes identity of jetI onto
+/// the vector of jets for minheap, to signal that it will have
+/// to be handled later.
+///
+/// GPS TEMP GPS TMP: REMOVE THIS LATER: EVEN LABELLED AS INLINE, THE
+/// CALL ADDS A SUBSTANTIAL PENALTY...
+// inline void ClusterSequence::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vector<TiledJet *> & jets_for_minheap) {
+//   double dist = _bj_dist(jetI,jetX);
+//   if (dist < jetI->NN_dist) {
+//     if (jetI != jetX) {
+//       jetI->NN_dist = dist;
+//       jetI->NN = jetX;
+//       // label jetI as needing heap action...
+//       if (!jetI->minheap_update_needed()) {
+// 	jetI->label_minheap_update_needed();
+// 	jets_for_minheap.push_back(jetI);
+//       }
+//     }
+//   }
+//   if (dist < jetX->NN_dist) {
+//     if (jetI != jetX) {
+//       jetX->NN_dist = dist;
+//       jetX->NN      = jetI;}
+//   }
+// }
 
 //----------------------------------------------------------------------
 /// run a tiled clustering, with our minheap for keeping track of the
@@ -894,29 +945,57 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     // remove the minheap entry for jetA
     minheap.remove(jetA-head);
 
+    bool new_code  = false;
+    bool verbose = false;
+
     // first establish the set of tiles over which we are going to
     // have to run searches for updated and new nearest-neighbours --
     // basically a combination of vicinity of the tiles of the two old
     // and one new jet.
     int n_near_tiles = 0;
-    _add_untagged_neighbours_to_tile_union(jetA->tile_index, 
-					   tile_union, n_near_tiles);
+    if (new_code) {
+      _add_untagged_neighbours_to_tile_union_using_max_info(jetA, 
+       					   tile_union, n_near_tiles);
+    } else {
+     _add_untagged_neighbours_to_tile_union(jetA->tile_index, 
+     					   tile_union, n_near_tiles);
+    }
+    if (verbose) {
+     cout << "      A:  " << *jetA << endl;
+     if (jetB != NULL) {
+       cout << "   oldB:  " << oldB << endl;
+       cout << "      B:  " << *jetB << endl;
+     }
+    }
     if (jetB != NULL) {
+      if (new_code) {
+	_add_untagged_neighbours_to_tile_union(jetB->tile_index,
+					       tile_union,n_near_tiles);
+      } else {
       if (jetB->tile_index != jetA->tile_index) {
 	_add_untagged_neighbours_to_tile_union(jetB->tile_index,
 					       tile_union,n_near_tiles);
       }
+      }
+      // in new version, must always call the add untagged, because
+      // oldB's position is different from jetA's and jetB's, so
+      // some of the logic may work out differently.
+      if (new_code) {
+	_add_untagged_neighbours_to_tile_union_using_max_info(&oldB,
+							      tile_union,n_near_tiles);
+      } else {
       if (oldB.tile_index != jetA->tile_index && 
-	  oldB.tile_index != jetB->tile_index) {
-	// GS: the line below generates a warning that oldB.tile_index
-	// may be used uninitialised. However, to reach this point, we
-	// need jetB != NULL (see test a few lines above) and if jetB
-	// !=NULL, one would have gone through "oldB = *jetB before
-	// (see piece of code ~20 line above), so the index is
-	// initialised. We do not do anything to avoid the warning to
-	// avoid any potential speed impact.
-	_add_untagged_neighbours_to_tile_union(oldB.tile_index,
-					       tile_union,n_near_tiles);
+      	  oldB.tile_index != jetB->tile_index) {
+      	// GS: the line below generates a warning that oldB.tile_index
+      	// may be used uninitialised. However, to reach this point, we
+      	// need jetB != NULL (see test a few lines above) and if jetB
+      	// !=NULL, one would have gone through "oldB = *jetB before
+      	// (see piece of code ~20 line above), so the index is
+      	// initialised. We do not do anything to avoid the warning to
+      	// avoid any potential speed impact.
+      	_add_untagged_neighbours_to_tile_union(oldB.tile_index,
+      					       tile_union,n_near_tiles);
+      }
       }
       // indicate that we'll have to update jetB in the minheap
       jetB->label_minheap_update_needed();
@@ -927,12 +1006,107 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     // Initialise jetB's NN distance as well as updating it for 
     // other particles.
     // Run over all tiles in our union 
+
+    if (new_code) { /// --------- NEW VERSION OF CODE -------------------
+    if (jetB != NULL) {
+      Tile & jetB_tile = _tiles[jetB->tile_index];
+      for (Tile ** near_tile  = jetB_tile.begin_tiles; 
+	           near_tile != jetB_tile.end_tiles; near_tile++) {
+    	double dist_to_tile = _distance_to_tile(jetB, *near_tile);
+    	bool relevant_for_jetB  = dist_to_tile <= jetB->NN_dist;
+    	bool relevant_for_near_tile = dist_to_tile < (*near_tile)->max_NN_dist;
+	for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
+	  double dist = _bj_dist(jetI,jetB);
+	  if (dist < jetI->NN_dist) {
+	    if (jetI != jetB) {
+	      jetI->NN_dist = dist;
+	      jetI->NN = jetB;
+	      // label jetI as needing heap action...
+	      if (!jetI->minheap_update_needed()) {
+		jetI->label_minheap_update_needed();
+		jets_for_minheap.push_back(jetI);
+	      }
+	    }
+	  }
+	  if (dist < jetB->NN_dist) {
+	    if (jetI != jetB) {
+	      jetB->NN_dist = dist;
+	      jetB->NN      = jetI;}
+	  }
+	}
+      }
+    }
+    // for (int itile = 0; itile < n_near_tiles; itile++) {
+    //   Tile * tile_ptr = &_tiles[tile_union[itile]];
+    //   if (verbose) cout <<        " looking at tile " << tile_ptr - &_tiles[0] << endl;
+    //   tile_ptr->tagged = false; // reset tag, since we're done with unions
+    //   // run over all jets in the current tile
+    //   for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
+    // 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
+	
+    // 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
+    // 	  jetI->NN_dist = _R2;
+    // 	  jetI->NN      = NULL;
+    // 	  // label jetI as needing heap action...
+    // 	  if (!jetI->minheap_update_needed()) {
+    // 	    jetI->label_minheap_update_needed();
+    // 	    jets_for_minheap.push_back(jetI);}
+    // 	  // now go over tiles that are neighbours of I (include own tile)
+    // 	  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
+    // 	               near_tile != tile_ptr->end_tiles; near_tile++) {
+    // 	    // and then over the contents of that tile
+    // 	    if (new_code) {if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;}
+    // 	    for (TiledJet * jetJ  = (*near_tile)->head; 
+    //                         jetJ != NULL; jetJ = jetJ->next) {
+    // 	      double dist = _bj_dist(jetI,jetJ);
+    // 	      if (dist < jetI->NN_dist && jetJ != jetI) {
+    // 		jetI->NN_dist = dist; jetI->NN = jetJ;
+    // 	      }
+    // 	    }
+    // 	  }
+    // 	}
+    // 	// check whether new jetB is closer than jetI's current NN and
+    // 	// if jetI is closer than jetB's current (evolving) nearest
+    // 	// neighbour. Where relevant update things
+    // 	if (jetB != NULL) {
+    // 	  double dist = _bj_dist(jetI,jetB);
+    // 	  if (dist < jetI->NN_dist) {
+    // 	    if (jetI != jetB) {
+    // 	      jetI->NN_dist = dist;
+    // 	      jetI->NN = jetB;
+    // 	      // label jetI as needing heap action...
+    // 	      if (!jetI->minheap_update_needed()) {
+    // 		jetI->label_minheap_update_needed();
+    // 		jets_for_minheap.push_back(jetI);}
+    // 	    }
+    // 	  }
+    // 	  if (dist < jetB->NN_dist) {
+    // 	    if (jetI != jetB) {
+    // 	      jetB->NN_dist = dist;
+    // 	      jetB->NN      = jetI;}
+    // 	  }
+    // 	}
+    //   }
+    } else { /// --------- OLD VERSION OF CODE -------------------
     for (int itile = 0; itile < n_near_tiles; itile++) {
       Tile * tile_ptr = &_tiles[tile_union[itile]];
+      if (verbose) cout <<        " looking at tile " << tile_ptr - &_tiles[0] << endl;
       tile_ptr->tagged = false; // reset tag, since we're done with unions
       // run over all jets in the current tile
       for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
+	
+	if (jetI->NN == jetA && // GPS diagnosis
+	    _distance_to_tile(jetA, &_tiles[jetI->tile_index]) >= _tiles[jetI->tile_index].max_NN_dist) {
+	  cout << "HH " 
+	       << _distance_to_tile(jetA, &_tiles[jetI->tile_index]) 
+	       << " " << _tiles[jetI->tile_index].max_NN_dist 
+	       << " " << jetI->NN_dist
+	       << " details=A: " << jetA->eta << " " << jetA->phi << ", tile: " << _tiles[jetI->tile_index].eta_centre << " " << _tiles[jetI->tile_index].phi_centre
+	       << ", NN: " << jetI->eta << " " << jetI->phi
+	       << endl;
+	}
+
 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
 	  jetI->NN_dist = _R2;
 	  jetI->NN      = NULL;
@@ -957,6 +1131,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	// if jetI is closer than jetB's current (evolving) nearest
 	// neighbour. Where relevant update things
 	if (jetB != NULL) {
+	  //_update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
 	  double dist = _bj_dist(jetI,jetB);
 	  if (dist < jetI->NN_dist) {
 	    if (jetI != jetB) {
@@ -964,8 +1139,8 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	      jetI->NN = jetB;
 	      // label jetI as needing heap action...
 	      if (!jetI->minheap_update_needed()) {
-		jetI->label_minheap_update_needed();
-		jets_for_minheap.push_back(jetI);}
+	  	jetI->label_minheap_update_needed();
+	  	jets_for_minheap.push_back(jetI);}
 	    }
 	  }
 	  if (dist < jetB->NN_dist) {
@@ -976,10 +1151,23 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	}
       }
     }
+    }
 
     // deal with jets whose minheap entry needs updating
+    if (verbose) cout << "  jets whose NN was modified: " << endl;
     while (jets_for_minheap.size() > 0) {
       TiledJet * jetI = jets_for_minheap.back(); 
+      if (verbose) {
+	cout << "           "; cout.flush();
+	cout << jetI << " "; cout.flush();
+	cout << *jetI ;
+	if (jetI->NN) {
+	  cout << ", NN=" << jetI->NN->_jets_index;
+	  cout << ", dist=" << jetI->NN_dist << endl;
+	} else {
+	  cout << ", NN=none" << endl;
+	}
+      }
       jets_for_minheap.pop_back();
       minheap.update(jetI-head, _bj_diJ(jetI));
       jetI->label_minheap_update_done();

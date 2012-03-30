@@ -754,7 +754,7 @@ protected:
     int        _jets_index;
   };
 
-
+public: // GPS temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   /// structure analogous to BriefJet, but with the extra information
   /// needed for dealing with tiles
   class TiledJet {
@@ -877,6 +877,7 @@ protected:
   void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
   double _distance_to_tile(const TiledJet * bj, const Tile *) const;
+  void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
 
   //----------------------------------------------------------------------
