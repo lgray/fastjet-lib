@@ -981,59 +981,16 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     // remove the minheap entry for jetA
     minheap.remove(jetA-head);
 
-    bool new_code  = true;
-    bool verbose = false;
-
     // first establish the set of tiles over which we are going to
     // have to run searches for updated and new nearest-neighbours --
     // basically a combination of vicinity of the tiles of the two old
     // and one new jet.
     int n_near_tiles = 0;
-    if (new_code) {
-      _add_untagged_neighbours_to_tile_union_using_max_info(jetA, 
+    _add_untagged_neighbours_to_tile_union_using_max_info(jetA, 
        					   tile_union, n_near_tiles);
-    } else {
-     _add_untagged_neighbours_to_tile_union(jetA->tile_index, 
-     					   tile_union, n_near_tiles);
-    }
-    if (verbose) {
-     cout << "      A:  " << *jetA << endl;
-     if (jetB != NULL) {
-       cout << "   oldB:  " << oldB << endl;
-       cout << "      B:  " << *jetB << endl;
-     }
-    }
     if (jetB != NULL) {
-      if (new_code) {
-	//_add_untagged_neighbours_to_tile_union(jetB->tile_index,
-	//				       tile_union,n_near_tiles);
-      } else {
-      if (jetB->tile_index != jetA->tile_index) {
-	_add_untagged_neighbours_to_tile_union(jetB->tile_index,
-					       tile_union,n_near_tiles);
-      }
-      }
-      // in new version, must always call the add untagged, because
-      // oldB's position is different from jetA's and jetB's, so
-      // some of the logic may work out differently.
-      if (new_code) {
 	_add_untagged_neighbours_to_tile_union_using_max_info(&oldB,
 							      tile_union,n_near_tiles);
-      } else {
-      if (oldB.tile_index != jetA->tile_index && 
-      	  oldB.tile_index != jetB->tile_index) {
-      	// GS: the line below generates a warning that oldB.tile_index
-      	// may be used uninitialised. However, to reach this point, we
-      	// need jetB != NULL (see test a few lines above) and if jetB
-      	// !=NULL, one would have gone through "oldB = *jetB before
-      	// (see piece of code ~20 line above), so the index is
-      	// initialised. We do not do anything to avoid the warning to
-      	// avoid any potential speed impact.
-      	_add_untagged_neighbours_to_tile_union(oldB.tile_index,
-      					       tile_union,n_near_tiles);
-      }
-      }
-      // indicate that we'll have to update jetB in the minheap
       jetB->label_minheap_update_needed();
       jets_for_minheap.push_back(jetB);
     }
@@ -1043,12 +1000,10 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     // other particles.
     // Run over all tiles in our union 
 
-    if (new_code) { /// --------- NEW VERSION OF CODE -------------------
     if (jetB != NULL) {
       Tile & jetB_tile = _tiles[jetB->tile_index];
       for (Tile ** near_tile  = jetB_tile.begin_tiles; 
 	           near_tile != jetB_tile.end_tiles; near_tile++) {
-        if (verbose) cout << "starting tile " << (*near_tile) - &_tiles[0] << endl;
 
     	double dist_to_tile = _distance_to_tile(jetB, *near_tile);
         // use <= in next line so that on first tile, relevant_for_jetB is 
@@ -1063,6 +1018,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
             }
 
             _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+	    // -- Keep this old inline code for later speed tests
             // double dist = _bj_dist(jetI,jetB);
             // if (dist < jetI->NN_dist) {
             //   if (jetI != jetB) {
@@ -1086,7 +1042,6 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
       }
     }
 
-      
     // now run over the tiles that were tagged earlier and that we haven't yet
     // had a change to visit.
     for (int itile = 0; itile < n_near_tiles; itile++) {
@@ -1101,128 +1056,11 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
         }
       }
     }
-    // for (int itile = 0; itile < n_near_tiles; itile++) {
-    //   Tile * tile_ptr = &_tiles[tile_union[itile]];
-    //   if (verbose) cout <<        " looking at tile " << tile_ptr - &_tiles[0] << endl;
-    //   tile_ptr->tagged = false; // reset tag, since we're done with unions
-    //   // run over all jets in the current tile
-    //   for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
-    // 	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
-	
-    // 	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
-    // 	  jetI->NN_dist = _R2;
-    // 	  jetI->NN      = NULL;
-    // 	  // label jetI as needing heap action...
-    // 	  if (!jetI->minheap_update_needed()) {
-    // 	    jetI->label_minheap_update_needed();
-    // 	    jets_for_minheap.push_back(jetI);}
-    // 	  // now go over tiles that are neighbours of I (include own tile)
-    // 	  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
-    // 	               near_tile != tile_ptr->end_tiles; near_tile++) {
-    // 	    // and then over the contents of that tile
-    // 	    if (new_code) {if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;}
-    // 	    for (TiledJet * jetJ  = (*near_tile)->head; 
-    //                         jetJ != NULL; jetJ = jetJ->next) {
-    // 	      double dist = _bj_dist(jetI,jetJ);
-    // 	      if (dist < jetI->NN_dist && jetJ != jetI) {
-    // 		jetI->NN_dist = dist; jetI->NN = jetJ;
-    // 	      }
-    // 	    }
-    // 	  }
-    // 	}
-    // 	// check whether new jetB is closer than jetI's current NN and
-    // 	// if jetI is closer than jetB's current (evolving) nearest
-    // 	// neighbour. Where relevant update things
-    // 	if (jetB != NULL) {
-    // 	  double dist = _bj_dist(jetI,jetB);
-    // 	  if (dist < jetI->NN_dist) {
-    // 	    if (jetI != jetB) {
-    // 	      jetI->NN_dist = dist;
-    // 	      jetI->NN = jetB;
-    // 	      // label jetI as needing heap action...
-    // 	      if (!jetI->minheap_update_needed()) {
-    // 		jetI->label_minheap_update_needed();
-    // 		jets_for_minheap.push_back(jetI);}
-    // 	    }
-    // 	  }
-    // 	  if (dist < jetB->NN_dist) {
-    // 	    if (jetI != jetB) {
-    // 	      jetB->NN_dist = dist;
-    // 	      jetB->NN      = jetI;}
-    // 	  }
-    // 	}
-    //   }
-    } else { /// --------- OLD VERSION OF CODE -------------------
-    for (int itile = 0; itile < n_near_tiles; itile++) {
-      Tile * tile_ptr = &_tiles[tile_union[itile]];
-      if (verbose) cout <<        " looking at tile " << tile_ptr - &_tiles[0] << endl;
-      tile_ptr->tagged = false; // reset tag, since we're done with unions
-      // run over all jets in the current tile
-      for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
-	// see if jetI had jetA or jetB as a NN -- if so recalculate the NN
-	
-	if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
-          _set_NN(jetI, jets_for_minheap);
-	  jetI->NN_dist = _R2;
-	  jetI->NN      = NULL;
-	  // label jetI as needing heap action...
-	  if (!jetI->minheap_update_needed()) {
-	    jetI->label_minheap_update_needed();
-	    jets_for_minheap.push_back(jetI);}
-	  // now go over tiles that are neighbours of I (include own tile)
-	  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
-	               near_tile != tile_ptr->end_tiles; near_tile++) {
-	    // and then over the contents of that tile
-	    for (TiledJet * jetJ  = (*near_tile)->head; 
-                            jetJ != NULL; jetJ = jetJ->next) {
-	      double dist = _bj_dist(jetI,jetJ);
-	      if (dist < jetI->NN_dist && jetJ != jetI) {
-		jetI->NN_dist = dist; jetI->NN = jetJ;
-	      }
-	    }
-	  }
-	}
-	// check whether new jetB is closer than jetI's current NN and
-	// if jetI is closer than jetB's current (evolving) nearest
-	// neighbour. Where relevant update things
-	if (jetB != NULL) {
-	  //_update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
-	  double dist = _bj_dist(jetI,jetB);
-	  if (dist < jetI->NN_dist) {
-	    if (jetI != jetB) {
-	      jetI->NN_dist = dist;
-	      jetI->NN = jetB;
-	      // label jetI as needing heap action...
-	      if (!jetI->minheap_update_needed()) {
-	  	jetI->label_minheap_update_needed();
-	  	jets_for_minheap.push_back(jetI);}
-	    }
-	  }
-	  if (dist < jetB->NN_dist) {
-	    if (jetI != jetB) {
-	      jetB->NN_dist = dist;
-	      jetB->NN      = jetI;}
-	  }
-	}
-      }
-    }
-    }
 
     // deal with jets whose minheap entry needs updating
-    if (verbose) cout << "  jets whose NN was modified: " << endl;
+    //if (verbose) cout << "  jets whose NN was modified: " << endl;
     while (jets_for_minheap.size() > 0) {
       TiledJet * jetI = jets_for_minheap.back(); 
-      if (verbose) {
-	cout << "           "; cout.flush();
-	cout << jetI << " "; cout.flush();
-	cout << *jetI ;
-	if (jetI->NN) {
-	  cout << ", NN=" << jetI->NN->_jets_index;
-	  cout << ", dist=" << jetI->NN_dist << endl;
-	} else {
-	  cout << ", NN=none" << endl;
-	}
-      }
       jets_for_minheap.pop_back();
       minheap.update(jetI-head, _bj_diJ(jetI));
       jetI->label_minheap_update_done();
