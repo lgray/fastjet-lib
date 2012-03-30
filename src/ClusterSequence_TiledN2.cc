@@ -908,8 +908,8 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
 	//           frequently, but one is running over more tiles
 	//           and on balance, for the trial event we used, it's
 	//           a bit slower.
-    	bool relevant_for_jetA  = dist_to_tile < jetA->NN_dist;
-    	bool relevant_for_RTile = dist_to_tile < (*RTile)->max_NN_dist;
+    	bool relevant_for_jetA  = dist_to_tile <= jetA->NN_dist;
+    	bool relevant_for_RTile = dist_to_tile <= (*RTile)->max_NN_dist;
     	if (relevant_for_jetA || relevant_for_RTile) {
     	  for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
     	    double dist = _bj_dist(jetA,jetB);
@@ -1010,35 +1010,48 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
         // set to true
     	bool relevant_for_jetB  = dist_to_tile <= jetB->NN_dist;
     	bool relevant_for_near_tile = dist_to_tile <= (*near_tile)->max_NN_dist;
-        if (relevant_for_jetB || relevant_for_near_tile) {
+        bool relevant = relevant_for_jetB || relevant_for_near_tile;
+        if ((*near_tile)->tagged && relevant) {
           for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
-
-            if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
+            if (jetI->NN == jetA || jetI->NN == jetB) 
               _set_NN(jetI, jets_for_minheap);
-            }
-
             _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
-	    // -- Keep this old inline code for later speed tests
-            // double dist = _bj_dist(jetI,jetB);
-            // if (dist < jetI->NN_dist) {
-            //   if (jetI != jetB) {
-            //     jetI->NN_dist = dist;
-            //     jetI->NN = jetB;
-            //     // label jetI as needing heap action...
-            //     if (!jetI->minheap_update_needed()) {
-            //       jetI->label_minheap_update_needed();
-            //       jets_for_minheap.push_back(jetI);
-            //     }
-            //   }
-            // }
-            // if (dist < jetB->NN_dist) {
-            //   if (jetI != jetB) {
-            //     jetB->NN_dist = dist;
-            //     jetB->NN      = jetI;}
-            // }
           }
           (*near_tile)->tagged = false;
+        } else if (relevant) {
+          for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
+            _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+          }
         }
+        // if (relevant_for_jetB || relevant_for_near_tile) {
+        //   for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
+        // 
+        //     if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
+        //       _set_NN(jetI, jets_for_minheap);
+        //     }
+        // 
+        //     _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+	//     // -- Keep this old inline code for later speed tests
+        //     // double dist = _bj_dist(jetI,jetB);
+        //     // if (dist < jetI->NN_dist) {
+        //     //   if (jetI != jetB) {
+        //     //     jetI->NN_dist = dist;
+        //     //     jetI->NN = jetB;
+        //     //     // label jetI as needing heap action...
+        //     //     if (!jetI->minheap_update_needed()) {
+        //     //       jetI->label_minheap_update_needed();
+        //     //       jets_for_minheap.push_back(jetI);
+        //     //     }
+        //     //   }
+        //     // }
+        //     // if (dist < jetB->NN_dist) {
+        //     //   if (jetI != jetB) {
+        //     //     jetB->NN_dist = dist;
+        //     //     jetB->NN      = jetI;}
+        //     // }
+        //   }
+        //   (*near_tile)->tagged = false;
+        // }
       }
     }
 
