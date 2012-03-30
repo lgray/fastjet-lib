@@ -307,6 +307,7 @@ int main (int argc, char ** argv) {
   bool   show_constituents = cmdline.present("-const");
   bool   massless = cmdline.present("-massless");
   int    nev     = cmdline.int_val("-nev",1);
+  int    skip     = cmdline.int_val("-skip",0);
   bool   add_dense_coverage = cmdline.present("-dense");
   double ghost_maxrap = cmdline.value("-ghost-maxrap",5.0);
   bool   all_algs = cmdline.present("-all-algs");
@@ -626,6 +627,9 @@ int main (int argc, char ** argv) {
 
   // select the particles that pass the selection cut
   particles = particles_sel(particles);
+
+  // allow user to skip some number of events (e.g. for easier bug-chasing)
+  if (iev < skip) continue;
   
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     int nparticles = particles.size();
