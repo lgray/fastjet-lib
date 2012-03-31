@@ -1,3 +1,10 @@
+2012-03-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_TiledN2.cc: 
+	  small improvement in _distance_to_tile computation (cache
+	  calculation of 0.5*tile spacing).
+
 2012-03-30  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
 
 	* include/fastjet/ClusterSequence.hh: 

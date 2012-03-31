@@ -119,6 +119,9 @@ void ClusterSequence::_initialise_tiles() {
   _tiles_eta_min = _tiles_ieta_min * _tile_size_eta;
   _tiles_eta_max = _tiles_ieta_max * _tile_size_eta;
 
+  _tile_half_size_eta = _tile_size_eta * 0.5;
+  _tile_half_size_phi = _tile_size_phi * 0.5;
+
   // allocate the tiles
   _tiles.resize((_tiles_ieta_max-_tiles_ieta_min+1)*_n_tiles_phi);
 
@@ -738,7 +741,8 @@ double ClusterSequence::_distance_to_tile(const TiledJet * bj, const Tile * tile
   // Using the positions of tile centers should instead be safe.
   double deta;
   if (_tiles[bj->tile_index].eta_centre == tile->eta_centre) deta = 0;
-  else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;                                          
+  //else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;
+  else   deta = std::abs(bj->eta - tile->eta_centre) - _tile_half_size_eta;
   // ------
   //   |
   // A | B
@@ -750,7 +754,8 @@ double ClusterSequence::_distance_to_tile(const TiledJet * bj, const Tile * tile
 
   double dphi = std::abs(bj->phi - tile->phi_centre);
   if (dphi > pi) dphi = twopi-dphi;
-  dphi -= 0.5*_tile_size_phi;
+  dphi -= _tile_half_size_phi;
+  //dphi -= 0.5*_tile_size_phi;
   if (dphi < 0) dphi = 0;
 
   return dphi*dphi + deta*deta;
@@ -1011,18 +1016,26 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
     	bool relevant_for_jetB  = dist_to_tile <= jetB->NN_dist;
     	bool relevant_for_near_tile = dist_to_tile <= (*near_tile)->max_NN_dist;
         bool relevant = relevant_for_jetB || relevant_for_near_tile;
-        if ((*near_tile)->tagged && relevant) {
-          for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
-            if (jetI->NN == jetA || jetI->NN == jetB) 
-              _set_NN(jetI, jets_for_minheap);
-            _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
-          }
+        // this first option decides exactly what loop to do based on whether 
+        // the near tile was tagged. You'd think it's more efficient, but
+        // not necessarily...
+        if (relevant) {
+          if ((*near_tile)->tagged) {
+            for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
+              if (jetI->NN == jetA || jetI->NN == jetB) _set_NN(jetI, jets_for_minheap);
+              _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+            }
           (*near_tile)->tagged = false;
-        } else if (relevant) {
-          for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
-            _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+          } else {
+            for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
+              _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+            }
           }
         }
+
+        // this second option does everything independently of whether the near tile
+        // was tagged -- somehow you'd expect it to be slower, but it may actually be
+        // marginally faster.
         // if (relevant_for_jetB || relevant_for_near_tile) {
         //   for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
         // 

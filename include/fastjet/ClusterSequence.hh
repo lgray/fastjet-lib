@@ -852,6 +852,7 @@ public: // GPS temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   std::vector<Tile> _tiles;
   double _tiles_eta_min, _tiles_eta_max;
   double _tile_size_eta, _tile_size_phi;
+  double _tile_half_size_eta, _tile_half_size_phi;
   int    _n_tiles_phi,_tiles_ieta_min,_tiles_ieta_max;
 
   // reasonably robust return of tile index given ieta and iphi, in particular
