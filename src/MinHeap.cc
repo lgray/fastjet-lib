@@ -42,7 +42,7 @@ using namespace std;
 ///     _heap[2].minloc points to smallest entry in other half of heap
 ///
 ///   . for _heap[i], the "parent" is to be found at (i-1)/2
-void MinHeap::_initialise(const std::vector<double> & values){
+void MinHeap::initialise(const std::vector<double> & values){
   
   // fill the high-range of the heap with the largest possible value
   // (minloc of each entry is itself)

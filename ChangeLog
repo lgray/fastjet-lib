@@ -1,3 +1,19 @@
+2012-04-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/Tiling.cc:              *** ADDED ***
+	* include/fastjet/Tiling.hh:  *** ADDED ***
+	  added as-yet incomplete Tiling classes to provide handling of
+	  tiling that is external to the CS.
+	
+	* include/fastjet/ClusterSequence.hh: 
+	  moved guards right up to top of file.
+
+	* include/fastjet/internal/MinHeap.hh: 
+	* src/MinHeap.cc: 
+
+	  renamed _initialise(values) -> initialise(values) and added a
+	  constructor that just sets the size and no more.
+
 2012-03-31  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

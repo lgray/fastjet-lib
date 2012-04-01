@@ -1,3 +1,6 @@
+#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
+#define __FASTJET_CLUSTERSEQUENCE_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -26,9 +29,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-
-#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
-#define __FASTJET_CLUSTERSEQUENCE_HH__
 
 #include<vector>
 #include<map>

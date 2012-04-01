@@ -16,6 +16,7 @@ libfastjet_la_SOURCES = DnnPlane.cc\
 	BasicRandom.cc JetDefinition.cc Error.cc AreaDefinition.cc\
 	RangeDefinition.cc CompositeJetStructure.cc \
 	FunctionOfPseudoJet.cc\
-	LimitedWarning.cc
+	LimitedWarning.cc\
+	Tiling.cc
 
 EXTRA_DIST = makefile.static genconfig.sh
