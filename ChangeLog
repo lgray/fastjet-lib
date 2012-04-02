@@ -1,3 +1,13 @@
+2012-04-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Tiling2.hh:
+	* include/fastjet/Tiling2.cc:
+	* src/ClusterSequence.cc:
+	* src/Makefile.am:
+	* include/fastjet/Makefile.am:
+	  inserted a copy of the current Tiling class for easier
+	  comparison between the presetn status and further developments.
+
 2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/ClusterSequence.hh: 
