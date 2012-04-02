@@ -7,10 +7,14 @@
 	* src/Tiling3.cc:              *** ADDED ***
 	* include/fastjet/Tiling3.hh:  *** ADDED ***
 	  addition of tiling routines that allow for ghosts to be treated
-	  separately from other particles, in an anti-kt type approach,
-	  whereby ghosts do not cluster with each other. Available as
-	  N2MinHeapTiled_separate_ghosts_antikt -- compiles but does not
-	  yet work.
+	  separately from other particles. This is relevant for anti-kt
+	  type algorithms where ghosts cluster with each other only at the
+	  very end of the sequence. If one's not interested in the pure
+	  ghost jets, then one can neglect all ghost-ghost distances.
+	  Available as N2MinHeapTiled_separate_ghosts_antikt -- compiles
+	  and runs OK on normal events, and seems to behave OK also on
+	  ghosted events.  Note the ghost pt cutoff is currently
+	  hard-coded.
 
 2012-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
 
@@ -32,7 +36,7 @@
 	* src/Makefile.am:
 	* include/fastjet/Makefile.am:
 	  inserted a copy of the current Tiling class for easier
-	  comparison between the presetn status and further developments.
+	  comparison between the present status and further developments.
 
 2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
 

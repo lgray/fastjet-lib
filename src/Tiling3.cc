@@ -460,7 +460,7 @@ void Tiling3::run() {
   int nreal = jetA - briefjets;
   // then the ones we will label as ghosts
   for (int i = 0; i< ntot; i++) {
-    bool is_ghost = _jets[i].perp2() >= ghost_limit;
+    bool is_ghost = _jets[i].perp2() < ghost_limit;
     if (is_ghost) {
       _tj_set_jetinfo(jetA, i, is_ghost);
       jetA++; // move on to next entry of briefjets
@@ -619,8 +619,17 @@ void Tiling3::run() {
       _bj_remove_from_tiles(jetA);
     }
 
-    // remove the minheap entry for jetA if jetA is a real particle
-    if (!jetA->is_ghost) minheap.remove(jetA-head);
+    // remove the minheap entry for jetA if jetA is a real particle;
+    // only in this case 
+    if (!jetA->is_ghost) {
+      minheap.remove(jetA-head);
+      // jetB cannot be a ghost; so when jetA is not a ghost we decrease
+      // our count of remaining real particles
+      nreal--;
+    }
+    
+
+    
 
     // first establish the set of tiles over which we are going to
     // have to run searches for updated and new nearest-neighbours --
@@ -742,7 +751,6 @@ void Tiling3::run() {
       Tile3 & tile_I = _tiles[jetI->tile_index];
       if (tile_I.max_NN_dist < jetI->NN_dist) tile_I.max_NN_dist = jetI->NN_dist;
     }
-    nreal--;
   }
 
   // final cleaning up;
