@@ -1,3 +1,17 @@
+2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/JetDefinition.hh: 
+	* src/Makefile.am: 
+	* include/fastjet/Makefile.am: 
+	* src/Tiling3.cc:              *** ADDED ***
+	* include/fastjet/Tiling3.hh:  *** ADDED ***
+	  addition of tiling routines that allow for ghosts to be treated
+	  separately from other particles, in an anti-kt type approach,
+	  whereby ghosts do not cluster with each other. Available as
+	  N2MinHeapTiled_separate_ghosts_antikt -- compiles but does not
+	  yet work.
+
 2012-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
 
 	* src/Tiling.cc:
