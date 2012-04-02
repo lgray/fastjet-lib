@@ -86,7 +86,7 @@ protected:
   std::vector<Tile> _tiles;
 
 
-  double _Rparam;
+  double _Rparam, _R2, _invR2;
   double _tiles_eta_min, _tiles_eta_max;
   double _tile_size_eta, _tile_size_phi;
   double _tile_half_size_eta, _tile_half_size_phi;
@@ -106,6 +106,39 @@ protected:
     return (ieta-_tiles_ieta_min)*_n_tiles_phi
                   + (iphi+_n_tiles_phi) % _n_tiles_phi;
   }
+
+  void  _bj_remove_from_tiles(TiledJet * const jet);
+
+  /// returns the tile index given the eta and phi values of a jet
+  int _tile_index(const double & eta, const double & phi) const;
+
+  // sets up information regarding the tiling of the given jet
+  void _tj_set_jetinfo(TiledJet * const jet, const int _jets_index);
+
+  void _print_tiles(TiledJet * briefjets ) const;
+  void _add_neighbours_to_tile_union(const int tile_index, 
+		 std::vector<int> & tile_union, int & n_near_tiles) const;
+  void _add_untagged_neighbours_to_tile_union(const int tile_index, 
+		 std::vector<int> & tile_union, int & n_near_tiles);
+  void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
+		 std::vector<int> & tile_union, int & n_near_tiles);
+  double _distance_to_tile(const TiledJet * bj, const Tile *) const;
+  void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
+  void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
+
+
+
+  //----------------------------------------------------------------------
+  template <class J> inline void _bj_set_jetinfo(
+                            J * const jetA, const int _jets_index) const {
+    jetA->eta  = _jets[_jets_index].rap();
+    jetA->phi  = _jets[_jets_index].phi_02pi();
+    jetA->kt2  = _cs.jet_scale_for_algorithm(_jets[_jets_index]);
+    jetA->_jets_index = _jets_index;
+    // initialise NN info as well
+    jetA->NN_dist = _R2;
+    jetA->NN      = NULL;
+}
 
 };
 

@@ -34,6 +34,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 Tiling::Tiling(const ClusterSequence & cs) :
   _cs(cs), _jets(cs.jets()), _minheap(_jets.size()) {
   _Rparam = cs.jet_def().R();
+  _R2 = _Rparam * _Rparam;
+  _invR2 = 1.0 / _R2;
   _initialise_tiles();
 }
 
@@ -145,6 +147,103 @@ void Tiling::_initialise_tiles() {
     }
   }
 
+}
+
+//----------------------------------------------------------------------
+/// return the tile index corresponding to the given eta,phi point
+int Tiling::_tile_index(const double & eta, const double & phi) const {
+  int ieta, iphi;
+  if      (eta <= _tiles_eta_min) {ieta = 0;}
+  else if (eta >= _tiles_eta_max) {ieta = _tiles_ieta_max-_tiles_ieta_min;}
+  else {
+    //ieta = int(floor((eta - _tiles_eta_min) / _tile_size_eta));
+    ieta = int(((eta - _tiles_eta_min) / _tile_size_eta));
+    // following needed in case of rare but nasty rounding errors
+    if (ieta > _tiles_ieta_max-_tiles_ieta_min) {
+      ieta = _tiles_ieta_max-_tiles_ieta_min;} 
+  }
+  // allow for some extent of being beyond range in calculation of phi
+  // as well
+  //iphi = (int(floor(phi/_tile_size_phi)) + _n_tiles_phi) % _n_tiles_phi;
+  // with just int and no floor, things run faster but beware
+  iphi = int((phi+twopi)/_tile_size_phi) % _n_tiles_phi;
+  return (iphi + ieta * _n_tiles_phi);
+}
+
+
+//----------------------------------------------------------------------
+// sets up information regarding the tiling of the given jet
+inline void Tiling::_tj_set_jetinfo( TiledJet * const jet,
+					      const int _jets_index) {
+  // first call the generic setup
+  _bj_set_jetinfo<>(jet, _jets_index);
+
+  // Then do the setup specific to the tiled case.
+
+  // Find out which tile it belonds to
+  jet->tile_index = _tile_index(jet->eta, jet->phi);
+
+  // Insert it into the tile's linked list of jets
+  Tile * tile = &_tiles[jet->tile_index];
+  jet->previous   = NULL;
+  jet->next       = tile->head;
+  if (jet->next != NULL) {jet->next->previous = jet;}
+  tile->head      = jet;
+}
+
+
+//----------------------------------------------------------------------
+/// output the contents of the tiles
+void Tiling::_print_tiles(TiledJet * briefjets ) const {
+  for (vector<Tile>::const_iterator tile = _tiles.begin(); 
+       tile < _tiles.end(); tile++) {
+    cout << "Tile " << tile - _tiles.begin()<<" = ";
+    vector<int> list;
+    for (TiledJet * jetI = tile->head; jetI != NULL; jetI = jetI->next) {
+      list.push_back(jetI-briefjets);
+      //cout <<" "<<jetI-briefjets;
+    }
+    sort(list.begin(),list.end());
+    for (unsigned int i = 0; i < list.size(); i++) {cout <<" "<<list[i];}
+    cout <<"\n";
+  }
+}
+
+
+//----------------------------------------------------------------------
+/// Add to the vector tile_union the tiles that are in the neighbourhood
+/// of the specified tile_index, including itself -- start adding
+/// from position n_near_tiles-1, and increase n_near_tiles as
+/// you go along (could have done it more C++ like with vector with reserved
+/// space, but fear is that it would have been slower, e.g. checking
+/// for end of vector at each stage to decide whether to resize it)
+void Tiling::_add_neighbours_to_tile_union(const int tile_index, 
+	       vector<int> & tile_union, int & n_near_tiles) const {
+  for (Tile * const * near_tile = _tiles[tile_index].begin_tiles; 
+       near_tile != _tiles[tile_index].end_tiles; near_tile++){
+    // get the tile number
+    tile_union[n_near_tiles] = *near_tile - & _tiles[0];
+    n_near_tiles++;
+  }
+}
+
+
+//----------------------------------------------------------------------
+/// Like _add_neighbours_to_tile_union, but only adds neighbours if 
+/// their "tagged" status is false; when a neighbour is added its
+/// tagged status is set to true.
+inline void Tiling::_add_untagged_neighbours_to_tile_union(
+               const int tile_index, 
+	       vector<int> & tile_union, int & n_near_tiles)  {
+  for (Tile ** near_tile = _tiles[tile_index].begin_tiles; 
+       near_tile != _tiles[tile_index].end_tiles; near_tile++){
+    if (! (*near_tile)->tagged) {
+      (*near_tile)->tagged = true;
+      // get the tile number
+      tile_union[n_near_tiles] = *near_tile - & _tiles[0];
+      n_near_tiles++;
+    }
+  }
 }
 
 
