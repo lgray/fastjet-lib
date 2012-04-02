@@ -36,6 +36,31 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+class Tile2 {
+public:
+  /// pointers to neighbouring tiles, including self
+  Tile2 *   begin_tiles[n_tile_neighbours]; 
+  /// neighbouring tiles, excluding self
+  Tile2 **  surrounding_tiles; 
+  /// half of neighbouring tiles, no self
+  Tile2 **  RH_tiles;  
+  /// just beyond end of tiles
+  Tile2 **  end_tiles; 
+  /// start of list of BriefJets contained in this tile
+  TiledJet * head;    
+  /// sometimes useful to be able to tag a tile
+  bool     tagged;    
+  /// for all particles in the tile, this stores the largest of the
+  /// (squared) nearest-neighbour distances.
+  double max_NN_dist;
+  double eta_centre, phi_centre;
+
+  bool is_near_zero_phi(double tile_size_phi) const {
+    return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
+  }
+};
+
+
 //----------------------------------------------------------------------
 class Tiling2 {
 public:
@@ -49,7 +74,7 @@ public:
 protected:
   ClusterSequence & _cs;
   const std::vector<PseudoJet> & _jets;
-  std::vector<Tile> _tiles;
+  std::vector<Tile2> _tiles;
 
 
   double _Rparam, _R2, _invR2;
@@ -88,7 +113,7 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles);
   void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-  double _distance_to_tile(const TiledJet * bj, const Tile *) const;
+  double _distance_to_tile(const TiledJet * bj, const Tile2 *) const;
   void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
   void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);

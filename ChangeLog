@@ -2,6 +2,10 @@
 
 	* include/fastjet/Tiling2.hh:
 	* include/fastjet/Tiling2.cc:
+	  copied Tile (from Tile.{hh,cc} into Tile2 for future mods of Tile
+
+	* include/fastjet/Tiling2.hh:
+	* include/fastjet/Tiling2.cc:
 	* src/ClusterSequence.cc:
 	* src/Makefile.am:
 	* include/fastjet/Makefile.am:
