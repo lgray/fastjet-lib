@@ -55,14 +55,16 @@ const int n_tile_neighbours = 9;
 
 class Tile {
 public:
+  typedef double (Tile::*DistToTileFn)(const TiledJet*) const;
+  typedef std::pair<Tile *, DistToTileFn> TileFnPair;
   /// pointers to neighbouring tiles, including self
-  Tile *   begin_tiles[n_tile_neighbours]; 
+  TileFnPair begin_tiles[n_tile_neighbours]; 
   /// neighbouring tiles, excluding self
-  Tile **  surrounding_tiles; 
+  TileFnPair *  surrounding_tiles; 
   /// half of neighbouring tiles, no self
-  Tile **  RH_tiles;  
+  TileFnPair *  RH_tiles;  
   /// just beyond end of tiles
-  Tile **  end_tiles; 
+  TileFnPair *  end_tiles; 
   /// start of list of BriefJets contained in this tile
   TiledJet * head;    
   /// sometimes useful to be able to tag a tile
@@ -70,11 +72,52 @@ public:
   /// for all particles in the tile, this stores the largest of the
   /// (squared) nearest-neighbour distances.
   double max_NN_dist;
-  double eta_centre, phi_centre;
+  double eta_min, eta_max, phi_min, phi_max;
 
-  bool is_near_zero_phi(double tile_size_phi) const {
-    return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
+  bool is_near_zero_phi(double tile_half_size_phi) const {
+    return phi_min < tile_half_size_phi || (twopi-phi_max) < tile_half_size_phi;
   }
+
+  double distance_to_centre(const TiledJet *) const {return 0;}
+  double distance_to_left(const TiledJet * jet) const {
+    double deta = jet->eta - eta_min;
+    return deta*deta;
+  }
+  double distance_to_right(const TiledJet * jet) const {
+    double deta = jet->eta - eta_max;
+    return deta*deta;
+  }
+  double distance_to_bottom(const TiledJet * jet) const {
+    double dphi = jet->phi - phi_min;
+    return dphi*dphi;
+  }
+  double distance_to_top(const TiledJet * jet) const {
+    double dphi = jet->phi - phi_max;
+    return dphi*dphi;
+  }
+
+  double distance_to_left_top(const TiledJet * jet) const {
+    double deta = jet->eta - eta_min;
+    double dphi = jet->phi - phi_max;
+    return deta*deta + dphi*dphi;
+  }
+  double distance_to_left_bottom(const TiledJet * jet) const {
+    double deta = jet->eta - eta_min;
+    double dphi = jet->phi - phi_min;
+    return deta*deta + dphi*dphi;
+  }
+  double distance_to_right_top(const TiledJet * jet) const {
+    double deta = jet->eta - eta_max;
+    double dphi = jet->phi - phi_max;
+    return deta*deta + dphi*dphi;
+  }
+  double distance_to_right_bottom(const TiledJet * jet) const {
+    double deta = jet->eta - eta_max;
+    double dphi = jet->phi - phi_min;
+    return deta*deta + dphi*dphi;
+  }
+
+  
 };
 
 //----------------------------------------------------------------------
