@@ -1,3 +1,12 @@
+2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_TiledN2.cc: 
+	  put the N2MinHeapTiled back to the old code now that we have a
+	  dedicated strategy for developments from below. This also
+	  removes any risk of penalty associated with increased tile size,
+	  etc. in the old strategies.
+
 2012-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
 
 	* include/fastjet/Tiling.hh: 

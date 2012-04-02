@@ -754,7 +754,6 @@ protected:
     int        _jets_index;
   };
 
-public: // GPS temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   /// structure analogous to BriefJet, but with the extra information
   /// needed for dealing with tiles
   class TiledJet {
@@ -844,15 +843,10 @@ public: // GPS temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     TiledJet * head;    
     /// sometimes useful to be able to tag a tile
     bool     tagged;    
-    /// for all particles in the tile, this stores the largest of the
-    /// (squared) nearest-neighbour distances.
-    double max_NN_dist;
-    double eta_centre, phi_centre;
   };
   std::vector<Tile> _tiles;
   double _tiles_eta_min, _tiles_eta_max;
   double _tile_size_eta, _tile_size_phi;
-  double _tile_half_size_eta, _tile_half_size_phi;
   int    _n_tiles_phi,_tiles_ieta_min,_tiles_ieta_max;
 
   // reasonably robust return of tile index given ieta and iphi, in particular
@@ -875,11 +869,6 @@ public: // GPS temporary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		 std::vector<int> & tile_union, int & n_near_tiles) const;
   void _add_untagged_neighbours_to_tile_union(const int tile_index, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-  void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
-		 std::vector<int> & tile_union, int & n_near_tiles);
-  double _distance_to_tile(const TiledJet * bj, const Tile *) const;
-  void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
-  void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
   //----------------------------------------------------------------------
   /// fundamental structure for e+e- clustering
