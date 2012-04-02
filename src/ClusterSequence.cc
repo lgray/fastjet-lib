@@ -31,6 +31,7 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 #include "fastjet/version.hh" // stores the current version number
+#include "fastjet/Tiling.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -333,6 +334,15 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     this->_faster_tiled_N2_cluster();
   } else if (_strategy == N2MinHeapTiled) {
     this->_minheap_faster_tiled_N2_cluster();
+  } else if (_strategy == N2MinHeapTiled_experimental1) {
+    // attempt to use an external tiling routine -- it manipulates
+    // the CS history via the plugin mechanism
+    _plugin_activated = true;
+    Tiling tiling(*this);
+    tiling.run();
+    _plugin_activated = false;
+
+
   } else if (_strategy == NlnN) {
     this->_delaunay_cluster();
   } else if (_strategy == NlnNCam) {

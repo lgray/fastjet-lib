@@ -75,13 +75,15 @@ struct Tile {
 //----------------------------------------------------------------------
 class Tiling {
 public:
-  Tiling(const ClusterSequence & cs);
+  Tiling(ClusterSequence & cs);
 
-  void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
+  void run();
+
+  //void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
   
 
 protected:
-  const ClusterSequence & _cs;
+  ClusterSequence & _cs;
   const std::vector<PseudoJet> & _jets;
   std::vector<Tile> _tiles;
 
@@ -94,7 +96,7 @@ protected:
 
   std::vector<TiledJet *> _jets_for_minheap;
   
-  MinHeap _minheap;
+  //MinHeap _minheap;
 
   void _initialise_tiles();
 
@@ -126,6 +128,13 @@ protected:
   void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
   void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
+  // return the diJ (multiplied by _R2) for this jet assuming its NN
+  // info is correct
+  template <class J> double _bj_diJ(const J * const jet) const {
+    double kt2 = jet->kt2;
+    if (jet->NN != NULL) {if (jet->NN->kt2 < kt2) {kt2 = jet->NN->kt2;}}
+    return jet->NN_dist * kt2;
+  }
 
 
   //----------------------------------------------------------------------
@@ -138,7 +147,17 @@ protected:
     // initialise NN info as well
     jetA->NN_dist = _R2;
     jetA->NN      = NULL;
-}
+  }
+
+
+  //----------------------------------------------------------------------
+  template <class J> inline double _bj_dist(
+                const J * const jetA, const J * const jetB) const {
+    double dphi = std::abs(jetA->phi - jetB->phi);
+    double deta = (jetA->eta - jetB->eta);
+    if (dphi > pi) {dphi = twopi - dphi;}
+    return dphi*dphi + deta*deta;
+  }
 
 };
 

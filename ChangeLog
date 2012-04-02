@@ -1,3 +1,17 @@
+2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/JetDefinition.hh:
+	* src/ClusterSequence.cc:
+
+	  added N2MinHeapTiled_experimental1 and
+	  N2MinHeapTiled_experimental2 and instrumented the first one so
+	  that it uses the external tiling class.
+
+	* src/Tiling.cc:
+	* include/fastjet/Tiling.hh:
+	  completed and tested these so that it replicates the N2MinHeap
+	  strategy that has been developed in the past few days.
+
 2012-04-01  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/Tiling.cc:              *** ADDED ***
