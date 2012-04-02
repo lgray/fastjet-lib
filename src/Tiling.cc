@@ -308,7 +308,7 @@ ostream & operator<<(ostream & ostr, const TiledJet & jet) {
 
 //----------------------------------------------------------------------
 /// returns a particle's distance to the edge of the specified tile
-double Tiling::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
+inline double Tiling::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
 
   // Note the careful way of checking the minimum potential deta:
   // unlike the phi case below, we don't calculate the distance to the
@@ -368,7 +368,7 @@ inline void Tiling::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vecto
 }
 
 
-void Tiling::_set_NN(TiledJet * jetI, 
+inline void Tiling::_set_NN(TiledJet * jetI, 
                               vector<TiledJet *> & jets_for_minheap) {
   jetI->NN_dist = _R2;
   jetI->NN      = NULL;
