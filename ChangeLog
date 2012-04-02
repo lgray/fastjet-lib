@@ -1,3 +1,10 @@
+2012-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
+
+	* include/fastjet/Tiling.hh: 
+	* src/Tiling.cc: 
+	  playing with the idea of two copies of bj_dist, with and without
+	  2pi periodicity.
+
 2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/JetDefinition.hh:

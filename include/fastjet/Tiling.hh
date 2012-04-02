@@ -53,7 +53,8 @@ public:
 
 const int n_tile_neighbours = 9;
 
-struct Tile {
+class Tile {
+public:
   /// pointers to neighbouring tiles, including self
   Tile *   begin_tiles[n_tile_neighbours]; 
   /// neighbouring tiles, excluding self
@@ -70,6 +71,10 @@ struct Tile {
   /// (squared) nearest-neighbour distances.
   double max_NN_dist;
   double eta_centre, phi_centre;
+
+  bool is_near_zero_phi(double tile_size_phi) const {
+    return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
+  }
 };
 
 //----------------------------------------------------------------------
@@ -126,6 +131,7 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles);
   double _distance_to_tile(const TiledJet * bj, const Tile *) const;
   void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
+
   void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
   // return the diJ (multiplied by _R2) for this jet assuming its NN
@@ -156,6 +162,15 @@ protected:
     double dphi = std::abs(jetA->phi - jetB->phi);
     double deta = (jetA->eta - jetB->eta);
     if (dphi > pi) {dphi = twopi - dphi;}
+    return dphi*dphi + deta*deta;
+  }
+
+
+  //----------------------------------------------------------------------
+  template <class J> inline double _bj_dist_not_periodic(
+                const J * const jetA, const J * const jetB) const {
+    double dphi = jetA->phi - jetB->phi;
+    double deta = (jetA->eta - jetB->eta);
     return dphi*dphi + deta*deta;
   }
 

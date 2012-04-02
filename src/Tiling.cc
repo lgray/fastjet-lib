@@ -338,6 +338,7 @@ double Tiling::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
 
 
 
+
 //----------------------------------------------------------------------
 /// looks at distance between jetX and jetI and updates the NN
 /// information if relevant; also pushes identity of jetI onto
@@ -377,20 +378,39 @@ void Tiling::_set_NN(TiledJet * jetI,
     jets_for_minheap.push_back(jetI);}
   // now go over tiles that are neighbours of I (include own tile)
   Tile * tile_ptr = &_tiles[jetI->tile_index];
-  for (Tile ** near_tile  = tile_ptr->begin_tiles; 
-       near_tile != tile_ptr->end_tiles; near_tile++) {
-    // for own tile, this will be zero automatically: should we be clever
-    // and skip the test? (With some doubling of code?)
-    if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;
-    // and then over the contents of that tile
-    for (TiledJet * jetJ  = (*near_tile)->head; 
-         jetJ != NULL; jetJ = jetJ->next) {
-      double dist = _bj_dist(jetI,jetJ);
-      if (dist < jetI->NN_dist && jetJ != jetI) {
-        jetI->NN_dist = dist; jetI->NN = jetJ;
+  //if (tile_ptr->is_near_zero_phi(_tile_size_phi)) {
+    for (Tile ** near_tile  = tile_ptr->begin_tiles; 
+         near_tile != tile_ptr->end_tiles; near_tile++) {
+      // for own tile, this will be zero automatically: should we be clever
+      // and skip the test? (With some doubling of code?)
+      if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;
+      // and then over the contents of that tile
+      for (TiledJet * jetJ  = (*near_tile)->head; 
+           jetJ != NULL; jetJ = jetJ->next) {
+        double dist = _bj_dist(jetI,jetJ);
+        if (dist < jetI->NN_dist && jetJ != jetI) {
+          jetI->NN_dist = dist; jetI->NN = jetJ;
+        }
       }
     }
-  }
+  // } else {
+  //   // second copy that exploits the fact that for this tile we needn't worry
+  //   // about periodicity
+  //   for (Tile ** near_tile  = tile_ptr->begin_tiles; 
+  //        near_tile != tile_ptr->end_tiles; near_tile++) {
+  //     // for own tile, this will be zero automatically: should we be clever
+  //     // and skip the test? (With some doubling of code?)
+  //     if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;
+  //     // and then over the contents of that tile
+  //     for (TiledJet * jetJ  = (*near_tile)->head; 
+  //          jetJ != NULL; jetJ = jetJ->next) {
+  //       double dist = _bj_dist_not_periodic(jetI,jetJ);
+  //       if (dist < jetI->NN_dist && jetJ != jetI) {
+  //         jetI->NN_dist = dist; jetI->NN = jetJ;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 
@@ -422,7 +442,7 @@ void Tiling::run() {
     // first do it on this tile
     for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
       for (jetB = tile->head; jetB != jetA; jetB = jetB->next) {
-	double dist = _bj_dist(jetA,jetB);
+	double dist = _bj_dist_not_periodic(jetA,jetB);
 	if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
 	if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
       }
@@ -432,30 +452,50 @@ void Tiling::run() {
     }
   }
   for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
-    // then do it for RH tiles; 
-    for (Tile ** RTile = tile->RH_tiles; RTile != tile->end_tiles; RTile++) {
-      for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
-    	double dist_to_tile = _distance_to_tile(jetA, *RTile);
-    	// it only makes sense to do a tile if jetA is close enough to the Rtile
-    	// either for a jet in the Rtile to be closer to jetA than it's current NN
-    	// or if jetA could be closer to something in the Rtile than the largest
-	// NN distance within the RTile.
-	//
-	// GPS note: also tried approach where we perform only the
-	//           first test and run over all surrounding tiles
-	//           (not just RH ones). The test is passed less
-	//           frequently, but one is running over more tiles
-	//           and on balance, for the trial event we used, it's
-	//           a bit slower.
-    	bool relevant_for_jetA  = dist_to_tile <= jetA->NN_dist;
-    	bool relevant_for_RTile = dist_to_tile <= (*RTile)->max_NN_dist;
-    	if (relevant_for_jetA || relevant_for_RTile) {
-    	  for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
-    	    double dist = _bj_dist(jetA,jetB);
-    	    if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
-    	    if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
-    	  }
-    	} 
+    if (tile->is_near_zero_phi(_tile_size_phi)) {
+      // then do it for RH tiles; 
+      for (Tile ** RTile = tile->RH_tiles; RTile != tile->end_tiles; RTile++) {
+        for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
+          double dist_to_tile = _distance_to_tile(jetA, *RTile);
+          // it only makes sense to do a tile if jetA is close enough to the Rtile
+          // either for a jet in the Rtile to be closer to jetA than it's current NN
+          // or if jetA could be closer to something in the Rtile than the largest
+          // NN distance within the RTile.
+          //
+          // GPS note: also tried approach where we perform only the
+          //           first test and run over all surrounding tiles
+          //           (not just RH ones). The test is passed less
+          //           frequently, but one is running over more tiles
+          //           and on balance, for the trial event we used, it's
+          //           a bit slower.
+          bool relevant_for_jetA  = dist_to_tile <= jetA->NN_dist;
+          bool relevant_for_RTile = dist_to_tile <= (*RTile)->max_NN_dist;
+          if (relevant_for_jetA || relevant_for_RTile) {
+            for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
+              double dist = _bj_dist(jetA,jetB);
+              if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
+              if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
+            }
+          } 
+        }
+      }
+    } else {
+      // this second version of the code uses the faster
+      // "not_periodic" version because it knows that the tile is
+      // sufficiently far from the edge.
+      for (Tile ** RTile = tile->RH_tiles; RTile != tile->end_tiles; RTile++) {
+        for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
+          double dist_to_tile = _distance_to_tile(jetA, *RTile);
+          bool relevant_for_jetA  = dist_to_tile <= jetA->NN_dist;
+          bool relevant_for_RTile = dist_to_tile <= (*RTile)->max_NN_dist;
+          if (relevant_for_jetA || relevant_for_RTile) {
+            for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
+              double dist = _bj_dist_not_periodic(jetA,jetB);
+              if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
+              if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
+            }
+          } 
+        }
       }
     }
     // no need to do it for LH tiles, since they are implicitly done
