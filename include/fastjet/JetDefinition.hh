@@ -49,6 +49,8 @@ enum Strategy {
   /// temporary name -- may evolve
   N2MinHeapTiled_separate_ghosts_antikt   = -10, 
   /// temporary name -- will evolve
+  N2MinHeapTiled_experimental3   = -7, 
+  /// temporary name -- will evolve
   N2MinHeapTiled_experimental2   = -6, 
   /// temporary name -- will evolve
   N2MinHeapTiled_experimental1   = -5, 
