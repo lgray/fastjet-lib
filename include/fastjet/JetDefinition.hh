@@ -309,7 +309,7 @@ public:
   /// return a pointer to the plugin 
   const Plugin * plugin() const {return _plugin;};
 
-  /// allows to let the JetDefinition handle the deletion of the
+  /// calling this causes the JetDefinition to handle the deletion of the
   /// plugin when it is no longer used
   void delete_plugin_when_unused();
 

@@ -1,3 +1,8 @@
+2012-05-04  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* include/fastjet/JetDefinition.hh (): 
+	  small changes to comments
+
 2012-02-20  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 
 	* test-compare.sh: 
