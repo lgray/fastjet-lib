@@ -199,7 +199,7 @@ template<class BJ, class I> void NNH<BJ,I>::start(const std::vector<PseudoJet> &
   // initialise the basic jet info 
   for (int i = 0; i< n; i++) {
     //jetA->init(jets[i], i);
-    init_jet(jetA, jets[i], i);
+    this->init_jet(jetA, jets[i], i);
     where_is[i] = jetA;
     jetA++; // move on to next entry of briefjets
   }
@@ -276,7 +276,7 @@ template<class BJ, class I> void NNH<BJ,I>::merge_jets(int iA, int iB,
 
   // initialise jetB based on the new jet
   //jetB->init(jet, index);
-  init_jet(jetB, jet, index);
+  this->init_jet(jetB, jet, index);
   // and record its position (making sure we have the space)
   if (index >= int(where_is.size())) where_is.resize(2*index);
   where_is[jetB->index()] = jetB;

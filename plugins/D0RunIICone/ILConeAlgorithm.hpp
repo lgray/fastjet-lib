@@ -47,6 +47,12 @@
 // History of changes in FastJet compared tothe original version of
 // ProtoJet.hpp
 //
+// 2012-06-12  Gregory Soyez  <soyez@fastjet.fr>
+//        * Replaced addItem(...) by this->addItem(...) to allow
+//          compilation with gcc 4.7 which no longer performs
+//          unqualified template lookups. See
+//          e.g. http://gcc.gnu.org/gcc-4.7/porting_to.html
+//
 // 2011-12-13  Gregory Soyez  <soyez@fastjet.fr>
 // 
 //        * added license information
@@ -311,7 +317,7 @@ private:
 	  //std::cout << " is_stable: item y=" << (*tk)->y() << " phi=" << (*tk)->phi() << " RD2=" << RD2((*tk)->y(),(*tk)->phi(),Yst,PHIst) << " " << Yst-radius << " " << Yst+radius << endl;
 	  if(RD2((*tk)->y(),(*tk)->phi(),Yst,PHIst) <= radius2) 
 	    {
-	      addItem(*tk);
+	      this->addItem(*tk);
 	    }
 	}       
 #else
@@ -324,7 +330,7 @@ private:
 	    //std::cout << "     item " << (*tk)->y() << " " << (*tk)->phi() << " " << RD2((*tk)->y(),(*tk)->phi(),Yst,PHIst) << " " << Yst-radius << " " << Yst+radius << endl;
 	    if(RD2(((*tk).second)->y(),((*tk).second)->phi(),Yst,PHIst) <= radius2) 
 	      {
-		addItem((*tk).second);
+		this->addItem((*tk).second);
 	      }
 	  }
 	
@@ -337,7 +343,7 @@ private:
 	    if(RD2((*tk)->y(),(*tk)->phi(),Yst,PHIst) <= radius2) 
 	       {
 		 //cout << "add item to *tk" << endl;
-		addItem(*tk);
+		this->addItem(*tk);
 	      }
 	  }
 #endif
