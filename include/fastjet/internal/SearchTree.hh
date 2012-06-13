@@ -188,7 +188,8 @@ template<class T> class SearchTree<T>::circulator{
 public:
 
   // so that it can access out _node object;
-  friend class SearchTree<T>::const_circulator;
+  // note: "class U" needed for clang (v1.1 branches/release_27) compilation
+  template<class U> friend class SearchTree<U>::const_circulator;
   friend class SearchTree<T>;
 
   circulator() : _node(NULL) {}
