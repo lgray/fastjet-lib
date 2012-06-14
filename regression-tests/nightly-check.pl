@@ -108,7 +108,7 @@ push @setups, ["karnak","--enable-allcxxplugins", "", 1000, ""]; # full monty on
 #push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10, ""]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4.3 CXX=/usr/local/bin/g++-4.4.3", "", 10, ""]; # full set with gcc 4.4.3
+push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 (since 14/06/2012 4.4 is 4.4.7)
 #push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10, ""]; # full set with gcc 4.4 
 # extra tests for areas
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # loaclly
