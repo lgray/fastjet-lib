@@ -1,3 +1,10 @@
+2012-06-19  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* doc/fastjet-doc.tex (section{Introduction}): 
+	  added a footnote about stopping the exclusive algorithm once it
+	  reaches a predetermined number of jets. (Thanks to Giulia
+	  Zanderighi for pointing out this omission).
+
 2012-06-13  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/internal/SearchTree.hh (template): 
