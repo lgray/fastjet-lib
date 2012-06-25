@@ -1,3 +1,8 @@
+2012-06-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence.cc (print_banner):
+	  updated references in the banner
+
 2012-06-19  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* doc/fastjet-doc.tex (section{Introduction}): 

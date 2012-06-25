@@ -384,10 +384,10 @@ void ClusterSequence::print_banner() {
   (*ostr) << "#                 M. Cacciari, G.P. Salam and G. Soyez                  \n"; 
   (*ostr) << "#     A software package for jet finding and analysis at colliders      \n";
   (*ostr) << "#                           http://fastjet.fr                           \n"; 
-  (*ostr) << "#								      	   \n";
-  (*ostr) << "# Please cite arXiv:1111.6097 if you use this package for scientific    \n";
-  (*ostr) << "# work and optionally also Phys. Lett. B641 (2006) [hep-ph/0512210].    \n";
-  (*ostr) << "#								      	   \n";
+  (*ostr) << "#	                                                                      \n";
+  (*ostr) << "# Please cite EPJC72(2012)1896 [arXiv:1111.6097] if you use this package\n";
+  (*ostr) << "# for scientific work and optionally PLB641(2006)57 [hep-ph/0512210].   \n";
+  (*ostr) << "#                                                                       \n";
   (*ostr) << "# FastJet is provided without warranty under the terms of the GNU GPLv2.\n";
   (*ostr) << "# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code";
 #ifndef DROP_CGAL
