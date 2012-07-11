@@ -36,7 +36,9 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 using namespace std;
 
 double BackgroundJetScalarPtDensity::result(const PseudoJet & jet) const {
-  std::vector<PseudoJet> constituents = jet.constituents();
+  // do not include the ghpsts in the list of constituents to have a
+  // correct behaviour when _pt_power is <= 0
+  std::vector<PseudoJet> constituents = (!SelectorIsPureGhost())(jet.constituents());
   double scalar_pt = 0;
   for (unsigned i = 0; i < constituents.size(); i++) {
     scalar_pt += pow(constituents[i].perp(), _pt_power);

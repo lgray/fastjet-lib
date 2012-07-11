@@ -207,21 +207,28 @@ public:
   //----------------------------------------------------------------
   /// Returns the mean area of the jets used to actually compute the
   /// background properties in the last call of rho() or sigma()
+  /// If the configuration has changed in the meantime, throw an error.
   double mean_area() const{
-    _recompute_if_needed();
+    if (!_uptodate)
+      throw Error("JetMedianBackgroundEstimator::mean_area(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+    //_recompute_if_needed();
     return _mean_area;
   }
   
   /// returns the number of jets used to actually compute the
   /// background properties in the last call of rho() or sigma()
+  /// If the configuration has changed in the meantime, throw an error.
   unsigned int n_jets_used() const{
-    _recompute_if_needed();
+    if (!_uptodate)
+      throw Error("JetMedianBackgroundEstimator::n_jets_used(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+    //_recompute_if_needed();
     return _n_jets_used;
   }
 
   /// Returns the estimate of the area (within the range defined by
   /// the selector) that is not occupied by jets. The value is that
   /// for the last call of rho() or sigma()
+  /// If the configuration has changed in the meantime, throw an error.
   ///
   /// The answer is defined to be zero if the area calculation
   /// involved explicit ghosts; if the area calculation was an active
@@ -233,13 +240,16 @@ public:
   /// The result here is just the cached result of the corresponding
   /// call to the ClusterSequenceAreaBase function.
   double empty_area() const{
-    _recompute_if_needed();
+    if (!_uptodate)
+      throw Error("JetMedianBackgroundEstimator::empty_area(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+    //_recompute_if_needed();
     return _empty_area;
   }
 
   /// Returns the number of empty jets used when computing the
   /// background properties. The value is that for the last call of
   /// rho() or sigma().
+  /// If the configuration has changed in the meantime, throw an error.
   ///
   /// If the area has explicit ghosts the result is zero; for active
   /// areas it is the number of internal pure ghost jets that pass the
@@ -249,7 +259,9 @@ public:
   /// The result here is just the cached result of the corresponding
   /// call to the ClusterSequenceAreaBase function.
   double n_empty_jets() const{
-    _recompute_if_needed();
+    if (!_uptodate)
+      throw Error("JetMedianBackgroundEstimator::n_empty_jets(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+    //_recompute_if_needed();
     return _n_empty_jets;
   }
 

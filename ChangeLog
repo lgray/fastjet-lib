@@ -1,3 +1,16 @@
+2012-07-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	  When trying to access information relative to the last
+	  computation of rho (or sigma) --- i.e. in mean_area(),
+	  n_jets_used(), empty_area() and n_empty_jets() ---, throw an
+	  error if the configuration has changed in the meantime.
+
+	* tools/JetMedianBackgroundEstimator.cc:
+	  In BackgroundJetScalarPtDensity, explicitly exclude the ghosts
+	  from the list of constituents to avoid problematic behaviour
+	  when _pt_power <= 0.
+
 2012-06-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence.cc (print_banner):
