@@ -225,18 +225,18 @@ public:
     return _n_jets_used;
   }
 
-  /// returns the jets used to actually compute the background
-  /// properties
-  std::vector<PseudoJet> jets_used() const{
-    if (!_uptodate) throw Error("...");
-    _check_csa_alive();
-    std::vector<PseudoJet> tmp_jets = _rho_range(_included_jets);
-    std::vector<PseudoJet> used_jets;
-    for (unsigned int i=0; i<tmp_jets.size(); i++){
-      if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
-    }
-    return used_jets;
-  }
+  // /// returns the jets used to actually compute the background
+  // /// properties
+  // std::vector<PseudoJet> jets_used() const{
+  //   if (!_uptodate) throw Error("...");
+  //   _check_csa_alive();
+  //   std::vector<PseudoJet> tmp_jets = _rho_range(_included_jets);
+  //   std::vector<PseudoJet> used_jets;
+  //   for (unsigned int i=0; i<tmp_jets.size(); i++){
+  //     if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
+  //   }
+  //   return used_jets;
+  // }
 
   /// Returns the estimate of the area (within the range defined by
   /// the selector) that is not occupied by jets. The value is that
