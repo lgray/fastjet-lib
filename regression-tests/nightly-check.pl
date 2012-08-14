@@ -117,7 +117,7 @@ push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-s
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # loaclly
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
 push @setups, ["osiris", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
-push @setups, ["orphee", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
+#push @setups, ["orphee", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
 
 # process command-line
 $mail=0;
