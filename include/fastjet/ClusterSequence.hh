@@ -312,8 +312,9 @@ class ClusterSequence {
   void signal_imminent_self_deletion() const;
 
   /// returns the scale associated with a jet as required for this
-  /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the 
-  /// Cambridge algorithm). [May become virtual at some point]
+  /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the
+  /// Cambridge algorithm). Intended mainly for internal use and not
+  /// valid for plugin algorithms.
   double jet_scale_for_algorithm(const PseudoJet & jet) const;
 
   ///
