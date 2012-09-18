@@ -1,3 +1,9 @@
+2012-09-18  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* fortran_wrapper/fastjetfortran.cc: 
+	  added a fastjeteegenkt_ routine, similar to fastjetppgenkt_, but
+	  for e+e- generalised kt, as requested by Bryan.
+
 2012-08-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 

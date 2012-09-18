@@ -254,6 +254,22 @@ void fastjetppgenkt_(const double * p, const int & npart,
     transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
 
+/// a routine that provides similar f77 functionality to fastjetppgenkt_, 
+/// but for the e+e- algorithms instead of the pp ones; note this 
+/// only gives the "inclusive" algorithms. The algorithms are as
+/// defined in the FastJet manual.
+void fastjeteegenkt_(const double * p, const int & npart,                   
+                     const double & R, const double & palg,
+                     double * f77jets, int & njets) {
+    
+  // prepare jet def
+  jet_def = JetDefinition(ee_genkt_algorithm, R, palg);
+  
+  // do everything
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
+}
+
+
 
 /// f77 interface to the pp generalised-kt (sequential recombination)
 /// algorithms, as defined in arXiv.org:0802.1189, which includes
