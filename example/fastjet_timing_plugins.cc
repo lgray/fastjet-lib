@@ -710,6 +710,8 @@ int main (int argc, char ** argv) {
     if (show_cones) {
       const fj::SISConeExtras * extras = 
         dynamic_cast<const fj::SISConeExtras *>(clust_seq->extras());
+      if (extras == 0) 
+        throw fastjet::Error("extras object for SISCone was null (this can happen with certain area types)");
       cout << "most ambiguous split (difference in squared dist) = "
            << extras->most_ambiguous_split() << endl;
       vector<fastjet::PseudoJet> stable_cones(extras->stable_cones()); 

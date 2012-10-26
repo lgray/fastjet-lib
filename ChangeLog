@@ -4,6 +4,11 @@
 	  added a fastjeteegenkt_ routine, similar to fastjetppgenkt_, but
 	  for e+e- generalised kt, as requested by Bryan.
 
+2012-09-14  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* example/fastjet_timing_plugins.cc: 
+	  added protection in case of null extras for SISCone
+
 2012-08-21  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* include/fastjet/ClusterSequence.hh: 
