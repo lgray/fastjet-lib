@@ -352,7 +352,7 @@ const JetDefinition::Recombiner* Filter::_get_common_recombiner(const vector<Pse
 }
 
 // check if the jet (or all its pieces) have explicit ghosts
-// (assuming the jet has area support
+// (assuming the jet has area support).
 //
 // Note that if the jet has an associated cluster sequence that is no
 // longer valid, an error will be thrown (needed since it could be the
