@@ -92,6 +92,31 @@ unsigned int Selector::count(const std::vector<PseudoJet> & jets) const {
   return n;
 }
 
+//----------------------------------------------------------------------
+// sum the momenta of the jets that pass the cuts
+PseudoJet Selector::sum(const std::vector<PseudoJet> & jets) const {
+  PseudoJet this_sum(0,0,0,0);
+  const SelectorWorker * worker_local = validated_worker();
+  
+  // separate strategies according to whether the worker applies jet by jet
+  if (worker_local->applies_jet_by_jet()) {
+    for (unsigned i = 0; i < jets.size(); i++) {
+      if (worker_local->pass(jets[i])) this_sum += jets[i];
+    }
+  } else {
+    std::vector<const PseudoJet *> jetptrs(jets.size());
+    for (unsigned i = 0; i < jets.size(); i++) {
+      jetptrs[i] = & jets[i];
+    }
+    worker_local->terminator(jetptrs);
+    for (unsigned i = 0; i < jetptrs.size(); i++) {
+      if (jetptrs[i]) this_sum += jets[i];
+    }
+  }
+
+  return this_sum;
+}
+
 
 //----------------------------------------------------------------------
 // sift the input jets into two vectors -- those that pass the selector
