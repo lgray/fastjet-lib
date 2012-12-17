@@ -2,6 +2,16 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
+Summary of changes from v3.0.2 -> v3.0.3: 26/06/12
+================================================================
+
+This is a bug-fix release, fixing 
+
+* compilation issues with g++-4.7 and clang
+* issue of missing documentation figures in the tarball
+* issue with the --enable-extra-warnings flag in configure
+
+================================================================
 Summary of changes from v3.0.1 -> v3.0.2: 17/01/12
 ================================================================
 

@@ -1,3 +1,12 @@
+2012-12-17  Gregory Soyez  <soyez@fastjet.fr>
+
+	* NEWS:
+	  brought the NEWS from 3.0.2 to 3.0.3 from the branch
+	  [3.0.3 was developed in a branch and consisted of a few bug
+	  fixes borrowed from the trunk. All the changes are in agreement
+	  between the trunk and the branch so there was just the summary
+	  of changes that needed to be updates]
+
 2012-12-11  Gavin Salam  <salam@lpthe.jussieu.fr>
 
 	* src/Selector.cc:
