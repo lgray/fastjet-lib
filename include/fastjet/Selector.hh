@@ -64,14 +64,19 @@ public:
   // basic operations for checking what gets selected
   //----------------------------------------------------------
 
-  /// returns true if a given object passes the selection criterion.
-  /// This has to be overloaded by derived workers
+  /// returns true if a given object passes the selection criterion,
+  /// and is the main function that needs to be overloaded by derived
+  /// workers. 
+  ///
+  /// NB: this function is used only if applies_jet_by_jet() returns
+  /// true. If it does not, then derived classes are expected to
+  /// (re)implement the terminator function()
   virtual bool pass(const PseudoJet & jet) const = 0;
 
   /// For each jet that does not pass the cuts, this routine sets the 
-  /// pointer to 0. 
+  /// pointer to 0.
   ///
-  /// It does not assume that the PseudoJet* passed as argumetn are not NULL
+  /// It does not assume that the PseudoJet* passed as argument are not NULL
   virtual void terminator(std::vector<const PseudoJet *> & jets) const {
     for (unsigned i = 0; i < jets.size(); i++) {
       if (jets[i] && !pass(*jets[i])) jets[i] = NULL;
