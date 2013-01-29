@@ -1,4 +1,7 @@
 2013-01-29  Gavin Salam  <gavin.salam@cern.ch>
+        * many places:
+	  updated the svn ignore properties to ignore Makefile,
+	  Makefile.in .deps
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/JetMedianBackgroundEstimator.cc (description):
