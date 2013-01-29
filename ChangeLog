@@ -1,5 +1,9 @@
 2013-01-29  Gavin Salam  <gavin.salam@cern.ch>
 
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/JetMedianBackgroundEstimator.cc (description):
+	  description() now prints out the pt power if it differs from 1.
+
 	* autogen.sh: 
 	  fixed a minor bug when glibtool is missing.
 

@@ -30,6 +30,7 @@
 #include <fastjet/ClusterSequenceArea.hh>
 #include <fastjet/ClusterSequenceStructure.hh>
 #include <iostream>
+#include <sstream>
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
@@ -44,6 +45,14 @@ double BackgroundJetScalarPtDensity::result(const PseudoJet & jet) const {
     scalar_pt += pow(constituents[i].perp(), _pt_power);
   }
   return scalar_pt / jet.area();
+}
+
+
+std::string BackgroundJetScalarPtDensity::description() const {
+  ostringstream oss;
+  oss << "BackgroundScalarJetPtDensity";
+  if (_pt_power != 1.0) oss << " with pt_power = " << _pt_power;
+  return oss.str();
 }
 
 

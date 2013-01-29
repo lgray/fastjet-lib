@@ -453,7 +453,7 @@ public:
 
   virtual double result(const PseudoJet & jet) const;
 
-  virtual std::string description() const {return "BackgroundScalarJetPtDensity";}
+  virtual std::string description() const;
 
 private:
   double _pt_power;
