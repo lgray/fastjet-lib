@@ -1,3 +1,8 @@
+2013-01-29  Gavin Salam  <gavin.salam@cern.ch>
+
+	* autogen.sh: 
+	  fixed a minor bug when glibtool is missing.
+
 2013-01-29  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
