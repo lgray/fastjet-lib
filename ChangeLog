@@ -1,3 +1,10 @@
+2013-01-29  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	  provided an access, using jets_used(), to the jets that have
+	  been used for the last call to rho() or sigma()
+	  + changed come of the comments
+
 2013-01-07  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/Selector.hh: 

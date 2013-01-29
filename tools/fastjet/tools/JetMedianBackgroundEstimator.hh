@@ -210,7 +210,7 @@ public:
   /// If the configuration has changed in the meantime, throw an error.
   double mean_area() const{
     if (!_uptodate)
-      throw Error("JetMedianBackgroundEstimator::mean_area(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+      throw Error("JetMedianBackgroundEstimator::mean_area(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
     //_recompute_if_needed();
     return _mean_area;
   }
@@ -220,23 +220,23 @@ public:
   /// If the configuration has changed in the meantime, throw an error.
   unsigned int n_jets_used() const{
     if (!_uptodate)
-      throw Error("JetMedianBackgroundEstimator::n_jets_used(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+      throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
     //_recompute_if_needed();
     return _n_jets_used;
   }
 
-  // /// returns the jets used to actually compute the background
-  // /// properties
-  // std::vector<PseudoJet> jets_used() const{
-  //   if (!_uptodate) throw Error("...");
-  //   _check_csa_alive();
-  //   std::vector<PseudoJet> tmp_jets = _rho_range(_included_jets);
-  //   std::vector<PseudoJet> used_jets;
-  //   for (unsigned int i=0; i<tmp_jets.size(); i++){
-  //     if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
-  //   }
-  //   return used_jets;
-  // }
+  /// returns the jets used to actually compute the background
+  /// properties
+  std::vector<PseudoJet> jets_used() const{
+    if (!_uptodate) throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+    _check_csa_alive();
+    std::vector<PseudoJet> tmp_jets = _rho_range(_included_jets);
+    std::vector<PseudoJet> used_jets;
+    for (unsigned int i=0; i<tmp_jets.size(); i++){
+      if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
+    }
+    return used_jets;
+  }
 
   /// Returns the estimate of the area (within the range defined by
   /// the selector) that is not occupied by jets. The value is that
@@ -254,7 +254,7 @@ public:
   /// call to the ClusterSequenceAreaBase function.
   double empty_area() const{
     if (!_uptodate)
-      throw Error("JetMedianBackgroundEstimator::empty_area(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+      throw Error("JetMedianBackgroundEstimator::empty_area(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
     //_recompute_if_needed();
     return _empty_area;
   }
@@ -273,7 +273,7 @@ public:
   /// call to the ClusterSequenceAreaBase function.
   double n_empty_jets() const{
     if (!_uptodate)
-      throw Error("JetMedianBackgroundEstimator::n_empty_jets(): it is not allowed to retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+      throw Error("JetMedianBackgroundEstimator::n_empty_jets(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
     //_recompute_if_needed();
     return _n_empty_jets;
   }
