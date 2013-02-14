@@ -86,6 +86,9 @@ enum Strategy {
 //======================================================================
 /// \enum JetAlgorithm
 /// the various families of jet-clustering algorithm
+//
+// [Remember to update the "is_spherical()" routine if any further
+// spherical algorithms are added to the list below]
 enum JetAlgorithm {
   /// the longitudinally invariant kt algorithm
   kt_algorithm=0,
@@ -349,6 +352,12 @@ public:
   /// recombiner as teh one passed as an argument
   bool has_same_recombiner(const JetDefinition &other_jd) const;
 
+  /// returns true if the jet definition involves an algorithm
+  /// intended for use on a spherical geometry (e.g. e+e- algorithms,
+  /// as opposed to most pp algorithms, which use a cylindrical,
+  /// rapidity-phi geometry).
+  bool is_spherical() const;
+
   /// return a textual description of the current jet definition 
   std::string description() const;
 
@@ -460,6 +469,12 @@ public:
     /// whenever the user requests "exclusive" jets from the
     /// cluster sequence
     virtual bool exclusive_sequence_meaningful() const {return false;}
+
+    /// returns true if the plugin implements an algorithm intended
+    /// for use on a spherical geometry (e.g. e+e- algorithms, as
+    /// opposed to most pp algorithms, which use a cylindrical,
+    /// rapidity-phi geometry).
+    virtual bool is_spherical() const {return false;}
 
     /// a destructor to be replaced if necessary in derived classes...
     virtual ~Plugin() {};

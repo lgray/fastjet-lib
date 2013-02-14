@@ -1,3 +1,18 @@
+2013-02-14  Gavin Salam  <gavin.salam@cern.ch> + Matteo Cacciari
+
+	* src/JetDefinition.cc:
+	* include/fastjet/JetDefinition.hh:
+	  added is_spherical() member function, which returns true for
+	  algorithms intended for use in spherical coordinates (i.e. e+e-
+	  algorithms). Also extended the plugin interface so that plugins
+	  can provide this information (unmodified plugins return false,
+	  which makes sense because most current plugins are for hadron
+	  colliders).
+
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
+	* plugins/EECambridge/fastjet/EECambridgePlugin.hh:
+	  implemented is_spherical() members that return true.
+
 2013-01-29  Gavin Salam  <gavin.salam@cern.ch>
         * many places:
 	  updated the svn ignore properties to ignore Makefile,

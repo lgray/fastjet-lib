@@ -81,6 +81,10 @@ public:
   /// from the cluster sequence
   virtual bool exclusive_sequence_meaningful() const {return true;}
 
+  /// returns true because this plugin is intended for spherical
+  /// geometries (i.e. it's an e+e- algorithm).
+  virtual bool is_spherical() const {return true;}
+
 private:
   double _ycut;
 };

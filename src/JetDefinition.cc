@@ -105,6 +105,21 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm_in,
 
 
 //----------------------------------------------------------------------
+// returns true if the jet definition involves an algorithm
+// intended for use on a spherical geometry (e.g. e+e- algorithms,
+// as opposed to most pp algorithms, which use a cylindrical,
+// rapidity-phi geometry).
+bool JetDefinition::is_spherical() const {
+  if (jet_algorithm() == plugin_algorithm) {
+    return plugin()->is_spherical();
+  } else {
+    return (jet_algorithm() == ee_kt_algorithm ||  // as of 2013-02-14, the two
+            jet_algorithm() == ee_genkt_algorithm  // native spherical algorithms
+            );
+  }
+}
+
+//----------------------------------------------------------------------
 string JetDefinition::description() const {
   ostringstream name;
   if (jet_algorithm() == plugin_algorithm) {
