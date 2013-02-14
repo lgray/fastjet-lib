@@ -1,5 +1,11 @@
 2013-02-14  Gavin Salam  <gavin.salam@cern.ch> + Matteo Cacciari
 
+	* include/fastjet/JetDefinition.hh:
+	* include/fastjet/ClusterSequence.hh:
+	  introduced JetDefinition::operator()(particles), which runs
+	  the jet algorithm and returns an appropriately sorted vector
+	  of jets
+
 	* src/JetDefinition.cc:
 	* include/fastjet/JetDefinition.hh:
 	  added is_spherical() member function, which returns true for

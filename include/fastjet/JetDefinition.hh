@@ -1,7 +1,10 @@
+#ifndef __FASTJET_JETDEFINITION_HH__
+#define __FASTJET_JETDEFINITION_HH__
+
 //STARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
+// Copyright (c) 2005-2013, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
@@ -25,9 +28,6 @@
 //  along with FastJet. If not, see <http://www.gnu.org/licenses/>.
 //----------------------------------------------------------------------
 //ENDHEADER
-
-#ifndef __FASTJET_JETDEFINITION_HH__
-#define __FASTJET_JETDEFINITION_HH__
 
 #include<cassert>
 #include "fastjet/internal/numconsts.hh"
@@ -286,6 +286,13 @@ public:
                 Strategy strategy_in,
                 RecombinationScheme recomb_scheme_in = E_scheme,
                 int nparameters_in = 1);
+
+  /// cluster the supplied particles and returns a vector of resulting
+  /// jets, sorted by pt (or energy in the case of spherical,
+  /// i.e. e+e-, algorithms). This routine currently only makes
+  /// sense for "inclusive" type algorithms.
+  template <class L> 
+  std::vector<PseudoJet> operator()(const std::vector<L> & particles) const;
   
   /// R values larger than max_allowable_R are not allowed.
   ///
@@ -530,9 +537,11 @@ PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, const PseudoJet & j3,
 	       const JetDefinition::Recombiner & recombiner);
 
 
-
-
-
 FASTJET_END_NAMESPACE
+
+// include ClusterSequence which includes the implementation of the 
+// templated JetDefinition::operator()(...) member
+#include "fastjet/ClusterSequence.hh"
+
 
 #endif // __FASTJET_JETDEFINITION_HH__

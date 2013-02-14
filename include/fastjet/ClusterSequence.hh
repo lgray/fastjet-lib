@@ -1,3 +1,6 @@
+#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
+#define __FASTJET_CLUSTERSEQUENCE_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -27,8 +30,6 @@
 //ENDHEADER
 
 
-#ifndef __FASTJET_CLUSTERSEQUENCE_HH__
-#define __FASTJET_CLUSTERSEQUENCE_HH__
 
 #include<vector>
 #include<map>
@@ -966,6 +967,34 @@ inline const std::vector<ClusterSequence::history_element> & ClusterSequence::hi
 }
 
 inline unsigned int ClusterSequence::n_particles() const {return _initial_n;}
+
+//----------------------------------------------------------------------
+// implementation of JetDefinition::operator() is here to avoid nasty
+// issues of order of implementations and includes
+template<class L>
+std::vector<PseudoJet> JetDefinition::operator()(const std::vector<L> & particles) const {
+  // create a new cluster sequence
+  ClusterSequence * cs = new ClusterSequence(particles, *this);
+
+  // get the jets, and sort them according to whether the algorithm
+  // is spherical or not
+  std::vector<PseudoJet> jets;
+  if (is_spherical()) {
+    jets = sorted_by_E(cs->inclusive_jets());
+  } else {
+    jets = sorted_by_pt(cs->inclusive_jets());
+  }
+  
+  // make sure the ClusterSequence gets deleted once it's no longer
+  // needed
+  if (jets.size() != 0) {
+    cs->delete_self_when_unused();
+  } else {
+    delete cs;
+  }
+
+  return jets;
+}
 
 
 
