@@ -1,3 +1,6 @@
+#ifndef __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__
+#define __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__
+
 //STARTHEADER
 // $Id$
 //
@@ -26,9 +29,6 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-
-#ifndef __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__
-#define __FASTJET_PSEUDOJET_STRUCTURE_BASE_HH__
 
 #include "fastjet/internal/base.hh"
 
