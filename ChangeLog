@@ -1,5 +1,10 @@
 2013-02-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* m4/CGAL.m4:
+	  linked against gmp, gmpxx and mpfr if available (this provides a
+	  more robust CGAL support as in some cases -lgmp has to be
+	  explicitly included at link time)
+
 	* src/PseudoJetStructureBase.cc:
 	* include/fastjet/PseudoJetStructureBase.hh:
 	  forther #ifndef __FJCORE__ not included during the first round
