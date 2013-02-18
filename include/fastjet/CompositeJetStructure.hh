@@ -87,6 +87,7 @@ public:
   virtual std::vector<PseudoJet> pieces(const PseudoJet &jet) const;
 
   // area-related material
+#ifndef __FJCORE__
 
   /// check if it has a well-defined area
   virtual bool has_area() const;
@@ -115,6 +116,7 @@ public:
     _area_4vector_ptr = area_4vector_ptr;
   }
 
+#endif  // __FJCORE__
 
 protected:
   std::vector<PseudoJet> _pieces;  ///< the pieces building the jet

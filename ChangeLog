@@ -1,3 +1,32 @@
+2013-02-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Selector.hh:
+	* include/fastjet/PseudoJetStructureBase.hh:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/CompositeJetStructure.hh:
+	* include/fastjet/ClusterSequenceStructure.hh:
+	* src/Selector.cc:
+	* src/PseudoJetStructureBase.cc:
+	* src/PseudoJet.cc:
+	* src/CompositeJetStructure.cc:
+	* src/ClusterSequenceStructure.cc:
+	  FJCore work: code not included in the core has been placed inside
+	    #ifndef __FJCORE__
+	    ...
+	    #endif
+	  for automatic extraction of the core part of FastJet. This includes
+	   . area-related headers and code
+	   . CGAL support
+
+	* include/fastjet/internal/IsBase.hh (cast_if_derived):
+	  use 0 instead of NULL (which would potentially require an
+	  additional header)
+
+	* src/ClosestPair2D.cc (closest_pair):
+	  use std::swap instead of swap (i.e. make the namespace explicit
+	  to avoid conflict with fastjet::swap in SharedPtr (only needed
+	  because we are in the fastJet namespace)
+
 2013-02-14  Gavin Salam  <gavin.salam@cern.ch> + Matteo Cacciari
 
 	* include/fastjet/JetDefinition.hh:

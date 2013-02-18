@@ -39,7 +39,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 class PseudoJet;
 class ClusterSequence;
+#ifndef __FJCORE__
 class ClusterSequenceAreaBase;
+#endif  // __FJCORE__
 
 /// @ingroup extra_info
 /// \class PseudoJetStructureBase
@@ -202,6 +204,7 @@ public:
   // the following ones require a computation of the area in the
   // parent ClusterSequence (See ClusterSequenceAreaBase for details)
   //------------------------------------------------------------------
+#ifndef __FJCORE__
 
   /// check if it has a defined area
   ///
@@ -229,6 +232,7 @@ public:
   /// By default, throws an Error
   virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
+#endif  // __FJCORE__
   //\} --- end of jet structure -------------------------------------
 };
 
