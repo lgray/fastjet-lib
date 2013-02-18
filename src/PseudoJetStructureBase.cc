@@ -75,6 +75,7 @@ const ClusterSequence * PseudoJetStructureBase::validated_cs() const{
   throw Error("This PseudoJet structure is not associated with a valid ClusterSequence");
 }
 
+#ifndef __FJCORE__
 // if the jet has valid area information then return a pointer to
 // the associated ClusterSequenceAreaBase object; otherwise throw an error
 //
@@ -82,6 +83,7 @@ const ClusterSequence * PseudoJetStructureBase::validated_cs() const{
 const ClusterSequenceAreaBase * PseudoJetStructureBase::validated_csab() const{
   throw Error("This PseudoJet structure is not associated with a valid cluster sequence with area");
 }
+#endif
 
 
 //-------------------------------------------------------------

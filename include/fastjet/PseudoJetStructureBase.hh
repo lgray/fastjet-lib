@@ -86,9 +86,11 @@ public:
   /// pointer to it; otherwise throw an error
   virtual const ClusterSequence * validated_cs() const;
 
+#ifndef __FJCORE__
   /// if the jet has valid area information then return a pointer to
   /// the associated ClusterSequenceAreaBase object; otherwise throw an error
   virtual const ClusterSequenceAreaBase * validated_csab() const;
+#endif
 
   //\}
 

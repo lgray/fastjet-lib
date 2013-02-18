@@ -1,5 +1,9 @@
 2013-02-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/PseudoJetStructureBase.cc:
+	* include/fastjet/PseudoJetStructureBase.hh:
+	  forther #ifndef __FJCORE__ not included during the first round
+
 	* include/fastjet/Selector.hh:
 	* include/fastjet/PseudoJetStructureBase.hh:
 	* include/fastjet/PseudoJet.hh:
