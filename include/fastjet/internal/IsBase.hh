@@ -162,7 +162,7 @@ struct IsBaseAndDerived{
 /// derived from B and NULL otherwise
 template<class B, class D>
 B* cast_if_derived(D* d){
-  return IsBaseAndDerived<B,D>::value ? (B*)(d) : NULL;
+  return IsBaseAndDerived<B,D>::value ? (B*)(d) : 0;
 }
 
 
