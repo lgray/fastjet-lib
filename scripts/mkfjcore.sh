@@ -173,6 +173,20 @@ for pattern in $internal_headers $fastjet_headers $internal_sources; do
     mv tmp fjcore.cc
 done
 
+echo; echo "Cleaning the resulting file:"
+wc -l fjcore.{hh,cc}
+echo "  - removing ifdef'ed code"
+for fn in fjcore.hh fjcore.cc; do
+    awk 'BEGIN{level=0;outcore=0;elsecore=0}{if (NF==0){next;} if ($1~/^#if/){level=level+1} if ($1=="#ifndef" && $2=="__FJCORE__"){outcore=level} if (outcore==0){print $0} if ($1~/^#endif/){ if (level==outcore){elsecore=0;outcore=0} level=level-1}  if (elsecore==1){ print $0} if ($1~/^#else/ && level==outcore){elsecore=1}}' $fn > tmp
+    mv tmp $fn
+done
+wc -l fjcore.{hh,cc}
+echo "  - removing comment lines"
+sed -i '/^ *\/\/.*$/d' fjcore.hh
+sed -i '/^ *\/\/.*$/d' fjcore.cc
+wc -l fjcore.{hh,cc}
+
+
 # now testing the final product by compiling the examples
 echo "======================================================================"
 echo "  CC [fjcore.cc]"
