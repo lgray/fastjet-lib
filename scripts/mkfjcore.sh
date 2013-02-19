@@ -18,7 +18,6 @@ internal_headers="base.hh\
 
 fastjet_headers="config_auto.h\
   config.h\
-  version.hh\
   SharedPtr.hh\
   Error.hh\
   LimitedWarning.hh\
@@ -31,11 +30,13 @@ fastjet_headers="config_auto.h\
   ClusterSequenceStructure.hh\
   ClusterSequence.hh"
 
-internal_sources="ClusterSequence_N2.icc"
+internal_sources="internal/ClusterSequence_N2.icc\
+  version.hh"
 
 fastjet_sources="ClosestPair2D.cc\
   ClusterSequence.cc\
   ClusterSequence_CP2DChan.cc\
+  ClusterSequence_Delaunay.cc\
   ClusterSequence_DumbN3.cc\
   ClusterSequence_N2.cc\
   ClusterSequenceStructure.cc\
@@ -69,7 +70,7 @@ for hh in $fastjet_headers; do
 done
 echo "copying internal sources"
 for icc in $internal_sources; do
-    cp $fjdir/include/fastjet/internal/$icc include/fastjet/internal/
+    cp $fjdir/include/fastjet/$icc include/fastjet/$icc
 done
 echo "copying FastJet sources"
 for cc in $fastjet_sources; do
@@ -106,12 +107,17 @@ EOF
 
 # try to build the library
 echo; echo "building the extracted code"
-make
+make || { echo "Failed"; exit 1; }
+    
 
 # then, for each header, try to include it and build dit against the lib
-echo; echo "checking individual headers (version expected to fail)"
+echo; echo "checking individual headers"
 for hh in $fastjet_headers; do
     echo $hh
+    if [[ "$hh" == "version.hh" ]]; then
+	echo "Skipped"
+	continue;
+    fi
     cat >tmp.cc <<EOF
 #include "include/fastjet/${hh}"
 
@@ -119,8 +125,9 @@ int main(){
   return 0;
 }
 EOF
-    g++ -Lsrc -lfjcore -I. -Iinclude -Wall -ansi -pedantic -Wshadow -Wextra -DDROP_CGAL -D__FJCORE__ tmp.cc
+    g++ -Lsrc -lfjcore -I. -Iinclude -Wall -ansi -pedantic -Wshadow -Wextra -DDROP_CGAL -D__FJCORE__ tmp.cc  || { echo "Failed"; exit 1; }
 done
+rm tmp.cc a.out
 
 # now merge everything in a single headre and a single source
 echo "======================================================================"
@@ -129,7 +136,8 @@ cat >fjcore.hh <<EOF
 #ifndef __FJCORE_HH__
 #define __FJCORE_HH__
 
-#define __FJCORE__
+#define __FJCORE__   // remove all the non-core code
+#define DROP_CGAL    // disable CGAL support
 
 EOF
 
@@ -140,6 +148,7 @@ done
 for hh in $fastjet_headers; do
     cat include/fastjet/$hh >> fjcore.hh
 done
+
 echo "#endif" >> fjcore.hh
 
 # copy the source
@@ -149,7 +158,7 @@ cat >fjcore.cc <<EOF
 EOF
 
 for icc in $internal_sources; do
-    cat include/fastjet/internal/$icc >> fjcore.cc
+    cat include/fastjet/$icc >> fjcore.cc
 done
 
 for cc in $fastjet_sources; do
@@ -157,12 +166,40 @@ for cc in $fastjet_sources; do
 done
 
 echo; echo "Cleaning the #include directives"
-for pattern in $internal_headers $fastjet_headers; do
+for pattern in $internal_headers $fastjet_headers $internal_sources; do
     grep -v "include.*$pattern" fjcore.hh > tmp
     mv tmp fjcore.hh
     grep -v "include.*$pattern" fjcore.cc > tmp
     mv tmp fjcore.cc
 done
+
+# now testing the final product by compiling the examples
+echo "======================================================================"
+echo "  CC [fjcore.cc]"
+g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g fjcore.cc
+for idx in 01 02 04 05 08 09 10; do
+    fname=$(ls $fjdir/example/$idx-*.cc)
+    fname=${fname##*/}
+
+    # get the example
+    cat $fjdir/example/$fname | sed 's/\/\/ENDHEADER/#include "fjcore.hh"/;s/^#include "fastjet\/.*$//g' > $fname
+
+    echo "  CC [$fname]"
+    g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g $fname || { echo "Failed."; exit 1; }
+    echo "  LD [${fname%.cc}]"
+    g++ -o ${fname%.cc} -g ${fname%cc.o} fjcore.o -lm || { echo "Failed."; exit 1; }
+    rm ${fname%.cc}*
+done
+    
+
+# remove the temporary files
+echo "======================================================================"
+echo "Cleaning unnecessary files"
+rm -Rf src include Makefile *.o
+
+echo "======================================================================"
+echo "fjcore-${version}/fjcore.{hh,cc} is now ready"
+echo "======================================================================"
 
 # cd ..
 
