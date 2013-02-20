@@ -252,13 +252,19 @@ void ClusterSequence::_add_neighbours_to_tile_union(const int tile_index,
 /// Note that with a high level of warnings (-pedantic -Wextra -ansi,
 /// gcc complains about tile_index maybe being used uninitialised for
 /// oldB in ClusterSequence::_minheap_faster_tiled_N2_cluster(). We
-/// have explicitly checked that it was harmless so we disable the gcc
-/// warning by hand. Note furthermore that the gcc warning depends on
-/// the gcc version which complicates a bit the construct below
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpragmas"
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+/// have explicitly checked that it was harmless so we could disable
+/// the gcc warning by hand using the construct below
+///
+///  #pragma GCC diagnostic push
+///  #pragma GCC diagnostic ignored "-Wpragmas"
+///  #pragma GCC diagnostic ignored "-Wuninitialized"
+///  #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+///    ...
+///  #pragma GCC diagnostic pop
+///
+/// the @GCC diagnostic push/pop directive was only introduced in
+/// gcc-4.6, so for broader usage, we'd need to insert #pragma GCC
+/// diagnostic ignored "-Wpragmas" at the top of this file
 inline void ClusterSequence::_add_untagged_neighbours_to_tile_union(
                const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
@@ -272,7 +278,6 @@ inline void ClusterSequence::_add_untagged_neighbours_to_tile_union(
     }
   }
 }
-#pragma GCC diagnostic pop
 
 
 //----------------------------------------------------------------------

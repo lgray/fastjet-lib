@@ -4,6 +4,9 @@
 	  explicitly disabled a harmless gcc warning in
 	  _add_untagged_neighbours_to_tile_union
 
+	  Turned into a comment for future usage/bookkeeping
+
+
 2013-02-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* m4/CGAL.m4:
