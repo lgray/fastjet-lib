@@ -132,11 +132,12 @@ rm tmp.cc a.out
 # now merge everything in a single headre and a single source
 echo "======================================================================"
 echo "Merging all the headers into fjcore.hh"
-cat >fjcore.hh <<EOF
+cat ../preamble.txt > fjcore.hh
+cat >>fjcore.hh <<EOF
 #ifndef __FJCORE_HH__
 #define __FJCORE_HH__
 
-#define __FJCORE__   // remove all the non-core code
+#define __FJCORE__   // remove all the non-core code (a safekeeper)
 #define DROP_CGAL    // disable CGAL support
 
 EOF
@@ -198,10 +199,11 @@ for idx in 01 02 04 05 08 09 10; do
     # get the example
     cat $fjdir/example/$fname | sed 's/\/\/ENDHEADER/#include "fjcore.hh"/;s/^#include "fastjet\/.*$//g' > $fname
 
-    echo "  CC [$fname]"
+    echo "  CC   [$fname]"
     g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g $fname || { echo "Failed."; exit 1; }
-    echo "  LD [${fname%.cc}]"
+    echo "  LD   [${fname%.cc}]"
     g++ -o ${fname%.cc} -g ${fname%cc.o} fjcore.o -lm || { echo "Failed."; exit 1; }
+    echo "  CHK  [${fname%.cc}] --- currently unimplemented"
     rm ${fname%.cc}*
 done
     

@@ -20,21 +20,30 @@
 //     For C/A, the NlnN method is available, while anti-kt and kt
 //     are limited to the N^2 one (still the fastest for N < 20k particles)
 //   - access to selectors, for implementing cuts and selections
-//   - access to all functionalities related to pseudojets (e.g. for
-//     using a composite jet structure)
+//   - access to all functionalities related to pseudojets (e.g. a jet's
+//     structure or user-defined information)
 //
 // Instead, it does NOT provide:
 //
-//   - everything else, i.e.
-//     - jet areas functionalities
-//     - background estimation
-//     - access to other algorithms via plugins
-//     - interface to CGAL
-//     - jet substructure tools, i.e. filters and taggers
+//   - jet areas functionalities
+//   - background estimation
+//   - access to other algorithms via plugins
+//   - interface to CGAL
+//   - fastjet tools, e.g. filters, taggers
 //
 // If these functionalities are needed, the full FastJet installation must be
 // used. The code will be fully compatible, with the sole replacement of the
 // header files.
+//
+// As for FastJet, fjcore is released under the terms of the GNU General Public
+// License version 2 (GPLv2). If you use this code as part of work towards a
+// scientific publication, whether directly or contained within another program
+// (e.g. Delphes, SpartyJet, Rivet, LHC collaboration software frameworks, 
+// etc.), you should include a citation to
+// 
+//   arXiv:1111.6097 (FastJet User Manual)
+//   and, optionally, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
+//
 //
 // Copyright (c) 2005-2013, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
