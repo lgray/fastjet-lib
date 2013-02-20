@@ -248,6 +248,14 @@ void ClusterSequence::_add_neighbours_to_tile_union(const int tile_index,
 /// Like _add_neighbours_to_tile_union, but only adds neighbours if 
 /// their "tagged" status is false; when a neighbour is added its
 /// tagged status is set to true.
+///
+/// Note that with a high level of warnings (-pedantic -Wextra -ansi,
+/// gcc complains about tile_index maybe being used uninitialised for
+/// oldB in ClusterSequence::_minheap_faster_tiled_N2_cluster(). We
+/// have explicitly checked that it was harmless so we disable the gcc
+/// warning by hand.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
 inline void ClusterSequence::_add_untagged_neighbours_to_tile_union(
                const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
@@ -261,6 +269,7 @@ inline void ClusterSequence::_add_untagged_neighbours_to_tile_union(
     }
   }
 }
+#pragma GCC diagnostic pop
 
 
 //----------------------------------------------------------------------
