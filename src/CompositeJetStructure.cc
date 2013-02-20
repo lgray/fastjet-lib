@@ -70,6 +70,7 @@ CompositeJetStructure::CompositeJetStructure(const std::vector<PseudoJet> & init
     _area_4vector_ptr = 0;
   }
 #else
+  if (recombiner){};  // ugly trick to prevent a gcc warning
   _area_4vector_ptr = 0;
 #endif
 

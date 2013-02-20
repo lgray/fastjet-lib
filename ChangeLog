@@ -1,5 +1,9 @@
 2013-02-20  Gregory Soyez  <soyez@fastjet.fr> + Gavin & Matteo
 
+	* src/CompositeJetStructure.cc (CompositeJetStructure):
+	  removed a compiler warning about recombiner beign unused in
+	  fjcore
+
 	* src/ClusterSequence_TiledN2.cc:
 	  explicitly disabled a harmless gcc warning in
 	  _add_untagged_neighbours_to_tile_union
