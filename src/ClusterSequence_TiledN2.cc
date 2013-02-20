@@ -290,7 +290,7 @@ void ClusterSequence::_tiled_N2_cluster() {
   TiledJet * briefjets = new TiledJet[n];
   TiledJet * jetA = briefjets, * jetB;
   TiledJet oldB;
-  
+  oldB.tile_index=0; // prevents a gcc warning
 
   // will be used quite deep inside loops, but declare it here so that
   // memory (de)allocation gets done only once
@@ -533,7 +533,7 @@ void ClusterSequence::_faster_tiled_N2_cluster() {
   TiledJet * briefjets = new TiledJet[n];
   TiledJet * jetA = briefjets, * jetB;
   TiledJet oldB;
-  
+  oldB.tile_index=0; // prevents a gcc warning
 
   // will be used quite deep inside loops, but declare it here so that
   // memory (de)allocation gets done only once
@@ -750,7 +750,7 @@ void ClusterSequence::_minheap_faster_tiled_N2_cluster() {
   TiledJet * briefjets = new TiledJet[n];
   TiledJet * jetA = briefjets, * jetB;
   TiledJet oldB;
-  
+  oldB.tile_index=0; // prevents a gcc warning
 
   // will be used quite deep inside loops, but declare it here so that
   // memory (de)allocation gets done only once

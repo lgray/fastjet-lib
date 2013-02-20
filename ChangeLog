@@ -1,11 +1,13 @@
-2013-02-20  Gregory Soyez  <soyez@fastjet.fr>
+2013-02-20  Gregory Soyez  <soyez@fastjet.fr> + Gavin & Matteo
 
 	* src/ClusterSequence_TiledN2.cc:
 	  explicitly disabled a harmless gcc warning in
 	  _add_untagged_neighbours_to_tile_union
-
 	  Turned into a comment for future usage/bookkeeping
 
+	  Instead, explicitly initialise oldB.tile_index=0 in
+	  _tiled_N2_cluster(), _faster_tiled_N2_cluster() and
+	  _minheap_faster_tiled_N2_cluster().
 
 2013-02-18  Gregory Soyez  <soyez@fastjet.fr>
 
