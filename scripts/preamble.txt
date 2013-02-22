@@ -1,4 +1,4 @@
-// fjcore -- extracted from FastJet v3.1.0 (http://fastjet.fr)
+// fjcore -- extracted from FastJet v--FJVERSION-- (http://fastjet.fr)
 //
 // fjcore constitutes a digest of the main FastJet functionalities.
 // The files fjcore.hh and fjcore.cc are meant to provide easy access to these 
@@ -68,3 +68,4 @@
 //  You should have received a copy of the GNU General Public License
 //  along with FastJet. If not, see <http://www.gnu.org/licenses/>.
 //----------------------------------------------------------------------
+//

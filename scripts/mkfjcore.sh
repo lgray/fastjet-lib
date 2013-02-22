@@ -129,10 +129,9 @@ EOF
 done
 rm tmp.cc a.out
 
-# now merge everything in a single headre and a single source
+# now merge everything in a single header and a single source
 echo "======================================================================"
 echo "Merging all the headers into fjcore.hh"
-cat ../preamble.txt > fjcore.hh
 cat >>fjcore.hh <<EOF
 #ifndef __FJCORE_HH__
 #define __FJCORE_HH__
@@ -188,8 +187,17 @@ sed -i '/^ *\/\/.*$/d' fjcore.cc
 wc -l fjcore.{hh,cc}
 
 
+# add preamble to fjcore.hh|cc (if done earlier, it gets canceled by comments removal)
+echo; echo "Including preamble with appropriate version number"
+for i in cc hh; do
+  cat ../preamble.txt fjcore.$i > tmp$$
+  sed -i "s/--FJVERSION--/$version/" tmp$$
+  mv tmp$$ fjcore.$i
+done  
+
 # now testing the final product by compiling the examples
 echo "======================================================================"
+echo "Now compiling and running examples for checking:"
 echo "  CC [fjcore.cc]"
 g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g fjcore.cc
 for idx in 01 02 04 05 08 09 10; do
