@@ -1,18 +1,16 @@
 // fjcore -- extracted from FastJet v3.1.0 (http://fastjet.fr)
 //
-// The files fjcore.hh and fjcore.cc constitute a digest of the main
-// FastJet functions. These files are not meant to be human-readable
-// (for documentation, see the full FastJet at http://fastjet.fr).
-//
-// fjcore is meant to provide easy access to these core functions, in the
-// form of single files and without the need of a full FastJet installation:
+// fjcore constitutes a digest of the main FastJet functionalities.
+// The files fjcore.hh and fjcore.cc are meant to provide easy access to these 
+// core functions, in the form of single files and without the need of a full 
+// FastJet installation:
 //
 //     g++ main.cc fjcore.cc
 // 
 // with main.cc including fjcore.hh.
 //
 // The results are expected to be identical to those obtained by linking to
-// the full FastJet distribution.
+// the full FastJet distribution. 
 //
 // In particular, fjcore provides:
 //
@@ -35,7 +33,10 @@
 // used. The code will be fully compatible, with the sole replacement of the
 // header files.
 //
-// As for FastJet, fjcore is released under the terms of the GNU General Public
+// fjcore.hh and fjcore.cc are not meant to be human-readable.
+// For documentation, see the full FastJet at http://fastjet.fr
+//
+// Like FastJet, fjcore is released under the terms of the GNU General Public
 // License version 2 (GPLv2). If you use this code as part of work towards a
 // scientific publication, whether directly or contained within another program
 // (e.g. Delphes, SpartyJet, Rivet, LHC collaboration software frameworks, 
@@ -43,7 +44,6 @@
 // 
 //   arXiv:1111.6097 (FastJet User Manual)
 //   and, optionally, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
-//
 //
 // Copyright (c) 2005-2013, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
