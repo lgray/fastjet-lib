@@ -165,6 +165,13 @@ for cc in $fastjet_sources; do
     cat src/$cc >> fjcore.cc
 done
 
+# add the string "[fjcore]" to fastjet version number in function
+# returning it and in banner
+# VERY fragile replacement!
+  sed -i 's/return "FastJet version "+string(fastjet_version)/return "FastJet version "+string(fastjet_version)+" [fjcore]"/' fjcore.cc
+  sed -i 's/FastJet release " << fastjet_version/FastJet release " << fastjet_version << " [fjcore]"/' fjcore.cc
+
+
 echo; echo "Cleaning the #include directives"
 for pattern in $internal_headers $fastjet_headers $internal_sources; do
     grep -v "include.*$pattern" fjcore.hh > tmp
@@ -173,7 +180,7 @@ for pattern in $internal_headers $fastjet_headers $internal_sources; do
     mv tmp fjcore.cc
 done
 
-echo; echo "Cleaning the resulting file:"
+echo; echo "Cleaning the resulting files:"
 wc -l fjcore.{hh,cc}
 echo "  - removing ifdef'ed code"
 for fn in fjcore.hh fjcore.cc; do
