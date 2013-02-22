@@ -3,7 +3,7 @@
 fjdir=..
 version=$(grep "AC_INIT" $fjdir/configure.ac | sed 's/^AC_INIT(\[.*\],\[//;s/\])$//')
 
-mkdir fjcore-$version
+mkdir fjcore-$version || { echo "A previous fjcore exists. Exiting."; exit 1; }
 cd fjcore-$version
 fjdir=../$fjdir
 
@@ -132,7 +132,7 @@ rm tmp.cc a.out
 # now merge everything in a single header and a single source
 echo "======================================================================"
 echo "Merging all the headers into fjcore.hh"
-cat >>fjcore.hh <<EOF
+cat >fjcore.hh <<EOF
 #ifndef __FJCORE_HH__
 #define __FJCORE_HH__
 
