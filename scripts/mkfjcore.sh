@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Script to create fjcore from the current (configured) version
+# of the code
 
 fjdir=..
 version=$(grep "AC_INIT" $fjdir/configure.ac | sed 's/^AC_INIT(\[.*\],\[//;s/\])$//')
@@ -110,7 +113,7 @@ echo; echo "building the extracted code"
 make || { echo "Failed"; exit 1; }
     
 
-# then, for each header, try to include it and build dit against the lib
+# then, for each header, try to include it and build it against the lib
 echo; echo "checking individual headers"
 for hh in $fastjet_headers; do
     echo $hh
@@ -168,8 +171,11 @@ done
 # add the string "[fjcore]" to fastjet version number in function
 # returning it and in banner
 # VERY fragile replacement!
-  sed -i 's/return "FastJet version "+string(fastjet_version)/return "FastJet version "+string(fastjet_version)+" [fjcore]"/' fjcore.cc
-  sed -i 's/FastJet release " << fastjet_version/FastJet release " << fastjet_version << " [fjcore]"/' fjcore.cc
+sed \
+  -e 's/return "FastJet version "+string(fastjet_version)/return "FastJet version "+string(fastjet_version)+" [fjcore]"/' \
+  -e 's/    FastJet release " << fastjet_version/FastJet release " << fastjet_version << " [fjcore]"/' \
+  fjcore.cc > fjcore.cc.tmp
+mv fjcore.cc.tmp fjcore.cc 
 
 
 echo; echo "Cleaning the #include directives"
@@ -181,32 +187,37 @@ for pattern in $internal_headers $fastjet_headers $internal_sources; do
 done
 
 echo; echo "Cleaning the resulting files:"
-wc -l fjcore.{hh,cc}
+wc -cl fjcore.{hh,cc}
 echo "  - removing ifdef'ed code"
 for fn in fjcore.hh fjcore.cc; do
     awk 'BEGIN{level=0;outcore=0;elsecore=0}{if (NF==0){next;} if ($1~/^#if/){level=level+1} if ($1=="#ifndef" && $2=="__FJCORE__"){outcore=level} if (outcore==0){print $0} if ($1~/^#endif/){ if (level==outcore){elsecore=0;outcore=0} level=level-1}  if (elsecore==1){ print $0} if ($1~/^#else/ && level==outcore){elsecore=1}}' $fn > tmp
     mv tmp $fn
 done
-wc -l fjcore.{hh,cc}
+wc -cl fjcore.{hh,cc}
 echo "  - removing comment lines"
-sed -i '/^ *\/\/.*$/d' fjcore.hh
-sed -i '/^ *\/\/.*$/d' fjcore.cc
-wc -l fjcore.{hh,cc}
+# GPS: on macs sed has a different command line (and there's
+#      no way of writing a line that's compatible with macs and linux)
+#      so just use a simple copy and move
+sed '/^ *\/\/.*$/d' fjcore.hh > fjcore.hh.nocomments
+sed '/^ *\/\/.*$/d' fjcore.cc > fjcore.cc.nocomments
+mv fjcore.hh.nocomments fjcore.hh
+mv fjcore.cc.nocomments fjcore.cc
+wc -cl fjcore.{hh,cc}
 
 
 # add preamble to fjcore.hh|cc (if done earlier, it gets canceled by comments removal)
 echo; echo "Including preamble with appropriate version number"
 for i in cc hh; do
-  cat ../preamble.txt fjcore.$i > tmp$$
-  sed -i "s/--FJVERSION--/$version/" tmp$$
-  mv tmp$$ fjcore.$i
+  cat ../preamble-fjcore.txt fjcore.$i > tmp$$
+  sed "s/--FJVERSION--/$version/" tmp$$ > fjcore.$i
 done  
 
 # now testing the final product by compiling the examples
 echo "======================================================================"
 echo "Now compiling and running examples for checking:"
 echo "  CC [fjcore.cc]"
-g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g fjcore.cc
+time g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g fjcore.cc
+echo
 for idx in 01 02 04 05 08 09 10; do
     fname=$(ls $fjdir/example/$idx-*.cc)
     fname=${fname##*/}
@@ -217,8 +228,16 @@ for idx in 01 02 04 05 08 09 10; do
     echo "  CC   [$fname]"
     g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g $fname || { echo "Failed."; exit 1; }
     echo "  LD   [${fname%.cc}]"
-    g++ -o ${fname%.cc} -g ${fname%cc.o} fjcore.o -lm || { echo "Failed."; exit 1; }
+    # GPS: removed -g from the following line, which was generating .dSYM 
+    #      debugging symbol directories on a mac
+    g++ -o ${fname%.cc} ${fname%cc.o} fjcore.o -lm || { echo "Failed."; exit 1; }
     echo "  CHK  [${fname%.cc}] --- currently unimplemented"
+    if [[ $idx == "01" ]]; then
+      echo "The banner is "
+      echo
+      ./${fname%.cc} < ../../example/data/single-event.dat | grep '^#'
+      echo
+    fi
     rm ${fname%.cc}*
 done
     

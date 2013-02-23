@@ -1,7 +1,14 @@
+2013-02-23  Gavin Salam  <gavin.salam@cern.ch>
+
+	* scripts/mkfjcore.sh:
+	  made a couple of changes to get this to work on macs
+	  + a little extra output (also added TODO-fjcore and renamed
+	  preamble file)
+
 2013-02-20  Gregory Soyez  <soyez@fastjet.fr> + Gavin & Matteo
 
 	* src/CompositeJetStructure.cc (CompositeJetStructure):
-	  removed a compiler warning about recombiner beign unused in
+	  removed a compiler warning about recombiner being unused in
 	  fjcore
 
 	* src/ClusterSequence_TiledN2.cc:
