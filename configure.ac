@@ -14,7 +14,7 @@ dnl Notes:
 dnl  - the first macro needs to place the files in the correct 
 dnl    dir in order to have the correct -I options for the remote build
 dnl  - see Makefile.am for distcleaning AX_PREFIX_CONFIG_H leftovers
-AM_CONFIG_HEADER(include/fastjet/config_raw.h:config.h.in)
+AC_CONFIG_HEADERS(include/fastjet/config_raw.h:config.h.in)
 AX_PREFIX_CONFIG_H(include/fastjet/config_auto.h,FASTJET,include/fastjet/config_raw.h)
 
 dnl check autoconf version
@@ -440,11 +440,11 @@ dnl     ...
 dnl   #endif
 dnl will give a positive anwser for FastJet 3.1.0a1.
 dnl-------------------------------------------------------------------
-versionmajor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]\+\)\.\([[^\.]]\+\)\.\([[^\.]]\+\).*/\1/'`
-versionminor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]\+\)\.\([[^\.]]\+\)\.\([[^\.]]\+\).*/\2/'`
-versionending=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]\+\)\.\([[^\.]]\+\)\.\([[^\.]]\+\)$/\3/'`
-versionpatchlevel=`echo $versionending | sed 's/^\([[0-9]]\+\).*/\1/'`
-versionprerelease=`echo $versionending | sed 's/^[[0-9-]]\+//'`
+versionmajor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\([[^\.]]*\).*/\1/'`
+versionminor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\([[^\.]]*\).*/\2/'`
+versionending=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\([[^\.]]*\)$/\3/'`
+versionpatchlevel=`echo $versionending | sed 's/^\([[0-9]][[0-9]]*\).*/\1/'`
+versionprerelease=`echo $versionending | sed 's/^[[0-9-]]*//'`
 versionnumber=`printf "%d%.2d%.2d" "$versionmajor" "$versionminor" "$versionpatchlevel"`
 
 AC_DEFINE_UNQUOTED([VERSION_MAJOR],      [$versionmajor],      [Major version of this package])
