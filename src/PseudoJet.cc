@@ -68,6 +68,7 @@ PseudoJet::PseudoJet(const double px_in, const double py_in, const double pz_in,
 void PseudoJet::_finish_init () {
   _kt2 = this->px()*this->px() + this->py()*this->py();
   _phi = pseudojet_invalid_phi;
+  _rap = pseudojet_invalid_rap;
 }
 
 //----------------------------------------------------------------------

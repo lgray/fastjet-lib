@@ -51,6 +51,7 @@ const double MaxRap = 1e5;
 
 /// default value for phi, meaning it (and rapidity) have yet to be calculated) 
 const double pseudojet_invalid_phi = -100.0;
+const double pseudojet_invalid_rap = -1e200;
 
 #ifndef __FJCORE__
 // forward definition
@@ -74,6 +75,7 @@ class PseudoJet {
   // cases better than just having the default constructor for the
   // internal shared pointer: see PJtiming.cc and the notes therein)
   PseudoJet() : _px(0), _py(0), _pz(0), _E(0) {_finish_init(); _reset_indices();}
+  //PseudoJet() : _px(0), _py(0), _pz(0), _E(0), _phi(pseudojet_invalid_phi), _rap(pseudojet_invalid_rap), _kt2(0) {_reset_indices();}
   /// construct a pseudojet from explicit components
   PseudoJet(const double px, const double py, const double pz, const double E);
 
