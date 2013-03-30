@@ -24,6 +24,15 @@ dnl   autoconf-2.59 (lxplus)
 dnl   autoconf-2.61 (karnak)
 dnl   autoconf-2.65 (ipht)
 dnl   autoconf-2.68 (virtual&lpthe)
+dnl
+dnl 2013-03-30, updated and tested it works with
+dnl   autoconf-2.63 + automake 1.11 (tycho SLC6)
+dnl   autoconf-2.69 + automake 1.13 (gavin's laptop with macports)
+dnl
+dnl   NB: it is broken on lxplus (SLC5, autoconf 2.59 + automake 1.9), 
+dnl       but lxplus will soon migrate to SLC6. For now 
+dnl       autogen can be run on lxplus6, links to automake-1.11 
+dnl       files replaced with copies and then used on lxplus5
 AC_PREREQ(2.59)
 
 dnl load our M4 macro directory

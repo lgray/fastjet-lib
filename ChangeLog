@@ -1,7 +1,9 @@
 2013-03-30  Gavin Salam  <gavin.salam@cern.ch>
 
 	* configure.ac:
-	  replaced AM_CONFIG_HEADER with AC_CONFIG_HEADERS
+	  replaced AM_CONFIG_HEADER with AC_CONFIG_HEADERS to get 
+	  compatibility with autoconf-2.69 + automake-1.13. This breaks
+	  very old autotools setups
 
 	  sorted out bug in sed commands for version numbers with OS X
 	  version of sed. (Some versions of sed and grep don't recognise
