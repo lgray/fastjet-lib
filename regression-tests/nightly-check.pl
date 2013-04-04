@@ -95,29 +95,23 @@ push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10, "
 #             g++-4.6.0 STL that is now on all machines
 push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc CFLAGS="-gcc-name=/usr/bin/gcc34" CXXFLAGS="-gcc-name=/usr/bin/gcc34 -gxx-name=/usr/bin/g++34" --disable-debug', "", 1000, ""]; # with the intel compiler
 # maintain a check with gxx-3.4
-push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gxx-3.4
-push @setups, ["tycho","--enable-allcxxplugins", "", 1000, ""]; # tycho: standard machine, 32 bits
-# GPS 2011-03-17: zetes is down, so remove this test
-#push @setups, ["zetes", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
-#push @setups, ["karnak","FC=/usr/local/bin/gfortran-4.4", "", 10, ""]; # out of the box on karnak (OS X 10.5)
-# karnak reenabled 2010-12-20
-# karnak disabled 2011-03-23
-# karnak enabled 2011-04-06
+push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4
+push @setups, ["tycho","--enable-allcxxplugins", "", 1000, ""]; # tycho: standard SCL6 machine, 64 bits, gcc 4.4.7
+push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 push @setups, ["karnak","", "", 10, ""]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","--enable-allcxxplugins", "", 1000, ""]; # full monty on karnak
-#push @setups, ["karnak","--enable-allcxxplugins --disable-shared", "", 10, ""]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 (since 14/06/2012 4.4 is 4.4.7)
-#push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4 --disable-shared", "", 10, ""]; # full set with gcc 4.4 
+push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
+push @setups, ["orphee","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
+push @setups, ["tycho","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.8 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.8", "", 10, ""]; # with gcc 4.8
 # extra tests for areas
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # loaclly
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
 # extra tests for background estimation
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # loaclly
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
-push @setups, ["osiris", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
-push @setups, ["orphee", "--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
 
 # process command-line
 $mail=0;
