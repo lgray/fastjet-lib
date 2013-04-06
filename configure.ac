@@ -33,7 +33,7 @@ dnl   NB: it is broken on lxplus (SLC5, autoconf 2.59 + automake 1.9),
 dnl       but lxplus will soon migrate to SLC6. For now 
 dnl       autogen can be run on lxplus6, links to automake-1.11 
 dnl       files replaced with copies and then used on lxplus5
-AC_PREREQ(2.59)
+AC_PREREQ(2.63)
 
 dnl load our M4 macro directory
 dnl  - this is recommended by latest versions of libtoolize
