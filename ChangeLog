@@ -2,6 +2,7 @@
 
 	* regression-tests/nightly-check.pl: 
 	  updated CGAL directory 
+	  removed explicit g++3.4 test (but we still have it on zetes)
 
 2013-04-06  Gavin Salam  <gavin.salam@cern.ch>
 

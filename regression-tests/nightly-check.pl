@@ -97,7 +97,7 @@ push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10, "
 #             g++-4.6.0 STL that is now on all machines
 push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc CFLAGS="-gcc-name=/usr/bin/gcc34" CXXFLAGS="-gcc-name=/usr/bin/gcc34 -gxx-name=/usr/bin/g++34" --disable-debug', "", 1000, ""]; # with the intel compiler
 # maintain a check with gxx-3.4
-push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4
+#push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4
 push @setups, ["tycho","--enable-allcxxplugins", "", 1000, ""]; # tycho: standard SCL6 machine, 64 bits, gcc 4.4.7
 push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 push @setups, ["karnak","", "", 10, ""]; # out of the box on karnak (OS X 10.5)
