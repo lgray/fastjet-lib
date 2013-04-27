@@ -67,7 +67,9 @@ $mailAddr='salam@lpthe.jussieu.fr cacciari@lpthe.jussieu.fr soyez@lpthe.jussieu.
 # systems, so I'll use the 64-bit build
 #$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_install';
 #$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.6.1_gcc46_install';
-$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.8_gcc46_install';
+#$CGAL_DIR='/ada3/anciens/soyez/jets/utils/CGAL-3.8_gcc46_install';
+# GPS: updated this 2013-04-27 to point to new build by Matteo
+$CGAL_DIR='/ada1/lpthe/cacciari/lib/CGAL-4.1';
 
 @setups = ();
 # for each setup we put the host ("" is current host), the config
