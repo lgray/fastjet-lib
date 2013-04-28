@@ -1,3 +1,9 @@
+2013-04-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	  switched intel compiler tests over to default args (used to rely
+	  on gcc34 libraries).
+
 2013-04-27  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
