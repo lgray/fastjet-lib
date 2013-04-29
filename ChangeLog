@@ -1,3 +1,8 @@
+2013-04-29  Gavin Salam  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl: 
+	  removed a couple more redundant machines for the nightly checks
+
 2013-04-28  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
