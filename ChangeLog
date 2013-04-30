@@ -1,3 +1,9 @@
+2013-04-30 Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * example/fastjet_timing_plugins.cc
+	  fixed a couple of harmless errors in the messages
+	  concerning missing plugins
+
 2013-04-30  Gregory Soyez  <soyez@fastjet.fr>
 
 	* regression-tests/nightly-check.pl:

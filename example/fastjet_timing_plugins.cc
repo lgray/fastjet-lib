@@ -413,7 +413,7 @@ int main (int argc, char ** argv) {
                                       max_iterations, overlap_threshold,
                                       sm_scale)));
 #else  // FASTJET_ENABLE_PLUGIN_CDFCONES
-    is_unavailable("midpoint");
+    is_unavailable("MidPoint");
 #endif // FASTJET_ENABLE_PLUGIN_CDFCONES
   } 
   if (all_algs || cmdline.present("-pxcone")) {
@@ -423,7 +423,7 @@ int main (int argc, char ** argv) {
                                       ktR, min_jet_energy,
                                       overlap_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_PXCONE
-    is_unavailable("pxcone");
+    is_unavailable("PxCone");
 #endif // FASTJET_ENABLE_PLUGIN_PXCONE
   } 
   if (all_algs || cmdline.present("-jetclu")) {
@@ -431,7 +431,7 @@ int main (int argc, char ** argv) {
     jet_defs.push_back( fj::JetDefinition( new fj::CDFJetCluPlugin (
                                                                     ktR, overlap_threshold, seed_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_CDFCONES
-    is_unavailable("pxcone");
+    is_unavailable("JetClu");
 #endif // FASTJET_ENABLE_PLUGIN_CDFCONES
   } 
   if (all_algs || cmdline.present("-siscone") || cmdline.present("-sisconespheri")) {
@@ -459,7 +459,7 @@ int main (int argc, char ** argv) {
       jet_defs.push_back( fj::JetDefinition(plugin));
     }
 #else  // FASTJET_ENABLE_PLUGIN_SISCONE
-    is_unavailable("siscone");
+    is_unavailable("SISCone");
 #endif // FASTJET_ENABLE_PLUGIN_SISCONE
   } 
   if (all_algs || cmdline.present("-d0runiicone")) {
@@ -509,7 +509,7 @@ int main (int argc, char ** argv) {
 #ifdef FASTJET_ENABLE_PLUGIN_D0RUNICONE
     jet_defs.push_back( fj::JetDefinition(new fj::D0RunIpre96ConePlugin(ktR, seed_threshold, overlap_threshold)));
 #else  // FASTJET_ENABLE_PLUGIN_D0RUNICONE
-    is_unavailable("D0RunICone");
+    is_unavailable("D0RunIpre96Cone");
 #endif // FASTJET_ENABLE_PLUGIN_D0RUNICONE
   } 
   if (all_algs || cmdline.present("-d0runicone")) {
