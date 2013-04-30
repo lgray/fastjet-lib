@@ -112,7 +112,7 @@ push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/u
 #push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
 #push @setups, ["orphee","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
 
-push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.8 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.8", "", 10, ""]; # with gcc 4.8
+push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.8 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.8", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 4.8
 # extra tests for areas
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely

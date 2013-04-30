@@ -1,3 +1,9 @@
+2013-04-30  Gregory Soyez  <soyez@fastjet.fr>
+
+	* regression-tests/nightly-check.pl:
+	  explicitly pointed to the correct version of libstdc++ when
+	  checking gcc-4.8
+
 2013-04-29  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl: 
