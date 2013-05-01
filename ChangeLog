@@ -1,3 +1,9 @@
+2013-05-01  Gavin Salam  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl: 
+	  added themis (32 bit) to the nightly check, and reordered the
+	  checks to make the structure more clearly visible.
+
 2013-04-30 Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * example/fastjet_timing_plugins.cc

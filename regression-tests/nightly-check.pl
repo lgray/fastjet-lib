@@ -87,38 +87,44 @@ $CGAL_DIR='/ada1/lpthe/cacciari/lib/CGAL-4.1';
 # - at least one run with pxcone
 
 
+# basic checks without and with CGAL (by default all 64 bit)
 push @setups, ["","", "", 10, ""]; # out of the box
-#push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$ENV{CGAL_DIR}, "", 1000, ""]; # with CGAL & all plugins
 push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, ""]; # with CGAL & all plugins
+
+# checks of the library system variants (shared/static/monolithic)
 push @setups, ["","--enable-allplugins --disable-shared", "", 10, ""]; # with static libs, and pxcone
 push @setups, ["","--enable-allplugins --disable-monolithic", "", 10, ""]; # test the non-monolithic build (all plugins in separate libs)
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10, ""]; # with static libs even though shared are built
-# 2011-06-29: remove the icpc checks, since icpc seems not to be able to handle the
-#             g++-4.6.0 STL that is now on all machines
-# 2013-04-28: switched back to plain intel compiler without special options
-#push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc CFLAGS="-gcc-name=/usr/bin/gcc34" CXXFLAGS="-gcc-name=/usr/bin/gcc34 -gxx-name=/usr/bin/g++34" --disable-debug', "", 1000, ""]; # with the intel compiler
+
+# checks with different compilers, and 32 instead of 64 bit; all still linux
+push @setups, ["themis","--enable-allcxxplugins", "", 1000, ""]; # a 32 bit SLC6 machine (added 2013-05-01)
 push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc --disable-debug', "", 1000, ""]; # with the intel compiler
-# maintain a check with gxx-3.4
-#push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4
-push @setups, ["tycho","--enable-allcxxplugins", "", 1000, ""]; # tycho: standard SCL6 machine, 64 bits, gcc 4.4.7
+push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.8 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.8", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 1000, ""]; # with gcc 4.8
 push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
+#push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4 [suspended 2013-04, but we have zetes for now]
+
+# checks on macs
 push @setups, ["karnak","", "", 10, ""]; # out of the box on karnak (OS X 10.5)
 push @setups, ["karnak","--enable-allcxxplugins", "", 1000, ""]; # full monty on karnak
 push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 (since 14/06/2012 4.4 is 4.4.7)
 
-# GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
-#push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
-#push @setups, ["orphee","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
-
-push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.8 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.8", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 4.8
 # extra tests for areas
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
+
 # extra tests for background estimation
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
+
+
+
+# GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
+#push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
+#push @setups, ["orphee","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
+#push @setups, ["tycho","--enable-allcxxplugins", "", 1000, ""]; # tycho: standard SCL6 machine, 64 bits, gcc 4.4.7 [2013-05-01: no longer needed since tycho is identical to others]
+
 
 # process command-line
 $mail=0;
