@@ -254,7 +254,11 @@ class PseudoJet {
     // complex construct here that works also in such a case. As for
     // dynamic_cast, NULL is returned if L is not derived from
     // PseudoJet
-    const PseudoJet * pj = cast_if_derived<const PseudoJet>(&some_four_vector);
+    //
+    // Note the explicit request for fastjet::cast_if_derived; when
+    // combining fastjet and fjcore, this avoids ambiguity in which of
+    // the two cast_if_derived calls to use.
+    const PseudoJet * pj = fastjet::cast_if_derived<const PseudoJet>(&some_four_vector);
 
     if (pj){
       (*this) = *pj;

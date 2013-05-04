@@ -88,7 +88,7 @@ public:
 
   // tracking the depth may have some speed overhead -- so leave it 
   // out for the time being...
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
   /// the max depth the tree has ever reached
   inline unsigned int max_depth() const {return _max_depth;};
 #else
@@ -128,7 +128,7 @@ private:
 			       unsigned int depth);
 
   
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
   unsigned int _max_depth;
 #endif
 
@@ -340,7 +340,7 @@ template<class T> void SearchTree<T>::_initialize(const std::vector<T> & init) {
   // reserve space for the list of available nodes
   //_available_nodes.reserve();
 
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
   _max_depth     = 0;
 #endif
 
@@ -390,7 +390,7 @@ template<class T> void SearchTree<T>::_do_initial_connections(
 					 unsigned int depth
 					 ) {
 
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
   // keep track of tree depth for checking things stay reasonable...
   _max_depth = max(depth, _max_depth);
 #endif
@@ -565,11 +565,11 @@ template<class T> typename SearchTree<T>::circulator SearchTree<T>::insert(const
   Node * old_location = NULL;
   bool             on_left = true; // (init not needed -- but soothes g++4)
   // work through tree until we reach its end
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
   unsigned int depth = 0;
 #endif
   while(location != NULL) {
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
     depth++;
 #endif
     old_location = location;
@@ -577,7 +577,7 @@ template<class T> typename SearchTree<T>::circulator SearchTree<T>::insert(const
     if (on_left) {location = location->left;}
     else {location = location->right;}
   }
-#ifdef TRACK_DEPTH
+#ifdef __FASTJET_SEARCHTREE_TRACK_DEPTH
   _max_depth = max(depth, _max_depth);
 #endif
   // now create tree links

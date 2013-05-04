@@ -1,3 +1,16 @@
+2013-05-04  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/PseudoJet.hh:
+	  added explicit fastjet:: to cast_if_derived call, to avoid
+	  ambiguities when converting from fastjet to fjcore PseudoJets
+	  (and vice versa), where it wasn't clear whether to use fastjet::
+	  or fjcore:: cast_if_derived.
+
+2013-05-03  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* include/fastjet/internal/SearchTree.hh:
+	  renamed TRACK_DEPTH define as __FASTJET_SEARCHTREE_TRACK_DEPTH
+
 2013-05-01  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl: 
