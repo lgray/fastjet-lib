@@ -1,5 +1,11 @@
 2013-05-04  Gavin Salam  <gavin.salam@cern.ch>
 
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence_Delaunay.cc
+	  moved inclusion of DynamicNearestNeighbours.hh from
+	  ClusterSequence.hh (a forward definition is sufficient) to the
+	  Delaunay file.
+
 	* include/fastjet/PseudoJet.hh:
 	  added explicit fastjet:: to cast_if_derived call, to avoid
 	  ambiguities when converting from fastjet to fjcore PseudoJets

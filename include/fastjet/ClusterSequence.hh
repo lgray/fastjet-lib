@@ -33,7 +33,6 @@
 
 #include<vector>
 #include<map>
-#include "fastjet/internal/DynamicNearestNeighbours.hh"
 #include "fastjet/PseudoJet.hh"
 #include<memory>
 #include<cassert>
@@ -51,8 +50,9 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
-// forward declaration
+// forward declarations
 class ClusterSequenceStructure;
+class DynamicNearestNeighbours;
 
 /// @ingroup basic_classes
 /// \class ClusterSequence
