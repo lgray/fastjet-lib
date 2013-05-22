@@ -1,3 +1,14 @@
+2013-05-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/MassDropTagger.cc (result):
+	  added a missing set of () when testing if the jet was obtained
+	  from a C/A clustering
+
+2013-05-13  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	  corrected a typo in a comment
+
 2013-05-04  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/ClusterSequence.hh:

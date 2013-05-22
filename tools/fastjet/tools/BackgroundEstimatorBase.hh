@@ -42,7 +42,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 /// \class BackgroundEstimatorBase
 ///
 /// Abstract base class that provides the basic interface for classes
-/// that estimate levels of background radiation in hadrion and
+/// that estimate levels of background radiation in hadron and
 /// heavy-ion collider events.
 ///
 ///
