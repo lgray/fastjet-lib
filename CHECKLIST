@@ -56,6 +56,8 @@ X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
 
 X.Y.Z  make sure it's committed with the CHECKLIST
 
+X.Y.Z  generate and release fjcore 
+
 X.Y.Z  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 
