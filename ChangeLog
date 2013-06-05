@@ -1,3 +1,9 @@
+2013-06-05  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* include/fastjet/SharedPtr.hh: 
+	  replaced USETR1SHAREDPTR -> __FASTJET_USETR1SHAREDPTR
+	  (merged from rev.3129 of 3.0.X branch)
+
 2013-05-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/MassDropTagger.cc (result):
