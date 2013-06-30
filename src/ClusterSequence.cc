@@ -31,6 +31,10 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 #include "fastjet/version.hh" // stores the current version number
+#include "fastjet/Tiling.hh"
+#include "fastjet/Tiling2.hh"
+#include "fastjet/Tiling25.hh"
+#include "fastjet/Tiling3.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -333,6 +337,38 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     this->_faster_tiled_N2_cluster();
   } else if (_strategy == N2MinHeapTiled) {
     this->_minheap_faster_tiled_N2_cluster();
+  } else if (_strategy == N2MinHeapTiled_experimental1) {
+    // attempt to use an external tiling routine -- it manipulates
+    // the CS history via the plugin mechanism
+    _plugin_activated = true;
+    Tiling tiling(*this);
+    tiling.run();
+    _plugin_activated = false;
+
+  } else if (_strategy == N2MinHeapTiled_experimental2) {
+    // attempt to use an external tiling routine -- it manipulates
+    // the CS history via the plugin mechanism
+    _plugin_activated = true;
+    Tiling25 tiling(*this);
+    tiling.run_alt();
+    _plugin_activated = false;
+
+  } else if (_strategy == N2MinHeapTiled_experimental3) {
+    // attempt to use an external tiling routine -- it manipulates
+    // the CS history via the plugin mechanism
+    _plugin_activated = true;
+    Tiling2 tiling(*this);
+    tiling.run_alt();
+    _plugin_activated = false;
+
+  } else if (_strategy == N2MinHeapTiled_separate_ghosts_antikt) {
+    // attempt to use an external tiling routine -- it manipulates
+    // the CS history via the plugin mechanism
+    _plugin_activated = true;
+    Tiling3 tiling(*this);
+    tiling.run();
+    _plugin_activated = false;
+
   } else if (_strategy == NlnN) {
     this->_delaunay_cluster();
   } else if (_strategy == NlnNCam) {

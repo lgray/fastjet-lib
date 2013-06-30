@@ -30,7 +30,6 @@
 //ENDHEADER
 
 
-
 #include<vector>
 #include<map>
 #include "fastjet/PseudoJet.hh"
@@ -756,7 +755,6 @@ protected:
     int        _jets_index;
   };
 
-
   /// structure analogous to BriefJet, but with the extra information
   /// needed for dealing with tiles
   class TiledJet {
@@ -872,7 +870,6 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles) const;
   void _add_untagged_neighbours_to_tile_union(const int tile_index, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-
 
   //----------------------------------------------------------------------
   /// fundamental structure for e+e- clustering

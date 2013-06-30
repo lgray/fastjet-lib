@@ -49,20 +49,28 @@ public:
   /// construct a MinHeap from the vector of values, allowing future
   /// expansion to a maximum size max_size;
   MinHeap (const std::vector<double> & values, unsigned int max_size) :
-    _heap(max_size) {_initialise(values);};
+    _heap(max_size) {initialise(values);}
+
+  /// do the minimal setup for a MinHeap that can reach max_size;
+  /// initialisation must be performed later with the actual values.
+  MinHeap (unsigned int max_size) : _heap(max_size) {}
 
   /// constructor in which the the maximum size is the size of the values array
   MinHeap (const std::vector<double> & values) :
-    _heap(values.size()) {_initialise(values);};
-  
+    _heap(values.size()) {initialise(values);}
+
+  /// initialise the heap with the supplied values. Should only be called if
+  /// the constructor did not supply values.
+  void initialise(const std::vector<double> & values);
+
   /// return the location of the minimal value on the heap
   inline unsigned int minloc() const {
-    return (_heap[0].minloc) - &(_heap[0]);};
+    return (_heap[0].minloc) - &(_heap[0]);}
   
   /// return the minimal value on the heap
-  inline double       minval() const {return _heap[0].minloc->value;};
+  inline double       minval() const {return _heap[0].minloc->value;}
 
-  inline double operator[](int i) const {return _heap[i].value;};
+  inline double operator[](int i) const {return _heap[i].value;}
 
   /// remove the value at the specified location (i.e. replace it with
   /// the largest possible value).
@@ -81,7 +89,6 @@ private:
       
   std::vector<ValueLoc> _heap;
 
-  void _initialise(const std::vector<double> & values);
 
 
 };

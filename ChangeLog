@@ -1,3 +1,7 @@
+2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* merged changes from speed development branch
+
 2013-06-05  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* include/fastjet/SharedPtr.hh: 
@@ -274,6 +278,174 @@
 
 	* include/fastjet/JetDefinition.hh (): 
 	  small changes to comments
+
+2012-04-09  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+
+	* include/fastjet/JetDefinition.hh (enum Strategy):
+	* src/ClusterSequence.cc
+	  right now the strategies are as follows:
+	  -7 = latest version of 9-tile (Tiling2::run_alt)
+	  -6 = new 25-tile code.
+
+	* include/fastjet/Tiling2.hh
+	* src/Tiling2.cc
+	  this now contains run() and run_alt(); wrt run(), the latter
+	  reorders the updates, so that the new object's neighbours go
+	  first, blindly checking at each distance whether we've hit a
+	  neighbour of the old points; then it looks at the remaining
+	  tiles that might be relevant for the old points. Basically cuts
+	  down the number of jet-to-tile distances by 10-20%, though no
+	  measurable speed improvements.
+
+	  Also: added a new class TilingAnalysis, which tries to determine
+	  a sensible rapidity extent for the tiling. Reduces the reliance
+	  on nasty hand-coded limits compared to before.
+
+	* src/ClusterSequence_TiledN2.cc: 
+	  this now uses the TilingAnalysis to decide the rapidity
+	  extents. For N=30, on the simple trial event 
+
+            time ./fastjet_timing_plugins -antikt -R 0.5 -combine 1 -repeat 50000 < ~/work/fastjet/data/Pythia-1PtMin50+nMinBias-mansorted.dat -strategy -3 -nhardest 30
+
+	  there was a run-time reduction of 30%, presumably because one
+	  avoids grid initialisation. Some of the parameters inside
+	  TilingAnalysis are "inspired" guestimates.
+
+
+	* include/fastjet/Tiling25.hh:       *** ADDED ***
+	* src/Tiling25.cc:                   *** ADDED ***
+	* src/Makefile.am
+	* include/fastjet/Makefile.am
+	  trial of a 25-tile approach with tiles of size R/2. Becomes
+	  competitive only starting from N \sim 20k. For 44k, one gains a
+	  factor of 1.3 in speed. In this region, relative to the old -4
+	  strategy we have a factor 4 gain in speed -- so not negligible
+	  for HI. 
+	  
+	
+2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/JetDefinition.hh: 
+	* src/Makefile.am: 
+	* include/fastjet/Makefile.am: 
+	* src/Tiling3.cc:              *** ADDED ***
+	* include/fastjet/Tiling3.hh:  *** ADDED ***
+	  addition of tiling routines that allow for ghosts to be treated
+	  separately from other particles. This is relevant for anti-kt
+	  type algorithms where ghosts cluster with each other only at the
+	  very end of the sequence. If one's not interested in the pure
+	  ghost jets, then one can neglect all ghost-ghost distances.
+	  Available as N2MinHeapTiled_separate_ghosts_antikt -- compiles
+	  and runs OK on normal events, and seems to behave OK also on
+	  ghosted events.  Note the ghost pt cutoff is currently
+	  hard-coded.
+
+2012-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
+
+	* src/Tiling.cc:
+	* include/fastjet/Tiling.hh:
+	  Used pointers to functions in Tile that allow for a faster
+	  computation of the distance from a point to the edges and corners
+	  of its tile.
+
+2012-04-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Tiling2.hh:
+	* include/fastjet/Tiling2.cc:
+	  copied Tile (from Tile.{hh,cc} into Tile2 for future mods of Tile
+
+	* include/fastjet/Tiling2.hh:
+	* include/fastjet/Tiling2.cc:
+	* src/ClusterSequence.cc:
+	* src/Makefile.am:
+	* include/fastjet/Makefile.am:
+	  inserted a copy of the current Tiling class for easier
+	  comparison between the present status and further developments.
+
+2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_TiledN2.cc: 
+	  put the N2MinHeapTiled back to the old code now that we have a
+	  dedicated strategy for developments from below. This also
+	  removes any risk of penalty associated with increased tile size,
+	  etc. in the old strategies.
+
+2012-04-02  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
+
+	* include/fastjet/Tiling.hh: 
+	* src/Tiling.cc: 
+	  playing with the idea of two copies of bj_dist, with and without
+	  2pi periodicity.
+
+2012-04-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/JetDefinition.hh:
+	* src/ClusterSequence.cc:
+
+	  added N2MinHeapTiled_experimental1 and
+	  N2MinHeapTiled_experimental2 and instrumented the first one so
+	  that it uses the external tiling class.
+
+	* src/Tiling.cc:
+	* include/fastjet/Tiling.hh:
+	  completed and tested these so that it replicates the N2MinHeap
+	  strategy that has been developed in the past few days.
+
+2012-04-01  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* src/Tiling.cc:              *** ADDED ***
+	* include/fastjet/Tiling.hh:  *** ADDED ***
+	  added as-yet incomplete Tiling classes to provide handling of
+	  tiling that is external to the CS.
+	
+	* include/fastjet/ClusterSequence.hh: 
+	  moved guards right up to top of file.
+
+	* include/fastjet/internal/MinHeap.hh: 
+	* src/MinHeap.cc: 
+
+	  renamed _initialise(values) -> initialise(values) and added a
+	  constructor that just sets the size and no more.
+
+2012-03-31  Gavin Salam  <salam@lpthe.jussieu.fr>
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_TiledN2.cc: 
+	  small improvement in _distance_to_tile computation (cache
+	  calculation of 0.5*tile spacing).
+
+2012-03-30  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence_TiledN2.cc: 
+	  completed a first "draft" of the new tiling strategy that
+	  aims to avoid calculations with tiles that are too far away
+	  for the particular configuration of particles at hand.
+
+2012-03-30  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* example/fastjet_timing_plugins.cc (main): 
+	  added a "-skip n" option to skip the first n events
+
+2012-03-29  Gavin Salam  <gsalam@macth69.cern.ch>
+
+	* src/ClusterSequence_TiledN2.cc (_minheap_faster_tiled_N2_cluster): 
+	  development work to try out impact of keeping track of max NN
+	  distance within the tile. Currently just in the initial NN
+	  determination. For N=10^4, akt05, it saves 40-50% of the time in
+	  that calculation (10% overall). Line being used for speed checks is
+
+	    ./fastjet_timing_plugins -antikt -R 0.5 -combine 60 -repeat 100\
+	      < ~/work/fastjet/data/Pythia-1PtMin50+nMinBias-mansorted.dat
+
+	  Correctness tests come out OK on 10^3 events.
+
+	* include/fastjet/ClusterSequence.hh:
+	  additions to the Tile structure so that it can maintain info
+	  about tile centres and the max_NN_dist within a tile.
 
 2012-02-20  Gavin Salam  <salam@lpthe.jussieu.fr> + Gregory
 

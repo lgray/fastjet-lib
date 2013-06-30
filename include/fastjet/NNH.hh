@@ -137,7 +137,7 @@ public:
 private:
   class NNBJ; // forward declaration
   
-  /// establish the nearest neighbour for jet, and cross check constistency
+  /// establish the nearest neighbour for jet, and cross check consistency
   /// of distances for the other jets that are encountered. Assumes
   /// jet not contained within begin...end
   void set_NN_crosscheck(NNBJ * jet, NNBJ * begin, NNBJ * end);
