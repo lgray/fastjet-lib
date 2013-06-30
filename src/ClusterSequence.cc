@@ -327,7 +327,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
 
   // run the code containing the selected strategy
   // 
-  // We order the strategies stqrting from the ones used by the Best
+  // We order the strategies starting from the ones used by the Best
   // strategy in the order of increasing N, then the remaining ones
   // again in the order of increasing N.
   if (_strategy == N2Plain) {

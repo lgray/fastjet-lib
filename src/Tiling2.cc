@@ -70,9 +70,14 @@ void TilingAnalysis::_determine_rapidity_extent() {
   // and find _minrap, _maxrap such that edge bin never contains more
   // than some fraction of busiest, and at least a few jets; first do
   // it from left. NB: the thresholds chosen here are largely
-  // guestimates as to what might work.
+  // guesstimates as to what might work.
   const double allowed_max_fraction = 0.5;
-  const int allowed_max_cumul = max(max_in_bin * allowed_max_fraction, 4.0);
+  // the edge bins should also contain at least min_multiplicity particles
+  const double min_multiplicity = 4;
+  // now calculate how much we can accumulate into an edge bin
+  const int allowed_max_cumul = max(max_in_bin * allowed_max_fraction, min_multiplicity);
+
+  // start scan over rapidity bins from the left, to find out minimum rapidity of tiling
   int cumul = 0;
   int iy;
   double _cumul2 = 0;
@@ -87,7 +92,7 @@ void TilingAnalysis::_determine_rapidity_extent() {
   _cumul2 += cumul*cumul;
   int iy_lo = iy + 1;
 
-  // then do it from right
+  // then do it from right, to find out maximum rapidity of tiling
   cumul = 0;
   for (iy = nbins; iy > 0; iy--) {
     cumul += counts[iy-1];

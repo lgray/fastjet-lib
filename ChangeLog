@@ -1,6 +1,29 @@
 2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
-	* merged changes from speed development branch
+	* merged changes from speed development branch. Things are
+	  currently a bit messy. Here's what we have
+
+	  - TilingAnalysis class 
+	    (inside Tiling2.hh|cc; it should be moved out & renamed TilingExtent?)
+	    tiling used to have an extent that stretched up to rapidity of
+	    most forward and backward particles; this new class limits the
+	    rapidity extent of the tiling so as not to have very sparse
+	    tiles at edges of the tiling. 
+
+	  - Tiling: this was the first attempt at a speed improvement. The
+	    main ingredient is that it tries not search beyond the edge of
+	    a tile if a particle's distance to the edge is greater than
+	    that to its in-tile nearest neighbour. 
+	    Available as N2MinHeapTiled_experimental1   = -5
+
+	  - Tiling2, with its run_alt() call, is very similar to Tiling,
+	    but reorders some checks and is marginally faster
+	    Available as N2MinHeapTiled_experimental3   = -7
+
+	  - Tiling25 (with its run_alt() call), uses a patch of 25 tiles
+	    of size R/2 for its NN searches. Gains are most substantial at
+	    quite high multiplicities / large R values.
+	    Available as N2MinHeapTiled_experimental2   = -6
 
 2013-06-05  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
