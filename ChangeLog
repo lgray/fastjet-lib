@@ -1,3 +1,12 @@
+2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo (later):
+
+	* Tiling2.cc|hh
+	* Tiling25.cc|hh
+	* src/ClusterSequence.cc
+	  removed old Tiling2::run() and renamed Tiling2::run_alt() -> Tiling2::run()
+	  removed old Tiling25::run() and renamed Tiling25::run_alt() -> Tiling25::run()
+
+
 2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* merged changes from speed development branch. Things are
@@ -17,13 +26,19 @@
 	    Available as N2MinHeapTiled_experimental1   = -5
 
 	  - Tiling2, with its run_alt() call, is very similar to Tiling,
-	    but reorders some checks and is marginally faster
+	    but reorders some checks and is marginally (up to 5%?) faster
 	    Available as N2MinHeapTiled_experimental3   = -7
 
 	  - Tiling25 (with its run_alt() call), uses a patch of 25 tiles
 	    of size R/2 for its NN searches. Gains are most substantial at
-	    quite high multiplicities / large R values.
+	    quite high multiplicities and/or large R values.
 	    Available as N2MinHeapTiled_experimental2   = -6
+
+          - Tiling3: intended just for the anti-kt algorithm, this avoids
+	    clustering ghosts with each other and so reduces some distance
+	    computations. Incorporates most of the mods from the Tiling
+	    approach as well
+	    Available as N2MinHeapTiled_separate_ghosts_antikt = -10
 
 2013-06-05  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 

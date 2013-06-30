@@ -350,7 +350,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     // the CS history via the plugin mechanism
     _plugin_activated = true;
     Tiling25 tiling(*this);
-    tiling.run_alt();
+    tiling.run();
     _plugin_activated = false;
 
   } else if (_strategy == N2MinHeapTiled_experimental3) {
@@ -358,7 +358,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     // the CS history via the plugin mechanism
     _plugin_activated = true;
     Tiling2 tiling(*this);
-    tiling.run_alt();
+    tiling.run();
     _plugin_activated = false;
 
   } else if (_strategy == N2MinHeapTiled_separate_ghosts_antikt) {

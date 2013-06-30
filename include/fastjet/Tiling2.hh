@@ -139,7 +139,6 @@ public:
   Tiling2(ClusterSequence & cs);
 
   void run();
-  void run_alt(); // does tile updates in a slightly cleverer order
 
   //void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
   

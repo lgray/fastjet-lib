@@ -78,10 +78,6 @@ public:
   Tiling25(ClusterSequence & cs);
 
   void run();
-  void run_alt();
-
-  //void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
-  
 
 protected:
   ClusterSequence & _cs;
