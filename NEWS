@@ -2,6 +2,15 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
+Summary of changes from v3.0.3 -> v3.0.4: 2013-06-05
+================================================================
+
+This is a minor maintenance release. Changes include:
+* dummy init of PseudoJet rapidity to avoid warnings with some configs.
+* minor code structure adjustments to allow for release of fjcore
+* inclusion of SISCone 2.0.6
+
+================================================================
 Summary of changes from v3.0.2 -> v3.0.3: 26/06/12
 ================================================================
 

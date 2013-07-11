@@ -1,3 +1,8 @@
+2013-07-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* NEWS:
+	  backported release notes for FastJet-3.0.4 from the 3.0.X branch
+
 2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo (later):
 
 	* Tiling2.cc|hh
