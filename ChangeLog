@@ -1,3 +1,8 @@
+2013-07-31  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/data/Makefile.am (EXTRA_DIST):
+	  added the missing boosted top event to the distribution
+
 2013-07-12  Gregory Soyez  <soyez@fastjet.fr>
 
 	* regression-tests/nightly-check.pl:
