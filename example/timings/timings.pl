@@ -27,7 +27,12 @@ $baserep = 700;
 #############################################
 
 # set of strategies to run
-@strategy  = (1,-4,-3,2,101);
+#@strategy  = (-6);
+#@strategy  = (1,-4,-5,-6,-7);
+#@strategy  = (2000+1,2000+2,2000-4,2000-5,2000-6,2000-7);
+@strategy  = (2000+1,2000-6,2000-7);
+#@strategy  = (2000+1);
+#@strategy  = (1,-4,-3,2,101);
 #@strategy = (-2,-1,0,2,10);
 #@strategy = (-3,-1,2);
 #@strategy = (3,4);
@@ -50,8 +55,12 @@ $baserep = 700;
 #@strategy = (11,102);
 
 #$radius=0.4;
-$radius=0.7;
-#$radius=1.0;
+#$radius=0.7;
+#$radius=0.45;
+$radius=1.0;
+
+#$etamax=1e100;
+$etamax=5.0;
 
 # number of runs to average over when getting
 # timings. Remember that first run will be discarded
@@ -78,7 +87,8 @@ chomp($hostname);
 #$filename="timings-LHC50+minbias+mansorted-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-R$radius-".$hostname.".dat";
 #$filename="timings-LHC50+minbias+mansorted-R$radius-cones-".$hostname.".dat";
-$filename="tmp-".$hostname.".dat";
+#$filename="timings-".$hostname."OSX-fj31devel-etamax5-akt100.dat";
+$filename="tmp-".$hostname."-v31-akt100.dat";
 #$filename="timings-Minbias-LowPt-LHC-".$hostname.".dat";
 #$filename="timings-Minbias-LowPt-LHC-highN-".$hostname.".dat";
 #$filename="timings-PtMin1000-LHC-highN-".$hostname.".dat";
@@ -93,7 +103,7 @@ if ( $uname =~ m/Linux/ ) {
       chomp($proc);
       $proc = $proc." -- ".`grep "cpu MHz" /proc/cpuinfo | awk -F: '{ print \$2" MHz"}' | sed 's/^/# /'`;
 } 
-print OUT $proc;
+print OUT "# $proc \n";
 print OUT "# \n";
 
 
@@ -103,11 +113,11 @@ for (my $k=0; $k <= $#strategy; $k++ ) {
 $strategy = $strategy[$k];
 print OUT "# strategy = ",$strategy,"\n";
 
-$maxj = 100;
+$maxj = 120;
 $algo = "";
 # allow for other seq.rec. algs
 if (int($strategy/1000+0.5) == 1) {$algo = "-cam";     $strategy -= 1000;}
-if (int($strategy/1000+0.5) == 2) {$algo = "-antikt" ; $strategy -= 2000; print "HELLO\n"}
+if (int($strategy/1000+0.5) == 2) {$algo = "-antikt" ; $strategy -= 2000; print "HELLO, doing anti-kt\n"}
 #if ( $strategy >= 2 )  {$maxcomb = 500;}
 #if ( $strategy >= 2 )  {$maxcomb = 9999;}
 #if ( $strategy >= 2 )  {$maxcomb = 4000;}
@@ -115,6 +125,7 @@ if ( $strategy >= 1 )  {$maxcomb = 700;}
 #if ( $strategy >= 1 )  {$maxcomb = 200;}
 if ( $strategy <= -1 ) {$maxcomb = 150;}
 if ( $strategy <= -3 ) {$maxcomb = 270;}
+if ( $strategy <= -4 ) {$maxcomb = 700;}
 if ( $strategy == 0 )  {$maxcomb = 13;}
 if ( $strategy >= 12 && $strategy <= 14) {$algo = "-cam";}
 if ( $strategy == 100)  {$maxcomb = 30;}
@@ -164,7 +175,10 @@ for (my $j=1; $j <= $maxj; $j++) {
       if ( $strategy < 5 || ($strategy >= 12 && $strategy <= 14 || $strategy >= 200)) {
 	# NB brackets are needed to get time to output to a stderr I can grab!!
 	#@lines=`(time -p ../fastjet_timing -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile) 2>&1`;
-	@lines=`(time -p ../fastjet_timing_plugins -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile) 2>&1`;
+          $cmdline="time -p ../fastjet_timing_plugins -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius  -etamax $etamax < $datafile";
+          #$cmdline="time -p $ENV{HOME}/work/jets/fjr-branches/fastjet-3.0.X-devel/example/fastjet_timing_plugins -strategy $strategy $algo -combine $combine -repeat $local_repeat -r $radius < $datafile";
+          #print $cmdline,"\n";
+	@lines=`($cmdline) 2>&1`;
       }
 
       if ( $strategy == 100 ) {  # run ktjet 
@@ -177,7 +191,7 @@ for (my $j=1; $j <= $maxj; $j++) {
 
       foreach my $line (@lines) {
 	if ($line =~ /number of particles *= *([0-9]+)/i) {$npart = $1;}
-        if ($line =~ /^Algorithm:/) {$algorithm = $line; chomp $algorithm;}
+        if ($line =~ /^Jet Definition:/) {$algorithm = $line; chomp $algorithm;}
 	if ($line =~ /user ([0-9\.]+)/) {$time = $1;}
       }
       # record the read time on the first round
@@ -193,11 +207,20 @@ for (my $j=1; $j <= $maxj; $j++) {
 
     # now ensure that we deal with actual run time.
     $time -= $readtime;
+    
+    # protection in case our time comes out zero or negative
+    # we increase the "repeat" and try again
+    if ($i==0 && $time <= 0) {
+      $i--;
+      $repeat *= 3;
+      next;
+    }
 
     # discard first run. It's often slower. Caching?
     if ( $i > 0 ) { $cumultime = $cumultime + $time; }
     else {
       # choose an adaptive number of repeats
+        print "time was $time\n";
       if ($time < 1.0) {$repeat *= (1.0/$time); $repeat = int($repeat);}
       if ($time > 5.0) {
 	$newrepeat = int(5.0/($time/$repeat))+1;
