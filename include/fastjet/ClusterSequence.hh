@@ -192,13 +192,13 @@ class ClusterSequence {
   std::vector<PseudoJet> exclusive_subjets_up_to (const PseudoJet & jet, 
 						  int nsub) const;
 
-  /// return the dij that was present in the merging nsub+1 -> nsub 
+  /// returns the dij that was present in the merging nsub+1 -> nsub 
   /// subjets inside this jet.
   ///
   /// Returns 0 if there were nsub or fewer constituents in the jet.
   double exclusive_subdmerge(const PseudoJet & jet, int nsub) const;
 
-  /// return the maximum dij that occurred in the whole event at the
+  /// returns the maximum dij that occurred in the whole event at the
   /// stage that the nsub+1 -> nsub merge of subjets occurred inside 
   /// this jet.
   ///

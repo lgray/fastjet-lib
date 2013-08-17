@@ -1,3 +1,9 @@
+2013-08-17  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/ClusterSequence.hh (C):
+	* include/fastjet/PseudoJet.hh:
+	  small changes to comments for subdmerge.
+
 2013-07-31  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/data/Makefile.am (EXTRA_DIST):
@@ -13,6 +19,7 @@
 	* NEWS:
 	  backported release notes for FastJet-3.0.4 from the 3.0.X branch
 
+>>>>>>> .r3179
 2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo (later):
 
 	* Tiling2.cc|hh
