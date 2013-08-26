@@ -19,7 +19,6 @@
 	* NEWS:
 	  backported release notes for FastJet-3.0.4 from the 3.0.X branch
 
->>>>>>> .r3179
 2013-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo (later):
 
 	* Tiling2.cc|hh
