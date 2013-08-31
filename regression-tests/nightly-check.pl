@@ -102,7 +102,8 @@ push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc --disable-debug', "", 
 push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.6 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.6", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 4.6 (only few evts)
 push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.7 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.7", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 4.7 (only few evts)
 push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.8 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.8", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 1000, ""]; # with gcc 4.8
-push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
+# temporary disabled because zetes is down, MC 31/8/2013
+#push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 #push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4 [suspended 2013-04, but we have zetes for now]
 
 # checks on macs
