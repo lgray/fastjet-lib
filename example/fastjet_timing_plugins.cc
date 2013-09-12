@@ -303,7 +303,7 @@ int main (int argc, char ** argv) {
   bool   get_all_dij   = cmdline.present("-get-all-dij");
   bool   get_all_yij   = cmdline.present("-get-all-yij");
   double subdcut = cmdline.double_val("-subdcut",-1.0);
-  double etamax = cmdline.double_val("-etamax",1.0e305);
+  double rapmax = cmdline.double_val("-rapmax",1.0e305);
   bool   show_constituents = cmdline.present("-const");
   bool   massless = cmdline.present("-massless");
   int    nev     = cmdline.int_val("-nev",1);
@@ -591,7 +591,7 @@ int main (int argc, char ** argv) {
       }
     }
     fj::PseudoJet psjet(fourvec);
-    if (abs(psjet.rap() < etamax)) {particles.push_back(psjet);}
+    if (abs(psjet.rap()) < rapmax) {particles.push_back(psjet);}
   }
 
   // add a fake underlying event which is very soft, uniformly distributed

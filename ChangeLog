@@ -1,3 +1,9 @@
+2013-09-12  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* example/fastjet_timing_plugins.cc: 
+	replaced -etamax option with -rapmax and fixed bug that it was
+	acting only as an upper limit of rapidity. (Not a lower limit)
+
 2013-08-17  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/ClusterSequence.hh (C):
