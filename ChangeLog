@@ -1,8 +1,13 @@
-2013-09-13  Gregory Soyez  <soyez@fastjet.fr>
+2013-09-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
-	* BUGS:
-	Added a mention of the harmless warning not fixed in
-	ClusterSequence::_minheap_faster_tiled_N2_cluster()
+	* regression-tests/test-all-algs.pl:
+	updated checksums for background estimations with -rapmax option,
+	in light of yesterday's bugfix in
+	fastjet_timing_plugins. Internal program consistency should be OK
+	given that the nightly check from the night before last came out
+	OK (and we haven't touched core code since then).
+
+	Also added some extra checksums for quick tests with 10 events.
 
 2013-09-13  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
