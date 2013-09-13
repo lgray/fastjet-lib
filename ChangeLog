@@ -1,3 +1,11 @@
+2013-09-13  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* regression-tests/test-all-algs.pl:
+	replaced -etamax -> -rapmax (following yesterday's change);
+	fixed an issue where bkgds & areas were giving problems when
+	running more than one strategy (to do with copies v. aliases in
+	foreach loops).
+
 2013-09-12  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* example/fastjet_timing_plugins.cc: 

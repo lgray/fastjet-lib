@@ -14,7 +14,7 @@
 #
 # Various command-line options are available:
 #
-#  -nev NEV          sets the number of events to use (default = ???)
+#  -nev NEV          sets the number of events to use (default = 10)
 #
 #  -alg ALGNAME      sets the alg name and all parameters other than R
 #                    [things separated by a : become separated by a space
@@ -37,7 +37,7 @@
 #
 #  -areas            run area configurations
 #
-#  -bkgd             run background estimations
+#  -bkgds            run background estimations
 #
 # Full (non-md5) results of a 1000 event run are to be found in
 # the (non svn) directory
@@ -161,17 +161,25 @@ elsif (exists($strategies{$alg})) {
 } else {
   @strat = ("")
 }
-foreach $strat (@strat) {
-    if ($strat ne "") {$stratcmd = "-strategy $strat"} else {$stratcmd=""}
-    $strat = "s$strat" ; # =~ s/.*y /s/; # we'll need this in a clean form later
+foreach $stratAlias (@strat) {
+  # the loop variable is an alias to the member of the array;
+  # but we will need to modify it below - so to avoid modifying the 
+  # original array, we make a copy and modify that
+  $strat = $stratAlias.""; 
+  if ($strat ne "") {$stratcmd = "-strategy $strat"} else {$stratcmd=""}
+  $strat = "s$strat" ; # =~ s/.*y /s/; # we'll need this in a clean form later
 
-foreach $area (@areaconfigs) {
+foreach $areaAlias (@areaconfigs) {
+  $area = $areaAlias.""; 
   if ($area ne "") {$areacmd = "-area $area"} else {$areacmd = ""}
   $area =~ s/area://g;
   $area =~ s/ /,/g;
 
-foreach $bkgd (@bkgdconfigs) {
-  if ($bkgd ne "") {$bkgdcmd = "-area -bkgd $bkgd"} else {$bkgdcmd = ""}
+foreach $bkgdAlias (@bkgdconfigs) {
+  $bkgd = $bkgdAlias."";
+  if ($bkgd ne "") {
+    $bkgdcmd = "-area -bkgd $bkgd";
+  } else {$bkgdcmd = ""}
   $bkgd =~ s/area://g;
   $bkgd =~ s/bkgd://g;
   $bkgd =~ s/ /,/g;
@@ -347,7 +355,7 @@ sub setDefaults {
       );
 
   %bkgdConfigs = (
-      "kt" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:csab,-area:active -bkgd:csab,-area:voronoi 1.0 -bkgd:csab,-area:explicit -bkgd:jetmedian -bkgd:fj2,-area:explicit -bkgd:jetmedian -etamax 5.0 -ghost-maxrap 4.0,-area:active -bkgd:jetmedian -etamax 5.0 -ghost-maxrap 4.0,-area:voronoi 1.0 -bkgd:jetmedian -etamax 5.0 -ghost-maxrap 4.0,-area:explicit -bkgd:jetmedian -etamax 5.0,-area:active -bkgd:jetmedian -etamax 5.0,-area:voronoi 1.0 -bkgd:jetmedian -etamax 5.0",
+      "kt" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:csab,-area:active -bkgd:csab,-area:voronoi 1.0 -bkgd:csab,-area:explicit -bkgd:jetmedian -bkgd:fj2,-area:explicit -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:active -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:explicit -bkgd:jetmedian -rapmax 5.0,-area:active -bkgd:jetmedian -rapmax 5.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0",
       "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian",
       "antikt" => "-bkgd -bkgd:gridmedian"
       );
@@ -574,12 +582,12 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-csab" => "c2d225beba88e0fb29a84eb1e33b9557",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-csab" => "9f213b2119656eeeb7bbd6fea6413827",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-fj2" => "017511a0e37f43b776c980230f9a3bee",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "450b94cefd3bc202683a4619aa4a8992",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "0b0ff0bb78e561891434119e910eee7e",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "ec3cce22c3de08aea065b5fd07538460",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-etamax,5.0" => "3c6fbf167c4347fa101e3f0be405c634",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian,-etamax,5.0" => "c07a3d3ac4d0aa95b24502a0a77712a6",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian,-etamax,5.0" => "7a76e0098ea17b50ae0b584241082873",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-rapmax,5.0,-ghost-maxrap,4.0" => "450b94cefd3bc202683a4619aa4a8992",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian,-rapmax,5.0,-ghost-maxrap,4.0" => "0b0ff0bb78e561891434119e910eee7e",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian,-rapmax,5.0,-ghost-maxrap,4.0" => "ec3cce22c3de08aea065b5fd07538460",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-explicit,-jetmedian,-rapmax,5.0" => "3c6fbf167c4347fa101e3f0be405c634",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-active,-jetmedian,-rapmax,5.0" => "c07a3d3ac4d0aa95b24502a0a77712a6",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,kt,R0.60,-voronoi,1.0,-jetmedian,-rapmax,5.0" => "7a76e0098ea17b50ae0b584241082873",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian" => "c81df2cfd3dde6bcf98d23297c31fba8",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-active,-jetmedian" => "bc6878256d7b055834b4314c391513eb",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-voronoi,1.0,-jetmedian" => "a9c0dac86b06184c771773a8654a6911",
@@ -593,12 +601,12 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active,-csab" => "5757c5aeebc440b45a55701a1f3f30d2",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0,-csab" => "ba0783116682acca53334078f08345c4",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-jetmedian,-fj2" => "63f617afc3bbdb5930e4783cfd585c88",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "5260ed54a82fed944f7817c1dc10babd",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "363f465770a130fa218b952bdd66d4ad",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0,-jetmedian,-etamax,5.0,-ghost-maxrap,4.0" => "9eaee60e2d8be815487af555b24da6bb",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-jetmedian,-etamax,5.0" => "6ccb0e1e01eaa44160ac2b3221e28ecb",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active,-jetmedian,-etamax,5.0" => "fc7c1af0c02c45d149891bc8429c5fdd",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0,-jetmedian,-etamax,5.0" => "b1531d96dfe7c36a35d168a637bf06ec",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-jetmedian,-rapmax,5.0,-ghost-maxrap,4.0" => "5260ed54a82fed944f7817c1dc10babd",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active,-jetmedian,-rapmax,5.0,-ghost-maxrap,4.0" => "363f465770a130fa218b952bdd66d4ad",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0,-jetmedian,-rapmax,5.0,-ghost-maxrap,4.0" => "9eaee60e2d8be815487af555b24da6bb",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-jetmedian,-rapmax,5.0" => "6ccb0e1e01eaa44160ac2b3221e28ecb",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-active,-jetmedian,-rapmax,5.0" => "fc7c1af0c02c45d149891bc8429c5fdd",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-voronoi,1.0,-jetmedian,-rapmax,5.0" => "b1531d96dfe7c36a35d168a637bf06ec",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian" => "9412ab943b9d86725df068bd5b828000",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-active,-jetmedian" => "d6c00a93e70f0d14100c1e87e53604d3",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-voronoi,1.0,-jetmedian" => "099fcbb79303d70bede72ed4591fe380",
