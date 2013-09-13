@@ -1,3 +1,9 @@
+2013-09-13  Gregory Soyez  <soyez@fastjet.fr>
+
+	* BUGS:
+	Added a mention of the harmless warning not fixed in
+	ClusterSequence::_minheap_faster_tiled_N2_cluster()
+
 2013-09-13  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* regression-tests/test-all-algs.pl:

@@ -99,6 +99,16 @@ Other issues to be aware of
 
 3. Copy of ClusterSequenceArea (and the other CS area-related classes)
    is not fully implemented.
+
+4. During compilation, you may get the following watning:
+
+     ClusterSequence_TiledN2.cc:254:45: warning: 
+     'oldB.fastjet::ClusterSequence::TiledJet::tile_index' may
+     be used uninitialized in this function [-Wuninitialized]
+
+   We have checked that this warning is actually harmless. However, it
+   occurs at a place in the clustering where speed is critical, so we
+   have decided to favour speed and not to get rid of the warning.
   
 ----------------------------------------------------------------------
 Probably solved
