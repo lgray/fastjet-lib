@@ -436,9 +436,13 @@ void Tiling3::run() {
   //_initialise_tiles();
 
   int ntot = _jets.size();
+  if (ntot == 0) return;
+
   TiledJet3 * briefjets = new TiledJet3[ntot];
   TiledJet3 * jetA = briefjets, * jetB;
-  TiledJet3 oldB;
+  // avoid warning about uninitialised oldB below; 
+  // only valid for ntot>=1 (hence the test ntot==0 test above)
+  TiledJet3 oldB = briefjets[0];
   
 
   // will be used quite deep inside loops, but declare it here so that

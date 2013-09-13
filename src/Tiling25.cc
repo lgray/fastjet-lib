@@ -457,7 +457,7 @@ void Tiling25::run() {
   TiledJet * briefjets = new TiledJet[n];
   TiledJet * jetA = briefjets, * jetB;
   // avoid warning about uninitialised oldB below; 
-  // only valid for n>1 (hence the test n==0 test above)
+  // only valid for n>=1 (hence the test n==0 test above)
   TiledJet oldB = briefjets[0]; 
 
   // will be used quite deep inside loops, but declare it here so that

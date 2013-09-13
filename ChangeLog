@@ -1,5 +1,9 @@
 2013-09-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
+	* src/Tiling3.cc: 
+	eliminated the uninitialised compilation warning (as done in the
+	other strategies).
+
 	* regression-tests/test-all-algs.pl:
 	updated checksums for background estimations with -rapmax option,
 	in light of yesterday's bugfix in

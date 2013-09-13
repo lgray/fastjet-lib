@@ -66,6 +66,61 @@ X.Y.Z  move the version number to X.Y.(Z+1)-devel with
        and indicate this in the ChangeLog
 
 ----------------------------------------------------------------------
+checklist for 3.0.3 (make a copy before editing!)
+-------------------
+3.0.3  run svn up
+3.0.3  update version number with ./scripts/set-version VERSION-NUMBER
+3.0.3  doxygen: check dirs are declared for new plugins + check in 
+       the class list that all classes are prefixed by 'fastjet::'
+3.0.3  ensure NEWS is up to date (and has the correct release date!)
+
+3.0.3  make sure siscone points to a tag, not trunk
+       cd ../plugins/SISCone; svn propedit svn:externals .; svn up
+
+3.0.3  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
+
+3.0.3  make check 
+
+3.0.3  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+         grep -i error.summary out
+         grep LEAK.SUMMARY out
+       and make sure there are no errors (look through the file too)
+
+3.0.3  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+3.0.3  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+3.0.3  rerun the nightly check
+
+3.0.3  make distcheck; record the md5sum here
+       14fdcbf0e6e38c55c16f0790f78e1404  fastjet-3.0.3.tar.gz
+
+3.0.3  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+3.0.3  compile manual
+3.0.3  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+3.0.3  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+3.0.3  update main web page & menu in devel area
+
+3.0.3  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+3.0.3  update main web-page area
+
+NO-NO  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+3.0.3  make sure it's committed with the CHECKLIST
+
+3.0.3  check everything is OK
+NO-NO  reset the SISCone link to the trunk
+3.0.3  move the version number to X.Y.(Z+1)-devel with
+       scripts/set-version VERSION-NUMBER
+
+----------------------------------------------------------------------
 checklist for 3.0.2
 -------------------
 3.0.2  update version number with ./scripts/set-version.sh VERSION-NUMBER
