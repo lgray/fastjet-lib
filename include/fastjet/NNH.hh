@@ -1,5 +1,5 @@
-#ifndef __NNH_HH__
-#define __NNH_HH__
+#ifndef __FASTJET_NNH_HH__
+#define __FASTJET_NNH_HH__
 
 //STARTHEADER
 // $Id$
@@ -378,4 +378,4 @@ template <class BJ, class I>  void NNH<BJ,I>::set_NN_nocross(
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
-#endif // __NNH_HH__
+#endif // __FASTJET_NNH_HH__

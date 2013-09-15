@@ -1,3 +1,12 @@
+2013-09-15  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/Selector.hh:
+	* include/fastjet/NNH.hh:
+	* include/fastjet/internal/ClusterSequence_N2.icc:
+	these files had guards without FASTJET_ in their name, as a result
+	of which the fjcore files had identical guards, causing a
+	conflict. the FASTJET_ tag has now been added. 
+
 2013-09-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* src/Tiling3.cc: 

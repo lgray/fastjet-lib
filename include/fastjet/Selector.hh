@@ -1,5 +1,5 @@
-#ifndef __SELECTOR_HH__
-#define __SELECTOR_HH__
+#ifndef __FASTJET_SELECTOR_HH__
+#define __FASTJET_SELECTOR_HH__
 
 //STARTHEADER
 // $Id$
@@ -481,5 +481,5 @@ Selector SelectorIsPureGhost();
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
-#endif // __SELECTOR_HH__
+#endif // __FASTJET_SELECTOR_HH__
 
