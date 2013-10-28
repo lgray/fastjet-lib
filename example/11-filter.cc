@@ -76,7 +76,7 @@ public:
     if (! j.has_pieces()) return _Rmax;
 
     vector<PseudoJet> pieces = j.pieces();
-    if (! pieces.size()==2) return _Rmax;
+    if (pieces.size() != 2) return _Rmax;
 
     double deltaR = pieces[0].delta_R(pieces[1]);
     return min(_Rmax, _deltaR_factor * deltaR);

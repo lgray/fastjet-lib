@@ -1,3 +1,26 @@
+2013-10-28  Gavin Salam  <gavin.salam@cern.ch>
+
+	[merges from fastjet-3.0.x branch]
+
+	* plugins/D0RunIICone/ConeSplitMerge.hpp:
+	made ProtoJet_ET_seedET_order::operator() const, to fix compilation
+	issue under OS X 10.9 (Mavericks). 
+
+	* plugins/CDFCones/CDFcode/JetCluAlgorithm.cc:
+	included <cstdlib> and switched abs -> std::abs to fix compilation
+	issue under OS X 10.9 (Mavericks). This and the above one reported
+	by David Grellscheid and Pere Mato Vila.
+
+	* example/11-filter.cc:
+	* tools/MassDropTagger.cc:
+	* tools/JHTopTagger.cc:
+	fixed bugs where (! a==b) was being used instead of
+	(a!=b) in certain consistency checks. In the two taggers, this
+	should only affect whether a warning is produced when called with
+	algorithms other than Cambridge/Aachen. Reported by David
+	Grellscheid. (The MDT case had already been fixed below; now the
+	fix is consistent across the board)
+
 2013-10-25  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* plugins/GridJet/fastjet/GridJetPlugin.hh:
