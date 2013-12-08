@@ -150,7 +150,7 @@ double CompositeJetStructure::area_error(const PseudoJet & /*reference*/) const{
 
   double a_err=0;
   for (unsigned i = 0; i < _pieces.size(); i++)
-    a_err += _pieces[i].area();
+    a_err += _pieces[i].area_error();
 
   return a_err;
 }
