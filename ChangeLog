@@ -1,3 +1,8 @@
+2013-12-09  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/CompositeJetStructure.hh:
+	extended comment for set_area_information(...)
+
 2013-12-08  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/CompositeJetStructure.cc (area_error): 

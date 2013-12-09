@@ -109,9 +109,15 @@ public:
   /// In this case, it will be true if all pieces are pure ghost
   virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
-  // allow to modify the area information
+  // allows one to modify the area information
   // (for use in join())
-  //------------------------------------------------------------------------------
+  //
+  // This member cannot be used by users who need to create a jet with
+  // user-supplied area information, because it sets only the 4-vector
+  // part of the area, but not all the other area information
+  // (e.g. scalar area) -- that other information is always deduced
+  // dynamically from the individual constituents.
+  // ------------------------------------------------------------------------------
   void set_area_information(PseudoJet *area_4vector_ptr){
     _area_4vector_ptr = area_4vector_ptr;
   }
