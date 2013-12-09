@@ -2,7 +2,7 @@
 
 	* src/CompositeJetStructure.cc (area_error): 
 	this was erroneously returning the sum of areas of the individual
-	pieces rather than the sum of their areas as stated in the
+	pieces rather than the sum of their area_errors() as stated in the
 	comments. Now fixed.
 
 2013-12-04  Gavin Salam  <gavin.salam@cern.ch>
