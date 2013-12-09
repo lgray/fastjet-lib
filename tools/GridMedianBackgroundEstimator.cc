@@ -112,7 +112,8 @@ void GridMedianBackgroundEstimator::verify_particles_set() const {
 string GridMedianBackgroundEstimator::description() const { 
   ostringstream desc;
   desc << "GridMedianBackgroundEstimator, with grid extension |y| < " << _ymax 
-       << " and requested grid spacing = " << _requested_grid_spacing;
+       << ", and grid cells of size dy x dphi = " << _dy << " x " << _dphi
+       << " (requested size = " << _requested_grid_spacing << ")";
   return desc.str();
 }       
 

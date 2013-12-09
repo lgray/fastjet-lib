@@ -17,6 +17,11 @@
 	can have a big effect on the speed of the wrapper for low
 	multiplicities. 
 
+2013-11-13  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory & Matteo
+
+	* tools/GridMedianBackgroundEstimator.cc (description):
+	description now prints information on the actual grid-cell size
+
 2013-11-04  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/ClusterSequenceVoronoiArea.cc (_initializeVA): 
