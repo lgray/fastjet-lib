@@ -1,3 +1,15 @@
+2013-12-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	ensured that tar's STDERR is also redirected to the $untar
+	variable. This (together with my locale variables change) should
+	help get the nightly check back on track with the new ramses (OS X
+	10.8). 
+
+	Also made sure that if the ssh output is not empty, the error
+	message is now explicit about the fact that this is the reason for
+	a failure. This should make future diagnostics easier.
+
 2013-12-09  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/CompositeJetStructure.hh:

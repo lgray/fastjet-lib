@@ -277,7 +277,7 @@ MAIN: while (1) {
 
         # check for failures, in ssh or in results
         if ($ssh || $ssherr) {
-          &fail("connection to $setups[$i][0]", $results."\n".$ssh);}
+          &fail("connection to $setups[$i][0]", $results."\nssh output should have been empty, but was:\n------------------------------\n".$ssh);}
         if (!$results || $results =~ /Failed/ || $?) {
           &fail("execution on remote host", $results);
         } else {
@@ -440,7 +440,7 @@ sub build_and_check($$$$) {
 
   #--- untar -----------------
   &message("* untarring $origDir/$tarName in tmp dir\n");
-  $untar=`tar zxvf $origDir/$tarName`;
+  $untar=`tar zxvf $origDir/$tarName 2>&1 `;
   if ($?) {
     &fail("untar",$untar);
   }
