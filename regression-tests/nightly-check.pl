@@ -108,10 +108,10 @@ push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-
 #push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4 [suspended 2013-04, but we have zetes for now]
 
 # checks on macs 
-push @setups, ["ramses","CC=cc CXX=c++", "", 10, ""]; # out of the box on new karnak (OS X 10.8.5) with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
-push @setups, ["ramses","--enable-allcxxplugins CC=cc CXX=c++", "", 1000, ""]; # full monty on new karnak with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
-push @setups, ["ramses","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
-#push @setups, ["ramses","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.5 CXX=/usr/local/bin/g++-4.5", "", 10, ""]; # full set with gcc 4.5.3
+push @setups, ["karnak","CC=cc CXX=c++", "", 10, ""]; # out of the box on new karnak (OS X 10.8.5) with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
+push @setups, ["karnak","--enable-allcxxplugins CC=cc CXX=c++", "", 1000, ""]; # full monty on new karnak with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
+push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
+#push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.5 CXX=/usr/local/bin/g++-4.5", "", 10, ""]; # full set with gcc 4.5.3
 # old checkss on old karnak. To be eventually removed
 # push @setups, ["karnak","--enable-allcxxplugins --disable-shared", ":-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X
 # push @setups, ["karnak","--enable-allcxxplugins", "--shared=no:-O2", 10, ""]; # full monty on karnak, with O2 to work around throw issue with g++ 4.0.1 on OS X

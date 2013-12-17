@@ -1,3 +1,8 @@
+2013-12-17  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* regression-tests/nightly-check.pl: 
+	replaced ramses -> karnak
+
 2013-12-10  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
@@ -10,6 +15,8 @@
 	message is now explicit about the fact that this is the reason for
 	a failure. This should make future diagnostics easier.
 
+	replaced karnak -> ramses (temporarily)
+	
 2013-12-09  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/CompositeJetStructure.hh:
