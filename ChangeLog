@@ -1,3 +1,8 @@
+2013-12-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	fixed an issue in the test for the presence of a C++ compiler.
+
 2013-12-17  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* regression-tests/nightly-check.pl: 
@@ -16,7 +21,7 @@
 	a failure. This should make future diagnostics easier.
 
 	replaced karnak -> ramses (temporarily)
-	
+
 2013-12-09  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/CompositeJetStructure.hh:

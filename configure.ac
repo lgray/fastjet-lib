@@ -69,7 +69,7 @@ AC_PROG_CXX
 dnl ensure CXX presence
 cxx_progname=$(basename $CXX)
 cxx_dirname=$(dirname $CXX)
-AC_CHECK_PROG([cxx_found],[$cxx_progname],[yes],[no].[$cxx_dirname$PATH_SEPARATOR$PATH])
+AC_CHECK_PROG([cxx_found],[$cxx_progname],[yes],[no],[$cxx_dirname$PATH_SEPARATOR$PATH])
 if test "x$cxx_found" == "xno"; then
    AC_MSG_ERROR([No functional C++ compiler found])
 fi
