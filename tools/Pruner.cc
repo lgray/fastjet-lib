@@ -50,8 +50,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //  \param zcut_dyn    dynamic pt-fraction cut in the pruning
 //  \param Rcut_dyn    dynamic angular distance cut in the pruning
 Pruner::Pruner(const JetDefinition &jet_def, 
-         FunctionOfPseudoJet<double> *zcut_dyn,
-         FunctionOfPseudoJet<double> *Rcut_dyn)
+         const FunctionOfPseudoJet<double> *zcut_dyn,
+         const FunctionOfPseudoJet<double> *Rcut_dyn)
   : _jet_def(jet_def), _zcut(0), _Rcut_factor(0),
     _zcut_dyn(zcut_dyn), _Rcut_dyn(Rcut_dyn), _get_recombiner_from_jet(false)  {
   assert(_zcut_dyn != 0 && _Rcut_dyn != 0);
@@ -121,6 +121,8 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   
   PseudoJet result_local = SelectorNHardest(1)(cs->inclusive_jets())[0];
   PrunerStructure * s = new PrunerStructure(result_local);
+  s->_Rcut = Rcut;
+  s->_zcut = zcut;
   result_local.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(s));
   
   // make sure things remain persistent -- i.e. tell the jet definition

@@ -43,6 +43,11 @@ class PrunerStructure;
 class PruningRecombiner;
 class PruningPlugin;
 
+// This tells third-party code that the pruner structure 
+// stores Rcut info; the alternative is for the user to 
+// get the information from the version number
+#define FASTJET_PRUNER_STRUCTURE_STORES_RCUT
+
 //----------------------------------------------------------------------
 /// @ingroup tools_generic
 /// \class Pruner
@@ -134,8 +139,8 @@ public:
   ///  \param zcut_dyn    dynamic pt-fraction cut in the pruning
   ///  \param Rcut_dyn    dynamic angular distance cut in the pruning
   Pruner(const JetDefinition &jet_def, 
-         FunctionOfPseudoJet<double> *zcut_dyn,
-         FunctionOfPseudoJet<double> *Rcut_dyn);
+         const FunctionOfPseudoJet<double> *zcut_dyn,
+         const FunctionOfPseudoJet<double> *Rcut_dyn);
 
   /// action on a single jet
   virtual PseudoJet result(const PseudoJet &jet) const;
@@ -158,8 +163,8 @@ private:
   JetDefinition _jet_def; ///< the internal jet definition
   double _zcut;        	  ///< the pt-fraction cut
   double _Rcut_factor;    ///< the angular separation cut factor
-  FunctionOfPseudoJet<double> *_zcut_dyn; ///< dynamic zcut
-  FunctionOfPseudoJet<double> *_Rcut_dyn; ///< dynamic Rcut
+  const FunctionOfPseudoJet<double> *_zcut_dyn; ///< dynamic zcut
+  const FunctionOfPseudoJet<double> *_Rcut_dyn; ///< dynamic Rcut
   bool   _get_recombiner_from_jet; ///< true for minimal constructor,
                                    ///< causes recombiner to be set equal 
                                    ///< to that already used in the jet 
@@ -193,8 +198,17 @@ public:
   /// The resulting vector is sorted in pt
   std::vector<PseudoJet> extra_jets() const;
 
+  /// return the value of Rcut that was used for this specific pruning.
+  double Rcut() const {return _Rcut;}
+
+  /// return the value of Rcut that was used for this specific pruning.
+  double zcut() const {return _zcut;}
+
 protected:
   friend class Pruner; ///< to allow setting the internal information
+
+private:
+  double _Rcut, _zcut;
 };
 
 //----------------------------------------------------------------------

@@ -165,8 +165,12 @@ int main(){
       // write out result
       cout << "  rap = " << j.rap() << ", phi = " << j.phi() << ", pt = " << j.perp()
            << " mass = " << j.m() 
-           << "  [kept: " << j.pieces().size() << ", rejected: "
-	   << n_rejected << "]" << endl;
+           << "  [kept: " << j.pieces().size() 
+           << ", rejected: " << n_rejected;
+      if (j.has_structure_of<Pruner>()) {
+        cout << ", Rcut: " << j.structure_of<Pruner>().Rcut();
+      }
+      cout << "]" << endl;
     }
   }
 

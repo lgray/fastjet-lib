@@ -1,3 +1,25 @@
+2013-12-28  Gavin Salam  <gavin.salam@cern.ch>
+
+	* tools/Pruner.cc:
+	* tools/fastjet/tools/Pruner.hh:
+
+	pruned_jet.structure_of<Pruner>() now has Rcut() and zcut() member
+	functions, which return the actual value of Rcut and zcut used for
+	that jet.
+
+	A preprocessor symbol is defined,
+	FASTJET_PRUNER_STRUCTURE_STORES_RCUT,
+	to indicate the availability of this information.
+
+	Also made the dynamic Rcut and zcut pointers "const", which they
+	should have been all along.
+
+	* doc/fastjet-doc.tex:
+	corresponding update to the documentation
+
+	* example/14-groomers.cc:
+	in the case of pruning, Rcut is now explicitly written out.
+
 2013-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:

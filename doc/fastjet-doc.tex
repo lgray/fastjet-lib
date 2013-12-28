@@ -3649,10 +3649,12 @@ to construct the pruner using functions that dynamically compute \ttt{zcut} and
 \ttt{Rcut} for the jet being pruned:
 \begin{lstlisting}
   Pruner (const JetDefinition &jet_def, 
-          FunctionOfPseudoJet< double > *zcut_dyn, 
-	  FunctionOfPseudoJet< double > *Rcut_dyn);
+          const FunctionOfPseudoJet< double > *zcut_dyn, 
+	  const FunctionOfPseudoJet< double > *Rcut_dyn);
 \end{lstlisting}
-
+The \ttt{pruned\_jet.structure\_of<Pruner>()} object also provides
+\ttt{Rcut()} and \ttt{zcut()} members, in order to retrieve the
+actual $R_\text{cut}$ and $z_\text{cut}$ values used for that jet.
 
 
 \subsection{Boosted-object taggers}
