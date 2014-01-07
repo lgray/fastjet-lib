@@ -260,8 +260,8 @@ bool operator==(const PseudoJet & jet, const double val) {
 
 
 //----------------------------------------------------------------------
-/// transform this jet (given in lab) into a jet in the rest
-/// frame of prest
+/// transform this jet (given in the rest frame of prest) into a jet
+/// in the lab frame 
 //
 // NB: code adapted from that in herwig f77 (checked how it worked
 // long ago)
@@ -287,8 +287,8 @@ PseudoJet & PseudoJet::boost(const PseudoJet & prest) {
 
 
 //----------------------------------------------------------------------
-/// transform this jet (given in the rest frame of prest) into a jet
-/// in the lab frame;
+/// transform this jet (given in lab) into a jet in the rest
+/// frame of prest  
 //
 // NB: code adapted from that in herwig f77 (checked how it worked
 // long ago)

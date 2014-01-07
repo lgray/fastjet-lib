@@ -1,3 +1,8 @@
+2014-01-07  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/PseudoJet.cc:
+	comments for boost/unboost were exchanged in the .cc file
+
 2013-12-28  Gavin Salam  <gavin.salam@cern.ch>
 
 	* tools/Pruner.cc:
