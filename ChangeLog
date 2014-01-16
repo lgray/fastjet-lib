@@ -1,3 +1,11 @@
+2014-01-16  Gregory Soyez  <soyez@fastjet.fr> and Gavin (committed by Gavin)
+
+	* include/fastjet/FunctionOfPseudoJet.hh: 
+	a FunctionOfPseudoJet(const TOut & constant_value) member
+	declaration was left over from some testing, but had never been
+	implemented. Since we don't intend to have it, it has been
+	commented out. Done in the trunk, and intended for FJ 3.0.7 upwards. 
+
 2014-01-07  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/PseudoJet.cc:

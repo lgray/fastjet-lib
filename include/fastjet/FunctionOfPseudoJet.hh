@@ -48,8 +48,12 @@ public:
   /// default ctor
   FunctionOfPseudoJet(){}
 
-  /// ctor that creates a constant function
-  FunctionOfPseudoJet(const TOut &constant_value);
+  // ctor that creates a constant function
+  //----------
+  // this declaration was present in versions of FJ from 3.0.0 to 3.0.6,
+  // but never implemented. It is being removed from 3.0.7 upwards
+  // to avoid misleading users
+  //FunctionOfPseudoJet(const TOut &constant_value);
 
   /// default dtor (virtual to allow safe polymorphism)
   virtual ~FunctionOfPseudoJet(){}
