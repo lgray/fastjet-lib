@@ -1,3 +1,8 @@
+2014-02-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
+
+	* scripts/mksnapshot.sh:
+	updated location of snapshots.html file
+
 2014-01-16  Gregory Soyez  <soyez@fastjet.fr> and Gavin (committed by Gavin)
 
 	* include/fastjet/FunctionOfPseudoJet.hh: 

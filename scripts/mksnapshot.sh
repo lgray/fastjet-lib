@@ -37,5 +37,5 @@ filebase=`echo $filename | sed 's/.tar.gz//'`
 echo Now run 
 echo mv -v $filename '~'salam/www/fastjet/repository/snapshots/
 echo svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/snapshots/$filebase -m \'tagged $filebase snapshot\'
-echo \# edit '~'salam/www/fastjet/snapshots.html
+echo \# edit '~'salam/www/fastjet3/snapshots.html
 #mv -v *$extralabel*.tar.gz ~salam/www/fastjet/repository/snapshots/
