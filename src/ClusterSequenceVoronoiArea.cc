@@ -4,7 +4,6 @@
 // Copyright (c) 2006-2007 Matteo Cacciari, Gavin Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
-// This file is part of a simple command-line handling environment
 //
 //  FastJet is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by

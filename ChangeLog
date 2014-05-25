@@ -1,3 +1,12 @@
+2014-05-25  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/PseudoJet.hh: 
+	fixed minor typo in comment
+
+	* src/ClusterSequenceVoronoiArea.cc: 
+	removed erroneous sentence in license comments about this file
+	being part of a command-line handling environment
+
 2014-02-18  Gavin SALAM  <salam@lpthe.jussieu.fr>
 
 	* scripts/mksnapshot.sh:

@@ -570,7 +570,7 @@ class PseudoJet {
   /// returns a reference to the structure casted to the requested
   /// structure type
   ///
-  /// If there is no sructure associated, an Error is thrown.
+  /// If there is no structure associated, an Error is thrown.
   /// If the type is not met, a std::bad_cast error is thrown.
   template<typename StructureType>
   const StructureType & structure() const;
