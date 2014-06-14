@@ -65,7 +65,7 @@ public:
   virtual inline double area(const PseudoJet & jet) const {
     return _voronoi_area[jet.cluster_hist_index()];}
 
-  /// return a 4-vector area associated with the given jet -- stricly
+  /// return a 4-vector area associated with the given jet -- strictly
   /// this is not the exact 4-vector area, but rather an approximation
   /// made of sums of centres of all Voronoi cells in jet, each
   /// contributing with a normalisation equal to the area of the cell
