@@ -254,9 +254,8 @@ public:
                 double xtra_param_in,
                 const Recombiner * recombiner_in,
                 Strategy strategy_in = Best) {
-    *this = JetDefinition(jet_algorithm_in, R_in, external_scheme, strategy_in);
+    *this = JetDefinition(jet_algorithm_in, R_in, xtra_param_in, external_scheme, strategy_in);
     _recombiner = recombiner_in;
-    set_extra_param(xtra_param_in);
   }
 
   /// a default constructor which creates a jet definition that is in
