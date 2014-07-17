@@ -1,3 +1,9 @@
+2014-07-17  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* src/Tiling2.cc: 
+	turned TilingAnalysis back on in Tiling2 and in TilingAnalysis,
+	changed allowed_max_fraction from 0.5 to 0.25.
+
 2014-07-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/Tiling2.cc:
@@ -234,9 +240,9 @@
 	    tiles at edges of the tiling. 
 
 	  - Tiling: this was the first attempt at a speed improvement. The
-	    main ingredient is that it tries not search beyond the edge of
+	    main ingredient is that it tries not to search beyond the edge of
 	    a tile if a particle's distance to the edge is greater than
-	    that to its in-tile nearest neighbour. 
+	    than to its in-tile nearest neighbour. 
 	    Available as N2MinHeapTiled_experimental1   = -5
 
 	  - Tiling2, with its run_alt() call, is very similar to Tiling,

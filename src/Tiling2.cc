@@ -33,7 +33,7 @@
 using namespace std;
 
 // uncomment the line below to use TilingAnalysis in Tiling2
-//#define _TILING2_USE_TILING_ANALYSIS_
+#define _TILING2_USE_TILING_ANALYSIS_
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -80,7 +80,11 @@ void TilingAnalysis::_determine_rapidity_extent(const vector<PseudoJet> & partic
   // than some fraction of busiest, and at least a few particles; first do
   // it from left. NB: the thresholds chosen here are largely
   // guesstimates as to what might work.
-  const double allowed_max_fraction = 0.5;
+  //
+  // 2014-07-17: in some tests at high multiplicity (100k) and particles going up to
+  //             about 7.3, anti-kt R=0.4, we found that 0.25 gave 20% better run times
+  //             than the original value of 0.5.
+  const double allowed_max_fraction = 0.25;
   // the edge bins should also contain at least min_multiplicity particles
   const double min_multiplicity = 4;
   // now calculate how much we can accumulate into an edge bin
@@ -196,6 +200,7 @@ void Tiling2::_initialise_tiles() {
   TilingAnalysis tiling_analysis(_cs);
   _tiles_eta_min = tiling_analysis.minrap();
   _tiles_eta_max = tiling_analysis.maxrap();
+  //cout << "Using timing analysis " << " " << _tiles_eta_min << " " << _tiles_eta_max << endl;
 #else
   // always include zero rapidity in the tiling region
   _tiles_eta_min = 0.0;
@@ -213,6 +218,7 @@ void Tiling2::_initialise_tiles() {
       if (eta > _tiles_eta_max) {_tiles_eta_max = eta;}
     }
   }
+  //cout << "NOT using timing analysis " << " " << _tiles_eta_min << " " << _tiles_eta_max << endl;
 #endif
 
   // now adjust the values
