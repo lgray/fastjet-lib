@@ -32,6 +32,8 @@
 #include <cmath>
 using namespace std;
 
+// uncomment the line below to use TilingAnalysis in Tiling2
+//#define _TILING2_USE_TILING_ANALYSIS_
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -189,27 +191,29 @@ void Tiling2::_initialise_tiles() {
   _n_tiles_phi   = max(3,int(floor(twopi/default_size)));
   _tile_size_phi = twopi / _n_tiles_phi; // >= _Rparam and fits in 2pi
 
+#ifdef _TILING2_USE_TILING_ANALYSIS_
   // testing
   TilingAnalysis tiling_analysis(_cs);
   _tiles_eta_min = tiling_analysis.minrap();
   _tiles_eta_max = tiling_analysis.maxrap();
-
-  // // always include zero rapidity in the tiling region
-  // _tiles_eta_min = 0.0;
-  // _tiles_eta_max = 0.0;
-  // // but go no further than following
-  // const double maxrap = 7.0;
-  // 
-  // // and find out how much further one should go
-  // for(unsigned int i = 0; i < _jets.size(); i++) {
-  //   double eta = _jets[i].rap();
-  //   // first check if eta is in range -- to avoid taking into account
-  //   // very spurious rapidities due to particles with near-zero kt.
-  //   if (abs(eta) < _maxrap) {
-  //     if (eta < _tiles_eta_min) {_tiles_eta_min = eta;}
-  //     if (eta > _tiles_eta_max) {_tiles_eta_max = eta;}
-  //   }
-  // }
+#else
+  // always include zero rapidity in the tiling region
+  _tiles_eta_min = 0.0;
+  _tiles_eta_max = 0.0;
+  // but go no further than following
+  const double maxrap = 7.0;
+  
+  // and find out how much further one should go
+  for(unsigned int i = 0; i < _jets.size(); i++) {
+    double eta = _jets[i].rap();
+    // first check if eta is in range -- to avoid taking into account
+    // very spurious rapidities due to particles with near-zero kt.
+    if (abs(eta) < maxrap) {
+      if (eta < _tiles_eta_min) {_tiles_eta_min = eta;}
+      if (eta > _tiles_eta_max) {_tiles_eta_max = eta;}
+    }
+  }
+#endif
 
   // now adjust the values
   _tiles_ieta_min = int(floor(_tiles_eta_min/_tile_size_eta));

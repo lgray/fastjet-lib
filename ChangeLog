@@ -1,3 +1,9 @@
+2014-07-17  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/Tiling2.cc:
+	added a pre-processor define to allow to switch on/off the use of
+	TilingAnalysis in Tiling2 (currently disabled)
+
 2014-07-17  Gavin Salam  <gavin.salam@cern.ch> + Matteo & Gregory
 
 	* src/Tiling2.cc|hh:
