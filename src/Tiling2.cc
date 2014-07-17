@@ -29,86 +29,116 @@
 #include "fastjet/Tiling2.hh"
 #include <iomanip>
 #include <limits>
+#include <cmath>
 using namespace std;
 
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-TilingAnalysis::TilingAnalysis(ClusterSequence & cs) :
-  _cs(cs), _jets(cs.jets()) {
-  _determine_rapidity_extent();
+TilingAnalysis::TilingAnalysis(ClusterSequence & cs) {
+  _determine_rapidity_extent(cs.jets());
 }
   
-void TilingAnalysis::_determine_rapidity_extent() {
-  int nrap = 20; // bins are of size 1 in rapidity; 
+void TilingAnalysis::_determine_rapidity_extent(const vector<PseudoJet> & particles) {
+  // have a binning of rapidity that goes from -nrap to nrap
+  // in bins of size 1; the left and right-most bins include
+  // include overflows from smaller/larger rapidities
+  int nrap = 20; 
   int nbins = 2*nrap;
   vector<int> counts(nbins, 0);
   
-  // get the minimum and maximum rapidities and at the same time bin the 
-  // rapidity distribution to help decide how far out it's worth going
+  // get the minimum and maximum rapidities and at the same time bin
+  // the multiplicities as a function of rapidity to help decide how
+  // far out it's worth going
   _minrap =  numeric_limits<double>::max();
   _maxrap = -numeric_limits<double>::max();
-  for (unsigned i = 0; i < _jets.size(); i++) {
-    // ignore cases jets with infinite rapidity
-    if (_jets[i].E() == abs(_jets[i].pz())) continue;
-    double rap = _jets[i].rap();
+  int ibin;
+  for (unsigned i = 0; i < particles.size(); i++) {
+    // ignore particles with infinite rapidity
+    if (particles[i].E() == abs(particles[i].pz())) continue;
+    double rap = particles[i].rap();
     if (rap < _minrap) _minrap = rap;
     if (rap > _maxrap) _maxrap = rap;
-    // now bin the rapidity to decide how far to go
-    int int_rap = int(rap+nrap); 
-    if (int_rap < 0) int_rap = 0;
-    if (int_rap >= nbins) int_rap = nbins - 1;
-    counts[int_rap]++;
+    // now bin the rapidity to decide how far to go with the tiling.
+    // Remember the bins go from ibin=0 (rap=-infinity..-19)
+    // to ibin = nbins-1 (rap=19..infinity for nrap=20)
+    ibin = int(rap+nrap); 
+    if (ibin < 0) ibin = 0;
+    if (ibin >= nbins) ibin = nbins - 1;
+    counts[ibin]++;
   }
 
-  // now figure out the busiest bin
+  // now figure out the particle count in the busiest bin
   int max_in_bin = 0;
-  for (int iy = 0; iy < nbins; iy++) {
-    if (max_in_bin < counts[iy]) max_in_bin = counts[iy];
+  for (ibin = 0; ibin < nbins; ibin++) {
+    if (max_in_bin < counts[ibin]) max_in_bin = counts[ibin];
   }
   
   // and find _minrap, _maxrap such that edge bin never contains more
-  // than some fraction of busiest, and at least a few jets; first do
+  // than some fraction of busiest, and at least a few particles; first do
   // it from left. NB: the thresholds chosen here are largely
   // guesstimates as to what might work.
   const double allowed_max_fraction = 0.5;
   // the edge bins should also contain at least min_multiplicity particles
   const double min_multiplicity = 4;
   // now calculate how much we can accumulate into an edge bin
-  const int allowed_max_cumul = max(max_in_bin * allowed_max_fraction, min_multiplicity);
+  int allowed_max_cumul = max(max_in_bin * allowed_max_fraction, min_multiplicity);
+  // make sure we don't require more particles in a bin than max_in_bin
+  if (allowed_max_cumul > max_in_bin) allowed_max_cumul = max_in_bin;
 
   // start scan over rapidity bins from the left, to find out minimum rapidity of tiling
-  int cumul = 0;
-  int iy;
+  int cumul_lo = 0;
   double _cumul2 = 0;
-  for (iy = 0; iy < nbins; iy++) {
-    cumul += counts[iy];
-    if (cumul >= allowed_max_cumul) {
-      double y = iy-nrap;
+  for (ibin = 0; ibin < nbins; ibin++) {
+    cumul_lo += counts[ibin];
+    if (cumul_lo >= allowed_max_cumul) {
+      double y = ibin-nrap;
       if (y > _minrap) _minrap = y;
       break;
     }
   }
-  _cumul2 += cumul*cumul;
-  int iy_lo = iy + 1;
+  assert(ibin != nbins); // internal consistency check that you found a bin
+  _cumul2 += cumul_lo*cumul_lo;
+
+  // ibin_lo is the index of the leftmost bin that should be considered
+  int ibin_lo = ibin;
 
   // then do it from right, to find out maximum rapidity of tiling
-  cumul = 0;
-  for (iy = nbins; iy > 0; iy--) {
-    cumul += counts[iy-1];
-    if (cumul >= allowed_max_cumul) {
-      double y = iy-nrap;
+  int cumul_hi = 0;
+  for (ibin = nbins-1; ibin >= 0; ibin--) {
+    cumul_hi += counts[ibin];
+    if (cumul_hi >= allowed_max_cumul) {
+      double y = ibin-nrap+1; // +1 here is the rapidity bin width
       if (y < _maxrap) _maxrap = y;
       break;
     }
   }
-  _cumul2 += cumul*cumul;
-  int iy_hi = iy - 1;
+  assert(ibin >= 0); // internal consistency check that you found a bin
 
-  // now get the rest of the squared bin contents
-  for (iy = iy_lo; iy < iy_hi; iy++) {
-    _cumul2 += counts[iy]*counts[iy];
+  // ibin_hi is the index of the rightmost bin that should be considered
+  int ibin_hi = ibin;
+
+  // consistency check 
+  assert(ibin_hi >= ibin_lo); 
+
+  // now work out cumul2
+  if (ibin_hi == ibin_lo) {
+    // if there is a single bin (potentially including overflows
+    // from both sides), cumul2 is the square of the total contents
+    // of that bin, which we obtain from cumul_lo and cumul_hi minus
+    // the double counting of part that is contained in both
+    _cumul2 = pow(cumul_lo + cumul_hi - counts[ibin_hi], 2);
+  } else {
+    // otherwise we have a straightforward sum of squares of bin
+    // contents
+    _cumul2 += cumul_hi*cumul_hi;
+
+    // now get the rest of the squared bin contents
+    for (ibin = ibin_lo+1; ibin < ibin_hi; ibin++) {
+      _cumul2 += counts[ibin]*counts[ibin];
+    }
   }
+
 }
 
 

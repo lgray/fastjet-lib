@@ -116,20 +116,32 @@ typedef Tile2Base<9> Tile2;
 
 
 //----------------------------------------------------------------------
+/// class to perform a fast analysis of the appropriate rapidity range
+/// in which to perform tiling
 class TilingAnalysis {
 public:
+  /// constructor that takes a ClusterSequence in a state where the
+  /// initial particles have been set up, but before clustering has
+  /// started.
   TilingAnalysis(ClusterSequence & cs);
 
-
+  /// returns the suggested minimum rapidity for the tiling
   double minrap() const {return _minrap;}
+  /// returns the suggested maximum rapidity for the tiling
   double maxrap() const {return _maxrap;}
-protected:
-  ClusterSequence & _cs;
-  const std::vector<PseudoJet> & _jets;
+
+  /// internally, the class bins the particle multiplicity versus
+  /// rapidity, in bins of size 1 running roughly from minrap to maxrap
+  /// (including overflows); this function returns the sum of squares
+  /// of bin contents, which may be informative for deciding strategy
+  /// choices.
+  double sum_of_binned_squared_multiplicity() const {return _cumul2;}
+
+private:
   double _minrap, _maxrap, _cumul2;
 
   /// attempts to calculate a sensible rapidity extent for the tiling
-  void _determine_rapidity_extent();
+  void _determine_rapidity_extent(const std::vector<PseudoJet> & particles);
 };
 
 
