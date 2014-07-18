@@ -1,5 +1,8 @@
 2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/ktjet_timing.cc:
+	included cstdio required by recent compilers
+
 	* tools/fastjet/tools/Filter.hh:
 	- added an _initialised flag alolowing to check whether the Filter
 	  has been initialised properly or not
