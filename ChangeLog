@@ -1,3 +1,8 @@
+2014-07-18  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* src/TilingExtent.cc (_determine_rapidity_extent): 
+	switched all ints for bin counts -> doubles
+	
 2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/TilingExtent.cc (_determine_rapidity_extent):
