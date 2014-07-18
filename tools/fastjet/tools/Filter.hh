@@ -97,7 +97,7 @@ public:
   /// trivial ctor
   /// Note: this is just for derived classes
   ///       a Filter initialised through this constructor will not work!
-  Filter() : _Rfiltfunc(0){};
+  Filter() : _Rfiltfunc(0), _initialised(false){};
 
   /// define a filter that decomposes a jet into subjets using a
   /// generic JetDefinition and then keeps only a subset of these
@@ -112,7 +112,7 @@ public:
   /// obtained with a cluster sequence with area support and explicit
   /// ghosts
   Filter(JetDefinition subjet_def, Selector selector, double rho = 0.0) : 
-    _subjet_def(subjet_def), _Rfiltfunc(0), _Rfilt(-1), _selector(selector), _rho(rho), _subtractor(0) {}
+    _subjet_def(subjet_def), _Rfiltfunc(0), _Rfilt(-1), _selector(selector), _rho(rho), _subtractor(0), _initialised(true) {}
 
   /// Same as the full constructor (see above) but just specifying the radius
   /// By default, Cambridge-Aachen is used
@@ -120,7 +120,7 @@ public:
   /// recombiner, that one will be used
   ///  \param Rfilt   the filtering radius
   Filter(double Rfilt, Selector selector, double rho = 0.0) : 
-    _Rfiltfunc(0), _Rfilt(Rfilt), _selector(selector), _rho(rho), _subtractor(0) { 
+    _Rfiltfunc(0), _Rfilt(Rfilt), _selector(selector), _rho(rho), _subtractor(0), _initialised(true) { 
     if (_Rfilt<0)
       throw Error("Attempt to create a Filter with a negative filtering radius");
   }
@@ -132,14 +132,14 @@ public:
   /// recombiner, that one will be used
   ///  \param Rfilt_func   the filtering radius function of a PseudoJet
   Filter(FunctionOfPseudoJet<double> *Rfilt_func, Selector selector, double rho = 0.0) : 
-    _Rfiltfunc(Rfilt_func), _Rfilt(-1), _selector(selector), _rho(rho), _subtractor(0) {}
+    _Rfiltfunc(Rfilt_func), _Rfilt(-1), _selector(selector), _rho(rho), _subtractor(0), _initialised(true) {}
 
   /// default dtor
   virtual ~Filter(){};
 
   /// Set a subtractor that is applied to all individual subjets before
   /// deciding which ones to keep. It takes precedence over a non-zero rho.
-  void set_subtractor(const Transformer * subtractor) {_subtractor = subtractor;}
+  void set_subtractor(const FunctionOfPseudoJet<PseudoJet> * subtractor) {_subtractor = subtractor;}
 
   /// runs the filtering and sets kept and rejected to be the jets of interest
   /// (with non-zero rho, they will have been subtracted).
@@ -208,7 +208,9 @@ private:
   double _Rfilt;               ///< a constant specifying the subjet radius (with C/A)
   Selector _selector;  ///< the subjet selection criterium
   double _rho;                 ///< the background density (used for subtraction when possible)
-  const Transformer * _subtractor; ///< for subtracting bkgd density from subjets
+  const FunctionOfPseudoJet<PseudoJet> * _subtractor; ///< for subtracting bkgd density from subjets
+
+  bool _initialised;    ///< true when the Filter has been properly intialised
 };
 
 

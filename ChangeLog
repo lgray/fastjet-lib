@@ -1,3 +1,11 @@
+2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/Filter.hh:
+	- added an _initialised flag alolowing to check whether the Filter
+	  has been initialised properly or not
+	- made the subtractor a (pointer to a)
+	  FunctionOfPseudoJet<PseudoJet> instead of a Transformer
+
 2014-07-18  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* include/fastjet/internal/Makefile.am

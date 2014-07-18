@@ -44,6 +44,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // class description
 string Filter::description() const {
+  if (!_initialised){
+    return "uninitialised Filter";
+  }
+
   ostringstream ostr;
   ostr << "Filter with subjet_def = ";
   if (_Rfiltfunc) {
@@ -72,6 +76,11 @@ string Filter::description() const {
 // return a vector of subjets, which are the ones that would be kept
 // by the filtering
 PseudoJet Filter::result(const PseudoJet &jet) const {
+  if (!_initialised){
+    //Q: do we throw or do we return an empty PJ?
+    throw Error("uninitialised Filter");
+  }
+
   // start by getting the list of subjets (including a list of sanity
   // checks)
   // NB: subjets is empty to begin with (see the comment for
