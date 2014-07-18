@@ -1,5 +1,5 @@
-#ifndef __FASTJET_TILING25_HH__
-#define __FASTJET_TILING25_HH__
+#ifndef __FASTJET_LAZYTILING25_HH__
+#define __FASTJET_LAZYTILING25_HH__
 
 // #define INSTRUMENT2 1
 
@@ -193,4 +193,4 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_TILING25_HH__
+#endif // __FASTJET_LAZYTILING25_HH__

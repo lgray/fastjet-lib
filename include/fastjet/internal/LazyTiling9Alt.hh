@@ -1,5 +1,5 @@
-#ifndef __FASTJET_TILING_HH__
-#define __FASTJET_TILING_HH__
+#ifndef __FASTJET_LAZYTILING9ALT_HH__
+#define __FASTJET_LAZYTILING9ALT_HH__
 
 //STARTHEADER
 // $Id$
@@ -222,4 +222,4 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_TILING_HH__
+#endif // __FASTJET_LAZYTILING9ALT_HH__
