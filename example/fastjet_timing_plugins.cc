@@ -304,6 +304,10 @@ int main (int argc, char ** argv) {
   bool   get_all_yij   = cmdline.present("-get-all-yij");
   double subdcut = cmdline.double_val("-subdcut",-1.0);
   double rapmax = cmdline.double_val("-rapmax",1.0e305);
+  if (cmdline.present("-etamax")) {
+    cerr << "WARNING: -etamax options actually sets maximum rapidity (and overrides -rapmax)\n";
+    rapmax = cmdline.double_val("-etamax");
+  }
   bool   show_constituents = cmdline.present("-const");
   bool   massless = cmdline.present("-massless");
   int    nev     = cmdline.int_val("-nev",1);

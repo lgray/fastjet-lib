@@ -1,5 +1,9 @@
 2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/fastjet_timing_plugins.cc:
+	reinstated the -etamax option which actually sets maximal rapidity
+	(and prints a warning) --- backported from the 3.0.X branch
+
 	* NEWS:
 	backported news for v3.0.5 and 3.0.6 from the 3.0.X branch
 
