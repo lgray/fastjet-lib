@@ -2,6 +2,22 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
+Summary of changes from v3.0.5 -> v3.0.6: 2013-10-29
+================================================================
+This is a minor maintenance release. Main changes:
+* fixed compilation issues for two plugins under OS X 10.9 (Mavericks)
+* fixed incorrect warnings in JHTopTagger, MassDropTagger and an example
+* GridJetPlugin now has extra enquiry functions
+
+================================================================
+Summary of changes from v3.0.4 -> v3.0.5: 2013-09-16
+================================================================
+This is a minor maintenance release. Main changes:
+* modified include guards, to solve coexistence issue for fjcore
+* resolved (bogus) compiler warning about uninitialised variables
+* added an example event file that was missing from the distribution
+
+================================================================
 Summary of changes from v3.0.3 -> v3.0.4: 2013-06-05
 ================================================================
 
