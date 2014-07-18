@@ -1,5 +1,9 @@
 2014-07-18  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
+	* include/fastjet/internal/Makefile.am
+	(fastjetincludeinternal_HEADERS):
+	added TilingExtent to fastjetincludeinternal_HEADERS
+
 	* src/TilingExtent.cc (_determine_rapidity_extent): 
 	switched all ints for bin counts -> doubles
 	
