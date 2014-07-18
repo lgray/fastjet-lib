@@ -47,13 +47,13 @@ std::string fastjet_version_string();
 /// clustering events with kt and cambridge style algorithms.
 enum Strategy {
   /// temporary name -- may evolve
-  N2MinHeapTiled_separate_ghosts_antikt   = -10, 
+  N2MHTLazy9AntiKtSeparateGhosts   = -10, 
   /// temporary name -- will evolve
-  N2MinHeapTiled_experimental3   = -7, 
+  N2MHTLazy9   = -7, 
   /// temporary name -- will evolve
-  N2MinHeapTiled_experimental2   = -6, 
+  N2MHTLazy25   = -6, 
   /// temporary name -- will evolve
-  N2MinHeapTiled_experimental1   = -5, 
+  N2MHTLazy9Alt   = -5, 
   /// fastest form about 500..10^4
   N2MinHeapTiled   = -4, 
   /// fastest from about 50..500

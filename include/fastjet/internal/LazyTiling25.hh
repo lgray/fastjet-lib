@@ -1,8 +1,10 @@
-#ifndef __FASTJET_TILING_HH__
-#define __FASTJET_TILING_HH__
+#ifndef __FASTJET_TILING25_HH__
+#define __FASTJET_TILING25_HH__
+
+// #define INSTRUMENT2 1
 
 //STARTHEADER
-// $Id: ClusterSequence.hh 2867 2012-03-31 09:17:15Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
@@ -32,109 +34,60 @@
 //#include "fastjet/PseudoJet.hh"
 #include "fastjet/internal/MinHeap.hh"
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/internal/LazyTiling9Alt.hh"
+#include "fastjet/internal/LazyTiling9.hh"
+
+
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-/// structure analogous to BriefJet, but with the extra information
-/// needed for dealing with tiles
-class TiledJet {
-public:
-  double     eta, phi, kt2, NN_dist;
-  TiledJet * NN, *previous, * next; 
-  int        _jets_index, tile_index;
-  bool _minheap_update_needed;
+typedef Tile2Base<25> Tile25;
 
-  // indicate whether jets need to have their minheap entries
-  // updated).
-  inline void label_minheap_update_needed() {_minheap_update_needed = true;}
-  inline void label_minheap_update_done()   {_minheap_update_needed = false;}
-  inline bool minheap_update_needed() const {return _minheap_update_needed;}
-};
+template<> inline bool Tile2Base<25>::is_near_zero_phi(double tile_size_phi) const {
+    return phi_centre < 2*tile_size_phi || (twopi-phi_centre) < 2*tile_size_phi;
+}
 
-const int n_tile_neighbours = 9;
+// class Tile25 {
+// public:
+//   /// pointers to neighbouring tiles, including self
+//   Tile25 *   begin_tiles[25];
+//   /// neighbouring tiles, excluding self
+//   Tile25 **  surrounding_tiles; 
+//   /// half of neighbouring tiles, no self
+//   Tile25 **  RH_tiles;  
+//   /// just beyond end of tiles
+//   Tile25 **  end_tiles; 
+//   /// start of list of BriefJets contained in this tile
+//   TiledJet * head;    
+//   /// sometimes useful to be able to tag a tile
+//   bool     tagged;    
+//   /// for all particles in the tile, this stores the largest of the
+//   /// (squared) nearest-neighbour distances.
+//   double max_NN_dist;
+//   double eta_centre, phi_centre;
+// 
+//   bool is_near_zero_phi(double tile_size_phi) const {
+//     return phi_centre < 2*tile_size_phi || (twopi-phi_centre) < 2*tile_size_phi;
+//   }
+// };
 
-class Tile {
-public:
-  typedef double (Tile::*DistToTileFn)(const TiledJet*) const;
-  typedef std::pair<Tile *, DistToTileFn> TileFnPair;
-  /// pointers to neighbouring tiles, including self
-  TileFnPair begin_tiles[n_tile_neighbours]; 
-  /// neighbouring tiles, excluding self
-  TileFnPair *  surrounding_tiles; 
-  /// half of neighbouring tiles, no self
-  TileFnPair *  RH_tiles;  
-  /// just beyond end of tiles
-  TileFnPair *  end_tiles; 
-  /// start of list of BriefJets contained in this tile
-  TiledJet * head;    
-  /// sometimes useful to be able to tag a tile
-  bool     tagged;    
-  /// for all particles in the tile, this stores the largest of the
-  /// (squared) nearest-neighbour distances.
-  double max_NN_dist;
-  double eta_min, eta_max, phi_min, phi_max;
-
-  bool is_near_zero_phi(double tile_half_size_phi) const {
-    return phi_min < tile_half_size_phi || (twopi-phi_max) < tile_half_size_phi;
-  }
-
-  double distance_to_centre(const TiledJet *) const {return 0;}
-  double distance_to_left(const TiledJet * jet) const {
-    double deta = jet->eta - eta_min;
-    return deta*deta;
-  }
-  double distance_to_right(const TiledJet * jet) const {
-    double deta = jet->eta - eta_max;
-    return deta*deta;
-  }
-  double distance_to_bottom(const TiledJet * jet) const {
-    double dphi = jet->phi - phi_min;
-    return dphi*dphi;
-  }
-  double distance_to_top(const TiledJet * jet) const {
-    double dphi = jet->phi - phi_max;
-    return dphi*dphi;
-  }
-
-  double distance_to_left_top(const TiledJet * jet) const {
-    double deta = jet->eta - eta_min;
-    double dphi = jet->phi - phi_max;
-    return deta*deta + dphi*dphi;
-  }
-  double distance_to_left_bottom(const TiledJet * jet) const {
-    double deta = jet->eta - eta_min;
-    double dphi = jet->phi - phi_min;
-    return deta*deta + dphi*dphi;
-  }
-  double distance_to_right_top(const TiledJet * jet) const {
-    double deta = jet->eta - eta_max;
-    double dphi = jet->phi - phi_max;
-    return deta*deta + dphi*dphi;
-  }
-  double distance_to_right_bottom(const TiledJet * jet) const {
-    double deta = jet->eta - eta_max;
-    double dphi = jet->phi - phi_min;
-    return deta*deta + dphi*dphi;
-  }
-
-  
-};
 
 //----------------------------------------------------------------------
-class Tiling {
+class LazyTiling25 {
 public:
-  Tiling(ClusterSequence & cs);
+  LazyTiling25(ClusterSequence & cs);
 
   void run();
-
-  //void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
-  
 
 protected:
   ClusterSequence & _cs;
   const std::vector<PseudoJet> & _jets;
-  std::vector<Tile> _tiles;
+  std::vector<Tile25> _tiles;
 
+#ifdef INSTRUMENT2
+  int _ncall; // GPS tmp
+  int _ncall_dtt; // GPS tmp
+#endif // INSTRUMENT2
 
   double _Rparam, _R2, _invR2;
   double _tiles_eta_min, _tiles_eta_max;
@@ -172,7 +125,12 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles);
   void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-  double _distance_to_tile(const TiledJet * bj, const Tile *) const;
+  double _distance_to_tile(const TiledJet * bj, const Tile25 *) 
+#ifdef INSTRUMENT2
+    ;
+#else
+    const;
+#endif 
   void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
   void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
@@ -201,7 +159,13 @@ protected:
 
   //----------------------------------------------------------------------
   template <class J> inline double _bj_dist(
-                const J * const jetA, const J * const jetB) const {
+                const J * const jetA, const J * const jetB) 
+#ifdef INSTRUMENT2
+    {
+    _ncall++; // GPS tmp
+#else
+    const {
+#endif 
     double dphi = std::abs(jetA->phi - jetB->phi);
     double deta = (jetA->eta - jetB->eta);
     if (dphi > pi) {dphi = twopi - dphi;}
@@ -211,7 +175,14 @@ protected:
 
   //----------------------------------------------------------------------
   template <class J> inline double _bj_dist_not_periodic(
-                const J * const jetA, const J * const jetB) const {
+                const J * const jetA, const J * const jetB)
+#ifdef INSTRUMENT2
+    {
+    _ncall++; // GPS tmp
+#else
+    const {
+#endif 
+    //_ncall++; // GPS tmp
     double dphi = jetA->phi - jetB->phi;
     double deta = (jetA->eta - jetB->eta);
     return dphi*dphi + deta*deta;
@@ -222,4 +193,4 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_TILING_HH__
+#endif // __FASTJET_TILING25_HH__

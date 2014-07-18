@@ -27,7 +27,6 @@ fastjetinclude_HEADERS= JetDefinition.hh\
   CompositeJetStructure.hh\
   WrappedStructure.hh\
   LimitedWarning.hh\
-  Tiling.hh Tiling2.hh Tiling25.hh Tiling3.hh\
   config.h
 
 nodist_fastjetinclude_HEADERS= config_auto.h

@@ -1,10 +1,10 @@
-#ifndef __FASTJET_TILING25_HH__
-#define __FASTJET_TILING25_HH__
+#ifndef __FASTJET_TILING2_HH__
+#define __FASTJET_TILING2_HH__
 
-// #define INSTRUMENT2 1
+//#define INSTRUMENT2 1
 
 //STARTHEADER
-// $Id: ClusterSequence.hh 2867 2012-03-31 09:17:15Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
@@ -34,29 +34,72 @@
 //#include "fastjet/PseudoJet.hh"
 #include "fastjet/internal/MinHeap.hh"
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/Tiling.hh"
-#include "fastjet/Tiling2.hh"
-
+#include "fastjet/internal/LazyTiling9Alt.hh"
 
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+template<int NN>
+class Tile2Base {
+public:
+  /// pointers to neighbouring tiles, including self
+  Tile2Base *   begin_tiles[NN]; 
+  /// neighbouring tiles, excluding self
+  Tile2Base **  surrounding_tiles; 
+  /// half of neighbouring tiles, no self
+  Tile2Base **  RH_tiles;  
+  /// just beyond end of tiles
+  Tile2Base **  end_tiles; 
+  /// start of list of BriefJets contained in this tile
+  TiledJet * head;    
+  /// sometimes useful to be able to tag a tile
+  bool     tagged;    
+  /// for all particles in the tile, this stores the largest of the
+  /// (squared) nearest-neighbour distances.
+  double max_NN_dist;
+  double eta_centre, phi_centre;
 
-typedef Tile2Base<25> Tile25;
+  /// returns true when a tile is sufficiently close to phi=0 that
+  /// it is necessary to be careful of periodicity when calculating
+  /// phi distances to relevant neighbouring tiles
+  bool is_near_zero_phi(double tile_size_phi) const {
+    return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
+  }
+  
+  /// returns the number of jets in the tile; useful principally for
+  /// diagnostics
+  int jet_count() const {
+    int count = 0;
+    const TiledJet * jet = head;
+    while (jet != 0) {
+      count++;
+      jet = jet->next;
+    }
+    return count;
+  }
+};
 
-template<> inline bool Tile2Base<25>::is_near_zero_phi(double tile_size_phi) const {
-    return phi_centre < 2*tile_size_phi || (twopi-phi_centre) < 2*tile_size_phi;
-}
 
-// class Tile25 {
+typedef Tile2Base<9> Tile2;
+
+// class Tile2 : public Tile2Base {
 // public:
 //   /// pointers to neighbouring tiles, including self
-//   Tile25 *   begin_tiles[25];
+//   Tile2 *   begin_tiles[n_tile_neighbours]; 
+//   bool is_near_zero_phi(double tile_size_phi) const {
+//     return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
+//   }
+// };
+
+// class Tile2  {
+// public:
+//   /// pointers to neighbouring tiles, including self
+//   Tile2 *   begin_tiles[n_tile_neighbours]; 
 //   /// neighbouring tiles, excluding self
-//   Tile25 **  surrounding_tiles; 
+//   Tile2 **  surrounding_tiles; 
 //   /// half of neighbouring tiles, no self
-//   Tile25 **  RH_tiles;  
+//   Tile2 **  RH_tiles;  
 //   /// just beyond end of tiles
-//   Tile25 **  end_tiles; 
+//   Tile2 **  end_tiles; 
 //   /// start of list of BriefJets contained in this tile
 //   TiledJet * head;    
 //   /// sometimes useful to be able to tag a tile
@@ -65,24 +108,27 @@ template<> inline bool Tile2Base<25>::is_near_zero_phi(double tile_size_phi) con
 //   /// (squared) nearest-neighbour distances.
 //   double max_NN_dist;
 //   double eta_centre, phi_centre;
-// 
 //   bool is_near_zero_phi(double tile_size_phi) const {
-//     return phi_centre < 2*tile_size_phi || (twopi-phi_centre) < 2*tile_size_phi;
+//     return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
 //   }
 // };
 
 
+
 //----------------------------------------------------------------------
-class Tiling25 {
+class LazyTiling9 {
 public:
-  Tiling25(ClusterSequence & cs);
+  LazyTiling9(ClusterSequence & cs);
 
   void run();
+
+  //void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
+  
 
 protected:
   ClusterSequence & _cs;
   const std::vector<PseudoJet> & _jets;
-  std::vector<Tile25> _tiles;
+  std::vector<Tile2> _tiles;
 
 #ifdef INSTRUMENT2
   int _ncall; // GPS tmp
@@ -125,7 +171,7 @@ protected:
 		 std::vector<int> & tile_union, int & n_near_tiles);
   void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-  double _distance_to_tile(const TiledJet * bj, const Tile25 *) 
+  double _distance_to_tile(const TiledJet * bj, const Tile2 *) 
 #ifdef INSTRUMENT2
     ;
 #else
@@ -193,4 +239,4 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_TILING25_HH__
+#endif // __FASTJET_TILING2_HH__

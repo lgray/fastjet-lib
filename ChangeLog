@@ -1,3 +1,48 @@
+2014-07-18  Gavin Salam  <gavin.salam@cern.ch> (later)
+
+	Carried out substantial renaming of the new Tiling files, classes,
+	strategy enum names, etc., basically according to the following
+	pattern
+
+                                                Strategy        Class
+    N2MinHeapTiled_experimental1 (Tiling)   ->  N2MHTLazy9Alt  (LazyTiling9Alt)
+    N2MinHeapTiled_experimental3 (Tiling2)  ->  N2MHTLazy9     (LazyTiling9)
+    N2MinHeapTiled_experimental2 (Tiling25) ->  N2MHTLazy25    (LazyTiling25)
+
+
+    N2MinHeapTiled_separate_ghosts_antikt (Tiling3)
+                                            ->  N2MHTLazy9AntiKtSeparateGhosts (LazyTiling9SeparateGhosts)
+
+
+	Overall that gives following renamed files
+
+        * include/fastjet/internal/LazyTiling25.hh:
+        * include/fastjet/internal/LazyTiling9.hh:
+        * include/fastjet/internal/LazyTiling9Alt.hh:
+        * include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
+        * src/LazyTiling25.cc:
+        * src/LazyTiling9.cc:
+        * src/LazyTiling9Alt.cc:
+        * src/LazyTiling9SeparateGhosts.cc:
+
+	moved from old names
+
+        * include/fastjet/internal/TilingExtent.hh: *** ADDED ***
+	* src/TilingExtent.cc                       *** ADDED ***
+
+	TilingExtent (was TilingAnalysis) moved out of old files.
+
+        * include/fastjet/JetDefinition.hh:
+        * src/ClusterSequence.cc:
+        * src/ClusterSequence_TiledN2.cc:
+	adaptations to take into account the new naming 
+
+        * include/fastjet/Makefile.am:
+	* include/fastjet/internal/Makefile.am
+        * src/Makefile.am
+	updated these to reflect new file naming scheme
+	
+	
 2014-07-18  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/Tiling2.cc: 

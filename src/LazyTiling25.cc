@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: ClusterSequence.hh 2863 2012-03-30 16:16:14Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
@@ -26,16 +26,22 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/Tiling.hh"
 #include <iomanip>
+#include "fastjet/internal/LazyTiling25.hh"
+#include "fastjet/internal/TilingExtent.hh"
 using namespace std;
+
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-Tiling::Tiling(ClusterSequence & cs) :
+LazyTiling25::LazyTiling25(ClusterSequence & cs) :
   _cs(cs), _jets(cs.jets())
   //, _minheap(_jets.size()) 
 {
+#ifdef INSTRUMENT2
+  _ncall = 0; // gps tmp
+  _ncall_dtt = 0; // gps tmp
+#endif // INSTRUMENT2
   _Rparam = cs.jet_def().R();
   _R2 = _Rparam * _Rparam;
   _invR2 = 1.0 / _R2;
@@ -51,35 +57,45 @@ Tiling::Tiling(ClusterSequence & cs) :
 ///
 /// The neighbourhood of a tile is set up as follows
 ///
-/// 	      LRR
-///           LXR
-///           LLR
+///          LLRRR
+///          LLRRR
+///          LLXRR
+///          LLLRR
+///          LLLRR
 ///
-/// such that tiles is an array containing XLLLLRRRR with pointers
-///                                         |   \ RH_tiles
+/// such that tiles is an array containing XLL..LLRR..RR with pointers
+///                                         |     \ RH_tiles
 ///                                         \ surrounding_tiles
 ///
 /// with appropriate precautions when close to the edge of the tiled
 /// region.
 ///
-void Tiling::_initialise_tiles() {
+void LazyTiling25::_initialise_tiles() {
 
   // first decide tile sizes (with a lower bound to avoid huge memory use with
   // very small R)
-  double default_size = max(0.1,_Rparam);
+  double default_size = max(0.1,_Rparam)/2;
   _tile_size_eta = default_size;
-  // it makes no sense to go below 3 tiles in phi -- 3 tiles is
+  // it makes no sense to go below 5 tiles in phi -- 5 tiles is
   // sufficient to make sure all pair-wise combinations up to pi in
   // phi are possible
-  _n_tiles_phi   = max(3,int(floor(twopi/default_size)));
+  _n_tiles_phi   = max(5,int(floor(twopi/default_size)));
   _tile_size_phi = twopi / _n_tiles_phi; // >= _Rparam and fits in 2pi
 
+#define _FASTJET_TILING25_USE_TILING_ANALYSIS_
+#ifdef  _FASTJET_TILING25_USE_TILING_ANALYSIS_
+  // testing
+  TilingExtent tiling_analysis(_cs);
+  _tiles_eta_min = tiling_analysis.minrap();
+  _tiles_eta_max = tiling_analysis.maxrap();
+  //cout << "Using timing analysis " << " " << _tiles_eta_min << " " << _tiles_eta_max << endl;
+#else // not _FASTJET_TILING25_USE_TILING_ANALYSIS_
   // always include zero rapidity in the tiling region
   _tiles_eta_min = 0.0;
   _tiles_eta_max = 0.0;
   // but go no further than following
   const double maxrap = 7.0;
-
+  
   // and find out how much further one should go
   for(unsigned int i = 0; i < _jets.size(); i++) {
     double eta = _jets[i].rap();
@@ -90,6 +106,9 @@ void Tiling::_initialise_tiles() {
       if (eta > _tiles_eta_max) {_tiles_eta_max = eta;}
     }
   }
+  //cout << "NOT using timing analysis " << " " << _tiles_eta_min << " " << _tiles_eta_max << endl;
+#endif // _FASTJET_TILING25_USE_TILING_ANALYSIS_
+
 
   // now adjust the values
   _tiles_ieta_min = int(floor(_tiles_eta_min/_tile_size_eta));
@@ -106,11 +125,11 @@ void Tiling::_initialise_tiles() {
   // now set up the cross-referencing between tiles
   for (int ieta = _tiles_ieta_min; ieta <= _tiles_ieta_max; ieta++) {
     for (int iphi = 0; iphi < _n_tiles_phi; iphi++) {
-      Tile * tile = & _tiles[_tile_index(ieta,iphi)];
+      Tile25 * tile = & _tiles[_tile_index(ieta,iphi)];
       // no jets in this tile yet
       tile->head = NULL; // first element of tiles points to itself
-      tile->begin_tiles[0] =  Tile::TileFnPair(tile,&Tile::distance_to_centre);
-      Tile::TileFnPair * pptile = & (tile->begin_tiles[0]);
+      tile->begin_tiles[0] =  tile;
+      Tile25 ** pptile = & (tile->begin_tiles[0]);
       pptile++;
       //
       // set up L's in column to the left of X
@@ -119,44 +138,45 @@ void Tiling::_initialise_tiles() {
 	// with the itile subroutine, we can safely run tiles from
 	// idphi=-1 to idphi=+1, because it takes care of
 	// negative and positive boundaries
-	//for (int idphi = -1; idphi <=+1; idphi++) {
-        //  *pptile = & _tiles[_tile_index(ieta-1,iphi+idphi)];
-        //  pptile++;
-        //}	
-        *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta-1,iphi-1)],
-                                   &Tile::distance_to_left_bottom);
-        pptile++;
-        *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta-1,iphi)],
-                                   &Tile::distance_to_left);
-        pptile++;
-        *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta-1,iphi+1)],
-                                   &Tile::distance_to_left_top);
-        pptile++;
+	for (int idphi = -2; idphi <=+2; idphi++) {
+	  *pptile = & _tiles[_tile_index(ieta-1,iphi+idphi)];
+	  pptile++;
+	}	
       }
-      // now set up last L (below X)
-      *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta,iphi-1)], 
-                                 &Tile::distance_to_bottom);
+      // and the column twice to left of X
+      if (ieta > _tiles_ieta_min + 1) {
+	// with the itile subroutine, we can safely run tiles from
+	// idphi=-1 to idphi=+1, because it takes care of
+	// negative and positive boundaries
+	for (int idphi = -2; idphi <= +2; idphi++) {
+	  *pptile = & _tiles[_tile_index(ieta-2,iphi+idphi)];
+	  pptile++;
+	}	
+      }
+      // now set up last two L's (below X)
+      *pptile = & _tiles[_tile_index(ieta,iphi-1)];
       pptile++;
-      // set up first R (above X)
+      *pptile = & _tiles[_tile_index(ieta,iphi-2)];
+      pptile++;
+      // set up first two R's (above X)
       tile->RH_tiles = pptile;
-      *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta,iphi+1)], 
-                                 &Tile::distance_to_top);
+      *pptile = & _tiles[_tile_index(ieta,iphi+1)];
+      pptile++;
+      *pptile = & _tiles[_tile_index(ieta,iphi+2)];
       pptile++;
       // set up remaining R's, to the right of X
       if (ieta < _tiles_ieta_max) {
-	//for (int idphi = -1; idphi <= +1; idphi++) {
-	//  *pptile = & _tiles[_tile_index(ieta+1,iphi+idphi)];
-	//  pptile++;
-	//}	
-        *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta+1,iphi-1)],
-                                   &Tile::distance_to_right_bottom);
-        pptile++;
-        *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta+1,iphi)],
-                                   &Tile::distance_to_right);
-        pptile++;
-        *pptile = Tile::TileFnPair(& _tiles[_tile_index(ieta+1,iphi+1)],
-                                   &Tile::distance_to_right_top);
-        pptile++;
+	for (int idphi = -2; idphi <= +2; idphi++) {
+	  *pptile = & _tiles[_tile_index(ieta+1,iphi+idphi)];
+	  pptile++;
+	}	
+      }
+      // set up remaining R's, and two cols to the right of X
+      if (ieta < _tiles_ieta_max - 1) {
+	for (int idphi = -2; idphi <= +2; idphi++) {
+	  *pptile = & _tiles[_tile_index(ieta+2,iphi+idphi)];
+	  pptile++;
+	}	
       }
       // now put semaphore for end tile
       tile->end_tiles = pptile;
@@ -165,10 +185,8 @@ void Tiling::_initialise_tiles() {
       // and ensure max distance is sensibly initialised
       tile->max_NN_dist = 0;
       // and also position of centre of tile
-      tile->eta_min = ieta*_tile_size_eta;
-      tile->eta_max = (ieta+1)*_tile_size_eta;
-      tile->phi_min = iphi*_tile_size_phi;
-      tile->phi_max = (iphi+1)*_tile_size_phi;
+      tile->eta_centre = (ieta+0.5)*_tile_size_eta;
+      tile->phi_centre = (iphi+0.5)*_tile_size_phi;
     }
   }
 
@@ -176,7 +194,7 @@ void Tiling::_initialise_tiles() {
 
 //----------------------------------------------------------------------
 /// return the tile index corresponding to the given eta,phi point
-int Tiling::_tile_index(const double & eta, const double & phi) const {
+int LazyTiling25::_tile_index(const double & eta, const double & phi) const {
   int ieta, iphi;
   if      (eta <= _tiles_eta_min) {ieta = 0;}
   else if (eta >= _tiles_eta_max) {ieta = _tiles_ieta_max-_tiles_ieta_min;}
@@ -198,7 +216,7 @@ int Tiling::_tile_index(const double & eta, const double & phi) const {
 
 //----------------------------------------------------------------------
 // sets up information regarding the tiling of the given jet
-inline void Tiling::_tj_set_jetinfo( TiledJet * const jet,
+inline void LazyTiling25::_tj_set_jetinfo( TiledJet * const jet,
 					      const int _jets_index) {
   // first call the generic setup
   _bj_set_jetinfo<>(jet, _jets_index);
@@ -209,7 +227,7 @@ inline void Tiling::_tj_set_jetinfo( TiledJet * const jet,
   jet->tile_index = _tile_index(jet->eta, jet->phi);
 
   // Insert it into the tile's linked list of jets
-  Tile * tile = &_tiles[jet->tile_index];
+  Tile25 * tile = &_tiles[jet->tile_index];
   jet->previous   = NULL;
   jet->next       = tile->head;
   if (jet->next != NULL) {jet->next->previous = jet;}
@@ -218,8 +236,8 @@ inline void Tiling::_tj_set_jetinfo( TiledJet * const jet,
 
 
 //----------------------------------------------------------------------
-void Tiling::_bj_remove_from_tiles(TiledJet * const jet) {
-  Tile * tile = & _tiles[jet->tile_index];
+void LazyTiling25::_bj_remove_from_tiles(TiledJet * const jet) {
+  Tile25 * tile = & _tiles[jet->tile_index];
 
   if (jet->previous == NULL) {
     // we are at head of the tile, so reset it.
@@ -238,8 +256,8 @@ void Tiling::_bj_remove_from_tiles(TiledJet * const jet) {
 
 //----------------------------------------------------------------------
 /// output the contents of the tiles
-void Tiling::_print_tiles(TiledJet * briefjets ) const {
-  for (vector<Tile>::const_iterator tile = _tiles.begin(); 
+void LazyTiling25::_print_tiles(TiledJet * briefjets ) const {
+  for (vector<Tile25>::const_iterator tile = _tiles.begin(); 
        tile < _tiles.end(); tile++) {
     cout << "Tile " << tile - _tiles.begin()<<" = ";
     vector<int> list;
@@ -261,12 +279,12 @@ void Tiling::_print_tiles(TiledJet * briefjets ) const {
 /// you go along (could have done it more C++ like with vector with reserved
 /// space, but fear is that it would have been slower, e.g. checking
 /// for end of vector at each stage to decide whether to resize it)
-void Tiling::_add_neighbours_to_tile_union(const int tile_index, 
+void LazyTiling25::_add_neighbours_to_tile_union(const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles) const {
-  for (Tile::TileFnPair const * near_tile = _tiles[tile_index].begin_tiles; 
+  for (Tile25 * const * near_tile = _tiles[tile_index].begin_tiles; 
        near_tile != _tiles[tile_index].end_tiles; near_tile++){
     // get the tile number
-    tile_union[n_near_tiles] = near_tile->first - & _tiles[0];
+    tile_union[n_near_tiles] = *near_tile - & _tiles[0];
     n_near_tiles++;
   }
 }
@@ -276,15 +294,15 @@ void Tiling::_add_neighbours_to_tile_union(const int tile_index,
 /// Like _add_neighbours_to_tile_union, but only adds neighbours if 
 /// their "tagged" status is false; when a neighbour is added its
 /// tagged status is set to true.
-inline void Tiling::_add_untagged_neighbours_to_tile_union(
+inline void LazyTiling25::_add_untagged_neighbours_to_tile_union(
                const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
-  for (Tile::TileFnPair * near_tile = _tiles[tile_index].begin_tiles; 
+  for (Tile25 ** near_tile = _tiles[tile_index].begin_tiles; 
        near_tile != _tiles[tile_index].end_tiles; near_tile++){
-    if (! (near_tile->first)->tagged) {
-      (near_tile->first)->tagged = true;
+    if (! (*near_tile)->tagged) {
+      (*near_tile)->tagged = true;
       // get the tile number
-      tile_union[n_near_tiles] = near_tile->first - & _tiles[0];
+      tile_union[n_near_tiles] = *near_tile - & _tiles[0];
       n_near_tiles++;
     }
   }
@@ -296,68 +314,71 @@ inline void Tiling::_add_untagged_neighbours_to_tile_union(
 /// neighbouring tile's max_NN_dist is >= the distance between the jet
 /// and the nearest point on the tile. It ignores tiles that have
 /// already been tagged.
-inline void Tiling::_add_untagged_neighbours_to_tile_union_using_max_info(
+inline void LazyTiling25::_add_untagged_neighbours_to_tile_union_using_max_info(
                const TiledJet * jet, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
-  Tile & tile = _tiles[jet->tile_index];
+  Tile25 & tile = _tiles[jet->tile_index];
   
-  for (Tile::TileFnPair * near_tile = tile.begin_tiles; near_tile != tile.end_tiles; near_tile++){
-    if ((near_tile->first)->tagged) continue;
-    double dist = (tile.*(near_tile->second))(jet);
+  for (Tile25 ** near_tile = tile.begin_tiles; near_tile != tile.end_tiles; near_tile++){
+    if ((*near_tile)->tagged) continue;
+    double dist = _distance_to_tile(jet, *near_tile);
     // cout << "      max info looked at tile " << *near_tile - &_tiles[0] 
     // 	 << ", dist = " << dist << " " << (*near_tile)->max_NN_dist
     // 	 << endl;
-    if (dist > (near_tile->first)->max_NN_dist) continue;
+    if (dist > (*near_tile)->max_NN_dist) continue;
 
     // cout << "      max info tagged tile " << *near_tile - &_tiles[0] << endl;
-    (near_tile->first)->tagged = true;
+    (*near_tile)->tagged = true;
     // get the tile number
-    tile_union[n_near_tiles] = near_tile->first - & _tiles[0];
+    tile_union[n_near_tiles] = *near_tile - & _tiles[0];
     n_near_tiles++;
   }
 }
 
-//--------TMPTMPTMPTMPTMP-----GPS TEMP--------------------
-ostream & operator<<(ostream & ostr, const TiledJet & jet) {
-  ostr << "j" << setw(3) << jet._jets_index << ":pt2,rap,phi=" ; ostr.flush();
-  ostr     << jet.kt2 << ","; ostr.flush();
-  ostr     << jet.eta << ","; ostr.flush();
-  ostr     << jet.phi; ostr.flush();
-  ostr     << ", tile=" << jet.tile_index; ostr.flush();
-  return ostr;
-}
+////--------TMPTMPTMPTMPTMP-----GPS TEMP--------------------
+//ostream & operator<<(ostream & ostr, const TiledJet & jet) {
+//  ostr << "j" << setw(3) << jet._jets_index << ":pt2,rap,phi=" ; ostr.flush();
+//  ostr     << jet.kt2 << ","; ostr.flush();
+//  ostr     << jet.eta << ","; ostr.flush();
+//  ostr     << jet.phi; ostr.flush();
+//  ostr     << ", tile=" << jet.tile_index; ostr.flush();
+//  return ostr;
+//}
 
 
 //----------------------------------------------------------------------
 /// returns a particle's distance to the edge of the specified tile
-inline double Tiling::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
+inline double LazyTiling25::_distance_to_tile(const TiledJet * bj, const Tile25 * tile) 
+#ifdef INSTRUMENT2
+   {
+  _ncall_dtt++; // GPS tmp
+#else
+  const {
+#endif // INSTRUMENT2
+  // Note the careful way of checking the minimum potential deta:
+  // unlike the phi case below, we don't calculate the distance to the
+  // centre and subtract spacing/2. This is because of issue of
+  // boundary tiles, which can extend far beyond spacing/2 in eta. 
+  // Using the positions of tile centers should instead be safe.
+  double deta;
+  if (_tiles[bj->tile_index].eta_centre == tile->eta_centre) deta = 0;
+  //else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;
+  else   deta = std::abs(bj->eta - tile->eta_centre) - _tile_half_size_eta;
+  // ------
+  //   |
+  // A | B
+  // ------
+  //   |
+  // C | D
+  // ------
 
-//   // Note the careful way of checking the minimum potential deta:
-//   // unlike the phi case below, we don't calculate the distance to the
-//   // centre and subtract spacing/2. This is because of issue of
-//   // boundary tiles, which can extend far beyond spacing/2 in eta. 
-//   // Using the positions of tile centers should instead be safe.
-//   double deta;
-//   if (_tiles[bj->tile_index].eta_centre == tile->eta_centre) deta = 0;
-//   //else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;
-//   else   deta = std::abs(bj->eta - tile->eta_centre) - _tile_half_size_eta;
-//   // ------
-//   //   |
-//   // A | B
-//   // ------
-//   //   |
-//   // C | D
-//   // ------
-// 
-//   double dphi = std::abs(bj->phi - tile->phi_centre);
-//   if (dphi > pi) dphi = twopi-dphi;
-//   dphi -= _tile_half_size_phi;
-//   //dphi -= 0.5*_tile_size_phi;
-//   if (dphi < 0) dphi = 0;
-// 
-//   return dphi*dphi + deta*deta;
+  double dphi = std::abs(bj->phi - tile->phi_centre);
+  if (dphi > pi) dphi = twopi-dphi;
+  dphi -= _tile_half_size_phi;
+  //dphi -= 0.5*_tile_size_phi;
+  if (dphi < 0) dphi = 0;
 
-  return 0.0;
+  return dphi*dphi + deta*deta;
 }
 
 
@@ -371,7 +392,7 @@ inline double Tiling::_distance_to_tile(const TiledJet * bj, const Tile * tile) 
 ///
 /// GPS TEMP GPS TMP: REMOVE THIS LATER: EVEN LABELLED AS INLINE, THE
 /// CALL ADDS A SUBSTANTIAL PENALTY...
-inline void Tiling::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vector<TiledJet *> & jets_for_minheap) {
+inline void LazyTiling25::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vector<TiledJet *> & jets_for_minheap) {
   double dist = _bj_dist(jetI,jetX);
   if (dist < jetI->NN_dist) {
     if (jetI != jetX) {
@@ -392,8 +413,8 @@ inline void Tiling::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vecto
 }
 
 
-inline void Tiling::_set_NN(TiledJet * jetI, 
-                            vector<TiledJet *> & jets_for_minheap) {
+inline void LazyTiling25::_set_NN(TiledJet * jetI, 
+                              vector<TiledJet *> & jets_for_minheap) {
   jetI->NN_dist = _R2;
   jetI->NN      = NULL;
   // label jetI as needing heap action...
@@ -401,15 +422,15 @@ inline void Tiling::_set_NN(TiledJet * jetI,
     jetI->label_minheap_update_needed();
     jets_for_minheap.push_back(jetI);}
   // now go over tiles that are neighbours of I (include own tile)
-  Tile * tile_ptr = &_tiles[jetI->tile_index];
-  //if (tile_ptr->is_near_zero_phi(_tile_half_size_phi)) {
-    for (Tile::TileFnPair * near_tile  = tile_ptr->begin_tiles; 
+  Tile25 * tile_ptr = &_tiles[jetI->tile_index];
+  //if (tile_ptr->is_near_zero_phi(_tile_size_phi)) {
+    for (Tile25 ** near_tile  = tile_ptr->begin_tiles; 
          near_tile != tile_ptr->end_tiles; near_tile++) {
       // for own tile, this will be zero automatically: should we be clever
       // and skip the test? (With some doubling of code?)
-      if (jetI->NN_dist < (tile_ptr->*(near_tile->second))(jetI)) continue;
+      if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;
       // and then over the contents of that tile
-      for (TiledJet * jetJ  = (near_tile->first)->head; 
+      for (TiledJet * jetJ  = (*near_tile)->head; 
            jetJ != NULL; jetJ = jetJ->next) {
         double dist = _bj_dist(jetI,jetJ);
         if (dist < jetI->NN_dist && jetJ != jetI) {
@@ -420,11 +441,11 @@ inline void Tiling::_set_NN(TiledJet * jetI,
   // } else {
   //   // second copy that exploits the fact that for this tile we needn't worry
   //   // about periodicity
-  //   for (Tile::TileFnPair * near_tile  = tile_ptr->begin_tiles; 
+  //   for (Tile25 ** near_tile  = tile_ptr->begin_tiles; 
   //        near_tile != tile_ptr->end_tiles; near_tile++) {
   //     // for own tile, this will be zero automatically: should we be clever
   //     // and skip the test? (With some doubling of code?)
-  //     if (jetI->NN_dist < tile_ptr->(*(near_tile->second)(jetI))) continue;
+  //     if (jetI->NN_dist < _distance_to_tile(jetI, *near_tile)) continue;
   //     // and then over the contents of that tile
   //     for (TiledJet * jetJ  = (*near_tile)->head; 
   //          jetJ != NULL; jetJ = jetJ->next) {
@@ -438,19 +459,22 @@ inline void Tiling::_set_NN(TiledJet * jetI,
 }
 
 
-void Tiling::run() {
+void LazyTiling25::run() {
 
   //_initialise_tiles();
 
   int n = _jets.size();
+  if (n == 0) return; 
+
   TiledJet * briefjets = new TiledJet[n];
   TiledJet * jetA = briefjets, * jetB;
-  TiledJet oldB;
-  
+  // avoid warning about uninitialised oldB below; 
+  // only valid for n>=1 (hence the test n==0 test above)
+  TiledJet oldB = briefjets[0]; 
 
   // will be used quite deep inside loops, but declare it here so that
   // memory (de)allocation gets done only once
-  vector<int> tile_union(3*n_tile_neighbours);
+  vector<int> tile_union(3*25);
   
   // initialise the basic jet info 
   for (int i = 0; i< n; i++) {
@@ -461,7 +485,7 @@ void Tiling::run() {
   TiledJet * head = briefjets; // a nicer way of naming start
 
   // set up the initial nearest neighbour information
-  vector<Tile>::iterator tile;
+  vector<Tile25>::iterator tile;
   for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
     // first do it on this tile
     for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
@@ -476,13 +500,11 @@ void Tiling::run() {
     }
   }
   for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
-    if (tile->is_near_zero_phi(_tile_half_size_phi)) {
+    if (tile->is_near_zero_phi(_tile_size_phi)) {
       // then do it for RH tiles; 
-      for (Tile::TileFnPair * RTileFnPair = tile->RH_tiles; 
-           RTileFnPair != tile->end_tiles; RTileFnPair++) {
-        Tile *RTile = RTileFnPair->first;
+      for (Tile25 ** RTile = tile->RH_tiles; RTile != tile->end_tiles; RTile++) {
         for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
-          double dist_to_tile = ((*tile).*(RTileFnPair->second))(jetA);
+          double dist_to_tile = _distance_to_tile(jetA, *RTile);
           // it only makes sense to do a tile if jetA is close enough to the Rtile
           // either for a jet in the Rtile to be closer to jetA than it's current NN
           // or if jetA could be closer to something in the Rtile than the largest
@@ -495,9 +517,9 @@ void Tiling::run() {
           //           and on balance, for the trial event we used, it's
           //           a bit slower.
           bool relevant_for_jetA  = dist_to_tile <= jetA->NN_dist;
-          bool relevant_for_RTile = dist_to_tile <= RTile->max_NN_dist;
+          bool relevant_for_RTile = dist_to_tile <= (*RTile)->max_NN_dist;
           if (relevant_for_jetA || relevant_for_RTile) {
-            for (jetB = RTile->head; jetB != NULL; jetB = jetB->next) {
+            for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
               double dist = _bj_dist(jetA,jetB);
               if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
               if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
@@ -509,15 +531,13 @@ void Tiling::run() {
       // this second version of the code uses the faster
       // "not_periodic" version because it knows that the tile is
       // sufficiently far from the edge.
-      for (Tile::TileFnPair* RTileFnPair = tile->RH_tiles;
-           RTileFnPair != tile->end_tiles; RTileFnPair++) {
-        Tile *RTile = RTileFnPair->first;
+      for (Tile25 ** RTile = tile->RH_tiles; RTile != tile->end_tiles; RTile++) {
         for (jetA = tile->head; jetA != NULL; jetA = jetA->next) {
-          double dist_to_tile = ((*tile).*(RTileFnPair->second))(jetA);
+          double dist_to_tile = _distance_to_tile(jetA, *RTile);
           bool relevant_for_jetA  = dist_to_tile <= jetA->NN_dist;
-          bool relevant_for_RTile = dist_to_tile <= RTile->max_NN_dist;
+          bool relevant_for_RTile = dist_to_tile <= (*RTile)->max_NN_dist;
           if (relevant_for_jetA || relevant_for_RTile) {
-            for (jetB = RTile->head; jetB != NULL; jetB = jetB->next) {
+            for (jetB = (*RTile)->head; jetB != NULL; jetB = jetB->next) {
               double dist = _bj_dist_not_periodic(jetA,jetB);
               if (dist < jetA->NN_dist) {jetA->NN_dist = dist; jetA->NN = jetB;}
               if (dist < jetB->NN_dist) {jetB->NN_dist = dist; jetB->NN = jetA;}
@@ -539,6 +559,9 @@ void Tiling::run() {
     }
   }
 
+#ifdef INSTRUMENT2
+  cout << "intermediate ncall, dtt = " << _ncall << " " << _ncall_dtt << endl; // GPS tmp
+#endif // INSTRUMENT2
 
   vector<double> diJs(n);
   for (int i = 0; i < n; i++) {
@@ -588,11 +611,45 @@ void Tiling::run() {
     // remove the minheap entry for jetA
     minheap.remove(jetA-head);
 
+    int n_near_tiles = 0;
+
+    // Initialise jetB's NN distance as well as updating it for other
+    // particles. While doing so, examine whether jetA or old jetB was
+    // some other particle's NN.
+    if (jetB != NULL) {
+      Tile25 & jetB_tile = _tiles[jetB->tile_index];
+      for (Tile25 ** near_tile  = jetB_tile.begin_tiles; 
+	           near_tile != jetB_tile.end_tiles; near_tile++) {
+
+    	double dist_to_tile = _distance_to_tile(jetB, *near_tile);
+        // use <= in next line so that on first tile, relevant_for_jetB is 
+        // set to true
+    	bool relevant_for_jetB  = dist_to_tile <= jetB->NN_dist;
+    	bool relevant_for_near_tile = dist_to_tile <= (*near_tile)->max_NN_dist;
+        bool relevant = relevant_for_jetB || relevant_for_near_tile;
+        if (! relevant) continue;
+        // now label this tile as having been considered (so that we 
+        // don't go over it again later)
+        tile_union[n_near_tiles] = *near_tile - & _tiles[0];
+        (*near_tile)->tagged = true;
+        n_near_tiles++;
+        
+        // if going over the neighbouring tile's jets, check anyway
+        // whether A or B were nearest neighbours, since it comes at a
+        // modest cost relative to the distance computation (and we would
+        // in most cases have to do it again later anyway).
+        for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
+          if (jetI->NN == jetA || jetI->NN == jetB) _set_NN(jetI, jets_for_minheap);
+          _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
+        }
+      }
+    }
+
     // first establish the set of tiles over which we are going to
     // have to run searches for updated and new nearest-neighbours --
     // basically a combination of vicinity of the tiles of the two old
     // and one new jet.
-    int n_near_tiles = 0;
+    int n_done_tiles = n_near_tiles;
     _add_untagged_neighbours_to_tile_union_using_max_info(jetA, 
        					   tile_union, n_near_tiles);
     if (jetB != NULL) {
@@ -603,79 +660,14 @@ void Tiling::run() {
     }
 
 
-    // Initialise jetB's NN distance as well as updating it for 
-    // other particles.
-    // Run over all tiles in our union 
-
-    if (jetB != NULL) {
-      Tile & jetB_tile = _tiles[jetB->tile_index];
-      for (Tile::TileFnPair * near_tile_fn_pair  = jetB_tile.begin_tiles; 
-	           near_tile_fn_pair != jetB_tile.end_tiles; near_tile_fn_pair++) {
-        Tile * near_tile = near_tile_fn_pair->first;
-
-    	double dist_to_tile = (jetB_tile.*(near_tile_fn_pair->second))(jetB);
-        // use <= in next line so that on first tile, relevant_for_jetB is 
-        // set to true
-    	bool relevant_for_jetB  = dist_to_tile <= jetB->NN_dist;
-    	bool relevant_for_near_tile = dist_to_tile <= near_tile->max_NN_dist;
-        bool relevant = relevant_for_jetB || relevant_for_near_tile;
-        // this first option decides exactly what loop to do based on whether 
-        // the near tile was tagged. You'd think it's more efficient, but
-        // not necessarily...
-        if (relevant) {
-          if (near_tile->tagged) {
-            for (TiledJet * jetI = near_tile->head; jetI != NULL; jetI = jetI->next) {
-              if (jetI->NN == jetA || jetI->NN == jetB) _set_NN(jetI, jets_for_minheap);
-              _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
-            }
-          near_tile->tagged = false;
-          } else {
-            for (TiledJet * jetI = near_tile->head; jetI != NULL; jetI = jetI->next) {
-              _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
-            }
-          }
-        }
-
-        // this second option does everything independently of whether the near tile
-        // was tagged -- somehow you'd expect it to be slower, but it may actually be
-        // marginally faster.
-        // if (relevant_for_jetB || relevant_for_near_tile) {
-        //   for (TiledJet * jetI = (*near_tile)->head; jetI != NULL; jetI = jetI->next) {
-        // 
-        //     if (jetI->NN == jetA || (jetI->NN == jetB && jetB != NULL)) {
-        //       _set_NN(jetI, jets_for_minheap);
-        //     }
-        // 
-        //     _update_jetX_jetI_NN(jetB, jetI, jets_for_minheap);
-	//     // -- Keep this old inline code for later speed tests
-        //     // double dist = _bj_dist(jetI,jetB);
-        //     // if (dist < jetI->NN_dist) {
-        //     //   if (jetI != jetB) {
-        //     //     jetI->NN_dist = dist;
-        //     //     jetI->NN = jetB;
-        //     //     // label jetI as needing heap action...
-        //     //     if (!jetI->minheap_update_needed()) {
-        //     //       jetI->label_minheap_update_needed();
-        //     //       jets_for_minheap.push_back(jetI);
-        //     //     }
-        //     //   }
-        //     // }
-        //     // if (dist < jetB->NN_dist) {
-        //     //   if (jetI != jetB) {
-        //     //     jetB->NN_dist = dist;
-        //     //     jetB->NN      = jetI;}
-        //     // }
-        //   }
-        //   (*near_tile)->tagged = false;
-        // }
-      }
+    // first untag the tiles we have already dealt with
+    for (int itile = 0; itile < n_done_tiles; itile++) {
+      _tiles[tile_union[itile]].tagged = false;
     }
-
     // now run over the tiles that were tagged earlier and that we haven't yet
     // had a change to visit.
-    for (int itile = 0; itile < n_near_tiles; itile++) {
-      Tile * tile_ptr = &_tiles[tile_union[itile]];
-      if (!tile_ptr->tagged) continue; // because earlier loop may have undone the tag
+    for (int itile = n_done_tiles; itile < n_near_tiles; itile++) {
+      Tile25 * tile_ptr = &_tiles[tile_union[itile]];
       tile_ptr->tagged = false;
       // run over all jets in the current tile
       for (TiledJet * jetI = tile_ptr->head; jetI != NULL; jetI = jetI->next) {
@@ -695,7 +687,7 @@ void Tiling::run() {
       jetI->label_minheap_update_done();
       // handle max_NN_dist update for all jets that might have
       // seen a change (increase) of distance
-      Tile & tile_I = _tiles[jetI->tile_index];
+      Tile25 & tile_I = _tiles[jetI->tile_index];
       if (tile_I.max_NN_dist < jetI->NN_dist) tile_I.max_NN_dist = jetI->NN_dist;
     }
     n--;
@@ -703,7 +695,10 @@ void Tiling::run() {
 
   // final cleaning up;
   delete[] briefjets;
-}
+#ifdef INSTRUMENT2
+  cout << "ncall, dtt = " << _ncall << " " << _ncall_dtt << endl; // GPS tmp
+#endif // INSTRUMENT2
 
+}
 
 FASTJET_END_NAMESPACE

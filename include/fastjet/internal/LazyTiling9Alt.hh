@@ -1,8 +1,8 @@
-#ifndef __FASTJET_TILING3_HH__
-#define __FASTJET_TILING3_HH__
+#ifndef __FASTJET_TILING_HH__
+#define __FASTJET_TILING_HH__
 
 //STARTHEADER
-// $Id: ClusterSequence.hh 2867 2012-03-31 09:17:15Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
@@ -32,17 +32,17 @@
 //#include "fastjet/PseudoJet.hh"
 #include "fastjet/internal/MinHeap.hh"
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/Tiling.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-class TiledJet3 {
+/// structure analogous to BriefJet, but with the extra information
+/// needed for dealing with tiles
+class TiledJet {
 public:
   double     eta, phi, kt2, NN_dist;
-  TiledJet3 * NN, *previous, * next; 
+  TiledJet * NN, *previous, * next; 
   int        _jets_index, tile_index;
   bool _minheap_update_needed;
-  bool is_ghost;
 
   // indicate whether jets need to have their minheap entries
   // updated).
@@ -51,38 +51,79 @@ public:
   inline bool minheap_update_needed() const {return _minheap_update_needed;}
 };
 
+const int n_tile_neighbours = 9;
 
-class Tile3 {
+class Tile {
 public:
+  typedef double (Tile::*DistToTileFn)(const TiledJet*) const;
+  typedef std::pair<Tile *, DistToTileFn> TileFnPair;
   /// pointers to neighbouring tiles, including self
-  Tile3 *   begin_tiles[n_tile_neighbours]; 
+  TileFnPair begin_tiles[n_tile_neighbours]; 
   /// neighbouring tiles, excluding self
-  Tile3 **  surrounding_tiles; 
+  TileFnPair *  surrounding_tiles; 
   /// half of neighbouring tiles, no self
-  Tile3 **  RH_tiles;  
+  TileFnPair *  RH_tiles;  
   /// just beyond end of tiles
-  Tile3 **  end_tiles; 
+  TileFnPair *  end_tiles; 
   /// start of list of BriefJets contained in this tile
-  TiledJet3 * head;    
-  /// start of list of BriefJets contained in this tile
-  TiledJet3 * ghost_head;    
+  TiledJet * head;    
   /// sometimes useful to be able to tag a tile
   bool     tagged;    
   /// for all particles in the tile, this stores the largest of the
   /// (squared) nearest-neighbour distances.
   double max_NN_dist;
-  double eta_centre, phi_centre;
+  double eta_min, eta_max, phi_min, phi_max;
 
-  bool is_near_zero_phi(double tile_size_phi) const {
-    return phi_centre < tile_size_phi || (twopi-phi_centre) < tile_size_phi;
+  bool is_near_zero_phi(double tile_half_size_phi) const {
+    return phi_min < tile_half_size_phi || (twopi-phi_max) < tile_half_size_phi;
   }
+
+  double distance_to_centre(const TiledJet *) const {return 0;}
+  double distance_to_left(const TiledJet * jet) const {
+    double deta = jet->eta - eta_min;
+    return deta*deta;
+  }
+  double distance_to_right(const TiledJet * jet) const {
+    double deta = jet->eta - eta_max;
+    return deta*deta;
+  }
+  double distance_to_bottom(const TiledJet * jet) const {
+    double dphi = jet->phi - phi_min;
+    return dphi*dphi;
+  }
+  double distance_to_top(const TiledJet * jet) const {
+    double dphi = jet->phi - phi_max;
+    return dphi*dphi;
+  }
+
+  double distance_to_left_top(const TiledJet * jet) const {
+    double deta = jet->eta - eta_min;
+    double dphi = jet->phi - phi_max;
+    return deta*deta + dphi*dphi;
+  }
+  double distance_to_left_bottom(const TiledJet * jet) const {
+    double deta = jet->eta - eta_min;
+    double dphi = jet->phi - phi_min;
+    return deta*deta + dphi*dphi;
+  }
+  double distance_to_right_top(const TiledJet * jet) const {
+    double deta = jet->eta - eta_max;
+    double dphi = jet->phi - phi_max;
+    return deta*deta + dphi*dphi;
+  }
+  double distance_to_right_bottom(const TiledJet * jet) const {
+    double deta = jet->eta - eta_max;
+    double dphi = jet->phi - phi_min;
+    return deta*deta + dphi*dphi;
+  }
+
+  
 };
 
-
 //----------------------------------------------------------------------
-class Tiling3 {
+class LazyTiling9Alt {
 public:
-  Tiling3(ClusterSequence & cs);
+  LazyTiling9Alt(ClusterSequence & cs);
 
   void run();
 
@@ -92,7 +133,7 @@ public:
 protected:
   ClusterSequence & _cs;
   const std::vector<PseudoJet> & _jets;
-  std::vector<Tile3> _tiles;
+  std::vector<Tile> _tiles;
 
 
   double _Rparam, _R2, _invR2;
@@ -101,7 +142,7 @@ protected:
   double _tile_half_size_eta, _tile_half_size_phi;
   int    _n_tiles_phi,_tiles_ieta_min,_tiles_ieta_max;
 
-  std::vector<TiledJet3 *> _jets_for_minheap;
+  std::vector<TiledJet *> _jets_for_minheap;
   
   //MinHeap _minheap;
 
@@ -116,25 +157,25 @@ protected:
                   + (iphi+_n_tiles_phi) % _n_tiles_phi;
   }
 
-  void  _bj_remove_from_tiles(TiledJet3 * const jet);
+  void  _bj_remove_from_tiles(TiledJet * const jet);
 
   /// returns the tile index given the eta and phi values of a jet
   int _tile_index(const double & eta, const double & phi) const;
 
   // sets up information regarding the tiling of the given jet
-  void _tj_set_jetinfo(TiledJet3 * const jet, const int _jets_index, bool is_ghost);
+  void _tj_set_jetinfo(TiledJet * const jet, const int _jets_index);
 
-  void _print_tiles(TiledJet3 * briefjets ) const;
+  void _print_tiles(TiledJet * briefjets ) const;
   void _add_neighbours_to_tile_union(const int tile_index, 
 		 std::vector<int> & tile_union, int & n_near_tiles) const;
   void _add_untagged_neighbours_to_tile_union(const int tile_index, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-  void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet3 * const jet, 
+  void _add_untagged_neighbours_to_tile_union_using_max_info(const TiledJet * const jet, 
 		 std::vector<int> & tile_union, int & n_near_tiles);
-  double _distance_to_tile(const TiledJet3 * bj, const Tile3 *) const;
-  void _update_jetX_jetI_NN(TiledJet3 * jetX, TiledJet3 * jetI, std::vector<TiledJet3 *> & jets_for_minheap);
+  double _distance_to_tile(const TiledJet * bj, const Tile *) const;
+  void _update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
-  void _set_NN(TiledJet3 * jetI, std::vector<TiledJet3 *> & jets_for_minheap);
+  void _set_NN(TiledJet * jetI, std::vector<TiledJet *> & jets_for_minheap);
 
   // return the diJ (multiplied by _R2) for this jet assuming its NN
   // info is correct
@@ -181,4 +222,4 @@ protected:
 
 FASTJET_END_NAMESPACE
 
-#endif // __FASTJET_TILING3_HH__
+#endif // __FASTJET_TILING_HH__

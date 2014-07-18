@@ -31,10 +31,10 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 #include "fastjet/version.hh" // stores the current version number
-#include "fastjet/Tiling.hh"
-#include "fastjet/Tiling2.hh"
-#include "fastjet/Tiling25.hh"
-#include "fastjet/Tiling3.hh"
+#include "fastjet/internal/LazyTiling9Alt.hh"
+#include "fastjet/internal/LazyTiling9.hh"
+#include "fastjet/internal/LazyTiling25.hh"
+#include "fastjet/internal/LazyTiling9SeparateGhosts.hh"
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -337,35 +337,35 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     this->_faster_tiled_N2_cluster();
   } else if (_strategy == N2MinHeapTiled) {
     this->_minheap_faster_tiled_N2_cluster();
-  } else if (_strategy == N2MinHeapTiled_experimental1) {
+  } else if (_strategy == N2MHTLazy9Alt) {
     // attempt to use an external tiling routine -- it manipulates
     // the CS history via the plugin mechanism
     _plugin_activated = true;
-    Tiling tiling(*this);
+    LazyTiling9Alt tiling(*this);
     tiling.run();
     _plugin_activated = false;
 
-  } else if (_strategy == N2MinHeapTiled_experimental2) {
+  } else if (_strategy == N2MHTLazy25) {
     // attempt to use an external tiling routine -- it manipulates
     // the CS history via the plugin mechanism
     _plugin_activated = true;
-    Tiling25 tiling(*this);
+    LazyTiling25 tiling(*this);
     tiling.run();
     _plugin_activated = false;
 
-  } else if (_strategy == N2MinHeapTiled_experimental3) {
+  } else if (_strategy == N2MHTLazy9) {
     // attempt to use an external tiling routine -- it manipulates
     // the CS history via the plugin mechanism
     _plugin_activated = true;
-    Tiling2 tiling(*this);
+    LazyTiling9 tiling(*this);
     tiling.run();
     _plugin_activated = false;
 
-  } else if (_strategy == N2MinHeapTiled_separate_ghosts_antikt) {
+  } else if (_strategy == N2MHTLazy9AntiKtSeparateGhosts) {
     // attempt to use an external tiling routine -- it manipulates
     // the CS history via the plugin mechanism
     _plugin_activated = true;
-    Tiling3 tiling(*this);
+    LazyTiling9SeparateGhosts tiling(*this);
     tiling.run();
     _plugin_activated = false;
 

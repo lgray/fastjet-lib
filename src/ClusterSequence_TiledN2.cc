@@ -38,7 +38,7 @@
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/MinHeap.hh"
-#include "fastjet/Tiling2.hh"
+#include "fastjet/internal/TilingExtent.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -94,7 +94,7 @@ void ClusterSequence::_initialise_tiles() {
   _n_tiles_phi   = max(3,int(floor(twopi/default_size)));
   _tile_size_phi = twopi / _n_tiles_phi; // >= _Rparam and fits in 2pi
 
-  TilingAnalysis tiling_analysis(*this);
+  TilingExtent tiling_analysis(*this);
   _tiles_eta_min = tiling_analysis.minrap();
   _tiles_eta_max = tiling_analysis.maxrap();
 

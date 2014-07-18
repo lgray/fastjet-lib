@@ -1,5 +1,5 @@
 //STARTHEADER
-// $Id: ClusterSequence.hh 2863 2012-03-30 16:16:14Z salam $
+// $Id$
 //
 // Copyright (c) 2005-2011, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
@@ -26,130 +26,22 @@
 //----------------------------------------------------------------------
 //ENDHEADER
 
-#include "fastjet/Tiling2.hh"
+
 #include <iomanip>
 #include <limits>
 #include <cmath>
+#include "fastjet/internal/LazyTiling9.hh"
+#include "fastjet/internal/TilingExtent.hh"
 using namespace std;
 
-// uncomment the line below to use TilingAnalysis in Tiling2
+// uncomment the line below to use TilingExtent in LazyTiling9
 #define _FASTJET_TILING2_USE_TILING_ANALYSIS_
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-TilingAnalysis::TilingAnalysis(ClusterSequence & cs) {
-  _determine_rapidity_extent(cs.jets());
-}
-  
-void TilingAnalysis::_determine_rapidity_extent(const vector<PseudoJet> & particles) {
-  // have a binning of rapidity that goes from -nrap to nrap
-  // in bins of size 1; the left and right-most bins include
-  // include overflows from smaller/larger rapidities
-  int nrap = 20; 
-  int nbins = 2*nrap;
-  vector<int> counts(nbins, 0);
-  
-  // get the minimum and maximum rapidities and at the same time bin
-  // the multiplicities as a function of rapidity to help decide how
-  // far out it's worth going
-  _minrap =  numeric_limits<double>::max();
-  _maxrap = -numeric_limits<double>::max();
-  int ibin;
-  for (unsigned i = 0; i < particles.size(); i++) {
-    // ignore particles with infinite rapidity
-    if (particles[i].E() == abs(particles[i].pz())) continue;
-    double rap = particles[i].rap();
-    if (rap < _minrap) _minrap = rap;
-    if (rap > _maxrap) _maxrap = rap;
-    // now bin the rapidity to decide how far to go with the tiling.
-    // Remember the bins go from ibin=0 (rap=-infinity..-19)
-    // to ibin = nbins-1 (rap=19..infinity for nrap=20)
-    ibin = int(rap+nrap); 
-    if (ibin < 0) ibin = 0;
-    if (ibin >= nbins) ibin = nbins - 1;
-    counts[ibin]++;
-  }
-
-  // now figure out the particle count in the busiest bin
-  int max_in_bin = 0;
-  for (ibin = 0; ibin < nbins; ibin++) {
-    if (max_in_bin < counts[ibin]) max_in_bin = counts[ibin];
-  }
-  
-  // and find _minrap, _maxrap such that edge bin never contains more
-  // than some fraction of busiest, and at least a few particles; first do
-  // it from left. NB: the thresholds chosen here are largely
-  // guesstimates as to what might work.
-  //
-  // 2014-07-17: in some tests at high multiplicity (100k) and particles going up to
-  //             about 7.3, anti-kt R=0.4, we found that 0.25 gave 20% better run times
-  //             than the original value of 0.5.
-  const double allowed_max_fraction = 0.25;
-  // the edge bins should also contain at least min_multiplicity particles
-  const double min_multiplicity = 4;
-  // now calculate how much we can accumulate into an edge bin
-  int allowed_max_cumul = max(max_in_bin * allowed_max_fraction, min_multiplicity);
-  // make sure we don't require more particles in a bin than max_in_bin
-  if (allowed_max_cumul > max_in_bin) allowed_max_cumul = max_in_bin;
-
-  // start scan over rapidity bins from the left, to find out minimum rapidity of tiling
-  int cumul_lo = 0;
-  double _cumul2 = 0;
-  for (ibin = 0; ibin < nbins; ibin++) {
-    cumul_lo += counts[ibin];
-    if (cumul_lo >= allowed_max_cumul) {
-      double y = ibin-nrap;
-      if (y > _minrap) _minrap = y;
-      break;
-    }
-  }
-  assert(ibin != nbins); // internal consistency check that you found a bin
-  _cumul2 += cumul_lo*cumul_lo;
-
-  // ibin_lo is the index of the leftmost bin that should be considered
-  int ibin_lo = ibin;
-
-  // then do it from right, to find out maximum rapidity of tiling
-  int cumul_hi = 0;
-  for (ibin = nbins-1; ibin >= 0; ibin--) {
-    cumul_hi += counts[ibin];
-    if (cumul_hi >= allowed_max_cumul) {
-      double y = ibin-nrap+1; // +1 here is the rapidity bin width
-      if (y < _maxrap) _maxrap = y;
-      break;
-    }
-  }
-  assert(ibin >= 0); // internal consistency check that you found a bin
-
-  // ibin_hi is the index of the rightmost bin that should be considered
-  int ibin_hi = ibin;
-
-  // consistency check 
-  assert(ibin_hi >= ibin_lo); 
-
-  // now work out cumul2
-  if (ibin_hi == ibin_lo) {
-    // if there is a single bin (potentially including overflows
-    // from both sides), cumul2 is the square of the total contents
-    // of that bin, which we obtain from cumul_lo and cumul_hi minus
-    // the double counting of part that is contained in both
-    _cumul2 = pow(cumul_lo + cumul_hi - counts[ibin_hi], 2);
-  } else {
-    // otherwise we have a straightforward sum of squares of bin
-    // contents
-    _cumul2 += cumul_hi*cumul_hi;
-
-    // now get the rest of the squared bin contents
-    for (ibin = ibin_lo+1; ibin < ibin_hi; ibin++) {
-      _cumul2 += counts[ibin]*counts[ibin];
-    }
-  }
-
-}
 
 
-
-Tiling2::Tiling2(ClusterSequence & cs) :
+LazyTiling9::LazyTiling9(ClusterSequence & cs) :
   _cs(cs), _jets(cs.jets())
   //, _minheap(_jets.size()) 
 {
@@ -183,7 +75,7 @@ Tiling2::Tiling2(ClusterSequence & cs) :
 /// with appropriate precautions when close to the edge of the tiled
 /// region.
 ///
-void Tiling2::_initialise_tiles() {
+void LazyTiling9::_initialise_tiles() {
 
   // first decide tile sizes (with a lower bound to avoid huge memory use with
   // very small R)
@@ -197,7 +89,7 @@ void Tiling2::_initialise_tiles() {
 
 #ifdef _FASTJET_TILING2_USE_TILING_ANALYSIS_
   // testing
-  TilingAnalysis tiling_analysis(_cs);
+  TilingExtent tiling_analysis(_cs);
   _tiles_eta_min = tiling_analysis.minrap();
   _tiles_eta_max = tiling_analysis.maxrap();
   //cout << "Using timing analysis " << " " << _tiles_eta_min << " " << _tiles_eta_max << endl;
@@ -284,7 +176,7 @@ void Tiling2::_initialise_tiles() {
 
 //----------------------------------------------------------------------
 /// return the tile index corresponding to the given eta,phi point
-int Tiling2::_tile_index(const double & eta, const double & phi) const {
+int LazyTiling9::_tile_index(const double & eta, const double & phi) const {
   int ieta, iphi;
   if      (eta <= _tiles_eta_min) {ieta = 0;}
   else if (eta >= _tiles_eta_max) {ieta = _tiles_ieta_max-_tiles_ieta_min;}
@@ -306,7 +198,7 @@ int Tiling2::_tile_index(const double & eta, const double & phi) const {
 
 //----------------------------------------------------------------------
 // sets up information regarding the tiling of the given jet
-inline void Tiling2::_tj_set_jetinfo( TiledJet * const jet,
+inline void LazyTiling9::_tj_set_jetinfo( TiledJet * const jet,
 					      const int _jets_index) {
   // first call the generic setup
   _bj_set_jetinfo<>(jet, _jets_index);
@@ -326,7 +218,7 @@ inline void Tiling2::_tj_set_jetinfo( TiledJet * const jet,
 
 
 //----------------------------------------------------------------------
-void Tiling2::_bj_remove_from_tiles(TiledJet * const jet) {
+void LazyTiling9::_bj_remove_from_tiles(TiledJet * const jet) {
   Tile2 * tile = & _tiles[jet->tile_index];
 
   if (jet->previous == NULL) {
@@ -346,7 +238,7 @@ void Tiling2::_bj_remove_from_tiles(TiledJet * const jet) {
 
 //----------------------------------------------------------------------
 /// output the contents of the tiles
-void Tiling2::_print_tiles(TiledJet * briefjets ) const {
+void LazyTiling9::_print_tiles(TiledJet * briefjets ) const {
   for (vector<Tile2>::const_iterator tile = _tiles.begin(); 
        tile < _tiles.end(); tile++) {
     cout << "Tile " << tile - _tiles.begin()<<" = ";
@@ -369,7 +261,7 @@ void Tiling2::_print_tiles(TiledJet * briefjets ) const {
 /// you go along (could have done it more C++ like with vector with reserved
 /// space, but fear is that it would have been slower, e.g. checking
 /// for end of vector at each stage to decide whether to resize it)
-void Tiling2::_add_neighbours_to_tile_union(const int tile_index, 
+void LazyTiling9::_add_neighbours_to_tile_union(const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles) const {
   for (Tile2 * const * near_tile = _tiles[tile_index].begin_tiles; 
        near_tile != _tiles[tile_index].end_tiles; near_tile++){
@@ -384,7 +276,7 @@ void Tiling2::_add_neighbours_to_tile_union(const int tile_index,
 /// Like _add_neighbours_to_tile_union, but only adds neighbours if 
 /// their "tagged" status is false; when a neighbour is added its
 /// tagged status is set to true.
-inline void Tiling2::_add_untagged_neighbours_to_tile_union(
+inline void LazyTiling9::_add_untagged_neighbours_to_tile_union(
                const int tile_index, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
   for (Tile2 ** near_tile = _tiles[tile_index].begin_tiles; 
@@ -404,7 +296,7 @@ inline void Tiling2::_add_untagged_neighbours_to_tile_union(
 /// neighbouring tile's max_NN_dist is >= the distance between the jet
 /// and the nearest point on the tile. It ignores tiles that have
 /// already been tagged.
-inline void Tiling2::_add_untagged_neighbours_to_tile_union_using_max_info(
+inline void LazyTiling9::_add_untagged_neighbours_to_tile_union_using_max_info(
                const TiledJet * jet, 
 	       vector<int> & tile_union, int & n_near_tiles)  {
   Tile2 & tile = _tiles[jet->tile_index];
@@ -438,7 +330,7 @@ inline void Tiling2::_add_untagged_neighbours_to_tile_union_using_max_info(
 
 //----------------------------------------------------------------------
 /// returns a particle's distance to the edge of the specified tile
-inline double Tiling2::_distance_to_tile(const TiledJet * bj, const Tile2 * tile) 
+inline double LazyTiling9::_distance_to_tile(const TiledJet * bj, const Tile2 * tile) 
 #ifdef INSTRUMENT2
    {
   _ncall_dtt++; // GPS tmp
@@ -482,7 +374,7 @@ inline double Tiling2::_distance_to_tile(const TiledJet * bj, const Tile2 * tile
 ///
 /// GPS TEMP GPS TMP: REMOVE THIS LATER: EVEN LABELLED AS INLINE, THE
 /// CALL ADDS A SUBSTANTIAL PENALTY...
-inline void Tiling2::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vector<TiledJet *> & jets_for_minheap) {
+inline void LazyTiling9::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vector<TiledJet *> & jets_for_minheap) {
   double dist = _bj_dist(jetI,jetX);
   if (dist < jetI->NN_dist) {
     if (jetI != jetX) {
@@ -503,7 +395,7 @@ inline void Tiling2::_update_jetX_jetI_NN(TiledJet * jetX, TiledJet * jetI, vect
 }
 
 
-inline void Tiling2::_set_NN(TiledJet * jetI, 
+inline void LazyTiling9::_set_NN(TiledJet * jetI, 
                               vector<TiledJet *> & jets_for_minheap) {
   jetI->NN_dist = _R2;
   jetI->NN      = NULL;
@@ -550,7 +442,7 @@ inline void Tiling2::_set_NN(TiledJet * jetI,
 
 
 
-void Tiling2::run() {
+void LazyTiling9::run() {
 
   //_initialise_tiles();
 
