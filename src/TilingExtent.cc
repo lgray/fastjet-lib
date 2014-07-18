@@ -45,7 +45,7 @@ void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particle
   // include overflows from smaller/larger rapidities
   int nrap = 20; 
   int nbins = 2*nrap;
-  vector<int> counts(nbins, 0);
+  vector<double> counts(nbins, 0);
   
   // get the minimum and maximum rapidities and at the same time bin
   // the multiplicities as a function of rapidity to help decide how
@@ -69,7 +69,7 @@ void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particle
   }
 
   // now figure out the particle count in the busiest bin
-  int max_in_bin = 0;
+  double max_in_bin = 0;
   for (ibin = 0; ibin < nbins; ibin++) {
     if (max_in_bin < counts[ibin]) max_in_bin = counts[ibin];
   }
@@ -86,12 +86,12 @@ void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particle
   // the edge bins should also contain at least min_multiplicity particles
   const double min_multiplicity = 4;
   // now calculate how much we can accumulate into an edge bin
-  int allowed_max_cumul = max(max_in_bin * allowed_max_fraction, min_multiplicity);
+  double allowed_max_cumul = floor(max(max_in_bin * allowed_max_fraction, min_multiplicity));
   // make sure we don't require more particles in a bin than max_in_bin
   if (allowed_max_cumul > max_in_bin) allowed_max_cumul = max_in_bin;
 
   // start scan over rapidity bins from the left, to find out minimum rapidity of tiling
-  int cumul_lo = 0;
+  double cumul_lo = 0;
   double _cumul2 = 0;
   for (ibin = 0; ibin < nbins; ibin++) {
     cumul_lo += counts[ibin];
@@ -108,7 +108,7 @@ void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particle
   int ibin_lo = ibin;
 
   // then do it from right, to find out maximum rapidity of tiling
-  int cumul_hi = 0;
+  double cumul_hi = 0;
   for (ibin = nbins-1; ibin >= 0; ibin--) {
     cumul_hi += counts[ibin];
     if (cumul_hi >= allowed_max_cumul) {
@@ -131,7 +131,8 @@ void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particle
     // from both sides), cumul2 is the square of the total contents
     // of that bin, which we obtain from cumul_lo and cumul_hi minus
     // the double counting of part that is contained in both
-    _cumul2 = pow(cumul_lo + cumul_hi - counts[ibin_hi], 2);
+    // (putting double 
+    _cumul2 = pow(double(cumul_lo + cumul_hi - counts[ibin_hi]), 2);
   } else {
     // otherwise we have a straightforward sum of squares of bin
     // contents
