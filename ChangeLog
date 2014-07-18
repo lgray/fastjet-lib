@@ -1,3 +1,14 @@
+2014-07-18  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/Tiling2.cc: 
+	changed name of the _TILING2_USE_TILING_ANALYSIS_
+	preprocessor variable to include FASTJET in its name (as per our
+	convention). 
+
+	* src/Tiling25.cc:
+	switched over to use of TilingAnalysis, again using a preprocessor
+	variable to control whether it is on or off.
+
 2014-07-17  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* src/Tiling2.cc: 

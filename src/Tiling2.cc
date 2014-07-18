@@ -33,7 +33,7 @@
 using namespace std;
 
 // uncomment the line below to use TilingAnalysis in Tiling2
-#define _TILING2_USE_TILING_ANALYSIS_
+#define _FASTJET_TILING2_USE_TILING_ANALYSIS_
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -195,7 +195,7 @@ void Tiling2::_initialise_tiles() {
   _n_tiles_phi   = max(3,int(floor(twopi/default_size)));
   _tile_size_phi = twopi / _n_tiles_phi; // >= _Rparam and fits in 2pi
 
-#ifdef _TILING2_USE_TILING_ANALYSIS_
+#ifdef _FASTJET_TILING2_USE_TILING_ANALYSIS_
   // testing
   TilingAnalysis tiling_analysis(_cs);
   _tiles_eta_min = tiling_analysis.minrap();
