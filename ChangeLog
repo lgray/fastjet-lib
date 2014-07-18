@@ -1,3 +1,9 @@
+2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/Makefile.am (fastjetincludeinternal_HEADERS):
+	LazyTiling25.hh was listed twice. Removed one. [was giving install
+	errors]
+
 2014-07-18  Gavin Salam  <gavin.salam@cern.ch> (later)
 
 	Carried out substantial renaming of the new Tiling files, classes,

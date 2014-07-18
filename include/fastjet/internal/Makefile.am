@@ -7,7 +7,6 @@ fastjetincludeinternal_HEADERS = base.hh ClosestPair2DBase.hh \
   LazyTiling9.hh \
   LazyTiling9Alt.hh \
   LazyTiling25.hh \
-  LazyTiling25.hh \
   LazyTiling9SeparateGhosts.hh
 
 #
