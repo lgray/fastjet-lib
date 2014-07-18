@@ -1,5 +1,9 @@
 2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/TilingExtent.cc (_determine_rapidity_extent):
+	_cumul2 was declared locally and hence shadowing the _cumul2
+	declared as a class member. Fixed.
+
 	* include/fastjet/internal/Makefile.am (fastjetincludeinternal_HEADERS):
 	LazyTiling25.hh was listed twice. Removed one. [was giving install
 	errors]

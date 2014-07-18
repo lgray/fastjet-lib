@@ -92,7 +92,7 @@ void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particle
 
   // start scan over rapidity bins from the left, to find out minimum rapidity of tiling
   double cumul_lo = 0;
-  double _cumul2 = 0;
+  _cumul2 = 0;
   for (ibin = 0; ibin < nbins; ibin++) {
     cumul_lo += counts[ibin];
     if (cumul_lo >= allowed_max_cumul) {
