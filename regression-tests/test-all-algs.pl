@@ -341,9 +341,9 @@ sub setDefaults {
   # for some algorithms we have multiple strategies to test
   %strategies = 
     (
-     "kt"  => "1:-4:-3:-1:2",
-     "antikt"  => "1:-4:-3:-1:2",
-     "cam" => "1:-4:-3:-1:2:12",
+     "kt"  => "1:-7:-6:-4:-3:-1:2",
+     "antikt"  => "1:-7:-6:-4:-3:-1:2",
+     "cam" => "1:-7:-6:-4:-3:-1:2:12",
     );
 
   # the different area configurations we'll consider

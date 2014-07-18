@@ -640,6 +640,29 @@ protected:
   /// that of the _structure_shared_ptr
   void _update_structure_use_count();
   
+  /// returns a suggestion for the best strategy to use on event
+  /// multiplicity, algorithm, R, etc.
+  Strategy _best_strategy() const;
+  
+  /// returns c*(a*R**2 + b*R + 1);
+  /// Written as a class in case we want to give names to different
+  /// parabolas
+  class _Parabola {
+  public:
+    _Parabola(double a, double b, double c) : _a(a), _b(b), _c(c) {}
+    double operator()(const double R) const {return _c*(_a*R*R + _b*R + 1);}
+  private:
+    double _a, _b, _c;
+  };
+
+  /// operator()(R) returns a*R+b;
+  class _Line {
+  public:
+    _Line(double a, double b) : _a(a), _b(b) {}
+    double operator()(const double R) const {return _a*R + _b;}
+  private:
+    double _a, _b;
+  };
 
   /// This contains the physical PseudoJets; for each PseudoJet one
   /// can find the corresponding position in the _history by looking

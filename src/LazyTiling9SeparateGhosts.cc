@@ -453,7 +453,9 @@ void LazyTiling9SeparateGhosts::run() {
   TiledJet3 * head = briefjets; // a nicer way of naming start
 
   // initialise the basic jet info 
-  double ghost_limit = 1e-100; // GPS TMP: UGLY hard-coded limit
+  // UGLY hard-coded threshold on squared ghost pt: any particle below
+  // this is deemed to be a ghost.
+  double ghost_limit = 1e-100; 
   // first get the particles we'll keep as "real"
   for (int i = 0; i< ntot; i++) {
     bool is_ghost = _jets[i].perp2() < ghost_limit; 

@@ -46,15 +46,45 @@ std::string fastjet_version_string();
 /// the various options for the algorithmic strategy to adopt in
 /// clustering events with kt and cambridge style algorithms.
 enum Strategy {
-  /// temporary name -- may evolve
+  /// Like N2MHTLazy9 in a number of respects, but does not calculate
+  /// ghost-ghost distances and so does not carry out ghost-ghost
+  /// recombination. 
+  ///
+  /// If you want active ghosted areas, then this is only suitable for
+  /// use with the anti-kt algorithm (or genkt with negative p), and
+  /// does not produce any pure ghost jets. If used with active areas
+  /// with Kt or Cam algorithms it will actually produce a passive
+  /// area.
+  /// 
+  /// Particles are deemed to be ghosts if their pt is below a
+  /// threshold (currently 1e-50, hard coded as ghost_limit in
+  /// LazyTiling9SeparateGhosts).
+  ///
+  /// Currently for events with a couple of thousand normal particles
+  /// and O(10k) ghosts, this can be quicker than N2MHTLazy9, which
+  /// would otherwise be the best strategy. 
+  ///
+  /// New in FJ3.1
   N2MHTLazy9AntiKtSeparateGhosts   = -10, 
-  /// temporary name -- will evolve
+  /// only looks into a neighbouring tile for a particle's nearest
+  /// neighbour (NN) if that particle's in-tile NN is further than the
+  /// distance to the edge of the neighbouring tile. Uses tiles of
+  /// size R and a 3x3 tile grid around the particle.
+  /// New in FJ3.1
   N2MHTLazy9   = -7, 
-  /// temporary name -- will evolve
+  /// Similar to N2MHTLazy9, but uses tiles of size R/2 and a 5x5 tile
+  /// grid around the particle.
+  /// New in FJ3.1
   N2MHTLazy25   = -6, 
-  /// temporary name -- will evolve
+  /// Like to N2MHTLazy9 but uses slightly different optimizations,
+  /// e.g. for calculations of distance to nearest tile; as of
+  /// 2014-07-18 it is slightly slower and not recommended for
+  /// production use. To considered deprecated.
+  /// New in FJ3.1
   N2MHTLazy9Alt   = -5, 
-  /// fastest form about 500..10^4
+  /// faster that N2Tiled above about 500 particles; differs from it
+  /// by retainig the di(closest j) distances in a MinHeap (sort of
+  /// priority queue) rather than a simple vector. 
   N2MinHeapTiled   = -4, 
   /// fastest from about 50..500
   N2Tiled     = -3, 
@@ -64,7 +94,8 @@ enum Strategy {
   N2Plain     = -1, 
   /// worse even than the usual N^3 algorithms
   N3Dumb      =  0, 
-  /// automatic selection of the best (based on N)
+  /// automatic selection of the best (based on N), including 
+  /// the LazyTiled strategies that are new to FJ3.1
   Best        =  1, 
   /// best of the NlnN variants -- best overall for N>10^4.
   /// (Does not work for R>=2pi)
@@ -86,6 +117,9 @@ enum Strategy {
   /// variant), for use exclusively with the Cambridge algorithm. 
   /// (Does not work for R>=2pi)
   NlnNCam      = 12, // 2piMultD
+  /// the automatic strategy choice that was being made in FJ 3.0
+  /// (restricted to strategies that were present in FJ 3.0)
+  FJ30Best     =  21, 
   /// the plugin has been used...
   plugin_strategy = 999
 };

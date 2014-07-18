@@ -276,6 +276,8 @@ void ClusterSequence::_initialise_and_run_no_decant () {
   //             with 6MB cache; tests performed with lines such as
   //             ./fastjet_timing_plugins -kt -nhardest 30 -repeat 50000 -strategy -3 -R 0.5 -nev 1  <  ../../data/Pythia-PtMin1000-LHC-1000ev.dat
   if (_strategy == Best) {
+    _strategy = _best_strategy();
+  } else if (_strategy == FJ30Best) {
     int N = _jets.size();
     //if (N <= 55*max(0.5,min(1.0,_Rparam))) {// old empirical scaling with R
     //----------------------
@@ -508,8 +510,6 @@ void ClusterSequence::_fill_initial_history () {
 
 
 //----------------------------------------------------------------------
-// Return the component corresponding to the specified index.
-// taken from CLHEP
 string ClusterSequence::strategy_string (Strategy strategy_in)  const {
   string strategy;
   switch(strategy_in) {
@@ -527,6 +527,14 @@ string ClusterSequence::strategy_string (Strategy strategy_in)  const {
     strategy = "N2MinHeapTiled"; break;
   case N2PoorTiled:
     strategy = "N2PoorTiled"; break;
+  case N2MHTLazy9:
+    strategy = "N2MHTLazy9"; break;
+  case N2MHTLazy9Alt:
+    strategy = "N2MHTLazy9Alt"; break;
+  case N2MHTLazy25:
+    strategy = "N2MHTLazy25"; break;
+  case N2MHTLazy9AntiKtSeparateGhosts:
+    strategy = "N2MHTLazy9AntiKtSeparateGhosts"; break;
   case N3Dumb:
     strategy = "N3Dumb"; break;
   case NlnNCam4pi:
@@ -563,6 +571,66 @@ double ClusterSequence::jet_scale_for_algorithm(
       return 1.0/kt2;
     } else {return 1.0;}
   } else {throw Error("Unrecognised jet algorithm");}
+}
+
+//----------------------------------------------------------------------
+// returns a suggestion for the best strategy to use on event
+// multiplicity, algorithm, R, etc.
+//
+// Some of the work to establish the best strategy is collected in
+// issue-tracker/2014-07-auto-strategy-selection; transition_fit.gp
+// indicates the results of the fits that we're using here.
+//
+// Currently the NlnN strategies are all missing
+Strategy ClusterSequence::_best_strategy() const {
+  int N = _jets.size();
+  // define bounded R, always above 0.1, because we don't trust any
+  // of our parametrizations below R = 0.1
+  double bounded_R = max(_Rparam, 0.1);
+
+  // the very first test thing is a quick hard-coded test to decide
+  // if we immediately opt for N2Plain
+  if (N <= 30 || N <= 36.0/(bounded_R + 0.7)) {
+    return N2Plain;
+  } 
+  
+  // Define objects that describe our various boundaries. A prefix N_
+  // indicates that boundary is for N, while L_ means it's for log(N).
+  //
+  // Hopefully having them static will ensure minimal overhead
+  // in creating them; collecting them in one place should
+  // help with updates?
+  const static _Parabola N_Tiled_to_MHT_lowR         (-11.4453,  15.9256, 107.125);
+  const static _Parabola L_MHT_to_MHTLazy9_lowR      (0.645352, -1.02009, 11.2284);
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_lowR(0.17047, -0.515858, 12.4833);
+
+  const static _Line     L_Tiled_to_MHTLazy9_medR     (-1.36514, 7.47217);
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_medR = L_MHTLazy9_to_MHTLazy25_lowR;
+
+  const static double    N_Plain_to_MHTLazy9_largeR     = 75;
+  const static double    N_MHTLazy9_to_MHTLazy25_largeR = 700;
+
+  if (bounded_R < 0.65) {
+    // low R case
+    if      (N    < N_Tiled_to_MHT_lowR(bounded_R))          return N2Tiled;
+    double logN = log(double(N));
+    if      (logN < L_MHT_to_MHTLazy9_lowR(bounded_R))       return N2MinHeapTiled;
+    else if (logN < L_MHTLazy9_to_MHTLazy25_lowR(bounded_R)) return N2MHTLazy9;
+    else                                                     return N2MHTLazy25;
+
+  } else if (bounded_R < 0.5*pi) {
+    // medium R case
+    double logN = log(double(N));
+    if      (logN < L_Tiled_to_MHTLazy9_medR(bounded_R))     return N2Tiled;
+    else if (logN < L_MHTLazy9_to_MHTLazy25_medR(bounded_R)) return N2MHTLazy9;
+    else                                                     return N2MHTLazy25;
+  } else {
+    // large R case
+    if      (N    < N_Plain_to_MHTLazy9_largeR)              return N2Plain;
+    else if (N    < N_MHTLazy9_to_MHTLazy25_largeR)          return N2MHTLazy9;
+    else                                                     return N2MHTLazy25;
+  }
+
 }
 
 

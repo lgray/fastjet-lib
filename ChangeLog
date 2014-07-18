@@ -1,3 +1,40 @@
+2014-07-18  Gavin Salam  <gavin.salam@cern.ch> [on train]
+
+	* regression-tests/test-all-algs.pl (setDefaults):
+	default strategy set for tests now includes -7 (N2MHTLazy9) and -6
+	(N2MHTLazy25) for kt, cam and anti-kt.
+
+	* include/fastjet/JetDefinition.hh: 
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc:
+	added Strategy = FJ30Best (21), which reproduces the strategy
+	selection of FJ 3.0.
+
+	Best now instead calls the new ClusterSequence::_best_strategy()
+	routine to select the best strategy. Also added helper classes
+	ClusterSequence::_Parabola and ClusterSequence::_Line. Structure
+	and parameters are based on Gregory's preliminary results in
+	issue-tracker/2014-07-auto-strategy-selection/transition_fit.gp.
+	Ran some basic tests to make sure that transitions look sensible
+	(compared to the plot transition_fit.eps). 
+
+	*** It's still missing the transitions to NlnN routines. ***
+
+	* src/ClusterSequence.cc: 
+	strategy_string() now correctly outputs a name for the new
+	LazyTiled strategies.
+
+	* include/fastjet/JetDefinition.hh:
+	filled out the comments to describe the new strategies.
+
+	* src/LazyTiling25.cc (_initialise_tiles): 
+	added some commented code to adapt tile rapidity-size choice in
+	cases where _tiles_eta_max - _tiles_eta_min < 3/2R, so as to
+	ensure exactly 3 spanning tiles; for large R, in cases where it
+	works, it appears to give a (sometimes substantial) speed
+	improvement, but it also hangs. Reason still needs identifying
+	(hence it's commented).
+
 2014-07-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/fastjet_timing_plugins.cc:
@@ -11,7 +48,7 @@
 	included cstdio required by recent compilers
 
 	* tools/fastjet/tools/Filter.hh:
-	- added an _initialised flag alolowing to check whether the Filter
+	- added an _initialised flag allowing to check whether the Filter
 	  has been initialised properly or not
 	- made the subtractor a (pointer to a)
 	  FunctionOfPseudoJet<PseudoJet> instead of a Transformer
@@ -49,6 +86,8 @@
 
     N2MinHeapTiled_separate_ghosts_antikt (Tiling3)
                                             ->  N2MHTLazy9AntiKtSeparateGhosts (LazyTiling9SeparateGhosts)
+
+    TilingAnalysis -> TilingExtent (separated out into a separate file)
 
 
 	Overall that gives following renamed files

@@ -110,11 +110,28 @@ void LazyTiling25::_initialise_tiles() {
 #endif // _FASTJET_TILING25_USE_TILING_ANALYSIS_
 
 
-  // now adjust the values
-  _tiles_ieta_min = int(floor(_tiles_eta_min/_tile_size_eta));
-  _tiles_ieta_max = int(floor( _tiles_eta_max/_tile_size_eta));
-  _tiles_eta_min = _tiles_ieta_min * _tile_size_eta;
-  _tiles_eta_max = _tiles_ieta_max * _tile_size_eta;
+  // now adjust the values of the ieta extents 
+
+  // 2014-07-18: the following commented piece of code gives speed
+  // improvements for large-R jets, but occasionally it appears to
+  // hang, e.g. on 
+  //    gunzip -c  < ../data/Pythia-PtMin50-LHC-10kev.dat.gz  | time ./example/fastjet_timing_plugins -R 1000 -nev 1000 -strategy -6  -antikt  -rapmax 5.0 -repeat 1 -write
+  // This needs to be understood
+  //
+//BAD   if (_tiles_eta_max - _tiles_eta_min < 3*_tile_size_eta) {
+//BAD     // if we have a rapidity coverage that is small compared to the
+//BAD     // tile size then we can adjust the grid in rapidity so as to
+//BAD     // have exactly 3 tiles
+//BAD     _tile_size_eta = (_tiles_eta_max - _tiles_eta_min)/3;
+//BAD     _tiles_ieta_min = 0;
+//BAD     _tiles_ieta_max = 2;
+//BAD     _tiles_eta_max -= _tile_size_eta;
+//BAD   } else {
+    _tiles_ieta_min = int(floor(_tiles_eta_min/_tile_size_eta));
+    _tiles_ieta_max = int(floor( _tiles_eta_max/_tile_size_eta));
+    _tiles_eta_min = _tiles_ieta_min * _tile_size_eta;
+    _tiles_eta_max = _tiles_ieta_max * _tile_size_eta;
+//BAD  }
 
   _tile_half_size_eta = _tile_size_eta * 0.5;
   _tile_half_size_phi = _tile_size_phi * 0.5;
