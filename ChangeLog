@@ -1,3 +1,11 @@
+2014-07-19  Gavin Salam  <gavin.salam@cern.ch>
+
+	* test-compare.sh (extra_args): 
+	eliminated lines with "Strategy" as well as "strategy" in order
+	for make check not to give error if all that has changed is the
+	strategy choice (previously just eliminated strategy, and was
+	failing because in one place the output said "Strategy")
+
 2014-07-18  Gavin Salam  <gavin.salam@cern.ch> [on train]
 
 	* regression-tests/test-all-algs.pl (setDefaults):

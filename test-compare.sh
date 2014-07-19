@@ -100,12 +100,12 @@ untested_algs=""
 Rvalues="0.4 0.7 1.0"
 extra_args="-incl 0.0"
 
-echo ":#"      >  clear_patterns.orig
-echo "^#"      >> clear_patterns.orig
-echo "version" >> clear_patterns.orig
-echo "strategy" >> clear_patterns.orig
-echo "CGAL" >> clear_patterns.orig
-echo "SISCone" >> clear_patterns.orig  # avoids problems w version numbers
+echo ":#"          >  clear_patterns.orig
+echo "^#"          >> clear_patterns.orig
+echo "version"     >> clear_patterns.orig
+echo "[Ss]trategy" >> clear_patterns.orig
+echo "CGAL"        >> clear_patterns.orig
+echo "SISCone"     >> clear_patterns.orig  # avoids problems w version numbers
 echo "pxcone: +[a-zA-Z*]" >> clear_patterns.orig   # special treatment for PxCone whose fortran output
 echo "pxcone: *$"         >> clear_patterns.orig   # occurs in non-predicatble position (flushing issue)
 echo "WARNING"            >> clear_patterns.orig   # occurs in non-predicatble position (flushing issue)
