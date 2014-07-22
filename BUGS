@@ -1,12 +1,7 @@
 Known bugs
 ----------
 
-1. the CGAL N ln N methods cannot handle coincident points. Events with
-   more than one particle having identical rapidity,phi values should be 
-   clustered with an alternative strategy. If this poses a severe
-   issue to someone, it will be fixed.
-
-2. For N log(N) strategies requiring CGAL, in rare case of near
+1. For N log(N) strategies requiring CGAL, in rare case of near
    degeneracies, the program may abort with the following error
    message:
 
@@ -23,7 +18,7 @@ Known bugs
    CGAL. [thanks to the CGAL development team and to Olivier Devillers
    in particular for the quick fix.]
 
-3. Filter and Pruner may lead to a crash in the following contorted
+2. Filter and Pruner may lead to a crash in the following contorted
    situation:
    1) they're constructed with just a radius or jet algorithm
    2) the original jet involves a user-allocated recombiner
