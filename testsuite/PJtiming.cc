@@ -28,7 +28,10 @@
 ///
 /// All three systems tested concur that with the full initialisation, timings
 /// are down to O(10-20ns) (5ns for Gregory).
-
+///
+/// 2014-07-22: with clang [Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)]
+///             this program no longer compiled 
+///             (variable length array of non-POD element type 'fastjet::PseudoJet')
 #include "fastjet/PseudoJet.hh"
 #include <iostream>
 #include "CmdLine.hh"
@@ -48,19 +51,23 @@ void make_vector(int sz) {
 }
 
 void make_array(int sz) {
-  PseudoJet particles[sz];
+  PseudoJet * particles = new PseudoJet[sz];
+  //PseudoJet particles[sz];
   particles[sz-1].reset(0,0,0,0); // make sure something happens
+  delete[] particles;
 }
 
 int main(int argc, char** argv) {
   CmdLine cmdline(argc,argv);
   int n = int(cmdline.value("-n",100.0));
   int sz = int(cmdline.value("-sz",100.0));
-  
+
   bool array = cmdline.present("-array");
 
   for (int i = 0; i < n; i++) {
     if (array) {make_array(sz);}
     else       {make_vector(sz);}
   }
+
+  cout << "Total number of PseudoJets created was " << double(n)*double(sz) << endl;
 }

@@ -1,5 +1,27 @@
 2014-07-22  Gavin Salam  <gavin.salam@cern.ch>
 
+	* testsuite/TestPseudoJet.hh:
+	added a set of tests of the ==0 and != 0 operators
+
+	* testsuite/cs_delete_self.cc: 
+	now gives errors when things that should (not) throw do not (or
+	do). 
+
+	* testsuite/PJtiming.cc:
+	replaced dynamic-sized C-array (which gave compilation errors)
+	with a dynamically allocated array.
+
+	* testsuite/run-all.sh: *** ADDED ***
+	this script runs everything in the directory and makes sure it all
+	exits OK. 
+
+	* testsuite/README: *** ADDED ***
+	added a README to help us recall how to use what's in here
+
+	* include/fastjet/PseudoJet.hh:
+	added val==PseudoJet and val!=PseudoJet bool functions so that we
+	have the complete set.
+
 	* include/fastjet/internal/SearchTree.hh (circulator):
 	the following line 
 	"template<class U> friend class SearchTree<U>::const_circulator;"

@@ -18,6 +18,7 @@ using namespace fastjet;
 class TestBase {
 public:
   TestBase() : _pass_test(true), _quiet_OK(false) {}
+  virtual ~TestBase() {}
 
   virtual std::string description() const {return short_name();}
   virtual std::string short_name()  const = 0;

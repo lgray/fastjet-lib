@@ -828,10 +828,12 @@ inline bool operator!=(const PseudoJet & a, const PseudoJet & b) {return !(a==b)
 /// Can only be used with val=0 and tests whether all four
 /// momentum components are equal to val (=0.0)
 bool operator==(const PseudoJet & jet, const double val);
+inline bool operator==(const double val, const PseudoJet & jet) {return jet == val;}
 
 /// Can only be used with val=0 and tests whether at least one of the
 /// four momentum components is different from val (=0.0)
-inline bool operator!=(const PseudoJet & a, const double & val) {return !(a==val);}
+inline bool operator!=(const PseudoJet & a, const double val)  {return !(a==val);}
+inline bool operator!=( const double val, const PseudoJet & a) {return !(a==val);}
 
 inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
   return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();

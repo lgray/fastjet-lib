@@ -24,14 +24,19 @@ PseudoJet hardest_jet(const vector<PseudoJet> & particles){
 }
 
 /// print jet info
-void show_jet(const PseudoJet & jet){
+void show_jet(const PseudoJet & jet, bool expected_to_throw = false){
+  bool threw = false;
   try{
     cout << "Jet has pt=" << jet.perp() << " and " << jet.constituents().size() << " constituents";
     if (jet.has_area()) cout << ", area = " << jet.area();
     cout << endl;
   } catch (fastjet::Error){
+    if (expected_to_throw) cerr << "Expected ";
     cerr << "fastjet::Error caught" << endl;
+    threw = true;
   }
+  assert(threw == expected_to_throw);
+  //if (threw != expected_to_throw) throw fastjet::Error("unexpected throw");
 }
 
 /// an example program showing how to use fastjet
@@ -62,7 +67,7 @@ int main (int argc, char ** argv) {
   PseudoJet j2 = hardest_jet(*cs2);
   show_jet(j2);
   delete cs2;
-  show_jet(j2); // should throw
+  show_jet(j2, true); // should throw
   cout << "Test 2 passed" << endl;
 
   //----------------------------------------------------------
@@ -78,7 +83,7 @@ int main (int argc, char ** argv) {
   PseudoJet * j4 = new PseudoJet(hardest_jet(particles));
   show_jet(*j4);
   delete j4->associated_cluster_sequence();
-  show_jet(*j4);  // should throw
+  show_jet(*j4,true);  // should throw
   delete j4;
   cout << "Test 4 passed" << endl;
 

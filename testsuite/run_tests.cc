@@ -32,6 +32,8 @@ int main(int argc, char** argv) {
   tests.push_back(new TestGroomerAreas());
   //tests.push_back(new TestGroomerRecombiners()); not for now -- it's empty
 
+  bool all_pass = true;
+
   // loop over the tests
   for (unsigned i = 0; i < tests.size(); i++) {
     // allow the user to concentrate on one test series
@@ -47,9 +49,11 @@ int main(int argc, char** argv) {
       cout << setw(4) << i << "  FAIL: " << tests[i]->short_name() <<endl;
       cout << "      (" << tests[i]->description() << ")" << endl;
       tests[i]->print_failures();
+      all_pass = false;
     }
     // clean up after the test....
     delete tests[i];
   }
   
+  assert(all_pass);
 }

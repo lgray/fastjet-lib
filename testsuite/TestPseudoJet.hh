@@ -81,7 +81,7 @@ public:
 /// Tests of assignments and resets of PseudoJets
 class TestPJAssignment : public TestBase {
  std::string short_name()  const {return "TestPJAssignment";}
- std::string description()  const {return "Tests of assignments and resets of PseudoJets";}
+ std::string description()  const {return "Tests of assignments, resets and zero-tests of PseudoJets";}
 
   bool run_test () {
     
@@ -150,6 +150,13 @@ class TestPJAssignment : public TestBase {
 
     // now run some tests 
     verify_equal(particle4==particle, false, "PJ inequality because of meta-info");
+
+    // now check null v. non-null things
+    PseudoJet null_vector;
+    verify_equal(null_vector == 0, true,  "PJ zero test");
+    verify_equal(0 == null_vector, true,  "PJ reversed zero test");
+    verify_equal(particle    == 0, false, "PJ non-zero test");
+    verify_equal(0 == particle,    true, "PJ reversed non-zero test");
 
     return _pass_test;
   }
