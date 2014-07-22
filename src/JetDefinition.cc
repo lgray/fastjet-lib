@@ -164,7 +164,7 @@ void JetDefinition::set_recombination_scheme(
   _default_recombiner = JetDefinition::DefaultRecombiner(recomb_scheme);
 
   // do not forget to delete the existing recombiner if needed
-  if (_recombiner_shared()) _recombiner_shared.reset();
+  if (_shared_recombiner()) _shared_recombiner.reset();
 
   _recombiner = 0;
 }
@@ -177,7 +177,7 @@ bool JetDefinition::has_same_recombiner(const JetDefinition &other_jd) const{
   const RecombinationScheme & scheme = recombination_scheme();
   if (other_jd.recombination_scheme() != scheme) return false;
 
-  // if the scheme is "external", also check that they ahve the same
+  // if the scheme is "external", also check that they have the same
   // recombiner
   return (scheme != external_scheme) 
     || (recombiner() == other_jd.recombiner());
@@ -188,9 +188,11 @@ bool JetDefinition::has_same_recombiner(const JetDefinition &other_jd) const{
 void JetDefinition::delete_recombiner_when_unused(){
   if (_recombiner == 0){
     throw Error("tried to call JetDefinition::delete_recombiner_when_unused() for a JetDefinition without a user-defined recombination scheme");
+  } else if (_shared_recombiner.get()) {
+    throw Error("Error in JetDefinition::delete_recombiner_when_unused: the recombiner is already scheduled for deletion when unused (or was already set as shared)");
   }
 
-  _recombiner_shared.reset(_recombiner);
+  _shared_recombiner.reset(_recombiner);
 }
 
 /// allows to let the JetDefinition handle the deletion of the

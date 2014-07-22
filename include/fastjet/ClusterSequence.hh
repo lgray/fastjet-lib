@@ -79,8 +79,8 @@ class ClusterSequence {
 // 		   const bool & writeout_combinations = false);
 
 
-  /// create a clustersequence starting from the supplied set
-  /// of pseudojets and clustering them with jet definition specified
+  /// create a ClusterSequence, starting from the supplied set
+  /// of PseudoJets and clustering them with jet definition specified
   /// by jet_def (which also specifies the clustering strategy)
   template<class L> ClusterSequence (
 			          const std::vector<L> & pseudojets,
@@ -299,9 +299,8 @@ class ClusterSequence {
   /// (e.g. the result of inclusive_jets()).
   ///
   /// NB: after having made this call, the user is still allowed to
-  /// delete the CS or let it go out of scope. Jets associated with it
-  /// will then simply not be able to access their substructure after
-  /// that point.
+  /// delete the CS. Jets associated with it will then simply not be
+  /// able to access their substructure after that point.
   void delete_self_when_unused();
 
   /// return true if the object has been told to delete itself
@@ -363,9 +362,19 @@ class ClusterSequence {
   };
 
   /// the plugin can associate some extra information with the
+  /// ClusterSequence object by calling this function. The
+  /// ClusterSequence takes ownership of the pointer (and
+  /// responsibility for deleting it when the CS gets deleted).
+  inline void plugin_associate_extras(Extras * extras_in) {
+    _extras.reset(extras_in);
+  }
+
+  /// the plugin can associate some extra information with the
   /// ClusterSequence object by calling this function
+  /// 
+  /// As of FJ v3.1, this is deprecated, in line with the deprecation
+  /// of auto_ptr in C++11
   inline void plugin_associate_extras(std::auto_ptr<Extras> extras_in) {
-    //_extras = extras_in;
     _extras.reset(extras_in.release());
   }
 
@@ -704,7 +713,6 @@ protected:
  private:
 
   bool _plugin_activated;
-  //std::auto_ptr<Extras> _extras; // things the plugin might want to add
   SharedPtr<Extras> _extras; // things the plugin might want to add
 
   void _really_dumb_cluster ();

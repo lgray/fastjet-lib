@@ -1,5 +1,30 @@
 2014-07-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
+	* RoadMap: updated (plans for 3.1)
+
+	* include/fastjet/PseudoJetStructureBase.hh:
+	deprecated the use of "const double& dcut" in exclusive_subjets(...)
+	and exclusive_subjets_up_to(...) for future major releases. (to be
+	replaced by "const double dcut".
+
+	* include/fastjet/GhostedAreaSpec.hh:
+	added both (set)_ghost_maxeta and (set)_ghost_rapmax to ensure
+	symmetry
+
+	* BUGS:
+	removed the bug due to coincident points in strategies using CGAL
+
+	* include/fastjet/JetDefinition.hh:
+	* src/JetDefinition.cc:
+	  . addded shared_recombiner() and set_shared_recombiner() methods.
+	  . replaced _recombiner_shared with _shared_recombiner
+	  . tidied up comments
+
+	* include/fastjet/ClusterSequence.hh: 
+	fixed comment about delete_self_when_unused() (one should not be
+	in a context where the CS may just go out of scope).
+	+ deprecated the use of auto_ptr for plugin extras.
+
 	* include/fastjet/internal/LazyTiling9Alt.hh: 
 	* src/LazyTiling9Alt.cc: 
 	commented out unused variant of _distance_to_tile

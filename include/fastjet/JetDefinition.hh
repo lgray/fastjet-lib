@@ -348,13 +348,21 @@ public:
 
   /// set the recombiner class to the one provided
   void set_recombiner(const Recombiner * recomb) {
-    if (_recombiner_shared()) _recombiner_shared.reset(recomb);
+    if (_shared_recombiner()) _shared_recombiner.reset(recomb);
     _recombiner = recomb;
     _default_recombiner = DefaultRecombiner(external_scheme);
   }
 
+  /// tell the JetDefinition to use the the recombiner that is passed as a 
+  /// shared pointer. The JetDefinition then acquires shared ownership. 
+  void set_shared_recombiner(const SharedPtr<const Recombiner> & recomb) {
+    _shared_recombiner.reset(recomb);
+    _recombiner = _shared_recombiner.get();
+  }
+
   /// calling this tells the JetDefinition to handle the deletion of
-  /// the recombiner when it is no longer used
+  /// the recombiner when it is no longer used. (Should not be used
+  /// together with set_shared_recombiner).
   void delete_recombiner_when_unused();
 
   /// return a pointer to the plugin 
@@ -383,7 +391,7 @@ public:
   /// (re)set the general purpose extra parameter
   void set_extra_param(double xtra_param) {_extra_param = xtra_param;}
 
-  /// return a pointer to the currently defined recombiner. 
+  /// returns a pointer to the currently defined recombiner. 
   ///
   /// Warning: the pointer may be to an internal recombiner (for
   /// default recombination schemes), in which case if the
@@ -395,9 +403,15 @@ public:
   /// recombiners, and return different recombiner() pointers.
   const Recombiner * recombiner() const {
     return _recombiner == 0 ? & _default_recombiner : _recombiner;}
+  
+  /// Returns the shared recombiner associated with this jet definition.
+  /// Will be null if using one of the default recombination schemes, or if
+  /// a pointer to a recombiner has been set without calling
+  /// delete_recombiner_when_unused().
+  SharedPtr<const Recombiner> shared_recombiner() const {return _shared_recombiner;}
 
   /// returns true if the current jet definitions shares the same
-  /// recombiner as teh one passed as an argument
+  /// recombiner as the one passed as an argument
   bool has_same_recombiner(const JetDefinition &other_jd) const;
 
   /// returns true if the jet definition involves an algorithm
@@ -543,7 +557,7 @@ private:
   // so that we don't have to worry about deleting it etc...
   DefaultRecombiner _default_recombiner;
   const Recombiner * _recombiner;
-  SharedPtr<const Recombiner> _recombiner_shared;
+  SharedPtr<const Recombiner> _shared_recombiner;
 
 };
 

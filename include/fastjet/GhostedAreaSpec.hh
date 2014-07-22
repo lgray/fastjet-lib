@@ -121,8 +121,10 @@ public:
   void _initialize();
 
   // for accessing values set by the user
-  inline double ghost_etamax () const {return _ghost_maxrap;}
+  inline double ghost_rapmax () const {return _ghost_maxrap;}
   inline double ghost_maxrap () const {return _ghost_maxrap;}
+  inline double ghost_etamax () const {return _ghost_maxrap;}
+  inline double ghost_maxeta () const {return _ghost_maxrap;}
   inline double ghost_area   () const {return _ghost_area   ;}
   inline double grid_scatter () const {return _grid_scatter;}
   inline double pt_scatter   () const {return _pt_scatter  ;}
@@ -139,8 +141,10 @@ public:
 
   // when explicitly modifying values, sometimes call the initializer
   inline void set_ghost_area   (double val) {_ghost_area    = val; _initialize();}
-  inline void set_ghost_etamax (double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_ghost_rapmax (double val) {_ghost_maxrap = val; _initialize();}
   inline void set_ghost_maxrap (double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_ghost_etamax (double val) {_ghost_maxrap = val; _initialize();}
+  inline void set_ghost_maxeta (double val) {_ghost_maxrap = val; _initialize();}
   inline void set_grid_scatter (double val) {_grid_scatter   = val; }
   inline void set_pt_scatter   (double val) {_pt_scatter     = val; }
   inline void set_mean_ghost_pt(double val) {_mean_ghost_pt  = val; }

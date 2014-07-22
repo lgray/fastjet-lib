@@ -155,6 +155,11 @@ public:
   /// just getting that list of constituents.
   ///
   /// By default, throws an Error
+  ///
+  /// Note: in a future major release of FastJet (4 or higher), 
+  /// "const double & dcut" may be replaced with "const double dcut",
+  /// requiring a modification of derived classes that overload
+  /// this function.
   virtual std::vector<PseudoJet> exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
@@ -162,6 +167,11 @@ public:
   /// exclusive_subjets.size()
   ///
   /// By default, throws an Error
+  ///
+  /// Note: in a future major release of FastJet (4 or higher), 
+  /// "const double & dcut" may be replaced with "const double dcut",
+  /// requiring a modification of derived classes that overload
+  /// this function.
   virtual int n_exclusive_subjets(const PseudoJet &reference, const double & dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
