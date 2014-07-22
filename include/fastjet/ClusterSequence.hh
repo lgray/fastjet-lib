@@ -74,7 +74,7 @@ class ClusterSequence {
 //   /// with some number of pi coverage. If writeout_combinations=true a
 //   /// summary of the recombination sequence is written out
 //   template<class L> ClusterSequence (const std::vector<L> & pseudojets, 
-// 		   const double & R = 1.0,
+// 		   const double R = 1.0,
 // 		   const Strategy & strategy = Best,
 // 		   const bool & writeout_combinations = false);
 
@@ -103,42 +103,42 @@ class ClusterSequence {
   /// return a vector of all jets (in the sense of the inclusive
   /// algorithm) with pt >= ptmin. Time taken should be of the order
   /// of the number of jets returned.
-  std::vector<PseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
+  std::vector<PseudoJet> inclusive_jets (const double ptmin = 0.0) const;
 
   /// return the number of jets (in the sense of the exclusive
   /// algorithm) that would be obtained when running the algorithm
   /// with the given dcut.
-  int n_exclusive_jets (const double & dcut) const;
+  int n_exclusive_jets (const double dcut) const;
 
   /// return a vector of all jets (in the sense of the exclusive
   /// algorithm) that would be obtained when running the algorithm
   /// with the given dcut.
-  std::vector<PseudoJet> exclusive_jets (const double & dcut) const;
+  std::vector<PseudoJet> exclusive_jets (const double dcut) const;
 
   /// return a vector of all jets when the event is clustered (in the
   /// exclusive sense) to exactly njets. 
   ///
   /// If there are fewer than njets particles in the ClusterSequence
   /// an error is thrown
-  std::vector<PseudoJet> exclusive_jets (const int & njets) const;
+  std::vector<PseudoJet> exclusive_jets (const int njets) const;
 
   /// return a vector of all jets when the event is clustered (in the
   /// exclusive sense) to exactly njets. 
   ///
   /// If there are fewer than njets particles in the ClusterSequence
   /// the function just returns however many particles there were.
-  std::vector<PseudoJet> exclusive_jets_up_to (const int & njets) const;
+  std::vector<PseudoJet> exclusive_jets_up_to (const int njets) const;
 
   /// return the dmin corresponding to the recombination that went
   /// from n+1 to n jets (sometimes known as d_{n n+1}). If the number
   /// of particles in the event is <= njets, the function returns 0.
-  double exclusive_dmerge (const int & njets) const;
+  double exclusive_dmerge (const int njets) const;
 
   /// return the maximum of the dmin encountered during all recombinations 
   /// up to the one that led to an n-jet final state; identical to
   /// exclusive_dmerge, except in cases where the dmin do not increase
   /// monotonically.
-  double exclusive_dmerge_max (const int & njets) const;
+  double exclusive_dmerge_max (const int njets) const;
 
   /// return the ymin corresponding to the recombination that went from
   /// n+1 to n jets (sometimes known as y_{n n+1}).
@@ -157,7 +157,7 @@ class ClusterSequence {
   }
 
 
-  //int n_exclusive_jets (const PseudoJet & jet, const double & dcut) const;
+  //int n_exclusive_jets (const PseudoJet & jet, const double dcut) const;
 
   /// return a vector of all subjets of the current jet (in the sense
   /// of the exclusive algorithm) that would be obtained when running
@@ -168,13 +168,13 @@ class ClusterSequence {
   /// constituents in the jet, this could be substantially slower than
   /// just getting that list of constituents.
   std::vector<PseudoJet> exclusive_subjets (const PseudoJet & jet, 
-                                            const double & dcut) const;
+                                            const double dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
   /// coefficient, but marginally more efficient than manually taking
   /// exclusive_subjets.size()
   int n_exclusive_subjets(const PseudoJet & jet, 
-                          const double & dcut) const;
+                          const double dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
   /// jet down to nsub subjets. Throws an error if there are fewer than
@@ -206,8 +206,8 @@ class ClusterSequence {
   double exclusive_subdmerge_max(const PseudoJet & jet, int nsub) const;
 
   //std::vector<PseudoJet> exclusive_jets (const PseudoJet & jet, 
-  //                                       const int & njets) const;
-  //double exclusive_dmerge (const PseudoJet & jet, const int & njets) const;
+  //                                       const int njets) const;
+  //double exclusive_dmerge (const PseudoJet & jet, const int njets) const;
 
   /// returns the sum of all energies in the event (relevant mainly for e+e-)
   double Q() const {return _Qtot;}
@@ -271,7 +271,7 @@ class ClusterSequence {
 
 // Not yet. Perhaps in a future release.
 //   /// print out all inclusive jets with pt > ptmin
-//   virtual void print_jets (const double & ptmin=0.0) const;
+//   virtual void print_jets (const double ptmin=0.0) const;
 
   /// add on to subjet_vector the constituents of jet (for internal use mainly)
   void add_constituents (const PseudoJet & jet, 
@@ -599,7 +599,7 @@ protected:
 //DEP   /// This is an alternative routine for initialising and running the
 //DEP   /// clustering, provided for legacy purposes. The jet finder is that
 //DEP   /// specified in the static member _default_jet_algorithm.
-//DEP   void _initialise_and_run (const double & R,
+//DEP   void _initialise_and_run (const double R,
 //DEP 			    const Strategy & strategy,
 //DEP 			    const bool & writeout_combinations);
 
@@ -622,12 +622,12 @@ protected:
   /// carry out the recombination between the jets numbered jet_i and
   /// jet_j, at distance scale dij; return the index newjet_k of the
   /// result of the recombination of i and j.
-  void _do_ij_recombination_step(const int & jet_i, const int & jet_j, 
-				 const double & dij, int & newjet_k);
+  void _do_ij_recombination_step(const int jet_i, const int jet_j, 
+				 const double dij, int & newjet_k);
 
   /// carry out an recombination step in which _jets[jet_i] merges with
   /// the beam, 
-  void _do_iB_recombination_step(const int & jet_i, const double & diB);
+  void _do_iB_recombination_step(const int jet_i, const double diB);
 
   /// every time a jet is added internally during clustering, this
   /// should be called to set the jet's structure shared ptr to point
@@ -728,9 +728,9 @@ protected:
   // NSqrtN method for C/A
   void _fast_NsqrtN_cluster();
 
-  void _add_step_to_history(const int & step_number, const int & parent1, 
-			       const int & parent2, const int & jetp_index,
-			       const double & dij);
+  void _add_step_to_history(const int step_number, const int parent1, 
+			       const int parent2, const int jetp_index,
+			       const double dij);
 
   /// internal routine associated with the construction of the unique
   /// history order (following children in the tree)
@@ -749,7 +749,7 @@ protected:
   typedef std::multimap<double,TwoVertices> DistMap;
 
   /// currently used only in the Voronoi based code
-  void _add_ktdistance_to_map(const int & ii, 
+  void _add_ktdistance_to_map(const int ii, 
 			      DistMap & DijMap,
   			      const DynamicNearestNeighbours * DNN);
 
@@ -884,7 +884,7 @@ protected:
 
   // routines for tiled case, including some overloads of the plain
   // BriefJet cases
-  int  _tile_index(const double & eta, const double & phi) const;
+  int  _tile_index(const double eta, const double phi) const;
   void _tj_set_jetinfo ( TiledJet * const jet, const int _jets_index);
   void  _bj_remove_from_tiles(TiledJet * const jet);
   void _initialise_tiles();
@@ -944,7 +944,7 @@ template<class L> void ClusterSequence::_transfer_input_jets(
 // // here in order for it the template aspect of it to work...
 // template<class L> ClusterSequence::ClusterSequence (
 // 			          const std::vector<L> & pseudojets,
-// 				  const double & R,
+// 				  const double R,
 // 				  const Strategy & strategy,
 // 				  const bool & writeout_combinations) {
 // 

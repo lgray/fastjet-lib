@@ -1,5 +1,25 @@
 2014-07-22  Gavin Salam  <gavin.salam@cern.ch>
 
+        * include/fastjet/ClusterSequence.hh
+        * include/fastjet/PseudoJet.hh
+        * include/fastjet/internal/LazyTiling25.hh
+        * include/fastjet/internal/LazyTiling9.hh
+        * include/fastjet/internal/LazyTiling9Alt.hh
+        * include/fastjet/internal/LazyTiling9SeparateGhosts.hh
+        * src/ClusterSequence.cc
+        * src/ClusterSequence_Delaunay.cc
+        * src/ClusterSequence_TiledN2.cc
+        * src/LazyTiling25.cc
+        * src/LazyTiling9.cc
+        * src/LazyTiling9Alt.cc
+        * src/LazyTiling9SeparateGhosts.cc
+        * src/PseudoJet.cc
+	replaced a number of "const double &" and "const int &" with
+	"const double" and "const int". There are still a number of others
+	to handle. 
+	
+2014-07-22  Gavin Salam  <gavin.salam@cern.ch>
+
 	* testsuite/TestPseudoJet.hh:
 	added a set of tests of the ==0 and != 0 operators
 

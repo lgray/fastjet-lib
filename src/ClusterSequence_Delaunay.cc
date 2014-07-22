@@ -216,7 +216,7 @@ void ClusterSequence::_delaunay_cluster () {
 /// . otherwise do nothing
 ///
 void ClusterSequence::_add_ktdistance_to_map(
-                          const int & ii, 
+                          const int ii, 
 			  DistMap & DijMap,
 			  const DynamicNearestNeighbours * DNN) {
   

@@ -159,7 +159,7 @@ protected:
   void  _bj_remove_from_tiles(TiledJet * const jet);
 
   /// returns the tile index given the eta and phi values of a jet
-  int _tile_index(const double & eta, const double & phi) const;
+  int _tile_index(const double eta, const double phi) const;
 
   // sets up information regarding the tiling of the given jet
   void _tj_set_jetinfo(TiledJet * const jet, const int _jets_index);

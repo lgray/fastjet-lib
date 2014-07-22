@@ -586,7 +586,7 @@ bool PseudoJet::has_exclusive_subjets() const{
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-std::vector<PseudoJet> PseudoJet::exclusive_subjets (const double & dcut) const {
+std::vector<PseudoJet> PseudoJet::exclusive_subjets (const double dcut) const {
   return validated_structure_ptr()->exclusive_subjets(*this, dcut);
 }
 
@@ -597,7 +597,7 @@ std::vector<PseudoJet> PseudoJet::exclusive_subjets (const double & dcut) const 
 //
 // an Error is thrown if this PseudoJet has no currently valid
 // associated ClusterSequence
-int PseudoJet::n_exclusive_subjets(const double & dcut) const {
+int PseudoJet::n_exclusive_subjets(const double dcut) const {
   return validated_structure_ptr()->n_exclusive_subjets(*this, dcut);
 }
 

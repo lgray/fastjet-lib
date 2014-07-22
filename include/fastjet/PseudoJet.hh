@@ -663,7 +663,7 @@ class PseudoJet {
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
-  std::vector<PseudoJet> exclusive_subjets (const double & dcut) const;
+  std::vector<PseudoJet> exclusive_subjets (const double dcut) const;
 
   /// return the size of exclusive_subjets(...); still n ln n with same
   /// coefficient, but marginally more efficient than manually taking
@@ -671,7 +671,7 @@ class PseudoJet {
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
   /// associated ClusterSequence
-  int n_exclusive_subjets(const double & dcut) const;
+  int n_exclusive_subjets(const double dcut) const;
 
   /// return the list of subjets obtained by unclustering the supplied
   /// jet down to nsub subjets. Throws an error if there are fewer than
@@ -886,7 +886,7 @@ public:
   inline IndexedSortHelper (const std::vector<double> * reference_values) {
     _ref_values = reference_values;
   };
-  inline int operator() (const int & i1, const int & i2) const {
+  inline int operator() (const int i1, const int i2) const {
     return  (*_ref_values)[i1] < (*_ref_values)[i2];
   };
 private:

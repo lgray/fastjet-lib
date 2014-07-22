@@ -171,7 +171,7 @@ void ClusterSequence::_initialise_tiles() {
 
 //----------------------------------------------------------------------
 /// return the tile index corresponding to the given eta,phi point
-int ClusterSequence::_tile_index(const double & eta, const double & phi) const {
+int ClusterSequence::_tile_index(const double eta, const double phi) const {
   int ieta, iphi;
   if      (eta <= _tiles_eta_min) {ieta = 0;}
   else if (eta >= _tiles_eta_max) {ieta = _tiles_ieta_max-_tiles_ieta_min;}

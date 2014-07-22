@@ -190,7 +190,7 @@ void ClusterSequence::signal_imminent_self_deletion() const {
 
 //DEP //----------------------------------------------------------------------
 //DEP void ClusterSequence::_initialise_and_run (
-//DEP 				  const double & R,
+//DEP 				  const double R,
 //DEP 				  const Strategy & strategy,
 //DEP 				  const bool & writeout_combinations) {
 //DEP 
@@ -765,7 +765,7 @@ void ClusterSequence::plugin_record_ij_recombination(
 
 //----------------------------------------------------------------------
 // return all inclusive jets with pt > ptmin
-vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
+vector<PseudoJet> ClusterSequence::inclusive_jets (const double ptmin) const{
   double dcut = ptmin*ptmin;
   int i = _history.size() - 1; // last jet
   vector<PseudoJet> jets_local;
@@ -817,7 +817,7 @@ vector<PseudoJet> ClusterSequence::inclusive_jets (const double & ptmin) const{
 //----------------------------------------------------------------------
 // return the number of exclusive jets that would have been obtained
 // running the algorithm in exclusive mode with the given dcut
-int ClusterSequence::n_exclusive_jets (const double & dcut) const {
+int ClusterSequence::n_exclusive_jets (const double dcut) const {
 
   // first locate the point where clustering would have stopped (i.e. the
   // first time max_dij_so_far > dcut)
@@ -836,7 +836,7 @@ int ClusterSequence::n_exclusive_jets (const double & dcut) const {
 //----------------------------------------------------------------------
 // return all exclusive jets that would have been obtained running
 // the algorithm in exclusive mode with the given dcut
-vector<PseudoJet> ClusterSequence::exclusive_jets (const double & dcut) const {
+vector<PseudoJet> ClusterSequence::exclusive_jets (const double dcut) const {
   int njets = n_exclusive_jets(dcut);
   return exclusive_jets(njets);
 }
@@ -845,7 +845,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const double & dcut) const {
 //----------------------------------------------------------------------
 // return the jets obtained by clustering the event to n jets.
 // Throw an error if there are fewer than n particles.
-vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
+vector<PseudoJet> ClusterSequence::exclusive_jets (const int njets) const {
 
   // make sure the user does not ask for more than jets than there
   // were particles in the first place.
@@ -862,7 +862,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets (const int & njets) const {
 //----------------------------------------------------------------------
 // return the jets obtained by clustering the event to n jets.
 // If there are fewer than n particles, simply return all particles
-vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int & njets) const {
+vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int njets) const {
 
   // provide a warning when extracting exclusive jets for algorithms 
   // that does not support it explicitly.
@@ -932,7 +932,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int & njets) cons
 //----------------------------------------------------------------------
 /// return the dmin corresponding to the recombination that went from
 /// n+1 to n jets
-double ClusterSequence::exclusive_dmerge (const int & njets) const {
+double ClusterSequence::exclusive_dmerge (const int njets) const {
   assert(njets >= 0);
   if (njets >= _initial_n) {return 0.0;}
   return _history[2*_initial_n-njets-1].dij;
@@ -944,7 +944,7 @@ double ClusterSequence::exclusive_dmerge (const int & njets) const {
 /// up to the one that led to an n-jet final state; identical to
 /// exclusive_dmerge, except in cases where the dmin do not increase
 /// monotonically.
-double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
+double ClusterSequence::exclusive_dmerge_max (const int njets) const {
   assert(njets >= 0);
   if (njets >= _initial_n) {return 0.0;}
   return _history[2*_initial_n-njets-1].max_dij_so_far;
@@ -956,7 +956,7 @@ double ClusterSequence::exclusive_dmerge_max (const int & njets) const {
 /// of the exclusive algorithm) that would be obtained when running
 /// the algorithm with the given dcut.
 std::vector<PseudoJet> ClusterSequence::exclusive_subjets 
-   (const PseudoJet & jet, const double & dcut) const {
+   (const PseudoJet & jet, const double dcut) const {
 
   set<const history_element*> subhist;
 
@@ -979,7 +979,7 @@ std::vector<PseudoJet> ClusterSequence::exclusive_subjets
 /// coefficient, but marginally more efficient than manually taking
 /// exclusive_subjets.size()
 int ClusterSequence::n_exclusive_subjets(const PseudoJet & jet, 
-                        const double & dcut) const {
+                        const double dcut) const {
   set<const history_element*> subhist;
   // get the set of history elements that correspond to subjets at
   // scale dcut
@@ -1284,7 +1284,7 @@ void ClusterSequence::print_jets_for_root(const std::vector<PseudoJet> & jets_in
 // Not yet. Perhaps in a future release
 // //----------------------------------------------------------------------
 // // print out all inclusive jets with pt > ptmin
-// void ClusterSequence::print_jets (const double & ptmin) const{
+// void ClusterSequence::print_jets (const double ptmin) const{
 //     vector<PseudoJet> jets = sorted_by_pt(inclusive_jets(ptmin));
 // 
 //     for (size_t j = 0; j < jets.size(); j++) {
@@ -1360,9 +1360,9 @@ void ClusterSequence::add_constituents (
 //----------------------------------------------------------------------
 // initialise the history in a standard way
 void ClusterSequence::_add_step_to_history (
-	       const int & step_number, const int & parent1, 
-	       const int & parent2, const int & jetp_index,
-	       const double & dij) {
+	       const int step_number, const int parent1, 
+	       const int parent2, const int jetp_index,
+	       const double dij) {
 
   history_element element;
   element.parent1 = parent1;
@@ -1532,8 +1532,8 @@ void ClusterSequence::_extract_tree_parents(
 /// jet_i and jet_j (assuming a distance dij) and returns the index
 /// of the recombined jet, newjet_k.
 void ClusterSequence::_do_ij_recombination_step(
-                               const int & jet_i, const int & jet_j, 
-			       const double & dij, 
+                               const int jet_i, const int jet_j, 
+			       const double dij, 
 			       int & newjet_k) {
 
   // Create the new jet by recombining the first two.
@@ -1569,7 +1569,7 @@ void ClusterSequence::_do_ij_recombination_step(
 /// carries out the bookkeeping associated with the step of recombining
 /// jet_i with the beam
 void ClusterSequence::_do_iB_recombination_step(
-				  const int & jet_i, const double & diB) {
+				  const int jet_i, const double diB) {
   // get history index
   int newstep_k = _history.size();
 
