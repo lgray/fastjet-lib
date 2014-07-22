@@ -277,7 +277,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
   //             ./fastjet_timing_plugins -kt -nhardest 30 -repeat 50000 -strategy -3 -R 0.5 -nev 1  <  ../../data/Pythia-PtMin1000-LHC-1000ev.dat
   if (_strategy == Best) {
     _strategy = _best_strategy();
-  } else if (_strategy == FJ30Best) {
+  } else if (_strategy == BestFJ30) {
     int N = _jets.size();
     //if (N <= 55*max(0.5,min(1.0,_Rparam))) {// old empirical scaling with R
     //----------------------

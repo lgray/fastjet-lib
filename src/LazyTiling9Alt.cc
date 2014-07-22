@@ -329,37 +329,37 @@ ostream & operator<<(ostream & ostr, const TiledJet & jet) {
 }
 
 
-//----------------------------------------------------------------------
-/// returns a particle's distance to the edge of the specified tile
-inline double LazyTiling9Alt::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
-
-//   // Note the careful way of checking the minimum potential deta:
-//   // unlike the phi case below, we don't calculate the distance to the
-//   // centre and subtract spacing/2. This is because of issue of
-//   // boundary tiles, which can extend far beyond spacing/2 in eta. 
-//   // Using the positions of tile centers should instead be safe.
-//   double deta;
-//   if (_tiles[bj->tile_index].eta_centre == tile->eta_centre) deta = 0;
-//   //else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;
-//   else   deta = std::abs(bj->eta - tile->eta_centre) - _tile_half_size_eta;
-//   // ------
-//   //   |
-//   // A | B
-//   // ------
-//   //   |
-//   // C | D
-//   // ------
+// //----------------------------------------------------------------------
+// /// returns a particle's distance to the edge of the specified tile
+// inline double LazyTiling9Alt::_distance_to_tile(const TiledJet * bj, const Tile * tile) const {
 // 
-//   double dphi = std::abs(bj->phi - tile->phi_centre);
-//   if (dphi > pi) dphi = twopi-dphi;
-//   dphi -= _tile_half_size_phi;
-//   //dphi -= 0.5*_tile_size_phi;
-//   if (dphi < 0) dphi = 0;
+// //   // Note the careful way of checking the minimum potential deta:
+// //   // unlike the phi case below, we don't calculate the distance to the
+// //   // centre and subtract spacing/2. This is because of issue of
+// //   // boundary tiles, which can extend far beyond spacing/2 in eta. 
+// //   // Using the positions of tile centers should instead be safe.
+// //   double deta;
+// //   if (_tiles[bj->tile_index].eta_centre == tile->eta_centre) deta = 0;
+// //   //else   deta = std::abs(bj->eta - tile->eta_centre) - 0.5*_tile_size_eta;
+// //   else   deta = std::abs(bj->eta - tile->eta_centre) - _tile_half_size_eta;
+// //   // ------
+// //   //   |
+// //   // A | B
+// //   // ------
+// //   //   |
+// //   // C | D
+// //   // ------
+// // 
+// //   double dphi = std::abs(bj->phi - tile->phi_centre);
+// //   if (dphi > pi) dphi = twopi-dphi;
+// //   dphi -= _tile_half_size_phi;
+// //   //dphi -= 0.5*_tile_size_phi;
+// //   if (dphi < 0) dphi = 0;
+// // 
+// //   return dphi*dphi + deta*deta;
 // 
-//   return dphi*dphi + deta*deta;
-
-  return 0.0;
-}
+//   return 0.0;
+// }
 
 
 

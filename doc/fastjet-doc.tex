@@ -3987,44 +3987,36 @@ measure is purely geometrical.
 \begin{table}[bt]
   \begin{center}
     \begin{tabular}{ll}\toprule
-      \ttt{N2Plain} & Plain $N^2$ algorithm (fastest for $N
-      \lesssim 30$)\\
-      \ttt{N2Tiled} & Tiled $N^2$ algorithm (fastest for $30 \lesssim
-      N \lesssim 400$)\\ 
+      \ttt{N2Plain} & Plain $N^2$ algorithm\\
+      \ttt{N2Tiled} & Tiled $N^2$ algorithm\\ 
       \ttt{N2MinHeapTiled} & Tiled $N^2$ algorithm with a heap for
-      tracking the minimum of \\& $d_{ij}$ 
+      tracking the min.\ of $d_{ij}$ 
       %(fastest for $400 \lesssim N \lesssim 15000$)\\ 
-      (fastest for $400 \lesssim N \lesssim $ a few thousand for $R < 0.7$)
       \\
       \ttt{N2MHTLazy9} & Variant of \ttt{N2MinHeapTiled}, with
       ``lazy'' (see text) evaluation of \\ &
       distances to  particles in the set of $9=3\times3$ nearby
-      tiles\\&
-      (fastest for $400 \lesssim N \lesssim 4000$)
+      tiles
       \\
       \ttt{N2MHTLazy25} & Like \ttt{N2MHTLazy9}, but uses tiles of
       size $R/2$ and a set of \\& $25=5\times5$ neighbours
-      (fastest for $4000 \lesssim N \lesssim $ a few
-      $\times 10^5$)      
       \\ 
       \ttt{N2MHTLazy9AntiKtSeparateGhosts} & Similar to
       \ttt{N2MHTLazy9}, but neglects ghost-ghost clusterings
       \\
-      \ttt{NlnN} & Voronoi-based $N\ln N$ algorithm (fastest for $
-      N \gtrsim 15000$)\\ 
+      \ttt{NlnN} & Voronoi-based $N\ln N$ algorithm\\ 
       \ttt{NlnNCam} & Based on Chan's $N\ln N$ closest pairs
-      algorithm (fastest for \\&$ 
-      N \gtrsim 6000$), suitable only for the Cambridge jet algorithm
+      algorithm, suitable only\\& for the Cambridge jet algorithm
       \\ 
       \ttt{Best} & Automatic selection of the best of these based on
       $N$ and $R$
       \\ 
-      \ttt{FJ30Best} & Automatic strategy selection as was done in
+      \ttt{BestFJ30} & Automatic strategy selection as was done in
       FastJet 3.0
       \\\bottomrule
     \end{tabular}
     \caption{The more interesting of the various algorithmic
-      strategies for clustering. Other strategies are given
+      strategies for clustering. Other strategies are given in 
       \ttt{JetDefinition.hh} --- however, strategies not
       listed in the above table may disappear in future releases.
       %
@@ -4032,10 +4024,11 @@ measure is purely geometrical.
       name starts with ``\ttt{ee\_}''), only the \ttt{N2Plain}
       strategy is available.  
       %
-      $N$ ranges in which a given strategy is optimal hold for $R=1$
-      and LHC events with full rapidity acceptance. 
-      \comment{Change the R to one that's actually widely used?}
-      \comment{Leave out FJ10Best?}
+      The $N$ range in which a given strategy is optimal depends on
+      $R$ and on the rapidity extent of the particles. 
+      %
+      See figure~\ref{???} for details.
+      \comment{Add the figure for the best strategy v. N and R}
     }
     \label{tab:Strategies}
   \end{center}
@@ -4121,7 +4114,10 @@ may also depend on the event structure.
     %
     Note that timings observed in practice can differ from those given
     here for events with substantially different distributions of
-    particles.  }
+    particles.  
+    %
+    \comment{Keep old 3.0.1 timings (maybe only for akt) and add new timings}
+  }
 \label{fig:timings}
 \end{figure}
 

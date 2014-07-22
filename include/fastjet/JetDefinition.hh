@@ -119,7 +119,7 @@ enum Strategy {
   NlnNCam      = 12, // 2piMultD
   /// the automatic strategy choice that was being made in FJ 3.0
   /// (restricted to strategies that were present in FJ 3.0)
-  FJ30Best     =  21, 
+  BestFJ30     =  21, 
   /// the plugin has been used...
   plugin_strategy = 999
 };

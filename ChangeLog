@@ -1,3 +1,13 @@
+2014-07-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
+
+	* include/fastjet/internal/LazyTiling9Alt.hh: 
+	* src/LazyTiling9Alt.cc: 
+	commented out unused variant of _distance_to_tile
+
+	* src/ClusterSequence.cc: 
+	* include/fastjet/JetDefinition.hh: 
+	renamed FJ30Best -> BestFJ30
+
 2014-07-22  Gavin Salam  <gavin.salam@cern.ch>
 
         * include/fastjet/ClusterSequence.hh

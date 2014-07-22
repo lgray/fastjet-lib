@@ -650,7 +650,7 @@ protected:
   class _Parabola {
   public:
     _Parabola(double a, double b, double c) : _a(a), _b(b), _c(c) {}
-    double operator()(const double R) const {return _c*(_a*R*R + _b*R + 1);}
+    inline double operator()(const double R) const {return _c*(_a*R*R + _b*R + 1);}
   private:
     double _a, _b, _c;
   };
@@ -659,7 +659,7 @@ protected:
   class _Line {
   public:
     _Line(double a, double b) : _a(a), _b(b) {}
-    double operator()(const double R) const {return _a*R + _b;}
+    inline double operator()(const double R) const {return _a*R + _b;}
   private:
     double _a, _b;
   };
