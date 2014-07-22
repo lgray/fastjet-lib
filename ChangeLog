@@ -1,3 +1,17 @@
+2014-07-22  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/internal/SearchTree.hh (circulator):
+	commented out to address a warning
+	"template<class U> friend class SearchTree<U>::const_circulator;"
+	Things still work with Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)
+
+	* src/ClosestPair2D.cc:
+	removed unused
+	const unsigned int huge_unsigned = 4294967295U;
+	which was giving unused-variable warnings
+
+	Both warnings reported by Torbjorn Sjostrand.
+
 2014-07-19  Gavin Salam  <gavin.salam@cern.ch>
 
 	* test-compare.sh (extra_args): 

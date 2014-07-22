@@ -35,7 +35,6 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-const unsigned int huge_unsigned = 4294967295U;
 const unsigned int twopow31      = 2147483648U;
 
 using namespace std;
