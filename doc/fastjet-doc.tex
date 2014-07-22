@@ -1338,7 +1338,27 @@ We recommend also that the main elements of the
 the original article that defines the algorithm, as well as to this
 manual and, optionally, the original \fastjet paper~\cite{fastjet}.
 
-
+As of version 3.1, it is also possible to conditionally compile code
+based on the the \fastjet version number, which is encoded in the
+\ttt{FASTJET\_VERSION\_NUMBER} preprocessor symbol as a single integer
+MMmmpp: MM is the major version number, mm the minor version
+number and pp the patch release.
+%
+Thus version 3.1.12 would be represented as 030112.
+%
+Code requiring at least version 3.1.0 could be included as follows:
+\begin{lstlisting}
+  #include "fastjet/config.h"
+  
+  #if FASTJET_VERSION_NUMBER > 30100
+  // code that needs version 3.1.0 or higher
+  # else
+  // alternative code that works also with version 3.0.x
+  #endif
+\end{lstlisting}
+In versions prior to 3.1.0 the \ttt{FASTJET\_VERSION\_NUMBER} symbol
+is undefined and is accordingly treated by the preprocessor as if it
+were zero.
 
 %======================================================================
 \section{\fastjet native jet algorithms}
@@ -5133,7 +5153,9 @@ have led us to deprecate and/or remove functionality.
   } 
 \end{table}
 
-\comment{auto ptr extras for plugins}
+As of version 3.1.0, the \ttt{FASTJET\_VERSION\_NUMBER} symbol can be
+used to provide version-dependent code compilation, as discussed in
+section~\ref{sec:version-information}. 
 
 %......................................................................
 \subsection{Backwards compatibility of background estimation facilities}
