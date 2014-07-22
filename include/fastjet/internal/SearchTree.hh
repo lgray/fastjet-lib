@@ -192,8 +192,9 @@ public:
   // 2014-07-22: as reported by Torbjorn Sjostrand,
   // the next line was giving a warning with Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)
   // (dependent nested name specifier 'SearchTree<U>::' for friend class declaration is not supported)
-  // Just commenting it out, things still seem to work 
+  // Just commenting it out, things still seem to work; same with a template of type T
   //template<class U> friend class SearchTree<U>::const_circulator;
+  friend class SearchTree<T>::const_circulator;
   friend class SearchTree<T>;
 
   circulator() : _node(NULL) {}
