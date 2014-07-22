@@ -156,7 +156,7 @@ class TestPJAssignment : public TestBase {
     verify_equal(null_vector == 0, true,  "PJ zero test");
     verify_equal(0 == null_vector, true,  "PJ reversed zero test");
     verify_equal(particle    == 0, false, "PJ non-zero test");
-    verify_equal(0 == particle,    true, "PJ reversed non-zero test");
+    verify_equal(0 == particle,    false, "PJ reversed non-zero test");
 
     return _pass_test;
   }
