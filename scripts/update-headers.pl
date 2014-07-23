@@ -44,15 +44,16 @@ find($options, @dirs);
 # out the update
 sub wanted($) {
   $file = $_;
-  if ($file =~ /\.cc$/ || $file =~ /\.hh$/ || $file =~ /\.f$/) {
+  if ($file =~ /\.cc$/ || $file =~ /\.hh$/ || $file =~ /\.icc$/ || $file =~ /\.f$/) {
   } else {
     return;
   }
   print "Examining $file\n";
   open (INFILE, "<$file") || die "Could not read from $file";
-  $headerOn=0;
-  $contents="";
-  $changedHeader=0;
+  $headerOn = 0;
+  $contents = "";
+  $header   = ""
+  $changedHeader = 0;
   $Id = "\$Id\$";
   my $copyrightstart="2005";
   while ($line = <INFILE>) {
@@ -69,15 +70,21 @@ sub wanted($) {
       $copyrightstart = $1;
     }
     if (! $headerOn) {$contents .= $line;}
+    else ($header .= $line);
     if ($line =~ /^\s*\/\/(FJ)?ENDHEADER/) {
       $headerOn = 0;
-      $contents .= &header($copyrightstart,$Id);
+      $newheader = &header($copyrightstart,$Id);
+      $contents .= $newheader;
       $changedHeader=1;
     }
   }
   close(INFILE);
   # if we've made changes, backup the file and write the new version
   if ($changedHeader) {
+    if ($newheader == $header) {
+      print "   No change to header\n";
+      next;
+    }
     print "   Copyright start: $copyrightstart\n";
     print "   Id string: $Id\n";
     if (!$dryrun) {
