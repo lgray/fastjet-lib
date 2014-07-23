@@ -1,3 +1,17 @@
+2014-07-23  Gavin Salam  <gavin.salam@cern.ch>
+
+	* scripts/update-headers.pl:  *** ADDED ***
+	new script to update headers (including copyright date) of all hh,
+	cc and .f files.
+
+	The master copyright text is now stored here. It has been adapted
+	to mention the manual as well as the original fastjet paper, and
+	also to request that the FastJet version number be quoted in
+	scientific publications.
+
+	* **/*.(cc|hh|f): 
+	updated headers
+
 2014-07-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory
 
 	* RoadMap: updated (plans for 3.1)
