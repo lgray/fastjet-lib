@@ -9,6 +9,10 @@
 	also to request that the FastJet version number be quoted in
 	scientific publications.
 
+	The header start/end strings are now FJSTARTHEADER and FJENDHEADER
+	(i.e. added "FJ") in order to limit chances of collisions with
+	other code.
+
 	* **/*.(cc|hh|f): 
 	updated headers
 
