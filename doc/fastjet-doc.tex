@@ -556,11 +556,11 @@ int main () {
   // print the jets
   cout <<   "        pt y phi" << endl;
   for (unsigned i = 0; i < jets.size(); i++) {
-    cout << "jet " << i << ": "<< jets[i].perp() << " " 
+    cout << "jet " << i << ": "<< jets[i].pt() << " " 
                    << jets[i].rap() << " " << jets[i].phi() << endl;
     vector<PseudoJet> constituents = jets[i].constituents();
     for (unsigned j = 0; j < constituents.size(); j++) {
-      cout << "    constituent " << j << "'s pt: "<< constituents[j].perp() << endl;
+      cout << "    constituent " << j << "'s pt: "<< constituents[j].pt() << endl;
     }
   }
 }
@@ -3189,7 +3189,7 @@ The subtractor can then be used as follows:
 \end{lstlisting}
 The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
 %
-If \ttt{jet.perp() < bge.rho(jet)*jet.area\_4vector().perp()}, then
+If \ttt{jet.pt() < bge.rho(jet)*jet.area\_4vector().pt()}, then
 the subtractor instead returns a jet with zero 4-momentum (so that
 \ttt{(subtracted\_jet==0)} returns \ttt{true}).
 %
