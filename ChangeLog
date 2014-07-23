@@ -3,15 +3,16 @@
 	* src/LazyTiling25.cc:
 
 	fixed bug in positioning of tile centers that emerged when
-	tiles_ieta_min and tiles_eta_min were different (which was
-	previously never the case); having fixed this, the scheme for
-	always having at least 3 tiles in Y now works. Ran a test on 10k
-	events that anti-kt results are identical to other schemes.
+	_tiles_ieta_min*_tile_size and _tiles_eta_min were different
+	(which was previously never the case); having fixed this, the
+	scheme for always having at least 3 tiles in Y now works. Ran a
+	test on 10k events that anti-kt results are identical to other
+	schemes.
 
 	* src/LazyTiling9.cc:
 	fixed the same bug in positioning of tile centers; this should
-	have no effect here since, for now, tiles_ieta_min and
-	tiles_eta_min are always the same.
+	have no effect here since, for now, _tiles_ieta_min*_tile_size and
+	_tiles_eta_min are always the same.
 
 	* scripts/update-headers.pl:  *** ADDED ***
 	new script to update headers (including copyright date) of all .hh,
