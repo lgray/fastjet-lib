@@ -1,8 +1,8 @@
 2014-07-23  Gavin Salam  <gavin.salam@cern.ch>
 
 	* scripts/update-headers.pl:  *** ADDED ***
-	new script to update headers (including copyright date) of all hh,
-	cc and .f files.
+	new script to update headers (including copyright date) of all .hh,
+	.cc, .icc and .f files.
 
 	The master copyright text is now stored here. It has been adapted
 	to mention the manual as well as the original fastjet paper, and
@@ -13,7 +13,7 @@
 	(i.e. added "FJ") in order to limit chances of collisions with
 	other code.
 
-	* **/*.(cc|hh|f): 
+	* **/*.(cc|icc|hh|f): 
 	updated headers
 
 2014-07-22  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo + Gregory

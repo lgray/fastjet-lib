@@ -52,7 +52,7 @@ sub wanted($) {
   open (INFILE, "<$file") || die "Could not read from $file";
   $headerOn = 0;
   $contents = "";
-  $header   = ""
+  $header   = "";
   $changedHeader = 0;
   $Id = "\$Id\$";
   my $copyrightstart="2005";
@@ -70,7 +70,7 @@ sub wanted($) {
       $copyrightstart = $1;
     }
     if (! $headerOn) {$contents .= $line;}
-    else ($header .= $line);
+    else {$header .= $line;}
     if ($line =~ /^\s*\/\/(FJ)?ENDHEADER/) {
       $headerOn = 0;
       $newheader = &header($copyrightstart,$Id);
@@ -81,9 +81,9 @@ sub wanted($) {
   close(INFILE);
   # if we've made changes, backup the file and write the new version
   if ($changedHeader) {
-    if ($newheader == $header) {
+    if ($newheader eq $header) {
       print "   No change to header\n";
-      next;
+      return;
     }
     print "   Copyright start: $copyrightstart\n";
     print "   Id string: $Id\n";
@@ -92,7 +92,7 @@ sub wanted($) {
         print "   Proceed for $file (Y/N/A[ll])?\n";
         $answer = <>;
         if ($answer =~ /^A/i) {$query = 0;}
-        elsif ($answer !~ /^y$/i) {next;}
+        elsif ($answer !~ /^y$/i) {return;}
       }
       print "   Updating $file (backup will be made as .bak)\n";
       rename $file, $file.".bak";
