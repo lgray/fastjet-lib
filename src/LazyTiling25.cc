@@ -118,23 +118,31 @@ void LazyTiling25::_initialise_tiles() {
   // improvements for large-R jets, but occasionally it appears to
   // hang, e.g. on 
   //    gunzip -c  < ../data/Pythia-PtMin50-LHC-10kev.dat.gz  | time ./example/fastjet_timing_plugins -R 1000 -nev 1000 -strategy -6  -antikt  -rapmax 5.0 -repeat 1 -write
-  // This needs to be understood
+  // 2014-07-23: this was understood because tile centres assumed 
+  //             tiles_ieta_min = tiles_eta_min (no longer true)
   //
-//BAD   if (_tiles_eta_max - _tiles_eta_min < 3*_tile_size_eta) {
-//BAD     // if we have a rapidity coverage that is small compared to the
-//BAD     // tile size then we can adjust the grid in rapidity so as to
-//BAD     // have exactly 3 tiles
-//BAD     _tile_size_eta = (_tiles_eta_max - _tiles_eta_min)/3;
-//BAD     _tiles_ieta_min = 0;
-//BAD     _tiles_ieta_max = 2;
-//BAD     _tiles_eta_max -= _tile_size_eta;
-//BAD   } else {
+#define FASTJET_LAZY25_MIN3TILESY
+#ifdef FASTJET_LAZY25_MIN3TILESY
+   if (_tiles_eta_max - _tiles_eta_min < 3*_tile_size_eta) {
+     // if we have a rapidity coverage that is small compared to the
+     // tile size then we can adjust the grid in rapidity so as to
+     // have exactly 3 tiles. This can give relevant speed improvements 
+     // for large R jets
+     _tile_size_eta = (_tiles_eta_max - _tiles_eta_min)/3;
+     _tiles_ieta_min = 0;
+     _tiles_ieta_max = 2;
+     // the eta max value is being taken as the lower edge of the
+     // highest-y tile
+     _tiles_eta_max -= _tile_size_eta;
+   } else {
+#endif //FASTJET_LAZY25_MIN3TILESY
     _tiles_ieta_min = int(floor(_tiles_eta_min/_tile_size_eta));
     _tiles_ieta_max = int(floor( _tiles_eta_max/_tile_size_eta));
     _tiles_eta_min = _tiles_ieta_min * _tile_size_eta;
     _tiles_eta_max = _tiles_ieta_max * _tile_size_eta;
-//BAD  }
-
+#ifdef FASTJET_LAZY25_MIN3TILESY
+   }
+#endif
   _tile_half_size_eta = _tile_size_eta * 0.5;
   _tile_half_size_phi = _tile_size_phi * 0.5;
 
@@ -204,7 +212,7 @@ void LazyTiling25::_initialise_tiles() {
       // and ensure max distance is sensibly initialised
       tile->max_NN_dist = 0;
       // and also position of centre of tile
-      tile->eta_centre = (ieta+0.5)*_tile_size_eta;
+      tile->eta_centre = (ieta-_tiles_ieta_min+0.5)*_tile_size_eta + _tiles_eta_min;
       tile->phi_centre = (iphi+0.5)*_tile_size_phi;
     }
   }
@@ -278,7 +286,9 @@ void LazyTiling25::_bj_remove_from_tiles(TiledJet * const jet) {
 void LazyTiling25::_print_tiles(TiledJet * briefjets ) const {
   for (vector<Tile25>::const_iterator tile = _tiles.begin(); 
        tile < _tiles.end(); tile++) {
-    cout << "Tile " << tile - _tiles.begin()<<" = ";
+    cout << "Tile " << tile - _tiles.begin()
+         << " at " << setw(10) << tile->eta_centre << "," << setw(10) << tile->phi_centre
+         << " = ";
     vector<int> list;
     for (TiledJet * jetI = tile->head; jetI != NULL; jetI = jetI->next) {
       list.push_back(jetI-briefjets);
@@ -581,6 +591,12 @@ void LazyTiling25::run() {
 #ifdef INSTRUMENT2
   cout << "intermediate ncall, dtt = " << _ncall << " " << _ncall_dtt << endl; // GPS tmp
 #endif // INSTRUMENT2
+
+  // GPS debugging
+  // _print_tiles(briefjets);
+  // for (jetB = briefjets; jetB < briefjets+n; jetB++) {
+  //   cout << "Tiled jet " << jetB->_jets_index << " has NN " << jetB->NN-briefjets << endl;
+  // }
 
   vector<double> diJs(n);
   for (int i = 0; i < n; i++) {

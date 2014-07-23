@@ -169,7 +169,7 @@ void LazyTiling9::_initialise_tiles() {
       // and ensure max distance is sensibly initialised
       tile->max_NN_dist = 0;
       // and also position of centre of tile
-      tile->eta_centre = (ieta+0.5)*_tile_size_eta;
+      tile->eta_centre = (ieta-_tiles_ieta_min+0.5)*_tile_size_eta + _tiles_eta_min;
       tile->phi_centre = (iphi+0.5)*_tile_size_phi;
     }
   }
