@@ -71,16 +71,16 @@ class Dnn3piCylinder : public DynamicNearestNeighbours {
 
   /// Returns the index of  the nearest neighbour of point labelled
   /// by ii (assumes ii is valid)
-  int NearestNeighbourIndex(const int & ii) const ;
+  int NearestNeighbourIndex(const int ii) const ;
 
   /// Returns the distance to the nearest neighbour of point labelled
   /// by index ii (assumes ii is valid)
-  double NearestNeighbourDistance(const int & ii) const ;
+  double NearestNeighbourDistance(const int ii) const ;
 
   /// Returns true iff the given index corresponds to a point that
   /// exists in the DNN structure (meaning that it has been added, and
   /// not removed in the meantime)
-  bool Valid(const int & index) const;
+  bool Valid(const int index) const;
 
   void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
 			  const std::vector<EtaPhi> & points_to_add,
@@ -205,7 +205,7 @@ class Dnn3piCylinder : public DynamicNearestNeighbours {
 /// of this algorithm -- depending on whether or not the user has
 /// initialised the class with instructions to ignore this problem the
 /// program will detect and ignore it, or crash.
-inline int Dnn3piCylinder::NearestNeighbourIndex(const int & current) const {
+inline int Dnn3piCylinder::NearestNeighbourIndex(const int current) const {
   int main_index = _mirror_info[current].main_index;
   int mirror_index = _mirror_info[current].mirror_index;
   int plane_index;
@@ -230,7 +230,7 @@ inline int Dnn3piCylinder::NearestNeighbourIndex(const int & current) const {
   return this_cylinder_index;
 }
 
-inline double Dnn3piCylinder::NearestNeighbourDistance(const int & current) const {
+inline double Dnn3piCylinder::NearestNeighbourDistance(const int current) const {
   int main_index = _mirror_info[current].main_index;
   int mirror_index = _mirror_info[current].mirror_index;
   if (mirror_index == INEXISTENT_VERTEX ) {
@@ -245,7 +245,7 @@ inline double Dnn3piCylinder::NearestNeighbourDistance(const int & current) cons
  
 }
 
-inline bool Dnn3piCylinder::Valid(const int & index) const {
+inline bool Dnn3piCylinder::Valid(const int index) const {
   return (_DNN->Valid(_mirror_info[index].main_index));
 }
 

@@ -445,20 +445,20 @@ Selector SelectorNHardest(unsigned int n);
 
 /// select objets within a distance 'radius' from the location of the
 /// reference jet, set by Selector::set_reference(...)
-Selector SelectorCircle(const double & radius); 
+Selector SelectorCircle(const double radius); 
 
 /// select objets with distance from the reference jet is between 'radius_in'
 /// and 'radius_out'; the reference jet is set by Selector::set_reference(...)
-Selector SelectorDoughnut(const double & radius_in, const double & radius_out); 
+Selector SelectorDoughnut(const double radius_in, const double radius_out); 
 
 /// select objets within a rapidity distance 'half_width' from the
 /// location of the reference jet, set by Selector::set_reference(...)
-Selector SelectorStrip(const double & half_width);
+Selector SelectorStrip(const double half_width);
 
 /// select objets within rapidity distance 'half_rap_width' from the
 /// reference jet and azimuthal-angle distance within 'half_phi_width'; the
 /// reference jet is set by Selector::set_reference(...)
-Selector SelectorRectangle(const double & half_rap_width, const double & half_phi_width);
+Selector SelectorRectangle(const double half_rap_width, const double half_phi_width);
 
 
 /// select objects that carry at least a fraction "fraction" of the

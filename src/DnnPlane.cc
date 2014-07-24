@@ -107,7 +107,7 @@ DnnPlane::DnnPlane(const vector<EtaPhi> & input_points,
 /// Crashes if the given vertex handle already exists. Otherwise
 /// it does the bookkeeping for future such tests
 int DnnPlane::_CheckIfVertexPresent(
-	const Vertex_handle & vertex, const int & its_index) {
+	const Vertex_handle & vertex, const int its_index) {
   // vertices that do not have the same geometric position as any
   // other vertex so far added have info().val() == NEW_VERTEX -- this
   // is ensured by the InitialisedInt class, which forms the "info"
@@ -381,7 +381,7 @@ void DnnPlane::RemoveAndAddPoints(
 //----------------------------------------------------------------------
 /// Determines the index and distance of the nearest neighbour to 
 /// point j and puts the information into the _supervertex entry for j.
-void DnnPlane::_SetNearest (const int & j) {
+void DnnPlane::_SetNearest (const int j) {
   // first deal with the cases where we have a coincidence
   if (_supervertex[j].coincidence != j){
     _supervertex[j].NNindex = _supervertex[j].coincidence;
@@ -499,7 +499,7 @@ void DnnPlane::_SetNearest (const int & j) {
 ///     nearest neighbour and to update the voronoi neighbours if need
 ///     be.
 void DnnPlane::_SetAndUpdateNearest(
-			  const int & j, 
+			  const int j, 
 			  vector<int> & indices_of_updated_neighbours) {
   //cout << "SetAndUpdateNearest for point " << j << endl;
   // first deal with coincidences

@@ -65,16 +65,16 @@ class DnnPlane : public DynamicNearestNeighbours {
 
   /// Returns the index of  the nearest neighbour of point labelled
   /// by ii (assumes ii is valid)
-  int NearestNeighbourIndex(const int & ii) const ;
+  int NearestNeighbourIndex(const int ii) const ;
 
   /// Returns the distance to the nearest neighbour of point labelled
   /// by index ii (assumes ii is valid)
-  double NearestNeighbourDistance(const int & ii) const ;
+  double NearestNeighbourDistance(const int ii) const ;
 
   /// Returns true iff the given index corresponds to a point that
   /// exists in the DNN structure (meaning that it has been added, and
   /// not removed in the meantime)
-  bool Valid(const int & index) const;
+  bool Valid(const int index) const;
 
   void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
 			  const std::vector<EtaPhi> & points_to_add,
@@ -121,7 +121,7 @@ private:
   //---------------------------------------------------------------------- 
   /// Determines the index and distance of the nearest neighbour to 
   /// point j and puts the information into the _supervertex entry for j
-  void _SetNearest(const int & j);
+  void _SetNearest(const int j);
 
   //----------------------------------------------------------------------
   /// Determines and stores the nearest neighbour of j.
@@ -133,7 +133,7 @@ private:
   ///
   /// Note that j is NOT pushed onto indices_of_updated_neighbours --
   /// if you want it there, put it there yourself.
-  void _SetAndUpdateNearest(const int & j, 
+  void _SetAndUpdateNearest(const int j, 
 			    std::vector<int> & indices_of_updated_neighbours);
 
   /// given a vertex_handle returned by CGAL on insertion of a new
@@ -141,7 +141,7 @@ private:
   /// that it corresponds to a vertex that we already knew about
   /// (usually because two points coincide)
   int _CheckIfVertexPresent(const Vertex_handle & vertex, 
-			    const int & its_index);
+			    const int its_index);
 
   //----------------------------------------------------------------------
   /// if the distance between 'pref' and 'candidate' is smaller (or
@@ -228,13 +228,13 @@ private:
 // here follow some inline implementations of the simpler of the
 // functions defined above
 
-inline int DnnPlane::NearestNeighbourIndex(const int & ii) const {
+inline int DnnPlane::NearestNeighbourIndex(const int ii) const {
   return _supervertex[ii].NNindex;}
 
-inline double DnnPlane::NearestNeighbourDistance(const int & ii) const {
+inline double DnnPlane::NearestNeighbourDistance(const int ii) const {
   return _supervertex[ii].NNdistance;}
 
-inline bool DnnPlane::Valid(const int & index) const {
+inline bool DnnPlane::Valid(const int index) const {
   if (index >= 0 && index < static_cast<int>(_supervertex.size())) {
     return (_supervertex[index].vertex != NULL);} else {return false;} }
 

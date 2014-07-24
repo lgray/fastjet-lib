@@ -1,3 +1,16 @@
+2014-07-24  Gavin Salam  <gavin.salam@cern.ch>
+
+        * include/fastjet/Selector.hh
+        * include/fastjet/internal/Dnn2piCylinder.hh
+        * include/fastjet/internal/Dnn3piCylinder.hh
+        * include/fastjet/internal/Dnn4piCylinder.hh
+        * include/fastjet/internal/DnnPlane.hh
+        * include/fastjet/internal/DynamicNearestNeighbours.hh
+        * src/DnnPlane.cc
+        * src/Selector.cc
+	further replacements of const double & and const int & with plain
+	const double and const int.
+
 2014-07-23  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/LazyTiling25.cc:

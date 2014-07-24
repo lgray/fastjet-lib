@@ -113,16 +113,16 @@ public:
 
   /// Returns the index of the nearest neighbour of point labelled
   /// by ii (assumes ii is valid)
-  virtual int NearestNeighbourIndex(const int & ii) const = 0;
+  virtual int NearestNeighbourIndex(const int ii) const = 0;
 
   /// Returns the distance to the nearest neighbour of point labelled
   /// by index ii (assumes ii is valid)
-  virtual double NearestNeighbourDistance(const int & ii) const = 0;
+  virtual double NearestNeighbourDistance(const int ii) const = 0;
 
   /// Returns true iff the given index corresponds to a point that
   /// exists in the DNN structure (meaning that it has been added, and
   /// not removed in the meantime)
-  virtual bool Valid(const int & index) const = 0;
+  virtual bool Valid(const int index) const = 0;
 
   /// remove the points labelled by the std::vector indices_to_remove, and
   /// add the points specified by the std::vector points_to_add
@@ -142,7 +142,7 @@ public:
 
   /// Remove the point labelled by index and return the list of
   /// points whose nearest neighbours have changed in the process
-  inline void RemovePoint (const int & index,
+  inline void RemovePoint (const int index,
 			   std::vector<int> & indices_of_updated_neighbours) {
     std::vector<int> indices_added;
     std::vector<EtaPhi> points_to_add;
@@ -159,7 +159,7 @@ public:
   /// nearest neighbour has changed (the list includes index3, i.e. the new
   /// point).
   inline void RemoveCombinedAddCombination(
-			const int & index1, const int & index2,
+			const int index1, const int index2,
 			const EtaPhi & newpoint,
 			int & index3,
 			std::vector<int> & indices_of_updated_neighbours) {

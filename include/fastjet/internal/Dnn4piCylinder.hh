@@ -58,16 +58,16 @@ class Dnn4piCylinder : public DynamicNearestNeighbours {
 
   /// Returns the index of  the nearest neighbour of point labelled
   /// by ii (assumes ii is valid)
-  int NearestNeighbourIndex(const int & ii) const ;
+  int NearestNeighbourIndex(const int ii) const ;
 
   /// Returns the distance to the nearest neighbour of point labelled
   /// by index ii (assumes ii is valid)
-  double NearestNeighbourDistance(const int & ii) const ;
+  double NearestNeighbourDistance(const int ii) const ;
 
   /// Returns true iff the given index corresponds to a point that
   /// exists in the DNN structure (meaning that it has been added, and
   /// not removed in the meantime)
-  bool Valid(const int & index) const;
+  bool Valid(const int index) const;
 
   void RemoveAndAddPoints(const std::vector<int> & indices_to_remove,
 			  const std::vector<EtaPhi> & points_to_add,
@@ -99,21 +99,21 @@ class Dnn4piCylinder : public DynamicNearestNeighbours {
 // here follow some inline implementations of the simpler of the
 // functions defined above
 
-inline int Dnn4piCylinder::NearestNeighbourIndex(const int & current) const {
+inline int Dnn4piCylinder::NearestNeighbourIndex(const int current) const {
   return (_DNN1->NearestNeighbourDistance(current) < 
 	  _DNN2->NearestNeighbourDistance(current)) ? 
     _DNN1->NearestNeighbourIndex(current) : 
     _DNN2->NearestNeighbourIndex(current) ; 
 }
 
-inline double Dnn4piCylinder::NearestNeighbourDistance(const int & current) const {
+inline double Dnn4piCylinder::NearestNeighbourDistance(const int current) const {
   return (_DNN1->NearestNeighbourDistance(current) < 
 	  _DNN2->NearestNeighbourDistance(current)) ? 
     _DNN1->NearestNeighbourDistance(current) : 
     _DNN2->NearestNeighbourDistance(current) ; 
 }
 
-inline bool Dnn4piCylinder::Valid(const int & index) const {
+inline bool Dnn4piCylinder::Valid(const int index) const {
   return (_DNN1->Valid(index) && _DNN2->Valid(index));
 }
 
