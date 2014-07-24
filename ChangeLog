@@ -1,3 +1,8 @@
+2014-07-24  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
+
+	* include/fastjet/ClusterSequence.hh:
+	removed an old commented-out constructor
+
 2014-07-24  Gavin Salam  <gavin.salam@cern.ch>
 
         * include/fastjet/Selector.hh

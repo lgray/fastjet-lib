@@ -66,21 +66,6 @@ class ClusterSequence {
   /// default constructor
   ClusterSequence () : _deletes_self_when_unused(false) {}
 
-//   /// create a clustersequence starting from the supplied set
-//   /// of pseudojets and clustering them with the long-invariant
-//   /// kt algorithm (E-scheme recombination) with the supplied
-//   /// value for R.
-//   ///
-//   /// If strategy=DumbN3 a very stupid N^3 algorithm is used for the
-//   /// clustering; otherwise strategy = NlnN* uses cylinders algorithms
-//   /// with some number of pi coverage. If writeout_combinations=true a
-//   /// summary of the recombination sequence is written out
-//   template<class L> ClusterSequence (const std::vector<L> & pseudojets, 
-// 		   const double R = 1.0,
-// 		   const Strategy & strategy = Best,
-// 		   const bool & writeout_combinations = false);
-
-
   /// create a ClusterSequence, starting from the supplied set
   /// of PseudoJets and clustering them with jet definition specified
   /// by jet_def (which also specifies the clustering strategy)
