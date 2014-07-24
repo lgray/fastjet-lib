@@ -1,3 +1,16 @@
+2014-07-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/Filter.hh:
+	* tools/Filter.cc:
+	simplified things considerably to use Recluster... still work in
+	progress and checks to be made
+
+	* tools/fastjet/tools/Recluster.hh:
+	* tools/Recluster.cc:
+	issue a warning when we're using the simplified C/A reclustering
+	and that there is non-explicit-ghost area support. Areas can be
+	weeoneous in this case.
+
 2014-07-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Recluster.hh              *** ADDED ***

@@ -161,46 +161,13 @@ private:
   /// It also sets the subjet_def to be used in joining things (the bit of
   /// subjet def that is of interest for later is the recombiner).
   void _set_filtered_elements(const PseudoJet & jet,
-                              std::vector<PseudoJet> & filtered_elements,
-                              JetDefinition & subjet_def,
-                              bool & discard_area) const;
+                              std::vector<PseudoJet> & filtered_elements) const;
   
-  /// set the filtered elements in the simple case of C/A+C/A
-  void _set_filtered_elements_cafilt(const PseudoJet & jet,
-                                     std::vector<PseudoJet> & filtered_elements,
-                                     double Rfilt) const;
-
-  /// set the filtered elements in the generic re-clustering case
-  void _set_filtered_elements_generic(const PseudoJet & jet, 
-                                      std::vector<PseudoJet> & filtered_elements,
-                                      const JetDefinition & subjet_def,
-				      bool do_areas) const;
-
   /// gather the information about what is kept and rejected under the
   /// form of a PseudoJet with a special ClusterSequenceInfo
   PseudoJet _finalise(const PseudoJet & jet, 
                       std::vector<PseudoJet> & kept, 
-                      std::vector<PseudoJet> & rejected,
-                      const JetDefinition & subjet_def,
-                      const bool discard_area) const;
-
-  // a series of checks
-  //--------------------------------------------------------------------
-  /// get the pieces down to the fundamental pieces
-  bool _get_all_pieces(const PseudoJet &jet, std::vector<PseudoJet> &all_pieces) const;
-
-  /// get the common recombiner to all pieces (NULL if none)
-  const JetDefinition::Recombiner* _get_common_recombiner(const std::vector<PseudoJet> &all_pieces) const;
-
-  /// check if one can apply the simplified trick for C/A subjets
-  bool _check_ca(const std::vector<PseudoJet> &all_pieces) const;
-
-  /// check if the jet (or all its pieces) have explicit ghosts
-  /// (assuming the jet has area support
-  ///
-  /// Note that if the jet has an associated cluster sequence that is no
-  /// longer valid, an error will be thrown
-  bool _check_explicit_ghosts(const std::vector<PseudoJet> &all_pieces) const;
+                      std::vector<PseudoJet> & rejected) const;
 
   bool _uses_subtraction() const {return (_subtractor || _rho != 0);}
 
