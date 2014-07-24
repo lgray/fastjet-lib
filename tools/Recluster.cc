@@ -45,6 +45,7 @@ using namespace std;
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 LimitedWarning Recluster::_explicit_ghost_warning;
+LimitedWarning Recluster::_dangerous_area_warning;
 
 // class description
 string Recluster::description() const {
@@ -136,15 +137,25 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
   //    superposition of C/A jets from the same cluster sequence
   //  - the pieces agree with the recombination scheme of subjet_def
   //
-  // Note that in this case area support will be automatically
-  // inherted so we can only worry about this later
-  //-------------------------------------------------------------------
+  // In this case area support will be automatically inherted so we
+  // can only worry about this later
+  // -------------------------------------------------------------------
   if (_check_ca(all_pieces, subjet_def)){
     _recluster_cafilt(all_pieces, subjets, subjet_def.R());
     subjets = sorted_by_pt(subjets);
-    return _single
-      ? subjets[0]
-      : join(subjets, *(subjet_def.recombiner()));
+    if (_single){
+      return subjets[0];
+    } else {
+      // if there is no explicit ghosts, the area of exclusive jets
+      // may be erroneous (each of them would have a corerct area but
+      // joining them may fail to get the total area correctly). In
+      // that case, we issue a warning
+      PseudoJet result = join(subjets, *(subjet_def.recombiner()));
+      if (result.has_area() &&
+	  (! all_pieces[0].validated_csab()->has_explicit_ghosts())){
+	_dangerous_area_warning.warn("Recluster: this jet has been reclustered using the simplified Cambridge/Aachen reclustering, including area support although it has not been originally clustered with explicit ghosts. In this case, areas for this jet may be erroneous");
+      }
+    }
   }
 
   // decide if area support has to be kept
