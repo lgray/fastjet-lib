@@ -1,3 +1,11 @@
+2014-07-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/Recluster.hh              *** ADDED ***
+	* tools/Recluster.cc:                           *** ADDED ***
+	added a "Recluster" tool [it is essentially the reclustering part
+	of Filter although this code has transited through the
+	RecursiveTools contrib]
+
 2014-07-24  Gavin SALAM  <salam@lpthe.jussieu.fr> + Matteo
 
 	* include/fastjet/ClusterSequence.hh:
