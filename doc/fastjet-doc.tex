@@ -884,7 +884,7 @@ To access inclusive jets, the following member function should be used
 \begin{lstlisting}
   /// return a vector of all jets (in the sense of the inclusive
   /// algorithm) with pt >= ptmin. 
-  vector<PseudoJet> inclusive_jets (const double & ptmin = 0.0) const;
+  vector<PseudoJet> inclusive_jets (const double ptmin = 0.0) const;
 \end{lstlisting}
 where \ttt{ptmin} may be omitted, then implicitly taking the value
 zero.
@@ -913,16 +913,16 @@ to be stopped once it reaches the specified number of jets.
 \begin{lstlisting}
   /// return a vector of all jets (in the sense of the exclusive algorithm) that would 
   /// be obtained when running the algorithm with the given dcut.
-  vector<PseudoJet> exclusive_jets (const double & dcut) const;
+  vector<PseudoJet> exclusive_jets (const double dcut) const;
 
   /// return a vector of all jets when the event is clustered (in the exclusive sense) 
   /// to exactly njets. Throws an error if the event has fewer than njets particles.
-  vector<PseudoJet> exclusive_jets (const int & njets) const;
+  vector<PseudoJet> exclusive_jets (const int njets) const;
 
   /// return a vector of all jets when the event is clustered (in the exclusive sense) 
   /// to exactly njets. If the event has fewer than njets particles, it returns all
   /// available particles.
-  vector<PseudoJet> exclusive_jets_up_to (const int & njets) const;
+  vector<PseudoJet> exclusive_jets_up_to (const int njets) const;
 \end{lstlisting}
 %
 The user may also wish just to obtain information about the number of
@@ -930,7 +930,7 @@ jets in the exclusive algorithm:
 \begin{lstlisting}
   /// return the number of jets (in the sense of the exclusive algorithm) that would 
   /// be obtained when running the algorithm with the given dcut.
-  int n_exclusive_jets (const double & dcut) const;
+  int n_exclusive_jets (const double dcut) const;
 \end{lstlisting}
 Another common query is to establish the $d_{\min}$ value associated
 with merging from $n+1$ to $n$ jets. Two member functions are
@@ -938,12 +938,12 @@ available for determining this:
 \begin{lstlisting}
   /// return the dmin corresponding to the recombination that went from n+1 to n jets 
   /// (sometimes known as $d_{n,n+1}$).
-  double exclusive_dmerge (const int & n) const;
+  double exclusive_dmerge (const int n) const;
 
   /// return the maximum of the dmin encountered during all recombinations up to the one 
   /// that led to an n-jet final state; identical to exclusive_dmerge, except in cases 
   /// where the dmin do not increase monotonically.
-  double exclusive_dmerge_max (const int & n) const;
+  double exclusive_dmerge_max (const int n) const;
 \end{lstlisting}
 The first returns the $d_{\min}$  in going from $n+1$ to $n$ jets. 
 %
@@ -1147,7 +1147,7 @@ $d_{\mathrm{cut}}$ scale inside a given jet, one may use the following
 \begin{lstlisting}
   /// Returns a vector of all subjets of the current jet (in the sense of the exclusive 
   /// algorithm) that would be obtained when running the algorithm with the given dcut
-  std::vector<PseudoJet> exclusive_subjets (const double & dcut) const;
+  std::vector<PseudoJet> exclusive_subjets (const double dcut) const;
 \end{lstlisting}
 If $m$ jets are found, this takes a time $\order{m \ln m}$ (owing to
 the internal use of a priority queue). Alternatively one may obtain
