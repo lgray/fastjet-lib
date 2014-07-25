@@ -187,7 +187,6 @@ private:
                                ///< composite jet with subjets as pieces
 
   static LimitedWarning   _explicit_ghost_warning;
-  static LimitedWarning   _dangerous_area_warning;
 };
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

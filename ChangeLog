@@ -1,5 +1,11 @@
 2014-07-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Recluster.hh:
+	* tools/Recluster.cc:
+	back to the case with C/A reclustering and non-ghosted areas:
+	instead of issuing a warning, discard the area info in the
+	composite jet.
+
 	* include/fastjet/CompositeJetStructure.hh:
 	commented out set_area_information: the comment said this was used
 	by "join" and cannot be used by an end-user while in practice,
@@ -27,7 +33,7 @@
 	* tools/Recluster.cc:
 	issue a warning when we're using the simplified C/A reclustering
 	and that there is non-explicit-ghost area support. Areas can be
-	weeoneous in this case.
+	erroneous in this case.
 
 2014-07-24  Gregory Soyez  <soyez@fastjet.fr>
 

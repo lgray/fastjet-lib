@@ -45,7 +45,6 @@ using namespace std;
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 LimitedWarning Recluster::_explicit_ghost_warning;
-LimitedWarning Recluster::_dangerous_area_warning;
 
 // class description
 string Recluster::description() const {
@@ -149,12 +148,15 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
       // if there is no explicit ghosts, the area of exclusive jets
       // may be erroneous (each of them would have a corerct area but
       // joining them may fail to get the total area correctly). In
-      // that case, we issue a warning
-      PseudoJet result = join(subjets, *(subjet_def.recombiner()));
-      if (result.has_area() &&
+      // that case, we simply disable the area support.
+      PseudoJet reclustered = join(subjets, *(subjet_def.recombiner()));
+      if (reclustered.has_area() &&
 	  (! all_pieces[0].validated_csab()->has_explicit_ghosts())){
-	_dangerous_area_warning.warn("Recluster: this jet has been reclustered using the simplified Cambridge/Aachen reclustering, including area support although it has not been originally clustered with explicit ghosts. In this case, areas for this jet may be erroneous");
+        CompositeJetStructure *css = (CompositeJetStructure *)(reclustered.structure_non_const_ptr());
+        assert(css);
+        css->discard_area();
       }
+      return reclustered;
     }
   }
 
