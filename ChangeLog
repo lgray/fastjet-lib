@@ -1,5 +1,13 @@
 2014-07-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/CompositeJetStructure.hh:
+	commented out set_area_information: the comment said this was used
+	by "join" and cannot be used by an end-user while in practice,
+	join no longer uses this (has it at any time?)
+
+	instead, added a discard_area() method that allows to disable the
+	area information for composite jets made of pieces with area.
+
 	* tools/Pruner.cc:
 	* tools/fastjet/tools/Pruner.hh:
 	when creating the pruning jet definition, set the shared

@@ -111,17 +111,27 @@ public:
   /// In this case, it will be true if all pieces are pure ghost
   virtual bool is_pure_ghost(const PseudoJet &reference) const;
 
-  // allows one to modify the area information
-  // (for use in join())
-  //
-  // This member cannot be used by users who need to create a jet with
-  // user-supplied area information, because it sets only the 4-vector
-  // part of the area, but not all the other area information
-  // (e.g. scalar area) -- that other information is always deduced
-  // dynamically from the individual constituents.
-  // ------------------------------------------------------------------------------
-  void set_area_information(PseudoJet *area_4vector_ptr){
-    _area_4vector_ptr = area_4vector_ptr;
+  //unused: // allows one to modify the area information
+  //unused: // (for use in join())
+  //unused: //
+  //unused: // This member cannot be used by users who need to create a jet with
+  //unused: // user-supplied area information, because it sets only the 4-vector
+  //unused: // part of the area, but not all the other area information
+  //unused: // (e.g. scalar area) -- that other information is always deduced
+  //unused: // dynamically from the individual constituents.
+  //unused: // ------------------------------------------------------------------------------
+  //unused: void set_area_information(PseudoJet *area_4vector_ptr){
+  //unused:   _area_4vector_ptr = area_4vector_ptr;
+  //unused: }
+
+  /// disable the area of the composite jet
+  /// 
+  /// this can be used e.g. to discard the area of a composite jet
+  /// made of pieces with non-explicit-ghost area since the area may
+  /// by erroneous in that case
+  void discard_area(){
+    if (_area_4vector_ptr) delete _area_4vector_ptr;
+    _area_4vector_ptr = 0;
   }
 
 #endif  // __FJCORE__
