@@ -160,7 +160,8 @@ private:
 
   /// return a pointer to a "common" recombiner if there is one,
   /// alternatively a null pointer.
-  const JetDefinition::Recombiner * _get_common_recombiner(const PseudoJet &jet) const;
+  const JetDefinition::Recombiner * _get_common_recombiner(const PseudoJet &jet, 
+							   SharedPtr<const JetDefinition::Recombiner> &shared_recombiner) const;
 
   JetDefinition _jet_def; ///< the internal jet definition
   double _zcut;        	  ///< the pt-fraction cut
