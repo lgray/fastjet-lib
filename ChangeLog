@@ -1,3 +1,19 @@
+2014-07-25  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/LazyTiling9.cc:
+
+	added FASTJET_LAZY9_MIN2TILESY option, which forces at least two
+	tiles in rapidity. Ran usual tests of 10k events on each of antikt,
+	cam & kt with R=1000. Found one event for kt in which the answers
+	do not agree with N2MinHeapTiled. This appears to be independent
+	of whether FASTJET_LAZY9_MIN2TILESY is set. Commands to see the
+	problem are
+
+	gunzip -c ../data/Pythia-PtMin50-LHC-10kev.dat.gz| time ./example/fastjet_timing_plugins -kt -R 1000 -strategy -7 -write -nev 7492 -skip 7491
+	gunzip -c ../data/Pythia-PtMin50-LHC-10kev.dat.gz| time ./example/fastjet_timing_plugins -kt -R 1000 -strategy -4 -write -nev 7492 -skip 7491
+
+	Detailed investigation still to be carried out.
+
 2014-07-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Recluster.hh:
@@ -21,7 +37,7 @@
 
 	* include/fastjet/JetDefinition.hh:
 	in set_shared_Recombiner, only copy the recombiner if we have
-	ownership of it [this allows to copy the sahre pointer even if we
+	ownership of it [this allows us to copy the shared pointer even if we
 	have no ownership of the recombiner]
 
 	* tools/fastjet/tools/Filter.hh:

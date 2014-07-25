@@ -115,11 +115,41 @@ void LazyTiling9::_initialise_tiles() {
   //cout << "NOT using timing analysis " << " " << _tiles_eta_min << " " << _tiles_eta_max << endl;
 #endif
 
-  // now adjust the values
+  // Now adjust the values for the rapidity ("eta") range.
+  //
+  // When tile_size_eta is large, we have two options:
+  // - always have at least two tiles in rapidity (FASTJET_LAZY9_MIN2TILESY),
+  //   currently split down the middle of the rapidity extent of the particles
+  // - take whatever we get from the original 
+  //   _tiles_ieta_min[max] = int(floor(_tiles_eta_min[max]/_tile_size_eta));
+  //   which will sometimes leave us with just one tile in Y; 
+  //
+  // For events that are symetric in Y this should not change
+  // anything, but for asymmetric ones FASTJET_LAZY9_MIN2TILESY may be
+  // a bit faster.
+  // 
+#define FASTJET_LAZY9_MIN2TILESY
+#ifdef FASTJET_LAZY9_MIN2TILESY
+   if (_tiles_eta_max - _tiles_eta_min < 2*_tile_size_eta) {
+     // if we have a rapidity coverage that is small compared to the
+     // tile size then we can adjust the grid in rapidity so as to
+     // have exactly 3 tiles. This can give relevant speed improvements 
+     // for large R jets
+     _tile_size_eta = (_tiles_eta_max - _tiles_eta_min)/2;
+     _tiles_ieta_min = 0;
+     _tiles_ieta_max = 1;
+     // the eta max value is being taken as the lower edge of the
+     // highest-y tile
+     _tiles_eta_max -= _tile_size_eta;
+   } else {
+#endif //FASTJET_LAZY9_MIN2TILESY
   _tiles_ieta_min = int(floor(_tiles_eta_min/_tile_size_eta));
   _tiles_ieta_max = int(floor( _tiles_eta_max/_tile_size_eta));
   _tiles_eta_min = _tiles_ieta_min * _tile_size_eta;
   _tiles_eta_max = _tiles_ieta_max * _tile_size_eta;
+#ifdef FASTJET_LAZY9_MIN2TILESY
+   }
+#endif
 
   _tile_half_size_eta = _tile_size_eta * 0.5;
   _tile_half_size_phi = _tile_size_phi * 0.5;
