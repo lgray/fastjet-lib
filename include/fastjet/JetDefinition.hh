@@ -359,7 +359,9 @@ public:
   /// shared pointer. The JetDefinition then acquires shared ownership. 
   void set_shared_recombiner(const SharedPtr<const Recombiner> & recomb) {
     _shared_recombiner.reset(recomb);
-    _recombiner = _shared_recombiner.get();
+    // only assign the recombiner if we have ownership of it
+    if (_shared_recombiner())
+      _recombiner = _shared_recombiner.get();
   }
 
   /// calling this tells the JetDefinition to handle the deletion of

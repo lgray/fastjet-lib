@@ -1,5 +1,15 @@
 2014-07-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/Pruner.cc:
+	* tools/fastjet/tools/Pruner.hh:
+	when creating the pruning jet definition, set the shared
+	recombiner in case it it owned by the parent jet definition.
+
+	* include/fastjet/JetDefinition.hh:
+	in set_shared_Recombiner, only copy the recombiner if we have
+	ownership of it [this allows to copy the sahre pointer even if we
+	have no ownership of the recombiner]
+
 	* tools/fastjet/tools/Filter.hh:
 	* tools/Filter.cc:
 	simplified things considerably to use Recluster... still work in
