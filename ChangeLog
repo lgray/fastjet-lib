@@ -1,3 +1,12 @@
+2014-07-26  Gavin Salam  <gavin.salam@cern.ch>
+
+	* example/fastjet_timing_plugins.cc:
+	Switched from fj:: to using namespace fastjet.
+
+	Added -compare-strategy for comparing two different strategies and
+	printing out events where they disagree. Currently does full
+	clustering history comparison (not suitable for C/A alg.)
+
 2014-07-25  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/LazyTiling9.cc:
@@ -13,6 +22,7 @@
 	gunzip -c ../data/Pythia-PtMin50-LHC-10kev.dat.gz| time ./example/fastjet_timing_plugins -kt -R 1000 -strategy -4 -write -nev 7492 -skip 7491
 
 	Detailed investigation still to be carried out.
+	Issue filed as 2014-07-26-Lazy9-largeR-clustering
 
 2014-07-25  Gregory Soyez  <soyez@fastjet.fr>
 
