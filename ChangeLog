@@ -3,6 +3,30 @@
 	* example/fastjet_timing_plugins.cc:
 	declared SubType globally to prevent a icpc (v10.1) error.
 
+2014-07-28  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/fastjet_timing_plugins.cc:
+	* fortran_wrapper/fastjetfortran.cc:
+	auto_ptr -> SgaredPtr as below
+
+	* include/fastjet/ClusterSequenceArea.hh:
+	use a standard pointer to hold the specific underlying CSAB rather
+	than an auto_ptr
+
+2014-07-27  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence_Delaunay.cc:
+	replaced the auto_ptr to the DNN object by a standard C pointer
+	(deleted at the end of ClusterSequence::_delaunay_cluster())
+
+	* plugins/SISCone/SISConePlugin.cc:
+	* plugins/SISCone/SISConeSphericalPlugin.cc:
+	* plugins/SISCone/fastjet/SISConePlugin.hh:
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
+	replaced the use of auto_ptr by SharedPtr (auto_ptr have been
+	deprecated by C++11. Ideally a unique_ptr should be used but
+	SharedPtr will do the job)
+
 2014-07-26  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/fastjet_timing_plugins.cc:
