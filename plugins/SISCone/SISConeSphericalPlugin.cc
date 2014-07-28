@@ -24,9 +24,9 @@ template<> PseudoJet::PseudoJet(const siscone_spherical::CSphmomentum & four_vec
 /////////////////////////////////////////////
 // static members declaration              //
 /////////////////////////////////////////////
-std::auto_ptr<SISConeSphericalPlugin>  SISConeSphericalPlugin::stored_plugin;
-std::auto_ptr<std::vector<PseudoJet> > SISConeSphericalPlugin::stored_particles;
-std::auto_ptr<CSphsiscone>             SISConeSphericalPlugin::stored_siscone;
+SharedPtr<SISConeSphericalPlugin>  SISConeSphericalPlugin::stored_plugin;
+SharedPtr<std::vector<PseudoJet> > SISConeSphericalPlugin::stored_particles;
+SharedPtr<CSphsiscone>             SISConeSphericalPlugin::stored_siscone;
 
 
 /////////////////////////////////////////////
@@ -206,7 +206,11 @@ void SISConeSphericalPlugin::run_clustering(ClusterSequence & clust_seq) const {
   extras->_jet_def_plugin = this;
 
   // give the extras object to the cluster sequence.
-  clust_seq.plugin_associate_extras(std::auto_ptr<ClusterSequence::Extras>(extras));
+  // 
+  // As of v3.1 of FastJet, extras are automatically owned (as
+  // SharedPtr) by the ClusterSequence and auto_ptr is deprecated. So
+  // we can use a simple pointer here
+  clust_seq.plugin_associate_extras(extras);
 }
 
 void SISConeSphericalPlugin::reset_stored_plugin() const{

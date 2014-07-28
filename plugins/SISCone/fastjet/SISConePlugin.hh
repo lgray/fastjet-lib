@@ -185,9 +185,12 @@ private:
 
   // part needed for the cache 
   // variables for caching the results and the input
-  static std::auto_ptr<SISConePlugin          > stored_plugin;
-  static std::auto_ptr<std::vector<PseudoJet> > stored_particles;
-  static std::auto_ptr<siscone::Csiscone      > stored_siscone;
+  //
+  // As of v3.1 of FJ, the use of auto_ptr is deprecated. C++11
+  // advises the use of unique_ptr but for now we'll use SharedPtr.
+  static SharedPtr<SISConePlugin          > stored_plugin;
+  static SharedPtr<std::vector<PseudoJet> > stored_particles;
+  static SharedPtr<siscone::Csiscone      > stored_siscone;
 };
 
 
