@@ -663,7 +663,7 @@ int main (int argc, char ** argv) {
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     int nparticles = particles.size();
     try {
-    auto_ptr<ClusterSequence> clust_seq;
+    SharedPtr<ClusterSequence> clust_seq;
     if (do_areas) {
       clust_seq.reset(new ClusterSequenceArea(particles,jet_def,area_def));
     } else {
