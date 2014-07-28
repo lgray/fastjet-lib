@@ -1,3 +1,8 @@
+2014-07-28  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/fastjet_timing_plugins.cc:
+	declared SubType globally to prevent a icpc (v10.1) error.
+
 2014-07-26  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/fastjet_timing_plugins.cc:

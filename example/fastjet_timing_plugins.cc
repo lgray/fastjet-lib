@@ -260,6 +260,14 @@ inline double pow2(const double x) {return x*x;}
 // pretty print the jets and their subjets
 void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut);
 
+// have various kinds of subjet finding, to test consistency among them
+//
+// this is needed in print_jets_and_sub and declaring it in the
+// function scope results in errors with older intel compilers (due to
+// the overloaded == operator in PseudoJet which results in the "a
+// template argument may not reference a local type" error)
+enum SubType {subtype_internal, subtype_newclust_dcut, subtype_newclust_R};
+
 void do_compare_strategy(int                       iev,
                          const vector<PseudoJet> & particles,
                          const JetDefinition     & jet_def,
@@ -896,11 +904,10 @@ void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut) {
   printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", 
 	 "phi", "pt", "n constituents");
 
-  // have various kinds of subjet finding, to test consistency among them
-  enum SubType {internal, newclust_dcut, newclust_R};
-  SubType subtype = internal;
-  //SubType subtype = newclust_dcut;
-  //SubType subtype = newclust_R;
+  // the kind of subjet finding used to test consistency among them
+  SubType sub_type = subtype_internal;
+  //SubType sub_type = subtype_newclust_dcut;
+  //SubType sub_type = subtype_newclust_R;
 
   // print out the details for each jet
   //for (unsigned int i = 0; i < sorted_jets.size(); i++) {
@@ -918,16 +925,16 @@ void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut) {
     print_jet(*jet);
     vector<PseudoJet> subjets;
     ClusterSequence * cspoint;
-    if (subtype == internal) {
+    if (sub_type == subtype_internal) {
       cspoint = 0;
       subjets = jet->exclusive_subjets(dcut);
       double ddnp1 = jet->exclusive_subdmerge_max(subjets.size());
       double ddn   = jet->exclusive_subdmerge_max(subjets.size()-1);
       cout << "     for " << ddnp1 << " < d < " << ddn << " one has " << endl;
-    } else if (subtype == newclust_dcut) {
+    } else if (sub_type == subtype_newclust_dcut) {
       cspoint = new ClusterSequence(jet->constituents(), jet_def);
       subjets = cspoint->exclusive_jets(dcut);
-    } else if (subtype == newclust_R) {
+    } else if (sub_type == subtype_newclust_R) {
       assert(jet_def.jet_algorithm() == cambridge_algorithm);
       JetDefinition subjd(jet_def.jet_algorithm(), jet_def.R()*sqrt(dcut));
       cspoint = new ClusterSequence(jet->constituents(), subjd);
