@@ -154,9 +154,6 @@ private:
   /// get the pieces down to the fundamental pieces
   bool _get_all_pieces(const PseudoJet &jet, std::vector<PseudoJet> &all_pieces) const;
 
-  /// get the common recombiner to all pieces (NULL if none)
-  const JetDefinition::Recombiner* _get_common_recombiner(const std::vector<PseudoJet> &all_pieces) const;
-
   /// construct the proper jet definition ensuring that the recombiner
   /// is taken from the underlying pieces (an error is thrown if the
   /// pieces do no share a common recombiner)

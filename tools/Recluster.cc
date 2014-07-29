@@ -291,50 +291,33 @@ bool Recluster::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pie
   return false;
 }
 
-// treatment of recombiners
+// construct the re-clustering jet definition using the recombiner
+// from whatever definition has been used to obtain the original jet
 //----------------------------------------------------------------------
-// get the common recombiner to all pieces (NULL if none)
-//
-// Note that if the jet has an associated cluster sequence that is no
-// longer valid, an error will be thrown (needed since it could be the
-// 1st check called after the enumeration of the pieces)
-const JetDefinition::Recombiner* Recluster::_get_common_recombiner(const vector<PseudoJet> &all_pieces) const{
-  const JetDefinition & jd_ref = all_pieces[0].validated_cs()->jet_def();
-  for (unsigned int i=1; i<all_pieces.size(); i++)
-    if (!all_pieces[i].validated_cs()->jet_def().has_same_recombiner(jd_ref)) return NULL;
-
-  return jd_ref.recombiner();
-}
-  
 void Recluster::_build_jet_def_with_recombiner(const vector<PseudoJet> &all_pieces, 
                                                JetDefinition &subjet_def) const{
-  // the recombiner has to be guessed from the pieces
-  const JetDefinition::Recombiner * common_recombiner = _get_common_recombiner(all_pieces);
-  if (common_recombiner) {
-    if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
-      RecombinationScheme scheme = 
-        static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
-      if (_has_subjet_extra)
-        subjet_def = JetDefinition(_subjet_alg, _subjet_radius, _subjet_extra, scheme);
-      else if (_has_subjet_radius)
-        subjet_def = JetDefinition(_subjet_alg, _subjet_radius, scheme);
-      else 
-        subjet_def = JetDefinition(_subjet_alg, scheme);
-    } else {
-      if (_has_subjet_extra)
-        subjet_def = JetDefinition(_subjet_alg, _subjet_radius, _subjet_extra, common_recombiner);
-      else if (_has_subjet_radius)
-        subjet_def = JetDefinition(_subjet_alg, _subjet_radius, common_recombiner);
-      else 
-        subjet_def = JetDefinition(_subjet_alg, common_recombiner);
-      // also copy the shared pointer in case it has ownershio (in
-      // that case, the ownership is shared and we're sure that it
-      // will not go out of scope too early
-      subjet_def.set_shared_recombiner(all_pieces[0].validated_cs()->jet_def().shared_recombiner());
+  // now build the JetDefinition (so far with no recombiner info)
+  if (_has_subjet_extra)
+    subjet_def = JetDefinition(_subjet_alg, _subjet_radius, _subjet_extra);
+  else if (_has_subjet_radius)
+    subjet_def = JetDefinition(_subjet_alg, _subjet_radius);
+  else 
+    subjet_def = JetDefinition(_subjet_alg);
+
+  // check that all the pieces have the same recombiner
+  //
+  // Note that if the jet has an associated cluster sequence that is no
+  // longer valid, an error will be thrown (needed since it could be the
+  // 1st check called after the enumeration of the pieces)
+  const JetDefinition & jd_ref = all_pieces[0].validated_cs()->jet_def();
+  for (unsigned int i=1; i<all_pieces.size(); i++){
+    if (!all_pieces[i].validated_cs()->jet_def().has_same_recombiner(jd_ref)){
+      throw Error("Recluster: requested to guess the recombination scheme (or recombiner) from the original jet but an inconsistency was found between the pieces constituing that jet.");
     }
-  } else {
-    throw Error("Recluster: requested to guess the recombination scheme (or recombiner) from the original jet but an inconsistency was found between the pieces constituing that jet.");
   }
+
+  // get the recombiner from the original jet_def
+  subjet_def.set_recombiner(jd_ref);
 }
 
 // area support

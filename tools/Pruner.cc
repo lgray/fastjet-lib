@@ -75,32 +75,19 @@ PseudoJet Pruner::result(const PseudoJet &jet) const{
   double Rcut = (_Rcut_dyn) ? (*_Rcut_dyn)(jet) : _Rcut_factor * 2.0*jet.m()/jet.perp();
   double zcut = (_zcut_dyn) ? (*_zcut_dyn)(jet) : _zcut;
   PruningPlugin * pruning_plugin;
+
   // for some constructors, we get the recombiner from the 
-  // input jet -- some acrobatics are needed (see plans for FJ3.1
-  // for a hopefully better solution).
+  // input jet -- some acrobatics are needed
   if (_get_recombiner_from_jet) {
-    SharedPtr<const JetDefinition::Recombiner> shared_recombiner;
-    const JetDefinition::Recombiner * common_recombiner = 
-      _get_common_recombiner(jet, shared_recombiner);
-    if (common_recombiner) {
-      JetDefinition jet_def = _jet_def;
-      if (typeid(*common_recombiner) == typeid(JetDefinition::DefaultRecombiner)) {
-        RecombinationScheme scheme = 
-          static_cast<const JetDefinition::DefaultRecombiner *>(common_recombiner)->scheme();
-        jet_def.set_recombination_scheme(scheme);
-      } else {
-	if (shared_recombiner()){
-	  jet_def.set_shared_recombiner(shared_recombiner);
-	} else {
-	  jet_def.set_recombiner(common_recombiner);
-	}	
-      }
-      pruning_plugin = new PruningPlugin(jet_def, zcut, Rcut);
-    } else {
-      // if there wasn't a common recombiner, we just use the default
-      // recombiner that was in _jet_def
-      pruning_plugin = new PruningPlugin(_jet_def, zcut, Rcut);
+    JetDefinition jet_def = _jet_def;
+
+    // if all the pieces have a shared recombiner, we'll use that
+    // one. Otherwise, use the one from _jet_def as a fallback.
+    JetDefinition jet_def_for_recombiner;
+    if (_check_common_recombiner(jet, jet_def_for_recombiner)){
+      jet_def.set_recombiner(jet_def_for_recombiner);
     }
+    pruning_plugin = new PruningPlugin(jet_def, zcut, Rcut);
   } else {
     pruning_plugin = new PruningPlugin(_jet_def, zcut, Rcut);
   }
@@ -163,43 +150,38 @@ bool Pruner::_check_explicit_ghosts(const PseudoJet &jet) const{
   return false;
 }
 
-// see if there is a common recombiner among the pieces; if there
-// is return a pointer to it; otherwise, return NULL.
-// 
-// NB: this way of doing things is not ideal, because quite some work
-//     is needed to get a correct handling of the final recombiner
-//     (e.g. default v. non-default). In future add
-//     set_recombiner(jet_def) to JetDefinition, maybe also add
-//     an invalid_scheme to the default recombiner and then 
-//     do all the work below directly with a JetDefinition directly
-//     together with JD::has_same_recombiner(...)
-//     2014-07-25(GS): for composite jet that means we'd need to check
-//     that all pieces share the same jet def (now we only check they
-//     share the same recombiner)
-//
-// 2014-07-25: also keep trace of the shared recombiner (in case the
-//             jet def had ownership of it, we need to copy it too)
-const JetDefinition::Recombiner * Pruner::_get_common_recombiner(const PseudoJet &jet, 
-								 SharedPtr<const JetDefinition::Recombiner> &shared_recombiner) const{
+// see if there is a common recombiner among the pieces; if there is
+// return true and set jet_def_for_recombiner so that the recombiner
+// can be taken from that JetDefinition. Otherwise, return
+// false. 'assigned' is initially false; when true, each time we meet
+// a new jet definition, we'll check it shares the same recombiner as
+// jet_def_for_recombiner.
+bool Pruner::_check_common_recombiner(const PseudoJet &jet, 
+				      JetDefinition &jet_def_for_recombiner,
+				      bool assigned) const{
   if (jet.has_associated_cluster_sequence()){
-    const JetDefinition &jet_def = jet.validated_cs()->jet_def();
-    shared_recombiner = jet_def.shared_recombiner();
-    return jet_def.recombiner();
+    // if the jet def for recombination has already been assigned, check if we have the same
+    if (assigned)
+      return jet.validated_cs()->jet_def().has_same_recombiner(jet_def_for_recombiner);
+
+    // otherwise, assign it.
+    jet_def_for_recombiner = jet.validated_cs()->jet_def();
+    assigned = true;
+    return true;
   }
 
   // if the jet has pieces, recurse in the pieces
   if (jet.has_pieces()){
     vector<PseudoJet> pieces = jet.pieces();
-    if (pieces.size() == 0) return 0;
-    const JetDefinition::Recombiner * reco = _get_common_recombiner(pieces[0], shared_recombiner);
-    for (unsigned int i=1;i<pieces.size(); i++)
-      if (_get_common_recombiner(pieces[i], shared_recombiner) != reco) return 0;
+    if (pieces.size() == 0) return false;
+    for (unsigned int i=0;i<pieces.size(); i++)
+      if (!_check_common_recombiner(pieces[i], jet_def_for_recombiner, assigned)) return false;
     // never returned false, so we're OK.
-    return reco;
+    return true;
   }
 
   // return false for any other (unknown) structure
-  return 0;
+  return false;
 }
 
 

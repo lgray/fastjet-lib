@@ -349,19 +349,40 @@ public:
   void set_recombination_scheme(RecombinationScheme);
 
   /// set the recombiner class to the one provided
+  ///
+  /// Note that in order to associate to a jet definition a recombiner
+  /// from another jet definition, it is strongly recommended to use
+  /// the set_recombiner(const JetDefinition &) method below. The
+  /// latter correctly handles the situations where the jet definition
+  /// owns the recombiner (i.e. where delete_recombiner_when_unused
+  /// has been called). In such cases, using set_recombiner(const
+  /// Recombiner *) may lead to memory corruption.
   void set_recombiner(const Recombiner * recomb) {
     if (_shared_recombiner()) _shared_recombiner.reset(recomb);
     _recombiner = recomb;
     _default_recombiner = DefaultRecombiner(external_scheme);
   }
 
-  /// tell the JetDefinition to use the the recombiner that is passed as a 
-  /// shared pointer. The JetDefinition then acquires shared ownership. 
-  void set_shared_recombiner(const SharedPtr<const Recombiner> & recomb) {
-    _shared_recombiner.reset(recomb);
-    // only assign the recombiner if we have ownership of it
-    if (_shared_recombiner())
-      _recombiner = _shared_recombiner.get();
+  /// set the recombiner to be the same as the one of 'other_jet_def'
+  ///
+  /// Note that this is the recommended method to associate to a jet
+  /// definition the recombiner from another jet definition. Compared
+  /// to the set_recombiner(const Recombiner *) above, it correctly
+  /// handles the case where the jet definition owns the recombiner
+  /// (i.e. where delete_recombiner_when_unused has been called)
+  void set_recombiner(const JetDefinition &other_jet_def){
+    // first treat the situation where we're using the default recombiner
+    if (other_jet_def._recombiner == 0){
+      set_recombination_scheme(other_jet_def.recombination_scheme());
+      return;
+    }
+
+    // in other cases, copy the pointer to the recombiner
+    _recombiner = other_jet_def._recombiner;
+
+    // if the recombiner is owned by the jet definition, share it
+    if (other_jet_def._shared_recombiner())
+      _shared_recombiner.reset(other_jet_def._shared_recombiner);
   }
 
   /// calling this tells the JetDefinition to handle the deletion of
@@ -407,12 +428,6 @@ public:
   /// recombiners, and return different recombiner() pointers.
   const Recombiner * recombiner() const {
     return _recombiner == 0 ? & _default_recombiner : _recombiner;}
-  
-  /// Returns the shared recombiner associated with this jet definition.
-  /// Will be null if using one of the default recombination schemes, or if
-  /// a pointer to a recombiner has been set without calling
-  /// delete_recombiner_when_unused().
-  SharedPtr<const Recombiner> shared_recombiner() const {return _shared_recombiner;}
 
   /// returns true if the current jet definitions shares the same
   /// recombiner as the one passed as an argument

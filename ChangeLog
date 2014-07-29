@@ -1,3 +1,22 @@
+2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Recluster.cc:
+	* tools/Pruner.cc:
+	* tools/fastjet/tools/Recluster.hh:
+	* tools/fastjet/tools/Pruner.hh:
+	arragnged the code to use JD::set_recombiner(const JetDefinition&)
+	instead of JD::set_recombiner(Recombiner*)
+
+	* include/fastjet/JetDefinition.hh:
+	introduced set_recombiner(const JetDefinition&) that correctly
+	copies the recombiner from another jet definition. When
+	applicable, this version is strongly recommended as the
+	alternative (set_recombiner(Recombiner*)) can lead to memory
+	corruption if the recombiner is owned by the jet definition.
+
+	removed set_shared_recombiner and shared_recombiner (superseeded
+	by the above option)
+
 2014-07-29  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
 
         * src/LazyTiling25.cc
@@ -10,7 +29,7 @@
 	arithmetic for each tiles with a use_periodic_delta_phi bool for
 	each tile. This appears to solve the
 	2014-07-26-Lazy9-largeR-clustering issue. (Tests ongoing with 10^7
-	events). 
+	events).
 
 	* src/ClusterSequence_Delaunay.cc (_delaunay_cluster):
 	reworked comments around the assert for cases where the clustering

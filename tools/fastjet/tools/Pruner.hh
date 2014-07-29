@@ -158,10 +158,15 @@ private:
   /// area support)
   bool _check_explicit_ghosts(const PseudoJet &jet) const;
 
-  /// return a pointer to a "common" recombiner if there is one,
-  /// alternatively a null pointer.
-  const JetDefinition::Recombiner * _get_common_recombiner(const PseudoJet &jet, 
-							   SharedPtr<const JetDefinition::Recombiner> &shared_recombiner) const;
+  /// see if there is a common recombiner among the pieces; if there
+  /// is return true and set jet_def_for_recombiner so that the
+  /// recombiner can be taken from that JetDefinition. Otherwise,
+  /// return false. 'assigned' is initially false; when true, each
+  /// time we meet a new jet definition, we'll check it shares the
+  /// same recombiner as jet_def_for_recombiner.
+  bool _check_common_recombiner(const PseudoJet &jet, 
+				JetDefinition &jet_def_for_recombiner,
+				bool assigned=false) const;
 
   JetDefinition _jet_def; ///< the internal jet definition
   double _zcut;        	  ///< the pt-fraction cut
