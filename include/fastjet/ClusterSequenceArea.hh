@@ -246,9 +246,11 @@ template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
 						    _area_def.ghost_spec());
     break;
   default:
-    std::cerr << "Error: unrecognized area_type in ClusterSequenceArea:" 
-              << _area_def.area_type() << std::endl;
-    exit(-1);
+    std::ostringstream err;
+    err << "Error: unrecognized area_type in ClusterSequenceArea:" 
+	<< _area_def.area_type();
+    throw Error(err.str());
+    //exit(-1);
   }
   // now copy across the information from the area base class
   _area_base = std::auto_ptr<ClusterSequenceAreaBase>(_area_base_ptr);

@@ -1,3 +1,11 @@
+2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/ClusterSequenceArea.hh:
+	replaced an error message printed to stdout (followed by exit(-1))
+	by an error thrown when the area type is unknown.
+	Note that this uses ostringstream, so we could try to move that to
+	the cc (or introduce AreaDefinition::area_type_str())
+
 2014-07-29  Gavin Salam  <gavin.salam@cern.ch>
 
         * include/fastjet/JetDefinition.hh:
