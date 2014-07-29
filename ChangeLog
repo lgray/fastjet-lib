@@ -7,7 +7,7 @@
         * include/fastjet/internal/LazyTiling9.hh
         * include/fastjet/internal/LazyTiling9Alt.hh
 	replace is_near_zero_phi() test, based on double-precision
-	arithmetic for each tiles with a user_periodic_delta_phi bool for
+	arithmetic for each tiles with a use_periodic_delta_phi bool for
 	each tile. This appears to solve the
 	2014-07-26-Lazy9-largeR-clustering issue. (Tests ongoing with 10^7
 	events). 
