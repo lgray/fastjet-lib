@@ -171,6 +171,32 @@ void JetDefinition::set_recombination_scheme(
   _recombiner = 0;
 }
 
+void JetDefinition::set_recombiner(const JetDefinition &other_jet_def){
+  // make sure the "invariants" of the other jet def are sensible
+  assert(other_jet_def._recombiner || 
+         other_jet_def.recombination_scheme() != external_scheme);
+
+  // first treat the situation where we're using the default recombiner
+  if (other_jet_def._recombiner == 0){
+    set_recombination_scheme(other_jet_def.recombination_scheme());
+    return;
+  }
+
+  // in other cases, copy the pointer to the recombiner
+  _recombiner = other_jet_def._recombiner;
+  // set the default recombiner appropriately
+  _default_recombiner = DefaultRecombiner(external_scheme);
+  // and set the _shared_recombiner to the same state
+  // as in the other_jet_def, whatever that was
+  _shared_recombiner.reset(other_jet_def._shared_recombiner);
+
+  // NB: it is tempting to go via set_recombiner and then to sort
+  // out the shared part, but this would be dangerous in the
+  // specific (rare?) case where other_jet_def is the same as this
+  // it deletes_recombiner_when_unused. In that case the shared
+  // pointer reset would delete the recombiner.
+}
+
 
 // returns true if the current jet definitions shares the same
 // recombiner as teh one passed as an argument
@@ -185,7 +211,7 @@ bool JetDefinition::has_same_recombiner(const JetDefinition &other_jd) const{
     || (recombiner() == other_jd.recombiner());
 }
 
-/// allows to let the JetDefinition handle the deletion of the
+/// causes the JetDefinition to handle the deletion of the
 /// recombiner when it is no longer used
 void JetDefinition::delete_recombiner_when_unused(){
   if (_recombiner == 0){

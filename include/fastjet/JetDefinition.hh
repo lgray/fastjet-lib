@@ -370,24 +370,13 @@ public:
   /// to the set_recombiner(const Recombiner *) above, it correctly
   /// handles the case where the jet definition owns the recombiner
   /// (i.e. where delete_recombiner_when_unused has been called)
-  void set_recombiner(const JetDefinition &other_jet_def){
-    // first treat the situation where we're using the default recombiner
-    if (other_jet_def._recombiner == 0){
-      set_recombination_scheme(other_jet_def.recombination_scheme());
-      return;
-    }
-
-    // in other cases, copy the pointer to the recombiner
-    _recombiner = other_jet_def._recombiner;
-
-    // if the recombiner is owned by the jet definition, share it
-    if (other_jet_def._shared_recombiner())
-      _shared_recombiner.reset(other_jet_def._shared_recombiner);
-  }
+  void set_recombiner(const JetDefinition &other_jet_def);
 
   /// calling this tells the JetDefinition to handle the deletion of
-  /// the recombiner when it is no longer used. (Should not be used
-  /// together with set_shared_recombiner).
+  /// the recombiner when it is no longer used. (Should not be called
+  /// if the recombiner was initialised from a JetDef whose recombiner
+  /// was already scheduled to delete itself - memory handling will
+  /// already be automatic across both JetDef's in that case).
   void delete_recombiner_when_unused();
 
   /// return a pointer to the plugin 

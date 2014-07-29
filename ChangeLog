@@ -1,3 +1,15 @@
+2014-07-29  Gavin Salam  <gavin.salam@cern.ch>
+
+        * include/fastjet/JetDefinition.hh:
+        * src/JetDefinition.cc:
+	moved new set_recombiner code into the .cc file, included a test
+	of the JetDef invariants and ensured that recombination_scheme()
+	returns correct result in case of external recombiners
+
+        * testsuite/TestRecombiners.hh:
+        * testsuite/run_tests.cc:
+	added first elements of testing for Recombiners.
+
 2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Recluster.cc:
@@ -14,7 +26,7 @@
 	alternative (set_recombiner(Recombiner*)) can lead to memory
 	corruption if the recombiner is owned by the jet definition.
 
-	removed set_shared_recombiner and shared_recombiner (superseeded
+	removed set_shared_recombiner and shared_recombiner (superceded
 	by the above option)
 
 2014-07-29  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
