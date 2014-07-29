@@ -1,10 +1,22 @@
 2014-07-29  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
 
+        * src/LazyTiling25.cc
+        * src/LazyTiling9.cc
+        * src/LazyTiling9Alt.cc
+        * include/fastjet/internal/LazyTiling25.hh
+        * include/fastjet/internal/LazyTiling9.hh
+        * include/fastjet/internal/LazyTiling9Alt.hh
+	replace is_near_zero_phi() test, based on double-precision
+	arithmetic for each tiles with a user_periodic_delta_phi bool for
+	each tile. This appears to solve the
+	2014-07-26-Lazy9-largeR-clustering issue. (Tests ongoing with 10^7
+	events). 
+
 	* src/ClusterSequence_Delaunay.cc (_delaunay_cluster):
 	reworked comments around the assert for cases where the clustering
 	strategy has not been recognized (all cases for which this would
 	be called should be recognized).
-	
+
 2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/SISCone/SISConePlugin.cc:

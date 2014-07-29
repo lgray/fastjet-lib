@@ -45,9 +45,6 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 typedef Tile2Base<25> Tile25;
 
-template<> inline bool Tile2Base<25>::is_near_zero_phi(double tile_size_phi) const {
-    return phi_centre < 2*tile_size_phi || (twopi-phi_centre) < 2*tile_size_phi;
-}
 
 // class Tile25 {
 // public:

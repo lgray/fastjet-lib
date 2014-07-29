@@ -103,6 +103,16 @@ void LazyTiling9Alt::_initialise_tiles() {
   _tile_half_size_eta = _tile_size_eta * 0.5;
   _tile_half_size_phi = _tile_size_phi * 0.5;
 
+  // set up information about whether we need to allow for "periodic" 
+  // wrapping tests in delta_phi calculations
+  vector<bool> use_periodic_delta_phi(_n_tiles_phi, false);
+  if (_n_tiles_phi <= 3) {
+    fill(use_periodic_delta_phi.begin(), use_periodic_delta_phi.end(), true);
+  } else {
+    use_periodic_delta_phi[0] = true;
+    use_periodic_delta_phi[_n_tiles_phi-1] = true;
+  }
+
   // allocate the tiles
   _tiles.resize((_tiles_ieta_max-_tiles_ieta_min+1)*_n_tiles_phi);
 
@@ -165,6 +175,8 @@ void LazyTiling9Alt::_initialise_tiles() {
       tile->end_tiles = pptile;
       // finally make sure tiles are untagged
       tile->tagged = false;
+      // and store the information about periodicity in phi
+      tile->use_periodic_delta_phi = use_periodic_delta_phi[iphi];
       // and ensure max distance is sensibly initialised
       tile->max_NN_dist = 0;
       // and also position of centre of tile
@@ -479,7 +491,7 @@ void LazyTiling9Alt::run() {
     }
   }
   for (tile = _tiles.begin(); tile != _tiles.end(); tile++) {
-    if (tile->is_near_zero_phi(_tile_half_size_phi)) {
+    if (tile->use_periodic_delta_phi) {
       // then do it for RH tiles; 
       for (Tile::TileFnPair * RTileFnPair = tile->RH_tiles; 
            RTileFnPair != tile->end_tiles; RTileFnPair++) {

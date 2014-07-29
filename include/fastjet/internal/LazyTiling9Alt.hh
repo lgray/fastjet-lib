@@ -71,14 +71,13 @@ public:
   TiledJet * head;    
   /// sometimes useful to be able to tag a tile
   bool     tagged;    
+  /// true for tiles where the delta phi calculation needs
+  /// potentially to account for periodicity in phi
+  bool     use_periodic_delta_phi;
   /// for all particles in the tile, this stores the largest of the
   /// (squared) nearest-neighbour distances.
   double max_NN_dist;
   double eta_min, eta_max, phi_min, phi_max;
-
-  bool is_near_zero_phi(double tile_half_size_phi) const {
-    return phi_min < tile_half_size_phi || (twopi-phi_max) < tile_half_size_phi;
-  }
 
   double distance_to_centre(const TiledJet *) const {return 0;}
   double distance_to_left(const TiledJet * jet) const {
