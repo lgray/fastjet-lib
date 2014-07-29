@@ -1,3 +1,10 @@
+2014-07-29  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
+
+	* src/ClusterSequence_Delaunay.cc (_delaunay_cluster):
+	reworked comments around the assert for cases where the clustering
+	strategy has not been recognized (all cases for which this would
+	be called should be recognized).
+	
 2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/SISCone/SISConePlugin.cc:
@@ -25,7 +32,7 @@
 
 	* example/fastjet_timing_plugins.cc:
 	* fortran_wrapper/fastjetfortran.cc:
-	auto_ptr -> SgaredPtr as below
+	auto_ptr -> SharedPtr as below
 
 	* include/fastjet/ClusterSequenceArea.hh:
 	use a standard pointer to hold the specific underlying CSAB rather
@@ -41,7 +48,7 @@
 	* plugins/SISCone/SISConeSphericalPlugin.cc:
 	* plugins/SISCone/fastjet/SISConePlugin.hh:
 	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
-	replaced the use of auto_ptr by SharedPtr (auto_ptr have been
+	replaced the use of auto_ptr by SharedPtr (auto_ptr has been
 	deprecated by C++11. Ideally a unique_ptr should be used but
 	SharedPtr will do the job)
 

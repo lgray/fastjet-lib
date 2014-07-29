@@ -86,13 +86,17 @@ void ClusterSequence::_delaunay_cluster () {
     err << "       supported because FastJet was compiled without CGAL"<<endl;
     throw Error(err.str());
     //assert(false);
-  }
+  } else
 #endif // DROP_CGAL
   {
-    ostringstream err;
-    err << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl;
+    //ostringstream err;
+    //err << "ERROR: Unrecognized value for strategy: "<<_strategy<<endl;
+    //throw Error(err.str());
+    //-----------------------------------------------------------------
+    // The code should never reach this point, because the checks above
+    // should always handle all _strategy values for which 
+    // _delaunay_cluster() is called 
     assert(false);
-    throw Error(err.str());
   }
 
   // We will find nearest neighbour for each vertex, and include
