@@ -29,7 +29,6 @@
 #include <iostream>
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/ClusterSequenceArea.hh"
-#include "fastjet/SharedPtr.hh"
 #include "fastjet/Selector.hh"
 #include "fastjet/SISConePlugin.hh"
 
@@ -42,9 +41,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// structures and means to transfer fortran <-> C++
 namespace fwrapper {
   vector<PseudoJet> input_particles, jets;
-  SharedPtr<JetDefinition::Plugin> plugin;
+  auto_ptr<JetDefinition::Plugin> plugin;
   JetDefinition jet_def;
-  SharedPtr<ClusterSequence> cs;
+  auto_ptr<ClusterSequence> cs;
 
   /// helper routine to transfer fortran input particles into 
   void transfer_input_particles(const double * p, const int & npart) {

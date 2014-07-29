@@ -74,11 +74,6 @@ public:
     initialize_and_run_cswa(pseudojets, jet_def_in);
   }
 
-  /// default dtor
-  virtual ~ClusterSequenceArea(){
-    if (_area_base) delete _area_base;
-  }
-
   /// return a reference to the area definition
   const AreaDefinition & area_def() const {return _area_def;}
 
@@ -208,10 +203,7 @@ private:
                                  const std::vector<L> & pseudojets, 
                                  const JetDefinition & jet_def);
 
-  // ise a standard C=style pointer (and do not forget to delete thin
-  // in the dtor)
-  //std::auto_ptr<ClusterSequenceAreaBase> _area_base;
-  ClusterSequenceAreaBase* _area_base;
+  std::auto_ptr<ClusterSequenceAreaBase> _area_base;
   AreaDefinition _area_def;
   static LimitedWarning _range_warnings;
   static LimitedWarning _explicit_ghosts_repeats_warnings;
@@ -222,37 +214,36 @@ private:
 template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
            const std::vector<L> & pseudojets, 
            const JetDefinition  & jet_def_in)
-{
+ {
   
-  //ClusterSequenceAreaBase * _area_base_ptr;
-  _area_base=0;
+  ClusterSequenceAreaBase * _area_base_ptr;
   switch(_area_def.area_type()) {
   case active_area:
-    _area_base = new ClusterSequenceActiveArea(pseudojets, 
-					       jet_def_in, 
-					       _area_def.ghost_spec());
+    _area_base_ptr = new ClusterSequenceActiveArea(pseudojets, 
+                                                   jet_def_in, 
+                                                   _area_def.ghost_spec());
     break;
   case active_area_explicit_ghosts:
     if (_area_def.ghost_spec().repeat() != 1) 
       _explicit_ghosts_repeats_warnings.warn("Requested active area with explicit ghosts with repeat != 1; only 1 set of ghosts will be used");
-    _area_base = new ClusterSequenceActiveAreaExplicitGhosts(pseudojets, 
-							     jet_def_in, 
-							     _area_def.ghost_spec());
+    _area_base_ptr = new ClusterSequenceActiveAreaExplicitGhosts(pseudojets, 
+                                                   jet_def_in, 
+                                                   _area_def.ghost_spec());
     break;
   case voronoi_area:
-    _area_base = new ClusterSequenceVoronoiArea(pseudojets, 
-						jet_def_in, 
-						_area_def.voronoi_spec());
+    _area_base_ptr = new ClusterSequenceVoronoiArea(pseudojets, 
+                                                   jet_def_in, 
+                                                   _area_def.voronoi_spec());
     break;
   case one_ghost_passive_area:
-    _area_base = new ClusterSequence1GhostPassiveArea(pseudojets, 
-						      jet_def_in, 
-						      _area_def.ghost_spec());
+    _area_base_ptr = new ClusterSequence1GhostPassiveArea(pseudojets, 
+						    jet_def_in, 
+						    _area_def.ghost_spec());
     break;
   case passive_area:
-    _area_base = new ClusterSequencePassiveArea(pseudojets, 
-						jet_def_in, 
-						_area_def.ghost_spec());
+    _area_base_ptr = new ClusterSequencePassiveArea(pseudojets, 
+						    jet_def_in, 
+						    _area_def.ghost_spec());
     break;
   default:
     std::cerr << "Error: unrecognized area_type in ClusterSequenceArea:" 
@@ -260,7 +251,7 @@ template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
     exit(-1);
   }
   // now copy across the information from the area base class
-  //_area_base = std::auto_ptr<ClusterSequenceAreaBase>(_area_base_ptr);
+  _area_base = std::auto_ptr<ClusterSequenceAreaBase>(_area_base_ptr);
   transfer_from_sequence(*_area_base);
 }
 

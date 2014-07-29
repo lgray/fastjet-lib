@@ -1,5 +1,18 @@
 2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/SISCone/SISConePlugin.cc:
+	* plugins/SISCone/SISConeSphericalPlugin.cc:
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh:
+	* plugins/SISCone/fastjet/SISConePlugin.hh:
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
+	* include/fastjet/ClusterSequenceArea.hh:
+	* src/ClusterSequence_Delaunay.cc:
+	* example/fastjet_timing_plugins.cc:
+	* fortran_wrapper/fastjetfortran.cc:
+	rolled back to the auto_ptr (The idea would be to switch to a
+	unique_ptr when we include c++11 support). For now, we just
+	deprecate its use in the interface
+
 	* example/fastjet_timing_plugins.cc:
 	replaced rapmax->grid_rapmax in a local declaration to eliminate a warning.
 

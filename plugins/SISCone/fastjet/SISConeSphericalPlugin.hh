@@ -164,13 +164,10 @@ private:
   bool _use_E_weighted_splitting;
 
   // part needed for the cache 
-  // variables for caching the results and the input 
-  //
-  // As of v3.1 of FJ, the use of auto_ptr is deprecated. C++11
-  // advises the use of unique_ptr but for now we'll use SharedPtr.
-  static SharedPtr<SISConeSphericalPlugin        > stored_plugin;
-  static SharedPtr<std::vector<PseudoJet>        > stored_particles;
-  static SharedPtr<siscone_spherical::CSphsiscone> stored_siscone;
+  // variables for caching the results and the input
+  static std::auto_ptr<SISConeSphericalPlugin        > stored_plugin;
+  static std::auto_ptr<std::vector<PseudoJet>        > stored_particles;
+  static std::auto_ptr<siscone_spherical::CSphsiscone> stored_siscone;
 };
 
 //======================================================================

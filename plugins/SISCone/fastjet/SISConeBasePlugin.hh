@@ -3,9 +3,8 @@
 
 #include "fastjet/JetDefinition.hh"
 #include "fastjet/ClusterSequence.hh"
-#include "fastjet/SharedPtr.hh"
 #include <vector>
-//#include <memory>
+#include <memory>
 #include <cmath>
 
 #include <sstream>

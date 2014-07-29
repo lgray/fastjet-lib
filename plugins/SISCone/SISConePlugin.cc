@@ -25,9 +25,9 @@ template<> PseudoJet::PseudoJet(const siscone::Cmomentum & four_vector) {
 /////////////////////////////////////////////
 // static members declaration              //
 /////////////////////////////////////////////
-SharedPtr<SISConePlugin>           SISConePlugin::stored_plugin;
-SharedPtr<std::vector<PseudoJet> > SISConePlugin::stored_particles;
-SharedPtr<Csiscone>                SISConePlugin::stored_siscone;
+std::auto_ptr<SISConePlugin>           SISConePlugin::stored_plugin;
+std::auto_ptr<std::vector<PseudoJet> > SISConePlugin::stored_particles;
+std::auto_ptr<Csiscone>                SISConePlugin::stored_siscone;
 
 
 /////////////////////////////////////////////
