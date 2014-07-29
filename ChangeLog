@@ -1,3 +1,8 @@
+2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/fastjet_timing_plugins.cc:
+	replaced rapmax->grid_rapmax in a local declaration to eliminate a warning.
+
 2014-07-28  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/fastjet_timing_plugins.cc:

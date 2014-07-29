@@ -793,9 +793,9 @@ int main (int argc, char ** argv) {
 	n_empty_jets = bge.n_empty_jets();
       } else {
 	assert(do_bkgd_gridmedian);
-        double rapmin, rapmax;
-        bkgd_range.get_rapidity_extent(rapmin, rapmax);
-	GridMedianBackgroundEstimator bge(rapmax, 2*ktR);
+        double grid_rapmin, grid_rapmax;
+        bkgd_range.get_rapidity_extent(grid_rapmin, grid_rapmax);
+	GridMedianBackgroundEstimator bge(grid_rapmax, 2*ktR);
         bge.set_particles(particles);
         rho = bge.rho();
         sigma = bge.sigma();
