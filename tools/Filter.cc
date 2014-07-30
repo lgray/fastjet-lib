@@ -89,8 +89,8 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   // NB: subjets is empty to begin with (see the comment for
   //     _set_filtered_elements_cafilt)
   vector<PseudoJet> subjets; 
-  JetDefinition subjet_def;
-  _set_filtered_elements(jet, subjets);
+  //JetDefinition subjet_def;
+  bool ca_optimised = _set_filtered_elements(jet, subjets);
 
   // now build the vector of kept and rejected subjets
   vector<PseudoJet> kept, rejected;
@@ -101,12 +101,15 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   selector_copy.sift(subjets, kept, rejected);
 
   // gather the info under the form of a PseudoJet
-  return _finalise(jet, kept, rejected);
+  return _finalise(jet, kept, rejected, ca_optimised);
 }
 
 
 // sets filtered_elements to be all the subjets on which filtering will work
-void Filter::_set_filtered_elements(const PseudoJet & jet,
+//
+// return true when the subjets have been optained using teh optimised
+// method for C/A
+bool Filter::_set_filtered_elements(const PseudoJet & jet,
                                     vector<PseudoJet> & filtered_elements) const {
   // create the recluster instance
   Recluster recluster;
@@ -116,15 +119,16 @@ void Filter::_set_filtered_elements(const PseudoJet & jet,
     recluster = Recluster(_subjet_def, false, Recluster::keep_all);
 
   // get the subjets
-  JetDefinition subjet_def;
-  bool ca_optimised = recluster.get_new_jets_and_def(jet, filtered_elements, subjet_def);
+  //JetDefinition subjet_def;
+  return recluster.get_new_jets_and_def(jet, filtered_elements);
 }
 
 // gather the information about what is kept and rejected under the
 // form of a PseudoJet with a special ClusterSequenceInfo
 PseudoJet Filter::_finalise(const PseudoJet & /*jet*/, 
                             vector<PseudoJet> & kept, 
-                            vector<PseudoJet> & rejected) const {
+                            vector<PseudoJet> & rejected,
+			    bool ca_optimisation_used) const {
   assert(kept.size()+rejected.size()>0);
   // figure out which recombiner to use
   const JetDefinition::Recombiner &rec = (kept.size()>0)
@@ -136,6 +140,18 @@ PseudoJet Filter::_finalise(const PseudoJet & /*jet*/,
   StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
   fs->_rejected = rejected;
   
+  // if we've used C/A optimisation, we need to get rid of the area
+  // information if it comes from a non-explicit-ghost clustering.
+  // (because in that case it can be erroneous due the lack of
+  // information about empty areas)
+  if (ca_optimisation_used){
+    bool has_non_explicit_ghost_area = (kept.size()>0)
+      ? (kept[0].has_area()     && kept[0].validated_csab()->has_explicit_ghosts())
+      : (rejected[0].has_area() && rejected[0].validated_csab()->has_explicit_ghosts());
+    if (has_non_explicit_ghost_area)
+      fs->discard_area();
+  }
+
   return filtered_jet;
 }
 

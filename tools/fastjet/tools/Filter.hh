@@ -160,14 +160,22 @@ private:
   /// Sets filtered_elements to be all the subjets on which filtering will work.
   /// It also sets the subjet_def to be used in joining things (the bit of
   /// subjet def that is of interest for later is the recombiner).
-  void _set_filtered_elements(const PseudoJet & jet,
+  ///
+  /// this returns true if teh optimisation trick for C/A reclustering has been used
+  bool _set_filtered_elements(const PseudoJet & jet,
                               std::vector<PseudoJet> & filtered_elements) const;
   
   /// gather the information about what is kept and rejected under the
   /// form of a PseudoJet with a special ClusterSequenceInfo
+  ///
+  /// The last argument (ca_optimisation_used) should be true if the
+  /// optimisation trick for C/A reclustering has been used (in which
+  /// case some extra tests have to be run for non-explicit-ghost
+  /// areas)
   PseudoJet _finalise(const PseudoJet & jet, 
                       std::vector<PseudoJet> & kept, 
-                      std::vector<PseudoJet> & rejected) const;
+                      std::vector<PseudoJet> & rejected,
+		      bool ca_optimisation_used) const;
 
   bool _uses_subtraction() const {return (_subtractor || _rho != 0);}
 
