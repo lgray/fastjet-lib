@@ -108,13 +108,16 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
 // sets filtered_elements to be all the subjets on which filtering will work
 void Filter::_set_filtered_elements(const PseudoJet & jet,
                                     vector<PseudoJet> & filtered_elements) const {
-  // recluster the jet
-  PseudoJet reclustered_jet = ((_Rfilt>=0) || (_Rfiltfunc))
-    ? Recluster(cambridge_algorithm, (_Rfiltfunc) ? (*_Rfiltfunc)(jet) : _Rfilt, false)(jet)
-    : Recluster(_subjet_def, false)(jet);
+  // create the recluster instance
+  Recluster recluster;
+  if ((_Rfilt>=0) || (_Rfiltfunc))
+    recluster = Recluster(cambridge_algorithm, (_Rfiltfunc) ? (*_Rfiltfunc)(jet) : _Rfilt, Recluster::keep_all);
+  else
+    recluster = Recluster(_subjet_def, false, Recluster::keep_all);
 
-  // order the filtered elements in pt
-  filtered_elements = sorted_by_pt(reclustered_jet.pieces());
+  // get the subjets
+  JetDefinition subjet_def;
+  bool ca_optimised = recluster.get_new_jets_and_def(jet, filtered_elements, subjet_def);
 }
 
 // gather the information about what is kept and rejected under the

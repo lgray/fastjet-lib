@@ -20,6 +20,7 @@
 //----------------------------------------------------------------------
 
 #include "fastjet/tools/Recluster.hh"
+#include "fastjet/CompositeJetStructure.hh"
 #include <fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh>
 #include <sstream>
 #include <typeinfo>
@@ -46,42 +47,34 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 LimitedWarning Recluster::_explicit_ghost_warning;
 
+// ctor
+Recluster::Recluster(JetAlgorithm subjet_alg, double subjet_radius, Keep keep_in)
+  : _subjet_def(JetDefinition(subjet_alg, subjet_radius)), 
+    _acquire_recombiner(true), _keep(keep_in), _cambridge_optimisation_enabled(true){}
+
+Recluster::Recluster(JetAlgorithm subjet_alg, Keep keep_in)
+    : _acquire_recombiner(true), _keep(keep_in), _cambridge_optimisation_enabled(true){
+  switch (JetDefinition::n_parameters_for_algorithm(subjet_alg)){
+  case 0: _subjet_def = JetDefinition(subjet_alg); break;
+  case 1: _subjet_def = JetDefinition(subjet_alg, JetDefinition::max_allowable_R); break;
+  default:
+    throw Error("Recluster(): tried to construct specifying only a jet algorithm ("+JetDefinition::algorithm_description(subjet_alg)+") which takes more than 1 parameter");
+  };
+}
+
+
 // class description
 string Recluster::description() const {
   ostringstream ostr;
   ostr << "Recluster with subjet_def = ";
-  if (_use_full_def) {
-    ostr << _subjet_def.description();
+  if (_acquire_recombiner){
+    ostr << _subjet_def.description_no_recombiner();
+    ostr << ", using a recombiner obtained from the jet being reclustered";
   } else {
-    // there is no easy way to access the algorithm description, so
-    // we've copy-pasted this from JetDefinition::description()
-    if (_subjet_alg == kt_algorithm) {
-      ostr << "Longitudinally invariant kt algorithm with R = " << _subjet_radius;
-    } else if (_subjet_alg == cambridge_algorithm) {
-      ostr << "Longitudinally invariant Cambridge/Aachen algorithm with R = " << _subjet_radius;
-    } else if (_subjet_alg == antikt_algorithm) {
-      ostr << "Longitudinally invariant anti-kt algorithm with R = " << _subjet_radius;
-    } else if (_subjet_alg == genkt_algorithm) {
-      ostr << "Longitudinally invariant generalised kt algorithm with R = " << _subjet_radius
-           << ", p = " << _subjet_extra;
-    } else if (_subjet_alg == cambridge_for_passive_algorithm) {
-      ostr << "Longitudinally invariant Cambridge/Aachen algorithm with R = " << _subjet_radius
-           << " and a special hack whereby particles with kt < " 
-           << _subjet_extra << "are treated as passive ghosts";
-    } else if (_subjet_alg == ee_kt_algorithm) {
-      ostr << "e+e- kt (Durham) algorithm";
-    } else if (_subjet_alg == ee_genkt_algorithm) {
-      ostr << "e+e- generalised kt algorithm with R = " << _subjet_radius
-           << ", p = " << _subjet_extra;
-    } else if (_subjet_alg == undefined_jet_algorithm) {
-      ostr << "uninitialised JetDefinition (jet_algorithm=undefined_jet_algorithm)" ;
-    } else {
-      ostr << "unrecognized jet_algorithm";
-    }
-    ostr << ", a recombiner obtained from the jet being reclustered";
+    ostr << _subjet_def.description();
   }
 
-  if (_single)
+  if (_keep == keep_only_hardest)
     ostr << " and keeping the hardest subjet";
   else
     ostr << " and joining all subjets into a composite jet";
@@ -89,12 +82,38 @@ string Recluster::description() const {
   return ostr.str();
 }
 
+
 // the main piece of code that performs the reclustering
 PseudoJet Recluster::result(const PseudoJet &jet) const {
+  // get the subjets and the exact jet definition that has been used
+  // to get them
+  vector<PseudoJet> subjets;
+  JetDefinition subjet_def;
+  bool ca_optimised = get_new_jets_and_def(jet, subjets, subjet_def);
+
+  return generate_output_jet(subjets, subjet_def, ca_optimised);
+}
+
+
+// a lower-level method that does the actual work of reclustering
+// the input jet. The resulting subjets are stored in output_jets
+// and the jet definition that has been used is stored in
+// output_jet_def
+//
+//  - input_jet       the (input) jet that one wants to recluster
+//  - output_jets     subjets resulting from the new clustering
+//  - output_jet_def  the jet def that has been used to obtain output_jets
+//
+// returns true if the ca soptimisation has been used (this means
+// that generate_output_jet will watch out for non-explicit-ghost
+// areas that might be leftover)
+bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet, 
+                                     vector<PseudoJet> & output_jets, 
+                                     JetDefinition & output_jet_def) const{
   // generic sanity checks
   //-------------------------------------------------------------------
   // make sure that the jet has constituents
-  if (! jet.has_constituents())
+  if (! input_jet.has_constituents())
     throw Error("Recluster can only be applied on jets having constituents");
 
   // tests particular to certain configurations
@@ -107,25 +126,19 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
   // Note that the pieces are always needed (either for C/A or for the
   // area checks)
   vector<PseudoJet> all_pieces;
-  if ((!_get_all_pieces(jet, all_pieces)) || (all_pieces.size()==0)){
+  if ((!_get_all_pieces(input_jet, all_pieces)) || (all_pieces.size()==0)){
     throw Error("Recluster: failed to retrieve all the pieces composing the jet.");
   }
 
   // decide which jet definition to use
   //-------------------------------------------------------------------
-  JetDefinition subjet_def;
-  if (_use_full_def){
-    // note that if the subjet def is undefined, we'll get an error
-    // anyway, so there is no need to handle this here
-    subjet_def = _subjet_def;
-  } else {
-    // we need at the very least to get teh recombiner from the pieces
-    _build_jet_def_with_recombiner(all_pieces, subjet_def);
+  output_jet_def = _subjet_def;
+  if (_acquire_recombiner){
+    _acquire_recombiner_from_pieces(all_pieces, output_jet_def);
   }
 
-
   // the vector that will ultimately hold the subjets
-  vector<PseudoJet> subjets;
+  output_jets.clear();
 
   // check if we can apply the simplification for C/A jets reclustered
   // with C/A
@@ -139,30 +152,15 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
   // In this case area support will be automatically inherted so we
   // can only worry about this later
   // -------------------------------------------------------------------
-  if (_check_ca(all_pieces, subjet_def)){
-    _recluster_cafilt(all_pieces, subjets, subjet_def.R());
-    subjets = sorted_by_pt(subjets);
-    if (_single){
-      return subjets[0];
-    } else {
-      // if there is no explicit ghosts, the area of exclusive jets
-      // may be erroneous (each of them would have a corerct area but
-      // joining them may fail to get the total area correctly). In
-      // that case, we simply disable the area support.
-      PseudoJet reclustered = join(subjets, *(subjet_def.recombiner()));
-      if (reclustered.has_area() &&
-	  (! all_pieces[0].validated_csab()->has_explicit_ghosts())){
-        CompositeJetStructure *css = (CompositeJetStructure *)(reclustered.structure_non_const_ptr());
-        assert(css);
-        css->discard_area();
-      }
-      return reclustered;
-    }
+  if (_check_ca(all_pieces, output_jet_def)){
+    _recluster_ca(all_pieces, output_jets, output_jet_def.R());
+    output_jets = sorted_by_pt(output_jets);
+    return true;
   }
 
   // decide if area support has to be kept
   //-------------------------------------------------------------------
-  bool include_area_support = jet.has_area();
+  bool include_area_support = input_jet.has_area();
   if ((include_area_support) &&  (!_check_explicit_ghosts(all_pieces))){
     _explicit_ghost_warning.warn("Recluster: the original cluster sequence is lacking explicit ghosts; area support will no longer be available after re-clustering");
     include_area_support = false;
@@ -170,12 +168,38 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
 
   // extract the subjets
   //-------------------------------------------------------------------
-  _recluster_generic(jet, subjets, subjet_def, include_area_support);
-  subjets = sorted_by_pt(subjets);
+  _recluster_generic(input_jet, output_jets, output_jet_def, include_area_support);
+  output_jets = sorted_by_pt(output_jets);
 
-  return _single
-    ? subjets[0]
-    : join(subjets, *(subjet_def.recombiner()));
+  return false;
+}
+
+// given a set of subjets and a jet definition used, create the
+// resulting PseudoJet
+PseudoJet Recluster::generate_output_jet(std::vector<PseudoJet> & subjets, 
+                                         JetDefinition & jet_def_used,
+                                         bool ca_optimisation_used) const{
+  // first handle the case where we only need to keep the hardest subjet
+  if (_keep == keep_only_hardest) return subjets[0];
+
+  // now the case where all subjets have to be joined
+  PseudoJet reclustered = join(subjets, *(jet_def_used.recombiner()));
+
+  // if we've used C/A optimisation, we need to get rid of the area
+  // information if it comes from a non-explicit-ghost clustering.
+  // (because in that case it can be erroneous due the lack of
+  // information about empty areas)
+  if (ca_optimisation_used){
+    if (reclustered.has_area() &&
+        (subjets.size() > 0) &&
+        (! subjets[0].validated_csab()->has_explicit_ghosts())){
+      CompositeJetStructure *css = (CompositeJetStructure *)(reclustered.structure_non_const_ptr());
+      assert(css);
+      css->discard_area();
+    }
+  }
+  
+  return reclustered;
 }
 
 //----------------------------------------------------------------------
@@ -183,9 +207,9 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
 //----------------------------------------------------------------------
 
 // get the subjets in the simple case of C/A+C/A
-void Recluster::_recluster_cafilt(const vector<PseudoJet> & all_pieces, 
-                                  vector<PseudoJet> & subjets, 
-                                  double Rfilt) const{
+void Recluster::_recluster_ca(const vector<PseudoJet> & all_pieces, 
+                              vector<PseudoJet> & subjets, 
+                              double Rfilt) const{
   subjets.clear();
 
   // each individual piece should have a C/A cluster sequence
@@ -263,7 +287,6 @@ void Recluster::_recluster_generic(const PseudoJet & jet,
   }
 }
 
-
 //----------------------------------------------------------------------
 // various checks and internal constructs
 //----------------------------------------------------------------------
@@ -294,15 +317,10 @@ bool Recluster::_get_all_pieces(const PseudoJet &jet, vector<PseudoJet> &all_pie
 // construct the re-clustering jet definition using the recombiner
 // from whatever definition has been used to obtain the original jet
 //----------------------------------------------------------------------
-void Recluster::_build_jet_def_with_recombiner(const vector<PseudoJet> &all_pieces, 
-                                               JetDefinition &subjet_def) const{
-  // now build the JetDefinition (so far with no recombiner info)
-  if (_has_subjet_extra)
-    subjet_def = JetDefinition(_subjet_alg, _subjet_radius, _subjet_extra);
-  else if (_has_subjet_radius)
-    subjet_def = JetDefinition(_subjet_alg, _subjet_radius);
-  else 
-    subjet_def = JetDefinition(_subjet_alg);
+void Recluster::_acquire_recombiner_from_pieces(const vector<PseudoJet> &all_pieces, 
+                                                JetDefinition &subjet_def) const{
+  // a quick safety check
+  assert(_acquire_recombiner);
 
   // check that all the pieces have the same recombiner
   //
@@ -352,6 +370,10 @@ bool Recluster::_check_explicit_ghosts(const vector<PseudoJet> &all_pieces) cons
 // 1st check called after the enumeration of the pieces)
 bool Recluster::_check_ca(const vector<PseudoJet> &all_pieces, 
                           const JetDefinition &subjet_def) const{
+  // check that optimisation is enabled
+  if (!_cambridge_optimisation_enabled) return false;
+
+  // check that we're reclustering with C/A
   if (subjet_def.jet_algorithm() != cambridge_algorithm) return false;
 
   // check that the 1st of all the pieces (we're sure there is at
