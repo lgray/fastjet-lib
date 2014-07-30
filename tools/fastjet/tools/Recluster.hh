@@ -162,19 +162,16 @@ public:
   ///
   /// \param input_jet       the (input) jet that one wants to recluster
   /// \param output_jets     subjets resulting from the new clustering
-  /// \param output_jet_def  the jet def that has been used to obtain output_jets
   ///
   /// returns true if the ca soptimisation has been used (this means
   /// that generate_output_jet will watch out for non-explicit-ghost
   /// areas that might be leftover)
   bool get_new_jets_and_def(const PseudoJet & input_jet, 
-                            std::vector<PseudoJet> & output_jets, 
-                            JetDefinition & output_jet_def) const;
+                            std::vector<PseudoJet> & output_jets) const;
 
   /// given a set of subjets and a jet definition used, create the
   /// resulting PseudoJet
-  PseudoJet generate_output_jet(std::vector<PseudoJet> & subjets, 
-                                JetDefinition & jet_def_used,
+  PseudoJet generate_output_jet(std::vector<PseudoJet> & subjets,
                                 bool ca_optimisation_used) const;
 
 

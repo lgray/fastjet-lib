@@ -88,10 +88,9 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
   // get the subjets and the exact jet definition that has been used
   // to get them
   vector<PseudoJet> subjets;
-  JetDefinition subjet_def;
-  bool ca_optimised = get_new_jets_and_def(jet, subjets, subjet_def);
+  bool ca_optimised = get_new_jets_and_def(jet, subjets);
 
-  return generate_output_jet(subjets, subjet_def, ca_optimised);
+  return generate_output_jet(subjets, ca_optimised);
 }
 
 
@@ -108,8 +107,7 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
 // that generate_output_jet will watch out for non-explicit-ghost
 // areas that might be leftover)
 bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet, 
-                                     vector<PseudoJet> & output_jets, 
-                                     JetDefinition & output_jet_def) const{
+                                     vector<PseudoJet> & output_jets) const{
   // generic sanity checks
   //-------------------------------------------------------------------
   // make sure that the jet has constituents
@@ -132,9 +130,9 @@ bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet,
 
   // decide which jet definition to use
   //-------------------------------------------------------------------
-  output_jet_def = _subjet_def;
+  JetDefinition subjet_def = _subjet_def;
   if (_acquire_recombiner){
-    _acquire_recombiner_from_pieces(all_pieces, output_jet_def);
+    _acquire_recombiner_from_pieces(all_pieces, subjet_def);
   }
 
   // the vector that will ultimately hold the subjets
@@ -152,8 +150,8 @@ bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet,
   // In this case area support will be automatically inherted so we
   // can only worry about this later
   // -------------------------------------------------------------------
-  if (_check_ca(all_pieces, output_jet_def)){
-    _recluster_ca(all_pieces, output_jets, output_jet_def.R());
+  if (_check_ca(all_pieces, subjet_def)){
+    _recluster_ca(all_pieces, output_jets, subjet_def.R());
     output_jets = sorted_by_pt(output_jets);
     return true;
   }
@@ -168,7 +166,7 @@ bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet,
 
   // extract the subjets
   //-------------------------------------------------------------------
-  _recluster_generic(input_jet, output_jets, output_jet_def, include_area_support);
+  _recluster_generic(input_jet, output_jets, subjet_def, include_area_support);
   output_jets = sorted_by_pt(output_jets);
 
   return false;
@@ -177,13 +175,17 @@ bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet,
 // given a set of subjets and a jet definition used, create the
 // resulting PseudoJet
 PseudoJet Recluster::generate_output_jet(std::vector<PseudoJet> & subjets, 
-                                         JetDefinition & jet_def_used,
                                          bool ca_optimisation_used) const{
   // first handle the case where we only need to keep the hardest subjet
   if (_keep == keep_only_hardest) return subjets[0];
 
   // now the case where all subjets have to be joined
-  PseudoJet reclustered = join(subjets, *(jet_def_used.recombiner()));
+
+  // safekeeper
+  if (subjets.size()==0) return join(subjets);
+
+  PseudoJet reclustered = join(subjets, 
+			       *(subjets[0].associated_cluster_sequence()->jet_def().recombiner()));
 
   // if we've used C/A optimisation, we need to get rid of the area
   // information if it comes from a non-explicit-ghost clustering.

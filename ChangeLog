@@ -1,5 +1,13 @@
 2014-07-30  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Filter.hh:
+	properly handled the case where C/A optimisation has been used and
+	the jet has a non-explicit-ghost jet area
+
+	* tools/Recluster.cc:
+	no longer keep track of the jet definition used to obtain the
+	subjets. It can be accessed through the subjets themselves.
+
 	* src/JetDefinition.cc:
 	reinserted the missing genkt_algorithm in n_parameters_for_algorithm
 
