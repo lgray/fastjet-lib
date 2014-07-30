@@ -1,5 +1,8 @@
 2014-07-30  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/fastjet/tools/Recluster.hh:
+	worked on the description of the class
+
 	* tools/fastjet/tools/Filter.hh:
 	properly handled the case where C/A optimisation has been used and
 	the jet has a non-explicit-ghost jet area

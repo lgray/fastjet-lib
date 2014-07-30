@@ -40,27 +40,27 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// \class Recluster
 /// Recluster a jet's constituents with a new jet definition.
 ///
-/// The result of the reclustering is returned as a single PseudoJet
-/// with a CompositeJet structure. The pieces of that PseudoJet will
-/// be the individual subjets
-///
 /// When constructed from a JetDefinition, that definition will be
-/// used to obtain the subjets.  When constructed from a JetAlgorithm
-/// and parameters (0 parameters for e+e-, just R or R and an extra
-/// parameter for others) the recombination scheme will be taken as
-/// the same one used to initially cluster the original jet.
+/// used to obtain the subjets. The user may then decide if the
+/// recombiner should be the one from that jet definition or if it
+/// should be acquired from the jet being processed (teh default).
 ///
-/// The result of the reclustering depends on its usage. There are two
-/// typical use-cases: either we recluster one fat jet into subjets,
-/// OR, we recluster the jet with a different jet alg. When Recluster
-/// is created from a full jet definition. The last parameter of the
-/// constructors below dicatate that behaviour: if "single" is true
-/// (the default), a single jet, issued from a regular clustering is
-/// returned (if there are more than one, the hardest is taken);
-/// otherwise (single==false), the result will be a composite jet with
-/// each subjet as pieces. [Note that since the structure of the
-/// resulting PseudoJet depends on its usage, this class inherits from
-/// FunctionOfPseudoJet<PseudoJet (including a description) rather
+/// Alternatively, Recluster can be constructed from a jet algorithm
+/// and an optional radius. In that casem the recombiner is
+/// systematically obtained fromn the jet being processed. If only the
+/// jet algorithm is specified, a default radius of max_allowable_R
+/// will be assumed if needed.
+///
+/// Recluster has two possible behaviours:
+///  - if it is constructed with keep=keep_only_hardest
+///    the hardest subjet is returned as a "standard" jet with an
+///    associated cluster sequence
+///  - if it is constructed with keep=keep_all
+///    all the subjets are joined in a composite jet
+///
+/// [Note that since the structure of the resulting PseudoJet depends
+/// on its usage, this class inherits from
+/// FunctionOfPseudoJet<PseudoJet> (including a description) rather
 /// than being a full-fledged Transformer]
 ///
 class Recluster : public FunctionOfPseudoJet<PseudoJet> {
