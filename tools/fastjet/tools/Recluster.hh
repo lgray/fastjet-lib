@@ -32,14 +32,15 @@
 //
 //  - do we have a single Recluster class with a "single" ctor
 //    argument or do we have a Recluster and a Subcluster? The latter
-//    option, although a bit more heavy would allow to define
-//    StructireType properly
+//    option, although a bit more heavy would allow one to define
+//    StructureType properly
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 /// \class Recluster
-/// Class that helps reclustering a jet with a new jet definition
+/// Transformer that reclusters a jet's constituents with a new jet
+/// definition.
 ///
 /// The result of the reclustering is returned as a single PseudoJet
 /// with a CompositeJet structure. The pieces of that PseudoJet will
