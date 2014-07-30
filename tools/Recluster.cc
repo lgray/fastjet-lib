@@ -84,7 +84,7 @@ string Recluster::description() const {
   if (_single)
     ostr << " and keeping the hardest subjet";
   else
-    ostr << " and joining all subjets in a composite jet";
+    ostr << " and joining all subjets into a composite jet";
 
   return ostr.str();
 }

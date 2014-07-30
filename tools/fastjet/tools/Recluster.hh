@@ -95,7 +95,7 @@ public:
   ///                       otherwise return a composite jet with subjets
   ///                       as pieces.
   /// 
-  /// Typically, for e+e- algoriothm you should use the third version
+  /// Typically, for e+e- algorithm you should use the third version
   /// below with no parameters, for "standard" pp algorithms, just the
   /// clustering radius has to be specified and for genkt-type of
   /// algorithms, both the radius and the extra parameter have to be
@@ -138,6 +138,10 @@ public:
   // type.
   typedef PseudoJetStructureBase StructureType;
 
+  
+  
+  // get_new_jets_and_def(const PseudoJet & input_jet, vector<PseudoJet> & output_jets, JetDefinition & output_jet_def);
+  
 private:
   /// set the reclustered elements in the simple case of C/A+C/A
   void _recluster_cafilt(const std::vector<PseudoJet> & all_pieces,
