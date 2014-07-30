@@ -431,6 +431,14 @@ public:
   /// return a textual description of the current jet definition 
   std::string description() const;
 
+  /// returns a description not including the recombiner information
+  std::string description_no_recombiner() const;
+
+  /// a short textual description of the algorithm jet_alg
+  static std::string algorithm_description(const JetAlgorithm jet_alg);
+
+  /// the number of parameters associated to a given jet algorithm
+  static unsigned int n_parameters_for_algorithm(const JetAlgorithm jet_alg);
 
 public:
   //======================================================================

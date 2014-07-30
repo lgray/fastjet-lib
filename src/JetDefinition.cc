@@ -69,32 +69,13 @@ JetDefinition::JetDefinition(JetAlgorithm jet_algorithm_in,
 
   // cross-check the number of parameters that were declared in setting up the
   // algorithm (passed internally from the public constructors)
-  switch (jet_algorithm_in) {
-  case ee_kt_algorithm:
-    if (nparameters != 0) {
-      ostringstream oss;
-      oss << "ee_kt_algorithm should be constructed with 0 parameters but was called with " 
-          << nparameters << " parameter(s)\n";
-      throw Error(oss.str()); 
-    }
-    break;
-  case genkt_algorithm: 
-  case ee_genkt_algorithm: 
-    if (nparameters != 2) {
-      ostringstream oss;
-      oss << "(ee_)genkt_algorithm should be constructed with 2 parameters but was called with " 
-          << nparameters << " parameter(s)\n";
-      throw Error(oss.str()); 
-    }
-    break;
-  default:
-    if (nparameters != 1) {
-      ostringstream oss;
-      oss << "The jet algorithm you requested ("
-          << jet_algorithm_in << ") should be constructed with 1 parameter but was called with " 
-          << nparameters << " parameter(s)\n";
-      throw Error(oss.str()); 
-    }
+  unsigned int nparameters_expected = n_parameters_for_algorithm(jet_algorithm_in);
+  if (nparameters != (int) nparameters_expected){
+    ostringstream oss;
+    oss << "The jet algorithm you requested ("
+        << jet_algorithm_in << ") should be constructed with " << nparameters_expected 
+        << " parameter(s) but was called with " << nparameters << " parameter(s)\n";
+    throw Error(oss.str()); 
   }
 
   // make sure the strategy requested is sensible
@@ -124,43 +105,79 @@ bool JetDefinition::is_spherical() const {
 //----------------------------------------------------------------------
 string JetDefinition::description() const {
   ostringstream name;
-  if (jet_algorithm() == plugin_algorithm) {
-    return plugin()->description();
-  } else if (jet_algorithm() == kt_algorithm) {
-    name << "Longitudinally invariant kt algorithm with R = " << R();
-    name << " and " << recombiner()->description();
-  } else if (jet_algorithm() == cambridge_algorithm) {
-    name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
-	 << R() ;
-    name << " and " << recombiner()->description();
-  } else if (jet_algorithm() == antikt_algorithm) {
-    name << "Longitudinally invariant anti-kt algorithm with R = " 
-	 << R() ;
-    name << " and " << recombiner()->description();
-  } else if (jet_algorithm() == genkt_algorithm) {
-    name << "Longitudinally invariant generalised kt algorithm with R = " 
-	 << R() << ", p = " << extra_param();
-    name << " and " << recombiner()->description();
-  } else if (jet_algorithm() == cambridge_for_passive_algorithm) {
-    name << "Longitudinally invariant Cambridge/Aachen algorithm with R = " 
-	 << R() << "and a special hack whereby particles with kt < " 
-         << extra_param() << "are treated as passive ghosts";
-  } else if (jet_algorithm() == ee_kt_algorithm) {
-    name << "e+e- kt (Durham) algorithm (NB: no R)";
-    name << " with " << recombiner()->description();
-  } else if (jet_algorithm() == ee_genkt_algorithm) {
-    name << "e+e- generalised kt algorithm with R = " 
-	 << R() << ", p = " << extra_param();
-    name << " and " << recombiner()->description();
-  } else if (jet_algorithm() == undefined_jet_algorithm) {
-    name << "uninitialised JetDefinition (jet_algorithm=undefined_jet_algorithm)" ;
-  } else {
-    throw Error("JetDefinition::description(): unrecognized jet_algorithm");
+  
+  name << description_no_recombiner();
+
+  if ((jet_algorithm() == plugin_algorithm) || (jet_algorithm() == undefined_jet_algorithm)){
+    return name.str();
   }
+
+  if (n_parameters_for_algorithm(jet_algorithm()) == 0)
+    name << " with ";
+  else 
+    name << " and ";
+  name << recombiner()->description();
+
   return name.str();
 }
 
+//----------------------------------------------------------------------
+string JetDefinition::description_no_recombiner() const {
+  
+  ostringstream name;
+  if (jet_algorithm() == plugin_algorithm) {
+    return plugin()->description();
+  } else if (jet_algorithm() == undefined_jet_algorithm) {
+    return "uninitialised JetDefinition (jet_algorithm=undefined_jet_algorithm)" ;
+  }
 
+  name << algorithm_description(jet_algorithm());
+  switch (n_parameters_for_algorithm(jet_algorithm())){
+  case 0: name << " (NB: no R)"; break;
+  case 1: name << " with R = " << R(); break; // the parameter is always R
+  case 2: 
+    // the 1st parameter is always R
+    name << " with R = " << R();
+    // the 2nd depends on the algorithm
+    if (jet_algorithm() == cambridge_for_passive_algorithm){
+      name << "and a special hack whereby particles with kt < " 
+           << extra_param() << "are treated as passive ghosts";
+    } else {
+      name << ", p = " << extra_param();
+    }
+  };
+
+  return name.str();
+}
+
+//----------------------------------------------------------------------
+string JetDefinition::algorithm_description(const JetAlgorithm jet_alg){
+  ostringstream name;
+  switch (jet_alg){
+  case plugin_algorithm:                return "plugin algorithm";
+  case kt_algorithm:                    return "Longitudinally invariant kt algorithm";
+  case cambridge_algorithm:             return "Longitudinally invariant Cambridge/Aachen algorithm";
+  case antikt_algorithm:                return "Longitudinally invariant anti-kt algorithm";
+  case genkt_algorithm:                 return "Longitudinally invariant generalised kt algorithm";
+  case cambridge_for_passive_algorithm: return "Longitudinally invariant Cambridge/Aachen algorithm";
+  case ee_kt_algorithm:                 return "e+e- kt (Durham) algorithm (NB: no R)";
+  case ee_genkt_algorithm:              return "e+e- generalised kt algorithm";
+  case undefined_jet_algorithm:         return "undefined jet algorithm";
+  default:
+    throw Error("JetDefinition::algorithm_description(): unrecognized jet_algorithm");
+  };
+}
+
+//----------------------------------------------------------------------
+unsigned int JetDefinition::n_parameters_for_algorithm(const JetAlgorithm jet_alg){
+  switch (jet_alg) {
+  case ee_kt_algorithm:    return 0;
+  case ee_genkt_algorithm: return 2;
+  default:                 return 1;
+  };
+}
+
+//----------------------------------------------------------------------
 void JetDefinition::set_recombination_scheme(
                                RecombinationScheme recomb_scheme) {
   _default_recombiner = JetDefinition::DefaultRecombiner(recomb_scheme);

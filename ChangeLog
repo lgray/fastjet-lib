@@ -1,3 +1,38 @@
+2014-07-30  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Filter.cc :
+	adapted to use the Keep enum in Recluster.
+	TODO: fix the "discard_area" part for non-explicit-ghost areas
+	with C/A reclustering
+
+	Note: we could get rid of the sub jet def returned by
+	Recluster::get_new_jets_and_def since it can be obtained from the
+	subjets.
+
+	* tools/fastjet/tools/Recluster.hh:
+	* tools/Recluster.cc:
+	  . added an enum (Keep) that takes values keep_only_hardest or
+	    keep_all, replacing the 'single' member
+	  . moved the ctor structure to
+	      Recluster(JetDef, acquire_recombiner = true,
+	                Keep keep_in = Recluster::keep_only_hardest)
+              Recluster(JetAlg, R, keep_in = Recluster::keep_only_hardest)
+              Recluster(JetAlg, keep_in = Recluster::keep_only_hardest)
+	    simplified quite a bit the structure accordingly
+	  . used the new description functionalities in JetDefinition
+	  . added Recluster::disable_cambridge_optimisation to disable the
+	    attempt to optimise for C/A
+	  . introduced get_new_jets_and_def(...) and generate_output_jet().
+	    These are the two steps of result() and this should ease the
+	    Filter.
+
+	* include/fastjet/JetDefinition.hh:
+	* src/JetDefinition.cc:
+	added JetDefinition::n_parameters_for_algorithm (static),
+	JetDefinition::algorithm_description (static) and
+	description_no_recombiner().
+	Slightly simplified other bits of the code accordingly.
+
 2014-07-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/ClusterSequenceArea.hh:
