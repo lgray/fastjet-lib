@@ -1,5 +1,8 @@
 2014-07-30  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/JetDefinition.cc:
+	reinserted the missing genkt_algorithm in n_parameters_for_algorithm
+
 	* tools/Filter.cc :
 	adapted to use the Keep enum in Recluster.
 	TODO: fix the "discard_area" part for non-explicit-ghost areas

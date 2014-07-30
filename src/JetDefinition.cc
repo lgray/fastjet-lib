@@ -172,6 +172,7 @@ string JetDefinition::algorithm_description(const JetAlgorithm jet_alg){
 unsigned int JetDefinition::n_parameters_for_algorithm(const JetAlgorithm jet_alg){
   switch (jet_alg) {
   case ee_kt_algorithm:    return 0;
+  case genkt_algorithm:
   case ee_genkt_algorithm: return 2;
   default:                 return 1;
   };
