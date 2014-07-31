@@ -1,5 +1,13 @@
 2014-07-31  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/GridMedianBackgroundEstimator.cc:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	  . no longer cace the scalar+pt in each grid cell (<~5% effect on
+	    timing, omitting the call to _percentile in the version with
+	    caching)
+	  . added support for rho_m, sigma_m (on by default but can be
+	    turned off using disable_rho_m())
+
 	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
 	added rho_m(), sigma_m(), rho_m(jet), sigma_m(jet) [throw by
 	default] and has_rho_m() [false by default].

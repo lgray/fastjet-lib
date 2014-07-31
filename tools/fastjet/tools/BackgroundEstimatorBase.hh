@@ -133,7 +133,7 @@ public:
   /// determination of rho_m.
   /// Note that support for sigma_m is automatic is one has sigma and
   /// rho_m support.
-  virtual bool has_rho_m() {return false;}
+  virtual bool has_rho_m() const {return false;}
   //\}
 
 

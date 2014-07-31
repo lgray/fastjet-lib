@@ -74,7 +74,8 @@ public:
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     _ymin(-ymax), _ymax(ymax), 
     _requested_grid_spacing(requested_grid_spacing),
-    _has_particles(false){setup_grid();}
+    _has_particles(false), _disable_rho_m(false)
+  {setup_grid();}
   //\}
 
 
@@ -85,6 +86,9 @@ public:
   /// tell the background estimator that it has a new event, composed
   /// of the specified particles.
   void set_particles(const std::vector<PseudoJet> & particles);
+
+  /// disable the automatic calculation of rho_m and sigma_m
+  void disable_rho_m(bool disable=true){ _disable_rho_m = disable;}
 
   //\}
 
@@ -115,6 +119,28 @@ public:
   /// determination of sigma
   bool has_sigma() {return true;}
 
+  //-----------------------------------------------------------------
+  /// returns rho_m (particle-masses contribution to the 4-vector density)
+  double rho_m() const;
+
+  /// returns sigma_m (particle-masses contribution to the 4-vector
+  /// density); must be multipled by sqrt(area) to get fluctuations
+  /// for a region of a given area.
+  double sigma_m() const;
+
+  /// returns rho_m locally at the position of a given jet. As for
+  /// rho(jet), it is non-const.
+  double rho_m(const PseudoJet & jet);
+
+  /// returns sigma_m locally at the position of a given jet. As for
+  /// rho(jet), it is non-const.
+  double sigma_m(const PseudoJet & jet);
+
+  /// returns true if this background estimator has support for
+  /// determination of sigma
+  bool has_rho_m() const {return !_disable_rho_m;}
+
+
   /// returns the area of the grid cells (all identical, but
   /// referred to as "mean" area for uniformity with JetMedianBGE).
   double mean_area() const {return _cell_area;}
@@ -135,6 +161,10 @@ public:
   ///
   /// Note that this has to be called BEFORE any attempt to do an
   /// actual computation
+  ///
+  /// The same profile will be used for both pt and mt (this is
+  /// probabaly a good approximation since the particle density
+  /// changes is what dominates the rapidity profile)
   virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class);
 
   //\}
@@ -164,8 +194,10 @@ private:
   int _ny, _nphi, _ntotal;
 
   // information abotu the event
-  std::vector<double> _scalar_pt;
+  //std::vector<double> _scalar_pt;
+  double _rho, _sigma, _rho_m, _sigma_m;
   bool _has_particles;
+  bool _disable_rho_m;
 
   // various warnings to let people aware of potential dangers
   LimitedWarning _warning_rho_of_jet;

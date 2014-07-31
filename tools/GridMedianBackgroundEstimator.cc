@@ -40,17 +40,65 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 // tell the background estimator that it has a new event, composed
 // of the specified particles.
 void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
-  fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
-  for (unsigned i = 0; i < particles.size(); i++) {
-    int j = igrid(particles[i]);
-    if (j >= 0){
-      if (_rescaling_class == 0)
-        _scalar_pt[j] += particles[i].perp();
-      else
-        _scalar_pt[j] += particles[i].perp()/(*_rescaling_class)(particles[i]);
+  vector<double> scalar_pt(_ntotal, 0.0);
+
+  // check if we need to compute only rho or both rho and rho_m
+  if (_disable_rho_m){
+    // only rho
+    //fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
+    for (unsigned i = 0; i < particles.size(); i++) {
+      int j = igrid(particles[i]);
+      if (j >= 0){
+	if (_rescaling_class == 0){
+	  scalar_pt[j] += particles[i].pt();
+	} else {
+	  scalar_pt[j] += particles[i].pt()/(*_rescaling_class)(particles[i]);
+	}
+      }
     }
+  } else {
+    // both rho and rho_m
+    //
+    // this requires a few other variables
+    vector<double> scalar_dt(_ntotal, 0.0);
+    double pt, dt;
+    for (unsigned i = 0; i < particles.size(); i++) {
+      int j = igrid(particles[i]);
+      if (j >= 0){
+	pt = particles[i].pt();
+	dt = particles[i].mt() - pt;
+	if (_rescaling_class == 0){
+	  scalar_pt[j] += pt;
+	  scalar_dt[j] += dt;
+	} else {
+	  double r = (*_rescaling_class)(particles[i]);
+	  scalar_pt[j] += pt/r;
+	  scalar_dt[j] += dt/r;
+	}
+      }
+    }
+    // sort things for _percentile
+    sort(scalar_dt.begin(), scalar_dt.end());
+
+    // compute rho_m and sigma_m (see comment below for the
+    // normaliosation of sigma)
+    double p50 = _percentile(scalar_dt, 0.5);
+    _rho_m   = p50 / _cell_area;
+    _sigma_m = (p50-_percentile(scalar_dt, (1.0-0.6827)/2.0))/sqrt(_cell_area);
   }
-  sort(_scalar_pt.begin(), _scalar_pt.end());
+
+  // in all cases, carry on with the computation of rho
+  // 
+  // first sort
+  sort(scalar_pt.begin(), scalar_pt.end());
+
+  // then compute rho
+  //
+  // watch out: by definition, our sigma is the standard deviation of
+  // the pt density multiplied by the square root of the cell area
+  double p50 = _percentile(scalar_pt, 0.5);
+  _rho   = p50 / _cell_area;
+  _sigma = (p50-_percentile(scalar_pt, (1.0-0.6827)/2.0))/sqrt(_cell_area);
 
   _has_particles = true;
 }
@@ -62,7 +110,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
 // get rho, the median background density per unit area
 double GridMedianBackgroundEstimator::rho() const {
   verify_particles_set();
-  return _percentile(_scalar_pt, 0.5) / _cell_area;
+  return _rho;
 }
 
 
@@ -72,11 +120,7 @@ double GridMedianBackgroundEstimator::rho() const {
 // given area.
 double GridMedianBackgroundEstimator::sigma() const{
   verify_particles_set();
-  // watch out: by definition, our sigma is the standard deviation of
-  // the pt density multiplied by the square root of the cell area
-  return (_percentile(_scalar_pt, 0.5) -
-          _percentile(_scalar_pt, (1.0-0.6827)/2.0)
-          )/sqrt(_cell_area);
+  return _sigma; 
 }
 
 //----------------------------------------------------------------------
@@ -86,7 +130,7 @@ double GridMedianBackgroundEstimator::sigma() const{
 // could depend on the position of the jet last used for a rho(jet)
 // determination.
 double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
-  verify_particles_set();
+  //verify_particles_set();
   double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
   return rescaling*rho();
 }
@@ -96,9 +140,51 @@ double GridMedianBackgroundEstimator::rho(const PseudoJet & jet)  {
 // get sigma, the background fluctuations per unit area, locally at
 // the position of a given jet. As for rho(jet), it is non-const.
 double GridMedianBackgroundEstimator::sigma(const PseudoJet & jet){
-  verify_particles_set();
+  //verify_particles_set();
   double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
   return rescaling*sigma();
+}
+
+//----------------------------------------------------------------------
+// returns rho_m (particle-masses contribution to the 4-vector density)
+double GridMedianBackgroundEstimator::rho_m() const {
+  if (_disable_rho_m){
+    throw Error("GridMediamBackgroundEstimator: rho_m requested but rho_m calculation has been disabled.");
+  }
+  verify_particles_set();
+  return _rho_m;
+}
+
+
+//----------------------------------------------------------------------
+// returns sigma_m (particle-masses contribution to the 4-vector
+// density); must be multipled by sqrt(area) to get fluctuations
+// for a region of a given area.
+double GridMedianBackgroundEstimator::sigma_m() const{
+  if (_disable_rho_m){
+    throw Error("GridMediamBackgroundEstimator: sigma_m requested but rho_m/sigma_m calculation has been disabled.");
+  }
+  verify_particles_set();
+  return _sigma_m; 
+}
+
+//----------------------------------------------------------------------
+// returns rho_m locally at the position of a given jet. As for
+// rho(jet), it is non-const.
+double GridMedianBackgroundEstimator::rho_m(const PseudoJet & jet)  {
+  //verify_particles_set();
+  double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
+  return rescaling*rho_m();
+}
+
+
+//----------------------------------------------------------------------
+// returns sigma_m locally at the position of a given jet. As for
+// rho(jet), it is non-const.
+double GridMedianBackgroundEstimator::sigma_m(const PseudoJet & jet){
+  //verify_particles_set();
+  double rescaling = (_rescaling_class == 0) ? 1.0 : (*_rescaling_class)(jet);
+  return rescaling*sigma_m();
 }
 
 //----------------------------------------------------------------------
@@ -170,7 +256,7 @@ void GridMedianBackgroundEstimator::setup_grid() {
   assert(_ny >= 1 && _nphi >= 1);
 
   _ntotal = _nphi * _ny;
-  _scalar_pt.resize(_ntotal);
+  //_scalar_pt.resize(_ntotal);
   _cell_area = _dy * _dphi;
 }
 
