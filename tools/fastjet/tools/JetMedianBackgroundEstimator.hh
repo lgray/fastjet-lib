@@ -122,7 +122,8 @@ public:
   /// \param rho_range   the Selector specifying which jets will be considered
   ///
   JetMedianBackgroundEstimator(const Selector &rho_range = SelectorIdentity())
-    : _rho_range(rho_range), _jet_def(JetDefinition()) { reset(); }
+    : _rho_range(rho_range), _jet_def(JetDefinition()),
+      _disable_rho_m(false){ reset(); }
   
 
   /// default dtor
@@ -169,6 +170,9 @@ public:
     _uptodate = false;
   }
 
+  /// disable the automatic calculation of rho_m and sigma_m
+  void disable_rho_m(bool disable=true){ _disable_rho_m = disable;}
+
   //\}
 
 
@@ -202,6 +206,29 @@ public:
   /// determination of sigma
   virtual bool has_sigma() {return true;}
 
+  //----------------------------------------------------------------
+  // now do the same thing for rho_m and sigma_m
+
+  /// get rho_m, the background density per unit area due to particle
+  /// masses
+  virtual double rho_m() const;
+
+  /// get sigma_m, the background fluctuations per unit area due to
+  /// particle masses; must be multipled by sqrt(area) to get
+  /// fluctuations for a region of a given area.
+  virtual double sigma_m() const;
+
+  /// get rho_m locally. As for rho(jet), it is non-const.
+  virtual double rho_m(const PseudoJet & /*jet*/);
+
+  /// get sigma_m locally. As for rho(jet), it is non-const.
+  virtual double sigma_m(const PseudoJet & /*jet*/);
+
+  /// returns true if this background estimator has support for
+  /// determination of rho_m.
+  /// Note that support for sigma_m is automatic is one has sigma and
+  /// rho_m support.
+  virtual bool has_rho_m() const {return !_disable_rho_m;}
   //\}
   
   /// @name  retrieving additional useful information
@@ -387,22 +414,25 @@ private:
   /// background estimation (i.e. either kt or C/A)
   /// Issue a warning otherwise
   void _check_jet_alg_good_for_median() const;
-  
+
   // the basic parameters of this class (passed through the variou ctors)
   Selector _rho_range;                   ///< range to compute the background in
   JetDefinition _jet_def;                ///< the jet def to use for teh clustering
   AreaDefinition _area_def;              ///< the area def to use for teh clustering
   std::vector<PseudoJet> _included_jets; ///< jets to be used
   
-  // the tunable aprameters of the class
+  // the tunable parameters of the class
   bool _use_area_4vector;
   bool _provide_fj2_sigma;
   const FunctionOfPseudoJet<double> * _jet_density_class;
   //SharedPtr<BackgroundRescalingBase> _rescaling_class_sharedptr;
+  bool _disable_rho_m;
   
   // the actual results of the computation
   mutable double _rho;               ///< background estimated density per unit area
   mutable double _sigma;             ///< background estimated fluctuations
+  mutable double _rho_m;             ///< "mass" background estimated density per unit area
+  mutable double _sigma_m;           ///< "mass" background estimated fluctuations
   mutable double _mean_area;         ///< mean area of the jets used to estimate the background
   mutable unsigned int _n_jets_used; ///< number of jets used to estimate the background
   mutable double _n_empty_jets;      ///< number of empty (pure-ghost) jets

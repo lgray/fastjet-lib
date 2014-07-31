@@ -100,8 +100,6 @@ public:
   /// returns true if this background estimator has support for
   /// determination of sigma
   virtual bool has_sigma() {return false;}
-  //\}
-
 
   //----------------------------------------------------------------
   // now do the same thing for rho_m and sigma_m
