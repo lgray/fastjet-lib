@@ -101,7 +101,41 @@ public:
   /// determination of sigma
   virtual bool has_sigma() {return false;}
   //\}
-  
+
+
+  //----------------------------------------------------------------
+  // now do the same thing for rho_m and sigma_m
+
+  /// get rho_m, the background density per unit area due to particle
+  /// masses
+  virtual double rho_m() const{
+    throw Error("rho_m() not supported for this Background Estimator");
+  }
+
+  /// get sigma_m, the background fluctuations per unit area due to
+  /// particle masses; must be multipled by sqrt(area) to get
+  /// fluctuations for a region of a given area.
+  virtual double sigma_m() const { 
+    throw Error("sigma_m() not supported for this Background Estimator");
+  }
+
+  /// get rho_m locally. As for rho(jet), it is non-const.
+  virtual double rho_m(const PseudoJet & jet){
+    throw Error("rho_m(jet) not supported for this Background Estimator");
+  }
+
+  /// get sigma_m locally. As for rho(jet), it is non-const.
+  virtual double sigma_m(const PseudoJet & /*jet*/) { 
+    throw Error("sigma_m(jet) not supported for this Background Estimator");
+  }
+
+  /// returns true if this background estimator has support for
+  /// determination of rho_m.
+  /// Note that support for sigma_m is automatic is one has sigma and
+  /// rho_m support.
+  virtual bool has_rho_m() {return false;}
+  //\}
+
 
   /// @name configuring the behaviour
   //\{

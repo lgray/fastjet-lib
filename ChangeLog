@@ -1,3 +1,9 @@
+2014-07-31  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	added rho_m(), sigma_m(), rho_m(jet), sigma_m(jet) [throw by
+	default] and has_rho_m() [false by default].
+
 2014-07-30  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Recluster.hh:
