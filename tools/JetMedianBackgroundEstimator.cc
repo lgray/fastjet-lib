@@ -84,7 +84,7 @@ LimitedWarning JetMedianBackgroundEstimator::_warnings_preliminary;
 JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const Selector &rho_range,
                                          const JetDefinition &jet_def,
                                          const AreaDefinition &area_def)
-  : _rho_range(rho_range), _jet_def(jet_def), _area_def(area_def) {
+  : _rho_range(rho_range), _jet_def(jet_def), _area_def(area_def){
 
   // initialise things decently
   reset();
@@ -335,6 +335,8 @@ void JetMedianBackgroundEstimator::reset(){
   set_use_area_4vector();  // true by default
   set_provide_fj2_sigma(false);
 
+  _disable_rho_m = false;
+
   // reset the computed values
   _rho = _sigma = 0.0;
   _rho_m = _sigma_m = 0.0;
@@ -414,6 +416,7 @@ void JetMedianBackgroundEstimator::_compute() const {
   // compute the pt/area for the selected jets
   double median_input_pt, median_input_dt=0.0;
   BackgroundJetPtMDensity m_density;
+  bool do_rho_m = (!_disable_rho_m) && (_jet_density_class == 0);
   for (unsigned i = 0; i < selected_jets.size(); i++) {
     const PseudoJet & current_jet = selected_jets[i];
 
@@ -429,7 +432,7 @@ void JetMedianBackgroundEstimator::_compute() const {
 
       // handle the rho_m part if requested
       // note that we're using the scalar area!
-      if (!_disable_rho_m) 
+      if (do_rho_m) 
 	median_input_pt = m_density(current_jet)/current_jet.area();
     
       // perform rescaling if needed
@@ -441,7 +444,7 @@ void JetMedianBackgroundEstimator::_compute() const {
       
       // store the result for future computation of the median
       vector_for_median_pt.push_back(median_input_pt);
-      if (!_disable_rho_m) 
+      if (do_rho_m) 
 	vector_for_median_dt.push_back(median_input_dt);
 
       total_area  += this_area;
@@ -483,7 +486,7 @@ void JetMedianBackgroundEstimator::_compute() const {
   _sigma      = stand_dev * sqrt(_mean_area);
 
   // compute the rho_m part now
-  if (!_disable_rho_m){
+  if (do_rho_m){
     _median_and_stddev(vector_for_median_dt, _n_empty_jets, _rho_m, stand_dev, 
 		       _provide_fj2_sigma);
     _sigma_m = stand_dev * sqrt(_mean_area);

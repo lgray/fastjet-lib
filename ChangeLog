@@ -1,6 +1,10 @@
 2014-07-31  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc:
+	fix: enabled rho_m in reset()
+	do not compute rho_m if a jet density class is provided.
+
+	* tools/JetMedianBackgroundEstimator.cc:
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	added support for rho_m, sigma_m (on by default but can be turned
 	off using disable_rho_m())
