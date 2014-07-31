@@ -3,6 +3,7 @@
 	* tools/JetMedianBackgroundEstimator.cc:
 	fix: enabled rho_m in reset()
 	do not compute rho_m if a jet density class is provided.
+	fix: critical "pt" v. "dt" typo in _compute()
 
 	* tools/JetMedianBackgroundEstimator.cc:
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:

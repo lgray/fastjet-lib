@@ -433,7 +433,7 @@ void JetMedianBackgroundEstimator::_compute() const {
       // handle the rho_m part if requested
       // note that we're using the scalar area!
       if (do_rho_m) 
-	median_input_pt = m_density(current_jet)/current_jet.area();
+	median_input_dt = m_density(current_jet)/current_jet.area();
     
       // perform rescaling if needed
       if (_rescaling_class != 0) {
