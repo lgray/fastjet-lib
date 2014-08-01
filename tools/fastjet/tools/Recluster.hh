@@ -126,9 +126,20 @@ public:
   //----------------------------------------------------------------------
   // tweaking the behaviour
 
-  /// do not try to optimise reclustering with Cambridge/Aachen algorithms
-  void disable_cambridge_optimisation(bool disabled=true){ _cambridge_optimisation_enabled = !disabled;}
-  void disable_cambridge_optimization(bool disabled=true){ _cambridge_optimisation_enabled = !disabled;}
+  /// sets whether to try to optimise reclustering with
+  /// Cambridge/Aachen algorithms (by not reclustering if the the
+  /// requested C/A reclustering can be obtained by using subjets of
+  /// an input C/A jet or one composed of multiple C/A pieces from the
+  /// same clustering sequence). By default this is enabled, and
+  /// _should_ always be correct; disable it to test this statement!
+  void set_cambridge_optimisation(bool enabled){ _cambridge_optimisation_enabled = enabled;}
+  /// sets whether to try to optimise reclustering with Cambridge/Aachen algorithms (US spelling!)
+  void set_cambridge_optimization(bool enabled){ _cambridge_optimisation_enabled = enabled;}
+
+  /// returns true if the reclusterer tries to optimise reclustering
+  /// with Cambridge/Aachen algorithms
+  bool cambridge_optimization(){return _cambridge_optimisation_enabled;}
+  bool cambridge_optimisation(){return _cambridge_optimisation_enabled;}
 
   //----------------------------------------------------------------------
   // retrieving info about the behaviour
@@ -155,22 +166,25 @@ public:
   /// \return the reclustered jet
   virtual PseudoJet result(const PseudoJet & jet) const;
 
-  /// a lower-level method that does the actual work of reclustering
-  /// the input jet. The resulting subjets are stored in output_jets
-  /// and the jet definition that has been used is stored in
-  /// output_jet_def
+  /// A lower-level method that does the actual work of reclustering
+  /// the input jet. The resulting subjets are stored in output_jets.
+  /// The jet definition that has been used can be accessed from the
+  /// output_jets' ClusterSequence.
   ///
   /// \param input_jet       the (input) jet that one wants to recluster
   /// \param output_jets     subjets resulting from the new clustering
   ///
-  /// returns true if the ca soptimisation has been used (this means
-  /// that generate_output_jet will watch out for non-explicit-ghost
+  /// Returns true if the C/A optimisation has been used (this means
+  /// that generate_output_jet then has to watch out for non-explicit-ghost
   /// areas that might be leftover)
   bool get_new_jets_and_def(const PseudoJet & input_jet, 
                             std::vector<PseudoJet> & output_jets) const;
 
   /// given a set of subjets and a jet definition used, create the
-  /// resulting PseudoJet
+  /// resulting PseudoJet;
+  /// 
+  /// If ca_optimisation_used then special care will be taken in
+  /// deciding whether the final jet can legitimately have an area.
   PseudoJet generate_output_jet(std::vector<PseudoJet> & subjets,
                                 bool ca_optimisation_used) const;
 

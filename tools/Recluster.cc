@@ -103,7 +103,7 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
 //  - output_jets     subjets resulting from the new clustering
 //  - output_jet_def  the jet def that has been used to obtain output_jets
 //
-// returns true if the ca soptimisation has been used (this means
+// returns true if the C/A optimisation has been used (this means
 // that generate_output_jet will watch out for non-explicit-ghost
 // areas that might be leftover)
 bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet, 
