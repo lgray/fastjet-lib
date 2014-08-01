@@ -1,3 +1,13 @@
+2014-08-01  Gavin SALAM  <gavin.salam@cern.ch> & Gregory
+
+	* src/ClusterSequence.cc: 
+	_best_strategy will now assert(false) if the jet alg is not one of
+	kt, antikt, cam or genkt, and drops back to kt or antikt choices
+	depending on genkt's p value.
+
+	The routine that calls it now replaces the NlnN strategy with
+	N2MHTLazy25 if NlnN isn't available.
+
 2014-08-01  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence.cc:
