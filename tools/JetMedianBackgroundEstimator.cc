@@ -356,7 +356,7 @@ void JetMedianBackgroundEstimator::reset(){
 // median will be calculated; if the pointer is null then pt/area
 // is used (as occurs also if this function is not called).
 void JetMedianBackgroundEstimator::set_jet_density_class(const FunctionOfPseudoJet<double> * jet_density_class_in) {
-  _warnings_preliminary.warn("JetMedianBackgroundEstimator::set_jet_density_class: density classes are still preliminary in FastJet 3.1. Their interface may differ in future releases (without guaranteeing backward compatibility). Note however that since FastJet 3.1, rho_m and sigma_m are accessible direclty in JetMedianBackgroundEstimator (with no need for a density class).");
+  _warnings_preliminary.warn("JetMedianBackgroundEstimator::set_jet_density_class: density classes are still preliminary in FastJet 3.1. Their interface may differ in future releases (without guaranteeing backward compatibility). Note that since FastJet 3.1, rho_m and sigma_m are accessible direclty in JetMedianBackgroundEstimator and GridMedianBackgroundEstimator(with no need for a density class).");
   _jet_density_class = jet_density_class_in;
   _uptodate = false;
 }
@@ -431,9 +431,10 @@ void JetMedianBackgroundEstimator::_compute() const {
       }
 
       // handle the rho_m part if requested
-      // note that we're using the scalar area!
+      // note that we're using the scalar area as a normalisation inside the
+      // density class!
       if (do_rho_m) 
-	median_input_dt = m_density(current_jet)/current_jet.area();
+	median_input_dt = m_density(current_jet);
     
       // perform rescaling if needed
       if (_rescaling_class != 0) {

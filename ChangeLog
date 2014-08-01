@@ -1,9 +1,16 @@
 2014-08-01  Gavin SALAM  <gavin.salam@cern.ch> & Gregory
 
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+        disable_rho_m() replaced with set_compute_rho_m()
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	changes to comments
+
 	* tools/fastjet/tools/Recluster.hh:
 	* tools/Recluster.cc:
 	work on comments and also slight change to interface relating to
-	ca optimisation.
+	C/A optimisation.
 
 	* src/ClusterSequence.cc:
 	_best_strategy will now assert(false) if the jet alg is not one of

@@ -87,8 +87,9 @@ public:
   /// of the specified particles.
   void set_particles(const std::vector<PseudoJet> & particles);
 
-  /// disable the automatic calculation of rho_m and sigma_m
-  void disable_rho_m(bool disable=true){ _disable_rho_m = disable;}
+  /// determine whether the automatic calculation of rho_m and sigma_m
+  /// is enabled (by default true)
+  void set_compute_rho_m(bool enable){ _disable_rho_m = !enable;}
 
   //\}
 
@@ -120,24 +121,27 @@ public:
   bool has_sigma() {return true;}
 
   //-----------------------------------------------------------------
-  /// returns rho_m (particle-masses contribution to the 4-vector density)
+  /// Returns rho_m, the purely longitudinal, particle-mass-induced
+  /// component of the background density per unit area
   double rho_m() const;
 
-  /// returns sigma_m (particle-masses contribution to the 4-vector
-  /// density); must be multipled by sqrt(area) to get fluctuations
-  /// for a region of a given area.
+  /// returns sigma_m, a measure of the fluctuations in the purely
+  /// longitudinal, particle-mass-induced component of the background
+  /// density per unit area; must be multipled by sqrt(area) to get
+  /// fluctuations for a region of a given area.
   double sigma_m() const;
 
-  /// returns rho_m locally at the position of a given jet. As for
-  /// rho(jet), it is non-const.
+  /// Returns rho_m locally at the jet position. As for rho(jet), it is non-const.
   double rho_m(const PseudoJet & jet);
 
-  /// returns sigma_m locally at the position of a given jet. As for
-  /// rho(jet), it is non-const.
+  /// Returns sigma_m locally at the jet position. As for rho(jet), it is non-const.
   double sigma_m(const PseudoJet & jet);
 
-  /// returns true if this background estimator has support for
-  /// determination of sigma
+  /// Returns true if this background estimator has support for
+  /// determination of rho_m.
+  ///
+  /// Note that support for sigma_m is automatic is one has sigma and
+  /// rho_m support.
   bool has_rho_m() const {return !_disable_rho_m;}
 
 

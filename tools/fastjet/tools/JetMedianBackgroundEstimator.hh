@@ -170,8 +170,9 @@ public:
     _uptodate = false;
   }
 
-  /// disable the automatic calculation of rho_m and sigma_m
-  void disable_rho_m(bool disable=true){ _disable_rho_m = disable;}
+  /// determine whether the automatic calculation of rho_m and sigma_m
+  /// is enabled (by default true)
+  void set_compute_rho_m(bool enable){ _disable_rho_m = !enable;}
 
   //\}
 
@@ -209,23 +210,25 @@ public:
   //----------------------------------------------------------------
   // now do the same thing for rho_m and sigma_m
 
-  /// get rho_m, the background density per unit area due to particle
-  /// masses
+  /// returns rho_m, the purely longitudinal, particle-mass-induced
+  /// component of the background density per unit area
   virtual double rho_m() const;
 
-  /// get sigma_m, the background fluctuations per unit area due to
-  /// particle masses; must be multipled by sqrt(area) to get
+  /// returns sigma_m, a measure of the fluctuations in the purely
+  /// longitudinal, particle-mass-induced component of the background
+  /// density per unit area; must be multipled by sqrt(area) to get
   /// fluctuations for a region of a given area.
   virtual double sigma_m() const;
 
-  /// get rho_m locally. As for rho(jet), it is non-const.
+  /// Returns rho_m locally at the jet position. As for rho(jet), it is non-const.
   virtual double rho_m(const PseudoJet & /*jet*/);
 
-  /// get sigma_m locally. As for rho(jet), it is non-const.
+  /// Returns sigma_m locally at the jet position. As for rho(jet), it is non-const.
   virtual double sigma_m(const PseudoJet & /*jet*/);
 
-  /// returns true if this background estimator has support for
+  /// Returns true if this background estimator has support for
   /// determination of rho_m.
+  ///
   /// Note that support for sigma_m is automatic is one has sigma and
   /// rho_m support.
   virtual bool has_rho_m() const {return !_disable_rho_m;}

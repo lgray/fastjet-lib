@@ -47,7 +47,6 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 /// that estimate levels of background radiation in hadron and
 /// heavy-ion collider events.
 ///
-///
 class BackgroundEstimatorBase {
 public:
   /// @name  constructors and destructors
@@ -104,31 +103,33 @@ public:
   //----------------------------------------------------------------
   // now do the same thing for rho_m and sigma_m
 
-  /// get rho_m, the background density per unit area due to particle
-  /// masses
+  /// returns rho_m, the purely longitudinal, particle-mass-induced
+  /// component of the background density per unit area
   virtual double rho_m() const{
     throw Error("rho_m() not supported for this Background Estimator");
   }
 
-  /// get sigma_m, the background fluctuations per unit area due to
-  /// particle masses; must be multipled by sqrt(area) to get
+  /// returns sigma_m, a measure of the fluctuations in the purely
+  /// longitudinal, particle-mass-induced component of the background
+  /// density per unit area; must be multipled by sqrt(area) to get
   /// fluctuations for a region of a given area.
   virtual double sigma_m() const { 
     throw Error("sigma_m() not supported for this Background Estimator");
   }
 
-  /// get rho_m locally. As for rho(jet), it is non-const.
-  virtual double rho_m(const PseudoJet & jet){
+  /// Returns rho_m locally at the jet position. As for rho(jet), it is non-const.
+  virtual double rho_m(const PseudoJet & /*jet*/){
     throw Error("rho_m(jet) not supported for this Background Estimator");
   }
 
-  /// get sigma_m locally. As for rho(jet), it is non-const.
+  /// Returns sigma_m locally at the jet position. As for rho(jet), it is non-const.
   virtual double sigma_m(const PseudoJet & /*jet*/) { 
     throw Error("sigma_m(jet) not supported for this Background Estimator");
   }
 
-  /// returns true if this background estimator has support for
+  /// Returns true if this background estimator has support for
   /// determination of rho_m.
+  ///
   /// Note that support for sigma_m is automatic is one has sigma and
   /// rho_m support.
   virtual bool has_rho_m() const {return false;}
@@ -147,6 +148,9 @@ public:
   ///
   /// The BackgroundRescalingYPolynomial class can be used to get a
   /// rescaling that depends just on rapidity.
+  ///
+  /// There is currently no support for different rescaling classes 
+  /// for rho and rho_m determinations.
   virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) { _rescaling_class = rescaling_class_in; }
 
   /// return the pointer to the jet density class
