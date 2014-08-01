@@ -74,7 +74,7 @@ public:
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     _ymin(-ymax), _ymax(ymax), 
     _requested_grid_spacing(requested_grid_spacing),
-    _has_particles(false), _disable_rho_m(false)
+    _has_particles(false), _enable_rho_m(true)
   {setup_grid();}
   //\}
 
@@ -89,7 +89,7 @@ public:
 
   /// determine whether the automatic calculation of rho_m and sigma_m
   /// is enabled (by default true)
-  void set_compute_rho_m(bool enable){ _disable_rho_m = !enable;}
+  void set_compute_rho_m(bool enable){ _enable_rho_m = enable;}
 
   //\}
 
@@ -142,7 +142,7 @@ public:
   ///
   /// Note that support for sigma_m is automatic is one has sigma and
   /// rho_m support.
-  bool has_rho_m() const {return !_disable_rho_m;}
+  bool has_rho_m() const {return _enable_rho_m;}
 
 
   /// returns the area of the grid cells (all identical, but
@@ -201,7 +201,7 @@ private:
   //std::vector<double> _scalar_pt;
   double _rho, _sigma, _rho_m, _sigma_m;
   bool _has_particles;
-  bool _disable_rho_m;
+  bool _enable_rho_m;
 
   // various warnings to let people aware of potential dangers
   LimitedWarning _warning_rho_of_jet;

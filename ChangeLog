@@ -1,3 +1,14 @@
+2014-08-01  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/GridMedianBackgroundEstimator.cc:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	replaced _disable_rho_m with _enable_rho_m internally
+
+	* tools/JetMedianBackgroundEstimator.cc:
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	replaced _disable_rho_m with _enable_rho_m internally
+	+ has_rho_m now also returns false if there is a density class
+
 2014-08-01  Gavin SALAM  <gavin.salam@cern.ch> & Gregory
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:

@@ -43,20 +43,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
   vector<double> scalar_pt(_ntotal, 0.0);
 
   // check if we need to compute only rho or both rho and rho_m
-  if (_disable_rho_m){
-    // only rho
-    //fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
-    for (unsigned i = 0; i < particles.size(); i++) {
-      int j = igrid(particles[i]);
-      if (j >= 0){
-	if (_rescaling_class == 0){
-	  scalar_pt[j] += particles[i].pt();
-	} else {
-	  scalar_pt[j] += particles[i].pt()/(*_rescaling_class)(particles[i]);
-	}
-      }
-    }
-  } else {
+  if (_enable_rho_m){
     // both rho and rho_m
     //
     // this requires a few other variables
@@ -85,6 +72,19 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
     double p50 = _percentile(scalar_dt, 0.5);
     _rho_m   = p50 / _cell_area;
     _sigma_m = (p50-_percentile(scalar_dt, (1.0-0.6827)/2.0))/sqrt(_cell_area);
+  } else {
+    // only rho
+    //fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
+    for (unsigned i = 0; i < particles.size(); i++) {
+      int j = igrid(particles[i]);
+      if (j >= 0){
+	if (_rescaling_class == 0){
+	  scalar_pt[j] += particles[i].pt();
+	} else {
+	  scalar_pt[j] += particles[i].pt()/(*_rescaling_class)(particles[i]);
+	}
+      }
+    }
   }
 
   // in all cases, carry on with the computation of rho
@@ -148,7 +148,7 @@ double GridMedianBackgroundEstimator::sigma(const PseudoJet & jet){
 //----------------------------------------------------------------------
 // returns rho_m (particle-masses contribution to the 4-vector density)
 double GridMedianBackgroundEstimator::rho_m() const {
-  if (_disable_rho_m){
+  if (! _enable_rho_m){
     throw Error("GridMediamBackgroundEstimator: rho_m requested but rho_m calculation has been disabled.");
   }
   verify_particles_set();
@@ -161,7 +161,7 @@ double GridMedianBackgroundEstimator::rho_m() const {
 // density); must be multipled by sqrt(area) to get fluctuations
 // for a region of a given area.
 double GridMedianBackgroundEstimator::sigma_m() const{
-  if (_disable_rho_m){
+  if (! _enable_rho_m){
     throw Error("GridMediamBackgroundEstimator: sigma_m requested but rho_m/sigma_m calculation has been disabled.");
   }
   verify_particles_set();

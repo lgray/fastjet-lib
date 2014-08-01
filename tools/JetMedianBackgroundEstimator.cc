@@ -275,8 +275,8 @@ double JetMedianBackgroundEstimator::sigma(const PseudoJet &jet) {
 //----------------------------------------------------------------------
 // returns rho_m (particle-masses contribution to the 4-vector density)
 double JetMedianBackgroundEstimator::rho_m() const {
-  if (_disable_rho_m){
-    throw Error("JetMediamBackgroundEstimator: rho_m requested but rho_m calculation is disabled.");
+  if (! has_rho_m()){
+    throw Error("JetMediamBackgroundEstimator: rho_m requested but rho_m calculation is disabled (either eplicitly or due to the presence of a jet density class).");
   }
   if (_rho_range.takes_reference())
     throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
@@ -290,8 +290,8 @@ double JetMedianBackgroundEstimator::rho_m() const {
 // density); must be multipled by sqrt(area) to get fluctuations
 // for a region of a given area.
 double JetMedianBackgroundEstimator::sigma_m() const{
-  if (_disable_rho_m){
-    throw Error("JetMediamBackgroundEstimator: sigma_m requested but rho_m/sigma_m calculation is disabled.");
+  if (! has_rho_m()){
+    throw Error("JetMediamBackgroundEstimator: sigma_m requested but rho_m/sigma_m calculation is disabled (either explicitly or due to the presence of a jet density class).");
   }
   if (_rho_range.takes_reference())
     throw Error("The background estimation is obtained from a selector that takes a reference jet. rho(PseudoJet) should be used in that case");
@@ -335,7 +335,7 @@ void JetMedianBackgroundEstimator::reset(){
   set_use_area_4vector();  // true by default
   set_provide_fj2_sigma(false);
 
-  _disable_rho_m = false;
+  _enable_rho_m = true;
 
   // reset the computed values
   _rho = _sigma = 0.0;
@@ -416,7 +416,7 @@ void JetMedianBackgroundEstimator::_compute() const {
   // compute the pt/area for the selected jets
   double median_input_pt, median_input_dt=0.0;
   BackgroundJetPtMDensity m_density;
-  bool do_rho_m = (!_disable_rho_m) && (_jet_density_class == 0);
+  bool do_rho_m = has_rho_m();
   for (unsigned i = 0; i < selected_jets.size(); i++) {
     const PseudoJet & current_jet = selected_jets[i];
 

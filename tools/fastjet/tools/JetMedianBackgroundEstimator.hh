@@ -123,7 +123,7 @@ public:
   ///
   JetMedianBackgroundEstimator(const Selector &rho_range = SelectorIdentity())
     : _rho_range(rho_range), _jet_def(JetDefinition()),
-      _disable_rho_m(false){ reset(); }
+      _enable_rho_m(true){ reset(); }
   
 
   /// default dtor
@@ -172,7 +172,7 @@ public:
 
   /// determine whether the automatic calculation of rho_m and sigma_m
   /// is enabled (by default true)
-  void set_compute_rho_m(bool enable){ _disable_rho_m = !enable;}
+  void set_compute_rho_m(bool enable){ _enable_rho_m = enable;}
 
   //\}
 
@@ -229,9 +229,12 @@ public:
   /// Returns true if this background estimator has support for
   /// determination of rho_m.
   ///
+  /// In te presence of a density class, support for rho_m is
+  /// automatically disabled
+  ///
   /// Note that support for sigma_m is automatic is one has sigma and
   /// rho_m support.
-  virtual bool has_rho_m() const {return !_disable_rho_m;}
+  virtual bool has_rho_m() const {return _enable_rho_m && (_jet_density_class == 0);}
   //\}
   
   /// @name  retrieving additional useful information
@@ -429,7 +432,7 @@ private:
   bool _provide_fj2_sigma;
   const FunctionOfPseudoJet<double> * _jet_density_class;
   //SharedPtr<BackgroundRescalingBase> _rescaling_class_sharedptr;
-  bool _disable_rho_m;
+  bool _enable_rho_m;
   
   // the actual results of the computation
   mutable double _rho;               ///< background estimated density per unit area
