@@ -592,7 +592,7 @@ Strategy ClusterSequence::_best_strategy() const {
 
   // the very first test thing is a quick hard-coded test to decide
   // if we immediately opt for N2Plain
-  if (N <= 30 || N <= 36.0/(bounded_R + 0.7)) {
+  if (N <= 30 || N <= 39.0/(bounded_R + 0.6)) {
     return N2Plain;
   } 
   
@@ -602,35 +602,98 @@ Strategy ClusterSequence::_best_strategy() const {
   // Hopefully having them static will ensure minimal overhead
   // in creating them; collecting them in one place should
   // help with updates?
-  const static _Parabola N_Tiled_to_MHT_lowR         (-11.4453,  15.9256, 107.125);
-  const static _Parabola L_MHT_to_MHTLazy9_lowR      (0.645352, -1.02009, 11.2284);
-  const static _Parabola L_MHTLazy9_to_MHTLazy25_lowR(0.17047, -0.515858, 12.4833);
+  const static _Parabola N_Tiled_to_MHT_lowR             (-45.4947,54.3528,44.6283);
+  const static _Parabola L_MHT_to_MHTLazy9_lowR          (0.677807,-1.05006,10.6994);
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_akt_lowR(0.169967,-0.512589,12.1572);
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_kt_lowR (0.16237,-0.484612,12.3373);
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_cam_lowR = L_MHTLazy9_to_MHTLazy25_kt_lowR;
+  const static _Parabola L_MHTLazy25_to_NlnN_akt_lowR    (0.0472051,-0.22043,15.9196);
+  const static _Parabola L_MHTLazy25_to_NlnN_kt_lowR     (0.118609,-0.326811,14.8287);
+  const static _Parabola L_MHTLazy25_to_NlnN_cam_lowR    (0.10119,-0.295748,14.3924);
 
-  const static _Line     L_Tiled_to_MHTLazy9_medR     (-1.36514, 7.47217);
-  const static _Parabola L_MHTLazy9_to_MHTLazy25_medR = L_MHTLazy9_to_MHTLazy25_lowR;
+  const static _Line     L_Tiled_to_MHTLazy9_medR         (-1.31304,7.29621);
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_akt_medR = L_MHTLazy9_to_MHTLazy25_akt_lowR;
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_kt_medR  = L_MHTLazy9_to_MHTLazy25_kt_lowR;
+  const static _Parabola L_MHTLazy9_to_MHTLazy25_cam_medR = L_MHTLazy9_to_MHTLazy25_cam_lowR;
+  const static _Parabola L_MHTLazy25_to_NlnN_akt_medR     = L_MHTLazy25_to_NlnN_akt_lowR;
+  const static _Parabola L_MHTLazy25_to_NlnN_kt_medR      = L_MHTLazy25_to_NlnN_kt_lowR;
+  const static _Parabola L_MHTLazy25_to_NlnN_cam_medR     = L_MHTLazy25_to_NlnN_cam_lowR;
 
-  const static double    N_Plain_to_MHTLazy9_largeR     = 75;
-  const static double    N_MHTLazy9_to_MHTLazy25_largeR = 700;
+  const static double    N_Plain_to_MHTLazy9_largeR         = 75;
+  const static double    N_MHTLazy9_to_MHTLazy25_akt_largeR = 700;
+  const static double    N_MHTLazy9_to_MHTLazy25_kt_largeR  = 1000;
+  const static double    N_MHTLazy9_to_MHTLazy25_cam_largeR = 1000;
+  const static double    N_MHTLazy25_to_NlnN_akt_largeR     = 100000;
+  const static double    N_MHTLazy25_to_NlnN_kt_largeR      = 40000;
+  const static double    N_MHTLazy25_to_NlnN_cam_largeR     = 15000;
+
+  //const static _Parabola N_Tiled_to_MHT_lowR         (-11.4453,  15.9256, 107.125);
+  //const static _Parabola L_MHT_to_MHTLazy9_lowR      (0.645352, -1.02009, 11.2284);
+  //const static _Parabola L_MHTLazy9_to_MHTLazy25_lowR(0.17047, -0.515858, 12.4833);
+  //
+  //const static _Line     L_Tiled_to_MHTLazy9_medR     (-1.36514, 7.47217);
+  //const static _Parabola L_MHTLazy9_to_MHTLazy25_medR = L_MHTLazy9_to_MHTLazy25_lowR;
+  //
+  //const static double    N_Plain_to_MHTLazy9_largeR     = 75;
+  //const static double    N_MHTLazy9_to_MHTLazy25_largeR = 700;
 
   if (bounded_R < 0.65) {
     // low R case
-    if      (N    < N_Tiled_to_MHT_lowR(bounded_R))          return N2Tiled;
+    if          (N    < N_Tiled_to_MHT_lowR(bounded_R))              return N2Tiled;
     double logN = log(double(N));
-    if      (logN < L_MHT_to_MHTLazy9_lowR(bounded_R))       return N2MinHeapTiled;
-    else if (logN < L_MHTLazy9_to_MHTLazy25_lowR(bounded_R)) return N2MHTLazy9;
-    else                                                     return N2MHTLazy25;
-
+    if          (logN < L_MHT_to_MHTLazy9_lowR(bounded_R))           return N2MinHeapTiled;
+    else {
+      if (_jet_algorithm == antikt_algorithm){
+        if      (logN < L_MHTLazy9_to_MHTLazy25_akt_lowR(bounded_R)) return N2MHTLazy9;
+        else if (logN < L_MHTLazy25_to_NlnN_akt_lowR(bounded_R))     return N2MHTLazy25;
+        else                                                         return NlnN;
+      } else if (_jet_algorithm == kt_algorithm){
+        if      (logN < L_MHTLazy9_to_MHTLazy25_kt_lowR(bounded_R))  return N2MHTLazy9;
+        else if (logN < L_MHTLazy25_to_NlnN_kt_lowR(bounded_R))      return N2MHTLazy25;
+        else                                                         return NlnN;
+      } else { // cambridge_algorithm
+        if      (logN < L_MHTLazy9_to_MHTLazy25_cam_lowR(bounded_R)) return N2MHTLazy9;
+        else if (logN < L_MHTLazy25_to_NlnN_cam_lowR(bounded_R))     return N2MHTLazy25;
+        else                                                         return NlnN;
+      }
+    }
   } else if (bounded_R < 0.5*pi) {
     // medium R case
     double logN = log(double(N));
-    if      (logN < L_Tiled_to_MHTLazy9_medR(bounded_R))     return N2Tiled;
-    else if (logN < L_MHTLazy9_to_MHTLazy25_medR(bounded_R)) return N2MHTLazy9;
-    else                                                     return N2MHTLazy25;
+    if      (logN < L_Tiled_to_MHTLazy9_medR(bounded_R))             return N2Tiled;
+    else {
+      if (_jet_algorithm == antikt_algorithm){
+        if      (logN < L_MHTLazy9_to_MHTLazy25_akt_medR(bounded_R)) return N2MHTLazy9;
+        else if (logN < L_MHTLazy25_to_NlnN_akt_medR(bounded_R))     return N2MHTLazy25;
+        else                                                         return NlnN;
+      } else if (_jet_algorithm == kt_algorithm){
+        if      (logN < L_MHTLazy9_to_MHTLazy25_kt_medR(bounded_R))  return N2MHTLazy9;
+        else if (logN < L_MHTLazy25_to_NlnN_kt_medR(bounded_R))      return N2MHTLazy25;
+        else                                                         return NlnN;
+      } else { // cambridge_algorithm
+        if      (logN < L_MHTLazy9_to_MHTLazy25_cam_medR(bounded_R)) return N2MHTLazy9;
+        else if (logN < L_MHTLazy25_to_NlnN_cam_medR(bounded_R))     return N2MHTLazy25;
+        else                                                         return NlnN;
+      }
+    }
   } else {
     // large R case
-    if      (N    < N_Plain_to_MHTLazy9_largeR)              return N2Plain;
-    else if (N    < N_MHTLazy9_to_MHTLazy25_largeR)          return N2MHTLazy9;
-    else                                                     return N2MHTLazy25;
+    if      (N    < N_Plain_to_MHTLazy9_largeR)                      return N2Plain;
+    else {
+      if (_jet_algorithm == antikt_algorithm){
+        if      (N < N_MHTLazy9_to_MHTLazy25_akt_largeR)             return N2MHTLazy9;
+        else if (N < N_MHTLazy25_to_NlnN_akt_largeR)                 return N2MHTLazy25;
+        else                                                         return NlnN;
+      } else if (_jet_algorithm == kt_algorithm){
+        if      (N < N_MHTLazy9_to_MHTLazy25_kt_largeR)              return N2MHTLazy9;
+        else if (N < N_MHTLazy25_to_NlnN_kt_largeR)                  return N2MHTLazy25;
+        else                                                         return NlnN;
+      } else { // cambridge_algorithm
+        if      (N < N_MHTLazy9_to_MHTLazy25_cam_largeR)             return N2MHTLazy9;
+        else if (N < N_MHTLazy25_to_NlnN_cam_largeR)                 return N2MHTLazy25;
+        else                                                         return NlnN;
+      }
+    }
   }
 
 }

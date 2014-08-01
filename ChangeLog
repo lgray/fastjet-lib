@@ -1,5 +1,9 @@
 2014-08-01  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/ClusterSequence.cc:
+	best_strategy() now follows the transitions sugegsted by the
+	latest timing run
+
 	* include/fastjet/Selector.hh:
 	* src/Selector.cc:
 	added Selector::scalar_pt sum that sums the pt of the objecs
