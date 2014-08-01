@@ -75,23 +75,6 @@ class TestGroomerAreas : public TestBase {
 //======================================================================
 typedef JetDefinition::DefaultRecombiner DefRecomb;
 
-class FlavourRecombiner : public  DefRecomb {
-public:
-  FlavourRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 
-    DefRecomb(recomb_scheme) {};
-
-  virtual std::string description() const {
-    return DefRecomb::description()+" (with user index addition)";}
-
-  /// recombine pa and pb and put result into pab
-  virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
-                         PseudoJet & pab) const {
-    DefRecomb::recombine(pa,pb,pab);
-    // Note: see the above discussion for the fact that we consider
-    // negative user indices as "0"
-    pab.set_user_index(max(pa.user_index(),0) + max(pb.user_index(),0));
-  }
-};
 
 /// class to test some things that happen with Groomers and Recombiners
 /// put together
