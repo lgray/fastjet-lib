@@ -199,6 +199,12 @@ public:
   /// passes and then evaluating the size of the vector
   PseudoJet sum(const std::vector<PseudoJet> & jets) const;
 
+  /// Return the scalar pt sum of the objects that pass the selection.
+  ///
+  /// This will often be more efficient that getting the vector of objects that
+  /// passes and then evaluating the size of the vector
+  double scalar_pt_sum(const std::vector<PseudoJet> & jets) const;
+
   /// sift the input jets into two vectors -- those that pass the selector
   /// and those that do not
   void sift(const std::vector<PseudoJet> & jets,

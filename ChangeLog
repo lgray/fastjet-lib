@@ -1,3 +1,10 @@
+2014-08-01  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Selector.hh:
+	* src/Selector.cc:
+	added Selector::scalar_pt sum that sums the pt of the objecs
+	passing the Selector.
+
 2014-07-31  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc:
