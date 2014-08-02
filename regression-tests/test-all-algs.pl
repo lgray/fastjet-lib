@@ -22,8 +22,8 @@
 #
 #  -R   R            sets R
 #
-#  -strat STRAT      use only this strategy [1 == best]; multiple colon-separated 
-#                    strategies may also be specified
+#  -strat STRAT      use only this strategy [1 == best]; multiple colon-separated
+#                    strategies may also be specified (or comma-separated)
 #
 #  -deposit DIR      puts the (unfiltered) output in a directory DIR
 #                    together with the sum
@@ -154,7 +154,7 @@ if ($bkgds){
 
 # the strategies to support
 if ($defstrat ne "") {
-  @strat = split(":",$defstrat);
+  @strat = split(/[:,]/,$defstrat);
 }
 elsif (exists($strategies{$alg})) {
   @strat = split(":",$strategies{$alg});

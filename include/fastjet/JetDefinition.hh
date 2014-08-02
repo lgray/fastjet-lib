@@ -148,11 +148,14 @@ enum JetAlgorithm {
   ///       diB = 1/kti^{2p}
   /// where p = extra_param()
   genkt_algorithm=3, 
-  /// a version of cambridge with a special distance measure for particles
-  /// whose pt is < extra_param()
+  /// a version of cambridge with a special distance measure for
+  /// particles whose pt is < extra_param(); this is not usually
+  /// intended for end users, but is instead automatically selected
+  /// when requesting a passive Cambridge area.
   cambridge_for_passive_algorithm=11,
   /// a version of genkt with a special distance measure for particles
   /// whose pt is < extra_param() [relevant for passive areas when p<=0]
+  /// ***** NB: THERE IS CURRENTLY NO IMPLEMENTATION FOR THIS ALG *******
   genkt_for_passive_algorithm=13, 
   //.................................................................
   /// the e+e- kt algorithm

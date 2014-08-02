@@ -638,15 +638,22 @@ Strategy ClusterSequence::_best_strategy() const {
   const static double    N_MHTLazy25_to_NlnN_kt_largeR      = 40000;
   const static double    N_MHTLazy25_to_NlnN_cam_largeR     = 15000;
 
-  // We have timing studies only for kt, cam and antikt; if we're
-  // using genkt, then we set the local jet_algorithm variable (used
-  // only for strategy choice) to be either kt or antikt, depending on
-  // the p value.
+  // We have timing studies only for kt, cam and antikt; for other
+  // algorithms we set the local jet_algorithm variable to the one of
+  // kt,cam,antikt that we think will be closest in behaviour to the
+  // other alg.
   JetAlgorithm jet_algorithm;
   if (_jet_algorithm == genkt_algorithm) {
+    // for genkt, then we set the local jet_algorithm variable (used
+    // only for strategy choice) to be either kt or antikt, depending on
+    // the p value.
     double p   = jet_def().extra_param();
     if (p < 0.0) jet_algorithm = antikt_algorithm;
     else         jet_algorithm =     kt_algorithm;
+  } else if (_jet_algorithm == cambridge_for_passive_algorithm) {
+    // we assume (but haven't tested) that using the kt-alg timing
+    // transitions should be adequate for cambridge_for_passive_algorithm
+    jet_algorithm = kt_algorithm;
   } else {
     jet_algorithm = _jet_algorithm;
   }
