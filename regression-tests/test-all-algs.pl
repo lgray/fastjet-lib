@@ -404,7 +404,7 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1,jetclu,R0.60" => "05781404302f156dac9171e37bc09d44",
   "Pythia-PtMin50-LHC-10kev.dat,nev1,pxcone,R0.60" => "c39185086e8ad3e35d13d32f2d03c41a",
   # ee algs ran on pp events
-  #"Pythia-PtMin50-LHC-10kev.dat,nev1,eekt,R0.60" => "8caea0f93458e54c5418b757793c50d2",
+  #"Pythia-PtMin50-LHC-10kev.dat,nev1,eekt,R0.60" => "8caea0f93458e54c518b757793c50d2",
   #"Pythia-PtMin50-LHC-10kev.dat,nev1,eegenkt:0,R0.60" => "d1d52a0e1b45b11590cab257c5af5152",
   #"Pythia-PtMin50-LHC-10kev.dat,nev1,eegenkt:-1,R0.60" => "8923f3b1d1e3b3e58859e7363ad5f538",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1,eekt,R0.60" => "6a7c5a8ec3700a82343fe597235c8fd7",
@@ -586,6 +586,14 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-repeat,2" => "66af0392ecb712f55b0e51d3083fd479",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-ghost-area,0.1" => "a5428690fcf1da5e7070d6f092345ea8",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,kt,R0.60,-explicit,-ghost-maxrap,4.0" => "6caad01ff496ed9b37a8ad8b5f1f9266",
+      # NB: the folllowing comes out different, on Gavin's macbook pro retina, 126529b37765562384705663b71f2912 
+      #     Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)
+      #     Target: x86_64-apple-darwin13.3.0
+      #
+      #     An explicit check shows that a single least-significant digit is responsible for the different.
+      #     The other cam areas also come out different, but there we haven't yet checked that it is just
+      #     a single digit. One test of kt areas also came out different, so this issue may actually be
+      #     be there for all areas.
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-active" => "911048ad2b03b38e62d1f8ddb4d95095",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit" => "741df147c16e55768cba1b892b35721f",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-passive" => "9b95ee58eda1fc7cf827410c9e87eee9",
