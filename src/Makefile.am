@@ -21,6 +21,7 @@ libfastjet_la_SOURCES = DnnPlane.cc\
 	LazyTiling9.cc \
         LazyTiling9Alt.cc \
         LazyTiling25.cc \
-        LazyTiling9SeparateGhosts.cc
+        LazyTiling9SeparateGhosts.cc \
+        RectangularGrid.cc
 
 EXTRA_DIST = makefile.static genconfig.sh

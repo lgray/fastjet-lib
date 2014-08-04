@@ -1,6 +1,14 @@
+2014-08-04  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/RectangularGrid.hh:
+	* src/RectangularGrid.cc:
+	* & corresponding Makefile.am files
+	added a new RectangularGrid class, intended to provide a common
+	core for at least some of the uses we have of rectangular grids.
+
 2014-08-02  Gavin Salam  <gavin.salam@cern.ch>
 
-	* regression-tests/test-all-algs.pl (setRefResults): 
+	* regression-tests/test-all-algs.pl (setRefResults):
 	for areas checksums, added a comment about results coming out
 	differently on Gavin's laptop, and in one case checked that this
 	is due to a single last digit change.
@@ -8,20 +16,20 @@
 	* src/ClusterSequence.cc (_best_strategy):
 	added handling of cambridge_for_passive_algorithm (treat it like
 	kt). This resolves today's nightly-check failure on cambridge
-	passive areas. 
+	passive areas.
 
 	* include/fastjet/JetDefinition.hh:
 	noted in comments that cambridge_for_passive_algorithm is not
-	intended for the end-user, but rather for internal games. 
+	intended for the end-user, but rather for internal games.
 	Also added a comment that genkt_for_passive_algorithm is not
 	currently implemented.
 
-	* regression-tests/test-all-algs.pl: 
+	* regression-tests/test-all-algs.pl:
 	now handles comma-separated strategy lists (not just colon-separated).
 
 2014-08-01  Gavin SALAM  <gavin.salam@cern.ch>
 
-	* testsuite/TestRecombiners.hh: 
+	* testsuite/TestRecombiners.hh:
 	added some very basic tests of recombiners, that setting to a
 	default recombination scheme works sensibly and that copying a
 	pointer to a recombination scheme also works. OK also with
