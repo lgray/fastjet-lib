@@ -41,10 +41,12 @@ int RectangularGrid::index(const PseudoJet & p) const {
   // it without testing the speed again
   double y_minus_ymin = p.rap() - _ymin;
   if (y_minus_ymin < 0) return -1;
-  int iy = int(y_minus_ymin * _inverse_dy); // guaranteed positive, so safe
+  int iy = int(y_minus_ymin * _inverse_dy); // guaranteed positive, so int is safe
   if (iy >= _ny) return -1;
-  // old version - gives a SoftKiller that's about 10% slower.
+  // old version: gives a SoftKiller that's about 10% slower on Gavin's retina mac.
   // (though having it hard coded inside SoftKiller returns that advantage)
+  // BUT: some comments said that this was a factor of two faster than
+  //      something similar to the version above. What is going on?
   // int iy = int(floor( (p.rap() - _ymin) * _inverse_dy ));
   // if (iy < 0 || iy >= _ny) return -1;
   int iphi = int( p.phi() * _inverse_dphi );

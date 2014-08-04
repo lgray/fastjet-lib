@@ -44,7 +44,8 @@ public:
   /// is outside the tiling region
   virtual int index(const PseudoJet & p) const = 0;
 
-  /// returns the total number of tiles in the tiling
+  /// returns the total number of tiles in the tiling; valid tile
+  /// indices run from 0 ... n_tiles()-1;
   virtual int n_tiles() const = 0;
 
   /// returns the number of tiles that are "good"; i.e. there is scope
@@ -56,8 +57,15 @@ public:
   /// returns whether a give tile is good
   virtual bool is_good(int itile) const {return true;}
 
+  /// returns true if all tiles have the same area
+  virtual bool all_tiles_equal_area() const {return true;}
+
+  /// returns the area of tile itile.
+  virtual double tile_area(int itile) const = 0;
+
   /// returns a string to describe the tiling
   virtual std::string description() const = 0;
+
 };
 
 //----------------------------------------------------------------------
@@ -104,7 +112,11 @@ public:
 //     return iy*_nphi + iphi;
 //   }
 
+
   virtual int n_tiles() const {return _ntotal;}
+
+  /// returns the area of tile itile.
+  virtual double tile_area(int itile) const {return _dphi*_dy;}
 
   virtual std::string description() const;
   
