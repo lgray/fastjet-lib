@@ -49,6 +49,8 @@
 \global\emergencystretch = .9\hsize
 
 \newcommand{\fastjet}{\texttt{FastJet}\xspace}
+\newcommand{\contrib}{\texttt{Contrib}\xspace}
+\newcommand{\fjcontrib}{\texttt{fjcontrib}\xspace}
 \newcommand{\ktjet}{\texttt{KtJet}\xspace}
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
 % ttt includes some resizing of text so that things look nicer inline
@@ -3890,7 +3892,29 @@ As it is less widely used than the taggers mentioned above, we refer
 the user to the online doxygen documentation for further details.
 
 
+%----------------------------------------------------------------------
+\subsection{FastJet Contrib}
 
+The \fastjet update schedule is geared towards providing stability.
+Typically, a minor (X.Y) release is made every two or three years, and
+a new minor or major release may only become widely adopted (notably
+by the experiments) a further year or two down the line.
+%
+In comparison, the field of jet physics, especially jet substructure,
+and the development of associated tools proceeds at a much faster pace.
+
+To accomodate this, part way through the 3.1 development cycle, in
+2013, \fastjet \contrib (\fjcontrib) was introduced. 
+%
+This provides a home for a variety of contributed tools. 
+%
+New tools from 3rd-party authors can usually be added in the space of
+days or weeks, after some basic review of the interface, so far
+usually carried out by the \fastjet authors.
+%
+Contents, instructions and information for contributing are provided
+on the \href{http://fastjet.hepforge.org/contrib/}{\fjcontrib}{ web pages~\cite{fjcontrib}.
+%
 
 
 %======================================================================
@@ -3997,11 +4021,14 @@ maintenance of a nearest-neighbour graph for the geometrical
 distances.  They apply equally well to any of the internally
 implemented hadron-collider jet algorithms.
 %
-The one exception is \ttt{NlnNCam}, which is based on a computational
-geometry algorithm for dynamic maintenance of closest pairs
-\cite{Chan} (rather than the more involved nearest neighbour graph),
-and is suitable only for the Cambridge algorithm, whose distance
-measure is purely geometrical.
+The two exceptions are: \ttt{NlnNCam}, which is based on a
+computational geometry algorithm for dynamic maintenance of closest
+pairs \cite{Chan} (rather than the more involved nearest neighbour
+graph), and is suitable only for the Cambridge algorithm, whose
+distance measure is purely geometrical; and
+\ttt{N2MHTLazy9AntiKtSeparateGhosts}, intended specifcally for area
+calculations with the anti-$k_t$ algorithm (though it can also be used
+for passive area calculations for other algorithms).
 
 %
 \begin{table}[bt]
@@ -4022,7 +4049,8 @@ measure is purely geometrical.
       size $R/2$ and a set of \\& $25=5\times5$ neighbours
       \\ 
       \ttt{N2MHTLazy9AntiKtSeparateGhosts} & Similar to
-      \ttt{N2MHTLazy9}, but neglects ghost-ghost clusterings
+      \ttt{N2MHTLazy9}, but neglects ghost-ghost clusterings\\
+      & (to be considered preliminary in FJ3.1)
       \\
       \ttt{NlnN} & Voronoi-based $N\ln N$ algorithm\\ 
       \ttt{NlnNCam} & Based on Chan's $N\ln N$ closest pairs
@@ -4047,8 +4075,7 @@ measure is purely geometrical.
       The $N$ range in which a given strategy is optimal depends on
       $R$ and on the rapidity extent of the particles. 
       %
-      See figure~\ref{???} for details.
-      \comment{Add the figure for the best strategy v. N and R}
+      See figure~\ref{fig:optimal-strategy} for details.
     }
     \label{tab:Strategies}
   \end{center}
@@ -4067,6 +4094,26 @@ for,%
 and \ttt{N2MinHeapTiled} differs only in that it uses an $N\ln N$
 (rather than $N^2$) data structure for maintaining in order the subset
 of the $d_{ij}$ that involves nearest neighbours.
+%
+Both use tiles of size at least $R\times R$, and search for a
+particle's nearest neighbours in the $3\times 3$ set of tiles centred
+on that particle's own tile.
+%
+The \ttt{N2MHTLazy9} strategy is similar, however before considering a
+neighbouring tile it establishes whether the edge of the tile is
+closer than the particle's nearest same-tile neighbour.
+%
+If not, it skips the tile, hence the name ``lazy''.
+%
+The extra checks and bookkeeping introduce a speed penalty for
+moderate $N$, but at large $N$ that is more than compensated for by
+the fact that one searches for neighbours neighbours in a smaller set
+of tiles.
+%
+The \ttt{N2MHTLazy25} strategy is almost identical except that it uses
+a $5\times 5$ set of tiles of size at least $R/2$.
+%
+All the lazy algorithms are new in \fastjet 3.1.
 %
 The \ttt{NlnN} strategy uses CGAL's Delaunay Triangulation
 \cite{CGAL} for the maintenance of the nearest-neighbour graph.
@@ -4091,22 +4138,50 @@ result to hold (this however has a significant impact only for $N
   As of version 3.1.0, this limitation has been eliminated.
 }
 
-If \ttt{strategy} is omitted then the \ttt{Best} option is set.  
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=0.32\textwidth]{figs/best-strategy-manual-akt}\hfill
+  \includegraphics[width=0.32\textwidth]{figs/best-strategy-manual-cam}\hfill
+  \includegraphics[width=0.32\textwidth]{figs/best-strategy-manual-kt}
+  \caption{Transitions between fastest strategies in the plane of
+    particle multiplicity $N$ and radius $R$. 
+    %
+    The events consist of
+    one hard scatter and a variable number pileup collisions, with
+    particles accepted up to rapidity $|y|<5$. 
+    %
+    To probe the small $N$
+    region, only the $N$ hardest particles in the event are kept.
+    %
+    The red lines with symbols indicate the measured transitions,
+    while the black solid lines are the approximate transitions used
+    for the \texttt{Best} strategy.
+    %
+    The three plots are, from left to right, for the anti-$k_t$, C/A and
+    $k_t$ algorithms.
+  }
+  \label{fig:optimal-strategy}
+\end{figure}
+
+
+Given the many strategies, it is not entirely trivial to select the
+fastest one for any given event.
 %
-Note that the $N$ ranges quoted in table~\ref{tab:Strategies} for
-which a given strategy is optimal hold for $R=1$; the general $R$
-dependence can be significant and non-trivial.
+The optimal choice depends on the jet algorithm, its radius parameter,
+the event multiplicity, and the way in which the particles are
+distributed across the event (e.g.\ all concentrated at small
+rapidities, or covering a large rapidity range).
 %
-While some attempt has been made to account for the $R$-dependence in
-the choice of the strategy with the ``\ttt{Best}'' option, there may
-exist specific regions of $N$ and $R$ in which a manual choice of
-strategy can give faster execution.
+Figure~\ref{fig:optimal-strategy} shows our determination of the
+optimal strategy for different $R$ and $N$ for events covering
+rapidities up to $|y|<5$.\footnote{The optimal transtion to the
+  \ttt{NlnNCam} strategy may depend strongly on the size of the
+  cache.}
 %
-Furthermore the \ttt{NlnNCam} strategy's timings may depend
-strongly on the size of the cache.
+The solid black lines indicate the transitions encoded in the
+``\ttt{Best}'' meta-strategy, which automatically selects one of the
+actual strategies for execution.
 %
-Finally for a given $N$ and $R$, the timings and the optimal strategy
-may also depend on the event structure.
 
 \begin{figure}[t]
   \centering
@@ -4141,6 +4216,8 @@ may also depend on the event structure.
 \label{fig:timings}
 \end{figure}
 
+\comment{UPDATE THIS TEXT WHEN NEW FIGURES ARE IN} 
+%
 Illustrative timings for the \ttt{Best} strategy are shown as a
 function of $N$ in figure~\ref{fig:timings} for the anti-$k_t$, $k_t$
 and the Cambridge/Aachen algorithms. Results for the SISCone plugin
@@ -4166,13 +4243,20 @@ total time, and could be reduced.
 %
 Additionally, for the Cambridge/Aachen algorithm at moderate to large
 $N$, the use of multiple grid sizes could bring an $\order{1}$
-benefit;
+benefit.
 %
-for the anti-$k_t$ algorithm one can envisage $\order{1}$ improvements
-at moderate to large $N$ when $N$ is dominated by ghost particles,
-making use of the fact that for the anti-$k_t$ algorithm one may
-neglect the ghosts' self clustering in the determination of hard jets'
-areas.
+The improvements contained in the \ttt{N2MHTLazy9AntiKtSeparateGhosts}
+strategy could be further extended to the \ttt{Lazy25} case.
+%
+Finally the \ttt{Best} strategy selection could try to better take
+into account the rapidity extent of the event, and special cases like
+single-jet reclustering.
+% 
+% for the anti-$k_t$ algorithm one can envisage $\order{1}$ improvements
+% at moderate to large $N$ when $N$ is dominated by ghost particles,
+% making use of the fact that for the anti-$k_t$ algorithm one may
+% neglect the ghosts' self clustering in the determination of hard jets'
+% areas.
 %
 Should users have applications where such improvements would be
 critical, they are encouraged to contact the \fastjet authors.
@@ -5567,6 +5651,7 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
 
+\bibitem{fjcontrib} \fastjet \contrib, \url{http://fastjet.hepforge.org/contrib/}.
 
 
 \end{thebibliography}
