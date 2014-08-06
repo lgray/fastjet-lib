@@ -4193,23 +4193,29 @@ The solid black lines indicate the transitions encoded in the
 actual strategies for execution.
 %
 
-\begin{figure}[t]
+\begin{figure}[tp]
   \centering
   % NB: use of 3_0_1 in file naming is to ensure that we can drop the
   % file extension. That way both latex and pdflatex will find an
   % appropriate figure.
-  \includegraphics[width=0.7\textwidth]{figs/timings_best_3_0_1}
-  \caption{Time required to perform the clustering of $N$ particles in
-    \fastjet 3.0.1 with the \ttt{Best} strategy. The anti-$k_t$,
-    $k_t$, and Cambridge/Aachen (C/A) native algorithms are shown,
-    together with the SISCone plugin.  All use $R=0.7$.
+  %\includegraphics[width=0.7\textwidth]{figs/timings_best_3_0_1}
+  \includegraphics[width=0.47\textwidth]{figs/fj31_timings_best_R04}\hfill
+  \includegraphics[width=0.47\textwidth]{figs/fj31_timings_best_R12}
+  \caption{
+    Time required to perform the clustering of $N$ particles in
+    \fastjet 3.1.0 with the \ttt{Best} strategy. The anti-$k_t$,
+    $k_t$, and Cambridge/Aachen (C/A) native algorithms are shown for
+    $R=0.4$ (left) and $R=1.2$ (right).
+    %
+    For comparison, the figure also includes the timings for the anti-$k_t$ algorithm
+    in version 3.0.1 of \fastjet.
     %%
-    Shown for an Intel i5 760 processor with 8~MB of
-    cache.
-    %%
+    The timings were obtained on an Intel i5 760 processor with 8~MB of
+    cache. \comment{Is this still correct?}
+    %
     For small $N$, $N$ was varied by taking a single hard dijet event
     generated with Pythia~6~\cite{Sjostrand:2006za} and extracting the
-    $N$ hardest particles. 
+    $N$ hardest particles. \comment{still correct? Rapidity limits?}
     %%
     Large $N$ values were obtained by taking a single hard dijet event
     and adding simulated minimum-bias events to it.  
@@ -4221,28 +4227,42 @@ actual strategies for execution.
     here for events with substantially different distributions of
     particles.  
     %
-    \comment{Keep old 3.0.1 timings (maybe only for akt) and add new timings}
   }
-\label{fig:timings}
+  \label{fig:timings}
 \end{figure}
 
-\comment{UPDATE THIS TEXT WHEN NEW FIGURES ARE IN} 
-%
 Illustrative timings for the \ttt{Best} strategy are shown as a
 function of $N$ in figure~\ref{fig:timings} for the anti-$k_t$, $k_t$
-and the Cambridge/Aachen algorithms. Results for the SISCone plugin
-are given for comparison purposes.
+and the Cambridge/Aachen algorithms, with $R=0.4$ on the left and
+$R=1.2$ on the right.
+%
+For comparison the figure also shows the timings for the anti-$k_t$
+algorithm in \fastjet 3.0.1 and also for SISCone ($R=0.4$ only).
 %
 Kinks in the timings of the native algorithms are visible at the $N$
 values where there is a switch from one strategy to another.
 %
-There can be imperfections in this choice, e.g. as seen for the $k_t$
-algorithm near $N=20\,000$. 
+%There can be imperfections in this choice, e.g. as seen for the $k_t$
+%algorithm near $N=20\,000$. 
 %
-While their impact is generally modest, depending on event structure
-there can be cases where a manual choice of strategy can have
-significant benefits.
+% While their impact is generally modest, depending on event structure
+% there can be cases where a manual choice of strategy can have
+% significant benefits.
 %
+The speed improvements from the the strategies introduced in version
+3.1 set in starting with a couple of thousand (hundred) particles for
+$R=0.4$ ($1.2$) and reach about a factor of ten improvement for
+$N\simeq 10^5$ ($20\,000$); they also result in the transition to the
+$N\ln N$ strategies occurring at somewhat larger $N$ than in version
+3.0, typically at or beyond $N=10^5$.
+%
+%
+Taking $N=10^4$ particles as a reference (e.g.\ corresponding to moderate
+$pp$ pileup plus ghosts for area subtraction\footnote{For the specific
+  case of the anti-$k_t$ algorithm with ghosts, the
+  \ttt{N2MHTLazy9AntiKtSeparateGhosts} can bring further benefits in
+  this region.}), the improvement in speed is about a factor of $2$
+for $R=0.4$ and $7$ for $R=1.2$.
 
 We note that there are a few places where there remains scope for
 timing improvements. 
@@ -4268,7 +4288,7 @@ single-jet reclustering.
 % neglect the ghosts' self clustering in the determination of hard jets'
 % areas.
 %
-Should users have applications where such improvements would be
+Should users have applications where such improvements are
 critical, they are encouraged to contact the \fastjet authors.
 
 %======================================================================
