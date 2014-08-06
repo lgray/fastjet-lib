@@ -2,6 +2,21 @@ Release Notes for fastjet
 -------------------------
 
 ================================================================
+Summary of changes from v3.0.6 -> v3.1.0: 2014-??-??
+================================================================
+* Significant speed improvements for high multiplicities
+* Fixed issue with coincident points in NlnN strategies
+
+Other things to probably/perhaps include
+* FASTJET_VERSION_NUMBER
+* Recluster
+* JetDefinition::operator(), including automatic sorting
+* particle mass support in subtraction (in progress)
+* pruner_jet.structure_of<Pruner>().Rcut() and zcut()
+* drap and dphi in GridJet (but it should anyway change to RectGrid)
+* compiler warning fixes
+
+================================================================
 Summary of changes from v3.0.5 -> v3.0.6: 2013-10-29
 ================================================================
 This is a minor maintenance release. Main changes:
