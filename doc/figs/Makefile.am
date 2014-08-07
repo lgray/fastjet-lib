@@ -9,8 +9,8 @@ EXTRA_DIST = \
      fj31-best-strategy-manual-cam.pdf \
      fj31-best-strategy-manual-kt.eps  \
      fj31-best-strategy-manual-kt.pdf  \
-     fj31_timings_best_R0.4.eps	       \
-     fj31_timings_best_R0.4.pdf	       \
-     fj31_timings_best_R1.2.eps	       \
-     fj31_timings_best_R1.2.pdf        
+     fj31_timings_best_R04.eps	       \
+     fj31_timings_best_R04.pdf	       \
+     fj31_timings_best_R12.eps	       \
+     fj31_timings_best_R12.pdf        
 
