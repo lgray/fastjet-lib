@@ -1,3 +1,18 @@
+2014-08-08  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/RectangularGrid.hh:
+	added mean_tile_area() and in the base class, by default
+	tile_area(itile) returns mean_tile_area() (since
+	all_tiles_equal_area() also returns true).
+
+	* tools/GridMedianBackgroundEstimator.cc:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	switched GMBGE over to the RectangularGrid class (enabled with
+	the FASTJET_GMBGE_USEFJGRID symbol). See 
+	2013-particle-level-sub/fj31-devel-timing-tests for timing
+	tests, which suggest a slight advantage for the new setup.
+	For SoftKiller there appears to be little difference.
+
 2014-08-04  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/RectangularGrid.hh:

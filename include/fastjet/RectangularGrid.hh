@@ -60,8 +60,13 @@ public:
   /// returns true if all tiles have the same area
   virtual bool all_tiles_equal_area() const {return true;}
 
-  /// returns the area of tile itile.
-  virtual double tile_area(int itile) const = 0;
+  /// returns the area of tile itile. Here with a default
+  /// implementation to return mean_tile_area(), consistent with the
+  /// fact that all_tiles_equal_area() returns true.
+  virtual double tile_area(int /* itile */) const {return mean_tile_area();}
+
+  /// returns the mean area of the tiles.
+  virtual double mean_tile_area() const = 0;
 
   /// returns a string to describe the tiling
   virtual std::string description() const = 0;
@@ -116,7 +121,10 @@ public:
   virtual int n_tiles() const {return _ntotal;}
 
   /// returns the area of tile itile.
-  virtual double tile_area(int itile) const {return _dphi*_dy;}
+  virtual double tile_area(int itile) const {return mean_tile_area();}
+
+  /// returns the mean area of tiles.
+  virtual double mean_tile_area() const {return _dphi*_dy;};
 
   virtual std::string description() const;
   

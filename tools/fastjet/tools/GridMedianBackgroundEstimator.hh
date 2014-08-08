@@ -34,6 +34,15 @@
 
 #include "fastjet/tools/BackgroundEstimatorBase.hh"
 
+// if defined then we'll use the RectangularGrid class
+#define FASTJET_GMBGE_USEFJGRID
+
+#ifdef FASTJET_GMBGE_USEFJGRID
+#include "fastjet/RectangularGrid.hh"
+#endif
+
+
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup tools_background
@@ -62,7 +71,12 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   Note also that in this case one needs to call rho(jet) instead of
 ///   rho() [Without rescaling, they are identical]
 ///
-class GridMedianBackgroundEstimator : public BackgroundEstimatorBase {
+class GridMedianBackgroundEstimator : public BackgroundEstimatorBase
+#ifdef FASTJET_GMBGE_USEFJGRID
+                                                                    , RectangularGrid
+#endif 
+{
+
 public:
   /// @name  constructors and destructors
   //\{
@@ -72,10 +86,18 @@ public:
   ///            "real" cell size could differ due e.g. to the 2pi
   ///             periodicity in azimuthal angle (size, not area)
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
+#ifdef FASTJET_GMBGE_USEFJGRID
+    RectangularGrid(ymax, requested_grid_spacing),
+#else 
     _ymin(-ymax), _ymax(ymax), 
     _requested_grid_spacing(requested_grid_spacing),
+#endif
     _has_particles(false), _enable_rho_m(true)
-  {setup_grid();}
+  {
+#ifndef FASTJET_GMBGE_USEFJGRID
+     setup_grid();
+#endif
+  }
   //\}
 
 
@@ -147,7 +169,7 @@ public:
 
   /// returns the area of the grid cells (all identical, but
   /// referred to as "mean" area for uniformity with JetMedianBGE).
-  double mean_area() const {return _cell_area;}
+  double mean_area() const {return mean_tile_area();}
   //\}
 
   /// @name configuring the behaviour
@@ -184,18 +206,27 @@ public:
 
 
 private:
+
+#ifndef FASTJET_GMBGE_USEFJGRID
+
   /// configure the grid
   void setup_grid();
 
   /// retrieve the grid cell index for a given PseudoJet
-  int igrid(const PseudoJet & p) const;
+  int index(const PseudoJet & p) const;
+
+  // information about the grid
+  double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _tile_area;
+  int _ny, _nphi, _ntotal;
+
+  int n_tiles() const {return _ntotal;}
+
+  double mean_tile_area() const {return _tile_area;}
+#endif // FASTJET_GMBGE_USEFJGRID
+
 
   /// verify that particles have been set and throw an error if not
   void verify_particles_set() const;
-
-  // information about the grid
-  double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _cell_area;
-  int _ny, _nphi, _ntotal;
 
   // information abotu the event
   //std::vector<double> _scalar_pt;
@@ -203,7 +234,7 @@ private:
   bool _has_particles;
   bool _enable_rho_m;
 
-  // various warnings to let people aware of potential dangers
+  // various warnings to inform people of potential dangers
   LimitedWarning _warning_rho_of_jet;
   LimitedWarning _warning_rescaling;
 };
