@@ -80,24 +80,32 @@ class GridMedianBackgroundEstimator : public BackgroundEstimatorBase
 public:
   /// @name  constructors and destructors
   //\{
+#ifdef FASTJET_GMBGE_USEFJGRID
   //----------------------------------------------------------------
   ///   \param ymax   maximal absolute rapidity extent of the grid
   ///   \param requested_grid_spacing   size of the grid cell. The
   ///            "real" cell size could differ due e.g. to the 2pi
   ///             periodicity in azimuthal angle (size, not area)
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
-#ifdef FASTJET_GMBGE_USEFJGRID
     RectangularGrid(ymax, requested_grid_spacing),
-#else 
+    _has_particles(false), _enable_rho_m(true) {} 
+
+  //----------------------------------------------------------------
+  /// Constructor based on a user's fully specified RectangularGrid
+  GridMedianBackgroundEstimator(const RectangularGrid & grid) :
+    RectangularGrid(grid),
+    _has_particles(false), _enable_rho_m(true) {}    
+
+#else  // alternative in old framework where we didn't have the rectangular grid
+  GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     _ymin(-ymax), _ymax(ymax), 
     _requested_grid_spacing(requested_grid_spacing),
-#endif
     _has_particles(false), _enable_rho_m(true)
   {
-#ifndef FASTJET_GMBGE_USEFJGRID
      setup_grid();
-#endif
   }
+#endif // FASTJET_GMBGE_USEFJGRID
+
   //\}
 
 

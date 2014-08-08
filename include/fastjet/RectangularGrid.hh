@@ -32,6 +32,7 @@
 //FJENDHEADER
 
 #include "fastjet/PseudoJet.hh"
+#include "fastjet/Selector.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -54,8 +55,11 @@ public:
   /// simplest mechanism to obtain a tiling with holes in it
   virtual int n_good_tiles() const {return n_tiles();}
 
-  /// returns whether a give tile is good
+  /// returns whether a given tile is good
   virtual bool is_good(int itile) const {return true;}
+
+  /// returns whether all tiles are good
+  virtual bool all_tiles_good() const {return n_good_tiles() == n_tiles();}
 
   /// returns true if all tiles have the same area
   virtual bool all_tiles_equal_area() const {return true;}
@@ -87,13 +91,20 @@ public:
   }
 
   /// ctor with more control over initialisation
-  ///  \param rapmin     the minimum rapidity extent of the grid
-  ///  \param rapmax     the maximum rapidity extent of the grid
-  ///  \param drap       the grid spacing in rapidity
-  ///  \param dphi       the grid spacing in azimuth
-  RectangularGrid(double rapmin, double rapmax, double drap, double dphi) 
+  ///  \param rapmin         the minimum rapidity extent of the grid
+  ///  \param rapmax         the maximum rapidity extent of the grid
+  ///  \param drap           the grid spacing in rapidity
+  ///  \param dphi           the grid spacing in azimuth
+  ///  \param tile_selector  optional (geometric) selector to specify 
+  ///                        which tiles are good; a tile is good if
+  ///                        a massless 4-vector at the center of the tile passes
+  ///                        the selection
+  RectangularGrid(double rapmin, double rapmax, double drap, double dphi,
+                  Selector tile_selector = Selector()) 
     : _ymax(rapmax), _ymin(rapmin), 
-      _requested_drap(drap), _requested_dphi(dphi) {
+      _requested_drap(drap), _requested_dphi(dphi),
+      _tile_selector(tile_selector)
+  {
     _setup_grid();
   }
 
@@ -103,22 +114,17 @@ public:
     _ntotal = 0;
   }
 
+  virtual int n_tiles() const {return _ntotal;}
+
+  virtual int n_good_tiles() const {return _ngood;}
+
   // this was being kept inline, but it seems to make little
   // difference whether it is or not (at least on Gavin's mac)
   virtual int index(const PseudoJet & p) const;
-  //  inline virtual int index(const PseudoJet & p) const;
-//  {
-//     // the code below has seem some degree of optimization: don't change
-//     // it without testing the speed again
-//     int iy = int(floor( (p.rap() - _ymin) * _inverse_dy ));
-//     if (iy < 0 || iy >= _ny) return -1;
-//     int iphi = int( p.phi() * _inverse_dphi );
-//     if (iphi == _nphi) iphi = 0; // just in case of rounding errors
-//     return iy*_nphi + iphi;
-//   }
 
-
-  virtual int n_tiles() const {return _ntotal;}
+  /// returns whether a given tile is good
+  // tested in "issue" 2014-08-08-testing-rect-grid
+  virtual bool is_good(int itile) const {return _tile_selector.worker() ? _is_good[itile] : true;}
 
   /// returns the area of tile itile.
   virtual double tile_area(int itile) const {return mean_tile_area();}
@@ -139,6 +145,13 @@ private:
   // information about the actual grid
   double _dy, _dphi, _cell_area, _inverse_dy, _inverse_dphi;
   int _ny, _nphi, _ntotal;
+  int _ngood;
+
+  // a tile selector
+  Selector _tile_selector;
+  // a cached 
+  std::vector<bool> _is_good;
+  
 };
 
 FASTJET_END_NAMESPACE        // defined in fastjet/internal/base.hh

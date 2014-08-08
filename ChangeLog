@@ -1,3 +1,19 @@
+2014-08-08  Gavin Salam  <gavin.salam@cern.ch> (later)
+
+	* include/fastjet/RectangularGrid.hh:
+	* src/RectangularGrid.cc:
+	constructor can now take a Selector that causes only certain tiles
+	to be considered "good"
+
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh
+	* tools/GridMedianBackgroundEstimator.cc:
+	Added constructor that just takes a RectangularGrid.
+
+	Implemented support for cases where some tiles are discarded
+	through the mechanism of Selectors for good tiles.
+
+	Tests in issue-tracker/2014-08-08-testing-rect-grid
+
 2014-08-08  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/RectangularGrid.hh:

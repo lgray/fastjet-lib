@@ -45,6 +45,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
 
 #ifdef FASTJET_GMBGE_USEFJGRID
   assert(all_tiles_equal_area());
+  //assert(n_good_tiles() == n_tiles()); // not needed now that we have an implementation
 #endif
 
   // check if we need to compute only rho or both rho and rho_m
@@ -90,6 +91,25 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
 	}
       }
     }
+  }
+
+  // if there are some "bad" tiles, then we need to exclude them from
+  // the calculation of the median. We'll do this by condensing the
+  // scalar_pt vector down to just the values for the tiles that are
+  // good.
+  //
+  // tested answers look right in "issue" 2014-08-08-testing-rect-grid
+  if (n_good_tiles() != n_tiles()) {
+    int newn = 0;
+    for (unsigned i = 0; i < scalar_pt.size(); i++) {
+      if (is_good(i)) {
+        // clang gets confused with the SharedPtr swap if we don't
+        // have std:: here
+        std::swap(scalar_pt[i],scalar_pt[newn]);
+        newn++;
+      }
+    }
+    scalar_pt.resize(newn);
   }
 
   // in all cases, carry on with the computation of rho

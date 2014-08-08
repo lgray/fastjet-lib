@@ -82,6 +82,23 @@ void RectangularGrid::_setup_grid() {
   _ntotal = _nphi * _ny;
   //_max_pt.resize(_ntotal);
   _cell_area = _dy * _dphi;
+
+  // if we have a selector, establish which tiles are good;
+  // apply the selector to a 4-vector at the tile's centre
+  if (_tile_selector.worker()) {
+    _is_good.resize(n_tiles());
+    _ngood = 0;
+    for (int i = 0; i < n_tiles(); i++) {
+      int iphi = i % _nphi;
+      int irap = i / _nphi;
+      double phi = (iphi + 0.5)*_dphi;
+      double rap = (irap + 0.5)*_dy + _ymin;
+      _is_good[i] = _tile_selector.pass(PtYPhiM(1.0, rap, phi));
+      if (_is_good[i]) _ngood++;
+    }
+  } else {
+    _ngood = n_tiles();
+  }
 }
 
 //----------------------------------------------------------------------
@@ -91,7 +108,11 @@ string RectangularGrid::description() const {
 
   ostringstream oss;
   oss << "rectangular grid with rapidity extent " << _ymin << " < rap < " << _ymax
-      << ", cell size drap x dphi = " << _dy << " x " << _dphi;
+      << ", tile size drap x dphi = " << _dy << " x " << _dphi;
+
+  if (_tile_selector.worker()) {
+    oss << ", good tiles are those that pass selector " <<  _tile_selector.description();
+  }
   return oss.str();
 }
 
