@@ -3370,7 +3370,60 @@ events with high multiplicities of hard jets.
 \label{sec:BGE-masses}
 
 There are several subtleties in handling masses in
-subtraction. \comment{To be continued}
+subtraction. 
+%
+The first~\cite{Soyez:2012hv} is related to the fact that hadrons have
+masses.
+%
+In some situations those masses are ignored and set to zero, e.g.\
+because they are experimentally unconstrained: detectors do not
+systematically give information on the mass for every particle.
+%
+However, if hadron masses are kept non-zero, then
+Eq.~(\ref{eq:BGE-4vector-massless}) must be extended to read
+\begin{equation}
+  \label{eq:4vector-subtraction-with-rhom}
+  p^\mu_\text{jet,sub} = 
+  p^\mu_\text{jet}  
+  - [\rho A^x_\text{jet}, \,
+     \rho A^y_\text{jet}, \,
+     (\rho+\rho_m) A^z_\text{jet}, \,
+     (\rho+\rho_m) A^E_\text{jet}
+     ]\,,
+\end{equation}
+where $\rho_m$ tracks the massive component of the energy flow. 
+%
+It can be approximately determined as the median across patches of
+$m_{\delta,\text{patch}}/A_{\text{patch}}$, where
+\begin{equation}
+  \label{eq:m-delta}
+  m_{\delta,\text{patch}} = \sum_{i\in\text{patch}}
+  \left(\sqrt{\smash[b]{m^2_{i} + p_{t,i}^2}} - p_{ti}\right)\,.
+\end{equation}
+By default, as of \fastjet 3.1, grid and jet-median background
+estimators automatically determine $\rho_m$. 
+%
+It is returned from a call to \ttt{rho\_m()}, with fluctuations
+accessible through \ttt{sigma\_m()}.
+%
+The determination of $\rho_m$ involves a small speed penalty and can
+be disabled with a call to \ttt{set\_compute\_rho\_m(false)} for
+either of the background estimators.
+
+To avoid changes in results relative to earlier versions, by default
+\fastjet 3.1 does not use $\rho_m$ in the \ttt{Subtractor}, i.e.\ it
+uses Eq.~(\ref{eq:BGE-4vector-massless}).
+%
+However, for a given subtractor, a call to
+\ttt{set\_use\_rho\_m(true)}, will cause it to instead use
+Eq.~(\ref{eq:4vector-subtraction-with-rhom}) for all subsequent
+subtractions.
+%
+We \emph{strongly recommend} switching this on if your input particles
+have masses --- or possibly even better, using massless input
+particles. \comment{Are we sure???}
+
+\comment{Carry on here: with safe subtraction}.
 
 %......................................................................
 \subsection{Other facilities}
@@ -5725,6 +5778,15 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   [arXiv:0712.3014 [hep-ph]].
   %%CITATION = ARXIV:0712.3014;%%
   %90 citations counted in INSPIRE as of 04 Aug 2014
+
+\bibitem{Soyez:2012hv}
+  G.~Soyez, G.~P.~Salam, J.~Kim, S.~Dutta and M.~Cacciari,
+  %``Pileup subtraction for jet shapes,''
+  Phys.\ Rev.\ Lett.\  {\bf 110} (2013) 16,  162001
+  [arXiv:1211.2811 [hep-ph]].
+  %%CITATION = ARXIV:1211.2811;%%
+  %30 citations counted in INSPIRE as of 11 Aug 2014
+
 \end{thebibliography}
 
 
