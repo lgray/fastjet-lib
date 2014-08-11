@@ -221,13 +221,15 @@ private:
   void setup_grid();
 
   /// retrieve the grid cell index for a given PseudoJet
-  int index(const PseudoJet & p) const;
+  int tile_index(const PseudoJet & p) const;
 
   // information about the grid
   double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _tile_area;
   int _ny, _nphi, _ntotal;
 
   int n_tiles() const {return _ntotal;}
+  int n_good_tiles() const {return n_tiles();}
+  int tile_is_good(int /* itile */) const {return true;}
 
   double mean_tile_area() const {return _tile_area;}
 #endif // FASTJET_GMBGE_USEFJGRID

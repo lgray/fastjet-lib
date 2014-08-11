@@ -56,7 +56,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
     vector<double> scalar_dt(n_tiles(), 0.0);
     double pt, dt;
     for (unsigned i = 0; i < particles.size(); i++) {
-      int j = index(particles[i]);
+      int j = tile_index(particles[i]);
       if (j >= 0){
 	pt = particles[i].pt();
 	dt = particles[i].mt() - pt;
@@ -82,7 +82,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
     // only rho
     //fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
     for (unsigned i = 0; i < particles.size(); i++) {
-      int j = index(particles[i]);
+      int j = tile_index(particles[i]);
       if (j >= 0){
 	if (_rescaling_class == 0){
 	  scalar_pt[j] += particles[i].pt();
@@ -102,7 +102,7 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
   if (n_good_tiles() != n_tiles()) {
     int newn = 0;
     for (unsigned i = 0; i < scalar_pt.size(); i++) {
-      if (is_good(i)) {
+      if (tile_is_good(i)) {
         // clang gets confused with the SharedPtr swap if we don't
         // have std:: here
         std::swap(scalar_pt[i],scalar_pt[newn]);
@@ -292,8 +292,8 @@ void GridMedianBackgroundEstimator::setup_grid() {
 
 
 //----------------------------------------------------------------------
-// retrieve the grid cell index for a given PseudoJet
-int GridMedianBackgroundEstimator::index(const PseudoJet & p) const {
+// retrieve the grid tile index for a given PseudoJet
+int GridMedianBackgroundEstimator::tile_index(const PseudoJet & p) const {
   // directly taking int does not work for values between -1 and 0
   // so use floor instead
   // double iy_double = (p.rap() - _ymin) / _dy;

@@ -43,7 +43,7 @@ class TilingBase {
 public:
   /// returns the index of the tile in which p is located, or -1 if p
   /// is outside the tiling region
-  virtual int index(const PseudoJet & p) const = 0;
+  virtual int tile_index(const PseudoJet & p) const = 0;
 
   /// returns the total number of tiles in the tiling; valid tile
   /// indices run from 0 ... n_tiles()-1;
@@ -56,7 +56,7 @@ public:
   virtual int n_good_tiles() const {return n_tiles();}
 
   /// returns whether a given tile is good
-  virtual bool is_good(int itile) const {return true;}
+  virtual bool tile_is_good(int /* itile */) const {return true;}
 
   /// returns whether all tiles are good
   virtual bool all_tiles_good() const {return n_good_tiles() == n_tiles();}
@@ -120,14 +120,14 @@ public:
 
   // this was being kept inline, but it seems to make little
   // difference whether it is or not (at least on Gavin's mac)
-  virtual int index(const PseudoJet & p) const;
+  virtual int tile_index(const PseudoJet & p) const;
 
   /// returns whether a given tile is good
   // tested in "issue" 2014-08-08-testing-rect-grid
-  virtual bool is_good(int itile) const {return _tile_selector.worker() ? _is_good[itile] : true;}
+  virtual bool tile_is_good(int itile) const {return _tile_selector.worker() ? _is_good[itile] : true;}
 
   /// returns the area of tile itile.
-  virtual double tile_area(int itile) const {return mean_tile_area();}
+  virtual double tile_area(int /* itile */) const {return mean_tile_area();}
 
   /// returns the mean area of tiles.
   virtual double mean_tile_area() const {return _dphi*_dy;};

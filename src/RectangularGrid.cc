@@ -36,7 +36,7 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-int RectangularGrid::index(const PseudoJet & p) const {
+int RectangularGrid::tile_index(const PseudoJet & p) const {
   // the code below has seem some degree of optimization: don't change
   // it without testing the speed again
 

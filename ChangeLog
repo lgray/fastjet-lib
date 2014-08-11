@@ -1,3 +1,14 @@
+2014-08-11  Gavin SALAM  <gavin.salam@cern.ch> + Gregory
+
+	* src/RectangularGrid.cc:
+	* include/fastjet/RectangularGrid.hh:
+	index() -> tile_index()
+	is_good() -> tile_is_good()
+
+	* tools/GridMedianBackgroundEstimator.cc:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	took into account above name changes
+
 2014-08-08  Gavin Salam  <gavin.salam@cern.ch> (later)
 
 	* include/fastjet/RectangularGrid.hh:
