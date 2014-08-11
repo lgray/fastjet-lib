@@ -3173,11 +3173,13 @@ A common use of an estimation of the background is to subtract its contamination
 from the
 transverse momentum of hard jets, in the form
 \begin{equation}
-p_{t,jet}^{sub} = p_{t,jet}^{raw} - \rho A_{jet} 
+  \label{eq:BGE-scalar-pt}
+  p_{t,jet}^{sub} = p_{t,jet}^{raw} - \rho A_{jet} 
 \end{equation}
 or its 4-vector version
 \begin{equation}
-p_{\mu,jet}^{sub} = p_{\mu,jet}^{raw} - \rho A_{\mu,jet} \, ,
+  \label{eq:BGE-4vector-massless}
+  p_{\mu,jet}^{sub} = p_{\mu,jet}^{raw} - \rho A_{\mu,jet} \, ,
 \end{equation}
 as first proposed in~\cite{cs}.
 
@@ -3240,7 +3242,7 @@ through the methods (available for both
 
 
 %......................................................................
-\subsubsection{Local estimation}
+\subsubsection{Local estimation (jet based)}
 \label{sec:local-bkgd-estimation}
 
 The first technique, ``local estimation'', available for now only in
@@ -3284,6 +3286,32 @@ takes the ones within the strip.\footnote{If you use non-geometric
 %
 This is however not always very effective, because one may not know
 how many hard jets to remove.
+
+%......................................................................
+\subsubsection{Estimation in regions (grid based)}
+\label{sec:region-bkgd-estimation}
+
+The grid-based estimator does not currently provide for local
+estimates, in the sense that the set of tiles used for a given
+instance of the grid-based estimator is always fixed.
+%
+However, as of \fastjet 3.1, it is possible to obtain relatively fine
+control over the which tiles a grid-based estimator uses.
+%
+This is done with the help of the \ttt{RectangularGrid} class
+%
+\begin{lstlisting}
+  RectangularGrid grid(rap_min, rap_max, rap_spacing, phi_spacing, selector);
+  GridMedianBackgroundEstimator bge(grid);
+\end{lstlisting}
+A given grid tile will be used only if a massless \ttt{PseudoJet}
+placed at the centre of the tile passes the \ttt{selector}.
+%
+So, for example, to obtain an estimate for $\rho$ based on the activity
+in the two forward regions of a detector, one might set \ttt{rap\_min}
+and \ttt{rap\_min} to cover the whole detector and then supply a
+\ttt{SelectorAbsRapRange(rap\_central\_max, rap\_max)} to select just
+the two forward regions.
 
 %......................................................................
 \subsubsection{Rescaling method}
@@ -3336,6 +3364,13 @@ dispersion after subtraction.
 %
 Additionally, it has the advantage of reduced sensitivity to biases in
 events with high multiplicities of hard jets.
+
+%......................................................................
+\subsection{Handling masses}
+\label{sec:BGE-masses}
+
+There are several subtleties in handling masses in
+subtraction. \comment{To be continued}
 
 %......................................................................
 \subsection{Other facilities}
