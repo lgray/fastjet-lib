@@ -1,3 +1,13 @@
+2014-08-11  Gavin Salam  <gavin.salam@cern.ch> + Gregory & Matteo
+
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc: 
+	operator* and operator*= now premptively call
+	_ensure_valid_rap_phi() so that we can always ensure that rap()
+	and phi() will be conserved after a *= operation (previously, if
+	they hadn't yet been cached, and you multiplied by 0, you would
+	get a non-sensical rap() and phi()).
+
 2014-08-11  Gavin Salam  <gavin.salam@cern.ch>
 
 	* scripts/preamble-fjcore.txt: 

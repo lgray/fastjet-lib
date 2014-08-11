@@ -807,6 +807,9 @@ class PseudoJet {
 
   /// set cached rapidity and phi values
   void _set_rap_phi() const;
+
+  // needed for operator* to have access to _ensure_valid_rap_phi()
+  friend PseudoJet operator*(double, const PseudoJet &);
 };
 
 
