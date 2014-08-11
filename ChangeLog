@@ -1,3 +1,8 @@
+2014-08-11  Gavin Salam  <gavin.salam@cern.ch>
+
+	* scripts/preamble-fjcore.txt: 
+	small tweaks to fjcore preamble
+
 2014-08-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Subtractor.cc:
