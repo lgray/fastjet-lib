@@ -15,6 +15,7 @@ Other things to probably/perhaps include
 * pruner_jet.structure_of<Pruner>().Rcut() and zcut()
 * drap and dphi in GridJet (but it should anyway change to RectGrid)
 * compiler warning fixes
+* RectangularGrid
 
 ================================================================
 Summary of changes from v3.0.5 -> v3.0.6: 2013-10-29
