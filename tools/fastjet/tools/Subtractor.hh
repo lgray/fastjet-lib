@@ -62,17 +62,94 @@ class Subtractor : public Transformer{
 public:
   /// define a subtractor based on a BackgroundEstimator
   Subtractor(BackgroundEstimatorBase * bge) : 
-    _bge(bge), _rho(-1.0) {}
+    _bge(bge), _rho(-1.0) { set_defaults(); }
 
   /// define a subtractor that uses a fixed value of rho, the background
   /// pt density per unit area (which must be positive)
   Subtractor(double rho);
 
   /// default constructor
-  Subtractor() : _bge(0), _rho(_invalid_rho) {}
+  Subtractor() : _bge(0), _rho(_invalid_rho) { set_defaults(); }
 
   /// default dtor
   virtual ~Subtractor(){};
+
+  /// @name configuring the behaviour
+  //\{
+  //----------------------------------------------------------------
+
+  /// reset all parameters to default values
+  ///
+  /// Note: by default, the rho_m term is not included and the safety
+  /// test for the mass is not done. This is mostly for backwards
+  /// compatibility with FastJet 3.0 and is highly likely to change in
+  /// a future release of FastJet
+  void set_defaults();
+
+  /// when 'use_rho_m' is true, include in the subtraction the
+  /// correction from rho_m, the purely longitudinal,
+  /// particle-mass-induced component of the background density per
+  /// unit area
+  ///
+  /// Note: this will be switched off by default (for backwards
+  /// compatibility with FastJet 3.0) but is highly likely to change
+  /// in a future release of FastJet
+  void set_use_rho_m(bool use_rho_m_in = true){ _use_rho_m=use_rho_m_in;}
+
+  /// returns whether or not the rho_m component is used
+  bool use_rho_m() const{ return _use_rho_m;}
+
+  /// when 'be_safe' is true, ensure that the mass of the subtracted
+  /// 4-vector remain positive
+  ///
+  /// when true, if the subtracted mass is negative, we return a
+  /// 4-vector with 0 mass, pt and phi from the subtracted 4-vector
+  /// and the rapidity of the original, unsubtracted jet.
+  ///
+  /// Note: this will be switched off by default (for backwards
+  /// compatibility with FastJet 3.0) but is highly likely to change
+  /// in a future release of FastJet
+  void set_safe(bool be_safe=true){ _be_safe=be_safe;}
+
+  /// returns whether or not safety tests on the mass are included
+  bool safe() const{ return _be_safe;}
+
+  /// This is mostly intended for cherge-hadron-subtracted type of
+  /// events where we wich to use vertex information to improve the
+  /// subtraction.
+  ///
+  /// Given the following parameters:
+  ///   \param sel_known_vertex    selects the particles with a
+  ///                              known vertex origin
+  ///   \param sel_leading_vertex  amongst the particles with a
+  ///                              known vertex origin, select those
+  ///                              coming from the leading vertex
+  /// Particles which are known to come from the leading vertex will
+  /// be kept, particles which are known to come from a non-leading
+  /// vertex will be eliminated and a regular area-median subtraction
+  /// will be applied on all the particles with unknown vertex origin.
+  ///
+  /// When this is set, we shall ensure that the pt of the subtracted
+  /// 4-vector is at least the pt of the particles that are known to
+  /// come from the leading vertex (if it fails, subtraction returns
+  /// the component that is known to come from the leading vertex ---
+  /// or, the original unsubtracted jet if it contains no particles
+  /// from the leading vertex).  Furthermore, when be_safe is on, we
+  /// also impose a similar constraint on the mass of the subtracted
+  /// 4-vector (if the test fails, the longitudinal part of the
+  /// subtracted 4-vector is taken from the component that is known to
+  /// come from the leading vertex).
+  void set_known_selectors(const Selector &sel_known_vertex,
+			   const Selector &sel_leading_vertex){
+    _sel_known_vertex   = sel_known_vertex;
+    _sel_leading_vertex = sel_leading_vertex;
+  }
+
+  //\}
+
+  /// @name description and action
+  //\{
+  //----------------------------------------------------------------
 
   /// returns a jet that's subtracted
   ///
@@ -83,13 +160,27 @@ public:
   /// class description
   virtual std::string description() const;
 
+  //\}
 protected:
+  /// compute the 4-vector that should be subtracted from the given
+  /// jet
+  PseudoJet _amount_to_subtract(const PseudoJet &jet) const;
 
   /// the tool used to estimate the background
   /// if has to be mutable in case its underlying selector takes a reference jet
   mutable BackgroundEstimatorBase * _bge;
   /// the fixed value of rho to use if the user has selected that option
   double _rho;
+
+  // configuration parameters/flags
+  bool _use_rho_m;   ///< include the rho_m correction
+  bool _be_safe;     ///< ensures that the subtracted mass is +ve
+
+  Selector _sel_known_vertex;   ///< selects the particles with a
+				///< known vertex origin
+  Selector _sel_leading_vertex; ///< amongst the particles with a
+				///< known vertex origin, select those
+				///< coming from the leading vertex
 
   /// a value of rho that is used as a default to label that the stored
   /// rho is not valid for subtraction. 
