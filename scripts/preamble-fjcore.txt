@@ -39,13 +39,13 @@
 // Like FastJet, fjcore is released under the terms of the GNU General Public
 // License version 2 (GPLv2). If you use this code as part of work towards a
 // scientific publication, whether directly or contained within another program
-// (e.g. Delphes, SpartyJet, Rivet, LHC collaboration software frameworks, 
+// (e.g. Delphes, MadGraph, SpartyJet, Rivet, LHC collaboration software frameworks, 
 // etc.), you should include a citation to
 // 
 //   arXiv:1111.6097 (FastJet User Manual)
 //   and, optionally, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
 //
-// Copyright (c) 2005-2013, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
+// Copyright (c) 2005-2014, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
