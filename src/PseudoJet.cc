@@ -177,6 +177,10 @@ PseudoJet operator- (const PseudoJet & jet1, const PseudoJet & jet2) {
 //----------------------------------------------------------------------
 // return the product, coeff * jet
 PseudoJet operator* (double coeff, const PseudoJet & jet) {
+  // see the comment in operator*= about ensuring valid rap phi
+  // before a multiplication to handle case of multiplication by
+  // zero, while maintaining rapidity and phi
+  jet._ensure_valid_rap_phi(); 
   //return PseudoJet(coeff*jet.four_mom());
   // the following code is hopefully more efficient
   PseudoJet coeff_times_jet(jet);
@@ -199,6 +203,14 @@ PseudoJet operator/ (const PseudoJet & jet, double coeff) {
 //----------------------------------------------------------------------
 /// multiply the jet's momentum by the coefficient
 void PseudoJet::operator*=(double coeff) {
+  // operator*= aims to maintain the rapidity and azimuth
+  // for the PseudoJet; if they have already been evaluated
+  // this is fine, but if they haven't and coeff is sufficiently
+  // small as to cause a zero or underflow result, then a subsequent
+  // invocation of rap or phi will lead to a non-sensical result. 
+  // So, here, we preemptively ensure that rapidity and phi
+  // are correctly cached
+  _ensure_valid_rap_phi(); 
   _px *= coeff;
   _py *= coeff;
   _pz *= coeff;
