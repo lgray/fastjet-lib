@@ -1,3 +1,14 @@
+2014-08-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	used -O2 rather than -O3 as a default (more stable timings. O3 was
+	only giving a small gain, sometimes being worse than -O2 and being
+	much more compiler-version-dependent than O2)
+
+	* tools/Filter.cc:
+	reinserted the missing bit of code needed to include internal
+	subtraction!
+
 2014-08-11  Gavin Salam  <gavin.salam@cern.ch> + Gregory & Matteo
 
 	* include/fastjet/PseudoJet.hh:

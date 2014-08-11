@@ -92,6 +92,16 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   //JetDefinition subjet_def;
   bool ca_optimised = _set_filtered_elements(jet, subjets);
 
+  // apply subtraction if needed:
+  if (_subtractor){
+    subjets = (*_subtractor)(subjets);
+  } else if (_rho!=0){
+    const ClusterSequenceAreaBase *csab = subjets[0].validated_csab();
+    for (unsigned int i=0;i<subjets.size();i++){
+      subjets[i]=csab->subtracted_jet(subjets[i], _rho);
+    }
+  }
+
   // now build the vector of kept and rejected subjets
   vector<PseudoJet> kept, rejected;
   // Note that in the following line we make a copy of the _selector

@@ -55,7 +55,10 @@ dnl if the user has not set CXXFLAGS, then set our own default
 dnl-------------------------------------------------------------------
 USE_CUSTOM_FLAGS="yes"
 if [[ "x$CXXFLAGS" == "x" ]]; then
-   CXXFLAGS="-O3 -Wall"
+   dnl 2014-08-11: it seems that -O3 produces timing results that vary
+   dnl quite a lot between different architectures and are sometimes
+   dnl worse than -O2. So we'll use -O2 as a new default
+   CXXFLAGS="-O2 -Wall"
    USE_CUSTOM_FLAGS="no"
 fi
 
