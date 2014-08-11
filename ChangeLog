@@ -6,14 +6,17 @@
 2014-08-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Subtractor.cc:
-	* tools/fastjet/tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	worked on the description; tidied a few loose ends.
+
+	* tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
 	added several options to the original Subtractor:
 	  . support for rho_m (set_use_rho_m(bool)) [off by default]
 	  . support for mass-safety tests (set_safe(bool)) [off by default]
 	  . support for CHS events using
 	    set_known_selectors(const Selector &sel_known_vertex,
 			        const Selector &sel_leading_vertex)
-	TODO: test things + update "description"
 
 2014-08-11  Gavin SALAM  <gavin.salam@cern.ch> + Gregory
 

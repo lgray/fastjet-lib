@@ -85,20 +85,24 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
       ? SelectorIdentity().sum(constits_known_lv) : 0.0*jet;
     known_pu = (constits_known_pu.size()!=0) 
       ? SelectorIdentity().sum(constits_known_pu) : 0.0*jet;
-    unknown = jet; // that keeps all info including area
     if (constits_unknown.size()==0){
       // no need for any form of subtraction!
-      return known_lv;
+      PseudoJet subtracted_jet = jet;
+      subtracted_jet.reset_momentum(known_lv);
+      return subtracted_jet;
     }
+    unknown = jet; // that keeps all info including area
     unknown.reset_momentum(SelectorIdentity().sum(constits_known_pu));
   } else {
     known_lv = jet; // ensures correct rap-phi!
-    known_lv *= 0;
+    known_lv *= 0.0;
     known_pu = known_lv;
   }
 
+  // prepare for the subtraction and compute the 4-vector to be
+  // subtracted
   PseudoJet subtracted_jet = jet;
-  PseudoJet to_subtract = known_pu + _amount_to_subtract(jet);
+  PseudoJet to_subtract = known_pu + _amount_to_subtract(unknown);
 
   // sanity check for the transverse momentum
   if (to_subtract.pt2() < jet.pt2() ) { 
@@ -106,8 +110,8 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
     // information
     subtracted_jet -= to_subtract;
   } else { 
-    // this sets the jet's momentum to zero while
-    // maintaining all of the jet's structural information
+    // this sets the jet's momentum while maintaining all of the jet's
+    // structural information
     subtracted_jet.reset_momentum(known_lv);
     return subtracted_jet;
   }
@@ -122,7 +126,9 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
   // sanity check for the mass (if needed)
   if ((_be_safe) && (subtracted_jet.m2() < known_lv.m2())){
     // in this case, we keep pt and phi as obtained from the
-    // subtraction above and take rap and m from the original jet
+    // subtraction above and take rap and m from the part that comes
+    // from the leading vertex (or the original jet if nothing comes
+    // from the leading vertex)
     subtracted_jet.reset_momentum(PtYPhiM(subtracted_jet.pt(),
 					  known_lv.rap(),
 					  subtracted_jet.phi(),
@@ -135,7 +141,13 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
 //----------------------------------------------------------------------
 std::string Subtractor::description() const{
   if (_bge != 0) {
-    return "Subtractor that uses the following background estimator to determine rho: "+_bge->description();
+    string desc = "Subtractor that uses the following background estimator to determine rho: "+_bge->description();
+    if (use_rho_m()) desc += "; including the rho_m correction";
+    if (safe())      desc += "; including mass safety tests";
+    if (_sel_known_vertex.worker()){
+      desc += "; using known vertex selection: "+_sel_known_vertex.description()+" and leading vertex selection: "+_sel_leading_vertex.description();
+    }
+    return desc;
   } else if (_rho != _invalid_rho) {
     ostringstream ostr;
     ostr << "Subtractor that uses a fixed value of rho = " << _rho;
@@ -164,9 +176,7 @@ PseudoJet Subtractor::_amount_to_subtract(const PseudoJet &jet) const{
 
     // add an optional contribution from the unknown particles masses
   if (_use_rho_m){
-    if (_bge == 0) {
-      throw Error("Subtractor: if you wish to include the rho_m contribution, Subtractor needs to be constructed with background estimator");
-    }
+    assert(_bge != 0); // test done in "set_use_rho_m()"
     to_subtract += _bge->rho_m(jet) * PseudoJet(0.0, 0.0, area.pz(), area.E());
   }
 

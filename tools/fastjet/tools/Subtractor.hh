@@ -94,8 +94,13 @@ public:
   /// Note: this will be switched off by default (for backwards
   /// compatibility with FastJet 3.0) but is highly likely to change
   /// in a future release of FastJet
-  void set_use_rho_m(bool use_rho_m_in = true){ _use_rho_m=use_rho_m_in;}
-
+  void set_use_rho_m(bool use_rho_m_in = true){
+    if (_bge == 0) {
+      throw Error("Subtractor: rho_m support works only for Subtractors constructed with background estimator");
+    }
+    _use_rho_m=use_rho_m_in;
+  }
+  
   /// returns whether or not the rho_m component is used
   bool use_rho_m() const{ return _use_rho_m;}
 
