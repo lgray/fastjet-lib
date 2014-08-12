@@ -1,3 +1,8 @@
+2014-08-12  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* tools/Subtractor.cc (_amount_to_subtract):
+	small change to warning message about non-zero rho_m.
+
 2014-08-12  Gavin SALAM  <gavin.salam@cern.ch> + Gregory
 
 	* plugins/GridJet/GridJetPlugin.cc:
@@ -307,7 +312,7 @@
 	* tools/Pruner.cc:
 	* tools/fastjet/tools/Recluster.hh:
 	* tools/fastjet/tools/Pruner.hh:
-	arragnged the code to use JD::set_recombiner(const JetDefinition&)
+	arranged the code to use JD::set_recombiner(const JetDefinition&)
 	instead of JD::set_recombiner(Recombiner*)
 
 	* include/fastjet/JetDefinition.hh:
@@ -317,7 +322,7 @@
 	alternative (set_recombiner(Recombiner*)) can lead to memory
 	corruption if the recombiner is owned by the jet definition.
 
-	removed set_shared_recombiner and shared_recombiner (superceded
+	removed set_shared_recombiner and shared_recombiner (superseded
 	by the above option)
 
 2014-07-29  Gavin SALAM  <salam@lpthe.jussieu.fr> + Gregory
