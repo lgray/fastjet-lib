@@ -867,8 +867,18 @@ Doing
   fastjet::JetDefinition AKT4(fastjet::antikt_algorithm,0.4);
   vector<fastjet::PseudoJet> akt4_jets = AKT4(particles);
 \end{lstlisting}
-returns the transverse momentum-ordered list of all the inclusive jets given by
-clustering with the anti-$k_t$ algorithm with radius parameter $R=0.4$.
+returns the list of all the inclusive jets given by clustering with
+the anti-$k_t$ algorithm with radius parameter $R=0.4$.
+%
+Jets from the anti-$k_t$ algorithm and other hadron-collider
+algorithms are returned sorted in decreasing transverse momentum,
+while those from $e^+e^-$ algorithms are returned sorted in decreasing
+energy.
+%
+This behaviour differs from that of
+\ttt{ClusterSequence::inclusive\_jets()}, where the ordering of the
+jets is not a priori determined (i.e.\ the user must manually sort the
+jets themselves).
 
 %......................................................................
 \subsection{\tt fastjet::ClusterSequence}
@@ -5810,6 +5820,14 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %''A sweepline algorithm for Voronoi diagrams,''
   Algorithmica {\bf 2} (1987) 1.
 
+\bibitem{Dasgupta:2007wa}
+  M.~Dasgupta, L.~Magnea and G.~P.~Salam,
+  %``Non-perturbative QCD effects in jets at hadron colliders,''
+  JHEP {\bf 0802} (2008) 055
+  [arXiv:0712.3014 [hep-ph]].
+  %%CITATION = ARXIV:0712.3014;%%
+  %90 citations counted in INSPIRE as of 04 Aug 2014
+
 \bibitem{Cacciari:2009dp}
   M.~Cacciari, G.~P.~Salam, S.~Sapeta,
   %``On the characterisation of the underlying event,''
@@ -5819,92 +5837,6 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
 \bibitem{GridMedianLH} M.~Cacciari, G.~P.~Salam and G.~Soyez, contribution in
   preparation to proceedings of ``Workshop on TeV Colliders'', Les
   Houches, June 2011.
-
-
-\bibitem{BDRS}
-  J.~M.~Butterworth, A.~R.~Davison, M.~Rubin and G.~P.~Salam,
-  %``Jet substructure as a new Higgs search channel at the LHC,''
-  Phys.\ Rev.\ Lett.\  {\bf 100} (2008) 242001
-  [arXiv:0802.2470 [hep-ph]].
-  %%CITATION = PRLTA,100,242001;%%
-
-\bibitem{trimming}
-  D.~Krohn, J.~Thaler and L.~T.~Wang,
-  %``Jet Trimming,''
-  JHEP {\bf 1002} (2010) 084
-  [arXiv:0912.1342 [hep-ph]].
-  %%CITATION = JHEPA,1002,084;%%
-
-\bibitem{Kaplan:2008ie}
-  D.~E.~Kaplan, K.~Rehermann, M.~D.~Schwartz, B.~Tweedie,
-  %``Top Tagging: A Method for Identifying Boosted Hadronically Decaying Top Quarks,''
-  Phys.\ Rev.\ Lett.\  {\bf 101 } (2008)  142001
-  [arXiv:0806.0848 [hep-ph]].
-
-%\cite{Butterworth:2009qa}
-\bibitem{Butterworth:2009qa}
-  J.~M.~Butterworth, J.~R.~Ellis, A.~R.~Raklev, G.~P.~Salam,
-  %``Discovering baryon-number violating neutralino decays at the LHC,''
-  Phys.\ Rev.\ Lett.\  {\bf 103 } (2009)  241803.
-  [arXiv:0906.0728 [hep-ph]].
-
-\bibitem{nsubtagger}
-  J.~H.~Kim,
-  %``Rest Frame Subjet Algorithm With SISCone Jet For Fully Hadronic Decaying
-  %Higgs Search,''
-  Phys.\ Rev.\  D {\bf 83} (2011) 011502
-  [arXiv:1011.1493 [hep-ph]].
-  %%CITATION = PHRVA,D83,011502;%%
-
-
-\bibitem{Chan}
-  T.~M.~Chan,
-  ``Closest-point problems simplified on the RAM,''
-  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
-  p.~472 (2002).
-
-
-\bibitem{Anderberg}
-  M.~R.~Anderberg, 
-  Cluster Analysis for Applications,
-  (Number 19 in Probability and Mathematical Statistics, Academic
-  Press, New York, 1973).
-
-
-\bibitem{Sonnenschein}
-  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
-  %% link verified GPS 2011-11-12
-  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
-
-\bibitem{Sjostrand:2006za}
-  T.~Sjostrand, S.~Mrenna and P.~Skands,
-  ``{\tt Pythia} 6.4 physics and manual,''
-  JHEP {\bf 0605} (2006) 026,
-  [arXiv:hep-ph/0603175].
-  %%CITATION = JHEPA,0605,026;%%
-
-\bibitem{Sjostrand:2007gs}
-  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
-  %``A Brief Introduction to PYTHIA 8.1,''
-  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
-  [arXiv:0710.3820 [hep-ph]].
-
-\bibitem{EppsteinHierarchical}
-  %%David Eppstein
-  D.~Eppstein
-  %``Fast hierarchical clustering and other applications of dynamic
-  %closest pairs,''
-  J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
-
-\bibitem{fjcontrib} \fastjet \contrib, \url{http://fastjet.hepforge.org/contrib/}.
-
-\bibitem{Dasgupta:2007wa}
-  M.~Dasgupta, L.~Magnea and G.~P.~Salam,
-  %``Non-perturbative QCD effects in jets at hadron colliders,''
-  JHEP {\bf 0802} (2008) 055
-  [arXiv:0712.3014 [hep-ph]].
-  %%CITATION = ARXIV:0712.3014;%%
-  %90 citations counted in INSPIRE as of 04 Aug 2014
 
 \bibitem{Soyez:2012hv}
   G.~Soyez, G.~P.~Salam, J.~Kim, S.~Dutta and M.~Cacciari,
@@ -5960,8 +5892,85 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %4 citations counted in INSPIRE as of 12 Aug 2014
 
 
-\end{thebibliography}
+\bibitem{BDRS}
+  J.~M.~Butterworth, A.~R.~Davison, M.~Rubin and G.~P.~Salam,
+  %``Jet substructure as a new Higgs search channel at the LHC,''
+  Phys.\ Rev.\ Lett.\  {\bf 100} (2008) 242001
+  [arXiv:0802.2470 [hep-ph]].
+  %%CITATION = PRLTA,100,242001;%%
 
+\bibitem{trimming}
+  D.~Krohn, J.~Thaler and L.~T.~Wang,
+  %``Jet Trimming,''
+  JHEP {\bf 1002} (2010) 084
+  [arXiv:0912.1342 [hep-ph]].
+  %%CITATION = JHEPA,1002,084;%%
+
+\bibitem{Kaplan:2008ie}
+  D.~E.~Kaplan, K.~Rehermann, M.~D.~Schwartz, B.~Tweedie,
+  %``Top Tagging: A Method for Identifying Boosted Hadronically Decaying Top Quarks,''
+  Phys.\ Rev.\ Lett.\  {\bf 101 } (2008)  142001
+  [arXiv:0806.0848 [hep-ph]].
+
+%\cite{Butterworth:2009qa}
+\bibitem{Butterworth:2009qa}
+  J.~M.~Butterworth, J.~R.~Ellis, A.~R.~Raklev, G.~P.~Salam,
+  %``Discovering baryon-number violating neutralino decays at the LHC,''
+  Phys.\ Rev.\ Lett.\  {\bf 103 } (2009)  241803.
+  [arXiv:0906.0728 [hep-ph]].
+
+\bibitem{nsubtagger}
+  J.~H.~Kim,
+  %``Rest Frame Subjet Algorithm With SISCone Jet For Fully Hadronic Decaying
+  %Higgs Search,''
+  Phys.\ Rev.\  D {\bf 83} (2011) 011502
+  [arXiv:1011.1493 [hep-ph]].
+  %%CITATION = PHRVA,D83,011502;%%
+
+\bibitem{fjcontrib} \fastjet \contrib, \url{http://fastjet.hepforge.org/contrib/}.
+
+
+\bibitem{Chan}
+  T.~M.~Chan,
+  ``Closest-point problems simplified on the RAM,''
+  in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
+  p.~472 (2002).
+
+
+\bibitem{Anderberg}
+  M.~R.~Anderberg, 
+  Cluster Analysis for Applications,
+  (Number 19 in Probability and Mathematical Statistics, Academic
+  Press, New York, 1973).
+
+
+\bibitem{Sonnenschein}
+  L.~Sonnenschein, Ph.D. Thesis, RWTH Aachen 2001; \\
+  %% link verified GPS 2011-11-12
+  \url{http://cmsdoc.cern.ch/documents/01/doc2001_025.ps.Z}
+
+\bibitem{Sjostrand:2006za}
+  T.~Sjostrand, S.~Mrenna and P.~Skands,
+  ``{\tt Pythia} 6.4 physics and manual,''
+  JHEP {\bf 0605} (2006) 026,
+  [arXiv:hep-ph/0603175].
+  %%CITATION = JHEPA,0605,026;%%
+
+\bibitem{Sjostrand:2007gs}
+  T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
+  %``A Brief Introduction to PYTHIA 8.1,''
+  Comput.\ Phys.\ Commun.\  {\bf 178 } (2008)  852-867.
+  [arXiv:0710.3820 [hep-ph]].
+
+\bibitem{EppsteinHierarchical}
+  %%David Eppstein
+  D.~Eppstein
+  %``Fast hierarchical clustering and other applications of dynamic
+  %closest pairs,''
+  J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
+
+
+\end{thebibliography}
 
 
 \end{document}
