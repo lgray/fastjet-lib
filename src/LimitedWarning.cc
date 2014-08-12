@@ -41,12 +41,12 @@ std::list< LimitedWarning::Summary > LimitedWarning::_global_warnings_summary;
 int LimitedWarning::_max_warn_default = 5;
 
 
-/// output a warning to ostr
-void LimitedWarning::warn(const std::string & warning) {
-  warn(warning, _default_ostr);
-}
+// /// output a warning to ostr
+// void LimitedWarning::warn(const std::string & warning) {
+//   warn(warning, _default_ostr);
+// }
 
-void LimitedWarning::warn(const std::string & warning, std::ostream * ostr) {
+void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
   if (_this_warning_summary == 0) {
     // prepare the information for the summary
     _global_warnings_summary.push_back(Summary(warning, 0));

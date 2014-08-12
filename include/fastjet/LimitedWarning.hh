@@ -55,10 +55,17 @@ public:
 
   /// outputs a warning to standard error (or the user's default
   /// warning stream if set)
-  void warn(const std::string & warning);
+  void warn(const char * warning) {warn(warning, _default_ostr);}
+
+  /// outputs a warning to standard error (or the user's default
+  /// warning stream if set)
+  void warn(const std::string & warning) {warn(warning.c_str(), _default_ostr);}
 
   /// outputs a warning to the specified stream
-  void warn(const std::string & warning, std::ostream * ostr);
+  void warn(const char * warning, std::ostream * ostr);
+
+  /// outputs a warning to the specified stream
+  void warn(const std::string & warning, std::ostream * ostr) {warn(warning.c_str(), ostr);}
 
   /// sets the default output stream for all warnings (by default
   /// cerr; passing a null pointer prevents warnings from being output)
