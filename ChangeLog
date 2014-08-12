@@ -7,6 +7,10 @@
 	handle cases where some grid tiles are deselected. Also removed an
 	apparently redundant copy constructor.
 
+	Passes the test-all-algs tests, and also examined behaviour
+	with deselected tiles in
+	issue-tracker/2014-08-08-testing-rect-grid/test-gridjet.cc
+
 	* include/fastjet/RectangularGrid.hh:
 	added rapmin(), rapmax(), drap() and dphi() enquiry functions.
 
