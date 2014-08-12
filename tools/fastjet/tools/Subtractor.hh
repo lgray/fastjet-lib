@@ -195,6 +195,8 @@ protected:
   // we anyway like -infinity as a default, and since that's a function,
   // that's not allowed in an include file.
   static const double _invalid_rho;
+
+  mutable LimitedWarning _unused_rho_m_warning;
 };
 
 FASTJET_END_NAMESPACE

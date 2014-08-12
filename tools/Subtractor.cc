@@ -174,10 +174,16 @@ PseudoJet Subtractor::_amount_to_subtract(const PseudoJet &jet) const{
   PseudoJet area = jet.area_4vector();
   PseudoJet to_subtract = rho*area;
 
-    // add an optional contribution from the unknown particles masses
+  double const rho_m_warning_threshold = 1e-5;
+
+  // add an optional contribution from the unknown particles masses
   if (_use_rho_m){
     assert(_bge != 0); // test done in "set_use_rho_m()"
     to_subtract += _bge->rho_m(jet) * PseudoJet(0.0, 0.0, area.pz(), area.E());
+  } else if (_bge && 
+             _bge->has_rho_m() && 
+             _bge->rho_m(jet) > rho_m_warning_threshold * rho) {
+    _unused_rho_m_warning.warn("Background estimator indicates significant rho_m, but use_rho_m()==false in subtractor; consider calling set_use_rho_m(true) to include the rho_m information");
   }
 
   return to_subtract;

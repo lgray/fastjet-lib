@@ -1,3 +1,18 @@
+2014-08-12  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/LimitedWarning.cc:
+	* include/fastjet/LimitedWarning.hh:
+	introduced versions of warn that take a const char *, in addition
+	to the existing ones with a const string &, so that calls of the
+	form warn("some message") don't need to create an intermediate
+	string (which could be slow). The master code is now the char *
+	version, and the string version just pass the resulting c_str().
+
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/Subtractor.cc (_amount_to_subtract):
+	added a warning for cases where rho_m is available and
+	substantially non-zero, but not used.
+
 2014-08-12  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Subtractor.cc:
