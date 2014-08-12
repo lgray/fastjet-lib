@@ -170,10 +170,10 @@ int main(){
   // estimation (both JetMedianBackgroundEstimator and
   // GridMedianBackgroundEstimator).
   //
-  // For backward-compatibility reasons. it is by default switched off
+  // For backward-compatibility reasons its use is by default switched off
   // (as is the enforcement of m>0 for the subtracted jets). The
-  // following 2 lines of code switch these on. They are stringly
-  // suggested and should become the default in future revisions of
+  // following 2 lines of code switch these on. They are strongly
+  // recommended and should become the default in future versions of
   // FastJet.
   //
   // Note that we also illustrate the use of the
