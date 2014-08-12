@@ -4262,8 +4262,9 @@ pairs \cite{Chan} (rather than the more involved nearest neighbour
 graph), and is suitable only for the Cambridge algorithm, whose
 distance measure is purely geometrical; and
 \ttt{N2MHTLazy9AntiKtSeparateGhosts}, intended specifcally for area
-calculations with the anti-$k_t$ algorithm (though it can also be used
-for passive area calculations for other algorithms).
+calculations with the anti-$k_t$ algorithm (to be considered
+preliminary in v3.1; it can also be used for passive area calculations
+for other algorithms).
 
 %
 \begin{table}[bt]
@@ -4353,7 +4354,7 @@ All the lazy algorithms are new in \fastjet 3.1.
 The \ttt{NlnN} strategy uses CGAL's Delaunay Triangulation
 \cite{CGAL} for the maintenance of the nearest-neighbour graph.
 %
-Note that $N \ln N$ performance of is an \emph{expected} result, and
+Note that $N \ln N$ performance is an \emph{expected} result, and
 it holds in practice for the $k_t$ and Cambridge algorithms, while for
 anti-$k_t$ and generalised-$k_t$ with $p<0$, hub-and-spoke (or
 bicycle-wheel) type configurations emerge dynamically during the
@@ -4436,17 +4437,20 @@ actual strategies for execution.
     in version 3.0.1 of \fastjet.
     %%
     The timings were obtained on an Intel i5 760 processor with 8~MB of
-    cache. \comment{Is this still correct?}
+    cache. \comment{Is this still correct, including cache? But maybe we
+      anyway update with new computer for timings?}
     %
     For small $N$, $N$ was varied by taking a single hard dijet event
     generated with Pythia~6~\cite{Sjostrand:2006za} and extracting the
-    $N$ hardest particles. \comment{still correct? Rapidity limits?}
+    $N$ hardest particles. 
     %%
     Large $N$ values were obtained by taking a single hard dijet event
     and adding simulated minimum-bias events to it.  
     %%
+    Particles are limited to rapidities $|y|<5$.
+    %%
     The results include the time to extract the inclusive jets with
-    $p_t > 5\GeV$ and sort them into decreasing $p_t$.
+    $p_t > 5\GeV$ and sort them into decreasing $p_t$.\comment{still correct?}
     %
     Note that timings observed in practice can differ from those given
     here for events with substantially different distributions of
@@ -4493,7 +4497,7 @@ We note that there are a few places where there remains scope for
 timing improvements. 
 %
 In particular at low $N$ the overheads related to copying and sorting
-of a vector of \ttt{PseudoJet} objects are a substantial fraction of the
+a vector of \ttt{PseudoJet} objects are a relevant fraction of the
 total time, and could be reduced.
 %
 Additionally, for the Cambridge/Aachen algorithm at moderate to large
@@ -4501,7 +4505,8 @@ $N$, the use of multiple grid sizes could bring an $\order{1}$
 benefit.
 %
 The improvements contained in the \ttt{N2MHTLazy9AntiKtSeparateGhosts}
-strategy could be further extended to the \ttt{Lazy25} case.
+strategy could be further extended to the \ttt{Lazy25} case and made
+available automatically.
 %
 Finally the \ttt{Best} strategy selection could try to better take
 into account the rapidity extent of the event, and special cases like
