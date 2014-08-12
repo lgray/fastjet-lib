@@ -1,5 +1,10 @@
 2014-08-12  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
+	* include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
+	* src/LazyTiling9SeparateGhosts.cc:
+	declared ghost_pt2_threshold as a static (public) member of the
+	class. [with a note that this is use-ar-your-own-risk material]
+
 	* tools/Subtractor.cc (_amount_to_subtract):
 	small change to warning message about non-zero rho_m.
 

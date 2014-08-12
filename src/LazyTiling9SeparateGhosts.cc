@@ -35,6 +35,8 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+double LazyTiling9SeparateGhosts::ghost_pt2_threshold = 1e-100; 
+
 LazyTiling9SeparateGhosts::LazyTiling9SeparateGhosts(ClusterSequence & cs) :
   _cs(cs), _jets(cs.jets())
   //, _minheap(_jets.size()) 
@@ -455,12 +457,11 @@ void LazyTiling9SeparateGhosts::run() {
   TiledJet3 * head = briefjets; // a nicer way of naming start
 
   // initialise the basic jet info 
-  // UGLY hard-coded threshold on squared ghost pt: any particle below
-  // this is deemed to be a ghost.
-  double ghost_limit = 1e-100; 
+  //
+  // Note that the threshold is a static member of the class
   // first get the particles we'll keep as "real"
   for (int i = 0; i< ntot; i++) {
-    bool is_ghost = _jets[i].perp2() < ghost_limit; 
+    bool is_ghost = _jets[i].perp2() < ghost_pt2_threshold; 
     if (!is_ghost) {
       _tj_set_jetinfo(jetA, i, is_ghost);
       jetA++; // move on to next entry of briefjets
@@ -469,7 +470,7 @@ void LazyTiling9SeparateGhosts::run() {
   int nreal = jetA - briefjets;
   // then the ones we will label as ghosts
   for (int i = 0; i< ntot; i++) {
-    bool is_ghost = _jets[i].perp2() < ghost_limit;
+    bool is_ghost = _jets[i].perp2() < ghost_pt2_threshold;
     if (is_ghost) {
       _tj_set_jetinfo(jetA, i, is_ghost);
       jetA++; // move on to next entry of briefjets

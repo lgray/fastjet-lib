@@ -89,7 +89,16 @@ public:
   void run();
 
   //void get_next_clustering(int & jetA_index, int & jetB_index, double & dij);
-  
+
+  /// this is the pt2 threshold below which particles will be
+  /// considered as ghosts.
+  ///
+  /// Note that as it stands, a user can decide to change that
+  /// value. Note however that this has to be done at the user's own
+  /// risk (this is an internal part of fastjet).In a similar spirit,
+  /// the interface to access this valus might also change in a future
+  /// release of FastJet.
+  static double ghost_pt2_threshold;
 
 protected:
   ClusterSequence & _cs;
