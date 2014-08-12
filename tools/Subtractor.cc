@@ -92,7 +92,7 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
       return subtracted_jet;
     }
     unknown = jet; // that keeps all info including area
-    unknown.reset_momentum(SelectorIdentity().sum(constits_known_pu));
+    unknown.reset_momentum(SelectorIdentity().sum(constits_unknown));
   } else {
     known_lv = jet; // ensures correct rap-phi!
     known_lv *= 0.0;
