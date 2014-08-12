@@ -3459,7 +3459,7 @@ For most applications a sensible behaviour is to adjust the
 mass to zero.
 %
 This behaviour can be enabled for a given subtractor by a call to
-its \ttt{set\_safe(true)} function (available since v.3.1).
+its \ttt{set\_safe\_mass(true)} function (available since v.3.1).
 %
 In this case the rapidity is then taken to be that of the original
 unsubtracted jet.
@@ -3624,7 +3624,7 @@ Here we summarise some useful recommendations:
   (section~\ref{sec:BGE-masses}).
   %
   You should also pay attention to what happens with negative squared
-  masses, and consider calling the subtractor's \ttt{set\_safe()}
+  masses, and consider calling the subtractor's \ttt{set\_safe\_mass()}
   option.
 
 \item For jet masses and shapes, there are various other techniques

@@ -49,7 +49,7 @@ Subtractor::Subtractor(double rho) : _bge(0), _rho(rho) {
 //----------------------------------------------------------------------
 void Subtractor::set_defaults(){
   _use_rho_m = false; // likely to change in future releases!!
-  _be_safe   = false; // likely to change in future releases!!
+  _safe_mass = false; // likely to change in future releases!!
 
   _sel_known_vertex = Selector();
   _sel_leading_vertex = Selector();
@@ -124,7 +124,7 @@ PseudoJet Subtractor::result(const PseudoJet & jet) const {
   }
 
   // sanity check for the mass (if needed)
-  if ((_be_safe) && (subtracted_jet.m2() < known_lv.m2())){
+  if ((_safe_mass) && (subtracted_jet.m2() < known_lv.m2())){
     // in this case, we keep pt and phi as obtained from the
     // subtraction above and take rap and m from the part that comes
     // from the leading vertex (or the original jet if nothing comes
@@ -143,7 +143,7 @@ std::string Subtractor::description() const{
   if (_bge != 0) {
     string desc = "Subtractor that uses the following background estimator to determine rho: "+_bge->description();
     if (use_rho_m()) desc += "; including the rho_m correction";
-    if (safe())      desc += "; including mass safety tests";
+    if (safe_mass()) desc += "; including mass safety tests";
     if (_sel_known_vertex.worker()){
       desc += "; using known vertex selection: "+_sel_known_vertex.description()+" and leading vertex selection: "+_sel_leading_vertex.description();
     }

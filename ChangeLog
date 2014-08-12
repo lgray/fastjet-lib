@@ -1,3 +1,10 @@
+2014-08-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	* doc/fastjet-doc.tex:
+	used safe_mass instead of safe (or be_safe)
+
 2014-08-12  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/LimitedWarning.cc:

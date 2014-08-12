@@ -104,7 +104,7 @@ public:
   /// returns whether or not the rho_m component is used
   bool use_rho_m() const{ return _use_rho_m;}
 
-  /// when 'safe' is true, ensure that the mass of the subtracted
+  /// when 'safe_mass' is true, ensure that the mass of the subtracted
   /// 4-vector remain positive
   ///
   /// when true, if the subtracted mass is negative, we return a
@@ -114,10 +114,10 @@ public:
   /// Note: this will be switched off by default (for backwards
   /// compatibility with FastJet 3.0) but is highly likely to change
   /// in a future release of FastJet
-  void set_safe(bool be_safe=true){ _be_safe=be_safe;}
+  void set_safe_mass(bool safe_mass_in=true){ _safe_mass=safe_mass_in;}
 
   /// returns whether or not safety tests on the mass are included
-  bool safe() const{ return _be_safe;}
+  bool safe_mass() const{ return _safe_mass;}
 
   /// This is mostly intended for cherge-hadron-subtracted type of
   /// events where we wich to use vertex information to improve the
@@ -140,7 +140,7 @@ public:
   /// come from the leading vertex (if it fails, subtraction returns
   /// the component that is known to come from the leading vertex ---
   /// or, the original unsubtracted jet if it contains no particles
-  /// from the leading vertex).  Furthermore, when safe() is on, we
+  /// from the leading vertex).  Furthermore, when safe_mass() is on, we
   /// also impose a similar constraint on the mass of the subtracted
   /// 4-vector (if the test fails, the longitudinal part of the
   /// subtracted 4-vector is taken from the component that is known to
@@ -180,7 +180,7 @@ protected:
 
   // configuration parameters/flags
   bool _use_rho_m;   ///< include the rho_m correction
-  bool _be_safe;     ///< ensures that the subtracted mass is +ve
+  bool _safe_mass;   ///< ensures that the subtracted mass is +ve
 
   Selector _sel_known_vertex;   ///< selects the particles with a
 				///< known vertex origin
