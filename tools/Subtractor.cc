@@ -183,7 +183,7 @@ PseudoJet Subtractor::_amount_to_subtract(const PseudoJet &jet) const{
   } else if (_bge && 
              _bge->has_rho_m() && 
              _bge->rho_m(jet) > rho_m_warning_threshold * rho) {
-    _unused_rho_m_warning.warn("Background estimator indicates significant rho_m, but use_rho_m()==false in subtractor; consider calling set_use_rho_m(true) to include the rho_m information");
+    _unused_rho_m_warning.warn("Background estimator indicates non-zero rho_m, but use_rho_m()==false in subtractor; consider calling set_use_rho_m(true) to include the rho_m information");
   }
 
   return to_subtract;
