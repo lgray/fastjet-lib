@@ -35,6 +35,9 @@
 #include "fastjet/tools/BackgroundEstimatorBase.hh"
 
 // if defined then we'll use the RectangularGrid class
+//
+// (For FastJet 3.2, maybe remove the symbol and simply clean up the
+// code below to use exclusively the RectangularGrid)
 #define FASTJET_GMBGE_USEFJGRID
 
 #ifdef FASTJET_GMBGE_USEFJGRID
