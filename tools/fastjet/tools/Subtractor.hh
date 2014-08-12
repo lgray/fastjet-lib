@@ -104,7 +104,7 @@ public:
   /// returns whether or not the rho_m component is used
   bool use_rho_m() const{ return _use_rho_m;}
 
-  /// when 'be_safe' is true, ensure that the mass of the subtracted
+  /// when 'safe' is true, ensure that the mass of the subtracted
   /// 4-vector remain positive
   ///
   /// when true, if the subtracted mass is negative, we return a
@@ -129,17 +129,18 @@ public:
   ///   \param sel_leading_vertex  amongst the particles with a
   ///                              known vertex origin, select those
   ///                              coming from the leading vertex
-  /// Particles which are known to come from the leading vertex will
-  /// be kept, particles which are known to come from a non-leading
-  /// vertex will be eliminated and a regular area-median subtraction
-  /// will be applied on all the particles with unknown vertex origin.
+  /// Momentum identified as coming from the leading vertex will be
+  /// kept, momentum identified as coming from a non-leading vertex
+  /// will be eliminated and a regular area-median subtraction will be
+  /// applied on the 4-vector sum of the particles with unknown vertex
+  /// origin.
   ///
   /// When this is set, we shall ensure that the pt of the subtracted
   /// 4-vector is at least the pt of the particles that are known to
   /// come from the leading vertex (if it fails, subtraction returns
   /// the component that is known to come from the leading vertex ---
   /// or, the original unsubtracted jet if it contains no particles
-  /// from the leading vertex).  Furthermore, when be_safe is on, we
+  /// from the leading vertex).  Furthermore, when safe() is on, we
   /// also impose a similar constraint on the mass of the subtracted
   /// 4-vector (if the test fails, the longitudinal part of the
   /// subtracted 4-vector is taken from the component that is known to

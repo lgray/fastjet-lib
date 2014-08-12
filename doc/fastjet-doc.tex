@@ -50,7 +50,7 @@
 
 \newcommand{\fastjet}{\texttt{FastJet}\xspace}
 \newcommand{\contrib}{\texttt{Contrib}\xspace}
-\newcommand{\fjcontrib}{\texttt{fjcontrib}\xspace}
+\newcommand{\fjcontrib}{\texttt{\href{http://fastjet.hepforge.org/contrib/}{fjcontrib}}\xspace}
 \newcommand{\ktjet}{\texttt{KtJet}\xspace}
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
 % ttt includes some resizing of text so that things look nicer inline
@@ -3372,7 +3372,7 @@ events with high multiplicities of hard jets.
 There are several subtleties in handling masses in
 subtraction. 
 %
-The first~\cite{Soyez:2012hv} is related to the fact that hadrons have
+The first is related to the fact that hadrons have
 masses.
 %
 In some situations those masses are ignored and set to zero, e.g.\
@@ -3380,7 +3380,8 @@ because they are experimentally unconstrained: detectors do not
 systematically give information on the mass for every particle.
 %
 However, if hadron masses are kept non-zero, then
-Eq.~(\ref{eq:BGE-4vector-massless}) must be extended to read
+Eq.~(\ref{eq:BGE-4vector-massless}) must be
+extended~\cite{Soyez:2012hv} to read
 \begin{equation}
   \label{eq:4vector-subtraction-with-rhom}
   p^\mu_\text{jet,sub} = 
@@ -3393,8 +3394,8 @@ Eq.~(\ref{eq:BGE-4vector-massless}) must be extended to read
 \end{equation}
 where $\rho_m$ tracks the massive component of the energy flow. 
 %
-It can be approximately determined as the median across patches of
-$m_{\delta,\text{patch}}/A_{\text{patch}}$, where
+It can be approximately determined as the median across patches of a
+quantity $m_{\delta,\text{patch}}/A_{\text{patch}}$, where
 \begin{equation}
   \label{eq:m-delta}
   m_{\delta,\text{patch}} = \sum_{i\in\text{patch}}
@@ -3420,10 +3421,60 @@ Eq.~(\ref{eq:4vector-subtraction-with-rhom}) for all subsequent
 subtractions.
 %
 We \emph{strongly recommend} switching this on if your input particles
-have masses --- or possibly even better, using massless input
-particles. \comment{Are we sure???}
+have masses, and in future versions of \fastjet we may change the
+default so that it is automatically switched on.
+%
+An alternative is to make the input particles massless.
 
-\comment{Carry on here: with safe subtraction}.
+A second issue, relevant both for
+Eqs.~(\ref{eq:BGE-4vector-massless}) and
+(\ref{eq:4vector-subtraction-with-rhom}), is that sometimes the
+resulting squared jet mass is negative.\footnote{Recall that if
+  $m^2<0$, \ttt{m()} returns $-\sqrt{-m^2}$, to avoid having to
+  introduce complex numbers just for this special case.}
+%
+This is obviously unphysical.
+%
+By default the 4-vector returned by the subtractor is left in that
+unphysical state, so that the user can decide what to do with it.
+%
+However, for most applications a sensible behaviour is to adjust the
+4-vector so as to maintain its $p_t$ and azimuth, while setting the
+mass to zero.
+%
+This behaviour can be enabled for a given subtractor by a call to
+its \ttt{set\_safe(true)} function (available since v.3.1).
+%
+In this case the rapidity is then taken to be that of the original
+unsubtracted jet.
+%
+In future versions of \fastjet, the default behaviour may be changed
+so that ``safe'' subtraction is automatically enabled.
+
+A general note with regards to jet masses is that a number of
+techniques have been proposed as alternatives to 4-vector subtraction
+for jet masses.
+%
+They include Jet Cleansing~\cite{Krohn:2013lba} (which requires
+charged-track information; see also the discussion in
+Ref.~\cite{Cacciari:2014jta}), Constituent
+Subtraction~\cite{Berta:2014eza}, the
+SoftKiller~\cite{Cacciari:2014gra} method and
+PUPPI~\cite{Bertolini:2014bba}.
+%
+Some of these can give significant improvements in the resolution of
+the subtraction for the jet masses, though potentially at the expense
+of some bias.
+%
+SoftKiller and PUPPI appear to give improved resolution also for the
+jet $p_t$ (again at the potential expense of modest biases).
+%
+Implementations of most of these techniques are, or will soon become
+available in \fjcontrib.
+%
+There one will also find the \ttt{GenericSubtractor} contrib, which
+code for area-based subtraction of jet shapes and other generic
+observables as discussed in\cite{Soyez:2012hv,Cacciari:2012mu}.
 
 %......................................................................
 \subsection{Other facilities}
@@ -3459,9 +3510,33 @@ total range area and the area of the jets contained in the range, with
 the number of empty jets then being calculated based on the average
 jet area for ghost jets ($0.55\pi R^2$~\cite{CSSAreas}).
 %
-All four function above return a result corresponding to the last call
+All four functions above return a result corresponding to the last call
 to \ttt{rho} or \ttt{sigma} (as long as the particles, cluster sequence or
 selector have not changed in the meantime).
+
+The \ttt{Subtractor} has an option
+\begin{lstlisting}
+  void set_known_selectors(const Selector & sel_known_vertex,
+                           const Selector & sel_leading_vertex);
+\end{lstlisting}
+The idea here is that there are contexts where it is possible, for
+some of a jet's constituents, to identify which vertex they come from.
+%
+In that case the can provide a user-defined a selector
+(section~\ref{sect:selectors}) that indicates whether a particle comes
+from an identified vertex or not and a second user-defined selector
+that indicates whether that vertex was the leading vertex.
+%
+The 4-momentum from the non-leading vertex is then discarded, that
+from the leading vertex is kept, and subtraction is applied to
+component that is not from identified vertices.
+%
+It follows that $\rho$ must correspond only to the momentum flow from
+non-identified vertices.
+%
+With this setup, the jet $p_t$ is bounded to be at least equal to that
+from the leading vertex, as is the mass if the ``safe'' subtraction
+option is enabled.
 
 %......................................................................
 \subsection{Alternative workflows}
@@ -5786,6 +5861,52 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   [arXiv:1211.2811 [hep-ph]].
   %%CITATION = ARXIV:1211.2811;%%
   %30 citations counted in INSPIRE as of 11 Aug 2014
+
+\bibitem{Krohn:2013lba}
+  D.~Krohn, M.~D.~Schwartz, M.~Low and L.~T.~Wang,
+  %``Jet Cleansing: Pileup Removal at High Luminosity,''
+  arXiv:1309.4777 [hep-ph].
+  %%CITATION = ARXIV:1309.4777;%%
+  %9 citations counted in INSPIRE as of 12 Aug 2014
+
+\bibitem{Cacciari:2014jta}
+  M.~Cacciari, G.~P.~Salam and G.~Soyez,
+  %``On the use of charged-track information to subtract neutral pileup,''
+  arXiv:1404.7353 [hep-ph].
+  %%CITATION = ARXIV:1404.7353;%%
+  %2 citations counted in INSPIRE as of 12 Aug 2014
+
+\bibitem{Berta:2014eza}
+  P.~Berta, M.~Spousta, D.~W.~Miller and R.~Leitner,
+  %``Particle-level pileup subtraction for jets and jet shapes,''
+  JHEP {\bf 1406} (2014) 092
+  [arXiv:1403.3108 [hep-ex]].
+  %%CITATION = ARXIV:1403.3108;%%
+  %4 citations counted in INSPIRE as of 12 Aug 2014
+
+
+\bibitem{Cacciari:2014gra}
+  M.~Cacciari, G.~P.~Salam and G.~Soyez,
+  %``SoftKiller, a particle-level pileup removal method,''
+  arXiv:1407.0408 [hep-ph].
+  %%CITATION = ARXIV:1407.0408;%%
+  %1 citations counted in INSPIRE as of 12 Aug 2014
+
+\bibitem{Bertolini:2014bba}
+  D.~Bertolini, P.~Harris, M.~Low and N.~Tran,
+  %``Pileup Per Particle Identification,''
+  arXiv:1407.6013 [hep-ph].
+  %%CITATION = ARXIV:1407.6013;%%
+
+
+\bibitem{Cacciari:2012mu}
+  M.~Cacciari, P.~Quiroga-Arias, G.~P.~Salam and G.~Soyez,
+  %``Jet Fragmentation Function Moments in Heavy Ion Collisions,''
+  Eur.\ Phys.\ J.\ C {\bf 73} (2013) 2319
+  [arXiv:1209.6086 [hep-ph]].
+  %%CITATION = ARXIV:1209.6086;%%
+  %4 citations counted in INSPIRE as of 12 Aug 2014
+
 
 \end{thebibliography}
 
