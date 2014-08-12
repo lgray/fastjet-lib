@@ -132,8 +132,18 @@ public:
   /// returns the mean area of tiles.
   virtual double mean_tile_area() const {return _dphi*_dy;};
 
+  /// returns a textual description of the grid
   virtual std::string description() const;
   
+  /// returns the minimum rapidity extent of the grid
+  double rapmin() const {return _ymin;}
+  /// returns the maxmium rapidity extent of the grid
+  double rapmax() const {return _ymax;}
+  /// returns the spacing of the grid in rapidity
+  double drap()   const {return _dy;}
+  /// returns the spacing of the grid in azimuth
+  double dphi()   const {return _dphi;}
+
 private:
   void _setup_grid();
   

@@ -1,3 +1,15 @@
+2014-08-12  Gavin SALAM  <gavin.salam@cern.ch> + Gregory
+
+	* plugins/GridJet/GridJetPlugin.cc:
+	* plugins/GridJet/fastjet/GridJetPlugin.hh:
+	switched this over to the use of RectangularGrid internally, plus
+	a new constructor that takes a RectangularGrid. Added code to
+	handle cases where some grid tiles are deselected. Also removed an
+	apparently redundant copy constructor.
+
+	* include/fastjet/RectangularGrid.hh:
+	added rapmin(), rapmax(), drap() and dphi() enquiry functions.
+
 2014-08-12  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Subtractor.cc:
