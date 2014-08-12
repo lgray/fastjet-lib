@@ -1,5 +1,8 @@
 2014-08-12  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
+	* NEWS:
+	worked on the list of changes since FastJet-3.0.6
+
 	* include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
 	* src/LazyTiling9SeparateGhosts.cc:
 	declared ghost_pt2_threshold as a static (public) member of the
