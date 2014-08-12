@@ -3312,7 +3312,7 @@ estimates, in the sense that the set of tiles used for a given
 instance of the grid-based estimator is always fixed.
 %
 However, as of \fastjet 3.1, it is possible to obtain relatively fine
-control over the which tiles a grid-based estimator uses.
+control over which fixed set of tiles a grid-based estimator uses.
 %
 This is done with the help of the \ttt{RectangularGrid} class
 %
@@ -3391,11 +3391,11 @@ subtraction.
 The first is related to the fact that hadrons have
 masses.
 %
-In some situations those masses are ignored and set to zero, e.g.\
+In some contexts those masses are ignored and set to zero, e.g.\
 because they are experimentally unconstrained: detectors do not
 systematically give information on the mass for every particle.
 %
-However, if hadron masses are kept non-zero, then
+However, if particle masses are kept non-zero, then
 Eq.~(\ref{eq:BGE-4vector-massless}) must be
 extended~\cite{Soyez:2012hv} to read
 \begin{equation}
@@ -3408,7 +3408,7 @@ extended~\cite{Soyez:2012hv} to read
      (\rho+\rho_m) A^E_\text{jet}
      ]\,,
 \end{equation}
-where $\rho_m$ tracks the massive component of the energy flow. 
+where $\rho_m$ accounts the massive component of the energy flow. 
 %
 It can be approximately determined as the median across patches of a
 quantity $m_{\delta,\text{patch}}/A_{\text{patch}}$, where
@@ -3417,7 +3417,7 @@ quantity $m_{\delta,\text{patch}}/A_{\text{patch}}$, where
   m_{\delta,\text{patch}} = \sum_{i\in\text{patch}}
   \left(\sqrt{\smash[b]{m^2_{i} + p_{t,i}^2}} - p_{ti}\right)\,.
 \end{equation}
-By default, as of \fastjet 3.1, grid and jet-median background
+By default, as of \fastjet 3.1, the grid and jet-median background
 estimators automatically determine $\rho_m$. 
 %
 It is returned from a call to \ttt{rho\_m()}, with fluctuations
@@ -3427,7 +3427,7 @@ The determination of $\rho_m$ involves a small speed penalty and can
 be disabled with a call to \ttt{set\_compute\_rho\_m(false)} for
 either of the background estimators.
 
-To avoid changes in results relative to earlier versions, by default
+To avoid changes in results relative to version 3.0, by default
 \fastjet 3.1 does not use $\rho_m$ in the \ttt{Subtractor}, i.e.\ it
 uses Eq.~(\ref{eq:BGE-4vector-massless}).
 %
@@ -3454,7 +3454,7 @@ This is obviously unphysical.
 By default the 4-vector returned by the subtractor is left in that
 unphysical state, so that the user can decide what to do with it.
 %
-However, for most applications a sensible behaviour is to adjust the
+For most applications a sensible behaviour is to adjust the
 4-vector so as to maintain its $p_t$ and azimuth, while setting the
 mass to zero.
 %
@@ -3488,7 +3488,7 @@ jet $p_t$ (again at the potential expense of modest biases).
 Implementations of most of these techniques are, or will soon become
 available in \fjcontrib.
 %
-There one will also find the \ttt{GenericSubtractor} contrib, which
+There one will also find the \ttt{GenericSubtractor} contrib, with
 code for area-based subtraction of jet shapes and other generic
 observables as discussed in\cite{Soyez:2012hv,Cacciari:2012mu}.
 
@@ -3538,7 +3538,7 @@ The \ttt{Subtractor} has an option
 The idea here is that there are contexts where it is possible, for
 some of a jet's constituents, to identify which vertex they come from.
 %
-In that case the can provide a user-defined a selector
+In that case it is possible to provide a user-defined a selector
 (section~\ref{sect:selectors}) that indicates whether a particle comes
 from an identified vertex or not and a second user-defined selector
 that indicates whether that vertex was the leading vertex.
@@ -3594,7 +3594,43 @@ jets passed via the \ttt{set\_jets()} call above must all originate from a commo
 \ttt{ClusterSequenceAreaBase} type class.
 
 
+%......................................................................
+\subsection{Recommendations}
 
+While the basic idea of pileup subtraction is rather simple, in
+practice a few details are relevant to obtaining the best possible
+performance.
+%
+Here we summarise some useful recommendations:
+\begin{enumerate}
+\item The \ttt{GridMedianBackgroundEstimator} is significantly faster
+  than the \ttt{JetMedianBackgroundEstimator} and performs equally
+  well in nearly all cases.
+
+\item Account for the rapidity dependence of pileup, either with the
+  rescaling method (section~\ref{sec:rescaled-bkgd-estimation}) or via
+  a local background estimator (section
+  \ref{sec:local-bkgd-estimation}) or the use of regions
+  (section~\ref{sec:region-bkgd-estimation}).
+  % 
+  For their own work in pileup subtraction the \fastjet authors tend
+  to prefer the rescaling method, with local estimation also a useful
+  option in the case of heavy-ion collisions.
+
+\item If you are interested in jet masses, and wish to use non-zero
+  input particle masses, make sure you use the $\rho_m$ component in
+  Eq.~(\ref{eq:4vector-subtraction-with-rhom}) by calling your
+  subtractor's \ttt{set\_use\_rho\_m()} method
+  (section~\ref{sec:BGE-masses}).
+  %
+  You should also pay attention to what happens with negative squared
+  masses, and consider calling the subtractor's \ttt{set\_safe()}
+  option.
+
+\item For jet masses and shapes, there are various other techniques
+  that may be of use, see e.g.\
+  Refs.~\cite{Cacciari:2012mu,Soyez:2012hv,Krohn:2013lba,Cacciari:2014jta,Berta:2014eza,Cacciari:2014gra,Bertolini:2014bba}.
+\end{enumerate}
 
 
 
