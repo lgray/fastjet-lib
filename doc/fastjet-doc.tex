@@ -854,6 +854,22 @@ performance is given in appendix~\ref{app:strategies}.
 A textual description of the jet definition can be obtained by a call
 to the member function \ttt{std::string description()}.
 
+As of \fastjet version 3.1, the \ttt{JetDefinition} class allows one
+to directly perform the clustering and access the inclusive jets thorugh the
+definition of a \ttt{()} operator:
+\begin{lstlisting}
+template<class L> std::vector<PseudoJet> JetDefinition::operator()(
+                                         const std::vector<L> & particles
+					 ) const;
+\end{lstlisting}
+Doing
+\begin{lstlisting}
+  fastjet::JetDefinition AKT4(fastjet::antikt_algorithm,0.4);
+  vector<fastjet::PseudoJet> akt4_jets = AKT4(particles);
+\end{lstlisting}
+returns the transverse momentum-ordered list of all the inclusive jets given by
+clustering with the anti-$k_t$ algorithm with radius parameter $R=0.4$.
+
 %......................................................................
 \subsection{\tt fastjet::ClusterSequence}
 \label{sec:ClusterSequence}
