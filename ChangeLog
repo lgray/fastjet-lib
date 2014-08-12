@@ -1,5 +1,8 @@
 2014-08-12  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
+	* example/07-subtraction.cc:
+	switched on use_rho_m and _safe_mass
+
 	* NEWS:
 	worked on the list of changes since FastJet-3.0.6
 

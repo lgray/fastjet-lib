@@ -43,6 +43,7 @@
 #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include "fastjet/tools/Subtractor.hh" 
 #include <iostream> // needed for io
+#include <fastjet/config.h>  // for the FASTJET_VERSION_NUMBER preprocessor symbol
 
 using namespace std;
 using namespace fastjet;
@@ -164,6 +165,23 @@ int main(){
   // to compute rho for the jets to be subtracted.
   // ----------------------------------------------------------
   Subtractor subtractor(&bkgd_estimator);
+
+  // since FastJet 3.1.0, rho_m is supported natively in background
+  // estimation (both JetMedianBackgroundEstimator and
+  // GridMedianBackgroundEstimator).
+  //
+  // For backward-compatibility reasons. it is by default switched off
+  // (as is the enforcement of m>0 for the subtracted jets). The
+  // following 2 lines of code switch these on. They are stringly
+  // suggested and should become the default in future revisions of
+  // FastJet.
+  //
+  // Note that we also illustrate the use of the
+  // FASTJET_VERSION_NUMBER macro
+#if FASTJET_VERSION_NUMBER >= 30100
+  subtractor.set_use_rho_m(true);
+  subtractor.set_safe_mass(true);
+#endif
 
   // Finally, once we have an event, we can just tell the background
   // estimator to use that list of particles
