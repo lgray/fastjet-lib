@@ -4131,32 +4131,6 @@ As it is less widely used than the taggers mentioned above, we refer
 the user to the online doxygen documentation for further details.
 
 
-%----------------------------------------------------------------------
-\subsection{FastJet Contrib}
-
-The \fastjet update schedule is geared towards providing stability.
-%
-Typically, a minor (e.g.\ $3.0 \to 3.1$) release is made every two or
-three years, and a new minor or major release may only become widely
-adopted (notably by the experiments) a further year or two down the
-line.
-%
-In comparison, the field of jet physics, especially jet substructure,
-and the development of associated tools proceeds at a much faster pace.
-
-To accommodate this, part way through the 3.1 development cycle, in
-2013, \fastjet \contrib (\fjcontrib) was introduced. 
-%
-This provides a home for a variety of contributed tools. 
-%
-New tools from 3rd-party authors can usually be added in the space of
-days or weeks, after some basic review of the interface, so far
-usually carried out by the \fastjet authors.
-%
-Contents, instructions and information for contributing are provided
-on the \fjcontrib web pages~\cite{fjcontrib},
-\url{http://fastjet.hepforge.org/contrib/}.
-%
 
 
 %======================================================================
@@ -4197,8 +4171,74 @@ standard location.\footnote{For events with near degeneracies in their
 The \ttt{NlnNCam} strategy does not require CGAL, since it is based on
 a considerably simpler computational-geometry structure~\cite{Chan}.
 
+%=======================================================================
+\section{FJcore}
 
+\ttt{fjcore} constitutes a digest of the main \fastjet functionality.
+The files \ttt{fjcore.hh} and \ttt{fjcore.cc}, distributed separately from the
+full \fastjet package from \url{http://fastjet.fr}, are meant to provide easy access to these 
+core functions, in the form of single files and without the need of a full 
+FastJet installation:
+\begin{lstlisting}
+    g++ main.cc fjcore.cc
+\end{lstlisting}
+with \ttt{main.cc} including \ttt{fjcore.hh}.
 
+The results are expected to be identical to those obtained by linking to
+the full FastJet distribution.
+
+Note that, in order to make it possible for fjcore and the full fastjet
+to coexist, the former uses the \ttt{fjcore} namespace instead of
+\ttt{fastjet}. 
+
+In particular, \ttt{fjcore} provides:
+\begin{itemize}
+  \item access to all native pp and ee algorithms, $k_t$, anti-$k_t$, C/A.
+    For C/A, the $N\ln N$ method is available, while anti-$k_t$ and $k_t$
+    are limited to the $N^2$ one (still the fastest for $N < 100$k particles)
+  \item access to selectors, for implementing cuts and selections
+  \item access to all functionalities related to pseudojets (e.g. a jet's
+    structure or user-defined information)
+\end{itemize}
+Instead, it does NOT provide:
+\begin{itemize}
+  \item jet areas functionality
+  \item background estimation
+  \item access to other algorithms via plugins
+  \item interface to CGAL
+  \item fastjet tools, e.g. filters, taggers
+\end{itemize}
+
+If these functionalities are needed, the full \fastjet installation must be
+used. The code will be fully compatible, with the sole replacement of the
+header files and of the \ttt{fjcore} namespace with the \ttt{fastjet} one.
+
+%=======================================================================
+\section{FastJet Contrib}
+
+The \fastjet update schedule is geared towards providing stability.
+%
+Typically, a minor (e.g.\ $3.0 \to 3.1$) release is made every two or
+three years, and a new minor or major release may only become widely
+adopted (notably by the experiments) a further year or two down the
+line.
+%
+In comparison, the field of jet physics, especially jet substructure,
+and the development of associated tools proceeds at a much faster pace.
+
+To accommodate this, part way through the 3.1 development cycle, in
+2013, \fastjet \contrib (\fjcontrib) was introduced. 
+%
+This provides a home for a variety of contributed tools. 
+%
+New tools from 3rd-party authors can usually be added in the space of
+days or weeks, after some basic review of the interface, so far
+usually carried out by the \fastjet authors.
+%
+Contents, instructions and information for contributing are provided
+on the \fjcontrib web pages~\cite{fjcontrib},
+\url{http://fastjet.hepforge.org/contrib/}.
+%
 
 
 
