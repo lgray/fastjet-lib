@@ -4178,16 +4178,16 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 The files \ttt{fjcore.hh} and \ttt{fjcore.cc}, distributed separately from the
 full \fastjet package from \url{http://fastjet.fr}, are meant to provide easy access to these 
 core functions, in the form of single files and without the need of a full 
-FastJet installation:
+\fastjet installation:
 \begin{lstlisting}
     g++ main.cc fjcore.cc
 \end{lstlisting}
 with \ttt{main.cc} including \ttt{fjcore.hh}.
 
 The results are expected to be identical to those obtained by linking to
-the full FastJet distribution.
+the full \fastjet distribution.
 
-Note that, in order to make it possible for fjcore and the full fastjet
+Note that, in order to make it possible for \ttt{fjcore} and the full \fastjet
 to coexist, the former uses the \ttt{fjcore} namespace instead of
 \ttt{fastjet}. 
 
