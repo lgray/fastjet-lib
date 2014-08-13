@@ -51,6 +51,7 @@
 \newcommand{\fastjet}{\texttt{FastJet}\xspace}
 \newcommand{\contrib}{\texttt{Contrib}\xspace}
 \newcommand{\fjcontrib}{\texttt{\href{http://fastjet.hepforge.org/contrib/}{fjcontrib}}\xspace}
+\newcommand{\fjcore}{\texttt{fjcore}\xspace}
 \newcommand{\ktjet}{\texttt{KtJet}\xspace}
 \newcommand{\clhep}{\texttt{CLHEP}\xspace}
 % ttt includes some resizing of text so that things look nicer inline
@@ -4174,44 +4175,76 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 %=======================================================================
 \section{FJcore}
 
-\ttt{fjcore} constitutes a digest of the main \fastjet functionality.
-The files \ttt{fjcore.hh} and \ttt{fjcore.cc}, distributed separately from the
-full \fastjet package from \url{http://fastjet.fr}, are meant to provide easy access to these 
-core functions, in the form of single files and without the need of a full 
-\fastjet installation:
+The \ttt{fjcore} package provides a simple, compact way of accessing
+the main \fastjet functionality.
+%
+It consists of just two files \ttt{fjcore.hh} and \ttt{fjcore.cc}.
+%
+A program can access the \ttt{fjcore} functionality by linking with
+\ttt{fjcore.cc} instead of the full \fastjet library,
+%  distributed separately from the
+% full \fastjet package from \url{http://fastjet.fr}, are meant to provide easy access to these 
+% core functions, in the form of single files and without the need of a full 
+% \fastjet installation:
 \begin{lstlisting}
     g++ main.cc fjcore.cc
 \end{lstlisting}
-with \ttt{main.cc} including \ttt{fjcore.hh}.
+where \ttt{main.cc} includes \ttt{fjcore.hh} rather than the usual
+\fastjet headers.
+%
+Clustering results are identical to those obtained by linking to the
+full \fastjet distribution.
 
-The results are expected to be identical to those obtained by linking to
-the full \fastjet distribution.
-
-Note that, in order to make it possible for \ttt{fjcore} and the full \fastjet
-to coexist, the former uses the \ttt{fjcore} namespace instead of
-\ttt{fastjet}. 
+One of the main intended uses of \fjcore is to provide jet-finding
+code that can be easily distributed with 3rd party code (e.g.\ it is
+currently distributed with Pythia~8~\cite{Sjostrand:2007gs} and
+MadGraph5\_aMC@NLO).
+%
+We emphasize that the \fastjet licensing conditions \emph{must} be
+respected when incorporating \fjcore.
+%
+This includes a mention of \fjcore's GPL license in the third-party
+package's own LICENSE or COPYING file.
+%
+Furthermore for interactive usage, the \fjcore banner may not be
+removed.
+%
+This is because it contains crucial information, such as the \fjcore version
+number, that users are expected to quote in their scientific
+publications.
+%
+In order to make it possible for \ttt{fjcore} and the full \fastjet
+(e.g.\ used in a separate user program) to coexist, the \fjcore
+package uses the \ttt{fjcore} namespace instead of \ttt{fastjet}.
 
 In particular, \ttt{fjcore} provides:
 \begin{itemize}
-  \item access to all native pp and ee algorithms, $k_t$, anti-$k_t$, C/A.
-    For C/A, the $N\ln N$ method is available, while anti-$k_t$ and $k_t$
-    are limited to the $N^2$ one (still the fastest for $N < 100$k particles)
+\item access to all native hadron-collider and $e^+e^-$ algorithms,
+  $k_t$, anti-$k_t$, C/A.  For C/A, the $N\ln N$ method is available,
+  while anti-$k_t$ and $k_t$ are limited to the $N^2$ one (still the
+  fastest for $N < 100$k particles)
   \item access to selectors, for implementing cuts and selections
-  \item access to all functionalities related to pseudojets (e.g. a jet's
+  \item access to all functionalities related to PseudoJets (e.g. a jet's
     structure or user-defined information)
 \end{itemize}
-Instead, it does NOT provide:
+Instead, it does \emph{not} provide:
 \begin{itemize}
-  \item jet areas functionality
+  \item jet-area functionality
   \item background estimation
   \item access to other algorithms via plugins
   \item interface to CGAL
   \item fastjet tools, e.g. filters, taggers
 \end{itemize}
-
+%
 If these functionalities are needed, the full \fastjet installation must be
 used. The code will be fully compatible, with the sole replacement of the
 header files and of the \ttt{fjcore} namespace with the \ttt{fastjet} one.
+
+The \fjcore package has been available since release 3.0.4 of
+\fastjet, and tracks \fastjet versions.
+%
+It is available for download from the \url{http://fastjet.fr/} web
+site.
 
 %=======================================================================
 \section{FastJet Contrib}
