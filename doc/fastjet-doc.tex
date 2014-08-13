@@ -3500,7 +3500,7 @@ available in \fjcontrib.
 %
 There one will also find the \ttt{GenericSubtractor} contrib, with
 code for area-based subtraction of jet shapes and other generic
-observables as discussed in\cite{Soyez:2012hv,Cacciari:2012mu}.
+observables as discussed in Refs.~\cite{Soyez:2012hv,Cacciari:2012mu}.
 
 %......................................................................
 \subsection{Other facilities}
@@ -3617,15 +3617,19 @@ Here we summarise some useful recommendations:
   than the \ttt{JetMedianBackgroundEstimator} and performs equally
   well in nearly all cases.
 
-\item Account for the rapidity dependence of pileup, either with the
-  rescaling method (section~\ref{sec:rescaled-bkgd-estimation}) or via
-  a local background estimator (section
-  \ref{sec:local-bkgd-estimation}) or the use of regions
-  (section~\ref{sec:region-bkgd-estimation}).
+\item Pileup usually has non-negligible rapidity dependence (and
+  in the case of heavy-ion collisions, the underlying event also has
+  azimuthal dependence).  
+  %
+  It is often important to account for this dependence, which can be
+  done either with the rescaling method
+  (section~\ref{sec:rescaled-bkgd-estimation}) or via a local
+  background estimator (section \ref{sec:local-bkgd-estimation}) or
+  the use of regions (section~\ref{sec:region-bkgd-estimation}).
   % 
   For their own work in pileup subtraction the \fastjet authors tend
   to prefer the rescaling method, with local estimation also a useful
-  option in the case of heavy-ion collisions.
+  option e.g.\ in the case of heavy-ion collisions.
 
 \item If you are interested in jet masses, and wish to use non-zero
   input particle masses, make sure you use the $\rho_m$ component in
@@ -4131,6 +4135,7 @@ the user to the online doxygen documentation for further details.
 \subsection{FastJet Contrib}
 
 The \fastjet update schedule is geared towards providing stability.
+%
 Typically, a minor (e.g.\ $3.0 \to 3.1$) release is made every two or
 three years, and a new minor or major release may only become widely
 adopted (notably by the experiments) a further year or two down the
@@ -4149,7 +4154,8 @@ days or weeks, after some basic review of the interface, so far
 usually carried out by the \fastjet authors.
 %
 Contents, instructions and information for contributing are provided
-on the \fjcontrib web pages~\cite{fjcontrib}.
+on the \fjcontrib web pages~\cite{fjcontrib},
+\url{http://fastjet.hepforge.org/contrib/}.
 %
 
 
@@ -4344,7 +4350,7 @@ If not, it skips the tile, hence the name ``lazy''.
 %
 The extra checks and bookkeeping introduce a speed penalty for
 moderate $N$, but at large $N$ that is more than compensated for by
-the fact that one searches for neighbours neighbours in a smaller set
+the fact that one searches for neighbours in a smaller set
 of tiles.
 %
 The \ttt{N2MHTLazy25} strategy is almost identical except that it uses
@@ -4419,6 +4425,11 @@ The solid black lines indicate the transitions encoded in the
 ``\ttt{Best}'' meta-strategy, which automatically selects one of the
 actual strategies for execution.
 %
+Note that the choice of optimal strategy can to some extent depend
+also on the processor, compiler version and optimisation flags.
+%
+Accordingly, the choices made in the \ttt{Best} strategy may not be
+perfectly optimal on all systems.
 
 \begin{figure}[tp]
   \centering
@@ -4472,7 +4483,7 @@ and the Cambridge/Aachen algorithms, with $R=0.4$ on the left and
 $R=1.2$ on the right.
 %
 For comparison the figure also shows the timings for the anti-$k_t$
-algorithm in \fastjet 3.0.1 and also for SISCone ($R=0.4$ only).
+algorithm in \fastjet 3.0.6 and additionally for SISCone ($R=0.4$ only).
 %
 Kinks in the timings of the native algorithms are visible at the $N$
 values where there is a switch from one strategy to another.
@@ -4484,7 +4495,7 @@ values where there is a switch from one strategy to another.
 % there can be cases where a manual choice of strategy can have
 % significant benefits.
 %
-The speed improvements from the the strategies introduced in version
+The speed improvements from the strategies introduced in version
 3.1 set in starting with a couple of thousand (hundred) particles for
 $R=0.4$ ($1.2$) and reach about a factor of ten improvement for
 $N\simeq 10^5$ ($20\,000$); they also result in the transition to the
@@ -4507,7 +4518,7 @@ a vector of \ttt{PseudoJet} objects are a relevant fraction of the
 total time, and could be reduced.
 %
 Additionally, for the Cambridge/Aachen algorithm at moderate to large
-$N$, the use of multiple grid sizes could bring an $\order{1}$
+$N$, the use of multiple grid sizes could bring some 
 benefit.
 %
 The improvements contained in the \ttt{N2MHTLazy9AntiKtSeparateGhosts}
