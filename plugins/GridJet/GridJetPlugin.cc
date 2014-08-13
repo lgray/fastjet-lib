@@ -45,7 +45,8 @@ GridJetPlugin::GridJetPlugin (double ymax,
                               double requested_grid_spacing, 
                               const JetDefinition & post_jet_def) :
 #ifdef FASTJET_GRIDJET_USEFJGRID
-  RectangularGrid(ymax, requested_grid_spacing), _post_jet_def(post_jet_def) {}
+  RectangularGrid(ymax, requested_grid_spacing), _post_jet_def(post_jet_def) {
+}
 #else
   _ymin(-ymax), _ymax(ymax), 
   _requested_grid_spacing(requested_grid_spacing) ,
@@ -58,7 +59,10 @@ GridJetPlugin::GridJetPlugin (double ymax,
 #ifdef FASTJET_GRIDJET_USEFJGRID
 GridJetPlugin::GridJetPlugin (const RectangularGrid & grid,
                               const JetDefinition & post_jet_def) : 
-  RectangularGrid(grid), _post_jet_def(post_jet_def) {}
+  RectangularGrid(grid), _post_jet_def(post_jet_def) {
+  if (!RectangularGrid::is_initialised()) 
+    throw Error("attempt to construct GridJetPlugin with uninitialised RectangularGrid");
+}
 #endif // FASTJET_GRIDJET_USEFJGRID
 
 #ifndef FASTJET_GRIDJET_USEFJGRID

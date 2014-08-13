@@ -10,9 +10,13 @@
 	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
 	throws exception if contructed with an uninitialised grid.
 
+	* plugins/GridJet/GridJetPlugin.cc:
+	throws on uninitialised grid.
+
 	* testsuite/run_tests.cc:
 	* testsuite/TestGrids.hh: *** ADDED ***
-	added a few basic tests of the grid initialisation.
+	added a few basic tests of the grid initialisation, GridJetPlugin,
+	etc. 
 
 2014-08-13 Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
