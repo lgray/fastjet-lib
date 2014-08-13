@@ -1,5 +1,10 @@
 2014-08-13  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
+	* plugins/CDFCones/CDFcode/JetCluAlgorithm.cc:
+	* plugins/CDFCones/CDFcode/MidPointAlgorithm.cc:
+	small changes, labelled in code, to avoid compiler warnings about
+	unused variables and comparisons between unsigned int and int
+
 	* src/AreaDefinition.cc:
 	replaced cerr + exit with a throw.
 
