@@ -19,7 +19,7 @@
 //
 //   - access to all native pp and ee algorithms, kt, anti-kt, C/A.
 //     For C/A, the NlnN method is available, while anti-kt and kt
-//     are limited to the N^2 one (still the fastest for N < 20k particles)
+//     are limited to the N^2 one (still the fastest for N < 100k particles)
 //   - access to selectors, for implementing cuts and selections
 //   - access to all functionalities related to pseudojets (e.g. a jet's
 //     structure or user-defined information)
