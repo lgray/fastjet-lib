@@ -241,7 +241,7 @@ $R$ in eq.~(\ref{eq:dij-illustr}), usually called the jet radius, is a
 parameter of the algorithm that determines its angular reach.
 %
 In the original, so-called ``exclusive'' formulation of the $k_t$
-algorithm~\cite{ktexcl} (generally used with $R=1$), one identifies
+algorithm~\cite{ktexcl} (proposed with $R\equiv 1$), one identifies
 the smallest of the $d_{ij}$ and $d_{iB}$. 
 %
 If it is a $d_{ij}$, one replaces $i$ and $j$ with a single new object
@@ -1444,11 +1444,12 @@ cases and the jets can then be obtained as follows:
 %......................................................................
 \subsection{Cambridge/Aachen jet algorithm}
 
-Currently the $pp$ Cambridge/Aachen (C/A) jet
-algorithm~\cite{CamOrig,CamWobisch} is provided only in an inclusive
-version~\cite{CamWobisch}, whose formulation is identical to that of
-the $k_t$ jet algorithm, except as regards the distance measures,
-which are:
+The $pp$ Cambridge/Aachen (C/A) jet
+algorithm~\cite{CamOrig,CamWobisch} is provided in the form proposed
+in Ref.~\cite{CamWobisch}.
+%
+Its formulation is identical to that of the (inclusive) $pp$ $k_t$ jet
+algorithm, except as regards the distance measures, which are:
 \begin{subequations}
   \label{eq:dij_cam}
   \begin{align}
@@ -1467,15 +1468,15 @@ algorithm with a
 $d_{cut}$ parameter simply provides the set of jets obtained up to the
 point where all $d_{ij},d_{iB} > d_{cut}$. Having clustered with some
 given $R$, this can actually be an effective way of viewing the event
-at a smaller radius, $R_{eff} = \sqrt{d_{cut}} R$, thus allowing a
-single event to be viewed at a continuous range of $R_{eff}$ within a
+at a smaller radius, $R_\text{eff} = \sqrt{d_{cut}} R$, thus allowing a
+single event to be viewed at a continuous range of $R_\text{eff}$ within a
 single clustering.
 
-We note that the true exclusive formulation of the Cambridge
-algorithm~\cite{CamOrig} (in $e^+e^-$) instead makes use an auxiliary ($k_t$)
-distance measure and `freezes' pseudojets whose recombination would
-involve too large a value of the auxiliary distance measure. Details
-are given in section~\ref{sec:ee-cam}.
+We note that the original formulation of the Cambridge
+algorithm~\cite{CamOrig} (in $e^+e^-$) instead makes use of an
+auxiliary ($k_t$) distance measure and `freezes' pseudojets whose
+recombination would involve too large a value of the auxiliary
+distance measure. Details are given in section~\ref{sec:ee-cam}.
 
 
 %......................................................................
