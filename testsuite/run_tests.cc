@@ -8,6 +8,7 @@
 #include "TestSubStructure.hh"
 #include "TestGroomerAreas.hh"
 #include "TestRecombiners.hh"
+#include "TestGrids.hh"
 #include <iomanip>
 #include "CmdLine.hh"
 
@@ -32,6 +33,7 @@ int main(int argc, char** argv) {
   tests.push_back(new TestSubStructure());
   tests.push_back(new TestGroomerAreas());
   tests.push_back(new TestRecombiners());
+  tests.push_back(new TestGrids());
   //tests.push_back(new TestGroomerRecombiners()); not for now -- it's empty
 
   bool all_pass = true;

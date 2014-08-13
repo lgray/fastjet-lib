@@ -1,17 +1,33 @@
+2014-08-13  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/RectangularGrid.hh:
+	* src/RectangularGrid.cc:
+	made sure that all member variables are set even for the default
+	constructor (issue revealed by Coverity when testing SoftKiller).
+	Added is_initialised() member to base class and RectangularGrid,
+	to allow classes using the grid to check the grid is sensible.
+
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	throws exception if contructed with an uninitialised grid.
+
+	* testsuite/run_tests.cc:
+	* testsuite/TestGrids.hh: *** ADDED ***
+	added a few basic tests of the grid initialisation.
+
 2014-08-13 Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
-        Files manually merged from the 3.0.X branch: 
-	
+        Files manually merged from the 3.0.X branch:
+
         * scripts/mkfjcore.sh
 	* scripts/Makefile-fjcore.txt               *** ADDED ***
 	* scripts/preamble-fjcore.txt
-	
+
 	switched mkfjcore to -O2 (flag also added in Makefile-fjcore.txt)
 	Added new Lazy* TilingExtent and files to mkfjcore.sh
 
 2014-08-13  Gavin SALAM  <gavin.salam@cern.ch> + Matteo & Gregory
 
-	* NEWS: 
+	* NEWS:
 	reshuffled entries to try to get an order reflecting importance of
 	different changes.
 

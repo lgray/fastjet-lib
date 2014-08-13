@@ -97,7 +97,10 @@ public:
   /// Constructor based on a user's fully specified RectangularGrid
   GridMedianBackgroundEstimator(const RectangularGrid & grid) :
     RectangularGrid(grid),
-    _has_particles(false), _enable_rho_m(true) {}    
+    _has_particles(false), _enable_rho_m(true) {
+    if (!RectangularGrid::is_initialised()) 
+      throw Error("attempt to construct GridMedianBackgroundEstimator with uninitialised RectangularGrid");
+  }    
 
 #else  // alternative in old framework where we didn't have the rectangular grid
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :

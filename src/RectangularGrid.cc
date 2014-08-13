@@ -36,6 +36,22 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+  /// dummy ctor (will give an unusable grid)
+RectangularGrid::RectangularGrid()
+    : _ymax(-1.0), _ymin(1.0), _requested_drap(-1.0), _requested_dphi(-1.0) {
+  // put in nonsensical values for the other variables too, to keep coverity happy
+  _ntotal = -1;
+  _ngood  = -1;
+  _dy = 0.0;
+  _dphi = 0.0;
+  _cell_area = 0.0;
+  _inverse_dy = 0;
+  _inverse_dphi = 0;
+  _ny   = 0;
+  _nphi = 0;
+}
+
+
 int RectangularGrid::tile_index(const PseudoJet & p) const {
   // the code below has seem some degree of optimization: don't change
   // it without testing the speed again
@@ -103,7 +119,7 @@ void RectangularGrid::_setup_grid() {
 
 //----------------------------------------------------------------------
 string RectangularGrid::description() const {
-  if (_requested_drap < 0 || _requested_dphi < 0)
+  if (! is_initialised())
     return "Uninitialised rectangular grid";
 
   ostringstream oss;

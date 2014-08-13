@@ -75,6 +75,9 @@ public:
   /// returns a string to describe the tiling
   virtual std::string description() const = 0;
 
+  /// returns true if the Tiling structure is in a suitably initialised state
+  virtual bool is_initialised() const = 0;
+  bool is_initialized() const {return is_initialised();}
 };
 
 //----------------------------------------------------------------------
@@ -109,10 +112,7 @@ public:
   }
 
   /// dummy ctor (will give an unusable grid)
-  RectangularGrid()
-    : _ymax(-1.0), _ymin(1.0), _requested_drap(-1.0), _requested_dphi(-1.0) {
-    _ntotal = 0;
-  }
+  RectangularGrid();
 
   virtual int n_tiles() const {return _ntotal;}
 
@@ -143,6 +143,9 @@ public:
   double drap()   const {return _dy;}
   /// returns the spacing of the grid in azimuth
   double dphi()   const {return _dphi;}
+
+  /// returns true if the grid is in a suitably initialised state
+  virtual bool is_initialised() const {return _ntotal > 0;}
 
 private:
   void _setup_grid();
