@@ -16,7 +16,7 @@ clean:
 
 distclean: clean
 	rm -f fjcore.o
-	
+
 .cc.o:         $<
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
