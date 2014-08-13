@@ -4175,6 +4175,7 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 
 %=======================================================================
 \section{FJcore}
+\label{sec:fjcore}
 
 The \ttt{fjcore} package provides a simple, compact way of accessing
 the main \fastjet functionality.
@@ -4249,6 +4250,7 @@ site.
 
 %=======================================================================
 \section{FastJet Contrib}
+\label{sec:fjcontrib}
 
 The \fastjet update schedule is geared towards providing stability.
 %
@@ -5524,9 +5526,17 @@ It brought the first of a series of \fastjet tools to help with
 advanced jet analyses, namely the \ttt{Selector} class, filters,
   pruners, taggers and new background estimation classes.
 %
-Version~3 also added the D0-Run I cone~\cite{Abbott:1997fc} plugin and
+Version~3.0 also added the D0-Run I cone~\cite{Abbott:1997fc} plugin and
 support for native jet algorithms to be run with $R>\pi/2$.
-
+%
+Version~3.1 gave significant speed improvements for multiplicities
+from a few thousand up to a few hundred thousand and various other
+small additions.
+%
+The period in between versions 3.0.0 and 3.1.0 also saw the first
+releases of the \fjcore compact subset of \fastjet
+(section~\ref{sec:fjcore}) and of the \fjcontrib project
+(section~\ref{sec:fjcontrib}).
 
 %......................................................................
 \subsection{Deprecated and removed features}
