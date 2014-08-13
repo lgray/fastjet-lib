@@ -752,10 +752,8 @@ protected:
   /// will be set by default to be true for the first run
   static bool _first_time;
 
-  /// record the number of warnings provided about the exclusive
-  /// algorithm -- so that we don't print it out more than a few
-  /// times.
-  static int _n_exclusive_warnings;
+  /// manage warnings related to exclusive jets access
+  static LimitedWarning _exclusive_warnings;
 
   /// the limited warning member for notification of user that 
   /// their requested strategy has been overridden (usually because

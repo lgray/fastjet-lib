@@ -1,3 +1,19 @@
+2014-08-13  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* src/AreaDefinition.cc: 
+	replaced cerr + exit with a throw.
+
+	* src/LimitedWarning.cc: 
+	introduced max_warn() and n_warn_so_far() functions and changed
+	warning text so that it says "WARNING from FastJet" rather than
+	just "WARNING".
+
+	* include/fastjet/ClusterSequence.hh: 
+	* src/ClusterSequence.cc (exclusive_jets_up_to):
+	rephrased warning for exclusive jets to reflect the fact that it
+	may be used with C/A and genkt. Also switched it over to the
+	LimitedWarning system.
+
 2014-08-13  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/RectangularGrid.hh:

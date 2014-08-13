@@ -402,7 +402,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
 
 // these needs to be defined outside the class definition.
 bool ClusterSequence::_first_time = true;
-int ClusterSequence::_n_exclusive_warnings = 0;
+LimitedWarning ClusterSequence::_exclusive_warnings;
 
 
 //----------------------------------------------------------------------
@@ -956,7 +956,7 @@ vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int njets) const 
 
   // provide a warning when extracting exclusive jets for algorithms 
   // that does not support it explicitly.
-  // Native algorithm that support it are: kt, ee_kt, cambridge, 
+  // Native algorithm that support it are: kt, ee_kt, Cambridge/Aachen, 
   //   genkt and ee_genkt (both with p>=0)
   // For plugins, we check Plugin::exclusive_sequence_meaningful()
   if (( _jet_def.jet_algorithm() != kt_algorithm) &&
@@ -966,10 +966,8 @@ vector<PseudoJet> ClusterSequence::exclusive_jets_up_to (const int njets) const 
 	(_jet_def.jet_algorithm() != ee_genkt_algorithm)) || 
        (_jet_def.extra_param() <0)) &&
       ((_jet_def.jet_algorithm() != plugin_algorithm) ||
-       (!_jet_def.plugin()->exclusive_sequence_meaningful())) &&
-      (_n_exclusive_warnings < 5)) {
-    _n_exclusive_warnings++;
-    cerr << "FastJet WARNING: dcut and exclusive jets for jet-finders other than kt should be interpreted with care." << endl;
+       (!_jet_def.plugin()->exclusive_sequence_meaningful()))) {
+    _exclusive_warnings.warn("dcut and exclusive jets for jet-finders other than kt, C/A or genkt with p>=0 should be interpreted with care.");
   }
 
 

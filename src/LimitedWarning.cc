@@ -55,7 +55,7 @@ void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
   if (_n_warn_so_far < _max_warn) {
     // prepare the warning within a string stream
     ostringstream warnstr;
-    warnstr << "WARNING: ";
+    warnstr << "WARNING from FastJet: ";
     warnstr << warning;
     _n_warn_so_far++;
     if (_n_warn_so_far == _max_warn) warnstr << " (LAST SUCH WARNING)";

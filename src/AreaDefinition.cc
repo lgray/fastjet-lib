@@ -69,9 +69,9 @@ string AreaDefinition::description() const {
     ostr << voronoi_spec().description();
     break;
   default:
-    cerr << "Error: unrecognized area_type in AreaDefinition::description():" 
+    ostr << "Error: unrecognized area_type in AreaDefinition::description():" 
          << area_type() << endl;
-    exit(-1);
+    throw Error(ostr.str());
   }
   return ostr.str();
 }

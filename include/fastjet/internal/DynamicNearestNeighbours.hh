@@ -38,6 +38,7 @@
 #include<sstream>
 #include<cassert>
 #include "fastjet/internal/numconsts.hh"
+#include "fastjet/Error.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -69,17 +70,11 @@ public:
 /// class corresponding to errors that will be thrown by Dynamic
 /// Nearest Neighbours code
 /// \endif
-class DnnError {
+class DnnError : public Error {
 public:
   // constructors
-  DnnError() {;};
-  DnnError(const std::string & message_in) {
-    _message = message_in; std::cerr << message_in << std::endl;};
-
-  std::string message() const {return _message;};
-
-private:
-  std::string _message;
+  //DnnError() {}
+  DnnError(const std::string & message_in) : Error(message_in) {}
 };
 
 
