@@ -4436,9 +4436,14 @@ actual strategies for execution.
     For comparison, the figure also includes the timings for the anti-$k_t$ algorithm
     in version 3.0.6 of \fastjet.
     %%
-    The timings were obtained on an Intel i5 760 processor with 8~MB of
-    cache. \comment{Is this still correct, including cache? But maybe we
-      anyway update with new computer for timings?}
+    % The timings were obtained on an Intel i5 760 processor with 8~MB of
+    % cache. 
+    %% machine is talos
+    The timings were obtained on an Intel Xeon X3360 processor with 6~MB of
+    level-3 cache, running at 2.83GHz.
+    %
+    The code was compiled with \ttt{g++} version 4.4, using the \ttt{-O2}
+    optimisation flag.
     %
     For small $N$, $N$ was varied by taking a single hard dijet event
     generated with Pythia~6~\cite{Sjostrand:2006za} and extracting the
@@ -4450,7 +4455,7 @@ actual strategies for execution.
     Particles are limited to rapidities $|y|<5$.
     %%
     The results include the time to extract the inclusive jets with
-    $p_t > 5\GeV$ and sort them into decreasing $p_t$.\comment{still correct?}
+    $p_t > 5\GeV$ and sort them into decreasing $p_t$.
     %
     Note that timings observed in practice can differ from those given
     here for events with substantially different distributions of
