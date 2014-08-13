@@ -6,18 +6,13 @@
 fjdir=..
 version=$(grep "AC_INIT" $fjdir/configure.ac | sed 's/^AC_INIT(\[.*\],\[//;s/\])$//')
 
-mkdir fjcore-$version || { echo "A previous fjcore exists. Exiting."; exit 1; }
+mkdir fjcore-$version || { echo "A previous fjcore-$version exists. Exiting."; exit 1; }
 cd fjcore-$version
 fjdir=../$fjdir
 
 internal_headers="base.hh\
   numconsts.hh\
-  IsBase.hh\
-  SearchTree.hh\
-  DynamicNearestNeighbours.hh\
-  MinHeap.hh\
-  ClosestPair2DBase.hh\
-  ClosestPair2D.hh"
+  IsBase.hh"
 
 fastjet_headers="config_auto.h\
   config.h\
@@ -31,10 +26,21 @@ fastjet_headers="config_auto.h\
   JetDefinition.hh\
   CompositeJetStructure.hh\
   ClusterSequenceStructure.hh\
-  ClusterSequence.hh"
+  ClusterSequence.hh\
+  NNH.hh"
 
-internal_sources="internal/ClusterSequence_N2.icc\
-  version.hh"
+internal_sources="version.hh\
+  internal/ClusterSequence_N2.icc\
+  internal/DynamicNearestNeighbours.hh\
+  internal/SearchTree.hh\
+  internal/MinHeap.hh\
+  internal/ClosestPair2DBase.hh\
+  internal/ClosestPair2D.hh\
+  internal/LazyTiling9Alt.hh\
+  internal/LazyTiling9.hh\
+  internal/LazyTiling25.hh\
+  internal/LazyTiling9SeparateGhosts.hh\
+  internal/TilingExtent.hh"
 
 fastjet_sources="ClosestPair2D.cc\
   ClusterSequence.cc\
@@ -52,7 +58,12 @@ fastjet_sources="ClosestPair2D.cc\
   MinHeap.cc\
   PseudoJet.cc\
   PseudoJetStructureBase.cc\
-  Selector.cc"
+  Selector.cc\
+  LazyTiling25.cc\
+  LazyTiling9.cc\
+  LazyTiling9Alt.cc\
+  LazyTiling9SeparateGhosts.cc\
+  TilingExtent.cc"
 
 
 # create the directory structure
@@ -95,7 +106,7 @@ EOF
 cat >src/Makefile <<EOF
 SRCS = $fastjet_sources
 OBJS =  \$(patsubst %.cc,%.o,\$(SRCS))
-CFLAGS = -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g -DDROP_CGAL -D__FJCORE__ -Wl,--enable-new-dtags -I../include
+CFLAGS = -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O2 -g -DDROP_CGAL -D__FJCORE__ -Wl,--enable-new-dtags -I../include
 
 %.o: %.cc
 ${TAB}g++ -c \$(CFLAGS) \$<
@@ -194,39 +205,80 @@ for fn in fjcore.hh fjcore.cc; do
     mv tmp $fn
 done
 wc -cl fjcore.{hh,cc}
-echo "  - removing comment lines"
+echo "  - removing comment lines and the plugin enable tags"
 # GPS: on macs sed has a different command line (and there's
 #      no way of writing a line that's compatible with macs and linux)
 #      so just use a simple copy and move
-sed '/^ *\/\/.*$/d' fjcore.hh > fjcore.hh.nocomments
-sed '/^ *\/\/.*$/d' fjcore.cc > fjcore.cc.nocomments
-mv fjcore.hh.nocomments fjcore.hh
+#     remove //... comments              remove plugin enable tags                remove /* ... */ comments         remove multiline /* ... */ comments
+#                                                                                  (single-line only first,
+#                                                                            only lines with comment exclusively)                          
+#
+sed '/^ *\/\/.*$/d' fjcore.hh | sed '/^#ifndef FASTJET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.hh.nocomments
+sed '/^ *\/\/.*$/d' fjcore.cc | sed '/ET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.cc.nocomments
+# further removal of ifndef WIN32 block from fjcore.hh (nothing similar in .cc)
+sed '/^#ifndef WIN32/,/#endif.*$/d' fjcore.hh.nocomments > fjcore.hh
+# renaming and removal of unnecessary files
+rm fjcore.hh.nocomments
 mv fjcore.cc.nocomments fjcore.cc
 wc -cl fjcore.{hh,cc}
 
+echo; echo "Renaming the fastjet namespace to fjcore"
+sed 's/namespace fastjet/namespace fjcore/g' fjcore.hh > tmp$$
+mv tmp$$ fjcore.hh
+for fn in fjcore.hh fjcore.cc; do
+  # replace fastjet namespace with fjcore one 
+  # replace all other __FASTJET guards with __FJCORE ones, to avoid interfering with 
+  # a possible run with also the "real" fastjet linked together;
+  # we also rename the FASTJET_PACKAGE lines (etc. from configure) -> FJCORE_PACKAGE
+  sed -e 's/fastjet::/fjcore::/g' \
+      -e 's/FASTJET_BEGIN_NAMESPACE/FJCORE_BEGIN_NAMESPACE/g' \
+      -e 's/FASTJET_END_NAMESPACE/FJCORE_END_NAMESPACE/g' \
+      -e 's/__FASTJET/__FJCORE/g' \
+      -e 's/DROP_CGAL/__FJCORE_DROP_CGAL/g' \
+      -e 's/FASTJET_PACKAGE/FJCORE_PACKAGE/g' \
+      -e 's/FASTJET_HAVE/FJCORE_HAVE/g' \
+      -e 's/FASTJET_STDC/FJCORE_STDC/g' \
+      -e 's/FASTJET_LT/FJCORE_LT/g' \
+      -e 's/FASTJET_VERSION/FJCORE_VERSION/g' \
+      -e 's/INCLUDE_FASTJET_CONFIG/INCLUDE_FJCORE_CONFIG/g' \
+       $fn \
+       > tmp$$
+  mv tmp$$ $fn
+  #sed 's/FASTJET_END_NAMESPACE/FJCORE_END_NAMESPACE/g' tmp$$ > $fn
+  #sed 's/__FASTJET/__FJCORE/g' $fn > tmp$$
+  #mv tmp$$ $fn  
+done
 
-# add preamble to fjcore.hh|cc (if done earlier, it gets canceled by comments removal)
+
+# add preamble to fjcore.hh|cc (if done earlier, it gets canceled by comments 
+# removal)
+# Also put it into a README file
 echo; echo "Including preamble with appropriate version number"
 for i in cc hh; do
   cat ../preamble-fjcore.txt fjcore.$i > tmp$$
   sed "s/--FJVERSION--/$version/" tmp$$ > fjcore.$i
-done  
+done
+rm tmp$$
+sed "s/--FJVERSION--/$version/" ../preamble-fjcore.txt > README
 
 # now testing the final product by compiling the examples
 echo "======================================================================"
 echo "Now compiling and running examples for checking:"
 echo "  CC [fjcore.cc]"
-time g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g fjcore.cc
+time g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O2 -g fjcore.cc
 echo
 for idx in 01 02 04 05 08 09 10; do
     fname=$(ls $fjdir/example/$idx-*.cc)
     fname=${fname##*/}
 
     # get the example
-    cat $fjdir/example/$fname | sed 's/\/\/ENDHEADER/#include "fjcore.hh"/;s/^#include "fastjet\/.*$//g' > $fname
+    cat $fjdir/example/$fname | 
+             sed 's/fastjet::/fjcore::/g' | \
+             sed 's/namespace fastjet/namespace fjcore/g' | \
+	     sed 's/\/\/ENDHEADER/#include "fjcore.hh"/;s/^#include "fastjet\/.*$//g' > $fname
 
     echo "  CC   [$fname]"
-    g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O3 -g $fname || { echo "Failed."; exit 1; }
+    g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O2 -g $fname || { echo "Failed."; exit 1; }
     echo "  LD   [${fname%.cc}]"
     # GPS: removed -g from the following line, which was generating .dSYM 
     #      debugging symbol directories on a mac
@@ -238,7 +290,9 @@ for idx in 01 02 04 05 08 09 10; do
       ./${fname%.cc} < ../../example/data/single-event.dat | grep '^#'
       echo
     fi
-    rm ${fname%.cc}*
+    if [ $idx -ne "01" ]; then # keep 01-basic example, to distribute
+        rm ${fname%.cc}* 
+    fi
 done
     
 
@@ -246,10 +300,21 @@ done
 echo "======================================================================"
 echo "Cleaning unnecessary files"
 rm -Rf src include Makefile *.o
+rm -Rf 01-basic # left over from rm above
+
+# Add a few items needed for distribution of fjcore package
+cp -p ../../example/data/single-event.dat . # copy event file, for distribution
+sed 's/data\///' 01-basic.cc > tmp$$ # change location of event file in usage
+mv tmp$$ 01-basic.cc
+cp -p ../Makefile-fjcore.txt Makefile
 
 echo "======================================================================"
-echo "fjcore-${version}/fjcore.{hh,cc} is now ready"
+echo "fjcore-${version}/fjcore.{hh,cc} are now ready"
 echo "======================================================================"
+cd ..
 
-# cd ..
+# now make a tarball
+echo "Now making fjcore-$version.tar.gz tarball"
+tar zcvf fjcore-$version.tar.gz fjcore-$version
+
 

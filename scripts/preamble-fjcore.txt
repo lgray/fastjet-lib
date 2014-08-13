@@ -1,6 +1,6 @@
 // fjcore -- extracted from FastJet v--FJVERSION-- (http://fastjet.fr)
 //
-// fjcore constitutes a digest of the main FastJet functionalities.
+// fjcore constitutes a digest of the main FastJet functionality.
 // The files fjcore.hh and fjcore.cc are meant to provide easy access to these 
 // core functions, in the form of single files and without the need of a full 
 // FastJet installation:
@@ -10,7 +10,10 @@
 // with main.cc including fjcore.hh.
 //
 // The results are expected to be identical to those obtained by linking to
-// the full FastJet distribution. 
+// the full FastJet distribution.
+//
+// NOTE THAT, IN ORDER TO MAKE IT POSSIBLE FOR FJCORE AND THE FULL FASTJET
+// TO COEXIST, THE FORMER USES THE "fjcore" NAMESPACE INSTEAD OF "fastjet". 
 //
 // In particular, fjcore provides:
 //
@@ -23,7 +26,7 @@
 //
 // Instead, it does NOT provide:
 //
-//   - jet areas functionalities
+//   - jet areas functionality
 //   - background estimation
 //   - access to other algorithms via plugins
 //   - interface to CGAL
@@ -31,10 +34,10 @@
 //
 // If these functionalities are needed, the full FastJet installation must be
 // used. The code will be fully compatible, with the sole replacement of the
-// header files.
+// header files and of the fjcore namespace with the fastjet one.
 //
 // fjcore.hh and fjcore.cc are not meant to be human-readable.
-// For documentation, see the full FastJet at http://fastjet.fr
+// For documentation, see the full FastJet manual and doxygen at http://fastjet.fr
 //
 // Like FastJet, fjcore is released under the terms of the GNU General Public
 // License version 2 (GPLv2). If you use this code as part of work towards a
@@ -42,7 +45,7 @@
 // (e.g. Delphes, MadGraph, SpartyJet, Rivet, LHC collaboration software frameworks, 
 // etc.), you should include a citation to
 // 
-//   arXiv:1111.6097 (FastJet User Manual)
+//   EPJC72(2012)1896 [arXiv:1111.6097] (FastJet User Manual)
 //   and, optionally, Phys.Lett.B641 (2006) 57 [arXiv:hep-ph/0512210]
 //
 // Copyright (c) 2005-2014, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
