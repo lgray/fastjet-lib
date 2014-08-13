@@ -1,3 +1,9 @@
+2014-08-13  Gavin SALAM  <gavin.salam@cern.ch> + Matteo & Gregory
+
+	* NEWS: 
+	reshuffled entries to try to get an order reflecting importance of
+	different changes.
+
 2014-08-12  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* example/07-subtraction.cc:
