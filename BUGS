@@ -36,7 +36,7 @@ Other issues to be aware of
 
    However:
 
-   - Some (older) versions of Pythia sometimes produce massive
+   - Some (older) versions of Pythia 6 sometimes produce massive
      particles with pt=0; phi is then ill-defined, while the rapidity
      is finite and we make no guarantees about how we treat the
      particle.
@@ -47,7 +47,8 @@ Other issues to be aware of
      algorithms, many dij can therefore also be identical. The choice
      of which dij to take is then ambiguous and what fastjet actually
      does may depend on: the compiler, the machine architecture
-     (because of rounding errors), the fastjet version.
+     (because of rounding errors), the fastjet version and the
+     clustering strategy.
   
      Physically this issue should not change the jets
      much. Nevertheless, one might choose to break any degeneracy
