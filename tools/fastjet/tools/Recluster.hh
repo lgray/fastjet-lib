@@ -41,23 +41,28 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// Recluster a jet's constituents with a new jet definition.
 ///
 /// When Recluster is constructed from a JetDefinition, it is that
-/// definition will be used to obtain the subjets. The user may then
-/// decide if the recombiner should be the one from that jet
+/// definition that will be used to obtain the new jets. The user may
+/// then decide if the recombiner should be the one from that jet
 /// definition or if it should be acquired from the jet being
 /// processed (the default).
 ///
 /// Alternatively, Recluster can be constructed from a jet algorithm
 /// and an optional radius. In that case the recombiner is
-/// systematically obtained fromn the jet being processed. If only the
-/// jet algorithm is specified, a default radius of max_allowable_R
-/// will be assumed if needed.
+/// systematically obtained fromn the jet being processed (unless you
+/// call set_acquire_recombiner(false)). If only the jet algorithm is
+/// specified, a default radius of max_allowable_R will be assumed if
+/// needed.
 ///
 /// Recluster has two possible behaviours:
-///  - if it is constructed with keep=keep_only_hardest
-///    the hardest subjet is returned as a "standard" jet with an
-///    associated cluster sequence
+///
+///  - if it is constructed with keep=keep_only_hardest the hardest
+///    inclusive jet is returned as a "standard" jet with an
+///    associated cluster sequence (unless there were no inclusive
+///    jets, in which case a zero jet is returned, with no associated
+///    cluster sequence)
+///
 ///  - if it is constructed with keep=keep_all
-///    all the subjets are joined in a composite jet
+///    all the inclusive jets are joined into a composite jet
 ///
 /// [Note that since the structure of the resulting PseudoJet depends
 /// on its usage, this class inherits from
@@ -68,61 +73,61 @@ class Recluster : public FunctionOfPseudoJet<PseudoJet> {
 public:
   /// the various options for the output of Recluster
   enum Keep{
-    /// keep only the hardest subjet and return a "standard" jet with
+    /// keep only the hardest inclusive jet and return a "standard" jet with
     /// an associated ClusterSequence [this will be the default]
     keep_only_hardest,
-    /// keep all the subjets. result() will join them into a composite
+    /// keep all the inclusive jets. result() will join them into a composite
     /// jet
     keep_all
   };
 
   /// default constructor (uses an undefined JetDefinition, and so cannot
   /// be used directly).
-  Recluster() : _subjet_def(), _acquire_recombiner(true),
+  Recluster() : _new_jet_def(), _acquire_recombiner(true),
                 _keep(keep_only_hardest), _cambridge_optimisation_enabled(true){}
 
-  /// Constructs a Recluster object that decomposes a jet into subjets
+  /// Constructs a Recluster object that reclusters a jet into a new jet
   /// using a generic JetDefinition
   ///
-  ///  \param subjet_def    the jet definition applied to obtain the subjets
+  ///  \param new_jet_def   the jet definition applied to do the reclustering
   ///  \param acquire_recombiner
   ///                       when true, the reclustering will guess the
   ///                       recombiner from the input jet instead of
-  ///                       the one in subjet_def. An error is thrown
+  ///                       the one in new_jet_def. An error is thrown
   ///                       if none is found
   ///  \param keep_in       Recluster::keep_only_hardest: the result is
-  ///                       the hardest subjet after reclustering,
+  ///                       the hardest inclusive jet after reclustering,
   ///                       returned as a "standard" jet.
   ///                       Recluster::keep_all: the result is a
-  ///                       composite jet with subjets as pieces.
-  Recluster(const JetDefinition & subjet_def, 
+  ///                       composite jet with the inclusive jets as pieces.
+  Recluster(const JetDefinition & new_jet_def, 
             bool acquire_recombiner_in = true, 
             Keep keep_in = keep_only_hardest)
-    : _subjet_def(subjet_def), _acquire_recombiner(acquire_recombiner_in), 
+    : _new_jet_def(new_jet_def), _acquire_recombiner(acquire_recombiner_in), 
       _keep(keep_in), _cambridge_optimisation_enabled(true) {}
 
-  /// Constructs a Recluster object that decomposes a jet into subjets
+  /// Constructs a Recluster object that reclusters a jet into a new jet
   /// using a JetAlgorithm and its parameters
   ///
-  ///  \param subjet_alg    the jet algorithm applied to obtain the subjets
-  ///  \param subjet_radius the jet radius if required
-  ///  \param keep_in       Recluster::keep_only_hardest: the result is
-  ///                       the hardest subjet after reclustering,
-  ///                       returned as a "standard" jet.
-  ///                       Recluster::keep_all: the result is a
-  ///                       composite jet with subjets as pieces.
+  ///  \param new_jet_alg    the jet algorithm applied to obtain the new clustering
+  ///  \param new_jet_radius the jet radius
+  ///  \param keep_in        Recluster::keep_only_hardest: the result is
+  ///                        the hardest inclusive jet after reclustering,
+  ///                        returned as a "standard" jet.
+  ///                        Recluster::keep_all: the result is a
+  ///                        composite jet with the inclusive jets as pieces.
   /// 
   /// This ctor will always acquire the recombiner from the jet being
   /// reclustered (it will throw if none can be found).  If you wish
   /// to use Recluster with an algorithm that requires an extra
   /// parameter (like the genkt algorithm), please specify the jet
   /// definition fully using the constructor above.
-  Recluster(JetAlgorithm subjet_alg, double subjet_radius, Keep keep_in = keep_only_hardest);
+  Recluster(JetAlgorithm snew_jet_alg, double new_jet_radius, Keep keep_in = keep_only_hardest);
 
   /// constructor with just a jet algorithm, but no jet radius. If the
   /// algorithm requires a jet radius, JetDefinition::max_allowable_R will be used. 
   ///
-  Recluster(JetAlgorithm subjet_alg, Keep keep_in = keep_only_hardest);
+  Recluster(JetAlgorithm new_jet_alg, Keep keep_in = keep_only_hardest);
 
   /// default dtor
   virtual ~Recluster(){}
@@ -140,7 +145,7 @@ public:
 
 
   /// sets whether to try to optimise reclustering with
-  /// Cambridge/Aachen algorithms (by not reclustering if the the
+  /// Cambridge/Aachen algorithms (by not reclustering if the
   /// requested C/A reclustering can be obtained by using subjets of
   /// an input C/A jet or one composed of multiple C/A pieces from the
   /// same clustering sequence). By default this is enabled, and
@@ -159,7 +164,7 @@ public:
   void set_keep(Keep keep_in) {_keep = keep_in;}
 
   /// returns the current "keep" mode i.e. whether only the hardest
-  /// subjet is returned or all of them (see Keep above)
+  /// inclusive jet is returned or all of them (see the Keep enum above)
   Keep keep() const{ return _keep;}
 
 
@@ -183,12 +188,12 @@ public:
   virtual PseudoJet result(const PseudoJet & jet) const;
 
   /// A lower-level method that does the actual work of reclustering
-  /// the input jet. The resulting subjets are stored in output_jets.
+  /// the input jet. The resulting jets are stored in output_jets.
   /// The jet definition that has been used can be accessed from the
   /// output_jets' ClusterSequence.
   ///
   /// \param input_jet       the (input) jet that one wants to recluster
-  /// \param output_jets     subjets resulting from the new clustering
+  /// \param output_jets     inclusive jets resulting from the new clustering
   ///
   /// Returns true if the C/A optimisation has been used (this means
   /// that generate_output_jet then has to watch out for non-explicit-ghost
@@ -196,25 +201,25 @@ public:
   bool get_new_jets_and_def(const PseudoJet & input_jet, 
                             std::vector<PseudoJet> & output_jets) const;
 
-  /// given a set of subjets and a jet definition used, create the
+  /// given a set of inclusive jets and a jet definition used, create the
   /// resulting PseudoJet;
   /// 
   /// If ca_optimisation_used then special care will be taken in
   /// deciding whether the final jet can legitimately have an area.
-  PseudoJet generate_output_jet(std::vector<PseudoJet> & subjets,
+  PseudoJet generate_output_jet(std::vector<PseudoJet> & incljets,
                                 bool ca_optimisation_used) const;
 
 
 private:
   /// set the reclustered elements in the simple case of C/A+C/A
   void _recluster_ca(const std::vector<PseudoJet> & all_pieces,
-                     std::vector<PseudoJet> & subjets,
+                     std::vector<PseudoJet> & incljets,
                      double Rfilt) const;
 
   /// set the reclustered elements in the generic re-clustering case
   void _recluster_generic(const PseudoJet & jet, 
-                          std::vector<PseudoJet> & subjets,
-                          const JetDefinition & subjet_def,
+                          std::vector<PseudoJet> & incljets,
+                          const JetDefinition & new_jet_def,
                           bool do_areas) const;
   
   // a series of checks
@@ -226,11 +231,11 @@ private:
   /// (an error is thrown if the pieces do no share a common
   /// recombiner)
   void _acquire_recombiner_from_pieces(const std::vector<PseudoJet> &all_pieces, 
-                                       JetDefinition &subjet_def) const;
+                                       JetDefinition &new_jet_def) const;
 
   /// check if one can apply the simplified trick for C/A subjets
   bool _check_ca(const std::vector<PseudoJet> &all_pieces, 
-                 const JetDefinition &subjet_def) const;
+                 const JetDefinition &new_jet_def) const;
 
   /// check if the jet (or all its pieces) have explicit ghosts
   /// (assuming the jet has area support
@@ -239,11 +244,11 @@ private:
   /// longer valid, an error will be thrown
   bool _check_explicit_ghosts(const std::vector<PseudoJet> &all_pieces) const;
 
-  JetDefinition _subjet_def;   ///< the jet definition to use to extract the subjets
+  JetDefinition _new_jet_def;  ///< the jet definition to use to extract the jets
   bool _acquire_recombiner;    ///< get the recombiner from the input
-                               ///< jet rather than from subjet_def
-  Keep _keep;                  ///< dicates what subjets are kept and
-                               ///< what is returned (see Keep above)
+                               ///< jet rather than from _new_jet_def
+  Keep _keep;                  ///< dictates which inclusive jets are kept and
+                               ///< which are returned (see Keep above)
 
   bool _cambridge_optimisation_enabled; ///<enable the checks to
                                         ///< perform optimisation when

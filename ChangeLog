@@ -1,3 +1,18 @@
+2014-08-14  Gavin Salam  <gavin.salam@cern.ch>
+
+	* tools/Recluster.cc:
+	* tools/fastjet/tools/Recluster.hh:
+	added functions set_acquire_recombiner(...) and set_keep(...) to
+	control behaviour after construction.
+
+	Fixed issue in case where there are no subjets and keep() is false
+	(now returns empty jet).
+
+	In comments and variable nameing replaced subjet_def ->
+	new_jet_def and subjets with inclusive jets.
+
+	Various other small changes to comments.
+
 2014-08-13  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* plugins/CDFCones/CDFcode/JetCluAlgorithm.cc:
