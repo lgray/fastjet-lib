@@ -40,13 +40,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// \class Recluster
 /// Recluster a jet's constituents with a new jet definition.
 ///
-/// When constructed from a JetDefinition, that definition will be
-/// used to obtain the subjets. The user may then decide if the
-/// recombiner should be the one from that jet definition or if it
-/// should be acquired from the jet being processed (teh default).
+/// When Recluster is constructed from a JetDefinition, it is that
+/// definition will be used to obtain the subjets. The user may then
+/// decide if the recombiner should be the one from that jet
+/// definition or if it should be acquired from the jet being
+/// processed (the default).
 ///
 /// Alternatively, Recluster can be constructed from a jet algorithm
-/// and an optional radius. In that casem the recombiner is
+/// and an optional radius. In that case the recombiner is
 /// systematically obtained fromn the jet being processed. If only the
 /// jet algorithm is specified, a default radius of max_allowable_R
 /// will be assumed if needed.
@@ -75,12 +76,13 @@ public:
     keep_all
   };
 
-  /// dummy ctor (uses an undefined JetDefinition)
+  /// default constructor (uses an undefined JetDefinition, and so cannot
+  /// be used directly).
   Recluster() : _subjet_def(), _acquire_recombiner(true),
                 _keep(keep_only_hardest), _cambridge_optimisation_enabled(true){}
 
-  /// define a recluster that decomposes a jet into subjets using a
-  /// generic JetDefinition
+  /// Constructs a Recluster object that decomposes a jet into subjets
+  /// using a generic JetDefinition
   ///
   ///  \param subjet_def    the jet definition applied to obtain the subjets
   ///  \param acquire_recombiner
@@ -99,8 +101,8 @@ public:
     : _subjet_def(subjet_def), _acquire_recombiner(acquire_recombiner_in), 
       _keep(keep_in), _cambridge_optimisation_enabled(true) {}
 
-  /// define a recluster that decomposes a jet into subjets using a
-  /// JetAlgorithm and its parameters
+  /// Constructs a Recluster object that decomposes a jet into subjets
+  /// using a JetAlgorithm and its parameters
   ///
   ///  \param subjet_alg    the jet algorithm applied to obtain the subjets
   ///  \param subjet_radius the jet radius if required
@@ -111,20 +113,31 @@ public:
   ///                       composite jet with subjets as pieces.
   /// 
   /// This ctor will always acquire the recombiner from the jet being
-  /// reclustered (it will throw if none can be found). For the
-  /// version where the radius is not provided (the second below),
-  /// max_allowable_R will be used if the algorithm requires a jet
-  /// radius. If you wish to use Recluster with an algorithm that
-  /// requires an extra parameter (like the genkt algorithm), please
-  /// specify the jet definition fully using the constructor above.
+  /// reclustered (it will throw if none can be found).  If you wish
+  /// to use Recluster with an algorithm that requires an extra
+  /// parameter (like the genkt algorithm), please specify the jet
+  /// definition fully using the constructor above.
   Recluster(JetAlgorithm subjet_alg, double subjet_radius, Keep keep_in = keep_only_hardest);
+
+  /// constructor with just a jet algorithm, but no jet radius. If the
+  /// algorithm requires a jet radius, JetDefinition::max_allowable_R will be used. 
+  ///
   Recluster(JetAlgorithm subjet_alg, Keep keep_in = keep_only_hardest);
 
   /// default dtor
   virtual ~Recluster(){}
 
   //----------------------------------------------------------------------
-  // tweaking the behaviour
+  // tweaking the behaviour and corresponding enquiry functions
+
+  /// set whether the reclustering should attempt to acquire a
+  /// recombiner from the input jet
+  void set_acquire_recombiner(bool acquire) {_acquire_recombiner = acquire;}
+
+  /// returns true if this reclusterer is set to acquire the
+  /// recombiner from the input jet
+  bool acquire_recombiner() const{ return _acquire_recombiner;}
+
 
   /// sets whether to try to optimise reclustering with
   /// Cambridge/Aachen algorithms (by not reclustering if the the
@@ -141,15 +154,9 @@ public:
   bool cambridge_optimization(){return _cambridge_optimisation_enabled;}
   bool cambridge_optimisation(){return _cambridge_optimisation_enabled;}
 
-  //----------------------------------------------------------------------
-  // retrieving info about the behaviour
-
-  /// class description
-  virtual std::string description() const;
-
-  /// returns true if this reclusterer is set to acquire the
-  /// recombiner from the input jets
-  bool acquire_recombiner() const{ return _acquire_recombiner;}
+  /// set the behaviour with regards to keeping all resulting jets or
+  /// just the hardest.
+  void set_keep(Keep keep_in) {_keep = keep_in;}
 
   /// returns the current "keep" mode i.e. whether only the hardest
   /// subjet is returned or all of them (see Keep above)
@@ -157,10 +164,19 @@ public:
 
 
   //----------------------------------------------------------------------
+  // retrieving info about the behaviour
+
+  /// class description
+  virtual std::string description() const;
+
+
+  //----------------------------------------------------------------------
   // core action of ths class
 
-  /// runs the reclustering and sets kept and rejected to be the jets of interest
-  /// (with non-zero rho, they will have been subtracted).
+  /// runs the reclustering and sets kept and rejected to be the jets
+  /// of interest (with non-zero rho, they will have been
+  /// subtracted). Normally this will be accessed through the base
+  /// class's operator().
   ///
   /// \param jet    the jet that gets reclustered
   /// \return the reclustered jet

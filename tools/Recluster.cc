@@ -94,14 +94,13 @@ PseudoJet Recluster::result(const PseudoJet &jet) const {
 }
 
 
-// a lower-level method that does the actual work of reclustering
-// the input jet. The resulting subjets are stored in output_jets
-// and the jet definition that has been used is stored in
-// output_jet_def
+// a lower-level method that does the actual work of reclustering the
+// input jet. The resulting subjets are stored in output_jets and the
+// jet definition that has been used can be deduced from their
+// associated ClusterSequence
 //
 //  - input_jet       the (input) jet that one wants to recluster
 //  - output_jets     subjets resulting from the new clustering
-//  - output_jet_def  the jet def that has been used to obtain output_jets
 //
 // returns true if the C/A optimisation has been used (this means
 // that generate_output_jet will watch out for non-explicit-ghost
@@ -142,12 +141,12 @@ bool Recluster::get_new_jets_and_def(const PseudoJet & input_jet,
   // with C/A
   //
   // we apply C/A clustering iff
-  //  - the request subjet_def is C/A
+  //  - the requested subjet_def is C/A
   //  - the jet is either directly coming from C/A or if it is a
   //    superposition of C/A jets from the same cluster sequence
   //  - the pieces agree with the recombination scheme of subjet_def
   //
-  // In this case area support will be automatically inherted so we
+  // In this case area support will be automatically inherited so we
   // can only worry about this later
   // -------------------------------------------------------------------
   if (_check_ca(all_pieces, subjet_def)){
@@ -189,7 +188,7 @@ PseudoJet Recluster::generate_output_jet(std::vector<PseudoJet> & subjets,
 
   // if we've used C/A optimisation, we need to get rid of the area
   // information if it comes from a non-explicit-ghost clustering.
-  // (because in that case it can be erroneous due the lack of
+  // (because in that case it can be erroneous due to the lack of
   // information about empty areas)
   if (ca_optimisation_used){
     if (reclustered.has_area() &&
@@ -224,6 +223,10 @@ void Recluster::_recluster_ca(const vector<PseudoJet> & all_pieces,
 
     double dcut = Rfilt / cs->jet_def().R();
     if (dcut>=1.0){
+      // remember that in this case all the pairwise interpiece
+      // distances are supposed to be larger than Rfilt (this was
+      // tested in _check_ca), which means that they can never
+      // recombine with each other.
       local_subjets.push_back(*piece_it);
     } else {
       local_subjets = piece_it->exclusive_subjets(dcut*dcut);
@@ -270,7 +273,7 @@ void Recluster::_recluster_generic(const PseudoJet & jet,
     // allow the cs to be deleted when it's no longer used
     // 
     // Note that there is at least one constituent in the jet so there
-    // is in principle at least one subjet But one may have used a
+    // is in principle at least one subjet. But one may have used a
     // nasty recombiner that left an empty set of subjets, so we'd
     // rather play it safe
     if (subjets.size())
@@ -332,7 +335,7 @@ void Recluster::_acquire_recombiner_from_pieces(const vector<PseudoJet> &all_pie
   const JetDefinition & jd_ref = all_pieces[0].validated_cs()->jet_def();
   for (unsigned int i=1; i<all_pieces.size(); i++){
     if (!all_pieces[i].validated_cs()->jet_def().has_same_recombiner(jd_ref)){
-      throw Error("Recluster: requested to guess the recombination scheme (or recombiner) from the original jet but an inconsistency was found between the pieces constituing that jet.");
+      throw Error("Recluster instance is configured to determine the recombination scheme (or recombiner) from the original jet, but different pieces of the jet were found to have non-equivalent recombiners.");
     }
   }
 
@@ -386,13 +389,13 @@ bool Recluster::_check_ca(const vector<PseudoJet> &all_pieces,
   for (unsigned int i=1; i<all_pieces.size(); i++)
     if (all_pieces[i].validated_cs() != cs_ref) return false;
 
-  // check that the 1st peice has the same recombiner as the one used
+  // check that the 1st piece has the same recombiner as the one used
   // for the subjet clustering
   // Note that since they share the same CS, checking the 1st one is enough
   if (!cs_ref->jet_def().has_same_recombiner(subjet_def)) return false;
 
   // we also have to make sure that the reclustering radius is not larger
-  // than any of the inter-pieces distance
+  // than any of the inter-piece distances
   double Rsub2 = subjet_def.R();
   Rsub2 *= Rsub2;
   for (unsigned int i=0; i<all_pieces.size()-1; i++){
