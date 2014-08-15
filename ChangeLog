@@ -5,8 +5,18 @@
         * doc/fastjet-doc.tex
         * CHECKLIST
         * NEWS
+	switched version number back to 3.1.0-devel
+
+2014-08-15  Gavin SALAM  <gavin.salam@cern.ch> + Matteo 
+
+        * Doxyfile
+        * configure.ac
+        * doc/fastjet-doc.tex
+        * CHECKLIST
+        * NEWS
 	update of version number for 
 	Release of FastJet fastjet-3.1.0-beta.1
+	
 
 2014-08-15  Gregory Soyez  <soyez@fastjet.fr>
 

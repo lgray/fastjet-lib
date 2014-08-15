@@ -122,12 +122,12 @@ FAILED        doxygen: check dirs are declared for new plugins + check in
 3.1.0-beta.1  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.1.0-beta.1  make sure it's committed with the CHECKLIST
 
-X.Y.Z  reset the SISCone link to the trunk: 
+3.1.0-beta.1  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 
-X.Y.Z  move the version number to X.Y.(Z+1)-devel with
+3.1.0-beta.1  move the version number to X.Y.(Z+1)-devel with
        scripts/set-version.sh VERSION-NUMBER
        and indicate this in the ChangeLog
 
