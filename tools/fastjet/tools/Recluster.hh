@@ -93,15 +93,15 @@ public:
   ///  \param acquire_recombiner
   ///                       when true, the reclustering will guess the
   ///                       recombiner from the input jet instead of
-  ///                       the one in new_jet_def. An error is thrown
-  ///                       if none is found
+  ///                       the one in new_jet_def. An error is then
+  ///                       thrown if no consistent recombiner is found
   ///  \param keep_in       Recluster::keep_only_hardest: the result is
   ///                       the hardest inclusive jet after reclustering,
   ///                       returned as a "standard" jet.
   ///                       Recluster::keep_all: the result is a
   ///                       composite jet with the inclusive jets as pieces.
   Recluster(const JetDefinition & new_jet_def, 
-            bool acquire_recombiner_in = true, 
+            bool acquire_recombiner_in = false, 
             Keep keep_in = keep_only_hardest)
     : _new_jet_def(new_jet_def), _acquire_recombiner(acquire_recombiner_in), 
       _keep(keep_in), _cambridge_optimisation_enabled(true) {}

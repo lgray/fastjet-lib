@@ -1,3 +1,10 @@
+2014-08-15  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* tools/fastjet/tools/Recluster.hh:
+	switched default for acquire_reombiner_in in constructor with
+	new_jet_def so that it is now false (i.e. the jet_def is used
+	exactly as it is supplied).
+
 2014-08-15  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/test-contrib.pl: 
