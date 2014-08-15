@@ -96,9 +96,11 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
   if (_subtractor){
     subjets = (*_subtractor)(subjets);
   } else if (_rho!=0){
-    const ClusterSequenceAreaBase *csab = subjets[0].validated_csab();
-    for (unsigned int i=0;i<subjets.size();i++){
-      subjets[i]=csab->subtracted_jet(subjets[i], _rho);
+    if (subjets.size()>0){
+      const ClusterSequenceAreaBase *csab = subjets[0].validated_csab();
+      for (unsigned int i=0;i<subjets.size();i++){
+        subjets[i]=csab->subtracted_jet(subjets[i], _rho);
+      }
     }
   }
 
@@ -139,14 +141,19 @@ PseudoJet Filter::_finalise(const PseudoJet & /*jet*/,
                             vector<PseudoJet> & kept, 
                             vector<PseudoJet> & rejected,
 			    bool ca_optimisation_used) const {
-  assert(kept.size()+rejected.size()>0);
-  // figure out which recombiner to use
-  const JetDefinition::Recombiner &rec = (kept.size()>0)
-    ? *(kept[0].associated_cs()->jet_def().recombiner())
-    : *(rejected[0].associated_cs()->jet_def().recombiner());
+  PseudoJet filtered_jet;
 
-  // create an appropriate structure and transfer the info to it
-  PseudoJet filtered_jet = join<StructureType>(kept, rec);
+  if (kept.size()+rejected.size()>0){
+    // figure out which recombiner to use
+    const JetDefinition::Recombiner &rec = (kept.size()>0)
+      ? *(kept[0].associated_cs()->jet_def().recombiner())
+      : *(rejected[0].associated_cs()->jet_def().recombiner());
+
+    // create an appropriate structure and transfer the info to it
+    filtered_jet = join<StructureType>(kept, rec);
+  } else {
+    filtered_jet = join<StructureType>(kept);
+  }
   StructureType *fs = (StructureType*) filtered_jet.structure_non_const_ptr();
   fs->_rejected = rejected;
   
@@ -154,7 +161,7 @@ PseudoJet Filter::_finalise(const PseudoJet & /*jet*/,
   // information if it comes from a non-explicit-ghost clustering.
   // (because in that case it can be erroneous due the lack of
   // information about empty areas)
-  if (ca_optimisation_used){
+  if ((ca_optimisation_used) && (kept.size()+rejected.size()>0)){
     bool has_non_explicit_ghost_area = (kept.size()>0)
       ? (kept[0].has_area()     && kept[0].validated_csab()->has_explicit_ghosts())
       : (rejected[0].has_area() && rejected[0].validated_csab()->has_explicit_ghosts());
