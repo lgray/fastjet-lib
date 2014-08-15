@@ -41,11 +41,14 @@ X.Y.Z  make sure it's committed (before distcheck; so that all files
 X.Y.Z  rerun the nightly check
 
 X.Y.Z  make distcheck; record the md5sum here (and revision number)
+X.Y.Z  generate and release fjcore and note its md5sum
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
 
-X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
+X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
 X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
 X.Y.Z  update main web page & menu in devel area
 
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
@@ -64,6 +67,263 @@ X.Y.Z  reset the SISCone link to the trunk:
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
        scripts/set-version.sh VERSION-NUMBER
        and indicate this in the ChangeLog
+
+----------------------------------------------------------------------
+checklist for 3.1.0-beta.1 (make a copy before editing!)
+-------------------
+X.Y.Z  run svn up
+X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
+X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
+       the class list that all classes are prefixed by 'fastjet::'
+X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
+
+X.Y.Z  make sure siscone points to a tag, not trunk
+       svn propedit svn:externals plugins/SISCone; svn up
+
+X.Y.Z  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
+
+X.Y.Z  make check 
+
+X.Y.Z  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+         grep -i error.summary out
+         grep LEAK.SUMMARY out
+       and make sure there are no errors (look through the file too)
+
+X.Y.Z  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+X.Y.Z  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+X.Y.Z  rerun the nightly check
+
+X.Y.Z  make distcheck; record the md5sum here (and revision number)
+X.Y.Z  generate and release fjcore and note its md5sum
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
+
+X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
+X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
+X.Y.Z  compile manual
+X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
+X.Y.Z  update main web page & menu in devel area
+
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  update main web-page area
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+X.Y.Z  make sure it's committed with the CHECKLIST
+
+X.Y.Z  generate and release fjcore 
+
+X.Y.Z  reset the SISCone link to the trunk: 
+       svn propedit svn:externals plugins/SISCone; svn up
+
+X.Y.Z  move the version number to X.Y.(Z+1)-devel with
+       scripts/set-version.sh VERSION-NUMBER
+       and indicate this in the ChangeLog
+
+----------------------------------------------------------------------
+checklist for 3.0.6 (make a copy before editing!)
+-------------------
+3.0.6  run svn up
+3.0.6  update version number with ./scripts/set-version.sh VERSION-NUMBER
+3.0.6  doxygen: check dirs are declared for new plugins + check in 
+       the class list that all classes are prefixed by 'fastjet::'
+       [ran ~salam/software/doxygen-1.7.4/bin/doxygen]
+3.0.6  ensure NEWS is up to date (and has the correct release date!)
+
+3.0.6  make sure siscone points to a tag, not trunk
+       svn propedit svn:externals plugins/SISCone; svn up
+
+3.0.6  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-3.0.6"
+
+3.0.6  make check 
+
+3.0.6  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+         grep -i error.summary out
+         grep LEAK.SUMMARY out
+       and make sure there are no errors (look through the file too)
+
+3.0.6  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+3.0.6  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+3.0.6  rerun the nightly check
+
+3.0.6  make distcheck; record the md5sum here (and revision number)
+       640d4c1e860143888915e4f728349fb5  fastjet-3.0.6.tar.gz (rev 3258)
+
+3.0.6  generate and release fjcore and note its md5sum
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-3.0.6.tar.gz; cd ..
+       3ace036ed3fd68f8979156a4e82cdb9d  fjcore-3.0.6.tar.gz
+
+3.0.6  copy distribution to web: cp -p fastjet-3.0.6.tar.gz ~salam/www/fastjet/repository/
+3.0.6  copy fjcore to web: cp -p scripts/fjcore-3.0.6.tar.gz ~salam/www/fastjet/repository
+3.0.6  compile manual
+3.0.6  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.0.6.pdf
+3.0.6  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.0.6
+3.0.6  update main web page & menu in devel area
+
+3.0.6  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.6
+3.0.6  update main web-page area
+
+NO-NO  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+3.0.6  make sure it's committed with the CHECKLIST
+
+3.0.6  reset the SISCone link to the trunk: 
+       svn propedit svn:externals plugins/SISCone; svn up
+
+3.0.6  move the version number to X.Y.(Z+1)-devel with
+       scripts/set-version.sh VERSION-NUMBER
+       and indicate this in the ChangeLog
+
+
+----------------------------------------------------------------------
+checklist for 3.0.5 (make a copy before editing!)
+-------------------
+3.0.5  run svn up
+3.0.5  update version number with ./scripts/set-version.sh VERSION-NUMBER
+3.0.5  doxygen: check dirs are declared for new plugins + check in 
+       the class list that all classes are prefixed by 'fastjet::'
+       [Note: used doxygen-1.7.4] 
+3.0.5  ensure NEWS is up to date (and has the correct release date!)
+
+3.0.5  make sure siscone points to a tag, not trunk
+       svn propedit svn:externals plugins/SISCone; svn up
+
+3.0.5  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
+
+3.0.5  make check 
+
+3.0.5  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+         grep -i error.summary out
+         grep LEAK.SUMMARY out
+       and make sure there are no errors (look through the file too)
+
+3.0.5  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+3.0.5  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+3.0.5  rerun the nightly check
+
+3.0.5  make distcheck; record the md5sum here (and revision number)
+       f93587b15aa77cb218ac5c5c12ed8c0c  fastjet-3.0.5.tar.gz
+
+3.0.5  generate and release fjcore and note its md5sum
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
+       911c631e0deda189e8e10782b8f140e5  fjcore-3.0.5.tar.gz
+
+3.0.5  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~/www/fastjet/repository/
+
+3.0.5  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~/www/fastjet/repository
+
+3.0.5  compile manual
+3.0.5  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+3.0.5  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-X.Y.Z
+3.0.5  update main web page & menu in devel area
+
+3.0.5  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  update main web-page area
+
+NO-NO  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+3.0.5  reset the SISCone link to the trunk: 
+       svn propedit svn:externals plugins/SISCone; svn up
+
+3.0.5  move the version number to X.Y.(Z+1)-devel with
+       scripts/set-version.sh VERSION-NUMBER
+       and indicate this in the ChangeLog
+
+3.0.5  make sure it's committed with the CHECKLIST
+
+----------------------------------------------------------------------
+checklist for 3.0.4 (make a copy before editing!)
+-------------------
+3.0.4  run svn up
+3.0.4  update version number with ./scripts/set-version.sh VERSION-NUMBER
+3.0.4  doxygen: check dirs are declared for new plugins + check in 
+       the class list that all classes are prefixed by 'fastjet::'
+       NB: used ~salam/software/doxygen-1.7.4/bin/doxygen 
+3.0.4  ensure NEWS is up to date (and has the correct release date!)
+
+3.0.4  make sure siscone points to a tag, not trunk
+       svn propedit svn:externals plugins/SISCone; svn up
+
+3.0.4  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
+
+3.0.4  make check 
+
+NO-NO  within zsh, in the examples directory, do 
+         echo >! out
+         for a in [01]*.cc
+         (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
+         grep -i error.summary out
+         grep LEAK.SUMMARY out
+       and make sure there are no errors (look through the file too)
+
+3.0.4  go to testsuite; make with an installation of the current version;
+         ./run_tests
+
+3.0.4  make sure it's committed (before distcheck; so that all files
+       have correct version numbers)
+
+NO-NO  rerun the nightly check
+
+3.0.4  make distcheck; record the md5sum here (and revision number)
+       975686656bd83f939482300b22bcc75b  fastjet-3.0.4.tar.gz
+
+3.0.4  generate and release fjcore and note its md5sum
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
+       a75db8c8a1c46694a3cb2b587749604d  fjcore-3.0.4.tar.gz
+
+3.0.4  copy distribution to web: cp -p fastjet-3.0.4.tar.gz ~/www/fastjet/repository/
+
+3.0.4  copy fjcore to web: cp -p scripts/fjcore-3.0.4.tar.gz ~/www/fastjet/repository
+
+3.0.4  compile manual
+3.0.4  copy manual to web: cp -p fastjet-doc.pdf ~/www/fastjet/repository/fastjet-doc-3.0.4.pdf
+3.0.4  run doxygen on the distribution, move to web: mv html ~/www/fastjet/repository/doxygen-3.0.4
+3.0.4  update main web page & menu in devel area
+
+3.0.4  tag: svn cp -m 'released 3.0.4' . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.0.4 
+
+3.0.4  update main web-page area
+
+X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       subject: FastJet release X.Y.Z       
+
+3.0.4  make sure it's committed with the CHECKLIST
+
+3.0.4  reset the SISCone link to the trunk: 
+       svn propedit svn:externals plugins/SISCone; svn up
+
+3.0.4  move the version number to X.Y.(Z+1)-devel with
+       scripts/set-version.sh VERSION-NUMBER
+       and indicate this in the ChangeLog
+
 
 ----------------------------------------------------------------------
 checklist for 3.0.3 (make a copy before editing!)
