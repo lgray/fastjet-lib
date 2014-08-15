@@ -32,7 +32,7 @@
 
 2014-08-15  Gavin Salam  <gavin.salam@cern.ch>
 
-	* regression-tests/test-contrib.pl: 
+	* regression-tests/test-contrib.pl:  *** ADDED ***
 	added script to facilitate testing of fjcontrib
 
 2014-08-14  Gavin Salam  <gavin.salam@cern.ch>
