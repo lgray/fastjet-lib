@@ -2,7 +2,7 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
-Summary of changes from v3.0.6 -> v3.1.0-beta.1: 2014-??-??
+Summary of changes from v3.0.6 -> v3.1.0-beta.1: 2014-08-15
 ================================================================
 * Significant speed improvements (x1.5-10) for large N (few thousand-10^5)
 * FASTJET_VERSION_NUMBER preprocessor symbol, for easy in-code version testing
