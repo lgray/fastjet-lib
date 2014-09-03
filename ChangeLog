@@ -1,3 +1,10 @@
+2014-09-03  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/PseudoJet.cc (join):
+	* include/fastjet/CompositeJetStructure.hh (join):
+	in join with a fixed number of input PseudoJets, reserved space
+	ahead of time in the temporary pieces vector.
+
 2014-08-15  Gavin SALAM  <gavin.salam@cern.ch> + Matteo 
 
         * Doxyfile

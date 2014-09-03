@@ -243,6 +243,7 @@ template<typename T> PseudoJet join(const PseudoJet & j1,
 template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2, 
 				    const JetDefinition::Recombiner & recombiner){
   std::vector<PseudoJet> pieces;
+  pieces.reserve(2);
   pieces.push_back(j1);
   pieces.push_back(j2);
   return join<T>(pieces, recombiner);
@@ -254,6 +255,7 @@ template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2,
 				    const PseudoJet & j3, 
 				    const JetDefinition::Recombiner & recombiner){
   std::vector<PseudoJet> pieces;
+  pieces.reserve(3);
   pieces.push_back(j1);
   pieces.push_back(j2);
   pieces.push_back(j3);
@@ -266,6 +268,7 @@ template<typename T> PseudoJet join(const PseudoJet & j1, const PseudoJet & j2,
 				    const PseudoJet & j3, const PseudoJet & j4, 
 				    const JetDefinition::Recombiner & recombiner){
   std::vector<PseudoJet> pieces;
+  pieces.reserve(4);
   pieces.push_back(j1);
   pieces.push_back(j2);
   pieces.push_back(j3);
