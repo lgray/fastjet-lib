@@ -154,6 +154,10 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   // allocate space for the extras object
   SISConeExtras * extras = new SISConeExtras(n);
 
+  // the ordering in which the inclusive jets are transfered here is
+  // deliberate and ensures that when a user asks for
+  // inclusive_jets(), they are provided in the order in which SISCone
+  // created them.
   for (int ijet = njet-1; ijet >= 0; ijet--) {
     const Cjet & jet = siscone->jets[ijet]; // shorthand
     

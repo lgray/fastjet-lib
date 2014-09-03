@@ -1,4 +1,12 @@
-2014-09-03  Gavin Salam  <gavin.salam@cern.ch>
+2014-09-03  Gavin Salam  <gavin.salam@cern.ch> + Gregory
+
+	* plugins/SISCone/SISConePlugin.cc (run_clustering):
+	* plugins/SISCone/SISConeSphericalPlugin.cc (run_clustering):
+	added comment to explain that jets are transferred such that
+	CS::inclusive_jets() returns them in the order they were created
+	by SISCone.
+
+2014-09-03  Gavin Salam  <gavin.salam@cern.ch> 
 
 	* src/PseudoJet.cc (join):
 	* include/fastjet/CompositeJetStructure.hh (join):
