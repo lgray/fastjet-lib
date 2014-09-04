@@ -50,12 +50,26 @@ public:
     *this = plugin;
   }
 
-  /// decide if we want the default SISCone with progressive removal
-  /// instead of the default split_merge step
-  void set_progressive_removal(bool progressive_removal=true){
-    _progressive_removal = progressive_removal;
+  /// set whether to use SISCone with progressive removal instead of
+  /// the default split_merge step.
+  ///
+  /// If progressive removal is enabled, the following SISCone
+  /// variables are not used:
+  ///
+  /// - overlap_threshold
+  /// - caching
+  /// - split_merge_stopping_scale
+  ///
+  /// The split_merge_scale choice is reinterpreted as the ordering
+  /// variable for progressive removal. It is also possible for the
+  /// user to supply his/her own function for the scale that orders
+  /// progressive removal, with set_user_scale(...)
+  void set_progressive_removal(bool progressive_removal_in=true){
+    _progressive_removal = progressive_removal_in;
   }
-  bool has_progressive_removal() const{ return _progressive_removal;}
+
+  /// returns true if progressive_removal is enabled
+  bool progressive_removal() const{ return _progressive_removal;}
 
   /// the cone radius
   double cone_radius        () const {return _cone_radius        ;}
