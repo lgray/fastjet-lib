@@ -316,13 +316,34 @@ void JetDefinition::DefaultRecombiner::recombine(
     break;
   case WTA_pt_scheme:{
     const PseudoJet & phard = (pa.pt2() >= pb.pt2()) ? pa : pb;
+    /// keep y,phi and m from the hardest, sum pt
     pab.reset_PtYPhiM(pa.pt()+pb.pt(), 
                       phard.rap(), phard.phi(), phard.m());
     return;}
-  //case WTA_E_scheme:
-  //
-  //case WTA_modp_scheme:
-  //
+  case WTA_E_scheme:{
+    const PseudoJet & phard = (pa.E() >= pb.E()) ? pa : pb;
+    /// keep 3-momentum direction and mass from the hardest, sum energies
+    double Eab = pa.E() + pb.E();
+    double scale = sqrt((Eab*Eab - phard.m2())/phard.modp2());
+    pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale,Eab);
+    return;}
+  case WTA_modp_scheme:{
+    // Note: we need to compute both a and b modp. And we need pthard
+    // and its modp. If we want to avoid repeating the test and do
+    // only 2 modp calculations, we'd have to duplicate the code (or
+    // use a pair<const PJ&>). An alternative is to write modp_soft as
+    // modp_ab-modp_hard but this could suffer rfom larger rounding
+    // errors
+    bool a_hardest = (pa.modp2() >= pb.modp2());
+    const PseudoJet & phard = a_hardest ? pa : pb;
+    const PseudoJet & psoft = a_hardest ? pb : pa;
+    /// keep 3-momentum direction and mass from the hardest, sum modp
+    double modp_hard = phard.modp();
+    double modp_ab = modp_hard + psoft.modp();
+    double scale = modp_ab/modp_hard;
+    pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale,
+	      sqrt(modp_ab*modp_ab + phard.m2()));
+    return;}
   default:
     ostringstream err;
     err << "DefaultRecombiner: unrecognized recombination scheme " 
