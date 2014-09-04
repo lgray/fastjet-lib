@@ -7,7 +7,7 @@
 	* src/JetDefinition.cc:
 	started the addition of WTA recombination schemes
 	 . WTA_pt_scheme fully done
-	 . WTA_{E,modp}_scheme have a desctiption and a (inexistant)
+	 . WTA_{E,modp}_scheme have a description and a (inexistant)
 	   preprocess step but still lack the actual recombination
 
 
