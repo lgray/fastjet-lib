@@ -269,6 +269,12 @@ string JetDefinition::DefaultRecombiner::description() const {
     return "boost-invariant pt scheme recombination";
   case BIpt2_scheme:
     return "boost-invariant pt2 scheme recombination";
+  case WTA_pt_scheme:
+    return "pt-ordered Winner-Takes-All recombination";
+  case WTA_E_scheme:
+    return "energy-ordered Winner-Takes-All recombination";
+  case WTA_modp_scheme:
+    return "|3-momentum|-ordered Winner-Takes-All recombination";
   default:
     ostringstream err;
     err << "DefaultRecombiner: unrecognized recombination scheme " 
@@ -308,6 +314,15 @@ void JetDefinition::DefaultRecombiner::recombine(
     weighta = pa.perp2(); 
     weightb = pb.perp2();
     break;
+  case WTA_pt_scheme:{
+    const PseudoJet & phard = (pa.pt2() >= pb.pt2()) ? pa : pb;
+    pab.reset_PtYPhiM(pa.pt()+pb.pt(), 
+                      phard.rap(), phard.phi(), phard.m());
+    return;}
+  //case WTA_E_scheme:
+  //
+  //case WTA_modp_scheme:
+  //
   default:
     ostringstream err;
     err << "DefaultRecombiner: unrecognized recombination scheme " 
@@ -343,6 +358,9 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
   case E_scheme:
   case BIpt_scheme:
   case BIpt2_scheme:
+  case WTA_pt_scheme:
+  case WTA_E_scheme:
+  case WTA_modp_scheme:
     break;
   case pt_scheme:
   case pt2_scheme:

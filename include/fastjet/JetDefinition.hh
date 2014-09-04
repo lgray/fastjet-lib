@@ -202,6 +202,12 @@ enum RecombinationScheme {
   /// pt^2 weighted recombination of y,phi (and summing of pt's)
   /// no preprocessing
   BIpt2_scheme=6,
+  /// Winner-Takes-All (WTA) recombination with pt ordering
+  WTA_pt_scheme=7,
+  /// Winner-Takes-All (WTA) recombination with energy ordering
+  WTA_E_scheme=8,
+  /// Winner-Takes-All (WTA) recombination with |3-momentum| ordering
+  WTA_modp_scheme=9,
   /// for the user's external scheme
   external_scheme = 99
 };

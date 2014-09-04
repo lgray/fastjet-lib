@@ -1,3 +1,12 @@
+2014-09-04  Gregory Soyez  <soyez@fastjet.fr>
+
+	* includec/fastjet/JetDefinition.hh:
+	* src/JetDefinition.cc:
+	started the addition of WTA recombination schemes
+	 . WTA_pt_scheme fully done
+	 . WTA_{E,modp}_scheme have a desctiption and a (inexistant)
+	   preprocess step but still lack the actual recombination
+
 2014-09-04  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* plugins/SISCone/SISConeBasePlugin.cc:     *** ADDED ***
