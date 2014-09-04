@@ -250,7 +250,7 @@ private:
 /// the structure that allows to store the information contained
 /// into a siscone::Cjet (built internally in SISCone from a stable
 /// cone) into a PseudoJet
-class SISConePlugin::UserScaleBase::StructureType {
+class SISConePlugin::UserScaleBase::StructureType : public PseudoJetStructureBase {
 public:
   StructureType(const siscone::Cjet & jet, const ClusterSequence &cs)
     : _jet(jet), _cs(cs){}
