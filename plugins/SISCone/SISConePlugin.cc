@@ -61,7 +61,7 @@ namespace siscone_plugin_internal{
     PseudoJet _build_PJ_from_Cjet(const siscone::Cjet &jet) const{
       PseudoJet j(jet.v.px, jet.v.py, jet.v.pz, jet.v.E);
       j.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(
-                                    new SISConePlugin::UserScaleBase::StructureType(jet,_cs)));      
+                                   new SISConePlugin::UserScaleBaseStructureType<siscone::Cjet>(jet,_cs)));      
       return j;
     }
 
@@ -102,10 +102,14 @@ string SISConePlugin::description () const {
     desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
-  desc <<  sm_scale_string                                << ", ";
-  if (!_progressive_removal)
-    desc << "caching turned "      << (caching() ? on : off);
-  desc << ", SM stop scale = "     << _split_merge_stopping_scale;
+  if (_progressive_removal && _user_scale)
+    desc << "using a user-defined ordering of stable cones";
+  else
+    desc <<  sm_scale_string;
+  if (!_progressive_removal){
+    desc << ", caching turned "      << (caching() ? on : off);
+    desc << ", SM stop scale = "     << _split_merge_stopping_scale;
+  }
 
   // add a note to the description if we use the pt-weighted splitting
   if (_use_pt_weighted_splitting){
@@ -291,54 +295,54 @@ void SISConePlugin::reset_stored_plugin() const{
   stored_plugin.reset( new SISConePlugin(*this));
 }
 
-//======================================================================
-// material to handle user-defined scales
-
-//--------------------------------------------------
-// SISCone structure type
-
-// the textual descripotion
-std::string SISConePlugin::UserScaleBase::StructureType::description() const{
-  return "PseudoJet wrapping a siscone::Cjet stable cone"; 
-}
-
-// retrieve the constituents
-//
-// if you simply need to iterate over the constituents, it will be
-// faster to access them via constituent(i)
-vector<PseudoJet> SISConePlugin::UserScaleBase::StructureType::constituents(const PseudoJet &) const{ 
-  vector<PseudoJet> constits;
-  constits.reserve(_jet.n);
-  for (unsigned int i=0; i<(unsigned int)_jet.n;i++)
-    constits.push_back(constituent(i));
-  return constits;
-}
-
-// returns the number of constituents
-unsigned int SISConePlugin::UserScaleBase::StructureType::size() const{
-  return _jet.n;
-}
-
-// returns the index (in the original particle list) of the ith
-// constituent
-int SISConePlugin::UserScaleBase::StructureType::constituent_index(unsigned int i) const{ 
-  return _jet.contents[i];
-}
-
-// returns the ith constituent (as a PseusoJet)
-const PseudoJet & SISConePlugin::UserScaleBase::StructureType::constituent(unsigned int i) const{
-  return _cs.jets()[_jet.contents[i]];
-}
-
-// returns the scalar pt of this stable cone
-double SISConePlugin::UserScaleBase::StructureType::pt_tilde() const{
-  return _jet.pt_tilde;
-}
-
-// returns the sm_var2 (signed ordering variable squared) for this stable cone
-double SISConePlugin::UserScaleBase::StructureType::ordering_var2() const{
-  return _jet.sm_var2;
-}
+// //======================================================================
+// // material to handle user-defined scales
+// 
+// //--------------------------------------------------
+// // SISCone structure type
+// 
+// // the textual descripotion
+// std::string SISConePlugin::UserScaleBase::StructureType::description() const{
+//   return "PseudoJet wrapping a siscone::Cjet stable cone"; 
+// }
+// 
+// // retrieve the constituents
+// //
+// // if you simply need to iterate over the constituents, it will be
+// // faster to access them via constituent(i)
+// vector<PseudoJet> SISConePlugin::UserScaleBase::StructureType::constituents(const PseudoJet &) const{ 
+//   vector<PseudoJet> constits;
+//   constits.reserve(_jet.n);
+//   for (unsigned int i=0; i<(unsigned int)_jet.n;i++)
+//     constits.push_back(constituent(i));
+//   return constits;
+// }
+// 
+// // returns the number of constituents
+// unsigned int SISConePlugin::UserScaleBase::StructureType::size() const{
+//   return _jet.n;
+// }
+// 
+// // returns the index (in the original particle list) of the ith
+// // constituent
+// int SISConePlugin::UserScaleBase::StructureType::constituent_index(unsigned int i) const{ 
+//   return _jet.contents[i];
+// }
+// 
+// // returns the ith constituent (as a PseusoJet)
+// const PseudoJet & SISConePlugin::UserScaleBase::StructureType::constituent(unsigned int i) const{
+//   return _cs.jets()[_jet.contents[i]];
+// }
+// 
+// // returns the scalar pt of this stable cone
+// double SISConePlugin::UserScaleBase::StructureType::pt_tilde() const{
+//   return _jet.pt_tilde;
+// }
+// 
+// // returns the sm_var2 (signed ordering variable squared) for this stable cone
+// double SISConePlugin::UserScaleBase::StructureType::ordering_var2() const{
+//   return _jet.sm_var2;
+// }
 
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh

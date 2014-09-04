@@ -175,54 +175,6 @@ public:
   void set_split_merge_use_pt_weighted_splitting(bool val) {
     _use_pt_weighted_splitting = val;}
 
-  // user-defined scale for progressive removal
-
-  /// \class UserScaleBase
-  /// base class for user-defined ordering of stable cones (used for
-  /// prorgessive removal)
-  ///
-  /// derived classes have to implement the () operator that returns
-  /// the scale associated with a given jet.
-  ///
-  /// The jets that are passed to this class will carry the structure
-  /// of type SISConePlugin::StructureType which allows to retreive
-  /// easily the following information:
-  ///
-  ///   vector<PseudoJet> constituents = jet.constituents();
-  ///   unsigned int n_constituents = jet.structure_of<SISConePlugin::UserScaleBase>().size();
-  ///   int index = jet.structure_of<SISConePlugin::UserScaleBase>().constituent_index(index i);
-  ///   const PseudoJet & p = jet.structure_of<SISConePlugin::UserScaleBase>().constituent(index i);
-  ///   double scalar_pt = jet.structure_of<SISConePlugin::UserScaleBase>().pt_tilde();
-  ///
-  /// see SISConePlugin::StructureType below for further details
-  class UserScaleBase : public FunctionOfPseudoJet<double>{
-  public:
-    /// returns the scale associated with a given jet
-    ///
-    /// "progressive removal" iteratively removes the stable cone with
-    /// the largest scale
-    virtual double result(const PseudoJet & jet) const = 0;
-
-    /// returns true when the scale associated with jet a is larger than
-    /// the scale associated with jet b
-    ///
-    /// By default this does a simple direct comparison but it can be
-    /// overloaded for higher precision [recommended if possible]
-    virtual bool is_larger(const PseudoJet & a, const PseudoJet & b) const{
-      return result(a)>result(b);
-    }
-
-    class StructureType; // defined below
-  };
-
-  /// set a user-defined scale for stable-cone ordering in
-  /// progressive removal
-  void set_user_scale(const UserScaleBase *user_scale_in){ _user_scale = user_scale_in;}
-
-  /// returns the user-defined scale in use (0 if none)
-  const UserScaleBase * user_scale() const{ return _user_scale;}
-
-
   // the things that are required by base class
   virtual std::string description () const;
   virtual void run_clustering(ClusterSequence &) const ;
@@ -236,8 +188,6 @@ private:
 
   bool _use_pt_weighted_splitting;
 
-  const UserScaleBase * _user_scale;
-
   // part needed for the cache 
   // variables for caching the results and the input
   static std::auto_ptr<SISConePlugin          > stored_plugin;
@@ -246,52 +196,52 @@ private:
 };
 
 
-///\class SISConePlugin::UserScaleBase::StructureType
-/// the structure that allows to store the information contained
-/// into a siscone::Cjet (built internally in SISCone from a stable
-/// cone) into a PseudoJet
-class SISConePlugin::UserScaleBase::StructureType : public PseudoJetStructureBase {
-public:
-  StructureType(const siscone::Cjet & jet, const ClusterSequence &cs)
-    : _jet(jet), _cs(cs){}
-
-  //--------------------------------------------------
-  // members inherited from the base class
-  /// the textual descripotion
-  virtual std::string description() const;
-
-  /// this structure has constituents
-  virtual bool has_constituents() const {return true;}
-
-  /// retrieve the constituents 
-  ///
-  /// if you simply need to iterate over the constituents, it will be
-  /// faster to access them via constituent(i)
-  virtual std::vector<PseudoJet> constituents(const PseudoJet & /*reference*/) const;
-
-  //--------------------------------------------------
-  // additional information relevant for this structure
-
-  /// returns the number of constituents
-  unsigned int size() const;
-
-  /// returns the index (in the original particle list) of the ith
-  /// constituent
-  int constituent_index(unsigned int i) const;
-
-  /// returns the ith constituent (as a PseusoJet)
-  const PseudoJet & constituent(unsigned int i) const;
-
-  /// returns the scalar pt of this stable cone
-  double pt_tilde() const;
-
-  /// returns the sm_var2 (signed ordering variable squared) for this stable cone
-  double ordering_var2() const;
-
-protected:
-  const siscone::Cjet &_jet;  ///< a dreference to the internal jet in SISCone
-  const ClusterSequence &_cs; ///< a reference to the CS (for access to the particles)
-};
+/////\class SISConePlugin::UserScaleBase::StructureType
+///// the structure that allows to store the information contained
+///// into a siscone::Cjet (built internally in SISCone from a stable
+///// cone) into a PseudoJet
+//class SISConePlugin::UserScaleBase::StructureType : public PseudoJetStructureBase {
+//public:
+//  StructureType(const siscone::Cjet & jet, const ClusterSequence &cs)
+//    : _jet(jet), _cs(cs){}
+//
+//  //--------------------------------------------------
+//  // members inherited from the base class
+//  /// the textual descripotion
+//  virtual std::string description() const;
+//
+//  /// this structure has constituents
+//  virtual bool has_constituents() const {return true;}
+//
+//  /// retrieve the constituents 
+//  ///
+//  /// if you simply need to iterate over the constituents, it will be
+//  /// faster to access them via constituent(i)
+//  virtual std::vector<PseudoJet> constituents(const PseudoJet & /*reference*/) const;
+//
+//  //--------------------------------------------------
+//  // additional information relevant for this structure
+//
+//  /// returns the number of constituents
+//  unsigned int size() const;
+//
+//  /// returns the index (in the original particle list) of the ith
+//  /// constituent
+//  int constituent_index(unsigned int i) const;
+//
+//  /// returns the ith constituent (as a PseusoJet)
+//  const PseudoJet & constituent(unsigned int i) const;
+//
+//  /// returns the scalar pt of this stable cone
+//  double pt_tilde() const;
+//
+//  /// returns the sm_var2 (signed ordering variable squared) for this stable cone
+//  double ordering_var2() const;
+//
+//protected:
+//  const siscone::Cjet &_jet;  ///< a dreference to the internal jet in SISCone
+//  const ClusterSequence &_cs; ///< a reference to the CS (for access to the particles)
+//};
 
 //======================================================================
 /// @ingroup extra_info
