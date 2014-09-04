@@ -1,3 +1,31 @@
+2014-09-04  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* plugins/SISCone/SISConeBasePlugin.cc:     *** ADDED ***
+	* plugins/SISCone/Makefile.am:
+	* plugins/SISCone/makefile.static:
+	SISConeBasePlugin::UserScaleBase::is_larger now uses the cached
+	value and has been moved in a proper .cc file (allows to declare
+	StructureType at the end of the class)
+
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
+	* plugins/SISCone/SISConeSphericalPlugin.cc:
+	implemented the user-defined scale support in the spherical
+	version too
+
+	* plugins/SISCone/SISConePlugin.cc:
+	* plugins/SISCone/fastjet/SISConePlugin.hh:
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh:
+	   . worked on the description of the plugin
+	   . moved the UserScaleBase class to SISConeBasePlugin
+	     derived plugins now use a template specialisation
+	       SISConePlugin::UserScaleBaseStructureType<type_of_siscone_jet>
+	
+	* plugins/SISCone/SISConePlugin.cc:
+	* plugins/SISCone/fastjet/SISConePlugin.hh:
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh:
+	carried on with the support of user-defined scales
+	[current version under testing].
+
 2014-09-04  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/SISCone/SISConePlugin.cc:
