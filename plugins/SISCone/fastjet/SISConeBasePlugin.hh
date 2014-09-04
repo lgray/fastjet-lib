@@ -42,12 +42,20 @@ public:
   /// default ctor
   SISConeBasePlugin (){
     _use_jet_def_recombiner = false;
+    set_progressive_removal(false);
   }
 
   /// copy constructor
   SISConeBasePlugin (const SISConeBasePlugin & plugin) {
     *this = plugin;
   }
+
+  /// decide if we want the default SISCone with progressive removal
+  /// instead of the default split_merge step
+  void set_progressive_removal(bool progressive_removal=true){
+    _progressive_removal = progressive_removal;
+  }
+  bool has_progressive_removal() const{ return _progressive_removal;}
 
   /// the cone radius
   double cone_radius        () const {return _cone_radius        ;}
@@ -119,6 +127,7 @@ protected:
   bool   _caching;//, _split_merge_on_transverse_mass;
   double _split_merge_stopping_scale;
   bool   _use_jet_def_recombiner;
+  bool   _progressive_removal;
 
   mutable double _ghost_sep_scale;
 

@@ -43,11 +43,15 @@ string SISConeSphericalPlugin::description () const {
 
   desc << "Spherical SISCone jet algorithm with " ;
   desc << "cone_radius = "       << cone_radius        () << ", ";
-  desc << "overlap_threshold = " << overlap_threshold  () << ", ";
+  if (_progressive_removal)
+    desc << "progressive-removal mode, ";
+  else 
+    desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_Emin = "     << protojet_Emin()      << ", ";
   desc <<  sm_scale_string                                << ", ";
-  desc << "caching turned "      << (caching() ? on : off);
+  if (!_progressive_removal)
+    desc << "caching turned "      << (caching() ? on : off);
   desc << ", SM stop scale = "     << _split_merge_stopping_scale;
 
   // add a note to the description if we use the pt-weighted splitting
@@ -83,7 +87,7 @@ void SISConeSphericalPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   bool new_siscone = true; // by default we'll be running it
 
-  if (caching()) {
+  if (caching() && !_progressive_removal) {
 
     // Establish if we have a cached run with the same R, npass and
     // particles. If not then do any tidying up / reallocation that's
@@ -137,9 +141,14 @@ void SISConeSphericalPlugin::run_clustering(ClusterSequence & clust_seq) const {
 
     // run the jet finding
     //cout << "plg sms: " << split_merge_scale() << endl;
-    siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
-			  n_pass_max(), protojet_or_ghost_Emin(), 
-			  Esplit_merge_scale(split_merge_scale()));
+    if (_progressive_removal)
+      siscone->compute_jets_progressive_removal(siscone_momenta, cone_radius(),
+						n_pass_max(), protojet_or_ghost_Emin(), 
+						Esplit_merge_scale(split_merge_scale()));
+    else
+      siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
+			    n_pass_max(), protojet_or_ghost_Emin(), 
+			    Esplit_merge_scale(split_merge_scale()));
   } else {
     // rerun the jet finding
     // just run the overlap part of the jets.

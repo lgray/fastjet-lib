@@ -44,11 +44,15 @@ string SISConePlugin::description () const {
 
   desc << "SISCone jet algorithm with " ;
   desc << "cone_radius = "       << cone_radius        () << ", ";
-  desc << "overlap_threshold = " << overlap_threshold  () << ", ";
+  if (_progressive_removal)
+    desc << "progressive-removal mode, ";
+  else  
+    desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
   desc <<  sm_scale_string                                << ", ";
-  desc << "caching turned "      << (caching() ? on : off);
+  if (!_progressive_removal)
+    desc << "caching turned "      << (caching() ? on : off);
   desc << ", SM stop scale = "     << _split_merge_stopping_scale;
 
   // add a note to the description if we use the pt-weighted splitting
@@ -84,7 +88,7 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   bool new_siscone = true; // by default we'll be running it
 
-  if (caching()) {
+  if (caching() && !_progressive_removal) {
 
     // Establish if we have a cached run with the same R, npass and
     // particles. If not then do any tidying up / reallocation that's
@@ -137,9 +141,22 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
     
     // run the jet finding
     //cout << "plg sms: " << split_merge_scale() << endl;
-    siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
-			  n_pass_max(), protojet_or_ghost_ptmin(), 
-			  Esplit_merge_scale(split_merge_scale()));
+    if (_progressive_removal){
+      // handle the optional user-defined scale choice
+      siscone_plugin_internal::SISConeUserScale * internal_scale = 0;
+      if (_user_scale){
+	internal_scale = new siscone_plugin_internal::SISConeUserScale(_user_scale, clust_seq);
+	siscone->set_user_scale(internal_scale);
+      }
+      siscone->compute_jets_progressive_removal(siscone_momenta, cone_radius(),
+						n_pass_max(), protojet_or_ghost_ptmin(), 
+						Esplit_merge_scale(split_merge_scale()));
+      if (_user_scale) delete internal_scale;
+    } else {
+      siscone->compute_jets(siscone_momenta, cone_radius(), overlap_threshold(),
+			    n_pass_max(), protojet_or_ghost_ptmin(), 
+			    Esplit_merge_scale(split_merge_scale()));
+    }
   } else {
     // rerun the jet finding
     // just run the overlap part of the jets.
@@ -221,6 +238,69 @@ void SISConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
 void SISConePlugin::reset_stored_plugin() const{
   stored_plugin.reset( new SISConePlugin(*this));
+}
+
+//======================================================================
+// material to handle user-defined scales
+
+//--------------------------------------------------
+// SISCone structure type
+
+// the textual descripotion
+std::string SISCone::StructureType::description() const{
+  return "PseudoJet wrapping a siscone::Cjet stable cone"; 
+}
+
+// retrieve the constituents 
+vector<PseudoJet> SISCone::StructureType::constituents(const PseudoJet &) const{ 
+  vector<PseudoJet> constits;
+  constits.reserve(_jet.n);
+  for (unsigned int i=0; i<(unsigned int)_jet.n;i++)
+    constits.push_back(constituent(i));
+  return constits;
+}
+
+// returns the number of constituents
+unsigned int SISCone::StructureType::size() const{
+  return _jet.n;
+}
+
+// returns the index (in the original particle list) of the ith
+// constituent
+int SISCone::StructureType::constituent_index(unsigned int i) const{ 
+  return _jet.contents[i];
+}
+
+// returns the ith constituent (as a PseusoJet)
+const PseudoJet & SISCone::StructureType::constituent(unsigned int i) const{
+  _cs.jets()[_jet.contents[i]];
+}
+
+// returns the scalar pt of this stable cone
+double SISCone::StructureType::pt_tilde() const{
+  return _jet.pt_tilde;
+}
+
+//--------------------------------------------------
+// wrap-up around siscone's user-defined scales
+namespace siscone_plugin_internal{
+  // implementation of the SISConeUserScale class
+
+  // returns the scale associated to a given jet
+  virtual double SISConeUserScale::operator()(const siscone::Cjet &jet) const{
+    return _user_scale->result(_build_from_Cjet(jet));
+  }
+
+  // returns true id the scasle associated to jet a is larger than
+  // the scale associated to jet b
+  virtual bool SISConeUserScale::is_larger(const siscone::Cjet &a, const siscone::Cjet &b) const{
+    return _user_scale->is_larger(_build_from_Cjet(a), _build_from_Cjet(b));
+  }
+
+  PseudoJet SISConeUserScale::_build_from_Cjet(const siscone::Cjet &jet) const{
+    PseudoJet j(jet.v.px, jet.v.py, jet.v.pz, jet.v.E);
+    j.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>(new SISConePlugin::StructureType(j,_cs)));      
+  }
 }
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
