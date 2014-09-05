@@ -332,7 +332,7 @@ void JetDefinition::DefaultRecombiner::recombine(
     // and its modp. If we want to avoid repeating the test and do
     // only 2 modp calculations, we'd have to duplicate the code (or
     // use a pair<const PJ&>). An alternative is to write modp_soft as
-    // modp_ab-modp_hard but this could suffer rfom larger rounding
+    // modp_ab-modp_hard but this could suffer from larger rounding
     // errors
     bool a_hardest = (pa.modp2() >= pb.modp2());
     const PseudoJet & phard = a_hardest ? pa : pb;

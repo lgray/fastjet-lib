@@ -1,5 +1,10 @@
 2014-09-05  Gavin Salam  <gavin.salam@cern.ch>
 
+	* include/fastjet/JetDefinition.hh:
+	amplified doxygen documentation on WTA schemes. Also mentioned
+	that all pt^2, WTA, etc. schemes are collinear safe only for
+	algorithms with an appropriate recombination order.
+
 	* plugins/SISCone/SISConeSphericalPlugin.cc (description):
 	* plugins/SISCone/SISConePlugin.cc (description):
 

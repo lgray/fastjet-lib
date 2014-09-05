@@ -180,7 +180,15 @@ const JetAlgorithm aachen_algorithm = cambridge_algorithm;
 const JetAlgorithm cambridge_aachen_algorithm = cambridge_algorithm;
 
 //======================================================================
-/// the various recombination schemes
+/// The various recombination schemes
+///
+/// Note that the schemes that recombine with non-linear weighting of
+/// the directions (e.g. pt2, winner-takes-all) are collinear safe
+/// only for algorithms with a suitable ordering of the
+/// recombinations: orderings in which, for particles of comparable
+/// energies, small-angle clusterings take place before large-angle
+/// clusterings. This property is satisfied by all gen-kt algorithms.
+/// 
 enum RecombinationScheme {
   /// summing the 4-momenta
   E_scheme=0,
@@ -202,11 +210,20 @@ enum RecombinationScheme {
   /// pt^2 weighted recombination of y,phi (and summing of pt's)
   /// no preprocessing
   BIpt2_scheme=6,
-  /// Winner-Takes-All (WTA) recombination with pt ordering
+  /// pt-based Winner-Takes-All (WTA) recombination: the
+  /// result of the recombination has the rapidity, azimuth and mass
+  /// of the the PseudoJet with the larger pt, and a pt equal to the
+  /// sum of the two pt's
   WTA_pt_scheme=7,
-  /// Winner-Takes-All (WTA) recombination with energy ordering
+  /// energy-based Winner-Takes-All (WTA) recombination: the result of
+  /// the recombination gets the 3-vector direction and mass of the
+  /// PseudoJet with the larger energy, and an energy equal to the
+  /// to the sum of the two energies
   WTA_E_scheme=8,
-  /// Winner-Takes-All (WTA) recombination with |3-momentum| ordering
+  /// mod-p-based Winner-Takes-All (WTA) recombination: the result of
+  /// the recombination gets the 3-vector direction and mass of the
+  /// PseudoJet with the larger |3-momentum| (modp), and a
+  /// |3-momentum| equal to the scalar sum of the two |3-momenta|.
   WTA_modp_scheme=9,
   /// for the user's external scheme
   external_scheme = 99
