@@ -57,6 +57,32 @@ class TestRecombiners : public TestBase {
     jd2.recombiner()->recombine(a, b, c);
     verify_equal(c.user_index(), 5, "FlavourRecombiner (copied) user index");
 
+    // additional tests of the WTA recombination schemes
+    jd1.set_recombination_scheme(WTA_pt_scheme);
+    a = PtYPhiM(100.0, 0, pi/4, 1.0);
+    b = PtYPhiM( 50.0, 0,    0, 2.0);
+    jd1.recombiner()->recombine(a, b, c);
+    verify_almost_equal(c.pt(),  150.0, "WTA_pt_scheme pt");
+    verify_almost_equal(c.rap(),   0.0, "WTA_pt_scheme y");
+    verify_almost_equal(c.phi(),  pi/4, "WTA_pt_scheme phi");
+    verify_almost_equal(c.m(),     1.0, "WTA_pt_scheme m");
+
+    jd1.set_recombination_scheme(WTA_E_scheme);
+    a.reset_momentum(120.0, 50.0,  0.0, 200.0);
+    b.reset_momentum( 40.0,  0.0, 30.0,  60.0);
+    jd1.recombiner()->recombine(a, b, c);
+    verify_almost_equal(c.E(),   260.0,   "WTA_E_scheme pt");
+    verify_almost_equal(c.eta(), a.eta(), "WTA_E_scheme y");
+    verify_almost_equal(c.phi(), a.phi(), "WTA_E_scheme phi");
+    verify_almost_equal(c.m(),   a.m(),   "WTA_E_scheme m");
+
+    jd1.set_recombination_scheme(WTA_modp_scheme);
+    jd1.recombiner()->recombine(a, b, c);
+    verify_almost_equal(c.modp(),180.0,   "WTA_modp_scheme pt");
+    verify_almost_equal(c.eta(), a.eta(), "WTA_modp_scheme y");
+    verify_almost_equal(c.phi(), a.phi(), "WTA_modp_scheme phi");
+    verify_almost_equal(c.m(),   a.m(),   "WTA_modp_scheme m");
+
     return _pass_test;
   }
 };
