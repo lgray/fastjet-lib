@@ -1,3 +1,12 @@
+2014-09-05  Gavin Salam  <gavin.salam@cern.ch>
+
+	* plugins/SISCone/SISConeSphericalPlugin.cc (description):
+	* plugins/SISCone/SISConePlugin.cc (description):
+
+	small tweak so that if there is a user scale for progressive
+	removal and it has a description, that description gets printed
+	out as part of the SISCone description
+
 2014-09-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/02-jetdef.cc:

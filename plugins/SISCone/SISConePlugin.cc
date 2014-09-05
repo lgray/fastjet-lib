@@ -102,10 +102,13 @@ string SISConePlugin::description () const {
     desc << "overlap_threshold = " << overlap_threshold  () << ", ";
   desc << "n_pass_max = "        << n_pass_max         () << ", ";
   desc << "protojet_ptmin = "    << protojet_ptmin()      << ", ";
-  if (_progressive_removal && _user_scale)
-    desc << "using a user-defined ordering of stable cones";
-  else
+  if (_progressive_removal && _user_scale) {
+    desc << "using a user-defined scale for ordering of stable cones";
+    string user_scale_desc = _user_scale->description();
+    if (user_scale_desc != "") desc << " (" << user_scale_desc << ")";
+  } else {
     desc <<  sm_scale_string;
+  }
   if (!_progressive_removal){
     desc << ", caching turned "      << (caching() ? on : off);
     desc << ", SM stop scale = "     << _split_merge_stopping_scale;
