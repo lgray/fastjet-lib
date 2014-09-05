@@ -1,3 +1,8 @@
+2014-09-05  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/02-jetdef.cc:
+	mentioned the WTA schemes in the example
+
 2014-09-04  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/JetDefinition.cc:
