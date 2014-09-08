@@ -1,5 +1,17 @@
 2014-09-08  Gregory Soyez  <soyez@fastjet.fr> + Matteo + Gavin
 
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/Subtractor.cc:
+	added a Subtractor(rho, rho_m) constructor + worked on some error messages
+
+	* example/07-subtraction.cc:
+	added the mass to the printed output
+
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh:
+	* tools/fastjet/tools/Subtractor.hh:
+	explicitly included base.hh to help Doxygen [likely a bug in Doxygen!]
+
 	* src/JetDefinition.cc:
 
 	For WTA_modp scheme, added a safeguard that prevents divisions by

@@ -165,7 +165,7 @@ int main(){
   // to compute rho for the jets to be subtracted.
   // ----------------------------------------------------------
   Subtractor subtractor(&bkgd_estimator);
-
+  
   // since FastJet 3.1.0, rho_m is supported natively in background
   // estimation (both JetMedianBackgroundEstimator and
   // GridMedianBackgroundEstimator).
@@ -205,16 +205,20 @@ int main(){
   cout << "Background estimation:" << endl;
   cout << "  " << bkgd_estimator.description() << endl << endl;;
   cout << "  Giving, for the full event" << endl;
-  cout << "    rho   = " << bkgd_estimator.rho()   << endl;
-  cout << "    sigma = " << bkgd_estimator.sigma() << endl;
+  cout << "    rho     = " << bkgd_estimator.rho()   << endl;
+  cout << "    sigma   = " << bkgd_estimator.sigma() << endl; 
+#if FASTJET_VERSION_NUMBER >= 30100
+  cout << "    rho_m   = " << bkgd_estimator.rho_m()   << endl;
+  cout << "    sigma_m = " << bkgd_estimator.sigma_m() << endl; 
+#endif
   cout << endl;
 
   cout << "Jets above " << ptmin << " GeV in the hard event (" << hard_event.size() << " particles)" << endl;
   cout << "---------------------------------------\n";
-  printf("%5s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "area");
+  printf("%5s %15s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "m", "area");
    for (unsigned int i = 0; i < hard_jets.size(); i++) {
-    printf("%5u %15.8f %15.8f %15.8f %15.8f\n", i,
-	   hard_jets[i].rap(), hard_jets[i].phi(), hard_jets[i].perp(),
+    printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
+	   hard_jets[i].rap(), hard_jets[i].phi(), hard_jets[i].pt(), hard_jets[i].m(),
 	   hard_jets[i].area());
   }
   cout << endl;
@@ -227,7 +231,7 @@ int main(){
   // ----------------------------------------------------------
   cout << "Jets above " << ptmin << " GeV in the full event (" << full_event.size() << " particles)" << endl;
   cout << "---------------------------------------\n";
-  printf("%5s %15s %15s %15s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "area", "rap_sub", "phi_sub", "pt_sub");
+  printf("%5s %15s %15s %15s %15s %15s %15s %15s %15s %15s\n","jet #", "rapidity", "phi", "pt", "m", "area", "rap_sub", "phi_sub", "pt_sub", "m_sub");
   unsigned int idx=0;
 
   // get the subtracted jets
@@ -235,12 +239,13 @@ int main(){
 
   for (unsigned int i=0; i<full_jets.size(); i++){
     // re-apply the pt cut
-    if (subtracted_jets[i].perp2() >= ptmin*ptmin){
-      printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n", idx,
-	     full_jets[i].rap(), full_jets[i].phi(), full_jets[i].perp(),
+    if (subtracted_jets[i].pt2() >= ptmin*ptmin){
+      printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n", idx,
+	     full_jets[i].rap(), full_jets[i].phi(), full_jets[i].pt(), full_jets[i].m(),
 	     full_jets[i].area(),
 	     subtracted_jets[i].rap(), subtracted_jets[i].phi(), 
-	     subtracted_jets[i].perp());
+	     subtracted_jets[i].pt(), 
+	     subtracted_jets[i].m());
       idx++;
     }
   }
