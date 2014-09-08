@@ -216,7 +216,11 @@ echo "  - removing comment lines and the plugin enable tags"
 sed '/^ *\/\/.*$/d' fjcore.hh | sed '/^#ifndef FASTJET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.hh.nocomments
 sed '/^ *\/\/.*$/d' fjcore.cc | sed '/ET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.cc.nocomments
 # further removal of ifndef WIN32 block from fjcore.hh (nothing similar in .cc)
+# (this effectively removes the whole of config.h, which however was needed 
+# during the initial compilation tests)
 sed '/^#ifndef WIN32/,/#endif.*$/d' fjcore.hh.nocomments > fjcore.hh
+# removal of EXECINFO ifdef block (not really necessary, as it's never used)
+sed '/^#ifndef FASTJET_HAVE_EXECINFO_H/,/#endif.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
 # renaming and removal of unnecessary files
 rm fjcore.hh.nocomments
 mv fjcore.cc.nocomments fjcore.cc

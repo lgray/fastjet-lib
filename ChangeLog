@@ -1,3 +1,14 @@
+2014-09-08  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * src/Error.cc
+	* scripts/mkfjcore.sh
+	
+	Added FJCORE guards around the backtrace block and the corresponding
+	include in Error.cc, so that they are never included in fjcore
+	(issues under Windows with MSVC, as reported by 
+	Chaowaroj Wanotayaroj <ma.x@cern.ch>). Also fully cleaned away
+	the EXECINFO guards from config_auto.h (not really necessary though)
+
 2014-09-08  Gregory Soyez  <soyez@fastjet.fr> + Matteo + Gavin
 
 	* tools/fastjet/tools/Subtractor.hh:

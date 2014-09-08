@@ -32,11 +32,13 @@
 #include "fastjet/config.h"
 #include <sstream>
 
+#ifndef __FJCORE__
 // printing the stack would need execinfo
 #ifdef FASTJET_HAVE_EXECINFO_H
 #include <execinfo.h>
 #include <cstdlib>
 #endif
+#endif  // __FJCORE__
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -52,6 +54,7 @@ Error::Error(const std::string & message_in) {
     ostringstream oss;
     oss << "fastjet::Error:  "<< message_in << endl;
 
+#ifndef __FJCORE__
     // only print the stack if execinfo is available and stack enabled
 #ifdef FASTJET_HAVE_EXECINFO_H
     if (_print_backtrace){
@@ -68,6 +71,7 @@ Error::Error(const std::string & message_in) {
       free(messages);
     }
 #endif
+#endif  // __FJCORE__
 
     *_default_ostr << oss.str();
     // get something written to file even 
