@@ -1704,25 +1704,83 @@ the pointer to the plugin and delete it when it is no longer needed.
 \subsection{SISCone Plugin}
 \label{sec:siscone-plugin}
 
-SISCone~\cite{SISCone} is an implementation of a stable-cone jet
-algorithm with a split--merge step (SC-SM in the notation
-of~\cite{Salam:2009jx}).
+SISCone provides infrared and collinear-safe implementations of the
+two most common kinds of cone algorithm.
 %
-As with most modern cone algorithms, it is divided into two parts:
-first it searches for stable cones; then, because a particle can
-appear in more than one stable cone, a `split--merge' procedure is
-applied, which ensures that no particle ends up in more than one jet.
+Cone algorithm execution generally involves two phases.
+%
+The first is the search for stable cones (SC).
+%
+Then, because a given particle can appear in more than one stable
+cone, there are two options for the second phase: one can apply a
+`split--merge' (see e.g.\ Ref.\ \cite{RunII-jet-physics}) procedure,
+which ensures that no particle ends up in more than one jet.
+%
+Or one can identify the highest-$p_t$ stable cone, call it a jet,
+remove all particles that it contained and then repeat the stable-cone
+search and removal over and over until no particles remain (we call
+this progressive removal).
+
 The stable cones are identified using an $\order{N^2 \ln N}$ seedless
-approach. This (and some care in the the `split--merge' procedure)
-ensures that the jets it produces are insensitive to additional soft
-particles and collinear splittings, i.e.\ the algorithm is infrared
-and collinear safe.
+approach~\cite{SISCone}. This (and some care in the `split--merge'
+procedure, if used) ensures that the jets it produces are insensitive
+to additional soft particles and collinear splittings, i.e.\ the
+algorithm is infrared and collinear safe.
+
+By default SISCone runs with a split--merge step.
+%
+The implementation with progressive removal was made public in version
+3.0 of SISCone, first released with version 3.1 of \fastjet.
+
+%  `split--merge' procedure is applied,  which
+% ensures that no particle ends up in more than one jet.
+% 
+%  using an
+% exhaustive geometric approach~\cite{SISCone} to help identify all
+% possible stable cones.
+% %
+% Because the exhaustive approach avoids the need for seeds and cone
+% iterations, it bypasses many of infrared and collinear-safety issues
+% that are present for seeded algorithms.
+% 
+% Cone algorithms generally have two steps: the identification of stable
+% cones and a step that processes those stable cones, e.g.\ dealing with
+% the fact that two distinct stable cones may share particles
+% %
+% SISCone can be operated in two variants: the default and original
+% mode, as described in Ref.\cite{SISCone}, performs a
+% Tevatron-style~\cite{RunII-jet-physics} split--merge (SM) operation to
+% handle overlaps;
+% %
+% The progressive removal (PR) variant
+
+%......................................................................
+\subsubsection{Default mode: with  a split--merge step}
+
+The original implementation of SISCone~\cite{SISCone} corresponded to
+a stable-cone jet algorithm with a split--merge step (SC-SM in the
+notation of~\cite{Salam:2009jx}).
+%
+This remains SISCone's default.
+
+% As with most modern cone algorithms, it is divided into two parts:
+% first it searches for stable cones; then, because a particle can
+% appear in more than one stable cone, a `split--merge' procedure is
+% applied, which ensures that no particle ends up in more than one jet.
+% %
+% The stable cones are identified using an $\order{N^2 \ln N}$ seedless
+% approach. This (and some care in the the `split--merge' procedure)
+% ensures that the jets it produces are insensitive to additional soft
+% particles and collinear splittings, i.e.\ the algorithm is infrared
+% and collinear safe.
 
 The plugin library and include files are to be be found in the
 \verb:plugins/SISCone: directory, and the main header file is
-\verb:SISConePlugin.hh:. The \verb:SISConePlugin: class has a
+\verb:fastjet/SISConePlugin.hh:. The \verb:SISConePlugin: class has a
 constructor with the following structure
 \begin{lstlisting}
+  #include "fastjet/SISConePlugin.hh"
+
   SISConePlugin (double cone_radius,
                  double overlap_threshold,
                  int    n_pass_max = 0,
@@ -1909,6 +1967,67 @@ large $N$.
 %
 An alternative implementation that is faster for $N \lesssim 10$ was
 presented in~\cite{Weinzierl:2011jx}. 
+
+%......................................................................
+\subsubsection{SISCone with progressive removal (SISCone-PR)}
+\label{sec:SISCone-PR}
+
+After creating an instance of \ttt{SISConePlugin}, the
+progressive-removal option can be enabled by calling
+\begin{lstlisting}
+  plugin->set_progressive_removal(true);
+\end{lstlisting}
+The value of the overlap parameter is then ignored and caching is not
+available.
+%
+The \ttt{SplitMergeScale} argument in the constructor, instead of
+being interpreted as the choice of scale to use in the split-merge step,
+is instead interpreted as the scale used to order the stable cones (the
+default is \ttt{SISConePlugin::SM\_pttilde}, i.e.\ the scalar sum of
+$p_t$'s of the constituents) and it is the hardest stable cone
+according to that choice that is removed.
+%
+The stable cone finding is then repeated on the remaining set of
+particles, the new hardest cone is removed, and so forth.
+%
+As for other progressive-removal cone algorithms, SISCone-PR
+guarantees that the first jet that is found has area $\pi
+R^2$.\footnote{The \texttt{inclusive\_jets()} function returns the
+  jets in the order in which they were found. Each jet's
+  \texttt{extras->pass(jet)} value also corresponds to the pass of
+  stable-cone finding at which it was obtained.}
+
+There can be interest trying out other choices of scale variable for
+the ordering of stable cones.
+%
+This can be achieved by calling
+\begin{lstlisting}
+  plugin->set_user_scale(&user_scale);
+\end{lstlisting}
+where \ttt{user\_scale} is an instance of any class that derives from
+the \ttt{SISConePlugin::UserScaleBase} class (actually defined in
+\ttt{SISConeBasePlugin}).
+
+In discussing the speed of SISCone with progressive removal, it is
+useful to distinguish $N$, the total number of particles in the event
+from $n$, the number inside a typical circle of radius $R$.
+%
+SISCone with split--merge actually takes a time $N n \ln n$.
+%
+SISCone with progressive removal, in its current implementation,
+repeats the full stable cone finding $\order{N/n}$ times.
+%
+Thus it takes a time $\sim N^2 \ln n$.
+%
+This could be reduced by repeating the stable-cone finding only for
+particles in the neighbourhood of the last stable-cone that was
+removed: that more limited stable-cone finding should take a time $n^2
+\ln n$ at each iteration, so that the total time would then be $N n
+\ln n$, albeit with a larger coefficient than for the split--merge
+variant.
+% 
+We leave such an improvement to future work, should there be demand
+for it.
 
 %----------------------------------------------------------------------
 \subsection{Other plugins for hadron colliders }
@@ -2377,7 +2496,9 @@ algorithm~\cite{SISCone}.
                            split_merge_scale = SISConeSphericalPlugin::SM_Etilde,
 			 double split_merge_stopping_scale = 0.0);
 \end{lstlisting}
-The functionality follows directly that of \ttt{SISConePlugin}.
+The functionality follows directly that of \ttt{SISConePlugin},
+including options for using a split--merge step (the default) or
+progressive removal.
 
 Note that the underlying implementation of spherical SISCone is
 optimised for large $N$. 
