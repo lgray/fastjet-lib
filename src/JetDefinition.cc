@@ -323,9 +323,15 @@ void JetDefinition::DefaultRecombiner::recombine(
   case WTA_E_scheme:{
     const PseudoJet & phard = (pa.E() >= pb.E()) ? pa : pb;
     /// keep 3-momentum direction and mass from the hardest, sum energies
+    ///
+    /// If the particle with the largest energy is at rest, the sum
+    /// remains at rest, implying that the mass of the sum is larger
+    /// than the mass of pa.
     double Eab = pa.E() + pb.E();
-    double scale = sqrt((Eab*Eab - phard.m2())/phard.modp2());
-    pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale,Eab);
+    double scale = (phard.modp2()==0.0)
+      ? 0.0
+      : sqrt((Eab*Eab - phard.m2())/phard.modp2());
+    pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale, Eab);
     return;}
   case WTA_modp_scheme:{
     // Note: we need to compute both a and b modp. And we need pthard
@@ -338,11 +344,18 @@ void JetDefinition::DefaultRecombiner::recombine(
     const PseudoJet & phard = a_hardest ? pa : pb;
     const PseudoJet & psoft = a_hardest ? pb : pa;
     /// keep 3-momentum direction and mass from the hardest, sum modp
+    ///
+    /// If the hardest particle is at rest, the sum remains at rest
+    /// (the energy of the sum is therefore the mass of pa)
     double modp_hard = phard.modp();
     double modp_ab = modp_hard + psoft.modp();
-    double scale = modp_ab/modp_hard;
-    pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale,
-	      sqrt(modp_ab*modp_ab + phard.m2()));
+    if (phard.modp2()==0.0){
+      pab.reset(0.0, 0.0, 0.0, phard.m());
+    } else {
+      double scale = modp_ab/modp_hard;
+      pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale,
+                sqrt(modp_ab*modp_ab + phard.m2()));
+    }
     return;}
   default:
     ostringstream err;

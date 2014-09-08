@@ -1,3 +1,16 @@
+2014-09-08  Gregory Soyez  <soyez@fastjet.fr> + Matteo + Gavin
+
+	* src/JetDefinition.cc:
+
+	For WTA_modp scheme, added a safeguard that prevents divisions by
+	zero if both objects are at rest (the energy of the sum will
+	therefore be the mass of pa)
+
+	For WTA_E scheme, if the hardest object is at rest, keep the sum
+	at rest and set the energy to the sum of energies: this implies
+	that we break the rule of the mass being that of the higher-energy
+	particle.
+
 2014-09-05  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/JetDefinition.hh:
