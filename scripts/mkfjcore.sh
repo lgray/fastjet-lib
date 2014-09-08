@@ -39,7 +39,6 @@ internal_sources="version.hh\
   internal/LazyTiling9Alt.hh\
   internal/LazyTiling9.hh\
   internal/LazyTiling25.hh\
-  internal/LazyTiling9SeparateGhosts.hh\
   internal/TilingExtent.hh"
 
 fastjet_sources="ClosestPair2D.cc\
@@ -62,7 +61,6 @@ fastjet_sources="ClosestPair2D.cc\
   LazyTiling25.cc\
   LazyTiling9.cc\
   LazyTiling9Alt.cc\
-  LazyTiling9SeparateGhosts.cc\
   TilingExtent.cc"
 
 

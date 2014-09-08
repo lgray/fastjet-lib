@@ -36,7 +36,9 @@
 #include "fastjet/internal/LazyTiling9Alt.hh"
 #include "fastjet/internal/LazyTiling9.hh"
 #include "fastjet/internal/LazyTiling25.hh"
+#ifndef __FJCORE__
 #include "fastjet/internal/LazyTiling9SeparateGhosts.hh"
+#endif  // __FJCORE__
 #include<iostream>
 #include<sstream>
 #include<fstream>
@@ -369,6 +371,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     tiling.run();
     _plugin_activated = false;
 
+#ifndef __FJCORE__
   } else if (_strategy == N2MHTLazy9AntiKtSeparateGhosts) {
     // attempt to use an external tiling routine -- it manipulates
     // the CS history via the plugin mechanism
@@ -376,6 +379,7 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     LazyTiling9SeparateGhosts tiling(*this);
     tiling.run();
     _plugin_activated = false;
+#endif  // __FJCORE__
 
   } else if (_strategy == NlnN) {
     this->_delaunay_cluster();

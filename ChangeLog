@@ -9,6 +9,11 @@
 	Chaowaroj Wanotayaroj <ma.x@cern.ch>). Also fully cleaned away
 	the EXECINFO guards from config_auto.h (not really necessary though)
 
+        * src/ClusterSequence.cc
+	Added FJCORE guards around Lazy9AntiKtSeparateGhosts strategy so
+	that it's never included in fjcore. Eliminated the files accordingly
+	from mkfjcore.sh
+	
 2014-09-08  Gregory Soyez  <soyez@fastjet.fr> + Matteo + Gavin
 
 	* tools/fastjet/tools/Subtractor.hh:
