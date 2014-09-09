@@ -271,8 +271,11 @@ string JetDefinition::DefaultRecombiner::description() const {
     return "boost-invariant pt2 scheme recombination";
   case WTA_pt_scheme:
     return "pt-ordered Winner-Takes-All recombination";
-  case WTA_E_scheme:
-    return "energy-ordered Winner-Takes-All recombination";
+  // Energy-ordering can lead to dangerous situations with particles at
+  // rest. We instead implement the WTA_modp_scheme
+  //
+  //   case WTA_E_scheme:
+  //     return "energy-ordered Winner-Takes-All recombination";
   case WTA_modp_scheme:
     return "|3-momentum|-ordered Winner-Takes-All recombination";
   default:
@@ -320,19 +323,22 @@ void JetDefinition::DefaultRecombiner::recombine(
     pab.reset_PtYPhiM(pa.pt()+pb.pt(), 
                       phard.rap(), phard.phi(), phard.m());
     return;}
-  case WTA_E_scheme:{
-    const PseudoJet & phard = (pa.E() >= pb.E()) ? pa : pb;
-    /// keep 3-momentum direction and mass from the hardest, sum energies
-    ///
-    /// If the particle with the largest energy is at rest, the sum
-    /// remains at rest, implying that the mass of the sum is larger
-    /// than the mass of pa.
-    double Eab = pa.E() + pb.E();
-    double scale = (phard.modp2()==0.0)
-      ? 0.0
-      : sqrt((Eab*Eab - phard.m2())/phard.modp2());
-    pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale, Eab);
-    return;}
+  // Energy-ordering can lead to dangerous situations with particles at
+  // rest. We instead implement the WTA_modp_scheme
+  //
+  //   case WTA_E_scheme:{
+  //     const PseudoJet & phard = (pa.E() >= pb.E()) ? pa : pb;
+  //     /// keep 3-momentum direction and mass from the hardest, sum energies
+  //     ///
+  //     /// If the particle with the largest energy is at rest, the sum
+  //     /// remains at rest, implying that the mass of the sum is larger
+  //     /// than the mass of pa.
+  //     double Eab = pa.E() + pb.E();
+  //     double scale = (phard.modp2()==0.0)
+  //       ? 0.0
+  //       : sqrt((Eab*Eab - phard.m2())/phard.modp2());
+  //     pab.reset(phard.px()*scale, phard.py()*scale, phard.pz()*scale, Eab);
+  //     return;}
   case WTA_modp_scheme:{
     // Note: we need to compute both a and b modp. And we need pthard
     // and its modp. If we want to avoid repeating the test and do
@@ -393,7 +399,7 @@ void JetDefinition::DefaultRecombiner::preprocess(PseudoJet & p) const {
   case BIpt_scheme:
   case BIpt2_scheme:
   case WTA_pt_scheme:
-  case WTA_E_scheme:
+  //case WTA_E_scheme:
   case WTA_modp_scheme:
     break;
   case pt_scheme:

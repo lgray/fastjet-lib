@@ -1,3 +1,12 @@
+2014-09-10  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/JetDefinition.hh:
+	* src/JetDefinition.cc:
+	commented out the WTA_E_scheme
+
+	Energy-ordering can lead to dangerous situations with particles at
+	rest. We instead implement the WTA_modp_scheme
+
 2014-09-08  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * src/Error.cc
