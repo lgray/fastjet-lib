@@ -1096,9 +1096,12 @@ table~\ref{tab:RecombSchemes}, and are described below.
     \ttt{Et2\_scheme}   \\\hline
     \ttt{BIpt\_scheme}  \\\hline
     \ttt{BIpt2\_scheme} \\\hline
+    \ttt{WTA\_pt\_scheme} \\\hline
+    \ttt{WTA\_modp\_scheme} \\\hline
   \end{tabular}
-  \caption{Members of the \ttt{RecombinationScheme} enum; the last two
-    refer to boost-invariant version of the $p_t$ and $p_t^2$ schemes
+  \caption{Members of the \ttt{RecombinationScheme} enum; the schemes
+    prefixed by ``BI''
+    boost-invariant version of the $p_t$ and $p_t^2$ schemes
     (as defined in section~\ref{sec:recomb_schemes}).}
   \label{tab:RecombSchemes}
 \end{table}
@@ -1113,6 +1116,7 @@ the energy in the $E_t$ and $E_t^2$ schemes). Then for all schemes the
 recombination $p_r$ of $p_i$ and $p_j$ is a massless 4-vector
 satisfying
 \begin{subequations}
+  \label{eq:recomb-weights}
   \begin{align}
     p_{t,r} &= p_{t,i} + p_{t,j}\,,\\
     \phi_r &= (w_i \phi_i + w_j \phi_j)/(w_i + w_j)\,,\\
@@ -1129,6 +1133,14 @@ As a workaround for this issue, we propose boost-invariant $p_t$ and
 $p_t^2$ schemes, which are identical to the normal $p_t$ and $p_t^2$
 schemes, except that they omit the preprocessing stage. They are
 available as \ttt{BIpt\_scheme} and \ttt{BIpt2\_scheme}.
+
+A generalisation of the $p_t$ and $p_t^2$ schemes is to take a
+weighting by $p_t^n$. 
+%
+An interesting limit is then $n \to \infty$, sometimes referred to as the
+winner-takes-all scheme (WTA), because the new rapidity and azimuth in
+Eq.~(\ref{eq:recomb-weights}) coincide that those of the harder of the
+two particles~\cite{...}. \comment{continue here} 
 
 \paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
 On request, we may in the future provide dedicated schemes for $\ee$
