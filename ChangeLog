@@ -1,3 +1,9 @@
+2014-09-11  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/ClusterSequence.cc:
+	now throws Error in case of use of N2MHTLazy9AntiKtSeparateGhosts
+	from fjcore (since it's no longer supported)
+
 2014-09-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/Error.cc:

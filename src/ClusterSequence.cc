@@ -379,6 +379,8 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     LazyTiling9SeparateGhosts tiling(*this);
     tiling.run();
     _plugin_activated = false;
+#else 
+    throw Error("N2MHTLazy9AntiKtSeparateGhosts strategy not supported with FJCORE");
 #endif  // __FJCORE__
 
   } else if (_strategy == NlnN) {
