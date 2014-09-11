@@ -1,6 +1,9 @@
 2014-09-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/Error.cc:
+	added a missing FJCORE guard
+
+	* src/Error.cc:
 	* configure.ac:
 	* config.h.in:
 	* m4/demangle.m4:              *** ADDED ***

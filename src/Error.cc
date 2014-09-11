@@ -52,6 +52,7 @@ bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
 ostream * Error::_default_ostr = & cerr;
 
+#ifndef __FJCORE__
 // demangling only is included, i.e. --enable-demangling is specified
 // at configure time, execinfo.h is present and the GNU C++ ABI is
 // supported
@@ -100,6 +101,8 @@ string demangle(const char* symbol) {
   return symbol;
 }
 #endif  // FASTJET_HAVE_DEMANGLING_SUPPORT
+#endif  // __FJCORE__
+
 
 Error::Error(const std::string & message_in) {
   _message = message_in; 
