@@ -851,6 +851,10 @@ multiplicity.
 %
 A discussion of the main available strategies together with their
 performance is given in appendix~\ref{app:strategies}.
+%
+Different strategies give identical clustering results, except
+potentially in the presence of distance degeneracies, where different
+strategies may resolve those degeneracies differently.
 
 A textual description of the jet definition can be obtained by a call
 to the member function \ttt{std::string description()}.
@@ -3775,6 +3779,9 @@ Here we summarise some useful recommendations:
   You should also pay attention to what happens with negative squared
   masses, and consider calling the subtractor's \ttt{set\_safe\_mass()}
   option.
+  %
+  For reasons of backwards compatibility, both of these options are
+  disabled by default; in future versions of \fastjet, this may change.
 
 \item For jet masses and shapes, there are various other techniques
   that may be of use, see e.g.\
@@ -4579,7 +4586,8 @@ anti-$k_t$ and generalised-$k_t$ with $p<0$, hub-and-spoke (or
 bicycle-wheel) type configurations emerge dynamically during the
 clustering and these break the conditions needed for the expected
 result to hold (this however has a significant impact only for $N
-\gtrsim 10^5$).\footnote{%
+\gtrsim 10^5$; we believe that it leads to $N^{3/2}$ asymptotic time
+for clustering).\footnote{%
   % 
   In versions of \fastjet prior to 3.1.0, the $N \ln N$ strategy had
   the limitation that it could not be used in events with perfectly
