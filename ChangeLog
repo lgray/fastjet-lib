@@ -1,3 +1,15 @@
+2014-09-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/Error.cc:
+	* configure.ac:
+	* config.h.in:
+	* m4/demangle.m4:              *** ADDED ***
+	added demangling of the backtrace symbols to the backtrace. This
+	is only activated if (in order of the tests)
+	  . execinfo.h          is found
+	  . --enable-demangling is specified at configure time
+	  . the GNU C++ ABI     is supported
+
 2014-09-10  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/JetDefinition.hh:

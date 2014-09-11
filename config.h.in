@@ -36,6 +36,10 @@
 /* The TrackJet plugin is enabled */
 #undef ENABLE_PLUGIN_TRACKJET
 
+/* defined if demangling is enabled at configure time and is supported through
+   the GNU C++ ABI */
+#undef HAVE_DEMANGLING_SUPPORT
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 

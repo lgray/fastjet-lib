@@ -218,6 +218,23 @@ fi
 AC_SUBST(HAS_RUNPATH_SUPPORT)
 AC_SUBST(CONFIG_RUNPATH_FLAGS)
 
+dnl-------------------------------------------------------------------
+dnl check if demangling using GNU C++ ABI is supported
+dnl-------------------------------------------------------------------
+dnl only do it if we have execinfo!
+if [[ "x${ac_cv_header_execinfo_h}" == "xyes" ]]; then
+    dnl check if demangling is enabled
+    AC_ARG_ENABLE(demangling,
+        [  --enable-demangling     enables demangling in backtrace (if supported)) [default=no]],
+        [enable_demangling_flag="$enableval"],
+        [enable_demangling_flag="no"])
+
+    dnl if asked for, check if deangling is supported
+    if [[ "x${enable_demangling_flag}" == "xyes" ]] ; then
+        ACX_CHECK_DEMANGLE_SUPPORT([AC_DEFINE(HAVE_DEMANGLING_SUPPORT, [], [defined if demangling is enabled at configure time and is supported through the GNU C++ ABI])],[])
+    fi
+fi
+
 dnl substitutions
 AC_SUBST(AM_CXXFLAGS)
 
