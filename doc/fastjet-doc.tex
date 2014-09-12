@@ -1139,16 +1139,38 @@ schemes, except that they omit the preprocessing stage. They are
 available as \ttt{BIpt\_scheme} and \ttt{BIpt2\_scheme}.
 
 A generalisation of the $p_t$ and $p_t^2$ schemes is to take a
-weighting by $p_t^n$. 
+weighting by $w_i = p_t^n$. 
 %
-An interesting limit is then $n \to \infty$, sometimes to as the
+An interesting limit is then $n \to \infty$, referred to as the
 winner-takes-all scheme (WTA), because the new rapidity and azimuth in
-Eq.~(\ref{eq:recomb-weights}) coincide that those of the harder of the
-two particles~\cite{...}. \comment{continue here} 
+Eq.~(\ref{eq:recomb-weights}) coincide with those of the harder of the
+two particles~\cite{Bertolini:2013iqa}. 
+%
+This gives the \ttt{WTA\_pt\_scheme}. 
+%
+The \ttt{WTA\_pt\_scheme} does not perform any preprocessing, but
+differs from the \ttt{BIpt...} schemes in that the result of a
+recombination acquires the mass of the higher-$p_t$ of the two
+particles (instead of setting the mass to zero).
+%
+This treatment ensures, for example, that recombination of a massive
+particle with an infinitesimally soft particle leaves the mass
+unchanged.
 
 \paragraph{Other schemes for $\boldsymbol{e^+e^-}$ collisions.}
-On request, we may in the future provide dedicated schemes for $\ee$
+%
+The default $E$-scheme is a sensible choice also for $e^+e^-$
 collisions.
+%
+The only non-standard $e^+e^-$-specific scheme currently implemented
+is the \ttt{WTA\_modp\_scheme}, in which the recombination of $p_i$ ad
+$p_j$ points in the direction and has the mass of the particle with
+larger 3-vector modulus ($|\vec p|$), and has a 3-vector modulus
+$|\vec p_r| = |\vec p_i| + |\vec p_i|$.
+
+%
+On request, we may in the future provide further dedicated schemes for
+$\ee$ collisions.
 
 \paragraph{User-defined schemes.} The user may define their own,
 custom recombination schemes, as described in Appendix~\ref{sec:recombiner}.
@@ -6228,7 +6250,22 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
 
-
+\bibitem{Bertolini:2013iqa}
+  D.~Bertolini, T.~Chan and J.~Thaler,
+  %``Jet Observables Without Jet Algorithms,''
+  JHEP {\bf 1404} (2014) 013
+  [arXiv:1310.7584 [hep-ph]];\\
+  %%CITATION = ARXIV:1310.7584;%%
+  %7 citations counted in INSPIRE as of 12 Sep 2014
+  %
+%\bibitem{Larkoski:2014uqa}
+  A.~J.~Larkoski, D.~Neill and J.~Thaler,
+  %``Jet Shapes with the Broadening Axis,''
+  JHEP {\bf 1404} (2014) 017
+  [arXiv:1401.2158 [hep-ph]];\\
+  %%CITATION = ARXIV:1401.2158;%%
+%  
+  G.~P.~Salam, unpublished.
 \end{thebibliography}
 
 
