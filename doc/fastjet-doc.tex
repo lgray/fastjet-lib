@@ -3609,7 +3609,10 @@ subtractions.
 %
 We \emph{strongly recommend} switching this on if your input particles
 have masses, and in future versions of \fastjet we may change the
-default so that it is automatically switched on.
+default so that it is automatically switched on.\footnote{It is also
+  possible to construct a \texttt{Subtractor} with explicit $\rho$ and
+  $\rho_m$ values, \texttt{Subtractor subtractor(rho, rho\_m)}; if
+  this is done, then $\rho_m$ use \emph{is enabled} by default.}
 %
 An alternative is to make the input particles massless.
 
