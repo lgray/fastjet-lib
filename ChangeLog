@@ -1,5 +1,15 @@
 2014-09-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/Error.hh
+	* src/Error.cc:
+	fixed a few details:
+	  . included the config.h header in Error.hh
+	  . defined _demangle in the header
+	  . removed unnecessary __FJCORE__ guards (since
+	    FASTJET_HAVE_EXECINFO_H) is not defined in FJCORE
+	    This allows to used -DFASTJET_HAVE_EXECINFO_H on
+	    the command line.
+
 	* include/fastjet/RectangularGrid.hh:
 	added '_in' suffix to a few ctor arguments to prevent a series of
 	Wshadow warnings

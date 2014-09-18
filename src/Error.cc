@@ -32,7 +32,7 @@
 #include "fastjet/config.h"
 #include <sstream>
 
-#ifndef __FJCORE__
+//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #ifndef __FJCORE__
 // printing the stack would need execinfo
 #ifdef FASTJET_HAVE_EXECINFO_H
 #include <execinfo.h>
@@ -42,7 +42,7 @@
 #include <cxxabi.h>
 #endif // FASTJET_HAVE_DEMANGLING_SUPPORT
 #endif // FASTJET_HAVE_EXECINFO_H
-#endif  // __FJCORE__
+//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #endif  // __FJCORE__
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -56,16 +56,18 @@ ostream * Error::_default_ostr = & cerr;
 #endif
 
 //----------------------------------------------------------------------
-#ifndef __FJCORE__
+//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #ifndef __FJCORE__ 
+
 // demangling only is included, i.e. --enable-demangling is specified
 // at configure time, execinfo.h is present and the GNU C++ ABI is
 // supported
+#ifdef FASTJET_HAVE_EXECINFO_H
 #ifdef FASTJET_HAVE_DEMANGLING_SUPPORT
 // demangle a given backtrace symbol
 //
 // Notes:
 //  - at the moment, only the symbol is parsed.
-//  - one can get te offset by using 
+//  - one can get the offset by using 
 //      "%*[^(]%*[^_]%127[^+)]%64[+x0123456789abcdef]", symbol, offset
 //    and checking if sscanf returns 0, 1 or 2
 //    (offset includes the leading +)
@@ -74,7 +76,7 @@ ostream * Error::_default_ostr = & cerr;
 //    to require exteral dependencies. If we want to go down that
 //    route, one could look into the inplementation o faddr2line(.c)
 //    and/or dladdr.
-string Error::demangle(const char* symbol) {
+string Error::_demangle(const char* symbol) {
   size_t size;
   int status;
   char temp[128];
@@ -104,7 +106,8 @@ string Error::demangle(const char* symbol) {
   return symbol;
 }
 #endif  // FASTJET_HAVE_DEMANGLING_SUPPORT
-#endif  // __FJCORE__
+#endif  // FASTJET_HAVE_EXECINFO_H
+//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #endif  // __FJCORE__
 
 
 //----------------------------------------------------------------------
@@ -115,7 +118,7 @@ Error::Error(const std::string & message_in) {
     ostringstream oss;
     oss << "fastjet::Error:  "<< message_in << endl;
 
-#ifndef __FJCORE__
+//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #ifndef __FJCORE__
     // only print the stack if execinfo is available and stack enabled
 #ifdef FASTJET_HAVE_EXECINFO_H
     if (_print_backtrace){
@@ -128,7 +131,7 @@ Error::Error(const std::string & message_in) {
       oss << "stack:" << endl;
       for (int i = 1; i < size && messages != NULL; ++i){
 #ifdef FASTJET_HAVE_DEMANGLING_SUPPORT
-	oss << "  #" << i << ": " << demangle(messages[i])
+	oss << "  #" << i << ": " << _demangle(messages[i])
 	    << " [" << messages[i]  << "]" << endl;
 #else
 	oss << "  #" << i << ": " << messages[i] << endl;
@@ -137,7 +140,7 @@ Error::Error(const std::string & message_in) {
       free(messages);
     }
 #endif  // FASTJET_HAVE_EXECINFO_H
-#endif  // __FJCORE__
+//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #endif  // __FJCORE__
 
     *_default_ostr << oss.str();
     // get something written to file even 
@@ -157,11 +160,11 @@ Error::Error(const std::string & message_in) {
 //----------------------------------------------------------------------
 void Error::set_print_backtrace(bool enabled) {
 #ifndef FASTJET_HAVE_EXECINFO_H
-     if (enabled) {
-         _execinfo_undefined.warn("Error::set_print_backtrace(true) will not work with this build of FastJet");
-     }
+  if (enabled) {
+    _execinfo_undefined.warn("Error::set_print_backtrace(true) will not work with this build of FastJet");
+  }
 #endif    
-    _print_backtrace = enabled;
+  _print_backtrace = enabled;
 }
 
 FASTJET_END_NAMESPACE

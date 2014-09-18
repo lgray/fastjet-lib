@@ -34,6 +34,7 @@
 #include<iostream>
 #include<string>
 #include "fastjet/internal/base.hh"
+#include "fastjet/config.h"
 #ifndef FASTJET_HAVE_EXECINFO_H
   #include "fastjet/LimitedWarning.hh"
 #endif
@@ -76,6 +77,14 @@ public:
   }
 
 private:
+
+#ifdef FASTJET_HAVE_EXECINFO_H
+#ifdef FASTJET_HAVE_DEMANGLING_SUPPORT
+  /// demangle a given backtrace symbol
+  std::string _demangle(const char* symbol);
+#endif
+#endif
+
   std::string _message;                ///< error message
   static bool _print_errors;           ///< do we print anything?
   static bool _print_backtrace;        ///< do we print the backtrace?
