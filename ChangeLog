@@ -2,6 +2,10 @@
 
 	* include/fastjet/Error.hh
 	* src/Error.cc:
+	restored some FJCORE guards to keep it more lightweight
+
+	* include/fastjet/Error.hh
+	* src/Error.cc:
 	fixed a few details:
 	  . included the config.h header in Error.hh
 	  . defined _demangle in the header

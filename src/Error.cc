@@ -56,13 +56,12 @@ ostream * Error::_default_ostr = & cerr;
 #endif
 
 //----------------------------------------------------------------------
-//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #ifndef __FJCORE__ 
+#ifndef __FJCORE__ 
 
 // demangling only is included, i.e. --enable-demangling is specified
 // at configure time, execinfo.h is present and the GNU C++ ABI is
 // supported
-#ifdef FASTJET_HAVE_EXECINFO_H
-#ifdef FASTJET_HAVE_DEMANGLING_SUPPORT
+#if defined(FASTJET_HAVE_EXECINFO_H) && defined(FASTJET_HAVE_DEMANGLING_SUPPORT)
 // demangle a given backtrace symbol
 //
 // Notes:
@@ -105,9 +104,8 @@ string Error::_demangle(const char* symbol) {
   //if all else fails, just return the symbol
   return symbol;
 }
-#endif  // FASTJET_HAVE_DEMANGLING_SUPPORT
-#endif  // FASTJET_HAVE_EXECINFO_H
-//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #endif  // __FJCORE__
+#endif  // FASTJET_HAVE_DEMANGLING_SUPPORT && FASTJET_HAVE_EXECINFO_H
+#endif  // __FJCORE__
 
 
 //----------------------------------------------------------------------
@@ -118,7 +116,7 @@ Error::Error(const std::string & message_in) {
     ostringstream oss;
     oss << "fastjet::Error:  "<< message_in << endl;
 
-//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #ifndef __FJCORE__
+#ifndef __FJCORE__
     // only print the stack if execinfo is available and stack enabled
 #ifdef FASTJET_HAVE_EXECINFO_H
     if (_print_backtrace){
@@ -140,7 +138,7 @@ Error::Error(const std::string & message_in) {
       free(messages);
     }
 #endif  // FASTJET_HAVE_EXECINFO_H
-//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #endif  // __FJCORE__
+#endif  // __FJCORE__
 
     *_default_ostr << oss.str();
     // get something written to file even 
@@ -159,7 +157,7 @@ Error::Error(const std::string & message_in) {
 
 //----------------------------------------------------------------------
 void Error::set_print_backtrace(bool enabled) {
-#ifndef FASTJET_HAVE_EXECINFO_H
+#if (!defined(FASTJET_HAVE_EXECINFO_H)) || defined(__FJCORE__)
   if (enabled) {
     _execinfo_undefined.warn("Error::set_print_backtrace(true) will not work with this build of FastJet");
   }

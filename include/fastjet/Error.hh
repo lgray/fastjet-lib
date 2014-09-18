@@ -35,8 +35,8 @@
 #include<string>
 #include "fastjet/internal/base.hh"
 #include "fastjet/config.h"
-#ifndef FASTJET_HAVE_EXECINFO_H
-  #include "fastjet/LimitedWarning.hh"
+#if (!defined(FASTJET_HAVE_EXECINFO_H)) || defined(__FJCORE__)
+#include "fastjet/LimitedWarning.hh"
 #endif
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -78,8 +78,8 @@ public:
 
 private:
 
-#ifdef FASTJET_HAVE_EXECINFO_H
-#ifdef FASTJET_HAVE_DEMANGLING_SUPPORT
+#ifndef __FJCORE__
+#if defined(FASTJET_HAVE_EXECINFO_H) && defined(FASTJET_HAVE_DEMANGLING_SUPPORT)
   /// demangle a given backtrace symbol
   std::string _demangle(const char* symbol);
 #endif
@@ -89,7 +89,7 @@ private:
   static bool _print_errors;           ///< do we print anything?
   static bool _print_backtrace;        ///< do we print the backtrace?
   static std::ostream * _default_ostr; ///< the output stream (cerr if not set)
-#ifndef FASTJET_HAVE_EXECINFO_H
+#if (!defined(FASTJET_HAVE_EXECINFO_H)) || defined(__FJCORE__)
   static LimitedWarning _execinfo_undefined;
 #endif
 };
