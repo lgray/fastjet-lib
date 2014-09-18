@@ -1,15 +1,21 @@
+2014-09-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/RectangularGrid.hh:
+	added '_in' suffix to a few ctor arguments to prevent a series of
+	Wshadow warnings
+
 2014-09-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
-        
+
 	* include/fastjet/Error.hh
         * src/Error.cc
 	* scripts/mkfjcore.sh
-	
+
 	- demangle() included in the Error class
 	- Added a warning to Error:set_print_backtrace in case
 	  backtrace is asked for by the user but EXECINFO is not
 	  available
 	- tweaked mkfjcore.sh to make the backtrace warning work
-	  properly in fjcore  
+	  properly in fjcore
 
 2014-09-11  Gavin Salam  <gavin.salam@cern.ch>
 
