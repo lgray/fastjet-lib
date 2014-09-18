@@ -135,6 +135,10 @@ public:
   ///
   /// derived classes have to implement the () operator that returns
   /// the scale associated with a given jet.
+  /// 
+  /// It is also highly recommended to implement the is_larger()
+  /// method whenever possible, in order to avoid rounding issues
+  /// known to lead to possible infrared unsafeties.
   ///
   /// The jets that are passed to this class will carry the structure
   /// of type SISConePlugin::StructureType which allows to retreive

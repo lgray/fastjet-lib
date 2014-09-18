@@ -1167,6 +1167,13 @@ is the \ttt{WTA\_modp\_scheme}, in which the recombination of $p_i$ ad
 $p_j$ points in the direction and has the mass of the particle with
 larger 3-vector modulus ($|\vec p|$), and has a 3-vector modulus
 $|\vec p_r| = |\vec p_i| + |\vec p_i|$.
+%
+\footnote{It is tempting to define also a \ttt{WTA\_E\_scheme} in
+  which the recombination would point in the direction of the particle
+  with the largest energy. This is however dangerous in situations
+  where the most energetic particle is at rest. As a consequence, this
+  scheme is not provided in \fastjet. A similar consideartion applies
+  for a \ttt{WTA\_mt\_scheme}.}
 
 %
 On request, we may in the future provide further dedicated schemes for
@@ -1750,13 +1757,15 @@ Cone algorithm execution generally involves two phases.
 The first is the search for stable cones (SC).
 %
 Then, because a given particle can appear in more than one stable
-cone, there are two options for the second phase: one can apply a
+cone, there are two options for the second phase: the standard
+approach is to can apply a
 `split--merge' (see e.g.\ Ref.\ \cite{RunII-jet-physics}) procedure,
 which ensures that no particle ends up in more than one jet.
 %
-Or one can identify the highest-$p_t$ stable cone, call it a jet,
+Alternatively, one can identify the highest-$p_t$ stable cone, call it a jet,
 remove all particles that it contained and then repeat the stable-cone
-search and removal over and over until no particles remain (we call
+search and removal over and over until no particles remain, or no new
+stable cones are found (we call
 this progressive removal).
 
 The stable cones are identified using an $\order{N^2 \ln N}$ seedless
@@ -1799,7 +1808,8 @@ The original implementation of SISCone~\cite{SISCone} corresponded to
 a stable-cone jet algorithm with a split--merge step (SC-SM in the
 notation of~\cite{Salam:2009jx}).
 %
-This remains SISCone's default.
+This remains SISCone's default and, unless explicitly mentioned
+otherwise, it corresponds to the version of SISCone used in the literature.
 
 % As with most modern cone algorithms, it is divided into two parts:
 % first it searches for stable cones; then, because a particle can
@@ -2527,7 +2537,7 @@ algorithm~\cite{SISCone}.
   #include "fastjet/SISConeSphericalPlugin.hh"
   // ...
   SISConeSphericalPlugin(double R, 
-                         double overlap\_threshold
+                         double overlap_threshold
 			 double protojet_Emin = 0.0, 
 			 bool   caching = false,
 			 SISConeSphericalPlugin::SplitMergeScale  

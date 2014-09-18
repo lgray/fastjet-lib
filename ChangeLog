@@ -1,3 +1,15 @@
+2014-09-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* doc/fastjet-doc.tex:
+	  . in the WTA section, added a footnote saying that WTA_E_scheme
+	    is sick and therefore not implemented
+	  . added a few words here and there to highlight the fact that
+	    "SISCone" means SISCone with SM (better avoid any confusion)
+
+	* plugins/SISCone/fastjet/SISConeBasePlugin.hh:
+	added a note that we recommend to implement
+	UserScaleBase::is_larger() whenev possible.
+
 2014-09-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * src/Error.cc
