@@ -17,8 +17,8 @@ internal_headers="base.hh\
 fastjet_headers="config_auto.h\
   config.h\
   SharedPtr.hh\
-  Error.hh\
   LimitedWarning.hh\
+  Error.hh\
   PseudoJetStructureBase.hh\
   PseudoJet.hh\
   FunctionOfPseudoJet.hh\
@@ -217,8 +217,9 @@ sed '/^ *\/\/.*$/d' fjcore.cc | sed '/ET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s
 # (this effectively removes the whole of config.h, which however was needed 
 # during the initial compilation tests)
 sed '/^#ifndef WIN32/,/#endif.*$/d' fjcore.hh.nocomments > fjcore.hh
-# removal of EXECINFO ifdef block (not really necessary, as it's never used)
-sed '/^#ifndef FASTJET_HAVE_EXECINFO_H/,/#endif.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
+# removal of "#define FASTJET_HAVE_EXECINFO 1" line from fjcore.hh. 
+# Guards are instead kept, because they are used in Error.hh|cc
+sed '/^#define FASTJET_HAVE_EXECINFO_H.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
 # renaming and removal of unnecessary files
 rm fjcore.hh.nocomments
 mv fjcore.cc.nocomments fjcore.cc

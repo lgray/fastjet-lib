@@ -51,13 +51,16 @@ using namespace std;
 bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
 ostream * Error::_default_ostr = & cerr;
+#ifndef FASTJET_HAVE_EXECINFO_H
+  LimitedWarning Error::_execinfo_undefined;
+#endif
 
+//----------------------------------------------------------------------
 #ifndef __FJCORE__
 // demangling only is included, i.e. --enable-demangling is specified
 // at configure time, execinfo.h is present and the GNU C++ ABI is
 // supported
 #ifdef FASTJET_HAVE_DEMANGLING_SUPPORT
-
 // demangle a given backtrace symbol
 //
 // Notes:
@@ -71,7 +74,7 @@ ostream * Error::_default_ostr = & cerr;
 //    to require exteral dependencies. If we want to go down that
 //    route, one could look into the inplementation o faddr2line(.c)
 //    and/or dladdr.
-string demangle(const char* symbol) {
+string Error::demangle(const char* symbol) {
   size_t size;
   int status;
   char temp[128];
@@ -104,6 +107,7 @@ string demangle(const char* symbol) {
 #endif  // __FJCORE__
 
 
+//----------------------------------------------------------------------
 Error::Error(const std::string & message_in) {
   _message = message_in; 
 
@@ -148,6 +152,16 @@ Error::Error(const std::string & message_in) {
     // else               { std::cerr << oss.str(); }
     
   }
+}
+
+//----------------------------------------------------------------------
+void Error::set_print_backtrace(bool enabled) {
+#ifndef FASTJET_HAVE_EXECINFO_H
+     if (enabled) {
+         _execinfo_undefined.warn("Error::set_print_backtrace(true) will not work with this build of FastJet");
+     }
+#endif    
+    _print_backtrace = enabled;
 }
 
 FASTJET_END_NAMESPACE

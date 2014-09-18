@@ -1,3 +1,16 @@
+2014-09-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+        
+	* include/fastjet/Error.hh
+        * src/Error.cc
+	* scripts/mkfjcore.sh
+	
+	- demangle() included in the Error class
+	- Added a warning to Error:set_print_backtrace in case
+	  backtrace is asked for by the user but EXECINFO is not
+	  available
+	- tweaked mkfjcore.sh to make the backtrace warning work
+	  properly in fjcore  
+
 2014-09-11  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/ClusterSequence.cc:

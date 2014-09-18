@@ -34,6 +34,9 @@
 #include<iostream>
 #include<string>
 #include "fastjet/internal/base.hh"
+#ifndef FASTJET_HAVE_EXECINFO_H
+  #include "fastjet/LimitedWarning.hh"
+#endif
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -64,7 +67,7 @@ public:
 
   /// controls whether the backtrace is printed out with the error message or not.
   /// The default is "false".
-  static void set_print_backtrace(bool enabled) {_print_backtrace = enabled;}
+  static void set_print_backtrace(bool enabled);
 
   /// sets the default output stream for all errors; by default
   /// cerr; if it's null then error output is suppressed.
@@ -77,6 +80,9 @@ private:
   static bool _print_errors;           ///< do we print anything?
   static bool _print_backtrace;        ///< do we print the backtrace?
   static std::ostream * _default_ostr; ///< the output stream (cerr if not set)
+#ifndef FASTJET_HAVE_EXECINFO_H
+  static LimitedWarning _execinfo_undefined;
+#endif
 };
 
 
