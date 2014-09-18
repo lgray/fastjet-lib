@@ -32,7 +32,7 @@
 #include "fastjet/config.h"
 #include <sstream>
 
-//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #ifndef __FJCORE__
+#ifndef __FJCORE__
 // printing the stack would need execinfo
 #ifdef FASTJET_HAVE_EXECINFO_H
 #include <execinfo.h>
@@ -42,7 +42,7 @@
 #include <cxxabi.h>
 #endif // FASTJET_HAVE_DEMANGLING_SUPPORT
 #endif // FASTJET_HAVE_EXECINFO_H
-//not needed since  FASTJET_HAVE_EXECINFO_H is removed from FJCORE #endif  // __FJCORE__
+#endif  // __FJCORE__
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -51,7 +51,7 @@ using namespace std;
 bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
 ostream * Error::_default_ostr = & cerr;
-#ifndef FASTJET_HAVE_EXECINFO_H
+#if (!defined(FASTJET_HAVE_EXECINFO_H)) || defined(__FJCORE__)
   LimitedWarning Error::_execinfo_undefined;
 #endif
 
