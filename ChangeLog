@@ -1,3 +1,8 @@
+2014-09-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * regression-tests/nightly-check.pl
+          Added a test with gcc 4.9
+
 2014-09-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex:
