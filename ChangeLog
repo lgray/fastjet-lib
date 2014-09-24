@@ -1,3 +1,8 @@
+2014-09-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* NEWS:
+	preliminary version of the 3.1.0 release notes
+
 2014-09-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * regression-tests/nightly-check.pl
