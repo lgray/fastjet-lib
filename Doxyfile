@@ -602,7 +602,7 @@ FILE_PATTERNS          = *.c *.cc *.cxx *.cpp *.c++ \
                          *.h *.hh *.hxx *.hpp *.h++ \
                          *.ii *.ixx *.ipp *.i++ *.icc \
                          *.php *.php3 *.inc *.m *.py *.f90 *.f \
-                         NEWS
+                         NEWS INSTALL README AUTHORS BUGS COPYING
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories
 # should be searched for input files as well. Possible values are YES and NO.
