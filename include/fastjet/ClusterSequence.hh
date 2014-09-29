@@ -640,9 +640,12 @@ protected:
   /// multiplicity, algorithm, R, etc.
   Strategy _best_strategy() const;
   
+  /// \if internal_doc
+  /// \class _Parabola
   /// returns c*(a*R**2 + b*R + 1);
   /// Written as a class in case we want to give names to different
   /// parabolas
+  /// \endif
   class _Parabola {
   public:
     _Parabola(double a, double b, double c) : _a(a), _b(b), _c(c) {}
@@ -651,7 +654,10 @@ protected:
     double _a, _b, _c;
   };
 
+  /// \if internal_doc
+  /// \class _Line
   /// operator()(R) returns a*R+b;
+  /// \endif
   class _Line {
   public:
     _Line(double a, double b) : _a(a), _b(b) {}

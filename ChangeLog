@@ -1,3 +1,8 @@
+2014-09-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/ClusterSequence.hh:
+	placed _Line and _Parabola in the "internal" doxygen doc
+
 2014-09-25  Gregory Soyez  <soyez@fastjet.fr> + Matteo
 
 	* NEWS:
