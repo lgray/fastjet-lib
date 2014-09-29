@@ -225,7 +225,7 @@ dnl only do it if we have execinfo!
 if [[ "x${ac_cv_header_execinfo_h}" == "xyes" ]]; then
     dnl check if demangling is enabled
     AC_ARG_ENABLE(demangling,
-        [  --enable-demangling     enables demangling in backtrace (if supported)) [default=no]],
+        [  --enable-demangling     enables demangling in backtrace (if supported) [default=no]],
         [enable_demangling_flag="$enableval"],
         [enable_demangling_flag="no"])
 

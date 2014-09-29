@@ -8,6 +8,15 @@
 	* NEWS:
 	preliminary version of the 3.1.0 release notes
 
+2014-09-18  Gavin Salam  <gavin.salam@cern.ch>
+
+	* configure.ac:
+	fixed typo in --enable-demangling help message
+
+	* regression-tests/nightly-check.pl:
+	added minimal check that --enable-demangling doesn't break anything
+	(commit done only 2014-09-29)
+
 2014-09-18  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * regression-tests/nightly-check.pl

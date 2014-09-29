@@ -126,6 +126,8 @@ push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-s
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
 push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
 
+# minimal check that demangling code doesn't break compilation
+push @setups, ["","--disable-static --enable-demangling", "", 10, ""]; # locally
 
 
 # GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
