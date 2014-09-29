@@ -1,17 +1,8 @@
 Release Notes for FastJet
 -------------------------
 
-
-
-
-  WATCH OUT: the 3.1 release data has to be specified at 2 places 
-
-
-
-
-
 ================================================================
-Summary of changes from v3.0.6 -> v3.1.0: 2014-XX-YY
+Summary of changes from v3.0.6 -> v3.1.0: 2014-09-30
 ================================================================
 * Significant speed improvements (x1.5-10) for large N (few thousand-10^5)
 * FASTJET_VERSION_NUMBER preprocessor symbol, for easy in-code version testing
@@ -30,7 +21,7 @@ Summary of changes from v3.0.6 -> v3.1.0: 2014-XX-YY
 * Various bug-fixes, build-system tweaks (e.g. default -O2 instead of -O3)
 
 ================================================================
-Summary of changes from v3.1.0-beta.1 -> v3.1.0: 2014-XX-YY
+Summary of changes from v3.1.0-beta.1 -> v3.1.0: 2014-09-30
 ================================================================
 * Addition of Winner-Takes-All recomb. schemes (WTA_pt_scheme, WTA_modp_scheme)
 * SISCone updated to v3.0.0 (addition of SISCone with progressive removal)

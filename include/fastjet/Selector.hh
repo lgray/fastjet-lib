@@ -304,15 +304,15 @@ public:
     return *this;
   }
 
-  /// class that gets throw when a Selector is applied despite it not
+  /// class that gets thrown when a Selector is applied despite it not
   /// having a valid underlying worker.
   class InvalidWorker : public Error {
   public:
     InvalidWorker() : Error("Attempt to use Selector with no valid underlying worker") {}
   };
 
-  /// class that gets throw when a Selector is applied despite it not
-  /// having a valid underlying worker.
+  /// class that gets thrown when the area is requested from a Selector for which
+  /// the area is not meaningful
   class InvalidArea : public Error {
   public:
     InvalidArea() : Error("Attempt to obtain area from Selector for which this is not meaningful") {}

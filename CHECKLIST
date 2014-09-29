@@ -31,9 +31,10 @@ X.Y.Z  within zsh, in the examples directory, do
          grep -i error.summary out
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
+       [Must be done without CGAL?]
 
 X.Y.Z  go to testsuite; make with an installation of the current version;
-         ./run_tests
+         ./run_tests and ./run-all.sh
 
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
@@ -70,30 +71,32 @@ X.Y.Z  move the version number to X.Y.(Z+1)-devel with
 ----------------------------------------------------------------------
 checklist for 3.1.0 (make a copy before editing!)
 -------------------
-X.Y.Z  run svn up
-X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
-X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
+3.1.0  run svn up
+3.1.0  update version number with ./scripts/set-version.sh VERSION-NUMBER
+3.1.0  doxygen: check dirs are declared for new plugins + check in 
        the class list that all classes are prefixed by 'fastjet::'
-X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
+3.1.0  ensure NEWS is up to date (and has the correct release date!)
 
-X.Y.Z  make sure siscone points to a tag, not trunk
+3.1.0  make sure siscone points to a tag, not trunk
        svn propedit svn:externals plugins/SISCone; svn up
 
-X.Y.Z  mention the release in ChangeLog: just say 
+3.1.0  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-3.1.0"
 
-X.Y.Z  make check 
+3.1.0  make check 
 
-X.Y.Z  within zsh, in the examples directory, do 
+3.1.0  within zsh, in the examples directory, do 
          echo >! out
          for a in [01]*.cc
          (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
          grep -i error.summary out
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
+       [test done on Gregory's home machine to work around valgrind
+       issues in bash; NB: must be done without CGAL]
 
-X.Y.Z  go to testsuite; make with an installation of the current version;
-         ./run_tests
+3.1.0  go to testsuite; make with an installation of the current version;
+         ./run_tests and ./run-all.sh
 
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
