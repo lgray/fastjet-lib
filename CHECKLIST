@@ -98,7 +98,7 @@ checklist for 3.1.0 (make a copy before editing!)
 3.1.0  go to testsuite; make with an installation of the current version;
          ./run_tests and ./run-all.sh
 
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.1.0  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
 X.Y.Z  rerun the nightly check
