@@ -34,7 +34,7 @@ Summary of changes from v3.1.0-beta.1 -> v3.1.0: 2014-XX-YY
 ================================================================
 * Addition of Winner-Takes-All recomb. schemes (WTA_pt_scheme, WTA_modp_scheme)
 * SISCone updated to v3.0.0 (addition of SISCone with progressive removal)
-* minor changes including elimination of gcc warnings and doxygen doc
+* minor changes including elimination of gcc warnings and doxygen doc fixes
 
 ================================================================
 Summary of changes from v3.0.6 -> v3.1.0-beta.1: 2014-08-15
