@@ -37,6 +37,7 @@
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
+/// @ingroup tools_generic
 /// \class Recluster
 /// Recluster a jet's constituents with a new jet definition.
 ///

@@ -59,6 +59,8 @@ X.Y.Z  update main web-page area
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z       
 
+X.Y.Z  tweet the release
+
 X.Y.Z  make sure it's committed with the CHECKLIST
 
 X.Y.Z  reset the SISCone link to the trunk: 
@@ -101,12 +103,24 @@ checklist for 3.1.0 (make a copy before editing!)
 3.1.0  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
-X.Y.Z  rerun the nightly check
-X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk
+3.1.0  rerun the nightly check
+3.1.0  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk
+       [GS Note: the script expects . to be in your path]
 
 X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate and release fjcore and note its md5sum
+
+3.1.0  generate and release fjcore and note its md5sum
        cd scripts; ./mkfjcore.sh; md5sum fjcore-3.1.0.tar.gz; cd ..
+         075910ff6de905008492f9fd249f26c1  fjcore-3.1.0.tar.gz
+
+[GS: stop here temporarily to see if we make tests with clang-3.{4,5,6}
+     However . the manual is compiled (w some font warnings)
+             . doxygen doc is ready to be copied to the web]
+
+If Recluster goes in the "tools" module:
+  . commit the fix on svn
+  . make distcheck + record md5sum and revision number above
+  . rm -Rf html; ~salam/software/doxygen-1.8.8/bin/doxygen
 
 X.Y.Z  copy distribution to web: cp -p fastjet-3.1.0.tar.gz ~salam/www/fastjet/repository/
 X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-3.1.0.tar.gz ~salam/www/fastjet/repository
@@ -120,6 +134,24 @@ X.Y.Z  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.1.0
+
+Dear FastJet users,
+
+Nearly three years after the major release of FastJet 3.0.0, we are
+pleased to announce the release of FastJet 3.1.0.
+
+compared to its predecessor, its main feature is a significant speed
+improvement with a gain of a factor from 1.5 to 10 for particle
+multiplicities between a few thousand and 10^5.
+
+As usual, please visit 
+  http://fastjet.fr
+for more information about new features and downloads.
+
+Best regards,
+Matteo, Gavin and Gregory
+
+X.Y.Z  tweet the release
 
 X.Y.Z  make sure it's committed with the CHECKLIST
 
