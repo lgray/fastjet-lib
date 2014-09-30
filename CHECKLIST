@@ -125,7 +125,7 @@ checklist for 3.1.0 (make a copy before editing!)
 3.1.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.1.0
 3.1.0  update main web-page area
 
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+3.1.0  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.1.0
 
 Dear FastJet user,
@@ -164,10 +164,9 @@ Summary of changes from v3.0.6 -> v3.1.0: 2014-09-30
   * easy copying of Recombiner info: jet_def1.set_recombiner(jet_def2)
 * Various bug-fixes, build-system tweaks (e.g. default -O2 instead of -O3)
 
+3.1.0  tweet the release
 
-X.Y.Z  tweet the release
-
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.1.0  make sure it's committed with the CHECKLIST
 
 X.Y.Z  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
