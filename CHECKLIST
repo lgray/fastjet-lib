@@ -107,49 +107,63 @@ checklist for 3.1.0 (make a copy before editing!)
 3.1.0  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk
        [GS Note: the script expects . to be in your path]
 
-X.Y.Z  make distcheck; record the md5sum here (and revision number)
+3.1.0  make distcheck; record the md5sum here (and revision number)
+         39b0dd15854935c4e7d76c4a1ac43bb8  fastjet-3.1.0.tar.gz
+         (revision 3713)
 
 3.1.0  generate and release fjcore and note its md5sum
        cd scripts; ./mkfjcore.sh; md5sum fjcore-3.1.0.tar.gz; cd ..
          075910ff6de905008492f9fd249f26c1  fjcore-3.1.0.tar.gz
 
-[GS: stop here temporarily to see if we make tests with clang-3.{4,5,6}
-     However . the manual is compiled (w some font warnings)
-             . doxygen doc is ready to be copied to the web]
+3.1.0  copy distribution to web: cp -p fastjet-3.1.0.tar.gz ~salam/www/fastjet/repository/
+3.1.0  copy fjcore to web: cp -p scripts/fjcore-3.1.0.tar.gz ~salam/www/fastjet/repository
+3.1.0  compile manual
+3.1.0  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.1.0.pdf
+3.1.0  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.1.0
+3.1.0  update main web page & menu in devel area
 
-If Recluster goes in the "tools" module:
-  . commit the fix on svn
-  . make distcheck + record md5sum and revision number above
-  . rm -Rf html; ~salam/software/doxygen-1.8.8/bin/doxygen
-
-X.Y.Z  copy distribution to web: cp -p fastjet-3.1.0.tar.gz ~salam/www/fastjet/repository/
-X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-3.1.0.tar.gz ~salam/www/fastjet/repository
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.1.0.pdf
-X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.1.0
-X.Y.Z  update main web page & menu in devel area
-
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.1.0
-X.Y.Z  update main web-page area
+3.1.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.1.0
+3.1.0  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.1.0
 
-Dear FastJet users,
+Dear FastJet user,
 
 Nearly three years after the major release of FastJet 3.0.0, we are
-pleased to announce the release of FastJet 3.1.0.
+pleased to announce FastJet 3.1.0.
 
-compared to its predecessor, its main feature is a significant speed
-improvement with a gain of a factor from 1.5 to 10 for particle
-multiplicities between a few thousand and 10^5.
+Compared to its predecessor, its main feature is a significant speed
+improvement, with a gain of a factor from 1.5 to 10 for particle
+multiplicities between a few thousand and 10^5. A more extensive
+summary of the changes is given at the end of this mail.
 
-As usual, please visit 
-  http://fastjet.fr
-for more information about new features and downloads.
+As usual, please go to http://fastjet.fr for the download.
+
+Feedback can be sent to fastjet@projects.hepforge.org .
 
 Best regards,
 Matteo, Gavin and Gregory
+
+================================================================
+Summary of changes from v3.0.6 -> v3.1.0: 2014-09-30
+================================================================
+* Significant speed improvements (x1.5-10) for large N (few thousand-10^5)
+* FASTJET_VERSION_NUMBER preprocessor symbol, for easy in-code version testing
+* New JetDefinition::operator(): jets = jet_def(particles);
+* Native particle-mass support in PU estimation (rho_m())
+* Subtraction can use rho_m (set_use_rho_m()) and force m>0 (set_safe_mass())
+* Addition of Winner-Takes-All recomb. schemes (WTA_pt_scheme, WTA_modp_scheme)
+* SISCone updated to v3.0.0 (addition of SISCone with progressive removal)
+* New Recluster class, serving as base for Filter
+* New RectangularGrid class, base for GridMedianEstimator & GridJetPlugin
+* Fixed long-standing issue with coincident points in NlnN strategies
+* Other small additions and changes include:
+  * Selector::sum(particles) to get 4-vector sum of particles that pass selector
+  * pruned_jet.structure_of<Pruner>() has Rcut() and zcut() functions
+  * easy copying of Recombiner info: jet_def1.set_recombiner(jet_def2)
+* Various bug-fixes, build-system tweaks (e.g. default -O2 instead of -O3)
+
 
 X.Y.Z  tweet the release
 
