@@ -1,4 +1,4 @@
-2014-09-30  Gregory Soyez  <soyez@fastjet.fr>
+2014-09-30  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* configure.ac:
 	* include/fastjet/config_win.h:
