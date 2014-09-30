@@ -168,10 +168,10 @@ Summary of changes from v3.0.6 -> v3.1.0: 2014-09-30
 
 3.1.0  make sure it's committed with the CHECKLIST
 
-X.Y.Z  reset the SISCone link to the trunk: 
+3.1.0  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 
-X.Y.Z  move the version number to X.Y.(Z+1)-devel with
+3.1.0  move the version number to 3.2.0-devel with
        scripts/set-version.sh VERSION-NUMBER
        and indicate this in the ChangeLog
 

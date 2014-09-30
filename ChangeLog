@@ -1,3 +1,11 @@
+2014-09-30  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	  changed version to 3.2.0-devel
+
 2014-09-30  Gavin SALAM  <gavin.salam@cern.ch> + Gregory
 
 	* Release of FastJet 3.1.0
