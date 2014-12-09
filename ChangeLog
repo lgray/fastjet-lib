@@ -1,3 +1,9 @@
+2014-12-09  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/Filter.hh:
+	added subtractor() to retreive (a pointer to) the subtractor used
+	internally
+
 2014-11-04  Gregory Soyez  <soyez@fastjet.fr>
 
 	* Doxyfile-devel:

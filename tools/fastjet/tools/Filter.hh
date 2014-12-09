@@ -143,6 +143,10 @@ public:
   /// deciding which ones to keep. It takes precedence over a non-zero rho.
   void set_subtractor(const FunctionOfPseudoJet<PseudoJet> * subtractor) {_subtractor = subtractor;}
 
+  /// Set a subtractor that is applied to all individual subjets before
+  /// deciding which ones to keep. It takes precedence over a non-zero rho.
+  const FunctionOfPseudoJet<PseudoJet> * subtractor() const{ return _subtractor;}
+
   /// runs the filtering and sets kept and rejected to be the jets of interest
   /// (with non-zero rho, they will have been subtracted).
   ///
