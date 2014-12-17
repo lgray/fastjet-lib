@@ -1,3 +1,8 @@
+2014-12-17  Gavin Salam  <gavin.salam@cern.ch>
+
+	* tools/fastjet/tools/Recluster.hh:
+	fixed typos in comments
+
 2014-12-09  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Filter.hh:
