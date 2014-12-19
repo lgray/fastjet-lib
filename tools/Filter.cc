@@ -163,8 +163,8 @@ PseudoJet Filter::_finalise(const PseudoJet & /*jet*/,
   // information about empty areas)
   if ((ca_optimisation_used) && (kept.size()+rejected.size()>0)){
     bool has_non_explicit_ghost_area = (kept.size()>0)
-      ? (kept[0].has_area()     && kept[0].validated_csab()->has_explicit_ghosts())
-      : (rejected[0].has_area() && rejected[0].validated_csab()->has_explicit_ghosts());
+      ? (kept[0].has_area()     && (!(kept[0].validated_csab()->has_explicit_ghosts())))
+      : (rejected[0].has_area() && (!(rejected[0].validated_csab()->has_explicit_ghosts())));
     if (has_non_explicit_ghost_area)
       fs->discard_area();
   }

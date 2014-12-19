@@ -1,3 +1,10 @@
+2014-12-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Filter.cc (_finalise):
+	fixed wrong test for non-explicit-ghosts when trying to filter C/A
+	jets with the C/A algorithm.
+	Reported by David Adams.
+
 2014-12-17  Gavin Salam  <gavin.salam@cern.ch>
 
 	* tools/fastjet/tools/Recluster.hh:
