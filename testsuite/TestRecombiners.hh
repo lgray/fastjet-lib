@@ -67,14 +67,15 @@ class TestRecombiners : public TestBase {
     verify_almost_equal(c.phi(),  pi/4, "WTA_pt_scheme phi");
     verify_almost_equal(c.m(),     1.0, "WTA_pt_scheme m");
 
-    jd1.set_recombination_scheme(WTA_E_scheme);
     a.reset_momentum(120.0, 50.0,  0.0, 200.0);
     b.reset_momentum( 40.0,  0.0, 30.0,  60.0);
-    jd1.recombiner()->recombine(a, b, c);
-    verify_almost_equal(c.E(),   260.0,   "WTA_E_scheme pt");
-    verify_almost_equal(c.eta(), a.eta(), "WTA_E_scheme y");
-    verify_almost_equal(c.phi(), a.phi(), "WTA_E_scheme phi");
-    verify_almost_equal(c.m(),   a.m(),   "WTA_E_scheme m");
+
+    //jd1.set_recombination_scheme(WTA_E_scheme);
+    //jd1.recombiner()->recombine(a, b, c);
+    //verify_almost_equal(c.E(),   260.0,   "WTA_E_scheme pt");
+    //verify_almost_equal(c.eta(), a.eta(), "WTA_E_scheme y");
+    //verify_almost_equal(c.phi(), a.phi(), "WTA_E_scheme phi");
+    //verify_almost_equal(c.m(),   a.m(),   "WTA_E_scheme m");
 
     jd1.set_recombination_scheme(WTA_modp_scheme);
     jd1.recombiner()->recombine(a, b, c);
