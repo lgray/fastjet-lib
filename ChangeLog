@@ -1,3 +1,9 @@
+2014-12-19  Gavin Salam  <gavin.salam@cern.ch>
+
+	* gtags.sh: *** ADDED ***
+	script to generate gtags files for easier navigation around the
+	project within emacs (use ggtags-mode)
+
 2014-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Filter.cc (_finalise):
