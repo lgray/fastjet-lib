@@ -34,7 +34,7 @@ X.Y.Z  within zsh, in the examples directory, do
        [Must be done without CGAL?]
 
 X.Y.Z  go to testsuite; make with an installation of the current version;
-         ./run_tests and ./run-all.sh
+         make clean; make; ./run_tests and ./run-all.sh
 
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
