@@ -1,3 +1,9 @@
+2014-12-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* regression-tests/test-contrib.pl:
+	run ./configure explicitly (instead of configure) in case . is not
+	in the PATH
+
 2014-12-19  Gavin Salam  <gavin.salam@cern.ch>
 
 	* gtags.sh: *** ADDED ***

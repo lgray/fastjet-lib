@@ -39,7 +39,7 @@ print "Working from ",getcwd,"\n";
 system("svn info | grep -e '^URL' -e '^Revision'");
 
 # now run the checks
-&runCommand("configure","configure --fastjet-config=$fjconfig","",\&printall);
+&runCommand("configure","./configure --fastjet-config=$fjconfig","",\&printall);
 &runCommand("make clean","make clean");
 &runCommand("make","make -j4");
 &runCommand("make check","make -j4 check","Failed",\&printSuccessFailure);
