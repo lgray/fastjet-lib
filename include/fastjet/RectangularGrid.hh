@@ -1,4 +1,4 @@
-#ifndef __FASTJET_RECTANGULARGRID_HH__
+p#ifndef __FASTJET_RECTANGULARGRID_HH__
 #define __FASTJET_RECTANGULARGRID_HH__
 
 //FJSTARTHEADER
@@ -78,6 +78,9 @@ public:
   /// returns true if the Tiling structure is in a suitably initialised state
   virtual bool is_initialised() const = 0;
   bool is_initialized() const {return is_initialised();}
+
+  /// virtual destructor
+  virtual ~TilingBase() {}
 };
 
 //----------------------------------------------------------------------
@@ -162,7 +165,9 @@ private:
 
   // a tile selector
   Selector _tile_selector;
-  // a cached 
+  // if there's a tile selector, then for each tile, this caches the
+  // information about whether it is "good" i.e. it passes the tile
+  // selector
   std::vector<bool> _is_good;
   
 };

@@ -76,7 +76,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///
 class GridMedianBackgroundEstimator : public BackgroundEstimatorBase
 #ifdef FASTJET_GMBGE_USEFJGRID
-                                                                    , RectangularGrid
+                                    , public RectangularGrid
 #endif 
 {
 

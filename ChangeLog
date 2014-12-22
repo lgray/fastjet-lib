@@ -1,3 +1,19 @@
+2014-12-22  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/RectangularGrid.cc:
+	* include/fastjet/RectangularGrid.hh:
+	fixed comment about _is_good and set the Id keyword (this was
+	missing before).
+2014-12-22  Gavin Salam  <gavin.salam@cern.ch>
+
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	made this derive publicly from RectangularGrid.
+
+	* include/fastjet/RectangularGrid.hh (TilingBase):
+	added a virtual destructor.
+
+	(both requests/observations from Pavel Demin)
+
 2014-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* regression-tests/test-contrib.pl:
