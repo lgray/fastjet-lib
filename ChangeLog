@@ -1,9 +1,15 @@
+2014-12-23  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/RectangularGrid.hh:
+	fixed typo in previous commit
+
 2014-12-22  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/RectangularGrid.cc:
 	* include/fastjet/RectangularGrid.hh:
 	fixed comment about _is_good and set the Id keyword (this was
 	missing before).
+
 2014-12-22  Gavin Salam  <gavin.salam@cern.ch>
 
 	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
