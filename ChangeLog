@@ -9,7 +9,12 @@
 	added tests of new GMBGE constructor with explicit RG pieces.
 
 	[merged from rev 3778 of 3.1.X-devel]
-	
+
+2014-12-24  Gavin Salam  <gavin.salam@cern.ch>
+
+	* gtags.sh -> scripts/gtags.sh:
+	and added testsuite to the list of directories
+
 2014-12-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/RectangularGrid.hh:

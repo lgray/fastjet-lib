@@ -6,4 +6,4 @@
 #
 # Usage: ./gtags.sh
 #
-find  ./include ./src ./tools ./plugins ./example -print | gtags --file=-
+find  ChangeLog ./include ./src ./tools ./plugins ./example ./testsuite -print | gtags --file=-
