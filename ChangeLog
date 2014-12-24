@@ -6,7 +6,7 @@
 	Grid. (Request from Pavel Demin).
 
 	* testsuite/TestGrids.hh:
-	added tests of new GMBGE constructor with explicit RG pieces.
+	added tests of new GMBGE constructor with explicit RG arguments.
 
 	[merged from rev 3778 of 3.1.X-devel]
 
