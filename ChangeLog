@@ -1,10 +1,21 @@
+2014-12-24  Gavin Salam  <gavin.salam@cern.ch>
+
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	added constructor that takes the explicit parameters for the
+	rectangular grid without the need for an intermediate Rectangular
+	Grid. (Request from Pavel Demin).
+
+	* testsuite/TestGrids.hh:
+	added tests of new GMBGE constructor with explicit RG pieces.
+
+	[merged from rev 3778 of 3.1.X-devel]
+	
 2014-12-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/RectangularGrid.hh:
 	fixed typo in previous commit
 
 2014-12-22  Gavin Salam  <gavin.salam@cern.ch>
-
 	* src/RectangularGrid.cc:
 	* include/fastjet/RectangularGrid.hh:
 	fixed comment about _is_good and set the Id keyword (this was

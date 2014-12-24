@@ -102,6 +102,23 @@ public:
       throw Error("attempt to construct GridMedianBackgroundEstimator with uninitialised RectangularGrid");
   }    
 
+  //---------------------------------------------------------------- 
+  /// Constructor with the explicit parameters for the underlying
+  /// RectangularGrid
+  ///
+  ///  \param rapmin         the minimum rapidity extent of the grid
+  ///  \param rapmax         the maximum rapidity extent of the grid
+  ///  \param drap           the grid spacing in rapidity
+  ///  \param dphi           the grid spacing in azimuth
+  ///  \param tile_selector  optional (geometric) selector to specify 
+  ///                        which tiles are good; a tile is good if
+  ///                        a massless 4-vector at the center of the tile passes
+  ///                        the selection
+  GridMedianBackgroundEstimator(double rapmin_in, double rapmax_in, double drap_in, double dphi_in,
+                                Selector tile_selector = Selector()) :
+    RectangularGrid(rapmin_in, rapmax_in, drap_in, dphi_in, tile_selector),
+    _has_particles(false), _enable_rho_m(true) {}
+
 #else  // alternative in old framework where we didn't have the rectangular grid
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     _ymin(-ymax), _ymax(ymax), 

@@ -14,7 +14,7 @@ class TestGrids : public TestBase {
   virtual bool run_test () {
     
     RectangularGrid grid;
-    VERIFY_THROWS(GridMedianBackgroundEstimator gmbge(grid), "GMBGE constructor with default (uninitialised) grid throws");
+    VERIFY_THROWS(GridMedianBackgroundEstimator gmbge1(grid), "GMBGE constructor with default (uninitialised) grid throws");
     VERIFY_THROWS(GridJetPlugin gridjet(grid), "GridJetPlugin constructor with default (uninitialised) grid throws");
 
     grid = RectangularGrid(2.0, 5.0, 0.5, twopi/12.0, !SelectorRapRange(3.0,4.0));
@@ -39,6 +39,13 @@ class TestGrids : public TestBase {
     verify_almost_equal(jets[0].pt(), 20.0, "jet 1 pt = 20 GeV", 0.01);
     verify_almost_equal(jets[1].pt(), 14.0, "jet 2 pt = 14 GeV", 0.01);
 
+    // test the GridMedianBackgroundEstimator with RectangularGrid assignments
+    GridMedianBackgroundEstimator gmbge(2.0, 5.0, 0.5, twopi/12.0, !SelectorRapRange(3.0,4.0));
+    verify_equal(gmbge.n_tiles(), grid.n_tiles(), "total # of grid tiles in GMBGE & RG");
+    verify_equal(gmbge.n_good_tiles(), grid.n_good_tiles(), "total # of good grid tiles in GMBGE & RG");
+    verify_equal(gmbge.dphi(), grid.dphi(), "phi spacing in GMBGE & RG");
+    verify_equal(gmbge.drap(), grid.drap(), "rap spacing in GMBGE & RG");
+    
     return _pass_test;
   }
 };
