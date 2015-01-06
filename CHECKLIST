@@ -14,6 +14,9 @@ X.Y.Z  run svn up
 X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
 X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
        the class list that all classes are prefixed by 'fastjet::'
+       Note: as of 2015-01-06 tycho only has v1.6.1 which does not
+             behave properly use instead
+             ~salam/software/doxygen-1.8.8/bin/doxygen
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 
 X.Y.Z  make sure siscone points to a tag, not trunk
@@ -36,11 +39,12 @@ X.Y.Z  within zsh, in the examples directory, do
 X.Y.Z  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
 
+X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
+
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
 X.Y.Z  rerun the nightly check
-X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk
 
 X.Y.Z  make distcheck; record the md5sum here (and revision number)
 X.Y.Z  generate and release fjcore and note its md5sum

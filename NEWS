@@ -2,6 +2,15 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
+Summary of changes from v3.1.0 -> v3.1.1: 2015-01-06
+================================================================
+This is a bug-fix release. Main changes:
+
+* fix to area support for Filter with Cambridge/Aachen jets and subjets
+* GridMedianBackgroundEstimator has new constructor and RectangularGrid as public base
+* added virtual destructor to TilingBase class
+
+================================================================
 Summary of changes from v3.0.6 -> v3.1.0: 2014-09-30
 ================================================================
 * Significant speed improvements (x1.5-10) for large N (few thousand-10^5)
