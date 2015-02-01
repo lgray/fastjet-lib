@@ -47,7 +47,7 @@ X.Y.Z  make sure it's committed (before distcheck; so that all files
 X.Y.Z  rerun the nightly check
 
 X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate and release fjcore and note its md5sum
+X.Y.Z  generate and release fjcore and note its md5sum [check the copyright date in the preamble]
        cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
 
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
