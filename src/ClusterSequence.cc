@@ -371,8 +371,8 @@ void ClusterSequence::_initialise_and_run_no_decant () {
     tiling.run();
     _plugin_activated = false;
 
-#ifndef __FJCORE__
   } else if (_strategy == N2MHTLazy9AntiKtSeparateGhosts) {
+#ifndef __FJCORE__
     // attempt to use an external tiling routine -- it manipulates
     // the CS history via the plugin mechanism
     _plugin_activated = true;
