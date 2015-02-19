@@ -1,3 +1,25 @@
+2015-02-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence.cc (_add_step_to_history):
+	thrown an InternalError if we're trying to cluster a particle that
+	has previsouly been clustered
+
+	* include/fastjet/Error.hh (InternalError):
+	Added an InternalError class that will be thrown in critical
+	internal errors that we still want to be catchable by end-users
+
+	* src/LazyTiling9SeparateGhosts.cc:
+	* src/LazyTiling9Alt.cc:
+	* src/LazyTiling25.cc:
+	* src/LazyTiling9.cc:
+	(_add_untagged_neighbours_to_tile_union_using_max_info): added a
+	margin of security in the comparison of "distance_to_tile" with
+	"max_NN_dist" when listing tiles need to be browsed for points to
+	update (because their current NN is one of the particle(s) that
+	just clustered). This prevents missed updates due to rounding
+	errors. [Fixing the cause of the bug reported by Jochen Olt on
+	February 12]
+
 2015-02-18  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * src/ClusterSequence.cc

@@ -1470,9 +1470,24 @@ void ClusterSequence::_add_step_to_history (
   int local_step = _history.size()-1;
   assert(local_step == step_number);
 
+  // sanity check: make sure the particles have not already been recombined
+  //
+  // Note that good practice would make this an assert (since this is
+  // a serious internal issue). However, we decided to throw an
+  // InternalError so that the end user can decide to catch it and
+  // retry the clustering with a different strategy.
+
   assert(parent1 >= 0);
+  if (_history[parent1].child != Invalid){
+    throw InternalError("trying to recomine an object that has previsously been recombined");
+  }
   _history[parent1].child = local_step;
-  if (parent2 >= 0) {_history[parent2].child = local_step;}
+  if (parent2 >= 0) {
+    if (_history[parent2].child != Invalid){
+      throw InternalError("trying to recomine an object that has previsously been recombined");
+    }
+    _history[parent2].child = local_step;
+  }
 
   // get cross-referencing right from PseudoJets
   if (jetp_index != Invalid) {
@@ -1655,6 +1670,7 @@ void ClusterSequence::_do_ij_recombination_step(
 
   _add_step_to_history(newstep_k, min(hist_i, hist_j), max(hist_i,hist_j),
 		       newjet_k, dij);
+
 
 }
 
