@@ -1,3 +1,16 @@
+2015-02-20  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Error.hh:
+	fixed a harmless gcc -Wshadow warning in TnternalError
+
+	* include/fastjet/internal/LazyTiling9Alt.hh:
+	* src/LazyTiling9SeparateGhosts.cc:
+	* src/LazyTiling9Alt.cc:
+	* src/LazyTiling25.cc:
+	* src/LazyTiling9.cc:
+	replaced the C preprocessor symbol by a C++ const (cleaner and
+	inside the fastjet namespace)
+
 2015-02-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/ClusterSequence.cc (_add_step_to_history):

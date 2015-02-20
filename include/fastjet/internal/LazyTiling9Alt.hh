@@ -63,12 +63,12 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// to browse for updateds, to add a margin of security close to the
 /// edges of the cell, i.e. instead of updating only tiles for which
 /// distance<=max_NN_dist, we will update tiles for which
-/// distance<=max_NN_dist+TILE_EDGE_SECURITY_MARGIN.
+/// distance<=max_NN_dist+tile_edge_security_margin.
 ///
 /// Note that this does not need to be done when computing nearest
 /// neighbours [rounding errors are tolerated there] but it is
 /// critical when tracking points that have to be updated.
-#define FASTJET_TILE_EDGE_SECURITY_MARGIN  1.0e-7
+const double tile_edge_security_margin=1.0e-7;
 
 /// structure analogous to BriefJet, but with the extra information
 /// needed for dealing with tiles

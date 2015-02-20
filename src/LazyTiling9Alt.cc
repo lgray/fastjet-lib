@@ -320,7 +320,7 @@ inline void LazyTiling9Alt::_add_untagged_neighbours_to_tile_union_using_max_inf
     if ((near_tile->first)->tagged) continue;
     // here we are not allowed to miss a tile due to some rounding
     // error. We therefore allow for a margin of security
-    double dist = (tile.*(near_tile->second))(jet) - FASTJET_TILE_EDGE_SECURITY_MARGIN;
+    double dist = (tile.*(near_tile->second))(jet) - tile_edge_security_margin;
     // cout << "      max info looked at tile " << *near_tile - &_tiles[0] 
     // 	 << ", dist = " << dist << " " << (*near_tile)->max_NN_dist
     // 	 << endl;
