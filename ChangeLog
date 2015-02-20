@@ -8,6 +8,7 @@
 	Added an InternalError class that will be thrown in critical
 	internal errors that we still want to be catchable by end-users
 
+	* include/fastjet/internal/LazyTiling9Alt.hh:
 	* src/LazyTiling9SeparateGhosts.cc:
 	* src/LazyTiling9Alt.cc:
 	* src/LazyTiling25.cc:
