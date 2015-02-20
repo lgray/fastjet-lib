@@ -39,6 +39,10 @@
 #
 #  -bkgds            run background estimations
 #
+#  -fjcore           uses fastjet_timing_plugins_fjcore, a version of 
+#                    fastjet_timing_plugins built with fjcore rather than the 
+#                    full fastjet 
+#
 # Full (non-md5) results of a 1000 event run are to be found in
 # the (non svn) directory
 #
@@ -123,8 +127,12 @@ while ($arg = shift @ARGV) {
   elsif ($arg eq "-areas"   ) {$areas   = 1;}
   elsif ($arg eq "-bkgds"   ) {$bkgds   = 1; $areas=0;} # bkgd superseeds areas
   elsif ($arg eq "-strat" || $arg eq "-strategy")    {$defstrat = shift @ARGV;}
+  elsif ($arg eq "-fjcore" )  {$fjcore="_fjcore"; }
   else  {die "unrecognized argument $arg";}
 }
+
+# set the executable name
+&setExecutable;
 
 
 # other settings
@@ -360,18 +368,7 @@ sub setDefaults {
       "antikt" => "-bkgd -bkgd:gridmedian"
       );
 
-  # find out which executable to use based on what's locally
-  # available, and failing that based on where we are
-  if (-x "fastjet_timing_plugins") {
-    $execName = getcwd."/fastjet_timing_plugins"
-  } elsif (-x "example/fastjet_timing_plugins") {
-    $execName = getcwd."/example/fastjet_timing_plugins"
-  } else {
-    $execName  =  getcwd."/$0";
-    $execName  =~ s/regression-tests.*//;
-    $execName .=  "example/fastjet_timing_plugins";
-  }
-  print "Using $execName\n\n";
+  $fjcore="";
 
   $defstrat = "";
 
@@ -388,7 +385,21 @@ sub setDefaults {
 
 }
 
-
+#======================================================================
+sub setExecutable {
+  # find out which executable to use based on what's locally
+  # available, and failing that based on where we are
+  if (-x "fastjet_timing_plugins$fjcore") {
+    $execName = getcwd."/fastjet_timing_plugins$fjcore"
+  } elsif (-x "example/fastjet_timing_plugins$fjcore") {
+    $execName = getcwd."/example/fastjet_timing_plugins$fjcore"
+  } else {
+    $execName  =  getcwd."/$0";
+    $execName  =~ s/regression-tests.*//;
+    $execName .=  "example/fastjet_timing_plugins$fjcore";
+  }
+  print "Using $execName\n\n";
+}
 
 #======================================================================
 sub setRefResults {

@@ -1,3 +1,27 @@
+2015-02-20  Matteo Cacciari <cacciari@lpthe.jussieu.fr
+
+        example/fastjet_timing_plugins.cc
+	regression-tests/test-all-algs.pl
+	
+	Modified fastjet_timing_plugins.cc so that it can be compiled with
+	fjcore using something like
+
+        g++ -D__FJCORE__ fastjet_timing_plugins_fjcore.cc \
+	../scripts/fjcore-3.2.0-devel/fjcore.cc CmdLine.cc \
+	-I ../scripts/fjcore-3.2.0-devel/ -o fastjet_timing_plugins_fjcore
+
+        Modified test-all-algs.pl so that it now takes a command line
+	option "-fjcore" that runs the version of fastjet_timing_plugins
+	compiled with fjcore instead of the one compiled with the 
+	full fastjet
+	
+	Not fully robust yet, e.g. running test-all-algs.pl using -areas
+	or -bkgds options together with -fjcore will break, because
+	the reading of some command-line options in fastjet_timing_plugins.cc
+	is so nested that excluding each and every one of them using __FJCORE__
+	guards would be a significant amount of work, and make the code
+	perhaps uselessly unreadable
+	
 2015-02-20  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/Error.hh:
