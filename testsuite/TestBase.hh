@@ -212,11 +212,9 @@ public:
     return PtYPhiM(pt, rap, phi, m);
   }
 
-
-  //----------------------------------------------------
-  vector<PseudoJet> default_event() const {
-    string file="../example/data/single-event.dat";
-    ifstream istr(file.c_str());
+  /// returns the event corresponding to the given filename
+  vector<PseudoJet> get_event(const string & filename) const {
+    ifstream istr(filename.c_str());
     double px, py , pz, E;
     vector<PseudoJet> input_particles;
     while (istr >> px >> py >> pz >> E) {
@@ -226,6 +224,11 @@ public:
       input_particles.back().set_user_index(input_particles.size()-1);
     }
     return input_particles;
+  }
+  
+  //----------------------------------------------------
+  vector<PseudoJet> default_event() const {
+    return get_event("../example/data/single-event.dat");
   }
 
 protected:
@@ -250,6 +253,16 @@ protected:
     Error::set_print_errors(true);		\
   }
 
+
+#define VERIFY_RUNS(CODE, MSG) {          \
+  bool check = true;                      \
+  try {                                   \
+    CODE ;                                \
+  } catch (const fastjet::Error & err) {  \
+    check = false;                        \
+  }                                       \
+  verify_equal(check, true, MSG );	  \
+  }
 
 //FASTJET_END_NAMESPACE
 

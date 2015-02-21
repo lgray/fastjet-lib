@@ -9,6 +9,7 @@
 #include "TestGroomerAreas.hh"
 #include "TestRecombiners.hh"
 #include "TestGrids.hh"
+#include "TestSpecialEvents.hh"
 #include <iomanip>
 #include "CmdLine.hh"
 
@@ -17,7 +18,8 @@ int main(int argc, char** argv) {
 
   bool verbose = cmdline.present("-verbose");
   string only = cmdline.value<string>("-only", "");
-
+  assert(cmdline.all_options_used());
+  
   // simply force the banner to appear at the beginning
   vector<PseudoJet> event;
   event.push_back(PtYPhiM(1.0,0.0,0.0));
@@ -34,6 +36,7 @@ int main(int argc, char** argv) {
   tests.push_back(new TestGroomerAreas());
   tests.push_back(new TestRecombiners());
   tests.push_back(new TestGrids());
+  tests.push_back(new TestSpecialEvents());
   //tests.push_back(new TestGroomerRecombiners()); not for now -- it's empty
 
   bool all_pass = true;

@@ -1,3 +1,25 @@
+2015-02-21  Gavin Salam  <gavin.salam@cern.ch>
+
+	* testsuite/run_tests.cc:
+	* testsuite/TestSpecialEvents.hh: *** ADDED ***
+	* testsuite/special-events/2015-02-infinite-loop-simplified.txt: *** ADDED ***
+	added class for testing special events (e.g. events known to have
+	caused problems in older FJ versions, so that we don't run the
+	risk of the same identical issue reappearing).
+
+	Also added the event from the 2015-02-infinite-loop issue and
+	checked that the test "fails" if we remove the fix for the issue.
+
+	And added check in run_tests.cc that all command-line options have
+	been used.
+
+	* testsuite/TestBase.hh:
+	added VERIFY_RUNS as a check (with graceful catch) that something
+	runs rather than throws.
+
+	* testsuite/mkmk: *** ADDED ***
+	to generate Makefile automatically (requires Gavin's mkcxx.pl)
+
 2015-02-20  Matteo Cacciari <cacciari@lpthe.jussieu.fr
 
         example/fastjet_timing_plugins.cc
