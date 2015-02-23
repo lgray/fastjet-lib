@@ -1035,9 +1035,17 @@ template <class J> inline void ClusterSequence::_bj_set_jetinfo(
 //----------------------------------------------------------------------
 template <class J> inline double ClusterSequence::_bj_dist(
                 const J * const jetA, const J * const jetB) const {
+  //#define FASTJET_NEW_DELTA_PHI
+#ifndef FASTJET_NEW_DELTA_PHI
+  //GPS+MC old version of Delta phi calculation
   double dphi = std::abs(jetA->phi - jetB->phi);
   double deta = (jetA->eta - jetB->eta);
   if (dphi > pi) {dphi = twopi - dphi;}
+#else 
+  //GPS+MC testing for 2015-02-faster-deltaR2
+  double dphi = pi-std::abs(pi-std::abs(jetA->phi - jetB->phi));
+  double deta = (jetA->eta - jetB->eta);
+#endif 
   return dphi*dphi + deta*deta;
 }
 

@@ -1,3 +1,12 @@
+2015-02-23  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* include/fastjet/ClusterSequence.hh (_bj_dist):
+	added (possibly temporary) code for testing 2015-02-faster-deltaR2
+	issue, with a define FASTJET_NEW_DELTA_PHI, which determines
+	whether to use a new delta phi calculation suggested by Keith
+	Pedersen. We are trying to establish if it brings significant
+	improvements. 
+	
 2015-02-21  Gavin Salam  <gavin.salam@cern.ch>
 
 	* testsuite/run_tests.cc:
