@@ -1,3 +1,9 @@
+2015-02-25  Gavin Salam  <gavin.salam@cern.ch>
+
+	* testsuite/TestSpecialEvents.hh:
+	* testsuite/special-events/2015-02-out-of-bounds-reduced.txt: *** ADDED ***
+	added a test to check the 2015-02-out-of-bounds issue
+
 2015-02-23  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* include/fastjet/ClusterSequence.hh (_bj_dist):

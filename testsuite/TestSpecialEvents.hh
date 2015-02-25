@@ -18,14 +18,15 @@ class TestSpecialEvents : public TestBase {
     JetDefinition jd;
 
     string dir = "special-events/";
-
+    string filename;
+    
     //----------------------------------------------------------------------
     // tests related to 2015-02-infinite-loop issue
     //
     // (despite name, infinite loop should no longer occur; wrong
     // reclustering of already-clustered particle should instead be
     // caught & throws InternalError)
-    string filename = "2015-02-infinite-loop-simplified.txt";
+    filename = "2015-02-infinite-loop-simplified.txt";
     event = get_event(dir+filename);
 
     jd = JetDefinition(fastjet::cambridge_algorithm, 0.8, N2MHTLazy25);
@@ -36,6 +37,14 @@ class TestSpecialEvents : public TestBase {
     VERIFY_RUNS(ClusterSequence cs(event,jd), "special event: "+filename+" with CA04 Lazy9Alt");
     jd = JetDefinition(fastjet::cambridge_algorithm, 0.4, N2MHTLazy9AntiKtSeparateGhosts);
     VERIFY_RUNS(ClusterSequence cs(event,jd), "special event: "+filename+" with CA04 Lazy9SeparateGhosts");
+
+    //----------------------------------------------------------------------
+    // tests related to 2015-02-out-of-bounds issue
+    filename = "2015-02-out-of-bounds-reduced.txt";
+    event = get_event(dir+filename);
+    jd = JetDefinition(fastjet::antikt_algorithm, 0.4, N2MHTLazy9);
+    VERIFY_RUNS(ClusterSequence cs(event,jd), "special event: "+filename+" with AK04 Lazy9");
+
 
     
     return _pass_test;
