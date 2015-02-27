@@ -1,3 +1,14 @@
+2015-02-27  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* scripts/mkfjcore.sh:
+	directory used to create fjcore now gets removed
+
+	* regression-tests/nightly-check.pl:
+	- exchanged order of make dist and mkfjcore
+	- fjcore tarball now left in the main directory and extracted each
+	  time to $tmpDir
+	- make check test adapted to also handle newer autotools output
+
 2015-02-27  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
         * scripts/mkfjcore.sh

@@ -130,7 +130,7 @@ push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-s
 push @setups, ["","--disable-static --enable-demangling", "", 10, ""]; # locally
 
 # minimal checks of fjcore
-push @setups, ["","", "", 1000, "-fjcore"]; # locally
+push @setups, ["","", "", 10, "-fjcore"]; # locally
 push @setups, ["karnak","CC=cc CXX=c++", "", 10, "-fjcore"]; # remotely on karnak
 
 
@@ -249,18 +249,6 @@ MAIN: while (1) {
     $summary .= "SUMMARY: $date, svn [.../$svnShortURL] revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
 
 
-    #--- extract fjcore ------------------------------------------------------
-    &message("* extracting fjcore");
-    $makefjcore=`pushd scripts; ./mkfjcore.sh $tmpDir 2>&1; popd`;
-    if ($makefjcore =~ / error[: ]/i || $makefjcore !~ /making (.*.tar.gz) tarball/) {
-      &message("\n");
-      &fail ("extracting fjcore", $makefjcore);
-    } else {
-      $tarNameCore = $1;
-      &message(" -> $tarNameCore\n");
-    }
-    
-
     #--- make dist ------------------------------------------------------
     &message("* running make dist");
     $makedist=`make dist 2>&1`;
@@ -271,6 +259,19 @@ MAIN: while (1) {
       $tarName = $1;
       &message(" -> $tarName\n");
     }
+
+    #--- extract fjcore ------------------------------------------------------
+    &message("* extracting fjcore");
+    $makefjcore=`pushd scripts; ./mkfjcore.sh $tmpDir 2>&1; popd`;
+    if ($makefjcore =~ / error[: ]/i || $makefjcore !~ /making (.*.tar.gz) tarball/) {
+      &message("\n");
+      &fail ("extracting fjcore", $makefjcore);
+    } else {
+      $tarNameCore = $1;
+      &message(" Created $tarNameCore and moving it to $origDir/\n");
+      system("mv $tmpDir/$tarNameCore $origDir/");
+    }
+    
 
 
     # now run the rest, either remotely, or from setups array, or from a setup file
@@ -450,8 +451,8 @@ sub build_and_check($$$$) {
 
   #--- clean up from previous invocation --
   if (-e "build/") {
-    &message("\n* removing everything (but the fjcore dist) from the tmp dir\n");
-    system("rm -rf build inst fastjet*");
+    &message("\n* removing everything from the tmp dir\n");
+    system("rm -rf *");
   }
 
   # some detailed info about the system
@@ -471,6 +472,7 @@ sub build_and_check($$$$) {
   if ( $testargs =~ /fjcore/ ) {
     
     #--- compile externally fastjet_timing_plugins with fjcore -------------------
+    system("tar zxf $origDir/$tarNameCore");
     ($distDir=$tarName) =~ s/.tar.gz//;
     ($distDirCore=$tarNameCore) =~ s/.tar.gz//;
     &message("* compiling fastjet_timing_plugins with fjcore\n");
@@ -514,7 +516,19 @@ sub build_and_check($$$$) {
     &message("* running make check\n");
     $makecheck=`make check 2>&1`;
     if ($makecheck =~ /error[: ]/i || $?) {
-      &fail("make check",$makecheck);
+      # on older autotools presence of word "error" means there's an error!
+      # On more modern autotools make check gives different
+      # output (always containing lines such as "Error: 0")
+      if ($makecheck =~ /TOTAL: *([0-9]+)/i) {
+        $expectedTotal= $1;
+        $npass = 0;
+        if ($makecheck =~ /PASS: *([0-9]+)/i) {$npass = $1;}
+        if ($npass != $expectedTotal) {
+          &fail("make check",$makecheck);
+        }
+      } else {
+        &fail("make check",$makecheck);
+      }
     }
   
     #--- run make install -------------------

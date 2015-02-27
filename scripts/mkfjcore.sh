@@ -329,5 +329,5 @@ cd ..
 # now make a tarball
 echo "Now making fjcore-$version.tar.gz tarball"
 tar zcvf fjcore-$version.tar.gz fjcore-$version
-
+rm -rf fjcore-$version
 
