@@ -2,13 +2,23 @@
 #
 # Script to create fjcore from the current (configured) version
 # of the code
+# It must be run from the scripts/ directory inside the main fastjet directory
 
-fjdir=..
+scriptsdir=$PWD
+fjdir=$PWD/..
 version=$(grep "AC_INIT" $fjdir/configure.ac | sed 's/^AC_INIT(\[.*\],\[//;s/\])$//')
 
+# directory where to create the fjcore directory and the tarball at 
+# the end of the extraction process, passed as first argument from
+# command line ($1). This directory will have been created by something else.
+# An empty argument does nothing, and the fjcore directory is created in scripts/
+if [[ ! x$1 = 'x' ]]; then
+   cd $1
+fi
+
+# create fjcore directory, move into it
 mkdir fjcore-$version || { echo "A previous fjcore-$version exists. Exiting."; exit 1; }
 cd fjcore-$version
-fjdir=../$fjdir
 
 internal_headers="base.hh\
   numconsts.hh\
@@ -258,11 +268,11 @@ done
 # Also put it into a README file
 echo; echo "Including preamble with appropriate version number"
 for i in cc hh; do
-  cat ../preamble-fjcore.txt fjcore.$i > tmp$$
+  cat $scriptsdir/preamble-fjcore.txt fjcore.$i > tmp$$
   sed "s/--FJVERSION--/$version/" tmp$$ > fjcore.$i
 done
 rm tmp$$
-sed "s/--FJVERSION--/$version/" ../preamble-fjcore.txt > README
+sed "s/--FJVERSION--/$version/" $scriptsdir/preamble-fjcore.txt > README
 
 # now testing the final product by compiling the examples
 echo "======================================================================"
@@ -290,7 +300,7 @@ for idx in 01 02 04 05 08 09 10; do
     if [[ $idx == "01" ]]; then
       echo "The banner is "
       echo
-      ./${fname%.cc} < ../../example/data/single-event.dat | grep '^#'
+      ./${fname%.cc} < $fjdir/example/data/single-event.dat | grep '^#'
       echo
     fi
     if [ $idx -ne "01" ]; then # keep 01-basic example, to distribute
@@ -306,10 +316,10 @@ rm -Rf src include Makefile *.o
 rm -Rf 01-basic # left over from rm above
 
 # Add a few items needed for distribution of fjcore package
-cp -p ../../example/data/single-event.dat . # copy event file, for distribution
+cp -p $fjdir/example/data/single-event.dat . # copy event file, for distribution
 sed 's/data\///' 01-basic.cc > tmp$$ # change location of event file in usage
 mv tmp$$ 01-basic.cc
-cp -p ../Makefile-fjcore.txt Makefile
+cp -p $scriptsdir/Makefile-fjcore.txt Makefile
 
 echo "======================================================================"
 echo "fjcore-${version}/fjcore.{hh,cc} are now ready"

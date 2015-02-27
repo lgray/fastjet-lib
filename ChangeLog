@@ -1,3 +1,15 @@
+2015-02-27  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+        * scripts/mkfjcore.sh
+	added the option to extract fjcore into any given directory rather
+	that only as a subdirectory of scripts. Useful when running mkfjcore.sh
+	in the nightly checks script.
+	
+	* regression-tests/nightly-check.pl
+	added the extraction (and test) of fjcore, and the running of a 
+	version of fastjet_timing_plugins compiled with fjcore. Also added
+	a couple of basic fjcore tests to setups list.
+
 2015-02-25  Gavin Salam  <gavin.salam@cern.ch>
 
 	* testsuite/TestSpecialEvents.hh:

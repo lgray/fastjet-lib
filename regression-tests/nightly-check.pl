@@ -129,6 +129,10 @@ push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-s
 # minimal check that demangling code doesn't break compilation
 push @setups, ["","--disable-static --enable-demangling", "", 10, ""]; # locally
 
+# minimal checks of fjcore
+push @setups, ["","", "", 1000, "-fjcore"]; # locally
+push @setups, ["karnak","CC=cc CXX=c++", "", 10, "-fjcore"]; # remotely on karnak
+
 
 # GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
 #push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
@@ -160,6 +164,7 @@ while ($arg = shift @ARGV) {
   # on remote hosts
   elsif ($arg eq "-remote")    {$tmpDir  = shift @ARGV; $remote=1;}
   elsif ($arg eq "-tar")       {$tarName = shift @ARGV;}
+  elsif ($arg eq "-tarcore")   {$tarNameCore = shift @ARGV;}
   elsif ($arg eq "-orig")      {$origDir = shift @ARGV;}
   else {die "Unrecognized argument: $arg";}
 }
@@ -243,6 +248,19 @@ MAIN: while (1) {
     $date=`date`; chomp($date);
     $summary .= "SUMMARY: $date, svn [.../$svnShortURL] revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
 
+
+    #--- extract fjcore ------------------------------------------------------
+    &message("* extracting fjcore");
+    $makefjcore=`pushd scripts; ./mkfjcore.sh $tmpDir 2>&1; popd`;
+    if ($makefjcore =~ / error[: ]/i || $makefjcore !~ /making (.*.tar.gz) tarball/) {
+      &message("\n");
+      &fail ("extracting fjcore", $makefjcore);
+    } else {
+      $tarNameCore = $1;
+      &message(" -> $tarNameCore\n");
+    }
+    
+
     #--- make dist ------------------------------------------------------
     &message("* running make dist");
     $makedist=`make dist 2>&1`;
@@ -253,6 +271,7 @@ MAIN: while (1) {
       $tarName = $1;
       &message(" -> $tarName\n");
     }
+
 
     # now run the rest, either remotely, or from setups array, or from a setup file
     for ($i = 0; $i <= $#setups; $i++) {
@@ -267,7 +286,7 @@ MAIN: while (1) {
         close SETUP;
 
         # connect to remote host and run there
-        $ssh=`ssh $setups[$i][0] $origDir/$command -remote $tmpDir -orig $origDir -tar $tarName 2>&1`;
+        $ssh=`ssh $setups[$i][0] $origDir/$command -remote $tmpDir -orig $origDir -tar $tarName -tarcore $tarNameCore 2>&1`;
         $ssh =~ s/^.*in the future\n//mg;   # because karnak's time is wrong
         $ssh =~ s/^.*slocate.db.*\n//mg;    # because zetes has out-of-date locate
         $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
@@ -423,6 +442,7 @@ sub build_and_check($$$$) {
   $summary .= "Running on $host: $shortuname, $compiler
    config: $config
    tests:  link($link), nev($nev)
+   args:   $testargs
 ";
 
 
@@ -430,8 +450,8 @@ sub build_and_check($$$$) {
 
   #--- clean up from previous invocation --
   if (-e "build/") {
-    &message("\n* removing everything from the tmp dir\n");
-    system("rm -rf *");
+    &message("\n* removing everything (but the fjcore dist) from the tmp dir\n");
+    system("rm -rf build inst fastjet*");
   }
 
   # some detailed info about the system
@@ -447,58 +467,74 @@ sub build_and_check($$$$) {
   if ($?) {
     &fail("untar",$untar);
   }
-
-  #--- configure -----------------
-  system("mkdir build/");
-  chdir "build";
-  &message("* running configure $config --prefix=$tmpDir/inst\n");
-  ($distDir=$tarName) =~ s/.tar.gz//;
-  $configOut=`../$distDir/configure $config --prefix=$tmpDir/inst 2>&1`;
-  if ($configOut =~ /error[: ]/i || $?) {
-    &fail("configure",$configOut);
-  }
-
-  # figure out the f77 compiler too
-  $fcompiler="";
-  if (`cat Makefile` =~ /^F(77|C) = ([^\s]+)$/m) {
-    $fcompiler = $2;
-    $fcompiler .= ", ".`$fcompiler --version 2>&1 | head -1`;
-    chomp $fcompiler;
-  }
-  &message("* fortran compiler: $fcompiler\n");
-
-  #--- run make -------------------
-  &message("* running make\n");
-  $make=`make -j2 2>&1`;
-  # be careful about how we check for errors in case we trigger
-  # intel warnings
-  if ($make =~ /^[Ee]rror[: ]/ || $make =~ / [Ee]rror[: ]/ || $?) {
-    &fail("make",$make);
-  }
-
-  #--- run make check -------------------
-  &message("* running make check\n");
-  $makecheck=`make check 2>&1`;
-  if ($makecheck =~ /error[: ]/i || $?) {
-    &fail("make check",$makecheck);
-  }
   
-  #--- run make install -------------------
-  &message("* running make install\n");
-  $makeinstall=`make install 2>&1`;
-  if ($makeinstall =~ /error[: ]/i || $?) {
-    &fail("make install",$makeinstall);
-  }
+  if ( $testargs =~ /fjcore/ ) {
+    
+    #--- compile externally fastjet_timing_plugins with fjcore -------------------
+    ($distDir=$tarName) =~ s/.tar.gz//;
+    ($distDirCore=$tarNameCore) =~ s/.tar.gz//;
+    &message("* compiling fastjet_timing_plugins with fjcore\n");
+    &message("* command is: $cxx -D__FJCORE__ -I$distDir/example -I$distDirCore $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  $distDirCore/fjcore.cc -o fastjet_timing_plugins_fjcore 2>&1\n");
+    $compile=`$cxx -D__FJCORE__ -I$distDir/example -I$distDirCore $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  $distDirCore/fjcore.cc -o fastjet_timing_plugins_fjcore 2>&1`;
+    if ($compile =~ /error[: ]/i || $?) {
+      &fail("external compilation with fjcore",$compile);
+    }
 
-  #--- do external compilation -------------------
-  chdir "../";
-  &message("* compiling fastjet_timing_plugins externally (with $cxx, fastjet-config ... $link)\n");
-  &message("* command is: $cxx $linkgcc -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $linkfj\` -o fastjet_timing_plugins 2>&1");
-  $compile=`$cxx $linkgcc -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $linkfj\` -o fastjet_timing_plugins 2>&1`;
-  if ($compile =~ /error[: ]/i || $?) {
-    &fail("external compilation",$compile);
-  }
+  } else {
 
+    #--- configure -----------------
+    system("mkdir build/");
+    chdir "build";
+    &message("* running configure $config --prefix=$tmpDir/inst\n");
+    ($distDir=$tarName) =~ s/.tar.gz//;
+    $configOut=`../$distDir/configure $config --prefix=$tmpDir/inst 2>&1`;
+    if ($configOut =~ /error[: ]/i || $?) {
+      &fail("configure",$configOut);
+    }
+
+    # figure out the f77 compiler too
+    $fcompiler="";
+    if (`cat Makefile` =~ /^F(77|C) = ([^\s]+)$/m) {
+      $fcompiler = $2;
+      $fcompiler .= ", ".`$fcompiler --version 2>&1 | head -1`;
+      chomp $fcompiler;
+    }
+    &message("* fortran compiler: $fcompiler\n");
+
+    #--- run make -------------------
+    &message("* running make\n");
+    $make=`make -j2 2>&1`;
+    # be careful about how we check for errors in case we trigger
+    # intel warnings
+    if ($make =~ /^[Ee]rror[: ]/ || $make =~ / [Ee]rror[: ]/ || $?) {
+      &fail("make",$make);
+    }
+
+    #--- run make check -------------------
+    &message("* running make check\n");
+    $makecheck=`make check 2>&1`;
+    if ($makecheck =~ /error[: ]/i || $?) {
+      &fail("make check",$makecheck);
+    }
+  
+    #--- run make install -------------------
+    &message("* running make install\n");
+    $makeinstall=`make install 2>&1`;
+    if ($makeinstall =~ /error[: ]/i || $?) {
+      &fail("make install",$makeinstall);
+    }
+
+    #--- do external compilation -------------------
+    chdir "../";
+    &message("* compiling fastjet_timing_plugins externally (with $cxx, fastjet-config ... $link)\n");
+    &message("* command is: $cxx $linkgcc -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $linkfj\` -o fastjet_timing_plugins 2>&1\n");
+    $compile=`$cxx $linkgcc -I$distDir/example $distDir/example/CmdLine.cc $distDir/example/fastjet_timing_plugins.cc  \`inst/bin/fastjet-config --cxxflags --libs --plugins $linkfj\` -o fastjet_timing_plugins 2>&1`;
+    if ($compile =~ /error[: ]/i || $?) {
+      &fail("external compilation",$compile);
+    }
+
+  } # end if on fjcore
+  
   #--- do test-all-algs -------------------
   &message("* testing all algs\n");
   # use the original test-all-algs.pl prog, since it isn't distributed
