@@ -130,7 +130,7 @@ push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-s
 push @setups, ["","--disable-static --enable-demangling", "", 10, ""]; # locally
 
 # minimal checks of fjcore
-push @setups, ["","", "", 10, "-fjcore"]; # locally
+push @setups, ["","", "", 1000, "-fjcore"]; # locally
 push @setups, ["karnak","CC=cc CXX=c++", "", 10, "-fjcore"]; # remotely on karnak
 
 
