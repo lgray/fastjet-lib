@@ -1,3 +1,8 @@
+2015-03-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/Filter.hh:
+	removed a harmless "shadow" warning in set_subtractor()
+
 2015-02-27  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* scripts/mkfjcore.sh:
