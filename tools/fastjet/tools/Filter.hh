@@ -141,7 +141,7 @@ public:
 
   /// Set a subtractor that is applied to all individual subjets before
   /// deciding which ones to keep. It takes precedence over a non-zero rho.
-  void set_subtractor(const FunctionOfPseudoJet<PseudoJet> * subtractor) {_subtractor = subtractor;}
+  void set_subtractor(const FunctionOfPseudoJet<PseudoJet> * subtractor_in) {_subtractor = subtractor_in;}
 
   /// Set a subtractor that is applied to all individual subjets before
   /// deciding which ones to keep. It takes precedence over a non-zero rho.
