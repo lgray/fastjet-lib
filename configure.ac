@@ -137,6 +137,37 @@ if [[ "$ENABLE_EXTRA_WARNINGS_FLAG" == "yes" ]] ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" -ansi -pedantic -Wextra -Wshadow "
 fi
 
+
+dnl check if one wants to enable c++11 features (required e.g. for thread-safety)
+dnl
+dnl This defines a FASTJET_HAVE_CXX11_FEATURES in fastjet/config.h
+AC_ARG_ENABLE(c++11-features,
+	[  --enable-c++11-features Turn on C++11 features (needed e.g. for thread-safety) [default=no]],
+	[ENABLE_CXX11FEATURES_FLAG="$enableval"],
+	[ENABLE_CXX11FEATURES_FLAG="no"])
+if [[ "$ENABLE_CXX11FEATURES_FLAG" == "yes" ]] ; then
+   AC_DEFINE(HAVE_CXX11_FEATURES, [], [defined if C++11 features have been enabled])
+   AC_MSG_WARN([C++11 features may require additional compiler arguments, these have to be specified by the user])
+   # one could alternately try to see what compiler flag(s) has to be included
+   # although that can be fairly heavy so better be moved in an ac file 
+   #
+   # e.g. for g++ we could try
+   #   AC_MSG_CHECKING([if $CXX supports -std=c++11 flag])
+   #   SAVE_CXXFLAGS="$CXXFLAGS"
+   #   CXXFLAGS="-std=c++11"
+   #   AC_LANG_PUSH(C++)
+   #   AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main(void){ return 0;}])],
+   #       [ac_cxx_eleven_ok=yes],[ac_cxx_eleven_ok=no])
+   #   AC_LANG_POP(C++)
+   #   CXXFLAGS="$SAVE_CXXFLAGS"
+   #   AC_MSG_RESULT([$ac_cxx_eleven_ok])
+   #   if [[ "x${ac_cxx_eleven_ok}" == "xyes" ]]; then
+   #      AM_CXXFLAGS=${AM_CXXFLAGS}" -std=c++11 "
+   #   fi
+fi
+
+
+
 dnl-------------------------------------------------------------------
 dnl deal with the choice of shared/static libs
 dnl-------------------------------------------------------------------
@@ -523,6 +554,7 @@ CONFIG_SUMMARY+="  Shared libraries           "${enable_shared}"\n"
 CONFIG_SUMMARY+="  Static libraries           "${enable_static}"\n"
 CONFIG_SUMMARY+="  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"
 CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
+CONFIG_SUMMARY+="  C++11 features             "${ENABLE_CXX11FEATURES_FLAG}"\n"
 AC_PLUGIN_SUMMARY([yes])
 CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
 AC_SUBST(CONFIG_SUMMARY)

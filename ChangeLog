@@ -1,3 +1,10 @@
+2015-04-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	added a --enable-cxx11-features argument to configure which in
+	turn defines a FASTJET_HAVE_CXX11_FEATURES pre-processor symbol in
+	fastjet/config.h
+
 2015-03-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Filter.hh:
