@@ -1,5 +1,15 @@
 2015-04-23  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/Makefile.am:
+	* include/fastjet/internal/cxx11helpers.hh:         *** ADDED ***
+	added a file containing helpers that would allow an easy
+	transition between no-CXX11 support and CXX11 support. It
+	currently introduces two classes:
+	 - FirstTimeTrigger: a class that will return true the first time
+	   its () operator is called, false afterwards.
+	 - AtomicCounter: a thread-safe counter when cxx11 features are
+	   on. Use step() to increment, () to get value.
+
 	* config.h.in:
 	added a HAVE_CXX11_FEATURES entry
 
@@ -10,7 +20,7 @@
 2015-04-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
-	added a --enable-cxx11-features argument to configure which in
+	added a --enable-c++11-features argument to configure which in
 	turn defines a FASTJET_HAVE_CXX11_FEATURES pre-processor symbol in
 	fastjet/config.h
 
