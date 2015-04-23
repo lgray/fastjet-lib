@@ -171,7 +171,7 @@ private:
   double _overlap_threshold ;
   SplitMergeScale _sm_scale ;
 
-  static bool _first_time;
+  static cxx11helpers::FirstTimeTrigger _first_time;
 
   /// print a banner for reference to the 3rd-party code
   void _print_banner(std::ostream *ostr) const;

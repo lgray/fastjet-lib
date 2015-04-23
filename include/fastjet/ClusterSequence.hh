@@ -48,6 +48,12 @@
 #include "fastjet/FunctionOfPseudoJet.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 
+#include "fastjet/config.h"
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+#include <atomic>
+#endif // FASTJET_HAVE_CXX11_FEATURES
+#include "fastjet/internal/cxx11helpers.hh"  // helpers to write code w&wo C++11 features
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
@@ -567,8 +573,11 @@ private:
   /// \cond internal_doc
 
   /// contains the actual stream to use for banners 
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  static std::atomic<std::ostream*> _fastjet_banner_ostr;
+#else
   static std::ostream * _fastjet_banner_ostr;
-
+#endif // FASTJET_HAVE_CXX11_FEATURES
   /// \endcond
 
 protected:
@@ -756,7 +765,7 @@ protected:
 
 
   /// will be set by default to be true for the first run
-  static bool _first_time;
+  static cxx11helpers::FirstTimeTrigger _first_time;
 
   /// manage warnings related to exclusive jets access
   static LimitedWarning _exclusive_warnings;

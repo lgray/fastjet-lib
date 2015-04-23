@@ -1,5 +1,49 @@
 2015-04-23  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/LimitedWarning.cc:
+	* include/fastjet/LimitedWarning.hh:
+	work towards thread-safety: _max_warn_default, _default_ostr,
+	_this_warning_summary as atomic.  Summary switched to use the
+	cxx11helpers::AtomicCounter which also provides access e.g. to
+	n_warn_so_far.
+
+	For warn() and summary() we use a lock (mutex)
+
+	* src/LazyTiling9SeparateGhosts.cc:
+	* include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
+	work towards thread-safety: ghost_pt2_threshold declared atomic
+
+	* src/Error.cc:
+	* include/fastjet/Error.hh:
+	work towards thread-safety: declared _print_errors,
+	_print_backtrace and _default_ostr as atomic.
+
+	* src/ClusterSequence.cc:
+	* include/fastjet/ClusterSequence.hh:
+	work towards thread-safety:
+	. declared _fastjet_banner_ostr as atomic
+	. declared _frist_time as cxx11helpers::FirstTimeTrigger
+
+	* plugins/TrackJet/TrackJetPlugin.cc:
+	* plugins/TrackJet/fastjet/TrackJetPlugin.hh:
+	* plugins/PxCone/PxConePlugin.cc:
+	* plugins/PxCone/fastjet/PxConePlugin.hh:
+	* plugins/D0RunIICone/D0RunIIConePlugin.cc:
+	* plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh:
+	* plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+	* plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
+	* plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh:
+	* plugins/CMSIterativeCone/CMSIterativeConePlugin.cc:
+	* plugins/CMSIterativeCone/fastjet/CMSIterativeConePlugin.hh:
+	* plugins/CDFCones/CDFMidPointPlugin.cc:
+	* plugins/CDFCones/fastjet/CDFMidPointPlugin.hh:
+	* plugins/CDFCones/CDFJetCluPlugin.cc:
+	* plugins/CDFCones/fastjet/CDFJetCluPlugin.hh:
+	* plugins/ATLASCone/ATLASConePlugin.cc :
+	* plugins/ATLASCone/fastjet/ATLASConePlugin.hh :
+
+	for the banner, declared _first_time as a cxx11helpers::FirstTimeTrigger
+
 	* include/fastjet/internal/Makefile.am:
 	* include/fastjet/internal/cxx11helpers.hh:         *** ADDED ***
 	added a file containing helpers that would allow an easy

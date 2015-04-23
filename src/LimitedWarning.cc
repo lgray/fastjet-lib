@@ -36,29 +36,72 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE
 
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+atomic<ostream *> LimitedWarning::_default_ostr{&cerr};
+atomic<int> LimitedWarning::_max_warn_default{5};
+std::mutex LimitedWarning::_global_warnings_summary_mutex;
+#else
 ostream * LimitedWarning::_default_ostr = &cerr;
-std::list< LimitedWarning::Summary > LimitedWarning::_global_warnings_summary;
 int LimitedWarning::_max_warn_default = 5;
+#endif // FASTJET_HAVE_CXX11_FEATURES
 
+std::list< LimitedWarning::Summary > LimitedWarning::_global_warnings_summary;
 
 // /// output a warning to ostr
 // void LimitedWarning::warn(const std::string & warning) {
 //   warn(warning, _default_ostr);
 // }
 
+/// the number of times so far that a warning has been registered
+/// with this instance of the class.
+int LimitedWarning::n_warn_so_far() const{
+  if (_this_warning_summary==0) return 0;
+  return (*_this_warning_summary).second;
+}
+
+
 void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
+  // update the summary
   if (_this_warning_summary == 0) {
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+    // Threadsafety note: 
+    //   here we need to lock _this_warning_summary to be sure that we
+    //   can quietly initialising things without taking the risk that
+    //   another thread "regenerates" the Summary entry at the same time
+    // 
+    // first acquire the mutex! 
+    // See e.g. http://baptiste-wicht.com/posts/2012/03/cp11-concurrency-tutorial-part-2-protect-shared-data.html
+    // for a quick intro.
+    std::lock_guard<std::mutex> guard(_global_warnings_summary_mutex);
+    // then make sure we still need to create things (in case another
+    // thread got us beaten (it's better to use the mutex as little as
+    // possible, hence the repetition of the text which might
+    // otherwise look stupid)
+    if (_this_warning_summary == 0) {
+      // prepare the information for the summary
+      _global_warnings_summary.push_back(Summary(warning, 0));
+      _this_warning_summary = & (_global_warnings_summary.back());
+    }
+    // the lock will automatically be released here
+#else  
     // prepare the information for the summary
     _global_warnings_summary.push_back(Summary(warning, 0));
     _this_warning_summary = & (_global_warnings_summary.back());
+#endif // FASTJET_HAVE_CXX11_FEATURES
   }
-  if (_n_warn_so_far < _max_warn) {
+
+
+  // maintain the count, but do not allow overflow
+  unsigned int count = (*_this_warning_summary).second.step();
+
+  // print the warning if we have not done it enough already
+  if ((_max_warn<0) || (count < (unsigned int)_max_warn)) {
     // prepare the warning within a string stream
     ostringstream warnstr;
     warnstr << "WARNING from FastJet: ";
     warnstr << warning;
-    _n_warn_so_far++;
-    if (_n_warn_so_far == _max_warn) warnstr << " (LAST SUCH WARNING)";
+    if ((_max_warn>0) && (count+1 == (unsigned int)_max_warn))
+      warnstr << " (LAST SUCH WARNING)";
     warnstr << std::endl;
     // arrange for the whole warning to be output in one go (that way
     // user can easily insert their own printout, e.g. event number
@@ -69,19 +112,26 @@ void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
     }
   }
 
-  // maintain the count, but do not allow overflow
-  if (_this_warning_summary->second < numeric_limits<unsigned>::max()) {
-    _this_warning_summary->second++;
-  }
 }
 
 //----------------------------------------------------------------------
 string LimitedWarning::summary() {
   ostringstream str;
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  {
+    // is the lock here really necessary. The only potential issue I
+    // see is if another thread adds a warning when the loop below
+    // calls it++ on the previous last element. Is there a simpler way
+    // to handle this?
+    std::lock_guard<std::mutex> guard(_global_warnings_summary_mutex);
+#endif
   for (list<Summary>::const_iterator it = _global_warnings_summary.begin();
        it != _global_warnings_summary.end(); it++) {
     str << it->second << " times: " << it->first << endl;
   }
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  }
+#endif
   return str.str();
 }
 
