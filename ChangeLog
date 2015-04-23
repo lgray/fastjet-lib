@@ -1,5 +1,48 @@
 2015-04-23  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/JetDefinition.hh:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/WrappedStructure.hh:
+	* src/PseudoJet.cc:
+	* src/ClusterSequence.cc:
+	* src/JetDefinition.cc:
+	* tools/JetMedianBackgroundEstimator.cc:
+	SharedPtr cast to bool does not need a ()! [somehow both seem to
+	work in our own implementation but std's implementation differs]
+	This has been changed in the following places;
+	 . _user_info in PseudoJet::user_info_ptr()
+	 . _structure in PseudoJet::has_structure_of()
+	 . _structure in PseudoJet::structure_of()
+	 . shared_recombiner in JetDefinition::set_recombiner()
+	 . _structure_shared_ptr in ~ClusterSequence()
+	 . _structure_shared_ptr in ClusterSequence::transfer_from_sequence()
+	 . _structure in PseudoJet::description()
+	 . _structure in PseudoJet::has_associated_cluster_sequence()
+	 . _structure in PseudoJet::has_valid_cluster_sequence()
+	 . _structure in PseudoJet::has_structure()
+	 . _structure in PseudoJet::structure()
+	 . _structure in PseudoJet::structure_non_const_ptr()
+	 . _structure in PseudoJet::validated_structure_ptr()
+	 . _structure in PseudoJet::has_constituents()
+	 . _structure in PseudoJet::has_exclusive_subjets()
+	 . _structure in PseudoJet::has_pieces()
+	 . _structure in WrappedStructure()
+	 . _shared_recombiner in etDefinition::set_recombination_scheme()
+
+	We have also removed the usage of the () operator to access the
+	pointer and moved to the standard use of get(). Occurences in
+	 . _structure_shared_ptr in ~ClusterSequence()
+	 . _structure_shared_ptr in ClusterSequence::transfer_from_sequence()
+	 . _structure in PseudoJet::description()
+	 . _structure in PseudoJet::structure()
+	 . _structure in PseudoJet::structure_non_const_ptr()
+	 . _structure in PseudoJet::validated_structure_ptr()
+	 . _csi in JetMedianBackgroundEstimator::set_jets()
+	 . _csi in JetMedianBackgroundEstimator::_compute()
+	 . _csi in JetMedianBackgroundEstimator::_check_csa_alive()
+	 . _csi in JetMedianBackgroundEstimator::_check_jet_alg_good_for_median()
+
+
 	* src/LimitedWarning.cc:
 	* include/fastjet/LimitedWarning.hh:
 	work towards thread-safety: _max_warn_default, _default_ostr,

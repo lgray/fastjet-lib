@@ -36,7 +36,7 @@
 
 // for testing purposes, the following define makes it possible
 // for our SharedPtr simply to be derived from the STL TR1 one.
-// #define __FASTJET_USETR1SHAREDPTR
+//#define __FASTJET_USETR1SHAREDPTR
 
 #ifdef __FASTJET_USETR1SHAREDPTR
 #include <tr1/memory>
@@ -70,12 +70,17 @@ public:
   SharedPtr() : std::tr1::shared_ptr<T>() {}
   SharedPtr(T * t) : std::tr1::shared_ptr<T>(t) {}
   SharedPtr(const SharedPtr<T> & t) : std::tr1::shared_ptr<T>(t) {}
-  // for some reason operator() doesn't get inherited
-  inline operator bool() const {return (this->get()!=NULL);}
-  /// return the pointer we're pointing to  
-  T* operator ()() const{
-    return this->get(); // automatically returns NULL when out-of-scope
-  }
+
+  // 2015-04-23: this does not belong to most standard implmentations
+  // (use get() instead), so we get rid of it. Note that it might be
+  // related to the "some reason" comment below.
+  //
+  // // for some reason operator() doesn't get inherited
+  // inline operator bool() const {return (this->get()!=NULL);}
+  // /// return the pointer we're pointing to  
+  // T* operator ()() const{
+  //   return this->get(); // automatically returns NULL when out-of-scope
+  // }
 };
 
 
@@ -209,12 +214,15 @@ public:
     reset(share);
     return *this;
   }
-  
-  /// return the pointer we're pointing to  
-  T* operator ()() const{
-    if (_ptr==NULL) return NULL;
-    return _ptr->get(); // automatically returns NULL when out-of-scope
-  }
+
+  // 2015-04-23: this does not belong to most standard implmentations
+  // (use get() instead), so we get rid of it
+  //
+  // /// return the pointer we're pointing to  
+  // T* operator ()() const{
+  //   if (_ptr==NULL) return NULL;
+  //   return _ptr->get(); // automatically returns NULL when out-of-scope
+  // }
   
   /// indirection, get a reference to the stored pointer
   ///

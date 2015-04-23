@@ -387,7 +387,7 @@ public:
   /// has been called). In such cases, using set_recombiner(const
   /// Recombiner *) may lead to memory corruption.
   void set_recombiner(const Recombiner * recomb) {
-    if (_shared_recombiner()) _shared_recombiner.reset(recomb);
+    if (_shared_recombiner) _shared_recombiner.reset(recomb);
     _recombiner = recomb;
     _default_recombiner = DefaultRecombiner(external_scheme);
   }
