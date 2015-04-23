@@ -1,5 +1,22 @@
 2015-04-23  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/JetDefinition.cc:
+	work towards thread-safety and usage of std::shared_ptr.
+	replaced a reset(shared_ptr) by an = shared_ptr which is also
+	supported by C11's shared_ptr
+
+	* src/ClusterSequence.cc:
+	disabled the usage of SharedPtr's set_count when CXX11 features are on.
+	AT THE MOMENT, CS SELF-DELETION IS BROKEN WITH CXX11FEATURES
+
+	* include/fastjet/SharedPtr.hh:
+	when c++11 features are enabled, use std::shared_ptr.
+	Notes:
+	- cxx11's shared pointer does not provide set_count so this
+	  imposes a bunch of modifications to self-deleting
+	  ClusterSequences.
+	- We use C++11 alias templates.
+
 	* include/fastjet/JetDefinition.hh:
 	* include/fastjet/PseudoJet.hh:
 	* include/fastjet/WrappedStructure.hh:
@@ -41,7 +58,6 @@
 	 . _csi in JetMedianBackgroundEstimator::_compute()
 	 . _csi in JetMedianBackgroundEstimator::_check_csa_alive()
 	 . _csi in JetMedianBackgroundEstimator::_check_jet_alg_good_for_median()
-
 
 	* src/LimitedWarning.cc:
 	* include/fastjet/LimitedWarning.hh:

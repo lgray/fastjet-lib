@@ -164,6 +164,10 @@ ClusterSequence::~ClusterSequence () {
     assert(csi != NULL);
     csi->set_associated_cs(NULL);
 
+    // set_count is not available with CXX11 shared pointers. There
+    // we'll use a different mechanism for handling self-deleting
+    // ClusterSequences
+#ifndef FASTJET_HAVE_CXX11_FEATURES
     // if the user had given the CS responsibility to delete itself,
     // but then deletes the CS themselves, the following lines of
     // code will ensure that the structure_shared_ptr will have
@@ -174,6 +178,7 @@ ClusterSequence::~ClusterSequence () {
       _structure_shared_ptr.set_count(_structure_shared_ptr.use_count() 
 				        + _structure_use_count_after_construction);
     }
+#endif // FASTJET_HAVE_CXX11_FEATURES
   }
 }
 
@@ -1730,7 +1735,12 @@ void ClusterSequence::delete_self_when_unused() {
     throw Error("delete_self_when_unused may only be called if at least one object outside the CS (e.g. a jet) is already associated with the CS");
   }
 
+    // set_count is not available with CXX11 shared pointers. There
+    // we'll use a different mechanism for handling self-deleting
+    // ClusterSequences
+#ifndef FASTJET_HAVE_CXX11_FEATURES
   _structure_shared_ptr.set_count(new_count);
+#endif // FASTJET_HAVE_CXX11_FEATURES
   _deletes_self_when_unused = true;
 }
 

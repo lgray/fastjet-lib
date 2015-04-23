@@ -32,17 +32,38 @@
 //FJENDHEADER
 
 #include "fastjet/internal/base.hh"
+#include "fastjet/config.h"
 #include <cstdlib>  // for NULL!!!
 
 // for testing purposes, the following define makes it possible
 // for our SharedPtr simply to be derived from the STL TR1 one.
+//
+// Note that with C++11 features, the std::shared_ptr will take
+// precedence anyway
 //#define __FASTJET_USETR1SHAREDPTR
 
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+// use C11's shared pointer
+#include <memory>
+#else
 #ifdef __FASTJET_USETR1SHAREDPTR
 #include <tr1/memory>
 #endif // __FASTJET_USETR1SHAREDPTR
+#endif // FASTJET_HAVE_CXX11_FEATURES
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
+
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+
+/// @ingroup advanced_usage
+/// \class SharedPtr
+/// replaces our shared pointer with the STL one
+///
+/// Note that here we can just use C++11 "template alias".
+template<typename T>
+using SharedPtr = std::shared_ptr<T>;
+
+#else  // FASTJET_HAVE_CXX11_FEATURES
 
 #ifdef __FASTJET_USETR1SHAREDPTR
 
@@ -400,6 +421,8 @@ inline T* get_pointer(SharedPtr<T> const & t){
 }
 
 #endif // __FASTJET_USETR1SHAREDPTR
+
+#endif // FASTJET_HAVE_CXX11_FEATURES
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
