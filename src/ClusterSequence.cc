@@ -183,6 +183,36 @@ ClusterSequence::~ClusterSequence () {
 }
 
 //-----------
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+// signals that a jet will no longer use the current CS
+void ClusterSequence::release_pseudojet(PseudoJet &jet) const{
+  // this only applies to self-deleting clusteer seqences
+  if (!_deletes_self_when_unused) return;
+
+  // we "free" the jet from the CS
+  //jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>());
+  jet.force_reset_structure();
+
+  // and then we can check if we need to delete the CS
+  if (_structure_shared_ptr.use_count() == _structure_use_count_after_construction){
+    //CXX11_SELF_DELETE_DBG: cout << "will self-delete CS (use_count=" << _structure_use_count_after_construction << ")" << endl; 
+    // we need to set delete_self_when unused to false before
+    // triggering the deletion
+    //
+    // This also serves a 2nd purpose: if several threads delete a PJ
+    // At the same time we end up in a situation where
+    // "release_pseudojet" frees both their structure pointers and
+    // both could delete the CS (giving a double-free
+    // corruption). This is prevented by the construct below (where we
+    // have made _deletes_self_when_unused atomic)
+    bool expected = true;
+    if (_deletes_self_when_unused.compare_exchange_strong(expected, false))
+      delete this;
+  }
+}
+
+#else // FASTJET_HAVE_CXX11_FEATURES
+
 void ClusterSequence::signal_imminent_self_deletion() const {
   // normally if the destructor is called when
   // _deletes_self_when_unused is true, it assumes that it's been
@@ -200,6 +230,8 @@ void ClusterSequence::signal_imminent_self_deletion() const {
   assert(_deletes_self_when_unused);
   _deletes_self_when_unused = false;
 }
+
+#endif // FASTJET_HAVE_CXX11_FEATURES
 
 //DEP //----------------------------------------------------------------------
 //DEP void ClusterSequence::_initialise_and_run (

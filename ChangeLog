@@ -1,5 +1,59 @@
 2015-04-23  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/ClusterSequence.hh:
+	* src/PseudoJet.cc:
+	* src/ClusterSequence.cc:
+	* src/ClusterSequenceStructure.cc:
+	Revamped the strategy to handle self-deleting ClusterSequences
+	with cxx11 features on. This follows from the fact that
+	std::shared_ptr does not support set_count().
+
+	The strategy here is to have PseudoJet tell its associated
+	ClusterSequence (if any) when it will no longer use the shared
+	pointer. This is implemented in PseudoJet::release_jet_from_cs()
+	which calls ClusterSequence::release_pseudojet().
+
+	Important technical remarks:
+
+	 - PseudoJet::release_jet_from_cs() has to be called everytime we
+	   want to change the PJ's structure pointer.
+
+	 - for the same reason, we have to introduce explicitly the =
+	   operator (the default would copy the structure pointer without
+	   first calling release_jet_from_cs)
+
+	 - Since we want to keep this light, we want to avoid calling
+	   release_jet_from_cs() from ctors (also, the shared pointers are
+	   by default initialised to empty shared pointers). So we have
+	   split _reset_indices() in two parts: _reset_indices() and
+	   _reset_shared_pointers(). Only the first is called in ctors
+	   while both at called in reset(...)
+
+	 - ClusterSequence::release_pseudojet() has to take care of a few
+	   things. First, it is only relevant for self-deleting CS. Then,
+	   we reset the ("calling") PJ's shared pointer before checking if
+	   we need to delete the CS. This allows to check self-deletion using
+	     shared_ptr.use_count == _structure_use_count_after_construction
+	   instead of
+	     shared_ptr.use_count == _structure_use_count_after_construction+1
+	   which would not be thread-safe.
+	   However this cones with a complication that resetting the PJ's
+	   structure pointer would call PseudoJet::release_jet_from_cs()
+	   and result in an infinite loop. We added a
+	   PseudoJet::force_reset_structure() to go around that issue.
+
+	 - The condition
+	     shared_ptr.use_count == _structure_use_count_after_construction
+	   can in principle be triggered by more than one thread deleting the
+	   "last" PJs at the same time. This is cured by making
+	   _deletes_self_when_unused atomic and using compare_and_exchange
+	   to test which thread sould perform the deletion.
+
+	 - We tried to limit the computational expense as most as possible
+	   by performing tests only when they were needed [some
+	   improvements might be possible]
+
 	* src/JetDefinition.cc:
 	work towards thread-safety and usage of std::shared_ptr.
 	replaced a reset(shared_ptr) by an = shared_ptr which is also

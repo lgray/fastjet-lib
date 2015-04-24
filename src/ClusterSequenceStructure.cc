@@ -28,6 +28,7 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
+#include "fastjet/config.h"
 #include "fastjet/ClusterSequenceStructure.hh"
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
@@ -42,6 +43,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 
 ClusterSequenceStructure::~ClusterSequenceStructure(){
+  // with CXX11 support, the self-deletion is handled in
+  // release_pseudojet
+#ifndef FASTJET_HAVE_CXX11_FEATURES
   if (_associated_cs != NULL 
       && _associated_cs->will_delete_self_when_unused()) {
     // automatically handle deletion of the cluster sequence;
@@ -55,6 +59,7 @@ ClusterSequenceStructure::~ClusterSequenceStructure(){
     _associated_cs->signal_imminent_self_deletion();
     delete _associated_cs;
   }
+#endif // FASTJET_HAVE_CXX11_FEATURES
 }
 
 

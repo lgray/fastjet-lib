@@ -60,10 +60,28 @@ PseudoJet::PseudoJet(const double px_in, const double py_in, const double pz_in,
   this->_finish_init();
 
   // some default values for the history and user indices
+  // note: no reset of shared pointers needed
   _reset_indices();
-
+  
 }
 
+//----------------------------------------------------------------------
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+PseudoJet::~PseudoJet(){
+  _release_jet_from_cs();
+}
+
+// this has to be called everytime one tries to alter the jet
+// structural info
+void PseudoJet::_release_jet_from_cs(){
+  // check if the jet has the structure of type CSstruct in which case
+  // we have to check if there is a need for self-deletion of the CS
+  if ((has_structure_of<ClusterSequence>()) && (has_valid_cluster_sequence())){
+    associated_cs()->release_pseudojet(*this);
+  }
+}
+
+#endif // FASTJET_HAVE_CXX11_FEATURES
 
 //----------------------------------------------------------------------
 /// do standard end of initialisation
@@ -462,6 +480,10 @@ const ClusterSequence * PseudoJet::validated_cs() const {
 //----------------------------------------------------------------------
 // set the associated structure
 void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure_in){
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  // if the jet currently belongs to a cs, we need to release it before any chenge
+  _release_jet_from_cs();
+#endif //FASTJET_HAVE_CXX11_FEATURES
   _structure = structure_in;
 }
 

@@ -300,8 +300,13 @@ class ClusterSequence {
   /// when unused
   bool will_delete_self_when_unused() const {return _deletes_self_when_unused;}
 
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  /// signals that a jet will no longer use the current CS (internal use only)
+  void release_pseudojet(PseudoJet &jet) const;
+#else
   /// tell the ClusterSequence it's about to be self deleted (internal use only)
   void signal_imminent_self_deletion() const;
+#endif
 
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the
@@ -710,7 +715,11 @@ protected:
   /// object referring to it disappears. It is mutable so as to ensure
   /// that signal_imminent_self_deletion() [const] can make relevant
   /// changes.
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  mutable std::atomic<bool> _deletes_self_when_unused;
+#else
   mutable bool _deletes_self_when_unused;
+#endif
 
  private:
 
