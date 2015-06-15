@@ -97,7 +97,7 @@ push @setups, ["","--enable-allplugins --disable-monolithic", "", 10, ""]; # tes
 push @setups, ["","--enable-allcxxplugins --enable-shared", "--shared=no", 10, ""]; # with static libs even though shared are built
 
 # checks with different compilers, and 32 instead of 64 bit; all still linux
-push @setups, ["themis","--enable-allcxxplugins", "", 1000, ""]; # a 32 bit SLC6 machine (added 2013-05-01)
+#push @setups, ["themis","--enable-allcxxplugins", "", 1000, ""]; # a 32 bit SLC6 machine (added 2013-05-01) (themis is out of order, MC 2015-06-15)
 push @setups, ["",'--enable-allcxxplugins CC=icc CXX=icpc --disable-debug', "", 1000, ""]; # with the intel compiler (v10)
 push @setups, ["",'--enable-allcxxplugins CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc LDFLAGS=-Wl,-rpath,/opt/intel/lib/intel64  --disable-debug', ":-Wl,-rpath -Wl,/opt/intel/lib/intel64", 10, ""]; # with the new intel compiler (v14) (only few evts)
 push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-4.6 CXX=/ada1/lpthe/cacciari/local/bin/g++-4.6", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 4.6 (only few evts)
