@@ -990,6 +990,7 @@ inline unsigned int ClusterSequence::n_particles() const {return _initial_n;}
 //----------------------------------------------------------------------
 // implementation of JetDefinition::operator() is here to avoid nasty
 // issues of order of implementations and includes
+#ifndef __CINT__
 template<class L>
 std::vector<PseudoJet> JetDefinition::operator()(const std::vector<L> & particles) const {
   // create a new cluster sequence
@@ -1014,7 +1015,7 @@ std::vector<PseudoJet> JetDefinition::operator()(const std::vector<L> & particle
 
   return jets;
 }
-
+#endif // __CINT__
 
 
 //----------------------------------------------------------------------

@@ -1,3 +1,11 @@
+2015-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* include/fastjet/ClusterSequence.hh:
+
+	added #ifndef __CINT__ around the (templated)
+	JetDefinition::operator() to solve issues with root5 reported by
+	Adrian Sevcenco.
+
 2015-04-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
