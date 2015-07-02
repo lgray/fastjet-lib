@@ -118,7 +118,7 @@ fi
 dnl if CGAL hasn't been found yet and the Makefile search didn't return an error message
 dnl we check if we can get the arguments ourselves. This method leave the option to specify
 dnl a CGAL directory using the --with-cgaldir directive
-dnl If no dir are specified, CGLA will be searched in standard places
+dnl If no dir are specified, CGAL will be searched for in standard places
 if test "$acx_cgal_found" == no; then
    dnl check support for -frounding-math for the C++ compiler
    ADDITIONAL_CGAL_FLAGS=""
