@@ -1,3 +1,17 @@
+2015-07-03  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/ClusterSequence_Delaunay.cc:
+	* src/DnnPlane.cc:
+	added various extra output for when verbose is true, which was
+	used to help debug the issue that was eventually traced to
+	DnnPlane.h 
+
+	* include/fastjet/internal/DnnPlane.hh:
+	added DnnPlane::_is_not_null(vertex_handle) to centralize checks
+	of whether a vertex_handle is null. This provides a workaround for
+	the issue that (vertex_handle != NULL) seems to work with
+	clang-3.6.1 and CGAL-4.6.1.
+
 2015-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo
 
 	* include/fastjet/ClusterSequence.hh:
