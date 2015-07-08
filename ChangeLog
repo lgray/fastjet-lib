@@ -1,3 +1,12 @@
+2015-07-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* m4/CGAL.m4 (ACX_CHECK_CGAL):
+	Now check for -frounding-math (gcc) and -fp=-model strict (intel)
+
+	Note that when using the intel compiler, chances are you'll get
+	both but -frounding-math will just be ignored [issuing a #10006
+	command-line warning]
+
 2015-07-03  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/ClusterSequence_Delaunay.cc:
