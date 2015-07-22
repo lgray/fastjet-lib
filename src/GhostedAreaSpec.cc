@@ -37,7 +37,13 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+// in order to keep thread-safety, have an independent random
+// generator for each thread
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  thread_local 
+#endif    
 BasicRandom<double> GhostedAreaSpec::_random_generator;
+
 LimitedWarning GhostedAreaSpec::_warn_fj2_placement_deprecated;
 
 /// explicit constructor
@@ -47,8 +53,8 @@ GhostedAreaSpec::GhostedAreaSpec(
                            double ghost_area_in    ,   
                            double grid_scatter_in  , 
                            double pt_scatter_in    ,   
-                           double mean_ghost_pt_in 
-                          ): 
+                           double mean_ghost_pt_in ,
+                           BasicRandom<double> *user_random_generator): 
     _repeat(repeat_in), 
     _ghost_area(ghost_area_in), 
     _grid_scatter(grid_scatter_in),  
@@ -56,7 +62,8 @@ GhostedAreaSpec::GhostedAreaSpec(
     _mean_ghost_pt(mean_ghost_pt_in),
     _fj2_placement(false),
     _selector(selector),
-    _actual_ghost_area(-1.0)
+    _actual_ghost_area(-1.0),
+    _user_random_generator(user_random_generator)
   {
     // check the selector has the properties needed -- an area and
     // applicability jet-by-jet (the latter follows automatically from

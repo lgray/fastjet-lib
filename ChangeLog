@@ -1,3 +1,19 @@
+2015-07-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Filter.cc:
+	take a copy of the subtractor before using it [should guarantee
+	thread-safety (TBC?)]
+
+	* include/fastjet/GhostedAreaSpec.hh (G):
+	added the option to specify a user-defined random generator. Typically, use
+	  BasicRandom my_random(s1, s2);
+	  GhostedAreaSpec(ghost_max_rap, &my_random);
+
+	The generator is stored as a shared pointer so it takes ownership of it.
+
+	the default BasicRandom<double> random generator has also be made
+	thread-local to agrantee thread safety.
+
 2015-04-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/PseudoJet.hh:
