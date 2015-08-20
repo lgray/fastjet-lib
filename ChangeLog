@@ -18,7 +18,7 @@
 	* include/fastjet/internal/DnnPlane.hh:
 	added DnnPlane::_is_not_null(vertex_handle) to centralize checks
 	of whether a vertex_handle is null. This provides a workaround for
-	the issue that (vertex_handle != NULL) seems to work with
+	the issue that (vertex_handle != NULL) seems not to work with
 	clang-3.6.1 and CGAL-4.6.1.
 
 2015-06-30  Gavin Salam  <gavin.salam@cern.ch> + Matteo
