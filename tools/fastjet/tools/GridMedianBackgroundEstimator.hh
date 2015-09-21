@@ -193,7 +193,7 @@ public:
   /// Returns true if this background estimator has support for
   /// determination of rho_m.
   ///
-  /// Note that support for sigma_m is automatic is one has sigma and
+  /// Note that support for sigma_m is automatic if one has sigma and
   /// rho_m support.
   bool has_rho_m() const {return _enable_rho_m;}
 
