@@ -1,5 +1,10 @@
 2015-09-21  Gavin Salam  <gavin.salam@cern.ch>
 
+	* tools/Subtractor.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	fixed bug where Subtractor::_unused_rho_m_warning was a
+	mutable. It is now a static, as it should be.
+
 	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh (RectangularGrid):
 	fixed typo in comment
 

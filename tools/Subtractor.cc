@@ -38,6 +38,7 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 const double Subtractor::_invalid_rho = -numeric_limits<double>::infinity();
 
+LimitedWarning Subtractor::_unused_rho_m_warning;
 
 //----------------------------------------------------------------------
 // ctor
