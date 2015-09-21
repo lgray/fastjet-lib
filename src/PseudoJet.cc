@@ -76,9 +76,16 @@ PseudoJet::~PseudoJet(){
 void PseudoJet::_release_jet_from_cs(){
   // check if the jet has the structure of type CSstruct in which case
   // we have to check if there is a need for self-deletion of the CS
-  if ((has_structure_of<ClusterSequence>()) && (has_valid_cluster_sequence())){
-    associated_cs()->release_pseudojet(*this);
+  ClusterSequenceStructure * assoc_css = dynamic_cast<ClusterSequenceStructure *>(_structure.get());
+  if (assoc_css) {
+    const ClusterSequence * assoc_cs = assoc_css->associated_cluster_sequence();
+    if (assoc_cs) assoc_cs->release_pseudojet(*this);
   }
+
+  // slightly less efficient version
+  // if ((has_structure_of<ClusterSequence>()) && (has_valid_cluster_sequence())){
+  //   associated_cs()->release_pseudojet(*this);
+  // }
 }
 
 #endif // FASTJET_HAVE_CXX11_FEATURES
