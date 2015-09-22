@@ -72,32 +72,55 @@ namespace cxx11helpers{
     /// e.g. http://stackoverflow.com/questions/19883092/error-implicitly-deleted-because-the-default-definition-would-be-ill-formed-ve)
     AtomicCounter(const AtomicCounter &other) : _count{other._count.load()}{}
 
+    /// for a more friendly usage, overload the type cast to the
+    /// base template type
+    operator T() const{ return _count.load();}
+       
+    /// set the counter to a given value
+    T set(const T new_value){
+      return _count.store(new_value);
+    }
+
     /// step the counter and return the count just before it was stepped
     ///
     /// Q: can we declare this as T && ...?
     T step(){
-      // another thread could be upadting this at the same time, so extra
-      // care is needed.
+      // just do the following:
+      // see e.g. http://en.cppreference.com/w/cpp/atomic/atomic/fetch_add
+      return _count.fetch_add(1);
+      
+      // alternative (more complex method)
       //
-      // Recall that the compare_exchange_strong will return true if the
-      // exchange has been done. Otherwise, it means that the count
-      // changed in the meantime, so we try again. Also, since when it
-      // "fails" compare_exchange_strong loads the count of *this in
-      // expected, count does not need to be re-read in the loop!
-      //
-      // Note that at the end of this procedure, count will countain the
-      // number of times this warning occured just before this
-      // occurence. It can thus be used to see if it needs to be printed
-      // out
-      unsigned int count = _count;
-      while (_count < std::numeric_limits<unsigned int>::max()
-             && !(_count.compare_exchange_strong(count, count+1)));
-      return count;
+      // // another thread could be upadting this at the same time, so extra
+      // // care is needed.
+      // //
+      // // Recall that the compare_exchange_strong will return true if the
+      // // exchange has been done. Otherwise, it means that the count
+      // // changed in the meantime, so we try again. Also, since when it
+      // // "fails" compare_exchange_strong loads the count of *this in
+      // // expected, count does not need to be re-read in the loop!
+      // //
+      // // Note that at the end of this procedure, count will countain the
+      // // number of times this warning occured just before this
+      // // occurence. It can thus be used to see if it needs to be printed
+      // // out
+      // unsigned int count = _count;
+      // while (_count < std::numeric_limits<unsigned int>::max()
+      //        && !(_count.compare_exchange_strong(count, count+1)));
+      // return count;
     }
 
-    /// for a more friendly usage, overload the type cast to the
-    /// base template type
-    operator T() const{ return _count.load();}
+    /// add a given amount to the counter
+    /// return the value just before the addition was done
+    T add(const T to_add){
+      return _count.fetch_add(to_add);
+    }
+
+    /// subtract a given amount to the counter
+    /// return the value just before the subtraction was done
+    T subtract(const T to_subtract){
+      return _count.fetch_sub(to_subtract);
+    }
 
   private:
     std::atomic<T> _count;  ///< the actual count
@@ -155,19 +178,36 @@ namespace cxx11helpers{
     /// copy ctor
     AtomicCounter(const AtomicCounter &other) : _count(other._count){}
 
-    /// step the counter and return the value just before it was stepped
-    T step(){
-      unsigned int count = _count;
-      if (_count < std::numeric_limits<unsigned int>::max()){ _count++; }
-      return count;
-    }
-
-    /// or, for a more friendly usage, overload the type cast
+    /// for a more friendly usage, overload the type cast
     ///
     /// This will (likely) allow a transparent usage w or wo C++11
     /// features enabled
     operator T() const{ return _count;}
+       
+    /// set the counter to a given value
+    T set(const T new_value){
+      return _count = new_value;
+    }
 
+    /// step the counter and return the value just before it was stepped
+    T step(){
+      unsigned int count = _count;
+      if (_count < std::numeric_limits<T>::max()){ _count++; }
+      return count;
+    }
+
+    /// add a given amount to the counter
+    /// return the value just before the addition was done
+    T add(const T to_add){
+      return _count += to_add;
+    }
+
+    /// subtract a given amount to the counter
+    /// return the value just before the subtraction was done
+    T subtract(const T to_subtract){
+      return _count -= to_subtract;
+    }    
+    
   private:
     T _count;  ///< the actual value
   };

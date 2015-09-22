@@ -1,3 +1,9 @@
+2015-09-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/cxx11helpers.hh:
+	used the sinples fetch_add(1) option for the step.
+	added a few simple functionalities
+
 2015-09-21  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/PseudoJet.cc:
