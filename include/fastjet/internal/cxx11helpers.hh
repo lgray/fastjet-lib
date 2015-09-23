@@ -75,7 +75,10 @@ namespace cxx11helpers{
     /// for a more friendly usage, overload the type cast to the
     /// base template type
     operator T() const{ return _count.load();}
-       
+
+    /// get the count
+    T count() const{ return _count.load();}
+    
     /// set the counter to a given value
     void set(const T new_value){
       _count.store(new_value);
@@ -184,6 +187,9 @@ namespace cxx11helpers{
     /// features enabled
     operator T() const{ return _count;}
        
+    /// get the count
+    T count() const{ return _count;}
+
     /// set the counter to a given value
     void set(const T new_value){
       _count = new_value;
