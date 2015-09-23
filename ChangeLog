@@ -1,3 +1,10 @@
+2015-09-23  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/Subtractor.cc:
+	made _unused_rho_m_warning static instead of mutable.
+	[ported from Gavin's modification in the trunk]
+
 2015-09-23  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/internal/cxx11helpers.hh (cxx11helpers):

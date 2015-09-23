@@ -202,7 +202,7 @@ protected:
   // that's not allowed in an include file.
   static const double _invalid_rho;
 
-  mutable LimitedWarning _unused_rho_m_warning;
+  static LimitedWarning _unused_rho_m_warning;
 };
 
 FASTJET_END_NAMESPACE
