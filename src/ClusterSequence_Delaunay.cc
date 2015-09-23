@@ -68,7 +68,7 @@ void ClusterSequence::_delaunay_cluster () {
   }
 
   // initialise our DNN structure with the set of points
-  auto_ptr<DynamicNearestNeighbours> DNN;
+  SharedPtr<DynamicNearestNeighbours> DNN;
 #ifndef DROP_CGAL // strategy = NlnN* are not supported if we drop CGAL...
   bool verbose = false;
   bool ignore_nearest_is_mirror = (_Rparam < twopi);

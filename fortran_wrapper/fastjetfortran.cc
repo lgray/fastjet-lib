@@ -41,9 +41,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// structures and means to transfer fortran <-> C++
 namespace fwrapper {
   vector<PseudoJet> input_particles, jets;
-  auto_ptr<JetDefinition::Plugin> plugin;
+  SharedPtr<JetDefinition::Plugin> plugin;
   JetDefinition jet_def;
-  auto_ptr<ClusterSequence> cs;
+  SharedPtr<ClusterSequence> cs;
 
   /// helper routine to transfer fortran input particles into 
   void transfer_input_particles(const double * p, const int & npart) {

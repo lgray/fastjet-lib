@@ -492,7 +492,8 @@ int main (int argc, char ** argv) {
     int npass = cmdline.value("-npass",0);
     if (all_algs || cmdline.present("-siscone")) {
       double sisptmin = cmdline.value("-sisptmin",0.0);
-      SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass,sisptmin);
+      bool cache = cmdline.present("-cache");
+      SISPlug * plugin = new SISPlug (ktR, overlap_threshold,npass,sisptmin,cache);
       if (cmdline.present("-sm-pt")) plugin->set_split_merge_scale(SISPlug::SM_pt);
       if (cmdline.present("-sm-mt")) plugin->set_split_merge_scale(SISPlug::SM_mt);
       if (cmdline.present("-sm-Et")) plugin->set_split_merge_scale(SISPlug::SM_Et);
@@ -689,7 +690,8 @@ int main (int argc, char ** argv) {
   for (int irepeat = 0; irepeat < repeat ; irepeat++) {
     int nparticles = particles.size();
     try {
-    auto_ptr<ClusterSequence> clust_seq;
+    // one could use a unique_ptr here, but SharedPtr is available independently of C++ standard
+    SharedPtr<ClusterSequence> clust_seq;
     if (do_areas) {
 #ifndef __FJCORE__
       clust_seq.reset(new ClusterSequenceArea(particles,jet_def,area_def));

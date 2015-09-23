@@ -203,7 +203,7 @@ private:
                                  const std::vector<L> & pseudojets, 
                                  const JetDefinition & jet_def);
 
-  std::auto_ptr<ClusterSequenceAreaBase> _area_base;
+  SharedPtr<ClusterSequenceAreaBase> _area_base;
   AreaDefinition _area_def;
   static LimitedWarning _range_warnings;
   static LimitedWarning _explicit_ghosts_repeats_warnings;
@@ -253,7 +253,7 @@ template<class L> void ClusterSequenceArea::initialize_and_run_cswa(
     //exit(-1);
   }
   // now copy across the information from the area base class
-  _area_base = std::auto_ptr<ClusterSequenceAreaBase>(_area_base_ptr);
+  _area_base = SharedPtr<ClusterSequenceAreaBase>(_area_base_ptr);
   transfer_from_sequence(*_area_base);
 }
 
