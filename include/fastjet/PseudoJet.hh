@@ -37,7 +37,7 @@
 #include<cassert>
 #include<cmath>
 #include<iostream>
-#include "fastjet/config.h"
+//std::shared_ptr: #include "fastjet/config.h"
 #include "fastjet/internal/numconsts.hh"
 #include "fastjet/internal/IsBase.hh"
 #include "fastjet/SharedPtr.hh"
@@ -94,12 +94,12 @@ class PseudoJet {
   PseudoJet(bool /* dummy */) {}
 
   /// default (virtual) destructor
-  virtual ~PseudoJet()
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-    ;
-#else
-    {}
-#endif
+  virtual ~PseudoJet(){}
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:     ;
+//std::shared_ptr: #else
+//std::shared_ptr:     {}
+//std::shared_ptr: #endif
   //\} ---- end of constructors and destructors --------------------------
 
   //----------------------------------------------------------------------
@@ -238,37 +238,37 @@ class PseudoJet {
   void operator+=(const PseudoJet &);
   void operator-=(const PseudoJet &);
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-  /// overload the assignment through the = operator
-  ///
-  /// this is needed to make sure that release_from_cs is called
-  /// before copying the structure shared pointer!
-  void operator=(const PseudoJet &other){
-    _release_jet_from_cs();
-    _structure = other._structure;
-    _user_info = other._user_info;
-
-    _px = other._px;
-    _py = other._py;
-    _pz = other._pz;
-    _E  = other._E;
-
-    _phi = other._phi;
-    _rap = other._rap;
-    _kt2  = other._kt2;
-    
-    _cluster_hist_index = other._cluster_hist_index;
-    _user_index = other._user_index;
-  }
-
-  /// force resetting the structure pointer to an empty structure
-  ///
-  /// THIS IS STRICTLY MEANT FOR INTERNAL USAGE IN SELF-DELETING
-  /// ClusterSequences. IT SHOULD NOT BE USED BY END-USERS.
-  void force_reset_structure(){
-    _structure.reset();
-  }  
-#endif
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:   /// overload the assignment through the = operator
+//std::shared_ptr:   ///
+//std::shared_ptr:   /// this is needed to make sure that release_from_cs is called
+//std::shared_ptr:   /// before copying the structure shared pointer!
+//std::shared_ptr:   void operator=(const PseudoJet &other){
+//std::shared_ptr:     _release_jet_from_cs();
+//std::shared_ptr:     _structure = other._structure;
+//std::shared_ptr:     _user_info = other._user_info;
+//std::shared_ptr: 
+//std::shared_ptr:     _px = other._px;
+//std::shared_ptr:     _py = other._py;
+//std::shared_ptr:     _pz = other._pz;
+//std::shared_ptr:     _E  = other._E;
+//std::shared_ptr: 
+//std::shared_ptr:     _phi = other._phi;
+//std::shared_ptr:     _rap = other._rap;
+//std::shared_ptr:     _kt2  = other._kt2;
+//std::shared_ptr:     
+//std::shared_ptr:     _cluster_hist_index = other._cluster_hist_index;
+//std::shared_ptr:     _user_index = other._user_index;
+//std::shared_ptr:   }
+//std::shared_ptr: 
+//std::shared_ptr:   /// force resetting the structure pointer to an empty structure
+//std::shared_ptr:   ///
+//std::shared_ptr:   /// THIS IS STRICTLY MEANT FOR INTERNAL USAGE IN SELF-DELETING
+//std::shared_ptr:   /// ClusterSequences. IT SHOULD NOT BE USED BY END-USERS.
+//std::shared_ptr:   void force_reset_structure(){
+//std::shared_ptr:     _structure.reset();
+//std::shared_ptr:   }  
+//std::shared_ptr: #endif
 
   /// reset the 4-momentum according to the supplied components and
   /// put the user and history indices back to their default values
@@ -316,7 +316,7 @@ class PseudoJet {
   inline void reset_PtYPhiM(double pt_in, double y_in, double phi_in, double m_in=0.0) {
     reset_momentum_PtYPhiM(pt_in, y_in, phi_in, m_in);
     _reset_indices();
-    _reset_shared_pointers();
+    //std::shared_ptr: _reset_shared_pointers();
   }
 
   /// reset the 4-momentum according to the supplied components 
@@ -839,22 +839,23 @@ class PseudoJet {
   void _finish_init();
   /// set the indices to default values
   void _reset_indices();
-  /// reset the shared pointers to empty ones
-  void _reset_shared_pointers();
-
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-  /// For jets associated with a ClusterSequence, this will "free" the
-  /// jet from the ClusterSequence. This means that, for self-deleting
-  /// cluster sequences, it will reset the structure pointer and check
-  /// if the CS needs to be deleted.
-  ///
-  /// This is the replacement mechanism for self-deleting cs (with
-  /// set_count not working with std shared_ptr) and...
-  ///
-  /// IT HAS TO BE CALLED BEFORE ANY CHANGE OF THE JET STRUCTURE
-  /// POINTER
-  void _release_jet_from_cs();
-#endif //FASTJET_HAVE_CXX11_FEATURES
+  
+//std::shared_ptr: /// reset the shared pointers to empty ones
+//std::shared_ptr: void _reset_shared_pointers();
+//std::shared_ptr: 
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:   /// For jets associated with a ClusterSequence, this will "free" the
+//std::shared_ptr:   /// jet from the ClusterSequence. This means that, for self-deleting
+//std::shared_ptr:   /// cluster sequences, it will reset the structure pointer and check
+//std::shared_ptr:   /// if the CS needs to be deleted.
+//std::shared_ptr:   ///
+//std::shared_ptr:   /// This is the replacement mechanism for self-deleting cs (with
+//std::shared_ptr:   /// set_count not working with std shared_ptr) and...
+//std::shared_ptr:   ///
+//std::shared_ptr:   /// IT HAS TO BE CALLED BEFORE ANY CHANGE OF THE JET STRUCTURE
+//std::shared_ptr:   /// POINTER
+//std::shared_ptr:   void _release_jet_from_cs();
+//std::shared_ptr: #endif //FASTJET_HAVE_CXX11_FEATURES
 
   /// ensure that the internal values for rapidity and phi 
   /// correspond to 4-momentum structure
@@ -968,16 +969,20 @@ template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
 inline void PseudoJet::_reset_indices() { 
   set_cluster_hist_index(-1);
   set_user_index(-1);
-}
 
-inline void PseudoJet::_reset_shared_pointers() {
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-  // if the jet currently belongs to a cs, we need to release it before any chenge
-  _release_jet_from_cs();
-#endif // FASTJET_HAVE_CXX11_FEATURES
   _structure.reset();
   _user_info.reset();
 }
+
+//std::shared_ptr: inline void PseudoJet::_reset_shared_pointers() {
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:   // if the jet currently belongs to a cs, we need to release it before any chenge
+//std::shared_ptr:   _release_jet_from_cs();
+//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:   _structure.reset();
+//std::shared_ptr:   _user_info.reset();
+//std::shared_ptr:   // and do not forget to remove it in reset_indices above
+//std::shared_ptr: }
 
 
 
@@ -996,7 +1001,7 @@ inline void PseudoJet::reset(double px_in, double py_in, double pz_in, double E_
   _E  = E_in;
   _finish_init();
   _reset_indices();
-  _reset_shared_pointers();
+  //std::shared_ptr: _reset_shared_pointers();
 }
 
 inline void PseudoJet::reset_momentum(double px_in, double py_in, double pz_in, double E_in) {

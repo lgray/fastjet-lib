@@ -164,10 +164,10 @@ ClusterSequence::~ClusterSequence () {
     assert(csi != NULL);
     csi->set_associated_cs(NULL);
 
-    // set_count is not available with CXX11 shared pointers. There
-    // we'll use a different mechanism for handling self-deleting
-    // ClusterSequences
-#ifndef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:     // set_count is not available with CXX11 shared pointers. There
+//std::shared_ptr:     // we'll use a different mechanism for handling self-deleting
+//std::shared_ptr:     // ClusterSequences
+//std::shared_ptr: #ifndef FASTJET_HAVE_CXX11_FEATURES
     // if the user had given the CS responsibility to delete itself,
     // but then deletes the CS themselves, the following lines of
     // code will ensure that the structure_shared_ptr will have
@@ -178,40 +178,40 @@ ClusterSequence::~ClusterSequence () {
       _structure_shared_ptr.set_count(_structure_shared_ptr.use_count() 
 				        + _structure_use_count_after_construction);
     }
-#endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
   }
 }
 
-//-----------
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-// signals that a jet will no longer use the current CS
-void ClusterSequence::release_pseudojet(PseudoJet &jet) const{
-  // this only applies to self-deleting clusteer seqences
-  if (!_deletes_self_when_unused) return;
-
-  // we "free" the jet from the CS
-  //jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>());
-  jet.force_reset_structure();
-
-  // and then we can check if we need to delete the CS
-  if (_structure_shared_ptr.use_count() == _structure_use_count_after_construction){
-    //CXX11_SELF_DELETE_DBG: cout << "will self-delete CS (use_count=" << _structure_use_count_after_construction << ")" << endl; 
-    // we need to set delete_self_when unused to false before
-    // triggering the deletion
-    //
-    // This also serves a 2nd purpose: if several threads delete a PJ
-    // At the same time we end up in a situation where
-    // "release_pseudojet" frees both their structure pointers and
-    // both could delete the CS (giving a double-free
-    // corruption). This is prevented by the construct below (where we
-    // have made _deletes_self_when_unused atomic)
-    bool expected = true;
-    if (_deletes_self_when_unused.compare_exchange_strong(expected, false))
-      delete this;
-  }
-}
-
-#else // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: //-----------
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: // signals that a jet will no longer use the current CS
+//std::shared_ptr: void ClusterSequence::release_pseudojet(PseudoJet &jet) const{
+//std::shared_ptr:   // this only applies to self-deleting clusteer seqences
+//std::shared_ptr:   if (!_deletes_self_when_unused) return;
+//std::shared_ptr: 
+//std::shared_ptr:   // we "free" the jet from the CS
+//std::shared_ptr:   //jet.set_structure_shared_ptr(SharedPtr<PseudoJetStructureBase>());
+//std::shared_ptr:   jet.force_reset_structure();
+//std::shared_ptr: 
+//std::shared_ptr:   // and then we can check if we need to delete the CS
+//std::shared_ptr:   if (_structure_shared_ptr.use_count() == _structure_use_count_after_construction){
+//std::shared_ptr:     //CXX11_SELF_DELETE_DBG: cout << "will self-delete CS (use_count=" << _structure_use_count_after_construction << ")" << endl; 
+//std::shared_ptr:     // we need to set delete_self_when unused to false before
+//std::shared_ptr:     // triggering the deletion
+//std::shared_ptr:     //
+//std::shared_ptr:     // This also serves a 2nd purpose: if several threads delete a PJ
+//std::shared_ptr:     // At the same time we end up in a situation where
+//std::shared_ptr:     // "release_pseudojet" frees both their structure pointers and
+//std::shared_ptr:     // both could delete the CS (giving a double-free
+//std::shared_ptr:     // corruption). This is prevented by the construct below (where we
+//std::shared_ptr:     // have made _deletes_self_when_unused atomic)
+//std::shared_ptr:     bool expected = true;
+//std::shared_ptr:     if (_deletes_self_when_unused.compare_exchange_strong(expected, false))
+//std::shared_ptr:       delete this;
+//std::shared_ptr:   }
+//std::shared_ptr: }
+//std::shared_ptr: 
+//std::shared_ptr: #else // FASTJET_HAVE_CXX11_FEATURES
 
 void ClusterSequence::signal_imminent_self_deletion() const {
   // normally if the destructor is called when
@@ -231,7 +231,7 @@ void ClusterSequence::signal_imminent_self_deletion() const {
   _deletes_self_when_unused = false;
 }
 
-#endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
 
 //DEP //----------------------------------------------------------------------
 //DEP void ClusterSequence::_initialise_and_run (
@@ -1767,12 +1767,12 @@ void ClusterSequence::delete_self_when_unused() {
     throw Error("delete_self_when_unused may only be called if at least one object outside the CS (e.g. a jet) is already associated with the CS");
   }
 
-    // set_count is not available with CXX11 shared pointers. There
-    // we'll use a different mechanism for handling self-deleting
-    // ClusterSequences
-#ifndef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:     // set_count is not available with CXX11 shared pointers. There
+//std::shared_ptr:     // we'll use a different mechanism for handling self-deleting
+//std::shared_ptr:     // ClusterSequences
+//std::shared_ptr: #ifndef FASTJET_HAVE_CXX11_FEATURES
   _structure_shared_ptr.set_count(new_count);
-#endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
   _deletes_self_when_unused = true;
 }
 

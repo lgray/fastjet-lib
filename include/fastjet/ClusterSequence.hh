@@ -48,10 +48,10 @@
 #include "fastjet/FunctionOfPseudoJet.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 
-#include "fastjet/config.h"
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-#include <atomic>
-#endif // FASTJET_HAVE_CXX11_FEATURES
+// #include "fastjet/config.h"
+// #ifdef FASTJET_HAVE_CXX11_FEATURES
+// #include <atomic>
+// #endif // FASTJET_HAVE_CXX11_FEATURES
 #include "fastjet/internal/cxx11helpers.hh"  // helpers to write code w&wo C++11 features
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -300,13 +300,13 @@ class ClusterSequence {
   /// when unused
   bool will_delete_self_when_unused() const {return _deletes_self_when_unused;}
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-  /// signals that a jet will no longer use the current CS (internal use only)
-  void release_pseudojet(PseudoJet &jet) const;
-#else
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:   /// signals that a jet will no longer use the current CS (internal use only)
+//std::shared_ptr:   void release_pseudojet(PseudoJet &jet) const;
+//std::shared_ptr: #else
   /// tell the ClusterSequence it's about to be self deleted (internal use only)
   void signal_imminent_self_deletion() const;
-#endif
+//std::shared_ptr: #endif
 
   /// returns the scale associated with a jet as required for this
   /// clustering algorithm (kt^2 for the kt-algorithm, 1 for the

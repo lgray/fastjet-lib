@@ -77,8 +77,8 @@ namespace cxx11helpers{
     operator T() const{ return _count.load();}
        
     /// set the counter to a given value
-    T set(const T new_value){
-      return _count.store(new_value);
+    void set(const T new_value){
+      _count.store(new_value);
     }
 
     /// step the counter and return the count just before it was stepped
@@ -185,8 +185,8 @@ namespace cxx11helpers{
     operator T() const{ return _count;}
        
     /// set the counter to a given value
-    T set(const T new_value){
-      return _count = new_value;
+    void set(const T new_value){
+      _count = new_value;
     }
 
     /// step the counter and return the value just before it was stepped

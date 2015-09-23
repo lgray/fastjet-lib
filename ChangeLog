@@ -1,4 +1,28 @@
+2015-09-23  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/ClusterSequence.hh:
+	* src/PseudoJet.cc:
+	* src/ClusterSequence.cc:
+	used the new SharedPtr implementation which basically allows to
+	revert to the use of SharedPtr::set_count().
+
+	The code using the standard shared_ptr has been commented out with
+	a std::shared_ptr: label in case we want to go back to that option
+	easily
+
+	* include/fastjet/SharedPtr.hh (SharedPtr):
+	when C++11 featues are enabled, use our own implementation of
+	SharedPtr instead of the std one. This has the advantage of
+	providing set_count() [extremely helpful for self-deletion of
+	ClusterSequence]. Note that the implementation is different from
+	the one without C++11 features enabled (in that it uses an atomic
+	counter)
+
 2015-09-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/cxx11helpers.hh:
+	fixed a bad return value for AtomicCount<T>::set()
 
 	* include/fastjet/internal/cxx11helpers.hh:
 	used the sinples fetch_add(1) option for the step.

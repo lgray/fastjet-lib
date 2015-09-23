@@ -65,30 +65,30 @@ PseudoJet::PseudoJet(const double px_in, const double py_in, const double pz_in,
   
 }
 
-//----------------------------------------------------------------------
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-PseudoJet::~PseudoJet(){
-  _release_jet_from_cs();
-}
-
-// this has to be called everytime one tries to alter the jet
-// structural info
-void PseudoJet::_release_jet_from_cs(){
-  // check if the jet has the structure of type CSstruct in which case
-  // we have to check if there is a need for self-deletion of the CS
-  ClusterSequenceStructure * assoc_css = dynamic_cast<ClusterSequenceStructure *>(_structure.get());
-  if (assoc_css) {
-    const ClusterSequence * assoc_cs = assoc_css->associated_cluster_sequence();
-    if (assoc_cs) assoc_cs->release_pseudojet(*this);
-  }
-
-  // slightly less efficient version
-  // if ((has_structure_of<ClusterSequence>()) && (has_valid_cluster_sequence())){
-  //   associated_cs()->release_pseudojet(*this);
-  // }
-}
-
-#endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: //----------------------------------------------------------------------
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: PseudoJet::~PseudoJet(){
+//std::shared_ptr:   _release_jet_from_cs();
+//std::shared_ptr: }
+//std::shared_ptr: 
+//std::shared_ptr: // this has to be called everytime one tries to alter the jet
+//std::shared_ptr: // structural info
+//std::shared_ptr: void PseudoJet::_release_jet_from_cs(){
+//std::shared_ptr:   // check if the jet has the structure of type CSstruct in which case
+//std::shared_ptr:   // we have to check if there is a need for self-deletion of the CS
+//std::shared_ptr:   ClusterSequenceStructure * assoc_css = dynamic_cast<ClusterSequenceStructure *>(_structure.get());
+//std::shared_ptr:   if (assoc_css) {
+//std::shared_ptr:     const ClusterSequence * assoc_cs = assoc_css->associated_cluster_sequence();
+//std::shared_ptr:     if (assoc_cs) assoc_cs->release_pseudojet(*this);
+//std::shared_ptr:   }
+//std::shared_ptr: 
+//std::shared_ptr:   // slightly less efficient version
+//std::shared_ptr:   // if ((has_structure_of<ClusterSequence>()) && (has_valid_cluster_sequence())){
+//std::shared_ptr:   //   associated_cs()->release_pseudojet(*this);
+//std::shared_ptr:   // }
+//std::shared_ptr: }
+//std::shared_ptr: 
+//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
 
 //----------------------------------------------------------------------
 /// do standard end of initialisation
@@ -487,10 +487,10 @@ const ClusterSequence * PseudoJet::validated_cs() const {
 //----------------------------------------------------------------------
 // set the associated structure
 void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure_in){
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-  // if the jet currently belongs to a cs, we need to release it before any chenge
-  _release_jet_from_cs();
-#endif //FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr:   // if the jet currently belongs to a cs, we need to release it before any chenge
+//std::shared_ptr:   _release_jet_from_cs();
+//std::shared_ptr: #endif //FASTJET_HAVE_CXX11_FEATURES
   _structure = structure_in;
 }
 
