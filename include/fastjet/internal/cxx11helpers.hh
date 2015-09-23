@@ -87,6 +87,9 @@ namespace cxx11helpers{
     /// step the counter and return the count just before it was stepped
     ///
     /// Q: can we declare this as T && ...?
+    //
+    // GPS: could this be an operator++?; the main reason
+    //      against is the overflow protection?
     T step(){
       // just do the following:
       // see e.g. http://en.cppreference.com/w/cpp/atomic/atomic/fetch_add
@@ -118,7 +121,7 @@ namespace cxx11helpers{
     T add(const T to_add){
       return _count.fetch_add(to_add);
     }
-
+    
     /// subtract a given amount to the counter
     /// return the value just before the subtraction was done
     T subtract(const T to_subtract){
@@ -135,6 +138,15 @@ namespace cxx11helpers{
   /// provides an object wich will return "true" the first time () is
   /// called and false afterwards
   /// \endif
+  //
+  // GPS: I wonder about the name (I'm not sure I like "trigger"). It
+  //      could be TrueFirstTime?
+  //
+  //      Do we have an idea of the time
+  //      penalty for the exchange_strong?  [I wonder if one could do
+  //      some weak/strong combination if the class itself is
+  //      responsible for writing things; but maybe this is
+  //      academic...]
   class FirstTimeTrigger{
   public:
     FirstTimeTrigger(): _first_time{true}{}
@@ -145,7 +157,7 @@ namespace cxx11helpers{
       //      _first_time = false;
       //   is dangerous because the test can be passed by a second thread
       //   before the first one has set it to false. Use atomic exchange
-      //   to andle this better
+      //   to handle this better
       bool expected = true;
       // this behaves as follows: if we have the expected value (true),
       // set _first_time to the desired (false) and return
