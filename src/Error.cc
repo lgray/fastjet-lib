@@ -48,7 +48,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 atomic<bool> Error::_print_errors{true};
 atomic<bool> Error::_print_backtrace{false};
 atomic<ostream *> Error::_default_ostr{& cerr};
@@ -56,7 +56,7 @@ atomic<ostream *> Error::_default_ostr{& cerr};
 bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
 ostream * Error::_default_ostr = & cerr;
-#endif  // FASTJET_HAVE_CXX11_FEATURES
+#endif  // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 #if (!defined(FASTJET_HAVE_EXECINFO_H)) || defined(__FJCORE__)
   LimitedWarning Error::_execinfo_undefined;

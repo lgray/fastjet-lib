@@ -38,11 +38,11 @@
 #include <list>
 
 #include "fastjet/config.h"
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 #include <atomic>
 #include <mutex>
-#endif // FASTJET_HAVE_CXX11_FEATURES
-#include "fastjet/internal/cxx11helpers.hh" // provides a counter (CXX11 or not)
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
+#include "fastjet/internal/thread_safety_helpers.hh" // provides a counter, thread-safe if needed
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -101,20 +101,17 @@ public:
 private:
   const int _max_warn;
 
-  typedef std::pair<std::string, cxx11helpers::AtomicCounter<unsigned int> > Summary;
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-  //std::atomic<int> _n_warn_so_far;
+  typedef std::pair<std::string, thread_safety_helpers::AtomicCounter<unsigned int> > Summary;
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   static std::atomic<int> _max_warn_default;
   static std::atomic<std::ostream *> _default_ostr;
   static std::mutex _global_warnings_summary_mutex;
   std::atomic<Summary*> _this_warning_summary;
 #else
-  //typedef std::pair<std::string, unsigned int> Summary;
-  //int _n_warn_so_far;
   static int _max_warn_default;
   static std::ostream * _default_ostr;
   Summary* _this_warning_summary;
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
   // Note that this is updated internally and we use a mutex for the
   // thread-safe version. So no other specific treatment is needed at

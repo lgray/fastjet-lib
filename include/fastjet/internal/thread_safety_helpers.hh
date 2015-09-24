@@ -28,32 +28,30 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#ifndef __FASTJET_CXX11_HELPERS_HH__
-#define __FASTJET_CXX11_HELPERS_HH__
+#ifndef __FASTJET_THREAD_SAFETY_HELPERS_HH__
+#define __FASTJET_THREAD_SAFETY_HELPERS_HH__
 
 /// The code in this file is supposed to help writing code that will
-/// automatically provide thread-safe/c++11 features when available
-/// and come revert back to "old/standard" C++ if C++11 is not
-/// switched on
+/// automatically provide thread-safe features when available and come
+/// revert back to "old/standard" C++ if thread-safety is not switched
+/// on
 ///
 ///\TODO fix doxygen comments (declare things as internal; make sure
 /// doxygen doc is not duplicate --- if necessary, keep only doxygen
-/// comments in the C++11 versions)
+/// comments in the thread-safe versions)
 
 #include "fastjet/internal/base.hh"
 #include "fastjet/config.h"
 #include <limits>
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 // introduces a few tools in CXX11 that we'll use in some FJ classes
 #include <atomic>
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-namespace cxx11helpers{
-
-
+namespace thread_safety_helpers{
 
   //----------------------------------------------------------------------
   /// \if internal_doc
@@ -131,22 +129,13 @@ namespace cxx11helpers{
   
   //----------------------------------------------------------------------
   /// \if internal_doc
-  /// \class FirstTimeTrigger
+  /// \class FirstTimeTrue
   /// provides an object wich will return "true" the first time () is
   /// called and false afterwards
   /// \endif
-  //
-  // GPS: I wonder about the name (I'm not sure I like "trigger"). It
-  //      could be TrueFirstTime?
-  //
-  //      Do we have an idea of the time
-  //      penalty for the exchange_strong?  [I wonder if one could do
-  //      some weak/strong combination if the class itself is
-  //      responsible for writing things; but maybe this is
-  //      academic...]
-  class FirstTimeTrigger{
+  class FirstTimeTrue{
   public:
-    FirstTimeTrigger(): _first_time{true}{}
+    FirstTimeTrue(): _first_time{true}{}
     bool operator()(){
       // Thread-safety note:
       //   the construct
@@ -159,21 +148,27 @@ namespace cxx11helpers{
       // this behaves as follows: if we have the expected value (true),
       // set _first_time to the desired (false) and return
       // true. Otherwise, do nothing and return false
-      return _first_time.compare_exchange_strong(expected, false);      
+      //
+      // Note that since we are not using the "expected" value
+      // afterwards, we can use a relaxed memory ordering if the next
+      // call returns false
+      return _first_time.compare_exchange_strong(expected, false,
+                                                 std::memory_order_seq_cst,
+                                                 std::memory_order_relaxed);
     }
   private:
     std::atomic<bool> _first_time;
   };
 
-} // namespace cxx11helpers
+} // namespace thread_safety_helpers
 
 FASTJET_END_NAMESPACE
 
-#else  // FJ wo CXX11 features
+#else  // FJ wo thread-safety features
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-namespace cxx11helpers{
+namespace thread_safety_helpers{
   //----------------------------------------------------------------------
   /// \class AtomicCounter
   ///
@@ -211,7 +206,6 @@ namespace cxx11helpers{
       return count;
     }
 
-
     /// override the ++ operator
     /// prefix version
     inline T operator++(){
@@ -229,12 +223,12 @@ namespace cxx11helpers{
   };
 
   //----------------------------------------------------------------------
-  /// \class FirstTimeTrigger
+  /// \class FirstTimeTrue
   /// provides an object wich will return "true" the first time () is
   /// called and false afterwards
-  class FirstTimeTrigger{
+  class FirstTimeTrue{
   public:
-    FirstTimeTrigger(): _first_time(true){}
+    FirstTimeTrue(): _first_time(true){}
     bool operator()(){
       if (!_first_time) {return false;}
       _first_time = false;
@@ -243,12 +237,12 @@ namespace cxx11helpers{
   private:
     bool _first_time;
   };
-} // namespace cxx11helpers
+} // namespace thread_safety_helpers
 
 FASTJET_END_NAMESPACE
 
 
 
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
-#endif // __FASTJET_CXX11_EXTRA_FEATURES_HH__
+#endif // __FASTJET_THREAD_SAFETY_HELPERS_HH__

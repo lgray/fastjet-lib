@@ -65,7 +65,7 @@ PseudoJet::PseudoJet(const double px_in, const double py_in, const double pz_in,
   
 }
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_THREAD_SAFETY
 /// copy-assignmemt
 ///
 /// this has to be explicitly specified since atomic does not support it.
@@ -89,10 +89,10 @@ PseudoJet & PseudoJet::operator=(const PseudoJet & other_pj){
   
   return *this;
 }
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_THREAD_SAFETY
 
 //std::shared_ptr: //----------------------------------------------------------------------
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr: PseudoJet::~PseudoJet(){
 //std::shared_ptr:   _release_jet_from_cs();
 //std::shared_ptr: }
@@ -114,7 +114,7 @@ PseudoJet & PseudoJet::operator=(const PseudoJet & other_pj){
 //std::shared_ptr:   // }
 //std::shared_ptr: }
 //std::shared_ptr: 
-//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif // FASTJET_HAVE_THREAD_SAFETY
 
 //----------------------------------------------------------------------
 /// do standard end of initialisation
@@ -130,12 +130,14 @@ void PseudoJet::_finish_init () {
   // 10ns total initialisation time (on a intel Core i7 2.7GHz)
   _rap = pseudojet_invalid_rap;
 
+#ifdef FASTJET_HAVE_THREAD_SAFETY
   _init_status = Init_NotDone;
+#endif
 }
 
 //----------------------------------------------------------------------
-#ifdef FASTJET_HAVE_CXX11_FEATURES
-inline void PseudoJet::_ensure_valid_rap_phi() const{
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+void PseudoJet::_ensure_valid_rap_phi() const{
   //TODO: for _init_status we can use memory_order_release when
   //writing and memory_order_acquire when reading. Check if that has
   //an impact on timing
@@ -440,7 +442,9 @@ void PseudoJet::set_cached_rap_phi(double rap_in, double phi_in) {
   _rap = rap_in; _phi = phi_in;
   if (_phi >= twopi) _phi -= twopi;
   if (_phi < 0)      _phi += twopi;
+#ifdef FASTJET_HAVE_THREAD_SAFETY
   _init_status = Init_Done;
+#endif
 }
 
 //----------------------------------------------------------------------
@@ -562,10 +566,10 @@ const ClusterSequence * PseudoJet::validated_cs() const {
 //----------------------------------------------------------------------
 // set the associated structure
 void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase> &structure_in){
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:   // if the jet currently belongs to a cs, we need to release it before any chenge
 //std::shared_ptr:   _release_jet_from_cs();
-//std::shared_ptr: #endif //FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif //FASTJET_HAVE_THREAD_SAFETY
   _structure = structure_in;
 }
 

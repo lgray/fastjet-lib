@@ -55,7 +55,7 @@ const double D0RunIIConePlugin::_DEFAULT_pT_min_second_protojet   = 0.   ;
 const int    D0RunIIConePlugin::_DEFAULT_merge_max                = 10000; 
 const double D0RunIIConePlugin::_DEFAULT_pT_min_nomerge           = 0.   ;
 
-cxx11helpers::FirstTimeTrigger D0RunIIConePlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue D0RunIIConePlugin::_first_time;
 
 string D0RunIIConePlugin::description () const {
   ostringstream desc;

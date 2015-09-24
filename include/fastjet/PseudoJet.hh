@@ -93,14 +93,14 @@ class PseudoJet {
   // NB: "dummy" is commented to avoid unused-variable compiler warnings
   PseudoJet(bool /* dummy */) {}
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_THREAD_SAFETY
   PseudoJet(const PseudoJet &other){ (*this)=other; }
   PseudoJet& operator=(const PseudoJet& other);
 #endif
   
   /// default (virtual) destructor
   virtual ~PseudoJet(){}
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:     ;
 //std::shared_ptr: #else
 //std::shared_ptr:     {}
@@ -243,7 +243,7 @@ class PseudoJet {
   void operator+=(const PseudoJet &);
   void operator-=(const PseudoJet &);
 
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:   /// overload the assignment through the = operator
 //std::shared_ptr:   ///
 //std::shared_ptr:   /// this is needed to make sure that release_from_cs is called
@@ -840,13 +840,15 @@ class PseudoJet {
   double _kt2; 
   int    _cluster_hist_index, _user_index;
 
+#ifdef FASTJET_HAVE_THREAD_SAFETY
   enum {
     Init_Done=1,
     Init_NotDone=0,
     Init_InProgress=-1
   };
-  
+
   mutable std::atomic<int> _init_status;
+#endif
   
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
@@ -856,7 +858,7 @@ class PseudoJet {
 //std::shared_ptr: /// reset the shared pointers to empty ones
 //std::shared_ptr: void _reset_shared_pointers();
 //std::shared_ptr: 
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:   /// For jets associated with a ClusterSequence, this will "free" the
 //std::shared_ptr:   /// jet from the ClusterSequence. This means that, for self-deleting
 //std::shared_ptr:   /// cluster sequences, it will reset the structure pointer and check
@@ -868,11 +870,11 @@ class PseudoJet {
 //std::shared_ptr:   /// IT HAS TO BE CALLED BEFORE ANY CHANGE OF THE JET STRUCTURE
 //std::shared_ptr:   /// POINTER
 //std::shared_ptr:   void _release_jet_from_cs();
-//std::shared_ptr: #endif //FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif //FASTJET_HAVE_THREAD_SAFETY
 
   /// ensure that the internal values for rapidity and phi 
   /// correspond to 4-momentum structure
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_THREAD_SAFETY
   void _ensure_valid_rap_phi() const;
 #else
   inline void _ensure_valid_rap_phi() const{
@@ -992,10 +994,10 @@ inline void PseudoJet::_reset_indices() {
 }
 
 //std::shared_ptr: inline void PseudoJet::_reset_shared_pointers() {
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:   // if the jet currently belongs to a cs, we need to release it before any chenge
 //std::shared_ptr:   _release_jet_from_cs();
-//std::shared_ptr: #endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif // FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:   _structure.reset();
 //std::shared_ptr:   _user_info.reset();
 //std::shared_ptr:   // and do not forget to remove it in reset_indices above

@@ -141,13 +141,13 @@ fi
 dnl check if one wants to enable c++11 features (required e.g. for thread-safety)
 dnl
 dnl This defines a FASTJET_HAVE_CXX11_FEATURES in fastjet/config.h
-AC_ARG_ENABLE(c++11-features,
-	[  --enable-c++11-features Turn on C++11 features (needed e.g. for thread-safety) [default=no]],
-	[ENABLE_CXX11FEATURES_FLAG="$enableval"],
-	[ENABLE_CXX11FEATURES_FLAG="no"])
-if [[ "$ENABLE_CXX11FEATURES_FLAG" == "yes" ]] ; then
-   AC_DEFINE(HAVE_CXX11_FEATURES, [], [defined if C++11 features have been enabled])
-   AC_MSG_WARN([C++11 features may require additional compiler arguments, these have to be specified by the user])
+AC_ARG_ENABLE(limited-thread-safety,
+	[  --enable-limited-thread-safety   Turn on basic thread-safety features (requires C++11)  [default=no]],
+	[ENABLE_LIMITED_THREAD_SAFETY_FLAG="$enableval"],
+	[ENABLE_LIMITED_THREAD_SAFETY_FLAG="no"])
+if [[ "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" == "yes" ]] ; then
+   AC_DEFINE(HAVE_LIMITED_THREAD_SAFETY, [], [defined if limited thread-safety has been enabled])
+   AC_MSG_WARN([Thread safety uses C++11 features and may require additional compiler arguments, these have to be specified by the user])
    # one could alternately try to see what compiler flag(s) has to be included
    # although that can be fairly heavy so better be moved in an ac file 
    #
@@ -166,6 +166,60 @@ if [[ "$ENABLE_CXX11FEATURES_FLAG" == "yes" ]] ; then
    #   fi
 fi
 
+AC_ARG_ENABLE(thread-safety,
+	[  --enable-thread-safety           Turn on thread-safety features (requires C++11)  [default=no]],
+	[ENABLE_THREAD_SAFETY_FLAG="$enableval"],
+	[ENABLE_THREAD_SAFETY_FLAG="no"])
+if [[ "$ENABLE_THREAD_SAFETY_FLAG" == "yes" ]] ; then
+   AC_DEFINE(HAVE_LIMITED_THREAD_SAFETY, [], [defined if limited thread-safety has been enabled])
+   AC_DEFINE(HAVE_THREAD_SAFETY,         [], [defined if thread-safety has been enabled])
+   AC_MSG_WARN([Thread safety uses C++11 features and may require additional compiler arguments, these have to be specified by the user])
+fi
+
+dnl-------------------------------------------------------------------
+dnl check if a few modern compiler options are availabble
+
+dnl---------- [[deprecated]] --> HAVE_CXX14_DEPRECATED ---------------
+AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "[[deprecated]]" keyword]])
+AC_LANG_PUSH(C++)
+save_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -Werror=attributes"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public:  [[deprecated]] void test() {}}; int main(void){ A a; a.test(); return 0;}]])],
+    [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
+CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_POP(C++)
+if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+   AC_DEFINE(HAVE_CXX14_DEPRECATED, [], [compiler supports c++14 deprecated keyword])
+fi
+AC_MSG_RESULT([$ac_compiler_has_requested_support])
+
+dnl------ _attribute__((deprecated)) --> HAVE_GNUCXX_DEPRECATED ------
+AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "__attribute__((deprecated))" keyword]])
+AC_LANG_PUSH(C++)
+save_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -Werror=attributes"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: void test() __attribute__((deprecated)) {}};int main(void){ A a; a.test(); return 0;}]])],
+    [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
+CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_POP(C++)
+if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+   AC_DEFINE(HAVE_GNUCXX_DEPRECATED, [], [compiler supports GNU c++ deprecated attribute])
+fi
+AC_MSG_RESULT([$ac_compiler_has_requested_support])
+
+dnl------------------- override --> HAVE_OVERRIDE ---------------------
+AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "override" keyword]])
+AC_LANG_PUSH(C++)
+save_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -Werror"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: virtual void test(){}}; class B : public A{public: virtual void test() override{}}; int main(void){ B b; b.test(); return 0;}]])],
+    [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
+CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_POP(C++)
+if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+   AC_DEFINE(HAVE_OVERRIDE, [], [compiler supports the "override" keyword])
+fi
+AC_MSG_RESULT([$ac_compiler_has_requested_support])
 
 
 dnl-------------------------------------------------------------------
@@ -554,7 +608,15 @@ CONFIG_SUMMARY+="  Shared libraries           "${enable_shared}"\n"
 CONFIG_SUMMARY+="  Static libraries           "${enable_static}"\n"
 CONFIG_SUMMARY+="  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"
 CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
-CONFIG_SUMMARY+="  C++11 features             "${ENABLE_CXX11FEATURES_FLAG}"\n"
+if [[ "$ENABLE_THREAD_SAFETY_FLAG" == "yes" ]]; then
+CONFIG_SUMMARY+="  Thread safety              yes (requires C++11)\n"
+else
+if [[ "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" == "yes" ]]; then
+CONFIG_SUMMARY+="  Thread safety              limited (requires C++11)\n"
+else
+CONFIG_SUMMARY+="  Thread safety              no\n"
+fi
+fi
 AC_PLUGIN_SUMMARY([yes])
 CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
 AC_SUBST(CONFIG_SUMMARY)

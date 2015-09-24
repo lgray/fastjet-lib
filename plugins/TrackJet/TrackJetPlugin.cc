@@ -88,7 +88,7 @@ public:
 // implementation of the TrackJet plugin
 //------------------------------------------------------------------
 
-cxx11helpers::FirstTimeTrigger TrackJetPlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue TrackJetPlugin::_first_time;
 
 string TrackJetPlugin::description () const {
   ostringstream desc;

@@ -45,7 +45,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-cxx11helpers::FirstTimeTrigger ATLASConePlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue ATLASConePlugin::_first_time;
 
 string ATLASConePlugin::description () const {
   ostringstream desc;

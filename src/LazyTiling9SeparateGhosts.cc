@@ -35,11 +35,11 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 atomic<double> LazyTiling9SeparateGhosts::ghost_pt2_threshold{1e-100}; 
 #else
 double LazyTiling9SeparateGhosts::ghost_pt2_threshold = 1e-100; 
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 LazyTiling9SeparateGhosts::LazyTiling9SeparateGhosts(ClusterSequence & cs) :
   _cs(cs), _jets(cs.jets())

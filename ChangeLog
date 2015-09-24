@@ -1,5 +1,76 @@
 2015-09-24  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc:
+	put the banner printing (including the optional ostream) into
+	FASTJET_HAVE_LIMITED_THREAD_SAFETY and the CS self-deletion in
+	FASTJET_HAVE_THREAD_SAFETY.
+
+	* include/fastjet/PseudoJet.hh:
+	put _init_status in a code onlly used with thread safety
+
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc:
+	* include/fastjet/SharedPtr.hh:
+	used the FASTJET_HAVE_THREAD_SAFETY confgure define
+
+	* src/LimitedWarning.cc:
+	* include/fastjet/LimitedWarning.hh:
+	* src/Error.cc:
+	* include/fastjet/Error.hh:
+	* src/LazyTiling9SeparateGhosts.cc:
+	* include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
+	* include/fastjet/GhostedAreaSpec.hh:
+	* src/GhostedAreaSpec.cc:
+	used the FASTJET_HAVE_LIMITED_THREAD_SAFETY confgure define
+
+        * plugins/ATLASCone/ATLASConePlugin.cc:
+        * plugins/ATLASCone/fastjet/ATLASConePlugin.hh:
+        * plugins/CDFCones/CDFJetCluPlugin.cc:
+        * plugins/CDFCones/CDFMidPointPlugin.cc:
+        * plugins/CDFCones/fastjet/CDFJetCluPlugin.hh:
+        * plugins/CDFCones/fastjet/CDFMidPointPlugin.hh:
+        * plugins/CMSIterativeCone/CMSIterativeConePlugin.cc:
+        * plugins/CMSIterativeCone/fastjet/CMSIterativeConePlugin.hh:
+        * plugins/D0RunICone/D0RunIBaseConePlugin.cc:
+        * plugins/D0RunICone/fastjet/D0RunIConePlugin.hh:
+        * plugins/D0RunICone/fastjet/D0RunIpre96ConePlugin.hh:
+        * plugins/D0RunIICone/D0RunIIConePlugin.cc:
+        * plugins/D0RunIICone/fastjet/D0RunIIConePlugin.hh:
+        * plugins/PxCone/PxConePlugin.cc:
+        * plugins/PxCone/fastjet/PxConePlugin.hh:
+        * plugins/TrackJet/TrackJetPlugin.cc:
+        * plugins/TrackJet/fastjet/TrackJetPlugin.hh:
+	replaced cxx11helpers::FirstTimeTrigger by
+	thread_safety_helpers::FirstTimeTrue
+	and used the FASTJET_HAVE_LIMITED_THREAD_SAFETY confgure define
+
+	* include/fastjet/internal/cxx11helpers.hh:          *** REMOVED ***
+        * include/fastjet/internal/thread_safety_helpers.hh:   *** ADDED ***
+	* include/fastjet/internal/Makefile.am:
+	renamed cxx11helpers.hh into thread_safety_helpers.hh.
+	Renamed the cxx11helpers namespace into thread_safety_helpers.
+	Also renamed FirstTimeTrigger into FirstTimeTrue
+
+	* include/fastjet/SahredPtr.hh:
+	explicitly included the <atomic> header
+
+	* m4/CGAL.m4:
+	improved support for compiler options (brought from the trunk)
+
+	* config.h.in:
+	* configure.ac (CONFIGURE_INVOCATION):
+	replaced HAVE_CXX11_FEATURES by HAVE_LIMITED_THREAD_SAFETY and
+	HAVE_THREAD_SAFETY allowing two levels of thread-safety through
+	--enable-limited-thread-safety --enable-thread-safety.
+
+	checked for support for a few specific compiler flags, (deprecated
+	and override), and define the appropriate symbols)
+
+	* src/ClusterSequenceStructure.cc (ClusterSequenceStructure):
+	commeted out a #ifndef left over from the switch ack to our own
+	SharedPtr (60 lines down in the ChangeLog)
+
 	* include/fastjet/PseudoJet.hh:
 	* src/PseudoJet.cc:
 	implemented a thread-safe version of the rap-phi initialisation.

@@ -39,7 +39,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // in order to keep thread-safety, have an independent random
 // generator for each thread
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   thread_local 
 #endif    
 BasicRandom<double> GhostedAreaSpec::_random_generator;

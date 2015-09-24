@@ -151,7 +151,7 @@ void D0RunIBaseConePlugin::run_clustering_worker(ClusterSequence & clust_seq) co
 //                                         //
 /////////////////////////////////////////////
 
-cxx11helpers::FirstTimeTrigger D0RunIpre96ConePlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue D0RunIpre96ConePlugin::_first_time;
 
 string D0RunIpre96ConePlugin::description () const {
   ostringstream desc;
@@ -198,7 +198,7 @@ void D0RunIpre96ConePlugin::_print_banner(ostream *ostr) const{
 //                                         //
 /////////////////////////////////////////////
 
-cxx11helpers::FirstTimeTrigger D0RunIConePlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue D0RunIConePlugin::_first_time;
 
 string D0RunIConePlugin::description () const {
   ostringstream desc;

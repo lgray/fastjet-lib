@@ -269,7 +269,7 @@ private:
 
 // in order to keep thread-safety, have an independent random
 // generator for each thread
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   static thread_local BasicRandom<double> _random_generator;
 #else
   static BasicRandom<double> _random_generator;

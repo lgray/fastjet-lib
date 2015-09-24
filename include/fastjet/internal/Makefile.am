@@ -9,7 +9,7 @@ fastjetincludeinternal_HEADERS = base.hh ClosestPair2DBase.hh \
   LazyTiling25.hh \
   LazyTiling9SeparateGhosts.hh \
   TilingExtent.hh \
-  cxx11helpers.hh
+  thread_safety_helpers.hh
 
 #
 # the following file is used by internal .cc files and

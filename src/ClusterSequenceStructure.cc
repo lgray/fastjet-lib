@@ -45,7 +45,7 @@ using namespace std;
 ClusterSequenceStructure::~ClusterSequenceStructure(){
   // with CXX11 support, the self-deletion is handled in
   // release_pseudojet
-#ifndef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifndef FASTJET_HAVE_THREAD_SAFETY
   if (_associated_cs != NULL 
       && _associated_cs->will_delete_self_when_unused()) {
     // automatically handle deletion of the cluster sequence;
@@ -59,7 +59,7 @@ ClusterSequenceStructure::~ClusterSequenceStructure(){
     _associated_cs->signal_imminent_self_deletion();
     delete _associated_cs;
   }
-#endif // FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #endif // FASTJET_HAVE_THREAD_SAFETY
 }
 
 

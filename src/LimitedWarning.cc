@@ -36,14 +36,14 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 atomic<ostream *> LimitedWarning::_default_ostr{&cerr};
 atomic<int> LimitedWarning::_max_warn_default{5};
 std::mutex LimitedWarning::_global_warnings_summary_mutex;
 #else
 ostream * LimitedWarning::_default_ostr = &cerr;
 int LimitedWarning::_max_warn_default = 5;
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 std::list< LimitedWarning::Summary > LimitedWarning::_global_warnings_summary;
 

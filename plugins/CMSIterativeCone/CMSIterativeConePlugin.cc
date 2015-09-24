@@ -82,7 +82,7 @@ T deltaR2 (T eta1, T phi1, T eta2, T phi2) {
 }
 
 //------------------------------------------------------
-cxx11helpers::FirstTimeTrigger CMSIterativeConePlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue CMSIterativeConePlugin::_first_time;
 
 string CMSIterativeConePlugin::description () const {
   ostringstream desc;

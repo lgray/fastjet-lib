@@ -42,19 +42,19 @@
 // precedence anyway
 //#define __FASTJET_USETR1SHAREDPTR
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_THREAD_SAFETY
 // use C11's shared pointer
 //std::shared_ptr #include <memory>
-#include "fastjet/internal/cxx11helpers.hh"
+#include <atomic>
 #else
 #ifdef __FASTJET_USETR1SHAREDPTR
 #include <tr1/memory>
 #endif // __FASTJET_USETR1SHAREDPTR
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_THREAD_SAFETY
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_THREAD_SAFETY
 
 //std::shared_ptr /// @ingroup advanced_usage
 //std::shared_ptr /// \class SharedPtr
@@ -254,7 +254,6 @@ public:
    * The pointer is deleted when the number of counts goes to 0;
    * \endif
    */
-  //class __SharedCountingPtr : public cxx11helpers::AtomicCounter<long>{
   class __SharedCountingPtr : public std::atomic<long>{
   public:
     /// default ctor
@@ -348,7 +347,7 @@ inline T* get_pointer(SharedPtr<T> const & t){
 
 
 
-#else  // FASTJET_HAVE_CXX11_FEATURES
+#else  // FASTJET_HAVE_THREAD_SAFETY
 
 #ifdef __FASTJET_USETR1SHAREDPTR
 
@@ -707,7 +706,7 @@ inline T* get_pointer(SharedPtr<T> const & t){
 
 #endif // __FASTJET_USETR1SHAREDPTR
 
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_THREAD_SAFETY
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 

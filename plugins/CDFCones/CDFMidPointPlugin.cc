@@ -43,7 +43,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 using namespace std;
 using namespace cdf;
 
-cxx11helpers::FirstTimeTrigger CDFMidPointPlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue CDFMidPointPlugin::_first_time;
 
 string CDFMidPointPlugin::description () const {
   ostringstream desc;

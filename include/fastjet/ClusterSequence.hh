@@ -48,11 +48,7 @@
 #include "fastjet/FunctionOfPseudoJet.hh"
 #include "fastjet/ClusterSequenceStructure.hh"
 
-// #include "fastjet/config.h"
-// #ifdef FASTJET_HAVE_CXX11_FEATURES
-// #include <atomic>
-// #endif // FASTJET_HAVE_CXX11_FEATURES
-#include "fastjet/internal/cxx11helpers.hh"  // helpers to write code w&wo C++11 features
+#include "fastjet/internal/thread_safety_helpers.hh"  // helpers to write code w&wo thread-safety
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -300,7 +296,7 @@ class ClusterSequence {
   /// when unused
   bool will_delete_self_when_unused() const {return _deletes_self_when_unused;}
 
-//std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
+//std::shared_ptr: #ifdef FASTJET_HAVE_THREAD_SAFETY
 //std::shared_ptr:   /// signals that a jet will no longer use the current CS (internal use only)
 //std::shared_ptr:   void release_pseudojet(PseudoJet &jet) const;
 //std::shared_ptr: #else
@@ -575,14 +571,14 @@ public:
   static std::ostream * fastjet_banner_stream() {return _fastjet_banner_ostr;}
 
 private:
+  
   /// \cond internal_doc
-
   /// contains the actual stream to use for banners 
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   static std::atomic<std::ostream*> _fastjet_banner_ostr;
 #else
   static std::ostream * _fastjet_banner_ostr;
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
   /// \endcond
 
 protected:
@@ -715,7 +711,7 @@ protected:
   /// object referring to it disappears. It is mutable so as to ensure
   /// that signal_imminent_self_deletion() [const] can make relevant
   /// changes.
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_THREAD_SAFETY
   mutable std::atomic<bool> _deletes_self_when_unused;
 #else
   mutable bool _deletes_self_when_unused;
@@ -774,7 +770,7 @@ protected:
 
 
   /// will be set by default to be true for the first run
-  static cxx11helpers::FirstTimeTrigger _first_time;
+  static thread_safety_helpers::FirstTimeTrue _first_time;
 
   /// manage warnings related to exclusive jets access
   static LimitedWarning _exclusive_warnings;

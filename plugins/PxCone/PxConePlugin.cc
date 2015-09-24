@@ -41,7 +41,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-cxx11helpers::FirstTimeTrigger PxConePlugin::_first_time;
+thread_safety_helpers::FirstTimeTrue PxConePlugin::_first_time;
 
 string PxConePlugin::description () const {
   ostringstream desc;

@@ -32,7 +32,7 @@
 #define __TRACKJETPLUGIN_HH__
 
 #include "fastjet/JetDefinition.hh"
-#include "fastjet/internal/cxx11helpers.hh"  // helpers to write transparent code w&wo C++11 features
+#include "fastjet/internal/thread_safety_helpers.hh"  // helpers to write transparent code w&wo C++11 features
 
 // questionable whether this should be in fastjet namespace or not...
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -88,7 +88,7 @@ private:
   JetDefinition::DefaultRecombiner _jet_recombiner;
   JetDefinition::DefaultRecombiner _track_recombiner;
 
-  static cxx11helpers::FirstTimeTrigger _first_time;
+  static thread_safety_helpers::FirstTimeTrue _first_time;
 
   /// print a banner for reference to the 3rd-party code
   void _print_banner(std::ostream *ostr) const;
