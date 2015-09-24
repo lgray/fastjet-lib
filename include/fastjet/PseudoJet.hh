@@ -37,7 +37,7 @@
 #include<cassert>
 #include<cmath>
 #include<iostream>
-//std::shared_ptr: #include "fastjet/config.h"
+#include "fastjet/config.h"
 #include "fastjet/internal/numconsts.hh"
 #include "fastjet/internal/IsBase.hh"
 #include "fastjet/SharedPtr.hh"
@@ -93,6 +93,11 @@ class PseudoJet {
   // NB: "dummy" is commented to avoid unused-variable compiler warnings
   PseudoJet(bool /* dummy */) {}
 
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  PseudoJet(const PseudoJet &other){ (*this)=other; }
+  PseudoJet& operator=(const PseudoJet& other);
+#endif
+  
   /// default (virtual) destructor
   virtual ~PseudoJet(){}
 //std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
@@ -835,6 +840,14 @@ class PseudoJet {
   double _kt2; 
   int    _cluster_hist_index, _user_index;
 
+  enum {
+    Init_Done=1,
+    Init_NotDone=0,
+    Init_InProgress=-1
+  };
+  
+  mutable std::atomic<int> _init_status;
+  
   /// calculate phi, rap, kt2 based on the 4-momentum components
   void _finish_init();
   /// set the indices to default values
@@ -859,10 +872,14 @@ class PseudoJet {
 
   /// ensure that the internal values for rapidity and phi 
   /// correspond to 4-momentum structure
-  inline void _ensure_valid_rap_phi() const {
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+  void _ensure_valid_rap_phi() const;
+#else
+  inline void _ensure_valid_rap_phi() const{
     if (_phi == pseudojet_invalid_phi) _set_rap_phi();
   }
-
+#endif
+  
   /// set cached rapidity and phi values
   void _set_rap_phi() const;
 

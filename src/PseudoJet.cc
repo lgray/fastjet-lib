@@ -65,6 +65,32 @@ PseudoJet::PseudoJet(const double px_in, const double py_in, const double pz_in,
   
 }
 
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+/// copy-assignmemt
+///
+/// this has to be explicitly specified since atomic does not support it.
+PseudoJet & PseudoJet::operator=(const PseudoJet & other_pj){
+  _structure = other_pj._structure;
+  _user_info = other_pj._user_info;
+
+  _kt2 = other_pj._kt2; 
+  _cluster_hist_index = other_pj._cluster_hist_index;
+  _user_index = other_pj._user_index;
+
+  _px = other_pj._px;
+  _py = other_pj._py;
+  _pz = other_pj._pz;
+  _E  = other_pj._E;
+
+  _phi = other_pj._phi; 
+  _rap = other_pj._rap;
+
+  _init_status.store(other_pj._init_status);
+  
+  return *this;
+}
+#endif // FASTJET_HAVE_CXX11_FEATURES
+
 //std::shared_ptr: //----------------------------------------------------------------------
 //std::shared_ptr: #ifdef FASTJET_HAVE_CXX11_FEATURES
 //std::shared_ptr: PseudoJet::~PseudoJet(){
@@ -103,7 +129,55 @@ void PseudoJet::_finish_init () {
   // So we initialise it; penalty is about 0.3ns per PseudoJet out of about
   // 10ns total initialisation time (on a intel Core i7 2.7GHz)
   _rap = pseudojet_invalid_rap;
+
+  _init_status = Init_NotDone;
 }
+
+//----------------------------------------------------------------------
+#ifdef FASTJET_HAVE_CXX11_FEATURES
+inline void PseudoJet::_ensure_valid_rap_phi() const{
+  //TODO: for _init_status we can use memory_order_release when
+  //writing and memory_order_acquire when reading. Check if that has
+  //an impact on timing
+  if (_init_status!=Init_Done){
+    int expected = Init_NotDone;
+    // if it's 0 (not done), set thing to "operation in progress"
+    // (-1) and do the init
+    //
+    // Note:
+    //   - this has to be the strong version so we can make a single
+    //     test
+    //   - we need to make sure that the -1 is loaded properly
+    //     (success), hence a std::memory_order_seq_cst model
+    //   - the failure model can be anything since we're not going
+    //     to use the value anyway
+    if (_init_status.compare_exchange_strong(expected, Init_InProgress,
+                                             std::memory_order_seq_cst,
+                                             std::memory_order_relaxed)){
+      _set_rap_phi();
+      _init_status = Init_Done; // can safely be done after all physics varlables are set
+    } else {
+      // wait until done
+      do{
+        // the operation below will reset expected to whatever is in
+        // init_state if the test fails, so we need to reset it to
+        // the 1 (aka init_done) we want!
+        expected = Init_Done;
+ 
+        // the next line
+        // - here we could potentially use the weak form
+        // - on success the value is unchanged so I think we can use relaxed ordering
+        // - expected will be reinitialised anyway so again, relaxed ordering should be fi
+
+        //} while (!_init_state.compare_exchange_strong(expected, 1));
+      } while (!_init_status.compare_exchange_weak(expected, Init_Done,
+                                                   std::memory_order_relaxed,
+                                                   std::memory_order_relaxed));
+    }
+    
+  }
+}
+#endif
 
 //----------------------------------------------------------------------
 void PseudoJet::_set_rap_phi() const {
@@ -366,6 +440,7 @@ void PseudoJet::set_cached_rap_phi(double rap_in, double phi_in) {
   _rap = rap_in; _phi = phi_in;
   if (_phi >= twopi) _phi -= twopi;
   if (_phi < 0)      _phi += twopi;
+  _init_status = Init_Done;
 }
 
 //----------------------------------------------------------------------

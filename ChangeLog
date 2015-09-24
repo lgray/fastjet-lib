@@ -1,5 +1,12 @@
 2015-09-24  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc:
+	implemented a thread-safe version of the rap-phi initialisation.
+	This goes through an atomic status flag.
+	Notes: - it comes with a ~5% time penalty
+	       - there might be further gain to get on memory ordering (see code)
+
 	* include/fastjet/internal/cxx11helpers.hh (cxx11helpers):
 	Mostly reverted AtomicCounter to a simple stepping counter with
 	overflow protection.
