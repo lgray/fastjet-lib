@@ -1,3 +1,12 @@
+2015-09-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/cxx11helpers.hh (cxx11helpers):
+	Mostly reverted AtomicCounter to a simple stepping counter with
+	overflow protection.
+
+	* include/fastjet/SharedPtr.hh:
+	made the internal __SharedCountingPtr inherit directly from atomic<long>
+
 2015-09-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/Subtractor.hh:

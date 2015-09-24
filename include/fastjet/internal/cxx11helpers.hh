@@ -53,11 +53,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 namespace cxx11helpers{
 
+
+
   //----------------------------------------------------------------------
   /// \if internal_doc
   /// \class AtomicCounter
   ///
-  /// provides a thread-safe counter
+  /// provides a thread-safe counter which can only step one unit at a time
+  /// and has overflow protection
   /// \endif
   template<typename T>
   class AtomicCounter{
@@ -77,7 +80,7 @@ namespace cxx11helpers{
     operator T() const{ return _count.load();}
 
     /// get the count
-    T count() const{ return _count.load();}
+    T get() const{ return _count.load();}
     
     /// set the counter to a given value
     void set(const T new_value){
@@ -87,51 +90,45 @@ namespace cxx11helpers{
     /// step the counter and return the count just before it was stepped
     ///
     /// Q: can we declare this as T && ...?
-    //
-    // GPS: could this be an operator++?; the main reason
-    //      against is the overflow protection?
     T step(){
-      // just do the following:
-      // see e.g. http://en.cppreference.com/w/cpp/atomic/atomic/fetch_add
-      return _count.fetch_add(1);
-      
-      // alternative (more complex method)
+      // another thread could be upadting this at the same time, so extra
+      // care is needed.
       //
-      // // another thread could be upadting this at the same time, so extra
-      // // care is needed.
-      // //
-      // // Recall that the compare_exchange_strong will return true if the
-      // // exchange has been done. Otherwise, it means that the count
-      // // changed in the meantime, so we try again. Also, since when it
-      // // "fails" compare_exchange_strong loads the count of *this in
-      // // expected, count does not need to be re-read in the loop!
-      // //
-      // // Note that at the end of this procedure, count will countain the
-      // // number of times this warning occured just before this
-      // // occurence. It can thus be used to see if it needs to be printed
-      // // out
-      // unsigned int count = _count;
-      // while (_count < std::numeric_limits<unsigned int>::max()
-      //        && !(_count.compare_exchange_strong(count, count+1)));
-      // return count;
+      // Recall that the compare_exchange_strong will return true if the
+      // exchange has been done. Otherwise, it means that the count
+      // changed in the meantime, so we try again. Also, since when it
+      // "fails" compare_exchange_strong loads the count of *this in
+      // expected, count does not need to be re-read in the loop!
+      //
+      // Note that at the end of this procedure, count will countain the
+      // number of times this warning occured just before this
+      // occurence. It can thus be used to see if it needs to be printed
+      // out
+      //
+      // Note also that compared to the apparently simpler fetch_add,
+      // this method also avoids overflows
+      T count = _count;
+      while (_count < std::numeric_limits<T>::max()
+             && !(_count.compare_exchange_strong(count, count+1)));
+      return count;
     }
 
-    /// add a given amount to the counter
-    /// return the value just before the addition was done
-    T add(const T to_add){
-      return _count.fetch_add(to_add);
+    /// override the ++ operator
+    /// prefix version
+    inline T operator++(){
+      return step()+1;
     }
-    
-    /// subtract a given amount to the counter
-    /// return the value just before the subtraction was done
-    T subtract(const T to_subtract){
-      return _count.fetch_sub(to_subtract);
+
+    /// override the ++ operator
+    /// postfix version
+    inline T operator++(int){
+      return step();
     }
 
   private:
     std::atomic<T> _count;  ///< the actual count
   };
-
+  
   //----------------------------------------------------------------------
   /// \if internal_doc
   /// \class FirstTimeTrigger
@@ -200,7 +197,7 @@ namespace cxx11helpers{
     operator T() const{ return _count;}
        
     /// get the count
-    T count() const{ return _count;}
+    T get() const{ return _count;}
 
     /// set the counter to a given value
     void set(const T new_value){
@@ -214,17 +211,18 @@ namespace cxx11helpers{
       return count;
     }
 
-    /// add a given amount to the counter
-    /// return the value just before the addition was done
-    T add(const T to_add){
-      return _count += to_add;
+
+    /// override the ++ operator
+    /// prefix version
+    inline T operator++(){
+      return step()+1;
     }
 
-    /// subtract a given amount to the counter
-    /// return the value just before the subtraction was done
-    T subtract(const T to_subtract){
-      return _count -= to_subtract;
-    }    
+    /// override the ++ operator
+    /// postfix version
+    inline T operator++(int){
+      return step();
+    }
     
   private:
     T _count;  ///< the actual value

@@ -116,7 +116,7 @@ public:
   SharedPtr(SharedPtr const & share) : _ptr(share._get_container()){
     // unless we're sharing nothing, increase the counter to reflect
     // the fact that we have a newcomer sharing the pointer
-    if (_ptr!=NULL) _ptr->step();
+    if (_ptr!=NULL) (*_ptr)++;
   }
 
   /// default dtor
@@ -159,7 +159,7 @@ public:
     // copy the container
     _ptr = share._get_container();  // Note: automatically set it to NULL if share is empty
     
-    if (_ptr!=NULL) _ptr->step();
+    if (_ptr!=NULL) (*_ptr)++;
   }
   
   /// overload the = operator so that it updates count
@@ -241,7 +241,7 @@ public:
   ///   \param count   the value that we need to reset to
   void set_count(const long & count){
     if (_ptr==NULL) return;
-    _ptr->set(count);
+    _ptr->set_count(count);
   }
 
   /**
@@ -254,14 +254,15 @@ public:
    * The pointer is deleted when the number of counts goes to 0;
    * \endif
    */
-  class __SharedCountingPtr : public cxx11helpers::AtomicCounter<long>{
+  //class __SharedCountingPtr : public cxx11helpers::AtomicCounter<long>{
+  class __SharedCountingPtr : public std::atomic<long>{
   public:
     /// default ctor
-    __SharedCountingPtr() : cxx11helpers::AtomicCounter<long>(0), _ptr(NULL){} 
+    __SharedCountingPtr() : std::atomic<long>(0), _ptr(NULL){} 
     
     /// ctor with initialisation
     template<class Y> explicit __SharedCountingPtr(Y* ptr)
-      : cxx11helpers::AtomicCounter<long>(1), _ptr(ptr){}
+      : std::atomic<long>(1), _ptr(ptr){}
     
     /// default dtor
     ~__SharedCountingPtr(){ 
@@ -277,7 +278,7 @@ public:
 
     /// force the count to be set to a specified value
     ///   \param count   the value that we ned to reset to
-    inline void set_count(const long & count){ set(count);}
+    inline void set_count(const long & count){ store(count);}
 
   private:
     T *_ptr;               ///< the pointer we're counting the references to
@@ -306,7 +307,7 @@ private:
     //// if no one else is using it, free the allocated memory
     //if (_ptr->use_count()==0)
     //  delete _ptr; // that automatically deletes the object itself
-    if (_ptr->subtract(1) == 1)
+    if (((*_ptr)--) == 1)
       delete _ptr;
   }
 
