@@ -26,6 +26,12 @@
 #include <cassert>
 #include "fastjet/internal/base.hh"
 
+#include "fastjet/config.h"
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+#include <mutex>
+#endif
+
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// \if internal_doc
@@ -145,9 +151,34 @@ public:
   
   /// given a pointer __res to the beginning of an array, fill that array
   /// with __n random numbers
+  ///
+  /// This now acquired an extra argument which is a optional set of
+  /// seeds (leave empty if not needed).
   void operator() (size_type __n, pointer __res) {
     for(size_type __i = 0; __i < __n; __i++) 
       __res[__i] = this -> operator()(); 
+  }
+
+  /// given a pointer __res to the beginning of an array, fill that array
+  /// with __n random numbers
+  ///
+  /// This now acquired an extra argument which allows to retreive the
+  /// set of seeds used for this generation.
+  void operator() (size_type __n, pointer __res, std::vector<int> & __iseed) {
+    // if we have (limited) thread safety, lock things
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+    // is the lock here really necessary. The only potential issue I
+    // see is if another thread adds a warning when the loop below
+    // calls it++ on the previous last element. Is there a simpler way
+    // to handle this?
+    std::lock_guard<std::mutex> guard(_multiple_number_generation_mutex);
+#endif
+    // get the seeds
+    get_status(__iseed);
+
+    // get the numbers
+    for(size_type __i = 0; __i < __n; __i++) 
+      __res[__i] = this -> operator()();
   }
 
   ///  (re)initialize the random number generator from an array of seeds
@@ -181,6 +212,7 @@ public:
   
 private:
   int _M_iseed[2];
+  static std::mutex _multiple_number_generation_mutex;
 };
   
 //   globally defined random number generator

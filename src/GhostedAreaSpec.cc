@@ -39,9 +39,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 // in order to keep thread-safety, have an independent random
 // generator for each thread
-#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
-  thread_local 
-#endif    
+//#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+//  thread_local 
+//#endif    
 BasicRandom<double> GhostedAreaSpec::_random_generator;
 
 LimitedWarning GhostedAreaSpec::_warn_fj2_placement_deprecated;
@@ -114,12 +114,14 @@ void GhostedAreaSpec::_initialize() {
   // checkpoint the status of the random number generator.
   checkpoint_random();
   //_random_generator.info(cerr);
+  _fixed_seed=vector<int>();
 }
 
 //----------------------------------------------------------------------
 /// adds the ghost 4-momenta to the vector of PseudoJet's
 void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
 
+  // determine the number of ghosts in rapidity 
   double rap_offset;
   int nrap_upper;
   if (_fj2_placement) {
@@ -130,6 +132,28 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
     nrap_upper  = _nrap-1;
   }
 
+  // generate all the random numbers
+  // Note that we have 3 numbers per ghost
+  unsigned int n_random = (nrap_upper+_nrap+1)*_nphi*3;
+  double * all_random = new double[n_random];
+  if (_fixed_seed.size()){
+    // take a copy of the random generator and use that to generate
+    // things with fixed seeds
+    BasicRandom<double> local_rand = generator_at_own_risk();
+    local_rand.set_status(_fixed_seed);
+    _last_used_seed = _fixed_seed;
+    local_rand(n_random, all_random);
+    // // update the seeds so next time we get the next set
+    // local_rand.get_status(_fixed_seeds);
+  } else {
+    // make sure we use a lock and get the seeds used for this
+    // generation
+    _our_rand(n_random, all_random, _last_used_seed);
+  }
+
+  // a counter for where we are in the random array
+  unsigned int random_counter=0;
+  
   // add momenta for ghosts
   for (int irap = -_nrap; irap <= nrap_upper; irap++) {
     for (int iphi = 0; iphi < _nphi; iphi++) {
@@ -139,13 +163,17 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       // NB: in FJ2 we'd exchanged the px and py components relative to a
       // standard definition of phi; to preserve the same areas as fj2
       // we now generate a "phi_fj2", and then convert to a standard phi
-      double phi_fj2 = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
+      //double phi_fj2 = (iphi+0.5) * _dphi + _dphi*(_our_rand()-0.5)*_grid_scatter;
+      double phi_fj2 = (iphi+0.5) * _dphi + _dphi*(all_random[random_counter++]-0.5)*_grid_scatter;
       double phi;
       if (_fj2_placement) phi = 0.5*pi - phi_fj2;
       else                phi = phi_fj2;
-      double rap = (irap+rap_offset) * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
+      //double rap = (irap+rap_offset) * _drap + _drap*(_our_rand()-0.5)*_grid_scatter
+      //	                                                 + _ghost_rap_offset ;
+      double rap = (irap+rap_offset) * _drap + _drap*(all_random[random_counter++]-0.5)*_grid_scatter
 	                                                 + _ghost_rap_offset ;
-      double pt = _mean_ghost_pt*(1+(_our_rand()-0.5)*_pt_scatter);
+      //double pt = _mean_ghost_pt*(1+(_our_rand()-0.5)*_pt_scatter);
+      double pt = _mean_ghost_pt*(1+(all_random[random_counter++]-0.5)*_pt_scatter);
 
       double exprap = exp(+rap);
       double pminus = pt/exprap;
@@ -165,6 +193,9 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
       event.push_back(mom);
     }
   }
+
+  // safety check
+  assert(random_counter==n_random);
 }
 
 string GhostedAreaSpec::description() const {

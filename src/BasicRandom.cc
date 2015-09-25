@@ -31,9 +31,11 @@
 //   nlo includes
 #include "fastjet/internal/BasicRandom.hh"
 
-
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+std::mutex BasicRandom<double>::_multiple_number_generation_mutex;
+#endif
 
 //
 //                   random number generator

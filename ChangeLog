@@ -1,5 +1,42 @@
 2015-09-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/GhostedAreaSpec.hh:
+	* src/GhostedAreaSpec.cc:
+	* include/fastjet/AreaDefinition.hh:
+	Tentative implementation of thread-safety:
+
+	By default, add_ghost locks (with a mutex) during the time it
+	generates the random numbers needed for the ghosts.
+	The seed used for that can be obtained using
+	GhostedAreaSpec::get_used_random_seed() after the clustering [this
+	is fine because ClusterSequenceArea stores a copy of it].
+
+	If one wants to use a fixed set of seeds, you should use a local
+	copy of the GhostedAreaSpec using
+	GhostedAreaSpec::with_fixed_seed(seed). Note that this will fix
+	the seed to that value [and a lock is no longer needed because we
+	can use a copy of the random number generator]
+
+	In practice, one can get a copy of the AreaDefinition using
+	AreaDefinition::with_fixed_seed(seed).
+
+	Note / OPEN QUESTION:
+	---------------------
+	this does not work for n_repeat>1 since the same seed will be used
+	for each ghost set. The workaround would be to have the fixed_seed
+	updated to the generator status at the end of eachset [requires to
+	make it mutable and perhaps change the name]
+	[GS: I'd be in favour of that option but struggle w the naming]
+
+	We haev also removed the thread_local for the random generator as
+	it is not supported by Apple's version of clang.
+
+	* include/fastjet/internal/BasicRandom.hh:
+	* src/BasicRandom.cc:
+	added a operator()(N, *array, seed) which would lock (using a
+	mutex) during the time the N random numbers are genrated and
+	return in 'seed' te initial seed used to generate the numbers
+
 	* include/fastjet/ClusterSequence.hh :
 	marked plugin_associate_extras(std::auto_ptr<Extras>) as deprecated
 

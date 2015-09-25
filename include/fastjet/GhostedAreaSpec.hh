@@ -61,6 +61,42 @@ namespace gas {
 ///
 /// Class that defines the parameters that go into the measurement
 /// of active jet areas.
+///
+/// Notes about thread-safety.
+/// --------------------------
+///
+/// Ghosts are generated randomly, using by default a static random
+/// number generator.
+///
+/// By default, we will lock the number generator during the period
+/// over which we generate the required random numbers.  The procedure
+/// will keep track of the seeds that have been used to generate a
+/// particular set of ghosts (and ultimately, these seeds will be
+/// stored and made available in the ClusterSequenceArea) using
+///
+///   ClusterSequenceArea::area_def().ghost_spec().get_used_random_seed(vector<int>);
+///
+/// To use user-speified seeds in a thread-safe way, the end-user
+/// should use
+///
+///   ClusterSequenceArea csa(particles, jet_def,
+///                           area_def.with_fixed_seed(user_defined_seed);
+///
+/// or explicitly make a copy of the AreaDefinition before doing
+/// the clustering:
+///
+///   AreaDefinition local_area_def
+///     = area_def.with_fixed_seed(user_defined_seed);
+///   ClusterSequenceArea csa(particles, jet_def, area_def,local_area_def);
+///
+/// This will use a local ranmdom generator to compute the ghosts (in
+/// particular, it will not affect the static global generator)
+///
+/// Note that each clustering done with the GhostedAreaSpec obtaind
+/// through area_def.with_seed(user_defined_seed) will use exactly the
+/// same set of ghosts.  Using
+/// area_def.with_fixed_seed(user_defined_seed) will return to using
+/// the common static random generator.
 class GhostedAreaSpec {
 public:
   /// default constructor
@@ -205,6 +241,8 @@ public:
   /// get all relevant information about the status of the 
   /// random number generator, so that it can be reset subsequently
   /// with set_random_status.
+  ///
+  /// 
   inline void get_random_status(std::vector<int> & __iseed) const {
     if (_user_random_generator){
       _user_random_generator->get_status(__iseed);
@@ -225,7 +263,28 @@ public:
       _random_generator.set_status(__iseed);
     }
   }
+
+  /// allows to return a copy of this GhostedAreaSpec with a local set
+  /// of seeds
+  GhostedAreaSpec with_fixed_seed(const std::vector<int> & __iseed) const {
+    GhostedAreaSpec new_spec = (*this);
+    new_spec._fixed_seed = __iseed;
+    return new_spec;
+  }
   
+  /// allows to get the current fixed seed
+  void get_fixed_seed(std::vector<int> & __iseed) const {
+    __iseed = _fixed_seed;
+  }
+  
+  /// allows to get the seed that have been used during the Clustering
+  ///
+  /// Note that this is enough in ClusterSequenceArea only becasue it
+  /// takes a copy
+  void get_used_random_seed(std::vector<int> & __iseed) const {
+    __iseed = _last_used_seed;
+  } 
+
   inline void checkpoint_random() {get_random_status(_random_checkpoint);}
   inline void restore_checkpoint_random() {set_random_status(_random_checkpoint);}
 
@@ -267,14 +326,27 @@ private:
 
   std::vector<int> _random_checkpoint;
 
-// in order to keep thread-safety, have an independent random
-// generator for each thread
-#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
-  static thread_local BasicRandom<double> _random_generator;
-#else
+  // optional fixed seeds
+  std::vector<int> _fixed_seed;
+
+  // access to the seeds used the very last time
+  mutable std::vector<int> _last_used_seed;
+  
+  // in order to keep thread-safety, have an independent random
+  // generator for each thread
+  //
+  // 2015-09-24: thread_local is not supported by Apple's version of
+  // clang! So we'll rely on something different here (see comment at
+  // the top of the class)
+  //#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+  //  static thread_local BasicRandom<double> _random_generator;
+  //#else
   static BasicRandom<double> _random_generator;
-#endif    
+  //#endif    
   //mutable BasicRandom<double> _random_generator;
+
+  /// a set of seeds as defined by the end-user
+  std::vector<int> _user_defined_seeds;
 
   // allow for a user-defined random generator
   SharedPtr<BasicRandom<double> > _user_random_generator;
@@ -283,6 +355,13 @@ private:
 
   inline double _our_rand() const {
     return _user_random_generator ? (*_user_random_generator)() : _random_generator();}
+
+  inline void _our_rand(unsigned int npoints, double *pointer,
+                        std::vector<int> & used_init_seed) const {
+    return _user_random_generator
+      ? (*_user_random_generator)(npoints, pointer, used_init_seed)
+      : _random_generator(npoints, pointer, used_init_seed);
+  }
   
 };
 
