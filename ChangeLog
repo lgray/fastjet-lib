@@ -1,3 +1,9 @@
+2015-09-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/LimitedWarning.cc:
+	fixed a missed switch to FASTJET_HAVE_LIMITED_THREAD_SAFETY.
+	[tested using grep that none are left over]
+
 2015-09-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/ClusterSequence.hh:
