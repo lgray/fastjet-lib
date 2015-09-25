@@ -1,5 +1,24 @@
 2015-09-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/ClusterSequence1GhostPassiveArea.hh:
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh:
+	* include/fastjet/ClusterSequenceActiveArea.hh:
+	* include/fastjet/ClusterSequenceArea.hh:
+	* include/fastjet/ClusterSequencePassiveArea.hh:
+	* include/fastjet/CircularRange.hh:
+	* include/fastjet/RectangularGrid.hh:
+	* include/fastjet/ClusterSequenceStructure.hh:
+	* include/fastjet/CompositeJetStructure.hh:
+	* include/fastjet/WrappedStructure.hh:
+	* include/fastjet/JetDefinition.hh (DefaultRecombiner):
+	added FASTJET_OVERRIDE where needed
+
+	* include/fastjet/internal/base.hh:
+	introduced a FASTJET_OVERRIDE macro that, when supported, allows
+	one to flag a method as having to be overriding the same method in
+	the base class. This would help finding typos (or constness
+	mismatches) in derived classes.
+
 	* include/fastjet/GhostedAreaSpec.hh:
 	* src/GhostedAreaSpec.cc:
 	* include/fastjet/AreaDefinition.hh:
