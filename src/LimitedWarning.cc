@@ -63,7 +63,7 @@ int LimitedWarning::n_warn_so_far() const{
 void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
   // update the summary
   if (_this_warning_summary == 0) {
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
     // Threadsafety note: 
     //   here we need to lock _this_warning_summary to be sure that we
     //   can quietly initialising things without taking the risk that
@@ -87,7 +87,7 @@ void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
     // prepare the information for the summary
     _global_warnings_summary.push_back(Summary(warning, 0));
     _this_warning_summary = & (_global_warnings_summary.back());
-#endif // FASTJET_HAVE_CXX11_FEATURES
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
   }
 
 
@@ -117,7 +117,7 @@ void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
 //----------------------------------------------------------------------
 string LimitedWarning::summary() {
   ostringstream str;
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   {
     // is the lock here really necessary. The only potential issue I
     // see is if another thread adds a warning when the loop below
@@ -129,7 +129,7 @@ string LimitedWarning::summary() {
        it != _global_warnings_summary.end(); it++) {
     str << it->second << " times: " << it->first << endl;
   }
-#ifdef FASTJET_HAVE_CXX11_FEATURES
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   }
 #endif
   return str.str();
