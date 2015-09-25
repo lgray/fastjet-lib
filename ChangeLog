@@ -1,5 +1,12 @@
 2015-09-25  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/ClusterSequence.hh :
+	marked plugin_associate_extras(std::auto_ptr<Extras>) as deprecated
+
+	* include/fastjet/internal/deprecated.hh:
+	added a compiler way to deprecate functions using the
+	FASTJET_DEPRECATED(func[,message]) macro.
+
 	* src/LimitedWarning.cc:
 	fixed a missed switch to FASTJET_HAVE_LIMITED_THREAD_SAFETY.
 	[tested using grep that none are left over]

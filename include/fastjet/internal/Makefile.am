@@ -9,6 +9,7 @@ fastjetincludeinternal_HEADERS = base.hh ClosestPair2DBase.hh \
   LazyTiling25.hh \
   LazyTiling9SeparateGhosts.hh \
   TilingExtent.hh \
+  deprecated.hh \
   thread_safety_helpers.hh
 
 #
