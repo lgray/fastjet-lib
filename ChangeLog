@@ -1,3 +1,10 @@
+2015-09-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/JetMedianBackgroundEstimator.cc:
+	Stored cached results in a JMBGEResult internal class.
+	Implemented a thread-safe version.
+
 2015-09-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/ClusterSequence1GhostPassiveArea.hh:
