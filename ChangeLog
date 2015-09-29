@@ -1,5 +1,9 @@
 2015-09-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/BasicRandom.hh:
+	added a missing "#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY"
+	around the declaration of the mutex
+
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/JetMedianBackgroundEstimator.cc:
 	Stored cached results in a JMBGEResult internal class.

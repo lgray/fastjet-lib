@@ -212,7 +212,9 @@ public:
   
 private:
   int _M_iseed[2];
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   static std::mutex _multiple_number_generation_mutex;
+#endif
 };
   
 //   globally defined random number generator
