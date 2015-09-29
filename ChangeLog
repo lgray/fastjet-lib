@@ -1,5 +1,14 @@
 2015-09-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* src/LimitedWarning.cc:
+	explicitly cast the _this_warning_summary variable to a pointer of
+	type LimitedWarning::Summary* before testing if it is 0.
+
+	This is harmless wo thread-safety enabled and is perfectly fine
+	with the atomic version when thread-safety is switched on. Not
+	doing the cast explicitly, the intel compiler (v13 and 15 tested)
+	are confused between different versions of the == operator.
+
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
 	* tools/JetMedianBackgroundEstimator.cc:
 	moved the templated implementations to the header file;

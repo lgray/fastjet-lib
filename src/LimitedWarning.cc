@@ -55,14 +55,17 @@ std::list< LimitedWarning::Summary > LimitedWarning::_global_warnings_summary;
 /// the number of times so far that a warning has been registered
 /// with this instance of the class.
 int LimitedWarning::n_warn_so_far() const{
-  if (_this_warning_summary==0) return 0;
+  // explicitly cast to the pointer type (useless wo thread-safety
+  // features but works around an issue with the intel compiler
+  // (v13.1.3) with thread-safety features
+  if (((LimitedWarning::Summary *)_this_warning_summary) == 0) return 0;
   return (*_this_warning_summary).second;
 }
 
 
 void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
   // update the summary
-  if (_this_warning_summary == 0) {
+  if (((LimitedWarning::Summary *)_this_warning_summary) == 0){
 #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
     // Threadsafety note: 
     //   here we need to lock _this_warning_summary to be sure that we
@@ -77,7 +80,7 @@ void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
     // thread got us beaten (it's better to use the mutex as little as
     // possible, hence the repetition of the text which might
     // otherwise look stupid)
-    if (_this_warning_summary == 0) {
+    if (((LimitedWarning::Summary *)_this_warning_summary) == 0){
       // prepare the information for the summary
       _global_warnings_summary.push_back(Summary(warning, 0));
       _this_warning_summary = & (_global_warnings_summary.back());
