@@ -579,8 +579,8 @@ T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
     //  (ii)  a calculation is in progress => we wait until it is done
     Status expected = Status_NotReady;
     if (_status.compare_exchange_strong(expected, Status_Working,
-                                        memory_order_seq_cst,
-                                        memory_order_relaxed)){
+                                        std::memory_order_seq_cst,
+                                        std::memory_order_relaxed)){
       // do the calculation and set things as ready
       _result = _compute(PseudoJet());
       _status = Status_Ready;
@@ -589,8 +589,8 @@ T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
       do{
         expected = Status_Ready;
       } while (!_status.compare_exchange_weak(expected, Status_Ready,
-                                              memory_order_seq_cst,
-                                              memory_order_relaxed));
+                                              std::memory_order_seq_cst,
+                                              std::memory_order_relaxed));
     }
   }
 #else

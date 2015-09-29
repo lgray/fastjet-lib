@@ -5,6 +5,8 @@
 	moved the templated implementations to the header file;
 	removed a few unneeded template specifications
 
+	added std:: before the memory order
+
 	* include/fastjet/internal/BasicRandom.hh:
 	added a missing "#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY"
 	around the declaration of the mutex
