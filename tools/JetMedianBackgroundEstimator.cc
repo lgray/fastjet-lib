@@ -229,7 +229,7 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 double JetMedianBackgroundEstimator::_get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const{
 #ifdef FASTJET_HAVE_THREAD_SAFETY
   // acquire lock
-  Status expected;
+  int expected;
   do {
     expected = Status_Ready;
   } while (!_status.compare_exchange_strong(expected, Status_Working,

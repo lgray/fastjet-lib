@@ -488,9 +488,11 @@ private:
   };
 
 #ifdef FASTJET_HAVE_THREAD_SAFETY
-  mutable std::atomic<Status> _status;
+  // it would be nicer to have this typed as Status but some compilers
+  // seem to struggle with atomic<Status>
+  mutable std::atomic<int> _status;
 #else
-  mutable Status _status;                 ///< true when the background computation is up-to-date
+  mutable int _status;                 ///< true when the background computation is up-to-date
 #endif
 
   /// handle warning messages
@@ -577,7 +579,7 @@ T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
     // we have 2 options:
     //  ( i) no calculation is in progress => we do it ourselves
     //  (ii)  a calculation is in progress => we wait until it is done
-    Status expected = Status_NotReady;
+    int expected = Status_NotReady;
     if (_status.compare_exchange_strong(expected, Status_Working,
                                         std::memory_order_seq_cst,
                                         std::memory_order_relaxed)){

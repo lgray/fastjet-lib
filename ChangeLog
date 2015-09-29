@@ -1,5 +1,19 @@
 2015-09-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/JetMedianBackgroundEstimator.cc:
+	declared _status as int or atomic<int> since atiomic<Status> is
+	apparently not supported by all compilers [gcc 4.6 and icpc].
+
+	* include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
+	* src/LazyTiling9SeparateGhosts.cc:
+	moved back to "ghost_pt2_threshold" declared as double and not
+	atomic<double>. The latter is not supported by gcc-4.6 and
+	icpc(v13 and 15). Furthermore, it's the end-userresponsibility to
+	ensure thread-safety if (s)he writes to that variable.
+
+	Note: one might consider the alternative of having a
+	set_ghost_pt2_tyhreshold where we do care of thread-safety
+
 	* src/LimitedWarning.cc:
 	explicitly cast the _this_warning_summary variable to a pointer of
 	type LimitedWarning::Summary* before testing if it is 0.

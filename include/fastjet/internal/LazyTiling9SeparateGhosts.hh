@@ -103,11 +103,11 @@ public:
   /// risk (this is an internal part of fastjet).In a similar spirit,
   /// the interface to access this valus might also change in a future
   /// release of FastJet.
-#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
-  static std::atomic<double> ghost_pt2_threshold;
-#else
+//#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+//  static std::atomic<double> ghost_pt2_threshold;
+//#else
   static double ghost_pt2_threshold;
-#endif //#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+//#endif //#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 protected:
   ClusterSequence & _cs;
