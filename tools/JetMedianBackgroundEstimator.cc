@@ -272,43 +272,6 @@ double JetMedianBackgroundEstimator::_get_value_reference(const PseudoJet &jet, 
 
 
 //------
-template <typename T>
-T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
-#ifdef FASTJET_HAVE_THREAD_SAFETY
-  // test if the calculation is already done
-  if (_status != Status_Ready){
-    // we have 2 options:
-    //  ( i) no calculation is in progress => we do it ourselves
-    //  (ii)  a calculation is in progress => we wait until it is done
-    Status expected = Status_NotReady;
-    if (_status.compare_exchange_strong(expected, Status_Working,
-                                        memory_order_seq_cst,
-                                        memory_order_relaxed)){
-      // do the calculation and set things as ready
-      _result = _compute(PseudoJet());
-      _status = Status_Ready;
-    } else {
-      // wait
-      do{
-        expected = Status_Ready;
-      } while (!_status.compare_exchange_weak(expected, Status_Ready,
-                                              memory_order_seq_cst,
-                                              memory_order_relaxed));
-    }
-  }
-#else
-  // test if the calculation is already done
-  if (_status != Status_Ready){
-    _result = _compute(PseudoJet());
-    _status = Status_Ready;
-  }
-#endif
-  
-  // for _rho_range wo reference, _result can be accessed outside the lock
-  // (if it's not, it means that the end-user has tempered with us)
-  return _result.*what;
-}
-
 // get rho, the median background density per unit area
 double JetMedianBackgroundEstimator::rho() const {
   if (_rho_range.takes_reference())

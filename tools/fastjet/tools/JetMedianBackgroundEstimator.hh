@@ -262,7 +262,7 @@ public:
     if (_status != Status_Ready)
       throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
     //_recompute_if_needed();
-    return _get_value<unsigned int>(& JMBGEResult::_n_jets_used);
+    return _get_value(& JMBGEResult::_n_jets_used);
   }
 
   /// returns the jets used to actually compute the background
@@ -430,7 +430,7 @@ private:
   /// helpers for computing things in a thread-safe way when needed
   double _get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const;
 
-  template <typename T=double>
+  template <typename T>
   T _get_value(T JMBGEResult::*what) const;
 
   /// do the actual job
@@ -564,6 +564,47 @@ public:
 
   virtual std::string description() const {return "BackgroundPtMDensity";}
 };
+
+
+//----------------------------------------------------------------------
+// implementation of the template bits
+
+template <typename T>
+T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+  // test if the calculation is already done
+  if (_status != Status_Ready){
+    // we have 2 options:
+    //  ( i) no calculation is in progress => we do it ourselves
+    //  (ii)  a calculation is in progress => we wait until it is done
+    Status expected = Status_NotReady;
+    if (_status.compare_exchange_strong(expected, Status_Working,
+                                        memory_order_seq_cst,
+                                        memory_order_relaxed)){
+      // do the calculation and set things as ready
+      _result = _compute(PseudoJet());
+      _status = Status_Ready;
+    } else {
+      // wait
+      do{
+        expected = Status_Ready;
+      } while (!_status.compare_exchange_weak(expected, Status_Ready,
+                                              memory_order_seq_cst,
+                                              memory_order_relaxed));
+    }
+  }
+#else
+  // test if the calculation is already done
+  if (_status != Status_Ready){
+    _result = _compute(PseudoJet());
+    _status = Status_Ready;
+  }
+#endif
+  
+  // for _rho_range wo reference, _result can be accessed outside the lock
+  // (if it's not, it means that the end-user has tempered with us)
+  return _result.*what;
+}
 
 
 
