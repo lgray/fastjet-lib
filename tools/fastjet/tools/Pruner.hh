@@ -235,8 +235,8 @@ private:
 /// the softest is rejected.
 ///
 /// Note that this in not meant for standalone use [in particular
-/// because it could lead to memory issues due to the rejected indices
-/// stored internally].
+/// because it could lead to memory (and thread-safety) issues due to
+/// the rejected indices stored internally (as a mutable variable)].
 ///
 /// \endif
 class PruningRecombiner : public JetDefinition::Recombiner{
