@@ -167,10 +167,7 @@ public:
   void operator() (size_type __n, pointer __res, std::vector<int> & __iseed) {
     // if we have (limited) thread safety, lock things
 #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
-    // is the lock here really necessary. The only potential issue I
-    // see is if another thread adds a warning when the loop below
-    // calls it++ on the previous last element. Is there a simpler way
-    // to handle this?
+    // is the lock here really necessary or would a spinlock do better?
     std::lock_guard<std::mutex> guard(_multiple_number_generation_mutex);
 #endif
     // get the seeds

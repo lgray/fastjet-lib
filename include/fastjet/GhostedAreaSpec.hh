@@ -71,16 +71,16 @@ namespace gas {
 /// By default, we will lock the number generator during the period
 /// over which we generate the required random numbers.  The procedure
 /// will keep track of the seeds that have been used to generate a
-/// particular set of ghosts (and ultimately, these seeds will be
-/// stored and made available in the ClusterSequenceArea) using
+/// particular set of ghosts and, ultimately, these seeds will be
+/// made available from ClusterSequenceArea via
 ///
 ///   ClusterSequenceArea::area_def().ghost_spec().get_used_random_seed(vector<int>);
 ///
-/// To use user-speified seeds in a thread-safe way, the end-user
+/// To use user-specified seeds in a thread-safe way, the end-user
 /// should use
 ///
 ///   ClusterSequenceArea csa(particles, jet_def,
-///                           area_def.with_fixed_seed(user_defined_seed);
+///                           area_def.with_fixed_seed(user_defined_seed));
 ///
 /// or explicitly make a copy of the AreaDefinition before doing
 /// the clustering:
@@ -89,10 +89,10 @@ namespace gas {
 ///     = area_def.with_fixed_seed(user_defined_seed);
 ///   ClusterSequenceArea csa(particles, jet_def, area_def,local_area_def);
 ///
-/// This will use a local ranmdom generator to compute the ghosts (in
+/// This will use a local random generator to compute the ghosts (in
 /// particular, it will not affect the static global generator)
 ///
-/// Note that each clustering done with the GhostedAreaSpec obtaind
+/// Note that each clustering done with the GhostedAreaSpec obtained
 /// through area_def.with_seed(user_defined_seed) will use exactly the
 /// same set of ghosts.  Using
 /// area_def.with_fixed_seed(user_defined_seed) will return to using

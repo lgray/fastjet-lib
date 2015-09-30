@@ -1,5 +1,9 @@
 2015-09-30  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/BasicRandom.hh:
+	* include/fastjet/GhostedAreaSpec.hh:
+	minor modifications to comments
+
 	* tools/fastjet/tools/Pruner.hh:
 	mentioned that PruningRecombiner::_rejected could be thread
 	unsafe. Note that we do not fix that because that class is meant
