@@ -167,7 +167,7 @@ int main (int argc, char ** argv) {
       }
     }
     fj::PseudoJet psjet(fourvec);
-    if (abs(psjet.rap() < etamax)) {jets.push_back(psjet);}
+    if (abs(psjet.rap()) < etamax) {jets.push_back(psjet);}
   }
 
   // add a fake underlying event which is very soft, uniformly distributed

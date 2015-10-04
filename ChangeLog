@@ -1,3 +1,8 @@
+2015-10-04  Gavin Salam  <gavin.salam@cern.ch>
+
+	* example/fastjet_timing.cc:
+	fixed bug in placement of abs (revealed by cppcheck)
+
 2015-09-21  Gavin Salam  <gavin.salam@cern.ch>
 
 	* tools/Subtractor.cc:
