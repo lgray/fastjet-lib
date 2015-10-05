@@ -1,3 +1,9 @@
+2015-10-05  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+        * fortran_wrapper/fastjet_fortran_example.f
+	name of program inside file renamed from siscone_example
+	to fastjet_fortran_example
+
 2015-10-04  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/fastjet_timing.cc:

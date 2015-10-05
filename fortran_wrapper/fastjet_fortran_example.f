@@ -12,7 +12,7 @@ C     To use, type: ./fastjet_fortran_example < ../example/data/single-event.dat
 C     
 C     $Id$
 C     
-      program siscone_example
+      program fastjet_fortran_example
       implicit none
 c ... maximum number of particles
       integer n
