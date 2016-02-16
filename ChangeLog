@@ -1,3 +1,11 @@
+2016-02-17  Gregory Soyez  <soyez@fastjet.fr>
+
+	* NEWS:
+	brought changes between release 3.1.1 and 3.1.3
+
+	Note: to-date, all modifications implemented in the 3.1.X-devel
+	branch have been backported to the trunk
+
 2015-10-05  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
         * fortran_wrapper/fastjet_fortran_example.f
