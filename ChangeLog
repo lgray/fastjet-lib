@@ -1,5 +1,8 @@
 2016-02-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* fastjet-config.in:
+	restored lines mistakenly commented out
+
 	* include/fastjet/PseudoJet.hh:
 	* src/PseudoJet.cc:
 	moved the (templated) implementation of "objects_sorted_by_values"

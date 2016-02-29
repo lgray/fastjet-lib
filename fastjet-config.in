@@ -10,11 +10,11 @@
 # the list of plugins is dynamic so we need the following
 # line to deal with the static lib link
 prefix=@prefix@
+exec_prefix=@exec_prefix@
+installationdir=@prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-#installationdir=@prefix@
-#exec_prefix=@exec_prefix@
 
 # print a usage message and exit
 # exit code passed as argument:
