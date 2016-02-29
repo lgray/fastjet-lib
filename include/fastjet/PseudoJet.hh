@@ -879,7 +879,29 @@ void sort_indices(std::vector<int> & indices,
 /// associated values would be in increasing order (but don't actually
 /// touch the values vector in the process).
 template<class T> std::vector<T> objects_sorted_by_values(const std::vector<T> & objects, 
-					      const std::vector<double> & values);
+					      const std::vector<double> & values) {
+  //assert(objects.size() == values.size());
+  if (objects.size() != values.size()){
+    throw Error("fastjet::objects_sorted_by_values(...): the size of the 'objects' vector must match the size of the 'values' vector");
+  }
+  
+  // get a vector of indices
+  std::vector<int> indices(values.size());
+  for (size_t i = 0; i < indices.size(); i++) {indices[i] = i;}
+  
+  // sort the indices
+  sort_indices(indices, values);
+  
+  // copy the objects 
+  std::vector<T> objects_sorted(objects.size());
+  
+  // place the objects in the correct order
+  for (size_t i = 0; i < indices.size(); i++) {
+    objects_sorted[i] = objects[indices[i]];
+  }
+
+  return objects_sorted;
+}
 
 /// \if internal_doc
 /// @ingroup internal

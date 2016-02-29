@@ -1,5 +1,13 @@
 2016-02-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/PseudoJet.hh:
+	* src/PseudoJet.cc:
+	moved the (templated) implementation of "objects_sorted_by_values"
+	to the header so as to make it public (requested by S. Alioli)
+
+	In case of size mismatch, replaced the assertion by a
+	fastjet::Error
+
 	* regression-tests/regression-test.pl:
 	added test results for spherical SISCone
 

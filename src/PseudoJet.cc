@@ -765,35 +765,6 @@ void sort_indices(vector<int> & indices,
 }
 
 
-
-//----------------------------------------------------------------------
-/// given a vector of values with a one-to-one correspondence with the
-/// vector of objects, sort objects into an order such that the
-/// associated values would be in increasing order
-template<class T> vector<T>  objects_sorted_by_values(
-                       const vector<T> & objects, 
-		       const vector<double> & values) {
-
-  assert(objects.size() == values.size());
-
-  // get a vector of indices
-  vector<int> indices(values.size());
-  for (size_t i = 0; i < indices.size(); i++) {indices[i] = i;}
-  
-  // sort the indices
-  sort_indices(indices, values);
-  
-  // copy the objects 
-  vector<T> objects_sorted(objects.size());
-  
-  // place the objects in the correct order
-  for (size_t i = 0; i < indices.size(); i++) {
-    objects_sorted[i] = objects[indices[i]];
-  }
-
-  return objects_sorted;
-}
-
 //----------------------------------------------------------------------
 /// return a vector of jets sorted into decreasing kt2
 vector<PseudoJet> sorted_by_pt(const vector<PseudoJet> & jets) {
