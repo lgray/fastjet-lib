@@ -296,7 +296,7 @@ sub isCone {
 #======================================================================
 sub isee {
   (my $alg) = @_;
-  return ($alg =~ /^ee/i || $alg =~ /jade/ )
+  return ($alg =~ /^ee/i || $alg =~ /jade/  || $alg =~ /spheri/ )
 }
 
 
@@ -323,7 +323,7 @@ sub setDefaults {
 
   $username=`whoami`;
   chomp $username;
-  if ( $username eq "greg"){
+  if (( $username eq "greg") || ( $username eq "soyez") || ( $username eq "gsoyez")){
       $dataDir="~/work/fastjet/data";
   } elsif ( $username eq "gsalam"){
       $dataDir=$ENV{HOME}."/work/fastjet/data";
@@ -423,6 +423,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1,eegenkt:-1,R0.60" => "df18bdb90f1088c7b3b572915a5c9b85",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1,eecambridge:-ycut:0.08,R0.60" => "ccbb772f1af5102aa59fc923f3e625cc",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1,eecambridge:-ycut:0.01,R0.60" => "cd039768d90103dbdc6dd2722abe712e",
+  "Pythia_Q1000_Zprime1000_nev1000.dat,nev1,sisconespheri,R0.60" => "ee82bb2a82e902b36bdf0c50a72d0848",
   # old R def for eegenkt
   #"Pythia-PtMin50-LHC-10kev.dat,nev1,eegenkt:0,R0.60" => "2308c88202e0b0087c256c8a65efb5ce",
   #"Pythia-PtMin50-LHC-10kev.dat,nev1,eegenkt:-1,R0.60" => "21753b7bab26ddb06f75b8eb7b1d3024",
@@ -453,6 +454,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,eegenkt:-1,R0.60" => "faac5c2857ed616cd420060e7675466c",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,eecambridge:-ycut:0.08,R0.60" => "9e248c74c5c8b3729f1e96a538daf146",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,eecambridge:-ycut:0.01,R0.60" => "12f7dab534711378bf6809e5e31f13d3",
+  "Pythia_Q1000_Zprime1000_nev1000.dat,nev10,sisconespheri,R0.60" => "f5224645e7bbe4580f4a37ec84ae418a",
   # old R def for eegenkt
   #"Pythia-PtMin50-LHC-10kev.dat,nev10,eegenkt:0,R0.60" => "e77d363d2ea067bd62d98e7b62bba772",
   #"Pythia-PtMin50-LHC-10kev.dat,nev10,eegenkt:-1,R0.60" => "aec87012ed66823e2f30862f57307d93",
@@ -486,6 +488,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev100,eegenkt:-1,R0.60" => "dd3222176571e51a4bb4d8d9876dea51",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev100,eecambridge:-ycut:0.08,R0.60" => "b248aa2ad20544720df26c3886e11e5c",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev100,eecambridge:-ycut:0.01,R0.60" => "420d8b18e3ecbdd6de1fed5f3533e811",
+  "Pythia_Q1000_Zprime1000_nev1000.dat,nev100,sisconespheri,R0.60" => "6d41454cd628fab08b802da7c7461fbe",
   # old R def for eegenkt
   #"Pythia-PtMin50-LHC-10kev.dat,nev100,eegenkt:0,R0.60" => "c210893596b56046573c60603e4a3e5b",
   #"Pythia-PtMin50-LHC-10kev.dat,nev100,eegenkt:-1,R0.60" => "905525747cad0344b6826514cd4cc618",
@@ -522,6 +525,7 @@ sub setRefResults {
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,eegenkt:-1,R0.60" => "3a5cd000d227f72752e4d5bc98a28e3d",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,eecambridge:-ycut:0.08,R0.60" => "00eb9436e2f8458c01b495c58e5b30d3",
   "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,eecambridge:-ycut:0.01,R0.60" => "cb9ea9ba8b46cbbe4f663cd34e53c8f1",
+  "Pythia_Q1000_Zprime1000_nev1000.dat,nev1000,sisconespheri,R0.60" => "ee84e72d42238d4127df28ea337fa633",
   # old R def for eegenkt
   #"Pythia-PtMin50-LHC-10kev.dat,nev1000,eegenkt:0,R0.60" => "48cb5d5a8a5f636d07569745e5be29e4",
   #"Pythia-PtMin50-LHC-10kev.dat,nev1000,eegenkt:-1,R0.60" => "e54ecd5d535f2f3d7ddffc1bfd43462c",

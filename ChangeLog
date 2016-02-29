@@ -1,3 +1,15 @@
+2016-02-29  Gregory Soyez  <soyez@fastjet.fr>
+
+	* regression-tests/regression-test.pl:
+	added test results for spherical SISCone
+
+	* fastjet-config.in:
+	added a "--guess-prefix" option that tries deducing the prefix
+	from the location of the fastjet-config script (it follows
+	symlinks if needed)
+	Q: do we want to add a "--enable-guess-prefix" option to configure
+	   to have this the default behaviour?
+
 2016-02-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* NEWS:
