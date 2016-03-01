@@ -88,6 +88,9 @@ public:
 ///  - double BJ::distance(const BJ * other_bj_jet); // distance between this and other_bj_jet
 ///  - double BJ::beam_distance()                  ; // distance to the beam
 ///
+/// The BJ::distance function is assumed to be symmetric: i.e. it must
+/// always satisfy A->distance(B) == B->distance(A).
+/// 
 /// For the NNH<BJ,I> version to function, the BJ::init(...) member
 /// must accept an extra argument
 ///

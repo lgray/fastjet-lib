@@ -1,3 +1,8 @@
+2016-03-01  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/NNH.hh:
+	added comment about need for distance part of the class to be symmetric.
+
 2016-02-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* fastjet-config.in:
