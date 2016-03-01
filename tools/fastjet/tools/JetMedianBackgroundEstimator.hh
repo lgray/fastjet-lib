@@ -129,8 +129,14 @@ public:
   JetMedianBackgroundEstimator(const Selector &rho_range = SelectorIdentity())
     : _rho_range(rho_range), _jet_def(JetDefinition()),
       _enable_rho_m(true){ reset(); }
-  
 
+  
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+  /// because of the internal atomic variale, we need to explicitly
+  /// implement a copy ctor
+  JetMedianBackgroundEstimator(const JetMedianBackgroundEstimator &other_bge);
+#endif
+  
   /// default dtor
   ~JetMedianBackgroundEstimator(){}
 

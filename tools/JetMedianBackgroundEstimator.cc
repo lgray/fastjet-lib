@@ -108,6 +108,27 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator( const Selector &rho_
   set_cluster_sequence(csa);
 }
 
+//----------------------------------------------------------------------
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+// because of the internal atomic variale, we need to explicitly
+// implement a copy ctor
+JetMedianBackgroundEstimator::JetMedianBackgroundEstimator(const JetMedianBackgroundEstimator &other_bge){
+  _rho_range         = other_bge._rho_range;
+  _jet_def           = other_bge._jet_def;
+  _area_def          = other_bge._area_def;
+  _included_jets     = other_bge._included_jets;
+  _use_area_4vector  = other_bge._use_area_4vector;
+  _provide_fj2_sigma = other_bge._provide_fj2_sigma;
+  _jet_density_class = other_bge._jet_density_class;
+  _enable_rho_m      = other_bge._enable_rho_m;
+  _result            = other_bge._result;
+  _csi               = other_bge._csi;
+
+  _status.store(other_bge._status.load());;
+}
+#endif
+  
+
 
 //----------------------------------------------------------------------
 // setting a new event
@@ -220,7 +241,6 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
   _status = Status_NotReady;
 }
 
-
 //----------------------------------------------------------------------
 // retrieving fundamental information
 //----------------------------------------------------------------------
@@ -228,29 +248,61 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 // helpers
 double JetMedianBackgroundEstimator::_get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const{
 #ifdef FASTJET_HAVE_THREAD_SAFETY
-  // acquire lock
+  // if the status is ready (or "work in progress", we might be working with the same jet
+  //
+  // In that case, lock things to test whether we do have the same 
+  // acquire lock once things are ready and check if we're using the same jet
   int expected;
-  do {
-    expected = Status_Ready;
-  } while (!_status.compare_exchange_strong(expected, Status_Working,
-                                            memory_order_seq_cst,
-                                            memory_order_relaxed));
-  // check that the reference is not the same as the previous one
-  // (would avoid an unnecessary recomputation)
-  if (jet == _result._reference_jet) return _result.*what;
-  // release lock
-  _status = Status_Ready;
+  if (_status != Status_NotReady){
+    // the following waits unti the status is Ready and sets it to "Working"
+    do {
+      expected = Status_Ready;
+    } while (!_status.compare_exchange_strong(expected, Status_Working,
+                                              memory_order_seq_cst,
+                                              memory_order_relaxed));
   
+    // check that the reference is not the same as the previous one
+    // (would avoid an unnecessary recomputation)
+    if (jet == _result._reference_jet){
+      double result = _result.*what;
+      // release lock and return result
+      _status = Status_Ready;
+      return result;
+    }
+    
+    // we need to recompute things, so set the status to "Not Ready"
+    _status = Status_NotReady;
+  }
+
+  // we're reaching that point in several cases:
+  //
+  //  - the sstatus was "NotReady"
+  //  - we're working with a different jet than the one currently cached
+  //
+  // In both cases, the status is "Not Ready" and we need to recompute
+  // things. We can do that locally and only acquire the lock later on
+    
   // do the computation locally
   JMBGEResult local_result = _compute(jet);
   double value = local_result.*what;
-  
-  // save the result for posterity: acquire lock; save; release lock
+
+  // here we need to acquire the lock
+  //
+  // i.e. wait until the status is anything else than "Working" and
+  // set it to "Working"
+  int expected_alt;
   do {
-    expected = Status_Ready;
-  } while (!_status.compare_exchange_strong(expected, Status_Working,
-                                            memory_order_seq_cst,
-                                            memory_order_relaxed));
+    expected = Status_NotReady;
+    expected_alt = Status_Ready;
+    // below, the first  test will return true if the status is "Ready"
+    //        the second test will return true if the status is "Not Ready"
+    // if both tetss are false it means that we're working and we need to loop
+  } while ((!_status.compare_exchange_strong(expected, Status_Working,
+                                             memory_order_seq_cst,
+                                             memory_order_relaxed)) &&
+           (!_status.compare_exchange_strong(expected_alt, Status_Working,
+                                             memory_order_seq_cst,
+                                             memory_order_relaxed)));
   _result = local_result;
   _status = Status_Ready;
   

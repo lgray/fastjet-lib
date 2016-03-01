@@ -95,8 +95,9 @@ namespace gas {
 /// Note that each clustering done with the GhostedAreaSpec obtained
 /// through area_def.with_seed(user_defined_seed) will use exactly the
 /// same set of ghosts.  Using
-/// area_def.with_fixed_seed(user_defined_seed) will return to using
-/// the common static random generator.
+/// area_def.with_fixed_seed(user_defined_seed), with an empty vector
+/// passed as argument, will return to using the common static random
+/// generator.
 class GhostedAreaSpec {
 public:
   /// default constructor
