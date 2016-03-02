@@ -840,6 +840,7 @@ inline bool operator==(const double val, const PseudoJet & jet) {return jet == v
 inline bool operator!=(const PseudoJet & a, const double val)  {return !(a==val);}
 inline bool operator!=( const double val, const PseudoJet & a) {return !(a==val);}
 
+/// returns the 4-vector dot product of a and b
 inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
   return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();
 }
