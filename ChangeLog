@@ -1,3 +1,26 @@
+2016-03-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* scripts/mkfjcore.sh:
+	added NNBase.hh to fjcore (needed by NNH.hh)
+
+	tried several options for the inclusion of the NN interface (NNH
+	alone does not work since it requires at lease NNHBase).
+
+	nothing: 1619  64470 fjcore.hh
+                 6095 230792 fjcore.cc
+                 7714 295262 total
+
+	NNH:     1808  70250 fjcore.hh
+                 6095 230792 fjcore.cc
+                 7903 301042 total
+
+	all:     2348  89874 fjcore.hh
+                 6079 230145 fjcore.cc
+                 8427 320019 total
+
+	for the moment, picked up the intermediate options since it's is
+	what we've had so far
+
 2016-03-02  Gavin Salam  <gavin.salam@cern.ch>
 
 

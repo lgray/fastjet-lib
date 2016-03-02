@@ -37,6 +37,7 @@ fastjet_headers="config_auto.h\
   CompositeJetStructure.hh\
   ClusterSequenceStructure.hh\
   ClusterSequence.hh\
+  NNBase.hh\
   NNH.hh"
 
 internal_sources="version.hh\
