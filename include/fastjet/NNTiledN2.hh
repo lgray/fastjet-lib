@@ -39,8 +39,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //----------------------------------------------------------------------
 /// @ingroup advanced_usage
 /// \class NNTiledN2
-/// Help solve closest pair problems with factorised interparticle and beam
-/// distance (i.e. satisfying the FastJet lemma), which allow tiling.
+///
+/// Helps solve closest pair problems with factorised interparticle
+/// and beam distances (ie satisfying the FastJet lemma) that are on
+/// a cylindrical geometry and allow tiling.
 ///
 /// (see NNBase.hh for an introductory description)
 ///
@@ -48,14 +50,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// clustering strategy in FastJet. As for the NNPlainN2 case, the
 /// interparticle and beam distances should be of the form
 ///
+/// \code
 ///   dij = min(mom_factor(i), mom_factor(j)) * geometrical_distance(i,j)
 ///   diB = mom_factor(i) * geometrical_beam_distance(i)
+/// \endcode
 ///
-/// Additionally, the NNTiledN2 class receives a tile_size parameter
-/// that controls the size of the tiles. It must be such that, for any
-/// two points in non-neighbouring tiles, the geometrical distance
-/// between the 2 points is larger than the geometrical beam distance
-/// of each of the 2 points.
+/// Additionally, the NNTiledN2 class takes a tile_size parameter that
+/// controls the size of the tiles. It must be such that, for any two
+/// points in non-neighbouring (and non-identical) tiles, the
+/// geometrical distance between the 2 points is larger than the
+/// geometrical beam distance of each of the 2 points.
 ///
 /// It is templated with a BJ (brief jet) class and can be used with or
 /// without an extra "Information" template, i.e. NNTiledN2<BJ> or
@@ -64,28 +68,37 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// For the NNTiledN2<BJ> version of the class to function, BJ must provide 
 /// three member functions
 ///  
+/// \code
 ///   void   BJ::init(const PseudoJet & jet);                   // initialise with a PseudoJet
 ///   double BJ::geometrical_distance(const BJ * other_bj_jet); // distance between this and other_bj_jet (geometrical part)
 ///   double BJ::geometrical_beam_distance();                   // distance to the beam (geometrical part)
 ///   double BJ::momentum_factor();                             // extra momentum factor
+/// \endcode
 ///
 /// For the NNTiledN2<BJ,I> version to function, the BJ::init(...) member
 /// must accept an extra argument
 ///
-///  - void   BJ::init(const PseudoJet & jet, I * info);   // initialise with a PseudoJet + info
+/// \code
+///   void BJ::init(const PseudoJet & jet, I * info);   // initialise with a PseudoJet + info
+/// \endcode
 ///
 /// NOTE: THE DISTANCE MUST BE SYMMETRIC I.E. SATISFY
+/// \code
 ///     a.geometrical_distance(b) == b.geometrical_distance(a)
+/// \endcode
 ///
-/// Finally, the BJ class need to provide access to the variables used
+/// Finally, the BJ class needs to provide access to the variables used
 /// for the rectangular tiling:
 ///
+/// \code
 ///   double BJ::rap(); // rapidity-like variable
-///   double BJ::phi(); // azimutal-angle-like variable (between -pi and pi)
+///   double BJ::phi(); // azimutal-angle-like variable (should be > -2pi)
+/// \endcode
 ///
-/// Note that it is strongly advised that you add the following lines
-/// to your BJ class:
+/// Note that you are strongly advised to add the following lines
+/// to your BJ class to allow it to be used also with NNH:
 ///
+/// \code
 ///   /// make this BJ class compatible with the use of NNH
 ///   double BJ::distance(const BJ * other_bj_jet){
 ///     double mom1 = momentum_factor();
@@ -95,14 +108,13 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   double BJ::beam_distance(){
 ///     return momentum_factor() * geometrical_beam_distance();
 ///   }
-///
-/// to make it also usable with the NNH class. 
+/// \endcode
 ///
 template<class BJ, class I = _NoInfo> class NNTiledN2 : public NNBase<I> {
 public:
 
   /// constructor with an initial set of jets (which will be assigned indices
-  /// 0 ... jets.size()-1
+  /// `0...jets.size()-1`)
   NNTiledN2(const std::vector<PseudoJet> & jets, double requested_tile_size)
     : NNBase<I>(),     _requested_tile_size(requested_tile_size) {start(jets);}
   NNTiledN2(const std::vector<PseudoJet> & jets, double requested_tile_size, I * info)

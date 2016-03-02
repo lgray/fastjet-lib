@@ -38,12 +38,16 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 /// @ingroup advanced_usage
 /// \class _NoInfo
-/// dummy class, used as a default template argument
+/// internal dummy class, used as a default template argument
 class _NoInfo {};
 
 /// @ingroup advanced_usage
 /// \class NNInfo
-/// template that will help initialise a BJ with a PseudoJet and extra information
+///
+/// internal helper template class to facilitate initialisation of a
+/// BJ with a PseudoJet and extra information. Implementations of
+/// NN-based clustering do not need to explicitly use or refer to
+/// this class!
 template<class I> class NNInfo {
 public:
   NNInfo()         : _info(NULL) {}
@@ -53,8 +57,8 @@ private:
   I * _info;
 };
 
-/// @ingroup advanced_usage
-/// Specialisation of NNInfo for cases where there is no extra info
+/// @ingroup advanced_usage Internal helper specialisation of NNInfo
+/// for cases where there is no extra info
 template<> class NNInfo<_NoInfo>  {
 public:
   NNInfo()           {}
@@ -65,69 +69,83 @@ public:
 
 //----------------------------------------------------------------------
 /// @ingroup advanced_usage
-/// \class NBase
-/// Help solve closest pair problems with generic interparticle and
-/// beam distance.
+/// \class NNBase
+/// Helps solve closest pair problems with generic interparticle and
+/// particle-beam distances.
 ///
-/// Description and derived classes:
+/// \section Description Description and derived classes:
 ///
-///   This is an abstract base class for several ways of solving the
-///   problem:
+///   This is an abstract base class which defines the interface for
+///   several classes that help carry out nearest-neighbour
+///   clustering:
 ///  
-///    - NNH        provides an implementation for generic measures
+///    - NNH        provides an implementation for generic measures,
 ///  
 ///    - NNPlainN2  provides an implementation for distances satisfying
 ///                 the FastJet lemma i.e. distances for which the
-///                 minimum corresponds to a geometric nearest neighbour
-///                 (i.e. the distance can be factorised in a momentum
-///                 factor and a geometric piece). This is based on the
-///                 fastjet N2Plain clustering strategy
+///                 minimum dij has the property that i is the
+///                 geometrical nearest neighbour of j, or vice
+///                 versa. I.e. the distance can be factorised in a
+///                 momentum factor and a geometric piece. This is
+///                 based on the fastjet N2Plain clustering strategy
 ///  
-///    - NNTiledN2  is a tiled version of NNPlainN2 (based on the N2Tiled
-///                 FastJet clustering strategy). It further requires
-///                 that the search for the nearest neighbour of a given
-///                 point can be done in its tile or the neighbouring
-///                 ones. In practice, this means that the beam distance
-///                 is smaller than the distance between a given tile
-///                 and all non-neighbouring ones.
+///    - NNTiledN2  is a tiled version of NNPlainN2 (based on the
+///                 N2Tiled FastJet clustering strategy). Like
+///                 NNPlain2 it applies to distance measures that
+///                 satisfy the FastJet lemma, with the additional
+///                 restriction that: (a) the underlying geometry
+///                 should be cylindrical (e.g. rapidity--azimuth) and
+///                 (b) the search for the geometric nearest neighbour
+///                 of each particle can be limited to that particle's
+///                 tile and its neighbouring tiles.
 ///
-/// Underlying BJ class:
+/// If you can use NNPlainN2 it will usually be faster than
+/// NNH. NNTiledN2, where it can be used, will be faster for
+/// multiplicities above a few tens of particles.
+///
+///   NOTE: IN ALL CASES, THE DISTANCE MUST BE SYMMETRIC (dij=dji)!!!
+///
+/// \section BJ Underlying BriefJet (BJ) class:
 /// 
-///   All derived classes will be templated with a BJ (brief jet)
+///   All derived classes must be templated with a BriefJet (BJ)
 ///   class --- BJ should basically cache the minimal amount of
 ///   information that is needed to efficiently calculate
 ///   interparticle distances and particle-beam distances.
 ///   
 ///   This class can be used with or without an extra "Information"
-///   template, i.e. NN*<BJ> or NN*<BJ,I>. BJ must provide one of the
-///   two following init function:
-///   
-///     void   BJ::init(const PseudoJet & jet);            // initialise with a PseudoJet
-///     void   BJ::init(const PseudoJet & jet, I * info);  // initialise with a PseudoJet + info
-///   
+///   template, i.e. `NN*<BJ>` or `NN*<BJ,I>`. Accordingly BJ must provide
+///   one of the two following init functions:
+///
+///   \code
+///     void  BJ::init(const PseudoJet & jet);            // initialise with a PseudoJet
+///     void  BJ::init(const PseudoJet & jet, I * info);  // initialise with a PseudoJet + info
+///   \endcode
+///
 ///   where info might be a pointer to a class that contains, e.g.,
 ///   information about R, or other parameters of the jet algorithm
 ///   
-///   It must then provide information about the distance that depends
-///   on the specific case (see the corresponding classes for details).
+///   The BJ then provides information about interparticle and
+///   particle-beam distances. The exact requirements depend on
+///   whether you use NNH, NNPlainN2 or NNTiledN2. (See the
+///   corresponding classes for details).
 ///
-///   NOTE: IN ALL CASES, THE DISTANC EMUST BE SYMMETRIC!!!
 ///
-/// Workflow:
+/// \section Workflow Workflow:
 ///
 ///   In all cases, the usage of NNBase classes works as follows:
 ///
-///   First, from the list of particles, create an NNwhatever<BJ>
+///   First, from the list of particles, create an `NN*<BJ>`
 ///   object of the appropriate type with the appropriate BJ class
 ///   (and optional extra info).
 ///
 ///   Then, cluster using a loop like this (assuming a FastJet plugin)
-///     
+///
+///   \code
 ///     while (njets > 0) {
 ///       int i, j, k;
 ///       // get the i and j that minimize the distance
 ///       double dij = nn.dij_min(i, j);  
-///
+///     
 ///       // do the appropriate recombination and update the nn
 ///       if (j >= 0) {    // interparticle recombination
 ///         cs.plugin_record_ij_recombination(i, j, dij, k);
@@ -139,27 +157,28 @@ public:
 ///       }
 ///       njets--;
 ///     }
+///   \endcode
 ///
-/// For an example of how the NNH<BJ> class is used, see the Jade (and
-/// EECambridge) plugins
+/// For an example of how the NNH<BJ> class is used, see the JadePlugin or
+/// EECambridgePlugin.
 template<class I = _NoInfo> class NNBase : public NNInfo<I> {
 public:
-  /// constructor with an initial set of jets (which will be assigned indices
-  /// 0 ... jets.size()-1
+  /// Default constructor
   NNBase() {}
+  /// Constuctor with additional Info 
   NNBase(I * info) : NNInfo<I>(info) {}
 
   /// initialisation from a given list of particles
   virtual void start(const std::vector<PseudoJet> & jets) = 0;
   
-  /// return the dij_min and indices iA, iB, for the corresponding jets.
+  /// returns the dij_min and indices iA, iB, for the corresponding jets.
   /// If iB < 0 then iA recombines with the beam
   virtual double dij_min(int & iA, int & iB) = 0;
 
-  /// remove the jet pointed to by index iA
+  /// removes the jet pointed to by index iA
   virtual void remove_jet(int iA) = 0;
 
-  /// merge the jets pointed to by indices A and B and replace them with
+  /// merges the jets pointed to by indices A and B and replaces them with
   /// jet, assigning it an index jet_index.
   virtual void merge_jets(int iA, int iB, const PseudoJet & jet, int jet_index) =  0;
 };

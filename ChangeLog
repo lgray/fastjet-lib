@@ -1,5 +1,10 @@
 2016-03-02  Gavin Salam  <gavin.salam@cern.ch>
 
+
+	* include/fastjet/NNBase.hh:
+	* include/fastjet/NNPlainN2.hh:
+	* include/fastjet/NNTiledN2.hh:
+
 	* include/fastjet/PseudoJet.hh:
 	added doxygen comment for dot_product
 

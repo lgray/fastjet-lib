@@ -38,8 +38,9 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 //----------------------------------------------------------------------
 /// @ingroup advanced_usage
 /// \class NNPlainN2
-/// Help solve closest pair problems with factorised interparticle and beam
-/// distance (i.e. satisfying the FastJet lemma)
+///
+/// Helps solve closest pair problems with factorised interparticle and beam
+/// distances (ie satisfying the FastJet lemma)
 ///
 /// (see NNBase.hh for an introductory description)
 ///
@@ -47,32 +48,41 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// clustering strategy in FastJet. The interparticle and beam
 /// distances should be of the form
 ///
+/// \code
 ///   dij = min(mom_factor(i), mom_factor(j)) * geometrical_distance(i,j)
 ///   diB = mom_factor(i) * geometrical_beam_distance(i)
+/// \endcode
 ///
-/// It is templated with a BJ (brief jet) class and can be used with or
+/// The class is templated with a BJ (brief jet) class and can be used with or
 /// without an extra "Information" template, i.e. NNPlainN2<BJ> or
 /// NNPlainN2<BJ,I>
 ///
 /// For the NNH_N2Plain<BJ> version of the class to function, BJ must provide 
-/// three member functions
+/// four member functions
 ///  
+/// \code
 ///   void   BJ::init(const PseudoJet & jet);                   // initialise with a PseudoJet
 ///   double BJ::geometrical_distance(const BJ * other_bj_jet); // distance between this and other_bj_jet (geometrical part)
 ///   double BJ::geometrical_beam_distance();                   // distance to the beam (geometrical part)
 ///   double BJ::momentum_factor();                             // extra momentum factor
+/// \endcode
 ///
 /// For the NNH_N2Plain<BJ,I> version to function, the BJ::init(...) member
 /// must accept an extra argument
 ///
-///  - void   BJ::init(const PseudoJet & jet, I * info);   // initialise with a PseudoJet + info
+/// \code
+///   void  BJ::init(const PseudoJet & jet, I * info);   // initialise with a PseudoJet + info
+/// \endcode
 ///
 /// NOTE: THE DISTANCE MUST BE SYMMETRIC I.E. SATISFY
+/// \code
 ///     a.geometric_distance(b) == b.geometric_distance(a)
+/// \endcode
 ///
-/// Note that it is strongly advised that you add the following lines
-/// to your BJ class:
+/// Note that you are strongly advised to add the following lines
+/// to your BJ class to allow it to be used also with NNH:
 ///
+/// \code
 ///   /// make this BJ class compatible with the use of NNH
 ///   double BJ::distance(const BJ * other_bj_jet){
 ///     double mom1 = momentum_factor();
@@ -82,27 +92,27 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   double BJ::beam_distance(){
 ///     return momentum_factor() * geometrical_beam_distance();
 ///   }
-///
-/// to make it also usable with the NNH class. 
+/// \endcode
 ///
 template<class BJ, class I = _NoInfo> class NNPlainN2 : public NNBase<I> {
 public:
 
   /// constructor with an initial set of jets (which will be assigned indices
-  /// 0 ... jets.size()-1
+  /// `0...jets.size()-1`)
   NNPlainN2(const std::vector<PseudoJet> & jets)           : NNBase<I>()     {start(jets);}
   NNPlainN2(const std::vector<PseudoJet> & jets, I * info) : NNBase<I>(info) {start(jets);}
   
-  void start(const std::vector<PseudoJet> & jets);
+  /// initialisation from a given list of particles
+  virtual void start(const std::vector<PseudoJet> & jets);
 
-  /// return the dij_min and indices iA, iB, for the corresponding jets.
+  /// returns the dij_min and indices iA, iB, for the corresponding jets.
   /// If iB < 0 then iA recombines with the beam
   double dij_min(int & iA, int & iB);
 
-  /// remove the jet pointed to by index iA
+  /// removes the jet pointed to by index iA
   void remove_jet(int iA);
 
-  /// merge the jets pointed to by indices A and B and replace them with
+  /// merges the jets pointed to by indices A and B and replace them with
   /// jet, assigning it an index jet_index.
   void merge_jets(int iA, int iB, const PseudoJet & jet, int jet_index);
 
