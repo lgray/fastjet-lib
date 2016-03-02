@@ -40,7 +40,11 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 TilingExtent::TilingExtent(ClusterSequence & cs) {
   _determine_rapidity_extent(cs.jets());
 }
-  
+
+TilingExtent::TilingExtent(const vector<PseudoJet> &particles) {
+  _determine_rapidity_extent(particles);
+}
+
 void TilingExtent::_determine_rapidity_extent(const vector<PseudoJet> & particles) {
   // have a binning of rapidity that goes from -nrap to nrap
   // in bins of size 1; the left and right-most bins include

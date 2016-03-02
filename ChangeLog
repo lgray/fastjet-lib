@@ -1,3 +1,23 @@
+2016-03-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/NNase.hh:          *** ADDED ***
+	* include/fastjet/NNH.hh:
+	* include/fastjet/NNPlainN2.hh:      *** ADDED ***
+	* include/fastjet/NNTiledN2.hh:      *** ADDED ***
+	* include/fastjet/Makefile.am:
+	this provides a structure which exposes the N2Plain and N2Tiled
+	strategies along the lines of the existing NNH class. They now all
+	derive from a common abstract NNBase base class.
+
+	Note that different classes have different requirements on the
+	underlying BJ (brief jet) class, both in terms of the methods that
+	have to be implemented and in terms of the supported physical
+	distances. See the documentation for details.
+
+	* src/TilingExtent.cc:
+	* include/fastjet/internal/TilingExtent.hh:
+	allowed the construction of TilingExtent from a list of PseudoJet
+
 2016-03-01  Gavin Salam  <gavin.salam@cern.ch>
 
 	* include/fastjet/NNH.hh:

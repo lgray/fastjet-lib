@@ -45,6 +45,9 @@ public:
   /// started.
   TilingExtent(ClusterSequence & cs);
 
+  /// constructor that takes a list of PseudoJets
+  TilingExtent(const std::vector<PseudoJet> &particles);
+
   /// returns the suggested minimum rapidity for the tiling
   double minrap() const {return _minrap;}
   /// returns the suggested maximum rapidity for the tiling
