@@ -58,8 +58,14 @@ public:
   LimitedWarning() : _max_warn(_max_warn_default),_this_warning_summary(0) {}
 
   /// constructor that provides a user-set max number of warnings
-    LimitedWarning(int max_warn_in) : _max_warn(max_warn_in), _this_warning_summary(0) {}
+  LimitedWarning(int max_warn_in) : _max_warn(max_warn_in), _this_warning_summary(0) {}  
 
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+  /// copy ctor (have to be specified explicitly becaus of the atomic variable)
+  LimitedWarning(const LimitedWarning &other)
+    : _max_warn(other._max_warn), _this_warning_summary{other._this_warning_summary.load()} {}  
+#endif
+  
   /// outputs a warning to standard error (or the user's default
   /// warning stream if set)
   void warn(const char * warning) {warn(warning, _default_ostr);}

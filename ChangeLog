@@ -1,3 +1,14 @@
+2016-03-02  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/LimitedWarning.hh:
+	* include/fastjet/internal/thread_safety_helpers.hh:
+	added copy ctors for a unch of classes that contain atomic
+	member(s)
+
+	* include/fastjet/internal/LazyTiling9SeparateGhosts.hh:
+	removed commented code (atomic ghost_pt2_threshold which we
+	decided not to go for)
+
 2016-03-01  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:

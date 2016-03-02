@@ -136,6 +136,8 @@ namespace thread_safety_helpers{
   class FirstTimeTrue{
   public:
     FirstTimeTrue(): _first_time{true}{}
+    // explicit copy ctor (this class contains atimoc vars)
+    FirstTimeTrue(const FirstTimeTrue &other) : _first_time{other._first_time.load()}{}
     bool operator()(){
       // Thread-safety note:
       //   the construct
