@@ -1,5 +1,5 @@
-#ifndef __FASTJET_NNPLAINN2_HH__
-#define __FASTJET_NNPLAINN2_HH__
+#ifndef __FASTJET_NNFJN2PLAIN_HH__
+#define __FASTJET_NNFJN2PLAIN_HH__
 
 //FJSTARTHEADER
 // $Id$
@@ -37,10 +37,10 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 /// @ingroup advanced_usage
-/// \class NNPlainN2
+/// \class NNFJN2Plain
 ///
-/// Helps solve closest pair problems with factorised interparticle and beam
-/// distances (ie satisfying the FastJet lemma)
+/// Helps solve closest pair problems with factorised interparticle
+/// and beam distances (ie satisfying the FastJet lemma)
 ///
 /// (see NNBase.hh for an introductory description)
 ///
@@ -53,12 +53,12 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   diB = mom_factor(i) * geometrical_beam_distance(i)
 /// \endcode
 ///
-/// The class is templated with a BJ (brief jet) class and can be used with or
-/// without an extra "Information" template, i.e. NNPlainN2<BJ> or
-/// NNPlainN2<BJ,I>
+/// The class is templated with a BJ (brief jet) class and can be used
+/// with or without an extra "Information" template,
+/// i.e. NNFJN2Plain<BJ> or NNFJN2Plain<BJ,I>
 ///
-/// For the NNH_N2Plain<BJ> version of the class to function, BJ must provide 
-/// four member functions
+/// For the NNH_N2Plain<BJ> version of the class to function, BJ must
+/// provide four member functions
 ///  
 /// \code
 ///   void   BJ::init(const PseudoJet & jet);                   // initialise with a PseudoJet
@@ -67,8 +67,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   double BJ::momentum_factor();                             // extra momentum factor
 /// \endcode
 ///
-/// For the NNH_N2Plain<BJ,I> version to function, the BJ::init(...) member
-/// must accept an extra argument
+/// For the NNH_N2Plain<BJ,I> version to function, the BJ::init(...)
+/// member must accept an extra argument
 ///
 /// \code
 ///   void  BJ::init(const PseudoJet & jet, I * info);   // initialise with a PseudoJet + info
@@ -79,8 +79,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///     a.geometric_distance(b) == b.geometric_distance(a)
 /// \endcode
 ///
-/// Note that you are strongly advised to add the following lines
-/// to your BJ class to allow it to be used also with NNH:
+/// Note that you are strongly advised to add the following lines to
+/// your BJ class to allow it to be used also with NNH:
 ///
 /// \code
 ///   /// make this BJ class compatible with the use of NNH
@@ -94,13 +94,13 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   }
 /// \endcode
 ///
-template<class BJ, class I = _NoInfo> class NNPlainN2 : public NNBase<I> {
+template<class BJ, class I = _NoInfo> class NNFJN2Plain : public NNBase<I> {
 public:
 
   /// constructor with an initial set of jets (which will be assigned indices
   /// `0...jets.size()-1`)
-  NNPlainN2(const std::vector<PseudoJet> & jets)           : NNBase<I>()     {start(jets);}
-  NNPlainN2(const std::vector<PseudoJet> & jets, I * info) : NNBase<I>(info) {start(jets);}
+  NNFJN2Plain(const std::vector<PseudoJet> & jets)           : NNBase<I>()     {start(jets);}
+  NNFJN2Plain(const std::vector<PseudoJet> & jets, I * info) : NNBase<I>(info) {start(jets);}
   
   /// initialisation from a given list of particles
   virtual void start(const std::vector<PseudoJet> & jets);
@@ -117,7 +117,7 @@ public:
   void merge_jets(int iA, int iB, const PseudoJet & jet, int jet_index);
 
   /// a destructor
-  ~NNPlainN2() {
+  ~NNFJN2Plain() {
     delete[] briefjets;
     delete[] diJ;
   }
@@ -190,7 +190,7 @@ private:
 
 
 //----------------------------------------------------------------------
-template<class BJ, class I> void NNPlainN2<BJ,I>::start(const std::vector<PseudoJet> & jets) {
+template<class BJ, class I> void NNFJN2Plain<BJ,I>::start(const std::vector<PseudoJet> & jets) {
   n = jets.size();
   briefjets = new NNBJ[n];
   where_is.resize(2*n);
@@ -229,7 +229,7 @@ template<class BJ, class I> void NNPlainN2<BJ,I>::start(const std::vector<Pseudo
 
 
 //----------------------------------------------------------------------
-template<class BJ, class I> double NNPlainN2<BJ,I>::dij_min(int & iA, int & iB) {
+template<class BJ, class I> double NNFJN2Plain<BJ,I>::dij_min(int & iA, int & iB) {
   // find the minimum of the diJ on this round
   double diJ_min = diJ[0];
   int diJ_min_jet = 0;
@@ -251,7 +251,7 @@ template<class BJ, class I> double NNPlainN2<BJ,I>::dij_min(int & iA, int & iB) 
 
 //----------------------------------------------------------------------
 // remove jetA from the list
-template<class BJ, class I> void NNPlainN2<BJ,I>::remove_jet(int iA) {
+template<class BJ, class I> void NNFJN2Plain<BJ,I>::remove_jet(int iA) {
   NNBJ * jetA = where_is[iA];
   // now update our nearest neighbour info and diJ table
   // first reduce size of table
@@ -276,7 +276,7 @@ template<class BJ, class I> void NNPlainN2<BJ,I>::remove_jet(int iA) {
 
 
 //----------------------------------------------------------------------
-template<class BJ, class I> void NNPlainN2<BJ,I>::merge_jets(int iA, int iB, 
+template<class BJ, class I> void NNFJN2Plain<BJ,I>::merge_jets(int iA, int iB, 
 					const PseudoJet & jet, int index) {
 
   NNBJ * jetA = where_is[iA];
@@ -339,7 +339,7 @@ template<class BJ, class I> void NNPlainN2<BJ,I>::merge_jets(int iA, int iB,
 
 //----------------------------------------------------------------------
 // this function assumes that jet is not contained within begin...end
-template <class BJ, class I> void NNPlainN2<BJ,I>::set_NN_crosscheck(NNBJ * jet, 
+template <class BJ, class I> void NNFJN2Plain<BJ,I>::set_NN_crosscheck(NNBJ * jet, 
 		    NNBJ * begin, NNBJ * end) {
   double NN_dist = jet->geometrical_beam_distance();
   NNBJ * NN      = NULL;
@@ -362,7 +362,7 @@ template <class BJ, class I> void NNPlainN2<BJ,I>::set_NN_crosscheck(NNBJ * jet,
 //----------------------------------------------------------------------
 // set the NN for jet without checking whether in the process you might
 // have discovered a new nearest neighbour for another jet
-template <class BJ, class I>  void NNPlainN2<BJ,I>::set_NN_nocross(
+template <class BJ, class I>  void NNFJN2Plain<BJ,I>::set_NN_nocross(
                  NNBJ * jet, NNBJ * begin, NNBJ * end) {
   double NN_dist = jet->geometrical_beam_distance();
   NNBJ * NN      = NULL;
@@ -398,4 +398,4 @@ template <class BJ, class I>  void NNPlainN2<BJ,I>::set_NN_nocross(
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
-#endif // __FASTJET_NNPLAINN2_HH__
+#endif // __FASTJET_NNFJN2PLAIN_HH__

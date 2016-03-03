@@ -1,5 +1,12 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/NNBase.hh:
+	* include/fastjet/NNPlainN2.hh:
+	* include/fastjet/NNTiledN2.hh:
+	renamed the classes:
+	  NNPlainN2  --> NNFJN2Plain
+	  NNTiledN2  --> NNFJN2Tiled
+
 	* scripts/mkfjcore.sh:
 	handled the pre-compiler macros defined by configure (for
 	supported compiler features), as well as the DEPRECATED and

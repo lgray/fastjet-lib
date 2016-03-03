@@ -79,28 +79,28 @@ public:
 ///   several classes that help carry out nearest-neighbour
 ///   clustering:
 ///  
-///    - NNH        provides an implementation for generic measures,
+///    - NNH          provides an implementation for generic measures,
 ///  
-///    - NNPlainN2  provides an implementation for distances satisfying
-///                 the FastJet lemma i.e. distances for which the
-///                 minimum dij has the property that i is the
-///                 geometrical nearest neighbour of j, or vice
-///                 versa. I.e. the distance can be factorised in a
-///                 momentum factor and a geometric piece. This is
-///                 based on the fastjet N2Plain clustering strategy
+///    - NNFJN2Plain  provides an implementation for distances
+///                   satisfying the FastJet lemma i.e. distances for
+///                   which the minimum dij has the property that i is
+///                   the geometrical nearest neighbour of j, or vice
+///                   versa. I.e. the distance can be factorised in a
+///                   momentum factor and a geometric piece. This is
+///                   based on the fastjet N2Plain clustering strategy
 ///  
-///    - NNTiledN2  is a tiled version of NNPlainN2 (based on the
-///                 N2Tiled FastJet clustering strategy). Like
-///                 NNPlain2 it applies to distance measures that
-///                 satisfy the FastJet lemma, with the additional
-///                 restriction that: (a) the underlying geometry
-///                 should be cylindrical (e.g. rapidity--azimuth) and
-///                 (b) the search for the geometric nearest neighbour
-///                 of each particle can be limited to that particle's
-///                 tile and its neighbouring tiles.
+///    - NNFJN2Tiled  is a tiled version of NNFJN2Plain (based on the
+///                   N2Tiled FastJet clustering strategy). Like
+///                   NNPlain2 it applies to distance measures that
+///                   satisfy the FastJet lemma, with the additional
+///                   restriction that: (a) the underlying geometry
+///                   should be cylindrical (e.g. rapidity--azimuth)
+///                   and (b) the search for the geometric nearest
+///                   neighbour of each particle can be limited to
+///                   that particle's tile and its neighbouring tiles.
 ///
-/// If you can use NNPlainN2 it will usually be faster than
-/// NNH. NNTiledN2, where it can be used, will be faster for
+/// If you can use NNFJN2Plain it will usually be faster than
+/// NNH. NNFJN2Tiled, where it can be used, will be faster for
 /// multiplicities above a few tens of particles.
 ///
 ///   NOTE: IN ALL CASES, THE DISTANCE MUST BE SYMMETRIC (dij=dji)!!!
@@ -126,7 +126,7 @@ public:
 ///   
 ///   The BJ then provides information about interparticle and
 ///   particle-beam distances. The exact requirements depend on
-///   whether you use NNH, NNPlainN2 or NNTiledN2. (See the
+///   whether you use NNH, NNFJN2Plain or NNFJN2Tiled. (See the
 ///   corresponding classes for details).
 ///
 ///
@@ -159,8 +159,8 @@ public:
 ///     }
 ///   \endcode
 ///
-/// For an example of how the NNH<BJ> class is used, see the JadePlugin or
-/// EECambridgePlugin.
+/// For an example of how the NNH<BJ> class is used, see the
+/// JadePlugin or EECambridgePlugin.
 template<class I = _NoInfo> class NNBase : public NNInfo<I> {
 public:
   /// Default constructor

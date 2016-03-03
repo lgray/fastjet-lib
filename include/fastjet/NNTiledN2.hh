@@ -1,5 +1,5 @@
-#ifndef __FASTJET_NNTILEDN2_HH__
-#define __FASTJET_NNTILEDN2_HH__
+#ifndef __FASTJET_NNFJN2TILED_HH__
+#define __FASTJET_NNFJN2TILED_HH__
 
 //FJSTARTHEADER
 // $Id$
@@ -38,7 +38,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 //----------------------------------------------------------------------
 /// @ingroup advanced_usage
-/// \class NNTiledN2
+/// \class NNFJN2Tiled
 ///
 /// Helps solve closest pair problems with factorised interparticle
 /// and beam distances (ie satisfying the FastJet lemma) that are on
@@ -47,7 +47,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// (see NNBase.hh for an introductory description)
 ///
 /// This variant provides an implementation based on the N2Tiled
-/// clustering strategy in FastJet. As for the NNPlainN2 case, the
+/// clustering strategy in FastJet. As for the NNFJN2Plain case, the
 /// interparticle and beam distances should be of the form
 ///
 /// \code
@@ -55,17 +55,17 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   diB = mom_factor(i) * geometrical_beam_distance(i)
 /// \endcode
 ///
-/// Additionally, the NNTiledN2 class takes a tile_size parameter that
-/// controls the size of the tiles. It must be such that, for any two
-/// points in non-neighbouring (and non-identical) tiles, the
+/// Additionally, the NNFJN2Tiled class takes a tile_size parameter
+/// that controls the size of the tiles. It must be such that, for any
+/// two points in non-neighbouring (and non-identical) tiles, the
 /// geometrical distance between the 2 points is larger than the
 /// geometrical beam distance of each of the 2 points.
 ///
 /// It is templated with a BJ (brief jet) class and can be used with or
-/// without an extra "Information" template, i.e. NNTiledN2<BJ> or
-/// NNTiledN2<BJ,I>
+/// without an extra "Information" template, i.e. NNFJN2Tiled<BJ> or
+/// NNFJN2Tiled<BJ,I>
 ///
-/// For the NNTiledN2<BJ> version of the class to function, BJ must provide 
+/// For the NNFJN2Tiled<BJ> version of the class to function, BJ must provide 
 /// three member functions
 ///  
 /// \code
@@ -75,7 +75,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   double BJ::momentum_factor();                             // extra momentum factor
 /// \endcode
 ///
-/// For the NNTiledN2<BJ,I> version to function, the BJ::init(...) member
+/// For the NNFJN2Tiled<BJ,I> version to function, the BJ::init(...) member
 /// must accept an extra argument
 ///
 /// \code
@@ -110,14 +110,14 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   }
 /// \endcode
 ///
-template<class BJ, class I = _NoInfo> class NNTiledN2 : public NNBase<I> {
+template<class BJ, class I = _NoInfo> class NNFJN2Tiled : public NNBase<I> {
 public:
 
   /// constructor with an initial set of jets (which will be assigned indices
   /// `0...jets.size()-1`)
-  NNTiledN2(const std::vector<PseudoJet> & jets, double requested_tile_size)
+  NNFJN2Tiled(const std::vector<PseudoJet> & jets, double requested_tile_size)
     : NNBase<I>(),     _requested_tile_size(requested_tile_size) {start(jets);}
-  NNTiledN2(const std::vector<PseudoJet> & jets, double requested_tile_size, I * info)
+  NNFJN2Tiled(const std::vector<PseudoJet> & jets, double requested_tile_size, I * info)
     : NNBase<I>(info), _requested_tile_size(requested_tile_size) {start(jets);}
   
   void start(const std::vector<PseudoJet> & jets);
@@ -134,7 +134,7 @@ public:
   void merge_jets(int iA, int iB, const PseudoJet & jet, int jet_index);
 
   /// a destructor
-  ~NNTiledN2() {
+  ~NNFJN2Tiled() {
     delete[] briefjets;
     delete[] diJ;
   }
@@ -268,7 +268,7 @@ private:
 
 
 //----------------------------------------------------------------------
-template<class BJ, class I> void NNTiledN2<BJ,I>::start(const std::vector<PseudoJet> & jets) {
+template<class BJ, class I> void NNFJN2Tiled<BJ,I>::start(const std::vector<PseudoJet> & jets) {
 
   _initialise_tiles(jets);
 
@@ -330,7 +330,7 @@ template<class BJ, class I> void NNTiledN2<BJ,I>::start(const std::vector<Pseudo
 
 
 //----------------------------------------------------------------------
-template<class BJ, class I> double NNTiledN2<BJ,I>::dij_min(int & iA, int & iB) {
+template<class BJ, class I> double NNFJN2Tiled<BJ,I>::dij_min(int & iA, int & iB) {
   // find the minimum of the diJ on this round
   diJ_plus_link * best, *stop; // pointers a bit faster than indices
                                // could use best to keep track of diJ
@@ -355,7 +355,7 @@ template<class BJ, class I> double NNTiledN2<BJ,I>::dij_min(int & iA, int & iB) 
 
 //----------------------------------------------------------------------
 // remove jetA from the list
-template<class BJ, class I> void NNTiledN2<BJ,I>::remove_jet(int iA) {
+template<class BJ, class I> void NNFJN2Tiled<BJ,I>::remove_jet(int iA) {
   TiledJet * jetA = where_is[iA];
 
   _bj_remove_from_tiles(jetA);
@@ -406,7 +406,7 @@ template<class BJ, class I> void NNTiledN2<BJ,I>::remove_jet(int iA) {
 
 
 //----------------------------------------------------------------------
-template<class BJ, class I> void NNTiledN2<BJ,I>::merge_jets(int iA, int iB, 
+template<class BJ, class I> void NNFJN2Tiled<BJ,I>::merge_jets(int iA, int iB, 
 					const PseudoJet & jet, int index) {
 
   TiledJet * jetA = where_is[iA];
@@ -517,7 +517,7 @@ template<class BJ, class I> void NNTiledN2<BJ,I>::merge_jets(int iA, int iB,
 /// region.
 ///
 template <class BJ, class I>
-void NNTiledN2<BJ,I>::_initialise_tiles(const std::vector<PseudoJet> &particles) {
+void NNFJN2Tiled<BJ,I>::_initialise_tiles(const std::vector<PseudoJet> &particles) {
 
   // first decide tile sizes (with a lower bound to avoid huge memory use with
   // very small R)
@@ -590,7 +590,7 @@ void NNTiledN2<BJ,I>::_initialise_tiles(const std::vector<PseudoJet> &particles)
 //----------------------------------------------------------------------
 /// return the tile index corresponding to the given rap,phi point
 template <class BJ, class I>
-int NNTiledN2<BJ,I>::_tile_index(const double rap, const double phi) const {
+int NNFJN2Tiled<BJ,I>::_tile_index(const double rap, const double phi) const {
   int irap, iphi;
   if      (rap <= _tiles_rap_min) {irap = 0;}
   else if (rap >= _tiles_rap_max) {irap = _tiles_irap_max-_tiles_irap_min;}
@@ -611,7 +611,7 @@ int NNTiledN2<BJ,I>::_tile_index(const double rap, const double phi) const {
 
 //----------------------------------------------------------------------
 template <class BJ, class I>
-void NNTiledN2<BJ,I>::_bj_remove_from_tiles(TiledJet * const jet) {
+void NNFJN2Tiled<BJ,I>::_bj_remove_from_tiles(TiledJet * const jet) {
   Tile * tile = & _tiles[jet->tile_index];
 
   if (jet->previous == NULL) {
@@ -633,7 +633,7 @@ void NNTiledN2<BJ,I>::_bj_remove_from_tiles(TiledJet * const jet) {
 // overloaded version which additionally sets up information regarding the
 // tiling
 template <class BJ, class I>
-inline void NNTiledN2<BJ,I>::_tiledjet_set_jetinfo(TiledJet * const tile_jet,
+inline void NNFJN2Tiled<BJ,I>::_tiledjet_set_jetinfo(TiledJet * const tile_jet,
                                                    const PseudoJet &jet, 
                                                    int index) {
   // the this-> in the next line is required by standard compiler
@@ -661,7 +661,7 @@ inline void NNTiledN2<BJ,I>::_tiledjet_set_jetinfo(TiledJet * const tile_jet,
 /// space, but fear is that it would have been slower, e.g. checking
 /// for end of vector at each stage to decide whether to resize it)
 template <class BJ, class I>
-void NNTiledN2<BJ,I>::_add_neighbours_to_tile_union(const int tile_index, 
+void NNFJN2Tiled<BJ,I>::_add_neighbours_to_tile_union(const int tile_index, 
                                                     int & n_near_tiles) const {
   for (Tile * const * near_tile = _tiles[tile_index].begin_tiles; 
        near_tile != _tiles[tile_index].end_tiles; near_tile++){
@@ -693,7 +693,7 @@ void NNTiledN2<BJ,I>::_add_neighbours_to_tile_union(const int tile_index,
 /// gcc-4.6, so for broader usage, we'd need to insert #pragma GCC
 /// diagnostic ignored "-Wpragmas" at the top of this file
 template <class BJ, class I>
-inline void NNTiledN2<BJ,I>::_add_untagged_neighbours_to_tile_union(
+inline void NNFJN2Tiled<BJ,I>::_add_untagged_neighbours_to_tile_union(
                const int tile_index, 
 	       int & n_near_tiles)  {
   for (Tile ** near_tile = _tiles[tile_index].begin_tiles; 
@@ -712,4 +712,4 @@ inline void NNTiledN2<BJ,I>::_add_untagged_neighbours_to_tile_union(
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
 
 
-#endif // __FASTJET_NNTILEDN2_HH__
+#endif // __FASTJET_NNFJN2TILED_HH__
