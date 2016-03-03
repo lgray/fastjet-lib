@@ -545,7 +545,10 @@ int main (int argc, char ** argv) {
   } 
   if (all_algs || cmdline.present("-jade")) {
 #ifdef FASTJET_ENABLE_PLUGIN_JADE
-    jet_defs.push_back( JetDefinition(new JadePlugin()));
+    JadePlugin::Strategy jade_strategy =
+      JadePlugin::Strategy(cmdline.value<int>("-jade-strategy",
+                                              JadePlugin::strategy_NNFJN2Plain));
+    jet_defs.push_back( JetDefinition(new JadePlugin(jade_strategy)));
 #else  // FASTJET_ENABLE_PLUGIN_JADE
     is_unavailable("Jade");
 #endif // FASTJET_ENABLE_PLUGIN_JADE

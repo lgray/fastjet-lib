@@ -1,3 +1,42 @@
+2016-03-03  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/NNBase.hh:
+	added a missing virtual destructor.
+
+	* example/fastjet_timing_plugins.cc:
+	added -jade-strategy flag (by default 1=NNFJN2Plain, but can also
+	be 0=NNH).
+
+	* plugins/Jade/fastjet/JadePlugin.hh:
+	* plugins/Jade/JadePlugin.cc:
+	Extended JadePlugin to have a strategy subclass
+	(JadePlugin::Strategy) and optional strategy argument to the
+	constructor. By defaults it now uses the new NNFJN2Plain
+	clustering, instead of the old NNH, but by changing the strategy
+	that can be changed.
+
+	Timings show that for higher multiplicities, NNFJN2Plain is about
+	a factor of two faster:
+
+        |                               | NNFJN2Plain | NNH   |
+        |-------------------------------+-------------+-------|
+        | all 70 particles, 10^5 events | 3.65s       | 6.94s |
+        | 20 hardest part,  10^6 events | 5.12s       | 4.74s |
+
+        Commands were:
+        ./fastjet_timing_plugins -jade -excly 0.001 -repeat 100000   < data/single-ee-event.dat
+        ./fastjet_timing_plugins -jade -excly 0.001 -repeat 1000000 -nhardest 20  < data/single-ee-event.dat
+
+	with -jade-strategy 1 or 0
+
+	Both strategies give identical clustering sequences and dij values
+	on 10^4 events.
+
+	Note: there are two implementations of the strategy selection, one
+	using a virtual base class to choose between the two strategies,
+	the other using a template. The template was selected in the end,
+	with the other code just commented out for now.
+
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/fastjet_timing_plugins.cc:
@@ -14,7 +53,7 @@
 	in C++11)
 
 	Note that we could have used std::unique_ptr but SharedPtr has the
-	advantage to be available independently of the C++ standard.
+	advantage of being available independently of the C++ standard.
 
 	* include/fastjet/Makefile.am:
 	* include/fastjet/NNPlainN2.hh --> include/fastjet/NNFJN2Plain.hh:

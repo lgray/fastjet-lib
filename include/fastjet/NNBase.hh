@@ -181,6 +181,8 @@ public:
   /// merges the jets pointed to by indices A and B and replaces them with
   /// jet, assigning it an index jet_index.
   virtual void merge_jets(int iA, int iB, const PseudoJet & jet, int jet_index) =  0;
+
+  virtual ~NNBase() {};
 };
 
 
