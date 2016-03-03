@@ -37,6 +37,7 @@
 #include "fastjet/internal/ClosestPair2DBase.hh"
 #include "fastjet/internal/SearchTree.hh"
 #include "fastjet/internal/MinHeap.hh"
+#include "fastjet/SharedPtr.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -133,8 +134,8 @@ private:
   typedef Tree::const_circulator  const_circulator;
 
 
-  triplet<std::auto_ptr<Tree> >  _trees;
-  std::auto_ptr<MinHeap> _heap;
+  triplet<SharedPtr<Tree> >  _trees;
+  SharedPtr<MinHeap>     _heap;
   std::vector<Point>     _points;
   std::stack<Point *>    _available_points;
 

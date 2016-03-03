@@ -1,5 +1,21 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/fastjet_timing_plugins.cc:
+	* fortran_wrapper/fastjetfortran.cc:
+	* plugins/SISCone/fastjet/SISConePlugin.hh:
+	* plugins/SISCone/fastjet/SISConeSphericalPlugin.hh:
+	* plugins/SISCone/SISConePlugin.cc:
+	* plugins/SISCone/SISConeSphericalPlugin.cc:
+	* src/ClosestPair2D.cc:
+	* src/ClusterSequence_Delaunay.cc:
+	* include/fastjet/internal/ClosestPair2D.hh:
+	* include/fastjet/ClusterSequenceArea.hh:
+	replaced auto_ptr with SharedPtr (following auto_ptr deprecation
+	in C++11)
+
+	Note that we could have used std::unique_ptr but SharedPtr has the
+	advantage to be available independently of the C++ standard.
+
 	* include/fastjet/Makefile.am:
 	* include/fastjet/NNPlainN2.hh --> include/fastjet/NNFJN2Plain.hh:
 	* include/fastjet/NNTiledN2.hh --> include/fastjet/NNFJN2Tiled.hh:
