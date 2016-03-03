@@ -1,3 +1,11 @@
+2016-03-03  FastJet service account  <fastjet@buildcoverity.cern.ch> [Gavin]
+
+	* scripts/coverity-run.sh:     *** ADDED ***
+	* scripts/coverity-commit.sh:  *** ADDED ***
+
+	added these scripts to run coverity and commit the results to the
+	server. 
+
 2016-03-02  Gregory Soyez  <soyez@fastjet.fr>
 
 	* scripts/mkfjcore.sh:
