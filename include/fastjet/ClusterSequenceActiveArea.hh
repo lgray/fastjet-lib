@@ -73,12 +73,12 @@ public:
 	  const GhostedAreaSpec & ghost_spec,
 	  const bool & writeout_combinations = false) ;
 
-  virtual double area (const PseudoJet & jet) const {
+  virtual double area (const PseudoJet & jet) const FASTJET_OVERRIDE {
                              return _average_area[jet.cluster_hist_index()];};
-  virtual double area_error (const PseudoJet & jet) const {
+  virtual double area_error (const PseudoJet & jet) const FASTJET_OVERRIDE {
                              return _average_area2[jet.cluster_hist_index()];};
 
-  virtual PseudoJet area_4vector (const PseudoJet & jet) const {
+  virtual PseudoJet area_4vector (const PseudoJet & jet) const FASTJET_OVERRIDE {
                     return _average_area_4vector[jet.cluster_hist_index()];};
 
   /// enum providing a variety of tentative strategies for estimating
@@ -109,11 +109,11 @@ public:
   /// consists of ghost jets or unclustered ghosts
   ///
   /// The selector passed as an argument needs to apply jet by jet.
-  virtual double empty_area(const Selector & selector) const;
+  virtual double empty_area(const Selector & selector) const FASTJET_OVERRIDE;
 
   /// return the true number of empty jets (replaces
   /// ClusterSequenceAreaBase::n_empty_jets(...))
-  virtual double n_empty_jets(const Selector & selector) const;
+  virtual double n_empty_jets(const Selector & selector) const FASTJET_OVERRIDE;
 
 protected:
   void _resize_and_zero_AA ();

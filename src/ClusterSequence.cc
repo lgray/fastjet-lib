@@ -151,8 +151,8 @@ std::ostream * ClusterSequence::_fastjet_banner_ostr = &cout;
 ClusterSequence::~ClusterSequence () {
   // set the pointer in the wrapper to this object to NULL to say that
   // we're going out of scope
-  if (_structure_shared_ptr()){
-    ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
+  if (_structure_shared_ptr){
+    ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr.get()); 
     // normally the csi is purely internal so it really should not be
     // NULL i.e assert should be OK
     // (we assert rather than throw an error, since failure here is a
@@ -814,7 +814,7 @@ void ClusterSequence::transfer_from_sequence(const ClusterSequence & from_seq,
   _extras   = from_seq._extras;
 
   // clean up existing structure
-  if (_structure_shared_ptr()) {
+  if (_structure_shared_ptr) {
     // If there are jets associated with an old version of the CS and
     // a new one, keeping track of when to delete the CS becomes more
     // complex; so we don't allow this situation to occur.
@@ -822,7 +822,7 @@ void ClusterSequence::transfer_from_sequence(const ClusterSequence & from_seq,
     
     // anything that is currently associated with the cluster sequence
     // should be told that its cluster sequence no longer exists
-    ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr()); 
+    ClusterSequenceStructure* csi = dynamic_cast<ClusterSequenceStructure*>(_structure_shared_ptr.get()); 
     assert(csi != NULL);
     csi->set_associated_cs(NULL);
   }

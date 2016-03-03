@@ -1,3 +1,66 @@
+2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
+
+	* scripts/mkfjcore.sh:
+	fasjet_internal_headers incorporated into fasjet_headers
+
+	* include/fastjet/WrappedStructure.hh:
+	* include/fastjet/CompositeJetStructure.hh:
+	* include/fastjet/ClusterSequenceStructure.hh:
+	* include/fastjet/ClusterSequenceVoronoiArea.hh:
+	* include/fastjet/ClusterSequencePassiveArea.hh:
+	* include/fastjet/ClusterSequenceArea.hh:
+	* include/fastjet/ClusterSequenceActiveArea.hh:
+	* include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh:
+	* include/fastjet/ClusterSequence1GhostPassiveArea.hh:
+	* include/fastjet/RectangularGrid.hh:
+	* include/fastjet/JetDefinition.hh:
+	* include/fastjet/CircularRange.hh:
+	used teh FASTJET_OVERRIDE macro whenever appropriate
+
+	* config.h.in:
+	* include/fastjet/internal/base.hh:
+	defined a FASTJET_OVERRIDE macro that translates into the
+	"override" keyword if supported.
+
+	Reminder: adding the the override keyword to a class member means
+	that it shold verload an equivalent member function in a base
+	class. If it does not, the compiler will issue an error. This is
+	therefore mostly meant as a safeguard (avoiding typos in
+	overloaded function names)
+
+	* tools/JetMedianBackgroundEstimator.cc:
+	* src/PseudoJet.cc:
+	* src/JetDefinition.cc:
+	* src/ClusterSequence.cc:
+	* include/fastjet/WrappedStructure.hh:
+	* include/fastjet/PseudoJet.hh:
+	* include/fastjet/JetDefinition.hh:
+
+	replaced
+	  if (shared_ptr())
+	by
+	  if (shared_ptr)
+	which correctly uses the casting to bool
+
+	also used SharedPtr::get() instead of SharedPtr::operator ().
+
+	* include/fastjet/SharedPtr.hh:
+	deprecated T* operator() [one should use get() instead]
+
+	* config.h.in:
+	* include/fastjet/internal/deprecated.hh:   *** ADDED ***
+	* include/fastjet/internal/Makefile.am:
+	* scripts/mkfjcore.sh:
+	added a FASTJET_DEPRECATED(func) and a
+	FASTJET_DEPRECATED_MSG(func,message) macro that uses compile-time
+	depreaction when available
+
+	* configure.ac:
+	added tests for modern compiler options
+          [[deprecated]]             --> FASTJET_HAVE_CXX14_DEPRECATED
+	  _attribute__((deprecated)) --> FASTJET_HAVE_GNUCXX_DEPRECATED
+	  override                   --> FASTJET_HAVE_OVERRIDE
+
 2016-03-03  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/ClusterSequence_Delaunay.cc (_delaunay_cluster):

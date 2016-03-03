@@ -388,7 +388,7 @@ public:
   /// has been called). In such cases, using set_recombiner(const
   /// Recombiner *) may lead to memory corruption.
   void set_recombiner(const Recombiner * recomb) {
-    if (_shared_recombiner()) _shared_recombiner.reset(recomb);
+    if (_shared_recombiner) _shared_recombiner.reset(recomb);
     _recombiner = recomb;
     _default_recombiner = DefaultRecombiner(external_scheme);
   }
@@ -521,13 +521,13 @@ public:
     DefaultRecombiner(RecombinationScheme recomb_scheme = E_scheme) : 
       _recomb_scheme(recomb_scheme) {}
     
-    virtual std::string description() const;
+    virtual std::string description() const FASTJET_OVERRIDE;
     
     /// recombine pa and pb and put result into pab
     virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
-                           PseudoJet & pab) const;
+                           PseudoJet & pab) const FASTJET_OVERRIDE;
 
-    virtual void preprocess(PseudoJet & p) const;
+    virtual void preprocess(PseudoJet & p) const FASTJET_OVERRIDE;
 
     /// return the index of the recombination scheme
     RecombinationScheme scheme() const {return _recomb_scheme;}

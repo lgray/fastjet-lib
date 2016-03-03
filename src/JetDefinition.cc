@@ -184,7 +184,7 @@ void JetDefinition::set_recombination_scheme(
   _default_recombiner = JetDefinition::DefaultRecombiner(recomb_scheme);
 
   // do not forget to delete the existing recombiner if needed
-  if (_shared_recombiner()) _shared_recombiner.reset();
+  if (_shared_recombiner) _shared_recombiner.reset();
 
   _recombiner = 0;
 }

@@ -64,7 +64,7 @@ public:
 
   /// return an empty area that's appropriate to the passive area
   /// determination carried out
-  virtual double empty_area(const Selector & selector) const;
+  virtual double empty_area(const Selector & selector) const FASTJET_OVERRIDE;
 
 private:
 

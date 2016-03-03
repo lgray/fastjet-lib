@@ -38,6 +38,8 @@
 // for our SharedPtr simply to be derived from the STL TR1 one.
 // #define __FASTJET_USETR1SHAREDPTR
 
+#include "fastjet/internal/deprecated.hh"
+
 #ifdef __FASTJET_USETR1SHAREDPTR
 #include <tr1/memory>
 #endif // __FASTJET_USETR1SHAREDPTR
@@ -210,8 +212,11 @@ public:
     return *this;
   }
   
-  /// return the pointer we're pointing to  
-  T* operator ()() const{
+  /// return the pointer we're pointing to
+  ///
+  /// Since FastJet 3.2.0, this is depracated since it is no longer
+  /// part of std::shared_ptr<T>. Use SharedPtr<T>::get() instead
+  FASTJET_DEPRECATED_MSG(T* operator ()() const, "Use SharedPtr<T>::get() instead"){
     if (_ptr==NULL) return NULL;
     return _ptr->get(); // automatically returns NULL when out-of-scope
   }

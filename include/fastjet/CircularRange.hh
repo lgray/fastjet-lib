@@ -75,17 +75,17 @@ public:
   virtual ~CircularRange() {}
   
   /// return description of range
-  virtual inline std::string description() const {
+  virtual inline std::string description() const FASTJET_OVERRIDE {
     std::ostringstream ostr;
     ostr << "CircularRange: within distance "<< _distance << " of given jet or point." ;
     return ostr.str(); }
 
   /// returns true since this range is localizable (i.e. set_position
   /// does something meaningful)
-  virtual inline bool is_localizable() const { return true; }
+  virtual inline bool is_localizable() const FASTJET_OVERRIDE { return true; }
   
   /// return bool according to whether (rap,phi) is in range
-  virtual inline bool is_in_range(double rap, double phi) const {
+  virtual inline bool is_in_range(double rap, double phi) const FASTJET_OVERRIDE {
      if (! _rapphi_are_valid()) {
        throw Error("Circular range used without a center having being defined (use set_position())");
      }
@@ -97,7 +97,7 @@ public:
      return inrange; }
 
   /// return the minimal and maximal rapidity of this range
-  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const {
+  virtual inline void get_rap_limits(double & rapmin, double & rapmax) const FASTJET_OVERRIDE {
      rapmin = _rapjet - _distance;
      rapmax = _rapjet + _distance; }
 

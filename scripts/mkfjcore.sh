@@ -20,12 +20,14 @@ fi
 mkdir fjcore-$version || { echo "A previous fjcore-$version exists. Exiting."; exit 1; }
 cd fjcore-$version
 
-internal_headers="base.hh\
-  numconsts.hh\
-  IsBase.hh"
-
+# 2016-03-03: GS Note: we could in principle simply add these as
+# internal/whatever.hh to the "fastjet_headers" list below
 fastjet_headers="config_auto.h\
   config.h\
+  internal/base.hh\
+  internal/numconsts.hh\
+  internal/IsBase.hh\
+  internal/deprecated.hh\
   SharedPtr.hh\
   LimitedWarning.hh\
   Error.hh\
@@ -84,12 +86,12 @@ mkdir src
 # copy the internal headers, headers and sources
 echo "======================================================================"
 echo "copying internal headers"
-for hh in $internal_headers; do
-    cp $fjdir/include/fastjet/internal/$hh include/fastjet/internal/
-done
-echo "copying FastJet headers"
+# for hh in $internal_headers; do
+#     cp $fjdir/include/fastjet/internal/$hh include/fastjet/internal/
+# done
+# echo "copying FastJet headers"
 for hh in $fastjet_headers; do
-    cp $fjdir/include/fastjet/$hh include/fastjet/
+    cp $fjdir/include/fastjet/$hh include/fastjet/$hh
 done
 echo "copying internal sources"
 for icc in $internal_sources; do
@@ -164,9 +166,9 @@ cat >fjcore.hh <<EOF
 
 EOF
 
-for hh in $internal_headers; do
-    cat include/fastjet/internal/$hh >> fjcore.hh
-done
+# for hh in $internal_headers; do
+#     cat include/fastjet/internal/$hh >> fjcore.hh
+# done
 
 for hh in $fastjet_headers; do
     cat include/fastjet/$hh >> fjcore.hh
@@ -199,7 +201,7 @@ mv fjcore.cc.tmp fjcore.cc
 
 
 echo; echo "Cleaning the #include directives"
-for pattern in $internal_headers $fastjet_headers $internal_sources; do
+for pattern in $fastjet_headers $internal_sources; do
     grep -v "include.*$pattern" fjcore.hh > tmp
     mv tmp fjcore.hh
     grep -v "include.*$pattern" fjcore.cc > tmp

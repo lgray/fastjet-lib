@@ -69,7 +69,7 @@ public:
   /// return an estimate for the number of empty jets -- one uses the
   /// AreaBase one rather than the ActiveArea one (which for which we
   /// do not have the information).
-  virtual double n_empty_jets(const Selector & selector) const {
+  virtual double n_empty_jets(const Selector & selector) const FASTJET_OVERRIDE {
     return ClusterSequenceAreaBase::n_empty_jets(selector);
   }
 

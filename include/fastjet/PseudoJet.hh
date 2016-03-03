@@ -436,7 +436,9 @@ class PseudoJet {
 
   /// retrieve a pointer to the (const) user information
   const UserInfoBase * user_info_ptr() const{
-    if (!_user_info()) return NULL;
+    // the line below is not needed since the next line would anyway
+    // return NULL in that case
+    //if (!_user_info) return NULL;
     return _user_info.get();
   }
 
@@ -992,7 +994,7 @@ const StructureType & PseudoJet::structure() const{
 // (that is, its structure is compatible with a Transformer::StructureType)
 template<typename TransformerType>
 bool PseudoJet::has_structure_of() const{
-  if (!_structure()) return false;
+  if (!_structure) return false;
 
   return dynamic_cast<const typename TransformerType::StructureType *>(_structure.get()) != 0;
 }
@@ -1002,7 +1004,7 @@ bool PseudoJet::has_structure_of() const{
 // NULL is returned if the corresponding type is not met
 template<typename TransformerType>
 const typename TransformerType::StructureType & PseudoJet::structure_of() const{
-  if (!_structure()) 
+  if (!_structure) 
     throw Error("Trying to access the structure of a PseudoJet without an associated structure");
 
   return dynamic_cast<const typename TransformerType::StructureType &>(*_structure);

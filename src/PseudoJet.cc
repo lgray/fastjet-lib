@@ -408,11 +408,11 @@ double PseudoJet::delta_phi_to(const PseudoJet & other) const {
 
 string PseudoJet::description() const{
   // the "default" case of a PJ which does not belong to any cluster sequence
-  if (!_structure())
+  if (!_structure)
     return "standard PseudoJet (with no associated clustering information)";
   
   // for all the other cases, the description comes from the structure
-  return _structure()->description();
+  return _structure->description();
 }
 
 
@@ -428,7 +428,7 @@ string PseudoJet::description() const{
 // check whether this PseudoJet has an associated parent
 // ClusterSequence
 bool PseudoJet::has_associated_cluster_sequence() const{
-  return (_structure()) && (_structure->has_associated_cluster_sequence());
+  return (_structure) && (_structure->has_associated_cluster_sequence());
 }
 
 //----------------------------------------------------------------------
@@ -445,7 +445,7 @@ const ClusterSequence* PseudoJet::associated_cluster_sequence() const{
 // check whether this PseudoJet has an associated parent
 // ClusterSequence that is still valid
 bool PseudoJet::has_valid_cluster_sequence() const{
-  return (_structure()) && (_structure->has_valid_cluster_sequence());
+  return (_structure) && (_structure->has_valid_cluster_sequence());
 }
 
 //----------------------------------------------------------------------
@@ -468,7 +468,7 @@ void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase>
 //----------------------------------------------------------------------
 // return true if there is some strusture associated with this PseudoJet
 bool PseudoJet::has_structure() const{
-  return _structure();
+  return _structure;
 }
 
 //----------------------------------------------------------------------
@@ -477,8 +477,8 @@ bool PseudoJet::has_structure() const{
 //
 // return NULL if there is no associated structure
 const PseudoJetStructureBase* PseudoJet::structure_ptr() const {
-  if (!_structure()) return NULL;
-  return _structure();
+  //if (!_structure) return NULL;
+  return _structure.get();
 }
   
 //----------------------------------------------------------------------
@@ -492,8 +492,8 @@ const PseudoJetStructureBase* PseudoJet::structure_ptr() const {
 // unless you really need a write access to the PseudoJet's
 // underlying structure.
 PseudoJetStructureBase* PseudoJet::structure_non_const_ptr(){
-  if (!_structure()) return NULL;
-  return _structure();
+  //if (!_structure) return NULL;
+  return _structure.get();
 }
   
 //----------------------------------------------------------------------
@@ -502,9 +502,9 @@ PseudoJetStructureBase* PseudoJet::structure_non_const_ptr(){
 //
 // throw an error if there is no associated structure
 const PseudoJetStructureBase* PseudoJet::validated_structure_ptr() const {
-  if (!_structure()) 
+  if (!_structure) 
     throw Error("Trying to access the structure of a PseudoJet which has no associated structure");
-  return _structure();
+  return _structure.get();
 }
   
 //----------------------------------------------------------------------
@@ -572,7 +572,7 @@ bool PseudoJet::is_inside(const PseudoJet &jet) const{
 //----------------------------------------------------------------------
 // returns true if the PseudoJet has constituents
 bool PseudoJet::has_constituents() const{
-  return (_structure()) && (_structure->has_constituents());
+  return (_structure) && (_structure->has_constituents());
 }
 
 //----------------------------------------------------------------------
@@ -585,7 +585,7 @@ vector<PseudoJet> PseudoJet::constituents() const{
 //----------------------------------------------------------------------
 // returns true if the PseudoJet has support for exclusive subjets
 bool PseudoJet::has_exclusive_subjets() const{
-  return (_structure()) && (_structure->has_exclusive_subjets());
+  return (_structure) && (_structure->has_exclusive_subjets());
 }
 
 //----------------------------------------------------------------------
@@ -669,7 +669,7 @@ double PseudoJet::exclusive_subdmerge_max(int nsub) const {
 // By default a single particle or a jet coming from a
 // ClusterSequence have no pieces and this methos will return false.
 bool PseudoJet::has_pieces() const{
-  return ((_structure()) && (_structure->has_pieces(*this)));
+  return ((_structure) && (_structure->has_pieces(*this)));
 }
 
 // retrieve the pieces that make up the jet. 
