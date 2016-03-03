@@ -1,5 +1,19 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* scripts/mkfjcore.sh:
+	handled the pre-compiler macros defined by configure (for
+	supported compiler features), as well as the DEPRECATED and
+	OVERRIDE ones.
+
+	By default, they are not availabel but one can define
+
+	  FJCORE_HAVE_OVERRIDE
+	  FJCORE_HAVE_GNUXX_DEPRECATED
+	  FJCORE_HAVE_CXX14_DEPRECATED
+	  FJCORE_HAVE_EXPLICIT_FOR_OPERATORS
+
+	before including fjcore.hh to switch on the approproate support.
+
 	* include/fastjet/internal/deprecated.hh:
 	fixed typo
 

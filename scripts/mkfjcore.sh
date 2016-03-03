@@ -233,6 +233,9 @@ sed '/^#ifndef WIN32/,/#endif.*$/d' fjcore.hh.nocomments > fjcore.hh
 # removal of "#define FASTJET_HAVE_EXECINFO 1" line from fjcore.hh. 
 # Guards are instead kept, because they are used in Error.hh|cc
 sed '/^#define FASTJET_HAVE_EXECINFO_H.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
+# same story for a bunch of other compiler-related flags
+sed '/^#define FASTJET_HAVE_OVERRIDE.*$/d;/^#define FASTJET_HAVE_GNUCXX_DEPRECATED.*$/d;/^#define FASTJET_HAVE_CXX14_DEPRECATED.*$/d;/^#define FASTJET_HAVE_EXPLICIT_FOR_OPERATORS.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
+
 # renaming and removal of unnecessary files
 rm fjcore.hh.nocomments
 mv fjcore.cc.nocomments fjcore.cc
@@ -255,6 +258,8 @@ for fn in fjcore.hh fjcore.cc; do
       -e 's/FASTJET_HAVE/FJCORE_HAVE/g' \
       -e 's/FASTJET_STDC/FJCORE_STDC/g' \
       -e 's/FASTJET_LT/FJCORE_LT/g' \
+      -e 's/FASTJET_OVERRIDE/FJCORE_OVERRIDE/g' \
+      -e 's/FASTJET_DEPRECATED/FJCORE_DEPRECATED/g' \
       -e 's/FASTJET_VERSION/FJCORE_VERSION/g' \
       -e 's/INCLUDE_FASTJET_CONFIG/INCLUDE_FJCORE_CONFIG/g' \
        $fn \
