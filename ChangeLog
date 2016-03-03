@@ -1,6 +1,13 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/SharedPtr.hh:
+	if supported, declared the conversion to bbool as explicit
+
+	* configure.ac:
+	added a check for the "explicit" keyword for (conversion)
+	operators in class (typically requires C++11)
+
+	* include/fastjet/SharedPtr.hh:
 	* include/fastjet/ClusterSequence.hh:
 	used the new FASTJET_DEPRECATED syntax
 

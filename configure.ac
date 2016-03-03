@@ -212,6 +212,20 @@ if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
 
+dnl--- explicit (for operators in class) --> HAVE_EXPLICIT_FOR_OPERATORAS ---
+AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "explicit" keyword for operators]])
+AC_LANG_PUSH(C++)
+save_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS -Werror"
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: explicit operator bool(){return true;}}; int main(void){ A a; bool b=bool(a); if (b) b=false; return 0;}]])],
+    [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
+CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_POP(C++)
+if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+   AC_DEFINE(HAVE_EXPLICIT_FOR_OPERATORS, [], [compiler supports the "explicit" keyword for operators])
+fi
+AC_MSG_RESULT([$ac_compiler_has_requested_support])
+
 
 
 dnl-------------------------------------------------------------------

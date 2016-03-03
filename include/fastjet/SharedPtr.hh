@@ -73,6 +73,9 @@ public:
   SharedPtr(T * t) : std::tr1::shared_ptr<T>(t) {}
   SharedPtr(const SharedPtr<T> & t) : std::tr1::shared_ptr<T>(t) {}
   // for some reason operator() doesn't get inherited
+  #ifdef FASTJET_HAVE_EXPLICIT_FOR_OPERATORS
+  explicit
+  #endif
   inline operator bool() const {return (this->get()!=NULL);}
   /// return the pointer we're pointing to  
   T* operator ()() const{
@@ -262,6 +265,9 @@ public:
 
   /// conversion to bool
   /// This will allow you to use the indirection nicely
+  #ifdef FASTJET_HAVE_EXPLICIT_FOR_OPERATORS
+  explicit
+  #endif
   inline operator bool() const{
     return (get()!=NULL);
   }

@@ -49,6 +49,9 @@
 /* Define to 1 if you have the <execinfo.h> header file. */
 #undef HAVE_EXECINFO_H
 
+/* compiler supports the "explicit" keyword for operators */
+#undef HAVE_EXPLICIT_FOR_OPERATORS
+
 /* compiler supports GNU c++ deprecated attribute */
 #undef HAVE_GNUCXX_DEPRECATED
 
