@@ -46,7 +46,7 @@ namespace Private {
   public:
     int orig, mirror;
     MirrorInfo(int a, int b) : orig(a), mirror(b) {}
-    MirrorInfo() {} : orig(0), mirror(0) {} // set dummy values to keep static code checkers happy
+    MirrorInfo() : orig(0), mirror(0) {} // set dummy values to keep static code checkers happy
   };
 
   /// if there is a need for a mirror when looking for closest pairs
