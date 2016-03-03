@@ -11,7 +11,7 @@
 	* plugins/Jade/JadePlugin.cc:
 	Extended JadePlugin to have a strategy subclass
 	(JadePlugin::Strategy) and optional strategy argument to the
-	constructor. By defaults it now uses the new NNFJN2Plain
+	constructor. By default it now uses the new NNFJN2Plain
 	clustering, instead of the old NNH, but by changing the strategy
 	that can be changed.
 

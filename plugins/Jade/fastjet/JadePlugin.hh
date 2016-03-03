@@ -76,6 +76,9 @@ class ClusterSequence;
 /// and related routines.
 class JadePlugin : public JetDefinition::Plugin {
 public:
+  /// enum that contains the two clustering strategy options; for
+  /// higher multiplicities, strategy_NNFJN2Plain is about a factor of
+  /// two faster.
   enum Strategy { strategy_NNH = 0, strategy_NNFJN2Plain = 1};
   
   /// Main constructor for the Jade Plugin class.  
