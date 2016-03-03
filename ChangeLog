@@ -17,24 +17,24 @@
 	supported compiler features), as well as the DEPRECATED and
 	OVERRIDE ones.
 
-	By default, they are not availabel but one can define
+	By default, they are not available but one can define
 
 	  FJCORE_HAVE_OVERRIDE
-	  FJCORE_HAVE_GNUXX_DEPRECATED
+	  FJCORE_HAVE_GNUCXX_DEPRECATED
 	  FJCORE_HAVE_CXX14_DEPRECATED
 	  FJCORE_HAVE_EXPLICIT_FOR_OPERATORS
 
-	before including fjcore.hh to switch on the approproate support.
+	before including fjcore.hh to switch on the appropriate support.
 
 	* include/fastjet/internal/deprecated.hh:
 	fixed typo
 
 	* include/fastjet/SharedPtr.hh:
-	if supported, declared the conversion to bbool as explicit
+	if supported, declared the conversion to bool as explicit
 
 	* configure.ac:
 	added a check for the "explicit" keyword for (conversion)
-	operators in class (typically requires C++11)
+	operators in a class (typically requires C++11)
 
 	* include/fastjet/SharedPtr.hh:
 	* include/fastjet/ClusterSequence.hh:
@@ -63,7 +63,7 @@
 	* include/fastjet/RectangularGrid.hh:
 	* include/fastjet/JetDefinition.hh:
 	* include/fastjet/CircularRange.hh:
-	used teh FASTJET_OVERRIDE macro whenever appropriate
+	used the FASTJET_OVERRIDE macro whenever appropriate
 
 	* config.h.in:
 	* include/fastjet/internal/base.hh:
@@ -71,7 +71,7 @@
 	"override" keyword if supported.
 
 	Reminder: adding the the override keyword to a class member means
-	that it shold verload an equivalent member function in a base
+	that it should verload an equivalent member function in a base
 	class. If it does not, the compiler will issue an error. This is
 	therefore mostly meant as a safeguard (avoiding typos in
 	overloaded function names)
@@ -99,9 +99,9 @@
 	* include/fastjet/internal/deprecated.hh:   *** ADDED ***
 	* include/fastjet/internal/Makefile.am:
 	* scripts/mkfjcore.sh:
-	added a FASTJET_DEPRECATED(func) and a
-	FASTJET_DEPRECATED_MSG(func,message) macro that uses compile-time
-	depreaction when available
+	added FASTJET_DEPRECATED(func) and 
+	FASTJET_DEPRECATED_MSG(func,message) macros that use compile-time
+	deprecation when available
 
 	* configure.ac:
 	added tests for modern compiler options
@@ -152,7 +152,7 @@
                  6079 230145 fjcore.cc
                  8427 320019 total
 
-	for the moment, picked up the intermediate options since it's is
+	for the moment, picked up the intermediate option since it's
 	what we've had so far
 
 2016-03-02  Gavin Salam  <gavin.salam@cern.ch>
@@ -167,7 +167,7 @@
 
 2016-03-02  Gregory Soyez  <soyez@fastjet.fr>
 
-	* include/fastjet/NNase.hh:          *** ADDED ***
+	* include/fastjet/NNBase.hh:         *** ADDED ***
 	* include/fastjet/NNH.hh:
 	* include/fastjet/NNPlainN2.hh:      *** ADDED ***
 	* include/fastjet/NNTiledN2.hh:      *** ADDED ***
@@ -200,7 +200,7 @@
 	moved the (templated) implementation of "objects_sorted_by_values"
 	to the header so as to make it public (requested by S. Alioli)
 
-	In case of size mismatch, replaced the assertion by a
+	In the test for a size mismatch, replaced the assertion by a
 	fastjet::Error
 
 	* regression-tests/regression-test.pl:
@@ -216,7 +216,7 @@
 2016-02-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* NEWS:
-	brought changes between release 3.1.1 and 3.1.3
+	brought in changes between releases 3.1.1 and 3.1.3
 
 	Note: to-date, all modifications implemented in the 3.1.X-devel
 	branch have been backported to the trunk
