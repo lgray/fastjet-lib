@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# to view the results point a browser to
+# http://lcgapp10.cern.ch:8080/
 
 COV_BIN=/coverity/cov-analysis/bin/
 STREAM=FastJetTrunk
