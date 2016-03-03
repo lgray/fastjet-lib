@@ -1,5 +1,8 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/internal/deprecated.hh:
+	fixed typo
+
 	* include/fastjet/SharedPtr.hh:
 	if supported, declared the conversion to bbool as explicit
 

@@ -42,8 +42,8 @@
 #define FASTJET_DEPRECATED               __attribute__((deprecated))
 #define FASTJET_DEPRECATED_MSG(message)  __attribute__((deprecated))
 #else
-#define FASTJET_DEPRECATED               func
-#define FASTJET_DEPRECATED_MSG(fmessage) func
+#define FASTJET_DEPRECATED               
+#define FASTJET_DEPRECATED_MSG(message) 
 #endif
 
 #endif // __FASTJET_FASTJET_DEPRECATED_HH__
