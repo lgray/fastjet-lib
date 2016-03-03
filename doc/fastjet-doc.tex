@@ -5278,25 +5278,85 @@ about individual jets.
 \label{sec:new-seq-rec}
 
 To enable users to more easily build plugins for new sequential
-recombination algorithms, \fastjet also provides a class \verb|NNH|,
-which provides users with access to an implementation of the
-nearest-neighbour heuristic for establishing and maintaining
-information about the closest pair of objects in a dynamic set of
-objects (see \cite{EppsteinHierarchical} for an introduction to this
-and other generic algorithms).
+recombination algorithms, \fastjet also provides several classes that
+give access to implementations of dynamic nearest neighbour finding: 
+\begin{itemize}
+\item A class \verb|NNH|, which provides users with access to an
+  implementation of the nearest-neighbour heuristic for establishing
+  and maintaining information about the closest pair of objects in a
+  dynamic set of objects with generic distance measures (see
+  \cite{EppsteinHierarchical} for an introduction to this and other
+  generic algorithms). In good cases (e.g.\ C/A-like distances) this
+  allows one to construct clustering that runs in $N^2$ time, though
+  its worst case can be as bad as $N^3$ (e.g.\ anti-$k_t$).
 %
-In good cases (C/A-like) this allows one to construct clustering that runs in
-$N^2$ time, though its worst case can be as bad as $N^3$ (e.g.\ anti-$k_t$).
+\item A class \verb|NNFJN2Plain|, for distances that can be written in
+  the form $d_{ij}= \min(x_i, x_j) D_{ij}$, $d_{iB} = x_i D_{iB}$,
+  making use of the FastJet lemma and maintaining a nearest neighbour
+  table for the $D_{ij}$ part of the distance measure.
+  %
+  Closely related code forms the basis of the internal \verb|N2Plain|
+  strategy for the generalised-$k_t$ algorithms, where
+  $x_i \equiv p_{ti}^{2p}$ and $D_{ij} \equiv \Delta R_{ij}^2/R^2$,
+  $D_{iB} = 1$.
+  %
+  If $D_{ij}$ is geometrical, then the nearest-neighbour maintenance
+  for the $D_{ij}$ can be done in $N^2$ time, ensuring an overall
+  $N^2$ algorithm.
 %
-It is a templated class and the template argument should be a class
-that stores the minimal information for each jet so as to be able to
-calculate interjet distances.
+\item A class \verb|NNFJN2Tiled|. This is intended for problems with a
+  cylindrical geometry. 
+  %
+  The user specifies the tile size and then the algorithm facilitates
+  clustering with distance measures of the form
+  $d_{ij}= \min(x_i, x_j) D_{ij}$ (like \verb|NNFJN2Plain|), with
+  the additional assumption that for a pair of particles $i$ and $j$
+  on non-identical, non-neighbouring tiles, $D_{iB}, D_{jB} <D_{ij}$, so
+  that $i$ and $j$ will never cluster with each other.
+  %
+  The code is closely related to that used for the internal
+  \verb|N2Tiled| strategy for generalised-$k_t$ algorithms.
+  %
+  The asymptotic scaling is also $N^2$, but at high multiplicities the
+  coefficient is usually significantly smaller than for
+  \verb|NNFJN2Tiled|.
+\end{itemize}
+All three classes derive from \texttt{NNBase}.\footnote{The \ttt{NNBase},
+  \ttt{NNFJN2Plain} and \ttt{NNFJN2Tiled} classes were introduced in
+  version 3.2 of \fastjet.}
 %
-It underlies the implementations of the Jade and $\ee$ Cambridge
-plugins.
+They are templated with an underlying (``BriefJet'') class, which
+stores the minimal information for each particles so as to be able to
+calculate interparticle and particle--beam distances.
 %
-The interested user should consult those codes for more information,
-as well as the header for the \verb|NNH| class.
+The \verb|NNH| class underlies the implementations of the Jade and
+$\ee$ Cambridge plugins, while all three \verb|NN***| classes are used in
+the VariableR contrib's plugin.
+%
+The interested user should consult those plugins for examples, and the
+headers of the \verb|NN***| classes for more detailed information.
+
+
+% To enable users to more easily build plugins for new sequential
+% recombination algorithms, \fastjet also provides a class \verb|NNH|,
+% which provides users with access to an implementation of the
+% nearest-neighbour heuristic for establishing and maintaining
+% information about the closest pair of objects in a dynamic set of
+% objects (see \cite{EppsteinHierarchical} for an introduction to this
+% and other generic algorithms).
+% %
+% In good cases (C/A-like) this allows one to construct clustering that runs in
+% $N^2$ time, though its worst case can be as bad as $N^3$ (e.g.\ anti-$k_t$).
+% %
+% It is a templated class and the template argument should be a class
+% that stores the minimal information for each jet so as to be able to
+% calculate interjet distances.
+% %
+% It underlies the implementations of the Jade and $\ee$ Cambridge
+% plugins.
+% %
+% The interested user should consult those codes for more information,
+% as well as the header for the \verb|NNH| class.
 
 
 
@@ -6285,3 +6345,5 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
 \end{document}
 
 
+
+%  LocalWords:  NNBase
