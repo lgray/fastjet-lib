@@ -1,5 +1,17 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/SharedPtr.hh:
+	* include/fastjet/ClusterSequence.hh:
+	used the new FASTJET_DEPRECATED syntax
+
+	* configure.ac:
+	* include/fastjet/internal/deprecated.hh:
+	__attribute__((deprecated)) can be placed before the function
+	declaration. This means that we cam simply have a simple define
+	FASTJET_DEPRECATED or a macro FASTJET_DEPRECATED_MSG("...")
+
+	These are to be placed bofore the function declaration
+
 	* scripts/mkfjcore.sh:
 	fasjet_internal_headers incorporated into fasjet_headers
 

@@ -363,8 +363,8 @@ class ClusterSequence {
   /// 
   /// As of FJ v3.1, this is deprecated, in line with the deprecation
   /// of auto_ptr in C++11
-  FASTJET_DEPRECATED_MSG(inline void plugin_associate_extras(std::auto_ptr<Extras> extras_in),
-                     "Please use ClusterSequence::plugin_associate_extras(Extras * extras_in)) instead") {
+  FASTJET_DEPRECATED_MSG("Please use ClusterSequence::plugin_associate_extras(Extras * extras_in)) instead")
+  inline void plugin_associate_extras(std::auto_ptr<Extras> extras_in){
     _extras.reset(extras_in.release());
   }
 

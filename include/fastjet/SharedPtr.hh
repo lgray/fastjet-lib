@@ -216,7 +216,8 @@ public:
   ///
   /// Since FastJet 3.2.0, this is depracated since it is no longer
   /// part of std::shared_ptr<T>. Use SharedPtr<T>::get() instead
-  FASTJET_DEPRECATED_MSG(T* operator ()() const, "Use SharedPtr<T>::get() instead"){
+  FASTJET_DEPRECATED_MSG("Use SharedPtr<T>::get() instead")
+  T* operator ()() const{
     if (_ptr==NULL) return NULL;
     return _ptr->get(); // automatically returns NULL when out-of-scope
   }

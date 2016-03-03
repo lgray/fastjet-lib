@@ -36,14 +36,14 @@
 
 // define a deprecation macro that would pick the appropriate form
 #if defined(FASTJET_HAVE_CXX14_DEPRECATED)
-#define FASTJET_DEPRECATED(func)              [[deprecated]] func
-#define FASTJET_DEPRECATED_MSG(func,message)  [[deprecated(message)]] func
+#define FASTJET_DEPRECATED               [[deprecated]]
+#define FASTJET_DEPRECATED_MSG(message)  [[deprecated(message)]]
 #elif defined(FASTJET_HAVE_GNUCXX_DEPRECATED)
-#define FASTJET_DEPRECATED(func)              func __attribute__((deprecated))
-#define FASTJET_DEPRECATED_MSG(func,message)  func __attribute__((deprecated))
+#define FASTJET_DEPRECATED               __attribute__((deprecated))
+#define FASTJET_DEPRECATED_MSG(message)  __attribute__((deprecated))
 #else
-#define FASTJET_DEPRECATED(func)              func
-#define FASTJET_DEPRECATED_MSG(func,message)  func
+#define FASTJET_DEPRECATED               func
+#define FASTJET_DEPRECATED_MSG(fmessage) func
 #endif
 
 #endif // __FASTJET_FASTJET_DEPRECATED_HH__
