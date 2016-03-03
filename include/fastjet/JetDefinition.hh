@@ -343,6 +343,7 @@ public:
     _plugin = plugin_in;
     _strategy = plugin_strategy;
     _Rparam = _plugin->R();
+    _extra_param = 0.0; // a dummy value to keep static code checkers happy
     _jet_algorithm = plugin_algorithm;
     set_recombination_scheme(E_scheme);
   }
