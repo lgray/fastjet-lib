@@ -1,5 +1,10 @@
 2016-03-03  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/Makefile.am:
+	* include/fastjet/NNPlainN2.hh --> include/fastjet/NNFJN2Plain.hh:
+	* include/fastjet/NNTiledN2.hh --> include/fastjet/NNFJN2Tiled.hh:
+	renamed the file to follow the class names
+
 	* include/fastjet/NNBase.hh:
 	* include/fastjet/NNPlainN2.hh:
 	* include/fastjet/NNTiledN2.hh:
