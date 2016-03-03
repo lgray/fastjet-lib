@@ -5329,9 +5329,9 @@ They are templated with an underlying (``BriefJet'') class, which
 stores the minimal information for each particles so as to be able to
 calculate interparticle and particle--beam distances.
 %
-The \verb|NNH| class underlies the implementations of the Jade and
-$\ee$ Cambridge plugins, while all three \verb|NN***| classes are used in
-the VariableR contrib's plugin.
+The $\ee$ Cambridge plugin relies on the \verb|NNH| class, the
+\ttt{JadePlugin} can use both \ttt{NNH} and \ttt{NNFJN2Plain}, while all
+three \verb|NN***| classes are used in the VariableR contrib's plugin.
 %
 The interested user should consult those plugins for examples, and the
 headers of the \verb|NN***| classes for more detailed information.
