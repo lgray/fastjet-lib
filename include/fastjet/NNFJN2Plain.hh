@@ -76,7 +76,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///
 /// NOTE: THE DISTANCE MUST BE SYMMETRIC I.E. SATISFY
 /// \code
-///     a.geometric_distance(b) == b.geometric_distance(a)
+///     a.geometrical_distance(b) == b.geometrical_distance(a)
 /// \endcode
 ///
 /// Note that you are strongly advised to add the following lines to
