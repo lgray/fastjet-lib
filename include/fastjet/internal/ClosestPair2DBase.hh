@@ -47,7 +47,7 @@ class Coord2D {
 public:
   double x, y;
 
-  Coord2D() {};
+  Coord2D() : x(0.0), y(0.0) {};
 
   Coord2D(double a, double b): x(a), y(b) {};
 

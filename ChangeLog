@@ -63,6 +63,10 @@
 
 2016-03-03  Gavin Salam  <gavin.salam@cern.ch>
 
+	* include/fastjet/internal/ClosestPair2DBase.hh (Coord2D):
+	initialised members in default constructor to keep static code
+	checkers happy.
+
 	* src/ClusterSequence_Delaunay.cc (_delaunay_cluster):
 	made verbose const to keep static code checkers happy
 
