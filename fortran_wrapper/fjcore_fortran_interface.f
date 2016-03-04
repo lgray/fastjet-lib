@@ -1,14 +1,12 @@
 C     example program to run siscone and/or pp sequential recombination
-C     algorithms from f77
+C     algorithms from f77 with fjcore
 C     
-C     To compile, first make sure that the installation bin directory is
-C     in your path (so as to have access to fastjet-config) and then
-C     type make -f Makefile.alt fastjet_fortran_example
+C     To compile, UPDATE THIS...
 C     
 C     Given the complications inherent in mixing C++ and fortran, your
 C     mileage may vary...
 C     
-C     To use, type: ./fastjet_fortran_example < ../example/data/single-event.dat
+C     To use, type: ./fjcore_fortran_example < ../example/data/single-event.dat
 C     
 C     $Id$
 C     
