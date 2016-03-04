@@ -1,3 +1,9 @@
+2016-03-04  Gavin Salam  <gavin.salam@cern.ch>
+
+	* scripts/cppcheck-run.sh: *** ADDED ***
+	added script to run cppcheck and put results into a reports/
+	directory. 
+
 2016-03-04  Gavin SALAM  <gavin.salam@cern.ch> + Gregory & Matteo
 
 	* fortran_wrapper/fjcorefortran.cc: *** ADDED ***
