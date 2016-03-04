@@ -1,3 +1,8 @@
+2016-03-04  Gregory Soyez  <soyez@fastjet.fr>
+
+	* fortran_wrapper/fjcorefortran.cc:
+	removed a leftover trace of (unsupported) areas
+
 2016-03-04  Gavin Salam  <gavin.salam@cern.ch>
 
 	* scripts/cppcheck-run.sh: *** ADDED ***

@@ -71,23 +71,14 @@ namespace fwrapper {
   /// and the extraction of the jets
   void transfer_cluster_transfer(const double * p, const int & npart, 
                                  const JetDefinition & jet_def,
-				 double * f77jets, int & njets,
-				 const double & ghost_maxrap = 0.0,  
-				 const int & nrepeat = 0, const double & ghost_area = 0.0) {
+				 double * f77jets, int & njets) {
 
     // transfer p[4*ipart+0..3] -> input_particles[i]
     transfer_input_particles(p, npart);
 
-    // perform the clustering
-    if ( ghost_maxrap == 0.0 ) {
-         // cluster without areas
-	 cs.reset(new ClusterSequence(input_particles,jet_def));
-    } else {
-         // cluster with areas
-         GhostedAreaSpec area_spec(ghost_maxrap,nrepeat,ghost_area);
-         AreaDefinition area_def(active_area, area_spec);
-	 cs.reset(new ClusterSequenceArea(input_particles,jet_def,area_def));
-    }
+    // cluster without areas
+    cs.reset(new ClusterSequence(input_particles,jet_def));
+
     // extract jets (pt-ordered)
     jets = sorted_by_pt(cs->inclusive_jets());
     
