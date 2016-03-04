@@ -1,5 +1,8 @@
 2016-03-04  Gregory Soyez  <soyez@fastjet.fr>
 
+	* scripts/mkfjcore.sh:
+	included fjcorefortran.cc
+
 	* fortran_wrapper/fjcorefortran.cc:
 	removed a leftover trace of (unsupported) areas
 

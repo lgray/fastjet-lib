@@ -328,6 +328,7 @@ cp -p $fjdir/example/data/single-event.dat . # copy event file, for distribution
 sed 's/data\///' 01-basic.cc > tmp$$ # change location of event file in usage
 mv tmp$$ 01-basic.cc
 cp -p $scriptsdir/Makefile-fjcore.txt Makefile
+cp -p $fjdir/fortran_wrapper/fjcorefortran.cc .
 
 echo "======================================================================"
 echo "fjcore-${version}/fjcore.{hh,cc} are now ready"
