@@ -57,15 +57,19 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// clustering:
 ///
 /// - NNH uses distance(...) and beam_distance()
-/// - NNHFJPlainN2 uses geometrical_distance(...), momentum_factor()
+/// - NNFJPlainN2 uses geometrical_distance(...), momentum_factor()
 ///   and geometrical_beam_distance()
 ///
-/// For NNHFJPlainN2 the 2 E_i E_j (1-cos theta_{ij}) factor
+/// For NNFJPlainN2 the 2 E_i E_j (1-cos theta_{ij}) factor
 /// gets broken up into
 ///
 ///     sqrt(2)*min(E_i,E_j) * [sqrt(2)*max(E_i,E_j) (1 - cos \theta_{ij})]
 ///
-/// which allows one to use the FJ lemma.
+/// The second factor is what we call the "geometrical_distance" even
+/// though it isn't actually purely geometrical. But the fact that it
+/// gets multiplied by min(E_i,E_j) to get the full distance is
+/// sufficient for the validity of the FJ lemma, allowing for the use
+/// of NNFJN2Plain.
 class JadeBriefJet {
 public:
   void init(const PseudoJet & jet) {
@@ -101,7 +105,7 @@ public:
   }
 
   double geometrical_beam_distance() const {
-    // get a numnber that is almost the same as max(), just a little
+    // get a number that is almost the same as max(), just a little
     // smaller so as to ensure that when we divide it by rt2E and then
     // multiply it again, we won't get an overflow
     const double almost_max = numeric_limits<double>::max() * (1 - 1e-13);
