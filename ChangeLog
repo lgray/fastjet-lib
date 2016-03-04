@@ -1,5 +1,9 @@
 2016-03-04  Gregory Soyez  <soyez@fastjet.fr>
 
+	* fortran_wrapper/fjcore_fortran_interface.f:
+	added an example of the fjcore fortran interface (still to be
+	polished!)
+
 	* scripts/mkfjcore.sh:
 	included fjcorefortran.cc
 
