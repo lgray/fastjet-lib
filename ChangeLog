@@ -1,5 +1,8 @@
 2016-03-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/fastjet_timing_plugins.cc:
+	fixed a use of a deprecated JetDefinition ctor
+
 	* NEWS:
 	drafted for the 3.2.0 release
 

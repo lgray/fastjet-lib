@@ -593,7 +593,7 @@ int main (int argc, char ** argv) {
   if (all_algs || 
       cmdline.present("-kt") || 
       (jet_defs.size() == 0 && !found_unavailable))  {
-    jet_defs.push_back( JetDefinition(kt_algorithm, ktR, strategy));
+    jet_defs.push_back( JetDefinition(kt_algorithm, ktR, E_scheme, strategy));
   }
 
   string filename = cmdline.value<string>("-file", "");
