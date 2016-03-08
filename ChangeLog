@@ -1,3 +1,8 @@
+2016-03-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/PseudoJet.cc (has_structure):
+	explicit conversion of _structure to bool
+
 2016-03-04  Gregory Soyez  <soyez@fastjet.fr>
 
 	* fortran_wrapper/fjcore_fortran_interface.f:
