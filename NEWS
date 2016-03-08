@@ -5,13 +5,15 @@ Release Notes for FastJet
 Summary of changes from v3.1.3 -> v3.2.0: 2016-03-DD
 ================================================================
 
-* exposed the N2Plain and N2Tiled clustering strategies under the form
-  of two new classes (NNFJN2Plain and NNFJN2Tiled), similar to NNH
+* exposed the N2Plain and N2Tiled strategies for 3rd-party clustering
+  algorithms under the form of two new classes (NNFJN2Plain and
+  NNFJN2Tiled), similar to NNH
 * included version 3.0.1 SISCone with a minor bug fix
-* made PseudoJet::obj_sorted_by_values() public
-* added a --guess-prefix option to fastjet-config (tried to guess the
-  prefix from fastjet-config instead of using the one from configure)
-* added helpers for compile-time deprecation and the override keyword
+* made template implementation of PseudoJet::obj_sorted_by_values() public
+* added a --guess-prefix option to fastjet-config (guesses prefix
+  from location of fastjet-config instead of prefix from configure)
+* added internal helpers for C++11 and C++14 features: compile-time
+  deprecation and the override keyword 
 * small tweaks to the build system
 
 ================================================================

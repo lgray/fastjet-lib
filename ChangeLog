@@ -1,3 +1,8 @@
+2016-03-08  Gavin Salam  <gavin.salam@cern.ch>
+
+	* NEWS:
+	small tweaks
+
 2016-03-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/fastjet_timing_plugins.cc:
