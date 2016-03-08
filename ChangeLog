@@ -5,6 +5,20 @@
 
 2016-03-04  Gregory Soyez  <soyez@fastjet.fr>
 
+	* doc/fastjet-doc.tex:
+	added SharedPtr<T>::operator() to the deprecation list
+
+	* include/fastjet/CircularRange.hh:
+	* include/fastjet/RangeDefinition.hh:
+	marked deprecated features with FASTJET_DEPRECATED_MSG
+
+	* include/fastjet/JetDefinition.hh:
+	added a (moslty internal) ctor
+	  JetDefinition(jet_alg, R, recomb_scheme, strategy, nparameters);
+	and added a FASTJET_DEPRECATED for the
+	  JetDefinition(jet_alg, R, strategy, recomb_scheme, nparameters);
+	which was already deprecated since FastJet 2.1
+
 	* fortran_wrapper/fjcore_fortran_interface.f:
 	added an example of the fjcore fortran interface (still to be
 	polished!)

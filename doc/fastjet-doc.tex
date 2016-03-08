@@ -5801,10 +5801,10 @@ have led us to deprecate and/or remove functionality.
     CS::set\_jet\_finder(...)    & 2.1 & 3.0 & pass a JetDefinition to constructor\\
     CS::set\_jet\_algorithm(...) & 2.1 & 3.0 & pass a JetDefinition to constructor\\
     CS::CS(particles, R, ...)    & 2.1 & 3.0 & CS::CS(particles, jet\_def)\\
-    JD(jet\_alg, R, strategy)    & 2.1 & -   & JD(jet\_alg, R, recomb\_scheme, strategy)\\
+    JD(jet\_alg, R, strategy)    & 2.1 & --  & JD(jet\_alg, R, recomb\_scheme, strategy)\\
     \midrule
     %----------------------------------------------------------------------
-    JetFinder       & 2.3    & -   & JetAlgorithm \\
+    JetFinder       & 2.3    & --  & JetAlgorithm \\
     SISConePlugin.hh  
                     & 2.3    & 3.0  & fastjet/SISConePlugin.hh (idem.\ other plugins)\\
     ActiveAreaSpec  & 2.3   &  --  & AreaDefinition \& GhostedAreaSpec\\
@@ -5828,6 +5828,10 @@ have led us to deprecate and/or remove functionality.
     CS::plugin\_associate\_extras(auto\_ptr) 
                    & 3.1    &  --  &
                    CS::plugin\_associate\_extras(Extras *)\\
+    \midrule %------------------------------------------------------------
+    SharedPtr<T>::operator()
+                   & 3.2    &  --  &
+                   SharedPtr<T>::get()\\
     \bottomrule %=========================================================
   \end{tabular}
   \caption{Summary of interfaces and features of earlier versions that have been

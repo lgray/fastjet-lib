@@ -34,6 +34,7 @@
 #include<cassert>
 #include "fastjet/internal/numconsts.hh"
 #include "fastjet/PseudoJet.hh"
+#include "fastjet/internal/deprecated.hh"
 #include<string>
 #include<memory>
 
@@ -267,7 +268,7 @@ public:
                 double R_in, 
                 RecombinationScheme recomb_scheme_in = E_scheme,
                 Strategy strategy_in = Best) {
-    *this = JetDefinition(jet_algorithm_in, R_in, strategy_in, recomb_scheme_in, 1);
+    *this = JetDefinition(jet_algorithm_in, R_in, recomb_scheme_in, strategy_in, 1);
   }
 
   /// constructor for algorithms that have no free parameters
@@ -276,7 +277,7 @@ public:
                 RecombinationScheme recomb_scheme_in = E_scheme,
                 Strategy strategy_in = Best) {
     double dummyR = 0.0;
-    *this = JetDefinition(jet_algorithm_in, dummyR, strategy_in, recomb_scheme_in, 0);
+    *this = JetDefinition(jet_algorithm_in, dummyR, recomb_scheme_in, strategy_in, 0);
   }
 
   /// constructor for algorithms that require R + one extra parameter to be set 
@@ -286,7 +287,7 @@ public:
                 double xtra_param_in,
                 RecombinationScheme recomb_scheme_in = E_scheme,
                 Strategy strategy_in = Best) {
-    *this = JetDefinition(jet_algorithm_in, R_in, strategy_in, recomb_scheme_in, 2);
+    *this = JetDefinition(jet_algorithm_in, R_in, recomb_scheme_in, strategy_in, 2);
     set_extra_param(xtra_param_in);
   }
 
@@ -348,17 +349,28 @@ public:
     set_recombination_scheme(E_scheme);
   }
 
+  /// constructor to fully specify a jet-definition (together with
+  /// information about how algorithically to run it).
+  JetDefinition(JetAlgorithm jet_algorithm_in, 
+                double R_in, 
+                RecombinationScheme recomb_scheme_in,
+                Strategy strategy_in,
+                int nparameters_in);
 
   /// constructor to fully specify a jet-definition (together with
   /// information about how algorithically to run it).
   ///
   /// the ordering of arguments here is old and deprecated (except
   /// as the common constructor for internal use)
+  FASTJET_DEPRECATED_MSG("This argument ordering is deprecated. Use JetDefinition(alg, R, strategy, scheme[, n_parameters]) instead")
   JetDefinition(JetAlgorithm jet_algorithm_in, 
                 double R_in, 
                 Strategy strategy_in,
                 RecombinationScheme recomb_scheme_in = E_scheme,
-                int nparameters_in = 1);
+                int nparameters_in = 1){
+    (*this) = JetDefinition(jet_algorithm_in,R_in,recomb_scheme_in,strategy_in,nparameters_in);
+  }
+
 
   /// cluster the supplied particles and returns a vector of resulting
   /// jets, sorted by pt (or energy in the case of spherical,

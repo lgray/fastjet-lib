@@ -44,8 +44,8 @@ const double JetDefinition::max_allowable_R = 1000.0;
 //  from .hh to .cc]
 JetDefinition::JetDefinition(JetAlgorithm jet_algorithm_in, 
 			     double R_in, 
-			     Strategy strategy_in,
 			     RecombinationScheme recomb_scheme_in,
+			     Strategy strategy_in,
                              int nparameters) :
   _jet_algorithm(jet_algorithm_in), _Rparam(R_in), _strategy(strategy_in) {
 

@@ -34,6 +34,7 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/LimitedWarning.hh"
 #include "fastjet/Selector.hh"
+//#include "fastjet/internal/deprecated.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
@@ -143,6 +144,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_area(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   double median_pt_per_unit_area(const Selector & selector) const;
 
   /// the median of (pt/area_4vector) for jets contained within the
@@ -150,12 +152,14 @@ public:
   /// 
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   double median_pt_per_unit_area_4vector(const Selector & selector) const;
   
   /// the function that does the work for median_pt_per_unit_area and 
   /// median_pt_per_unit_area_4vector: 
   /// - something_is_area_4vect = false -> use plain area
   /// - something_is_area_4vect = true  -> use 4-vector area
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_something(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   double median_pt_per_unit_something(
                     const Selector & selector, bool use_area_4vector) const;
 
@@ -237,6 +241,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::parabolic_pt_per_unit_area(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
                                           const Selector & selector, 
                                           double exclude_above=-1.0, 

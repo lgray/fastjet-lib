@@ -34,6 +34,7 @@
 
 #include "fastjet/RangeDefinition.hh"
 #include "fastjet/Error.hh"
+#include "fastjet/internal/deprecated.hh"
 
 // for backwards compatibility: one should now use SelectorCircle,
 // defined in fastjet/Selector.hh, instead CircularRange
@@ -49,9 +50,11 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 class CircularRange : public fastjet::RangeDefinition {
 public:
   /// constructor
+  FASTJET_DEPRECATED_MSG("CircularRange is deprecated since FastJet 3.0. Use SelectorCircle instead")
   CircularRange() {_set_invalid_rapphi();}
   
   /// initialise CircularRange with a jet
+  FASTJET_DEPRECATED_MSG("CircularRange is deprecated since FastJet 3.0. Use SelectorCircle instead")
   CircularRange(const fastjet::PseudoJet & jet, double distance) {
                 _distance = distance;
 		_rapjet = jet.rap();
@@ -59,6 +62,7 @@ public:
 		_total_area = fastjet::pi*_distance*_distance;  }
 
   /// initialise CircularRange with a (rap,phi) point
+  FASTJET_DEPRECATED_MSG("CircularRange is deprecated since FastJet 3.0. Use SelectorCircle instead")
   CircularRange(double rap, double phi, double distance) {
                 _distance = distance;
 		_rapjet = rap;
@@ -66,6 +70,7 @@ public:
 		_total_area = fastjet::pi*_distance*_distance;  }
 
   /// initialise CircularRange with just the radius parameter
+  FASTJET_DEPRECATED_MSG("CircularRange is deprecated since FastJet 3.0. Use SelectorCircle instead")
   CircularRange(double distance) {
                 _set_invalid_rapphi();
                 _distance = distance;
