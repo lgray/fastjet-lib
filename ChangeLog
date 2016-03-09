@@ -1,5 +1,10 @@
 2016-03-09  Gregory Soyez  <soyez@fastjet.fr>
 
+	* tools/Filter.cc:
+	no longer rely on the deprecated CSAB interface to subtract jets
+	when Filter is constructed using a "rho" number (use
+	Subtractor(rho) instead)
+
 	* include/fastjet/ClusterSequenceArea.hh:
 	* include/fastjet/ClusterSequenceAreaBase.hh:
 	* src/ClusterSequenceArea.cc:

@@ -30,6 +30,7 @@
 
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Recluster.hh"
+#include "fastjet/tools/Subtractor.hh"
 #include <fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh>
 #include <cassert>
 #include <algorithm>
@@ -97,9 +98,10 @@ PseudoJet Filter::result(const PseudoJet &jet) const {
     subjets = (*_subtractor)(subjets);
   } else if (_rho!=0){
     if (subjets.size()>0){
-      const ClusterSequenceAreaBase *csab = subjets[0].validated_csab();
+      //const ClusterSequenceAreaBase *csab = subjets[0].validated_csab();
       for (unsigned int i=0;i<subjets.size();i++){
-        subjets[i]=csab->subtracted_jet(subjets[i], _rho);
+        //subjets[i]=csab->subtracted_jet(subjets[i], _rho);
+        subjets[i]=Subtractor(_rho)(subjets[i]);
       }
     }
   }
