@@ -143,6 +143,7 @@ public:
   /// The selector needs to have a finite area and be applicable jet by
   /// jet (see the BackgroundEstimator and Subtractor tools for more
   /// advanced usage)
+  FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
 					const Selector & selector, 
                                         bool use_area_4vector,
@@ -150,7 +151,7 @@ public:
                                         double & mean_area,
 					bool all_are_incl = false) const FASTJET_OVERRIDE {
     _warn_if_range_unsuitable(selector);
-    ClusterSequenceAreaBase::get_median_rho_and_sigma(
+    ClusterSequenceAreaBase::_get_median_rho_and_sigma(
                                  all_jets, selector, use_area_4vector,
 				 median, sigma, mean_area, all_are_incl);
   }
@@ -159,36 +160,37 @@ public:
   /// which actually just does the same thing as the base version (but
   /// since we've overridden the 5-argument version above, we have to
   /// override the 4-argument version too.
+  FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma) const FASTJET_OVERRIDE {
-    ClusterSequenceAreaBase::get_median_rho_and_sigma(selector,use_area_4vector,
-                                                      median,sigma);
+    ClusterSequenceAreaBase::_get_median_rho_and_sigma(selector,use_area_4vector,
+                                                       median,sigma);
   }
 
   /// overload version of what's in the ClusterSequenceAreaBase class,
   /// which actually just does the same thing as the base version (but
   /// since we've overridden the multi-argument version above, we have to
   /// override the 5-argument version too.
+  FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
 					double & mean_area) const FASTJET_OVERRIDE {
-    ClusterSequenceAreaBase::get_median_rho_and_sigma(selector,use_area_4vector,
-                                                      median,sigma, mean_area);
+    ClusterSequenceAreaBase::_get_median_rho_and_sigma(selector,use_area_4vector,
+                                                       median,sigma, mean_area);
   }
 
 
   /// overload version of what's in the ClusterSequenceAreaBase class, which 
   /// additionally checks compatibility between "range" and region in which
   /// ghosts are thrown.
+  FASTJET_DEPRECATED_MSG("ClusterSequenceArea::parabolic_pt_per_unit_area(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")  
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
                                           const Selector & selector, 
                                           double exclude_above=-1.0, 
                                           bool use_area_4vector=false) const FASTJET_OVERRIDE {
-    _warn_if_range_unsuitable(selector);
-    ClusterSequenceAreaBase::parabolic_pt_per_unit_area(
-                                a,b,selector, exclude_above, use_area_4vector);
+    return _parabolic_pt_per_unit_area(a,b,selector,exclude_above,use_area_4vector);
   }
 
 
@@ -207,6 +209,21 @@ private:
   AreaDefinition _area_def;
   static LimitedWarning _range_warnings;
   static LimitedWarning _explicit_ghosts_repeats_warnings;
+
+  // the following set of private methods are all deprecated. Their
+  // role is simply to hide the corresponding methods (without the
+  // first underscore) from the public interface so that they can be
+  // used internally until all the deprecated methods are removed.
+  // DO NOT USE ANY OF THESE METHODS: THEY ARE DEPRECATED AND WILL BE
+  // REMOVED.
+  virtual void _parabolic_pt_per_unit_area(double & a, double & b, 
+                                          const Selector & selector, 
+                                          double exclude_above=-1.0, 
+                                          bool use_area_4vector=false) const FASTJET_OVERRIDE {
+    _warn_if_range_unsuitable(selector);
+    ClusterSequenceAreaBase::_parabolic_pt_per_unit_area(
+                                a,b,selector, exclude_above, use_area_4vector);
+  }
 
 };
 

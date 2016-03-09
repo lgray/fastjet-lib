@@ -1,3 +1,55 @@
+2016-03-09  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/ClusterSequenceArea.hh:
+	* include/fastjet/ClusterSequenceAreaBase.hh:
+	* src/ClusterSequenceArea.cc:
+	* src/ClusterSequenceAreaBase.cc:
+	marked as deprecated the background estimation and subtraction
+	methods. One should use the BackgroundEstimator series of tools
+	and the Subtractor tool instead.
+
+	Internal note: since some of these methods were called internally
+	by other deprecated methods, we have moved the implementation to
+	private (or protected when needed) methods to avoid deprecation
+	warnings when compiling FastJet itself. As mentioned in the
+	comments, these methods are also deprecated (although they are not
+	explicitly marked by FASTJET_DEPRECATED)
+
+	List of concerned methods:
+	. CSAB::median_rho_per_unit_area()
+            Used by CSAB::subtracted_jets()
+            Used by CSAB::subtracted_jet()
+            Used by CSAB::subtracted_pt()
+            Added   CSAB::_median_rho_per_unit_area() [private]
+	. CSAB::median_rho_per_unit_area_4vector()
+            Added   CSAB::_median_rho_per_unit_area_4vector() [private]
+	. CSAB::median_rho_per_unit_something()
+	    Used by CSAB::_median_rho_per_unit_area_4vector()
+	    Used by CSAB::_median_rho_per_unit_area()
+	    Added   CSAB::_median_rho_per_unit_something() [private]
+	. CSAB::get_median_rho_and_sigma(...) (3 variants)
+	    Used by CSA::get_median_rho_and_sigma()
+	    Used by CSA::median_pt_per_unit_something()
+	    Added   CSAB::_get_median_rho_and_sigma() (3 variants) [protected]
+	. CSAB::subtracted_jets(...) (2 variants)
+	    One variant calls the other so, added the "other" with an _
+	. CSAB::subtracted_jet(...) (2 variants)
+	    Used by CSAB::subtracted_jets()
+	    Used by CSAB::subtracted_pt()
+	    Added   CSAB::_subtracted_jet()
+	    STILL USED BY Filter
+	. CSAB::subtracted_pt(...) (2 variants)
+	    One variant calls the other so, added the "other" with an _
+	. CSAB::parabolic_pt_per_unit_area()
+	    Used by CSA::parabolic_pt_per_unit_area()
+	    Added   CSAB::_parabolic_pt_per_unit_area() [protected]
+	. CSA::parabolic_pt_per_unit_area()
+	    Added   CSA::_parabolic_pt_per_unit_area() [private]
+	. CSA::get_median_rho_and_sigma() (3 variants)
+
+	One occurence still left to fix: Filter uses
+	CSAB::subtracted_jet(...) with a fixed rho.
+
 2016-03-08  Gavin Salam  <gavin.salam@cern.ch>
 
 	* NEWS:
@@ -5,6 +57,7 @@
 
 2016-03-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/fastjet_areas.cc:
 	* example/fastjet_timing_plugins.cc:
 	fixed a use of a deprecated JetDefinition ctor
 
