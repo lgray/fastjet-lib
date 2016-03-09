@@ -77,7 +77,7 @@ int main () {
   // the associated parameters
   double Rparam = 1.0;
   fastjet::Strategy strategy = fastjet::Best;
-  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, strategy);
+  fastjet::JetDefinition jet_def(fastjet::kt_algorithm, Rparam, fastjet::E_scheme, strategy);
   //fastjet::JetDefinition jet_def(fastjet::cambridge_algorithm, Rparam, strategy);
   //fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, Rparam, strategy);
   //fastjet::JetDefinition jet_def(new fastjet::SISConePlugin(Rparam,0.75));
