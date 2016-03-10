@@ -171,10 +171,10 @@ dnl-------------------------------------------------------------------
 dnl check if a few modern compiler options are availabble
 
 dnl---------- [[deprecated]] --> HAVE_CXX14_DEPRECATED ---------------
-AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "[[deprecated]]" keyword]])
+AC_MSG_CHECKING([[if $CXX ${AM_CXXFLAGS} $CXXFLAGS supports the "[[deprecated]]" keyword]])
 AC_LANG_PUSH(C++)
 save_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$CXXFLAGS -Werror=attributes"
+CXXFLAGS="${AM_CXXFLAGS} $CXXFLAGS -Werror -Wno-error=deprecated-declarations"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public:  [[deprecated]] void test() {}}; int main(void){ A a; a.test(); return 0;}]])],
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
@@ -185,10 +185,10 @@ fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
 
 dnl------ _attribute__((deprecated)) --> HAVE_GNUCXX_DEPRECATED ------
-AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "__attribute__((deprecated))" keyword]])
+AC_MSG_CHECKING([[if $CXX ${AM_CXXFLAGS} $CXXFLAGS supports the "__attribute__((deprecated))" keyword]])
 AC_LANG_PUSH(C++)
 save_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$CXXFLAGS -Werror=attributes"
+CXXFLAGS="${AM_CXXFLAGS} $CXXFLAGS -Werror -Wno-error=deprecated-declarations"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: __attribute__((deprecated)) void test() {}};int main(void){ A a; a.test(); return 0;}]])],
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
@@ -199,10 +199,10 @@ fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
 
 dnl------------------- override --> HAVE_OVERRIDE ---------------------
-AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "override" keyword]])
+AC_MSG_CHECKING([[if $CXX ${AM_CXXFLAGS} $CXXFLAGS supports the "override" keyword]])
 AC_LANG_PUSH(C++)
 save_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$CXXFLAGS -Werror"
+CXXFLAGS="${AM_CXXFLAGS} $CXXFLAGS -Werror"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: virtual void test(){}}; class B : public A{public: virtual void test() override{}}; int main(void){ B b; b.test(); return 0;}]])],
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
@@ -213,10 +213,10 @@ fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
 
 dnl--- explicit (for operators in class) --> HAVE_EXPLICIT_FOR_OPERATORAS ---
-AC_MSG_CHECKING([[if $CXX $CXXFLAGS supports the "explicit" keyword for operators]])
+AC_MSG_CHECKING([[if $CXX ${AM_CXXFLAGS} $CXXFLAGS supports the "explicit" keyword for operators]])
 AC_LANG_PUSH(C++)
 save_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$CXXFLAGS -Werror"
+CXXFLAGS="${AM_CXXFLAGS} $CXXFLAGS -Werror"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: explicit operator bool(){return true;}}; int main(void){ A a; bool b=bool(a); if (b) b=false; return 0;}]])],
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"

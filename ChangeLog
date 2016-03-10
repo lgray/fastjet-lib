@@ -1,3 +1,10 @@
+2016-03-10  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	included AM_CXXFLAGS in our compiler tests (+ tidied up the
+	-Werror options) to stay as close as possible to the actual
+	behaviour during compilation
+
 2016-03-09  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Filter.cc:
