@@ -103,6 +103,7 @@ push @setups, ["gcc4.4-extra-c++11", "", "CC=/opt/intel/bin/icc CXX=/opt/intel/b
 # process command-line
 $mail=0;
 $remote=0;
+$remotetag="unknown";
 $usetarball=0;
 $command=$0;
 $commandArgs=join(" ",@ARGV);
@@ -254,7 +255,7 @@ MAIN: while (1) {
                 $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
                 $ssherr = $?;
                 if ($ssh || $ssherr) {
-                    &fail("test on to $setups[$i][1]", $results."\nssh output should have been empty, but was:\n------------------------------\n".$ssh);}
+                    &fail("test on to $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh);}
 
                 $tag = $setups[$i][0];
                 $ssh=`scp $host:$path/$fjsubdir/egression-trests/compiler-results/$tag.* $resDir`;
@@ -263,7 +264,7 @@ MAIN: while (1) {
                 $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
                 $ssherr = $?;
                 if ($ssh || $ssherr) {
-                    &fail("copying results from $setups[$i][1]", $results."\nssh output should have been empty, but was:\n------------------------------\n".$ssh);}
+                    &fail("copying results from $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh);}
             } else {
                 # run the test locally
                 &build_and_check($setups[$i][0], $setups[$i][2]) || last MAIN;
@@ -310,10 +311,10 @@ sub finish () {
         print MAIL $allMessages;
         close MAIL;
     } elsif ($remote) {
-        open (MSG, "> $origDir/regression-tests/compiler-results/$tag.log") || die "Remote host could not write to $tmpDir/messages";
+        open (MSG, "> $origDir/regression-tests/compiler-results/$remotetag.log") || die "Remote host could not write to $origDir/regression-tests/compiler-results/$remotetag.log";
         print MSG $allMessages;
         close MSG;
-        open (SUM, "> $origDir/regression-tests/compiler-results/$tag.sum") || die "Remote host could not write to $tmpDir/summary";
+        open (SUM, "> $origDir/regression-tests/compiler-results/$remotetag.sum") || die "Remote host could not write to $origDir/regression-tests/compiler-results/$remotetag.sum";
         print SUM $summary;
         close SUM;
     }
@@ -366,6 +367,7 @@ sub OKUnavail ($) {
 #
 sub build_and_check($$) {
     my ($tag,$config) = @_;
+    $remotetag=$tag;
 
     # make sure we have a directlry where the results can be stores
     $resDir = "$origDir/regression-tests/compiler-results";
