@@ -247,7 +247,7 @@ MAIN: while (1) {
                 $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
                 $ssherr = $?;
                 if ($ssh || $ssherr) {
-                    &fail("tar copy to $setups[$i][1]", $results."\nssh output should have been empty, but was:\n------------------------------\n".$ssh);}
+                    &fail("tar copy to $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh."\n".$ssherr);}
 
                 $ssh=`ssh $host "cd $path/$fjsubdir; ./regression-tests/compiler-tests.pl -remote -only $i -tar $tarName 2>&1"`;
                 $ssh =~ s/^.*in the future\n//mg;   # because karnak's time is wrong
@@ -255,7 +255,7 @@ MAIN: while (1) {
                 $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
                 $ssherr = $?;
                 if ($ssh || $ssherr) {
-                    &fail("test on to $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh);}
+                    &fail("test on to $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh."\n".$ssherr);}
 
                 $tag = $setups[$i][0];
                 $ssh=`scp $host:$path/$fjsubdir/egression-trests/compiler-results/$tag.* $resDir`;
@@ -264,7 +264,7 @@ MAIN: while (1) {
                 $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
                 $ssherr = $?;
                 if ($ssh || $ssherr) {
-                    &fail("copying results from $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh);}
+                    &fail("copying results from $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh."\n".$ssherr);}
             } else {
                 # run the test locally
                 &build_and_check($setups[$i][0], $setups[$i][2]) || last MAIN;
