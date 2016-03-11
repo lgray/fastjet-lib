@@ -83,6 +83,13 @@ foreach $version ("4.7", "4.8", "4.9", "5.1"){
 push @setups, ["gcc5.1-cgal",        "", "CC=/ada1/lpthe/cacciari/local/bin/gcc-5.1 CXX=/ada1/lpthe/cacciari/local/bin/g++-5.1 --enable-cgal --with-cgaldir=".$CGAL_DIR];
 push @setups, ["gcc5.1-cgal-c++11",  "", "CC=/ada1/lpthe/cacciari/local/bin/gcc-5.1 CXX=/ada1/lpthe/cacciari/local/bin/g++-5.1 --enable-cgal --with-cgaldir=".$CGAL_DIR." CXXFLAGS='-O2 -Wall -std=c++11'"];
 
+# 5.3 is the default on fractal (CGAL seems v4.7 which is the latest stable so we include it in the tests)
+push @setups, ["gcc5.3-extra",       "fractal:work/fastjet", "--enable-extra-warnings"];
+push @setups, ["gcc5.3-c++11",       "fractal:work/fastjet", "CXXFLAGS='-O2 -Wall -std=c++11'"];
+push @setups, ["gcc5.3-extra-c++11", "fractal:work/fastjet", "--enable-extra-warnings CXXFLAGS='-O2 -Wall -std=c++11'"];
+push @setups, ["gcc5.3-cgal",        "fractal:work/fastjet", "--enable-cgal"];
+push @setups, ["gcc5.3-cgal-c++11",  "fractal:work/fastjet", "--enable-cgal CXXFLAGS='-O2 -Wall -std=c++11'"];
+
 #----------------------------------------------------------------------
 #------------  clang version scan -------------------------------------
 #----------------------------------------------------------------------
