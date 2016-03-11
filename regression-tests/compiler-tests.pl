@@ -258,7 +258,7 @@ MAIN: while (1) {
                     &fail("test on to $setups[$i][1]", "ssh output should have been empty, but was:\n------------------------------\n".$ssh."\n".$ssherr);}
 
                 $tag = $setups[$i][0];
-                $ssh=`scp $host:$path/$fjsubdir/egression-trests/compiler-results/$tag.* $resDir`;
+                $ssh=`scp $host:$path/$fjsubdir/regression-tests/compiler-results/$tag.* $resDir`;
                 $ssh =~ s/^.*in the future\n//mg;   # because karnak's time is wrong
                 $ssh =~ s/^.*slocate.db.*\n//mg;    # because zetes has out-of-date locate
                 $ssh =~ s/^.*updatedb.*\n//mg; # (which I use on logon...)
