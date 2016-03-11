@@ -86,7 +86,7 @@ push @setups, ["gcc5.1-cgal-c++11",  "", "CC=/ada1/lpthe/cacciari/local/bin/gcc-
 #----------------------------------------------------------------------
 #------------  clang version scan -------------------------------------
 #----------------------------------------------------------------------
-foreach $version ("3.5", "3.6", "3.7", "3.7"){
+foreach $version ("3.5", "3.6", "3.7", "3.8"){
     push @setups, ["clang".$version."-extra",       "fractal:work/fastjet", "CC=clang-".$version." CXX=clang++-".$version." --enable-extra-warnings"];
     push @setups, ["clang".$version."-c++11",       "fractal:work/fastjet", "CC=clang-".$version." CXX=clang++-".$version." CXXFLAGS='-O2 -Wall -std=c++11'"];
     push @setups, ["clang".$version."-extra-c++11", "fractal:work/fastjet", "CC=clang-".$version." CXX=clang++-".$version." --enable-extra-warnings CXXFLAGS='-O2 -Wall -std=c++11'"];
@@ -95,9 +95,9 @@ foreach $version ("3.5", "3.6", "3.7", "3.7"){
 #----------------------------------------------------------------------
 #------------  intel version scan -------------------------------------
 #----------------------------------------------------------------------
-push @setups, ["gcc4.4-extra",       "", "CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc --enable-extra-warnings"];
-push @setups, ["gcc4.4-c++11",       "", "CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc CXXFLAGS='-O2 -Wall -std=c++11'"];
-push @setups, ["gcc4.4-extra-c++11", "", "CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc --enable-extra-warnings CXXFLAGS='-O2 -Wall -std=c++11'"];
+push @setups, ["icpc-extra",       "", "CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc --enable-extra-warnings"];
+push @setups, ["icpc-c++11",       "", "CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc CXXFLAGS='-O2 -Wall -std=c++11'"];
+push @setups, ["icpc-extra-c++11", "", "CC=/opt/intel/bin/icc CXX=/opt/intel/bin/icpc --enable-extra-warnings CXXFLAGS='-O2 -Wall -std=c++11'"];
 
 
 # process command-line
@@ -222,9 +222,11 @@ MAIN: while (1) {
         #--- create dir for compilation results -----------------------------
         $resDir = "$origDir/regression-tests/compiler-results";
         &message("* making tmp directory $resDir\n");
-        if (-e $resDir || ! (mkdir $resDir)) {
-            $resDir = "";
-            &fail("* creating result directory","$resDir already exists or could not be created; stopping");
+        if (! -e $resDir){
+            if (! (mkdir $resDir)) {
+                $resDir = "";
+                &fail("* creating result directory","$resDir could not be created; stopping");
+            }
         }
         
         #--------------------------------------------------------------------
