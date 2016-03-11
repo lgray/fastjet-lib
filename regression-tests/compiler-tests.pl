@@ -425,7 +425,7 @@ sub build_and_check($$) {
 
     #--- run make -------------------
     &message("* running make\n");
-    $make=`make -j4  > $origDir/regression-tests/compiler-results/$tag.bld 2>&1`;
+    $make=`make -j4  > $origDir/regression-tests/compiler-results/$tag.bld 2>$origDir/regression-tests/compiler-results/$tag.err`;
     # be careful about how we check for errors in case we trigger
     # intel warnings
     if ($make =~ /^[Ee]rror[: ]/ || $make =~ / [Ee]rror[: ]/ || $?) {
