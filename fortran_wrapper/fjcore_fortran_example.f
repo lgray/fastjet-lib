@@ -1,12 +1,20 @@
-C     example program to run siscone and/or pp sequential recombination
+C     example program to run  pp sequential recombination
 C     algorithms from f77 with fjcore
 C     
-C     To compile, UPDATE THIS...
+C     To compile, either use the Makefile and type
+C
+C        make fjcore_fortran_example
+C
+C     or simply execute
+C
+C        g++ -O -c fjcore.cc fjcorefortran.cc
+C        gfortran -O fjcore_fortran_example.o fjcore.o fjcorefortran.o -lstdc++\
+C                 -o fjcore_fortran_example
 C     
 C     Given the complications inherent in mixing C++ and fortran, your
 C     mileage may vary...
 C     
-C     To use, type: ./fjcore_fortran_example < ../example/data/single-event.dat
+C     To use, type: ./fjcore_fortran_example < single-event.dat
 C     
 C     $Id$
 C     
@@ -39,7 +47,7 @@ c ... fill in p (NB, energy is p(4,i))
       R = 0.6d0
       f = 0.75d0
 c.....cluster with a pp generalised-kt sequential recombination alg
-      palg = 1d0 ! 1.0d0 = kt, 0.0d0 = Cam/Aachen, -1.0d0 = anti-kt
+      palg = -1d0 ! 1.0d0 = kt, 0.0d0 = Cam/Aachen, -1.0d0 = anti-kt
       call fjcoreppgenkt(p,npart,R,palg,jets,njets)   ! ... now you have the jets
 
 

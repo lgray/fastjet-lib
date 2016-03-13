@@ -9,6 +9,9 @@
 // 
 // with main.cc including fjcore.hh.
 //
+// A fortran interface, fjcorefortran.cc, is also provided. See the example 
+// and the Makefile for instructions.
+//
 // The results are expected to be identical to those obtained by linking to
 // the full FastJet distribution.
 //

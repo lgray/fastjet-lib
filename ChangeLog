@@ -1,3 +1,18 @@
+2016-03-10  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
+
+	 * fortran_wrapper/fastjet_fortran_example.f:
+	 it now runs antikt by default (it was kt)
+	 
+         * fortran_wrapper/fjcore_fortran_interface.f:
+	 renamed to fjcore_fortran_example.f
+	 
+	 * scripts/Makefile-fjcore.txt:
+	 * scripts/mkfjcore.sh:
+	 changes for inclusion of fortran example
+
+         *scripts/preamble-fjcore.txt:
+	 added mention of fortran interface
+	 
 2016-03-10  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
