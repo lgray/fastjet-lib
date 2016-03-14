@@ -5,7 +5,7 @@
 #
 
 # if you are not using the GNU compilers the names below will likely
-need to be redefined.
+# need to be redefined.
 CXX=g++
 FC=gfortran
 
