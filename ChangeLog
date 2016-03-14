@@ -1,3 +1,17 @@
+2016-03-14  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/ClusterSequenceArea.hh:
+	* include/fastjet/ClusterSequenceAreaBase.hh:
+	removed the FASTJET_DEPRECATED_MSG tag from virtual members
+	because of the following bug in gcc 5.1 and 5.2 (leading to bogus
+	reprecation warnings)
+	   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65974
+
+	* configure.ac:
+	* include/fastjet/internal/deprecated.hh:
+	((deprecated)) -> ((__deprecated__)) to avoid potential
+	replacements by the precompiler
+
 2016-03-10  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
 	 * fortran_wrapper/fastjet_fortran_example.f:
