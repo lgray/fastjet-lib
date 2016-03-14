@@ -39,8 +39,8 @@
 #define FASTJET_DEPRECATED               [[deprecated]]
 #define FASTJET_DEPRECATED_MSG(message)  [[deprecated(message)]]
 #elif defined(FASTJET_HAVE_GNUCXX_DEPRECATED)
-#define FASTJET_DEPRECATED               __attribute__((deprecated))
-#define FASTJET_DEPRECATED_MSG(message)  __attribute__((deprecated))
+#define FASTJET_DEPRECATED               __attribute__((__deprecated__))
+#define FASTJET_DEPRECATED_MSG(message)  __attribute__((__deprecated__))
 #else
 #define FASTJET_DEPRECATED               
 #define FASTJET_DEPRECATED_MSG(message) 

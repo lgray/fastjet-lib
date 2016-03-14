@@ -189,7 +189,7 @@ AC_MSG_CHECKING([[if $CXX ${AM_CXXFLAGS} $CXXFLAGS supports the "__attribute__((
 AC_LANG_PUSH(C++)
 save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="${AM_CXXFLAGS} $CXXFLAGS -Werror -Wno-error=deprecated-declarations"
-AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: __attribute__((deprecated)) void test() {}};int main(void){ A a; a.test(); return 0;}]])],
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: __attribute__((__deprecated__)) void test() {}};int main(void){ A a; a.test(); return 0;}]])],
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
