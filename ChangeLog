@@ -1,5 +1,8 @@
 2016-03-14  Gregory Soyez  <soyez@fastjet.fr>
 
+	* doc/fastjet-doc.tex:
+	worked on the list of deprecated features.
+
 	* include/fastjet/ClusterSequenceArea.hh:
 	* include/fastjet/ClusterSequenceAreaBase.hh:
 	removed the FASTJET_DEPRECATED_MSG tag from virtual members
