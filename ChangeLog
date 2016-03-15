@@ -1,3 +1,10 @@
+2016-03-15  Gavin Salam  <gavin.salam@cern.ch>
+
+	* include/fastjet/internal/deprecated.hh:
+	* include/fastjet/ClusterSequenceAreaBase.hh:
+	* include/fastjet/ClusterSequenceArea.hh:
+	fixed typos in comments and clarified a comment
+
 2016-03-14  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex:
@@ -17,19 +24,19 @@
 
 2016-03-10  Matteo Cacciari <cacciari@lpthe.jussieu.fr>
 
-	 * fortran_wrapper/fastjet_fortran_example.f:
-	 it now runs antikt by default (it was kt)
-	 
-         * fortran_wrapper/fjcore_fortran_interface.f:
-	 renamed to fjcore_fortran_example.f
-	 
-	 * scripts/Makefile-fjcore.txt:
-	 * scripts/mkfjcore.sh:
-	 changes for inclusion of fortran example
+	* fortran_wrapper/fastjet_fortran_example.f:
+	it now runs antikt by default (it was kt)
 
-         *scripts/preamble-fjcore.txt:
-	 added mention of fortran interface
-	 
+        * fortran_wrapper/fjcore_fortran_interface.f:
+	renamed to fjcore_fortran_example.f
+
+	* scripts/Makefile-fjcore.txt:
+	* scripts/mkfjcore.sh:
+	changes for inclusion of fortran example
+
+        *scripts/preamble-fjcore.txt:
+	added mention of fortran interface
+
 2016-03-10  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
@@ -57,7 +64,7 @@
 	private (or protected when needed) methods to avoid deprecation
 	warnings when compiling FastJet itself. As mentioned in the
 	comments, these methods are also deprecated (although they are not
-	explicitly marked by FASTJET_DEPRECATED)
+	explicitly marked with FASTJET_DEPRECATED)
 
 	List of concerned methods:
 	. CSAB::median_rho_per_unit_area()

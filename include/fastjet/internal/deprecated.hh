@@ -34,7 +34,8 @@
 
 #include "fastjet/config.h"
 
-// define a deprecation macro that would pick the appropriate form
+// define a deprecation macro based on the capabilities of the compiler
+// (as determined at configure time).
 #if defined(FASTJET_HAVE_CXX14_DEPRECATED)
 #define FASTJET_DEPRECATED               [[deprecated]]
 #define FASTJET_DEPRECATED_MSG(message)  [[deprecated(message)]]

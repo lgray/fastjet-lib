@@ -144,7 +144,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_area(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_area(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   double median_pt_per_unit_area(const Selector & selector) const;
 
   /// the median of (pt/area_4vector) for jets contained within the
@@ -152,14 +152,14 @@ public:
   /// 
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_area_4vector(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   double median_pt_per_unit_area_4vector(const Selector & selector) const;
   
   /// the function that does the work for median_pt_per_unit_area and 
   /// median_pt_per_unit_area_4vector: 
   /// - something_is_area_4vect = false -> use plain area
   /// - something_is_area_4vect = true  -> use 4-vector area
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_something(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::median_pt_per_unit_something(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   double median_pt_per_unit_something(const Selector & selector,
                                       bool use_area_4vector) const;
 
@@ -187,7 +187,7 @@ public:
   /// long as rho has also been determined with a 4-vector area;
   /// using a scalar area causes one to neglect terms of relative
   /// order $R^2/8$ in the jet $p_t$.
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::get_median_rho_and_sigma(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
@@ -212,7 +212,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::get_median_rho_and_sigma(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
 					const Selector & selector, 
                                         bool use_area_4vector,
@@ -226,7 +226,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::get_median_rho_and_sigma(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma) const{
@@ -242,7 +242,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::parabolic_pt_per_unit_area(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::parabolic_pt_per_unit_area(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
                                           const Selector & selector, 
                                           double exclude_above=-1.0, 
@@ -252,7 +252,7 @@ public:
   /// Only inclusive_jets above ptmin are subtracted and returned.
   /// the ordering is the same as that of sorted_by_pt(cs.inclusive_jets()),
   /// i.e. not necessarily ordered in pt once subtracted
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jets(...) is depreacted since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jets(...) is deprecated since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
   std::vector<PseudoJet> subtracted_jets(const double rho,
                                          const double ptmin=0.0) const;
 
@@ -264,12 +264,12 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jets(...) is depreacted since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jets(...) is deprecated since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
   std::vector<PseudoJet> subtracted_jets(const Selector & selector, 
                                          const double ptmin=0.0) const;
 
   /// return a subtracted jet, using area_4vector, given rho
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jet(...) is depreacted since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jet(...) is deprecated since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
   PseudoJet subtracted_jet(const PseudoJet & jet,
                            const double rho) const;
 
@@ -281,12 +281,12 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jet(...) is depreacted since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_jet(...) is deprecated since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
   PseudoJet subtracted_jet(const PseudoJet & jet,
                            const Selector & selector) const;
 
   /// return the subtracted pt, given rho
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_pt(...) is depreacted since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_pt(...) is deprecated since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
   double subtracted_pt(const PseudoJet & jet,
                        const double rho,
 	               bool use_area_4vector=false) const;
@@ -298,7 +298,7 @@ public:
   /// The selector passed as an argument has to have a finite area and
   /// apply jet-by-jet (see the BackgroundEstimator and Subtractor
   /// tools for more generic usages)
-  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_pt(...) is depreacted since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
+  FASTJET_DEPRECATED_MSG("ClusterSequenceAreaBase::subtracted_pt(...) is deprecated since FastJet 3.0. Use the Subtractor tool (with the BackgroundEstimator series of tools) instead")
   double subtracted_pt(const PseudoJet & jet,
                        const Selector & selector,
 	               bool use_area_4vector=false) const;

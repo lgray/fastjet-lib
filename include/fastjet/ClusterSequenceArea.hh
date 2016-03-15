@@ -143,7 +143,7 @@ public:
   /// The selector needs to have a finite area and be applicable jet by
   /// jet (see the BackgroundEstimator and Subtractor tools for more
   /// advanced usage)
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const std::vector<PseudoJet> & all_jets,
 					const Selector & selector, 
                                         bool use_area_4vector,
@@ -160,7 +160,7 @@ public:
   /// which actually just does the same thing as the base version (but
   /// since we've overridden the 5-argument version above, we have to
   /// override the 4-argument version too.
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma) const FASTJET_OVERRIDE {
@@ -172,7 +172,7 @@ public:
   /// which actually just does the same thing as the base version (but
   /// since we've overridden the multi-argument version above, we have to
   /// override the 5-argument version too.
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::get_median_rho_and_sigma(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")
   virtual void get_median_rho_and_sigma(const Selector & selector, 
                                         bool use_area_4vector,
                                         double & median, double & sigma,
@@ -185,7 +185,7 @@ public:
   /// overload version of what's in the ClusterSequenceAreaBase class, which 
   /// additionally checks compatibility between "range" and region in which
   /// ghosts are thrown.
-  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::parabolic_pt_per_unit_area(...) is depreacted since FastJet 3.0. Use the BackgroundEstimator series of tools instead")  
+  //FASTJET_DEPRECATED_MSG("ClusterSequenceArea::parabolic_pt_per_unit_area(...) is deprecated since FastJet 3.0. Use the BackgroundEstimator series of tools instead")  
   virtual void parabolic_pt_per_unit_area(double & a, double & b, 
                                           const Selector & selector, 
                                           double exclude_above=-1.0, 
