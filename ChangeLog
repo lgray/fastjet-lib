@@ -1,5 +1,10 @@
 2016-03-15  Gavin Salam  <gavin.salam@cern.ch>
 
+	* src/PseudoJet.cc (has_structure):
+	minor change to return bool(_structure) instead of
+	(bool)_structure (should be functionally identical) + fixed a
+	typo. 
+
 	* include/fastjet/internal/deprecated.hh:
 	* include/fastjet/ClusterSequenceAreaBase.hh:
 	* include/fastjet/ClusterSequenceArea.hh:
@@ -14,7 +19,7 @@
 	* include/fastjet/ClusterSequenceAreaBase.hh:
 	removed the FASTJET_DEPRECATED_MSG tag from virtual members
 	because of the following bug in gcc 5.1 and 5.2 (leading to bogus
-	reprecation warnings)
+	deprecation warnings)
 	   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65974
 
 	* configure.ac:
