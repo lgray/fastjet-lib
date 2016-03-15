@@ -1,5 +1,8 @@
 2016-03-15  Gavin Salam  <gavin.salam@cern.ch>
 
+	* NEWS:
+	added fjcore fortran wrapper mention
+
 	* src/PseudoJet.cc (has_structure):
 	minor change to return bool(_structure) instead of
 	(bool)_structure (should be functionally identical) + fixed a
