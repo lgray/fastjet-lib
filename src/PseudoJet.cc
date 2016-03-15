@@ -468,7 +468,6 @@ void PseudoJet::set_structure_shared_ptr(const SharedPtr<PseudoJetStructureBase>
 //----------------------------------------------------------------------
 // return true if there is some structure associated with this PseudoJet
 bool PseudoJet::has_structure() const{
-  //return (bool) _structure;
   return bool(_structure);
 }
 

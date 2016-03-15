@@ -1,4 +1,4 @@
-C     example program to run  pp sequential recombination
+C     example program to run pp sequential recombination
 C     algorithms from f77 with fjcore
 C     
 C     To compile, either use the Makefile and type
