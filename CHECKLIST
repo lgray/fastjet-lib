@@ -101,13 +101,21 @@ checklist for 3.2.0
        and make sure there are no errors (look through the file too)
        [Must be done without CGAL?]
 
-X.Y.Z  mention the release in ChangeLog: just say 
-       "Release of FastJet fastjet-X.Y.Z"
-
-X.Y.Z  go to testsuite; make with an installation of the current version;
+3.2.0  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
 
-X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
+3.2.0  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
+
+       Note: it comes with a few deprecation warnings:
+         - Njettiness.cc:48:18: SharedPtr<T>::operator()()
+         - Njettiness.cc:65:24: SharedPtr<T>::operator()()
+         - Njettiness.cc:67:21: SharedPtr<T>::operator()()
+         - Njettiness.cc:72:94: SharedPtr<T>::operator()()
+         - Njettiness.cc:76:81: SharedPtr<T>::operator()()
+         - Njettiness.cc:79:94: SharedPtr<T>::operator()()
+
+3.2.0  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
 
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
