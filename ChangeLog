@@ -1,5 +1,14 @@
 2016-03-16  Gregory Soyez  <soyez@fastjet.fr>
 
+	* NEWS:
+	set the correct release date (and included SISCone version)
+
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	changed version to 3.2.0
+
 	* doc/fastjet-doc.tex:
 	added a brief mention of the examples and fortran interface
 	shipped w fjcore
