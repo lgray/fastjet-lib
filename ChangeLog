@@ -4,6 +4,9 @@
 
 2016-03-16  Gregory Soyez  <soyez@fastjet.fr>
 
+	* scripts/preamble-fjcore.txt:
+	updated copyright dates
+
 	* NEWS:
 	set the correct release date (and included SISCone version)
 
