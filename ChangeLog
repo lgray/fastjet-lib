@@ -1,5 +1,12 @@
 2016-03-17  Gregory Soyez  <soyez@fastjet.fr>
 
+	* scripts/mkfjcore.sh:
+	explicitly removed the FASTJET_ENABLE_AUTO_PTR_INTERFACE (and
+	FASTJET_HAVE_DEMANGLING_SUPPORT) from fjcore
+
+	fixed a few issues of replacements FASTJET -> FJCORE that had to
+	be done.
+
 	* NEWS:
 	updated to mention the --disable-auto-ptr configure option
 

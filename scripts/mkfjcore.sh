@@ -225,7 +225,7 @@ echo "  - removing comment lines and the plugin enable tags"
 #                                                                            only lines with comment exclusively)                          
 #
 sed '/^ *\/\/.*$/d' fjcore.hh | sed '/^#ifndef FASTJET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.hh.nocomments
-sed '/^ *\/\/.*$/d' fjcore.cc | sed '/ET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.cc.nocomments
+sed '/^ *\/\/.*$/d' fjcore.cc | sed '/^#ifndef FASTJET_ENABLE_PLUGIN/,/#endif.*$/d'| sed '/^\s*\/\*.*\*\/\s*$/d' | sed '/^\s*\/\*/,/\*\/\s*$/d' > fjcore.cc.nocomments
 # further removal of ifndef WIN32 block from fjcore.hh (nothing similar in .cc)
 # (this effectively removes the whole of config.h, which however was needed 
 # during the initial compilation tests)
@@ -234,7 +234,8 @@ sed '/^#ifndef WIN32/,/#endif.*$/d' fjcore.hh.nocomments > fjcore.hh
 # Guards are instead kept, because they are used in Error.hh|cc
 sed '/^#define FASTJET_HAVE_EXECINFO_H.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
 # same story for a bunch of other compiler-related flags
-sed '/^#define FASTJET_HAVE_OVERRIDE.*$/d;/^#define FASTJET_HAVE_GNUCXX_DEPRECATED.*$/d;/^#define FASTJET_HAVE_CXX14_DEPRECATED.*$/d;/^#define FASTJET_HAVE_EXPLICIT_FOR_OPERATORS.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
+sed '/^#define FASTJET_HAVE_AUTO_PTR_INTERFACE.*$/d;/^#define FASTJET_HAVE_DEMANGLING_SUPPORT.*$/d;/^#define FASTJET_HAVE_OVERRIDE.*$/d;/^#define FASTJET_HAVE_GNUCXX_DEPRECATED.*$/d;/^#define FASTJET_HAVE_CXX14_DEPRECATED.*$/d;/^#define FASTJET_HAVE_EXPLICIT_FOR_OPERATORS.*$/d' fjcore.hh > fjcore.hh.tmp; mv fjcore.hh.tmp fjcore.hh
+
 
 # renaming and removal of unnecessary files
 rm fjcore.hh.nocomments
@@ -253,6 +254,12 @@ for fn in fjcore.hh fjcore.cc; do
       -e 's/FASTJET_BEGIN_NAMESPACE/FJCORE_BEGIN_NAMESPACE/g' \
       -e 's/FASTJET_END_NAMESPACE/FJCORE_END_NAMESPACE/g' \
       -e 's/__FASTJET/__FJCORE/g' \
+      -e 's/define FASTJET/ define FJCORE/g' \
+      -e 's/define _FASTJET/define _FJCORE/g' \
+      -e 's/ifdef FASTJET/ifdef FJCORE/g' \
+      -e 's/ifdef _FASTJET/ifdef _FJCORE/g' \
+      -e 's/ifndef FASTJET/ifndef FJCORE/g' \
+      -e 's/ifndef _FASTJET/ifndef _FJCORE/g' \
       -e 's/DROP_CGAL/__FJCORE_DROP_CGAL/g' \
       -e 's/FASTJET_PACKAGE/FJCORE_PACKAGE/g' \
       -e 's/FASTJET_HAVE/FJCORE_HAVE/g' \
