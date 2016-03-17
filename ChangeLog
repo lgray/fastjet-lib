@@ -1,5 +1,9 @@
 2016-03-17  Gregory Soyez  <soyez@fastjet.fr>
 
+	* NEWS:
+	set the correct release date
+	(starting the release process again)
+
 	* scripts/mkfjcore.sh:
 	explicitly removed the FASTJET_ENABLE_AUTO_PTR_INTERFACE (and
 	FASTJET_HAVE_DEMANGLING_SUPPORT) from fjcore
