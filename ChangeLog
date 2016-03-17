@@ -1,3 +1,11 @@
+2016-03-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	changed version to 3.2.1-devel
+
 2016-03-17  Gregory Soyez  <soyez@fastjet.fr>
 
 	* Release of FastJet 3.2.0

@@ -120,33 +120,36 @@ checklist for 3.2.0
 3.2.0  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
-X.Y.Z  rerun the nightly check
+3.2.0  rerun the nightly check
 
-X.Y.Z  make distcheck; record the md5sum here (and revision number)
+3.2.0  make distcheck; record the md5sum here (and revision number)
+         3aa9d718ce409675c5c029bdfd6d61da  fastjet-3.2.0.tar.gz
+         (revision 4114)
+         
+3.2.0  generate and release fjcore and note its md5sum [check the copyright date in the preamble]
+         e491bb6f82009c7f8b8c662fef4af5e5  fjcore-3.2.0.tar.gz
+         
+3.2.0  copy distribution to web: cp -p fastjet-3.2.0.tar.gz ~salam/www/fastjet/repository/
+3.2.0  copy fjcore to web: cp -p scripts/fjcore-3.2.0.tar.gz ~salam/www/fastjet/repository
+3.2.0  compile manual
+3.2.0  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.2.0.pdf
+3.2.0  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.2.0
+3.2.0  update main web page & menu in devel area
 
-X.Y.Z  generate and release fjcore and note its md5sum [check the copyright date in the preamble]
-       
-X.Y.Z  copy distribution to web: cp -p fastjet-3.2.0.tar.gz ~salam/www/fastjet/repository/
-X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-3.2.0.tar.gz ~salam/www/fastjet/repository
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.2.0.pdf
-X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.2.0
-X.Y.Z  update main web page & menu in devel area
-
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.2.0
-X.Y.Z  update main web-page area
+3.2.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.2.0
+3.2.0  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.2.0
 
 X.Y.Z  tweet the release
 
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.2.0  make sure it's committed with the CHECKLIST
 
-X.Y.Z  reset the SISCone link to the trunk: 
+3.2.0  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 
-X.Y.Z  move the version number to 3.2.1-devel with
+3.2.1-devel  move the version number to 3.2.1-devel with
        scripts/set-version.sh VERSION-NUMBER
        and indicate this in the ChangeLog
 
