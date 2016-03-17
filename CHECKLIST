@@ -10,6 +10,8 @@ to indicate you carried out the operation.
 ----------------------------------------------------------------------
 checklist for X.Y.Z (make a copy before editing!)
 -------------------
+  preparatory work
+  ~~~~~~~~~~~~~~~~
 X.Y.Z  run svn up
 X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
 X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
@@ -18,15 +20,13 @@ X.Y.Z  doxygen: check dirs are declared for new plugins + check in
              behave properly use instead
              ~salam/software/doxygen-1.8.8/bin/doxygen
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
-
 X.Y.Z  make sure siscone points to a tag, not trunk
        svn propedit svn:externals plugins/SISCone; svn up
+X.Y.Z  check copyright dates in fjcore preamble (scripts/preamble-fjcore.txt)
 
-X.Y.Z  mention the release in ChangeLog: just say 
-       "Release of FastJet fastjet-X.Y.Z"
-
+  validation/checks
+  ~~~~~~~~~~~~~~~~~
 X.Y.Z  make check 
-
 X.Y.Z  within zsh, in the examples directory, do 
          echo >! out
          for a in [01]*.cc
@@ -34,42 +34,42 @@ X.Y.Z  within zsh, in the examples directory, do
          grep -i error.summary out
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
-       [Must be done without CGAL?]
-
+       [Must be done without CGAL? You may have to recompile examples manually]
 X.Y.Z  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
-
 X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
-
+X.Y.Z  make sure it's committed (before the nightly check)
+X.Y.Z  rerun the nightly check
+X.Y.Z  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-X.Y.Z"
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
-X.Y.Z  rerun the nightly check
-
+  prepare the distributed material
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate and release fjcore and note its md5sum [check the copyright date in the preamble]
+X.Y.Z  generate fjcore and note its md5sum here
        cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
 
+  do the release and announce it
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
 X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
 X.Y.Z  compile manual
 X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
 X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
 X.Y.Z  update main web page & menu in devel area
-
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
 X.Y.Z  update main web-page area
-
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
-       subject: FastJet release X.Y.Z       
-
+       subject: FastJet release X.Y.Z    
 X.Y.Z  tweet the release
 
+  prepare for the next devel phase
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 X.Y.Z  make sure it's committed with the CHECKLIST
-
 X.Y.Z  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
-
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
        scripts/set-version.sh VERSION-NUMBER
        and indicate this in the ChangeLog
@@ -84,7 +84,7 @@ checklist for 3.2.0
        Note: as of 2015-01-06 tycho only has v1.6.1 which does not
              behave properly use instead
              ~salam/software/doxygen-1.8.8/bin/doxygen
-       [done on Gregory's office computer w doxygen-1.8.9]
+       [done on Gregory's home computer w doxygen-1.8.11]
 3.2.0  ensure NEWS is up to date (and has the correct release date!)
 
 3.2.0  make sure siscone points to a tag, not trunk
@@ -117,23 +117,27 @@ checklist for 3.2.0
 3.2.0  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-X.Y.Z"
 
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.2.0  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
 X.Y.Z  rerun the nightly check
 
-X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate and release fjcore and note its md5sum [check the copyright date in the preamble]
+3.2.0  make distcheck; record the md5sum here (and revision number)
+       23c6ad54dde8fe130611ca10fcbff2f9  fastjet-3.2.0.tar.gz
+       (revision 4106)
+
+3.2.0  generate and release fjcore and note its md5sum [check the copyright date in the preamble]
        cd scripts; ./mkfjcore.sh; md5sum fjcore-3.2.0.tar.gz; cd ..
+       0ea7dcc671ce8c558cff0a34cffda561  fjcore-3.2.0.tar.gz
+       
+3.2.0  copy distribution to web: cp -p fastjet-3.2.0.tar.gz ~salam/www/fastjet/repository/
+3.2.0  copy fjcore to web: cp -p scripts/fjcore-3.2.0.tar.gz ~salam/www/fastjet/repository
+3.2.0  compile manual
+3.2.0  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.2.0.pdf
+3.2.0  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.2.0
+3.2.0  update main web page & menu in devel area
 
-X.Y.Z  copy distribution to web: cp -p fastjet-3.2.0.tar.gz ~salam/www/fastjet/repository/
-X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-3.2.0.tar.gz ~salam/www/fastjet/repository
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.2.0.pdf
-X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-3.2.0
-X.Y.Z  update main web page & menu in devel area
-
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.2.0
+3.2.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.2.0
 X.Y.Z  update main web-page area
 
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
