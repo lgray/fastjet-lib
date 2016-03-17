@@ -12,6 +12,7 @@ Summary of changes from v3.1.3 -> v3.2.0: 2016-03-16
 * made template implementation of PseudoJet::obj_sorted_by_values() public
 * added a --guess-prefix option to fastjet-config (guesses prefix
   from location of fastjet-config instead of prefix from configure)
+* added a --disable-auto-ptr option to configure (for clean C++11 compilation)
 * added internal helpers for C++11 and C++14 features: compile-time
   deprecation and the override keyword 
 * small tweaks to the build system

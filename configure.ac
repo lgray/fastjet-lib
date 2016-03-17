@@ -138,37 +138,21 @@ if [[ "$ENABLE_EXTRA_WARNINGS_FLAG" == "yes" ]] ; then
 fi
 
 
-# dnl check if one wants to enable c++11 features (required e.g. for thread-safety)
-# dnl
-# dnl This defines a FASTJET_HAVE_CXX11_FEATURES in fastjet/config.h
-# AC_ARG_ENABLE(c++11-features,
-# 	[  --enable-c++11-features Turn on C++11 features (needed e.g. for thread-safety) [default=no]],
-# 	[ENABLE_CXX11FEATURES_FLAG="$enableval"],
-# 	[ENABLE_CXX11FEATURES_FLAG="no"])
-# if [[ "$ENABLE_CXX11FEATURES_FLAG" == "yes" ]] ; then
-#    AC_DEFINE(HAVE_CXX11_FEATURES, [], [defined if C++11 features have been enabled])
-#    AC_MSG_WARN([C++11 features may require additional compiler arguments, these have to be specified by the user])
-#    # one could alternately try to see what compiler flag(s) has to be included
-#    # although that can be fairly heavy so better be moved in an ac file 
-#    #
-#    # e.g. for g++ we could try
-#    #   AC_MSG_CHECKING([if $CXX supports -std=c++11 flag])
-#    #   SAVE_CXXFLAGS="$CXXFLAGS"
-#    #   CXXFLAGS="-std=c++11"
-#    #   AC_LANG_PUSH(C++)
-#    #   AC_COMPILE_IFELSE([AC_LANG_SOURCE([int main(void){ return 0;}])],
-#    #       [ac_cxx_eleven_ok=yes],[ac_cxx_eleven_ok=no])
-#    #   AC_LANG_POP(C++)
-#    #   CXXFLAGS="$SAVE_CXXFLAGS"
-#    #   AC_MSG_RESULT([$ac_cxx_eleven_ok])
-#    #   if [[ "x${ac_cxx_eleven_ok}" == "xyes" ]]; then
-#    #      AM_CXXFLAGS=${AM_CXXFLAGS}" -std=c++11 "
-#    #   fi
-# fi
-
-
 dnl-------------------------------------------------------------------
 dnl check if a few modern compiler options are availabble
+
+dnl --------- disable deprecated auto_ptr interface ------------------
+dnl This requires the --disable-auto-ptr option 
+dnl which is currently not the default but will become in a future
+dnl release (or might disappear altogether)
+AC_ARG_ENABLE(auto-ptr,
+	[  --enable-auto-ptr  compile the deprecated parts of the interface using auto-ptr [default=yes]],
+	[ENABLE_AUTO_PTR_INTERFACE="$enableval"],
+	[ENABLE_AUTO_PTR_INTERFACE="yes"])
+if [[ "$ENABLE_AUTO_PTR_INTERFACE" == "yes" ]] ; then
+   AC_DEFINE(HAVE_AUTO_PTR_INTERFACE, [], [compile the deprecated parts of the interface using auto-ptr])   
+fi
+
 
 dnl---------- [[deprecated]] --> HAVE_CXX14_DEPRECATED ---------------
 AC_MSG_CHECKING([[if $CXX ${AM_CXXFLAGS} $CXXFLAGS supports the "[[deprecated]]" keyword]])

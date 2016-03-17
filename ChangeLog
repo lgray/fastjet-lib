@@ -1,6 +1,16 @@
-2016-03-16  Gregory Soyez  <soyez@fastjet.fr>
+2016-03-17  Gregory Soyez  <soyez@fastjet.fr>
 
-	* Release of FastJet 3.2.0
+	* NEWS:
+	updated to mention the --disable-auto-ptr configure option
+
+	* include/fastjet/ClusterSequence.hh:
+	disabled CS::plugin_associate_extras(std::auto_ptr<Extras>
+	extras_in) when auto_ptr are disabled at configure time
+
+	* configure.ac:
+	added a --disable-auto-ptr configure option that removes the part
+	of the interface that uses std::auto_ptr (by default, auto_ptr
+	will be enabled)
 
 2016-03-16  Gregory Soyez  <soyez@fastjet.fr>
 

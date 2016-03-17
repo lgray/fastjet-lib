@@ -36,6 +36,9 @@
 /* The TrackJet plugin is enabled */
 #undef ENABLE_PLUGIN_TRACKJET
 
+/* compile the deprecated parts of the interface using auto-ptr */
+#undef HAVE_AUTO_PTR_INTERFACE
+
 /* compiler supports c++14 deprecated keyword */
 #undef HAVE_CXX14_DEPRECATED
 
