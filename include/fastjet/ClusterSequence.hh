@@ -81,6 +81,9 @@ class ClusterSequence {
     transfer_from_sequence(cs);
   }
 
+  /// explicit assignment operator for a ClusterSequence
+  ClusterSequence & operator=(const ClusterSequence & cs);
+  
   // virtual ClusterSequence destructor, in case any derived class
   // thinks of needing a destructor at some point
   virtual ~ClusterSequence (); //{}

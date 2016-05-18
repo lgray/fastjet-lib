@@ -774,6 +774,15 @@ Strategy ClusterSequence::_best_strategy() const {
 // }
 
 
+ClusterSequence & ClusterSequence::operator=(const ClusterSequence & cs) {
+  // self assignment is trivial
+  if (&cs != this) {
+    _deletes_self_when_unused = false;
+    transfer_from_sequence(cs);
+  }
+  return *this;
+}
+
 //----------------------------------------------------------------------
 // transfer the sequence contained in other_seq into our own;
 // any plugin "extras" contained in the from_seq will be lost

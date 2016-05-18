@@ -1,3 +1,12 @@
+2016-05-18  Gavin Salam  <gavin.salam@cern.ch>
+
+	* src/ClusterSequence.cc (operator=):
+	* include/fastjet/ClusterSequence.hh:
+	added an explicit assignment operator, to solve an issue reported
+	by Roberto Franceschini (where structure wasn't being properly
+	transferred with assignment, though it was fine on construction).
+	[issue 2016-05-CS-assignment-issue]
+
 2016-03-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
