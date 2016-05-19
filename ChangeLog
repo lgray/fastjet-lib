@@ -1,3 +1,8 @@
+2016-05-19  Gavin Salam  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl:
+	added gcc-6.1 to the nightly check
+
 2016-05-18  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/ClusterSequence.cc (operator=):
