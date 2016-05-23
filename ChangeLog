@@ -1,3 +1,9 @@
+2016-05-23  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/SISCone/Makefile.am:
+	included the ./siscone in the list of include path (equivalement
+	to $builddir)/siscone so that config.h is found
+
 2016-05-19  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl:
