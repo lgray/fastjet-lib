@@ -723,8 +723,11 @@ Strategy ClusterSequence::_best_strategy() const {
     }
   }
   
-  bool code_should_never_reach_here = false;
-  assert(code_should_never_reach_here); 
+  //bool code_should_never_reach_here = false;
+  //assert(code_should_never_reach_here);
+
+  assert(0 && "Code should never reach here");
+
   return N2MHTLazy9;
 
 }
@@ -1463,7 +1466,8 @@ void ClusterSequence::add_constituents (
 //----------------------------------------------------------------------
 // initialise the history in a standard way
 void ClusterSequence::_add_step_to_history (
-	       const int step_number, const int parent1, 
+               //NO_LONGER_USED: const int step_number,
+               const int parent1, 
 	       const int parent2, const int jetp_index,
 	       const double dij) {
 
@@ -1477,7 +1481,9 @@ void ClusterSequence::_add_step_to_history (
   _history.push_back(element);
 
   int local_step = _history.size()-1;
-  assert(local_step == step_number);
+  //#ifndef __NO_ASSERTS__
+  //assert(local_step == step_number);
+  //#endif
 
   // sanity check: make sure the particles have not already been recombined
   //
@@ -1677,8 +1683,11 @@ void ClusterSequence::_do_ij_recombination_step(
   int hist_i = _jets[jet_i].cluster_hist_index();
   int hist_j = _jets[jet_j].cluster_hist_index();
 
-  _add_step_to_history(newstep_k, min(hist_i, hist_j), max(hist_i,hist_j),
+  _add_step_to_history(min(hist_i, hist_j), max(hist_i,hist_j),
 		       newjet_k, dij);
+
+  //  _add_step_to_history(newstep_k, min(hist_i, hist_j), max(hist_i,hist_j),
+  //		       newjet_k, dij);
 
 
 }
@@ -1689,12 +1698,15 @@ void ClusterSequence::_do_ij_recombination_step(
 /// jet_i with the beam
 void ClusterSequence::_do_iB_recombination_step(
 				  const int jet_i, const double diB) {
-  // get history index
-  int newstep_k = _history.size();
-
   // recombine the jet with the beam
-  _add_step_to_history(newstep_k,_jets[jet_i].cluster_hist_index(),BeamJet,
+  _add_step_to_history(_jets[jet_i].cluster_hist_index(),BeamJet,
 		       Invalid, diB);
+
+  // // get history index
+  // int newstep_k = _history.size();
+  // 
+  // _add_step_to_history(newstep_k,_jets[jet_i].cluster_hist_index(),BeamJet,
+  //         	       Invalid, diB);
 
 }
 

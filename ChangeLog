@@ -1,3 +1,12 @@
+2016-07-20  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence.cc:
+	. made sure the compiler does not complain about unused variables
+	  if assert is disaled (e.g. if NDEBUG is defined)
+	. removed the "step_number" argument in _add_step_to_history() [it
+	  is only used in an assertion that we are confident would not fail]
+	This fixed an issue reported by Andy Buckley.
+
 2016-05-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/SISCone/Makefile.am:

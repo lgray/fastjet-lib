@@ -737,9 +737,10 @@ protected:
   // NSqrtN method for C/A
   void _fast_NsqrtN_cluster();
 
-  void _add_step_to_history(const int step_number, const int parent1, 
-			       const int parent2, const int jetp_index,
-			       const double dij);
+  void _add_step_to_history( //const int step_number,
+                            const int parent1, 
+			    const int parent2, const int jetp_index,
+			    const double dij);
 
   /// internal routine associated with the construction of the unique
   /// history order (following children in the tree)
