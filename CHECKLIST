@@ -57,7 +57,14 @@ X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/r
 X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
 X.Y.Z  compile manual
 X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  run doxygen on the distribution, move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
+X.Y.Z  doxygen: to avoid spurious files, run doxygen on a tarball
+         tar -xzf fastjet-X.Y.Z.tar.gz
+         cd fastjet-X.Y.Z
+         ./configure
+         doxygen
+       then move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
+       (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-X.Y.Z)
+       clean: cd ..; rm -Rf fastjet-X.Y.Z
 X.Y.Z  update main web page & menu in devel area
 X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
 X.Y.Z  update main web-page area
