@@ -1,3 +1,8 @@
+2016-07-22  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* NEWS:
+	prepared release notes for 3.2.1
+
 2016-07-21  Gregory Soyez  <soyez@fastjet.fr>
 
 	* CHECKLIST:
@@ -8,7 +13,7 @@
 
 	* src/ClusterSequence.cc:
 	. made sure the compiler does not complain about unused variables
-	  if assert is disaled (e.g. if NDEBUG is defined)
+	  if assert is disabled (e.g. if NDEBUG is defined)
 	. removed the "step_number" argument in _add_step_to_history() [it
 	  is only used in an assertion that we are confident would not fail]
 	This fixed an issue reported by Andy Buckley.
