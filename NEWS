@@ -10,7 +10,7 @@ This is a bug-fix release. Main changes:
   (reported by Roberto Franceschini)
 * eliminated a warning about unused variables when assertions are
   disabled (reported by Andy Buckley)
-* included SISCone-3.2.1 which now installs config.h to improve
+* included SISCone-3.0.3 which now installs config.h to improve
   build stability
 
 ================================================================
