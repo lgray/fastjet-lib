@@ -35,6 +35,12 @@ X.Y.Z  within zsh, in the examples directory, do
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
        [Must be done without CGAL? You may have to recompile examples manually]
+         echo "mem_test" > out;
+         for a in [01]*.cc; do
+           g++ `fastjet-config --cxxflags --libs --plugins` -o ${a%.cc} $a
+           tmp=`grep 'run it with.*[01].*<' $a | sed 's/.*://'`; cmd=($tmp)
+           echo ${cmd[0]} | tee -a out; valgrind ${cmd[0]} < ${cmd[2]} >> out 2>&1
+         done
 X.Y.Z  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
 X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
@@ -101,8 +107,8 @@ checklist for 3.2.1
 
   validation/checks
   ~~~~~~~~~~~~~~~~~
-X.Y.Z  make check 
-X.Y.Z  within zsh, in the examples directory, do 
+3.2.1  make check 
+3.2.1  within zsh, in the examples directory, do 
          echo >! out
          for a in [01]*.cc
          (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
@@ -110,9 +116,9 @@ X.Y.Z  within zsh, in the examples directory, do
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
        [Must be done without CGAL? You may have to recompile examples manually]
-X.Y.Z  go to testsuite; make with an installation of the current version;
+3.2.1  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
-X.Y.Z  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
+3.2.1  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
 X.Y.Z  make sure it's committed (before the nightly check)
 X.Y.Z  rerun the nightly check
 X.Y.Z  ensure NEWS has the correct release date!
