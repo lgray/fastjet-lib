@@ -1,5 +1,11 @@
 2016-07-22  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	  changed version to 3.2.1
+
 	* NEWS:
 	prepared release notes for 3.2.1
 
