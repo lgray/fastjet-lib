@@ -1,3 +1,9 @@
+2016-10-25  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* include/fastjet/NNFJN2Tiled.hh:
+	fixed type mismatched for diJ_plus_link (was pre-declared as a
+	class then declared as a struct)
+
 2016-08-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:

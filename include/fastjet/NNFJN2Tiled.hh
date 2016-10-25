@@ -257,7 +257,8 @@ private:
   };
 
   // structure that holds the real, full, distance (as well as a pointer to the corresponding TiledJet)
-  struct diJ_plus_link {
+  class diJ_plus_link {
+  public:
     double     diJ; // the distance
     TiledJet * jet; // the jet (i) for which we've found this distance
                     // (whose NN will the J).
