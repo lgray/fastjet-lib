@@ -54,6 +54,74 @@ class TestPtYPhiM : public TestBase {
   }
 };
 
+//----------------------------------------------------------------------
+/// class to test that addition, etc. are all working sensibly
+class TestPJOperations : public TestBase {
+  std::string short_name()  const {return "TestPJOperations";}
+  bool run_test () {
+    for (unsigned i = 0; i < 10; i++) {
+      // range of pt values chosen affects choice for tolerance below
+      double pt1  = uniform_random(1.0, 10.0);
+      double rap1 = uniform_random(-5.0, 5.0);
+      double phi1 = uniform_random(0.0, twopi);
+      double m1   = uniform_random(0.0, 5.0);
+
+      double pt2  = uniform_random(1.0, 10.0);
+      double rap2 = uniform_random(-5.0, 5.0);
+      double phi2 = uniform_random(0.0, twopi);
+      double m2   = uniform_random(0.0, 5.0);
+
+      double factor = uniform_random(0.5, 1.5);
+
+      // first check additions (and dot_product)
+      PseudoJet p1 = PtYPhiM(pt1, rap1, phi1, m1);
+      PseudoJet p2 = PtYPhiM(pt2, rap2, phi2, m2);
+
+      PseudoJet p12_a = p1 + p2;
+      PseudoJet p12_b = p1; p12_b += p2;
+      verify_almost_equal(p12_a, p12_b, "+= v. +");
+      verify_almost_equal(p12_a.m2(), p1.m2() + p2.m2() + 2*dot_product(p1,p2),
+                          "(p1+p2).m2() v. explicit calculation of m2 with dot products");
+
+      // then try subtractions
+      p12_a = p1 - p2;
+      p12_b = p1; p12_b -= p2;
+      verify_almost_equal(p12_a, p12_b, "-= v. -");
+      //p12_a = p1 + (-p2); // unary minus not supported...
+      //verify_almost_equal(p12_a, p12_b, "p1 += p2 v. p1 + (-p2)");
+      verify_almost_equal(p12_a.m2(), p1.m2() + p2.m2() - 2*dot_product(p1,p2),
+                          "(p1-p2).m2() v. explicit calculation of m2 with dot products");
+      
+      // then multiplication
+      PseudoJet pfact_a, pfact_b;
+      pfact_a = factor * p1;
+      pfact_b = p1; pfact_b *= factor;
+      verify_almost_equal(pfact_a, pfact_b, "*= v. factor*p1");
+      pfact_a = p1 * factor;
+      verify_almost_equal(pfact_a, pfact_b, "*= v. p1*factor");
+      verify_almost_equal(pfact_a.pt(), p1.pt()*factor, "(p1*factor).pt() == p1.pt()*factor");
+
+      // then division
+      pfact_a = p1 / factor;
+      pfact_b = p1; pfact_b /= factor;
+      verify_almost_equal(pfact_a, pfact_b, "/= v. p1/factor");
+      verify_almost_equal(pfact_a.pt(), p1.pt()/factor, "(p1/factor).pt() == p1.pt()/factor");
+
+      // then boost (& unboost)?
+      verify_almost_equal(p1.boost(p2).unboost(p2), p1, "p1.boost(p2).unboost(p2) == p1");
+
+      // and check that rapidity comes out sensible with a longitudinal boost
+      double delta_y = 2.0;
+      PseudoJet myboost = PtYPhiM(0.0,delta_y,0.0,1.0);
+      PseudoJet p1boost = p1; p1.boost(myboost);
+      //cout << p1.rap() << " " << p1boost.rap() << " " << myboost.rap() << endl;
+      verify_almost_equal(p1boost.rap(), p1.rap()-delta_y, "p1boost.rap() == p1.rap() - delta_y");
+      
+    }
+    
+    return _pass_test;
+  }
+};
 
 //----------------------------------------------------------------------
 class Info : public PseudoJet::UserInfoBase {

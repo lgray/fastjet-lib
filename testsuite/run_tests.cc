@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
   vector<TestBase *> tests;
   tests.push_back(new TestPtYPhiM());
   tests.push_back(new TestPJAssignment());
+  tests.push_back(new TestPJOperations());
   tests.push_back(new TestPJCSaccess());
   tests.push_back(new TestSubStructure());
   tests.push_back(new TestGroomerAreas());
