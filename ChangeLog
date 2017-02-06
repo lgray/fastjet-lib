@@ -1,3 +1,18 @@
+2017-02-06  Gavin Salam  <gavin.salam@cern.ch>
+
+	* testsuite/TestSpecialEvents.hh:
+	modified constructors of JetDefs to eliminate a large number of
+	compilation warnings. 
+
+	* testsuite/run_tests.cc (main):
+	* testsuite/TestPseudoJet.hh:
+	Added TestPJOperations to test various binary operations
+
+	* include/fastjet/PseudoJet.hh|cc:
+	operator+=, -=, *=, /= all had "void" as their return type;
+	now fixed this bug so that they return PseudoJet &
+	(observed to be an issue with Swig)
+
 2016-10-25  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* include/fastjet/NNFJN2Tiled.hh:

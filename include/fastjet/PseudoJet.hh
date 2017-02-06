@@ -225,10 +225,10 @@ class PseudoJet {
   /// frame of prest  [NOT FULLY TESTED]
   PseudoJet & unboost(const PseudoJet & prest);
 
-  void operator*=(double);
-  void operator/=(double);
-  void operator+=(const PseudoJet &);
-  void operator-=(const PseudoJet &);
+  PseudoJet & operator*=(double);
+  PseudoJet & operator/=(double);
+  PseudoJet & operator+=(const PseudoJet &);
+  PseudoJet & operator-=(const PseudoJet &);
 
   /// reset the 4-momentum according to the supplied components and
   /// put the user and history indices back to their default values
