@@ -51,3 +51,30 @@ namespace std{
 %extend fastjet::ClusterSequence {
      %template(ClusterSequence) ClusterSequence<PseudoJet>;
 }
+
+// These make JetDefinition, Selector and PseudoJet all printable
+%extend JetDefinition {
+  char *__str__() {
+    const unsigned int len_max=4096;
+    static char temp[len_max];
+    snprintf(temp,len_max, "Jet Definition: %s",$self->description().c_str());
+    return &temp[0];
+  }
+}
+
+%extend Selector {char *__str__() {
+    const unsigned int len_max=4096;
+    static char temp[len_max];
+    snprintf(temp,len_max, "Selector: %s",$self->description().c_str());
+    return &temp[0];
+  }
+}
+
+%extend PseudoJet {
+  char *__str__() {
+    const unsigned int len_max=4096;
+    static char temp[len_max];
+    snprintf(temp,len_max, "[%f, %f, %f, %f]",$self->px(), $self->py(), $self->pz(), $self->E());
+    return &temp[0];
+  }
+}
