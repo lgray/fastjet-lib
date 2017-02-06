@@ -1,0 +1,17 @@
+Current procedure to get things working
+
+- build and install fastjet (using clang as a compiler)
+  Following assumes installed in FJINSTALL
+  
+- cd into the pyinterface directory
+
+- parse the interface w swig:
+
+   swig -python -c++ -I../include fastjet.i
+
+- link the module against FJ
+
+   clang++ -shared `python-config --includes --libs` -DSWIG -I../include -L$(FJINSTALL)/lib -lfastjet -Wl,-rpath,$(FJINSTALL)/lib -fPIC -DPIC fastjet_wrap.cxx -o _fastjet.so
+
+- test by running
+   ./test.py
