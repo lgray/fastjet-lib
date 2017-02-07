@@ -1,4 +1,6 @@
 // -*-c++-*-
+%include "std_string.i"
+
 %module fastjet
 %{
 #include "fastjet/config_auto.h"
@@ -58,12 +60,7 @@ namespace fastjet {
 
 // These make JetDefinition, Selector and PseudoJet all printable
 %extend JetDefinition {
-  char *__str__() {
-    const unsigned int len_max=4096;
-    static char temp[len_max];
-    snprintf(temp,len_max, "Jet Definition: %s",$self->description().c_str());
-    return &temp[0];
-  }
+  std::string __str__() {return $self->description();}
 
   std::vector<PseudoJet> __call__(const std::vector<PseudoJet> & particles) {
     return (*self)(particles);
@@ -72,12 +69,7 @@ namespace fastjet {
 }
 
 %extend Selector {
-  char *__str__() {
-    const unsigned int len_max=4096;
-    static char temp[len_max];
-    snprintf(temp,len_max, "Selector: %s",$self->description().c_str());
-    return &temp[0];
-  }
+  std::string __str__() {return $self->description();}
 
   // The C++ operators [* && || !] map to [* & | ~] in python
   Selector __mul__   (const Selector & other) {return *($self) *  other;}
@@ -87,13 +79,13 @@ namespace fastjet {
  }
   
 %extend PseudoJet {
-  char *__str__() {
+  std::string __str__() {
     const unsigned int len_max=4096;
-    static char temp[len_max];
+    char temp[len_max];
     snprintf(temp,len_max, "[%f, %f, %f, %f]",$self->px(), $self->py(), $self->pz(), $self->E());
-    return &temp[0];
+    return std::string(temp);
   }
-
+  
   // these C++ operators are not automatically handled by SWIG (would only
   // be handled if there were part of the class)
   PseudoJet __add__ (const PseudoJet & p) {return *($self) + p;}
