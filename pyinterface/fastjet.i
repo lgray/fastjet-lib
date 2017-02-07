@@ -53,7 +53,7 @@ namespace std{
 }
 
 // These make JetDefinition, Selector and PseudoJet all printable
-%extend JetDefinition {
+%extend fastjet::JetDefinition {
   char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];
@@ -62,7 +62,7 @@ namespace std{
   }
 }
 
-%extend Selector {char *__str__() {
+%extend fastjet::Selector {char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];
     snprintf(temp,len_max, "Selector: %s",$self->description().c_str());
@@ -70,7 +70,7 @@ namespace std{
   }
 }
 
-%extend PseudoJet {
+%extend fastjet::PseudoJet {
   char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];

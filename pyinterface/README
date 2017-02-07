@@ -13,5 +13,10 @@ Current procedure to get things working
 
    clang++ -shared `python-config --includes --libs` -DSWIG -I../include -L$(FJINSTALL)/lib -lfastjet -Wl,-rpath,$(FJINSTALL)/lib -fPIC -DPIC fastjet_wrap.cxx -o _fastjet.so
 
+
+   OR
+
+   c++ -shared `python-config --includes --libs` -DSWIG -I../include `fastjet-config --libs` -fPIC -DPIC fastjet_wrap.cxx -o _fastjet.so
+
 - test by running
    ./test.py
