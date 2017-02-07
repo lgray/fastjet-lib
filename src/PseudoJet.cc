@@ -156,22 +156,22 @@ double PseudoJet::pseudorapidity() const {
 
 //----------------------------------------------------------------------
 // return "sum" of two pseudojets
-PseudoJet operator+ (const PseudoJet & jet1, const PseudoJet & jet2) {
+PseudoJet PseudoJet::operator+ (const PseudoJet & jet2) const {
   //return PseudoJet(jet1.four_mom()+jet2.four_mom());
-  return PseudoJet(jet1.px()+jet2.px(),
-		   jet1.py()+jet2.py(),
-		   jet1.pz()+jet2.pz(),
-		   jet1.E() +jet2.E()  );
+  return PseudoJet(px()+jet2.px(),
+		   py()+jet2.py(),
+		   pz()+jet2.pz(),
+		   E() +jet2.E()  );
 } 
 
 //----------------------------------------------------------------------
 // return difference of two pseudojets
-PseudoJet operator- (const PseudoJet & jet1, const PseudoJet & jet2) {
+PseudoJet PseudoJet::operator- (const PseudoJet & jet2) const {
   //return PseudoJet(jet1.four_mom()-jet2.four_mom());
-  return PseudoJet(jet1.px()-jet2.px(),
-		   jet1.py()-jet2.py(),
-		   jet1.pz()-jet2.pz(),
-		   jet1.E() -jet2.E()  );
+  return PseudoJet(px()-jet2.px(),
+		   py()-jet2.py(),
+		   pz()-jet2.pz(),
+		   E() -jet2.E()  );
 } 
 
 //----------------------------------------------------------------------
@@ -190,14 +190,14 @@ PseudoJet operator* (double coeff, const PseudoJet & jet) {
 
 //----------------------------------------------------------------------
 // return the product, coeff * jet
-PseudoJet operator* (const PseudoJet & jet, double coeff) {
-  return coeff*jet;
+PseudoJet PseudoJet::operator* (double coeff) const {
+  return coeff*(*this);
 } 
 
 //----------------------------------------------------------------------
 // return the ratio, jet / coeff
-PseudoJet operator/ (const PseudoJet & jet, double coeff) {
-  return (1.0/coeff)*jet;
+PseudoJet PseudoJet::operator/ (double coeff) const {
+  return (1.0/coeff)*(*this);
 } 
 
 //----------------------------------------------------------------------
@@ -252,27 +252,27 @@ PseudoJet & PseudoJet::operator-=(const PseudoJet & other_jet) {
 }
 
 //----------------------------------------------------------------------
-bool operator==(const PseudoJet & a, const PseudoJet & b) {
-  if (a.px() != b.px()) return false;
-  if (a.py() != b.py()) return false;
-  if (a.pz() != b.pz()) return false;
-  if (a.E () != b.E ()) return false;
+bool PseudoJet::operator==(const PseudoJet & b) const {
+  if (px() != b.px()) return false;
+  if (py() != b.py()) return false;
+  if (pz() != b.pz()) return false;
+  if (E () != b.E ()) return false;
   
-  if (a.user_index()    != b.user_index()) return false;
-  if (a.cluster_hist_index() != b.cluster_hist_index()) return false;
-  if (a.user_info_ptr() != b.user_info_ptr()) return false;
-  if (a.structure_ptr() != b.structure_ptr()) return false;
+  if (user_index()    != b.user_index()) return false;
+  if (cluster_hist_index() != b.cluster_hist_index()) return false;
+  if (user_info_ptr() != b.user_info_ptr()) return false;
+  if (structure_ptr() != b.structure_ptr()) return false;
 
   return true;
 }
 
 //----------------------------------------------------------------------
 // check if the jet has zero momentum
-bool operator==(const PseudoJet & jet, const double val) {
+bool PseudoJet::operator==(const double val) const {
   if (val != 0) 
     throw Error("comparing a PseudoJet with a non-zero constant (double) is not allowed.");
-  return (jet.px() == 0 && jet.py() == 0 && 
-	  jet.pz() == 0 && jet.E() == 0);
+  return (px() == 0 && py() == 0 && 
+	  pz() == 0 && E() == 0);
 }
 
 

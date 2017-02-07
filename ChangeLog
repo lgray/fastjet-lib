@@ -1,5 +1,10 @@
 2017-02-07  Gavin Salam  <gavin.salam@cern.ch>
 
+	* src/PseudoJet.cc:
+	* include/fastjet/PseudoJet.hh:
+	reworked a numebr of binary operations to become member functions, to
+	facilitate python.
+
 	* testsuite/TestPseudoJet.hh (TestBase):
 	fixed issue in testing boosts
 

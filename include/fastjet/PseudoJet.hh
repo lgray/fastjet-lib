@@ -230,6 +230,29 @@ class PseudoJet {
   PseudoJet & operator+=(const PseudoJet &);
   PseudoJet & operator-=(const PseudoJet &);
 
+  // most of the binary operators go here (except for things like
+  // double*PJ, which must come outside the class)
+  PseudoJet operator+ (const PseudoJet & jet2) const;
+  PseudoJet operator- (const PseudoJet & jet2) const;
+  PseudoJet operator* (double) const;
+  PseudoJet operator/ (double) const;
+
+  /// returns true if the 4 momentum components of the two PseudoJets
+  /// are identical and all the internal indices (user, cluster_history)
+  /// + structure and user-info shared pointers are too
+  bool operator==(const PseudoJet &) const;
+
+  /// inequality test which is exact opposite of operator==
+  inline bool operator!=(const PseudoJet & b) const {return !((*this)==b);}
+
+  /// Can only be used with val=0 and tests whether all four
+  /// momentum components are equal to val (=0.0)
+  bool operator==(const double val) const;
+
+  /// Can only be used with val=0 and tests whether at least one of the
+  /// four momentum components is different from val (=0.0)
+  inline bool operator!=(const double val) const {return !((*this)==val);}
+  
   /// reset the 4-momentum according to the supplied components and
   /// put the user and history indices back to their default values
   inline void reset(double px, double py, double pz, double E);
@@ -818,32 +841,24 @@ class PseudoJet {
 
 
 //----------------------------------------------------------------------
-// routines for basic binary operations
-
-PseudoJet operator+(const PseudoJet &, const PseudoJet &);
-PseudoJet operator-(const PseudoJet &, const PseudoJet &);
+// routines for the binary operations that can't // be member functions
 PseudoJet operator*(double, const PseudoJet &);
-PseudoJet operator*(const PseudoJet &, double);
-PseudoJet operator/(const PseudoJet &, double);
-
-/// returns true if the 4 momentum components of the two PseudoJets
-/// are identical and all the internal indices (user, cluster_history)
-/// + structure and user-info shared pointers are too
-bool operator==(const PseudoJet &, const PseudoJet &);
-
-/// inequality test which is exact opposite of operator==
-inline bool operator!=(const PseudoJet & a, const PseudoJet & b) {return !(a==b);}
-
-/// Can only be used with val=0 and tests whether all four
-/// momentum components are equal to val (=0.0)
-bool operator==(const PseudoJet & jet, const double val);
 inline bool operator==(const double val, const PseudoJet & jet) {return jet == val;}
-
-/// Can only be used with val=0 and tests whether at least one of the
-/// four momentum components is different from val (=0.0)
-inline bool operator!=(const PseudoJet & a, const double val)  {return !(a==val);}
 inline bool operator!=( const double val, const PseudoJet & a) {return !(a==val);}
 
+// routines that provide access to the binary operations, implemented
+// in terms of class-member operators. These are useful in case people
+// want to use these operators on types that can be implicitly
+// converted to PseudoJet.
+//inline PseudoJet operator+(const PseudoJet & a, const PseudoJet & b) {return a.operator+(b);}
+//inline PseudoJet operator-(const PseudoJet & a, const PseudoJet & b) {return a.operator-(b);}
+//inline PseudoJet operator*(const PseudoJet & a, double val)          {return a.operator*(val);}
+//inline PseudoJet operator/(const PseudoJet & a, double val)          {return a.operator/(val);}
+//inline bool operator==(const PseudoJet & a, const PseudoJet & b) {return a.operator==(b);}
+//inline bool operator!=(const PseudoJet & a, const PseudoJet & b) {return a.operator!=(b);}
+//inline bool operator==(const PseudoJet & a, const double val)    {return a.operator==(val);}
+//inline bool operator!=(const PseudoJet & a, const double val)    {return a.operator!=(val);}
+  
 /// returns the 4-vector dot product of a and b
 inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
   return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();
