@@ -108,14 +108,17 @@ class TestPJOperations : public TestBase {
       verify_almost_equal(pfact_a.pt(), p1.pt()/factor, "(p1/factor).pt() == p1.pt()/factor");
 
       // then boost (& unboost)?
-      verify_almost_equal(p1.boost(p2).unboost(p2), p1, "p1.boost(p2).unboost(p2) == p1");
+      PseudoJet p1copy = p1;
+      p1copy.boost(p2);
+      p1copy.unboost(p2);
+      // this operation seems to need a looser tolerance (specifically for m2)
+      verify_almost_equal(p1copy, p1, "p1copy.boost(p2).unboost(p2) == p1", 1e-6);
 
       // and check that rapidity comes out sensible with a longitudinal boost
       double delta_y = 2.0;
       PseudoJet myboost = PtYPhiM(0.0,delta_y,0.0,1.0);
-      PseudoJet p1boost = p1; p1.boost(myboost);
-      //cout << p1.rap() << " " << p1boost.rap() << " " << myboost.rap() << endl;
-      verify_almost_equal(p1boost.rap(), p1.rap()-delta_y, "p1boost.rap() == p1.rap() - delta_y");
+      PseudoJet p1boost = p1; p1boost.boost(myboost);
+      verify_almost_equal(p1boost.rap(), p1.rap()+delta_y, "p1boost.rap() == p1.rap() + delta_y");
       
     }
     
