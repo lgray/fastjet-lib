@@ -1,12 +1,16 @@
 #!/usr/bin/python
+
+# 
 from fastjet import *
 import re
 
 def main():
     event = read_event("../example/data/single-event.dat")
     print "Event has {} particles and is of type {}".format(len(event), type(event))
+    print event
     
     jet_def = JetDefinition(antikt_algorithm, 0.4)
+    print jet_def.__call__;
     #cs = ClusterSequence(event, jet_def)
     #jets = SelectorPtMin(5.0)(sorted_by_pt(cs.inclusive_jets()))
     jets = jet_def(event)
@@ -29,6 +33,7 @@ def main():
     print selC(jets)
     print
     
+    print "Number of constituents of jets[0] is {}".format(jets[0].constituents().size())
     
     
     #----------------------------------------------------------------------

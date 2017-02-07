@@ -78,15 +78,11 @@ namespace fastjet {
     return &temp[0];
   }
 
-  Selector __and__(const Selector & other) {
-    return *($self) && other;
-  }
-  Selector __or__(const Selector & other) {
-    return *($self) || other;
-  }
-  Selector __invert__() {
-    return !(*($self));
-  }
+  // The C++ operators [* && || !] map to [* & | ~] in python
+  Selector __mul__   (const Selector & other) {return *($self) *  other;}
+  Selector __and__   (const Selector & other) {return *($self) && other;}
+  Selector __or__    (const Selector & other) {return *($self) || other;}
+  Selector __invert__()                       {return !(*($self));}
  }
 
 %extend PseudoJet {
@@ -97,9 +93,7 @@ namespace fastjet {
     return &temp[0];
   }
 
-  PseudoJet __rmul__(double x) {
-    return *($self) * x;
-  }
+  PseudoJet __rmul__(double x) {return *($self) * x;}
 }
 
 }
