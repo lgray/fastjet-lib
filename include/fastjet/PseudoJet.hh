@@ -82,8 +82,10 @@ class PseudoJet {
   PseudoJet(const double px, const double py, const double pz, const double E);
 
   /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
+  #ifndef SWIG
   template <class L> PseudoJet(const L & some_four_vector);
-
+  #endif
+  
   // Constructor that performs minimal initialisation (only that of
   // the shared pointers), of use in certain speed-critical contexts
   //
@@ -945,9 +947,11 @@ private:
 /// constructor from any object that has px,py,pz,E = some_four_vector[0--3],
 // NB: do not know if it really needs to be inline, but when it wasn't
 //     linking failed with g++ (who knows what was wrong...)
+#ifndef SWIG
 template <class L> inline  PseudoJet::PseudoJet(const L & some_four_vector) {
   reset(some_four_vector);
 }
+#endif
 
 //----------------------------------------------------------------------
 inline void PseudoJet::_reset_indices() { 

@@ -1,3 +1,10 @@
+2017-02-07  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/PseudoJet.hh:
+	excluded the templated PseudoJet constructor from the python
+	interface (creates nasty issues w swig (e.g. vector allocators
+	with fastjet::PseudoJet::PseudoJet>)
+
 2017-02-07  Gavin Salam  <gavin.salam@cern.ch>
 
 	* src/PseudoJet.cc:
