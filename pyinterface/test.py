@@ -7,8 +7,10 @@ def main():
     print "Event has {} particles and is of type {}".format(len(event), type(event))
     
     jet_def = JetDefinition(antikt_algorithm, 0.4)
-    cs = ClusterSequence(event, jet_def)
-    jets = SelectorPtMin(5.0)(sorted_by_pt(cs.inclusive_jets()))
+    #cs = ClusterSequence(event, jet_def)
+    #jets = SelectorPtMin(5.0)(sorted_by_pt(cs.inclusive_jets()))
+    jets = jet_def(event)
+    jets = SelectorPtMin(5.0)(jets)
     print jets
     print len(jets)
     for jet in jets:
@@ -27,11 +29,7 @@ def main():
     print selC(jets)
     print
     
-    #jets = jet_def.cluster(sel(vec))
-    #print jets[0].pt()
     
-    jets = cs.inclusive_jets();
-    print jets[0].pt()
     
     #----------------------------------------------------------------------
     c = a-b

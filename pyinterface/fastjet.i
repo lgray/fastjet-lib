@@ -48,12 +48,15 @@
 namespace std{
   %template(vectorPJ) vector<fastjet::PseudoJet>;
 }
-%extend fastjet::ClusterSequence {
+
+namespace fastjet {
+
+%extend ClusterSequence {
      %template(ClusterSequence) ClusterSequence<PseudoJet>;
 }
 
 // These make JetDefinition, Selector and PseudoJet all printable
-%extend fastjet::JetDefinition {
+%extend JetDefinition {
   char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];
@@ -61,9 +64,13 @@ namespace std{
     return &temp[0];
   }
 
+  std::vector<PseudoJet> __call__(const std::vector<PseudoJet> & particles) {
+    return (*self)(particles);
+  }
+
 }
 
-%extend fastjet::Selector {
+%extend Selector {
   char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];
@@ -71,22 +78,18 @@ namespace std{
     return &temp[0];
   }
 
-  fastjet::Selector __and__(const fastjet::Selector & other) {
+  Selector __and__(const Selector & other) {
     return *($self) && other;
   }
-  fastjet::Selector __or__(const fastjet::Selector & other) {
+  Selector __or__(const Selector & other) {
     return *($self) || other;
   }
-  fastjet::Selector __invert__() {
+  Selector __invert__() {
     return !(*($self));
   }
-
-  // fastjet::Selector __call__(const vector<fastjet::PseudoJet> & p) {
-  //   return ($self)(p);
-  // }
  }
 
-%extend fastjet::PseudoJet {
+%extend PseudoJet {
   char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];
@@ -94,7 +97,9 @@ namespace std{
     return &temp[0];
   }
 
-  fastjet::PseudoJet __rmul__(double x) {
+  PseudoJet __rmul__(double x) {
     return *($self) * x;
   }
+}
+
 }
