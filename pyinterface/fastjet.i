@@ -78,6 +78,8 @@ namespace fastjet {
  }
   
 %extend PseudoJet {
+  PseudoJet(const PseudoJet & p) {return new fastjet::PseudoJet(p);}
+  
   std::string __str__() {
     const unsigned int len_max=4096;
     char temp[len_max];

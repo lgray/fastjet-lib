@@ -1,8 +1,15 @@
 #!/usr/bin/python
-
+#
+# Simple example to try out fastjet from python. Some things to keep in mind
+#
+# - FastJet's vector<PseudoJet> is called vectorPJ in the python
+# - to copy a jet you need to do "pjcopy = PseudoJet(pj)"
+#   (instead "pjcopy = pj" just makes a reference and seems to cause memory issues)
+# - for combinations of selectors, (&&, || and !) map to (&, | and ~)
+# - 
 # 
 from fastjet import *
-import re
+import copy
 
 def main():
 
@@ -12,15 +19,15 @@ def main():
     print jet_def;
     print selector
 
-    filename = '../example/data/Pythia-PtMin1000-LHC-10ev.dat'
-    #filename = '../example/data/single-event.dat'
+    #filename = '../example/data/Pythia-PtMin1000-LHC-10ev.dat'
+    filename = '../example/data/single-event.dat'
     f = file(filename,'r')
     
     # get the event
     while True:
         event = read_event(f)
-        print "Event has {} particles and is of type {}".format(len(event), type(event))
         if (len(event) == 0): break
+        print "Event has {} particles and is of type {}".format(len(event), type(event))
         
         # cluster it
         jets = selector(jet_def(event))
@@ -30,8 +37,13 @@ def main():
         # make sure jet-related information is correctly held
         if (jets.size() > 0):
             print "Number of constituents of jets[0] is {}".format(jets[0].constituents().size())
-
-    check_operators()
+            #a = PseudoJet(jets[0])
+            a = jets[0]*1.0  # this effectively takes a copy
+            print "jets[0]", jets[0]
+            a *= 2
+            print "a, jets[0]", a, jets[0]
+            
+    #check_operators()
     
 def check_operators():
     #----------------------------------------------------------------------
