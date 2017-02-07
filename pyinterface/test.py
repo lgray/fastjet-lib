@@ -5,45 +5,33 @@ from fastjet import *
 import re
 
 def main():
+    
+    jet_def = JetDefinition(antikt_algorithm, 0.4)
+    selector = SelectorPtMin(5.0) & SelectorAbsRapMax(4.5)
+    print jet_def;
+    print selector
+    
     event = read_event("../example/data/single-event.dat")
     print "Event has {} particles and is of type {}".format(len(event), type(event))
     print event
-    
-    jet_def = JetDefinition(antikt_algorithm, 0.4)
-    print jet_def.__call__;
-    #cs = ClusterSequence(event, jet_def)
-    #jets = SelectorPtMin(5.0)(sorted_by_pt(cs.inclusive_jets()))
-    jets = jet_def(event)
-    jets = SelectorPtMin(5.0)(jets)
-    print jets
-    print len(jets)
+    jets = selector(jet_def(event))
     for jet in jets:
         print jet.pt(), jet.rap()
-    
-    a=PtYPhiM(100.0, 0.0, 0.0, 0.0)
-    b=PtYPhiM(100.0, 0.2, 0.0, 0.0)
-    
-    vec = vectorPJ();
-    vec.push_back(a)
-    vec.push_back(b)
-    
-    selA = SelectorAbsRapMax(0.1)
-    selB = SelectorPtMin(20)
-    selC = ~(selA | selB)
-    print selC
-    print selC(jets)
-    print
     
     print "Number of constituents of jets[0] is {}".format(jets[0].constituents().size())
     
     
     #----------------------------------------------------------------------
+    a=PtYPhiM(100.0, 0.0, 0.0, 0.0)
+    b=PtYPhiM(100.0, 0.2, 0.0, 0.0)
     c = a-b
     print 2.0*a
     print b
     print c/2
 
 
+    a = PseudoJet()
+    print (a==0),a 
 #----------------------------------------------------------------------
 def read_event(filename):
     f = open(filename, 'r')

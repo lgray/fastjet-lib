@@ -1,3 +1,4 @@
+// -*-c++-*-
 %module fastjet
 %{
 #include "fastjet/config_auto.h"
@@ -93,7 +94,17 @@ namespace fastjet {
     return &temp[0];
   }
 
+  // these C++ operators are not automatically handled by SWIG (would only
+  // be handled if there were part of the class)
+  PseudoJet __add__ (const PseudoJet & p) {return *($self) + p;}
+  PseudoJet __sub__ (const PseudoJet & p) {return *($self) - p;}
+  bool      __eq__  (const PseudoJet & p) {return *($self) == p;}
+  bool      __ne__  (const PseudoJet & p) {return *($self) != p;}
+  PseudoJet __mul__ (double x) {return *($self) * x;}
   PseudoJet __rmul__(double x) {return *($self) * x;}
+  PseudoJet __div__ (double x) {return *($self) / x;}
+  bool      __eq__  (double x) {return *($self) == x;}
+  bool      __ne__  (double x) {return *($self) != x;}
 }
 
 }
