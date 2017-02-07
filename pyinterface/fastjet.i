@@ -1,5 +1,6 @@
 // -*-c++-*-
 %include "std_string.i"
+%include "std_vector.i"
 
 %module fastjet
 %{
@@ -47,7 +48,6 @@
 %include "fastjet/NNH.hh"
 
  // extra configurations
-%include "std_vector.i"
 namespace std{
   %template(vectorPJ) vector<fastjet::PseudoJet>;
 }

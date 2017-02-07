@@ -12,17 +12,24 @@ def main():
     print jet_def;
     print selector
 
+    filename = '../example/data/Pythia-PtMin1000-LHC-10ev.dat'
+    #filename = '../example/data/single-event.dat'
+    f = file(filename,'r')
+    
     # get the event
-    event = read_event("../example/data/single-event.dat")
-    print "Event has {} particles and is of type {}".format(len(event), type(event))
-
-    # cluster it
-    jets = selector(jet_def(event))
-    for jet in jets:
-        print jet.pt(), jet.rap()
-
-    # make sure jet-related information is correctly held
-    print "Number of constituents of jets[0] is {}".format(jets[0].constituents().size())
+    while True:
+        event = read_event(f)
+        print "Event has {} particles and is of type {}".format(len(event), type(event))
+        if (len(event) == 0): break
+        
+        # cluster it
+        jets = selector(jet_def(event))
+        for jet in jets:
+            print jet.pt(), jet.rap()
+            
+        # make sure jet-related information is correctly held
+        if (jets.size() > 0):
+            print "Number of constituents of jets[0] is {}".format(jets[0].constituents().size())
 
     check_operators()
     
@@ -36,18 +43,23 @@ def check_operators():
     print b
     print c/2
 
-
     a = PseudoJet()
-    print (a==0),a 
+    print (a==0),a
+    
 #----------------------------------------------------------------------
-def read_event(filename):
-    f = open(filename, 'r')
+def read_event(file_or_filename):
+    
+    if (isinstance(file_or_filename,basestring)) : f = open(file_or_filename, 'r')
+    else                                         : f = file_or_filename
+    #if (regexp != None)              : search(f,regexp)
+    
     #event = []
     event = vectorPJ()
     while True:
         line = f.readline()
         if (not line): break
-        if (line[0] == '#'): break
+        if (len(line) >=4 and line[0:4] == '#END'): break
+        elif   (line[0] == '#'): continue
         p = line.split()
         event.append(PseudoJet(float(p[0]),float(p[1]),float(p[2]),float(p[3])));
 
