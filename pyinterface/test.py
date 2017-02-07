@@ -30,6 +30,7 @@ def main():
     selA = SelectorAbsRapMax(0.1)
     selB = SelectorPtMin(20)
     selC = ~(selA | selB)
+    print selC
     print selC(jets)
     print
     
