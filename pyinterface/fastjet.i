@@ -60,15 +60,31 @@ namespace std{
     snprintf(temp,len_max, "Jet Definition: %s",$self->description().c_str());
     return &temp[0];
   }
+
 }
 
-%extend fastjet::Selector {char *__str__() {
+%extend fastjet::Selector {
+  char *__str__() {
     const unsigned int len_max=4096;
     static char temp[len_max];
     snprintf(temp,len_max, "Selector: %s",$self->description().c_str());
     return &temp[0];
   }
-}
+
+  fastjet::Selector __and__(const fastjet::Selector & other) {
+    return *($self) && other;
+  }
+  fastjet::Selector __or__(const fastjet::Selector & other) {
+    return *($self) || other;
+  }
+  fastjet::Selector __invert__() {
+    return !(*($self));
+  }
+
+  // fastjet::Selector __call__(const vector<fastjet::PseudoJet> & p) {
+  //   return ($self)(p);
+  // }
+ }
 
 %extend fastjet::PseudoJet {
   char *__str__() {
@@ -76,5 +92,9 @@ namespace std{
     static char temp[len_max];
     snprintf(temp,len_max, "[%f, %f, %f, %f]",$self->px(), $self->py(), $self->pz(), $self->E());
     return &temp[0];
+  }
+
+  fastjet::PseudoJet __rmul__(double x) {
+    return *($self) * x;
   }
 }
