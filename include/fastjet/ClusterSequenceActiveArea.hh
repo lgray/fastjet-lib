@@ -75,7 +75,7 @@ public:
 
   virtual double area (const PseudoJet & jet) const FASTJET_OVERRIDE{
                              return _average_area[jet.cluster_hist_index()];};
-  virtual double area_error (const PseudoJet & jet) const {
+  virtual double area_error (const PseudoJet & jet) const FASTJET_OVERRIDE {
                              return _average_area2[jet.cluster_hist_index()];};
 
   virtual PseudoJet area_4vector (const PseudoJet & jet) const FASTJET_OVERRIDE{
