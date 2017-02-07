@@ -1,8 +1,17 @@
+2017-02-07  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* include/fastjet/PseudoJet.hh:
+	disabled the templated reset<T> with swig
+
+	* include/fastjet/internal/deprecated.hh:
+	playing with swig: some advanced deprecated features do not behave
+	properly do disable them in swig
+
 2017-02-06  Gavin Salam  <gavin.salam@cern.ch>
 
 	* testsuite/TestSpecialEvents.hh:
 	modified constructors of JetDefs to eliminate a large number of
-	compilation warnings. 
+	compilation warnings.
 
 	* testsuite/run_tests.cc (main):
 	* testsuite/TestPseudoJet.hh:
@@ -12,6 +21,11 @@
 	operator+=, -=, *=, /= all had "void" as their return type;
 	now fixed this bug so that they return PseudoJet &
 	(observed to be an issue with Swig)
+
+2017-02-06  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* pyinterface:
+	started to work on a swig-based pythin interface
 
 2016-10-25  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 

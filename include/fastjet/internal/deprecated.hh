@@ -34,6 +34,8 @@
 
 #include "fastjet/config.h"
 
+#ifndef SWIG
+
 // define a deprecation macro based on the capabilities of the compiler
 // (as determined at configure time).
 #if defined(FASTJET_HAVE_CXX14_DEPRECATED)
@@ -46,5 +48,11 @@
 #define FASTJET_DEPRECATED               
 #define FASTJET_DEPRECATED_MSG(message) 
 #endif
+
+#else  // SIWG
+#define FASTJET_DEPRECATED               
+#define FASTJET_DEPRECATED_MSG(message) 
+#endif // SWIG
+
 
 #endif // __FASTJET_FASTJET_DEPRECATED_HH__

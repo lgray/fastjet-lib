@@ -248,6 +248,7 @@ class PseudoJet {
   /// reset the 4-momentum according to the supplied generic 4-vector
   /// (accessible via indexing, [0]==px,...[3]==E) and put the user
   /// and history indices back to their default values.
+#ifndef SWIG
   template <class L> inline void reset(const L & some_four_vector) {
     // check if some_four_vector can be cast to a PseudoJet
     //
@@ -269,6 +270,7 @@ class PseudoJet {
 	    some_four_vector[2], some_four_vector[3]);
     }
   }
+#endif // SWIG
 
   /// reset the PseudoJet according to the specified pt, rapidity,
   /// azimuth and mass (also resetting indices, etc.)
