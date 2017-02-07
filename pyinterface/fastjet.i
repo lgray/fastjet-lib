@@ -65,7 +65,6 @@ namespace fastjet {
   std::vector<PseudoJet> __call__(const std::vector<PseudoJet> & particles) {
     return (*self)(particles);
   }
-
 }
 
 %extend Selector {
