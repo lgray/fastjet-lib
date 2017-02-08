@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # Simple example to try out fastjet from python. Some things to keep in mind
 #
