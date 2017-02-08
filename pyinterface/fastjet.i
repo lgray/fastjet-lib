@@ -1,6 +1,7 @@
 // -*-c++-*-
 %include "std_string.i"
 %include "std_vector.i"
+// extra configurations
 
 %module fastjet
 %{
@@ -26,6 +27,8 @@
 #include "fastjet/NNH.hh"
   %}
 
+%template(vectorPJ) std::vector<fastjet::PseudoJet>;
+
 %include "fastjet/config_auto.h"
 %include "fastjet/config.h"
 %include "fastjet/internal/base.hh"
@@ -47,10 +50,6 @@
 %include "fastjet/NNBase.hh"
 %include "fastjet/NNH.hh"
 
- // extra configurations
-namespace std{
-  %template(vectorPJ) vector<fastjet::PseudoJet>;
-}
 
 namespace fastjet {
 
@@ -79,7 +78,7 @@ namespace fastjet {
   
 %extend PseudoJet {
   PseudoJet(const PseudoJet & p) {return new fastjet::PseudoJet(p);}
-  
+
   std::string __str__() {
     const unsigned int len_max=4096;
     char temp[len_max];
