@@ -24,24 +24,21 @@ def main():
     f = file(filename,'r')
     
     # get the event
+    iev = 0
     while True:
+        iev += 1
         event = read_event(f)
         if (len(event) == 0): break
-        print "Event has {} particles and is of type {}".format(len(event), type(event))
+        print "Event {} has {} particles and is of type {}".format(iev, len(event), type(event))
         
         # cluster it
         jets = selector(jet_def(event))
         for jet in jets:
-            print jet.pt(), jet.rap()
+            print "jet pt and rap: ", jet.pt(), jet.rap()
             
         # make sure jet-related information is correctly held
-        if (jets.size() > 0):
-            print "Number of constituents of jets[0] is {}".format(jets[0].constituents().size())
-            #a = PseudoJet(jets[0])
-            a = jets[0]*1.0  # this effectively takes a copy
-            print "jets[0]", jets[0]
-            a *= 2
-            print "a, jets[0]", a, jets[0]
+        if (len(jets) > 0):
+            print "Number of constituents of jets[0] is {}".format(len(jets[0].constituents()))
             
     #check_operators()
     
@@ -65,8 +62,7 @@ def read_event(file_or_filename):
     else                                         : f = file_or_filename
     #if (regexp != None)              : search(f,regexp)
     
-    #event = []
-    event = vectorPJ()
+    event = []
     while True:
         line = f.readline()
         if (not line): break
