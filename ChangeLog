@@ -1,5 +1,10 @@
 2017-02-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* pyinterface/test.py       -> pyinterface/01-basic.py:
+	* pyinterface/test-area.py  -> pyinterface/02-area.py:
+	* pyinterface/test-tools.py -> pyinterface/03-tools.py:
+	renamed the files
+
 	* configure.ac:
 	* Makefile.am:
 	* pyinterface/Makefile.am:             *** ADDED ***
