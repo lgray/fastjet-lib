@@ -523,6 +523,41 @@ dnl-------------------------------------------------------------------
 AC_CONFIG_FILES( fortran_wrapper/Makefile )
 
 dnl-------------------------------------------------------------------
+dnl python interface
+dnl-------------------------------------------------------------------
+AC_MSG_CHECKING([whether to build the python interface])
+AC_ARG_ENABLE(pyext,
+	[  --enable-pyext          Enable the python interface [default=no]],
+	[ENABLE_PYEXT_FLAG="$enableval"],
+	[ENABLE_PYEXT_FLAG="no"])
+AC_MSG_RESULT(${ENABLE_PYEXT_FLAG})
+if [[ "$ENABLE_PYEXT_FLAG" == "yes" ]] ; then
+    AM_PATH_PYTHON
+    AC_ARG_VAR([PYTHON_INCLUDE], [Include flags for python, bypassing python-config])
+    AC_ARG_VAR([PYTHON_CONFIG], [Path to python-config])
+    AS_IF([test -z "$PYTHON_INCLUDE"], [
+        AS_IF([test -z "$PYTHON_CONFIG"], [
+            AC_PATH_PROGS([PYTHON_CONFIG],
+                          [python$PYTHON_VERSION-config python-config],
+                          [no],
+                          [`dirname $PYTHON`])
+            AS_IF([test "$PYTHON_CONFIG" = no], [AC_MSG_ERROR([cannot find python-config for $PYTHON.])])
+        ])
+        AC_MSG_CHECKING([python include flags])
+        PYTHON_INCLUDE=`$PYTHON_CONFIG --includes`
+        AC_MSG_RESULT([$PYTHON_INCLUDE])
+    ])
+fi
+AM_CONDITIONAL(BUILD_PYEXT, test x$ENABLE_PYEXT_FLAG = xyes)
+AC_CONFIG_FILES( pyinterface/Makefile )
+
+# If we were to let the end-user run waig, then we should have the following:
+#AM_PATH_PYTHON
+#AX_PKG_SWIG(3.0.0, [], [AC_MSG_ERROR([SWIG is required to build the python interface...]) ])
+#SWIG_ENABLE_CXX
+#SWIG_PYTHON
+
+dnl-------------------------------------------------------------------
 dnl split the version number in major.minor.patch[prerelease] version
 dnl
 dnl We accordingly define FASTJET_VERSION_{MAJOR,MINOR,PATCHLEVEL} as
@@ -601,6 +636,7 @@ CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
 #CONFIG_SUMMARY+="  C++11 features             "${ENABLE_CXX11FEATURES_FLAG}"\n"
 AC_PLUGIN_SUMMARY([yes])
 CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
+CONFIG_SUMMARY+="  Pythom interface           "${ENALE_PYTHON_FLAG}"\n"
 AC_SUBST(CONFIG_SUMMARY)
 
 

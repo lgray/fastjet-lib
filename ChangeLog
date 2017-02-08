@@ -1,9 +1,18 @@
 2017-02-08  Gregory Soyez  <soyez@fastjet.fr>
 
-	* pyinterface/test-area.py:
+	* configure.ac:
+	* Makefile.am:
+	* pyinterface/Makefile.am:             *** ADDED ***
+	configure now acquired a --enable-pyext flag which builds
+	thepython interface.
+	Note: swig has to be run first to generate swig_wrap.cpp amf
+	fastjet.py. These files are included in the tarball (as well as
+	fastjet.i for completeness)
+
+	* pyinterface/test-area.py:            *** ADDED ***
 	added an example with areas and subtraction
 
-	* pyinterface/test-tools.py:
+	* pyinterface/test-tools.py:           *** ADDED ***
 	added an example showing usage of tools
 
 	* pyinterface/fastjet.i:
