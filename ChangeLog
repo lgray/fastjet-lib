@@ -1,5 +1,8 @@
 2017-02-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* pyinterface/test-area.py:
+	added an example with areas and subtraction
+
 	* pyinterface/test-tools.py:
 	added an example showing usage of tools
 
