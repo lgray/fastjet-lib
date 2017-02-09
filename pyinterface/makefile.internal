@@ -2,17 +2,18 @@
 
 all: fastjet.py 
 
-fastjet.py: fastjet.i fastjet-doc.i
+fastjet.py: fastjet-doc.i fastjet.i
 	swig -python -c++ -I../include -I../tools -o swig_wrap.cpp fastjet.i
 
 fastjet-doc.i: ../xml/index.xml
-	../scripts/doxy2swig/doxy2swig ../xml/index.xml fastjet-doc.i
+	../scripts/doxy2swig/doxy2swig.py ../xml/index.xml fastjet-doc.i
 
 old: fastjet.i
 	swig -python -c++ -I../include -I../tools fastjet.i
 	$(CXX) -shared `python-config --includes --libs` -DSWIG -I../include -I../tools `fastjet-config --libs` -fPIC -DPIC fastjet_wrap.cxx -o _fastjet.so
 
 clean:
+	rm -f fastjet-doc.i
 	rm -f fastjet.py
 	rm -f swig_wrap.cpp
 	rm -f fastjet_wrap.cxx

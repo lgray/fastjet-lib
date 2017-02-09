@@ -1,3 +1,16 @@
+2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
+
+	* pyinterface/makefile.internal:
+	pointed to the correct doxy2swig.py sccript (was missing the .py
+	extension) + removed fastjet-doc.i during make clean.
+
+	* Doxyfile:
+	updated to doxygen-1.8.12
+
+	explicitly excluded ILConeAlgorithm.hpp in the D0RunIICone
+	(causing trouble w swig xml doc and not being used anyway in the
+	html)
+
 2017-02-09  Gavin Salam  <gavin.salam@cern.ch>
 
 	* pyinterface/fastjet.i:
