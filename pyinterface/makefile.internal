@@ -1,7 +1,16 @@
-all: fastjet.i
+
+
+all: fastjet.py
+
+fastjet.py: fastjet.i
+	swig -python -c++ -I../include -I../tools -o swig_wrap.cpp fastjet.i
+
+old: fastjet.i
 	swig -python -c++ -I../include -I../tools fastjet.i
 	$(CXX) -shared `python-config --includes --libs` -DSWIG -I../include -I../tools `fastjet-config --libs` -fPIC -DPIC fastjet_wrap.cxx -o _fastjet.so
 
 clean:
+	rm -f fastjet.py
+	rm -f swig_wrap.cpp
 	rm -f fastjet_wrap.cxx
 	rm -f _fastjet.so
