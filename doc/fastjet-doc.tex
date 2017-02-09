@@ -4350,6 +4350,63 @@ standard location.\footnote{For events with near degeneracies in their
 The \ttt{NlnNCam} strategy does not require CGAL, since it is based on
 a considerably simpler computational-geometry structure~\cite{Chan}.
 
+%======================================================================
+\section{Python interface}
+
+As of version 3.3 \fastjet ships with a Python interface, whose
+compilation is enabled at configure time.
+%
+It includes access to much of the functionality in FastJet, except
+plugins and certain features are difficult to map to Python.
+%
+In particular templated types, nested classes and user-derived classes
+(e.g.\ a user-defined class derived from \ttt{UserInfoBase}) are not
+currently supported.
+%
+The python interface was created automatically, using
+SWIG~\cite{swig}.
+%
+The Python documentation was generated automatically using Doxygen and
+the \ttt{doxy2swig} program~\cite{doxy2swig}.
+
+The following points are useful to keep in mind:
+\begin{itemize}
+\item You can pass a python list such as \ttt{[PseudoJet0, PseudoJet1,
+    ...]}  to any FastJet call that expects a vector of
+  \ttt{PseudoJet}s
+
+\item Any FastJet call that in C++ returns a vector of\ttt{PseudoJet}s will
+  in Python return a tuple of \ttt{PseudoJet}s
+
+\item For many objects that provide definictions of some kind, a
+  pythonic \ttt{\_\_str\_\_} call maps to \ttt{description()}.
+
+\item When combining selectors, \ttt{\&\&}, \ttt{||} and \ttt{!} in
+  C++ map to \ttt{\&}, \ttt{|} and \ttt{\~} in Python.
+
+\item Remember that Python uses references, e.g.\ \ttt{a = b} means
+  that \ttt{a} is a reference to \ttt{b}. If you need to copy a
+  \ttt{PseudoJet} \ttt{pj} with a view to altering it, do ``\ttt{pjcopy =
+    PseudoJet(pj)}''.
+\end{itemize}
+%
+A short example of Python usage is as follows:
+%
+\begin{lstlisting}[language=Python]
+  from fastjet import *
+  particles = []
+  particles.append(PseudoJet(100.0, 0.0, 0.0, 100.0)) # px, py, pz, E
+  particles.append(PseudoJet(150.0, 0.0, 0.0, 150.0))
+
+  R = 0.4
+  jet_def = JetDefinition(antikt_algorithm, R)
+
+  jets = jet_def(particles)
+
+  print jet_def
+  for jet in jets: print jet
+\end{lstlisting}
+
 %=======================================================================
 \section{FJcore}
 \label{sec:fjcore}
@@ -4428,6 +4485,7 @@ The \fjcore package has been available since release 3.0.4 of
 %
 It is available for download from the \url{http://fastjet.fr/} web
 site.
+
 
 %=======================================================================
 \section{FastJet Contrib}
@@ -5779,7 +5837,12 @@ The period in between versions 3.0.0 and 3.1.0 also saw the first
 releases of the \fjcore compact subset of \fastjet
 (section~\ref{sec:fjcore}) and of the \fjcontrib project
 (section~\ref{sec:fjcontrib}).
-
+%
+Version~3.2 exposed more of \fastjet's core clustering functionality
+to third-party code (\ttt{NNFJN2Plain} and \ttt{NNFJN2Tiled} classes).
+%
+Version~3.3 brought a Python interface to \fastjet.
+ 
 %......................................................................
 \subsection{Deprecated and removed features}
 \label{sec:deprecated}
@@ -6067,6 +6130,23 @@ Comp.~Geom.~{\bf 22} (2001) 5; \url{http://www.cgal.org/}
   Phys.\ Rev.\  {\bf D80 } (2009)  051501.
   [arXiv:0903.5081 [hep-ph]].
 
+\bibitem{Bertolini:2013iqa}
+  D.~Bertolini, T.~Chan and J.~Thaler,
+  %``Jet Observables Without Jet Algorithms,''
+  JHEP {\bf 1404} (2014) 013
+  [arXiv:1310.7584 [hep-ph]];\\
+  %%CITATION = ARXIV:1310.7584;%%
+  %7 citations counted in INSPIRE as of 12 Sep 2014
+  %
+%\bibitem{Larkoski:2014uqa}
+  A.~J.~Larkoski, D.~Neill and J.~Thaler,
+  %``Jet Shapes with the Broadening Axis,''
+  JHEP {\bf 1404} (2014) 017
+  [arXiv:1401.2158 [hep-ph]];\\
+  %%CITATION = ARXIV:1401.2158;%%
+%  
+  G.~P.~Salam, unpublished.
+
 
 \bibitem{CamOrig}
   Y.~L.~Dokshitzer, G.~D.~Leder, S.~Moretti and B.~R.~Webber,
@@ -6314,6 +6394,10 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   in Proc.\ 13th ACM-SIAM Symposium on Discrete Algorithms (SODA),
   p.~472 (2002).
 
+\bibitem{swig} \url{http://www.swig.org/}
+
+\bibitem{doxy2swig} \url{https://github.com/m7thon/doxy2swig/}
+
 \bibitem{Sjostrand:2007gs}
   T.~Sjostrand, S.~Mrenna, P.~Z.~Skands,
   %``A Brief Introduction to PYTHIA 8.1,''
@@ -6348,23 +6432,6 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   %``Fast hierarchical clustering and other applications of dynamic
   %closest pairs,''
   J. Experimental Algorithmics {\bf 5} (2000) 1-23 [cs.DS/9912014].
-
-\bibitem{Bertolini:2013iqa}
-  D.~Bertolini, T.~Chan and J.~Thaler,
-  %``Jet Observables Without Jet Algorithms,''
-  JHEP {\bf 1404} (2014) 013
-  [arXiv:1310.7584 [hep-ph]];\\
-  %%CITATION = ARXIV:1310.7584;%%
-  %7 citations counted in INSPIRE as of 12 Sep 2014
-  %
-%\bibitem{Larkoski:2014uqa}
-  A.~J.~Larkoski, D.~Neill and J.~Thaler,
-  %``Jet Shapes with the Broadening Axis,''
-  JHEP {\bf 1404} (2014) 017
-  [arXiv:1401.2158 [hep-ph]];\\
-  %%CITATION = ARXIV:1401.2158;%%
-%  
-  G.~P.~Salam, unpublished.
 \end{thebibliography}
 
 
