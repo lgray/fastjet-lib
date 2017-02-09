@@ -4,7 +4,7 @@ import re
 import copy
 
 def main():
-    event = read_event("../example/data/single-event.dat")
+    event = read_event("../data/single-event.dat")
     print "Event has {} particles and is of type {}".format(len(event), type(event))
     
     jet_def = JetDefinition(antikt_algorithm, 0.4)
@@ -61,14 +61,12 @@ def main():
 def read_event(filename):
     f = open(filename, 'r')
     event = []
-    while True:
-        line = f.readline()
-        if (not line): break
-        if (line[0] == '#'): break
+    for line in f:
         p = line.split()
         event.append(PseudoJet(float(p[0]),float(p[1]),float(p[2]),float(p[3])));
 
     return event
     
-main()
+if __name__ == '__main__':
+    main()
 
