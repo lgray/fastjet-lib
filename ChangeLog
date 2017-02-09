@@ -1,5 +1,11 @@
 2017-02-09  Gavin Salam  <gavin.salam@cern.ch>
 
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	changed version to 3.3.0-devel
+
 	* example/python/README: *** ADDED ***
 	with info on path settings, etc.
 
