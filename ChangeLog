@@ -1,3 +1,8 @@
+2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
+
+	* regression-tests/nightly-check.pl:
+	added minimal checks that the python interface compiles smoothly
+
 2017-02-09  Gavin Salam  <gavin.salam@cern.ch>
 
 	* configure.ac:

@@ -135,6 +135,9 @@ push @setups, ["","--disable-static --enable-demangling", "", 10, ""]; # locally
 push @setups, ["","", "", 1000, "-fjcore"]; # locally
 push @setups, ["karnak","CC=cc CXX=c++", "", 10, "-fjcore"]; # remotely on karnak
 
+# minimal check of the python interface
+push @setups, ["","--disable-static --enable-pyext", "", 10, ""];               # locally, just the interface
+push @setups, ["","--disable-static --enable-pyext --enable-swig", "", 10, ""]; # locally, interface + swig
 
 # GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
 #push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
