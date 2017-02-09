@@ -14,6 +14,8 @@ def main():
     cs = ClusterSequenceArea(event, jet_def, area_def)
     jets = SelectorPtMin(5.0)(sorted_by_pt(cs.inclusive_jets()))
 
+    print "jet def:", jet_def
+    print "area def:", area_def
     print "#-------------------- initial jets --------------------"
     print_jets(jets)
 

@@ -146,6 +146,22 @@ namespace fastjet {
 }
 %enddef
 
+// a macro to get support for description through __str__ method
+%define FASTJET_SWIG_ADD_STR(Class)
+%extend Class {
+  std::string __str__() const {return $self->description();}
+}
+%enddef
+
+
+
+FASTJET_SWIG_ADD_STR(JetDefinition)  
+FASTJET_SWIG_ADD_STR(AreaDefinition)  
+FASTJET_SWIG_ADD_STR(Selector)
+FASTJET_SWIG_ADD_STR(GhostedAreaSpec)
+FASTJET_SWIG_ADD_STR(FunctionOfPseudoJet)
+FASTJET_SWIG_ADD_STR(RectangularGrid)
+
 FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequence)
 FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceActiveAreaExplicitGhosts)
 FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceActiveArea)
@@ -156,8 +172,6 @@ FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceArea)
 
 // These make JetDefinition, Selector and PseudoJet all printable
 %extend JetDefinition {
-  std::string __str__() {return $self->description();}
-
   std::vector<PseudoJet> __call__(const std::vector<PseudoJet> & particles) {
     return (*self)(particles);
   }
@@ -244,15 +258,15 @@ namespace fastjet{
   }
 }
 %enddef
-
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Boost)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Unboost)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Recluster)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Filter)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Pruner)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(CASubJetTagger)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(MassDropTagger)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(RestFrameNSubjettinessTagger)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(JHTopTagger)
-FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Subtractor)
+  
+FASTJET_SWIG_ADD_STR(Boost)
+FASTJET_SWIG_ADD_STR(Unboost)
+FASTJET_SWIG_ADD_STR(Recluster)
+FASTJET_SWIG_ADD_STR(Filter)
+FASTJET_SWIG_ADD_STR(Pruner)
+FASTJET_SWIG_ADD_STR(CASubJetTagger)
+FASTJET_SWIG_ADD_STR(MassDropTagger)
+FASTJET_SWIG_ADD_STR(RestFrameNSubjettinessTagger)
+FASTJET_SWIG_ADD_STR(JHTopTagger)
+FASTJET_SWIG_ADD_STR(Subtractor)
 }

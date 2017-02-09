@@ -1,7 +1,13 @@
 2017-02-09  Gavin Salam  <gavin.salam@cern.ch>
 
+	* pyinterface/fastjet.i:
+	added more __str__ implementations.
+
 	* example/python/01-basic.py: (moved from pyinterface/)
 	simplified it, made output more similar to ../01-basic.cc
+
+	* example/python/02-areas.py:
+	small changes to output
 
 	* example/python/04-multi-event.py
 	this now contains the more advanced multi-event reading framework
