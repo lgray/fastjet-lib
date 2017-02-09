@@ -1,5 +1,5 @@
-SWIG_INTERFACES = fastjet.i fastjet-doc.i
-SWIG_DEPENDENCIES = ../include/fastjet/config_auto.h\
+SWIGINTERFACES = fastjet.i fastjet-doc.i
+SWIGDEPENDENCIES = ../include/fastjet/config_auto.h\
     $(top_srcdir)/include/fastjet/config.h\
     $(top_srcdir)/include/fastjet/internal/base.hh\
     $(top_srcdir)/include/fastjet/internal/numconsts.hh\
@@ -51,7 +51,7 @@ SWIG_DEPENDENCIES = ../include/fastjet/config_auto.h\
 
 if BUILD_INCLUDES_SWIG
 BUILT_SOURCES = swig_wrap.cpp
-swig_wrap.cpp : $(SWIG_INTERFACES) $(SWIG_DEPENDENCIES)
+swig_wrap.cpp : $(SWIGINTERFACES) $(SWIGDEPENDENCIES)
 	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -o $@ $<
 endif
 
@@ -63,7 +63,7 @@ _fastjet_la_LDFLAGS = -module
 _fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # include the interface file for completeness
-EXTRA_DIST=$(SWIG_INTERFACES) swig_wrap.cpp
+EXTRA_DIST=$(SWIGINTERFACES) swig_wrap.cpp
 
 #----------------------------------------------------------------------
 # If we were to let the end-user run waig, then we should have the following:
