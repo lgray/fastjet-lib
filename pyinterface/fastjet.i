@@ -8,9 +8,10 @@
 
 
 %define DOCSTRING
-"Python interface to the FastJet jet clustering package. 
-Usage is similar to the C++ case, with the following small changes
+"Python interface to the FastJet jet clustering package.  
 
+Usage is similar to the C++ case, with a few small changes noted
+below.
 
 Notes
 -----
@@ -27,18 +28,36 @@ Notes
        jet_def = fastjet.JetDefinition(fastjet.antikt_algorithm, 0.4)
        print jet_def
 
-- for combinations of selectors, (&&, || and !) in C++ map to (&, | and ~) in python
+- for combinations of selectors, (&&, || and !) in C++ map to 
+  (&, | and ~) in python
+
+- Selector::pass is remapped to Selector._pass
 
 - remember that python uses reference, e.g. a = b means that a is a
   reference to b. If you need to copy a PseudoJet (pj), with a view to
   altering it, do 'pjcopy = PseudoJet(pj)'
 
+- the python documentation has been automatically generated from the
+  C++ doxygen documentation: python/C++ differences are not indicated,
+  and certain methods and classes may be documented that were not
+  included in the python conversion and/or configured for this
+  particular installation.
+
 Example
 -------
 
-
   from fastjet import *
-  
+  particles = []
+  particles.append(PseudoJet(100.0, 0.0, 0.0, 100.0)) # px, py, pz, E
+  particles.append(PseudoJet(150.0, 0.0, 0.0, 150.0))
+
+  R = 0.4
+  jet_def = JetDefinition(antikt_algorithm, R)
+
+  jets = jet_def(particles)
+
+  print jet_def
+  for jet in jets: print jet
 
 "
 %enddef
