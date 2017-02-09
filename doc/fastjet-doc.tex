@@ -4357,13 +4357,13 @@ As of version 3.3 \fastjet ships with a Python interface, whose
 compilation is enabled at configure time.
 %
 It includes access to much of the functionality in FastJet, except
-plugins and certain features are difficult to map to Python.
+plugins and certain features that are difficult to map to Python.
 %
 In particular templated types, nested classes and user-derived classes
 (e.g.\ a user-defined class derived from \ttt{UserInfoBase}) are not
 currently supported.
 %
-The python interface was created automatically, using
+The Python interface was created automatically, using
 SWIG~\cite{swig}.
 %
 The Python documentation was generated automatically using Doxygen and
@@ -4373,12 +4373,12 @@ The following points are useful to keep in mind:
 \begin{itemize}
 \item You can pass a python list such as \ttt{[PseudoJet0, PseudoJet1,
     ...]}  to any FastJet call that expects a vector of
-  \ttt{PseudoJet}s
+  \ttt{PseudoJet}s.
 
-\item Any FastJet call that in C++ returns a vector of\ttt{PseudoJet}s will
+\item Any FastJet call that in C++ returns a vector of \ttt{PseudoJet}s will
   in Python return a tuple of \ttt{PseudoJet}s
 
-\item For many objects that provide definictions of some kind, a
+\item For many objects that provide definitions of some kind, a
   pythonic \ttt{\_\_str\_\_} call maps to \ttt{description()}.
 
 \item When combining selectors, \ttt{\&\&}, \ttt{||} and \ttt{!} in
