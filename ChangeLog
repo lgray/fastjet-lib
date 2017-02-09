@@ -146,7 +146,7 @@
 	changed version to 3.2.2-devel
 	+ reset the SISCone link to the trunk
 
-2016-03-17  Gregory Soyez  <soyez@fastjet.fr>
+2016-08-04  Gregory Soyez  <soyez@fastjet.fr>
 
 	* Release of FastJet 3.2.1
 
