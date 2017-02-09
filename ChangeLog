@@ -1,5 +1,9 @@
 2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
 
+	* pyinterface/Makefile.am:
+	installed the python module in the site-packages directly (without
+	a fastjet subdirectory)
+
 	* pyinterface/__init__.py:
 	added (and installed) this so that python automatically finds the
 	fsatjet module from te parent directory
