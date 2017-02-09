@@ -22,7 +22,7 @@ Notes
 - Any FastJet call that in C++ returns a vector of PseudoJets will in
   python return a tuple (or list) of PseudoJets
 
-- for many objects that provide definictions of some kind, __str__
+- for many objects that provide definitions of some kind, __str__
   call maps to description(). So, for example, you can just do
 
        jet_def = fastjet.JetDefinition(fastjet.antikt_algorithm, 0.4)

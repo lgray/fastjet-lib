@@ -2,6 +2,10 @@
 """Simple example to try out fastjet from python, with funcionality similar to
 ../example/01-basic.cc
 
+For this script to work, make sure that the installation location for
+the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
+included in your PYTHONPATH environment variable.
+
 Some things to keep in mind:
 
 - You can pass a python list such as [PseudoJet0, PseudoJet1, ...]
@@ -11,7 +15,8 @@ Some things to keep in mind:
   return a list of PseudoJets
 
 - for many objects that provide definictions of some kind, __str__
-  call maps to description() (with an extra bit of explanatory info)
+  call maps to description() (potentially with an extra bit of
+  explanatory info)
 
 - for combinations of selectors, (&&, || and !) in C++ map to (&, | and ~) in python
 
@@ -19,18 +24,15 @@ Some things to keep in mind:
   reference to b. If you need to copy a PseudoJet (pj), with a view to
   altering it, do "pjcopy = PseudoJet(pj)"
 
--
-
 """
 
 # figure out where fastjet's python package is hiding
-import subprocess, sys
-fastjetPath = str(subprocess.Popen(["fastjet-config", "--prefix"],
-                            stdout=subprocess.PIPE).communicate()[0].rstrip())
-fastjetPath += "/lib/python{}.{}/site-packages/fastjet".format(sys.version_info[0],sys.version_info[1])
-#fastjetPath += "/lib/python{}.{}/site-packages/fastjet".format(sys.version_info[0],sys.version_info[1])
-# include it in the python path
-sys.path = [fastjetPath] + sys.path
+# import subprocess, sys
+# fastjetPath = str(subprocess.Popen(["fastjet-config", "--prefix"],
+#                             stdout=subprocess.PIPE).communicate()[0].rstrip())
+# fastjetPath += "/lib/python{}.{}/site-packages".format(sys.version_info[0],sys.version_info[1])
+# # include it in the python path
+# sys.path = [fastjetPath] + sys.path
 
 import fastjet as fj
 import gzip
@@ -105,4 +107,5 @@ The event is converted to a python list of PseudoJets
 
     return event
     
-main()
+if __name__ == '__main__':
+    main()
