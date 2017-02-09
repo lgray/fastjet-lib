@@ -1,9 +1,49 @@
 // -*-c++-*-
+// for info on getting documentation, see https://github.com/m7thon/doxy2swig
+//
 %include "std_string.i"
 %include "std_vector.i"
-// extra configurations
+// read in documentation generated using doxygen and https://github.com/m7thon/doxy2swig
+%include "fastjet-doc.i"
 
-%module fastjet
+
+%define DOCSTRING
+"Python interface to the FastJet jet clustering package. 
+Usage is similar to the C++ case, with the following small changes
+
+
+Notes
+-----
+
+- You can pass a python list such as [PseudoJet0, PseudoJet1, ...]
+  to any FastJet call that expects a vector of PseudoJets
+
+- Any FastJet call that in C++ returns a vector of PseudoJets will in
+  python return a tuple (or list) of PseudoJets
+
+- for many objects that provide definictions of some kind, __str__
+  call maps to description(). So, for example, you can just do
+
+       jet_def = fastjet.JetDefinition(fastjet.antikt_algorithm, 0.4)
+       print jet_def
+
+- for combinations of selectors, (&&, || and !) in C++ map to (&, | and ~) in python
+
+- remember that python uses reference, e.g. a = b means that a is a
+  reference to b. If you need to copy a PseudoJet (pj), with a view to
+  altering it, do 'pjcopy = PseudoJet(pj)'
+
+Example
+-------
+
+
+  from fastjet import *
+  
+
+"
+%enddef
+
+%module(docstring=DOCSTRING) fastjet
 
 %{
 #include "fastjet/config_auto.h"

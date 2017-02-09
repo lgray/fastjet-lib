@@ -221,10 +221,10 @@ class PseudoJet {
   //\{
   //----------------------------------------------------------------------
   /// transform this jet (given in the rest frame of prest) into a jet
-  /// in the lab frame [NOT FULLY TESTED]
+  /// in the lab frame
   PseudoJet & boost(const PseudoJet & prest);
   /// transform this jet (given in lab) into a jet in the rest
-  /// frame of prest  [NOT FULLY TESTED]
+  /// frame of prest
   PseudoJet & unboost(const PseudoJet & prest);
 
   PseudoJet & operator*=(double);

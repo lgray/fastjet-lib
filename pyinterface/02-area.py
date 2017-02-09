@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 from fastjet import *
-import re
 
 def main():
     #----------------------------------------------------------------------
     # read the event
     event = read_event("../example/data/single-event.dat")
-    print "Event has {} particles and is of type {}".format(len(event), type(event))
+    print "Event has {0} particles".format(len(event))
     
     #----------------------------------------------------------------------
     # cluster the event
@@ -33,7 +32,7 @@ def main():
     # subtract the jets
     subtractor = Subtractor(gmbge)
     subtracted_jets = subtractor(jets)
-    print "#-------------------- subtracteed jets --------------------"
+    print "#-------------------- subtracted jets --------------------"
     print_jets(subtracted_jets)
     
 

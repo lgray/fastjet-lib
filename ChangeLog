@@ -1,3 +1,22 @@
+2017-02-09  Gavin Salam  <gavin.salam@cern.ch>
+
+	* pyinterface/fastjet.i:
+	work in progress on docstring
+
+	* pyinterface/...:
+	work in progress on the examples, etc.
+
+	* Doxyfile:
+	enabled generator of XML documentation, for use by doxy2swig
+
+	* include/fastjet/PseudoJet.hh:
+	removed "[NOT FULLY TESTED]" from the boost and unboost function
+	documentation. 
+
+	* scripts/doxy2swig *** ADDED ***
+	to aid generation of documentation for the python interface
+
+
 2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
 
 	* pyinterface/Makefile.am:

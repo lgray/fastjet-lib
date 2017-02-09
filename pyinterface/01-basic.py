@@ -1,77 +1,108 @@
 #!/usr/bin/env python
-#
-# Simple example to try out fastjet from python. Some things to keep in mind
-#
-# - FastJet's vector<PseudoJet> is called vectorPJ in the python
-# - to copy a jet you need to do "pjcopy = PseudoJet(pj)"
-#   (instead "pjcopy = pj" just makes a reference and seems to cause memory issues)
-# - for combinations of selectors, (&&, || and !) map to (&, | and ~)
-# - 
-# 
-from fastjet import *
-import copy
+"""Simple example to try out fastjet from python, with funcionality similar to
+../example/01-basic.cc
+
+Some things to keep in mind:
+
+- You can pass a python list such as [PseudoJet0, PseudoJet1, ...]
+  to any FastJet call that expects a vector of PseudoJets
+
+- Any FastJet call that in C++ returns a vector of PseudoJets will in python
+  return a list of PseudoJets
+
+- for many objects that provide definictions of some kind, __str__
+  call maps to description() (with an extra bit of explanatory info)
+
+- for combinations of selectors, (&&, || and !) in C++ map to (&, | and ~) in python
+
+- remember that python uses reference, e.g. a = b means that a is a
+  reference to b. If you need to copy a PseudoJet (pj), with a view to
+  altering it, do "pjcopy = PseudoJet(pj)"
+
+-
+
+"""
+
+# figure out where fastjet's python package is hiding
+import subprocess, sys
+fastjetPath = str(subprocess.Popen(["fastjet-config", "--prefix"],
+                            stdout=subprocess.PIPE).communicate()[0].rstrip())
+fastjetPath += "/lib/python{}.{}/site-packages/fastjet".format(sys.version_info[0],sys.version_info[1])
+#fastjetPath += "/lib/python{}.{}/site-packages/fastjet".format(sys.version_info[0],sys.version_info[1])
+# include it in the python path
+sys.path = [fastjetPath] + sys.path
+
+import fastjet as fj
+import gzip
 
 def main():
 
-    # set up our jet definition and a jet selector
-    jet_def = JetDefinition(antikt_algorithm, 0.4)
-    selector = SelectorPtMin(5.0) & SelectorAbsRapMax(4.5)
-    print jet_def;
-    print selector
+    # get the banner out of the way early on
+    fj.ClusterSequence.print_banner()
+    print
 
-    #filename = '../example/data/Pythia-PtMin1000-LHC-10ev.dat'
+    # set up our jet definition and a jet selector
+    jet_def = fj.JetDefinition(fj.antikt_algorithm, 0.4)
+    selector = fj.SelectorPtMin(5.0) & fj.SelectorAbsRapMax(4.5)
+    print "jet definition is:",jet_def
+    print "jet selector is:", selector,"\n"
+
     filename = '../example/data/single-event.dat'
+    #filename = '../example/data/Pythia-PtMin1000-LHC-10ev.dat'
     f = file(filename,'r')
+    #filename = '/Users/gsalam/work/fastjet/data/Pythia-PtMin50-LHC-10kev.dat.gz'
+    #f = gzip.GzipFile(filename,'rb')
     
     # get the event
     iev = 0
     while True:
-        iev += 1
         event = read_event(f)
+        iev += 1
         if (len(event) == 0): break
-        print "Event {} has {} particles and is of type {}".format(iev, len(event), type(event))
+        jets = selector(jet_def(event))
+        print "Event {0} has {1} particles".format(iev, len(event))
         
         # cluster it
-        jets = selector(jet_def(event))
-        for jet in jets:
-            print "jet pt and rap: ", jet.pt(), jet.rap()
+        for ijet in range(len(jets)):
+            print "jet {0} pt and rap: {1} {2}".format(ijet, jets[ijet].pt(), jets[ijet].rap())
             
         # make sure jet-related information is correctly held
         if (len(jets) > 0):
-            print "Number of constituents of jets[0] is {}".format(len(jets[0].constituents()))
+            print "Number of constituents of jets[0] is {0}".format(len(jets[0].constituents()))
             
-    #check_operators()
-    
-def check_operators():
-    #----------------------------------------------------------------------
-    # some random manipulations to check operators
-    a=PtYPhiM(100.0, 0.0, 0.0, 0.0)
-    b=PtYPhiM(100.0, 0.2, 0.0, 0.0)
-    c = a-b
-    print 2.0*a
-    print b
-    print c/2
 
-    a = PseudoJet()
-    print (a==0),a
-    
 #----------------------------------------------------------------------
 def read_event(file_or_filename):
-    
+    """
+Routine that can take either an existing opened file object, or a
+filename (which it will open itself) and then reads an event from that
+file. An event is deemed to end when the file comes to an end or when
+the reader encounters the string "#END".
+
+The event is converted to a python list of PseudoJets
+    """
+
+    # open the file if necessary
     if (isinstance(file_or_filename,basestring)) : f = open(file_or_filename, 'r')
     else                                         : f = file_or_filename
-    #if (regexp != None)              : search(f,regexp)
-    
+
+    # create an empty list
     event = []
     while True:
         line = f.readline()
-        if (not line): break
-        if (len(line) >=4 and line[0:4] == '#END'): break
-        elif   (line[0] == '#'): continue
+        # exit if the file has come to an end
+        if   (not line): break
+        # or if we reach the string "#END"
+        if   (len(line) >=4 and line[0:4] == '#END'): break
+
+        # ignore comment lines or empty lines
+        elif (line[0] == '#' or len(line) <= 1): continue
+
+        # assume we have a good line and split it into px, py, pz, E
         p = line.split()
-        event.append(PseudoJet(float(p[0]),float(p[1]),float(p[2]),float(p[3])));
+        # and append the PseudoJet
+        event.append(fj.PseudoJet(float(p[0]),float(p[1]),float(p[2]),float(p[3])));
 
     return event
     
 main()
-
