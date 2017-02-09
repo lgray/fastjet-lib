@@ -48,11 +48,13 @@ def read_event(filename):
 
 #----------------------------------------------------------------------
 def print_jets(jets):
-    print len(jets)," jets"
-    print "columns are pt, rap, area"
-    for jet in jets:
-        print jet.pt(), jet.rap(), jet.area()
-    print
+    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>10s}".format(
+        "jet #", "pt", "rap", "phi", "area")
+
+    for ijet in range(len(jets)):
+        jet = jets[ijet]
+        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {3:10.4f}".format(
+            ijet, jet.pt(), jet.rap(), jet.phi(), jet.area)
     
 
 if __name__ == '__main__':
