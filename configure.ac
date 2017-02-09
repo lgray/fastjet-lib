@@ -505,7 +505,7 @@ AC_CONFIG_FILES( tools/Makefile tools/fastjet/Makefile tools/fastjet/tools/Makef
 dnl-------------------------------------------------------------------
 dnl make sure examples dir is there
 dnl-------------------------------------------------------------------
-AC_CONFIG_FILES( example/Makefile example/data/Makefile example/root/Makefile )
+AC_CONFIG_FILES( example/Makefile example/python/Makefile example/data/Makefile example/root/Makefile )
 
 dnl-------------------------------------------------------------------
 dnl and the documentation

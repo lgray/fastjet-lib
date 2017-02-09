@@ -1,5 +1,8 @@
 2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
 
+	* configure.ac:
+	generated the makefile in the example/python directory
+
 	* pyinterface/Makefile.am:
 	removed unnecessary _ that generated (harmless) warnings with
 	automake
