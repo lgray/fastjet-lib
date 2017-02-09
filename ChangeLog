@@ -1,5 +1,9 @@
 2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
 
+	* m4/ax_swig_python.m4:              *** ADDED ***
+	* m4/ax_swig_enable_cxx.m4:          *** ADDED ***
+	added missing m4 macros (on some systems)
+
 	* CHECKLIST:
 	added a note about running doxy2swig.py and swig
 
