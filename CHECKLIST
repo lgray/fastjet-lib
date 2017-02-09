@@ -18,7 +18,11 @@ X.Y.Z  doxygen: check dirs are declared for new plugins + check in
        the class list that all classes are prefixed by 'fastjet::'
        Note: as of 2015-01-06 tycho only has v1.6.1 which does not
              behave properly use instead
-             ~salam/software/doxygen-1.8.8/bin/doxygen
+             ~salam/software/doxygen-1.8.8/bin/doxygen             
+       Note: as of 2017-02-09 the doxyfile was updated to v1.8.12 so
+             it may not work on tycho (which has no native doxygen)
+X.Y.Z  make sure the swig interface is up-to-date:
+          make -f makefile.internal clean; make -f makefile.internal
 X.Y.Z  ensure NEWS is up to date (and has the correct release date!)
 X.Y.Z  make sure siscone points to a tag, not trunk
        svn propedit svn:externals plugins/SISCone; svn up

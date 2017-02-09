@@ -1,3 +1,60 @@
+SWIG_INTERFACES = fastjet.i fastjet-doc.i
+SWIG_DEPENDENCIES = ../include/fastjet/config_auto.h\
+    $(top_srcdir)/include/fastjet/config.h\
+    $(top_srcdir)/include/fastjet/internal/base.hh\
+    $(top_srcdir)/include/fastjet/internal/numconsts.hh\
+    $(top_srcdir)/include/fastjet/internal/IsBase.hh\
+    $(top_srcdir)/include/fastjet/internal/deprecated.hh\
+    $(top_srcdir)/include/fastjet/internal/BasicRandom.hh\
+    $(top_srcdir)/include/fastjet/SharedPtr.hh\
+    $(top_srcdir)/include/fastjet/LimitedWarning.hh\
+    $(top_srcdir)/include/fastjet/Error.hh\
+    $(top_srcdir)/include/fastjet/PseudoJetStructureBase.hh\
+    $(top_srcdir)/include/fastjet/PseudoJet.hh\
+    $(top_srcdir)/include/fastjet/FunctionOfPseudoJet.hh\
+    $(top_srcdir)/include/fastjet/RangeDefinition.hh\
+    $(top_srcdir)/include/fastjet/Selector.hh\
+    $(top_srcdir)/include/fastjet/JetDefinition.hh\
+    $(top_srcdir)/include/fastjet/CompositeJetStructure.hh\
+    $(top_srcdir)/include/fastjet/WrappedStructure.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequenceStructure.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequence.hh\
+    $(top_srcdir)/include/fastjet/RectangularGrid.hh\
+    $(top_srcdir)/include/fastjet/NNBase.hh\
+    $(top_srcdir)/include/fastjet/NNH.hh\
+    $(top_srcdir)/include/fastjet/NNFJN2Plain.hh\
+    $(top_srcdir)/include/fastjet/NNFJN2Tiled.hh\
+    $(top_srcdir)/include/fastjet/GhostedAreaSpec.hh\
+    $(top_srcdir)/include/fastjet/AreaDefinition.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequenceAreaBase.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequenceActiveArea.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequence1GhostPassiveArea.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequencePassiveArea.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequenceVoronoiArea.hh\
+    $(top_srcdir)/include/fastjet/ClusterSequenceArea.hh\
+    $(top_srcdir)/tools/fastjet/tools/Transformer.hh\
+    $(top_srcdir)/tools/fastjet/tools/Boost.hh\
+    $(top_srcdir)/tools/fastjet/tools/Recluster.hh\
+    $(top_srcdir)/tools/fastjet/tools/Filter.hh\
+    $(top_srcdir)/tools/fastjet/tools/Pruner.hh\
+    $(top_srcdir)/tools/fastjet/tools/CASubJetTagger.hh\
+    $(top_srcdir)/tools/fastjet/tools/MassDropTagger.hh\
+    $(top_srcdir)/tools/fastjet/tools/RestFrameNSubjettinessTagger.hh\
+    $(top_srcdir)/tools/fastjet/tools/TopTaggerBase.hh\
+    $(top_srcdir)/tools/fastjet/tools/JHTopTagger.hh\
+    $(top_srcdir)/tools/fastjet/tools/BackgroundEstimatorBase.hh\
+    $(top_srcdir)/tools/fastjet/tools/JetMedianBackgroundEstimator.hh\
+    $(top_srcdir)/tools/fastjet/tools/GridMedianBackgroundEstimator.hh\
+    $(top_srcdir)/tools/fastjet/tools/Subtractor.hh
+
+
+if BUILD_INCLUDES_SWIG
+BUILT_SOURCES = swig_wrap.cpp
+swig_wrap.cpp : $(SWIG_INTERFACES) $(SWIG_DEPENDENCIES)
+	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -o $@ $<
+endif
+
 python_PYTHON = fastjet.py
 pyexec_LTLIBRARIES = _fastjet.la
 _fastjet_la_SOURCES = swig_wrap.cpp
@@ -6,7 +63,7 @@ _fastjet_la_LDFLAGS = -module
 _fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # include the interface file for completeness
-EXTRA_DIST=fastjet.i
+EXTRA_DIST=$(SWIG_INTERFACES) swig_wrap.cpp
 
 #----------------------------------------------------------------------
 # If we were to let the end-user run waig, then we should have the following:

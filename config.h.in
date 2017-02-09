@@ -70,6 +70,9 @@
 /* compiler supports the "override" keyword */
 #undef HAVE_OVERRIDE
 
+/* If available, contains the Python version number currently in use. */
+#undef HAVE_PYTHON
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 

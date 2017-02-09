@@ -1,3 +1,18 @@
+2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
+
+	* CHECKLIST:
+	added a note about running doxy2swig.py and swig
+
+	* example/python/Makefile.am:        *** ADDED ***
+	* example/Makefile.am:
+	shipped the python examples with the distribution
+
+	* configure.ac:
+	* pyinterface/Makefile.am:
+	* m4/ax_pkg_swig.m4:                 *** ADDED ***
+	added support, via --enable-swig, to run swi instead of using the
+	swig_wrap.cpp provided in the distriution..
+
 2017-02-09  Gavin Salam  <gavin.salam@cern.ch>
 
 	* pyinterface/fastjet.i:

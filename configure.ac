@@ -547,15 +547,30 @@ if [[ "$ENABLE_PYEXT_FLAG" == "yes" ]] ; then
         PYTHON_INCLUDE=`$PYTHON_CONFIG --includes`
         AC_MSG_RESULT([$PYTHON_INCLUDE])
     ])
+
+    # at a deeper level, one may want to be able to run swig dynamically
+    #   
+    # In the end we want to ship swig_wrapper.cpp and fastjet.py together
+    # with the distribution but for development purposes (and possile
+    # incoherences w end-user configurations) it is good to have teh
+    # option to run swig automatically
+    AC_MSG_CHECKING([whether to run swig])
+    AC_ARG_ENABLE(swig,
+                  [  --enable-swig          Runs swig to update the python interface [default=no]],
+                  [ENABLE_SWIG_FLAG="$enableval"],
+                  [ENABLE_SWIG_FLAG="no"])
+    AC_MSG_RESULT(${ENABLE_SWIG_FLAG})
+    if [[ "$ENABLE_SWIG_FLAG" == "yes" ]] ; then
+        AX_PKG_SWIG([3.0.0], [], [AC_MSG_ERROR([SWIG explicitly requested but not found...]) ])
+        SWIG_ENABLE_CXX
+        SWIG_PYTHON
+    fi
+else
+    ENABLE_SWIG_FLAG="no"
 fi
 AM_CONDITIONAL(BUILD_PYEXT, test x$ENABLE_PYEXT_FLAG = xyes)
+AM_CONDITIONAL(BUILD_INCLUDES_SWIG, test x$ENABLE_SWIG_FLAG = xyes)
 AC_CONFIG_FILES( pyinterface/Makefile )
-
-# If we were to let the end-user run waig, then we should have the following:
-#AM_PATH_PYTHON
-#AX_PKG_SWIG(3.0.0, [], [AC_MSG_ERROR([SWIG is required to build the python interface...]) ])
-#SWIG_ENABLE_CXX
-#SWIG_PYTHON
 
 dnl-------------------------------------------------------------------
 dnl split the version number in major.minor.patch[prerelease] version
@@ -637,6 +652,7 @@ CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
 AC_PLUGIN_SUMMARY([yes])
 CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
 CONFIG_SUMMARY+="  Python interface           "${ENABLE_PYEXT_FLAG}"\n"
+CONFIG_SUMMARY+="  Swig python generator      "${ENABLE_SWIG_FLAG}"\n"
 AC_SUBST(CONFIG_SUMMARY)
 
 
