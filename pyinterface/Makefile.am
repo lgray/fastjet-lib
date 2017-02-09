@@ -1,4 +1,4 @@
-pkgpython_PYTHON = fastjet.py
+pkgpython_PYTHON = fastjet.py __init__.py
 pkgpyexec_LTLIBRARIES = _fastjet.la
 _fastjet_la_SOURCES = swig_wrap.cpp
 _fastjet_la_CPPFLAGS = $(PYTHON_INCLUDE) $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -DSWIG
