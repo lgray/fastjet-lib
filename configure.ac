@@ -636,7 +636,7 @@ CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
 #CONFIG_SUMMARY+="  C++11 features             "${ENABLE_CXX11FEATURES_FLAG}"\n"
 AC_PLUGIN_SUMMARY([yes])
 CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
-CONFIG_SUMMARY+="  Pythom interface           "${ENALE_PYTHON_FLAG}"\n"
+CONFIG_SUMMARY+="  Python interface           "${ENABLE_PYEXT_FLAG}"\n"
 AC_SUBST(CONFIG_SUMMARY)
 
 
