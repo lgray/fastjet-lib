@@ -46,7 +46,8 @@ SWIGDEPENDENCIES = ../include/fastjet/config_auto.h\
     $(top_srcdir)/tools/fastjet/tools/BackgroundEstimatorBase.hh\
     $(top_srcdir)/tools/fastjet/tools/JetMedianBackgroundEstimator.hh\
     $(top_srcdir)/tools/fastjet/tools/GridMedianBackgroundEstimator.hh\
-    $(top_srcdir)/tools/fastjet/tools/Subtractor.hh
+    $(top_srcdir)/tools/fastjet/tools/Subtractor.hh\
+    $(srcdir)/FastJetPythonExtensions.hh
 
 
 if BUILD_INCLUDES_SWIG
@@ -64,7 +65,7 @@ _fastjet_la_LDFLAGS = -module
 _fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # include the interface file for completeness
-EXTRA_DIST=$(SWIGINTERFACES) swig_wrap.cpp
+EXTRA_DIST=$(SWIGINTERFACES) swig_wrap.cpp FastJetPythonExtensions.hh
 
 # this gets evaluated before install-exec
 # we use that to silence litool

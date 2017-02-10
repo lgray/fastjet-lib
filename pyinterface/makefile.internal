@@ -53,3 +53,4 @@ fastjet.py: ../include/fastjet/ClusterSequence1GhostPassiveArea.hh
 fastjet.py: ../include/fastjet/ClusterSequencePassiveArea.hh
 fastjet.py: ../include/fastjet/ClusterSequenceVoronoiArea.hh
 fastjet.py: ../include/fastjet/ClusterSequenceArea.hh
+fastjet.py: FastJetPythonExtensions.hh

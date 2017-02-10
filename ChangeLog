@@ -1,3 +1,11 @@
+2017-02-10  Gavin Salam  <gavin.salam@cern.ch>
+
+	* pyinterface/FastJetPythonExtensions.hh: *** ADDED ***
+	* pyinterface/makefile.internal:
+	* pyinterface/Makefile.am:
+	started adding tools to allow extensions of FastJet functionality
+	through python, in particular PseudoJet user-info support.
+
 2017-02-10  Gregory Soyez  <soyez@fastjet.fr>
 
 	* pyinterface/Makefile.am:

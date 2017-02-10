@@ -99,6 +99,7 @@ Example
 #include "fastjet/ClusterSequencePassiveArea.hh"
 #include "fastjet/ClusterSequenceVoronoiArea.hh"
 #include "fastjet/ClusterSequenceArea.hh"
+#include "FastJetPythonExtensions.hh"
   %}
 
 %template(vectorPJ) std::vector<fastjet::PseudoJet>;
@@ -136,6 +137,7 @@ Example
 %include "fastjet/ClusterSequencePassiveArea.hh"
 %include "fastjet/ClusterSequenceVoronoiArea.hh"
 %include "fastjet/ClusterSequenceArea.hh"
+%include "FastJetPythonExtensions.hh"
 
 namespace fastjet {
 
@@ -197,6 +199,15 @@ FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceArea)
     return std::string(temp);
   }
 
+  void set_python_info(PyObject * pyobj) {
+    fastjet::UserInfoPython * new_python_info = new fastjet::UserInfoPython(pyobj);
+    $self->set_user_info(new_python_info);
+  }
+
+  PyObject * python_info() const {
+    return $self->user_info<fastjet::UserInfoPython>().get_pyobj();
+  }
+  
   // these C++ operators are not automatically handled by SWIG (would only
   // be handled if there were part of the class)
   PseudoJet __add__ (const PseudoJet & p) {return *($self) + p;}
