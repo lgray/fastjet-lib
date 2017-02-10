@@ -15,7 +15,8 @@ rev=`svn info | grep Revision | sed s'/[^0-9]*//'`
 # extra label will be
 extralabel=`date +"%Y%m%d"`-rev$rev
 echo $extralabel
-sed -i 's/\(AC_INIT.*\)])/\1-'$extralabel'])/' configure.ac
+sed 's/\(AC_INIT.*\)])/\1-'$extralabel'])/' < configure.ac > configure.ac.new
+mv configure.ac.new configure.ac
 
 # now make sure the windows config file is consistent
 pushd src
