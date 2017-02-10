@@ -1,5 +1,9 @@
 2017-02-10  Gavin Salam  <gavin.salam@cern.ch>
 
+	* src/genconfig.sh:
+	fixed issue with sed on some platforms that cannot handle "+" in
+	the regexp.
+
 	* example/python/05-user-info.py:  *** ADDED ***
 	* example/python/Makefile.am (EXTRA_DIST): 
 	added an example that show how one can use Python user information
