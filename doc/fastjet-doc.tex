@@ -4384,6 +4384,15 @@ The following points are useful to keep in mind:
 \item When combining selectors, \ttt{\&\&}, \ttt{||} and \ttt{!} in
   C++ map to \ttt{\&}, \ttt{|} and \ttt{\~} in Python.
 
+\item Any python variable \ttt{var} (which may be a simple variable or
+  a more complicated object) can be associated with a \ttt{PseudoJet}
+  \ttt{pj} using
+  the \ttt{pj.set\_python\_info(var)} call; it can be retrieved with
+  \ttt{pj.python\_info()}.
+  %
+  This is based on the C++ \ttt{PseudoJet} \ttt{user\_info}
+  functionality described in Appendix~\ref{app:user-info}.
+
 \item Remember that Python uses references, e.g.\ \ttt{a = b} means
   that \ttt{a} is a reference to \ttt{b}. If you need to copy a
   \ttt{PseudoJet} \ttt{pj} with a view to altering it, do ``\ttt{pjcopy =

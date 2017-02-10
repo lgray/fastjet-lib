@@ -3,11 +3,14 @@
 
   - the script has a ParticleInfo class, to store information about particles
 
-  - the read_event(...) function creates ParticleInfo and assigns it to each PseudoJet
+  - the read_event(...) function creates a ParticleInfo for each
+    particle and assigns it to the corresponding PseudoJet, using the
+    PseudoJet.set_python_info(...) call.
 
   - the print_jets(...) function gets the jet constituents, examines
     the ParticleInfo for each one and uses it to determine additional
-    information about each jet.
+    information about each jet. It uses the PseudoJet.python_info(...)
+    call.
 
 For this script to work, make sure that the installation location for
 the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
