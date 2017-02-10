@@ -1,5 +1,9 @@
 2017-02-10  Gavin Salam  <gavin.salam@cern.ch>
 
+	* example/python/05-user-info.py:  *** ADDED ***
+	* example/python/Makefile.am (EXTRA_DIST): 
+	added an example that show how one can use Python user information
+
 	* pyinterface/FastJetPythonExtensions.hh: *** ADDED ***
 	* pyinterface/makefile.internal:
 	* pyinterface/Makefile.am:

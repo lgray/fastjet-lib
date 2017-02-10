@@ -10,7 +10,13 @@ public:
     Py_XINCREF(_pyobj);
   }
 
-  PyObject * get_pyobj() const {return _pyobj;}
+  PyObject * get_pyobj() const {
+    // since there's going to be an extra reference to this object
+    // one must increase the reference count; it seems that this
+    // is _our_ responsibility
+    Py_XINCREF(_pyobj);
+    return _pyobj;
+  }
   //const PyObject * get_pyobj() const {return _pyobj;}
   
   ~UserInfoPython() {
