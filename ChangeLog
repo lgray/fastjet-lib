@@ -1,5 +1,13 @@
 2017-02-10  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/python/06-selector.py:      *** ADDED ***
+	* pyinterface/FastJetPythonExtensions.hh:
+	added a SelectorPython that currently takes a function (jet->Bool)
+	controlling what passes the selector. See 06-selector.py for a
+	simple usage.
+
+	At this stage, more testing (incl memory management) is needed
+
 	* pyinterface/Makefile.am:
 	fixed fate of swig_wrp.cpp and fastjet.i during make dist
 
