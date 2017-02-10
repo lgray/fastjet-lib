@@ -49,11 +49,19 @@ SWIGDEPENDENCIES = ../include/fastjet/config_auto.h\
     $(top_srcdir)/tools/fastjet/tools/Subtractor.hh\
     $(srcdir)/FastJetPythonExtensions.hh
 
+# include the interface file for completeness
+EXTRA_DIST=$(SWIGINTERFACES) FastJetPythonExtensions.hh
 
 if BUILD_INCLUDES_SWIG
-BUILT_SOURCES = swig_wrap.cpp
+BUILT_SOURCES = swig_wrap.cpp fastjet.py
 swig_wrap.cpp : $(SWIGINTERFACES) $(SWIGDEPENDENCIES)
 	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -o $@ $<
+fastjet.py: swig_wrap.cpp
+	@echo "fastjet.py is built at the same time as swig_wrap.cpp"
+else
+# you're responsible for making sure this is available (through the
+# distrib or by running swig for developpers)
+EXTRA_DIST+=swig_wrap.cpp fastjet.py
 endif
 
 python_PYTHON = fastjet.py
@@ -65,7 +73,6 @@ _fastjet_la_LDFLAGS = -module
 _fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # include the interface file for completeness
-EXTRA_DIST=$(SWIGINTERFACES) swig_wrap.cpp FastJetPythonExtensions.hh
 
 # this gets evaluated before install-exec
 # we use that to silence litool
