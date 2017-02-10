@@ -1,3 +1,12 @@
+2017-02-10  Gregory Soyez  <soyez@fastjet.fr>
+
+	* pyinterface/Makefile.am:
+	added some workarounds to avoid libtool install showing a
+	potentially misleading message about where python modules have
+	been instsalled (this can differ between the fastjet.py and
+	_fastjet.so files on some installations)
+	Instead print a message of our own.
+
 2017-02-09  Gregory Soyez  <soyez@fastjet.fr>
 
 	* regression-tests/nightly-check.pl:

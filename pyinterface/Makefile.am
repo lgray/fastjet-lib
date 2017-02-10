@@ -57,6 +57,7 @@ endif
 
 python_PYTHON = fastjet.py
 pyexec_LTLIBRARIES = _fastjet.la
+_fastjet_la_LIBTOOLFLAGS = --silent
 _fastjet_la_SOURCES = swig_wrap.cpp
 _fastjet_la_CPPFLAGS = $(PYTHON_INCLUDE) $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -DSWIG
 _fastjet_la_LDFLAGS = -module
@@ -64,6 +65,24 @@ _fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIB
 
 # include the interface file for completeness
 EXTRA_DIST=$(SWIGINTERFACES) swig_wrap.cpp
+
+# this gets evaluated before install-exec
+# we use that to silence litool
+install-exec-local:
+	$(eval AM_LIBTOOLFLAGS = "--silent")
+
+# this gets evaluated after install-exec
+# we use that restore the flags to nothing (as they're supposed to be)
+install-exec-hook:
+	$(eval AM_LIBTOOLFLAGS = "")
+	@echo "------------------------------------------------------------"
+	@echo "The fastjet.py python module is installed in "
+	@echo "  $(DESTDIR)$(pythondir)"
+	@echo "and the _fastjet.so library is installed in" 
+	@echo "  $(DESTDIR)$(pyexecdir)"
+	@echo "You should make sure that these are in your PYTHONPATH"
+	@echo "------------------------------------------------------------"
+
 
 #----------------------------------------------------------------------
 # If we were to let the end-user run waig, then we should have the following:
