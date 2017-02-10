@@ -5,8 +5,10 @@ The examples here show functionality similar to what is provided by
 some of the C++ examples in ../
 
 For them to work, make sure that the installation location for the
-fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
-included in your PYTHONPATH environment variable.
+fastjet python module is included in your PYTHONPATH environment
+variable (e.g. PREFIX/lib/python2.7/site-packages and/or
+PREFIX/lib64/python2.7/site-packages -- on some systems both may be
+needed).
 
 Some things to keep in mind:
 
