@@ -87,10 +87,10 @@ public:
     //}
 
     if (!PyBool_Check(py_result))
-      throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be casted to a bool");
+      throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be cast to a bool");
     int result = PyObject_IsTrue(py_result);
     if (result == -1)
-      throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be casted to a bool");
+      throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be cast to a bool");
     Py_XDECREF(py_result);
 
     return result;

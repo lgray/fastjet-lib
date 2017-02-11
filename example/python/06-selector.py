@@ -56,23 +56,28 @@ def main():
         print_jets(jets)
 
 #----------------------------------------------------------------------
-def is_photon(jet):
-    if jet.python_info().pdg_id == 22: return True
-    return False
+def is_photon(particle):
+    "Function for use with fj.SelectorPython"
+    return (particle.python_info().pdg_id == 22)
 
 #----------------------------------------------------------------------
 def print_jets(jets):
     print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s}".format(
         "jet #", "pt", "rap", "phi", "primary pt", "N particles", "N photons")
 
+    # Create a FastJet selector based on a Python function (which
+    # takes a PseudoJet and returns True if the PseudoJet passes the
+    # selection condition). The resulting selector can be used in the
+    # same way as any normal FastJet selector.
     sel_photons = fj.SelectorPython(is_photon)
+    
     for ijet in range(len(jets)):
         jet = jets[ijet]
 
         # figure out how many particles and how many photons the jet contains
         # and how much pt comes from the primary vertex
         constituents = jet.constituents()
-        nphotons = len(sel_photons(constituents))
+        nphotons = sel_photons.count(constituents)
         primary_pt = 0
         for c in constituents:
             if (c.python_info().subevent_index <= 0): primary_pt += c.pt()
