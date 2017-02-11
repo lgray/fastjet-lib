@@ -52,7 +52,8 @@ public:
 
     // we directly make sure that the function is callable
     if (!PyCallable_Check(_py_function)){
-      PyErr_SetString(PyExc_TypeError, "SelectorWorkerPython::SelectorWorkerPython: the argument should be callable");
+      PyErr_SetString(PyExc_TypeError,
+          "SelectorWorkerPython::SelectorWorkerPython: the argument should be callable");
       // do we also throw a fastjet error?
     }
   }
