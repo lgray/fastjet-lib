@@ -1,25 +1,15 @@
 #!/usr/bin/env python
-"""Illustration of the assignment of pythonic user information to PseudoJets:
+"""Illustration of the use of selectors defined in Python that work on
+pythonic user information associated with each particle. The
+functionality is largely that of 05-user-info.py, just coded slightly
+differently.
 
-  - the script has a ParticleInfo class, to store information about particles
-
-  - the read_event(...) function creates a ParticleInfo for each
-    particle and assigns it to the corresponding PseudoJet, using the
-    PseudoJet.set_python_info(...) call.
-
-  - the print_jets(...) function gets the jet constituents, examines
-    the ParticleInfo for each one and uses it to determine additional
-    information about each jet. It uses the PseudoJet.python_info(...)
-    call.
-
-For this script to work, make sure that the installation location for
-the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
-included in your PYTHONPATH environment variable.
 
 """
 
 import fastjet as fj
 import gzip
+import 05_user_info
 
 def main():
 
@@ -48,11 +38,16 @@ def main():
         # cluster it
         jets = selector(jet_def(event))
 
+        # Create a FastJet selector based on a Python function (which
+        # takes a PseudoJet and returns True if the PseudoJet passes the
+        # selection condition). The resulting selector can be used in the
+        # same way as any normal FastJet selector.
+        sel_pileup = fj.SelectorPython(is_pileup)
+        n_pileup_particles = sel_pileup.count(event)
+        
         # print some info
-        npileup = 0
-        for p in event:
-            if (p.python_info().subevent_index > 0): npileup += 1
-        print "Event {0} has {1} particles (of which {2} from pileup)".format(iev, len(event), npileup)
+        print "Event {0} has {1} particles (of which {2} from pileup)".format(
+            iev, len(event), n_pileup_particles)
         print_jets(jets)
 
 #----------------------------------------------------------------------
@@ -61,15 +56,18 @@ def is_photon(particle):
     return (particle.python_info().pdg_id == 22)
 
 #----------------------------------------------------------------------
-def print_jets(jets):
-    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s}".format(
-        "jet #", "pt", "rap", "phi", "primary pt", "N particles", "N photons")
+def is_pileup(particle):
+    "Function for use with fj.SelectorPython"
+    return (particle.python_info().subevent_index > 0)
 
-    # Create a FastJet selector based on a Python function (which
-    # takes a PseudoJet and returns True if the PseudoJet passes the
-    # selection condition). The resulting selector can be used in the
-    # same way as any normal FastJet selector.
+#----------------------------------------------------------------------
+def print_jets(jets):
+    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s} {7:>12s}".format(
+        "jet #", "pt", "rap", "phi", "primary pt", "N particles",
+        "N photons", "N prim.phot")
+
     sel_photons = fj.SelectorPython(is_photon)
+    sel_pileup  = fj.SelectorPython(is_pileup)
     
     for ijet in range(len(jets)):
         jet = jets[ijet]
@@ -77,13 +75,17 @@ def print_jets(jets):
         # figure out how many particles and how many photons the jet contains
         # and how much pt comes from the primary vertex
         constituents = jet.constituents()
-        nphotons = sel_photons.count(constituents)
-        primary_pt = 0
-        for c in constituents:
-            if (c.python_info().subevent_index <= 0): primary_pt += c.pt()
+        n_photons = sel_photons.count(constituents)
+
+        # invert the pileup selector to find the primary pileup
+        primary_pt = (~sel_pileup).scalar_pt_sum(constituents)
+
+        # and get the number of primary photons by combining two selectors
+        n_primary_photons = ((~sel_pileup)*sel_photons).count(constituents)
             
-        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:10.3f} {5:12d} {6:12d}".format(
-            ijet, jet.pt(), jet.rap(), jet.phi(), primary_pt, len(constituents), nphotons)
+        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:10.3f} {5:12d} {6:12d} {7:12d}".format(
+            ijet, jet.pt(), jet.rap(), jet.phi(), primary_pt, len(constituents),
+            n_photons, n_primary_photons)
         
 #----------------------------------------------------------------------            
 class ParticleInfo(object):
