@@ -36,7 +36,7 @@ echo "Have produced the file(s):"
 filename=`ls -rt *$extralabel*.tar.gz | tail -1`
 filebase=`echo $filename | sed 's/.tar.gz//'`
 echo Now run 
-echo mv -v $filename '~'salam/www/fastjet/repository/snapshots/
-echo svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/snapshots/$filebase -m \'tagged $filebase snapshot\'
-echo \# edit '~'salam/www/fastjet3/snapshots.html
+echo scp -p $filename tycho.lpthe.jussieu.fr:'~'salam/www/fastjet/repository/snapshots/
+echo svn cp . svn+ssh://tycho.lpthe.jussieu.fr/ada1/lpthe/salam/svn/fastjet/tags/snapshots/$filebase -m \'tagged $filebase snapshot\'
+echo \# edit '~'salam/www/fastjet3/snapshots.html on tycho
 #mv -v *$extralabel*.tar.gz ~salam/www/fastjet/repository/snapshots/
