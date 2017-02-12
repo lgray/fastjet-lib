@@ -2,7 +2,7 @@
 
 	* example/python/06-selector.py (print_jets):
 	* pyinterface/FastJetPythonExtensions.hh:
-	small tweaks to comments etc.
+	small tweaks to comments, details of how example is written, etc.
 
 2017-02-10  Gregory Soyez  <soyez@fastjet.fr>
 
