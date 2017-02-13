@@ -4353,17 +4353,17 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 %======================================================================
 \section{Python interface}
 
-As of version 3.3 \fastjet ships with a Python interface. Its
-compilation is enabled at configure time.
+As of version 3.3, \fastjet ships with a Python interface. Its
+compilation can be enabled at configure time with the option
+\ttt{--enable-pyext}. 
 %
 It includes access to much of the functionality in FastJet, except
 plugins and certain features that are difficult to map to Python.
 %
 In particular templated types, nested classes and user-derived classes
-(e.g.\ a user-defined class derived from \ttt{UserInfoBase}) are not
-currently supported.
+are not currently supported (with a few exceptions, see below).
 %
-The Python interface was created automatically, using
+The Python interface was largely created automatically, using
 SWIG~\cite{swig}.
 %
 The Python documentation was generated automatically using Doxygen and
@@ -4371,7 +4371,7 @@ the \ttt{doxy2swig} program~\cite{doxy2swig}.
 
 The following points are useful to keep in mind:
 \begin{itemize}
-\item You can pass a python list such as \ttt{[PseudoJet0, PseudoJet1,
+\item You can pass a Python list such as \ttt{[PseudoJet0, PseudoJet1,
     ...]}  to any FastJet call that expects a vector of
   \ttt{PseudoJet}s.
 
@@ -4392,6 +4392,11 @@ The following points are useful to keep in mind:
   %
   This is based on the C++ \ttt{PseudoJet} \ttt{user\_info}
   functionality described in Appendix~\ref{app:user-info}.
+
+\item Python functions can be used to create \fastjet\ \ttt{Selector}
+  objects, using \ttt{SelectorPython(some\_python\_function)}. The
+  function must accept a \ttt{PseudoJet} as its single argument and
+  return \ttt{True} or \ttt{False}.
 
 \item Remember that Python uses references, e.g.\ \ttt{a = b} means
   that \ttt{a} is a reference to \ttt{b}. If you need to copy a
@@ -4415,6 +4420,8 @@ A short example of Python usage is as follows:
   print jet_def
   for jet in jets: print jet
 \end{lstlisting}
+Further examples are to be found in the \ttt{example/python/}
+directory.
 
 %=======================================================================
 \section{FJcore}
