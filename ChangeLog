@@ -1,3 +1,8 @@
+2017-02-24  Gavin Salam  <gavin.salam@cern.ch>
+
+	* fastjet-config.in (usage):
+	edited the --pythonpath help text (+ one typo)
+
 2017-02-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* fastjet-config.in:

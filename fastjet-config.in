@@ -38,9 +38,9 @@ The arguments can be either queries (one must be present):
   --prefix     gets the FastJet installation directory
   --cxxflags   returns the compilation flags to be used with C++ programs
   --libs       returns the flags to pass to the linker
-  --list-plugins  list all the available plugins
+  --list-plugins  lists all the available plugins
   --config     shows a summary of how FastJet was configured
-  --pythonpath path to include in PYTHONPATH to get the FastJet Python module 
+  --pythonpath returns path for FastJet Python module (add to PYTHONPATH)
 
 or flags (optional):
 
