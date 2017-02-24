@@ -1,3 +1,8 @@
+2017-02-23  Gregory Soyez  <soyez@fastjet.fr>
+
+	* fastjet-config.in:
+	added a --pythonpath option
+
 2017-02-12  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/python/06-selector.py:
