@@ -9,7 +9,6 @@ differently.
 
 import fastjet as fj
 import gzip
-import 05_user_info
 
 def main():
 
@@ -51,9 +50,16 @@ def main():
         print_jets(jets)
 
 #----------------------------------------------------------------------
-def is_photon(particle):
-    "Function for use with fj.SelectorPython"
-    return (particle.python_info().pdg_id == 22)
+class HasPID:
+    """Helps select particles with a specific PID"""
+    def __init__(self, _pdg_id):
+        self.pdg_id=_pdg_id
+
+    def __str__(self):
+        return "PDGID="+str(self.pdg_id)
+
+    def __call__(self, particle):
+        return (particle.python_info().pdg_id == self.pdg_id)
 
 #----------------------------------------------------------------------
 def is_pileup(particle):
@@ -62,13 +68,17 @@ def is_pileup(particle):
 
 #----------------------------------------------------------------------
 def print_jets(jets):
+    is_photon=HasPID(22)
+    sel_photons = fj.SelectorPython(is_photon)
+    sel_pileup  = fj.SelectorPython(is_pileup)
+
+    # with classes, description uses the class __str__ fmethod
+    print "Note: photon selection: "+str(sel_photons)
+   
     print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s} {7:>12s}".format(
         "jet #", "pt", "rap", "phi", "primary pt", "N particles",
         "N photons", "N prim.phot")
 
-    sel_photons = fj.SelectorPython(is_photon)
-    sel_pileup  = fj.SelectorPython(is_pileup)
-    
     for ijet in range(len(jets)):
         jet = jets[ijet]
 

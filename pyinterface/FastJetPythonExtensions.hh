@@ -47,11 +47,11 @@ private:
 /// a bool
 class SelectorWorkerPython : public SelectorWorker{
 public:
-  SelectorWorkerPython(PyObject *py_function) : _py_function(py_function){
-    Py_XINCREF(_py_function);
+  SelectorWorkerPython(PyObject *py_class_or_function) : _py_class_or_function(py_class_or_function){
+    Py_XINCREF(_py_class_or_function);
 
     // we directly make sure that the function is callable
-    if (!PyCallable_Check(_py_function)){
+    if (!PyCallable_Check(_py_class_or_function)){
       PyErr_SetString(PyExc_TypeError,
           "SelectorWorkerPython::SelectorWorkerPython: the argument should be callable");
       // do we also throw a fastjet error?
@@ -59,10 +59,17 @@ public:
   }
 
   ~SelectorWorkerPython(){
-    Py_XDECREF(_py_function);
+    Py_XDECREF(_py_class_or_function);
   }    
 
   virtual std::string description() const{
+    if (PyObject_HasAttrString(_py_class_or_function, "__str__")){
+      Py_XINCREF(_py_class_or_function);
+      PyObject* result = PyObject_Str(_py_class_or_function);
+      const char *str_result = PyString_AsString(result);
+      Py_XDECREF(_py_class_or_function);
+      return std::string("Selector based on python condition ")+std::string(str_result);
+    }
     return "Selector based on python function";
   }
 
@@ -72,10 +79,10 @@ public:
     PyObject *py_jet = 0;
     py_jet = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(jet_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
-    Py_XINCREF(_py_function);
+    Py_XINCREF(_py_class_or_function);
     PyObject * args = Py_BuildValue("(O)", py_jet);
-    PyObject *py_result = PyObject_CallObject(_py_function, args);
-    Py_XDECREF(_py_function);
+    PyObject *py_result = PyObject_CallObject(_py_class_or_function, args);
+    Py_XDECREF(_py_class_or_function);
 
     if (py_result == NULL)
       throw Error("SelectorWorkerPython::pass(): call to python function returned a NULL result.");
@@ -98,7 +105,7 @@ public:
   }
   
 private:
-  PyObject *_py_function;
+  PyObject *_py_class_or_function;
 };
 
 // effectively create a Selector for python
