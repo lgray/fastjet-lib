@@ -1,3 +1,22 @@
+2017-04-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/python/07-recombiner.py:             *** ADDED ***
+
+	added an eample of a user-defined recombiner
+
+	* pyinterface/fastjet.i:                       *** ADDED ***
+	* pyinterface/FastJetPythonExtensions.hh:      *** ADDED ***
+
+	added functionalities to specify a user-redined recombiner in
+	Python. The user should implement a class that provides
+	    def __init__(self):
+	    def __str__(self):
+            def preprocess(self, pa):
+	    def recombine(self, pa, pb): # returns the recombined PseudoJet
+	and then call
+	    jet_def.set_python_recombiner(...)
+	with an instance of that class as an argument.
+
 2017-02-28  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/python/06-selector.py:

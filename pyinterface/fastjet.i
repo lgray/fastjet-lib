@@ -177,6 +177,12 @@ FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceArea)
   std::vector<PseudoJet> __call__(const std::vector<PseudoJet> & particles) {
     return (*self)(particles);
   }
+
+  void set_python_recombiner(PyObject * pyobj){
+    fastjet::RecombinerPython *new_python_recombiner = new fastjet::RecombinerPython(pyobj);
+    $self->set_recombiner(new_python_recombiner);
+    $self->delete_recombiner_when_unused();
+  }
 }
 
 %extend Selector {
