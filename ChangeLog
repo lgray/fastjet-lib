@@ -1,3 +1,20 @@
+2017-05-19  Gavin Salam  <gavin.salam@cern.ch>
+
+	* tools/fastjet/tools/MassDropTagger.hh:
+	* tools/MassDropTagger.cc:
+	Following report of issue 2017-05-FPE-in-MDT associated with
+	negative (squared) masses in MassDropTagger, changed behaviour of
+	pathological cases:
+
+	- if the parent has zero or negative mass, an empty jet is
+	returned (and a warning is printed) [before the program just
+	carried on running using the negative mass^2]
+
+	- if the heavier child subjet has negative (squared) mass, then mu
+	is set to subjet.m()/parent.m(), which is also negative [before
+	you could get NaN, zero or a postive ratio of two negative things]
+
+
 2017-04-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/python/07-recombiner.py:             *** ADDED ***

@@ -109,6 +109,7 @@ public:
 protected:
   double _mu, _ycut;
   static LimitedWarning _warnings_nonca;
+  static LimitedWarning _negative_mass_warning;
 };
 
 
