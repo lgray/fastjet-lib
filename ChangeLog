@@ -21,10 +21,10 @@
 
 	added an eample of a user-defined recombiner
 
-	* pyinterface/fastjet.i:                       *** ADDED ***
-	* pyinterface/FastJetPythonExtensions.hh:      *** ADDED ***
+	* pyinterface/fastjet.i:
+	* pyinterface/FastJetPythonExtensions.hh:
 
-	added functionalities to specify a user-redined recombiner in
+	added functionalities to specify a user-defined recombiner in
 	Python. The user should implement a class that provides
 	    def __init__(self):
 	    def __str__(self):
@@ -42,7 +42,7 @@
 	* pyinterface/FastJetPythonExtensions.hh:
 	descrpition now uses the "class_or_function" __str__ if available
 
-	Note that for functioins this currently produces a message of the
+	Note that for functions this currently produces a message of the
 	form "function at address ..." which is not 100% elegant (but
 	we'll live with it for the time being)
 
