@@ -1,3 +1,10 @@
+2017-05-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/python/07-recombiner.py:
+	* example/python/06-selector.py:
+	* pyinterface/FastJetPythonExtensions.hh:
+	cleaned and added comments + fixed a few typos
+
 2017-05-19  Gavin Salam  <gavin.salam@cern.ch>
 
 	* tools/fastjet/tools/MassDropTagger.hh:

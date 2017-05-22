@@ -43,12 +43,15 @@ private:
 /// Internal class for making python classes/functions usable as selectors
 ///
 /// This is an internal class that makes possible the calls to
-///   selector = Selector(pyton_function)
-/// where python_function will take a PseufoJet as argument and return
+///   selector = SelectorPython(pyton_function)
+/// where python_function will take a PseudoJet as argument and return
 /// a bool
 class SelectorWorkerPython : public SelectorWorker{
 public:
+  // ctor based on a PYObject which should be callable (typically a
+  // class or a function)
   SelectorWorkerPython(PyObject *py_class_or_function) : _py_class_or_function(py_class_or_function){
+    // increment ref count on the py object
     Py_XINCREF(_py_class_or_function);
 
     // we directly make sure that the function is callable
@@ -59,11 +62,21 @@ public:
     }
   }
 
+  // dtor
   ~SelectorWorkerPython(){
+    // decrement ref count on the py object
     Py_XDECREF(_py_class_or_function);
   }    
 
+  // description of the Selector
   virtual std::string description() const{
+    // reuse the python string if it is available
+    //
+    // Note: this will take the __str__ method in classes but it would
+    // also be available for functions, producing a rather inelegan
+    // output of the form
+    //   Selector based on python condition <function is_pileup at 0x...>
+    // Not sure how to avoid this?
     if (PyObject_HasAttrString(_py_class_or_function, "__str__")){
       Py_XINCREF(_py_class_or_function);
       PyObject* result = PyObject_Str(_py_class_or_function);
@@ -74,26 +87,31 @@ public:
     return "Selector based on python function";
   }
 
+  // implement the check whether the given PseudoJet passes the
+  // selection or not
   virtual bool pass(const PseudoJet &jet) const{
     // first make a copy of the jet in a PyObject* managed by swig
-    PseudoJet jet_copy = jet;  // not sure this is needed
+    PseudoJet jet_copy = jet;  // not sure this is needed?
     PyObject *py_jet = 0;
     py_jet = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(jet_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
+    // now call the user-defined selection function (in python)
     Py_XINCREF(_py_class_or_function);
     PyObject * args = Py_BuildValue("(O)", py_jet);
     PyObject *py_result = PyObject_CallObject(_py_class_or_function, args);
     Py_XDECREF(_py_class_or_function);
 
+    // and interpret the result as a bool
+    //
+    // Note that somehow the conversion from bool via SWIG_AsVal_bool
+    // is not available at this stage so we cannot simply do:
+    //   bool result;
+    //   int conversion_result = SWIG_AsVal_bool(py_result, &result);
+    //   if (!SWIG_IsOK(conversion_result)){
+    //     throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be casted to a bool");
+    //   }
     if (py_result == NULL)
       throw Error("SelectorWorkerPython::pass(): call to python function returned a NULL result.");
-
-    // somehow the conversion from bool via SWIG_AsVal_bool is not available
-    //bool result;
-    //int conversion_result = SWIG_AsVal_bool(py_result, &result);
-    //if (!SWIG_IsOK(conversion_result)){
-    //  throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be casted to a bool");
-    //}
 
     if (!PyBool_Check(py_result))
       throw Error("SelectorWorkerPython::pass(): the value returned by the python function could not be cast to a bool");
@@ -157,7 +175,7 @@ public:
   /// recombine pa and pb and put result into pab
   virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
                          PseudoJet & pab) const{
-    // first make a copy of the arguments as PyObject* managed by swig
+    // first make a copy of the "input" arguments as PyObject* managed by swig
     PseudoJet pa_copy = pa;  // not sure this is needed
     PyObject *py_pa = 0;
     py_pa = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(pa_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
@@ -166,18 +184,15 @@ public:
     PyObject *py_pb = 0;
     py_pb = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(pb_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
-    //PseudoJet pab_copy = pa;  // not sure this is needed
-    //PyObject *py_pab = 0;
-    //py_pab = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< fastjet::PseudoJet& >(pab_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
-
+    // now call the recombiner
     Py_XINCREF(_py_class);
     PyObject *py_result = PyObject_CallMethod(_py_class, (char *) "recombine",
                                               (char *) "(OO)", py_pa, py_pb);
     Py_XDECREF(_py_class);
-
     if (py_result == NULL)
       throw Error("RecombinerPython::recombine(): call to python function returned a NULL result.");
 
+    // put the result in pab
     void *pab_void_ptr = 0;
     PseudoJet *pab_ptr = 0;
     int res1 = SWIG_ConvertPtr(py_result, &pab_void_ptr, SWIGTYPE_p_fastjet__PseudoJet, 0 );
@@ -192,19 +207,20 @@ public:
   /// routine called to preprocess each input jet (to make all input
   /// jets compatible with the scheme requirements (e.g. massless).
   virtual void preprocess(PseudoJet & pa) const {
-      // first make a copy of the arguments as PyObject* managed by swig
+    // first make a copy of the arguments as PyObject* managed by swig
     PseudoJet pa_copy = pa;  // not sure this is needed
     PyObject *py_pa = 0;
     py_pa = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< fastjet::PseudoJet& >(pa_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
+    // then call the user-defined python function
     Py_XINCREF(_py_class);
     PyObject *py_result = PyObject_CallMethod(_py_class, (char *) "preprocess",
                                               (char *) "(O)", py_pa);
     Py_XDECREF(_py_class);
-
     if (py_result == NULL)
       throw Error("RecombinerPython::preprocess(): call to python function returned a NULL result.");
 
+    // copy the result back in pa
     void *pa_void_ptr = 0;
     PseudoJet *pa_ptr = 0;
     int res1 = SWIG_ConvertPtr(py_pa, &pa_void_ptr, SWIGTYPE_p_fastjet__PseudoJet, 0);

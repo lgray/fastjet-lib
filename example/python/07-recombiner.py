@@ -22,6 +22,8 @@ def main():
     print "jet definition is:",jet_def
     print "jet selector is:", selector,"\n"
 
+    # create a user-defined recombiner which checks for photons and
+    # sums user-indices (see below for details)
     recombiner = UserRecombiner()
     jet_def_user_recomb = fj.JetDefinition(fj.antikt_algorithm, 0.4)
     jet_def_user_recomb.set_python_recombiner(recombiner)
@@ -36,39 +38,62 @@ def main():
         iev += 1
         if (len(event) == 0): break
         
-        # Create a FastJet selector based on a Python function (which
-        # takes a PseudoJet and returns True if the PseudoJet passes the
-        # selection condition). The resulting selector can be used in the
-        # same way as any normal FastJet selector.
-        sel_pileup = fj.SelectorPython(is_pileup)
-        n_pileup_particles = sel_pileup.count(event)
-
         # cluster it with the default recombiner and print some info
         jets = selector(jet_def(event))
-        print "Event {0} has {1} particles (of which {2} from pileup)".format(
-            iev, len(event), n_pileup_particles)
+        print "Event {0} has {1} particles".format(iev, len(event))
         print_jets(jets)
         print ""
 
         # now re-cluster with our user-defined recombiner
         jets = selector(jet_def_user_recomb(event))
+        print ""
+        print "CHECK: below, the user index (built through the recombiner)"
+        print "       should correspond to the number of photons"
+        print ""
         print_jets(jets)
 
-        #direct_test: fj_recombiner = fj.RecombinerPython(recombiner)
-        #direct_test: print fj_recombiner
-        #direct_test: pa = fj.PseudoJet()
-        #direct_test: pb = fj.PseudoJet()
-        #direct_test: pa.reset(jets[0])
-        #direct_test: pb.reset(jets[1])
-        #direct_test: fj_recombiner.preprocess(pa)
-        #direct_test: fj_recombiner.preprocess(pb)
-        #direct_test: print "pre-processed: ",jets[0]," --> ",pa,pa.user_index()
-        #direct_test: print "pre-processed: ",jets[1]," --> ",pb,pb.user_index()
-        #direct_test: pab=fj.PseudoJet()
-        #direct_test: fj_recombiner.recombine(pa,pb,pab)  #works
-        #direct_test: print "recombined: ", pab,pab.user_index()
+
+#----------------------------------------------------------------------
+# User-defined recombiner
+#
+# Ths class implements mostly
+#   - __str__: a description of the user-defined recombiner
+#   - preprocess: which takes a PseudoJet and ... proprecesses it!
+#   - recombine: which takes 2 PseudoJet and returns the recombined PseudoJet
+class UserRecombiner(object):
+    """illustrative class for use of user-defined recombiners.
+    """
+    # ctor
+    def __init__(self):
+        self._sel_photon = fj.SelectorPython(HasPID(22))
+
+    # description
+    def __str__(self):
+        return "user-defined recombiner that sums user indices"
+
+    # pre-processing of each PseudoJet
+    #
+    # This put 1 (0) in the user index if the particle is (is not) aa
+    # photon
+    def preprocess(self, pa):
+        pa.reset_momentum_PtYPhiM(pa.pt(), pa.rap(), pa.phi(), 0.0)
+        # store the number of photons
+        if self._sel_photon(pa):
+            pa.set_user_index(1)
+        else:
+            pa.set_user_index(0)
+
+    # pre-processing of each PseudoJEt
+    # this will sum the number of photons in the user index
+    def recombine(self, pa, pb):
+        pab=pa+pb
+        pab.set_user_index(pa.user_index() + pb.user_index())
+        return pab
         
 #----------------------------------------------------------------------            
+# user-defined info associated to each PseudoJet in the event
+#
+# This is the same as the one which was introduced in 05-user-info.py
 class ParticleInfo(object):
     """illustrative class for use in assigning pythonic user information
     to a PseudoJet.
@@ -85,7 +110,7 @@ class ParticleInfo(object):
         return "subevent_index={0}, particle_index={1}, pdg_id={2}".format(
             self.subevent_index, self.particle_index, self.pdg_id)
 
-    #----------------------------------------------------------------------
+#----------------------------------------------------------------------
 class HasPID:
     """Helps select particles with a specific PID"""
     def __init__(self, _pdg_id):
@@ -98,47 +123,13 @@ class HasPID:
         return (particle.python_info().pdg_id == self.pdg_id)
 
 #----------------------------------------------------------------------
-def is_pileup(particle):
-    "Function for use with fj.SelectorPython"
-    return (particle.python_info().subevent_index > 0)
-        
-#----------------------------------------------------------------------
-class UserRecombiner(object):
-    """illustrative class for use of user-defined recombiners.
-    """
-    def __init__(self):
-        print "creating user-defined recombiner"
-        
-    def __str__(self):
-        return "user-defined recombiner"
-
-    def preprocess(self, pa):
-        pa.reset_momentum_PtYPhiM(pa.pt(), pa.rap(), pa.phi(), 0.0)
-        # store the number of photons
-        if pa.has_user_info() and pa.python_info().pdg_id == 22:
-            pa.set_user_index(1)
-        else:
-            pa.set_user_index(0)
-
-    # this will sum the number of photons in the user index
-    def recombine(self, pa, pb):
-        pab=pa+pb
-        pab.set_user_index(pa.user_index() + pb.user_index())
-        return pab
-
-
-#----------------------------------------------------------------------
 def print_jets(jets):
     is_photon=HasPID(22)
     sel_photons = fj.SelectorPython(is_photon)
-    sel_pileup  = fj.SelectorPython(is_pileup)
-
-    # with classes, description uses the class __str__ fmethod
-    print "Note: photon selection: "+str(sel_photons)
    
-    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s} {7:>12s} {8:>12s}".format(
-        "jet #", "pt", "rap", "phi", "primary pt", "N particles",
-        "N photons", "N prim.phot", "user index")
+    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s}".format(
+        "jet #", "pt", "rap", "phi", "N particles",
+        "N photons", "user index")
 
     for ijet in range(len(jets)):
         jet = jets[ijet]
@@ -147,16 +138,10 @@ def print_jets(jets):
         # and how much pt comes from the primary vertex
         constituents = jet.constituents()
         n_photons = sel_photons.count(constituents)
-
-        # invert the pileup selector to find the primary pileup
-        primary_pt = (~sel_pileup).scalar_pt_sum(constituents)
-
-        # and get the number of primary photons by combining two selectors
-        n_primary_photons = ((~sel_pileup)*sel_photons).count(constituents)
             
-        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:10.3f} {5:12d} {6:12d} {7:12d} {8:12d}".format(
-            ijet, jet.pt(), jet.rap(), jet.phi(), primary_pt, len(constituents),
-            n_photons, n_primary_photons, jet.user_index())
+        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:12d} {5:12d} {6:12d}".format(
+            ijet, jet.pt(), jet.rap(), jet.phi(), len(constituents),
+            n_photons, jet.user_index())
         
 #----------------------------------------------------------------------
 event_index = 0

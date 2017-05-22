@@ -41,6 +41,9 @@ def main():
         # takes a PseudoJet and returns True if the PseudoJet passes the
         # selection condition). The resulting selector can be used in the
         # same way as any normal FastJet selector.
+        #
+        # See print_jets below for other examples of python-defined
+        # Selectors (built either from a class or from a function)
         sel_pileup = fj.SelectorPython(is_pileup)
         n_pileup_particles = sel_pileup.count(event)
         
@@ -49,7 +52,19 @@ def main():
             iev, len(event), n_pileup_particles)
         print_jets(jets)
 
+
 #----------------------------------------------------------------------
+# return true when the particle is associated to a pileup vertex
+# This function can be used to create a FastJet Selector using
+#   my_selector = fj.SelectorPython(is_pileup)
+def is_pileup(particle):
+    "Function for use with fj.SelectorPython"
+    return (particle.python_info().subevent_index > 0)
+        
+#----------------------------------------------------------------------
+# class which, when called, returns true for particles with the required PID
+# This class can be used to create a FastJet Selector using
+#   my_selector = fj.SelectorPython(HasPID(22))
 class HasPID:
     """Helps select particles with a specific PID"""
     def __init__(self, _pdg_id):
@@ -62,18 +77,13 @@ class HasPID:
         return (particle.python_info().pdg_id == self.pdg_id)
 
 #----------------------------------------------------------------------
-def is_pileup(particle):
-    "Function for use with fj.SelectorPython"
-    return (particle.python_info().subevent_index > 0)
-
-#----------------------------------------------------------------------
 def print_jets(jets):
-    is_photon=HasPID(22)
-    sel_photons = fj.SelectorPython(is_photon)
+    sel_photons = fj.SelectorPython(HasPID(22))
     sel_pileup  = fj.SelectorPython(is_pileup)
 
     # with classes, description uses the class __str__ fmethod
     print "Note: photon selection: "+str(sel_photons)
+    print "Note: pileup selection: "+str(sel_pileup)  # gives nasty output (keep?)
    
     print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s} {7:>12s}".format(
         "jet #", "pt", "rap", "phi", "primary pt", "N particles",
@@ -98,6 +108,9 @@ def print_jets(jets):
             n_photons, n_primary_photons)
         
 #----------------------------------------------------------------------            
+# user-defined info associated to each PseudoJet in the event
+#
+# This is the same as the one which was introduced in 05-user-info.py
 class ParticleInfo(object):
     """illustrative class for use in assigning pythonic user information
     to a PseudoJet.
