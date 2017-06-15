@@ -1,3 +1,14 @@
+2017-06-15  Gavin Salam  <gavin.salam@cern.ch> + Matteo
+
+	* pyinterface/fastjet.i: 
+	* pyinterface/FastJetPythonExtensions.hh: 
+	* pyinterface/README-for-devel: 
+
+	added some notes / queries (see GPS tags in code)
+
+	* example/python/06-selector.py (HasPID):
+	made this a new-style class (i.e. added (object) at the end). 
+
 2017-05-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/python/07-recombiner.py:

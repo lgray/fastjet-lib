@@ -91,11 +91,12 @@ public:
   // selection or not
   virtual bool pass(const PseudoJet &jet) const{
     // first make a copy of the jet in a PyObject* managed by swig
-    PseudoJet jet_copy = jet;  // not sure this is needed?
+    PseudoJet jet_copy = jet;  // not sure this is needed? GPS: is it possible to check (and save ourselves a copy)?
     PyObject *py_jet = 0;
     py_jet = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(jet_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
     // now call the user-defined selection function (in python)
+    // GPS: are the INCREF and DECREF really needed here?
     Py_XINCREF(_py_class_or_function);
     PyObject * args = Py_BuildValue("(O)", py_jet);
     PyObject *py_result = PyObject_CallObject(_py_class_or_function, args);
@@ -128,6 +129,7 @@ private:
 };
 
 // effectively create a Selector for python
+// GPS query: should this dummy variable be py_function_or_class ???
 Selector SelectorPython(PyObject *py_function) {
   return Selector(new SelectorWorkerPython(py_function));
 }

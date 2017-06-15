@@ -1,4 +1,34 @@
-Current procedure to get things working
+*** THE PART BELOW IS OUT OF DATE (but useful to keep for future projects ***
+***
+*** Current procedure: configure with --enable-pyext --enable-swig
+*** and the python interface will be automatically updated as needed
+***
+
+Questions from Matteo / Gavin:
+
+- set_python_info v. maintaining set_user_info (if the latter works);
+  in the end Matteo is OKish with set_python_info
+
+- Matteo queries nomenclature: UserInfoPython (never to be used by
+  python user) v. SelectorPython (is to be used) -- worries that
+  user might get confused between these internal/external classes
+
+
+- can SelectorWorkerPython return the name of the function in its
+  description? (also name for classes that don't have __str__?)
+
+- do we want selectors that have the "applies_jet_by_jet = false" and
+  a corresponding terminator? [not critical at this stage]
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+old procedure to get things working
 
 - build and install fastjet (using clang as a compiler)
   Following assumes installed in FJINSTALL

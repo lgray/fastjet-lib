@@ -268,6 +268,7 @@ FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceArea)
 
 namespace fastjet{
 // all the tools operator() must be availale
+// GPS QUERY: this looks like it adds __str__ rather than operator()
 %define FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Class)
 %extend Class {
   std::string  __str__() {
