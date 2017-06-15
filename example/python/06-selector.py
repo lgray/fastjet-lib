@@ -65,7 +65,7 @@ def is_pileup(particle):
 # class which, when called, returns true for particles with the required PID
 # This class can be used to create a FastJet Selector using
 #   my_selector = fj.SelectorPython(HasPID(22))
-class HasPID:
+class HasPID(object):
     """Helps select particles with a specific PID"""
     def __init__(self, _pdg_id):
         self.pdg_id=_pdg_id
