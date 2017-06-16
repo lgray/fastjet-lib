@@ -11,14 +11,14 @@ from __future__ import print_function
 from builtins import range
 from builtins import object
 import fastjet as fj
-import gzip
+#import gzip
 
 def main():
 
     # get the banner out of the way early on
     fj.ClusterSequence.print_banner()
     print()
-        
+    
     # set up our jet definition and a jet selector
     jet_def = fj.JetDefinition(fj.antikt_algorithm, 0.4)
     selector = fj.SelectorPtMin(15.0) & fj.SelectorAbsRapMax(4.5)

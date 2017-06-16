@@ -80,10 +80,30 @@ public:
     if (PyObject_HasAttrString(_py_class_or_function, "__str__")){
       Py_XINCREF(_py_class_or_function);
       PyObject* result = PyObject_Str(_py_class_or_function);
+      //
+      // with Python3 PyString_AsString is causing a segfault (seems
+      // to occur with s strlen call); swig defines it (it's missing
+      // in the base py3) as
+      //
+      // #if PY_VERSION_HEX >= 0x03000000
+      // [...]
+      // #define PyString_AsString(str) PyBytes_AsString(str)
+      // #endif
+      //
+      // but that doesn't seem to be good enough. Some discussion of
+      // related issues are in
+      // 
+      // https://stackoverflow.com/questions/22487780/what-do-i-use-instead-of-pystring-asstring-when-loading-a-python-module-in-3-3
+      // https://mail.python.org/pipermail/python-list/2009-March/527813.html
+      //
+      // needs more investigation
+      //
       const char *str_result = PyString_AsString(result);
+      //std::cout << " converted to str_result " << str_result << std::endl;
       Py_XDECREF(_py_class_or_function);
       return std::string("Selector based on python condition ")+std::string(str_result);
     }
+    std::cout <<  "does not have attr string: " << std::endl;
     return "Selector based on python function";
   }
 
