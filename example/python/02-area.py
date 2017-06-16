@@ -1,11 +1,13 @@
 #!/usr/bin/env python
+from __future__ import print_function
+from builtins import range
 from fastjet import *
 
 def main():
     #----------------------------------------------------------------------
     # read the event
     event = read_event("../data/single-event.dat")
-    print "Event has {0} particles".format(len(event))
+    print("Event has {0} particles".format(len(event)))
     
     #----------------------------------------------------------------------
     # cluster the event
@@ -14,9 +16,9 @@ def main():
     cs = ClusterSequenceArea(event, jet_def, area_def)
     jets = SelectorPtMin(5.0)(sorted_by_pt(cs.inclusive_jets()))
 
-    print "jet def:", jet_def
-    print "area def:", area_def
-    print "#-------------------- initial jets --------------------"
+    print("jet def:", jet_def)
+    print("area def:", area_def)
+    print("#-------------------- initial jets --------------------")
     print_jets(jets)
 
     #----------------------------------------------------------------------
@@ -25,16 +27,16 @@ def main():
     grid_spacing = 0.55
     gmbge = GridMedianBackgroundEstimator(maxrap, grid_spacing)
     gmbge.set_particles(event)
-    print "#-------------------- background properties --------------------"
-    print "rho   = ", gmbge.rho()
-    print "sigma = ", gmbge.sigma()
-    print
+    print("#-------------------- background properties --------------------")
+    print("rho   = ", gmbge.rho())
+    print("sigma = ", gmbge.sigma())
+    print()
     
     #----------------------------------------------------------------------
     # subtract the jets
     subtractor = Subtractor(gmbge)
     subtracted_jets = subtractor(jets)
-    print "#-------------------- subtracted jets --------------------"
+    print("#-------------------- subtracted jets --------------------")
     print_jets(subtracted_jets)
     
 
@@ -50,13 +52,13 @@ def read_event(filename):
 
 #----------------------------------------------------------------------
 def print_jets(jets):
-    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>10s}".format(
-        "jet #", "pt", "rap", "phi", "area")
+    print("{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>10s}".format(
+        "jet #", "pt", "rap", "phi", "area"))
 
     for ijet in range(len(jets)):
         jet = jets[ijet]
-        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {3:10.4f}".format(
-            ijet, jet.pt(), jet.rap(), jet.phi(), jet.area)
+        print("{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {3:10.4f}".format(
+            ijet, jet.pt(), jet.rap(), jet.phi(), jet.area))
     
 
 if __name__ == '__main__':

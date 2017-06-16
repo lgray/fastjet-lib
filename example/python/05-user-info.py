@@ -17,7 +17,10 @@ the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
 included in your PYTHONPATH environment variable.
 
 """
+from __future__ import print_function
 
+from builtins import range
+from builtins import object
 import fastjet as fj
 import gzip
 
@@ -25,16 +28,16 @@ def main():
 
     # get the banner out of the way early on
     fj.ClusterSequence.print_banner()
-    print
+    print()
 
     # set up our jet definition and a jet selector
     jet_def = fj.JetDefinition(fj.antikt_algorithm, 0.4)
     selector = fj.SelectorPtMin(15.0) & fj.SelectorAbsRapMax(4.5)
-    print "jet definition is:",jet_def
-    print "jet selector is:", selector,"\n"
+    print("jet definition is:",jet_def)
+    print("jet selector is:", selector,"\n")
 
     filename = '../data/Pythia-dijet-ptmin100-lhc-pileup-1ev.dat'
-    f = file(filename,'r')
+    f = open(filename,'r')
     #filename = '/Users/gsalam/work/fastjet/data/Pythia-PtMin50-LHC-10kev.dat.gz'
     #f = gzip.GzipFile(filename,'rb')
     
@@ -52,13 +55,13 @@ def main():
         npileup = 0
         for p in event:
             if (p.python_info().subevent_index > 0): npileup += 1
-        print "Event {0} has {1} particles (of which {2} from pileup)".format(iev, len(event), npileup)
+        print("Event {0} has {1} particles (of which {2} from pileup)".format(iev, len(event), npileup))
         print_jets(jets)
 
 #----------------------------------------------------------------------
 def print_jets(jets):
-    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s}".format(
-        "jet #", "pt", "rap", "phi", "primary pt", "N particles", "N photons")
+    print("{0:>5s} {1:>10s} {2:>10s} {3:>10s} {4:>12s} {5:>12s} {6:>12s}".format(
+        "jet #", "pt", "rap", "phi", "primary pt", "N particles", "N photons"))
 
     for ijet in range(len(jets)):
         jet = jets[ijet]
@@ -72,8 +75,8 @@ def print_jets(jets):
             if (c.python_info().pdg_id == 22): nphotons += 1
             if (c.python_info().subevent_index <= 0): primary_pt += c.pt()
             
-        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:10.3f} {5:12d} {6:12d}".format(
-            ijet, jet.pt(), jet.rap(), jet.phi(), primary_pt, len(constituents), nphotons)
+        print("{0:5d} {1:10.3f} {2:10.4f} {3:10.4f} {4:10.3f} {5:12d} {6:12d}".format(
+            ijet, jet.pt(), jet.rap(), jet.phi(), primary_pt, len(constituents), nphotons))
         
 #----------------------------------------------------------------------            
 class ParticleInfo(object):
@@ -105,8 +108,8 @@ The event is converted to a python list of PseudoJets
     """
 
     # open the file if necessary
-    if (isinstance(file_or_filename,basestring)) : f = open(file_or_filename, 'r')
-    else                                         : f = file_or_filename
+    if (isinstance(file_or_filename,str)) : f = open(file_or_filename, 'r')
+    else                                  : f = file_or_filename
 
     # create an empty list
     event = []

@@ -6,7 +6,9 @@ the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
 included in your PYTHONPATH environment variable.
 
 """
+from __future__ import print_function
 
+from builtins import range
 import fastjet as fj
 #import gzip
 
@@ -14,17 +16,17 @@ def main():
 
     # get the banner out of the way early on
     fj.ClusterSequence.print_banner()
-    print
+    print()
 
     # set up our jet definition and a jet selector
     jet_def = fj.JetDefinition(fj.antikt_algorithm, 0.4)
     selector = fj.SelectorPtMin(5.0) & fj.SelectorAbsRapMax(4.5)
-    print "jet definition is:",jet_def
-    print "jet selector is:", selector,"\n"
+    print("jet definition is:",jet_def)
+    print("jet selector is:", selector,"\n")
 
     #filename = '../data/single-event.dat'
     filename = '../data/Pythia-PtMin1000-LHC-10ev.dat'
-    f = file(filename,'r')
+    f = open(filename,'r')
     #filename = '/Users/gsalam/work/fastjet/data/Pythia-PtMin50-LHC-10kev.dat.gz'
     #f = gzip.GzipFile(filename,'rb')
     
@@ -35,15 +37,15 @@ def main():
         iev += 1
         if (len(event) == 0): break
         jets = selector(jet_def(event))
-        print "Event {0} has {1} particles".format(iev, len(event))
+        print("Event {0} has {1} particles".format(iev, len(event)))
         
         # cluster it
         for ijet in range(len(jets)):
-            print "jet {0} pt and rap: {1} {2}".format(ijet, jets[ijet].pt(), jets[ijet].rap())
+            print("jet {0} pt and rap: {1} {2}".format(ijet, jets[ijet].pt(), jets[ijet].rap()))
             
         # make sure jet-related information is correctly held
         if (len(jets) > 0):
-            print "Number of constituents of jets[0] is {0}".format(len(jets[0].constituents()))
+            print("Number of constituents of jets[0] is {0}".format(len(jets[0].constituents())))
             
 #----------------------------------------------------------------------
 def read_event(file_or_filename):
@@ -57,8 +59,8 @@ The event is converted to a python list of PseudoJets
     """
 
     # open the file if necessary
-    if (isinstance(file_or_filename,basestring)) : f = open(file_or_filename, 'r')
-    else                                         : f = file_or_filename
+    if (isinstance(file_or_filename,str)) : f = open(file_or_filename, 'r')
+    else                                  : f = file_or_filename
 
     # create an empty list
     event = []

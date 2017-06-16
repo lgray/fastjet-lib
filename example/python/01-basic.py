@@ -7,7 +7,9 @@ the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
 included in your PYTHONPATH environment variable.
 
 """
+from __future__ import print_function
 
+from builtins import range
 import fastjet as fj
 #import gzip
 
@@ -26,23 +28,23 @@ def main():
     jets = selector(jet_def(event))
 
     # print out some information about the event and clustering
-    print "Event has {0} particles".format(len(event))
-    print "jet definition is:",jet_def
-    print "jet selector is:", selector,"\n"
+    print("Event has {0} particles".format(len(event)))
+    print("jet definition is:",jet_def)
+    print("jet selector is:", selector,"\n")
     
     # print the jets
     print_jets(jets)
     
     # get internal information about one of the jets
     if (len(jets) > 0):
-        print "Number of constituents of jets[0] is {0}".format(len(jets[0].constituents()))
+        print("Number of constituents of jets[0] is {0}".format(len(jets[0].constituents())))
 
 #----------------------------------------------------------------------
 def print_jets(jets):
-    print "{0:>5s} {1:>10s} {2:>10s} {3:>10s}".format("jet #", "pt", "rap", "phi")
+    print("{0:>5s} {1:>10s} {2:>10s} {3:>10s}".format("jet #", "pt", "rap", "phi"))
     for ijet in range(len(jets)):
-        print "{0:5d} {1:10.3f} {2:10.4f} {3:10.4f}".format(
-            ijet, jets[ijet].pt(), jets[ijet].rap(), jets[ijet].phi())
+        print("{0:5d} {1:10.3f} {2:10.4f} {3:10.4f}".format(
+            ijet, jets[ijet].pt(), jets[ijet].rap(), jets[ijet].phi()))
     
         
 #----------------------------------------------------------------------
