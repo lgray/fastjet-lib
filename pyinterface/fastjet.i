@@ -267,8 +267,10 @@ FASTJET_TEMPLATED_CTOR_FOR_PSEUDOJET(ClusterSequenceArea)
 
 
 namespace fastjet{
-// all the tools operator() must be availale
-// GPS QUERY: this looks like it adds __str__ rather than operator()
+// the access to the tools operator() is automatically handled by SWIG
+//
+// Here, we add the __str__ suppport so the description can be printed
+// easily
 %define FASTJET_OPERATOR_PARENTHESIS_CALLABLE(Class)
 %extend Class {
   std::string  __str__() {

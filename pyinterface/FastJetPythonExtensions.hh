@@ -73,7 +73,7 @@ public:
     // reuse the python string if it is available
     //
     // Note: this will take the __str__ method in classes but it would
-    // also be available for functions, producing a rather inelegan
+    // also be available for functions, producing a rather inelegant
     // output of the form
     //   Selector based on python condition <function is_pileup at 0x...>
     // Not sure how to avoid this?
@@ -91,12 +91,12 @@ public:
   // selection or not
   virtual bool pass(const PseudoJet &jet) const{
     // first make a copy of the jet in a PyObject* managed by swig
-    PseudoJet jet_copy = jet;  // not sure this is needed? GPS: is it possible to check (and save ourselves a copy)?
     PyObject *py_jet = 0;
-    py_jet = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(jet_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
+    py_jet = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(jet))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
     // now call the user-defined selection function (in python)
     // GPS: are the INCREF and DECREF really needed here?
+    // GS:  I don't think so but I am unsure so I preferred to play it safe.
     Py_XINCREF(_py_class_or_function);
     PyObject * args = Py_BuildValue("(O)", py_jet);
     PyObject *py_result = PyObject_CallObject(_py_class_or_function, args);
@@ -129,9 +129,8 @@ private:
 };
 
 // effectively create a Selector for python
-// GPS query: should this dummy variable be py_function_or_class ???
-Selector SelectorPython(PyObject *py_function) {
-  return Selector(new SelectorWorkerPython(py_function));
+Selector SelectorPython(PyObject *py_function_or_class) {
+  return Selector(new SelectorWorkerPython(py_function_or_class));
 }
 
 //----------------------------------------------------------------------
@@ -178,13 +177,13 @@ public:
   virtual void recombine(const PseudoJet & pa, const PseudoJet & pb, 
                          PseudoJet & pab) const{
     // first make a copy of the "input" arguments as PyObject* managed by swig
-    PseudoJet pa_copy = pa;  // not sure this is needed
+    //PseudoJet pa_copy = pa;  // not sure this is needed
     PyObject *py_pa = 0;
-    py_pa = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(pa_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
+    py_pa = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(pa))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
-    PseudoJet pb_copy = pb;  // not sure this is needed
+    //PseudoJet pb_copy = pb;  // not sure this is needed
     PyObject *py_pb = 0;
-    py_pb = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(pb_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
+    py_pb = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< const fastjet::PseudoJet& >(pb))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
     // now call the recombiner
     Py_XINCREF(_py_class);
@@ -210,9 +209,9 @@ public:
   /// jets compatible with the scheme requirements (e.g. massless).
   virtual void preprocess(PseudoJet & pa) const {
     // first make a copy of the arguments as PyObject* managed by swig
-    PseudoJet pa_copy = pa;  // not sure this is needed
+    //PseudoJet pa_copy = pa;  // not sure this is needed
     PyObject *py_pa = 0;
-    py_pa = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< fastjet::PseudoJet& >(pa_copy))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
+    py_pa = SWIG_NewPointerObj((new fastjet::PseudoJet(static_cast< fastjet::PseudoJet& >(pa))), SWIGTYPE_p_fastjet__PseudoJet, SWIG_POINTER_OWN |  0 );
 
     // then call the user-defined python function
     Py_XINCREF(_py_class);
