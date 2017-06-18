@@ -31,7 +31,8 @@ def main():
     recombiner = UserRecombiner()
     jet_def_user_recomb = fj.JetDefinition(fj.antikt_algorithm, 0.4)
     jet_def_user_recomb.set_python_recombiner(recombiner)
-
+    print("jet definition with user recombiner is:",jet_def_user_recomb)
+    
     filename = '../data/Pythia-dijet-ptmin100-lhc-pileup-1ev.dat'
     f = open(filename,'r')
     

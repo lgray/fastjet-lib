@@ -1,3 +1,20 @@
+2017-06-18  Gavin Salam  <gavin.salam@cern.ch>
+
+	* example/python/07-recombiner.py (main):
+	also prints out jet definition with a user-defined recombiner.
+
+	* pyinterface/FastJetPythonExtensions.hh:
+	added cpp_string_from_py_str(...) and
+	pp_string_from_str_py_obj(...) helper functions to get the
+	str output of a python object and convert into a C++ string.
+
+	This uses PyUnicode_AsUTF8 calls for Py3 and normal
+	PyString_AsString calls for Py2. To be seen how robust this is,
+	but seems to solve the issue found below with segfaults.
+
+	The implementation also solves a memory leak issue (failure to
+	XDECREF result of PyObject_Str).
+
 2017-06-16  Gavin Salam  <gavin.salam@cern.ch>
 
 	* pyinterface/FastJetPythonExtensions.hh (SelectorWorker):

@@ -39,6 +39,39 @@ private:
 };
 
 //----------------------------------------------------------------------
+/// get a C++ string from a Python object that is assumed to be
+/// of string type (unicode for Py3).
+///
+/// Later we might imagine moving to using something like
+/// SWIG_AsPtr_std_string.
+///
+/// Implementation with Python calls is inspired from discussions
+/// at
+///   https://stackoverflow.com/questions/22487780/what-do-i-use-instead-of-pystring-asstring-when-loading-a-python-module-in-3-3
+///   https://mail.python.org/pipermail/python-list/2009-March/527813.html
+///
+inline std::string cpp_string_from_py_str(PyObject *py_str) {
+  const char *char_result;
+#if PY_VERSION_HEX >= 0x03000000
+  char_result = PyUnicode_AsUTF8(py_str);
+#else
+  char_result = PyString_AsString(py_str);
+#endif
+  return std::string(char_result);
+}
+
+//----------------------------------------------------------------------
+/// Invokes the str call on a python object and returns the corresponding
+/// C++ string
+inline std::string cpp_string_from_str_py_obj(PyObject *py_obj) {
+  PyObject* py_str = PyObject_Str(py_obj);
+  std::string cpp_str = cpp_string_from_py_str(py_str);
+  Py_XDECREF(py_str);
+  return cpp_str;
+}
+
+
+//----------------------------------------------------------------------
 /// \class SelectorWorkerPython
 /// Internal class for making python classes/functions usable as selectors
 ///
@@ -66,7 +99,7 @@ public:
   ~SelectorWorkerPython(){
     // decrement ref count on the py object
     Py_XDECREF(_py_class_or_function);
-  }    
+  }
 
   // description of the Selector
   virtual std::string description() const{
@@ -78,32 +111,11 @@ public:
     //   Selector based on python condition <function is_pileup at 0x...>
     // Not sure how to avoid this?
     if (PyObject_HasAttrString(_py_class_or_function, "__str__")){
-      Py_XINCREF(_py_class_or_function);
-      PyObject* result = PyObject_Str(_py_class_or_function);
-      //
-      // with Python3 PyString_AsString is causing a segfault (seems
-      // to occur with s strlen call); swig defines it (it's missing
-      // in the base py3) as
-      //
-      // #if PY_VERSION_HEX >= 0x03000000
-      // [...]
-      // #define PyString_AsString(str) PyBytes_AsString(str)
-      // #endif
-      //
-      // but that doesn't seem to be good enough. Some discussion of
-      // related issues are in
-      // 
-      // https://stackoverflow.com/questions/22487780/what-do-i-use-instead-of-pystring-asstring-when-loading-a-python-module-in-3-3
-      // https://mail.python.org/pipermail/python-list/2009-March/527813.html
-      //
-      // needs more investigation
-      //
-      const char *str_result = PyString_AsString(result);
-      //std::cout << " converted to str_result " << str_result << std::endl;
-      Py_XDECREF(_py_class_or_function);
-      return std::string("Selector based on python condition ")+std::string(str_result);
+      //Py_XINCREF(_py_class_or_function); // GPS: not needed?
+      std::string cpp_str = cpp_string_from_str_py_obj(_py_class_or_function);
+      //Py_XDECREF(_py_class_or_function); // GPS: not needed?
+      return std::string("Selector based on python condition ")+cpp_str;
     }
-    std::cout <<  "does not have attr string: " << std::endl;
     return "Selector based on python function";
   }
 
@@ -186,11 +198,10 @@ public:
       throw Error("RecombinerPython: the provided class should implement the __str__ method (for description");
     }
     
-    Py_XINCREF(_py_class);
-    PyObject* result = PyObject_Str(_py_class);
-    const char *str_result = PyString_AsString(result);
-    Py_XDECREF(_py_class);
-    return std::string("User-defined recombiner based on python recombiner ")+std::string(str_result);
+    //Py_XINCREF(_py_class); // GPS not needed
+    std::string cpp_str = cpp_string_from_str_py_obj(_py_class);
+    //Py_XDECREF(_py_class); // GPS not needed
+    return std::string("User-defined recombiner based on python recombiner ")+cpp_str;
   }
   
   /// recombine pa and pb and put result into pab
