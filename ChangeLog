@@ -1,3 +1,9 @@
+2017-06-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/python/Makefile.am:
+	added examples 06 (selector) and 07 (recombiner) to the
+	distributed tarball
+
 2017-06-19  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/python/01-basic.py:
