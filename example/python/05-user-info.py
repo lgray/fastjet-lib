@@ -19,8 +19,6 @@ included in your PYTHONPATH environment variable.
 """
 from __future__ import print_function
 
-from builtins import range
-from builtins import object
 import fastjet as fj
 import gzip
 
