@@ -70,6 +70,16 @@ inline std::string cpp_string_from_str_py_obj(PyObject *py_obj) {
   return cpp_str;
 }
 
+//----------------------------------------------------------------------
+/// Invokes the name call on a python object and returns the corresponding
+/// C++ string
+inline std::string cpp_string_from_name_py_obj(PyObject *py_obj) {
+  PyObject* py_str = PyObject_GetAttrString(py_obj, "__name__");
+  std::string cpp_str = cpp_string_from_py_str(py_str);
+  Py_XDECREF(py_str);
+  return cpp_str;
+}
+
 
 //----------------------------------------------------------------------
 /// \class SelectorWorkerPython
@@ -103,6 +113,15 @@ public:
 
   // description of the Selector
   virtual std::string description() const{
+    // Functions define __name__ which gives a more readable output
+    // that __str__. So we'll use it for the description
+    if (PyObject_HasAttrString(_py_class_or_function, "__name__")){
+      //Py_XINCREF(_py_class_or_function); // GPS: not needed?
+      std::string cpp_str = cpp_string_from_name_py_obj(_py_class_or_function);
+      //Py_XDECREF(_py_class_or_function); // GPS: not needed?
+      return std::string("Selector based on python function ")+cpp_str;
+    }
+    
     // reuse the python string if it is available
     //
     // Note: this will take the __str__ method in classes but it would

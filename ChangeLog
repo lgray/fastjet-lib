@@ -1,3 +1,10 @@
+2017-06-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* pyinterface/FastJetPythonExtensions.hh:
+	tried to use the __name__ attribute to disentangle python objects
+	from functions and return the proper description for selectors
+	accordingly
+
 2017-06-18  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/python/07-recombiner.py (main):
