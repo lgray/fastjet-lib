@@ -62,6 +62,9 @@ public:
   /// the error message
   std::string message() const {return _message;}
 
+  /// an alternative access to the error message (more standard)
+  std::string description() const {return message();}
+  
   /// controls whether the error message (and the backtrace, if its printing is enabled) 
   /// is printed out or not
   static void set_print_errors(bool print_errors) {_print_errors = print_errors;}

@@ -1,3 +1,17 @@
+2017-06-20  Gavin Salam  <gavin.salam@cern.ch>
+
+	* pyinterface/tests/:                      *** ADDED ***
+	* pyinterface/tests/sel_str_memcheck.py:   *** ADDED ***
+	* pyinterface/tests/fjexception.py:        *** ADDED ***
+	added some of the code used for tests...
+
+	* pyinterface/fastjet.i:
+	added handling of fastjet::Error exceptions.
+
+	* include/fastjet/Error.hh (Error):
+	added description() member function, in line with what's provided
+	by other classes.
+
 2017-06-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/python/Makefile.am:

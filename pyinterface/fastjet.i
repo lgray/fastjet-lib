@@ -102,6 +102,21 @@ Example
 #include "FastJetPythonExtensions.hh"
   %}
 
+// code to ensure that FJ C++ exceptions are passed on to Python
+// cf https://stackoverflow.com/questions/15006048/dynamically-rethrowing-self-defined-c-exceptions-as-python-exceptions-using-sw
+%exception {
+  try {
+    $action
+      } catch (fastjet::Error &_e) {
+    SWIG_Python_Raise(SWIG_NewPointerObj(
+        (new fastjet::Error(static_cast<const fastjet::Error& >(_e))),  
+            SWIGTYPE_p_fastjet__Error,SWIG_POINTER_OWN),
+        "fastjet::Error", SWIGTYPE_p_fastjet__Error); 
+    SWIG_fail;
+  } 
+}
+
+
 %template(vectorPJ) std::vector<fastjet::PseudoJet>;
 
 %include "fastjet/config_auto.h"
@@ -289,4 +304,7 @@ FASTJET_SWIG_ADD_STR(MassDropTagger)
 FASTJET_SWIG_ADD_STR(RestFrameNSubjettinessTagger)
 FASTJET_SWIG_ADD_STR(JHTopTagger)
 FASTJET_SWIG_ADD_STR(Subtractor)
+FASTJET_SWIG_ADD_STR(Error)
+
+    
 }
