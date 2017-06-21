@@ -4353,9 +4353,17 @@ a considerably simpler computational-geometry structure~\cite{Chan}.
 %======================================================================
 \section{Python interface}
 
-As of version 3.3, \fastjet ships with a Python interface. Its
-compilation can be enabled at configure time with the option
-\ttt{--enable-pyext}. 
+As of version 3.3, \fastjet ships with a Python interface.
+%
+In version 3.3 this interface is to be considered at a beta-release
+stage.
+%
+While we expect it to remain largely stable, some details may evolve
+in future releases.
+
+%
+Its compilation can be enabled at configure time with the option
+\ttt{--enable-pyext}.
 %
 It includes access to much of the functionality in FastJet, except
 plugins and certain features that are difficult to map to Python.
@@ -4368,6 +4376,10 @@ SWIG~\cite{swig}.
 %
 The Python documentation was generated automatically using Doxygen and
 the \ttt{doxy2swig} program~\cite{doxy2swig}.
+
+%----------------------------------------------------------------------
+\subsection{Essential usage}
+\label{sec:python-essential-usage}
 
 The following points are useful to keep in mind:
 \begin{itemize}
@@ -4397,13 +4409,71 @@ The following points are useful to keep in mind:
   objects, using \ttt{SelectorPython(some\_python\_function)}. The
   function must accept a \ttt{PseudoJet} as its single argument and
   return \ttt{True} or \ttt{False}.
+  %
+  You can also supply a class, in which case it should implement a
+  \ttt{\_\_call\_\_(self,particle)} member to indicate whether a
+  particle passes the selector and a \ttt{\_\_str\_\_(self)} member
+  for the description (see \ttt{example/python/06-selector.py}).
+  %
+  
+\item A Python class can also be used to construct a recombiner, which
+  must have \ttt{preprocess(self,pa}, \ttt{recombine(self,pa,pb)} and
+  \ttt{\_\_str\_\_(self)} members, in analogy with the C++ structure,
+  Appendix \ref{sec:recombiner} (with \ttt{\_\_str\_\_} providing the
+  functionality of the C++ \ttt{description} member).
+  %
+  You can then assign the python-based recombiner using a call such as
+  \ttt{jet\_def.set\_python\_recombiner(python\_recombiner)}, cf.\
+  example \ttt{example/python/07-recombiner.py}.
+
+\item When a \fastjet \ttt{Error} exception is thrown from C++, a
+  corresponding \ttt{fastjet.Error(...)} exception is raised in
+  Python. 
+  % 
+  This allows for graceful handling of exceptions, notably in
+  an interactive Python session.
 
 \item Remember that Python uses references, e.g.\ \ttt{a = b} means
   that \ttt{a} is a reference to \ttt{b}. If you need to copy a
   \ttt{PseudoJet} \ttt{pj} with a view to altering it, do ``\ttt{pjcopy =
     PseudoJet(pj)}''.
 \end{itemize}
-%
+
+%----------------------------------------------------------------------
+\subsection{Known issues}
+\label{sec:python-issues}
+
+\begin{itemize}
+\item C++ enums are replaced by integers in Python. 
+  %
+  This causes complications for some overloaded interfaces, notably
+  that of \ttt{JetDefinition}, which takes a jet algorithm
+  specification, followed by zero, one or two C++ \ttt{double} arguments
+  (e.g.\ jet radius $R$ and the power $p$ of the generalised-$k_t$
+  algorithm), then specifications of the recombination scheme and
+  clustering strategy (both enums).
+  %
+  With Python the arguments corresponding to the C++ doubles
+  \emph{must} be Python \ttt{float}s.
+  %
+  If instead they are integers, then they are interpreted as
+  specifying the recombination scheme and clustering strategy.
+
+\item For the \ttt{Selector::sift(jets, jets\_that\_pass, jets\_that\_fail)} C++ member, the last two arguments are
+  references to \ttt{vector<PseudoJet>} objects.
+  %
+  In this case, it is not possible (in version 3.3) to use a Python
+  list in place of those arguments. 
+  %
+  Instead you should pass variables initialised to be \ttt{vectorPJ()}.
+
+\end{itemize}
+
+
+%----------------------------------------------------------------------
+\subsection{A simple example}
+\label{sec:python-example}
+
 A short example of Python usage is as follows:
 %
 \begin{lstlisting}[language=Python]
