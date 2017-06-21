@@ -9,6 +9,9 @@ This release adds a first version of a Python interface to
 FastJet. Enable it with --enable-pyext at configure time and see
 examples/python/ for usage.
 
+Thanks to Lily Asquith and Eric Metodiev for testing and helpful
+feedback.
+
 ================================================================
 Summary of changes from v3.2.0 -> v3.2.1: 2016-08-04
 ================================================================
