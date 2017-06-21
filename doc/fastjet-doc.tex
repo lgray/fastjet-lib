@@ -4440,7 +4440,7 @@ The following points are useful to keep in mind:
 \end{itemize}
 
 %----------------------------------------------------------------------
-\subsection{Known issues}
+\subsection{Known issues as of version 3.3.x}
 \label{sec:python-issues}
 
 \begin{itemize}
@@ -4462,11 +4462,13 @@ The following points are useful to keep in mind:
 \item For the \ttt{Selector::sift(jets, jets\_that\_pass, jets\_that\_fail)} C++ member, the last two arguments are
   references to \ttt{vector<PseudoJet>} objects.
   %
-  In this case, it is not possible (in version 3.3) to use a Python
-  list in place of those arguments. 
+  In this case, it is not possible to use a Python list in place of
+  those arguments.
   %
   Instead you should pass variables initialised to be \ttt{vectorPJ()}.
 
+\item Plugins and \fjcontrib code do not yet have a Python interface,
+  nor does \fjcore.
 \end{itemize}
 
 
