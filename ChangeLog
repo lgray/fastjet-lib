@@ -1,3 +1,10 @@
+2017-06-21  Gavin Salam  <gavin.salam@cern.ch>
+
+	* scripts/mksnapshot.sh:
+	this now generates a patch for the snapshots.html file and echoes
+	commands to apply it; mostly tested, but not yet with an actual
+	snapshot. (Implementation not necessarilly optimally efficient?)
+
 2017-06-20  Gavin Salam  <gavin.salam@cern.ch>
 
 	* pyinterface/tests/:                      *** ADDED ***
