@@ -4417,10 +4417,15 @@ The following points are useful to keep in mind:
   %
   
 \item A Python class can also be used to construct a recombiner, which
-  must have \ttt{preprocess(self,pa}, \ttt{recombine(self,pa,pb)} and
+  must have \ttt{preprocess(self,pa)}, \ttt{recombine(self,pa,pb)} and
   \ttt{\_\_str\_\_(self)} members, in analogy with the C++ structure,
   Appendix \ref{sec:recombiner} (with \ttt{\_\_str\_\_} providing the
   functionality of the C++ \ttt{description} member).
+  %
+  \ttt{preprocess(self,pa)} should (optionally) modify \ttt{pa}
+  directly, while \ttt{recombine(self,pa,pb)} should return a new
+  \ttt{PseudoJet}, resulting from the recombination of \ttt{pa} and
+  \ttt{pb}.
   %
   You can then assign the python-based recombiner using a call such as
   \ttt{jet\_def.set\_python\_recombiner(python\_recombiner)}, cf.\

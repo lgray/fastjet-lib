@@ -1,3 +1,9 @@
+2017-06-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* doc/fastjet-doc.tex:
+	fixed a trivial typo + added a sentence to the description of the
+	user-defined recombiners in python.
+
 2017-06-21  Gavin Salam  <gavin.salam@cern.ch>
 
 	* scripts/mksnapshot.sh:
