@@ -1,5 +1,9 @@
 2017-06-22  Gregory Soyez  <soyez@fastjet.fr>
 
+	* example/python/08-exception.py:          *** ADDED ***
+	started to work on an example showing how to handle fastjet::Error
+	exceptions in python
+
 	* doc/fastjet-doc.tex:
 	fixed a trivial typo + added a sentence to the description of the
 	user-defined recombiners in python.

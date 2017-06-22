@@ -287,6 +287,38 @@ private:
    PyObject *_py_class;  
 };
 
+//----------------------------------------------------------------------
+// Since Python handles enum types as int, there can be some confusion
+// between different JetDefinition ctors, where a int param (intended
+// as a double, like using R=1 or p=-1 for the genkt algorithm) is
+// actually interpreted an te enum (for the recombination scheme).
+//
+// We therefore provide a few helpers to force the construction of a
+// Jet Definition with a fied number of parameters (+recombiner+strategy)
+//
+// JetDefinition0Param(algorithm, recomb_scheme, strategy)
+JetDefinition JetDefinition0Param(JetAlgorithm jet_algorithm, 
+                                  RecombinationScheme recomb_scheme = E_scheme,
+                                  Strategy strategy = Best){
+  return JetDefinition(jet_algorithm, recomb_scheme, strategy);
+}
+
+// JetDefinition1Param(algorithm, R, recomb_scheme, strategy)
+JetDefinition JetDefinition1Param(JetAlgorithm jet_algorithm, 
+                                  double R_in, 
+                                  RecombinationScheme recomb_scheme = E_scheme,
+                                  Strategy strategy = Best){
+  return JetDefinition(jet_algorithm, R_in, recomb_scheme, strategy);
+}
+
+// JetDefinition2Param(algorithm, R, extrarecomb_scheme, strategy)
+JetDefinition JetDefinition2Param(JetAlgorithm jet_algorithm, 
+                                  double R_in, 
+                                  double xtra_param,
+                                  RecombinationScheme recomb_scheme = E_scheme,
+                                  Strategy strategy = Best){
+  return JetDefinition(jet_algorithm, R_in, xtra_param, recomb_scheme, strategy);
+}
 
 
 FASTJET_END_NAMESPACE      // defined in fastjet/internal/base.hh
