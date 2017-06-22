@@ -4,6 +4,15 @@
 	started to work on an example showing how to handle fastjet::Error
 	exceptions in python
 
+	* pyinterface/FastJetPythonExtensions.hh (JetDefinition*Param):
+	added helpers to solve the issue that integer parameters in JD
+	ctors are handled as values for the eRecombinationScheme enum
+	rather ythan float arguments (R or xtra_param). One can now use
+	  JetDefinition0Param(scheme, strategy)
+	  JetDefinition1Param(R, scheme, strategy)
+	  JetDefinition2Param(R, xtra_param, scheme, strategy)
+	where the scheme and strategy are optional.
+
 	* doc/fastjet-doc.tex:
 	fixed a trivial typo + added a sentence to the description of the
 	user-defined recombiners in python.
