@@ -1,3 +1,26 @@
+2017-06-23  Gavin Salam  <gavin.salam@cern.ch>
+
+	* NEWS
+	extended template for 3.3.0 (including thanks)
+
+        * doc/fastjet-doc.tex
+	added discussion of JetDefinitionXParam
+
+        * example/python/01-basic.py
+        * example/python/02-area.py
+        * example/python/03-tools.py
+        * example/python/04-multi-event.py
+        * example/python/05-user-info.py
+        * example/python/06-selector.py
+        * example/python/07-recombiner.py
+	updated docstring to mention use of fastjet-config --pythonpath
+	(rather than some fixed path) and in some cases added missing
+	brief explanation of what the example does.
+
+        * example/python/08-exception.py:
+	revamped the example to illustrate errors raised with invalid R
+	for a JetDefinition (makes example simple, and arguably more useful?)
+
 2017-06-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/python/08-exception.py:          *** ADDED ***

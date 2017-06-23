@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-"""Illustration of the use of selectors defined in Python that work on
-pythonic user information associated with each particle. The
-functionality is largely that of 05-user-info.py, just coded slightly
-differently.
+"""Illustration of the use of recombiners defined in Python.
 
+For this script to work, make sure that the installation location for
+the fastjet python module (cf. fastjet-config --pythonpath) is
+included in your PYTHONPATH environment variable.
 
 """
 from __future__ import print_function

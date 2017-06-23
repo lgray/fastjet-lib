@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+"""Simple example to illustrate use of various FastJet tools in python.
+
+For this script to work, make sure that the installation location for
+the fastjet python module (cf. fastjet-config --pythonpath) is
+included in your PYTHONPATH environment variable.
+
+"""
+
 from __future__ import print_function
 from fastjet import *
 import re

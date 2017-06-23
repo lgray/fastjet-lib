@@ -4464,13 +4464,26 @@ The following points are useful to keep in mind:
   If instead they are integers, then they are interpreted as
   specifying the recombination scheme and clustering strategy.
 
-\item For the \ttt{Selector::sift(jets, jets\_that\_pass, jets\_that\_fail)} C++ member, the last two arguments are
+  As an alternative there are Python calls \texttt{JetDefinition0Param(...)},
+  \texttt{JetDefinition1Param(...)},
+  \texttt{JetDefinition2Param(...)}, which explicitly expect 0, 1 or 2
+  parameters that are automatically converted to double.
+
+  This issue is relevant also if you write code for other users that
+  takes the parameters as an argument and then passes them on to
+  FastJet: you may want to either explicitly call the \ttt{NParam}
+  versions, or explicitly convert the user parameters to \ttt{float}
+  in your own code.
+
+\item For the \ttt{Selector::sift(jets, jets\_that\_pass,
+    jets\_that\_fail)} C++ member, the last two arguments are 
   references to \ttt{vector<PseudoJet>} objects.
   %
   In this case, it is not possible to use a Python list in place of
   those arguments.
   %
-  Instead you should pass variables initialised to be \ttt{vectorPJ()}.
+  Instead you should pass variables initialised to be \ttt{vectorPJ()}
+  (which corresponds to the C++ \ttt{vector<PseudoJet>}).
 
 \item Plugins and \fjcontrib code do not yet have a Python interface,
   nor does \fjcore.

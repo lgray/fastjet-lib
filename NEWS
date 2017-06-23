@@ -2,7 +2,7 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
-Summary of changes from v3.2.1 -> v3.3.0: 2017-??-??
+Summary of changes from v3.2.2 -> v3.3.0: 2017-??-??
 ================================================================
 
 This release adds a first version of a Python interface to
@@ -11,6 +11,10 @@ examples/python/ for usage.
 
 Thanks to Lily Asquith and Eric Metodiev for testing and helpful
 feedback.
+
+================================================================
+***** PUT IN CHANGES from v3.2.1 -> v3.2.2: 2017-??-??
+================================================================
 
 ================================================================
 Summary of changes from v3.2.0 -> v3.2.1: 2016-08-04

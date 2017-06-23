@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 """Simple example to illustrate how to handle fastjet::Error
-exceptions. This is mostly useful in an interactive context.
+exceptions. 
+
+Arguably, the greatest benefit of these exceptions is that the
+interpreter recovers from mistakes made in interactive mode; best seen
+trying the following in interactive mode:
+
+import fastjet as fj
+jd = fj.JetDefinition(fj.antikt_algorithm, 1e4)
 
 For this script to work, make sure that the installation location for
-the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
+the fastjet python module (cf. fastjet-config --pythonpath) is
 included in your PYTHONPATH environment variable.
 
 """
@@ -14,57 +21,14 @@ import fastjet as fj
 
 def main():
 
-    # set up our jet definition and a jet selector
-    
-    # The call
-    #   fj.JetDefinition(fj.antikt_algorithm, 1)
-    # will interpret 1 as a value for the RecombinationScheme enum
-    # instead of the requested R=1.
-    # We'll catch that error
-    try:
-        jet_def = fj.JetDefinition(fj.antikt_algorithm, 1)
-    except fj.Error:
-        print("Caught fj::Error. Will try the explicit construction")
-        jet_def = fj.JetDefinition1Param(fj.antikt_algorithm, 1)
+    trial_R_values = [0.1, 1.0, 10.0, 10000.0]
 
-    selector = fj.SelectorPtMin(5.0) & fj.SelectorAbsRapMax(4.5)
-
-    filename = '../data/single-event.dat'
-    
-    # get the event
-    event = read_event(filename)
-    # cluster it
-    jets = selector(jet_def(event))
-
-    # print out some information about the event and clustering
-    print("Event has {0} particles".format(len(event)))
-    print("jet definition is:",jet_def)
-    print("jet selector is:", selector,"\n")
-    
-    # print the jets
-    print_jets(jets)
-    
-    # get internal information about one of the jets
-    if (len(jets) > 0):
-        print("Number of constituents of jets[0] is {0}".format(len(jets[0].constituents())))
-
-#----------------------------------------------------------------------
-def print_jets(jets):
-    print("{0:>5s} {1:>10s} {2:>10s} {3:>10s}".format("jet #", "pt", "rap", "phi"))
-    for ijet in range(len(jets)):
-        print("{0:5d} {1:10.3f} {2:10.4f} {3:10.4f}".format(
-            ijet, jets[ijet].pt(), jets[ijet].rap(), jets[ijet].phi()))
-    
-        
-#----------------------------------------------------------------------
-def read_event(filename):
-    f = open(filename, 'r')
-    event = []
-    for line in f:
-        p = line.split()
-        event.append(fj.PseudoJet(float(p[0]),float(p[1]),float(p[2]),float(p[3])));
-
-    return event
-    
+    for R in trial_R_values:
+        try:
+            jet_def = fj.JetDefinition(fj.antikt_algorithm, R)
+            print("successfully created jet definition:",jet_def)
+        except fj.Error:
+            print("failed to create jet definition with R =", R)
+            
 if __name__ == '__main__':
     main()

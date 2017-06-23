@@ -2,7 +2,7 @@
 """Simple example to try out fastjet from python, showing multi-event reading.
 
 For this script to work, make sure that the installation location for
-the fastjet python module (e.g. PREFIX/lib/python2.7/site-packages) is
+the fastjet python module (cf. fastjet-config --pythonpath) is
 included in your PYTHONPATH environment variable.
 
 """
