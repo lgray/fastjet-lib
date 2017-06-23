@@ -13,8 +13,14 @@ Thanks to Lily Asquith and Eric Metodiev for testing and helpful
 feedback.
 
 ================================================================
-***** PUT IN CHANGES from v3.2.1 -> v3.2.2: 2017-??-??
+***** PUT IN CHANGES from v3.2.1 -> v3.2.2: 2017-05-23
 ================================================================
+This is a bug-fix release. Main changes:
+
+* fixed issue with negative masses in MassDropTagger
+  (reported by Johannes Elmsheuser)
+* fixed the return type of some PseudoJet operators
+* fixed type mismatch for diJ_plus_link in NNFJN2Tiled
 
 ================================================================
 Summary of changes from v3.2.0 -> v3.2.1: 2016-08-04
