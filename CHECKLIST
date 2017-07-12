@@ -108,17 +108,17 @@ checklist for 3.3.0
              ~salam/software/doxygen-1.8.8/bin/doxygen             
        Note: as of 2017-02-09 the doxyfile was updated to v1.8.12 so
              it may not work on tycho (which has no native doxygen)
-X.Y.Z make sure the swig interface is up-to-date: this is done via the
+3.3.0 make sure the swig interface is up-to-date: this is done via the
       --enable-swig configure option. "make" should build the interface       
 3.3.0  ensure NEWS is up to date (and has the correct release date!)
        put today as a tentative release date.
-X.Y.Z  make sure siscone points to a tag, not trunk
+3.3.0  make sure siscone points to a tag, not trunk
        svn propedit svn:externals plugins/SISCone; svn up
-X.Y.Z  check copyright dates in fjcore preamble (scripts/preamble-fjcore.txt)
+3.3.0  check copyright dates in fjcore preamble (scripts/preamble-fjcore.txt)
 
   validation/checks
   ~~~~~~~~~~~~~~~~~
-X.Y.Z  make check 
+3.3.0  make check 
 X.Y.Z  within zsh, in the examples directory, do 
          echo >! out
          for a in [01]*.cc
