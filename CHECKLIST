@@ -148,16 +148,18 @@ checklist for 3.3.0
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 3.3.0  make distcheck; record the md5sum here (and revision number)
+         732f907dd81922799fd9d8c0d934125a  fastjet-3.3.0.tar.gz (rev 4323)
 3.3.0  generate fjcore and note its md5sum here
        cd scripts; ./mkfjcore.sh; md5sum fjcore-3.3.0.tar.gz; cd ..
-
+         fa37cb588d9ac4a93635871d88e8b495  fjcore-3.3.0.tar.gz
+         
   do the release and announce it
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  copy distribution to web: cp -p fastjet-3.3.0.tar.gz ~salam/www/fastjet/repository/
-X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-3.3.0.tar.gz ~salam/www/fastjet/repository
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.3.0.pdf
-X.Y.Z  doxygen: to avoid spurious files, run doxygen on a tarball
+3.3.0  copy distribution to web: cp -p fastjet-3.3.0.tar.gz ~salam/www/fastjet/repository/
+3.3.0  copy fjcore to web: cp -p scripts/fjcore-3.3.0.tar.gz ~salam/www/fastjet/repository
+3.3.0  compile manual
+3.3.0  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.3.0.pdf
+3.3.0  doxygen: to avoid spurious files, run doxygen on a tarball
          tar -xzf fastjet-3.3.0.tar.gz
          cd fastjet-3.3.0
          ./configure
@@ -165,10 +167,10 @@ X.Y.Z  doxygen: to avoid spurious files, run doxygen on a tarball
        then move to web: mv html ~salam/www/fastjet/repository/doxygen-3.3.0
        (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-3.3.0)
        clean: cd ..; rm -Rf fastjet-3.3.0
-X.Y.Z  update main web page & menu in devel area
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.3.0
-X.Y.Z  update main web-page area
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+3.3.0  update main web page & menu in devel area
+3.3.0  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.3.0
+3.3.0  update main web-page area
+3.3.0  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.3.0
 X.Y.Z  tweet the release
 
