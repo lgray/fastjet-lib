@@ -1,3 +1,14 @@
+2017-07-12  Gregory Soyez  <soyez@fastjet.fr>
+
+	* scripts/preamble-fjcore.txt:
+	updated the copyright dates
+
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	changed version to 3.3.0
+
 2017-06-23  Gregory Soyez  <soyez@fastjet.fr>
 
 	* NEWS:
