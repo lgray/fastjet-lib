@@ -139,8 +139,8 @@ checklist for 3.3.0
 3.3.0  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
 3.3.0  make sure it's committed (before the nightly check)
 3.3.0  rerun the nightly check
-X.Y.Z  mention the release in ChangeLog: just say 
-       "Release of FastJet fastjet-X.Y.Z"
+3.3.0  mention the release in ChangeLog: just say 
+       "Release of FastJet fastjet-3.3.0"
 X.Y.Z  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
@@ -148,27 +148,27 @@ X.Y.Z  make sure it's committed (before distcheck; so that all files
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 X.Y.Z  make distcheck; record the md5sum here (and revision number)
 X.Y.Z  generate fjcore and note its md5sum here
-       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-3.3.0.tar.gz; cd ..
 
   do the release and announce it
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
-X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
+X.Y.Z  copy distribution to web: cp -p fastjet-3.3.0.tar.gz ~salam/www/fastjet/repository/
+X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-3.3.0.tar.gz ~salam/www/fastjet/repository
 X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
+X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.3.0.pdf
 X.Y.Z  doxygen: to avoid spurious files, run doxygen on a tarball
-         tar -xzf fastjet-X.Y.Z.tar.gz
-         cd fastjet-X.Y.Z
+         tar -xzf fastjet-3.3.0.tar.gz
+         cd fastjet-3.3.0
          ./configure
          doxygen
-       then move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
-       (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-X.Y.Z)
-       clean: cd ..; rm -Rf fastjet-X.Y.Z
+       then move to web: mv html ~salam/www/fastjet/repository/doxygen-3.3.0
+       (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-3.3.0)
+       clean: cd ..; rm -Rf fastjet-3.3.0
 X.Y.Z  update main web page & menu in devel area
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
+X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.3.0
 X.Y.Z  update main web-page area
 X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
-       subject: FastJet release X.Y.Z    
+       subject: FastJet release 3.3.0
 X.Y.Z  tweet the release
 
   prepare for the next devel phase
