@@ -38,7 +38,7 @@
 
 // define a deprecation macro based on the capabilities of the compiler
 // (as determined at configure time).
-#if defined(FASTJET_HAVE_CXX14_DEPRECATED)
+#if defined(FASTJET_HAVE_CXX14_DEPRECATED) and (!defined(__FJCORE__))
 #define FASTJET_DEPRECATED               [[deprecated]]
 #define FASTJET_DEPRECATED_MSG(message)  [[deprecated(message)]]
 #elif defined(FASTJET_HAVE_GNUCXX_DEPRECATED)

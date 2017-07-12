@@ -134,7 +134,7 @@ AC_ARG_ENABLE(extra-warnings,
 	[ENABLE_EXTRA_WARNINGS_FLAG="$enableval"],
 	[ENABLE_EXTRA_WARNINGS_FLAG="no"])
 if [[ "$ENABLE_EXTRA_WARNINGS_FLAG" == "yes" ]] ; then
-   AM_CXXFLAGS=${AM_CXXFLAGS}" -ansi -pedantic -Wextra -Wshadow "
+   AM_CXXFLAGS=${AM_CXXFLAGS}" -pedantic -Wextra -Wshadow "
 fi
 
 

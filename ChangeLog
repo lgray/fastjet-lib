@@ -149,6 +149,26 @@
 	* example/python/06-selector.py (HasPID):
 	made this a new-style class (i.e. added (object) at the end). 
 
+2017-05-23  Gregory Soyez  <soyez@fastjet.fr>
+
+	*** BROUGHT FROM THE 3.2.X-devel BRANCH ON 2017-07-12 ***
+
+	Note: issues found when compiling fjcore with [[deprecated]]. This
+	is related to the fact that fjcore is built w -ansi which
+	conflicts w the normal build with gcc6 (with support for
+	[[deprecated]]). Compiling w --enable-extra-warnings instead shows
+	some issues with SISCone replacement of auto_ptr by unique_ptr
+	(SISCone sees it as supported but then it conflicts with the -ansi
+	in FJ). The two fixes below go around those issues.
+
+	* configure.ac:
+	removed the -ansi flag from the "--enable-extra-warnings" option
+	since this is asking for trouble with default c++11 support (like
+	gcc6)
+
+	* include/fastjet/internal/deprecated.hh:
+	explicitly excluded the [[deprecated]] variant from fjcore.
+
 2017-05-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/python/07-recombiner.py:
