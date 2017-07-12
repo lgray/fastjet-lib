@@ -141,13 +141,14 @@ checklist for 3.3.0
 3.3.0  rerun the nightly check
 3.3.0  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-3.3.0"
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.3.0  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
   prepare the distributed material
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate fjcore and note its md5sum here
+
+3.3.0  make distcheck; record the md5sum here (and revision number)
+3.3.0  generate fjcore and note its md5sum here
        cd scripts; ./mkfjcore.sh; md5sum fjcore-3.3.0.tar.gz; cd ..
 
   do the release and announce it
