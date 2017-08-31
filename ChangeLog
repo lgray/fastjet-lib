@@ -1,3 +1,9 @@
+2017-08-31  Gavin Salam  <gavin.salam@cern.ch>
+
+	* plugins/SISCone/SISConeBasePlugin.cc:
+	fixed erroneous UserScaleBase::StructureType -> UserScaleBase as
+	reported by attila.krasznahorkay@cern.ch.
+
 2017-07-12  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
