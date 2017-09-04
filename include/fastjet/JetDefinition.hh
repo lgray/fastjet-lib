@@ -213,7 +213,7 @@ enum RecombinationScheme {
   BIpt2_scheme=6,
   /// pt-based Winner-Takes-All (WTA) recombination: the
   /// result of the recombination has the rapidity, azimuth and mass
-  /// of the the PseudoJet with the larger pt, and a pt equal to the
+  /// of the PseudoJet with the larger pt, and a pt equal to the
   /// sum of the two pt's
   WTA_pt_scheme=7,
   /// mod-p-based Winner-Takes-All (WTA) recombination: the result of
