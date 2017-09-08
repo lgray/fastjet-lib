@@ -25,6 +25,10 @@ dnl Note: this is of no effect if a Makefile is used
 AC_ARG_WITH(cgaldir,
             [AC_HELP_STRING([--with-cgaldir=dir], [Assume the given directory for CGAL (CGAL >= 3.4)])])
 
+dnl al;lows to specify a non0-standard installation directory for Boost used by CGAL
+AC_ARG_WITH(cgal_boostdir,
+            [AC_HELP_STRING([--with-cgal-boostdir=dir], [Assume the given directory for Boost needed by CGAL (CGAL >= 3.4; requires an installed Boost)])])
+
 dnl define CGAL_MAKEFILE to be 
 dnl  1. the value given to --with-cgalmakefile
 dnl  2. the environment var
@@ -161,11 +165,25 @@ if test "$acx_cgal_found" == no; then
 	CXXFLAGS="${CXXFLAGS} -I${with_cgaldir}/include $ADDITIONAL_CGAL_FLAGS"
 	CPPFLAGS="${CPPFLAGS} -I${with_cgaldir}/include $ADDITIONAL_CGAL_FLAGS"
 
-	CGAL_CPPFLAGS="-I${with_cgaldir}/include"
-	CGAL_CXXFLAGS="-I${with_cgaldir}/include"
-	CGAL_LIBS="-L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
+	CGAL_CPPFLAGS="${CGAL_CPPFLAGS} -I${with_cgaldir}/include"
+	CGAL_CXXFLAGS="${CGAL_CXXFLAGS} -I${with_cgaldir}/include"
+	CGAL_LIBS="${CGAL_LIBS} -L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
     fi
 
+    dnl if a non-standard Boost location has been specified, add it to
+    dnl the compilation flags
+    AC_MSG_CHECKING(CGAL Boost dir in ${with_cgal_boostdir})
+    if test \! -z "$with_cgal_boostdir"; then
+	CPPFLAGS="${CPPFLAGS} -I${with_cgal_boostdir}/include"
+	CXXFLAGS="${CXXFLAGS} -I${with_cgal_boostdir}/include"
+       	LDFLAGS="${LDFLAGS} -L${with_cgal_boostdir}/lib -Wl,-rpath,${with_cgal_boostdir}/lib"
+
+	CGAL_CPPFLAGS="${CGAL_CPPFLAGS} -I${with_cgal_boostdir}/include"
+	CGAL_CXXFLAGS="${CGAL_CXXFLAGS} -I${with_cgal_boostdir}/include"
+	CGAL_LIBS="${CGAL_LIBS} -L${with_cgal_boostdir}/lib -Wl,-rpath,${with_cgal_boostdir}/lib"
+    fi
+    AC_MSG_RESULT(yes)
+    
     CXXFLAGS=${CXXFLAGS}" $ADDITIONAL_CGAL_FLAGS"
     CPPFLAGS=${CPPFLAGS}" $ADDITIONAL_CGAL_FLAGS"
 

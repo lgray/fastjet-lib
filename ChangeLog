@@ -1,3 +1,9 @@
+2017-09-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* m4/CGAL.m4 (ACX_CHECK_CGAL):
+	added an option --with-cgal-boostdir to allow specifying a
+	non-standard Boost installation path used to install CGAL
+
 2017-08-31  Gavin Salam  <gavin.salam@cern.ch>
 
 	* plugins/SISCone/SISConeBasePlugin.cc:
