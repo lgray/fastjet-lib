@@ -1,5 +1,9 @@
 2017-09-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* PseudoJet.hh:
+	added theta() and cos_theta() PseudoJet member functions as
+	well as theta(pja, pjb) and cos_theta(pja,pjb) functions
+
 	* m4/CGAL.m4 (ACX_CHECK_CGAL):
 	added an option --with-cgal-boostdir to allow specifying a
 	non-standard Boost installation path used to install CGAL
