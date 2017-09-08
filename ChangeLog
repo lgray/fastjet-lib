@@ -1,5 +1,8 @@
 2017-09-08  Gregory Soyez  <soyez@fastjet.fr>
 
+	* NEWS:
+	started drafting a NEWS for 3.4.0(?)
+
 	* PseudoJet.hh:
 	added theta() and cos_theta() PseudoJet member functions as
 	well as theta(pja, pjb) and cos_theta(pja,pjb) functions
