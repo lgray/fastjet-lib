@@ -171,6 +171,12 @@ class PseudoJet {
   /// return the transverse energy squared
   inline double Et2() const {return (_kt2==0) ? 0.0 : _E*_E/(1.0+_pz*_pz/_kt2);}
 
+  /// cos of the polar angle
+  /// should we have: min(1.0,max(-1.0,_pz/sqrt(modp2()))); 
+  inline double cos_theta() const { return _pz/sqrt(modp2()); }
+  /// polar angle
+  inline double theta() const { return acos(cos_theta()); }
+
   /// returns component i, where X==0, Y==1, Z==2, E==3
   double operator () (int i) const ; 
   /// returns component i, where X==0, Y==1, Z==2, E==3
@@ -849,6 +855,16 @@ inline bool operator!=( const double val, const PseudoJet & a) {return !(a==val)
 /// returns the 4-vector dot product of a and b
 inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
   return a.E()*b.E() - a.px()*b.px() - a.py()*b.py() - a.pz()*b.pz();
+}
+
+/// returns the cosine of the angle between a and b
+inline double cos_theta(const PseudoJet & a, const PseudoJet & b) {
+  return dot_product(a,b)/sqrt(a.modp2()*b.modp2());
+}
+
+/// returns the angle between a and b
+inline double theta(const PseudoJet & a, const PseudoJet & b) {
+  return acos(cos_theta(a,b));
 }
 
 /// returns true if the momenta of the two input jets are identical
