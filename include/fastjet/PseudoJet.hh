@@ -173,7 +173,9 @@ class PseudoJet {
 
   /// cos of the polar angle
   /// should we have: min(1.0,max(-1.0,_pz/sqrt(modp2()))); 
-  inline double cos_theta() const { return _pz/sqrt(modp2()); }
+  inline double cos_theta() const {
+    return std::min(1.0, std::max(-1.0, _pz/sqrt(modp2())));
+  }
   /// polar angle
   inline double theta() const { return acos(cos_theta()); }
 
@@ -859,7 +861,8 @@ inline double dot_product(const PseudoJet & a, const PseudoJet & b) {
 
 /// returns the cosine of the angle between a and b
 inline double cos_theta(const PseudoJet & a, const PseudoJet & b) {
-  return dot_product(a,b)/sqrt(a.modp2()*b.modp2());
+  double dot_3d = a.px()*b.px() + a.py()*b.py() + a.pz()*b.pz();
+  return std::min(1.0, std::max(-1.0, dot_3d/sqrt(a.modp2()*b.modp2())));
 }
 
 /// returns the angle between a and b

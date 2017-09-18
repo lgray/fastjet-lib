@@ -1,3 +1,9 @@
+2017-09-18  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/PseudoJet.hh:
+	fixed issue + added safegards for the computation of theta and
+	cos_theta
+
 2017-09-08  Gregory Soyez  <soyez@fastjet.fr>
 
 	* NEWS:
