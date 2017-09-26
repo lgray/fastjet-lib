@@ -1,3 +1,15 @@
+2017-09-26  Gregory Soyez  <soyez@fastjet.fr>
+
+	* configure.ac:
+	remove unused CGAL variable
+
+	* m4/CGAL.m4:
+	revamped the CGAL detection script to also search for libraries in
+	lib64 and lib32 subdirectories when CGAL (or Boost for CGAL_ paths
+	are supplied by the user
+
+	Cleaned unused bits in the process
+
 2017-09-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/PseudoJet.hh:
