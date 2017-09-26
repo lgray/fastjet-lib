@@ -237,8 +237,9 @@ if test "$acx_cgal_found" == no; then
     dnl if the headers have been found, check for the libs
     if test "$cgal_have_header" == yes; then
         dnl prepare the linker flags for test
-        LIBS="${save_LIBS} $CGAL_LIBS"
-        
+        LIBS="${save_LIBS}"
+        LDFLAGS="${save_LDFLAGS} $CGAL_LIBS"
+
         AC_LANG_PUSH(C++)
 	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
 	AC_LANG_POP(C++)
