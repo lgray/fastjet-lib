@@ -1,5 +1,8 @@
 2017-09-26  Gregory Soyez  <soyez@fastjet.fr>
 
+	* m4/CGAL.m4:
+	removed debugging comment
+
 	* configure.ac:
 	remove unused CGAL variable
 

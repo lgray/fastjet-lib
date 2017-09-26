@@ -269,8 +269,6 @@ if test "$acx_cgal_found" == no; then
     fi
 fi
 
-echo "CGAL_LIBS set to $CGAL_LIBS"
-
 AC_MSG_CHECKING(CGAL)
 if test "$acx_cgal_found" == yes; then
 	AC_MSG_RESULT(yes);
