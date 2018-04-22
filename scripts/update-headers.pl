@@ -22,7 +22,7 @@ print "End year for copyright is $endyear\n";
 
 
 # set up directories where we want to act
-@dirs=("include","tools","src","plugins","fortran_wrapper");
+@dirs=("include","tools","src","plugins","fortran_wrapper", "scripts");
 print "Directories in which to search are: ",join(" ",@dirs),"\n";
 
 print "Do you want to update the files (Y), or just do a dry run (N)?\n";
@@ -44,7 +44,9 @@ find($options, @dirs);
 # out the update
 sub wanted($) {
   $file = $_;
-  if ($file =~ /\.cc$/ || $file =~ /\.hh$/ || $file =~ /\.icc$/ || $file =~ /\.f$/) {
+  # NB: .txt files are updated notably for the fjcore preamble
+  if ($file =~ /\.cc$/ || $file =~ /\.hh$/ || $file =~ /\.icc$/
+      || $file =~ /\.f$/ || $file =~ /\.txt$/) {
   } else {
     return;
   }

@@ -13,6 +13,7 @@ checklist for X.Y.Z (make a copy before editing!)
   preparatory work
   ~~~~~~~~~~~~~~~~
 X.Y.Z  run svn up
+X.Y.Z  make sure headers are up to date with ./scripts/update-headers.pl
 X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
 X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
        the class list that all classes are prefixed by 'fastjet::'
