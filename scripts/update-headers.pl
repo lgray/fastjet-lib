@@ -22,7 +22,7 @@ print "End year for copyright is $endyear\n";
 
 
 # set up directories where we want to act
-@dirs=("include","tools","src","plugins");
+@dirs=("include","tools","src","plugins","fortran_wrapper");
 print "Directories in which to search are: ",join(" ",@dirs),"\n";
 
 print "Do you want to update the files (Y), or just do a dry run (N)?\n";
@@ -54,6 +54,7 @@ sub wanted($) {
   $contents = "";
   $header   = "";
   $changedHeader = 0;
+  $fjcore = 0;
   $Id = "\$Id\$";
   my $copyrightstart="2005";
   while ($line = <INFILE>) {
@@ -66,14 +67,16 @@ sub wanted($) {
       $Id = $1;
     }
     # check for copyright and get starting year
-    if ($line =~ /^\s*\/\/ *Copyright .c. ([0-9]{4})-.*Cacciari/) {
+    if ($line =~ /^\s*\/\/ *Copyright .c. ([0-9]{4})-?.*Cacciari/) {
       $copyrightstart = $1;
     }
+    if ($line =~ /fjcore/) {$fjcore = 1;}
     if (! $headerOn) {$contents .= $line;}
     else {$header .= $line;}
     if ($line =~ /^\s*\/\/(FJ)?ENDHEADER/) {
       $headerOn = 0;
       $newheader = &header($copyrightstart,$Id);
+      if ($fjcore) {$newheader =~ s/FastJet/FastJet (fjcore)/m;}
       $contents .= $newheader;
       $changedHeader=1;
     }

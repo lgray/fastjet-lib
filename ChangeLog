@@ -1,5 +1,12 @@
 2018-04-22  Gavin Salam  <gavin.salam@cern.ch>
 
+	* various/(*.hh|cc)
+	* scripts/update-headers.pl:
+	better at handling cases where copyright is a single year (though
+	it could end up reading 2018-2018); also now handles the C++ files
+	in the fortran_wrapper directory; and recognises fjcore files,
+	leaving the fjcore indicator in there.
+
 	* **/*.cc **/*.hh:
 	* scripts/preamble-fjcore.txt:
 	updated copyright date on FJ files to 2018
