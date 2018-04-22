@@ -1,7 +1,8 @@
 2018-04-22  Gavin Salam  <gavin.salam@cern.ch>
 
+	* **/*.cc **/*.hh:
 	* scripts/preamble-fjcore.txt:
-	updated copyright date to 2018
+	updated copyright date on FJ files to 2018
 
 2018-04-21  Gavin Salam  <gavin.salam@cern.ch>
 
