@@ -1,3 +1,14 @@
+2018-04-22  Gavin Salam  <gavin.salam@cern.ch>
+
+	* scripts/preamble-fjcore.txt:
+	updated copyright date to 2018
+
+2018-04-21  Gavin Salam  <gavin.salam@cern.ch>
+
+	* fortran_wrapper/fastjetfortran.cc:
+	commented out changes that help with thread safety in
+	fastjetfortran. (Plan for future is to introduce an ifdef)
+
 2017-09-26  Gregory Soyez  <soyez@fastjet.fr>
 
 	* m4/CGAL.m4:
