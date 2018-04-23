@@ -141,17 +141,20 @@ checklist for 3.3.1: from Gavin's laptop
 *****  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
 3.3.1  make sure it's committed (before the nightly check)
 3.3.1  rerun the nightly check
-X.Y.Z  mention the release in ChangeLog: just say 
+3.3.1  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-X.Y.Z"
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.3.1  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
   prepare the distributed material
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate fjcore and note its md5sum here
-       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
+3.3.1  make distcheck; record the md5sum here (and revision number)
+       4cc4e07abb1c2ccc54e040c346c3b433 (rev 4364)
 
+3.3.1  generate fjcore and note its md5sum here
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
+       MD5 (fjcore-3.3.1.tar.gz) = 0df7f46df0c48db931ac10ce03a1e167
+       
   do the release and announce it
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
