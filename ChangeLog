@@ -1,5 +1,11 @@
-2018-04-22  Gavin Salam  <gavin.salam@cern.ch>
+2018-04-23  Gavin Salam  <gavin.salam@cern.ch>
 
+	* COPYING:
+	changed initial paragraph to indicate that FJ license is GPL v2 or
+	later (rather than just v2), in accord with the headers of the
+	source files.
+
+2018-04-22  Gavin Salam  <gavin.salam@cern.ch>
 
 	* various/(*.hh|cc)
 	* scripts/preamble-fjcore.txt:
