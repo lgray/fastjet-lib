@@ -1,5 +1,12 @@
 2018-04-23  Gavin Salam  <gavin.salam@cern.ch>
 
+	* NEWS
+        * Doxyfile
+        * configure.ac
+        * doc/fastjet-doc.tex
+	* include/fastjet/config_win.h
+	preparing for 3.3.1 release
+
 	* COPYING:
 	changed initial paragraph to indicate that FJ license is GPL v2 or
 	later (rather than just v2), in accord with the headers of the
