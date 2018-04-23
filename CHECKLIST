@@ -139,7 +139,6 @@ checklist for 3.3.1: from Gavin's laptop
 3.3.1  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
 *****  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
-       FAILED because 
 3.3.1  make sure it's committed (before the nightly check)
 X.Y.Z  rerun the nightly check
 X.Y.Z  mention the release in ChangeLog: just say 

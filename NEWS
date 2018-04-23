@@ -5,7 +5,7 @@ Release Notes for FastJet
 Summary of changes from v3.3.0 -> v3.3.1: 2018-04-24
 ================================================================
 
-* License clarified as being GPL v2 or later
+* Main FastJet License clarified as being GPL v2 or later
 * added theta() and cos_theta() members to PseudoJet 
 * added a --with-cgal-boostdir=... configure option to handle
   cases where CGAL uses a non-standard Boost installation path
