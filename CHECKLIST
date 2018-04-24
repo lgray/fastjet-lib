@@ -179,7 +179,7 @@ X.Y.Z  tweet the release
   prepare for the next devel phase
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 3.3.1  make sure it's committed with the CHECKLIST
-X.Y.Z  reset the SISCone link to the trunk: 
+3.3.1  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
        scripts/set-version.sh VERSION-NUMBER
