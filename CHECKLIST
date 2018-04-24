@@ -171,14 +171,14 @@ checklist for 3.3.1: from Gavin's laptop
        clean: cd ..; rm -Rf fastjet-3.3.1
 3.3.1  update main web page & menu in devel area
 3.3.1  tag: svn cp . ^/tags/fastjet-3.3.1
-X.Y.Z  update main web-page area
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+3.3.1  update main web-page area
+3.3.1  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z    
 X.Y.Z  tweet the release
 
   prepare for the next devel phase
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.3.1  make sure it's committed with the CHECKLIST
 X.Y.Z  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
