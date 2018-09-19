@@ -1,3 +1,9 @@
+2018-09-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/Makefile.am (libfastjettools_la_LIBADD):
+	made libfastjet a dependence of libfastjettools (issue raised by
+	Jan Strube <jstrube@uoregon.edu>)
+
 2018-09-19  Gavin Salam  <gavin.salam@cern.ch>
 
 	* changed external link for SISCone to reflect new hepforge
