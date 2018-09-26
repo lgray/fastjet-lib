@@ -1,7 +1,32 @@
+2018-09-26  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/GridJet/Makefile.am:
+	* plugins/D0RunICone/Makefile.am:
+	* plugins/CMSIterativeCone/Makefile.am:
+	* plugins/Jade/Makefile.am:
+	* plugins/EECambridge/Makefile.am:
+	* plugins/ATLASCone/Makefile.am:
+	* plugins/TrackJet/Makefile.am:
+	* plugins/NestedDefs/Makefile.am:
+	* plugins/D0RunIICone/Makefile.am:
+	* plugins/PxCone/Makefile.am:
+	* plugins/CDFCones/Makefile.am:
+	* plugins/SISCone/Makefile.am:
+	made all the lib<plugin_name>Plugin (non-monolithic build) depend
+	on libfastjet
+
+	* plugins/SISCone/Makefile.am:
+	added a dependence of the produced library (single or monolithic)
+	on libsiscone and libsisconespherical
+
+	* plugins/Makefile.am:
+	made libfastjetplugin (and all the individual plugin libs for
+	non-monolithic biulds) depend on libfastjet
+
 2018-09-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/Makefile.am (libfastjettools_la_LIBADD):
-	made libfastjet a dependence of libfastjettools (issue raised by
+	made libfastjettools depend on libfastjet (issue raised by
 	Jan Strube <jstrube@uoregon.edu>)
 
 2018-09-19  Gavin Salam  <gavin.salam@cern.ch>
