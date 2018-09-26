@@ -1,5 +1,8 @@
 2018-09-26  Gregory Soyez  <soyez@fastjet.fr>
 
+	* NEWS:
+	drafted NEWS for 3.3.2 release
+
 	* plugins/GridJet/Makefile.am:
 	* plugins/D0RunICone/Makefile.am:
 	* plugins/CMSIterativeCone/Makefile.am:
