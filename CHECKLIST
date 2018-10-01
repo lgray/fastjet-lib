@@ -181,7 +181,7 @@ NONO!  tweet the release
 
   prepare for the next devel phase
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  make sure it's committed with the CHECKLIST
+3.3.2  make sure it's committed with the CHECKLIST
 X.Y.Z  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
 X.Y.Z  move the version number to X.Y.(Z+1)-devel with
