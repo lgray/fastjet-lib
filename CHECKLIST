@@ -152,30 +152,32 @@ SKIPPED  after make install, from a separate directory, run regression-tests/tes
 
   prepare the distributed material
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  make distcheck; record the md5sum here (and revision number)
-X.Y.Z  generate fjcore and note its md5sum here
-       cd scripts; ./mkfjcore.sh; md5sum fjcore-X.Y.Z.tar.gz; cd ..
-
+3.3.2  make distcheck; record the md5sum here (and revision number)
+       ca3708785c9194513717a54c1087bfb0  fastjet-3.3.2.tar.gz (rev 4382)
+3.3.2  generate fjcore and note its md5sum here
+       cd scripts; ./mkfjcore.sh; md5sum fjcore-3.3.2.tar.gz; cd ..
+       edde318e04e69d3b96083bf06f815206  fjcore-3.3.2.tar.gz
+       
   do the release and announce it
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  copy distribution to web: cp -p fastjet-X.Y.Z.tar.gz ~salam/www/fastjet/repository/
-X.Y.Z  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
-X.Y.Z  compile manual
-X.Y.Z  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-X.Y.Z.pdf
-X.Y.Z  doxygen: to avoid spurious files, run doxygen on a tarball
-         tar -xzf fastjet-X.Y.Z.tar.gz
-         cd fastjet-X.Y.Z
+3.3.2  copy distribution to web: cp -p fastjet-3.3.2.tar.gz ~salam/www/fastjet/repository/
+3.3.2  copy fjcore to web: cp -p scripts/fjcore-X.Y.Z.tar.gz ~salam/www/fastjet/repository
+3.3.2  compile manual
+3.3.2  copy manual to web: cp -p fastjet-doc.pdf ~salam/www/fastjet/repository/fastjet-doc-3.3.2.pdf
+3.3.2  doxygen: to avoid spurious files, run doxygen on a tarball
+         tar -xzf fastjet-3.3.2.tar.gz
+         cd fastjet-3.3.2
          ./configure --enable-allcxxplugins
          doxygen
        then move to web: mv html ~salam/www/fastjet/repository/doxygen-X.Y.Z
-       (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-X.Y.Z)
-       clean: cd ..; rm -Rf fastjet-X.Y.Z
-X.Y.Z  update main web page & menu in devel area
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-X.Y.Z
-X.Y.Z  update main web-page area
-X.Y.Z  send mail to: fastjet-announce@projects.hepforge.org
+       (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-3.3.2)
+       clean: cd ..; rm -Rf fastjet-3.3.2
+3.3.2  update main web page & menu in devel area
+3.3.2  tag: svn cp . svn+ssh://tycho/ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.3.2
+3.3.2  update main web-page area
+NONO!  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release X.Y.Z    
-X.Y.Z  tweet the release
+NONO!  tweet the release
 
   prepare for the next devel phase
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
