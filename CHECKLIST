@@ -144,10 +144,10 @@ SKIPPED  after make install, from a separate directory, run regression-tests/tes
         *** due to the recent upgrade of HepForge,fj-contrib has not
         *** yet been updated. We postpone this to later
 3.3.2  make sure it's committed (before the nightly check)
-X.Y.Z  rerun the nightly check
-X.Y.Z  mention the release in ChangeLog: just say 
+3.3.2  rerun the nightly check
+3.3.2  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-X.Y.Z"
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.3.2  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
   prepare the distributed material
