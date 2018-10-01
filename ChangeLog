@@ -1,5 +1,11 @@
 2018-10-01  Gregory Soyez  <soyez@fastjet.fr>
 
+	* doc/fastjet-doc.tex:
+	updated my affiliation to include CNRS and Univ. Paris-Saclay
+
+	* src/ClusterSequence.cc (print_banner):
+	updated banner so it mentions GPL v2 or higher
+
 	* configure.ac:
 	* include/fastjet/config_win.h:
 	* Doxyfile:
