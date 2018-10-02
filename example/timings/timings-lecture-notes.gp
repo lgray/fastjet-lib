@@ -32,7 +32,7 @@ set label 1 'FastJet 3.3.2, R=0.5' at graph 0.05,0.95 boxed
 # just fj30 results
 plot m.'"strategy = 202"'  u 1:(1000*$2) w l dt (4,4,4,4)  lw 3 lc 3              t 'CDFMidPoint',\
      m.'"strategy = 204"'  u 1:(1000*$2) w l dt 1          lw 3 lc 3              t 'SISCone',\
-     m.'"strategy = 100"'  u 1:(1000*$2) w l dt (12,4,4,4) lw 3 lc 1              t 'k_t (ktjet)',\
+     m.'"strategy = 100 "' u 1:(1000*$2) w l dt (12,4,4,4) lw 3 lc 1              t 'k_t (ktjet)',\
      m.'"strategy = 1"'    u 1:(1000*$2) w l dt 1          lw 4 lc 1              t 'k_t (FastJet)',\
      m.'"strategy = 1001"' u 1:(1000*$2) w l dt 1          lw 3 lc rgb "#00cc00"  t 'C/A (FastJet)',\
      m.'"strategy = 2001"' u 1:(1000*$2) w l dt 1          lw 3 lc 7              t 'anti-k_t (FastJet)'
