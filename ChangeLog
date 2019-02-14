@@ -1,3 +1,9 @@
+2019-02-14  Gavin Salam  <gavin.salam@cern.ch>
+
+	* plugins/Jade/JadePlugin.cc (JadeBriefJet):
+	introduced fix proposed by andrii.verbytskyi@mpp.mpg.de to work
+	around overflow error when rt2E < 1.
+
 2018-10-01  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex:
