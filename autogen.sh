@@ -59,7 +59,7 @@ LIBTOOLIZE=libtoolize
 }
 
 (grep "^AC_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
-  ($LIBTOOL --version) < /dev/null > /dev/null 2>&1 || {
+  ($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed."
     echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2d.tar.gz"
