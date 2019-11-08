@@ -1,3 +1,15 @@
+2019-11-08  Gregory Soyez  <soyez@fastjet.fr>
+
+	* m4/CGAL.m4:
+	added a --with-cgal-gmpdir=... allowing one to use a non-standard
+	directory for the GMP library (used to build CGAL).
+	Note that this is only relevasnt when FastJet is built wih
+	--enable-cgal
+
+	* fastjet-config.in:
+	reordered link flags to properly satisfy dependencies (put fastjet
+	before CGAL/gmp)
+
 2019-05-10  Gavin Salam  <salam@hydra>
 
 	* autogen.sh (LIBTOOLIZE):
