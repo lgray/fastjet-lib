@@ -212,6 +212,34 @@ if test "$acx_cgal_found" == no; then
         fi
     fi
 
+    dnl check for gmp
+    dnl if a non-standard location has been specified, add it to
+    dnl the compilation flags
+    if test \! -z "$with_cgal_gmpdir"; then
+        AC_MSG_CHECKING(with GMP in ${with_cgal_gmpdir})
+        CGAL_CPPFLAGS="$CGAL_CPPFLAGS -I${with_cgal_gmpdir}/include"
+        libdir_found="no"
+        for libdircandidate in lib lib64 lib32; do
+            if test -d ${with_cgal_gmpdir}/${libdircandidate}; then
+                libdir_found="yes"
+                CGAL_LIBS="${CGAL_LIBS} -L${with_cgal_gmpdir}/${libdircandidate} -Wl,-rpath,${with_cgal_gmpdir}/${libdircandidate}"
+                break
+            fi
+        done
+        if test "$libdir_found" == yes; then
+            AC_MSG_RESULT([${libdircandidate}])
+        else 
+            AC_MSG_RESULT([no GMP lib found in directory])
+            $2
+            exit
+        fi
+    fi
+    dnl search for gmp
+    AC_CHECK_LIB(gmp, main, [CGAL_LIBS="$CGAL_LIBS -lgmp"])
+    dnl AC_CHECK_LIB(gmpxx, main, [CGAL_LIBS="$CGAL_LIBS -lgmpxx"])
+    dnl AC_CHECK_LIB(CGALcore++, main, [CGAL_LIBS="$CGAL_LIBS -lCGALcore++"])
+
+
     dnl search the CGAL headers
     dnl
     dnl set temporarily the check language to C++
@@ -242,42 +270,15 @@ if test "$acx_cgal_found" == no; then
     if test "$cgal_have_header" == yes; then
         dnl prepare the linker flags for test
         LIBS="${save_LIBS}"
-        LDFLAGS="${save_LDFLAGS} $CGAL_LIBS"
+        LDFLAGS="$CGAL_LIBS ${save_LDFLAGS}"
 
         AC_LANG_PUSH(C++)
 	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
 	AC_LANG_POP(C++)
 	if test "$cgal_have_lib" == yes; then
-	    CGAL_LIBS=${CGAL_LIBS}" -lCGAL"
+	    CGAL_LIBS=" -lCGAL "${CGAL_LIBS}
             dnl AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="$CGAL_LIBS -lmpfr"])
             
-            dnl check for gmp
-            dnl if a non-standard location has been specified, add it to
-            dnl the compilation flags
-            if test \! -z "$with_cgal_gmpdir"; then
-                AC_MSG_CHECKING(with GMP in ${with_cgal_gmpdir})
-	        CGAL_CPPFLAGS="$CGAL_CPPFLAGS -I${with_cgal_gmpdir}/include"
-                libdir_found="no"
-                for libdircandidate in lib lib64 lib32; do
-                    if test -d ${with_cgal_gmpdir}/${libdircandidate}; then
-                        libdir_found="yes"
-                        CGAL_LIBS="${CGAL_LIBS} -L${with_cgal_gmpdir}/${libdircandidate} -Wl,-rpath,${with_cgal_gmpdir}/${libdircandidate}"
-                        break
-                    fi
-                done
-                if test "$libdir_found" == yes; then
-                    AC_MSG_RESULT([${libdircandidate}])
-                else 
-                    AC_MSG_RESULT([no GMP lib found in directory])
-                    $2
-                    exit
-                fi
-            fi
-            dnl search for gmp
-            AC_CHECK_LIB(gmp, main, [CGAL_LIBS="$CGAL_LIBS -lgmp"])
-	    dnl AC_CHECK_LIB(gmpxx, main, [CGAL_LIBS="$CGAL_LIBS -lgmpxx"])
-	    dnl AC_CHECK_LIB(CGALcore++, main, [CGAL_LIBS="$CGAL_LIBS -lCGALcore++"])
-
             dnl we can finally claim we've found CGAL!
 	    acx_cgal_found=yes
         fi
