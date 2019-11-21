@@ -1,3 +1,10 @@
+2019-11-21  Gregory Soyez  <soyez@fastjet.fr>
+
+	* m4/CGAL.m4:
+	uniformised the CGAL dependency checks: we now check for Boost,
+	GMP and MPFR whikcch are the 3 dependences listed by CGAL (since
+	at least v4.1)
+
 2019-11-15  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:

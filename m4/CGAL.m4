@@ -33,6 +33,10 @@ dnl allows to specify a non-standard installation directory for GMP used by CGAL
 AC_ARG_WITH(cgal_gmpdir,
             [AC_HELP_STRING([--with-cgal-gmpdir=dir], [Assume the given directory for GMP needed by CGAL])])
 
+dnl allows to specify a non-standard installation directory for MPFR used by CGAL
+AC_ARG_WITH(cgal_mpfrdir,
+            [AC_HELP_STRING([--with-cgal-mpfrdir=dir], [Assume the given directory for MPFR needed by CGAL])])
+
 dnl define CGAL_MAKEFILE to be 
 dnl  1. the value given to --with-cgalmakefile
 dnl  2. the environment var
@@ -192,6 +196,11 @@ if test "$acx_cgal_found" == no; then
 
     dnl if a non-standard Boost location has been specified, add it to
     dnl the compilation flags
+    dnl
+    dnl it seems that an explicit -lbbost is not needed to compile FJ
+    dnl or codes using FJ. The code below just adds the -L flags in
+    dnl case it helps as well as the include files
+    dnl
     if test \! -z "$with_cgal_boostdir"; then
         AC_MSG_CHECKING(with Boost lib in ${with_cgal_boostdir})
 	CGAL_CPPFLAGS="$CGAL_CPPFLAGS -I${with_cgal_boostdir}/include"
@@ -211,8 +220,13 @@ if test "$acx_cgal_found" == no; then
             exit
         fi
     fi
+    AC_CHECK_LIB(boost_system, main, [CGAL_LIBS="-lboost_system $CGAL_LIBS"])
+    AC_CHECK_LIB(boost_thread, main, [CGAL_LIBS="-lboost_thread $CGAL_LIBS"])
 
-    dnl check for gmp
+    dnl check for gmp as CGAL depends on it
+    dnl
+    dnl it seems that FJ (and code using FJ) depend both on headers and lib
+    dnl
     dnl if a non-standard location has been specified, add it to
     dnl the compilation flags
     if test \! -z "$with_cgal_gmpdir"; then
@@ -235,9 +249,37 @@ if test "$acx_cgal_found" == no; then
         fi
     fi
     dnl search for gmp
-    AC_CHECK_LIB(gmp, main, [CGAL_LIBS="$CGAL_LIBS -lgmp"])
+    AC_CHECK_LIB(gmp, main, [CGAL_LIBS="-lgmp $CGAL_LIBS"])
     dnl AC_CHECK_LIB(gmpxx, main, [CGAL_LIBS="$CGAL_LIBS -lgmpxx"])
-    dnl AC_CHECK_LIB(CGALcore++, main, [CGAL_LIBS="$CGAL_LIBS -lCGALcore++"])
+
+    dnl check for MPFR as CGAL depends on it
+    dnl
+    dnl it seems that FJ (and code using FJ) depend only on the headers.
+    dnl We include both on headers and lib
+    dnl
+    dnl if a non-standard location has been specified, add it to
+    dnl the compilation flags
+    if test \! -z "$with_cgal_mpfrdir"; then
+        AC_MSG_CHECKING(with MPFR in ${with_cgal_mpfrdir})
+        CGAL_CPPFLAGS="$CGAL_CPPFLAGS -I${with_cgal_mpfrdir}/include"
+        libdir_found="no"
+        for libdircandidate in lib lib64 lib32; do
+            if test -d ${with_cgal_mpfrdir}/${libdircandidate}; then
+                libdir_found="yes"
+                CGAL_LIBS="${CGAL_LIBS} -L${with_cgal_mpfrdir}/${libdircandidate} -Wl,-rpath,${with_cgal_mpfrdir}/${libdircandidate}"
+                break
+            fi
+        done
+        if test "$libdir_found" == yes; then
+            AC_MSG_RESULT([${libdircandidate}])
+        else 
+            AC_MSG_RESULT([no MPFR lib found in directory])
+            $2
+            exit
+        fi
+    fi
+    dnl search for mpfr
+    AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="-lmpfr $CGAL_LIBS"])
 
 
     dnl search the CGAL headers
@@ -274,10 +316,10 @@ if test "$acx_cgal_found" == no; then
 
         AC_LANG_PUSH(C++)
 	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
+        dnl AC_CHECK_LIB(CGALcore++, main, [CGAL_LIBS="$CGAL_LIBS -lCGALcore++"])
 	AC_LANG_POP(C++)
 	if test "$cgal_have_lib" == yes; then
 	    CGAL_LIBS=" -lCGAL "${CGAL_LIBS}
-            dnl AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="$CGAL_LIBS -lmpfr"])
             
             dnl we can finally claim we've found CGAL!
 	    acx_cgal_found=yes
