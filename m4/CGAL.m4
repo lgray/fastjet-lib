@@ -37,6 +37,12 @@ dnl allows to specify a non-standard installation directory for MPFR used by CGA
 AC_ARG_WITH(cgal_mpfrdir,
             [AC_HELP_STRING([--with-cgal-mpfrdir=dir], [Assume the given directory for MPFR needed by CGAL])])
 
+dnl allows one to say that the CGAL build is header-only
+AC_ARG_ENABLE(cgal-header-only,
+	[  --enable-cgal-header-only   signals a header-only install of CGAL [default=no]],
+	[ENABLE_CGAL_HEADER_ONLY_FLAG="$enableval"],
+	[ENABLE_CGAL_HEADER_ONLY_FLAG="no"])
+
 dnl define CGAL_MAKEFILE to be 
 dnl  1. the value given to --with-cgalmakefile
 dnl  2. the environment var
@@ -174,25 +180,12 @@ if test "$acx_cgal_found" == no; then
             AC_MSG_RESULT([${libdircandidate}])
         else 
             AC_MSG_RESULT([no CGALlib found in directory])
+            CGAL_CPPFLAGS=""
+            CGAL_LIBS=""
             $2
             exit
         fi
     fi
-
-    dnl    dnl check if a directory has bee specified
-    dnl    dnl in that case, we need to add a -I and -L arg to CXXFLAGS and LDFLAGS
-    dnl    dnl Note that the headers will be searched fo in ${cgaldir}/include
-    dnl    dnl and the libs in ${cgaldir}/libs
-    dnl    if test \! -z "$with_cgaldir"; then
-    dnl        AC_MSG_CHECKING(CGAL in ${with_cgaldir})
-    dnl        LDFLAGS="${LDFLAGS} -L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
-    dnl        CXXFLAGS="${CXXFLAGS} -I${with_cgaldir}/include $ADDITIONAL_CGAL_FLAGS"
-    dnl        CPPFLAGS="${CPPFLAGS} -I${with_cgaldir}/include $ADDITIONAL_CGAL_FLAGS"
-    dnl    
-    dnl        CGAL_CPPFLAGS="${CGAL_CPPFLAGS} -I${with_cgaldir}/include"
-    dnl        CGAL_CXXFLAGS="${CGAL_CXXFLAGS} -I${with_cgaldir}/include"
-    dnl        CGAL_LIBS="${CGAL_LIBS} -L${with_cgaldir}/lib -Wl,-rpath,${with_cgaldir}/lib"
-    dnl    fi
 
     dnl if a non-standard Boost location has been specified, add it to
     dnl the compilation flags
@@ -204,24 +197,29 @@ if test "$acx_cgal_found" == no; then
     if test \! -z "$with_cgal_boostdir"; then
         AC_MSG_CHECKING(with Boost lib in ${with_cgal_boostdir})
 	CGAL_CPPFLAGS="$CGAL_CPPFLAGS -I${with_cgal_boostdir}/include"
-        libdir_found="no"
-        for libdircandidate in lib lib64 lib32; do
-            if test -d ${with_cgal_boostdir}/${libdircandidate}; then
-                libdir_found="yes"
-                CGAL_LIBS="${CGAL_LIBS} -L${with_cgal_boostdir}/${libdircandidate} -Wl,-rpath,${with_cgal_boostdir}/${libdircandidate}"
-                break
-            fi
-        done
-        if test "$libdir_found" == yes; then
-            AC_MSG_RESULT([${libdircandidate}])
-        else 
-            AC_MSG_RESULT([no Boost lib found in directory])
-            $2
-            exit
-        fi
+
+          libdir_found="no"
+          for libdircandidate in lib lib64 lib32; do
+              if test -d ${with_cgal_boostdir}/${libdircandidate}; then
+                  libdir_found="yes"
+                  CGAL_LIBS="${CGAL_LIBS} -L${with_cgal_boostdir}/${libdircandidate} -Wl,-rpath,${with_cgal_boostdir}/${libdircandidate}"
+                  break
+              fi
+          done
+          if test "$libdir_found" == yes; then
+              AC_MSG_RESULT([${libdircandidate}])
+          else 
+              AC_MSG_RESULT([no Boost lib found in directory])
+              CGAL_CPPFLAGS=""
+              CGAL_LIBS=""
+              $2
+              exit
+          fi
     fi
-    AC_CHECK_LIB(boost_system, main, [CGAL_LIBS="-lboost_system $CGAL_LIBS"])
-    AC_CHECK_LIB(boost_thread, main, [CGAL_LIBS="-lboost_thread $CGAL_LIBS"])
+    dnl     AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
+    dnl if test "$cgal_have_lib" == yes; then
+    dnl AC_CHECK_LIB(boost_system, main, [CGAL_LIBS="-lboost_system $CGAL_LIBS"])
+    dnl AC_CHECK_LIB(boost_thread, main, [CGAL_LIBS="-lboost_thread $CGAL_LIBS"])
 
     dnl check for gmp as CGAL depends on it
     dnl
@@ -244,12 +242,23 @@ if test "$acx_cgal_found" == no; then
             AC_MSG_RESULT([${libdircandidate}])
         else 
             AC_MSG_RESULT([no GMP lib found in directory])
+            CGAL_CPPFLAGS=""
+            CGAL_LIBS=""
             $2
             exit
         fi
     fi
-    dnl search for gmp
-    AC_CHECK_LIB(gmp, main, [CGAL_LIBS="-lgmp $CGAL_LIBS"])
+    dnl search for gmp 
+    AC_CHECK_LIB(gmp, main, cgal_have_gmplib=yes, cgal_have_gmplib=no)
+    if test "$cgal_have_gmplib" == yes; then
+        CGAL_LIBS="-lgmp $CGAL_LIBS"
+    else
+        CGAL_CPPFLAGS=""
+        CGAL_LIBS=""
+        $2
+        exit
+    fi        
+    dnl AC_CHECK_LIB(gmp, main, [CGAL_LIBS="-lgmp $CGAL_LIBS"])
     dnl AC_CHECK_LIB(gmpxx, main, [CGAL_LIBS="$CGAL_LIBS -lgmpxx"])
 
     dnl check for MPFR as CGAL depends on it
@@ -274,12 +283,14 @@ if test "$acx_cgal_found" == no; then
             AC_MSG_RESULT([${libdircandidate}])
         else 
             AC_MSG_RESULT([no MPFR lib found in directory])
+            CGAL_CPPFLAGS=""
+            CGAL_LIBS=""
             $2
             exit
         fi
     fi
     dnl search for mpfr
-    AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="-lmpfr $CGAL_LIBS"])
+    dnl AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="-lmpfr $CGAL_LIBS"])
 
 
     dnl search the CGAL headers
@@ -310,19 +321,23 @@ if test "$acx_cgal_found" == no; then
 
     dnl if the headers have been found, check for the libs
     if test "$cgal_have_header" == yes; then
-        dnl prepare the linker flags for test
-        LIBS="${save_LIBS}"
-        LDFLAGS="$CGAL_LIBS ${save_LDFLAGS}"
-
-        AC_LANG_PUSH(C++)
-	AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
-        dnl AC_CHECK_LIB(CGALcore++, main, [CGAL_LIBS="$CGAL_LIBS -lCGALcore++"])
-	AC_LANG_POP(C++)
-	if test "$cgal_have_lib" == yes; then
-	    CGAL_LIBS=" -lCGAL "${CGAL_LIBS}
+        if [[ "$ENABLE_CGAL_HEADER_ONLY_FLAG" == "no" ]] ; then
+            dnl prepare the linker flags for test
+            LIBS="${save_LIBS}"
+            LDFLAGS="$CGAL_LIBS ${save_LDFLAGS}"
             
-            dnl we can finally claim we've found CGAL!
-	    acx_cgal_found=yes
+            AC_LANG_PUSH(C++)
+	    AC_CHECK_LIB(CGAL, main, cgal_have_lib=yes, cgal_have_lib=no)
+            dnl AC_CHECK_LIB(CGALcore++, main, [CGAL_LIBS="$CGAL_LIBS -lCGALcore++"])
+	    AC_LANG_POP(C++)
+	    if test "$cgal_have_lib" == yes; then
+	        CGAL_LIBS=" -lCGAL "${CGAL_LIBS}
+                
+                dnl we can finally claim we've found CGAL!
+	        acx_cgal_found=yes
+            fi
+        else
+            acx_cgal_found=yes
         fi
     fi 
 
@@ -335,8 +350,6 @@ if test "$acx_cgal_found" == no; then
     dnl if the lib has not been found, reset the saved vars to their original values
     if test "$acx_cgal_found" == no; then 
        CGAL_CPPFLAGS=""
-       dnl CGAL_CXXFLAGS=""
-       dnl CGAL_LDFLAGS=""
        CGAL_LIBS=""
     fi
 fi

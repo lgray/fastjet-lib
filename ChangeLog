@@ -1,3 +1,11 @@
+2019-11-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* m4/CGAL.m4:
+	after further tests, it seems that only GMP is needed for FJ so
+	this is whay we're now asking for (awaiting confirmation from
+	cgal-discuss).
+	If GMP is not found (and CGAL is requested), configure will fail.
+
 2019-11-21  Gregory Soyez  <soyez@fastjet.fr>
 
 	* m4/CGAL.m4:
