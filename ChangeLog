@@ -1,6 +1,12 @@
 2019-11-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* m4/CGAL.m4:
+	removed the test for Boost header (version.hpp) as it soed not
+	seem to be required by all installations of CGAL... we therefore
+	prefer to leave the responsabiility to the end-users who need it
+	and not bother the ones who don't.
+
+	* m4/CGAL.m4:
 	added explicit checks of the headers firectory and files
 	+ done a bit of cleaning
 

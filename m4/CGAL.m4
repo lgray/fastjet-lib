@@ -230,9 +230,9 @@ if test "$acx_cgal_found" == no; then
         dnl no_boost_lib_used:     exit
         dnl no_boost_lib_used: fi
     fi
-    AC_LANG_PUSH(C++)
-    AC_CHECK_HEADERS([boost/version.hpp])
-    AC_LANG_POP(C++)
+    dnl AC_LANG_PUSH(C++)
+    dnl AC_CHECK_HEADERS([boost/version.hpp])
+    dnl AC_LANG_POP(C++)
     dnl AC_CHECK_LIB(boost_system, main, [CGAL_LIBS="-lboost_system $CGAL_LIBS"])
     dnl AC_CHECK_LIB(boost_thread, main, [CGAL_LIBS="-lboost_thread $CGAL_LIBS"])
 
