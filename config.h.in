@@ -39,9 +39,6 @@
 /* compile the deprecated parts of the interface using auto-ptr */
 #undef HAVE_AUTO_PTR_INTERFACE
 
-/* Define to 1 if you have the <boost/version.hpp> header file. */
-#undef HAVE_BOOST_VERSION_HPP
-
 /* compiler supports c++14 deprecated keyword */
 #undef HAVE_CXX14_DEPRECATED
 
