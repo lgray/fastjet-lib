@@ -1,3 +1,9 @@
+2019-11-27  Gregory Soyez  <soyez@fastjet.fr>
+
+	* m4/CGAL.m4 (ACX_CHECK_CGAL):
+	when adding compiler/linker flags, also use them in checks for
+	headres and libs
+
 2019-11-22  Gregory Soyez  <soyez@fastjet.fr>
 
 	* m4/CGAL.m4:

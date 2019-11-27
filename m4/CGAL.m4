@@ -141,6 +141,13 @@ dnl we check if we can get the arguments ourselves. This method leave the option
 dnl a CGAL directory using the --with-cgaldir directive
 dnl If no dir are specified, CGAL will be searched for in standard places
 if test "$acx_cgal_found" == no; then
+    dnl store the com[iler/linker flags so we can restore them in case of failure
+    dnl After each check we add found flags to both CGAL_... flags and global flags
+    save_LIBS="$LIBS"
+    save_LDFLAGS="$LDFLAGS"
+    save_CXXFLAGS="$CXXFLAGS"
+    save_CPPFLAGS="$CPPFLAGS"
+
     dnl check support for the floating-point specifications needed for CGAL
     dnl  . gcc required -frounding-math
     dnl  . icc requires -fp-model srticy
@@ -262,6 +269,11 @@ if test "$acx_cgal_found" == no; then
         fi
     fi
     dnl search for gmp 
+    CXXFLAGS=${save_CXXFLAGS}" $CGAL_CPPFLAGS"
+    CPPFLAGS=${save_CPPFLAGS}" $CGAL_CPPFLAGS"
+    LIBS="${save_LIBS}"
+    LDFLAGS="$CGAL_LIBS ${save_LDFLAGS}"
+
     AC_CHECK_HEADERS(gmp.h)
     AC_CHECK_LIB(gmp, main, cgal_have_gmplib=yes, cgal_have_gmplib=no)
     dnl AC_CHECK_LIB(gmpxx, main, [CGAL_LIBS="$CGAL_LIBS -lgmpxx"])
@@ -270,6 +282,10 @@ if test "$acx_cgal_found" == no; then
     else
         CGAL_CPPFLAGS=""
         CGAL_LIBS=""
+        LIBS="$save_LIBS"
+        LDFLAGS="$save_LDFLAGS"
+        CXXFLAGS="$save_CXXFLAGS"
+        CPPFLAGS="$save_CPPFLAGS"
         $2
         exit
     fi        
@@ -287,6 +303,10 @@ if test "$acx_cgal_found" == no; then
         AC_MSG_CHECKING(with MPFR in ${with_cgal_mpfrdir})
         if test \! -d ${with_cgal_mpfrdir}/include; then
             AC_MSG_RESULT([no CGAL GMP header directory found])
+            LIBS="$save_LIBS"
+            LDFLAGS="$save_LDFLAGS"
+            CXXFLAGS="$save_CXXFLAGS"
+            CPPFLAGS="$save_CPPFLAGS"
             CGAL_CPPFLAGS=""
             CGAL_LIBS=""
             $2
@@ -296,6 +316,11 @@ if test "$acx_cgal_found" == no; then
         AC_MSG_RESULT([yes])
     fi
     dnl search for mpfr
+    CXXFLAGS=${save_CXXFLAGS}" $CGAL_CPPFLAGS"
+    CPPFLAGS=${save_CPPFLAGS}" $CGAL_CPPFLAGS"
+    LIBS="${save_LIBS}"
+    LDFLAGS="$CGAL_LIBS ${save_LDFLAGS}"
+
     AC_CHECK_HEADERS(mpfr.h)
     dnl AC_CHECK_LIB(mpfr, main, [CGAL_LIBS="-lmpfr $CGAL_LIBS"])
 
@@ -314,13 +339,9 @@ if test "$acx_cgal_found" == no; then
     dnl   AC_LANG_POP(language)
 
     dnl first save the current flags so we can restore them later if needed
-    save_LIBS="$LIBS"
-    save_LDFLAGS="$LDFLAGS"
-    save_CXXFLAGS="$CXXFLAGS"
-    save_CPPFLAGS="$CPPFLAGS"
 
-    CXXFLAGS=${CXXFLAGS}" $CGAL_CPPFLAGS"
-    CPPFLAGS=${CPPFLAGS}" $CGAL_CPPFLAGS"
+    CXXFLAGS=${save_CXXFLAGS}" $CGAL_CPPFLAGS"
+    CPPFLAGS=${save_CPPFLAGS}" $CGAL_CPPFLAGS"
 
     AC_LANG_PUSH(C++)
     AC_CHECK_HEADER([CGAL/Exact_predicates_inexact_constructions_kernel.h], [cgal_have_header=yes], [cgal_have_header=no])
