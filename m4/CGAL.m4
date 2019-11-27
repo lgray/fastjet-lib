@@ -141,7 +141,8 @@ dnl we check if we can get the arguments ourselves. This method leave the option
 dnl a CGAL directory using the --with-cgaldir directive
 dnl If no dir are specified, CGAL will be searched for in standard places
 if test "$acx_cgal_found" == no; then
-    dnl store the com[iler/linker flags so we can restore them in case of failure
+
+    dnl store the compiler/linker flags so we can restore them in case of failure
     dnl After each check we add found flags to both CGAL_... flags and global flags
     save_LIBS="$LIBS"
     save_LDFLAGS="$LDFLAGS"
