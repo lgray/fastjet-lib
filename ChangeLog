@@ -1,5 +1,14 @@
 2019-11-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	changed version to 3.3.3
+
+	* regression-tests/test-contrib.pl:
+	updated svn repository to match new HEPForge setup
+
 	* almost all cc and hh files:
 	updated the header to include the correct years in the copyright
 

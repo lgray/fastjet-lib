@@ -55,7 +55,7 @@ Some useful ones include:
    --enable-cgal-header-only
                     specified that one is working with a header-only
                     version of CGAL (this will hopefully be
-                    auto-detected in a future versin of FastJet)
+                    auto-detected in a future version of FastJet)
    
    --enable-allcxxplugins    (default=no)
                     enable all C++ plugins, but not the Fortran ones
