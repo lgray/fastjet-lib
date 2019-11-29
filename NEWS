@@ -2,6 +2,14 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
+Summary of changes from v3.3.2 -> v3.3.3: 2019-11-29
+================================================================
+
+This is a bug-fix release with
+* improved treatment of CGAL in the build system (thanks to Marco van Leeuwen)
+* fixed an overflow issue in the JadePlugin (thanks to Andrii Verbytskyi) 
+
+================================================================
 Summary of changes from v3.3.1 -> v3.3.2: 2018-10-01
 ================================================================
 
