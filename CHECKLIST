@@ -141,11 +141,11 @@ checklist for 3.3.3
 3.3.3  go to testsuite; make with an installation of the current version;
          make clean; make; ./run_tests and ./run-all.sh
 3.3.3  after make install, from a separate directory, run regression-tests/test-contrib.pl --svn trunk [--fastjet-config file]
-X.Y.Z  make sure it's committed (before the nightly check)
-X.Y.Z  rerun the nightly check
-X.Y.Z  mention the release in ChangeLog: just say 
+3.3.3  make sure it's committed (before the nightly check)
+SKIPPED  rerun the nightly check (skipped as last night's one went fine)
+3.3.3  mention the release in ChangeLog: just say 
        "Release of FastJet fastjet-X.Y.Z"
-X.Y.Z  make sure it's committed (before distcheck; so that all files
+3.3.3  make sure it's committed (before distcheck; so that all files
        have correct version numbers)
 
   prepare the distributed material
