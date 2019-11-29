@@ -37,7 +37,7 @@ FastJet (some details may still evolve in the future).
 Enable it with --enable-pyext at configure time and see
 examples/python/ for usage.
 
-Thanks to Lily Asquith, Stefane Carrazza and Eric Metodiev for
+Thanks to Lily Asquith, Stefano Carrazza and Eric Metodiev for
 testing and helpful feedback.
 
 ================================================================

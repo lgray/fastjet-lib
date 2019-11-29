@@ -2,7 +2,7 @@
 
 	* doc/fastjet-doc.tex:
 	* INSTALL:
-	documented the new configure argumetns for CGAL
+	documented the new configure arguments for CGAL
 
 2019-11-27  Gregory Soyez  <soyez@fastjet.fr>
 
@@ -32,7 +32,7 @@
 
 	* m4/CGAL.m4:
 	uniformised the CGAL dependency checks: we now check for Boost,
-	GMP and MPFR whikcch are the 3 dependences listed by CGAL (since
+	GMP and MPFR which are the 3 dependences listed by CGAL (since
 	at least v4.1)
 
 2019-11-15  Gregory Soyez  <soyez@fastjet.fr>
@@ -46,7 +46,7 @@
 	* m4/CGAL.m4:
 	added a --with-cgal-gmpdir=... allowing one to use a non-standard
 	directory for the GMP library (used to build CGAL).
-	Note that this is only relevasnt when FastJet is built wih
+	Note that this is only relevant when FastJet is built with
 	--enable-cgal
 
 	* fastjet-config.in:
