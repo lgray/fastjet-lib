@@ -12,7 +12,8 @@ use Cwd;
 $fjconfig=`which fastjet-config`;
 $contribURL="";
 $contribPath="";
-$svnBase="svn+ssh://svn.hepforge.org/hepforge/svn/fastjet/contrib/";
+$svnBase="svn+ssh://vcs\@phab.hepforge.org/source/fastjetsvn/contrib/";
+#$svnBase="svn+ssh://svn.hepforge.org/hepforge/svn/fastjet/contrib/";
 $tmpDir="";
 
 while ($arg = shift @ARGV) {
