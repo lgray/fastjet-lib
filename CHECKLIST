@@ -179,14 +179,12 @@ NONO!  tweet the release
 
   prepare for the next devel phase
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-X.Y.Z  make sure it's committed with the CHECKLIST
-X.Y.Z  reset the SISCone link to the trunk: 
+3.3.3  make sure it's committed with the CHECKLIST
+3.3.3  reset the SISCone link to the trunk: 
        svn propedit svn:externals plugins/SISCone; svn up
-X.Y.Z  move the version number to X.Y.(Z+1)-devel with
-       scripts/set-version.sh VERSION-NUMBER
+3.3.3  move the version number to 3.3.4-devel with
+       scripts/set-version.sh 3.3.4-devel
        and indicate this in the ChangeLog
-
-
 
 ----------------------------------------------------------------------
 checklist for 3.3.2
