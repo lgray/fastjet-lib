@@ -1,6 +1,9 @@
 2019-11-29  Gregory Soyez  <soyez@fastjet.fr>
 
 	* doc/fastjet-doc.tex:
+	added a few clarifications suggested by Matteo
+
+	* doc/fastjet-doc.tex:
 	* INSTALL:
 	documented the new configure arguments for CGAL
 
