@@ -1,5 +1,8 @@
 2019-11-29  Gregory Soyez  <soyez@fastjet.fr>
 
+	* almost all cc and hh files:
+	updated the header to include the correct years in the copyright
+
 	* doc/fastjet-doc.tex:
 	added a few clarifications suggested by Matteo
 
