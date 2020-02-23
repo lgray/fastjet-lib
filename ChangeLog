@@ -1,3 +1,12 @@
+2020-02-23  Gavin Salam  <gavin.salam@cern.ch>
+
+	* INSTALL:
+	explicitly mentioned that --enable-cgal-header-only is to be
+	used instead of --enable-cgal when using CGAL v5
+
+	* m4/CGAL.m4 (ACX_CHECK_CGAL):
+	similar clarification
+
 2019-11-30  Gavin Salam  <gavin.salam@cern.ch>
 
 	* fortran_wrapper/Makefile.alt:
