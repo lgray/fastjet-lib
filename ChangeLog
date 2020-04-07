@@ -1,3 +1,13 @@
+2020-04-07  Gavin Salam  <salam@hydra>
+
+	* src/MinHeap.cc (initialise):
+	rewrote a line of code in calculation of heap updates, replacing
+	&(_heap[2*loc+1]) with &(_heap[0]) + (2*loc+1).  This is intended
+	to resolve an issue reported by Andrii Verbyitskyi with gcc's
+	-D_GLIBCXX_SANITIZE_VECTOR which mistaken thinkgs we're actually
+	trying to access _heap[2*loc+1], when actually we're just getting
+	an address that we will use for comparisons afterwards.
+
 2020-02-23  Gavin Salam  <gavin.salam@cern.ch>
 
 	* INSTALL:
