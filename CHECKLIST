@@ -13,6 +13,14 @@ checklist for X.Y.Z (make a copy before editing!)
   preparatory work
   ~~~~~~~~~~~~~~~~
 X.Y.Z  run svn up
+X.Y.Z  make sure the release system has up to date autoconf and automake
+X.Y.Z  make sure 8 files are symbolic links to the correct automake version
+       - [ ] compile             - [ ] missing    
+       - [ ] config.guess        - [ ] test-driver
+       - [ ] config.sub          - [ ] depcomp    
+       - [ ] install-sh          - [ ] py-compile 
+       if not, try running autogen.sh to see if the situation improves!
+       
 X.Y.Z  make sure headers are up to date with ./scripts/update-headers.pl
 X.Y.Z  update version number with ./scripts/set-version.sh VERSION-NUMBER
 X.Y.Z  doxygen: check dirs are declared for new plugins + check in 
