@@ -187,7 +187,7 @@ checklist for 3.3.4
        (or scp -r html tycho:~salam/www/fastjet/repository/doxygen-3.3.4)
        clean: cd ..; rm -Rf fastjet-3.3.4       
 3.3.4  update main web page & menu in devel area
-X.Y.Z  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.3.4
+3.3.4  tag: svn cp . file:///ada1/lpthe/salam/svn/fastjet/tags/fastjet-3.3.4
 3.3.4  update main web-page area
 NO!NO  send mail to: fastjet-announce@projects.hepforge.org
        subject: FastJet release 3.3.4
