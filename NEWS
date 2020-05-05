@@ -9,8 +9,7 @@ This is a bug-fix release with
 * resolved run-time crash with certain strict g++ options and
   compilation issue with oracle c++ (both reported by Andrii
   Verbyitskyi)
-  
-
+* included SISCone v3.0.5 (fixes signed-unsigned mismatch)
 
 ================================================================
 Summary of changes from v3.3.2 -> v3.3.3: 2019-11-29

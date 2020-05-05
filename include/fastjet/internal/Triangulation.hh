@@ -5,7 +5,7 @@
 //FJSTARTHEADER
 // $Id$
 //
-// Copyright (c) 2005-2019, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
+// Copyright (c) 2005-2020, Matteo Cacciari, Gavin P. Salam and Gregory Soyez
 //
 //----------------------------------------------------------------------
 // This file is part of FastJet.
