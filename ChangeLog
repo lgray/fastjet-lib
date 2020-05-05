@@ -1,6 +1,12 @@
 2020-05-05  Gregory Soyez  <soyez@fastjet.fr>
 
-	updated the copyright dates
+	* configure.ac:
+	* include/fastjet/config_win.h:
+	* Doxyfile:
+	* tex/fastjet-doc.tex:
+	changed version to 3.3.4
+
+	* almost all source files: updated the copyright dates
 
 2020-04-28  Gregory Soyez  <soyez@fastjet.fr>
 
