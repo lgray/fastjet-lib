@@ -2,7 +2,7 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
-Summary of changes from v3.3.3 -> v3.3.4: 2020-05-06
+Summary of changes from v3.3.3 -> v3.3.4: 2020-05-05
 ================================================================
 This is a bug-fix release with
 * clarifications in documentation for handling of CGAL v5
