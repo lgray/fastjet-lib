@@ -1,5 +1,9 @@
 2020-05-05  Gregory Soyez  <soyez@fastjet.fr>
 
+	* Release of FastJet fastjet-3.3.4
+
+2020-05-05  Gregory Soyez  <soyez@fastjet.fr>
+
 	* configure.ac:
 	* include/fastjet/config_win.h:
 	* Doxyfile:
