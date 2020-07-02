@@ -1,3 +1,9 @@
+2020-07-02  Gavin Salam  <gavin.salam@cern.ch>
+
+	* example/python/02-area.py:
+	fixed bug in area printout (format string and argument)
+	reported by Michael Neidhard Heinz.
+
 2020-05-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* configure.ac:
