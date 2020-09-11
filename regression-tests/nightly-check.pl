@@ -234,7 +234,7 @@ MAIN: while (1) {
       if ($gitstatus ne '') {&fail("git status is not clean",$gitstatus);}
       # check we are not ahead
       $gitahead=`git status 2>&1`;
-      if ($gitahead =~ /Your branch is ahead/) {&fail("local git is ahead",$gitahead)}
+      if ($gitahead =~ /Your branch is ahead/) {&fail("local git is ahead wrt remote",$gitahead)}
       # git pull ($? is exit code -- nonzero on failure)
       $gitpull=`git pull 2>&1`;
       if ($? || $gitpull =~ /conflict/i) {&fail("error or conflict in git pull", $gitpull)}
