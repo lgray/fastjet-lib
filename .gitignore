@@ -1,0 +1,42 @@
+/data
+/html
+/latex
+/FILELIST
+/Makefile.in
+/Makefile
+/*.tar.gz
+/config.status
+/fastjet-config
+/libtool
+/config.log
+/config.guess
+/config.sub
+/_configs.sed
+/autom4te.cache
+/aclocal.m4
+/install-sh
+/depcomp
+/configure
+/ltmain.sh
+/missing
+/Makefile
+/Makefile.in
+/compile-output
+/compile
+/test-driver
+/test-suite.log
+/tmp
+/Makefile.in
+/test-compare.sh.log
+/test-compare.sh.trs
+/GPATH
+/GRTAGS
+/GTAGS
+/# Added by svn-ignore on 2017-02-09
+/py-compile
+/# Added by svn-ignore on 2017-02-09
+/xml
+/# Added by svn-ignore on 2017-02-09
+/config.SAVE
+/# Added by svn-ignore on 2017-02-09
+/.libs
