@@ -1,5 +1,8 @@
 2020-09-11  Gavin Salam  <gavin.salam@cern.ch>
 
+	* INSTALL
+	updated instructions for usage with git
+	
 	* regression-tests/nightly-check.pl:
 	updated nightly-check.pl to work with git
 
