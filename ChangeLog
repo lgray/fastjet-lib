@@ -1,3 +1,8 @@
+2020-09-11  Gavin Salam  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl:
+	updated nightly-check.pl to work with git
+
 2020-09-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* example/fastjet_timing_plugins.cc:
