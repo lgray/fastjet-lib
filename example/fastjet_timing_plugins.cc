@@ -847,7 +847,7 @@ int main (int argc, char ** argv) {
     }
 #endif
   } // try
-  catch (Error fjerr) {
+  catch (Error &fjerr) {
     cout << "Caught fastjet error, exiting gracefully" << endl;
     exit(0);
   }

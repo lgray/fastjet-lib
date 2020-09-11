@@ -1,3 +1,8 @@
+2020-09-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/fastjet_timing_plugins.cc:
+	caught an "Error" exception by reference instead of by value
+
 2020-07-02  Gavin Salam  <gavin.salam@cern.ch>
 
 	* example/python/02-area.py:
