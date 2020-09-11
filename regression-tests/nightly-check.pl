@@ -191,7 +191,8 @@ $allMessages = "";
 $summary = "";
 $testall = "";
 $verbose = $verbose || (! ($mail || $remote));
-$svnrev = "";
+$svnrev = ""; $svnShortURL = ""; # (just to make these global variables)
+$gitlog = ""; # (just to make this a global variable)
 $date = "";
 #$tarName="fastjet-2.4-devel.tar.gz"; # TMP 
 
