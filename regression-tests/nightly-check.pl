@@ -227,51 +227,76 @@ MAIN: while (1) {
     # - get state description with `git log --pretty='%h%d' --decorate=short -1`
 
 
-    #--- svn update --------------------------------------------------------
-    &message("* running svn update\n");
-    $svnup=`svn update 2>&1`;
-    if ($svnup =~ /external .. revision [0-9]/i && 
-        ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
-        $svnup !~ /conflict/i) {
-      # check if we had a merge -- in that case using this script is dangerous, so tell 
-      # user
-      if ($svnup =~ /^G..*nightly-check.pl/m) {&fail("svn update merged nightly-check.pl", $svnup);}
-      # if the script was just updated, then rerun ourselves
-      if ($svnup =~ /^U..*nightly-check.pl/m) {
-        &message("* nightly-check.pl has been updated, rerunning\n\n");
-        system("$command $commandArgs");
-        last;
+    $usegit=1;
+    if ($usegit) {
+      # check nothing uncommitted
+      $gitstatus=`git status --porcelain --untracked-files=no 2>&1`; chomp $gitstatus;
+      if ($gitstatus ne '') {&fail("git status is not clean",$gitstatus);}
+      # check we are not ahead
+      $gitahead=`git status 2>&1`;
+      if ($gitahead =~ /Your branch is ahead/) {&fail("local git is ahead",$gitahead)}
+      # git pull ($? is exit code -- nonzero on failure)
+      $gitpull=`git pull 2>&1`;
+      if ($? || $gitpull =~ /conflict/i) {&fail("error or conflict in git pull", $gitpull)}
+      # submodule update
+      $gitsub =`git submodule update 2>&1`;
+      if ($? || $gitsub =~ /conflict/i) {&fail("error or conflict in git sub", $gitpull)}
+      # check for nighly-check.pl update and rerun
+      if ($gitpull =~ /nightly-check.pl/) {
+          &message("* nightly-check.pl has been updated, rerunning\n\n");
+          system("$command $commandArgs");
+          last;
       }
-      # all is OK, do nothing
+      $date=`date`; chomp($date);
+      $gitlog = `git log --pretty='%h%d' --decorate=short -1`;
+      $giturl = `git remote get-url origin`;
+      $summary .= "SUMMARY: $date, git [$giturl] $gitlog ---------------------------------------------------\n\n";
     } else {
-      &fail("svn update", $svnup);
+      #--- svn update --------------------------------------------------------
+      &message("* running svn update\n");
+      $svnup=`svn update 2>&1`;
+      if ($svnup =~ /external .. revision [0-9]/i && 
+          ($svnup =~ /^At revision [0-9]/m || $svnup =~ /^Updated to revision [0-9]/m) &&
+          $svnup !~ /conflict/i) {
+        # check if we had a merge -- in that case using this script is dangerous, so tell 
+        # user
+        if ($svnup =~ /^G..*nightly-check.pl/m) {&fail("svn update merged nightly-check.pl", $svnup);}
+        # if the script was just updated, then rerun ourselves
+        if ($svnup =~ /^U..*nightly-check.pl/m) {
+          &message("* nightly-check.pl has been updated, rerunning\n\n");
+          system("$command $commandArgs");
+          last;
+        }
+        # all is OK, do nothing
+      } else {
+        &fail("svn update", $svnup);
+      }
+      $svninfo = `svn info`;
+      if ($svninfo =~ /^URL: (.+)/m) {
+        $svnURL = $1;
+        &message("* svn URL: $svnURL\n");
+      } else {
+        &fail("getting svn URL",$svninfo);
+      }
+      ($svnShortURL = $svnURL) =~ s/.*salam.svn.fastjet.//;
+      if ($svninfo =~ /^Revision: ([0-9]+)/m) {
+        $svnrev = $1;
+        &message("* svn revision: $svnrev\n");
+      } else {
+        &fail("getting svn revision",$svninfo);
+      }
+      $svnstatus=`svn status`;
+      $svnstatus =~ s/^(\?|X|Performing status).*\n//mg;
+      $svnstatus =~ s/^\n//mg;
+      if ($?) {
+        &fail("svn status",$svnstatus)
+      } else {
+        &message("* svn status:\n".$svnstatus);
+      }
+      # some useful stuff for the summary
+      $date=`date`; chomp($date);
+      $summary .= "SUMMARY: $date, svn [.../$svnShortURL] revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
     }
-    $svninfo = `svn info`;
-    if ($svninfo =~ /^URL: (.+)/m) {
-      $svnURL = $1;
-      &message("* svn URL: $svnURL\n");
-    } else {
-      &fail("getting svn URL",$svninfo);
-    }
-    ($svnShortURL = $svnURL) =~ s/.*salam.svn.fastjet.//;
-    if ($svninfo =~ /^Revision: ([0-9]+)/m) {
-      $svnrev = $1;
-      &message("* svn revision: $svnrev\n");
-    } else {
-      &fail("getting svn revision",$svninfo);
-    }
-    $svnstatus=`svn status`;
-    $svnstatus =~ s/^(\?|X|Performing status).*\n//mg;
-    $svnstatus =~ s/^\n//mg;
-    if ($?) {
-      &fail("svn status",$svnstatus)
-    } else {
-      &message("* svn status:\n".$svnstatus);
-    }
-    # some useful stuff for the summary
-    $date=`date`; chomp($date);
-    $summary .= "SUMMARY: $date, svn [.../$svnShortURL] revision $svnrev\n$svnstatus---------------------------------------------------\n\n";
-
 
     #--- make dist ------------------------------------------------------
     &message("* running make dist");
@@ -370,7 +395,9 @@ sub finish () {
   } elsif (!$remote) {
     &message("\nAll tests passed\n");
     # try to get more info about test results
-    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages)." [".$svnShortURL."@".$svnrev."]";
+    $mailSubject = 'fastjet nightly: '.OKUnavail($allMessages);
+    if ($usegit) {$mailSubject .= " $gitlog"}
+    else         {$mailSubject .= " [".$svnShortURL."@".$svnrev."]"}
   }
 
   # clean up
@@ -405,7 +432,7 @@ sub finish () {
 #======================================================================
 sub fail($$) {
   ($fail, $failDetails) = @_;
-  $summary .= "   FAILED on $fail\n";
+  $summary .= "   FAILED: $fail\n";
   &finish();
 }
 
