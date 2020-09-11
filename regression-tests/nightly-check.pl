@@ -260,7 +260,6 @@ MAIN: while (1) {
       @giturl = split(" ",$giturl);
       $giturl = $giturl[1];
       $summary .= "SUMMARY: $date, git [$giturl] $gitlog ---------------------------------------------------\n\n";
-      print $summary,"\n";
     } else {
       #--- svn update --------------------------------------------------------
       &message("* running svn update\n");
