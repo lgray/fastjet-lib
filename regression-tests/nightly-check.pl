@@ -236,6 +236,9 @@ MAIN: while (1) {
       $gitahead=`git status 2>&1`;
       if ($gitahead =~ /Your branch is ahead/) {&fail("local git is ahead wrt remote",$gitahead)}
       # git pull ($? is exit code -- nonzero on failure)
+      # NB: we check the output for conflicts, but they
+      #     should never occur, given the earlier check on the
+      #     state of the repo
       $gitpull=`git pull 2>&1`;
       if ($? || $gitpull =~ /conflict/i) {&fail("error or conflict in git pull", $gitpull)}
       # submodule update
