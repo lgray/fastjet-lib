@@ -320,7 +320,7 @@ MAIN: while (1) {
 
     #--- extract fjcore ------------------------------------------------------
     &message("* extracting fjcore");
-    $makefjcore=`pushd scripts; ./mkfjcore.sh $tmpDir 2>&1; popd`;
+    $makefjcore=`cd scripts; ./mkfjcore.sh $tmpDir 2>&1; cd ..`;
     if ($makefjcore =~ / error[: ]/i || $makefjcore !~ /making (.*.tar.gz) tarball/) {
       &message("\n");
       &fail ("extracting fjcore", $makefjcore);
