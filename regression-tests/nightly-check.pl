@@ -252,8 +252,14 @@ MAIN: while (1) {
       }
       $date=`date`; chomp($date);
       $gitlog = `git log --pretty='%h%d' --decorate=short -1`;
-      $giturl = `git remote get-url origin`;
+      # this fails on the ancient git version on orphee
+      #$giturl = `git remote get-url origin`;
+      # this should work more generally (though it is uglier)
+      $giturl = `git remote -v`;
+      @giturl = split(" ",$giturl);
+      $giturl = $giturl[1];
       $summary .= "SUMMARY: $date, git [$giturl] $gitlog ---------------------------------------------------\n\n";
+      print $summary,"\n";
     } else {
       #--- svn update --------------------------------------------------------
       &message("* running svn update\n");
