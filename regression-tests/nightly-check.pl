@@ -208,6 +208,25 @@ MAIN: while (1) {
       &fail("* creating tmp directory","$tmpDir already exists or could not be created; stopping");
     }
 
+    # bits and pieces for transition to git
+    # https://stackoverflow.com/questions/3258243/check-if-pull-needed-in-git
+    # to get description of state (HEAD->master, etc.): git log --pretty='%d' --decorate=short -1
+    # to get description of state with abbrev reflog: git log --pretty='%h%d' --decorate=short -1
+    # to get current ref: git rev-parse @
+    # to see if there are any uncommitted files: git status --porcelain --untracked-files=no
+    # remember to do a git pull and a git submodule update
+
+    # sequence to follow:
+    # - check nothing uncommitted, with git status --porcelain --untracked-files=no
+    # - check we are not ahead with `git status | grep 'Your branch is ahead'`
+    # - git pull 
+    #   - if conflicts, die (given the first two conditions, there should not be)
+    #   - parse output to see if nightly-check updated -- if so, rerun
+    # - git submodule update
+    #   - if conflicts, die (given the first two conditions, there should not be)
+    # - get state description with `git log --pretty='%h%d' --decorate=short -1`
+
+
     #--- svn update --------------------------------------------------------
     &message("* running svn update\n");
     $svnup=`svn update 2>&1`;
