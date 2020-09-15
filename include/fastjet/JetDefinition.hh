@@ -362,12 +362,12 @@ public:
   ///
   /// the ordering of arguments here is old and deprecated (except
   /// as the common constructor for internal use)
-  FASTJET_DEPRECATED_MSG("This argument ordering is deprecated. Use JetDefinition(alg, R, strategy, scheme[, n_parameters]) instead")
+  FASTJET_DEPRECATED_MSG("This argument ordering is deprecated. Use JetDefinition(alg, R, strategy, scheme[, n_parameters]) instead",
   JetDefinition(JetAlgorithm jet_algorithm_in, 
                 double R_in, 
                 Strategy strategy_in,
                 RecombinationScheme recomb_scheme_in = E_scheme,
-                int nparameters_in = 1){
+                int nparameters_in = 1)){
     (*this) = JetDefinition(jet_algorithm_in,R_in,recomb_scheme_in,strategy_in,nparameters_in);
   }
 

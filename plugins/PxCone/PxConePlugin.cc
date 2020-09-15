@@ -41,7 +41,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 using namespace std;
 
-bool PxConePlugin::_first_time = true;
+thread_safety_helpers::FirstTimeTrue PxConePlugin::_first_time;
 
 string PxConePlugin::description () const {
   ostringstream desc;
@@ -167,8 +167,7 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
 // print a banner for reference to the 3rd-party code
 void PxConePlugin::_print_banner(ostream *ostr) const{
-  if (! _first_time) return;
-  _first_time=false;
+  if (! _first_time()) return;
 
   // make sure the user has not set the banner stream to NULL
   if (!ostr) return;  

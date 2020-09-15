@@ -37,6 +37,13 @@
 #include <string>
 #include <list>
 
+#include "fastjet/config.h"
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+#include <atomic>
+#include <mutex>
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
+#include "fastjet/internal/thread_safety_helpers.hh" // provides a counter, thread-safe if needed
+
 FASTJET_BEGIN_NAMESPACE
 
 /// @ingroup error_handling
@@ -48,11 +55,17 @@ class LimitedWarning {
 public:
   
   /// constructor that provides a default maximum number of warnings
-  LimitedWarning() : _max_warn(_max_warn_default), _n_warn_so_far(0), _this_warning_summary(0) {}
+  LimitedWarning() : _max_warn(_max_warn_default),_this_warning_summary(0) {}
 
   /// constructor that provides a user-set max number of warnings
-  LimitedWarning(int max_warn_in) : _max_warn(max_warn_in), _n_warn_so_far(0), _this_warning_summary(0) {}
+  LimitedWarning(int max_warn_in) : _max_warn(max_warn_in), _this_warning_summary(0) {}  
 
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+  /// copy ctor (have to be specified explicitly becaus of the atomic variable)
+  LimitedWarning(const LimitedWarning &other)
+    : _max_warn(other._max_warn), _this_warning_summary{other._this_warning_summary.load()} {}  
+#endif
+  
   /// outputs a warning to standard error (or the user's default
   /// warning stream if set)
   void warn(const char * warning) {warn(warning, _default_ostr);}
@@ -85,20 +98,32 @@ public:
 
   /// the number of times so far that a warning has been registered
   /// with this instance of the class.
-  int n_warn_so_far() const {return _n_warn_so_far;}
+  int n_warn_so_far() const;
 
   /// returns a summary of all the warnings that came through the
   /// LimiteWarning class
   static std::string summary();
 
 private:
-  int _max_warn, _n_warn_so_far;
+  const int _max_warn;
+
+  typedef std::pair<std::string, thread_safety_helpers::AtomicCounter<unsigned int> > Summary;
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+  static std::atomic<int> _max_warn_default;
+  static std::atomic<std::ostream *> _default_ostr;
+  static std::mutex _global_warnings_summary_mutex;
+  std::atomic<Summary*> _this_warning_summary;
+#else
   static int _max_warn_default;
   static std::ostream * _default_ostr;
-  typedef std::pair<std::string, unsigned int> Summary;
+  Summary* _this_warning_summary;
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
+
+  // Note that this is updated internally and we use a mutex for the
+  // thread-safe version. So no other specific treatment is needed at
+  // this level.
   static std::list< Summary > _global_warnings_summary;
-  Summary * _this_warning_summary;
-  
+ 
 };
 
 FASTJET_END_NAMESPACE

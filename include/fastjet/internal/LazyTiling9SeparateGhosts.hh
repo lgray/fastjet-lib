@@ -36,6 +36,8 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/internal/LazyTiling9Alt.hh"
 
+#include "fastjet/config.h"
+
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 class TiledJet3 {
