@@ -1,8 +1,17 @@
+2021-01-05  Gregory Soyez  <soyez@fastjet.fr>
+
+	* pyinterface/fastjet.i:
+	included a few fixes suggested by Patrick Komiske:
+	- installed a few files so they're acceessible for projects
+	  derived from FJ to define theit own wrapper
+	- improved exceptions (throws a FastJetError py exception)
+	- defined a data table
+
 2020-09-11  Gavin Salam  <gavin.salam@cern.ch>
 
 	* INSTALL
 	updated instructions for usage with git
-	
+
 	* regression-tests/nightly-check.pl:
 	updated nightly-check.pl to work with git
 
