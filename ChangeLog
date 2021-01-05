@@ -1,5 +1,8 @@
 2021-01-05  Gregory Soyez  <soyez@fastjet.fr>
 
+	* include/fastjet/Error.hh:
+	had the Error class derive from std::exception
+
 	* pyinterface/fastjet.i:
 	included a few fixes suggested by Patrick Komiske:
 	- installed a few files so they're acceessible for projects
