@@ -34,9 +34,9 @@
 #include <iostream>
 #include <sstream>
 
-FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
-
 using namespace std;
+
+FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 double BackgroundJetScalarPtDensity::result(const PseudoJet & jet) const {
   // do not include the ghosts in the list of constituents to have a
@@ -142,7 +142,6 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
 
   // initialise things decently (including setting uptodate to false!)
   //reset();
-  _status = Status_NotReady;
 
   // cluster the particles
   // 
@@ -153,11 +152,20 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
   //  - it avoids adding another flag to ensure particles are 
   //    clustered only once
   ClusterSequenceArea *csa = new ClusterSequenceArea(particles, _jet_def, _area_def);
+
+//THREAD-SAFETY-QUESTION: #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+//THREAD-SAFETY-QUESTION:   // before caching thing, lock things down to avoid concurrency issues
+//THREAD-SAFETY-QUESTION:   std::lock_guard<std::mutex> guard(_jets_caching_mutex);
+//THREAD-SAFETY-QUESTION: #endif
   _included_jets = csa->inclusive_jets();
 
   // store the CS for later on
   _csi = csa->structure_shared_ptr();
   csa->delete_self_when_unused();
+
+  _status = Status_NotReady;
+
+//THREAD-SAFETY-QUESTION:   // in thread-safe mode, the lock will automatically be released here
 }
 
 //----------------------------------------------------------------------
@@ -179,22 +187,29 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
 // a well-defined area. For this reasons, it is STRONGLY advised to
 // use an area with explicit ghosts.
 void JetMedianBackgroundEstimator::set_cluster_sequence(const ClusterSequenceAreaBase & csa) {
-  _csi = csa.structure_shared_ptr();
-
   // sanity checks
   //---------------
-  //  (i) check the alg is appropriate
-  _check_jet_alg_good_for_median();
-
-  //  (ii) check that, if there are no explicit ghosts, the selector has a finite area
+  //  (i) check that, if there are no explicit ghosts, the selector has a finite area
   if ((!csa.has_explicit_ghosts()) && (!_rho_range.has_finite_area())){
     throw Error("JetMedianBackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
+
+//THREAD-SAFETY-QUESTION: #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+//THREAD-SAFETY-QUESTION:   // before caching thing, lock things down to avoid concurrency issues
+//THREAD-SAFETY-QUESTION:   std::lock_guard<std::mutex> guard(_jets_caching_mutex);
+//THREAD-SAFETY-QUESTION: #endif
+  _csi = csa.structure_shared_ptr();
+
+  //  (ii) check the alg is appropriate
+  _check_jet_alg_good_for_median();
+
 
   // get the initial list of jets
   _included_jets = csa.inclusive_jets();
 
   _status = Status_NotReady;
+  
+//THREAD-SAFETY-QUESTION:   // in thread-safe mode, the lock will automatically be released here
 }
 
 
@@ -213,32 +228,39 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
   if (! (jets[0].has_associated_cluster_sequence()) && (jets[0].has_area()))
     throw Error("JetMedianBackgroundEstimator::JetMedianBackgroundEstimator: the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
 
-  _csi = jets[0].structure_shared_ptr();
-  ClusterSequenceStructure * csi = dynamic_cast<ClusterSequenceStructure*>(_csi.get());
+  SharedPtr<PseudoJetStructureBase> csi_shared = jets[0].structure_shared_ptr();
+  ClusterSequenceStructure * csi = dynamic_cast<ClusterSequenceStructure*>(csi_shared.get());
   const ClusterSequenceAreaBase * csab = csi->validated_csab();
 
   for (unsigned int i=1;i<jets.size(); i++){
     if (! jets[i].has_associated_cluster_sequence()) // area automatic if the next test succeeds
       throw Error("JetMedianBackgroundEstimator::set_jets(...): the jets used to estimate the background properties must be associated with a valid ClusterSequenceAreaBase");
 
-    if (jets[i].structure_shared_ptr().get() != _csi.get())
+    if (jets[i].structure_shared_ptr().get() != csi_shared.get())
       throw Error("JetMedianBackgroundEstimator::set_jets(...): all the jets used to estimate the background properties must share the same ClusterSequence");
   }
 
-  //  (i) check the alg is appropriate
-  _check_jet_alg_good_for_median();
-
-  //  (ii) check that, if there are no explicit ghosts, the selector has a finite area
+  //  (i) check that, if there are no explicit ghosts, the selector has a finite area
   if ((!csab->has_explicit_ghosts()) && (!_rho_range.has_finite_area())){
     throw Error("JetMedianBackgroundEstimator: either an area with explicit ghosts (recommended) or a Selector with finite area is needed (to allow for the computation of the empty area)");
   }
 
+//THREAD-SAFETY-QUESTION: #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+//THREAD-SAFETY-QUESTION:   // before caching thing, lock things down to avoid concurrency issues
+//THREAD-SAFETY-QUESTION:   std::lock_guard<std::mutex> guard(_jets_caching_mutex);
+//THREAD-SAFETY-QUESTION: #endif
+  _csi = csi_shared;
+
+  //  (ii) check the alg is appropriate
+  _check_jet_alg_good_for_median();
 
   // get the initial list of jets
   _included_jets = jets;
 
   // ensure recalculation of quantities that need it
   _status = Status_NotReady;
+  
+//THREAD-SAFETY-QUESTION:   // in thread-safe mode, the lock will automatically be released here
 }
 
 //----------------------------------------------------------------------
@@ -248,18 +270,16 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 // helpers
 double JetMedianBackgroundEstimator::_get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const{
 #ifdef FASTJET_HAVE_THREAD_SAFETY
-  // if the status is ready (or "work in progress", we might be working with the same jet
-  //
-  // In that case, lock things to test whether we do have the same 
+  // if the status is "Not Ready, we have to recompute things
+  // 
+  // if the status is ready or "work in progress", we might be working with the same jet
+  // In thin case, lock things to test whether we do have the same 
   // acquire lock once things are ready and check if we're using the same jet
-  int expected;
   if (_status != Status_NotReady){
-    // the following waits unti the status is Ready and sets it to "Working"
-    do {
-      expected = Status_Ready;
-    } while (!_status.compare_exchange_strong(expected, Status_Working,
-                                              memory_order_seq_cst,
-                                              memory_order_relaxed));
+    _wait_for_ready_set_working();
+    
+    // when we exit the above loop, the status has changed to "ready"
+    // somewhere else and we've changed it to "working"
   
     // check that the reference is not the same as the previous one
     // (would avoid an unnecessary recomputation)
@@ -276,34 +296,24 @@ double JetMedianBackgroundEstimator::_get_value_reference(const PseudoJet &jet, 
 
   // we're reaching that point in several cases:
   //
-  //  - the sstatus was "NotReady"
+  //  - the status was "NotReady"
   //  - we're working with a different jet than the one currently cached
   //
   // In both cases, the status is "Not Ready" and we need to recompute
   // things. We can do that locally and only acquire the lock later on
+  //
+  // If another thread asks for a value during the computation time,
+  // it will be recomputed there as well
     
   // do the computation locally
   JMBGEResult local_result = _compute(jet);
   double value = local_result.*what;
 
   // here we need to acquire the lock
-  //
-  // i.e. wait until the status is anything else than "Working" and
-  // set it to "Working"
-  int expected_alt;
-  do {
-    expected = Status_NotReady;
-    expected_alt = Status_Ready;
-    // below, the first  test will return true if the status is "Ready"
-    //        the second test will return true if the status is "Not Ready"
-    // if both tetss are false it means that we're working and we need to loop
-  } while ((!_status.compare_exchange_strong(expected, Status_Working,
-                                             memory_order_seq_cst,
-                                             memory_order_relaxed)) &&
-           (!_status.compare_exchange_strong(expected_alt, Status_Working,
-                                             memory_order_seq_cst,
-                                             memory_order_relaxed)));
+  _wait_not_working_set_working();
   _result = local_result;
+
+  // and release the lock
   _status = Status_Ready;
   
   return value;
@@ -354,13 +364,6 @@ double JetMedianBackgroundEstimator::rho(const PseudoJet & jet) {
     return rescaling_factor * _get_value_reference(jet, &JMBGEResult::_rho);
 
   return rescaling_factor * _get_value(&JMBGEResult::_rho);
-
-  //_recompute_if_needed(jet);
-  //double our_rho = _result._rho;
-  //if (_rescaling_class != 0) { 
-  //  our_rho *= (*_rescaling_class)(jet);
-  //}
-  //return our_rho;
 }
 
 // get sigma, the background fluctuations per unit area,
@@ -491,25 +494,6 @@ string JetMedianBackgroundEstimator::description() const {
 //----------------------------------------------------------------------
 // computation of the background properties
 //----------------------------------------------------------------------
-// // for estimation using a relocatable selector (i.e. local range)
-// // this allows to set its position. Note that this HAS to be called
-// // before any attempt to compute the background properties
-// void JetMedianBackgroundEstimator::_recompute_if_needed(const PseudoJet &jet){
-//   // if the range is relocatable, handles its relocation
-//   if (_rho_range.takes_reference()){
-//     // check that the reference is not the same as the previous one
-//     // (would avoid an unnecessary recomputation)
-//     if (jet == _result._reference_jet) return;
-// 
-//     // relocate the range and make sure things get recomputed the next
-//     // time one tries to get some information
-//     //done in _compute: _rho_range.set_reference(jet);
-//     _status = Status_NotReady;
-//   }
-// 
-//   if (_status != Status_Ready) _result = _compute(jet);
-//   _status = Status_Ready;
-// }
 
 // do the actual job
 JetMedianBackgroundEstimator::JMBGEResult JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) const {
@@ -658,7 +642,33 @@ void JetMedianBackgroundEstimator::_check_jet_alg_good_for_median() const{
   }
 }
 
+void JetMedianBackgroundEstimator::_wait_for_ready_set_working() const{
+  int expected;
+  // the following waits unti the status is Ready and sets it to "Working"
+  do {
+    expected = Status_Ready;
+  } while (!_status.compare_exchange_strong(expected, Status_Working,
+                                            memory_order_seq_cst,
+                                            memory_order_relaxed));
+}
 
+void JetMedianBackgroundEstimator::_wait_not_working_set_working() const{
+  // wait until the status is anything else than "Working" and
+  // set it to "Working"
+  int expected, expected_alt;
+  do {
+    expected = Status_NotReady;
+    expected_alt = Status_Ready;
+    // below, the first  test will return true if the status is "Ready"
+    //        the second test will return true if the status is "Not Ready"
+    // if both tetss are false it means that we're working and we need to loop
+  } while ((!_status.compare_exchange_strong(expected, Status_Working,
+                                             memory_order_seq_cst,
+                                             memory_order_relaxed)) &&
+           (!_status.compare_exchange_strong(expected_alt, Status_Working,
+                                             memory_order_seq_cst,
+                                             memory_order_relaxed)));
+}
 
 FASTJET_END_NAMESPACE
 

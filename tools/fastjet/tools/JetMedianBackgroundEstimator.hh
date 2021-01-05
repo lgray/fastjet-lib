@@ -257,8 +257,10 @@ public:
   double mean_area() const{
     if (_status != Status_Ready)
       throw Error("JetMedianBackgroundEstimator::mean_area(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    //_recompute_if_needed();
-    return _get_value(& JMBGEResult::_mean_area);
+    _wait_for_ready_set_working();
+    double res = _get_value(& JMBGEResult::_mean_area);
+    _status = Status_Ready;
+    return res;
   }
   
   /// returns the number of jets used to actually compute the
@@ -267,14 +269,17 @@ public:
   unsigned int n_jets_used() const{
     if (_status != Status_Ready)
       throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    //_recompute_if_needed();
-    return _get_value(& JMBGEResult::_n_jets_used);
+    _wait_for_ready_set_working();
+    double res = _get_value(& JMBGEResult::_n_jets_used);
+    _status = Status_Ready;
+    return res;
   }
 
   /// returns the jets used to actually compute the background
   /// properties
   std::vector<PseudoJet> jets_used() const{
     if (_status != Status_Ready) throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
+    _wait_for_ready_set_working();
     _check_csa_alive();
     std::vector<PseudoJet> tmp_jets;
     if (_rho_range.takes_reference()){
@@ -287,6 +292,7 @@ public:
     for (unsigned int i=0; i<tmp_jets.size(); i++){
       if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
     }
+    _status = Status_Ready;    
     return used_jets;
   }
 
@@ -307,8 +313,10 @@ public:
   double empty_area() const{
     if (_status != Status_Ready)
       throw Error("JetMedianBackgroundEstimator::empty_area(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    //_recompute_if_needed();
-    return _get_value(& JMBGEResult::_empty_area);
+    _wait_for_ready_set_working();
+    double res = _get_value(& JMBGEResult::_empty_area);
+    _status = Status_Ready;
+    return res;
   }
 
   /// Returns the number of empty jets used when computing the
@@ -326,8 +334,10 @@ public:
   double n_empty_jets() const{
     if (_status != Status_Ready)
       throw Error("JetMedianBackgroundEstimator::n_empty_jets(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    //_recompute_if_needed();
-    return _get_value(& JMBGEResult::_n_empty_jets);
+    _wait_for_ready_set_working();
+    double res = _get_value(& JMBGEResult::_n_empty_jets);
+    _status = Status_Ready;
+    return res;
   }
 
   //}
@@ -434,8 +444,18 @@ private:
   };
 
   /// helpers for computing things in a thread-safe way when needed
+  ///
+  /// This variant handles the jet-dependent quantities when the
+  /// selector takes a reference
   double _get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const;
-
+  ///
+  /// This variant handles either the jet-independent quantities, or
+  /// the jet-dependent ones when the selector does no take a
+  /// reference (typically in presence of re-scaling).
+  ///
+  /// This does not set a lock if the initial staus is "ready" so the
+  /// former are required to set a lock to guaranteee that no changes
+  /// occurs from a concurrent call to {rho,...}(jet)
   template <typename T>
   T _get_value(T JMBGEResult::*what) const;
 
@@ -467,6 +487,12 @@ private:
   /// Issue a warning otherwise
   void _check_jet_alg_good_for_median() const;
 
+  /// a spinlock that waits until the status is set to ready and set it to "working"
+  void _wait_for_ready_set_working() const;
+
+    /// a spinlock that waits until the status is not "working" and set it to "working"
+  void _wait_not_working_set_working() const;
+
   // the basic parameters of this class (passed through the variou ctors)
   Selector _rho_range;                   ///< range to compute the background in
   JetDefinition _jet_def;                ///< the jet def to use for teh clustering
@@ -497,6 +523,10 @@ private:
   // it would be nicer to have this typed as Status but some compilers
   // seem to struggle with atomic<Status>
   mutable std::atomic<int> _status;
+
+  // allows us to lock things down before caching basic (patches) info  
+  std::mutex _jets_caching_mutex;
+
 #else
   mutable int _status;                 ///< true when the background computation is up-to-date
 #endif
