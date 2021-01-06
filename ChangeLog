@@ -1,3 +1,11 @@
+2021-01-06  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Error.hh:
+	removed the inheritance on std::exception for 2 reasons: (i) is
+	causes issues w old compilers (throw() v. noexcept v. no
+	qualifiers) and (ii) doing this properly also requires defining
+	"virtual const char* what()"
+
 2021-01-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/Error.hh:

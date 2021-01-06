@@ -1,4 +1,4 @@
-#ifndef __FASTJET_ERROR_HH__
+ #ifndef __FASTJET_ERROR_HH__
 #define __FASTJET_ERROR_HH__
 
 //FJSTARTHEADER
@@ -35,7 +35,7 @@
 #include<string>
 #include "fastjet/internal/base.hh"
 #include "fastjet/config.h"
-#include <exception>
+//#include <exception>
 #if (!defined(FASTJET_HAVE_EXECINFO_H)) || defined(__FJCORE__)
 #include "fastjet/LimitedWarning.hh"
 #endif
@@ -45,7 +45,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// @ingroup error_handling
 /// \class Error
 /// base class corresponding to errors that can be thrown by FastJet
-class Error : public std::exception{
+class Error{
 public:
   /// default constructors
   Error() {}
