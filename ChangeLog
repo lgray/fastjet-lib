@@ -1,3 +1,8 @@
+2021-01-08  Gavin Salam  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl:
+	temporarily removed karnak because the machine is offline. 
+
 2021-01-06  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/Error.hh:
