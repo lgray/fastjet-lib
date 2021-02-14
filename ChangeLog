@@ -31,6 +31,30 @@
 Entries below are added in a merge of the master branch
 Entries above are inserted in the thread-safety branch
 --------------------------------------------------------------------------------
+2021-01-08  Gavin Salam  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl:
+	temporarily removed karnak because the machine is offline. 
+
+2021-01-06  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Error.hh:
+	removed the inheritance on std::exception for 2 reasons: (i) is
+	causes issues w old compilers (throw() v. noexcept v. no
+	qualifiers) and (ii) doing this properly also requires defining
+	"virtual const char* what()"
+
+2021-01-05  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/Error.hh:
+	had the Error class derive from std::exception
+
+	* pyinterface/fastjet.i:
+	included a few fixes suggested by Patrick Komiske:
+	- installed a few files so they're acceessible for projects
+	  derived from FJ to define theit own wrapper
+	- improved exceptions (throws a FastJetError py exception)
+	- defined a data table
 
 2020-09-11  Gavin Salam  <gavin.salam@cern.ch>
 

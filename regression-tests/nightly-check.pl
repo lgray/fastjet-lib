@@ -115,25 +115,26 @@ push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-
 #push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
 #push @setups, ["","--enable-allcxxplugins CC=gcc34 CXX=g++34", "", 10, ""]; # with gcc-3.4 [suspended 2013-04, but we have zetes for now]
 
+## GPS 2021-01-08: temporarily removing all karnak tests
 # checks on macs 
-push @setups, ["karnak","CC=cc CXX=c++", "", 10, ""]; # out of the box on new karnak (OS X 10.8.5) with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
-push @setups, ["karnak","--enable-allcxxplugins CC=cc CXX=c++", "", 1000, ""]; # full monty on new karnak with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
-push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
+# push @setups, ["karnak","CC=cc CXX=c++", "", 10, ""]; # out of the box on new karnak (OS X 10.8.5) with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
+# push @setups, ["karnak","--enable-allcxxplugins CC=cc CXX=c++", "", 1000, ""]; # full monty on new karnak with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
+# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
 
 # extra tests for areas
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
-push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
+# push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
 
 # extra tests for background estimation
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
-push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
+# push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
 
 # minimal check that demangling code doesn't break compilation
 push @setups, ["","--disable-static --enable-demangling", "", 10, ""]; # locally
 
 # minimal checks of fjcore
 push @setups, ["","", "", 1000, "-fjcore"]; # locally
-push @setups, ["karnak","CC=cc CXX=c++", "", 10, "-fjcore"]; # remotely on karnak
+# push @setups, ["karnak","CC=cc CXX=c++", "", 10, "-fjcore"]; # remotely on karnak
 
 # minimal check of the python interface
 push @setups, ["","--disable-static --enable-pyext", "", 10, ""];               # locally, just the interface
