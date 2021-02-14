@@ -74,7 +74,7 @@ Example
 #include "fastjet/internal/BasicRandom.hh"
 #include "fastjet/SharedPtr.hh"
 #include "fastjet/LimitedWarning.hh"
-#include "fastjet/Error.hh"
+  //#include "fastjet/Error.hh"
 #include "fastjet/PseudoJetStructureBase.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/FunctionOfPseudoJet.hh"
@@ -122,12 +122,16 @@ static PyObject * FastJetError_;
 // this gets placed in the SWIG_init function
 %init %{
   fastjet::Error::set_print_errors(false);
-  FastJetError_ = PyErr_NewException(`module` ".FastJetError", NULL, NULL);
+  unsigned int mlen = strlen(`module`);
+  char * msg = (char*) calloc(mlen+15, sizeof(char));
+  strcpy(msg, `module`);
+  strcat(msg, ".FastJetError");
+  FastJetError_ = PyErr_NewException(msg, NULL, NULL);
   Py_INCREF(FastJetError_);
   if (PyModule_AddObject(m, "FastJetError", FastJetError_) < 0) {
     Py_DECREF(m);
     Py_DECREF(FastJetError_);
-    return NULL;
+    //return NULL;
   }
 %}
 %enddef
