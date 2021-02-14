@@ -1,5 +1,7 @@
 /Makefile
-/PJtiming
-/run_tests
-/cs_delete_self
 /Makefile.bak
+/Makefile~
+/PJtiming
+/cs_delete_self
+/run_tests
+/thread_safety_tests

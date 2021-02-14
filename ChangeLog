@@ -26,6 +26,8 @@
 	Those files had conflicts during the merge
 	Everything has been fixed easily (leftover comments are above).
 
+    Other things added
+	* testsuite/thread_safety_tests.cc
 
 --------------------------------------------------------------------------------
 Entries below are added in a merge of the master branch

@@ -1,1 +1,2 @@
-mkcxx.pl '-f'
+# the thread safety tests need C++14
+mkcxx.pl -f -4

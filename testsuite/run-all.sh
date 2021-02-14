@@ -22,4 +22,6 @@ header
 header 
 ./run_tests || report_failure run_tests
 
+header 
+./thread_safety_tests || report_failure run_tests
 
