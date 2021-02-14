@@ -3,7 +3,7 @@ Installation instructions for FastJet
 ------------------------------------- 
 
 These instructions for installation from an untarred FastJet release
-tarball. For additional steps needed from a git checkout, see below.
+tarball. For additional steps needed from a git clone, see below.
 
 FastJet can be configured, built and installed using the standard
 sequence
@@ -126,7 +126,8 @@ Then you should generate all configuration files. This is done using
 or, alternatively,
 
 % autoreconf --install
-% ./configure [configure option]
+% cd plugins/SISCone/siscone; autoreconf --install; cd ../../..
+% ./configure [configure options]
 
 Remarks: 
 

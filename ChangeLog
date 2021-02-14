@@ -31,6 +31,10 @@
 Entries below are added in a merge of the master branch
 Entries above are inserted in the thread-safety branch
 --------------------------------------------------------------------------------
+2021-02-14  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+	* INSTALL instructions from git now mention running autoreconf in
+	siscone directory as well.
+
 2021-01-08  Gavin Salam  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl:
