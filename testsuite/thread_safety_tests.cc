@@ -11,11 +11,12 @@
 #include "fastjet/ClusterSequence.hh"
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Pruner.hh"
+#include "TestThreadsBase.hh"
 
 using namespace fastjet;
 using namespace std;
 
-void groomJets(const Transformer* f, const vector<fastjet::PseudoJet>& ungroomed_jets, uint ig) {
+void groomJets(const Transformer* f, const vector<fastjet::PseudoJet>& ungroomed_jets, unsigned int ig) {
   unsigned int ij=0;
   // loop on jet candidates
   for (const PseudoJet & u : ungroomed_jets){
@@ -28,13 +29,24 @@ void groomJets(const Transformer* f, const vector<fastjet::PseudoJet>& ungroomed
 
 int main(int argc, char ** argv) {
 
+  // run our our tests
+  vector<unique_ptr<TestBase> > tests;
+  tests.emplace_back(make_unique<TestThread<ThreadedTestPhiRap>>());
+  for (auto & test: tests) {
+    bool outcome = test->run_test();
+    if (!outcome) test->print_failures();
+    else          cout << "Success for " << test->short_name() << endl;
+  }
+  exit(0);
+
 #ifndef FASTJET_HAVE_THREAD_SAFETY
   cout << argv[0] << ": FastJet not configured with thread safety, bailing out gracefully" << endl;
   return 0;
 #else 
+
+
   // Set up the input event once
   //----------------------------------------------------------
-  
   // read in input particles
   //----------------------------------------------------------
   vector<fastjet::PseudoJet> input_particles;
@@ -54,7 +66,7 @@ int main(int argc, char ** argv) {
   constexpr bool do_parallel_threads = true;
 
   // Repeatedly process the same event
-  for(uint evt=0; evt<100; ++evt) {
+  for(unsigned int evt=0; evt<100; ++evt) {
     cout << "Start of event " << evt << endl;
     constexpr double ptmin = 5.0;
 
@@ -100,7 +112,7 @@ int main(int argc, char ** argv) {
 
     // We spawn a thread to run each of the groomers
     vector<thread> threads;
-    uint ig=0;
+    unsigned int ig=0;
     for (const unique_ptr<Transformer>& pf : groomers){
       threads.emplace_back(thread(groomJets, pf.get(), ungroomed_jets, ig));
       if(!do_parallel_threads) { threads.back().join(); }; // Run one thread at a time

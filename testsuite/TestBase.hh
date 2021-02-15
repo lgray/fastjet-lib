@@ -116,7 +116,8 @@ public:
 
   /// verifies two things are equal within tolerance; if not it
   /// registers failure in the _pass_test
-  bool verify_almost_equal(double a, double b, const string & testname, double tol = -1.0) {
+  bool verify_almost_equal(double a, double b, const string & testname, double tol = -1.0, 
+                           bool dummy_ignore_structure = false) {
     if (!almost_equal(a,b,tol)) {
       _pass_test = false;
       std::ostringstream ostr;
