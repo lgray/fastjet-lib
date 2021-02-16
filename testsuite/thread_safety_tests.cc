@@ -34,6 +34,10 @@ int main(int argc, char ** argv) {
   tests.emplace_back(make_unique<TestThread<ThreadedBanner>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestPhiRap>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering1Ev>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedClustering10Ev>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedClustering10EvAreas>>(AreaDefinition(active_area_explicit_ghosts)));
+  tests.emplace_back(make_unique<TestThread<ThreadedClustering10EvAreas>>(AreaDefinition(voronoi_area, VoronoiAreaSpec())));
+  //tests.emplace_back(make_unique<TestThread<ThreadedClustering10EvAreas<voronoi_area>>>());
 
   // run over them
   for (auto & test: tests) {

@@ -1,8 +1,10 @@
 #ifndef __TESTTHREADSBASE_HH__
 #define __TESTTHREADSBASE_HH__
-#include "TestBase.hh"
 #include <thread>
 #include <sstream>
+#include "TestBase.hh"
+#include "fastjet/AreaDefinition.hh"
+#include "fastjet/ClusterSequenceArea.hh"
 
 using namespace std;
 using namespace fastjet;
@@ -24,7 +26,10 @@ template<class R>
 class TestThread : public TestBase {
 
 public:
-  TestThread() {}
+  // allow this class to pass parameters to the constructor
+  // of the underlying R class, via pack expansion
+  template<class ... Types>
+  TestThread(Types... args_R) : sequential(args_R...), threaded(args_R...) {}
   /// descriptions are taken from the template class
   std::string description() const {return threaded.description();}
   std::string short_name()  const {return threaded.short_name();}
@@ -122,11 +127,41 @@ public:
     }
     _events.push_back(input_particles);
   }
-  
+
+  /// loads up to max events from filename
+  void load_events(const string & filename, int max=-1) {
+    ifstream istr(filename.c_str());
+    vector<PseudoJet> input_particles;
+    string line;
+    int iev = 0;
+    double px, py , pz, E;
+    while (getline(istr,line)) {
+      if (line =="#END") {
+        _events.push_back(input_particles);
+        input_particles.resize(0);
+        ++iev;
+        if (iev == max) return;
+      }
+      if (line.substr(0,1) == "#") {continue;}
+      istringstream linestream(line);
+      linestream >> px >> py >> pz >> E;
+      input_particles.push_back(fastjet::PseudoJet(px,py,pz,E)); 
+      input_particles.back().set_user_index(input_particles.size()-1);
+    }
+    if (input_particles.size() > 0) _events.push_back(input_particles);
+  }
+
+
   //----------------------------------------------------
   void load_default_event() {
     return load_event("../example/data/single-event.dat");
   }
+
+  /// loads the default 10 events
+  void load_default_10events() {
+    return load_events("../example/data/Pythia-PtMin1000-LHC-10ev.dat");
+  }
+
 
 protected:
   vector<vector<S> > _result;
@@ -135,7 +170,7 @@ protected:
 
 
 //-------------------------------------------------------------
-/// just generates a banner; we can't explicit test the outcome
+/// just generates a banner; we can't explicitly test the outcome
 /// of this, but when running the code we'll look to see
 /// how many times the banner comes out...
 class ThreadedBanner : public ThreadedTestBase<double> {
@@ -173,7 +208,7 @@ public:
 };
 
 //-------------------------------------------------------------
-/// Test clutering with multiple algorithms
+/// Test clutering with multiple jet definitions on one original event
 class ThreadedClustering1Ev : public ThreadedTestBase<PseudoJet> {
 public:
 
@@ -190,6 +225,61 @@ public:
 
 protected:
   vector<double> _R_values;
+};
+
+//-------------------------------------------------------------
+/// Test clutering with the same jet definition across many events
+class ThreadedClustering10Ev : public ThreadedTestBase<PseudoJet> {
+public:
+
+  ThreadedClustering10Ev()  {
+    load_default_10events();
+    set_size(_events.size());
+  }
+
+  void run_test_i(unsigned i) {
+    ClusterSequence cs(_events[i], _jet_def);
+    _result[i] = cs.inclusive_jets();
+  } 
+
+  JetDefinition _jet_def{antikt_algorithm, 0.4};
+
+protected:
+};
+
+//-------------------------------------------------------------
+/// Test clutering with the same jet definition across many events
+/// and get ghosted areas
+class ThreadedClustering10EvAreas : public ThreadedTestBase<double> {
+public:
+
+  ThreadedClustering10EvAreas(AreaDefinition area_def) : _area_def(area_def) {
+    load_default_10events();
+    //load_default_event();
+    set_size(_events.size());
+  }
+
+  std::string short_name()  const {
+    string area_desc = _area_def.description();
+    size_t max_len = 15;
+    string short_area_desc = area_desc.substr(0,min(max_len,area_desc.size()));
+    return string(typeid(*this).name())
+     + " "+ short_area_desc + "...";}
+
+
+  void run_test_i(unsigned i) {
+    vector<int> seed{int(12345+i), int(67890-i*i)};
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
+    auto jets = cs.inclusive_jets();
+    for (const auto & jet: jets) {
+      _result[i].push_back(jet.area());
+    }
+  } 
+
+  JetDefinition _jet_def{antikt_algorithm, 0.4};
+  AreaDefinition _area_def;
+
+protected:
 };
 
 
