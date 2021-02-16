@@ -146,7 +146,11 @@ public:
 
   /// return a copy of this AreaDefinition with a user-defined set of seeds
   AreaDefinition with_fixed_seed(const std::vector<int> & iseed) const{
-    return AreaDefinition(_area_type, _ghost_spec.with_fixed_seed(iseed));
+    if (_area_type == voronoi_area) {
+      return *this;
+    } else {
+      return AreaDefinition(_area_type, _ghost_spec.with_fixed_seed(iseed));
+    }
   }
   
 private:
