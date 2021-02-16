@@ -43,8 +43,10 @@ int main(int argc, char ** argv) {
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGE>>());
 
   // run over them
+  bool overall_outcome = true;
   for (auto & test: tests) {
     bool outcome = test->run_test();
+    overall_outcome &= outcome;
     if (!outcome) {
       cout << "Failure for " << test->short_name() << endl;
       test->print_failures();
@@ -53,7 +55,8 @@ int main(int argc, char ** argv) {
       cout << "Success for " << test->short_name() << endl;
     } 
   }
-  exit(0);
+  if (overall_outcome) return 0;
+  else                 return -1;
 
 #ifndef FASTJET_HAVE_THREAD_SAFETY
   cout << argv[0] << ": FastJet not configured with thread safety, bailing out gracefully" << endl;
