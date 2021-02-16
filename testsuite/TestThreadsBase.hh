@@ -5,6 +5,11 @@
 #include "TestBase.hh"
 #include "fastjet/AreaDefinition.hh"
 #include "fastjet/ClusterSequenceArea.hh"
+#include "fastjet/tools/Filter.hh"
+#include "fastjet/tools/Pruner.hh"
+#include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+#include "fastjet/tools/JetMedianBackgroundEstimator.hh"
+#include "fastjet/tools/Subtractor.hh"
 
 using namespace std;
 using namespace fastjet;
@@ -36,38 +41,52 @@ public:
 
   bool run_test() {
     
-    unsigned n = sequential.n_threads();
+    unsigned i_round = 0;
 
-    // first do the threaded part
-    vector<unique_ptr<thread>> threads;
-    for (unsigned i = 0; i < n; i++) {
-      threads.emplace_back(make_unique<thread>(thread_run_test<R>, &threaded, i));
-    }
-    for (unsigned i = 0; i < n; i++) {
-      threads[i]->join();
-    }
-
-    // then run the sequential test
-    for (unsigned i = 0; i < n; i++) {
-      thread_run_test<R>(&sequential, i);
-    }
-
-
-    // finally check the results are in agreement
     bool outcome = true;
-    for (unsigned i = 0; i < n; i++) {
-      ostringstream ostr;
-      ostr << short_name() << ": size of result from thread " << i;
-      outcome &= verify_equal(sequential.result()[i].size(), 
-                              threaded.result()[i].size(), ostr.str());
-      for (unsigned j = 0; j < sequential.result()[i].size(); j++) {
-        ostringstream ostr2;
-        ostr2 << ostr.str() << ", value " << j;
-        // last argument (true) tells verify_almost_equal to ignore 
-        // structure info in its test
-        outcome &= verify_almost_equal(sequential.result()[i][j], 
-                      threaded.result()[i][j], ostr2.str(), -1 , true);
+  
+    while (true) {
+
+      // first establish if we will run this round
+      bool seq_OK = sequential.prepare_round(i_round);
+      bool thr_OK = threaded  .prepare_round(i_round);
+      assert(seq_OK == thr_OK);
+      if (not seq_OK) break;
+
+      // then figure out how many threads we will want
+      unsigned n = sequential.n_threads();
+
+      // first do the threaded part
+      vector<unique_ptr<thread>> threads;
+      for (unsigned i = 0; i < n; i++) {
+        threads.emplace_back(make_unique<thread>(thread_run_test<R>, &threaded, i));
       }
+      for (unsigned i = 0; i < n; i++) {
+        threads[i]->join();
+      }
+
+      // then run the sequential test
+      for (unsigned i = 0; i < n; i++) {
+        thread_run_test<R>(&sequential, i);
+      }
+
+
+      // finally check the results are in agreement
+      for (unsigned i = 0; i < n; i++) {
+        ostringstream ostr;
+        ostr << short_name() << ": size of result from thread " << i;
+        outcome &= verify_equal(sequential.result()[i].size(), 
+                                threaded.result()[i].size(), ostr.str());
+        for (unsigned j = 0; j < sequential.result()[i].size(); j++) {
+          ostringstream ostr2;
+          ostr2 << ostr.str() << ", value " << j;
+          // last argument (true) tells verify_almost_equal to ignore 
+          // structure info in its test
+          outcome &= verify_almost_equal(sequential.result()[i][j], 
+                        threaded.result()[i][j], ostr2.str(), -1 , true);
+        }
+      }
+      i_round += 1;
     }
     return outcome;
   }
@@ -95,12 +114,19 @@ template<class S>
 class ThreadedTestBase {
 public:
   ThreadedTestBase(unsigned n = 0) {_result.resize(n);}
-  void set_size(unsigned n) {_result.resize(n);}
+  void set_n_threads(unsigned n) {_result.resize(n);}
   virtual ~ThreadedTestBase() {}
 
   /// this is the critical part that the user needs to implement
   /// (together with the constructor))
   virtual void run_test_i(unsigned i) = 0;
+
+  /// The TestThread class will try things on increasing rounds
+  /// (each with an incremented index j) until this function
+  /// returns false. Many classes won't need to overload this and
+  /// will run a single round. But it provides the functionality
+  /// for multiple rounds where needed...
+  virtual bool prepare_round(unsigned j) {return j == 0;}
 
   /// default short name is the class name (this will take on the
   /// derived class name, albeit in its mangled form)
@@ -208,12 +234,12 @@ public:
 };
 
 //-------------------------------------------------------------
-/// Test clutering with multiple jet definitions on one original event
-class ThreadedClustering1Ev : public ThreadedTestBase<PseudoJet> {
+/// Test clustering with multiple jet definitions on one original event
+class ThreadedClustering1EvManyR : public ThreadedTestBase<PseudoJet> {
 public:
 
-  ThreadedClustering1Ev() : _R_values{0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0} {
-    set_size(_R_values.size());
+  ThreadedClustering1EvManyR() : _R_values{0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0} {
+    set_n_threads(_R_values.size());
     load_default_event();
   }
 
@@ -227,6 +253,81 @@ protected:
   vector<double> _R_values;
 };
 
+// //-------------------------------------------------------------
+// /// Test clustering with each thread extracting jets from a common
+// /// underlying ClusterSequence, which should automatically delete
+// /// itself
+// class ThreadedClustering1EvCommonCS : public ThreadedTestBase<PseudoJet> {
+// public:
+// 
+//   ThreadedClustering1EvCommonCS() {
+//     set_n_threads(3);
+//     load_default_event();
+//     JetDefinition jet_def(antikt_algorithm, 0.4);
+//     _jets = jet_def(_events[0]);
+//     //cs.reset(new ClusterSequence(_events[0], jet_def));
+//   }
+// 
+//   void run_test_i(unsigned i) {
+//     //_result[i] = cs->inclusive_jets();
+//     _result[i] = _jets;
+//   } 
+// 
+// protected:
+//   
+//   vector<PseudoJet> _jets;
+//   //unique_ptr<ClusterSequence> cs;
+// };
+
+
+//-------------------------------------------------------------
+/// Test clustering with each thread extracting jets from a common
+/// underlying ClusterSequence, which should automatically delete
+/// itself; this one seems to work non non-thread-safe versions, whereas
+/// the logically similar  parallel groomer below fails.
+class ThreadedClustering1EvCommonCS : public ThreadedTestBase<double> {
+public:
+
+  ThreadedClustering1EvCommonCS() {
+    set_n_threads(8);
+    load_default_10events();
+    //load_default_event();
+    //JetDefinition jet_def(antikt_algorithm, 0.4);
+    //vector<PseudoJet> jets = jet_def(_events[0]);
+    //_jets.resize(n_threads());
+    //for (unsigned i = 0; i < n_threads(); i++) {
+    //  _jets[i] = jets;
+    //}
+    //cs.reset(new ClusterSequence(_events[0], jet_def));
+  }
+
+  bool prepare_round(unsigned j) override {
+    if (j >= _events.size()) return false;
+
+    JetDefinition jet_def(antikt_algorithm, 0.4);
+    vector<PseudoJet> jets = jet_def(_events[j]);
+    _jets.resize(n_threads());
+    for (unsigned i = 0; i < n_threads(); i++) {
+      _jets[i] = jets;
+    }
+    return true;
+  }
+
+  void run_test_i(unsigned i) override {
+    //_result[i] = cs->inclusive_jets();
+    for (const PseudoJet & j: _jets[i]) {
+      _result[i].push_back(j.pt());
+    }
+    _jets[i].resize(0);
+  } 
+
+protected:
+  
+  vector<vector<PseudoJet>> _jets;
+  //unique_ptr<ClusterSequence> cs;
+};
+
+
 //-------------------------------------------------------------
 /// Test clutering with the same jet definition across many events
 class ThreadedClustering10Ev : public ThreadedTestBase<PseudoJet> {
@@ -234,7 +335,7 @@ public:
 
   ThreadedClustering10Ev()  {
     load_default_10events();
-    set_size(_events.size());
+    set_n_threads(_events.size());
   }
 
   void run_test_i(unsigned i) {
@@ -256,7 +357,7 @@ public:
   ThreadedClustering10EvAreas(AreaDefinition area_def) : _area_def(area_def) {
     load_default_10events();
     //load_default_event();
-    set_size(_events.size());
+    set_n_threads(_events.size());
   }
 
   std::string short_name()  const {
@@ -264,22 +365,145 @@ public:
     size_t max_len = 15;
     string short_area_desc = area_desc.substr(0,min(max_len,area_desc.size()));
     return string(typeid(*this).name())
-     + " "+ short_area_desc + "...";}
+     + " "+ short_area_desc + "...";
+  }
 
 
   void run_test_i(unsigned i) {
+#ifdef FASTJET_HAVE_THREAD_SAFETY
     vector<int> seed{int(12345+i), int(67890-i*i)};
     ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
+#else
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def);
+#endif 
     auto jets = cs.inclusive_jets();
     for (const auto & jet: jets) {
       _result[i].push_back(jet.area());
     }
   } 
 
+protected:
+
   JetDefinition _jet_def{antikt_algorithm, 0.4};
   AreaDefinition _area_def;
 
+};
+
+//---------------------------------------------------------
+/// this is intended to carry out the same test as supplied
+/// by Chris Delitzsch and ATLAS colleagues; note that it 
+/// does not always crash: there is some system-based
+/// randomness
+class ThreadedClusteringPrllGroomers : public ThreadedTestBase<double> {
+
+public:
+  ThreadedClusteringPrllGroomers() {
+    double Rfilt = 0.3;
+    unsigned int nfilt = 3;
+    _groomers.emplace_back(std::make_unique<Filter>(JetDefinition(cambridge_algorithm, Rfilt), 
+                                                    SelectorNHardest(nfilt) ) );
+
+    double Rtrim = 0.2;
+    double ptfrac = 0.03;
+    _groomers.emplace_back(std::make_unique<Filter>(JetDefinition(kt_algorithm, Rtrim), 
+                                                    SelectorPtFractionMin(ptfrac) ) );
+
+    double zcut = 0.1;
+    double rcut_factor = 0.5;
+    _groomers.emplace_back(std::make_unique<Pruner>(cambridge_algorithm, zcut, rcut_factor));
+    
+    set_n_threads(_groomers.size());
+    //load_default_event();
+    //_jets = jet_def(_events[0]);
+    //cs.reset(new ClusterSequence(_events[0], jet_def));
+    load_default_10events();
+    JetDefinition jet_def(antikt_algorithm, 1.0);
+    for (const auto & event: _events) {
+      vector<PseudoJet> jets = jet_def(event);
+      for (const PseudoJet & j: jets) {_jets.push_back(j);}
+    }
+  }
+
+  void run_test_i(unsigned i) {
+    //_result[i] = cs->inclusive_jets();
+    for (const PseudoJet & j: _jets) {
+      auto groomed = (*_groomers[i])(j);
+      _result[i].push_back(groomed.pt());
+    }
+  } 
+
 protected:
+  vector<PseudoJet> _jets;
+  vector<unique_ptr<Transformer> > _groomers;
+};
+
+/// class to try out GridMedianBGE, taking a copy for local use within
+/// the thread
+class ThreadedGMBGE : public ThreadedTestBase<PseudoJet> {
+public:
+  ThreadedGMBGE() {
+    load_default_10events();
+    set_n_threads(_events.size());
+  }
+
+  void run_test_i(unsigned i) {
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+    vector<int> seed{int(12345+i), int(67890-i*i)};
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
+#else
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def);
+#endif 
+    vector<PseudoJet> jets = cs.inclusive_jets();
+    GridMedianBackgroundEstimator gmbge(_gmbge);
+    gmbge.set_particles(_events[i]);
+    Subtractor subtractor(&gmbge);
+    subtractor.set_use_rho_m(true);
+    vector<PseudoJet> subtracted_jets = subtractor(jets);
+    _result[i] = subtracted_jets;
+  } 
+
+private:
+  JetDefinition  _jet_def{cambridge_algorithm, 1.0};
+  AreaDefinition _area_def{active_area_explicit_ghosts};
+  GridMedianBackgroundEstimator _gmbge{-5.0, 5.0, 1.0, 1.0};
+};
+
+/// class to try out JetMedianBGE, taking a copy for local use within
+/// the thread
+class ThreadedJMBGE : public ThreadedTestBase<PseudoJet> {
+public:
+  ThreadedJMBGE() {
+    load_default_10events();
+    set_n_threads(_events.size());
+  }
+
+  void run_test_i(unsigned i) {
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+    vector<int> seed{int(12345+i), int(67890-i*i)};
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
+#else
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def);
+#endif 
+    // only examine jets up to c. 4 to avoid warnings with jets
+    // outside the region where rho can be estimated reliably (since our
+    // JMBGE definition uses a dynamic selector to choose the set of jets)
+    vector<PseudoJet> jets = SelectorAbsRapMax(4.0)(cs.inclusive_jets());
+    // use a copy of the jmbge
+    JetMedianBackgroundEstimator jmbge(_jmbge);
+    jmbge.set_cluster_sequence(cs);
+    Subtractor subtractor(&jmbge);
+    subtractor.set_use_rho_m(true);
+    //for (const PseudoJet & j: jets) {
+    //  cout << j.rap() << " " << jmbge.rho(j) << endl;
+    //}
+    vector<PseudoJet> subtracted_jets = subtractor(jets);
+    _result[i] = subtracted_jets;
+  } 
+
+private:
+  JetDefinition  _jet_def{cambridge_algorithm, 0.5};
+  AreaDefinition _area_def{active_area_explicit_ghosts};
+  JetMedianBackgroundEstimator _jmbge{SelectorStrip(1.5)};
 };
 
 
