@@ -29,9 +29,13 @@ void groomJets(const Transformer* f, const vector<fastjet::PseudoJet>& ungroomed
 
 int main(int argc, char ** argv) {
 
-  // run our our tests
+  // Declare the set of tests
   vector<unique_ptr<TestBase> > tests;
+  tests.emplace_back(make_unique<TestThread<ThreadedBanner>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestPhiRap>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedClustering1Ev>>());
+
+  // run over them
   for (auto & test: tests) {
     bool outcome = test->run_test();
     if (!outcome) test->print_failures();
