@@ -148,7 +148,7 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
   // One may argue that it is better to cache the particles and only
   // do the clustering later but clustering the particles now has 2
   // practical advantages:
-  //  - it allows to une only '_included_jets' in all that follows
+  //  - it allows us to use only '_included_jets' in all that follows
   //  - it avoids adding another flag to ensure particles are 
   //    clustered only once
   ClusterSequenceArea *csa = new ClusterSequenceArea(particles, _jet_def, _area_def);
