@@ -506,5 +506,36 @@ private:
   JetMedianBackgroundEstimator _jmbge{SelectorStrip(1.5)};
 };
 
+/// class to try out JetMedianBGE, taking a copy for local use within
+/// the thread
+class ThreadedJMBGECommonEvent : public ThreadedTestBase<PseudoJet> {
+public:
+  ThreadedJMBGECommonEvent() : _subtractor(&_jmbge) {
+    load_default_10events();
+    set_n_threads(8);
+    _subtractor.set_use_rho_m(true);
+
+  }
+
+  virtual bool prepare_round(unsigned j) {
+    if (j >= _events.size()) return false;
+    _cs.reset(new ClusterSequenceArea(_events[j], _jet_def, _area_def));
+    _jmbge.set_cluster_sequence(*_cs);
+    _jets = SelectorAbsRapMax(4.0)(_cs->inclusive_jets());
+    return true;
+  }
+
+  void run_test_i(unsigned i) {
+    _result[i] = _subtractor(_jets);
+  } 
+
+private:
+  vector<PseudoJet> _jets;
+  unique_ptr<ClusterSequenceArea> _cs;
+  JetDefinition  _jet_def{cambridge_algorithm, 0.5};
+  AreaDefinition _area_def{active_area_explicit_ghosts};
+  JetMedianBackgroundEstimator _jmbge{SelectorStrip(1.5)};
+  Subtractor _subtractor;
+};
 
 #endif // __TESTTHREADSBASE_HH__
