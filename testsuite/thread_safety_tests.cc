@@ -33,11 +33,13 @@ int main(int argc, char ** argv) {
   vector<unique_ptr<TestBase> > tests;
   tests.emplace_back(make_unique<TestThread<ThreadedBanner>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestPhiRap>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedTestRapPhi>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering1EvManyR>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering1EvCommonCS>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering10Ev>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering10EvAreas>>(AreaDefinition(active_area_explicit_ghosts)));
   tests.emplace_back(make_unique<TestThread<ThreadedClustering10EvAreas>>(AreaDefinition(voronoi_area, VoronoiAreaSpec())));
+  tests.emplace_back(make_unique<TestThread<ThreadedClustering10EvAreasGlobalRand>>(AreaDefinition(active_area_explicit_ghosts)));
   tests.emplace_back(make_unique<TestThread<ThreadedClusteringPrllGroomers>>());
   tests.emplace_back(make_unique<TestThread<ThreadedGMBGE>>());
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGE>>());
@@ -48,14 +50,15 @@ int main(int argc, char ** argv) {
   // run over them
   bool overall_outcome = true;
   for (auto & test: tests) {
+    cout << "Testing ... " << test->short_name() << flush;
     bool outcome = test->run_test();
     overall_outcome &= outcome;
     if (!outcome) {
-      cout << "Failure for " << test->short_name() << endl;
+      cout << "\rFailure for " << test->short_name() << endl;
       test->print_failures();
     }
     else {
-      cout << "Success for " << test->short_name() << endl;
+      cout << "\rSuccess for " << test->short_name() << endl;
     } 
   }
   if (overall_outcome) return 0;

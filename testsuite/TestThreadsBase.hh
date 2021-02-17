@@ -41,22 +41,27 @@ public:
 
   bool run_test() {
     
-    unsigned i_round = 0;
-
     bool outcome = true;
-  
+
+
+    unsigned i_round = 0;
+    cout << " " << flush;
     while (true) {
 
       // first establish if we will run this round
-      bool seq_OK = sequential.prepare_round(i_round);
       bool thr_OK = threaded  .prepare_round(i_round);
+      bool seq_OK = sequential.prepare_round(i_round);
       assert(seq_OK == thr_OK);
       if (not seq_OK) break;
+
+      threaded  .reset_result();
+      sequential.reset_result();
 
       // then figure out how many threads we will want
       unsigned n = sequential.n_threads();
 
       // first do the threaded part
+      cout << "t" << flush;
       vector<unique_ptr<thread>> threads;
       for (unsigned i = 0; i < n; i++) {
         threads.emplace_back(make_unique<thread>(thread_run_test<R>, &threaded, i));
@@ -66,12 +71,13 @@ public:
       }
 
       // then run the sequential test
+      cout << "s" << flush;
       for (unsigned i = 0; i < n; i++) {
         thread_run_test<R>(&sequential, i);
       }
 
-
       // finally check the results are in agreement
+      cout << "v" << flush;
       for (unsigned i = 0; i < n; i++) {
         ostringstream ostr;
         ostr << short_name() << ": size of result from thread " << i;
@@ -96,6 +102,7 @@ protected:
   R threaded;
   /// stores the result of running in a thread-safe manner
   vector<vector<R> > _result;
+  int _nrepeat = 1;
 };
 
 //--------------------------------------------------------------------
@@ -127,6 +134,11 @@ public:
   /// will run a single round. But it provides the functionality
   /// for multiple rounds where needed...
   virtual bool prepare_round(unsigned j) {return j == 0;}
+
+  /// empty out the results vector. Intended for use ahead of each new round
+  void reset_result() {
+    for (vector<S> & r: _result) {r.resize(0);}
+  }
 
   /// default short name is the class name (this will take on the
   /// derived class name, albeit in its mangled form)
@@ -219,16 +231,42 @@ class ThreadedTestPhiRap : public ThreadedTestBase<double> {
 public:
 
   ThreadedTestPhiRap() : ThreadedTestBase<double>(8) {
-    load_default_event();
+    load_default_10events();
   }
 
-  void run_test_i(unsigned i) {
-    _result[i].reserve(_events[0].size() * 4);
-    for (const auto & j: _events[0]) {
+  bool prepare_round(unsigned j) override {
+    if (j >= _events.size()) return false;
+    _event = &_events[j];
+    return true;
+  }
+
+  void run_test_i(unsigned i) override {
+    _result[i].reserve(_event->size() * 4);
+    for (const auto & j: *_event) {
       _result[i].push_back(j.phi());
       _result[i].push_back(j.rap());
       _result[i].push_back(j.phi());
       _result[i].push_back(j.rap()); 
+    }
+  } 
+protected:
+  const vector<PseudoJet> * _event;
+};
+
+
+//-------------------------------------------------------------
+/// relative to ThreadedTestPhiRap alternative order
+/// of rap and phi extractions
+class ThreadedTestRapPhi : public ThreadedTestPhiRap {
+public:
+
+  void run_test_i(unsigned i) override {
+    _result[i].reserve(_event->size() * 4);
+    for (const auto & j: *_event) {
+      _result[i].push_back(j.rap()); 
+      _result[i].push_back(j.phi());
+      _result[i].push_back(j.rap());
+      _result[i].push_back(j.phi());
     }
   } 
 };
@@ -360,7 +398,7 @@ public:
     set_n_threads(_events.size());
   }
 
-  std::string short_name()  const {
+  std::string short_name()  const override {
     string area_desc = _area_def.description();
     size_t max_len = 15;
     string short_area_desc = area_desc.substr(0,min(max_len,area_desc.size()));
@@ -369,14 +407,14 @@ public:
   }
 
 
-  void run_test_i(unsigned i) {
+  void run_test_i(unsigned i) override {
 #ifdef FASTJET_HAVE_THREAD_SAFETY
     vector<int> seed{int(12345+i), int(67890-i*i)};
     ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
 #else
     ClusterSequenceArea cs(_events[i], _jet_def, _area_def);
 #endif 
-    auto jets = cs.inclusive_jets();
+    auto jets = sorted_by_pt(cs.inclusive_jets());
     for (const auto & jet: jets) {
       _result[i].push_back(jet.area());
     }
@@ -388,6 +426,36 @@ protected:
   AreaDefinition _area_def;
 
 };
+
+///-------------------------------------------------------------
+/// Test clutering with the same jet definition across many events
+/// and get ghosted areas: in this "Alt" case we are mainly testing
+/// that the default area usage (with the global random number
+/// generator) is safe, in that it doesn't cause hangs or crashes; for
+/// the area results themselves, we simply take the two hardest jets and
+/// look at the nearest integer to area/(pi R^2)
+class ThreadedClustering10EvAreasGlobalRand : public ThreadedClustering10EvAreas {
+public:
+
+  ThreadedClustering10EvAreasGlobalRand(AreaDefinition area_def) : ThreadedClustering10EvAreas(area_def) {}
+
+
+  void run_test_i(unsigned i) {
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def);
+    auto jets = SelectorNHardest(2)(sorted_by_pt(cs.inclusive_jets()));
+    for (const auto & jet: jets) {
+      int int_area_result = int( jet.area()/ (pi*pow(_jet_def.R(),2)) + 0.5);
+      _result[i].push_back(int_area_result);
+    }
+  } 
+
+protected:
+
+  JetDefinition _jet_def{antikt_algorithm, 0.4};
+  AreaDefinition _area_def;
+
+};
+
 
 //---------------------------------------------------------
 /// this is intended to carry out the same test as supplied
