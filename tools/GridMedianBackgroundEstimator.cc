@@ -48,6 +48,10 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
   //assert(n_good_tiles() == n_tiles()); // not needed now that we have an implementation
 #endif
 
+  _cached_estimate.reset();
+  _cached_estimate.set_has_sigma(true);
+  _cached_estimate.set_mean_area(mean_tile_area());
+  
   // check if we need to compute only rho or both rho and rho_m
   if (_enable_rho_m){
     // both rho and rho_m
@@ -76,8 +80,9 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
     // compute rho_m and sigma_m (see comment below for the
     // normaliosation of sigma)
     double p50 = _percentile(scalar_dt, 0.5);
-    _rho_m   = p50 / mean_tile_area();
-    _sigma_m = (p50-_percentile(scalar_dt, (1.0-0.6827)/2.0))/sqrt(mean_tile_area());
+    _cached_estimate.set_has_rho_m(true);
+    _cached_estimate.set_rho_m(p50 / mean_tile_area());
+    _cached_estimate.set_sigma_m((p50-_percentile(scalar_dt, (1.0-0.6827)/2.0))/sqrt(mean_tile_area()));
   } else {
     // only rho
     //fill(_scalar_pt.begin(), _scalar_pt.end(), 0.0);
@@ -122,20 +127,39 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
   // watch out: by definition, our sigma is the standard deviation of
   // the pt density multiplied by the square root of the cell area
   double p50 = _percentile(scalar_pt, 0.5);
-  _rho   = p50 / mean_tile_area();
-  _sigma = (p50-_percentile(scalar_pt, (1.0-0.6827)/2.0))/sqrt(mean_tile_area());
+  _cached_estimate.set_rho(p50 / mean_tile_area());
+  _cached_estimate.set_sigma((p50-_percentile(scalar_pt, (1.0-0.6827)/2.0))/sqrt(mean_tile_area()));
 
-  _has_particles = true;
+  _cache_available = true;
 }
 
 
 //----------------------------------------------------------------------
 // retrieving fundamental information
 //----------------------------------------------------------------------
+
+// get the full set of background properties
+BackgroundEstimatorBase::BackgroundEstimate GridMedianBackgroundEstimator::operator()() const{
+  verify_particles_set();
+  return _cached_estimate;  
+}
+ 
+// get the full set of background properties for a given reference jet
+BackgroundEstimatorBase::BackgroundEstimate GridMedianBackgroundEstimator::operator()(const PseudoJet &jet) const{
+  verify_particles_set();
+  if (_rescaling_class == 0)
+    return _cached_estimate;
+  
+  BackgroundEstimate estimate = _cached_estimate;
+  estimate.apply_rescaling_factor((*_rescaling_class)(jet));
+  return estimate;
+}
+
+
 // get rho, the median background density per unit area
 double GridMedianBackgroundEstimator::rho() const {
   verify_particles_set();
-  return _rho;
+  return _cached_estimate.rho();
 }
 
 
@@ -145,7 +169,7 @@ double GridMedianBackgroundEstimator::rho() const {
 // given area.
 double GridMedianBackgroundEstimator::sigma() const{
   verify_particles_set();
-  return _sigma; 
+  return _cached_estimate.sigma(); 
 }
 
 //----------------------------------------------------------------------
@@ -177,7 +201,7 @@ double GridMedianBackgroundEstimator::rho_m() const {
     throw Error("GridMediamBackgroundEstimator: rho_m requested but rho_m calculation has been disabled.");
   }
   verify_particles_set();
-  return _rho_m;
+  return _cached_estimate.rho_m();
 }
 
 
@@ -190,7 +214,7 @@ double GridMedianBackgroundEstimator::sigma_m() const{
     throw Error("GridMediamBackgroundEstimator: sigma_m requested but rho_m/sigma_m calculation has been disabled.");
   }
   verify_particles_set();
-  return _sigma_m; 
+  return _cached_estimate.sigma_m(); 
 }
 
 //----------------------------------------------------------------------
@@ -215,7 +239,7 @@ double GridMedianBackgroundEstimator::sigma_m(const PseudoJet & jet){
 //----------------------------------------------------------------------
 // verify that particles have been set and throw an error if not
 void GridMedianBackgroundEstimator::verify_particles_set() const {
-  if (!_has_particles) throw Error("GridMedianBackgroundEstimator::rho() or sigma() called without particles having been set");
+  if (!_cache_available) throw Error("GridMedianBackgroundEstimator::rho() or sigma() called without particles having been set");
 }
 
 
@@ -254,7 +278,7 @@ void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJe
   // you need to call set_particles again if you set the rescaling
   // class. We thus warn if there are already some available
   // particles
-  if (_has_particles)
+  if (_cache_available)
     _warning_rescaling.warn("GridMedianBackgroundEstimator::set_rescaling_class(): trying to set the rescaling class when there are already particles that have been set is dangerous: the rescaling will not affect the already existing particles resulting in mis-estimation of rho. You need to call set_particles() again before proceeding with any background estimation.");
   
   BackgroundEstimatorBase::set_rescaling_class(rescaling_class_in);

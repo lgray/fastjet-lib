@@ -79,6 +79,13 @@ public:
   /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
+  class BackgroundEstimate;
+  
+  /// get the full set of background properties
+  virtual BackgroundEstimate operator()() const = 0;
+  
+  /// get the full set of background properties for a given reference jet
+  virtual BackgroundEstimate operator()(const PseudoJet &jet) const = 0;
 
   /// get rho, the background density per unit area
   virtual double rho() const = 0;
@@ -187,11 +194,19 @@ public:
   /// done using the "Extra" information.
   class BackgroundEstimate{
   public:
+    /// ctor wo initialisation
     BackgroundEstimate()
       : _rho(0.0), _sigma(0.0), _rho_m(0.0), _sigma_m(0.0), 
         _has_sigma(false), _has_rho_m(false),
         _mean_area(0.0){}
 
+    /// reset to default
+    void reset(){
+      _rho = _sigma = _rho_m = _sigma_m = _mean_area = 0.0;
+      _has_sigma = _has_rho_m = false;
+      _extra.reset();
+    }
+    
     /// background density per unit area
     double rho() const {return _rho;}
     void set_rho(double rho_in) {_rho = rho_in;}

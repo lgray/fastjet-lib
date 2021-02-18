@@ -91,13 +91,12 @@ public:
   ///             periodicity in azimuthal angle (size, not area)
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     RectangularGrid(ymax, requested_grid_spacing),
-    _has_particles(false), _enable_rho_m(true) {} 
+    _enable_rho_m(true) {} 
 
   //----------------------------------------------------------------
   /// Constructor based on a user's fully specified RectangularGrid
   GridMedianBackgroundEstimator(const RectangularGrid & grid) :
-    RectangularGrid(grid),
-    _has_particles(false), _enable_rho_m(true) {
+    RectangularGrid(grid), _enable_rho_m(true) {
     if (!RectangularGrid::is_initialised()) 
       throw Error("attempt to construct GridMedianBackgroundEstimator with uninitialised RectangularGrid");
   }    
@@ -116,14 +115,13 @@ public:
   ///                        the selection
   GridMedianBackgroundEstimator(double rapmin_in, double rapmax_in, double drap_in, double dphi_in,
                                 Selector tile_selector = Selector()) :
-    RectangularGrid(rapmin_in, rapmax_in, drap_in, dphi_in, tile_selector),
-    _has_particles(false), _enable_rho_m(true) {}
+    RectangularGrid(rapmin_in, rapmax_in, drap_in, dphi_in, tile_selector), _enable_rho_m(true) {}
 
 #else  // alternative in old framework where we didn't have the rectangular grid
   GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
     _ymin(-ymax), _ymax(ymax), 
     _requested_grid_spacing(requested_grid_spacing),
-    _has_particles(false), _enable_rho_m(true)
+    _enable_rho_m(true)
   {
      setup_grid();
   }
@@ -142,13 +140,18 @@ public:
 
   /// determine whether the automatic calculation of rho_m and sigma_m
   /// is enabled (by default true)
-  void set_compute_rho_m(bool enable){ _enable_rho_m = enable;}
+  void set_compute_rho_m(bool enable){ _enable_rho_m = enable; }
 
   //\}
 
   /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
+  /// get the full set of background properties
+  BackgroundEstimate operator()() const;
+  
+  /// get the full set of background properties for a given reference jet
+  BackgroundEstimate operator()(const PseudoJet &jet) const;
 
   /// returns rho, the median background density per unit area
   double rho() const;
@@ -263,8 +266,9 @@ private:
 
   // information abotu the event
   //std::vector<double> _scalar_pt;
-  double _rho, _sigma, _rho_m, _sigma_m;
-  bool _has_particles;
+  //double _rho, _sigma, _rho_m, _sigma_m;
+  BackgroundEstimate _cached_estimate;
+  //bool _has_particles;
   bool _enable_rho_m;
 
   // various warnings to inform people of potential dangers

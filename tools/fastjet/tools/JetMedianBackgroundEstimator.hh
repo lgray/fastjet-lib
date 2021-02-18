@@ -199,14 +199,10 @@ public:
   ///
   /// For background estimators using a local ranges, this throws an
   ///   error (use operator(jet) instead)
-  /// In the presence of a rescaling, the rescaling is taken assuming
-  ///   a PseudoJet=PtYPhiM(1,0,0)
-  ///
-  /// This does not affect the cache
+  /// In the presence of a rescaling, the rescaling is not included
   BackgroundEstimate operator()() const;
   
   /// get the full set of background properties for a given reference jet
-  /// This does not affect the cache
   BackgroundEstimate operator()(const PseudoJet &jet) const;
 
   /// get rho, the median background density per unit area
