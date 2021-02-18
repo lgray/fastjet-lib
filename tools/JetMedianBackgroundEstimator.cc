@@ -367,7 +367,9 @@ double JetMedianBackgroundEstimator::rho(const PseudoJet & jet) {
   // adopt a different strategy for ranges taking a reference and others
   if (_rho_range.takes_reference()){
     // we compute the background and use it (no caching)
-    return rescaling_factor * _compute(jet).rho();
+    BackgroundEstimate estimate = _compute(jet);
+    _cache(estimate, false);
+    return rescaling_factor * estimate.rho();
   }
 
   // otherwise, we're in a situation where things can be cached once
@@ -388,8 +390,11 @@ double JetMedianBackgroundEstimator::sigma(const PseudoJet &jet) {
     ? (*_rescaling_class)(jet) : 1.0;
   
   // see "rho(jet)" for a descrtiption of the strategy
-  if (_rho_range.takes_reference())
-    return rescaling_factor * _compute(jet).sigma();
+  if (_rho_range.takes_reference()){
+    BackgroundEstimate estimate = _compute(jet);
+    _cache(estimate, false);
+    return rescaling_factor * estimate.sigma();
+  }
   if (!_cache_available) _compute_and_cache();
   return rescaling_factor * _cached_estimate.sigma();
 }
@@ -432,8 +437,11 @@ double JetMedianBackgroundEstimator::rho_m(const PseudoJet & jet)  {
     ? (*_rescaling_class)(jet) : 1.0;
   
   // see "rho(jet)" for a descrtiption of the strategy
-  if (_rho_range.takes_reference())
-    return rescaling_factor * _compute(jet).rho_m();
+  if (_rho_range.takes_reference()){
+    BackgroundEstimate estimate = _compute(jet);
+    _cache(estimate, false);
+    return rescaling_factor * estimate.rho_m();
+  }
   if (!_cache_available) _compute_and_cache();
   return rescaling_factor * _cached_estimate.rho_m();
 }
@@ -448,8 +456,11 @@ double JetMedianBackgroundEstimator::sigma_m(const PseudoJet & jet){
     ? (*_rescaling_class)(jet) : 1.0;
   
   // see "rho(jet)" for a descrtiption of the strategy
-  if (_rho_range.takes_reference())
-    return rescaling_factor * _compute(jet).sigma_m();
+  if (_rho_range.takes_reference()){
+    BackgroundEstimate estimate = _compute(jet);
+    _cache(estimate, false);
+    return rescaling_factor * estimate.sigma_m();
+  }
   if (!_cache_available) _compute_and_cache();
   return rescaling_factor * _cached_estimate.sigma_m();
 }
@@ -460,16 +471,18 @@ double JetMedianBackgroundEstimator::sigma_m(const PseudoJet & jet){
 /// background properties in the last call of rho() or sigma()
 /// If the configuration has changed in the meantime, throw an error.
 double JetMedianBackgroundEstimator::mean_area() const{
-  //TODO: cuirrently this does not work for local ranges (since they
-  // do not cache their values. We can always ask for the estimate
-  // instead. Also, the behaviour for other cases is improved since it
-  // no longer need a previous call to sth that does the caching (the
-  // caching will be done here)
-  //
-  // the same comment applies for n_jets_used, empty_area and
-  // n_empty_jets below
-  if (_rho_range.takes_reference())
-    throw Error("To obtain the mean area in cases where the background estimation is obtained from a selector that takes a reference jet, get a full estimate and use BackgroundEstimate::mean_area.");
+  // if the selector takes a reference, we need to use the cache 
+  if (_rho_range.takes_reference()){
+    // lock to make sure no other thread interferes w the caching
+    _lock_if_needed();
+    if (!_cache_available){
+      _unlock_if_needed();
+      throw Error("Calls to JetMedianBackgroundEstimator::mean_area() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
+    }
+    double return_value = _cached_estimate.mean_area();
+    _unlock_if_needed();
+    return return_value;
+  }
   if (!_cache_available) _compute_and_cache();
   return _cached_estimate.mean_area();
   // if (_status != Status_Ready)
@@ -484,8 +497,18 @@ double JetMedianBackgroundEstimator::mean_area() const{
 /// background properties in the last call of rho() or sigma()
 /// If the configuration has changed in the meantime, throw an error.
 unsigned int JetMedianBackgroundEstimator::n_jets_used() const{
-  if (_rho_range.takes_reference())
-    throw Error("To obtain the mean area in cases where the background estimation is obtained from a selector that takes a reference jet, get a full estimate and use BackgroundEstimate::extra<JetMedianBackgroundEstimator>().n_jets_used()");
+  // if the selector takes a reference, we need to use the cache 
+  if (_rho_range.takes_reference()){
+    // lock to make sure no other thread interferes w the caching
+    _lock_if_needed();
+    if (!_cache_available){
+      _unlock_if_needed();
+      throw Error("Calls to JetMedianBackgroundEstimator::n_jets_used() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
+    }
+    unsigned int return_value = _cached_estimate.extra<JetMedianBackgroundEstimator>().n_jets_used();
+    _unlock_if_needed();
+    return return_value;
+  }
   if (!_cache_available) _compute_and_cache();
   return _cached_estimate.extra<JetMedianBackgroundEstimator>().n_jets_used();
   // if (_status != Status_Ready)
@@ -499,15 +522,25 @@ unsigned int JetMedianBackgroundEstimator::n_jets_used() const{
 /// returns the jets used to actually compute the background
 /// properties
 std::vector<PseudoJet> JetMedianBackgroundEstimator::jets_used() const{
-  //TODO: this definitely needs fixing!
-  // Possible solution 1: find a way to cache things for selectors taking a ref
-  // Possible solution 2: introduce jets_used(jet)
-  // Possible solution 3: cache the jets used so we can also get it through the () operator
-  if (_rho_range.takes_reference())
-    throw Error("This feature is currently unimplemented for background estimated using a selector that takes a reference jet.");
-
-  if (!_cache_available) _compute_and_cache();
-  vector<PseudoJet> tmp_jets = _rho_range(_included_jets);
+  vector<PseudoJet> tmp_jets;
+  
+  // if the selector takes a reference, we need to use the cache 
+  if (_rho_range.takes_reference()){
+    // lock to make sure no other thread interferes w the caching
+    _lock_if_needed();
+    if (!_cache_available){
+      _unlock_if_needed();
+      throw Error("Calls to JetMedianBackgroundEstimator::jets_used() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
+    }
+    PseudoJet reference_jet = _cached_estimate.extra<JetMedianBackgroundEstimator>().reference_jet();
+    _unlock_if_needed();
+    Selector local_rho_range = _rho_range;
+    tmp_jets = _rho_range(_included_jets);
+  } else {
+    if (!_cache_available) _compute_and_cache();
+    tmp_jets = _rho_range(_included_jets);
+  }
+  
   std::vector<PseudoJet> used_jets;
   for (unsigned int i=0; i<tmp_jets.size(); i++){
     if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
@@ -547,8 +580,18 @@ std::vector<PseudoJet> JetMedianBackgroundEstimator::jets_used() const{
 /// The result here is just the cached result of the corresponding
 /// call to the ClusterSequenceAreaBase function.
 double JetMedianBackgroundEstimator::empty_area() const{
-  if (_rho_range.takes_reference())
-    throw Error("To obtain the mean area in cases where the background estimation is obtained from a selector that takes a reference jet, get a full estimate and use BackgroundEstimate::extra<JetMedianBackgroundEstimator>().empty_area()");
+  // if the selector takes a reference, we need to use the cache 
+  if (_rho_range.takes_reference()){
+    // lock to make sure no other thread interferes w the caching
+    _lock_if_needed();
+    if (!_cache_available){
+      _unlock_if_needed();
+      throw Error("Calls to JetMedianBackgroundEstimator::empty_area() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
+    }
+    double return_value = _cached_estimate.extra<JetMedianBackgroundEstimator>().empty_area();
+    _unlock_if_needed();
+    return return_value;
+  }
   if (!_cache_available) _compute_and_cache();
   return _cached_estimate.extra<JetMedianBackgroundEstimator>().empty_area();
   //if (_status != Status_Ready)
@@ -572,8 +615,18 @@ double JetMedianBackgroundEstimator::empty_area() const{
 /// The result here is just the cached result of the corresponding
 /// call to the ClusterSequenceAreaBase function.
 double JetMedianBackgroundEstimator::n_empty_jets() const{
-  if (_rho_range.takes_reference())
-    throw Error("To obtain the mean area in cases where the background estimation is obtained from a selector that takes a reference jet, get a full estimate and use BackgroundEstimate::extra<JetMedianBackgroundEstimator>().n_empty_jets()");
+  // if the selector takes a reference, we need to use the cache 
+  if (_rho_range.takes_reference()){
+    // lock to make sure no other thread interferes w the caching
+    _lock_if_needed();
+    if (!_cache_available){
+      _unlock_if_needed();
+      throw Error("Calls to JetMedianBackgroundEstimator::n_empty_jets() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
+    }
+    double return_value = _cached_estimate.extra<JetMedianBackgroundEstimator>().n_empty_jets();
+    _unlock_if_needed();
+    return return_value;
+  }
   if (!_cache_available) _compute_and_cache();
   return _cached_estimate.extra<JetMedianBackgroundEstimator>().n_empty_jets();
   //if (_status != Status_Ready)
@@ -751,28 +804,42 @@ JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_
   return local_estimate;
 }
 
-void JetMedianBackgroundEstimator::_compute_and_cache() const {
-  // get the result (for a dummy PseudoJet which will anyway not be used)
-  BackgroundEstimate estimate = _compute(PseudoJet());
-
+ void JetMedianBackgroundEstimator::_cache(const BackgroundEstimate &estimate, bool no_overwrite) const {
   // we need to write to the cache, so set a lock if needed
   _lock_if_needed();
 
-  // we only need to write if someone else did not do it earlier
-  //
-  // Doing this avoids potential "read" problems when two threads try
-  // to compute the cache at the same time. The first one may return
-  // and try to read the result when the second actually writes. The
-  // lines below guarantee that the first thread would have set
-  // _cache_available to true before releasing the lock and therefore
-  // the second thread will not attempt to write
-  if (!_cache_available){
+  if (no_overwrite){
+    // we only need to write if someone else did not do it earlier
+    //
+    // Doing this avoids potential "read" problems when two threads try
+    // to compute the cache at the same time. The first one may return
+    // and try to read the result when the second actually writes. The
+    // lines below guarantee that the first thread would have set
+    // _cache_available to true before releasing the lock and therefore
+    // the second thread will not attempt to write
+    if (!_cache_available){
+      _cached_estimate = estimate;
+      _cache_available = true;
+    }
+  } else {
+    // if we overwrite the cache, we need to make sure that other
+    // parts of the code use r/w accesses that respect the lock that
+    // we have acquired.
+    //
+    // In practice, this will only be used in the case wheere we have
+    // a local selector, in queries that require access to the cache.
     _cached_estimate = estimate;
-    _cache_available = true;
+    _cache_available = true;    
   }
 
   // release the lock
   _unlock_if_needed();
+}
+
+void JetMedianBackgroundEstimator::_compute_and_cache() const {
+  // get the result (for a dummy PseudoJet which will anyway not be used)
+  // and cache it
+  _cache(_compute(PseudoJet()));
 }
  
 

@@ -434,8 +434,11 @@ private:
   /// this leaves th ecache (and the stdatus flags) unchanged
   BackgroundEstimate _compute(const PseudoJet &jet) const;
    
-  /// fill the case (to be called for cases where the cache can be
-  /// computed once and for all
+  /// fill the cache with the given estimate
+  void _cache(const BackgroundEstimate &estimate, bool no_overwrite=true) const;
+   
+  /// fill the cache with a computed estimate (to be called for cases
+  /// where the cache can be computed once and for all)
   void _compute_and_cache() const;
 
   // 
