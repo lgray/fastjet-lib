@@ -332,6 +332,46 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 // #endif // FASTJET_HAVE_THREAD_SAFETY
 // }
 
+//----------------------------------------------------------------------
+// retrieving fundamental information
+//----------------------------------------------------------------------
+
+// get the full set of background properties
+//
+// For background estimators using a local ranges, this throws an
+//   error (use operator(jet) instead)
+// In the presence of a rescaling, the rescaling factor is not taken
+// into account
+BackgroundEstimatorBase::BackgroundEstimate JetMedianBackgroundEstimator::operator()() const{
+  if (_rho_range.takes_reference())
+    throw Error("The background estimation is obtained from a selector that takes a reference jet. operator()(PseudoJet) should be used in that case");
+
+  if (!_cache_available) _compute_and_cache();
+  return _cached_estimate;
+}
+
+// get the full set of background properties for a given reference jet
+// This does not affect the cache
+BackgroundEstimatorBase::BackgroundEstimate JetMedianBackgroundEstimator::operator()(const PseudoJet &jet) const{
+  // first compute an optional rescaling factor
+  double rescaling_factor = (_rescaling_class != 0)
+    ? (*_rescaling_class)(jet) : 1.0;
+  BackgroundEstimate estimate;
+  
+  // adopt a different strategy for ranges taking a reference and others
+  if (_rho_range.takes_reference()){
+    // we compute the background and rescale it (no caching)
+    estimate = _compute(jet);
+  } else {
+    // otherwise, we're in a situation where things can be cached once
+    // and for all and then the cache can be used frely
+    if (!_cache_available) _compute_and_cache();
+    estimate = _cached_estimate;
+  }  
+  estimate.apply_rescaling_factor(rescaling_factor);
+  return estimate;
+}
+
 
 //------
 // get rho, the median background density per unit area
@@ -366,7 +406,7 @@ double JetMedianBackgroundEstimator::rho(const PseudoJet & jet) {
   
   // adopt a different strategy for ranges taking a reference and others
   if (_rho_range.takes_reference()){
-    // we compute the background and use it (no caching)
+    // we compute the background and use it
     BackgroundEstimate estimate = _compute(jet);
     _cache(estimate, false);
     return rescaling_factor * estimate.rho();

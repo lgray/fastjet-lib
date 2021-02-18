@@ -223,6 +223,13 @@ public:
     double mean_area() const {return _mean_area;}
     void set_mean_area(double mean_area_in) {_mean_area = mean_area_in;}
 
+    /// apply a rescaling factor (to rho, rho_m, sigma, sigma_m)
+    void apply_rescaling_factor(double rescaling_factor){
+      _rho     *= rescaling_factor;
+      _sigma   *= rescaling_factor;
+      _rho_m   *= rescaling_factor;
+      _sigma_m *= rescaling_factor;
+    }
 
     /// base class for extra information
     class BackgroundEstimateExtraBase {
