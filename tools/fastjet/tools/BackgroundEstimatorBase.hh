@@ -52,12 +52,19 @@ public:
   /// @name  constructors and destructors
   //\{
   //----------------------------------------------------------------
-  BackgroundEstimatorBase() : _rescaling_class(0) {}
-  //\}
+  BackgroundEstimatorBase() : _rescaling_class(0) {
+    _set_cache_unavailable();                                               
+  }
+
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+  /// because of the internal atomic variale, we need to explicitly
+  /// implement a copy ctor
+  BackgroundEstimatorBase(const BackgroundEstimatorBase &other_bge);
+#endif
 
   /// a default virtual destructor that does nothing
   virtual ~BackgroundEstimatorBase() {}
-
+  //\}
 
   /// @name setting a new event
   //\{
@@ -98,7 +105,7 @@ public:
 
   /// returns true if this background estimator has support for
   /// determination of sigma
-  virtual bool has_sigma() {return false;}
+  virtual bool has_sigma() const {return false;}
 
   //----------------------------------------------------------------
   // now do the same thing for rho_m and sigma_m
@@ -169,6 +176,110 @@ public:
 
   //\}
 
+  /// @name helpers to handle the result of the background estimation
+  //\{
+  ///
+  /// /// a class that holds the result of the calculation
+  ///
+  /// By default it provides access to the main background properties:
+  /// rho, rho_m, sigma and sigma_m. If background estimators derived
+  /// from the base class want to store more information, this can be
+  /// done using the "Extra" information.
+  class BackgroundEstimate{
+  public:
+    BackgroundEstimate()
+      : _rho(0.0), _sigma(0.0), _rho_m(0.0), _sigma_m(0.0), 
+        _has_sigma(false), _has_rho_m(false),
+        _mean_area(0.0){}
+
+    /// background density per unit area
+    double rho() const {return _rho;}
+    void set_rho(double rho_in) {_rho = rho_in;}
+
+    /// background fluctuations per unit area
+    double sigma() const {return _sigma;}
+    void set_sigma(double sigma_in) {_sigma = sigma_in;}
+
+    /// true if this background estimate has a determination of sigma
+    bool has_sigma() {return true;}
+    void set_has_sigma(bool has_sigma_in) {_has_sigma = has_sigma_in;}
+
+    /// purely longitudinal (particle-mass-induced)
+    /// component of the background density per unit area
+    double rho_m() const {return _rho_m;}
+    void set_rho_m(double rho_m_in) {_rho_m = rho_m_in;}
+
+    /// fluctuations in the purely longitudinal (particle-mass-induced)
+    /// component of the background density per unit area
+    double sigma_m() const {return _sigma_m;}
+    void set_sigma_m(double sigma_m_in) {_sigma_m = sigma_m_in;}
+
+    /// true if this background estimate has a determination of rho_m.
+    /// Support for sigma_m is automatic if one has sigma and rho_m support.
+    bool has_rho_m() const {return _has_rho_m;}
+    void set_has_rho_m(bool has_rho_m_in) {_has_rho_m = has_rho_m_in;}
+
+    /// mean area of the patches used to compute the background properties
+    double mean_area() const {return _mean_area;}
+    void set_mean_area(double mean_area_in) {_mean_area = mean_area_in;}
+
+
+    /// base class for extra information
+    class BackgroundEstimateExtraBase {
+    public:
+      // dummy ctor
+      BackgroundEstimateExtraBase(){};
+
+      // dummy virtual dtor
+      // makes it polymorphic to allow for dynamic_cast
+      virtual ~BackgroundEstimateExtraBase(){}; 
+    };
+
+    /// returns true if the background estimate has extra info
+    bool has_extra() const{
+      return _extra.get();
+    }
+    
+    /// returns true if the background estimate has extra info
+    /// compatible with the provided template type
+    template<typename T>
+    bool has_extra() const{
+      return _extra.get() && dynamic_cast<const T *>(_extra.get());
+    }
+
+    /// sets the extra info based on the provided pointer
+    ///
+    /// When calling this method, the BackgroundEstimate class takes
+    /// ownership of the pointer (and deletes it)
+    void set_extra(BackgroundEstimateExtraBase *extra_in) {
+      _extra.reset(extra_in);
+    }
+    
+    /// returns a reference to the extra information associated with a
+    /// given BackgroundEstimator. It assumes that the extra
+    /// information is reachable as
+    /// BackgroundEstimator::BackgroundEstimateExtra
+    template<typename BackgroundEstimator>
+    const typename BackgroundEstimator::BackgroundEstimateExtra & extra() const{
+      return dynamic_cast<const typename BackgroundEstimator::BackgroundEstimateExtra &>(* _extra.get());
+    }
+
+  protected:
+    double _rho;       ///< background estimated density per unit area
+    double _sigma;     ///< background estimated fluctuations
+    double _rho_m;     ///< "mass" background estimated density per unit area
+    double _sigma_m;   ///< "mass" background estimated fluctuations
+    bool _has_sigma;   ///< true if this estimate has a determination of sigma
+    bool _has_rho_m;   ///< true if this estimate has a determination of rho_m
+    double _mean_area; ///< mean area of the patches used to compute the bkg properties
+    
+
+    SharedPtr<BackgroundEstimateExtraBase> _extra;
+
+  };
+  
+
+  
 protected:
   /// @name helpers for derived classes
   ///
@@ -209,6 +320,41 @@ protected:
 
   const FunctionOfPseudoJet<double> * _rescaling_class;
   static LimitedWarning _warnings_empty_area;
+
+
+  // cached actual results of the computation
+  mutable bool _cache_available;
+  mutable BackgroundEstimate _cached_estimate;    ///< all the info about what is computed
+  //\}
+
+  /// @name helpers for thread safety
+  ///
+  /// Note that these helpers are related to median-based estimation
+  /// of the background, so there is no guarantee that they will
+  /// remain in this base class in the long term
+  //\{
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+  // true when one is currently writing to cache (i.e. when the spin lock is set)
+  mutable std::atomic<bool> _writing_to_cache;
+
+  void _set_cache_unavailable(){
+    _cache_available = false;
+    _writing_to_cache = false;
+  }
+
+  // // allows us to lock things down before caching basic (patches) info  
+  // std::mutex _jets_caching_mutex;
+#else
+  void _set_cache_unavailable(){
+    _cache_available = false;
+  }
+#endif
+
+  void _lock_if_needed()   const;
+  void _unlock_if_needed() const;
+
+  //\}
+
 };
 
 
@@ -251,3 +397,72 @@ FASTJET_END_NAMESPACE
 
 #endif  // __BACKGROUND_ESTIMATOR_BASE_HH__
 
+// //--------------------------------------------------
+// // deprecated
+// class JetMedianBGE{
+//   BackgroundEstimateDefinition();
+// 
+//   ....;
+// }
+// //--------------------------------------------------
+// 
+// class BackgroundEstimateDefinition{ 
+//   //const EventBackground get_event_background(particles, <seed>) const;
+// 
+// 
+//   //--------------------------------------------------
+//   // DEPRECATED
+//   void set_particles() {
+// 
+//     _worker = ...;
+//   double rho(const PseudoJet &/*jet*/) const{ _worker.rho();}
+// 
+//   //--------------------------------------------------
+//   
+//   EventBackground(Worker?) _cached_event_background;
+// };
+// 
+// class EventBackground{
+//   EventBackground(particles, BackgroundEstimateDefinition);
+// 
+//   
+//   class EventBackgroundWorker{
+//     
+//     ...
+//   };
+// 
+//   
+//   BackgroundEstimate operator()() const;
+//   BackgroundEstimate operator()(jet) const;
+//   
+//   // do we want this:
+//   double rho();
+//   double rho(jet);
+//   //?
+//    
+// 
+//   mutable BackgroundEstimate _estimate;
+// 
+// 
+//   SharedPtr<EventBackgroundWorker> _event_background_worker;
+// }
+// 
+// class BackgroundEstimate{
+// 
+//   double rho();
+//   
+//   SharedPtr<EventBackgroundWorker> _event_background_worker;
+// 
+// private:
+//   _rho;
+//   _sigma;
+//   _rho_m;
+//   _sigma_m;
+//   _has_rho_m;
+//   _has_sigma;
+// 
+//   // info specific to JMBGE: _reference_jet, mean_area, n_jets_used, n_empty_jets, _empty_area
+//   //                         all need to go in the estimate in general
+//   // info specific to GMBGE: RectangularGrid, _mean_area (can go either in the the def, the eventBG or the estimate
+//   
+// };

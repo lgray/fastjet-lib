@@ -171,7 +171,7 @@ public:
 
   /// returns true if this background estimator has support for
   /// determination of sigma
-  bool has_sigma() {return true;}
+  bool has_sigma() const {return true;}
 
   //-----------------------------------------------------------------
   /// Returns rho_m, the purely longitudinal, particle-mass-induced

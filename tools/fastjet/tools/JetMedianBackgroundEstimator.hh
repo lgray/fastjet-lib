@@ -1,6 +1,7 @@
 #ifndef __FASTJET_BACKGROUND_ESTIMATOR_HH__
 #define __FASTJET_BACKGROUND_ESTIMATOR_HH__
 
+
 //FJSTARTHEADER
 // $Id$
 //
@@ -131,11 +132,11 @@ public:
       _enable_rho_m(true){ reset(); }
 
   
-#ifdef FASTJET_HAVE_THREAD_SAFETY
-  /// because of the internal atomic variale, we need to explicitly
-  /// implement a copy ctor
-  JetMedianBackgroundEstimator(const JetMedianBackgroundEstimator &other_bge);
-#endif
+//#ifdef FASTJET_HAVE_THREAD_SAFETY
+//  /// because of the internal atomic variale, we need to explicitly
+//  /// implement a copy ctor
+//  JetMedianBackgroundEstimator(const JetMedianBackgroundEstimator &other_bge);
+//#endif
   
   /// default dtor
   ~JetMedianBackgroundEstimator(){}
@@ -178,12 +179,15 @@ public:
   /// (re)set the selector to be used for future calls to rho() etc.
   void set_selector(const Selector & rho_range_selector) {
     _rho_range = rho_range_selector;
-    _status = Status_NotReady;
+    _set_cache_unavailable();
   }
 
   /// determine whether the automatic calculation of rho_m and sigma_m
   /// is enabled (by default true)
-  void set_compute_rho_m(bool enable){ _enable_rho_m = enable;}
+  void set_compute_rho_m(bool enable){
+    _enable_rho_m = enable;
+    _set_cache_unavailable();
+  }
 
   //\}
 
@@ -216,7 +220,7 @@ public:
 
   /// returns true if this background estimator has support for
   /// determination of sigma
-  virtual bool has_sigma() {return true;}
+  virtual bool has_sigma() const {return true;}
 
   //----------------------------------------------------------------
   // now do the same thing for rho_m and sigma_m
@@ -254,47 +258,16 @@ public:
   /// Returns the mean area of the jets used to actually compute the
   /// background properties in the last call of rho() or sigma()
   /// If the configuration has changed in the meantime, throw an error.
-  double mean_area() const{
-    if (_status != Status_Ready)
-      throw Error("JetMedianBackgroundEstimator::mean_area(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    _wait_for_ready_set_working();
-    double res = _get_value(& JMBGEResult::_mean_area);
-    _status = Status_Ready;
-    return res;
-  }
+  double mean_area() const;
   
   /// returns the number of jets used to actually compute the
   /// background properties in the last call of rho() or sigma()
   /// If the configuration has changed in the meantime, throw an error.
-  unsigned int n_jets_used() const{
-    if (_status != Status_Ready)
-      throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    _wait_for_ready_set_working();
-    double res = _get_value(& JMBGEResult::_n_jets_used);
-    _status = Status_Ready;
-    return res;
-  }
+  unsigned int n_jets_used() const;
 
   /// returns the jets used to actually compute the background
   /// properties
-  std::vector<PseudoJet> jets_used() const{
-    if (_status != Status_Ready) throw Error("JetMedianBackgroundEstimator::n_jets_used(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    _wait_for_ready_set_working();
-    _check_csa_alive();
-    std::vector<PseudoJet> tmp_jets;
-    if (_rho_range.takes_reference()){
-      Selector local_rho_range = _rho_range;
-      tmp_jets = local_rho_range.set_reference(_result._reference_jet)(_included_jets);
-    } else {
-      tmp_jets = _rho_range(_included_jets);
-    }
-    std::vector<PseudoJet> used_jets;
-    for (unsigned int i=0; i<tmp_jets.size(); i++){
-      if (tmp_jets[i].area()>0) used_jets.push_back(tmp_jets[i]);
-    }
-    _status = Status_Ready;    
-    return used_jets;
-  }
+  std::vector<PseudoJet> jets_used() const;
 
   /// Returns the estimate of the area (within the range defined by
   /// the selector) that is not occupied by jets. The value is that
@@ -310,14 +283,7 @@ public:
   ///
   /// The result here is just the cached result of the corresponding
   /// call to the ClusterSequenceAreaBase function.
-  double empty_area() const{
-    if (_status != Status_Ready)
-      throw Error("JetMedianBackgroundEstimator::empty_area(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    _wait_for_ready_set_working();
-    double res = _get_value(& JMBGEResult::_empty_area);
-    _status = Status_Ready;
-    return res;
-  }
+  double empty_area() const;
 
   /// Returns the number of empty jets used when computing the
   /// background properties. The value is that for the last call of
@@ -331,14 +297,7 @@ public:
   ///
   /// The result here is just the cached result of the corresponding
   /// call to the ClusterSequenceAreaBase function.
-  double n_empty_jets() const{
-    if (_status != Status_Ready)
-      throw Error("JetMedianBackgroundEstimator::n_empty_jets(): one may not retrieve information about the last call to rho() or sigma() when the configuration has changed in the meantime.");
-    _wait_for_ready_set_working();
-    double res = _get_value(& JMBGEResult::_n_empty_jets);
-    _status = Status_Ready;
-    return res;
-  }
+  double n_empty_jets() const;
 
   //}
 
@@ -364,7 +323,7 @@ public:
   ///  \param use_it             whether one uses the 4-vector area or not (true by default)
   void set_use_area_4vector(bool use_it = true){
     _use_area_4vector = use_it;
-    _status = Status_NotReady;
+    _set_cache_unavailable();
   }  
 
   /// check if the estimator uses the 4-vector area or the scalar area
@@ -376,7 +335,7 @@ public:
   /// call to this function.
   void set_provide_fj2_sigma(bool provide_fj2_sigma = true) {
     _provide_fj2_sigma = provide_fj2_sigma;
-    _status = Status_NotReady;
+    _set_cache_unavailable();
   }
 
   /// Set a pointer to a class that calculates the quantity whose
@@ -403,7 +362,7 @@ public:
   /// rescaling that depends just on rapidity.
   virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) {
     BackgroundEstimatorBase::set_rescaling_class(rescaling_class_in);
-    _status = Status_NotReady;
+    _set_cache_unavailable();
   }
 
   //\}
@@ -417,57 +376,68 @@ public:
 
   //\}
 
-
-private:
   /// an internal class to hold the result of the calculation
-  class JMBGEResult{
+  class BackgroundEstimateExtra : public BackgroundEstimate::BackgroundEstimateExtraBase{
   public:
+    BackgroundEstimateExtra()
+      :  _reference_jet(PseudoJet()), _n_jets_used(0),
+         _n_empty_jets(0.0), _empty_area(0.0) {}
+
+    /// get/set the current reference jet
+    PseudoJet reference_jet() const {return _reference_jet;}
+    void set_reference_jet(const PseudoJet &reference_jet_in){
+      _reference_jet = reference_jet_in;
+    }
+    
+    /// get/set the number of jets used to estimate the background
+    unsigned int n_jets_used() const {return _n_jets_used;}
+    void set_n_jets_used(int n_jets_used_in){ _n_jets_used=n_jets_used_in;}
+    
+    /// get/set the number of empty (pure-ghost) jets
+    double n_empty_jets() const {return _n_empty_jets;}
+    void set_n_empty_jets(double n_empty_jets_in){ _n_empty_jets=n_empty_jets_in;}
+      
+    /// get/set the empty (pure-ghost/unclustered) area!
+    double empty_area() const {return _empty_area;}
+    void set_empty_area(double empty_area_in){ _empty_area=empty_area_in;}
+    
+    
+  protected:
     PseudoJet _reference_jet;  ///< current reference jet
-    
-    double _rho;               ///< background estimated density per unit area
-    double _sigma;             ///< background estimated fluctuations
-    double _rho_m;             ///< "mass" background estimated density per unit area
-    double _sigma_m;           ///< "mass" background estimated fluctuations
-    double _mean_area;         ///< mean area of the jets used to estimate the background
-    
     unsigned int _n_jets_used; ///< number of jets used to estimate the background
     double _n_empty_jets;      ///< number of empty (pure-ghost) jets
     double _empty_area;        ///< the empty (pure-ghost/unclustered) area!
-
-    void reset(){
-      _reference_jet = PseudoJet();
-      _rho = _sigma = 0.0;
-      _rho_m = _sigma_m = 0.0;
-      _n_jets_used = _n_empty_jets = 0;
-      _empty_area = _mean_area = 0.0;
-    }
   };
 
-  /// helpers for computing things in a thread-safe way when needed
-  ///
-  /// This variant handles the jet-dependent quantities when the
-  /// selector takes a reference
-  double _get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const;
-  ///
-  /// This variant handles either the jet-independent quantities, or
-  /// the jet-dependent ones when the selector does no take a
-  /// reference (typically in presence of re-scaling).
-  ///
-  /// This does not set a lock if the initial staus is "ready" so the
-  /// former are required to set a lock to guaranteee that no changes
-  /// occurs from a concurrent call to {rho,...}(jet)
-  template <typename T>
-  T _get_value(T JMBGEResult::*what) const;
+  
+private:
 
-  /// do the actual job
-  JMBGEResult _compute(const PseudoJet &jet) const;
+  // /// helpers for computing things in a thread-safe way when needed
+  // ///
+  // /// This variant handles the jet-dependent quantities when the
+  // /// selector takes a reference
+  // double _get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const;
+  // ///
+  // /// This variant handles either the jet-independent quantities, or
+  // /// the jet-dependent ones when the selector does no take a
+  // /// reference (typically in presence of re-scaling).
+  // ///
+  // /// This does not set a lock if the initial staus is "ready" so the
+  // /// former are required to set a lock to guaranteee that no changes
+  // /// occurs from a concurrent call to {rho,...}(jet)
+  // template <typename T>
+  // T _get_value(T JMBGEResult::*what) const;
+
+  /// compute the background properties for a given jet (excluding
+  /// rescaling factors) and return a corresponding BackgroundEstimate
+  ///
+  /// this leaves th ecache (and the stdatus flags) unchanged
+  BackgroundEstimate _compute(const PseudoJet &jet) const;
    
-  // /// check if the properties need to be recomputed 
-  // /// and do so if needed
-  // void _recompute_if_needed() const {
-  //   if (_status != Status_Ready) _result = _compute(PseudoJet());
-  //   _status = Status_Ready;
-  // }
+  /// fill the case (to be called for cases where the cache can be
+  /// computed once and for all
+  void _compute_and_cache() const;
+
   // 
   // /// for estimation using a selector that takes a reference jet
   // /// (i.e. a selector that can be relocated) this function allows one
@@ -487,11 +457,11 @@ private:
   /// Issue a warning otherwise
   void _check_jet_alg_good_for_median() const;
 
-  /// a spinlock that waits until the status is set to ready and set it to "working"
-  void _wait_for_ready_set_working() const;
-
-    /// a spinlock that waits until the status is not "working" and set it to "working"
-  void _wait_not_working_set_working() const;
+  // /// a spinlock that waits until the status is set to ready and set it to "working"
+  // void _wait_for_ready_set_working() const;
+  // 
+  // /// a spinlock that waits until the status is not "working" and set it to "working"
+  // void _wait_not_working_set_working() const;
 
   // the basic parameters of this class (passed through the variou ctors)
   Selector _rho_range;                   ///< range to compute the background in
@@ -506,30 +476,8 @@ private:
   //SharedPtr<BackgroundRescalingBase> _rescaling_class_sharedptr;
   bool _enable_rho_m;
   
-  // the actual results of the computation
-  mutable JMBGEResult _result;            ///< all the info about what is computed
-
   // internal variables
   SharedPtr<PseudoJetStructureBase> _csi; ///< allows to check if _csa is still valid
-
-  // status of the calculation
-  enum Status{
-    Status_Ready = 1,
-    Status_NotReady = 0,
-    Status_Working = -1
-  };
-
-#ifdef FASTJET_HAVE_THREAD_SAFETY
-  // it would be nicer to have this typed as Status but some compilers
-  // seem to struggle with atomic<Status>
-  mutable std::atomic<int> _status;
-
-  // allows us to lock things down before caching basic (patches) info  
-  std::mutex _jets_caching_mutex;
-
-#else
-  mutable int _status;                 ///< true when the background computation is up-to-date
-#endif
 
   /// handle warning messages
   static LimitedWarning _warnings;
@@ -604,45 +552,45 @@ public:
 };
 
 
-//----------------------------------------------------------------------
-// implementation of the template bits
-
-template <typename T>
-T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
-#ifdef FASTJET_HAVE_THREAD_SAFETY
-  // test if the calculation is already done
-  if (_status != Status_Ready){
-    // we have 2 options:
-    //  ( i) no calculation is in progress => we do it ourselves
-    //  (ii)  a calculation is in progress => we wait until it is done
-    int expected = Status_NotReady;
-    if (_status.compare_exchange_strong(expected, Status_Working,
-                                        std::memory_order_seq_cst,
-                                        std::memory_order_relaxed)){
-      // do the calculation and set things as ready
-      _result = _compute(PseudoJet());
-      _status = Status_Ready;
-    } else {
-      // wait
-      do{
-        expected = Status_Ready;
-      } while (!_status.compare_exchange_weak(expected, Status_Ready,
-                                              std::memory_order_seq_cst,
-                                              std::memory_order_relaxed));
-    }
-  }
-#else
-  // test if the calculation is already done
-  if (_status != Status_Ready){
-    _result = _compute(PseudoJet());
-    _status = Status_Ready;
-  }
-#endif
-  
-  // for _rho_range wo reference, _result can be accessed outside the lock
-  // (if it's not, it means that the end-user has tempered with us)
-  return _result.*what;
-}
+// //----------------------------------------------------------------------
+// // implementation of the template bits
+// 
+// template <typename T>
+// T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
+// #ifdef FASTJET_HAVE_THREAD_SAFETY
+//   // test if the calculation is already done
+//   if (_status != Status_Ready){
+//     // we have 2 options:
+//     //  ( i) no calculation is in progress => we do it ourselves
+//     //  (ii)  a calculation is in progress => we wait until it is done
+//     int expected = Status_NotReady;
+//     if (_status.compare_exchange_strong(expected, Status_Working,
+//                                         std::memory_order_seq_cst,
+//                                         std::memory_order_relaxed)){
+//       // do the calculation and set things as ready
+//       _result = _compute(PseudoJet());
+//       _status = Status_Ready;
+//     } else {
+//       // wait
+//       do{
+//         expected = Status_Ready;
+//       } while (!_status.compare_exchange_weak(expected, Status_Ready,
+//                                               std::memory_order_seq_cst,
+//                                               std::memory_order_relaxed));
+//     }
+//   }
+// #else
+//   // test if the calculation is already done
+//   if (_status != Status_Ready){
+//     _result = _compute(PseudoJet());
+//     _status = Status_Ready;
+//   }
+// #endif
+//   
+//   // for _rho_range wo reference, _result can be accessed outside the lock
+//   // (if it's not, it means that the end-user has tempered with us)
+//   return _result.*what;
+// }
 
 
 
