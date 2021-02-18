@@ -43,8 +43,7 @@ int main(int argc, char ** argv) {
   tests.emplace_back(make_unique<TestThread<ThreadedClusteringPrllGroomers>>());
   tests.emplace_back(make_unique<TestThread<ThreadedGMBGE>>());
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGE>>());
-  // fails as of 2021-02-17
-  //tests.emplace_back(make_unique<TestThread<ThreadedJMBGECommonEvent>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedJMBGECommonEvent>>());
   
 
   // run over them

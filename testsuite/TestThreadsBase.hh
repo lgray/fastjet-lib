@@ -582,12 +582,16 @@ public:
     load_default_10events();
     set_n_threads(8);
     _subtractor.set_use_rho_m(true);
-
   }
 
   virtual bool prepare_round(unsigned j) {
     if (j >= _events.size()) return false;
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+    vector<int> seed{int(12345+j), int(67890-j*j)};
+    _cs.reset(new ClusterSequenceArea(_events[j], _jet_def, _area_def.with_fixed_seed(seed)));
+#else 
     _cs.reset(new ClusterSequenceArea(_events[j], _jet_def, _area_def));
+#endif
     _jmbge.set_cluster_sequence(*_cs);
     _jets = SelectorAbsRapMax(4.0)(_cs->inclusive_jets());
     return true;
@@ -603,6 +607,7 @@ private:
   JetDefinition  _jet_def{cambridge_algorithm, 0.5};
   AreaDefinition _area_def{active_area_explicit_ghosts};
   JetMedianBackgroundEstimator _jmbge{SelectorStrip(1.5)};
+  //JetMedianBackgroundEstimator _jmbge{SelectorAbsRapMax(2.5)};
   Subtractor _subtractor;
 };
 
