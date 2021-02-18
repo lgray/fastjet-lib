@@ -691,12 +691,24 @@ string JetMedianBackgroundEstimator::description() const {
 
 // do the actual job
 JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) const {
-  // check if the clustersequence is still valid
-  _check_csa_alive();
-
   // prepare a local structure to hold temporarily the results
   // (by design, this comes with default values of 0 for each property)
   BackgroundEstimate local_estimate;
+
+  // if we have a local range and the reference jet is the same as the
+  // cached one,m reuse the cached estimate
+  if (_rho_range.takes_reference()){
+    _lock_if_needed();
+    if ((_cache_available) && (_cached_estimate.extra<JetMedianBackgroundEstimator>().reference_jet() == jet)){
+      local_estimate = _cached_estimate;
+      _unlock_if_needed();
+      return local_estimate;
+    }
+    _unlock_if_needed();
+  }
+  
+  // check if the clustersequence is still valid
+  _check_csa_alive();
 
   local_estimate.set_has_sigma(has_sigma());
   local_estimate.set_has_rho_m(has_rho_m());
