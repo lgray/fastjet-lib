@@ -197,6 +197,7 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/tools/JetMedianBackgroundEstimator.hh"
 #include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+#include "fastjet/tools/Subtractor.hh"
 #include "fastjet/Selector.hh"
 #else
 #include "fjcore.hh"
@@ -384,17 +385,23 @@ int main (int argc, char ** argv) {
 #ifndef __FJCORE__
   bool do_bkgd_csab = false, do_bkgd_jetmedian = false, do_bkgd_fj2 = false;
   bool do_bkgd_gridmedian = false;
+  bool do_bkgd_localrange;
+  bool do_subtractor = false;
   Selector bkgd_range;
   if (do_bkgd) {
     bkgd_range = SelectorAbsRapMax(ghost_maxrap - ktR); 
     if      (cmdline.present("-bkgd:csab"))      {do_bkgd_csab = true;}
     else if (cmdline.present("-bkgd:jetmedian")) {do_bkgd_jetmedian = true;
       do_bkgd_fj2 = cmdline.present("-bkgd:fj2");
+      do_bkgd_localrange = cmdline.present("-bkgd:localrange");
+      if (do_bkgd_localrange) bkgd_range = SelectorStrip(1.5);
     } else if (cmdline.present("-bkgd:gridmedian")) {do_bkgd_gridmedian = true;
     } else {
       throw Error("with the -bkgd option, some particular background must be specified (csab or jetmedian)");
     }
     assert(do_areas || do_bkgd_gridmedian);
+    do_subtractor = cmdline.present("-subtractor");
+    if (do_subtractor) assert(do_areas);
   }
 #else
   do_bkgd = false; 
@@ -813,37 +820,72 @@ int main (int argc, char ** argv) {
       double rho, sigma, mean_area, empty_area, n_empty_jets;
       ClusterSequenceAreaBase * csab = 
         dynamic_cast<ClusterSequenceAreaBase *>(clust_seq.get());
+      BackgroundEstimatorBase * bge_ptr = 0;
       if (do_bkgd_csab) {
         csab->get_median_rho_and_sigma(bkgd_range, true, rho, sigma, mean_area);
         empty_area = csab->empty_area(bkgd_range);
         n_empty_jets = csab->n_empty_jets(bkgd_range);
       } else if (do_bkgd_jetmedian) {
-        JetMedianBackgroundEstimator bge(bkgd_range);
-        bge.set_provide_fj2_sigma(do_bkgd_fj2);
-        bge.set_cluster_sequence(*csab);
-        rho = bge.rho();
-        sigma = bge.sigma();
-        mean_area = bge.mean_area();
-        empty_area = bge.empty_area();
-        n_empty_jets = bge.n_empty_jets();
+        JetMedianBackgroundEstimator * bge = new JetMedianBackgroundEstimator(bkgd_range);
+        bge_ptr = bge;
+        bge->set_provide_fj2_sigma(do_bkgd_fj2);
+        bge->set_cluster_sequence(*csab);
+        if (!do_bkgd_localrange) {
+          rho = bge->rho();
+          sigma = bge->sigma();
+          mean_area = bge->mean_area();
+          empty_area = bge->empty_area();
+          n_empty_jets = bge->n_empty_jets();
+        }
       } else {
         assert(do_bkgd_gridmedian);
         double grid_rapmin, grid_rapmax;
         bkgd_range.get_rapidity_extent(grid_rapmin, grid_rapmax);
-        GridMedianBackgroundEstimator bge(grid_rapmax, 2*ktR);
-        bge.set_particles(particles);
-        rho = bge.rho();
-        sigma = bge.sigma();
-        mean_area = bge.mean_area();
+        GridMedianBackgroundEstimator * bge = new GridMedianBackgroundEstimator(grid_rapmax, 2*ktR);
+        bge_ptr = bge;
+        bge->set_particles(particles);
+        rho = bge->rho();
+        sigma = bge->sigma();
+        mean_area = bge->mean_area();
         empty_area = 0;
         n_empty_jets = 0;
       }
-      cout << "  rho = " << rho 
+      if (bge_ptr) cout << "Background estimator: " << bge_ptr->description() << endl;
+      if (do_bkgd_localrange || do_subtractor) {
+        assert(bge_ptr != 0);
+        vector<PseudoJet> jets = SelectorAbsRapMax(3.0)(sorted_by_pt(csab->inclusive_jets()));
+        vector<PseudoJet> subjets;
+        if (do_subtractor) {
+          Subtractor subtractor(bge_ptr);
+          subtractor.set_use_rho_m(true);
+          subtractor.set_safe_mass(true);
+          cout << "Subtractor: " << subtractor.description() << endl;
+          subjets = subtractor(jets);
+        }
+        cout << "i   pt  rap  phi  m  rho  rho_m  sigma  sigma_m" << endl;
+        if (do_subtractor) cout << "isub ptsub rapsub phisub msub area" << endl;
+        for (unsigned i = 0; i < jets.size(); i++) {
+          const PseudoJet & jet = jets[i];
+          cout << i << "   "
+               << " " << jet.pt() << " " << jet.rap() << " " << jet.phi() << " " << jet.m() 
+               << " " << bge_ptr->rho(jet) << " " << bge_ptr->rho_m(jet) 
+               << " " << bge_ptr->sigma(jet)  << " " << bge_ptr->sigma_m(jet) << endl;
+          if (do_subtractor) {
+            const PseudoJet & subjet = subjets[i];
+            cout << i << "sub"
+                 << " " << subjet.pt() << " " << subjet.rap() << " " << subjet.phi() << " " << subjet.m() 
+                 << " " << jet.area() << endl;
+          }
+        }
+      } else {
+        cout << "  rho = " << rho 
            << ", sigma = " << sigma 
            << ", mean_area = " << mean_area
            << ", empty_area = " << empty_area
            << ", n_empty_jets = " << n_empty_jets
            << endl;
+      }
+      if (bge_ptr != 0) delete bge_ptr;
     }
 #endif
   } // try
