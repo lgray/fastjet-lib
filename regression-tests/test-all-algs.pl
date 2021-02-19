@@ -4,12 +4,11 @@
 # clustering algorithms in FastJet.
 #
 # It works by running example/fasjet_timing_plugins for a jet
-# definition, extracting either the jets (cone algs) or the
-# written-out sequence (seq.rec. algs) and then taking the md5sum
-# of the results.
+# definition, extracting either the jets (cone algs) or the written-out
+# sequence (seq.rec. algs) and then taking the md5sum of the results.
 #
-# It contains a bunch of stored md5sums for various cases, against
-# which it carries out a quick test.
+# It contains a bunch of stored md5sums for various cases, against which
+# it carries out a quick test.
 #
 #
 # Various command-line options are available:
@@ -17,43 +16,51 @@
 #  -nev NEV          sets the number of events to use (default = 10)
 #
 #  -alg ALGNAME      sets the alg name and all parameters other than R
-#                    [things separated by a : become separated by a space
-#                    in the final command]
+#                    [things separated by a : become separated by a
+#                    space in the final command]
 #
 #  -R   R            sets R
 #
-#  -strat STRAT      use only this strategy [1 == best]; multiple colon-separated
-#                    strategies may also be specified (or comma-separated)
+#  -strat STRAT      use only this strategy [1 == best]; multiple
+#                    colon-separated strategies may also be specified
+#                    (or comma-separated)
 #
 #  -deposit DIR      puts the (unfiltered) output in a directory DIR
 #                    together with the sum
 #
-#  -perl             writes md5 output such that it can be pasted into this
-#                    program for future reference
+#  -newdeposit DIR   the same but only deposits the file if it doesn't
+#                    already exist (whether as such or with a .gz)
+#
+#  -perl             writes md5 output such that it can be pasted into
+#                    this program for future reference
 #
 #  -newperl          similar, but only for things that we don't yet have
 #
-#  -verbose          writes out a few extra details (e.g. the command being run). 
+#  -verbose          writes out a few extra details (e.g. the command
+#  being run). 
 #
 #  -areas            run area configurations
 #
 #  -bkgds            run background estimations
 #
-#  -fjcore           uses fastjet_timing_plugins_fjcore, a version of 
-#                    fastjet_timing_plugins built with fjcore rather than the 
-#                    full fastjet 
+#  -fjcore           uses fastjet_timing_plugins_fjcore, a version of
+#                    fastjet_timing_plugins built with fjcore rather
+#                    than the full fastjet 
 #
-# Full (non-md5) results of a 1000 event run are to be found in
-# the (non svn) directory
+# Full (non-md5) results of a 1000 event run are to be found in the
+# following git 
+#
+#     https://gitlab.com/fastjet/internal/validation-ref
+#
+# Or alternatively on tycho in
 #
 #     ~salam/work/fastjet/validation-ref-2008-10-30
 #
-#
 # Known issues:
 # -------------
-# A main weakness is what will happen should we change the output
-# format of floating points numbers (e.g. for jet pts, etc.)]
-# (or if the compiler changes this)
+# A main weakness is what will happen should we change the output format
+# of floating points numbers (e.g. for jet pts, etc.)] (or if the
+# compiler changes this)
 #
 #
 # Adding algorithms:
@@ -67,8 +74,8 @@
 #   Extra options can be given too: "newalg:-y:0.8" will run
 #   fastjet_timing_plugins with options "-newalg -y 0.8".
 #
-#   the {1|10|100|1000} means you should carry out separate runs with
-#   1, 10, 100, 1000 events, so as to get the checksums for each.
+#   the {1|10|100|1000} means you should carry out separate runs with 1,
+#   10, 100, 1000 events, so as to get the checksums for each.
 #
 #   Each time you'll get a line of perl that is to be added to the
 #   initialisation of the %refResults hash (in setRefResults()).
@@ -76,7 +83,8 @@
 # - now rerun the command above, and check that the algorithm is
 #   labelled "OK" on each run
 #
-# - run "./test-all-algs.pl -alg newalg -nev 1000 -deposit SOME-DIRECTORY" 
+# - run "./test-all-algs.pl -alg newalg -nev 1000 -deposit
+#   SOME-DIRECTORY" 
 #
 #   that will place the raw results in SOME-DIRECTORY (I use
 #   ~salam/work/fastjet/validation-ref-2008-10-30 -- ideally  everything
@@ -84,22 +92,21 @@
 #
 # - add "newalg" to the @algs array in setDefaults()
 #
-# - if you want things to be tested in the nightly build, make sure
-#   the new algorithm is actually compiled -- i.e. add the appropriate
+# - if you want things to be tested in the nightly build, make sure the
+#   new algorithm is actually compiled -- i.e. add the appropriate
 #   configure options to $configOpts in nightly-check.pl
 #
-# - commit and then run nightly-check.pl (nightly-check.pl
-#   deliberately fails on uncommitted directories -- to avoid giving
-#   results based on something not actually in the repository)
+# - commit and then run nightly-check.pl (nightly-check.pl deliberately
+#   fails on uncommitted directories -- to avoid giving results based on
+#   something not actually in the repository)
 #
 # - The next automatic run of nightly-check.pl will use an old
-#   nightly-check.pl script (it runs the script from a special
-#   directory and the script does the update only after starting...)
-#   and so your new algorithm won't necessarily be configured (it will
-#   then be labelled as unavailable -- or NA in the subject line).
+#   nightly-check.pl script (it runs the script from a special directory
+#   and the script does the update only after starting...) and so your
+#   new algorithm won't necessarily be configured (it will then be
+#   labelled as unavailable -- or NA in the subject line).
 #
-#   It's only the following night that things will reach
-#   "equilibrium".
+#   It's only the following night that things will reach "equilibrium".
 #
 #
 # $Id$
@@ -114,6 +121,7 @@ use Cwd;
 &setRefResults;
 
 $verbose = "";
+$depositNew = 0;
 
 # now allow user to play with things
 while ($arg = shift @ARGV) {
@@ -121,6 +129,7 @@ while ($arg = shift @ARGV) {
   elsif ($arg eq "-alg"     ) {@algs = (shift @ARGV);}
   elsif ($arg eq "-R"       ) {$R = shift @ARGV;}
   elsif ($arg eq "-deposit" ) {$deposit = shift @ARGV;}
+  elsif ($arg eq "-newdeposit" ) {$deposit = shift @ARGV; $depositNew = 1;}
   elsif ($arg eq "-perl"    ) {$perlOut = "Perl Output:\n";}
   elsif ($arg eq "-newperl" ) {$perlOut = "New Perl Output:\n";}
   elsif ($arg eq "-verbose" ) {$verbose = 1;}
@@ -259,22 +268,24 @@ foreach $bkgdAlias (@bkgdconfigs) {
   # optionally record things for future, in a file
   if ($deposit && !exists($done{$name}) && $sum ne "unavailable") {
     $depfile = "$deposit/$name.res";
-    print "          > $depfile\n";
-    if (! -e $deposit) {mkdir $deposit || die "Could not create directory $deposit";}
-    open (DEP, "> $depfile") || die "Could not open $depfile";
-    print DEP $res;
-    close DEP;
-    system("gzip -f $depfile");
-    open (SUM, "> $deposit/$name.sum") || die "Could not open $deposit/$name.sum";
-    print SUM  "date ".`date`;
-    print SUM  "machine: ".`uname -a`;
-    print SUM  "directory: ".getcwd."\n";
-    $configlog = "config.log";
-    if (! -e $configlog) {$configlog = "../".$configlog;}
-    print SUM  "configured: ".`egrep '^ +\\\$' $configlog | head -1`;
-    print SUM  "cmdline: $cmdline\n";
-    print SUM  "md5sum: ",$sum,"\n";
-    close SUM;
+    if (! (-e $depfile || -e "$depfile.gz")) {
+      print "          > $depfile\n";
+      if (! -e $deposit) {mkdir $deposit || die "Could not create directory $deposit";}
+      open (DEP, "> $depfile") || die "Could not open $depfile";
+      print DEP $res;
+      close DEP;
+      system("gzip -f $depfile");
+      open (SUM, "> $deposit/$name.sum") || die "Could not open $deposit/$name.sum";
+      print SUM  "date ".`date`;
+      print SUM  "machine: ".`uname -a`;
+      print SUM  "directory: ".getcwd."\n";
+      $configlog = "config.log";
+      if (! -e $configlog) {$configlog = "../".$configlog;}
+      print SUM  "configured: ".`egrep '^ +\\\$' $configlog | head -1`;
+      print SUM  "cmdline: $cmdline\n";
+      print SUM  "md5sum: ",$sum,"\n";
+      close SUM;
+    }
   }
 
   $done{$name} = 1;
@@ -284,6 +295,7 @@ foreach $bkgdAlias (@bkgdconfigs) {
 } # alg
 
 if ($perlOut) {print $perlOut;}
+
 
 
 #======================================================================
@@ -364,7 +376,7 @@ sub setDefaults {
 
   %bkgdConfigs = (
       "kt" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:csab,-area:active -bkgd:csab,-area:voronoi 1.0 -bkgd:csab,-area:explicit -bkgd:jetmedian -bkgd:fj2,-area:explicit -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:active -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:explicit -bkgd:jetmedian -rapmax 5.0,-area:active -bkgd:jetmedian -rapmax 5.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0",
-      "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian",
+      "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:jetmedian -subtractor,-area:explicit -bkgd:jetmedian -bkgd:localrange -subtractor,-area:explicit -bkgd:jetmedian -bkgd:rescaling -subtractor,-area:explicit -bkgd:gridmedian -subtractor,-area:explicit -bkgd:gridmedian -bkgd:rescaling -subtractor",
       "antikt" => "-bkgd -bkgd:gridmedian"
       );
 
@@ -691,8 +703,25 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian" => "9412ab943b9d86725df068bd5b828000",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-active,-jetmedian" => "d6c00a93e70f0d14100c1e87e53604d3",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-voronoi,1.0,-jetmedian" => "099fcbb79303d70bede72ed4591fe380",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-bkgd,-gridmedian" => "35a2e74da09f6befd2bbcf9eb89b81d5"
-);
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-bkgd,-gridmedian" => "35a2e74da09f6befd2bbcf9eb89b81d5",
+
+  # 2021-02 background & subtraction additions
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "003bc7cbf950bd9e4f2a06d5477c5183",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "afcdbb7696ee7ef8317386de0e58c88c",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "3562ad2ee96c71ee725a01b0798765cf",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "fbe23cbb362f23b18f3cea10a50c8848",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "30f3cb346f0d633dfb651a73d40bcac5",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "12be54fc563004b2795046fb5fb6ab2c",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "259030b67ea550930820810e515fc944",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "99a31439f47540dad2b94272de44b39b",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "86489bfa02ef3a128d9495936a6f4342",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "f3496836739a1a6400fbf2c037d5781c",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "66a87ed1afc27c883db723003dc52818",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "d2af82f24a8ec7b5db5b7f80147001da",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "3035a4c6b6f7c19befb6eaa085a0be37",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "c041f06df3ad8a72aaa2bc3d01a17a24",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dd9a1f3e1609a3ec2d26355b0437b646"
+  );
 
   %refResultsOrig = %refResults;
 }  

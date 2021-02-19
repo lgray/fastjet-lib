@@ -1,6 +1,7 @@
 *.la
 *.lo
 *.o
+*~
 .la
 .libs
 /# Added by svn-ignore on 2017-02-09
