@@ -4,15 +4,21 @@
 
     * regression-tests/README.md:      (*** ADDED ***)
     * regression-tests/test-contrib.pl:
-	added some basic documentation
+	added some basic documentation + option -std=c+XX
 
 	* example/fastjet_timing_plugins.cc:
 	added -bkgd:localrange option to turn on usage of a local range
 	with the JetMedianBackgroundEstimator (in which case rho, sigma etc.
-	are printed out for each jet)
+	are printed out for each jet).
+	Added a -bkgd:rescaling option to turn on usage of a rescaling
+	function (should not be used with a localrange).
 	Also added a -subtractor option, which works with GMBGE and JMBGE 
 	and prints out the original jets (including rho info) and the
 	subtracted jets
+
+	* regression-tests/test-all-algs.pl:
+	added extra runs with the -bkgds (-cam) option, running various subtractions,
+	and added corresponding references checksums
 
 2021-02-14  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
 	* INSTALL instructions from git now mention running autoreconf in

@@ -385,8 +385,9 @@ int main (int argc, char ** argv) {
 #ifndef __FJCORE__
   bool do_bkgd_csab = false, do_bkgd_jetmedian = false, do_bkgd_fj2 = false;
   bool do_bkgd_gridmedian = false;
-  bool do_bkgd_localrange;
+  bool do_bkgd_localrange = false;
   bool do_subtractor = false;
+  BackgroundRescalingYPolynomial * bkgd_rescaling = 0;
   Selector bkgd_range;
   if (do_bkgd) {
     bkgd_range = SelectorAbsRapMax(ghost_maxrap - ktR); 
@@ -395,9 +396,13 @@ int main (int argc, char ** argv) {
       do_bkgd_fj2 = cmdline.present("-bkgd:fj2");
       do_bkgd_localrange = cmdline.present("-bkgd:localrange");
       if (do_bkgd_localrange) bkgd_range = SelectorStrip(1.5);
-    } else if (cmdline.present("-bkgd:gridmedian")) {do_bkgd_gridmedian = true;
+    } else if (cmdline.present("-bkgd:gridmedian")) {
+      do_bkgd_gridmedian = true;
     } else {
       throw Error("with the -bkgd option, some particular background must be specified (csab or jetmedian)");
+    }
+    if (cmdline.present("-bkgd:rescaling")) {
+      bkgd_rescaling = new BackgroundRescalingYPolynomial(1.157,0,-0.0266,0,0.000048);
     }
     assert(do_areas || do_bkgd_gridmedian);
     do_subtractor = cmdline.present("-subtractor");
@@ -828,6 +833,8 @@ int main (int argc, char ** argv) {
       } else if (do_bkgd_jetmedian) {
         JetMedianBackgroundEstimator * bge = new JetMedianBackgroundEstimator(bkgd_range);
         bge_ptr = bge;
+        // may be null
+        bge->set_rescaling_class(bkgd_rescaling);
         bge->set_provide_fj2_sigma(do_bkgd_fj2);
         bge->set_cluster_sequence(*csab);
         if (!do_bkgd_localrange) {
@@ -843,6 +850,7 @@ int main (int argc, char ** argv) {
         bkgd_range.get_rapidity_extent(grid_rapmin, grid_rapmax);
         GridMedianBackgroundEstimator * bge = new GridMedianBackgroundEstimator(grid_rapmax, 2*ktR);
         bge_ptr = bge;
+        bge->set_rescaling_class(bkgd_rescaling);
         bge->set_particles(particles);
         rho = bge->rho();
         sigma = bge->sigma();
@@ -850,9 +858,9 @@ int main (int argc, char ** argv) {
         empty_area = 0;
         n_empty_jets = 0;
       }
-      if (bge_ptr) cout << "Background estimator: " << bge_ptr->description() << endl;
       if (do_bkgd_localrange || do_subtractor) {
         assert(bge_ptr != 0);
+        cout << "Background estimator: " << bge_ptr->description() << endl;
         vector<PseudoJet> jets = SelectorAbsRapMax(3.0)(sorted_by_pt(csab->inclusive_jets()));
         vector<PseudoJet> subjets;
         if (do_subtractor) {
