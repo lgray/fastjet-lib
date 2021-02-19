@@ -3,7 +3,16 @@
 # Script to download fjcontrib and build it against a given fastjet version
 #
 # Usage:
-#   test-contrib.pl {--svn URL | --path path}  [--fastjet-config path-to-fastjet-config]
+#   test-contrib.pl {--svn URL | --path path}  [--fastjet-config path-to-fastjet-config] [-std=...]
+#
+#
+# --svn URL:  if supplied, then a fresh checkout is made; URL can either
+#             be a complete URL, or something such as trunk or branches/...
+#
+# --path path: looks for fjcontrib at the specified path
+#
+# -std=c++11 (or some other standard): note single "-"; may be needed if fj compilation 
+#            had that option too and it is not the default for the C++ compiler.
 use warnings;
 use IO::Handle;
 use Cwd;
@@ -15,11 +24,13 @@ $contribPath="";
 $svnBase="svn+ssh://vcs\@phab.hepforge.org/source/fastjetsvn/contrib/";
 #$svnBase="svn+ssh://svn.hepforge.org/hepforge/svn/fastjet/contrib/";
 $tmpDir="";
+$std="";
 
 while ($arg = shift @ARGV) {
   if      ($arg eq "--svn")  {$contribURL  = shift @ARGV;}
   elsif ($arg eq "--path") {$contribPath = shift @ARGV;}
   elsif ($arg eq "--fastjet-config") {$fjconfig = shift @ARGV;}
+  elsif ($arg =~ "^-std") {$std = $arg;}
   else { die "unrecognized argument $arg";}
 }
 
@@ -33,6 +44,9 @@ if ($contribPath && !$contribURL) {
   &runCommand("svn checkout","svn co $contribURL $tmpDir");
   chdir $tmpDir;
   &runCommand("getting all contribs","./scripts/update-contribs.sh --force");
+} else {
+  print "One of --svn or --path must be given (--svn option can simply be 'trunk')\n";
+  exit(-1);
 }
 
 # print out basic info
@@ -40,7 +54,7 @@ print "Working from ",getcwd,"\n";
 system("svn info | grep -e '^URL' -e '^Revision'");
 
 # now run the checks
-&runCommand("configure","./configure --fastjet-config=$fjconfig","",\&printall);
+&runCommand("configure","./configure CXXFLAGS='-Wall -O -g $std' --fastjet-config=$fjconfig","",\&printall);
 &runCommand("make clean","make clean");
 &runCommand("make","make -j4");
 &runCommand("make check","make -j4 check","Failed",\&printSuccessFailure);
