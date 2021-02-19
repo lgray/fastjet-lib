@@ -264,7 +264,7 @@ private:
   /// verify that particles have been set and throw an error if not
   void verify_particles_set() const;
 
-  // information abotu the event
+  // information about the event
   //std::vector<double> _scalar_pt;
   //double _rho, _sigma, _rho_m, _sigma_m;
   BackgroundEstimate _cached_estimate;

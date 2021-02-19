@@ -132,12 +132,6 @@ public:
       _enable_rho_m(true){ reset(); }
 
   
-//#ifdef FASTJET_HAVE_THREAD_SAFETY
-//  /// because of the internal atomic variale, we need to explicitly
-//  /// implement a copy ctor
-//  JetMedianBackgroundEstimator(const JetMedianBackgroundEstimator &other_bge);
-//#endif
-  
   /// default dtor
   ~JetMedianBackgroundEstimator(){}
 
@@ -421,45 +415,37 @@ public:
   
 private:
 
-  // /// helpers for computing things in a thread-safe way when needed
-  // ///
-  // /// This variant handles the jet-dependent quantities when the
-  // /// selector takes a reference
-  // double _get_value_reference(const PseudoJet &jet, double JMBGEResult::*what) const;
-  // ///
-  // /// This variant handles either the jet-independent quantities, or
-  // /// the jet-dependent ones when the selector does no take a
-  // /// reference (typically in presence of re-scaling).
-  // ///
-  // /// This does not set a lock if the initial staus is "ready" so the
-  // /// former are required to set a lock to guaranteee that no changes
-  // /// occurs from a concurrent call to {rho,...}(jet)
-  // template <typename T>
-  // T _get_value(T JMBGEResult::*what) const;
-
   /// compute the background properties for a given jet (excluding
   /// rescaling factors) and return a corresponding BackgroundEstimate
   ///
-  /// this leaves th ecache (and the stdatus flags) unchanged
+  /// this leaves the cache (and the status flags) unchanged
   BackgroundEstimate _compute(const PseudoJet &jet) const;
-   
+
+  //------
+  // the next calls are meant for the case where the cache can be
+  // filled once and for all, i.e. cases where the selector does NOT
+  // take a reference
+  
   /// fill the cache with the given estimate
-  void _cache(const BackgroundEstimate &estimate, bool no_overwrite=true) const;
+  void _cache_no_overwrite(const BackgroundEstimate &estimate) const;
    
-  /// fill the cache with a computed estimate (to be called for cases
-  /// where the cache can be computed once and for all)
-  void _compute_and_cache() const;
+  /// fill the cache with a computed estimate
+  void _compute_and_cache_no_overwrite() const;
 
-  // 
-  // /// for estimation using a selector that takes a reference jet
-  // /// (i.e. a selector that can be relocated) this function allows one
-  // /// to set its position.
-  // ///
-  // /// Note that this HAS to be called before any attempt to compute
-  // /// the background properties. The call is, however, performed
-  // /// automatically by the functions rho(jet) and sigma(jet).
-  // void _recompute_if_needed(const PseudoJet &jet);
+  //------
+  // the next calls are meant for the case where the selector does
+  // take a reference and the cache needs to be refilled whenever one
+  // calls this background estimate with a different reference jet
 
+  /// fill the cache with the given estimate
+  void _cache(const BackgroundEstimate &estimate) const;
+   
+  /// update the cache if need be and return the background
+  /// estimate. This is meant to be called for cases with a local
+  /// range (selector that takesa reference)
+  BackgroundEstimate _compute_and_cache_if_needed(const PseudoJet &jet) const;
+  //-----
+  
   /// check that the underlying structure is still alive
   /// throw an error otherwise
   void _check_csa_alive() const;
@@ -468,12 +454,6 @@ private:
   /// background estimation (i.e. either kt or C/A)
   /// Issue a warning otherwise
   void _check_jet_alg_good_for_median() const;
-
-  // /// a spinlock that waits until the status is set to ready and set it to "working"
-  // void _wait_for_ready_set_working() const;
-  // 
-  // /// a spinlock that waits until the status is not "working" and set it to "working"
-  // void _wait_not_working_set_working() const;
 
   // the basic parameters of this class (passed through the variou ctors)
   Selector _rho_range;                   ///< range to compute the background in
@@ -562,48 +542,6 @@ public:
 
   virtual std::string description() const {return "BackgroundPtMDensity";}
 };
-
-
-// //----------------------------------------------------------------------
-// // implementation of the template bits
-// 
-// template <typename T>
-// T JetMedianBackgroundEstimator::_get_value(T JMBGEResult::*what) const{
-// #ifdef FASTJET_HAVE_THREAD_SAFETY
-//   // test if the calculation is already done
-//   if (_status != Status_Ready){
-//     // we have 2 options:
-//     //  ( i) no calculation is in progress => we do it ourselves
-//     //  (ii)  a calculation is in progress => we wait until it is done
-//     int expected = Status_NotReady;
-//     if (_status.compare_exchange_strong(expected, Status_Working,
-//                                         std::memory_order_seq_cst,
-//                                         std::memory_order_relaxed)){
-//       // do the calculation and set things as ready
-//       _result = _compute(PseudoJet());
-//       _status = Status_Ready;
-//     } else {
-//       // wait
-//       do{
-//         expected = Status_Ready;
-//       } while (!_status.compare_exchange_weak(expected, Status_Ready,
-//                                               std::memory_order_seq_cst,
-//                                               std::memory_order_relaxed));
-//     }
-//   }
-// #else
-//   // test if the calculation is already done
-//   if (_status != Status_Ready){
-//     _result = _compute(PseudoJet());
-//     _status = Status_Ready;
-//   }
-// #endif
-//   
-//   // for _rho_range wo reference, _result can be accessed outside the lock
-//   // (if it's not, it means that the end-user has tempered with us)
-//   return _result.*what;
-// }
-
 
 
 FASTJET_END_NAMESPACE
