@@ -23,6 +23,12 @@ public:
   virtual std::string description() const {return short_name();}
   virtual std::string short_name()  const = 0;
   virtual bool run_test() = 0;
+  /// repeat the test multiple times
+  virtual bool run_test(unsigned int n) {
+    bool outcome = true;
+    for (unsigned i = 0; i < n; i++) outcome &= run_test();
+    return outcome;
+  };
 
   /// a helper function to verify equality to within some specified
   /// tolerance, with the tolerance defined as a relative tolerance

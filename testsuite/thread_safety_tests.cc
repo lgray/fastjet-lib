@@ -12,6 +12,7 @@
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Pruner.hh"
 #include "TestThreadsBase.hh"
+#include "CmdLine.hh"
 
 using namespace fastjet;
 using namespace std;
@@ -28,6 +29,9 @@ void groomJets(const Transformer* f, const vector<fastjet::PseudoJet>& ungroomed
 }
 
 int main(int argc, char ** argv) {
+
+  CmdLine cmdline(argc,argv);
+  unsigned int nrepeat = cmdline.value("-n",1);
 
   // Declare the set of tests
   vector<unique_ptr<TestBase> > tests;
@@ -50,7 +54,7 @@ int main(int argc, char ** argv) {
   bool overall_outcome = true;
   for (auto & test: tests) {
     cout << "Testing ... " << test->short_name() << flush;
-    bool outcome = test->run_test();
+    bool outcome = test->run_test(nrepeat);
     overall_outcome &= outcome;
     if (!outcome) {
       cout << "\rFailure for " << test->short_name() << endl;
