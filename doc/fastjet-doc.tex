@@ -58,7 +58,7 @@
 \newcommand{\ttt}[1]{{\small\texttt{#1}}}
 %\newcommand{\ttt}[1]{\scalebox{0.9}{\texttt{#1}}}
 %\newcommand{\ttt}[1]{\texttt{#1}}
-\newcommand{\comment}[1]{\textbf{[#1]}}
+\newcommand{\comment}[1]{{\color{red}\textbf{[#1]}}}
 \newcommand{\order}[1]{{\cal O}\left(#1\right)}
 \newcommand{\ie}{{\it i.e.}\ }
 \newcommand{\eg}{{\it e.g.}\ }
@@ -4319,7 +4319,100 @@ the user to the online doxygen documentation for further details.
 
 
 
+%======================================================================
+\section{Thread safety}
 
+As of version 3.4.0, FastJet has the option of being configured with
+thread-safety enabled.
+%
+Two variants are possible: limited and full thread safety.
+%
+Both require \ttt{C++11} support in the compiler.
+
+%----------------------------------------------------------------------
+\subsection{Limited thread safety}
+\label{sec:limit-thre-safety}
+
+Limited thread safety, can be obtained by configuring with the
+\ttt{--enable-limited-thread-safety} option.
+%
+Output of the banner, error-handling and warnings are thread
+safe.
+%
+Concurrent read-access of \ttt{JetDefinition} and
+\ttt{AreaDefinition} objects is safe across threads.
+%
+Concurrent read-access of \ttt{PseudoJet} objects is not safe across
+threads, for reasons related to the internal caching of rapidity and
+azimuth.
+%
+The \ttt{SharedPtr} and objects that rely on them are also not
+thread-safe.
+
+%----------------------------------------------------------------------
+\subsection{Full thread safety}
+\label{sec:full-thread-safety}
+
+Full thread safety, obtained by configuring with
+\ttt{--enable-thread-safety}.
+%
+Concurrent read-access of \ttt{PseudoJet} objects is now possible,
+\ttt{SharedPtr} objects are thread safe, which enables thread safety
+across \fastjet operations marked as \ttt{const}.
+
+Normal \fastjet usage sometimes entails non-const operations and/or
+operations that affect global (static) variables.
+%
+In these case, certain workflows are to be privileged to enable
+thread-safe operation.
+
+
+%......................................................................
+\subsubsection{Ghosted areas.}
+\label{sec:threads-ghosted-areas}
+%
+Areas that use ghosts, cf.\ Section~\ref{sec:ghosted-areas}, rely on
+an internal random number generator to place the ghosts.
+%
+By default the generator is a static and common across all threads.
+%
+With this usage option, a lock is employed to ensure that the full set
+of ghosts is generated with a consistent set of random numbers.
+%
+Given a \ttt{ClusterSequenceArea csa}, the random seed that was used
+for that set of ghosts can be retrieved with \comment{rename \ttt{get\_random\_seeds\_used}?}
+\begin{lstlisting}
+  vector<int> seeds;
+  csa.area_def().ghost_spec().get_used_random_seed(seeds);
+\end{lstlisting}
+Alternatively, given a ghosted \ttt{AreaDefinition area\_def}, the
+\ttt{ClusterSequenceArea} can use ghosts can be generated using a
+specific set of seeds, for example
+\begin{lstlisting}
+  vector<int> seeds{12345,67890};
+  ClusterSequenceArea csa(particles, jet_def, area_def.with_fixed_seeds(seeds));
+\end{lstlisting}
+The \ttt{area\_def.with\_fixed\_seeds(seeds)} call returns a copy of
+the \ttt{area\_def} with the specified seeds.\footnote{If using an
+  area definition with a repeat value greater than one, this method
+  will not work, because the seeds will be the same for each
+  repetition of the ghosts.
+  %
+  In that case, the user may create their own random generator (one
+  per thread), and in each thread create a \ttt{GhostedAreaSpec} with
+  that generator. 
+}
+
+%----------------------------------------------------------------------
+\subsubsection{Background estimation and subtraction}
+\label{sec:threads-backgr-estim-subtr}
+
+
+: \comment{Continue here}
+\begin{itemize} 
+\item ghosted areas
+\item background subtraction
+\end{itemize}
 %======================================================================
 \section{Compilation notes}
 
