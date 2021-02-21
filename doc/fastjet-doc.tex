@@ -4343,11 +4343,11 @@ Concurrent read-access of \ttt{JetDefinition} and
 \ttt{AreaDefinition} objects is safe across threads.
 %
 Concurrent read-access of \ttt{PseudoJet} objects is not safe across
-threads, for reasons related to the internal caching of rapidity and
-azimuth.
+threads, for reasons related to internal caching of rapidity and
+azimuth and non-thread safety of the \ttt{SharedPtr}.
 %
-The \ttt{SharedPtr} and objects that rely on them are also not
-thread-safe.
+Other objects that rely on \ttt{SharedPtr} are also not thread-safe
+for any operation where the \ttt{SharedPtr} count might be altered.
 
 %----------------------------------------------------------------------
 \subsection{Full thread safety}
