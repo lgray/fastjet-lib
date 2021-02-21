@@ -76,7 +76,7 @@ namespace gas {
 /// particular set of ghosts and, ultimately, these seeds will be
 /// made available from ClusterSequenceArea via
 ///
-///   ClusterSequenceArea::area_def().ghost_spec().get_last_used_random_seed(vector<int>);
+///   ClusterSequenceArea::area_def().ghost_spec().get_last_seed(vector<int>);
 ///
 /// To use user-specified seeds in a thread-safe way, the end-user
 /// should use
@@ -287,7 +287,9 @@ public:
   /// This should typically be access through the area definition held
   /// by the ClusterSequenceArea, because the CSA class takes a copy of the
   /// AreaDefinition and it is that copy that stored the 
-  void get_last_used_random_seed(std::vector<int> & __iseed) const {
+  void get_last_seed(std::vector<int> & __iseed) const {
+    if (_repeat > 1) _warn_fixed_last_seeds_nrepeat_gt_1
+                      .warn("Using fixed seeds (or accessing last used seeds) not sensible with repeat>1");
     __iseed = _last_used_seed;
   } 
 
@@ -358,6 +360,7 @@ private:
   SharedPtr<BasicRandom<double> > _user_random_generator;
   
   static LimitedWarning _warn_fj2_placement_deprecated;
+  static LimitedWarning _warn_fixed_last_seeds_nrepeat_gt_1;
 
   inline double _our_rand() const {
     return _user_random_generator ? (*_user_random_generator)() : _random_generator();}

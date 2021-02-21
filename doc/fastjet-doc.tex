@@ -4380,10 +4380,10 @@ With this usage option, a lock is employed to ensure that the full set
 of ghosts is generated with a consistent set of random numbers.
 %
 Given a \ttt{ClusterSequenceArea csa}, the random seed that was used
-for that set of ghosts can be retrieved with \comment{rename \ttt{get\_random\_seeds\_used}?}
+for that set of ghosts can be retrieved with 
 \begin{lstlisting}
   vector<int> seeds;
-  csa.area_def().ghost_spec().get_used_random_seed(seeds);
+  csa.area_def().ghost_spec().get_last_seed(seeds);
 \end{lstlisting}
 Alternatively, given a ghosted \ttt{AreaDefinition area\_def}, the
 \ttt{ClusterSequenceArea} can use ghosts can be generated using a

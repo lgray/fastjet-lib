@@ -45,6 +45,7 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 BasicRandom<double> GhostedAreaSpec::_random_generator;
 
 LimitedWarning GhostedAreaSpec::_warn_fj2_placement_deprecated;
+LimitedWarning GhostedAreaSpec::_warn_fixed_last_seeds_nrepeat_gt_1;
 
 /// explicit constructor
 GhostedAreaSpec::GhostedAreaSpec(
@@ -137,6 +138,8 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
   unsigned int n_random = (nrap_upper+_nrap+1)*_nphi*3;
   double * all_random = new double[n_random];
   if (_fixed_seed.size()){
+    if (_repeat > 1) _warn_fixed_last_seeds_nrepeat_gt_1
+                      .warn("Using fixed seeds (or accessing last used seeds) not sensible with repeat>1");
     // take a copy of the random generator and use that to generate
     // things with fixed seeds
     BasicRandom<double> local_rand = generator_at_own_risk();
