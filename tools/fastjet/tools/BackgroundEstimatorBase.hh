@@ -41,6 +41,139 @@ FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh
 
 
 /// @ingroup tools_background
+/// @name helpers to handle the result of the background estimation
+//\{
+///
+/// /// a class that holds the result of the calculation
+///
+/// By default it provides access to the main background properties:
+/// rho, rho_m, sigma and sigma_m. If background estimators derived
+/// from the base class want to store more information, this can be
+/// done using the "Extra" information.
+class BackgroundEstimate{
+public:
+  /// ctor wo initialisation
+  BackgroundEstimate()
+    : _rho(0.0), _sigma(0.0), _rho_m(0.0), _sigma_m(0.0), 
+      _has_sigma(false), _has_rho_m(false),
+      _mean_area(0.0){}
+
+  
+  /// @name for accessing information about the background
+  ///@{
+
+  /// background density per unit area
+  double rho() const {return _rho;}
+
+  /// background fluctuations per unit square-root area
+  /// must be multipled by sqrt(area) to get fluctuations for a region
+  /// of a given area.
+  double sigma() const {return _sigma;}
+
+  /// true if this background estimate has a determination of sigma
+  bool has_sigma() {return true;}
+
+  /// purely longitudinal (particle-mass-induced)
+  /// component of the background density per unit area
+  double rho_m() const {return _rho_m;}
+
+  /// fluctuations in the purely longitudinal (particle-mass-induced)
+  /// component of the background density per unit square-root area
+  double sigma_m() const {return _sigma_m;}
+
+  /// true if this background estimate has a determination of rho_m.
+  /// Support for sigma_m is automatic if one has sigma and rho_m support.
+  bool has_rho_m() const {return _has_rho_m;}
+
+  /// mean area of the patches used to compute the background properties
+  double mean_area() const {return _mean_area;}
+
+  /// base class for extra information
+  class Extras {
+  public:
+    // dummy ctor
+    Extras(){};
+
+    // dummy virtual dtor
+    // makes it polymorphic to allow for dynamic_cast
+    virtual ~Extras(){}; 
+  };
+
+  /// returns true if the background estimate has extra info
+  bool has_extras() const{
+    return _extras.get();
+  }
+  
+  /// returns true if the background estimate has extra info
+  /// compatible with the provided template type
+  template<typename T>
+  bool has_extras() const{
+    return _extras.get() && dynamic_cast<const T *>(_extras.get());
+  }
+
+  /// returns a reference to the extra information associated with a
+  /// given BackgroundEstimator. It assumes that the extra
+  /// information is reachable with class name
+  /// BackgroundEstimator::Extras
+  template<typename BackgroundEstimator>
+  const typename BackgroundEstimator::Extras & extras() const{
+    return dynamic_cast<const typename BackgroundEstimator::Extras &>(* _extras.get());
+  }
+
+  ///@}
+
+
+  /// @name for setting information about the background (internal FJ use)
+  ///@{
+
+  /// reset to default
+  void reset(){
+    _rho = _sigma = _rho_m = _sigma_m = _mean_area = 0.0;
+    _has_sigma = _has_rho_m = false;
+    _extras.reset();
+  }
+  void set_rho(double rho_in) {_rho = rho_in;}
+  void set_sigma(double sigma_in) {_sigma = sigma_in;}
+  void set_has_sigma(bool has_sigma_in) {_has_sigma = has_sigma_in;}
+  void set_rho_m(double rho_m_in) {_rho_m = rho_m_in;}
+  void set_sigma_m(double sigma_m_in) {_sigma_m = sigma_m_in;}
+  void set_has_rho_m(bool has_rho_m_in) {_has_rho_m = has_rho_m_in;}
+  void set_mean_area(double mean_area_in) {_mean_area = mean_area_in;}
+
+  /// apply a rescaling factor (to rho, rho_m, sigma, sigma_m)
+  void apply_rescaling_factor(double rescaling_factor){
+    _rho     *= rescaling_factor;
+    _sigma   *= rescaling_factor;
+    _rho_m   *= rescaling_factor;
+    _sigma_m *= rescaling_factor;
+  }
+
+  /// sets the extra info based on the provided pointer
+  ///
+  /// When calling this method, the BackgroundEstimate class takes
+  /// ownership of the pointer (and is responsible for deleting it)
+  void set_extras(Extras *extras_in) {
+    _extras.reset(extras_in);
+  }
+  ///@}
+
+
+protected:
+  double _rho;       ///< background estimated density per unit area
+  double _sigma;     ///< background estimated fluctuations
+  double _rho_m;     ///< "mass" background estimated density per unit area
+  double _sigma_m;   ///< "mass" background estimated fluctuations
+  bool _has_sigma;   ///< true if this estimate has a determination of sigma
+  bool _has_rho_m;   ///< true if this estimate has a determination of rho_m
+  double _mean_area; ///< mean area of the patches used to compute the bkg properties
+  
+
+  SharedPtr<Extras> _extras;
+
+};
+
+
+/// @ingroup tools_background
 /// \class BackgroundEstimatorBase
 ///
 /// Abstract base class that provides the basic interface for classes
@@ -79,8 +212,6 @@ public:
   /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
-  class BackgroundEstimate;
-  
   /// get the full set of background properties
   virtual BackgroundEstimate operator()() const = 0;
   
@@ -90,9 +221,9 @@ public:
   /// get rho, the background density per unit area
   virtual double rho() const = 0;
 
-  /// get sigma, the background fluctuations per unit area; must be
-  /// multipled by sqrt(area) to get fluctuations for a region of a
-  /// given area.
+  /// get sigma, the background fluctuations per unit square-root area;
+  /// must be multipled by sqrt(area) to get fluctuations for a region
+  /// of a given area.
   virtual double sigma() const { 
     throw Error("sigma() not supported for this Background Estimator");
   }
@@ -125,7 +256,7 @@ public:
 
   /// returns sigma_m, a measure of the fluctuations in the purely
   /// longitudinal, particle-mass-induced component of the background
-  /// density per unit area; must be multipled by sqrt(area) to get
+  /// density per unit square-root area; must be multipled by sqrt(area) to get
   /// fluctuations for a region of a given area.
   virtual double sigma_m() const { 
     throw Error("sigma_m() not supported for this Background Estimator");
@@ -182,124 +313,6 @@ public:
   virtual std::string description() const = 0;
 
   //\}
-
-  /// @name helpers to handle the result of the background estimation
-  //\{
-  ///
-  /// /// a class that holds the result of the calculation
-  ///
-  /// By default it provides access to the main background properties:
-  /// rho, rho_m, sigma and sigma_m. If background estimators derived
-  /// from the base class want to store more information, this can be
-  /// done using the "Extra" information.
-  class BackgroundEstimate{
-  public:
-    /// ctor wo initialisation
-    BackgroundEstimate()
-      : _rho(0.0), _sigma(0.0), _rho_m(0.0), _sigma_m(0.0), 
-        _has_sigma(false), _has_rho_m(false),
-        _mean_area(0.0){}
-
-    /// reset to default
-    void reset(){
-      _rho = _sigma = _rho_m = _sigma_m = _mean_area = 0.0;
-      _has_sigma = _has_rho_m = false;
-      _extra.reset();
-    }
-    
-    /// background density per unit area
-    double rho() const {return _rho;}
-    void set_rho(double rho_in) {_rho = rho_in;}
-
-    /// background fluctuations per unit area
-    double sigma() const {return _sigma;}
-    void set_sigma(double sigma_in) {_sigma = sigma_in;}
-
-    /// true if this background estimate has a determination of sigma
-    bool has_sigma() {return true;}
-    void set_has_sigma(bool has_sigma_in) {_has_sigma = has_sigma_in;}
-
-    /// purely longitudinal (particle-mass-induced)
-    /// component of the background density per unit area
-    double rho_m() const {return _rho_m;}
-    void set_rho_m(double rho_m_in) {_rho_m = rho_m_in;}
-
-    /// fluctuations in the purely longitudinal (particle-mass-induced)
-    /// component of the background density per unit area
-    double sigma_m() const {return _sigma_m;}
-    void set_sigma_m(double sigma_m_in) {_sigma_m = sigma_m_in;}
-
-    /// true if this background estimate has a determination of rho_m.
-    /// Support for sigma_m is automatic if one has sigma and rho_m support.
-    bool has_rho_m() const {return _has_rho_m;}
-    void set_has_rho_m(bool has_rho_m_in) {_has_rho_m = has_rho_m_in;}
-
-    /// mean area of the patches used to compute the background properties
-    double mean_area() const {return _mean_area;}
-    void set_mean_area(double mean_area_in) {_mean_area = mean_area_in;}
-
-    /// apply a rescaling factor (to rho, rho_m, sigma, sigma_m)
-    void apply_rescaling_factor(double rescaling_factor){
-      _rho     *= rescaling_factor;
-      _sigma   *= rescaling_factor;
-      _rho_m   *= rescaling_factor;
-      _sigma_m *= rescaling_factor;
-    }
-
-    /// base class for extra information
-    class BackgroundEstimateExtraBase {
-    public:
-      // dummy ctor
-      BackgroundEstimateExtraBase(){};
-
-      // dummy virtual dtor
-      // makes it polymorphic to allow for dynamic_cast
-      virtual ~BackgroundEstimateExtraBase(){}; 
-    };
-
-    /// returns true if the background estimate has extra info
-    bool has_extra() const{
-      return _extra.get();
-    }
-    
-    /// returns true if the background estimate has extra info
-    /// compatible with the provided template type
-    template<typename T>
-    bool has_extra() const{
-      return _extra.get() && dynamic_cast<const T *>(_extra.get());
-    }
-
-    /// sets the extra info based on the provided pointer
-    ///
-    /// When calling this method, the BackgroundEstimate class takes
-    /// ownership of the pointer (and deletes it)
-    void set_extra(BackgroundEstimateExtraBase *extra_in) {
-      _extra.reset(extra_in);
-    }
-    
-    /// returns a reference to the extra information associated with a
-    /// given BackgroundEstimator. It assumes that the extra
-    /// information is reachable as
-    /// BackgroundEstimator::BackgroundEstimateExtra
-    template<typename BackgroundEstimator>
-    const typename BackgroundEstimator::BackgroundEstimateExtra & extra() const{
-      return dynamic_cast<const typename BackgroundEstimator::BackgroundEstimateExtra &>(* _extra.get());
-    }
-
-  protected:
-    double _rho;       ///< background estimated density per unit area
-    double _sigma;     ///< background estimated fluctuations
-    double _rho_m;     ///< "mass" background estimated density per unit area
-    double _sigma_m;   ///< "mass" background estimated fluctuations
-    bool _has_sigma;   ///< true if this estimate has a determination of sigma
-    bool _has_rho_m;   ///< true if this estimate has a determination of rho_m
-    double _mean_area; ///< mean area of the patches used to compute the bkg properties
-    
-
-    SharedPtr<BackgroundEstimateExtraBase> _extra;
-
-  };
-  
 
   
 protected:

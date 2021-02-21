@@ -76,7 +76,7 @@ namespace gas {
 /// particular set of ghosts and, ultimately, these seeds will be
 /// made available from ClusterSequenceArea via
 ///
-///   ClusterSequenceArea::area_def().ghost_spec().get_used_random_seed(vector<int>);
+///   ClusterSequenceArea::area_def().ghost_spec().get_last_used_random_seed(vector<int>);
 ///
 /// To use user-specified seeds in a thread-safe way, the end-user
 /// should use
@@ -276,16 +276,18 @@ public:
     return new_spec;
   }
   
-  /// allows to get the current fixed seed
+  /// returns the current fixed seed
   void get_fixed_seed(std::vector<int> & __iseed) const {
     __iseed = _fixed_seed;
   }
   
-  /// allows to get the seed that have been used during the Clustering
+  /// allows the user to get the seed that was used at the start of the
+  /// last generation of ghosts.
   ///
-  /// Note that this is enough in ClusterSequenceArea only becasue it
-  /// takes a copy
-  void get_used_random_seed(std::vector<int> & __iseed) const {
+  /// This should typically be access through the area definition held
+  /// by the ClusterSequenceArea, because the CSA class takes a copy of the
+  /// AreaDefinition and it is that copy that stored the 
+  void get_last_used_random_seed(std::vector<int> & __iseed) const {
     __iseed = _last_used_seed;
   } 
 

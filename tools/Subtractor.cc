@@ -175,7 +175,7 @@ std::string Subtractor::description() const{
 // jet
 PseudoJet Subtractor::_amount_to_subtract(const PseudoJet &jet) const{
   // the "transverse momentum" part
-  BackgroundEstimatorBase::BackgroundEstimate bg_estimate;
+  BackgroundEstimate bg_estimate;
   double rho;
   if (_bge != 0) {
     bg_estimate = (*_bge)(jet);

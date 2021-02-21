@@ -40,3 +40,5 @@
 /test-suite.log
 /tmp
 /xml
+doc/fastjet-doc.synctex.gz
+testsuite/thread_safety_tests.dSYM/

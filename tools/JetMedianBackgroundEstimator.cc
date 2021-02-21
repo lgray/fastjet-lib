@@ -252,7 +252,7 @@ void JetMedianBackgroundEstimator::set_jets(const vector<PseudoJet> &jets) {
 //   error (use operator(jet) instead)
 // In the presence of a rescaling, the rescaling factor is not taken
 // into account
-BackgroundEstimatorBase::BackgroundEstimate JetMedianBackgroundEstimator::operator()() const{
+BackgroundEstimate JetMedianBackgroundEstimator::operator()() const{
   if (_rho_range.takes_reference())
     throw Error("The background estimation is obtained from a selector that takes a reference jet. operator()(PseudoJet) should be used in that case");
 
@@ -262,7 +262,7 @@ BackgroundEstimatorBase::BackgroundEstimate JetMedianBackgroundEstimator::operat
 
 // get the full set of background properties for a given reference jet
 // This does not affect the cache
-BackgroundEstimatorBase::BackgroundEstimate JetMedianBackgroundEstimator::operator()(const PseudoJet &jet) const{
+BackgroundEstimate JetMedianBackgroundEstimator::operator()(const PseudoJet &jet) const{
   // first compute an optional rescaling factor
   double rescaling_factor = (_rescaling_class != 0)
     ? (*_rescaling_class)(jet) : 1.0;
@@ -448,12 +448,12 @@ unsigned int JetMedianBackgroundEstimator::n_jets_used() const{
       _unlock_if_needed();
       throw Error("Calls to JetMedianBackgroundEstimator::n_jets_used() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
     }
-    unsigned int return_value = _cached_estimate.extra<JetMedianBackgroundEstimator>().n_jets_used();
+    unsigned int return_value = _cached_estimate.extras<JetMedianBackgroundEstimator>().n_jets_used();
     _unlock_if_needed();
     return return_value;
   }
   if (!_cache_available) _compute_and_cache_no_overwrite();
-  return _cached_estimate.extra<JetMedianBackgroundEstimator>().n_jets_used();
+  return _cached_estimate.extras<JetMedianBackgroundEstimator>().n_jets_used();
 }
 
 /// returns the jets used to actually compute the background
@@ -469,7 +469,7 @@ std::vector<PseudoJet> JetMedianBackgroundEstimator::jets_used() const{
       _unlock_if_needed();
       throw Error("Calls to JetMedianBackgroundEstimator::jets_used() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
     }
-    PseudoJet reference_jet = _cached_estimate.extra<JetMedianBackgroundEstimator>().reference_jet();
+    PseudoJet reference_jet = _cached_estimate.extras<JetMedianBackgroundEstimator>().reference_jet();
     _unlock_if_needed();
     Selector local_rho_range = _rho_range;
     tmp_jets = _rho_range(_included_jets);
@@ -508,12 +508,12 @@ double JetMedianBackgroundEstimator::empty_area() const{
       _unlock_if_needed();
       throw Error("Calls to JetMedianBackgroundEstimator::empty_area() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
     }
-    double return_value = _cached_estimate.extra<JetMedianBackgroundEstimator>().empty_area();
+    double return_value = _cached_estimate.extras<JetMedianBackgroundEstimator>().empty_area();
     _unlock_if_needed();
     return return_value;
   }
   if (!_cache_available) _compute_and_cache_no_overwrite();
-  return _cached_estimate.extra<JetMedianBackgroundEstimator>().empty_area();
+  return _cached_estimate.extras<JetMedianBackgroundEstimator>().empty_area();
 }
 
 /// Returns the number of empty jets used when computing the
@@ -537,12 +537,12 @@ double JetMedianBackgroundEstimator::n_empty_jets() const{
       _unlock_if_needed();
       throw Error("Calls to JetMedianBackgroundEstimator::n_empty_jets() in cases where the background estimation uses a selector that takes a reference jet need to call a method that fills the cached estimate (rho(jet), sigma(jet), ...).");
     }
-    double return_value = _cached_estimate.extra<JetMedianBackgroundEstimator>().n_empty_jets();
+    double return_value = _cached_estimate.extras<JetMedianBackgroundEstimator>().n_empty_jets();
     _unlock_if_needed();
     return return_value;
   }
   if (!_cache_available) _compute_and_cache_no_overwrite();
-  return _cached_estimate.extra<JetMedianBackgroundEstimator>().n_empty_jets();
+  return _cached_estimate.extras<JetMedianBackgroundEstimator>().n_empty_jets();
 }
  
 
@@ -597,7 +597,7 @@ string JetMedianBackgroundEstimator::description() const {
 // computation of the background properties
 //----------------------------------------------------------------------
 // do the actual job
-JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) const {
+BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) const {
   // prepare a local structure to hold temporarily the results
   // (by design, this comes with default values of 0 for each property)
   BackgroundEstimate local_estimate;
@@ -610,9 +610,9 @@ JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_
 
   // structure to hold the extra info associated w this BGE (the call
   // below initialises everything to 0)
-  BackgroundEstimateExtra * extra = new BackgroundEstimateExtra;
-  local_estimate.set_extra(extra);
-  extra->set_reference_jet(jet);
+  Extras * extras = new Extras;
+  local_estimate.set_extras(extras);
+  extras->set_reference_jet(jet);
 
   // fill the vector of pt/area (or the quantity from the jet density class) 
   //  - in the range
@@ -682,16 +682,16 @@ JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_
   // If we have explicit ghosts, this is 0 (i.e. the default)
   const ClusterSequenceAreaBase * csab = (dynamic_cast<ClusterSequenceStructure*>(_csi.get()))->validated_csab();
   if (! (csab->has_explicit_ghosts())) {
-    extra->set_empty_area  (csab->empty_area(_rho_range));
-    extra->set_n_empty_jets(csab->n_empty_jets(_rho_range));
+    extras->set_empty_area  (csab->empty_area(_rho_range));
+    extras->set_n_empty_jets(csab->n_empty_jets(_rho_range));
   }
 
-  extra->set_n_jets_used(njets_used);
-  double total_njets = extra->n_jets_used() + extra->n_empty_jets();
-  total_area  += extra->empty_area();
+  extras->set_n_jets_used(njets_used);
+  double total_njets = extras->n_jets_used() + extras->n_empty_jets();
+  total_area  += extras->empty_area();
 
   double rho_tmp, stand_dev;
-  _median_and_stddev(vector_for_median_pt, extra->n_empty_jets(),
+  _median_and_stddev(vector_for_median_pt, extras->n_empty_jets(),
                      rho_tmp, stand_dev, _provide_fj2_sigma);
   local_estimate.set_rho(rho_tmp);
   
@@ -701,7 +701,7 @@ JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_
 
   // compute the rho_m part now
   if (do_rho_m){
-    _median_and_stddev(vector_for_median_dt, extra->n_empty_jets(),
+    _median_and_stddev(vector_for_median_dt, extras->n_empty_jets(),
                        rho_tmp, stand_dev, 
 		       _provide_fj2_sigma);
     local_estimate.set_rho_m(rho_tmp);
@@ -765,14 +765,14 @@ void JetMedianBackgroundEstimator::_cache(const BackgroundEstimate &estimate) co
   _unlock_if_needed();
 }
 
-JetMedianBackgroundEstimator::BackgroundEstimate JetMedianBackgroundEstimator::_compute_and_cache_if_needed(const PseudoJet &jet) const {
+BackgroundEstimate JetMedianBackgroundEstimator::_compute_and_cache_if_needed(const PseudoJet &jet) const {
   /// this is meant to be called if the selector is local
   assert(_rho_range.takes_reference());
 
   BackgroundEstimate local_estimate;
   
   _lock_if_needed();
-  if ((_cache_available) && (_cached_estimate.extra<JetMedianBackgroundEstimator>().reference_jet() == jet)){
+  if ((_cache_available) && (_cached_estimate.extras<JetMedianBackgroundEstimator>().reference_jet() == jet)){
     local_estimate = _cached_estimate;
     _unlock_if_needed();
     return local_estimate;

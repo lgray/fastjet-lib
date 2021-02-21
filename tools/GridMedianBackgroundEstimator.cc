@@ -139,13 +139,13 @@ void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & part
 //----------------------------------------------------------------------
 
 // get the full set of background properties
-BackgroundEstimatorBase::BackgroundEstimate GridMedianBackgroundEstimator::operator()() const{
+BackgroundEstimate GridMedianBackgroundEstimator::operator()() const{
   verify_particles_set();
   return _cached_estimate;  
 }
  
 // get the full set of background properties for a given reference jet
-BackgroundEstimatorBase::BackgroundEstimate GridMedianBackgroundEstimator::operator()(const PseudoJet &jet) const{
+BackgroundEstimate GridMedianBackgroundEstimator::operator()(const PseudoJet &jet) const{
   verify_particles_set();
   if (_rescaling_class == 0)
     return _cached_estimate;

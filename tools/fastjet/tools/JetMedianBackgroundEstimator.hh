@@ -379,29 +379,31 @@ public:
 
   //\}
 
-  /// an internal class to hold the result of the calculation
-  class BackgroundEstimateExtra : public BackgroundEstimate::BackgroundEstimateExtraBase{
+  /// an internal class to hold results of the calculation
+  /// that are to be assigned to the "extras" part of a BackgroundEstimate
+  class Extras : public BackgroundEstimate::Extras {
   public:
-    BackgroundEstimateExtra()
+    Extras()
       :  _reference_jet(PseudoJet()), _n_jets_used(0),
          _n_empty_jets(0.0), _empty_area(0.0) {}
 
-    /// get/set the current reference jet
+    /// returns the current reference jet
     PseudoJet reference_jet() const {return _reference_jet;}
+    
+    /// returns the number of jets used to estimate the background
+    unsigned int n_jets_used() const {return _n_jets_used;}
+    
+    /// returns the number of empty (pure-ghost) jets
+    double n_empty_jets() const {return _n_empty_jets;}
+      
+    /// returns the empty (pure-ghost/unclustered) area!
+    double empty_area() const {return _empty_area;}
+
     void set_reference_jet(const PseudoJet &reference_jet_in){
       _reference_jet = reference_jet_in;
     }
-    
-    /// get/set the number of jets used to estimate the background
-    unsigned int n_jets_used() const {return _n_jets_used;}
     void set_n_jets_used(int n_jets_used_in){ _n_jets_used=n_jets_used_in;}
-    
-    /// get/set the number of empty (pure-ghost) jets
-    double n_empty_jets() const {return _n_empty_jets;}
     void set_n_empty_jets(double n_empty_jets_in){ _n_empty_jets=n_empty_jets_in;}
-      
-    /// get/set the empty (pure-ghost/unclustered) area!
-    double empty_area() const {return _empty_area;}
     void set_empty_area(double empty_area_in){ _empty_area=empty_area_in;}
     
     
