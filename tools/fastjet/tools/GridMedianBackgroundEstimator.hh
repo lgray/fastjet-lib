@@ -136,7 +136,7 @@ public:
 
   /// tell the background estimator that it has a new event, composed
   /// of the specified particles.
-  void set_particles(const std::vector<PseudoJet> & particles);
+  void set_particles(const std::vector<PseudoJet> & particles) FASTJET_OVERRIDE;
 
   /// determine whether the automatic calculation of rho_m and sigma_m
   /// is enabled (by default true)
@@ -144,61 +144,69 @@ public:
 
   //\}
 
+  /// return a pointer to a copy of this BGE; the user is responsible
+  /// for eventually deleting the resulting object.
+  BackgroundEstimatorBase * copy() const FASTJET_OVERRIDE {
+    return new GridMedianBackgroundEstimator(*this);
+  };
+
+
+
   /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
   /// get the full set of background properties
-  BackgroundEstimate operator()() const;
+  BackgroundEstimate operator()() const FASTJET_OVERRIDE;
   
   /// get the full set of background properties for a given reference jet
-  BackgroundEstimate operator()(const PseudoJet &jet) const;
+  BackgroundEstimate operator()(const PseudoJet &jet) const FASTJET_OVERRIDE;
 
   /// returns rho, the median background density per unit area
-  double rho() const;
+  double rho() const FASTJET_OVERRIDE;
 
   /// returns sigma, the background fluctuations per unit area; must be
   /// multipled by sqrt(area) to get fluctuations for a region of a
   /// given area.
-  double sigma() const;
+  double sigma() const FASTJET_OVERRIDE;
 
   /// returns rho, the background density per unit area, locally at the
   /// position of a given jet. Note that this is not const, because a
   /// user may then wish to query other aspects of the background that
   /// could depend on the position of the jet last used for a rho(jet)
   /// determination.
-  double rho(const PseudoJet & jet);
+  double rho(const PseudoJet & jet) FASTJET_OVERRIDE;
 
   /// returns sigma, the background fluctuations per unit area, locally at
   /// the position of a given jet. As for rho(jet), it is non-const.
-  double sigma(const PseudoJet & jet);
+  double sigma(const PseudoJet & jet) FASTJET_OVERRIDE;
 
   /// returns true if this background estimator has support for
   /// determination of sigma
-  bool has_sigma() const {return true;}
+  bool has_sigma() const FASTJET_OVERRIDE {return true;}
 
   //-----------------------------------------------------------------
   /// Returns rho_m, the purely longitudinal, particle-mass-induced
   /// component of the background density per unit area
-  double rho_m() const;
+  double rho_m() const FASTJET_OVERRIDE;
 
   /// returns sigma_m, a measure of the fluctuations in the purely
   /// longitudinal, particle-mass-induced component of the background
   /// density per unit area; must be multipled by sqrt(area) to get
   /// fluctuations for a region of a given area.
-  double sigma_m() const;
+  double sigma_m() const FASTJET_OVERRIDE;
 
   /// Returns rho_m locally at the jet position. As for rho(jet), it is non-const.
-  double rho_m(const PseudoJet & jet);
+  double rho_m(const PseudoJet & jet) FASTJET_OVERRIDE;
 
   /// Returns sigma_m locally at the jet position. As for rho(jet), it is non-const.
-  double sigma_m(const PseudoJet & jet);
+  double sigma_m(const PseudoJet & jet) FASTJET_OVERRIDE;
 
   /// Returns true if this background estimator has support for
   /// determination of rho_m.
   ///
   /// Note that support for sigma_m is automatic if one has sigma and
   /// rho_m support.
-  bool has_rho_m() const {return _enable_rho_m;}
+  bool has_rho_m() const FASTJET_OVERRIDE {return _enable_rho_m;}
 
 
   /// returns the area of the grid cells (all identical, but
@@ -225,7 +233,7 @@ public:
   /// The same profile will be used for both pt and mt (this is
   /// probabaly a good approximation since the particle density
   /// changes is what dominates the rapidity profile)
-  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class);
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class) FASTJET_OVERRIDE;
 
   //\}
 
@@ -234,7 +242,7 @@ public:
   //----------------------------------------------------------------
 
   /// returns a textual description of the background estimator
-  std::string description() const;
+  std::string description() const FASTJET_OVERRIDE;
 
   //\}
 

@@ -4374,7 +4374,7 @@ thread-safe operation.
 Areas that use ghosts, cf.\ Section~\ref{sec:ghosted-areas}, rely on
 an internal random number generator to place the ghosts.
 %
-By default the generator is a static and common across all threads.
+By default the generator is static and common across all threads.
 %
 With this usage option, a lock is employed to ensure that the full set
 of ghosts is generated with a consistent set of random numbers.

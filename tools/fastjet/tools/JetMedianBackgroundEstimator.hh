@@ -144,7 +144,7 @@ public:
 
   /// tell the background estimator that it has a new event, composed
   /// of the specified particles.
-  virtual void set_particles(const std::vector<PseudoJet> & particles);
+  virtual void set_particles(const std::vector<PseudoJet> & particles) FASTJET_OVERRIDE;
 
   /// (re)set the cluster sequence (with area support) to be used by
   /// future calls to rho() etc. 
@@ -186,6 +186,13 @@ public:
   //\}
 
 
+  /// return a pointer to a copy of this BGE; the user is responsible
+  /// for eventually deleting the resulting object.
+  BackgroundEstimatorBase * copy() const FASTJET_OVERRIDE {
+    return new JetMedianBackgroundEstimator(*this);
+  };
+
+
   /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
@@ -194,16 +201,16 @@ public:
   /// For background estimators using a local ranges, this throws an
   ///   error (use operator(jet) instead)
   /// In the presence of a rescaling, the rescaling is not included
-  BackgroundEstimate operator()() const;
+  BackgroundEstimate operator()() const FASTJET_OVERRIDE;
   
   /// get the full set of background properties for a given reference jet
-  BackgroundEstimate operator()(const PseudoJet &jet) const;
+  BackgroundEstimate operator()(const PseudoJet &jet) const FASTJET_OVERRIDE;
 
   /// get rho, the median background density per unit area
-  double rho() const;
+  double rho() const FASTJET_OVERRIDE;
 
   /// get sigma, the background fluctuations per unit area
-  double sigma() const;
+  double sigma() const FASTJET_OVERRIDE;
 
   /// get rho, the median background density per unit area, locally at
   /// the position of a given jet.
@@ -211,7 +218,7 @@ public:
   /// If the Selector associated with the range takes a reference jet
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
-  double rho(const PseudoJet & jet);
+  double rho(const PseudoJet & jet) FASTJET_OVERRIDE;
 
   /// get sigma, the background fluctuations per unit area,
   /// locally at the position of a given jet.
@@ -219,30 +226,30 @@ public:
   /// If the Selector associated with the range takes a reference jet
   /// (i.e. is relocatable), then for subsequent operations the
   /// Selector has that jet set as its reference.
-  double sigma(const PseudoJet &jet);
+  double sigma(const PseudoJet &jet) FASTJET_OVERRIDE;
 
   /// returns true if this background estimator has support for
   /// determination of sigma
-  virtual bool has_sigma() const {return true;}
+  virtual bool has_sigma() const FASTJET_OVERRIDE {return true;}
 
   //----------------------------------------------------------------
   // now do the same thing for rho_m and sigma_m
 
   /// returns rho_m, the purely longitudinal, particle-mass-induced
   /// component of the background density per unit area
-  virtual double rho_m() const;
+  virtual double rho_m() const FASTJET_OVERRIDE;
 
   /// returns sigma_m, a measure of the fluctuations in the purely
   /// longitudinal, particle-mass-induced component of the background
   /// density per unit area; must be multipled by sqrt(area) to get
   /// fluctuations for a region of a given area.
-  virtual double sigma_m() const;
+  virtual double sigma_m() const FASTJET_OVERRIDE;
 
   /// Returns rho_m locally at the jet position. As for rho(jet), it is non-const.
-  virtual double rho_m(const PseudoJet & /*jet*/);
+  virtual double rho_m(const PseudoJet & /*jet*/) FASTJET_OVERRIDE;
 
   /// Returns sigma_m locally at the jet position. As for rho(jet), it is non-const.
-  virtual double sigma_m(const PseudoJet & /*jet*/);
+  virtual double sigma_m(const PseudoJet & /*jet*/) FASTJET_OVERRIDE;
 
   /// Returns true if this background estimator has support for
   /// determination of rho_m.
@@ -252,7 +259,7 @@ public:
   ///
   /// Note that support for sigma_m is automatic is one has sigma and
   /// rho_m support.
-  virtual bool has_rho_m() const {return _enable_rho_m && (_jet_density_class == 0);}
+  virtual bool has_rho_m() const FASTJET_OVERRIDE {return _enable_rho_m && (_jet_density_class == 0);}
   //\}
   
   /// @name  retrieving additional useful information
@@ -363,7 +370,7 @@ public:
   ///
   /// The BackgroundRescalingYPolynomial class can be used to get a
   /// rescaling that depends just on rapidity.
-  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) {
+  virtual void set_rescaling_class(const FunctionOfPseudoJet<double> * rescaling_class_in) FASTJET_OVERRIDE {
     BackgroundEstimatorBase::set_rescaling_class(rescaling_class_in);
     _set_cache_unavailable();
   }
@@ -375,7 +382,7 @@ public:
   //----------------------------------------------------------------
 
   /// returns a textual description of the background estimator
-  std::string description() const;
+  std::string description() const FASTJET_OVERRIDE;
 
   //\}
 

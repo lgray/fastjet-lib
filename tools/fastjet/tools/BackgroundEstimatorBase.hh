@@ -209,6 +209,10 @@ public:
 
   //\}
 
+  /// return a pointer to a copy of this BGE; the user is responsible
+  /// for eventually deleting the resulting object.
+  virtual BackgroundEstimatorBase * copy() const = 0;
+
   /// @name  retrieving fundamental information
   //\{
   //----------------------------------------------------------------
