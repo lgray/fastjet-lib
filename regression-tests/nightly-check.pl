@@ -140,6 +140,10 @@ push @setups, ["","", "", 1000, "-fjcore"]; # locally
 push @setups, ["","--disable-static --enable-pyext", "", 10, ""];               # locally, just the interface
 push @setups, ["","--disable-static --enable-pyext --enable-swig", "", 10, ""]; # locally, interface + swig
 
+# checks of results with thread safety enabled
+push @setups, ["","--disable-static --enable-thread-safety CXXFLAGS=\"-O2 -Wall -std=c++11\"", "", 10, "-strat 1 -bkgds"];               # locally, just the interface
+
+
 # GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
 #push @setups, ["osiris","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on osiris (SLC6.3, gcc 4.4.6, 64 bit)
 #push @setups, ["orphee","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on orphee (FC17, gcc 4.7.0, 64 bit)
