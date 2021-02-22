@@ -1,11 +1,11 @@
-#define FASTJET_PACKAGE_STRING  "FastJet 3.3.5-devel"
-#define FASTJET_PACKAGE_VERSION  "3.3.5-devel"
-#define FASTJET_VERSION  "3.3.5-devel"
+#define FASTJET_PACKAGE_STRING  "FastJet 3.4.0-devel"
+#define FASTJET_PACKAGE_VERSION  "3.4.0-devel"
+#define FASTJET_VERSION  "3.4.0-devel"
 #define FASTJET_VERSION_MAJOR       3
-#define FASTJET_VERSION_MINOR       3
-#define FASTJET_VERSION_PATCHLEVEL  5
+#define FASTJET_VERSION_MINOR       4
+#define FASTJET_VERSION_PATCHLEVEL  0
 #define FASTJET_VERSION_PRERELEASE  "devel"
-#define FASTJET_VERSION_NUMBER      30305
+#define FASTJET_VERSION_NUMBER      30400
 
 /* The ATLASCone plugin is disabled by default*/
 #undef FASTJET_ENABLE_PLUGIN_ATLASCONE 
