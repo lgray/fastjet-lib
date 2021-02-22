@@ -483,9 +483,13 @@ int main (int argc, char ** argv) {
   if (all_algs || cmdline.present("-pxcone")) {
 #ifdef FASTJET_ENABLE_PLUGIN_PXCONE
     double min_jet_energy = 5.0;
+    // mode: 1=e+e-, 2=pp
+    int mode = cmdline.value("-pxcone-mode", 2);
+    cout << "pxcone-mode = " << mode << endl;
+    bool E_scheme_jets = false;
     jet_defs.push_back( JetDefinition( new PxConePlugin (
                                       ktR, min_jet_energy,
-                                      overlap_threshold)));
+                                      overlap_threshold, E_scheme_jets, mode)));
 #else  // FASTJET_ENABLE_PLUGIN_PXCONE
     is_unavailable("PxCone");
 #endif // FASTJET_ENABLE_PLUGIN_PXCONE

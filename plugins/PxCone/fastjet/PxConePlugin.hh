@@ -93,8 +93,8 @@ public:
   ///   - mode: set to 1 for the e+e- version
   ///           set to 2 for the hadron-hadron version (the default)
   ///
-  PxConePlugin (double  cone_radius_in      , 
-		double  min_jet_energy_in = 5.0  , 
+  PxConePlugin (double  cone_radius_in, 
+		double  min_jet_energy_in = 5.0, 
 		double  overlap_threshold_in = 0.5,
                 bool    E_scheme_jets_in = false,
                 int     mode = 2) : 
@@ -124,6 +124,7 @@ public:
   /// unaffected.
   bool E_scheme_jets()         const {return _E_scheme_jets      ;}
 
+  int mode()                   const {return _mode               ;}
 
   // the things that are required by base class
   virtual std::string description () const;
