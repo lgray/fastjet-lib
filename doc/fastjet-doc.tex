@@ -4389,8 +4389,8 @@ Alternatively, given a ghosted \ttt{AreaDefinition area\_def}, the
 \ttt{ClusterSequenceArea} can use ghosts can be generated using a
 specific set of seeds, for example
 \begin{lstlisting}
-  vector<int> seeds{12345,67890};
-  ClusterSequenceArea csa(particles, jet_def, area_def.with_fixed_seeds(seeds));
+  vector<int> seed{12345,67890};
+  ClusterSequenceArea csa(particles, jet_def, area_def.with_fixed_seed(seed));
 \end{lstlisting}
 The \ttt{area\_def.with\_fixed\_seeds(seeds)} call returns a copy of
 the \ttt{area\_def} with the specified seeds.\footnote{If using an
@@ -4421,10 +4421,16 @@ and use that for accessing information about the background
 \begin{lstlisting}
   // copy the global BackgroundEstimator class
   unique_ptr<BackgroundEstimatorBase> local_bge(global_bge.copy());
-  // set the particles on the local copy, using its operator() function
+
+  // set the particles on the local copy
   local_bge->set_particles(particles);
+  // alternatively set the particles with a fixed a specific seed for
+  // the ghost generation
+  vector<int> seed{12345,67890};
+  local_bge->set_particles_with_seed(particles, seed);
+
   // and access information about the background across the whole
-  // event (if supported)
+  // event (if supported), using its operator() function
   BackgroundEstimate bkgd_estimate1 = local_bge();
   // or locally around some jet
   BackgroundEstimate bkgd_estimate2 = local_bge(jet);
