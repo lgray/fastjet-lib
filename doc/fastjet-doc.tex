@@ -3350,7 +3350,7 @@ background density and a measure of its fluctuations with the two
 following calls 
 %
 \begin{lstlisting}
-  BackgroundEstimate bkgd_estimate = bge();
+  BackgroundEstimate bkgd_estimate = bge.estimate();
   // the median of ($p_t$/area) for grid cells, or for jets that pass the selection cut, 
   // making use also of information on empty area in the event (in the jets case)
   rho = estimate.rho(); 
@@ -3441,7 +3441,7 @@ follows (available for both \ttt{JetMedianBackgroundEstimator} and
 \ttt{GridMedianBackgroundEstimator})
 \begin{lstlisting}
   // get an estimate of the background in the vicinity of the given jet
-  BackgroundEstimate bkgd_estimate = bge(jet);
+  BackgroundEstimate bkgd_estimate = bge.estimate(jet);
   // and then extract specific information about the background
   double rho   = bkgd_estimate.rho();   // $p_t$ density per unit area $A$ near jet
   double sigma = bkgd_estimate.sigma(); // fluctuations in the $p_t$ density near jet
@@ -3555,21 +3555,19 @@ from \ttt{FunctionOfPseudoJet<double>} --- see appendix
   // tell JetMedianBackgroundEstimator or GridMedianBackgroundEstimator about the rescaling
   bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
-Subsequent calls to \ttt{operator()} will be based on the on median of
+Subsequent calls to \ttt{bge.estimate()} will be based on the on median of
 the distribution $p_t/A / \ttt{rescaling}(y)$ (rather than $p_t/A$).
 %
-Any calls to \ttt{operator(jet)} will include an additional factor of
+Any calls to \ttt{bge.estimate(jet)} will include an additional factor of
 \ttt{rescaling}$(y_\ttt{jet})$ in the resulting
 \ttt{BackgroundEstimate}.
 %
 Note that any overall factor in the rescaling function cancels out for
-\ttt{operator(jet)}, but not for calls to \ttt{operator()}
-\comment{operator or something else here?} (which are in any case less
-meaningful when a rapidity dependence is being assumed for the
-background).
+\ttt{bge.estimate(jet)}, but not for calls to \ttt{bge.estimate()}
+(which are in any case less meaningful when a rapidity dependence is
+being assumed for the background).
 
-In ongoing studies \cite{GridMedianLH}, \comment{Did this ever get
-  written up?} we have found that despite its
+We have found~\cite{Soyez:2018opl} that despite its
 use of an average background shape, the rescaling method generally
 performs comparably to local estimation in terms of its residual $p_t$
 dispersion after subtraction.
@@ -3705,7 +3703,7 @@ A \ttt{BackgroundEstimate} from a \ttt{JetMedianBackgroundEstimator} contains
 yet more information that can be obtained as follows
 \begin{lstlisting}
   JetMedianBackgroundEstimator::Extras extras = \
-                    BackgroundEstimate.extras<JetMedianBackgroundEstimator>();
+                    bkgd_estimate.extras<JetMedianBackgroundEstimator>();
 \end{lstlisting}
 where the \ttt{extras} object has the following member functions:
 \begin{lstlisting}
@@ -4449,9 +4447,9 @@ and use that for accessing information about the background
 
   // and access information about the background across the whole
   // event (if supported), using its operator() function
-  BackgroundEstimate bkgd_estimate1 = (*local_bge)();
+  BackgroundEstimate bkgd_estimate1 = local_bge->estimate();
   // or locally around some jet
-  BackgroundEstimate bkgd_estimate2 = (*local_bge)(jet);
+  BackgroundEstimate bkgd_estimate2 = local_bge->estimate(jet);
 \end{lstlisting}
 If using a globally defined \ttt{Subtractor} \ttt{global\_subtractor},
 one similarly needs to take a copy and point that copy to the
@@ -6576,9 +6574,14 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
   JHEP {\bf 1004 } (2010)  065.
   [arXiv:0912.4926 [hep-ph]].
 
-\bibitem{GridMedianLH} M.~Cacciari, G.~P.~Salam and G.~Soyez, contribution in
-  preparation to proceedings of ``Workshop on TeV Colliders'', Les
-  Houches, June 2011.
+%\cite{Soyez:2018opl}
+\bibitem{Soyez:2018opl}
+G.~Soyez,
+%``Pileup mitigation at the LHC: A theorist\textquoteright{}s view,''
+Phys. Rept. \textbf{803} (2019), 1-158
+doi:10.1016/j.physrep.2019.01.007
+[arXiv:1801.09721 [hep-ph]].
+% 26 citations counted in INSPIRE as of 22 Feb 2021
 
 \bibitem{Soyez:2012hv}
   G.~Soyez, G.~P.~Salam, J.~Kim, S.~Dutta and M.~Cacciari,
