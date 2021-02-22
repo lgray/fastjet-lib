@@ -25,6 +25,7 @@ cd fjcore-$version
 fastjet_headers="config_auto.h\
   config.h\
   internal/base.hh\
+  internal/thread_safety_helpers.hh\
   internal/numconsts.hh\
   internal/IsBase.hh\
   internal/deprecated.hh\
