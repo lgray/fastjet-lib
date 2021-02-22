@@ -225,10 +225,10 @@ public:
   //\{
   //----------------------------------------------------------------
   /// get the full set of background properties
-  virtual BackgroundEstimate operator()() const = 0;
+  virtual BackgroundEstimate estimate() const = 0;
   
   /// get the full set of background properties for a given reference jet
-  virtual BackgroundEstimate operator()(const PseudoJet &jet) const = 0;
+  virtual BackgroundEstimate estimate(const PseudoJet &jet) const = 0;
 
   /// get rho, the background density per unit area
   virtual double rho() const = 0;
@@ -479,8 +479,8 @@ FASTJET_END_NAMESPACE
 //   };
 // 
 //   
-//   BackgroundEstimate operator()() const;
-//   BackgroundEstimate operator()(jet) const;
+//   BackgroundEstimate estimate() const;
+//   BackgroundEstimate estimate(jet) const;
 //   
 //   // do we want this:
 //   double rho();

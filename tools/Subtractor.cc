@@ -178,7 +178,7 @@ PseudoJet Subtractor::_amount_to_subtract(const PseudoJet &jet) const{
   BackgroundEstimate bg_estimate;
   double rho;
   if (_bge != 0) {
-    bg_estimate = (*_bge)(jet);
+    bg_estimate = _bge->estimate(jet);
     rho = bg_estimate.rho();
   } else if (_rho != _invalid_rho) {
     rho = _rho;

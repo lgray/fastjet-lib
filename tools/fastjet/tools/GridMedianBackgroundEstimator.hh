@@ -133,10 +133,10 @@ public:
   //\{
   //----------------------------------------------------------------
   /// get the full set of background properties
-  BackgroundEstimate operator()() const FASTJET_OVERRIDE;
+  BackgroundEstimate estimate() const FASTJET_OVERRIDE;
   
   /// get the full set of background properties for a given reference jet
-  BackgroundEstimate operator()(const PseudoJet &jet) const FASTJET_OVERRIDE;
+  BackgroundEstimate estimate(const PseudoJet &jet) const FASTJET_OVERRIDE;
 
   /// returns rho, the median background density per unit area
   double rho() const FASTJET_OVERRIDE;

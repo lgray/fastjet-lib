@@ -205,7 +205,7 @@ int main(){
   cout << "Background estimation:" << endl;
   cout << "  " << bkgd_estimator.description() << endl << endl;;
   cout << "  Giving, for the full event" << endl;
-  BackgroundEstimate bkgd_estimate = bkgd_estimator();
+  BackgroundEstimate bkgd_estimate = bkgd_estimator.estimate();
   cout << "    rho     = " << bkgd_estimate.rho()   << endl;
   cout << "    sigma   = " << bkgd_estimate.sigma() << endl; 
   cout << "    rho_m   = " << bkgd_estimate.rho_m()   << endl;

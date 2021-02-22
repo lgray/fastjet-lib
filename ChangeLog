@@ -1,3 +1,30 @@
+2021-02-22  Gregory Soyez  <soyez@fastjet.fr> + Gavin (work over the past week)
+
+	* example/07-subtraction.cc:
+	* tools/fastjet/tools/Subtractor.hh:
+	* tools/Suntractor.cc:
+
+	percolated the changes in the various BGEs (mostly used estimate()
+	when possible)
+
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh:
+	* tools/fastjet/tools/GridMedianBackgroundEstimator.hh:
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh:
+	* tools/BackgroundEstimatorBase.cc:
+	* tools/GridMedianBackgroundEstimator.cc:
+	* tools/JetMedianBackgroundEstimator.cc:
+
+	worked on making the background estimation thread-safe:
+	- inserted a copy() mechanism + set_particles_with_seeds to allow
+	  for a thread-safe usage of multiple events in parallel
+
+	- made sure that the access to the cache is safe when calling the
+	  BGE across different threadds sharing the same event (i.e. after
+	  the call to set_... have all been made)
+	- included a BackgrounmdEstimate class that gets filled when calling
+            BGE::estimate(<jet>)
+
+
 2020-09-15  Gregory Soyez  <soyez@fastjet.fr>
 
 	* merged master branch back into the thread-safety branch

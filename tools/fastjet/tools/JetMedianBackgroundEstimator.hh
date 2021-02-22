@@ -204,12 +204,12 @@ public:
   /// get the full set of background properties
   ///
   /// For background estimators using a local ranges, this throws an
-  ///   error (use operator(jet) instead)
+  ///   error (use estimate(jet) instead)
   /// In the presence of a rescaling, the rescaling is not included
-  BackgroundEstimate operator()() const FASTJET_OVERRIDE;
+  BackgroundEstimate estimate() const FASTJET_OVERRIDE;
   
   /// get the full set of background properties for a given reference jet
-  BackgroundEstimate operator()(const PseudoJet &jet) const FASTJET_OVERRIDE;
+  BackgroundEstimate estimate(const PseudoJet &jet) const FASTJET_OVERRIDE;
 
   /// get rho, the median background density per unit area
   double rho() const FASTJET_OVERRIDE;
