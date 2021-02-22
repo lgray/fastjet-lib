@@ -85,7 +85,8 @@ namespace fwrapper {
                                  const JetDefinition & jet_def,
 				 double * f77jets, int & njets,
 				 const double & ghost_maxrap = 0.0,  
-				 const int & nrepeat = 0, const double & ghost_area = 0.0) {
+				 const int & nrepeat = 0, const double & ghost_area = 0.0,
+                                 bool use_energy_ordering = false) {
 
     // transfer p[4*ipart+0..3] -> input_particles[i]
     transfer_input_particles(p, npart);
@@ -101,7 +102,11 @@ namespace fwrapper {
 	 cs.reset(new ClusterSequenceArea(input_particles,jet_def,area_def));
     }
     // extract jets (pt-ordered)
-    jets = sorted_by_pt(cs->inclusive_jets());
+    if (use_energy_ordering){
+      jets = sorted_by_E(cs->inclusive_jets());
+    } else {
+      jets = sorted_by_pt(cs->inclusive_jets());
+    }
     
     // transfer jets -> f77jets[4*ijet+0..3]
     transfer_jets(f77jets, njets);
@@ -275,7 +280,7 @@ void fastjeteegenkt_(const double * p, const int & npart,
   jet_def = JetDefinition(ee_genkt_algorithm, R, palg);
   
   // do everything
-  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets, 0.0, 0, 0.0, true);
 }
 
 

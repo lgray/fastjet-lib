@@ -65,6 +65,18 @@ Entries above are inserted in the thread-safety branch
 --------------------------------------------------------------------------------
 ========== CHANGELOG FILE FOR FastJet =================================
 
+2021-02-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* fortran_wrapper/fastjetfortran.cc:
+	used an ordering in energy when using the eegenkt algorithm
+
+2021-02-22  Gregory Soyez  <soyez@fastjet.fr>
+
+	* plugins/PxCone/fastjet/PxConePlugin.hh:
+	* plugins/PxCone/PxConePlugin.cc:
+	allowed one to run in e+e- mode (setting mode=1 instead of the
+	default mode=2)
+
 2021-02-19 Fri  <gavin.salam@physics.ox.ac.uk>
 
     * regression-tests/README.md:      (*** ADDED ***)

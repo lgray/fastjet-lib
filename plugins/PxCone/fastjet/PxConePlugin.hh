@@ -90,14 +90,19 @@ public:
   ///     momentum sum for the jets is carried out by direct
   ///     four-vector addition instead of p-scheme recombination.
   ///
+  ///   - mode: set to 1 for the e+e- version
+  ///           set to 2 for the hadron-hadron version (the default)
+  ///
   PxConePlugin (double  cone_radius_in      , 
 		double  min_jet_energy_in = 5.0  , 
 		double  overlap_threshold_in = 0.5,
-                bool    E_scheme_jets_in = false) : 
+                bool    E_scheme_jets_in = false,
+                int     mode = 2) : 
     _cone_radius        (cone_radius_in      ),
     _min_jet_energy     (min_jet_energy_in   ),
     _overlap_threshold  (overlap_threshold_in),
-    _E_scheme_jets      (E_scheme_jets_in    ) {}
+    _E_scheme_jets      (E_scheme_jets_in    ),
+    _mode               (mode                ){}
 
 
   // some functions to return info about parameters ----------------
@@ -135,6 +140,9 @@ private:
   bool _E_scheme_jets;
 
   static thread_safety_helpers::FirstTimeTrue _first_time;
+  int _mode;  // 1 = e+e-, 2 = hh (default)
+
+  static bool _first_time;
 
   /// print a banner for reference to the 3rd-party code
   void _print_banner(std::ostream *ostr) const;
