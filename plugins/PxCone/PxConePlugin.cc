@@ -50,7 +50,8 @@ string PxConePlugin::description () const {
        << "cone_radius = "        << cone_radius        () << ", "
        << "min_jet_energy = "     << min_jet_energy     () << ", "
        << "overlap_threshold  = " << overlap_threshold  () << ", "
-       << "E_scheme_jets  = "     << E_scheme_jets      () 
+       << "E_scheme_jets  = "     << E_scheme_jets      () << ", "
+       << "mode (1=e+e-, 2=hh) = " << _mode
        << " (NB: non-standard version of PxCone, containing small bug fixes by Gavin Salam)";
 
   return desc.str();
@@ -62,7 +63,7 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
   //_print_banner(clust_seq.fastjet_banner_stream());
  
   // only have hh mode
-  int mode = 2;
+  //int mode = 2;
 
   int    ntrak = clust_seq.jets().size(), itkdm = 4;
   double *ptrak = new double[ntrak*4+1];
@@ -83,7 +84,7 @@ void PxConePlugin::run_clustering(ClusterSequence & clust_seq) const {
 
   // run pxcone
   pxcone(
-    mode   ,    // 1=>e+e-, 2=>hadron-hadron
+    _mode  ,    // 1=>e+e-, 2=>hadron-hadron
     ntrak  ,    // Number of particles
     itkdm  ,    // First dimension of PTRAK array: 
     ptrak  ,    // Array of particle 4-momenta (Px,Py,Pz,E)
