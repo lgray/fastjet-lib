@@ -3568,7 +3568,8 @@ Note that any overall factor in the rescaling function cancels out for
 meaningful when a rapidity dependence is being assumed for the
 background).
 
-In ongoing studies \cite{GridMedianLH}, we have found that despite its
+In ongoing studies \cite{GridMedianLH}, \comment{Did this ever get
+  written up?} we have found that despite its
 use of an average background shape, the rescaling method generally
 performs comparably to local estimation in terms of its residual $p_t$
 dispersion after subtraction.
@@ -3694,14 +3695,20 @@ observables as discussed in Refs.~\cite{Soyez:2012hv,Cacciari:2012mu}.
 \subsection{Other facilities}
 \label{sec:BGE-other-facilities}
 
-The \ttt{JetMedianBackgroundEstimator} has a number of enquiry
-functions to access information used internally within the median
-$\rho$ and $\sigma$ determination.
+The \ttt{BackgroundEstimate} class has one further enquiry function:
 \begin{lstlisting}
-  // Returns the mean area of the jets used to actually compute the background properties,
-  // including empty area and jets (available also in grid-based estimator)
+  // Returns the mean area of the jets or grid cells used to actually compute 
+  // the background properties, including empty area and/or pure ghost jets
   double mean_area() const;
-   
+\end{lstlisting}
+A \ttt{BackgroundEstimate} from a \ttt{JetMedianBackgroundEstimator} contains
+yet more information that can be obtained as follows
+\begin{lstlisting}
+  JetMedianBackgroundEstimator::Extras extras = \
+                    BackgroundEstimate.extras<JetMedianBackgroundEstimator>();
+\end{lstlisting}
+where the \ttt{extras} object has the following member functions:
+\begin{lstlisting}
   // Returns the number of jets used to actually compute the background properties
   // (including empty jets)
   unsigned int n_jets_used() const;
@@ -4468,10 +4475,16 @@ In some cases they alter the state of the
 cache, which then affects the result of calls such as
 \ttt{JetMedianBackgroundEstimator::mean\_area()}.
 %
-While the update of the internal information is carried out in a
-thread-safe manner, if sharing a background estimator instance for a
-common event across multiple threads, those different threads will be
-acting on the cache in ways that are likely to break the link between
+With thread-safety enabled at configure-time, the update of the
+internal information is carried out in a thread-safe manner if sharing
+a background estimator instance for a common event across multiple
+threads.
+%
+This can happen e.g.\ when performing operations on several jets in
+parallel, or when applying different groomers in parallel.
+%
+However, those different threads will be acting on the
+cache in ways that are likely to break the link between
 the \ttt{rho(jet)} and \ttt{mean\_area()} calls.
 %
 So we recommend that any code that uses background estimation be
