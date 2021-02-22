@@ -4357,6 +4357,8 @@ Full thread safety, obtained by configuring with
 Concurrent read-access of \ttt{PseudoJet} objects is now possible,
 \ttt{SharedPtr} objects are thread safe, which enables thread safety
 across \fastjet operations marked as \ttt{const}.
+%
+As of version 3.4.0, thread safety is not yet guaranteed in plugins.
 
 Normal \fastjet usage sometimes entails non-const operations and/or
 operations that affect global (static) variables.
@@ -4405,12 +4407,62 @@ the \ttt{area\_def} with the specified seeds.\footnote{If using an
 \subsubsection{Background estimation and subtraction}
 \label{sec:threads-backgr-estim-subtr}
 
+The classes derived from \ttt{BackgroundEstimatorBase} store
+information about an event when one calls member functions such as
+\ttt{set\_particles(...)}.
+%
+Thus it is not safe to use a single \ttt{BackgroundEstimatorBase}
+across concurrent threads that are each processing a different event.
+%
+Instead, given a global \ttt{BackgroundEstimatorBase}
+\ttt{global\_bge} it is possible to ask for a copy of the estimator
+locally within a thread, and then set the particles on the local copy
+and use that for accessing information about the background
+\begin{lstlisting}
+  // copy the global BackgroundEstimator class
+  unique_ptr<BackgroundEstimatorBase> local_bge(global_bge.copy());
+  // set the particles on the local copy, using its operator() function
+  local_bge->set_particles(particles);
+  // and access information about the background across the whole
+  // event (if supported)
+  BackgroundEstimate bkgd_estimate1 = local_bge();
+  // or locally around some jet
+  BackgroundEstimate bkgd_estimate2 = local_bge(jet);
+\end{lstlisting}
+If using a globally defined \ttt{Subtractor} \ttt{global\_subtractor},
+one similarly needs to take a copy and point that copy to the
+thread-local \ttt{BackgroundEstimatorBase}:
+\begin{lstlisting}
+  // copy the subtractor
+  Subtractor local_subtractor = global_subtractor;
+  // arrange for the copy to use the local background estimator
+  local_subtractor.set_background_estimator(&local_bge);
+\end{lstlisting}
 
-: \comment{Continue here}
-\begin{itemize} 
-\item ghosted areas
-\item background subtraction
-\end{itemize}
+
+Note that prior to version 3.4.0 of \fastjet, the
+\ttt{BackgroundEstimate} class did not exist and one accessed
+information about the background directly from member functions of the
+\ttt{BackgroundEstimatorBase} instance, e.g.\
+\ttt{BackgroundEstimatorBase::rho(jet)}.
+%
+In some cases they alter the state of the
+\ttt{BackgroundEstimatorBase} object: e.g.\
+\ttt{JetMedianBackgroundEstimator::rho(jet)} updates an internal
+cache, which then affects the result of calls such as
+\ttt{JetMedianBackgroundEstimator::mean\_area()}.
+%
+While the update of the internal information is carried out in a
+thread-safe manner, if sharing a background estimator instance for a
+common event across multiple threads, those different threads will be
+acting on the cache in ways that are likely to break the link between
+the \ttt{rho(jet)} and \ttt{mean\_area()} calls.
+%
+So we recommend that any code that uses background estimation be
+updated to access the results through the \ttt{BackgroundEstimate}
+class.
+
+
 %======================================================================
 \section{Compilation notes}
 
