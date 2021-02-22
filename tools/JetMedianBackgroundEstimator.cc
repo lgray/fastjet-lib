@@ -118,14 +118,14 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
   // pass an empty seed vector to the full set_particles method to tell it to use
   // default seeds rather than fixed seeds
   vector<int> seed;
-  set_particles(particles, seed);
+  set_particles_with_seed(particles, seed);
 }
 
 
 // tell the background estimator that it has a new event, composed
 // of the specified particles and use the supplied seed for the
 // generation of ghosts. If the seed is empty, it is ignored.
-void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles, const vector<int> & seed) {
+void JetMedianBackgroundEstimator::set_particles_with_seed(const vector<PseudoJet> & particles, const vector<int> & seed) {
   // make sure that we have been provided a genuine jet definition 
   if (_jet_def.jet_algorithm() == undefined_jet_algorithm)
     throw Error("JetMedianBackgroundEstimator::set_particles can only be called if you set the jet (and area) definition explicitly through the class constructor");

@@ -592,7 +592,7 @@ public:
 #ifdef FASTJET_HAVE_THREAD_SAFETY
     unique_ptr<BackgroundEstimatorBase> bge(_bge->copy());
     vector<int> seed{int(12345+i), int(67890-i*i)};  
-    bge->set_particles(_events[i], seed);
+    bge->set_particles_with_seed(_events[i], seed);
     ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
 #else
     BackgroundEstimatorBase * bge = _bge;

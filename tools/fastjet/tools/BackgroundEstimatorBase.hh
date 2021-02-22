@@ -211,7 +211,7 @@ public:
   /// (typically a vector of length 2) to ensure reproducibility of
   /// background estimators that rely on random numbers (specifically
   /// JetMedianBackgroundEstimator with ghosted areas)
-  virtual void set_particles(const std::vector<PseudoJet> & particles, const std::vector<int> & /*seed*/) {
+  virtual void set_particles_with_seed(const std::vector<PseudoJet> & particles, const std::vector<int> & /*seed*/) {
     set_particles(particles);
   }
 
