@@ -3350,15 +3350,16 @@ background density and a measure of its fluctuations with the two
 following calls 
 %
 \begin{lstlisting}
+  BackgroundEstimate bkgd_estimate = bge();
   // the median of ($p_t$/area) for grid cells, or for jets that pass the selection cut, 
   // making use also of information on empty area in the event (in the jets case)
-  rho = bge.rho(); 
+  rho = estimate.rho(); 
 
   // an estimate of the fluctuations in the $p_t$ density per unit $\smash{\sqrt{A}}$,
   // which is obtained from the 1-sigma half-width of the distribution of pt/A.
   // To be precise it is defined such that a fraction (1-0.6827)/2 of the jets
   // (including empty jets) have $p_t/A < \rho - \sigma / \sqrt{\langle A \rangle}$
-  sigma = bge.sigma(); 
+  sigma = bkgd_estimate.sigma(); 
 \end{lstlisting}
 Note that $\rho$ and $\sigma$ determinations count empty area within
 the relevant region as consisting of jets of zero $p_t$.
@@ -3403,9 +3404,11 @@ The subtractor can then be used as follows:
   PseudoJet subtracted_jet = subtractor(jet);
   vector<PseudoJet> subtracted_jets = subtractor(jets);
 \end{lstlisting}
-The subtractor normally returns \ttt{jet - bge.rho(jet)*jet.area\_4vector()}.
+The subtractor normally returns \ttt{jet - rho*jet.area\_4vector()},
+where \ttt{rho} may be estimated locally (see below,
+section~\ref{sec:BGE-positional}).
 %
-If \ttt{jet.pt() < bge.rho(jet)*jet.area\_4vector().pt()}, then
+If \ttt{jet.pt() < rho*jet.area\_4vector().pt()}, then
 the subtractor instead returns a jet with zero 4-momentum (so that
 \ttt{(subtracted\_jet==0)} returns \ttt{true}).
 %
@@ -3433,14 +3436,18 @@ $\rho$ based on all jets or grid cells from (say) $|y|<4.5$.
 %
 Two techniques are described below to help alleviate this problem.
 %
-In each case the properties of the background are to be obtained
-through the methods (available for both
-\ttt{JetMedianBackgroundEstimator} and
+In each case the properties of the background are to be obtained as
+follows (available for both \ttt{JetMedianBackgroundEstimator} and
 \ttt{GridMedianBackgroundEstimator})
 \begin{lstlisting}
-  double rho  (const PseudoJet & jet); // $p_t$ density per unit area $A$ near jet
-  double sigma(const PseudoJet & jet); // fluctuations in the $p_t$ density near jet
+  // get an estimate of the background in the vicinity of the given jet
+  BackgroundEstimate bkgd_estimate = bge(jet);
+  // and then extract specific information about the background
+  double rho   = bkgd_estimate.rho();   // $p_t$ density per unit area $A$ near jet
+  double sigma = bkgd_estimate.sigma(); // fluctuations in the $p_t$ density near jet
 \end{lstlisting}
+%  double rho  (const PseudoJet & jet); 
+%  double sigma(const PseudoJet & jet); // 
 
 
 %......................................................................
@@ -3548,16 +3555,18 @@ from \ttt{FunctionOfPseudoJet<double>} --- see appendix
   // tell JetMedianBackgroundEstimator or GridMedianBackgroundEstimator about the rescaling
   bge.set_rescaling_class(&rescaling);
 \end{lstlisting}
-Subsequent calls to \ttt{rho()} will return the median of the
-distribution $p_t/A / \ttt{rescaling}(y)$ (rather than $p_t/A$).
+Subsequent calls to \ttt{operator()} will be based on the on median of
+the distribution $p_t/A / \ttt{rescaling}(y)$ (rather than $p_t/A$).
 %
-Any calls to \ttt{rho(jet)} and \ttt{sigma(jet)} will include an
-additional factor of \ttt{rescaling}$(y_\ttt{jet})$.
+Any calls to \ttt{operator(jet)} will include an additional factor of
+\ttt{rescaling}$(y_\ttt{jet})$ in the resulting
+\ttt{BackgroundEstimate}.
 %
 Note that any overall factor in the rescaling function cancels out for
-\ttt{rho(jet)} and \ttt{sigma(jet)}, but not for calls to \ttt{rho()}
-and \ttt{sigma()} (which are in any case less meaningful when a
-rapidity dependence is being assumed for the background).
+\ttt{operator(jet)}, but not for calls to \ttt{operator()}
+\comment{operator or something else here?} (which are in any case less
+meaningful when a rapidity dependence is being assumed for the
+background).
 
 In ongoing studies \cite{GridMedianLH}, we have found that despite its
 use of an average background shape, the rescaling method generally
@@ -3606,8 +3615,8 @@ quantity $m_{\delta,\text{patch}}/A_{\text{patch}}$, where
 By default, as of \fastjet 3.1, the grid and jet-median background
 estimators automatically determine $\rho_m$. 
 %
-It is returned from a call to \ttt{rho\_m()}, with fluctuations
-accessible through \ttt{sigma\_m()}.
+It is available within a \ttt{BackgroundEstimate} via a call to
+\ttt{rho\_m()}, with fluctuations accessible through \ttt{sigma\_m()}.
 %
 The determination of $\rho_m$ involves a small speed penalty and can
 be disabled with a call to \ttt{set\_compute\_rho\_m(false)} for
@@ -4420,7 +4429,9 @@ locally within a thread, and then set the particles on the local copy
 and use that for accessing information about the background
 \begin{lstlisting}
   // copy the global BackgroundEstimator class
-  unique_ptr<BackgroundEstimatorBase> local_bge(global_bge.copy());
+  // (the user will be responsible for deleting it and may
+  // wish to put it into a unique_ptr)
+  BackgroundEstimatorBase * local_bge(global_bge.copy());
 
   // set the particles on the local copy
   local_bge->set_particles(particles);
@@ -4431,9 +4442,9 @@ and use that for accessing information about the background
 
   // and access information about the background across the whole
   // event (if supported), using its operator() function
-  BackgroundEstimate bkgd_estimate1 = local_bge();
+  BackgroundEstimate bkgd_estimate1 = (*local_bge)();
   // or locally around some jet
-  BackgroundEstimate bkgd_estimate2 = local_bge(jet);
+  BackgroundEstimate bkgd_estimate2 = (*local_bge)(jet);
 \end{lstlisting}
 If using a globally defined \ttt{Subtractor} \ttt{global\_subtractor},
 one similarly needs to take a copy and point that copy to the
@@ -4442,9 +4453,8 @@ thread-local \ttt{BackgroundEstimatorBase}:
   // copy the subtractor
   Subtractor local_subtractor = global_subtractor;
   // arrange for the copy to use the local background estimator
-  local_subtractor.set_background_estimator(&local_bge);
+  local_subtractor.set_background_estimator(local_bge);
 \end{lstlisting}
-
 
 Note that prior to version 3.4.0 of \fastjet, the
 \ttt{BackgroundEstimate} class did not exist and one accessed
