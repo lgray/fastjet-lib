@@ -146,6 +146,11 @@ public:
   /// of the specified particles.
   virtual void set_particles(const std::vector<PseudoJet> & particles) FASTJET_OVERRIDE;
 
+  // tell the background estimator that it has a new event, composed
+  // of the specified particles and use the supplied seed for the
+  // generation of ghosts. If the seed is empty, it is ignored.
+  virtual void set_particles(const std::vector<PseudoJet> & particles, const std::vector<int> & seed) FASTJET_OVERRIDE;
+
   /// (re)set the cluster sequence (with area support) to be used by
   /// future calls to rho() etc. 
   ///

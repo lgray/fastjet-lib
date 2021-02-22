@@ -115,6 +115,17 @@ JetMedianBackgroundEstimator::JetMedianBackgroundEstimator( const Selector &rho_
 // tell the background estimator that it has a new event, composed
 // of the specified particles.
 void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
+  // pass an empty seed vector to the full set_particles method to tell it to use
+  // default seeds rather than fixed seeds
+  vector<int> seed;
+  set_particles(particles, seed);
+}
+
+
+// tell the background estimator that it has a new event, composed
+// of the specified particles and use the supplied seed for the
+// generation of ghosts. If the seed is empty, it is ignored.
+void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles, const vector<int> & seed) {
   // make sure that we have been provided a genuine jet definition 
   if (_jet_def.jet_algorithm() == undefined_jet_algorithm)
     throw Error("JetMedianBackgroundEstimator::set_particles can only be called if you set the jet (and area) definition explicitly through the class constructor");
@@ -130,8 +141,12 @@ void JetMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & parti
   //  - it allows us to use only '_included_jets' in all that follows
   //  - it avoids adding another flag to ensure particles are 
   //    clustered only once
-  ClusterSequenceArea *csa = new ClusterSequenceArea(particles, _jet_def, _area_def);
-
+  ClusterSequenceArea *csa;
+  if (seed.size() == 0) {
+    csa = new ClusterSequenceArea(particles, _jet_def, _area_def);
+  } else {
+    csa = new ClusterSequenceArea(particles, _jet_def, _area_def.with_fixed_seed(seed));
+  }
 //THREAD-SAFETY-QUESTION: #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 //THREAD-SAFETY-QUESTION:   // before caching thing, lock things down to avoid concurrency issues
 //THREAD-SAFETY-QUESTION:   std::lock_guard<std::mutex> guard(_jets_caching_mutex);

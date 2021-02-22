@@ -574,6 +574,53 @@ private:
   JetMedianBackgroundEstimator _jmbge{SelectorStrip(1.5)};
 };
 
+
+/// class to try out JetMedianBGE, taking a copy for local use within
+/// the thread
+class ThreadedBGEBase : public ThreadedTestBase<PseudoJet> {
+public:
+  ThreadedBGEBase(BackgroundEstimatorBase * bge) : _bge(bge) {
+    load_default_10events();
+    set_n_threads(_events.size());
+  }
+
+  virtual std::string short_name()  const {
+    return string(typeid(*this).name())+"+"+string(typeid(*_bge).name());
+  }
+
+  void run_test_i(unsigned i) {
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+    unique_ptr<BackgroundEstimatorBase> bge(_bge->copy());
+    vector<int> seed{int(12345+i), int(67890-i*i)};  
+    bge->set_particles(_events[i], seed);
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def.with_fixed_seed(seed));
+#else
+    BackgroundEstimatorBase * bge = _bge;
+    bge->set_particles(_events[i]);
+    ClusterSequenceArea cs(_events[i], _jet_def, _area_def);
+#endif 
+    // only examine jets up to c. 4 to avoid warnings with jets
+    // outside the region where rho can be estimated reliably (since our
+    // JMBGE definition uses a dynamic selector to choose the set of jets)
+    vector<PseudoJet> jets = SelectorAbsRapMax(4.0)(cs.inclusive_jets());
+    // use a copy of the jmbge
+    Subtractor subtractor(&*bge);
+    subtractor.set_use_rho_m(true);
+    //for (const PseudoJet & j: jets) {
+    //  cout << j.rap() << " " << jmbge.rho(j) << endl;
+    //}
+    vector<PseudoJet> subtracted_jets = subtractor(jets);
+    _result[i] = subtracted_jets;
+  } 
+
+private:
+  BackgroundEstimatorBase * _bge;
+  JetDefinition  _jet_def{cambridge_algorithm, 0.5};
+  AreaDefinition _area_def{active_area_explicit_ghosts};
+  JetMedianBackgroundEstimator _jmbge{SelectorStrip(1.5)};
+};
+
+
 /// class to try out JetMedianBGE, taking a copy for local use within
 /// the thread
 class ThreadedJMBGECommonEvent : public ThreadedTestBase<PseudoJet> {

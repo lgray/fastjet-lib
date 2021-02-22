@@ -47,6 +47,11 @@ int main(int argc, char ** argv) {
   tests.emplace_back(make_unique<TestThread<ThreadedClusteringPrllGroomers>>());
   tests.emplace_back(make_unique<TestThread<ThreadedGMBGE>>());
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGE>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedBGEBase>>(
+      new JetMedianBackgroundEstimator(SelectorStrip(1.5), 
+      JetDefinition(kt_algorithm, 0.5), 
+      AreaDefinition(active_area_explicit_ghosts))));
+  tests.emplace_back(make_unique<TestThread<ThreadedBGEBase>>(new GridMedianBackgroundEstimator(2.5, 0.6))); 
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGECommonEvent>>());
   
 

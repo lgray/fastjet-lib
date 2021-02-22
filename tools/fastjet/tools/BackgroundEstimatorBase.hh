@@ -207,6 +207,14 @@ public:
   /// of the specified particles.
   virtual void set_particles(const std::vector<PseudoJet> & particles) = 0;
 
+  /// an alternative call that takes a random number generator seed
+  /// (typically a vector of length 2) to ensure reproducibility of
+  /// background estimators that rely on random numbers (specifically
+  /// JetMedianBackgroundEstimator with ghosted areas)
+  virtual void set_particles(const std::vector<PseudoJet> & particles, const std::vector<int> & /*seed*/) {
+    set_particles(particles);
+  }
+
   //\}
 
   /// return a pointer to a copy of this BGE; the user is responsible
