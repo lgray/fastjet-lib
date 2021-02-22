@@ -33,17 +33,7 @@
 
 
 #include "fastjet/tools/BackgroundEstimatorBase.hh"
-
-// if defined then we'll use the RectangularGrid class
-//
-// (For FastJet 3.2, maybe remove the symbol and simply clean up the
-// code below to use exclusively the RectangularGrid)
-#define FASTJET_GMBGE_USEFJGRID
-
-#ifdef FASTJET_GMBGE_USEFJGRID
 #include "fastjet/RectangularGrid.hh"
-#endif
-
 
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -75,15 +65,12 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 ///   rho() [Without rescaling, they are identical]
 ///
 class GridMedianBackgroundEstimator : public BackgroundEstimatorBase
-#ifdef FASTJET_GMBGE_USEFJGRID
                                     , public RectangularGrid
-#endif 
 {
 
 public:
   /// @name  constructors and destructors
   //\{
-#ifdef FASTJET_GMBGE_USEFJGRID
   //----------------------------------------------------------------
   ///   \param ymax   maximal absolute rapidity extent of the grid
   ///   \param requested_grid_spacing   size of the grid cell. The
@@ -116,16 +103,6 @@ public:
   GridMedianBackgroundEstimator(double rapmin_in, double rapmax_in, double drap_in, double dphi_in,
                                 Selector tile_selector = Selector()) :
     RectangularGrid(rapmin_in, rapmax_in, drap_in, dphi_in, tile_selector), _enable_rho_m(true) {}
-
-#else  // alternative in old framework where we didn't have the rectangular grid
-  GridMedianBackgroundEstimator(double ymax, double requested_grid_spacing) :
-    _ymin(-ymax), _ymax(ymax), 
-    _requested_grid_spacing(requested_grid_spacing),
-    _enable_rho_m(true)
-  {
-     setup_grid();
-  }
-#endif // FASTJET_GMBGE_USEFJGRID
 
   //\}
 
@@ -248,26 +225,6 @@ public:
 
 
 private:
-
-#ifndef FASTJET_GMBGE_USEFJGRID
-
-  /// configure the grid
-  void setup_grid();
-
-  /// retrieve the grid cell index for a given PseudoJet
-  int tile_index(const PseudoJet & p) const;
-
-  // information about the grid
-  double _ymin, _ymax, _dy, _dphi, _requested_grid_spacing, _tile_area;
-  int _ny, _nphi, _ntotal;
-
-  int n_tiles() const {return _ntotal;}
-  int n_good_tiles() const {return n_tiles();}
-  int tile_is_good(int /* itile */) const {return true;}
-
-  double mean_tile_area() const {return _tile_area;}
-#endif // FASTJET_GMBGE_USEFJGRID
-
 
   /// verify that particles have been set and throw an error if not
   void verify_particles_set() const;

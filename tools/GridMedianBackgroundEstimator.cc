@@ -43,10 +43,8 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 void GridMedianBackgroundEstimator::set_particles(const vector<PseudoJet> & particles) {
   vector<double> scalar_pt(n_tiles(), 0.0);
 
-#ifdef FASTJET_GMBGE_USEFJGRID
   assert(all_tiles_equal_area());
   //assert(n_good_tiles() == n_tiles()); // not needed now that we have an implementation
-#endif
 
   _cached_estimate.reset();
   _cached_estimate.set_has_sigma(true);
@@ -248,13 +246,7 @@ void GridMedianBackgroundEstimator::verify_particles_set() const {
 //----------------------------------------------------------------------
 string GridMedianBackgroundEstimator::description() const { 
   ostringstream desc;
-#ifdef FASTJET_GMBGE_USEFJGRID
   desc << "GridMedianBackgroundEstimator, with " << RectangularGrid::description();
-#else
-  desc << "GridMedianBackgroundEstimator, with grid extension |y| < " << _ymax 
-       << ", and grid cells of size dy x dphi = " << _dy << " x " << _dphi
-       << " (requested size = " << _requested_grid_spacing << ")";
-#endif
   return desc.str();
 }       
 
@@ -283,63 +275,6 @@ void GridMedianBackgroundEstimator::set_rescaling_class(const FunctionOfPseudoJe
   
   BackgroundEstimatorBase::set_rescaling_class(rescaling_class_in);
 }
-
-
-#ifndef FASTJET_GMBGE_USEFJGRID
-//----------------------------------------------------------------------
-// protected material
-//----------------------------------------------------------------------
-// configure the grid
-void GridMedianBackgroundEstimator::setup_grid() {
-
-  // since we've exchanged the arguments of the grid constructor,
-  // there's a danger of calls with exchanged ymax,spacing arguments -- 
-  // the following check should catch most such situations.
-  assert(_ymax>0 && _ymax - _ymin >= _requested_grid_spacing);
-
-  // this grid-definition code is becoming repetitive -- it should
-  // probably be moved somewhere central...
-  double ny_double = (_ymax-_ymin) / _requested_grid_spacing;
-  _ny = int(ny_double+0.5);
-  _dy = (_ymax-_ymin) / _ny;
-  
-  _nphi = int (twopi / _requested_grid_spacing + 0.5);
-  _dphi = twopi / _nphi;
-
-  // some sanity checking (could throw a fastjet::Error)
-  assert(_ny >= 1 && _nphi >= 1);
-
-  _ntotal = _nphi * _ny;
-  //_scalar_pt.resize(_ntotal);
-  _tile_area = _dy * _dphi;
-}
-
-
-//----------------------------------------------------------------------
-// retrieve the grid tile index for a given PseudoJet
-int GridMedianBackgroundEstimator::tile_index(const PseudoJet & p) const {
-  // directly taking int does not work for values between -1 and 0
-  // so use floor instead
-  // double iy_double = (p.rap() - _ymin) / _dy;
-  // if (iy_double < 0.0) return -1;
-  // int iy = int(iy_double);
-  // if (iy >= _ny) return -1;
-
-  // writing it as below gives a huge speed gain (factor two!). Even
-  // though answers are identical and the routine here is not the
-  // speed-critical step. It's not at all clear why.
-  int iy = int(floor( (p.rap() - _ymin) / _dy ));
-  if (iy < 0 || iy >= _ny) return -1;
-
-  int iphi = int( p.phi()/_dphi );
-  assert(iphi >= 0 && iphi <= _nphi);
-  if (iphi == _nphi) iphi = 0; // just in case of rounding errors
-
-  int index_res = iy*_nphi + iphi;
-  assert (index_res >= 0 && index_res < _ny*_nphi);
-  return index_res;
-}
-#endif // FASTJET_GMBGE_USEFJGRID
 
 
 
