@@ -33,7 +33,22 @@
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/Selector.hh"
 #include "fastjet/SISConePlugin.hh"
-//#include <thread>
+
+// Many calls below rely on caching information (input particles,
+// ClusterSequence, jets) in fastjet structures so that one can query
+// for extra information (e,g, jet constituents) after clustering.
+//
+// By default, this caching is not thread-safe.
+//
+// Uncommenting the following line results in defining all the cached
+// variables as thread_local, meaning that clustering (with caching)
+// and requesting extra information in the same thread is possible.
+//
+//#define FASTJET_FORTRAN_THREAD_LOCAL_CACHING
+
+#ifdef FASTJET_FORTRAN_THREAD_LOCAL_CACHING
+#include <thread>
+#endif
 
 using namespace std;
 using namespace fastjet;
@@ -43,44 +58,127 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 /// a namespace for the fortran-wrapper which contains commonly-used
 /// structures and means to transfer fortran <-> C++
 namespace fwrapper {
+#ifdef FASTJET_FORTRAN_THREAD_LOCAL_CACHING
+  // use a thread local version of the caching so that this interface
+  // works in a (reasonably) thread-safe way.
+  thread_local vector<PseudoJet> input_particles, jets;
+  thread_local SharedPtr<JetDefinition::Plugin> plugin;
+  thread_local JetDefinition jet_def;
+  thread_local SharedPtr<ClusterSequence> cs;
+#else // FASTJET_FORTRAN_THREAD_LOCAL_CACHING not defined
   vector<PseudoJet> input_particles, jets;
   SharedPtr<JetDefinition::Plugin> plugin;
   JetDefinition jet_def;
   SharedPtr<ClusterSequence> cs;
-  // replace the above with thread local version if you want
-  // this interface to work in a (reasonably) thread-safe way.
-  // thread_local vector<PseudoJet> input_particles, jets;
-  // thread_local SharedPtr<JetDefinition::Plugin> plugin;
-  // thread_local JetDefinition jet_def;
-  // thread_local SharedPtr<ClusterSequence> cs;
+#endif // FASTJET_FORTRAN_THREAD_LOCAL_CACHING
 
-  /// helper routine to transfer fortran input particles into 
-  void transfer_input_particles(const double * p, const int & npart) {
-    input_particles.resize(0);
-    input_particles.reserve(npart);
+  /// helper routine to transform the fortran input particles into PseudoJets
+  vector<PseudoJet> convert_input_particles(const double * p, const int & npart) {
+    vector<PseudoJet> particles;
+    particles.reserve(npart);
     for (int i=0; i<npart; i++) {
       valarray<double> mom(4); // mom[0..3]
       for (int j=0;j<=3; j++) {
          mom[j] = *(p++);
       }
       PseudoJet psjet(mom);
-      input_particles.push_back(psjet);    
+      particles.push_back(psjet);    
     }
+    return particles;
   }
 
-  /// helper routine to help transfer jets -> f77jets[4*ijet+0..3]
-  void transfer_jets(double * f77jets, int & njets) {
-    njets = jets.size();
+  /// helper routine to transfer fortran input particles into cached input_particles
+  void transfer_input_particles(const double * p, const int & npart) {
+    input_particles = convert_input_particles(p, npart);
+    //input_particles.resize(0);
+    //input_particles.reserve(npart);
+    //for (int i=0; i<npart; i++) {
+    //  valarray<double> mom(4); // mom[0..3]
+    //  for (int j=0;j<=3; j++) {
+    //     mom[j] = *(p++);
+    //  }
+    //  PseudoJet psjet(mom);
+    //  input_particles.push_back(psjet);    
+    //}
+  }
+
+  /// helper routine to help convert fj_jets -> f77jets[4*ijet+0..3]
+  void convert_jets(vector<PseudoJet> & fj_jets, double * f77jets, int & njets) {
+    njets = fj_jets.size();
     for (int i=0; i<njets; i++) {
       for (int j=0;j<=3; j++) {
-        *f77jets = jets[i][j];
+        *f77jets = fj_jets[i][j];
         f77jets++;
       } 
     }
   }
   
+  /// helper routine to help transfer jets -> f77jets[4*ijet+0..3]
+  void transfer_jets(double * f77jets, int & njets) {
+    convert_jets(jets, f77jets, njets);
+    // njets = jets.size();
+    // for (int i=0; i<njets; i++) {
+    //   for (int j=0;j<=3; j++) {
+    //     *f77jets = jets[i][j];
+    //     f77jets++;
+    //   } 
+    // }
+  }
+
+  /// this returns a newly-created pointer to a ClusterSequence based
+  /// in the provided particles and clustering parameters
+  ClusterSequence* cluster_base(const vector<PseudoJet> & particles,
+                                const JetDefinition & jet_def,
+                                const double & ghost_maxrap = 0.0,  
+                                const int & nrepeat = 0, const double & ghost_area = 0.0) {
+    // perform the clustering
+    if ( ghost_maxrap == 0.0 ) {
+      // cluster without areas
+      return new ClusterSequence(particles,jet_def);
+    } else {
+      // cluster with areas
+      GhostedAreaSpec area_spec(ghost_maxrap,nrepeat,ghost_area);
+      AreaDefinition area_def(active_area, area_spec);
+      return new ClusterSequenceArea(particles,jet_def,area_def);
+    }
+  }
+  
   /// helper routine packaging the transfers, the clustering
   /// and the extraction of the jets
+  /// This fills the f77jets and njets but does not cache anything
+  void cluster_nocache(const double * p, const int & npart, 
+                       const JetDefinition & jet_def,
+                       double * f77jets, int & njets,
+                       const double & ghost_maxrap = 0.0,  
+                       const int & nrepeat = 0, const double & ghost_area = 0.0,
+                       bool use_energy_ordering = false) {
+
+    // transfer p[4*ipart+0..3] -> particles[i]
+    vector<PseudoJet> particles = convert_input_particles(p, npart);
+
+    // cluster
+    ClusterSequence *cs_local = cluster_base(particles, jet_def,
+                                             ghost_maxrap, nrepeat, ghost_area);
+    
+    // extract jets
+    vector<PseudoJet> fj_jets;
+    if (use_energy_ordering){
+      fj_jets = sorted_by_E(cs_local->inclusive_jets());
+    } else {
+      fj_jets = sorted_by_pt(cs_local->inclusive_jets());
+    }
+    
+    convert_jets(fj_jets, f77jets, njets);
+
+    // release memory
+    delete cs_local;
+  }
+
+  /// helper routine packaging the transfers, the clustering
+  /// and the extraction of the jets
+  ///
+  /// This fills the f77jets and njets and caches the input particles,
+  /// the ClusterSequence and the jets for future manipulations
   void transfer_cluster_transfer(const double * p, const int & npart, 
                                  const JetDefinition & jet_def,
 				 double * f77jets, int & njets,
@@ -88,31 +186,28 @@ namespace fwrapper {
 				 const int & nrepeat = 0, const double & ghost_area = 0.0,
                                  bool use_energy_ordering = false) {
 
-    // transfer p[4*ipart+0..3] -> input_particles[i]
+    // transfer p[4*ipart+0..3] -> input_particles[i]  (cached)
     transfer_input_particles(p, npart);
 
-    // perform the clustering
-    if ( ghost_maxrap == 0.0 ) {
-         // cluster without areas
-	 cs.reset(new ClusterSequence(input_particles,jet_def));
-    } else {
-         // cluster with areas
-         GhostedAreaSpec area_spec(ghost_maxrap,nrepeat,ghost_area);
-         AreaDefinition area_def(active_area, area_spec);
-	 cs.reset(new ClusterSequenceArea(input_particles,jet_def,area_def));
-    }
-    // extract jets (pt-ordered)
+    // cluster 
+    ClusterSequence *cs_local = cluster_base(input_particles, jet_def,
+                                             ghost_maxrap, nrepeat, ghost_area);
+
+    // cache
+    cs.reset(cs_local);
+    
+    // extract jets (into cache)
     if (use_energy_ordering){
-      jets = sorted_by_E(cs->inclusive_jets());
+      jets = sorted_by_E(cs_local->inclusive_jets());
     } else {
-      jets = sorted_by_pt(cs->inclusive_jets());
+      jets = sorted_by_pt(cs_local->inclusive_jets());
     }
     
     // transfer jets -> f77jets[4*ijet+0..3]
-    transfer_jets(f77jets, njets);
- 
+    transfer_jets(f77jets, njets); 
   }
 
+  
 }
 FASTJET_END_NAMESPACE
 
@@ -123,6 +218,9 @@ extern "C" {
 
 /// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
 /// [see below for the interface to kt, Cam/Aachen & kt]
+///
+/// This caches the clustering structures for later access to extra
+/// information (constituents, ...)
 //
 // Corresponds to the following Fortran subroutine
 // interface structure:
@@ -161,6 +259,24 @@ void fastjetsiscone_(const double * p, const int & npart,
     // do everything
     transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
+
+/// same as above without the caching (invalidating calls to
+/// constituents, ... but making this call thread-safe)
+void fastjetsisconenocache_(const double * p, const int & npart,                   
+                            const double & R, const double & f,                   
+                            double * f77jets, int & njets) {
+    
+    // prepare jet def
+    JetDefinition::Plugin *plugin_local = new SISConePlugin(R,f);
+    JetDefinition jet_def_local = plugin_local;
+
+    // do everything
+    cluster_nocache(p,npart,jet_def,f77jets,njets);
+
+    // release memory
+    delete plugin_local;
+}
+ 
 
 
 

@@ -1,3 +1,12 @@
+2021-02-24  Gregory Soyez  <soyez@fastjet.fr>
+
+	* fortran_wrapper/fastjetfortran.cc:
+	added a pre-processor flag to allow one to make the cache thread-local
+
+	started to work on providing access to the clustering routines
+	without caching (invalidates later calls to extract additional
+	info, but restores thread safety)
+
 2021-02-22  Gregory Soyez  <soyez@fastjet.fr> + Gavin (work over the past week)
 
 	* example/07-subtraction.cc:
