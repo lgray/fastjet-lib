@@ -31,6 +31,10 @@
   showstringspaces=false,
   keepspaces=true
 }
+% the following makes it possible to write \lstinline"some_command"
+% But note that it then becomes impossible to use the " character
+% anywhere else.
+\lstMakeShortInline{"}
 
 %% \lstset{% general command to set parameter(s)
 %%   columns=fullflexible
@@ -4411,14 +4415,13 @@ and \ttt{SharedPtr} objects are thread safe.
 This enables thread safety across \fastjet operations marked as
 \ttt{const}.
 
-In our implementations, the \ttt{SharedPtr} object involves an atomic
+In our implementation, the \ttt{SharedPtr} object involves an atomic
 counter and the \ttt{PseudoJet} involves a spin-lock the first time
 \ttt{phi()} or \ttt{rap()} are called, in order to safely cache their
 values.
 %
-Both of these strategies can lead to timing overheads. 
-
-
+Both of these strategies can lead to timing overheads, which in our
+tests have not exceeded $10{-}15\%$. 
 
 %----------------------------------------------------------------------
 \subsection{Specific work-flows}
@@ -4428,7 +4431,7 @@ Both of these strategies can lead to timing overheads.
 operations that affect global (static) variables.
 %
 Below, we outline specific cases where care is needed even with
-thread-safety is enabled.
+thread-safety enabled.
 
 %......................................................................
 \subsubsection{Ghosted areas}
@@ -4439,8 +4442,11 @@ an internal random number generator to place the ghosts.
 %
 By default the generator is static and common across all threads.
 %
-With this usage option, a lock is employed to ensure that the full set
-of ghosts is generated with a consistent set of random numbers.
+When using the static generator, a lock is employed to ensure that the
+full set of ghosts being added to a given event is generated with a
+single consistent sequence of random numbers (any concurrent thread
+needing a distinct set of ghosts waits its turn until the static
+generator is available). 
 %
 Given a \ttt{ClusterSequenceArea csa}, the random seed that was used
 for that set of ghosts can be retrieved with 
@@ -4449,8 +4455,8 @@ for that set of ghosts can be retrieved with
   csa.area_def().ghost_spec().get_last_seed(seeds);
 \end{lstlisting}
 Alternatively, given a ghosted \ttt{AreaDefinition area\_def}, the
-\ttt{ClusterSequenceArea} can use ghosts generated using a
-specific set of seeds, for example
+\ttt{ClusterSequenceArea} can use ghosts generated using a specific
+set of seeds for the random number generator, for example
 \begin{lstlisting}
   vector<int> seed{12345,67890};
   ClusterSequenceArea csa(particles, jet_def, area_def.with_fixed_seed(seed));
@@ -4482,7 +4488,7 @@ Thus it is not safe to use a single \ttt{BackgroundEstimatorBase}
 across concurrent threads that are each processing a different event.
 %
 Instead, given a global \ttt{BackgroundEstimatorBase}
-\ttt{global\_bge} it is possible to ask for a copy of the estimator
+\ttt{global\_bge}, it is possible to ask for a copy of the estimator
 locally within a thread, and then set the particles on the local copy
 and use that for accessing information about the background
 \begin{lstlisting}
@@ -4517,6 +4523,9 @@ thread-local \ttt{BackgroundEstimatorBase}:
   // arrange for the copy to use the local background estimator
   local_subtractor.set_background_estimator(local_bge);
 \end{lstlisting}
+%
+The user is responsible for deleting the \ttt{local\_gbe} when it is
+no longer needed.
 
 Note that prior to version 3.4.0 of \fastjet, the
 \ttt{BackgroundEstimate} class did not exist and one accessed
