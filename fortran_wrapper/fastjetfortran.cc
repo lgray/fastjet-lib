@@ -253,6 +253,9 @@ void fastjetsiscone_(const double * p, const int & npart,
 
 /// same SISCone as above without the caching (invalidating calls to
 /// constituents, ... but making this call thread-safe)
+///
+/// Note that as of SISCone 3.0.6 SISCone itself is not guaranteed to
+/// be thread-safe
 void fastjetsisconenocache_(const double * p, const int & npart,                   
                             const double & R, const double & f,                   
                             double * f77jets, int & njets) {
@@ -261,7 +264,7 @@ void fastjetsisconenocache_(const double * p, const int & npart,
   JetDefinition jet_def_local = plugin_local;
 
   // do everything
-  cluster_nocache(p,npart,jet_def,f77jets,njets);
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets);
   
   // release memory
   delete plugin_local;
@@ -316,6 +319,9 @@ void fastjetsisconewitharea_(const double * p, const int & npart,
 
 /// same SISCone+area as above without the caching (invalidating calls
 /// to constituents, ... but making this call thread-safe)
+///
+/// Note that as of SISCone 3.0.6 SISCone itself is not guaranteed to
+/// be thread-safe
 void fastjetsisconewithareanocache_(const double * p, const int & npart,                   
                                     const double & R, const double & f,                   
                                     const double & ghost_rapmax, const int & nrepeat, const double & ghost_area,
@@ -325,7 +331,7 @@ void fastjetsisconewithareanocache_(const double * p, const int & npart,
   JetDefinition jet_def_local = plugin_local;
 
   // do everything
-  cluster_nocache(p,npart,jet_def,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
 
   // release memory
   delete plugin_local;
