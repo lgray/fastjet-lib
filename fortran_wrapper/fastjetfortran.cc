@@ -73,33 +73,22 @@ namespace fwrapper {
 #endif // FASTJET_FORTRAN_THREAD_LOCAL_CACHING
 
   /// helper routine to transform the fortran input particles into PseudoJets
-  vector<PseudoJet> convert_input_particles(const double * p, const int & npart) {
-    vector<PseudoJet> particles;
-    particles.reserve(npart);
+  void convert_input_particles(const double * p, const int & npart, vector<PseudoJet> &fj_particles) {
+    fj_particles.resize(0);
+    fj_particles.reserve(npart);
     for (int i=0; i<npart; i++) {
       valarray<double> mom(4); // mom[0..3]
       for (int j=0;j<=3; j++) {
          mom[j] = *(p++);
       }
       PseudoJet psjet(mom);
-      particles.push_back(psjet);    
+      fj_particles.push_back(psjet);    
     }
-    return particles;
   }
 
   /// helper routine to transfer fortran input particles into cached input_particles
   void transfer_input_particles(const double * p, const int & npart) {
-    input_particles = convert_input_particles(p, npart);
-    //input_particles.resize(0);
-    //input_particles.reserve(npart);
-    //for (int i=0; i<npart; i++) {
-    //  valarray<double> mom(4); // mom[0..3]
-    //  for (int j=0;j<=3; j++) {
-    //     mom[j] = *(p++);
-    //  }
-    //  PseudoJet psjet(mom);
-    //  input_particles.push_back(psjet);    
-    //}
+    convert_input_particles(p, npart, input_particles);
   }
 
   /// helper routine to help convert fj_jets -> f77jets[4*ijet+0..3]
@@ -150,19 +139,19 @@ namespace fwrapper {
                        const JetDefinition & jet_def,
                        double * f77jets, int & njets,
                        const double & ghost_maxrap = 0.0,  
-                       const int & nrepeat = 0, const double & ghost_area = 0.0,
-                       bool use_energy_ordering = false) {
+                       const int & nrepeat = 0, const double & ghost_area = 0.0) {
 
     // transfer p[4*ipart+0..3] -> particles[i]
-    vector<PseudoJet> particles = convert_input_particles(p, npart);
+    vector<PseudoJet> fj_particles;
+    convert_input_particles(p, npart, fj_particles);
 
     // cluster
-    ClusterSequence *cs_local = cluster_base(particles, jet_def,
+    ClusterSequence *cs_local = cluster_base(fj_particles, jet_def,
                                              ghost_maxrap, nrepeat, ghost_area);
     
     // extract jets
     vector<PseudoJet> fj_jets;
-    if (use_energy_ordering){
+    if (jet_def.is_spherical()){
       fj_jets = sorted_by_E(cs_local->inclusive_jets());
     } else {
       fj_jets = sorted_by_pt(cs_local->inclusive_jets());
@@ -183,8 +172,7 @@ namespace fwrapper {
                                  const JetDefinition & jet_def,
 				 double * f77jets, int & njets,
 				 const double & ghost_maxrap = 0.0,  
-				 const int & nrepeat = 0, const double & ghost_area = 0.0,
-                                 bool use_energy_ordering = false) {
+				 const int & nrepeat = 0, const double & ghost_area = 0.0) {
 
     // transfer p[4*ipart+0..3] -> input_particles[i]  (cached)
     transfer_input_particles(p, npart);
@@ -197,7 +185,7 @@ namespace fwrapper {
     cs.reset(cs_local);
     
     // extract jets (into cache)
-    if (use_energy_ordering){
+    if (jet_def.is_spherical()){
       jets = sorted_by_E(cs_local->inclusive_jets());
     } else {
       jets = sorted_by_pt(cs_local->inclusive_jets());
@@ -396,7 +384,7 @@ void fastjeteegenkt_(const double * p, const int & npart,
   jet_def = JetDefinition(ee_genkt_algorithm, R, palg);
   
   // do everything
-  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets, 0.0, 0, 0.0, true);
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
 
 
