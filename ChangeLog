@@ -1,6 +1,9 @@
 2021-02-25  Gregory Soyez  <soyez@fastjet.fr>
 
 	* fortran_wrapper/fastjetfortran.cc:
+	implemented the missing "nocache" functions
+
+	* fortran_wrapper/fastjetfortran.cc:
 	convert_input_particles now takes the list of PseudoJet to be
 	created as an argument (instead of returning it)
 
