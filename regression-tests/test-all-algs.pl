@@ -706,21 +706,37 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-bkgd,-gridmedian" => "35a2e74da09f6befd2bbcf9eb89b81d5",
 
   # 2021-02 background & subtraction additions
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "003bc7cbf950bd9e4f2a06d5477c5183",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "afcdbb7696ee7ef8317386de0e58c88c",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "3562ad2ee96c71ee725a01b0798765cf",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "fbe23cbb362f23b18f3cea10a50c8848",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "30f3cb346f0d633dfb651a73d40bcac5",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "12be54fc563004b2795046fb5fb6ab2c",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "259030b67ea550930820810e515fc944",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "99a31439f47540dad2b94272de44b39b",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "86489bfa02ef3a128d9495936a6f4342",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "f3496836739a1a6400fbf2c037d5781c",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "66a87ed1afc27c883db723003dc52818",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "d2af82f24a8ec7b5db5b7f80147001da",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "3035a4c6b6f7c19befb6eaa085a0be37",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "c041f06df3ad8a72aaa2bc3d01a17a24",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dd9a1f3e1609a3ec2d26355b0437b646"
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dc1779b9f9fe453fcd8c51acf7d7c1f0",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "232fc18e17444eb16045ea656f2a88e2",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "f67a9bf6bd0735c237650bc9b919d9a7",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "51bacaee7f9e813a1a8329ba43738070",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "d96fbb7e57fbd96d48a507d8ab8815b9",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "a182d8f2ab44732415e1a6293bcc9fce",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "62dd843d5da9817d5e2db9e30d27fc13",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "67fe5f96d2c0b443c7e27c6ec6a1d307",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "7009e2ddbd2e9967a8e6ecc7bb9c45e4",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "a570b9b5ce302d6e4fdc5a7ea62c0b62",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "03a104c5c3e0e9508a53195298e28a24",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "7210fb41210040acae099b39d20418ae",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "68fca5a809aff53c0114c40ff9753907",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "4280e2b4539cc483e3cc2a4e50391427",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "411b5f90fa319b831cbae40d1037e50e"
+  # results using the old output format    
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "003bc7cbf950bd9e4f2a06d5477c5183",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "afcdbb7696ee7ef8317386de0e58c88c",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "3562ad2ee96c71ee725a01b0798765cf",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "fbe23cbb362f23b18f3cea10a50c8848",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "30f3cb346f0d633dfb651a73d40bcac5",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "12be54fc563004b2795046fb5fb6ab2c",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "259030b67ea550930820810e515fc944",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "99a31439f47540dad2b94272de44b39b",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "86489bfa02ef3a128d9495936a6f4342",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "f3496836739a1a6400fbf2c037d5781c"
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "66a87ed1afc27c883db723003dc52818",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "d2af82f24a8ec7b5db5b7f80147001da",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "3035a4c6b6f7c19befb6eaa085a0be37",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "c041f06df3ad8a72aaa2bc3d01a17a24",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dd9a1f3e1609a3ec2d26355b0437b646"
   );
 
   %refResultsOrig = %refResults;
