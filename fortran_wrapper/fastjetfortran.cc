@@ -254,7 +254,7 @@ void fastjetsiscone_(const double * p, const int & npart,
 /// same SISCone as above without the caching (invalidating calls to
 /// constituents, ... but making this call thread-safe)
 ///
-/// Note that as of SISCone 3.0.6 SISCone itself is not guaranteed to
+/// Note that as of SISCone 3.0.5 SISCone itself is not guaranteed to
 /// be thread-safe
 void fastjetsisconenocache_(const double * p, const int & npart,                   
                             const double & R, const double & f,                   
@@ -320,7 +320,7 @@ void fastjetsisconewitharea_(const double * p, const int & npart,
 /// same SISCone+area as above without the caching (invalidating calls
 /// to constituents, ... but making this call thread-safe)
 ///
-/// Note that as of SISCone 3.0.6 SISCone itself is not guaranteed to
+/// Note that as of SISCone 3.0.5 SISCone itself is not guaranteed to
 /// be thread-safe
 void fastjetsisconewithareanocache_(const double * p, const int & npart,                   
                                     const double & R, const double & f,                   
