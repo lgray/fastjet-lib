@@ -143,8 +143,6 @@ private:
   static thread_safety_helpers::FirstTimeTrue _first_time;
   int _mode;  // 1 = e+e-, 2 = hh (default)
 
-  static bool _first_time;
-
   /// print a banner for reference to the 3rd-party code
   void _print_banner(std::ostream *ostr) const;
 };

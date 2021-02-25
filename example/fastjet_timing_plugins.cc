@@ -485,7 +485,6 @@ int main (int argc, char ** argv) {
     double min_jet_energy = 5.0;
     // mode: 1=e+e-, 2=pp
     int mode = cmdline.value("-pxcone-mode", 2);
-    cout << "pxcone-mode = " << mode << endl;
     bool E_scheme_jets = false;
     jet_defs.push_back( JetDefinition( new PxConePlugin (
                                       ktR, min_jet_energy,

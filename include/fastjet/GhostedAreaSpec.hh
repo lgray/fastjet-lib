@@ -234,7 +234,7 @@ public:
   ///   sqrt(area)/(2*maxrap).
   ///
   /// FJ2 placement is now deprecated.
-  FASTJET_DEPRECATED_MSG("This is deprecated since we strongly recomment to use the new ghost placement instead",
+  FASTJET_DEPRECATED_MSG("This is deprecated since we strongly recommend use of the new ghost placement instead",
   void set_fj2_placement(bool  val));
 
   /// return nphi (ghosts layed out (-nrap, 0..nphi-1), (-nrap+1,0..nphi-1),
