@@ -4,7 +4,7 @@
 
     * regression-tests/nightly-check.pl:
 	attempt to get thread-safety check working on orphee
-	
+
 	* example/fastjet_timing_plugins.cc:
 	removed extraneous output of pxcone info (which caused make check to fail)
 
@@ -49,7 +49,7 @@ Entries below are inserted in the thread-safety branch
 
 	* example/07-subtraction.cc:
 	* tools/fastjet/tools/Subtractor.hh:
-	* tools/Suntractor.cc:
+	* tools/Subtractor.cc:
 
 	percolated the changes in the various BGEs (mostly used estimate()
 	when possible)
@@ -168,7 +168,7 @@ Entries below are added in the master branch
 	* pyinterface/fastjet.i:
 	included a few fixes suggested by Patrick Komiske:
 	- installed a few files so they're acceessible for projects
-	  derived from FJ to define theit own wrapper
+	  derived from FJ to define their own wrapper
 	- improved exceptions (throws a FastJetError py exception)
 	- defined a data table
 
