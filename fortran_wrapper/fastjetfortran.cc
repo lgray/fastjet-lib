@@ -73,33 +73,22 @@ namespace fwrapper {
 #endif // FASTJET_FORTRAN_THREAD_LOCAL_CACHING
 
   /// helper routine to transform the fortran input particles into PseudoJets
-  vector<PseudoJet> convert_input_particles(const double * p, const int & npart) {
-    vector<PseudoJet> particles;
-    particles.reserve(npart);
+  void convert_input_particles(const double * p, const int & npart, vector<PseudoJet> &fj_particles) {
+    fj_particles.resize(0);
+    fj_particles.reserve(npart);
     for (int i=0; i<npart; i++) {
       valarray<double> mom(4); // mom[0..3]
       for (int j=0;j<=3; j++) {
          mom[j] = *(p++);
       }
       PseudoJet psjet(mom);
-      particles.push_back(psjet);    
+      fj_particles.push_back(psjet);    
     }
-    return particles;
   }
 
   /// helper routine to transfer fortran input particles into cached input_particles
   void transfer_input_particles(const double * p, const int & npart) {
-    input_particles = convert_input_particles(p, npart);
-    //input_particles.resize(0);
-    //input_particles.reserve(npart);
-    //for (int i=0; i<npart; i++) {
-    //  valarray<double> mom(4); // mom[0..3]
-    //  for (int j=0;j<=3; j++) {
-    //     mom[j] = *(p++);
-    //  }
-    //  PseudoJet psjet(mom);
-    //  input_particles.push_back(psjet);    
-    //}
+    convert_input_particles(p, npart, input_particles);
   }
 
   /// helper routine to help convert fj_jets -> f77jets[4*ijet+0..3]
@@ -150,19 +139,19 @@ namespace fwrapper {
                        const JetDefinition & jet_def,
                        double * f77jets, int & njets,
                        const double & ghost_maxrap = 0.0,  
-                       const int & nrepeat = 0, const double & ghost_area = 0.0,
-                       bool use_energy_ordering = false) {
+                       const int & nrepeat = 0, const double & ghost_area = 0.0) {
 
     // transfer p[4*ipart+0..3] -> particles[i]
-    vector<PseudoJet> particles = convert_input_particles(p, npart);
+    vector<PseudoJet> fj_particles;
+    convert_input_particles(p, npart, fj_particles);
 
     // cluster
-    ClusterSequence *cs_local = cluster_base(particles, jet_def,
+    ClusterSequence *cs_local = cluster_base(fj_particles, jet_def,
                                              ghost_maxrap, nrepeat, ghost_area);
     
     // extract jets
     vector<PseudoJet> fj_jets;
-    if (use_energy_ordering){
+    if (jet_def.is_spherical()){
       fj_jets = sorted_by_E(cs_local->inclusive_jets());
     } else {
       fj_jets = sorted_by_pt(cs_local->inclusive_jets());
@@ -183,8 +172,7 @@ namespace fwrapper {
                                  const JetDefinition & jet_def,
 				 double * f77jets, int & njets,
 				 const double & ghost_maxrap = 0.0,  
-				 const int & nrepeat = 0, const double & ghost_area = 0.0,
-                                 bool use_energy_ordering = false) {
+				 const int & nrepeat = 0, const double & ghost_area = 0.0) {
 
     // transfer p[4*ipart+0..3] -> input_particles[i]  (cached)
     transfer_input_particles(p, npart);
@@ -197,7 +185,7 @@ namespace fwrapper {
     cs.reset(cs_local);
     
     // extract jets (into cache)
-    if (use_energy_ordering){
+    if (jet_def.is_spherical()){
       jets = sorted_by_E(cs_local->inclusive_jets());
     } else {
       jets = sorted_by_pt(cs_local->inclusive_jets());
@@ -216,6 +204,10 @@ using namespace fastjet::fwrapper;
 
 extern "C" {   
 
+//------------------------------------------------------------------------
+// Clustering routines
+//------------------------------------------------------------------------
+  
 /// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
 /// [see below for the interface to kt, Cam/Aachen & kt]
 ///
@@ -250,35 +242,34 @@ extern "C" {
 //
 void fastjetsiscone_(const double * p, const int & npart,                   
                      const double & R, const double & f,                   
-                     double * f77jets, int & njets) {
-    
-    // prepare jet def
-    plugin.reset(new SISConePlugin(R,f));
-    jet_def = plugin.get();
-
-    // do everything
-    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
+                     double * f77jets, int & njets) {  
+  // prepare jet def
+  plugin.reset(new SISConePlugin(R,f));
+  jet_def = plugin.get();
+  
+  // do everything
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
 
-/// same as above without the caching (invalidating calls to
+/// same SISCone as above without the caching (invalidating calls to
 /// constituents, ... but making this call thread-safe)
+///
+/// Note that as of SISCone 3.0.5 SISCone itself is not guaranteed to
+/// be thread-safe
 void fastjetsisconenocache_(const double * p, const int & npart,                   
                             const double & R, const double & f,                   
                             double * f77jets, int & njets) {
-    
-    // prepare jet def
-    JetDefinition::Plugin *plugin_local = new SISConePlugin(R,f);
-    JetDefinition jet_def_local = plugin_local;
+  // prepare jet def
+  JetDefinition::Plugin *plugin_local = new SISConePlugin(R,f);
+  JetDefinition jet_def_local = plugin_local;
 
-    // do everything
-    cluster_nocache(p,npart,jet_def,f77jets,njets);
-
-    // release memory
-    delete plugin_local;
+  // do everything
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets);
+  
+  // release memory
+  delete plugin_local;
 }
  
-
-
 
 /// f77 interface to SISCone (via fastjet), as defined in arXiv:0704.0292
 /// [see below for the interface to kt, Cam/Aachen & kt]
@@ -318,15 +309,33 @@ void fastjetsisconewitharea_(const double * p, const int & npart,
                      const double & R, const double & f,                   
                      const double & ghost_rapmax, const int & nrepeat, const double & ghost_area,
                      double * f77jets, int & njets) {
-    
-    // prepare jet def
-    plugin.reset(new SISConePlugin(R,f));
-    jet_def = plugin.get();
-
-    // do everything
-    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
+  // prepare jet def
+  plugin.reset(new SISConePlugin(R,f));
+  jet_def = plugin.get();
+  
+  // do everything
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
 }
 
+/// same SISCone+area as above without the caching (invalidating calls
+/// to constituents, ... but making this call thread-safe)
+///
+/// Note that as of SISCone 3.0.5 SISCone itself is not guaranteed to
+/// be thread-safe
+void fastjetsisconewithareanocache_(const double * p, const int & npart,                   
+                                    const double & R, const double & f,                   
+                                    const double & ghost_rapmax, const int & nrepeat, const double & ghost_area,
+                                    double * f77jets, int & njets) {
+  // prepare jet def
+  JetDefinition::Plugin *plugin_local = new SISConePlugin(R,f);
+  JetDefinition jet_def_local = plugin_local;
+
+  // do everything
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
+
+  // release memory
+  delete plugin_local;
+}
 
 
 /// f77 interface to the pp generalised-kt (sequential recombination)
@@ -369,20 +378,44 @@ void fastjetppgenkt_(const double * p, const int & npart,
                      const double & R, const double & palg,
                      double * f77jets, int & njets) {
     
-    // prepare jet def
-    if (palg == 1.0) {
-      jet_def = JetDefinition(kt_algorithm, R);
-    }  else if (palg == 0.0) {
-      jet_def = JetDefinition(cambridge_algorithm, R);
-    }  else if (palg == -1.0) {
-      jet_def = JetDefinition(antikt_algorithm, R);
-    } else {
-      jet_def = JetDefinition(genkt_algorithm, R, palg);
-    }
-
-    // do everything
-    transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
+  // prepare jet def
+  if (palg == 1.0) {
+    jet_def = JetDefinition(kt_algorithm, R);
+  }  else if (palg == 0.0) {
+    jet_def = JetDefinition(cambridge_algorithm, R);
+  }  else if (palg == -1.0) {
+    jet_def = JetDefinition(antikt_algorithm, R);
+  } else {
+    jet_def = JetDefinition(genkt_algorithm, R, palg);
+  }
+  
+  // do everything
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
+  
+/// same pp generalised-kt as above without the caching (invalidating
+/// calls to constituents, ... but making this call thread-safe)
+void fastjetppgenktnocache_(const double * p, const int & npart,                   
+                            const double & R, const double & palg,
+                            double * f77jets, int & njets) {
+  
+  // prepare jet def
+  JetDefinition jet_def_local;
+  if (palg == 1.0) {
+    jet_def_local = JetDefinition(kt_algorithm, R);
+  }  else if (palg == 0.0) {
+    jet_def_local = JetDefinition(cambridge_algorithm, R);
+  }  else if (palg == -1.0) {
+    jet_def_local = JetDefinition(antikt_algorithm, R);
+  } else {
+    jet_def_local = JetDefinition(genkt_algorithm, R, palg);
+  }
+  
+  // do everything
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets);
+}
+
+
 
 /// a routine that provides similar f77 functionality to fastjetppgenkt_, 
 /// but for the e+e- algorithms instead of the pp ones; note this 
@@ -396,11 +429,23 @@ void fastjeteegenkt_(const double * p, const int & npart,
   jet_def = JetDefinition(ee_genkt_algorithm, R, palg);
   
   // do everything
-  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets, 0.0, 0, 0.0, true);
+  transfer_cluster_transfer(p,npart,jet_def,f77jets,njets);
 }
 
+/// same ee generalised-kt as above without the caching (invalidating
+/// calls to constituents, ... but making this call thread-safe)
+void fastjeteegenktnocache_(const double * p, const int & npart,                   
+                            const double & R, const double & palg,
+                            double * f77jets, int & njets) {
+    
+  // prepare jet def
+  JetDefinition jet_def_local = JetDefinition(ee_genkt_algorithm, R, palg);
+  
+  // do everything
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets);
+}
 
-
+  
 /// f77 interface to the pp generalised-kt (sequential recombination)
 /// algorithms, as defined in arXiv.org:0802.1189, which includes
 /// kt, Cambridge/Aachen and anti-kt as special cases.
@@ -463,6 +508,40 @@ void fastjetppgenktwitharea_(const double * p, const int & npart,
 }
 
 
+/// same pp generalised-kt+area as above without the caching
+/// (invalidating calls to constituents, ... but making this call
+/// thread-safe)
+void fastjetppgenktwithareanocache_(const double * p, const int & npart,                   
+                                    const double & R, const double & palg,
+                                    const double & ghost_rapmax, const int & nrepeat, const double & ghost_area,
+                                    double * f77jets, int & njets) {
+    
+  // prepare jet def
+  JetDefinition jet_def_local;
+  if (palg == 1.0) {
+    jet_def_local = JetDefinition(kt_algorithm, R);
+  }  else if (palg == 0.0) {
+    jet_def_local = JetDefinition(cambridge_algorithm, R);
+  }  else if (palg == -1.0) {
+    jet_def_local = JetDefinition(antikt_algorithm, R);
+  } else {
+    jet_def_local = JetDefinition(genkt_algorithm, R, palg);
+  }
+  
+  // do everything
+  cluster_nocache(p,npart,jet_def_local,f77jets,njets,ghost_rapmax,nrepeat,ghost_area);
+}
+
+
+//------------------------------------------------------------------------
+// routines which access the cached particles/CluterSequence/jets
+//
+// Note that this is not available in the "nocache" versions of the
+// above clustering routines These routines may not work properly in a
+// threaded environment unless the
+// FASTJET_FORTRAN_THREAD_LOCAL_CACHING flag is defined
+//------------------------------------------------------------------------
+  
 /// f77 interface to provide access to the constituents of a jet found
 /// in the jet clustering with one of the above routines.
 ///

@@ -1,3 +1,15 @@
+2021-02-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* fortran_wrapper/fastjetfortran.cc:
+	implemented the missing "nocache" functions
+
+	* fortran_wrapper/fastjetfortran.cc:
+	convert_input_particles now takes the list of PseudoJet to be
+	created as an argument (instead of returning it)
+
+	uses jet_def.is_spherical() to decide whether to use energy or pt
+	ordering for the jets
+
 2021-02-24  Gregory Soyez  <soyez@fastjet.fr>
 
 	* fortran_wrapper/fastjetfortran.cc:
