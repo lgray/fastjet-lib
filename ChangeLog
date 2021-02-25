@@ -1,5 +1,10 @@
 ========== CHANGELOG FILE FOR FastJet =================================
 
+2021-02-25  Gregory Soyez  <soyez@fastjet.fr>
+
+	* example/fastjet_timing_plugins.cc (print_jets_bkgd):
+	reformatted the output for bkg estimation of subtraction
+
 2021-02-25 Thu  <gavin.salam@physics.ox.ac.uk>
 
     * regression-tests/nightly-check.pl:

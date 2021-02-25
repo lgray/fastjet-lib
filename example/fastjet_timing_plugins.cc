@@ -270,6 +270,11 @@ inline double pow2(const double x) {return x*x;}
 // pretty print the jets and their subjets
 void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut);
 
+void print_jets_bkgd(const vector<PseudoJet> &jets,
+                     const vector<PseudoJet> &subtracted_jets,
+                     BackgroundEstimatorBase * bge_ptr,
+                     bool do_subtractor);
+
 // have various kinds of subjet finding, to test consistency among them
 //
 // this is needed in print_jets_and_sub and declaring it in the
@@ -874,21 +879,22 @@ int main (int argc, char ** argv) {
           cout << "Subtractor: " << subtractor.description() << endl;
           subjets = subtractor(jets);
         }
-        cout << "i   pt  rap  phi  m  rho  rho_m  sigma  sigma_m" << endl;
-        if (do_subtractor) cout << "isub ptsub rapsub phisub msub area" << endl;
-        for (unsigned i = 0; i < jets.size(); i++) {
-          const PseudoJet & jet = jets[i];
-          cout << i << "   "
-               << " " << jet.pt() << " " << jet.rap() << " " << jet.phi() << " " << jet.m() 
-               << " " << bge_ptr->rho(jet) << " " << bge_ptr->rho_m(jet) 
-               << " " << bge_ptr->sigma(jet)  << " " << bge_ptr->sigma_m(jet) << endl;
-          if (do_subtractor) {
-            const PseudoJet & subjet = subjets[i];
-            cout << i << "sub"
-                 << " " << subjet.pt() << " " << subjet.rap() << " " << subjet.phi() << " " << subjet.m() 
-                 << " " << jet.area() << endl;
-          }
-        }
+        print_jets_bkgd(jets, subjets, bge_ptr, do_subtractor);
+        // cout << "i   pt  rap  phi  m  rho  rho_m  sigma  sigma_m" << endl;
+        // if (do_subtractor) cout << "isub ptsub rapsub phisub msub area" << endl;
+        // for (unsigned i = 0; i < jets.size(); i++) {
+        //   const PseudoJet & jet = jets[i];
+        //   cout << i << "   "
+        //        << " " << jet.pt() << " " << jet.rap() << " " << jet.phi() << " " << jet.m() 
+        //        << " " << bge_ptr->rho(jet) << " " << bge_ptr->rho_m(jet) 
+        //        << " " << bge_ptr->sigma(jet)  << " " << bge_ptr->sigma_m(jet) << endl;
+        //   if (do_subtractor) {
+        //     const PseudoJet & subjet = subjets[i];
+        //     cout << i << "sub"
+        //          << " " << subjet.pt() << " " << subjet.rap() << " " << subjet.phi() << " " << subjet.m() 
+        //          << " " << jet.area() << endl;
+        //   }
+        // }
       } else {
         cout << "  rho = " << rho 
            << ", sigma = " << sigma 
@@ -1055,6 +1061,33 @@ void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut) {
 
 }
 
+void print_jets_bkgd(const vector<PseudoJet> &jets,
+                     const vector<PseudoJet> &subtracted_jets,
+                     BackgroundEstimatorBase * bge_ptr,
+                     bool do_subtractor){
+  printf("Printing jets, background information");
+  if (do_subtractor)
+    printf(" and subtracted jets\n");
+  printf("%5s %15s %15s %15s %15s %15s %15s %15s %15s\n","jet #",
+         "rapidity", "phi", "pt", "pt^2+m^2",
+         "rho", "rho_m", "sigma", "sigma_m");
+  if (do_subtractor)
+    printf("%5s %15s %15s %15s %15s %15ss\n","jet #",
+           "rapidity", "phi", "pt", "pt^2+m^2", "area");
+
+  for (unsigned i = 0; i < jets.size(); i++) {
+    const PseudoJet & jet = jets[i];
+    BackgroundEstimate estimate = bge_ptr->estimate(jet);
+    printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
+           jet.rap(), jet.phi(), jet.perp(), jet.mt2(),
+           estimate.rho(), estimate.rho_m(), estimate.sigma(), estimate.sigma_m());
+    if (do_subtractor) {
+      const PseudoJet & subjet = subtracted_jets[i];
+      printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
+             subjet.rap(), subjet.phi(), subjet.perp(), subjet.mt2(), jet.area());
+    }
+  }
+}
 
 //----------------------------------------------------------------------
 void signal_failed_comparison(int iev, 
