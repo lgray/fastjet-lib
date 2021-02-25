@@ -55,48 +55,43 @@
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-#ifdef FASTJET_HAVE_THREAD_SAFETY
-
-//std::shared_ptr /// @ingroup advanced_usage
-//std::shared_ptr /// \class SharedPtr
-//std::shared_ptr /// replaces our shared pointer with the STL one
-//std::shared_ptr ///
-//std::shared_ptr /// Note that here we can just use C++11 "template alias".
-//std::shared_ptr template<typename T>
-//std::shared_ptr using SharedPtr = std::shared_ptr<T>;
-
 
 /**
  * @ingroup advanced_usage
  * \class SharedPtr
- * an implementation of C++0x shared pointers (or boost's)
- *
- * this class implements a smart pointer, based on the shared+ptr
- * proposal. A description of shared_ptr can be found in Section 2.2.3
- * of the first C++ Technical Report (TR1)
- *   http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1745.pdf
- * or, alternatively, on the Boost C++ library website at
- *   http://www.boost.org/doc/libs/1_42_0/libs/smart_ptr/shared_ptr.htm
- *
- * Our implementation is compatible with both of these apart from a
- * series of members and functions that have not been implemented:
+ * 
+ * An implementation of shared pointers that is broadly similar to C++11
+ * shared_ptr (https://en.cppreference.com/w/cpp/memory/shared_ptr). 
+ * One key additional feature is
+ * 
+ * - the ability to force an update of the count with the set_count(...)
+ *   member.
+ *   
+ * This effectively allows us to incorporate an offset in the count, 
+ * which allows deletions to be triggered even when some pointers remain. 
+ * We use this in particular for automatic deletion of a ClusterSequence
+ * when no pointers to its structure object remain other than those in 
+ * the PseudoJets that are part of the ClusterSequence object itself. 
+ * 
+ * Key features that are missing relative to C++11 are 
+ * 
  *  - conversion from weak and auto pointers
  *  - support for deleters and allocators
  *  - static, constant and dynamic casts
  *  - constructor and assignment sharing ownership with a shared
  *    pointer r but storing a different pointer than r (needed for the
  *    previous item)
+ * 
  * In the last 2 cases, their implementation would require storing two
  * pointers for every copies of the shared pointer, while our
- * implementation only needs one. We did not implement then since we
+ * implementation only needs one. We did not implement them since we
  * want to limit as much as possible memory and time consumption, and
  * can easily avoid (at least for our needs so far) the casts.
- *
- * We also add the possibility to force an update of the count.
  * 
- * The class has been tested against the existing boost (v1.42)
+ * The class has been tested against the boost (v1.42)
  * implementation (for the parts that we have implemented).
  */
+#ifdef FASTJET_HAVE_THREAD_SAFETY
 template<class T>
 class SharedPtr{
 public:
@@ -307,6 +302,9 @@ private:
     //// if no one else is using it, free the allocated memory
     //if (_ptr->use_count()==0)
     //  delete _ptr; // that automatically deletes the object itself
+    // NB: https://en.cppreference.com/w/cpp/atomic/atomic/operator_arith
+    // indicates that this uses the atomic fetch_sub(...) function, which
+    // is what ensures thread safety of the deletion.
     if (((*_ptr)--) == 1)
       delete _ptr;
   }
