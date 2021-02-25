@@ -103,7 +103,7 @@ namespace fwrapper {
   }
 
   /// helper routine to help convert fj_jets -> f77jets[4*ijet+0..3]
-  void convert_jets(vector<PseudoJet> & fj_jets, double * f77jets, int & njets) {
+  void convert_jets(const vector<PseudoJet> & fj_jets, double * f77jets, int & njets) {
     njets = fj_jets.size();
     for (int i=0; i<njets; i++) {
       for (int j=0;j<=3; j++) {
@@ -126,7 +126,7 @@ namespace fwrapper {
   }
 
   /// this returns a newly-created pointer to a ClusterSequence based
-  /// in the provided particles and clustering parameters
+  /// on the particles and clustering parameters that have been provided
   ClusterSequence* cluster_base(const vector<PseudoJet> & particles,
                                 const JetDefinition & jet_def,
                                 const double & ghost_maxrap = 0.0,  
