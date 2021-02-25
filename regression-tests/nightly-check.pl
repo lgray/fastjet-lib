@@ -141,7 +141,8 @@ push @setups, ["","--disable-static --enable-pyext", "", 10, ""];               
 push @setups, ["","--disable-static --enable-pyext --enable-swig", "", 10, ""]; # locally, interface + swig
 
 # checks of results with thread safety enabled
-push @setups, ["","--disable-static --enable-thread-safety CXXFLAGS=\"-O2 -Wall -std=c++11\"", "", 10, "-strat 1 -bkgds"];               # locally, just the interface
+#push @setups, ["","--disable-static --enable-thread-safety CXXFLAGS=\"-O2 -Wall -std=c++11\"", "", 10, "-strat 1 -bkgds"];               # locally, just the interface
+push @setups, ["","--disable-static --enable-thread-safety CXX=/ada1/lpthe/cacciari/local/bin/g++-6.1 CXXFLAGS=\"-O2 -Wall -std=c++11\"", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, "-strat 1 -bkgds"];               # locally, just the interface
 
 
 # GPS 2013-04-29: removed orphee and osiris, since now both standard SLC6
