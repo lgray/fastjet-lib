@@ -36,21 +36,10 @@
 #include <cstdlib>  // for NULL!!!
 #include "fastjet/internal/deprecated.hh"
 
-// for testing purposes, the following define makes it possible
-// for our SharedPtr simply to be derived from the STL TR1 one.
-//
-// Note that with C++11 features, the std::shared_ptr could probably
-// take precedence anyway
-//#define __FASTJET_USETR1SHAREDPTR
-
 #ifdef FASTJET_HAVE_THREAD_SAFETY
 // use C11's shared pointer
 //std::shared_ptr #include <memory>
 #include <atomic>
-#else
-#ifdef __FASTJET_USETR1SHAREDPTR
-#include <tr1/memory>
-#endif // __FASTJET_USETR1SHAREDPTR
 #endif // FASTJET_HAVE_THREAD_SAFETY
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -348,51 +337,6 @@ inline T* get_pointer(SharedPtr<T> const & t){
 
 #else  // FASTJET_HAVE_THREAD_SAFETY
 
-#ifdef __FASTJET_USETR1SHAREDPTR
-
-/// @ingroup advanced_usage
-/// \class SharedPtr
-/// replaces our shared pointer with the TR1 one (for testing purpose)
-///
-/// for testing purposes, it can be useful to replace our home-made
-/// SharedPtr with the standard library one. Having a class derived
-/// from the standard one is way of arranging for this to happen.
-/// 
-/// The other way of working this is a template class with an 
-/// internal typedef (http://bytes.com/topic/c/answers/60312-typedef-template)
-/// since templated typedefs don't work in standard C++
-///
-/// Note that some facilities that are present in the FastJet shared
-/// pointer (resetting use-count) are not handled by the TR1 shared
-/// pointer; and the FastJet SharedPtr has a different underlying data
-/// structure from the TR1 shared pointer, which prevents us from
-/// implementing some of TR1 features (notably assignment from shared
-/// pointers to a derived class).
-template<class T>
-class SharedPtr : public std::tr1::shared_ptr<T> {
-public:
-  SharedPtr() : std::tr1::shared_ptr<T>() {}
-  SharedPtr(T * t) : std::tr1::shared_ptr<T>(t) {}
-  SharedPtr(const SharedPtr<T> & t) : std::tr1::shared_ptr<T>(t) {}
-
-
-  // 2015-04-23: this does not belong to most standard implmentations
-  // (use get() instead), so we get rid of it. Note that it might be
-  // related to the "some reason" comment below.
-  //
-  // // for some reason operator() doesn't get inherited
-  // #ifdef FASTJET_HAVE_EXPLICIT_FOR_OPERATORS
-  // explicit
-  // #endif
-  // inline operator bool() const {return (this->get()!=NULL);}
-  // /// return the pointer we're pointing to  
-  // T* operator ()() const{
-  //   return this->get(); // automatically returns NULL when out-of-scope
-  // }
-};
-
-
-#else // __FASTJET_USETR1SHAREDPTR
 template<class T>
 class SharedPtr{
 public:
@@ -681,8 +625,6 @@ template<class T>
 inline T* get_pointer(SharedPtr<T> const & t){
   return t.get();
 }
-
-#endif // __FASTJET_USETR1SHAREDPTR
 
 #endif // FASTJET_HAVE_THREAD_SAFETY
 
