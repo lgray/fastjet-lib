@@ -3253,7 +3253,7 @@ The main method that is available in \fastjet involves the
 determination of the distribution of $p_t/A$ for the jets in a given
 event (or region of the event) and then taking the median of the
 distribution as an estimate of $\rho$, as proposed in~\cite{cs} and
-studied in detail also in~\cite{Cacciari:2009dp,GridMedianLH}.
+studied in detail also in~\cite{Cacciari:2009dp,Soyez:2018opl}.
 %
 This is largely insensitive to the presence of a handful of hard jets, and
 avoids any need for introducing a $p_t$ scale to distinguish hard and
@@ -3278,7 +3278,7 @@ This has the advantage of simplicity and much greater speed.
 One may worry that a hard jet will sometimes lie at a corner of
 multiple grid cells, inducing larger biases in the median than with a
 normal jet finder jets, however we have found this not
-to be an issue in practice~\cite{GridMedianLH}.
+to be an issue in practice~\cite{Soyez:2018opl}.
 
 \subsection{General Usage}\label{sec:bkg_general_usage}
 
@@ -3305,7 +3305,7 @@ definition.
 We have found that the $k_t$ or Cambridge/Aachen jet algorithms with $R
 = 0.4 - 0.6$ generally provide adequate background estimates, with
 the lower range of $R$ values to be preferred if the events are likely
-to be busy~\cite{Cacciari:2009dp,GridMedianLH}.
+to be busy~\cite{Cacciari:2009dp,Soyez:2018opl}.
 %
 An active area with explicit ghosts is generally
 recommended.\footnote{With the $k_t$ algorithm one may also use a
@@ -3333,7 +3333,7 @@ For the grid based method one creates a
                                     double requested_grid_spacing);
 \end{lstlisting}
 We have found grid spacings in the range $0.5-0.7$ to be
-adequate~\cite{GridMedianLH}, with lower values preferred for events
+adequate~\cite{Soyez:2018opl}, with lower values preferred for events
 that are likely to have high multiplicities.
 
 Both of the above background estimators derive from a
@@ -3792,11 +3792,10 @@ of a cluster sequence:
   // (re)set the jets to be used by future calls to rho() etc. 
   void set_jets(const std::vector<PseudoJet> & jets);
 \end{lstlisting}
-Note that the
-jets passed via the \ttt{set\_jets()} call above must all originate from a common
-\ttt{ClusterSequenceAreaBase} type class.
+Note that the jets passed via the \ttt{set\_jets()} call above must
+all originate from a common \ttt{ClusterSequenceAreaBase} type class.
 
-
+ 
 %......................................................................
 \subsection{Recommendations}
 
@@ -4333,6 +4332,7 @@ the user to the online doxygen documentation for further details.
 
 %======================================================================
 \section{Thread safety}
+\label{sec:thread-safety}
 
 As of version 3.4.0, FastJet has the option of being configured with
 thread-safety enabled.
@@ -4340,6 +4340,29 @@ thread-safety enabled.
 Two variants are possible: limited and full thread safety.
 %
 Both require \ttt{C++11} support in the compiler.
+%
+Limited thread safety should come with essentially zero overhead in
+normal operation, and is generally suitable if each thread processes a
+distinct event.
+%
+Full thread safety allows separate threads to work concurrently on a
+common event or collection of \ttt{PseudoJet}s (e.g.\ multiple threads
+each applying a different \ttt{JetDefinition} algorithm or
+\ttt{Transformer} to the same set of input \ttt{PseudoJet}s).
+%
+It involves adaptations of frequently used core objects, which may
+have a moderate speed impact: on some systems, we have observed a
+slowdown of up to $10{-}15\%$.
+%
+Summaries of the classes that are thread safe or not with the two
+options are given below in
+sections~\ref{sec:limit-thre-safety} and \ref{sec:full-thread-safety}.
+%
+Suggestions concerning thread-safe workflows are given in
+section~\ref{sec:thread-safety-workflows}. 
+
+As of version 3.4.0, thread safety is not yet guaranteed in plugins.
+
 
 %----------------------------------------------------------------------
 \subsection{Limited thread safety}
@@ -4351,38 +4374,64 @@ Limited thread safety, can be obtained by configuring with the
 Output of the banner, error-handling and warnings are thread
 safe.
 %
-Concurrent read-access of \ttt{JetDefinition} and
-\ttt{AreaDefinition} objects is safe across threads.
+Concurrent read-access and copying of \ttt{JetDefinition} are safe, so
+long as one doesn't use \ttt{delete\_recombiner\_when\_unused()} or
+\ttt{delete\_plugin\_when\_unused()}.
 %
-Concurrent read-access of \ttt{PseudoJet} objects is not safe across
-threads, for reasons related to internal caching of rapidity and
-azimuth and non-thread safety of the \ttt{SharedPtr}.
+Concurrent read access of \ttt{AreaDefinition} objects is also safe
+across threads (see section \ref{sec:threads-ghosted-areas} for the
+handling of seeds for ghost-generation).
 %
-Other objects that rely on \ttt{SharedPtr} are also not thread-safe
-for any operation where the \ttt{SharedPtr} count might be altered.
+Core objects for which concurrent read-access and copying of a single
+object are not safe across threads include \ttt{PseudoJet} and
+\ttt{SharedPtr}, as well as classes that rely on them such as
+\ttt{ClusterSequence}.
+%
+In particular, \ttt{PseudoJet} objects cache rapidity and azimuth the
+first time these are evaluated, and this is not thread safe.
+
+
+% Concurrent read-access of \ttt{PseudoJet} objects is not safe across
+% threads, for reasons related to internal caching of rapidity and
+% azimuth and non-thread safety of the \ttt{SharedPtr}.
+% %
+% Other objects that rely on \ttt{SharedPtr} are also not thread-safe
+% for any operation where the \ttt{SharedPtr} count might be altered.
 
 %----------------------------------------------------------------------
 \subsection{Full thread safety}
 \label{sec:full-thread-safety}
 
-Full thread safety, obtained by configuring with
+Full thread safety is obtained by configuring with
 \ttt{--enable-thread-safety}.
 %
 Concurrent read-access of \ttt{PseudoJet} objects is now possible,
-\ttt{SharedPtr} objects are thread safe, which enables thread safety
-across \fastjet operations marked as \ttt{const}.
+and \ttt{SharedPtr} objects are thread safe.
 %
-As of version 3.4.0, thread safety is not yet guaranteed in plugins.
+This enables thread safety across \fastjet operations marked as
+\ttt{const}.
 
-Normal \fastjet usage sometimes entails non-const operations and/or
+In our implementations, the \ttt{SharedPtr} object involves an atomic
+counter and the \ttt{PseudoJet} involves a spin-lock the first time
+\ttt{phi()} or \ttt{rap()} are called, in order to safely cache their
+values.
+%
+Both of these strategies can lead to timing overheads. 
+
+
+
+%----------------------------------------------------------------------
+\subsection{Specific work-flows}
+\label{sec:thread-safety-workflows}
+
+\fastjet usage sometimes entails non-const operations and/or
 operations that affect global (static) variables.
 %
-In these case, certain workflows are to be privileged to enable
-thread-safe operation.
-
+Below, we outline specific cases where care is needed even with
+thread-safety is enabled.
 
 %......................................................................
-\subsubsection{Ghosted areas.}
+\subsubsection{Ghosted areas}
 \label{sec:threads-ghosted-areas}
 %
 Areas that use ghosts, cf.\ Section~\ref{sec:ghosted-areas}, rely on
@@ -4400,7 +4449,7 @@ for that set of ghosts can be retrieved with
   csa.area_def().ghost_spec().get_last_seed(seeds);
 \end{lstlisting}
 Alternatively, given a ghosted \ttt{AreaDefinition area\_def}, the
-\ttt{ClusterSequenceArea} can use ghosts can be generated using a
+\ttt{ClusterSequenceArea} can use ghosts generated using a
 specific set of seeds, for example
 \begin{lstlisting}
   vector<int> seed{12345,67890};
@@ -4416,6 +4465,10 @@ the \ttt{area\_def} with the specified seeds.\footnote{If using an
   per thread), and in each thread create a \ttt{GhostedAreaSpec} with
   that generator. 
 }
+%
+The above functionality is available even without thread safety and
+functions in a thread-safe manner already with the limited thread
+safety option.
 
 %----------------------------------------------------------------------
 \subsubsection{Background estimation and subtraction}
@@ -4444,12 +4497,16 @@ and use that for accessing information about the background
   // the ghost generation
   vector<int> seed{12345,67890};
   local_bge->set_particles_with_seed(particles, seed);
-
+  
   // and access information about the background across the whole
   // event (if supported), using its operator() function
   BackgroundEstimate bkgd_estimate1 = local_bge->estimate();
-  // or locally around some jet
+  // or in the vicinity of a specific jet
   BackgroundEstimate bkgd_estimate2 = local_bge->estimate(jet);
+
+  // extract rho
+  double rho1 = bkgd_estimate1.rho();
+  double rho2 = bkgd_estimate2.rho();
 \end{lstlisting}
 If using a globally defined \ttt{Subtractor} \ttt{global\_subtractor},
 one similarly needs to take a copy and point that copy to the
@@ -4467,27 +4524,35 @@ information about the background directly from member functions of the
 \ttt{BackgroundEstimatorBase} instance, e.g.\
 \ttt{BackgroundEstimatorBase::rho(jet)}.
 %
-In some cases they alter the state of the
-\ttt{BackgroundEstimatorBase} object: e.g.\
-\ttt{JetMedianBackgroundEstimator::rho(jet)} updates an internal
-cache, which then affects the result of calls such as
-\ttt{JetMedianBackgroundEstimator::mean\_area()}.
 %
-With thread-safety enabled at configure-time, the update of the
-internal information is carried out in a thread-safe manner if sharing
-a background estimator instance for a common event across multiple
-threads.
+For \ttt{JetMedianBackgroundEstimator} objects that involve a
+\ttt{Selector} that takes a reference,
+(section~\ref{sec:local-bkgd-estimation}),
 %
-This can happen e.g.\ when performing operations on several jets in
-parallel, or when applying different groomers in parallel.
+calls to \ttt{rho(jet)}, \ttt{rho\_m(jet)}, \ttt{sigma(jet)},
+\ttt{sigma\_m(jet)} (which are all non-\ttt{const}) update the state
+of the \ttt{JetMedianBackgroundEstimator} object, which then affects
+the result of subsequent calls to \ttt{mean\_area()},
+\ttt{n\_jets\_used()}, \ttt{jets\_used()}, \ttt{empty\_area()} and
+\ttt{n\_empty\_jets()}.
 %
-However, those different threads will be acting on the
-cache in ways that are likely to break the link between
-the \ttt{rho(jet)} and \ttt{mean\_area()} calls.
+Without full thread safety, concurrent calls to \ttt{rho(jet)}, etc.,
+can cause the code to crash.
+%
+Compiling with full thread safety enabled eliminates the risk of a
+crash. 
+%
+However, even with full thread safety, the results from
+\ttt{mean\_area()} calls, etc., can be wrong if separate threads are
+each calling \ttt{rho(jet)} with different jets.
 %
 So we recommend that any code that uses background estimation be
 updated to access the results through the \ttt{BackgroundEstimate}
 class.
+%
+The details of its usage are given in
+sections~\ref{sec:bkg_estim_usage} and
+\ref{sec:BGE-other-facilities}. 
 
 
 %======================================================================
@@ -6577,7 +6642,7 @@ in {\it Proc. of the APS/DPF/DPB Summer Study on the Future of
 %\cite{Soyez:2018opl}
 \bibitem{Soyez:2018opl}
 G.~Soyez,
-%``Pileup mitigation at the LHC: A theorist\textquoteright{}s view,''
+%``Pileup mitigation at the LHC: A theorist's view,''
 Phys. Rept. \textbf{803} (2019), 1-158
 doi:10.1016/j.physrep.2019.01.007
 [arXiv:1801.09721 [hep-ph]].
