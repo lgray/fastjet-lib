@@ -393,38 +393,6 @@ public:
 
 
 #else // __FASTJET_USETR1SHAREDPTR
-
-/**
- * @ingroup advanced_usage
- * \class SharedPtr
- * an implementation of C++0x shared pointers (or boost's)
- *
- * this class implements a smart pointer, based on the shared+ptr
- * proposal. A description of shared_ptr can be found in Section 2.2.3
- * of the first C++ Technical Report (TR1)
- *   http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1745.pdf
- * or, alternatively, on the Boost C++ library website at
- *   http://www.boost.org/doc/libs/1_42_0/libs/smart_ptr/shared_ptr.htm
- *
- * Our implementation is compatible with both of these apart from a
- * series of members and functions that have not been implemented:
- *  - conversion from weak and auto pointers
- *  - support for deleters and allocators
- *  - static, constant and dynamic casts
- *  - constructor and assignment sharing ownership with a shared
- *    pointer r but storing a different pointer than r (needed for the
- *    previous item)
- * In the last 2 cases, their implementation would require storing two
- * pointers for every copies of the shared pointer, while our
- * implementation only needs one. We did not implement then since we
- * want to limit as much as possible memory and time consumption, and
- * can easily avoid (at least for our needs so far) the casts.
- *
- * We also add the possibility to force an update of the count.
- * 
- * The class has been tested against the existing boost (v1.42)
- * implementation (for the parts that we have implemented).
- */
 template<class T>
 class SharedPtr{
 public:
