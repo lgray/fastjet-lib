@@ -708,17 +708,17 @@ sub setRefResults {
   # 2021-02 background & subtraction additions
   "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dc1779b9f9fe453fcd8c51acf7d7c1f0",
   "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "232fc18e17444eb16045ea656f2a88e2",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "f67a9bf6bd0735c237650bc9b919d9a7",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "7e4f98d53162146f26ca830c2d51bf30",
   "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "51bacaee7f9e813a1a8329ba43738070",
   "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "d96fbb7e57fbd96d48a507d8ab8815b9",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "a182d8f2ab44732415e1a6293bcc9fce",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "62dd843d5da9817d5e2db9e30d27fc13",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "67fe5f96d2c0b443c7e27c6ec6a1d307",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "8f38cd2f93cb43af76106c0255059970",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "7009e2ddbd2e9967a8e6ecc7bb9c45e4",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "a570b9b5ce302d6e4fdc5a7ea62c0b62",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "03a104c5c3e0e9508a53195298e28a24",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "7210fb41210040acae099b39d20418ae",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "68fca5a809aff53c0114c40ff9753907",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "cf40d750e5c1ddb3d79f9cb4eded2cec",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "4280e2b4539cc483e3cc2a4e50391427",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "411b5f90fa319b831cbae40d1037e50e"
   # results using the old output format    

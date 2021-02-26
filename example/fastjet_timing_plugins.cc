@@ -1061,6 +1061,11 @@ void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut) {
 
 }
 
+/// if abs(x)<precision/2, return 0
+double make_safe_zero_truncation(double x, double precision){
+  return std::abs(x)<0.5*precision ? 0.0 : x;
+}
+
 void print_jets_bkgd(const vector<PseudoJet> &jets,
                      const vector<PseudoJet> &subtracted_jets,
                      BackgroundEstimatorBase * bge_ptr,
@@ -1078,9 +1083,14 @@ void print_jets_bkgd(const vector<PseudoJet> &jets,
   for (unsigned i = 0; i < jets.size(); i++) {
     const PseudoJet & jet = jets[i];
     BackgroundEstimate estimate = bge_ptr->estimate(jet);
+    // Note that the values of rho_m sometimes comes out as +- a very
+    // small number and the format can produce either 0.00000000 or
+    // -0.00000000. The call to "make_safe_zero_truncation" makes sure it is
+    // printed wo the - sign in each case
     printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
            jet.rap(), jet.phi(), jet.perp(), jet.mt2(),
-           estimate.rho(), estimate.rho_m(), estimate.sigma(), estimate.sigma_m());
+           estimate.rho(), make_safe_zero_truncation(estimate.rho_m(),1e-8),
+           estimate.sigma(), estimate.sigma_m());
     if (do_subtractor) {
       const PseudoJet & subjet = subtracted_jets[i];
       printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
