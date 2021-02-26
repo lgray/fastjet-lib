@@ -1112,8 +1112,8 @@ void print_jets_bkgd(const vector<PseudoJet> &jets,
              subjet.rap(), subjet.phi(), subjet.perp(), subjet.mt(), jet.area());
     }
   }
-#endif// __FJCORE__
 }
+#endif// __FJCORE__
 
 //----------------------------------------------------------------------
 void signal_failed_comparison(int iev, 
