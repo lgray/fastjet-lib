@@ -713,50 +713,22 @@ sub setRefResults {
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-active,-jetmedian" => "d6c00a93e70f0d14100c1e87e53604d3",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-voronoi,1.0,-jetmedian" => "099fcbb79303d70bede72ed4591fe380",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,antikt,R0.60,-bkgd,-gridmedian" => "35a2e74da09f6befd2bbcf9eb89b81d5",
-
-  # 2021-02 background & subtraction additions
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dc1779b9f9fe453fcd8c51acf7d7c1f0",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "232fc18e17444eb16045ea656f2a88e2",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "7e4f98d53162146f26ca830c2d51bf30",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "51bacaee7f9e813a1a8329ba43738070",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "d96fbb7e57fbd96d48a507d8ab8815b9",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "a182d8f2ab44732415e1a6293bcc9fce",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "62dd843d5da9817d5e2db9e30d27fc13",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "8f38cd2f93cb43af76106c0255059970",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "7009e2ddbd2e9967a8e6ecc7bb9c45e4",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "a570b9b5ce302d6e4fdc5a7ea62c0b62",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "03a104c5c3e0e9508a53195298e28a24",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "7210fb41210040acae099b39d20418ae",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "cf40d750e5c1ddb3d79f9cb4eded2cec",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "4280e2b4539cc483e3cc2a4e50391427",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "411b5f90fa319b831cbae40d1037e50e"
-  # results using the old output format    
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "003bc7cbf950bd9e4f2a06d5477c5183",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "afcdbb7696ee7ef8317386de0e58c88c",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "3562ad2ee96c71ee725a01b0798765cf",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "fbe23cbb362f23b18f3cea10a50c8848",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "30f3cb346f0d633dfb651a73d40bcac5",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "12be54fc563004b2795046fb5fb6ab2c",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "259030b67ea550930820810e515fc944",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "99a31439f47540dad2b94272de44b39b",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "86489bfa02ef3a128d9495936a6f4342",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "f3496836739a1a6400fbf2c037d5781c"
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "66a87ed1afc27c883db723003dc52818",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "d2af82f24a8ec7b5db5b7f80147001da",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "3035a4c6b6f7c19befb6eaa085a0be37",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "c041f06df3ad8a72aaa2bc3d01a17a24",
-  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dd9a1f3e1609a3ec2d26355b0437b646"
-
-  # 2021-02 background & subtraction additions with alt-ktR
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "f01bd8d3c5b57cdebb291dd453cd6057",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "e72912c591d3e166777513048e61ed8c",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "21a31f5d0169b9564613560587ba3fa8",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "8de0126c5f5b2762cee2024ac5511b0e",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "bf1d48fb643df84fefd749409be426dc",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "571434473b6d973e3399bc2db586a55e",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "51f777b6f330ff9d7c892d17e1fe5843",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "18ecc281322eaf639968176570f916c5",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "eb1f9213d4ff117a5540bfeb418c3f84",  
+  # 2021-02 background & subtraction additions (with alt-ktR when needed)
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "e547cd35f6a60c62fca0310f64dc7257",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "ed486cba8137a2e401dc54dcc8bdbcaa",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "ff34614c551f3ca521d7c9f35ce1d156",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "a8aa5125ffb3a822b1f0701f26256e33",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "e1b06358874249f5375bedc4ed32a634",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "1334c0bf9a2f2616a44d708e2df097fc",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "ab98f954017221ec25ba3e69bf227042",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "01c722fe558068322e6b1426b42a5b52",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "e7c2442244f9d3412880d5d07a8db856",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "262cbf3280709cbd7a5c0ffe39d4d73d",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "4401beb61b6dc90fc259bfdd72629072",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "4bd05254e91289baadd129781a6f43bf",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "06319d1484213063253fd88be9993e04",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "0fffb28f63770c18d2ee77044a415510",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "fb3aedadc7745020937eb6b4ff6d64b0"
   );
 
   %refResultsOrig = %refResults;

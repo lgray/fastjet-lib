@@ -881,7 +881,8 @@ int main (int argc, char ** argv) {
       if (do_bkgd_localrange || do_subtractor) {
         assert(bge_ptr != 0);
         cout << "Background estimator: " << bge_ptr->description() << endl;
-        vector<PseudoJet> jets = SelectorAbsRapMax(3.0)(sorted_by_pt(csab->inclusive_jets()));
+        //vector<PseudoJet>
+        jets = SelectorAbsRapMax(3.0)(sorted_by_pt(csab->inclusive_jets()));
         vector<PseudoJet> subjets;
         if (do_subtractor) {
           Subtractor subtractor(bge_ptr);
@@ -1089,7 +1090,7 @@ void print_jets_bkgd(const vector<PseudoJet> &jets,
          "rho", "rho_m", "sigma", "sigma_m");
   if (do_subtractor)
     printf("%5s %15s %15s %15s %15s %15ss\n","jet #",
-           "rapidity", "phi", "pt", "pt^2+m^2", "area");
+           "rapidity", "phi", "pt", "sqrt(pt^2+m^2)", "area");
 
   for (unsigned i = 0; i < jets.size(); i++) {
     const PseudoJet & jet = jets[i];
@@ -1099,13 +1100,13 @@ void print_jets_bkgd(const vector<PseudoJet> &jets,
     // -0.00000000. The call to "make_safe_zero_truncation" makes sure it is
     // printed wo the - sign in each case
     printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
-           jet.rap(), jet.phi(), jet.perp(), jet.mt2(),
+           jet.rap(), jet.phi(), jet.perp(), jet.mt(),
            estimate.rho(), make_safe_zero_truncation(estimate.rho_m(),1e-8),
            estimate.sigma(), estimate.sigma_m());
     if (do_subtractor) {
       const PseudoJet & subjet = subtracted_jets[i];
       printf("%5u %15.8f %15.8f %15.8f %15.8f %15.8f\n", i,
-             subjet.rap(), subjet.phi(), subjet.perp(), subjet.mt2(), jet.area());
+             subjet.rap(), subjet.phi(), subjet.perp(), subjet.mt(), jet.area());
     }
   }
 }
