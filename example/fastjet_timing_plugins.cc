@@ -393,6 +393,7 @@ int main (int argc, char ** argv) {
   bool do_bkgd_gridmedian = false;
   bool do_bkgd_localrange = false;
   bool do_subtractor = false;
+  double bkgd_alt_ktR = -1.0;
   BackgroundRescalingYPolynomial * bkgd_rescaling = 0;
   Selector bkgd_range;
   if (do_bkgd) {
@@ -401,6 +402,7 @@ int main (int argc, char ** argv) {
     else if (cmdline.present("-bkgd:jetmedian")) {do_bkgd_jetmedian = true;
       do_bkgd_fj2 = cmdline.present("-bkgd:fj2");
       do_bkgd_localrange = cmdline.present("-bkgd:localrange");
+      bkgd_alt_ktR = cmdline.value("-bkgd:alt-ktR", bkgd_alt_ktR);
       if (do_bkgd_localrange) bkgd_range = SelectorStrip(1.5);
     } else if (cmdline.present("-bkgd:gridmedian")) {
       do_bkgd_gridmedian = true;
@@ -846,7 +848,15 @@ int main (int argc, char ** argv) {
         // may be null
         bge->set_rescaling_class(bkgd_rescaling);
         bge->set_provide_fj2_sigma(do_bkgd_fj2);
-        bge->set_cluster_sequence(*csab);
+        if (bkgd_alt_ktR > 0) {
+          ClusterSequenceAreaBase * clust_seq_bkgd = 
+              new ClusterSequenceArea(particles, JetDefinition(kt_algorithm, bkgd_alt_ktR), area_def);
+          cout << "Alt JetDef for background-estimation CSAB: " << clust_seq_bkgd->jet_def().description() << endl;
+          bge->set_cluster_sequence(*clust_seq_bkgd);
+          clust_seq_bkgd->delete_self_when_unused();
+        } else {
+          bge->set_cluster_sequence(*csab);
+        }
         if (!do_bkgd_localrange) {
           rho = bge->rho();
           sigma = bge->sigma();

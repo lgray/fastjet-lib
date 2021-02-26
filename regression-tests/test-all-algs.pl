@@ -376,7 +376,16 @@ sub setDefaults {
 
   %bkgdConfigs = (
       "kt" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:csab,-area:active -bkgd:csab,-area:voronoi 1.0 -bkgd:csab,-area:explicit -bkgd:jetmedian -bkgd:fj2,-area:explicit -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:active -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:explicit -bkgd:jetmedian -rapmax 5.0,-area:active -bkgd:jetmedian -rapmax 5.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0",
-      "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:jetmedian -subtractor,-area:explicit -bkgd:jetmedian -bkgd:localrange -subtractor,-area:explicit -bkgd:jetmedian -bkgd:rescaling -subtractor,-area:explicit -bkgd:gridmedian -subtractor,-area:explicit -bkgd:gridmedian -bkgd:rescaling -subtractor",
+      # for the jet median subtraction tests, not the use of -bkgd:alt-ktR
+      #	This is needed because when using the same jet definition for
+      #	background estimation and subtraction, it is common for one of the
+      #	jets to coincide with the median background estimation jet, and then
+      #	the subtraction comparison of jet.pt() v. amount_to_sutract.pt()
+      #	should show something that is identically equal, but is prone to
+      #	rounding errors and the behaviour differs according to the system,
+      #	which affects whether the jet is set to zero pt or instead 4-vector
+      #	subtracted. 
+      "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:jetmedian -bkgd:alt-ktR 0.5345 -subtractor,-area:explicit -bkgd:jetmedian -bkgd:localrange -bkgd:alt-ktR 0.5345 -subtractor,-area:explicit -bkgd:jetmedian -bkgd:rescaling -bkgd:alt-ktR 0.5345 -subtractor,-area:explicit -bkgd:gridmedian -subtractor,-area:explicit -bkgd:gridmedian -bkgd:rescaling -subtractor",
       "antikt" => "-bkgd -bkgd:gridmedian"
       );
 
@@ -708,19 +717,19 @@ sub setRefResults {
   # 2021-02 background & subtraction additions
   "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dc1779b9f9fe453fcd8c51acf7d7c1f0",
   "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-gridmedian,-subtractor" => "232fc18e17444eb16045ea656f2a88e2",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "7e4f98d53162146f26ca830c2d51bf30",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "51bacaee7f9e813a1a8329ba43738070",
-  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "d96fbb7e57fbd96d48a507d8ab8815b9",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "7e4f98d53162146f26ca830c2d51bf30",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "51bacaee7f9e813a1a8329ba43738070",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "d96fbb7e57fbd96d48a507d8ab8815b9",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "a182d8f2ab44732415e1a6293bcc9fce",
   "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-gridmedian,-subtractor" => "62dd843d5da9817d5e2db9e30d27fc13",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "8f38cd2f93cb43af76106c0255059970",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "7009e2ddbd2e9967a8e6ecc7bb9c45e4",
-  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "a570b9b5ce302d6e4fdc5a7ea62c0b62",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "8f38cd2f93cb43af76106c0255059970",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "7009e2ddbd2e9967a8e6ecc7bb9c45e4",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-subtractor" => "a570b9b5ce302d6e4fdc5a7ea62c0b62",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "03a104c5c3e0e9508a53195298e28a24",
   "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "7210fb41210040acae099b39d20418ae",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "cf40d750e5c1ddb3d79f9cb4eded2cec",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "4280e2b4539cc483e3cc2a4e50391427",
-  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "411b5f90fa319b831cbae40d1037e50e"
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "cf40d750e5c1ddb3d79f9cb4eded2cec",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "4280e2b4539cc483e3cc2a4e50391427",
+  # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-subtractor" => "411b5f90fa319b831cbae40d1037e50e"
   # results using the old output format    
   # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-subtractor" => "003bc7cbf950bd9e4f2a06d5477c5183",
   # "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-subtractor" => "afcdbb7696ee7ef8317386de0e58c88c",
@@ -737,6 +746,17 @@ sub setRefResults {
   # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-subtractor" => "3035a4c6b6f7c19befb6eaa085a0be37",
   # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-subtractor" => "c041f06df3ad8a72aaa2bc3d01a17a24",
   # "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-gridmedian,-rescaling,-subtractor" => "dd9a1f3e1609a3ec2d26355b0437b646"
+
+  # 2021-02 background & subtraction additions with alt-ktR
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "f01bd8d3c5b57cdebb291dd453cd6057",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "e72912c591d3e166777513048e61ed8c",
+  "Pythia-PtMin50-LHC-10kev.dat,nev10,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "21a31f5d0169b9564613560587ba3fa8",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "8de0126c5f5b2762cee2024ac5511b0e",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "bf1d48fb643df84fefd749409be426dc",
+  "Pythia-PtMin50-LHC-10kev.dat,nev100,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "571434473b6d973e3399bc2db586a55e",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-alt-ktR,0.5345,-subtractor" => "51f777b6f330ff9d7c892d17e1fe5843",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-localrange,-alt-ktR,0.5345,-subtractor" => "18ecc281322eaf639968176570f916c5",
+  "Pythia-PtMin50-LHC-10kev.dat,nev1000,cam,R0.60,-explicit,-jetmedian,-rescaling,-alt-ktR,0.5345,-subtractor" => "eb1f9213d4ff117a5540bfeb418c3f84",  
   );
 
   %refResultsOrig = %refResults;

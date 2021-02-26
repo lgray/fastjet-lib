@@ -1,8 +1,13 @@
 ========== CHANGELOG FILE FOR FastJet =================================
-2021-02-26 Fri  <gavin.salam@physics.ox.ac.uk>
+2021-02-26 Fri  <gavin.salam@physics.ox.ac.uk> + Gregory
 
+	* regression-tests/test-all-algs.pl
 	* example/fastjet_timing_plugins.cc:
-	added printout of command line
+	added -bkgd:alt-ktR option to force background estimation to
+	use the kt algorithm with the specified R value and updated
+	test-all-algs to use that.
+
+	also added printout of command line to fastjet_timing_plugins
 
 2021-02-25  Gregory Soyez  <soyez@fastjet.fr>
 
