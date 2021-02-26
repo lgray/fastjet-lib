@@ -1,4 +1,8 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-02-26 Fri  <gavin.salam@physics.ox.ac.uk>
+
+	* example/fastjet_timing_plugins.cc:
+	added printout of command line
 
 2021-02-25  Gregory Soyez  <soyez@fastjet.fr>
 

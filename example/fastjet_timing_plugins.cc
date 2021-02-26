@@ -312,9 +312,10 @@ void is_unavailable(const string & algname) {
 /// wrapped in fastjet
 int main (int argc, char ** argv) {
 
+  CmdLine cmdline(argc,argv);
+  cout << "# " << cmdline.command_line() << endl;
   ClusterSequence::print_banner();
 
-  CmdLine cmdline(argc,argv);
   cmdline_p = &cmdline;
   // allow the use to specify the Strategy either through the
   // -clever or the -strategy options (both will take numerical
