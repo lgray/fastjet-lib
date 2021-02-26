@@ -270,10 +270,12 @@ inline double pow2(const double x) {return x*x;}
 // pretty print the jets and their subjets
 void print_jets_and_sub (const vector<PseudoJet> & jets, double dcut);
 
+#ifndef __FJCORE__
 void print_jets_bkgd(const vector<PseudoJet> &jets,
                      const vector<PseudoJet> &subtracted_jets,
                      BackgroundEstimatorBase * bge_ptr,
                      bool do_subtractor);
+#endif // __FJCORE__
 
 // have various kinds of subjet finding, to test consistency among them
 //
@@ -1078,6 +1080,7 @@ double make_safe_zero_truncation(double x, double precision){
   return std::abs(x)<0.5*precision ? 0.0 : x;
 }
 
+#ifndef __FJCORE__
 void print_jets_bkgd(const vector<PseudoJet> &jets,
                      const vector<PseudoJet> &subtracted_jets,
                      BackgroundEstimatorBase * bge_ptr,
@@ -1109,6 +1112,7 @@ void print_jets_bkgd(const vector<PseudoJet> &jets,
              subjet.rap(), subjet.phi(), subjet.perp(), subjet.mt(), jet.area());
     }
   }
+#endif// __FJCORE__
 }
 
 //----------------------------------------------------------------------

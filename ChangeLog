@@ -7,7 +7,18 @@
 	use the kt algorithm with the specified R value and updated
 	test-all-algs to use that.
 
+	This is needed because when using the same jet definition for
+	background estimation and subtraction, it is common for one of the
+	jets to coincide with the median background estimation jet, and then
+	the subtraction comparison of jet.pt() v. amount_to_sutract.pt()
+	should show something that is identically equal, but is prone to
+	rounding errors and the behaviour differs according to the system,
+	which affects whether the jet is set to zero pt or instead 4-vector
+	subtracted. 
+
 	also added printout of command line to fastjet_timing_plugins
+
+	plus hopefully fixed fastjet_timing_plugins to compile again with fjcore
 
 2021-02-25  Gregory Soyez  <soyez@fastjet.fr>
 
