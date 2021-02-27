@@ -31,9 +31,9 @@
 #ifndef __CASUBJET_TAGGER_HH__
 #define __CASUBJET_TAGGER_HH__
 
-#include <fastjet/PseudoJet.hh>
-#include <fastjet/WrappedStructure.hh>
-#include <fastjet/tools/Transformer.hh>
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/WrappedStructure.hh"
+#include "fastjet/tools/Transformer.hh"
 #include "fastjet/LimitedWarning.hh"
 
 FASTJET_BEGIN_NAMESPACE

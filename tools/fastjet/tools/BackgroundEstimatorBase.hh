@@ -31,10 +31,10 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/ClusterSequenceAreaBase.hh>
-#include <fastjet/FunctionOfPseudoJet.hh>
-#include <fastjet/Selector.hh>
-#include <fastjet/Error.hh>
+#include "fastjet/ClusterSequenceAreaBase.hh"
+#include "fastjet/FunctionOfPseudoJet.hh"
+#include "fastjet/Selector.hh"
+#include "fastjet/Error.hh"
 #include <iostream>
 
 FASTJET_BEGIN_NAMESPACE     // defined in fastjet/internal/base.hh

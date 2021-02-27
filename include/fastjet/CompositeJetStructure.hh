@@ -32,11 +32,11 @@
 #ifndef __FASTJET_COMPOSITEJET_STRUCTURE_HH__
 #define __FASTJET_COMPOSITEJET_STRUCTURE_HH__
 
-#include <fastjet/PseudoJet.hh>
-#include <fastjet/PseudoJetStructureBase.hh>
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/PseudoJetStructureBase.hh"
 
 // to have access to the recombiner we need to include the JetDefinition header
-#include <fastjet/JetDefinition.hh>
+#include "fastjet/JetDefinition.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

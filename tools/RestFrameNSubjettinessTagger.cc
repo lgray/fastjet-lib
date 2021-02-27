@@ -28,9 +28,9 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/tools/RestFrameNSubjettinessTagger.hh>
-#include <fastjet/tools/Boost.hh>
-#include <fastjet/ClusterSequence.hh>
+#include "fastjet/tools/RestFrameNSubjettinessTagger.hh"
+#include "fastjet/tools/Boost.hh"
+#include "fastjet/ClusterSequence.hh"
 #include <sstream>
 
 using namespace std;

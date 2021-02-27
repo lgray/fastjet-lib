@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/FunctionOfPseudoJet.hh>
+#include "fastjet/FunctionOfPseudoJet.hh"
 #include <string>
 #include <sstream>
 

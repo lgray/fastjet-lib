@@ -22,8 +22,8 @@
 // along with this code. If not, see <http://www.gnu.org/licenses/>.
 //----------------------------------------------------------------------
 
-#include <fastjet/JetDefinition.hh>
-#include <fastjet/FunctionOfPseudoJet.hh>   // to derive Recluster from FOfPJ<PJ>
+#include "fastjet/JetDefinition.hh"
+#include "fastjet/FunctionOfPseudoJet.hh"   // to derive Recluster from FOfPJ<PJ>
 #include <iostream>
 #include <string>
 

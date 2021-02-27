@@ -28,8 +28,8 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/tools/CASubJetTagger.hh>
-#include <fastjet/ClusterSequence.hh>
+#include "fastjet/tools/CASubJetTagger.hh"
+#include "fastjet/ClusterSequence.hh"
 
 #include <algorithm>
 #include <cmath>

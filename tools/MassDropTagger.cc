@@ -28,8 +28,8 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/tools/MassDropTagger.hh>
-#include <fastjet/ClusterSequence.hh>
+#include "fastjet/tools/MassDropTagger.hh"
+#include "fastjet/ClusterSequence.hh"
 #include <sstream>
 
 FASTJET_BEGIN_NAMESPACE

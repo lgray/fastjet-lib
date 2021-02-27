@@ -1,4 +1,50 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+
+2021-02-27  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/CompositeJetStructure.hh
+	* include/fastjet/FunctionOfPseudoJet.hh
+	* include/fastjet/NNFJN2Plain.hh
+	* include/fastjet/NNFJN2Tiled.hh
+	* include/fastjet/NNH.hh
+	* plugins/ATLASCone/CommonUtils.cc
+	* plugins/ATLASCone/CommonUtils.hh
+	* plugins/ATLASCone/Jet.cc
+	* plugins/ATLASCone/Jet.hh
+	* plugins/ATLASCone/JetConeFinderTool.cc
+	* plugins/ATLASCone/JetConeFinderTool.hh
+	* plugins/ATLASCone/JetDistances.hh
+	* plugins/ATLASCone/JetSplitMergeTool.cc
+	* plugins/ATLASCone/JetSplitMergeTool.hh
+	* plugins/ATLASCone/LorentzVector.hh
+	* src/CompositeJetStructure.cc
+	* src/FunctionOfPseudoJet.cc
+	* tools/CASubJetTagger.cc
+	* tools/Filter.cc
+	* tools/JHTopTagger.cc
+	* tools/JetMedianBackgroundEstimator.cc
+	* tools/MassDropTagger.cc
+	* tools/Recluster.cc
+	* tools/RestFrameNSubjettinessTagger.cc
+	* tools/TopTaggerBase.cc
+	* tools/fastjet/tools/BackgroundEstimatorBase.hh
+	* tools/fastjet/tools/Boost.hh
+	* tools/fastjet/tools/CASubJetTagger.hh
+	* tools/fastjet/tools/Filter.hh
+	* tools/fastjet/tools/JHTopTagger.hh
+	* tools/fastjet/tools/JetMedianBackgroundEstimator.hh
+	* tools/fastjet/tools/MassDropTagger.hh
+	* tools/fastjet/tools/Recluster.hh
+	* tools/fastjet/tools/RestFrameNSubjettinessTagger.hh
+	* tools/fastjet/tools/TopTaggerBase.hh
+	* tools/fastjet/tools/Transformer.hh:
+	used
+	  #include "fastjet/..."
+	instead of
+	  #include <fastjet/...>
+	to facilitate integration with the Cxx.jl tool.
+	Solves issue 2020-01-FJ-include-char
+
 2021-02-26 Fri  <gavin.salam@physics.ox.ac.uk> + Gregory
 
 	* regression-tests/test-all-algs.pl

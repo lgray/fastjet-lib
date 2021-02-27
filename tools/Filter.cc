@@ -31,7 +31,7 @@
 #include "fastjet/tools/Filter.hh"
 #include "fastjet/tools/Recluster.hh"
 #include "fastjet/tools/Subtractor.hh"
-#include <fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh>
+#include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
 #include <cassert>
 #include <algorithm>
 #include <sstream>

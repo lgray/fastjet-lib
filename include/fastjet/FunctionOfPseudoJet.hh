@@ -31,8 +31,8 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/PseudoJet.hh>
-#include <fastjet/Selector.hh>
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/Selector.hh"
 
 FASTJET_BEGIN_NAMESPACE
 

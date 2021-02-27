@@ -21,7 +21,7 @@
 
 #include "fastjet/tools/Recluster.hh"
 #include "fastjet/CompositeJetStructure.hh"
-#include <fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh>
+#include "fastjet/ClusterSequenceActiveAreaExplicitGhosts.hh"
 #include <sstream>
 #include <typeinfo>
 

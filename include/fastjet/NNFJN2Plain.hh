@@ -31,7 +31,7 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/NNBase.hh>
+#include "fastjet/NNBase.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

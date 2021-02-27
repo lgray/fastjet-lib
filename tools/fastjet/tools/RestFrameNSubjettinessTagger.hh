@@ -31,10 +31,10 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/PseudoJet.hh>
-#include <fastjet/JetDefinition.hh>
-#include <fastjet/CompositeJetStructure.hh>
-#include <fastjet/tools/Transformer.hh>
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/JetDefinition.hh"
+#include "fastjet/CompositeJetStructure.hh"
+#include "fastjet/tools/Transformer.hh"
 
 FASTJET_BEGIN_NAMESPACE
 

@@ -31,8 +31,8 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/internal/base.hh>
-#include <fastjet/tools/Transformer.hh>
+#include "fastjet/internal/base.hh"
+#include "fastjet/tools/Transformer.hh"
 
 FASTJET_BEGIN_NAMESPACE
 

@@ -31,9 +31,9 @@
 #ifndef __FASTJET_TRANSFORMER_HH__
 #define __FASTJET_TRANSFORMER_HH__
 
-#include <fastjet/PseudoJet.hh>
-#include <fastjet/FunctionOfPseudoJet.hh>
-#include <fastjet/PseudoJetStructureBase.hh>
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/FunctionOfPseudoJet.hh"
+#include "fastjet/PseudoJetStructureBase.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

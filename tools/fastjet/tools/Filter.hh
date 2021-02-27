@@ -31,10 +31,10 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/ClusterSequence.hh>
-#include <fastjet/Selector.hh>
-#include <fastjet/CompositeJetStructure.hh> // to derive the FilterStructure from CompositeJetStructure
-#include <fastjet/tools/Transformer.hh>     // to derive Filter from Transformer
+#include "fastjet/ClusterSequence.hh"
+#include "fastjet/Selector.hh"
+#include "fastjet/CompositeJetStructure.hh" // to derive the FilterStructure from CompositeJetStructure
+#include "fastjet/tools/Transformer.hh"     // to derive Filter from Transformer
 #include <iostream>
 #include <string>
 

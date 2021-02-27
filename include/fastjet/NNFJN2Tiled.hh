@@ -31,8 +31,8 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/NNBase.hh>
-#include <fastjet/internal/TilingExtent.hh>
+#include "fastjet/NNBase.hh"
+#include "fastjet/internal/TilingExtent.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

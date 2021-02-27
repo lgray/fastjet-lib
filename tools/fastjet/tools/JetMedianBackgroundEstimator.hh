@@ -33,11 +33,11 @@
 //FJENDHEADER
 
 #include "fastjet/config.h"
-#include <fastjet/ClusterSequenceAreaBase.hh>
-#include <fastjet/AreaDefinition.hh>
-#include <fastjet/FunctionOfPseudoJet.hh>
-#include <fastjet/Selector.hh>
-#include <fastjet/tools/BackgroundEstimatorBase.hh>
+#include "fastjet/ClusterSequenceAreaBase.hh"
+#include "fastjet/AreaDefinition.hh"
+#include "fastjet/FunctionOfPseudoJet.hh"
+#include "fastjet/Selector.hh"
+#include "fastjet/tools/BackgroundEstimatorBase.hh"
 #include <iostream>
 
 #ifdef FASTJET_HAVE_THREAD_SAFETY

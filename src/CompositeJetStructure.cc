@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/CompositeJetStructure.hh>
+#include "fastjet/CompositeJetStructure.hh"
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 

@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------
 //FJENDHEADER
 
-#include <fastjet/tools/TopTaggerBase.hh>
+#include "fastjet/tools/TopTaggerBase.hh"
 
 FASTJET_BEGIN_NAMESPACE
 

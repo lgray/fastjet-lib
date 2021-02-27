@@ -31,9 +31,9 @@
 #ifndef __FASTJET_MASS_DROP_TAGGER_HH__
 #define __FASTJET_MASS_DROP_TAGGER_HH__
 
-#include <fastjet/tools/Transformer.hh>
-#include <fastjet/LimitedWarning.hh>
-#include <fastjet/WrappedStructure.hh>
+#include "fastjet/tools/Transformer.hh"
+#include "fastjet/LimitedWarning.hh"
+#include "fastjet/WrappedStructure.hh"
 
 FASTJET_BEGIN_NAMESPACE
 
