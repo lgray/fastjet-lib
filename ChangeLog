@@ -2,6 +2,11 @@
 
 2021-02-27  Gregory Soyez  <soyez@fastjet.fr>
 
+	* almost all cc and hh files:
+	updated the header to include the correct years in the copyright
+
+2021-02-27  Gregory Soyez  <soyez@fastjet.fr>
+
 	* include/fastjet/CompositeJetStructure.hh
 	* include/fastjet/FunctionOfPseudoJet.hh
 	* include/fastjet/NNFJN2Plain.hh
