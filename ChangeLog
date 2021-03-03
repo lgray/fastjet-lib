@@ -1,9 +1,13 @@
 ========== CHANGELOG FILE FOR FastJet =================================
 2021-03-03 Wed  <gavin.salam@physics.ox.ac.uk> + Gregory + Matteo
 
+	* plugins/SISCone/siscone:
+	moved from 3.0.6-devel to 3.0.5 (in preparation for release)
+
 	* tools/JetMedianBackgroundEstimator.cc:
 	fixed potential bug in jets_used() introduced earlier as part of
-	thread-safety changes
+	thread-safety changes, to do with selector reference not being
+	properly set.
 
 2021-02-27  Gregory Soyez  <soyez@fastjet.fr>
 
