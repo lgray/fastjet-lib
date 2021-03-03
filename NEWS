@@ -2,12 +2,9 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
-Summary of changes from v3.3.4 -> v3.4.0-devel: 2021-MM-DD
+Summary of changes from v3.3.4 -> v3.4.0-beta1: 2021-MM-DD
 ================================================================
 New features:
-
-* the git repository for the code is now public
-  (see https://gitlab.com/fastjet/fastjet)
 
 * addition of support for thread safety. It requires a compiler 
   supporting the C++11 standard (or later) and must be explicitly 
@@ -32,22 +29,24 @@ New features:
   For details on using it, see sections 8 and 10.3.2 of the manual.
   The Subtractor class has been updated to use this. 
 
-Improvements to existing features
+* the git repository for the code is now public
+  (see https://gitlab.com/fastjet/fastjet)
+
+Improvements to existing features:
+
+* the Python interface now has improved exceptions (a fastjet Error is
+  translated into a FastJetError python exception) and can be more
+  easily be used with projects using FastJet that want to define their
+  own python wrappers. Thanks to Patrick Komiske for the suggestions.
 
 * PxConePlugin now has an optional mode argument for e+e- running
   (mode=1) instead of pp running (mode=2). Thanks to Stefan Kluth for
   the suggestion.
 
-* the Python interface now has improved exceptions (a fastjet Error is
-  translated into a FastJetError python exception) and can be more
-  easily be used with projects that want to define their own
-  wrappers. Thanks to Patrick Komiske for the suggestion.
-
 Bug fixes:
+
 * the Fortran interface to e+e- interface now returns jets ordered
   in decreasing energy rather than decreasing transverse momentum. 
-
-?????????? ANYTHING TO MENTION HERE???
 
 ================================================================
 Summary of changes from v3.3.3 -> v3.3.4: 2020-05-05

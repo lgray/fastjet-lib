@@ -891,7 +891,7 @@ Entries below are added in the master branch
 	At this stage, more testing (incl memory management) is needed
 
 	* pyinterface/Makefile.am:
-	fixed fate of swig_wrp.cpp and fastjet.i during make dist
+	fixed fate of swig_wrap.cpp and fastjet.i during make dist
 
 2017-02-10  Gavin Salam  <gavin.salam@cern.ch>
 

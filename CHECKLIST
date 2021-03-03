@@ -12,7 +12,9 @@ checklist for X.Y.Z (make a copy before editing!)
 -------------------
   preparatory work
   ~~~~~~~~~~~~~~~~
-X.Y.Z  run svn up
+X.Y.Z  run 
+         git pull
+         git submodule update
 X.Y.Z  make sure the release system has up to date autoconf and automake
 X.Y.Z  make sure 8 files are symbolic links to the correct automake version
        - [ ] compile             - [ ] install-sh
@@ -43,7 +45,7 @@ X.Y.Z  check copyright dates in fjcore preamble (scripts/preamble-fjcore.txt)
   validation/checks
   ~~~~~~~~~~~~~~~~~
 X.Y.Z  make check 
-X.Y.Z  within zsh, in the examples directory, do 
+X.Y.Z  within zsh, in the examples directory, do either in zsh (see below for bash)
          echo >! out
          for a in [01]*.cc
          (cmd=(`grep 'run it with.*[01].*<' $a | sed 's/.*://'`); echo $cmd[1]; valgrind $cmd[1] < $cmd[3] >>& out) 
@@ -51,6 +53,7 @@ X.Y.Z  within zsh, in the examples directory, do
          grep LEAK.SUMMARY out
        and make sure there are no errors (look through the file too)
        [Must be done without CGAL? You may have to recompile examples manually]
+       Or in bash
          echo "mem_test" > out;
          for a in [01]*.cc; do
            g++ $a `fastjet-config --cxxflags --libs --plugins` -o ${a%.cc}
