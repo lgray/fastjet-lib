@@ -487,7 +487,8 @@ std::vector<PseudoJet> JetMedianBackgroundEstimator::jets_used() const{
     PseudoJet reference_jet = _cached_estimate.extras<JetMedianBackgroundEstimator>().reference_jet();
     _unlock_if_needed();
     Selector local_rho_range = _rho_range;
-    tmp_jets = _rho_range(_included_jets);
+    local_rho_range.set_reference(reference_jet);
+    tmp_jets = local_rho_range(_included_jets);
   } else {
     if (!_cache_available) _compute_and_cache_no_overwrite();
     tmp_jets = _rho_range(_included_jets);
@@ -666,11 +667,11 @@ BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) 
       // note that we're using the scalar area as a normalisation inside the
       // density class!
       if (do_rho_m) 
-	median_input_dt = m_density(current_jet);
+        median_input_dt = m_density(current_jet);
     
       // perform rescaling if needed
       if (_rescaling_class != 0) {
-	double resc = (*_rescaling_class)(current_jet);;
+        double resc = (*_rescaling_class)(current_jet);;
         median_input_pt /= resc;
         median_input_dt /= resc;
       }
@@ -678,7 +679,7 @@ BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) 
       // store the result for future computation of the median
       vector_for_median_pt.push_back(median_input_pt);
       if (do_rho_m) 
-	vector_for_median_dt.push_back(median_input_dt);
+        vector_for_median_dt.push_back(median_input_dt);
 
       total_area  += this_area;
       njets_used++;
