@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-03-04  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/GhostedAreaSpec.cc:
+	fixed memory leak in add ghost (new without delete)
+
 2021-03-03 Wed  <gavin.salam@physics.ox.ac.uk> + Gregory + Matteo
 
 	* plugins/SISCone/siscone:

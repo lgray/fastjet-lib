@@ -197,6 +197,9 @@ void GhostedAreaSpec::add_ghosts(vector<PseudoJet> & event) const {
     }
   }
 
+  // release memory
+  delete[] all_random;
+  
   // safety check
   assert(random_counter==n_random);
 }
