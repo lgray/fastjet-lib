@@ -698,8 +698,15 @@ BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) 
   // If we have explicit ghosts, this is 0 (i.e. the default)
   const ClusterSequenceAreaBase * csab = (dynamic_cast<ClusterSequenceStructure*>(_csi.get()))->validated_csab();
   if (! (csab->has_explicit_ghosts())) {
-    extras->set_empty_area  (csab->empty_area(_rho_range));
-    extras->set_n_empty_jets(csab->n_empty_jets(_rho_range));
+    if (_rho_range.takes_reference()){
+      Selector local_rho_range = _rho_range;
+      local_rho_range.set_reference(jet);
+      extras->set_empty_area  (csab->empty_area(local_rho_range));
+      extras->set_n_empty_jets(csab->n_empty_jets(local_rho_range));
+    } else {
+      extras->set_empty_area  (csab->empty_area(_rho_range));
+      extras->set_n_empty_jets(csab->n_empty_jets(_rho_range));
+    }
   }
 
   extras->set_n_jets_used(njets_used);

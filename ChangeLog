@@ -1,4 +1,10 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-03-05  Gregory Soyez  <soyez@fastjet.fr>
+
+	* tools/JetMedianBackgroundEstimator.cc:
+	fixed issue of reference unset when computing empty areas w local
+	selectors (and checked no other misused were spotted)
+
 2021-03-04  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/GhostedAreaSpec.cc:
