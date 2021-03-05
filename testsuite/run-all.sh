@@ -1,6 +1,9 @@
 #!/bin/bash
 #
 # assume everything has been built
+#
+# By default, the thread-safety tests are oly run if FastJet has been
+# built w thread-safety enabled
 
 function report_failure {
     echo '******* FAILED ******** '
@@ -22,6 +25,10 @@ header
 header 
 ./run_tests || report_failure run_tests
 
-header 
-./thread_safety_tests || report_failure thread_safety_tests 
+header
+if ../fastjet-config --config | grep "Thread safety" | grep -q "yes"; then
+    ./thread_safety_tests || report_failure thread_safety_tests
+else
+    echo "Thread-safety tests enabled only when thread safety enabled for fastjet"
+fi
 
