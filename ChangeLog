@@ -1,4 +1,12 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-03-05  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
+
+	* tools/JetMedianBackgroundEstimator.cc:
+	removed a typo (;; instead of ;)
+	
+	* doc/fastjet-doc.tex
+	updated affiliation and reworked a sentence in the quickstart guide
+
 2021-03-05  Gregory Soyez  <soyez@fastjet.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc:
@@ -98,7 +106,7 @@
 
 2021-02-25 Thu  <gavin.salam@physics.ox.ac.uk>
 
-    * regression-tests/nightly-check.pl:
+        * regression-tests/nightly-check.pl:
 	attempt to get thread-safety check working on orphee
 
 	* example/fastjet_timing_plugins.cc:

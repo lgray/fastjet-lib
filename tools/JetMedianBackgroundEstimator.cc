@@ -671,7 +671,7 @@ BackgroundEstimate JetMedianBackgroundEstimator::_compute(const PseudoJet &jet) 
     
       // perform rescaling if needed
       if (_rescaling_class != 0) {
-        double resc = (*_rescaling_class)(current_jet);;
+        double resc = (*_rescaling_class)(current_jet);
         median_input_pt /= resc;
         median_input_dt /= resc;
       }
