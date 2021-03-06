@@ -111,7 +111,7 @@ push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-
 push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-5.3 CXX=/ada1/lpthe/cacciari/local/bin/g++-5.3 CXXFLAGS=\"-O2 -Wall -std=c++14\"", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 5.3 and c++14 (only few evts)
 push @setups, ["","--enable-allcxxplugins CC=/ada1/lpthe/cacciari/local/bin/gcc-6.1 CXX=/ada1/lpthe/cacciari/local/bin/g++-6.1 CXXFLAGS=\"-O2 -Wall\"", ":-Wl,-rpath -Wl,/ada1/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 6.1 (automatically c++14) (only few evts)
 
-push @setups, ["","--enable-allcxxplugins CC=/ada4/lpthe/cacciari/local/bin/g++-10.2 CXX=/ada4/lpthe/cacciari/local/bin/g++-10.2 CXXFLAGS=\"-O2 -Wall\"", ":-Wl,-rpath -Wl,/ada4/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 10.2 (automatically c++??) (only few evts)
+push @setups, ["","--enable-allcxxplugins CC=/ada4/lpthe/cacciari/local/bin/gcc-10.2 CXX=/ada4/lpthe/cacciari/local/bin/g++-10.2 CXXFLAGS=\"-O2 -Wall\"", ":-Wl,-rpath -Wl,/ada4/lpthe/cacciari/local/lib64", 10, ""]; # with gcc 10.2 (automatically c++??) (only few evts)
 
 # temporary disabled because zetes is down, MC 31/8/2013
 #push @setups, ["zetes","--enable-allcxxplugins", "", 10, ""]; # out of the box + all plugins on zetes (SLC4, gcc 3.4.6, 64 bit)
