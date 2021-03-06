@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-03-06 Sat  <gavin.salam@physics.ox.ac.uk>
+
+	* regression-tests/nightly-check.pl:
+	added gcc-10.2 to list of checks
+	
 2021-03-05  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc:
