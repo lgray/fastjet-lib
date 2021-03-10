@@ -29,9 +29,6 @@ New features:
   For details on using it, see sections 8 and 10.3.2 of the manual.
   The Subtractor class has been updated to use this. 
 
-* the git repository for the code is now public
-  (see https://gitlab.com/fastjet/fastjet)
-
 Improvements to existing features:
 
 * the Python interface now has improved exceptions (a fastjet Error is
