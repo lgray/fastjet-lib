@@ -678,7 +678,7 @@ dnl will give a positive anwser for FastJet 3.1.0a1.
 dnl-------------------------------------------------------------------
 versionmajor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\([[^\.]]*\).*/\1/'`
 versionminor=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\([[^\.]]*\).*/\2/'`
-versionending=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\([[^\.]]*\)$/\3/'`
+versionending=`echo $PACKAGE_VERSION | sed 's/^\([[^\.]]*\)\.\([[^\.]]*\)\.\(.*\)$/\3/'`
 versionpatchlevel=`echo $versionending | sed 's/^\([[0-9]][[0-9]]*\).*/\1/'`
 versionprerelease=`echo $versionending | sed 's/^[[0-9-]]*//'`
 versionnumber=`printf "%d%.2d%.2d" "$versionmajor" "$versionminor" "$versionpatchlevel"`

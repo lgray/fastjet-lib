@@ -1,14 +1,22 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-03-10  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/genconfig.sh:
+	* configure.ac:
+	fixed issue in version parsing. The approach now supports version
+	numbers with a pre-release tag containing a dot, such as
+	  X.Y.Z-beta.K
+
 2021-03-06 Sat  <gavin.salam@physics.ox.ac.uk>
 
 	* regression-tests/nightly-check.pl:
 	added gcc-10.2 to list of checks
-	
+
 2021-03-05  Matteo Cacciari  <cacciari@lpthe.jussieu.fr>
 
 	* tools/JetMedianBackgroundEstimator.cc:
 	removed a typo (;; instead of ;)
-	
+
 	* doc/fastjet-doc.tex
 	updated affiliation and reworked a sentence in the quickstart guide
 
