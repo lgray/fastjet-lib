@@ -1,4 +1,5 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-03-10  FastJet team <fastjet@projects.hepforge.org>
 2021-03-10  Gregory Soyez  <soyez@fastjet.fr>
 
 	* src/genconfig.sh:
