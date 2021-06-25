@@ -241,7 +241,9 @@ public:
     // send output to a place that we ignore (at least for now)
     // (but you can replace _ostr with _cerr to see what the 
     // output looks like)
-    LimitedWarning::set_default_stream_and_mutex(&_ostr, &_mutex);    
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+    LimitedWarning::set_default_stream_and_mutex(&_ostr, &_mutex);
+#endif
   }
 
   //std::string short_name() const {return typeid(*this).name();}
@@ -252,7 +254,9 @@ public:
 
   std::ostringstream _ostr;
   LimitedWarning _warning;
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   std::mutex _mutex;
+#endif
 };
 
 class ThreadedError : public ThreadedTestBase<string> {
@@ -261,7 +265,9 @@ public:
     // send output to a place that we ignore (at least for now)
     // (but you can replace _ostr with _cerr to see what the 
     // output looks like)
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
     Error::set_default_stream_and_mutex(&_ostr, &_mutex);    
+#endif
   }
 
   void run_test_i(unsigned i) {
@@ -272,7 +278,9 @@ public:
 
   std::ostringstream _ostr;
   Error _error;
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   std::mutex _mutex;
+#endif
 };
 
 
