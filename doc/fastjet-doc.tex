@@ -4564,6 +4564,52 @@ The details of its usage are given in
 sections~\ref{sec:bkg_estim_usage} and
 \ref{sec:BGE-other-facilities}. 
 
+%......................................................................
+\subsubsection{I/O}
+\label{sec:thread-safe-io}
+
+There are three components of the FastJet code that perform text
+output: the banner output, the \ttt{LimitedWarning} class and the
+\ttt{Error} class.
+%
+With limited thread safety enabled, all are thread safe in the sense
+that they will not crash the code.
+
+The banner will be output just once, and to ensure reproducibility of
+text output the user may wish to call
+\ttt{ClusterSequence::print\_banner()} before creating threads (the
+stream can be controlled with
+\ttt{ClusterSequence::set\_fastjet\_banner\_stream()}).
+%
+
+For the \ttt{LimitedWarning} and \ttt{Error} classes, the user has no
+direct control over the stage at which output may come.
+%
+To prevent garbled output, the user may perform calls to
+\begin{lstlisting}
+    LimitedWarning::set_default_stream_and_mutex(&user_stream, &user_mutex);
+    Error::set_default_stream_and_mutex(&user_stream, &user_mutex);
+\end{lstlisting}
+where the user provides a pointer to a stream and a mutex.
+%
+The mutex is then locked whenever something is to be output to the
+stream.
+%
+If the user is sending their own output to that same stream, it is
+their responsibility to ensure that they lock it when performing their
+own output.
+%
+Note that the \ttt{LimitedWarning} warning class outputs a ``(LAST
+SUCH WARNING)'' string the last time it outputs a warning of a given
+kind.
+%
+When running concurrent threads, that string may not appear with the
+warning that is actually the last of that kind.
+%
+Recall that output from warnings and errors can be disabled by setting
+a null stream for each of them and that a summary of the warnings can
+be obtained as a string at any time with a call to
+\ttt{LimitedWarning::summary()}. 
 
 %======================================================================
 \section{Compilation notes}
@@ -6809,4 +6855,4 @@ doi:10.1016/j.physrep.2019.01.007
 
 
 
-%  LocalWords:  NNBase
+%  LocalWords:  NNBase reproducibility
