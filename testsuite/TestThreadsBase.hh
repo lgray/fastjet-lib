@@ -223,6 +223,59 @@ public:
   }
 };
 
+
+//-------------------------------------------------------------
+
+/// check thread-safety of warnings output;
+///
+/// There are two aspects to testing this:
+///
+///     1. that it does not crash
+///     2. that the output comes out identical
+///
+/// Unfortunately, 2 isn't the case, because the "(LAST SUCH WARNING)"
+/// text does not come out in the same location
+class ThreadedWarning : public ThreadedTestBase<string> {
+public:
+  ThreadedWarning() : ThreadedTestBase<string>(8) {
+    // send output to a place that we ignore (at least for now)
+    // (but you can replace _ostr with _cerr to see what the 
+    // output looks like)
+    LimitedWarning::set_default_stream_and_mutex(&_ostr, &_mutex);    
+  }
+
+  //std::string short_name() const {return typeid(*this).name();}
+
+  void run_test_i(unsigned i) {
+    _warning.warn("test warning for threading tests");
+  }  
+
+  std::ostringstream _ostr;
+  LimitedWarning _warning;
+  std::mutex _mutex;
+};
+
+class ThreadedError : public ThreadedTestBase<string> {
+public:
+  ThreadedError() : ThreadedTestBase<string>(8) {
+    // send output to a place that we ignore (at least for now)
+    // (but you can replace _ostr with _cerr to see what the 
+    // output looks like)
+    Error::set_default_stream_and_mutex(&_ostr, &_mutex);    
+  }
+
+  void run_test_i(unsigned i) {
+    try {
+      throw Error("test error for threading checks");
+    } catch (const Error & error) {}
+  }  
+
+  std::ostringstream _ostr;
+  Error _error;
+  std::mutex _mutex;
+};
+
+
 //-------------------------------------------------------------
 /// since rap and phi have cached calculations, this test
 /// checks that if we evaluate them in separate threads 

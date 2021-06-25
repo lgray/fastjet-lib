@@ -52,6 +52,7 @@ using namespace std;
 atomic<bool> Error::_print_errors{true};
 atomic<bool> Error::_print_backtrace{false};
 atomic<ostream *> Error::_default_ostr{& cerr};
+atomic<mutex *>   Error::_stream_mutex{nullptr};
 #else
 bool Error::_print_errors = true;
 bool Error::_print_backtrace = false;
@@ -152,18 +153,17 @@ Error::Error(const std::string & message_in) {
 #endif  // FASTJET_HAVE_EXECINFO_H
 #endif  // __FJCORE__
 
-    *ostr << oss.str();
-    // get something written to file even 
-    // if the program aborts
-    ostr->flush();
-
-    // // output error message either to cerr or to the user-set stream
-    // if (_default_ostr) { *_default_ostr << oss.str();
-    //                       // get something written to file even 
-    // 			  // if the program aborts
-    //                       _default_ostr->flush(); }
-    // else               { std::cerr << oss.str(); }
-    
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+    if (_stream_mutex){
+      std::lock_guard<std::mutex> guard(*_stream_mutex);
+      *ostr << oss.str();
+      ostr->flush(); // get something written to file even if the program aborts
+    } else
+#endif //  FASTJET_HAVE_LIMITED_THREAD_SAFETY
+    {
+      *ostr << oss.str();
+      ostr->flush(); // get something written to file even if the program aborts
+    }
   }
 }
 

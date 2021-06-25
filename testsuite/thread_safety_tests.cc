@@ -36,6 +36,8 @@ int main(int argc, char ** argv) {
   // Declare the set of tests
   vector<unique_ptr<TestBase> > tests;
   tests.emplace_back(make_unique<TestThread<ThreadedBanner>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedWarning>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedError>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestPhiRap>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestRapPhi>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering1EvManyR>>());

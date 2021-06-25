@@ -1,4 +1,21 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-06-25 Fri  <gavin.salam@physics.ox.ac.uk> + Gregory & Matteo
+
+    * include/fastjet/Error.hh
+    * include/fastjet/LimitedWarning.hh
+    * src/Error.cc
+    * src/LimitedWarning.cc
+    * testsuite/TestThreadsBase.hh
+    * testsuite/mkmk
+    * testsuite/thread_safety_tests.cc
+
+	added set_default_stream_and_mutex to Error and LimitedWarning,
+	to allow users to set a mutex for I/O to the specified stream,
+	so that the stream I/O locks the supplied mutex before the output,
+	to help avoid garbled output.
+
+	Also added some related checks in the testsuite.
+
 2021-03-10  FastJet team <fastjet@projects.hepforge.org>
 
 	Release of FastJet 3.4.1-beta.1

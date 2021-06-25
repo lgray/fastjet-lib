@@ -61,7 +61,7 @@ public:
   LimitedWarning(int max_warn_in) : _max_warn(max_warn_in), _this_warning_summary(0) {}  
 
 #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
-  /// copy ctor (have to be specified explicitly becaus of the atomic variable)
+  /// copy ctor (have to be specified explicitly because of the atomic variable)
   LimitedWarning(const LimitedWarning &other)
     : _max_warn(other._max_warn), _this_warning_summary{other._this_warning_summary.load()} {}  
 #endif
@@ -85,6 +85,18 @@ public:
   static void set_default_stream(std::ostream * ostr) {
     _default_ostr = ostr;
   }
+
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+  /// sets the default output stream for all warnings (by default
+  /// cerr; passing a null pointer prevents warnings from being output)
+  /// The second argument is a mutex that would be used to guarantee 
+  /// that only a single thread writes to the stream at a time
+  static void set_default_stream_and_mutex(std::ostream * ostr,
+                                           std::mutex * warnings_mutex) {
+    _default_ostr  = ostr;
+    _stream_mutex = warnings_mutex;
+  }
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
   /// sets the default maximum number of warnings of a given kind
   /// before warning messages are silenced.
@@ -111,6 +123,7 @@ private:
 #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
   static std::atomic<int> _max_warn_default;
   static std::atomic<std::ostream *> _default_ostr;
+  static std::atomic<std::mutex *> _stream_mutex;
   static std::mutex _global_warnings_summary_mutex;
   std::atomic<Summary*> _this_warning_summary;
 #else

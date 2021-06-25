@@ -41,6 +41,7 @@
 #endif
 #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 #include <atomic>
+#include <mutex>
 #endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -83,6 +84,17 @@ public:
     _default_ostr = ostr;
   }
 
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+  /// sets the default output stream for all errors (by default
+  /// cerr; passing a null pointer prevents errors from being output)
+  /// The second argument is a mutex that would be used to guarantee 
+  /// that only a single thread writes to the stream at a time
+  static void set_default_stream_and_mutex(std::ostream * ostr, std::mutex * stream_mutex) {
+    _default_ostr = ostr;
+    _stream_mutex = stream_mutex;
+  }
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY
+
 private:
 
 #ifndef __FJCORE__
@@ -98,6 +110,7 @@ private:
   static std::atomic<bool> _print_errors;           ///< do we print anything?
   static std::atomic<bool> _print_backtrace;        ///< do we print the backtrace?
   static std::atomic<std::ostream *> _default_ostr; ///< the output stream (cerr if not set)
+  static std::atomic<std::mutex *> _stream_mutex; ///< the mutex for the output stream (nullptr if not set)
 #else
   static bool _print_errors;           ///< do we print anything?
   static bool _print_backtrace;        ///< do we print the backtrace?

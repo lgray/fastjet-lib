@@ -38,6 +38,7 @@ FASTJET_BEGIN_NAMESPACE
 
 #ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 atomic<ostream *> LimitedWarning::_default_ostr{&cerr};
+atomic<mutex *> LimitedWarning::_stream_mutex{nullptr};
 atomic<int> LimitedWarning::_max_warn_default{5};
 std::mutex LimitedWarning::_global_warnings_summary_mutex;
 #else
@@ -110,8 +111,18 @@ void LimitedWarning::warn(const char * warning, std::ostream * ostr) {
     // user can easily insert their own printout, e.g. event number
     // before the warning string).
     if (ostr) {
-      (*ostr) << warnstr.str();
-      ostr->flush(); // get something written to file even if the program aborts
+      // if there is a mutex, use it to lock
+#ifdef FASTJET_HAVE_LIMITED_THREAD_SAFETY
+      if (_stream_mutex){
+        std::lock_guard<std::mutex> guard(*_stream_mutex);
+        (*ostr) << warnstr.str();
+        ostr->flush(); // get something written to file even if the program aborts
+      } else 
+#endif // FASTJET_HAVE_LIMITED_THREAD_SAFETY      
+      {
+        (*ostr) << warnstr.str();
+        ostr->flush(); // get something written to file even if the program aborts
+      }
     }
   }
 
