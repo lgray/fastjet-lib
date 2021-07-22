@@ -1,4 +1,14 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-07-22 Thu  <gavin.salam@physics.ox.ac.uk>
+
+	* include/fastjet/ClusterSequence.hh:
+	added CS::plugin_non_const_jet(i) for plugins to be able to
+	modify properties of the input jets (e.g. user info)
+
+	* include/fastjet/PseudoJet.hh:
+	added PseudoJet::set_user_info_shared_ptr(...), to allow
+	user info to easily be transferred from one jet to another
+
 2021-06-25  FastJet team <fastjet@projects.hepforge.org>
 
 	Release of FastJet fastjet-3.4.0
@@ -1933,7 +1943,7 @@ Entries above were added while nmerging the master branch
 	make it mutable and perhaps change the name]
 	[GS: I'd be in favour of that option but struggle w the naming]
 
-	We haev also removed the thread_local for the random generator as
+	We have also removed the thread_local for the random generator as
 	it is not supported by Apple's version of clang.
 
 	* include/fastjet/internal/BasicRandom.hh:

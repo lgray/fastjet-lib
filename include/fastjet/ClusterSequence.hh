@@ -345,6 +345,19 @@ class ClusterSequence {
     _do_iB_recombination_step(jet_i, diB);
   }
 
+  /// return a non-const reference to the jets()[i], to allow
+  /// plugins to modify its contents. 
+  ///
+  /// It can only be called when the plugin is activated.
+  ///
+  /// ONLY USE THIS IF YOU ARE SURE YOU KNOW WHAT YOU ARE DOING
+  /// (contact FJ authors if you think you need this but are
+  /// unsure)
+  PseudoJet & plugin_non_const_jet(unsigned i) {
+    assert(plugin_activated());
+    return _jets[i];
+  }
+
   /// @ingroup extra_info
   /// \class Extras
   /// base class to store extra information that plugins may provide

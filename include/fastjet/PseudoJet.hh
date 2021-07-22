@@ -523,6 +523,10 @@ class PseudoJet {
     return _user_info;
   }
 
+  void set_user_info_shared_ptr(const SharedPtr<UserInfoBase> & user_info_in) {
+    _user_info = user_info_in;
+  }
+
   // \} --- end of extra info functions ---------------------------------
 
   //----------------------------------------------------------------------
