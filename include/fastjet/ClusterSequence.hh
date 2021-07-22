@@ -345,14 +345,18 @@ class ClusterSequence {
     _do_iB_recombination_step(jet_i, diB);
   }
 
-  /// return a non-const reference to the jets()[i], to allow
-  /// plugins to modify its contents. 
+  /// return a non-const reference to the jets()[i], to allow plugins to
+  /// modify its contents. 
   ///
   /// It can only be called when the plugin is activated.
   ///
-  /// ONLY USE THIS IF YOU ARE SURE YOU KNOW WHAT YOU ARE DOING
-  /// (contact FJ authors if you think you need this but are
-  /// unsure)
+  /// If you reset the jet (or set it equal to another one) you _must_
+  /// ensure that final jet is given the structure_shared_ptr of the
+  /// original jet, otherwise you will end up with an inconsistent
+  /// ClusterSequence. 
+  ///
+  /// ONLY USE THIS IF YOU ARE SURE YOU KNOW WHAT YOU ARE DOING (contact
+  /// FJ authors if you think you need this but are unsure)
   PseudoJet & plugin_non_const_jet(unsigned i) {
     assert(plugin_activated());
     return _jets[i];
