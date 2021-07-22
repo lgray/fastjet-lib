@@ -1,6 +1,10 @@
 ========== CHANGELOG FILE FOR FastJet =================================
 2021-07-22 Thu  <gavin.salam@physics.ox.ac.uk>
 
+    * scripts/Makefile-fjcore.txt:
+	added note that on some systems, the fortran example needs
+	-lstdc++ rather than -lc++
+
 	* include/fastjet/ClusterSequence.hh:
 	added CS::plugin_non_const_jet(i) for plugins to be able to
 	modify properties of the input jets (e.g. user info)
