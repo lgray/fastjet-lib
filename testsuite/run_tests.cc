@@ -10,6 +10,7 @@
 #include "TestRecombiners.hh"
 #include "TestGrids.hh"
 #include "TestSpecialEvents.hh"
+#include "TestEEDotCross.hh"
 #include <iomanip>
 #include "CmdLine.hh"
 
@@ -38,6 +39,7 @@ int main(int argc, char** argv) {
   tests.push_back(new TestRecombiners());
   tests.push_back(new TestGrids());
   tests.push_back(new TestSpecialEvents());
+  tests.push_back(new TestEEDotCross());
   //tests.push_back(new TestGroomerRecombiners()); not for now -- it's empty
 
   bool all_pass = true;

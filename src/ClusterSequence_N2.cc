@@ -91,7 +91,8 @@ template<> inline void ClusterSequence::_bj_set_jetinfo(
 }
 
 //----------------------------------------------------------------------
-// returns the angular distance between the two jets
+// returns the angular distance between the two jets, defined as
+// 2*(1-cos theta_ab)
 template<> double ClusterSequence::_bj_dist(
                 const EEBriefJet * const jeta, 
                 const EEBriefJet * const jetb) const {
@@ -99,8 +100,34 @@ template<> double ClusterSequence::_bj_dist(
     - jeta->nx*jetb->nx
     - jeta->ny*jetb->ny
     - jeta->nz*jetb->nz;
-  dist *= 2; // distance is _2_*min(Ei^2,Ej^2)*(1-cos theta)
-  return dist;
+
+  // if the distance is smaller than sqrt(epsilon), then switch to
+  // cross-product based evaluation; this is intended to ensure an
+  // absolute accuracy on sqrt(bj_dist), that is somewhere in the region
+  // of max(epsilon, sqrt(epsilon) * dist) rather than epsilon.
+  //
+  // Let's write cos(theta) == cos and sin(theta)==sin; then we have
+  //
+  //    2*(1-cos) = 2*(1-cos^2)/(1+cos) = 2*sin^2/(1+cos);   
+  //
+  // To save a division, we then replace 2/(1+cos) -> 1, which introduces
+  // a relative error of order sin^2(theta), which is sqrt(epsilon) when
+  // dist is itself sqrt(epsilon). For that value of dist, the relative
+  // error on the normal dot-product calculation of dist is itself
+  // sqrt(epsilon). This motivates the choice switchover point.
+  //
+  // This approach has been adopted from PanScales work.
+  if (dist*dist < numeric_limits<double>::epsilon()) {
+    double cross_x = jeta->ny * jetb->nz - jetb->ny * jeta->nz;
+    double cross_y = jeta->nz * jetb->nx - jetb->nz * jeta->nx;
+    double cross_z = jeta->nx * jetb->ny - jetb->nx * jeta->ny;
+    
+    // 2(1-cos(theta)) ~ theta^2, which is |cross_product|^2
+    dist = cross_x*cross_x + cross_y*cross_y + cross_z*cross_z;
+    return dist;
+  } else {
+    return dist*2; // distance is _2_*min(Ei^2,Ej^2)*(1-cos theta)
+  }
 }
 
 

@@ -1,4 +1,18 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-09-16 Thu  <gavin.salam@physics.ox.ac.uk>
+
+	* testsuite/TestEEDotCross.hh:
+	* testsuite/run_tests.cc:
+	started work on tests to be able to verify genkt small-angle dmerge
+	(currently fails, because small-angle distances not yet well calculated)
+
+	Timings prior to change for (MacOS, clang 12.0.0, 2.3 GHz 8-Core Intel Core i9)
+	./fastjet_timing_plugins -eegenkt 0 -repeat 100000 < data/single-ee-event.dat
+	2.43s, 2.46s, 2.43s, 2.35s, 2.38s, average = 2.41s
+
+	Timings after the change are 
+	2.68s, 2.70s, 2.79s, 2.83s, 2.79s, average = 2.76, i.e. 15% penalty
+
 2021-07-22 Thu  <gavin.salam@physics.ox.ac.uk>
 
     * scripts/Makefile-fjcore.txt:
