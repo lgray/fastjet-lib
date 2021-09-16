@@ -125,9 +125,9 @@ template<> double ClusterSequence::_bj_dist(
     // 2(1-cos(theta)) ~ theta^2, which is |cross_product|^2
     dist = cross_x*cross_x + cross_y*cross_y + cross_z*cross_z;
     return dist;
-  } else {
-    return dist*2; // distance is _2_*min(Ei^2,Ej^2)*(1-cos theta)
   }
+
+  return dist*2; // distance is _2_*min(Ei^2,Ej^2)*(1-cos theta)
 }
 
 
