@@ -315,7 +315,7 @@ inline bool operator!=(SharedPtr<T> const & t, SharedPtr<U> const & u){
   return t.get() != u.get();
 }
 
-/// comparison: orgering
+/// comparison: ordering
 template<class T,class U>
 inline bool operator<(SharedPtr<T> const & t, SharedPtr<U> const & u){
   return t.get() < u.get();
@@ -608,7 +608,7 @@ inline bool operator!=(SharedPtr<T> const & t, SharedPtr<U> const & u){
   return t.get() != u.get();
 }
 
-/// comparison: orgering
+/// comparison: ordering
 template<class T,class U>
 inline bool operator<(SharedPtr<T> const & t, SharedPtr<U> const & u){
   return t.get() < u.get();
