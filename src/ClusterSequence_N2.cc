@@ -149,6 +149,10 @@ template<> double ClusterSequence::_bj_dist(
     dist = cross_x*cross_x + cross_y*cross_y + cross_z*cross_z;
     return dist;
   }
+
+  // this alternative code has higher accuracy in some boundary regions
+  // but is almost a factor of two slower than the plain dot product
+  // (the code above is only 15% slower on a standard-looking event).  
   //if (dist < 1) {
   //  double cross_x = jeta->ny * jetb->nz - jetb->ny * jeta->nz;
   //  double cross_y = jeta->nz * jetb->nx - jetb->nz * jeta->nx;
