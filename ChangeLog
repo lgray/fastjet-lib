@@ -1,10 +1,68 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2021-11-15 Mon  <gavin.salam@physics.ox.ac.uk>
+
+
+    * include/fastjet/JetDefinition.hh:
+	added new strategy N2PlainEEAccurate, intended to work for eekt and ee_genkt
+
+	* include/fastjet/ClusterSequence.hh:
+	* src/ClusterSequence.cc:
+	* src/ClusterSequence_N2.cc:
+
+	Implemented the switch to use of more accurate code for eekt and ee_genkt
+	when the requested strategy is N2PlainEEAccurate. This involves a
+    the use of the cross product for angular-distance
+	calculations when the angle is smaller than (roughly)
+	epsilon**1/4, where epsilon is machine precision. It has a
+	timing penalty of about 15% slower than the default strategy (see
+	below), but is considerably more accurate for angles close to, or
+	smaller than, sqrt(epsilon), where the normal method breaks down.
+	This more accurate strategy breaks down for angles ~ epsilon. 
+	
+	* testsuite/TestEEDotCross.hh:
+
+	updated to use test only the distance calculation with
+	N2PlainEEAccurate (with the default strategy it will give errors).
+
+	* regression-tests/test-all-algs.pl:
+	For the native e+e- algorithms, it now runs the standard and the
+	more accurate strategies. Try it, e.g., with 
+
+	  ./regression-tests/test-all-algs.pl -alg eekt
+
+	NB: the more accurate one doesn't really get seriously tested here,
+	because it kicks in only for very small angles, which tend not to
+	be present in the event files used for the tests. The testsuite
+	tests are more indicative here.
+
+	* Timing summary: (machine in a different state relative to 2021-09-16)
+	(MacOS, clang 12.0.0, 2.3 GHz 8-Core Intel Core i9)
+
+	The timings with the original (default) strategy are as follows:
+	> ./fastjet_timing_plugins -eegenkt 0 -repeat 100000 < data/single-ee-event.dat
+    2.17,2.10,2.16,2.20 s -> average = 2.16 s
+
+	With the new N2PlainEEAccurate strategy (code 31), the speed penalty is about 15%: 	
+	> ./fastjet_timing_plugins -eegenkt 0 -repeat 100000 -strategy 31 < data/single-ee-event.dat
+	2.53,2.54,2.50,2.49 s -> average = 2.52 s
+
+	NB: also tested a version where the cross-product calculation is
+	used for angles < pi/2. This is somewhat more accurate for angles ~
+	epsilon**1/4 (relative accuracy of epsilon**3/4 instead of
+	epsilon**1/2?), but the speed cost is closer to a factor of two than
+	15%. (NB default strategy timings somewhat different -- at this
+	level they are sensitive to machine state)
+
+	> ./fastjet_timing_plugins -eegenkt 0 -repeat 100000 < data/single-ee-event.dat
+    2.06,2.11,2.06,2.11 -> average = 2.085
+	> ./fastjet_timing_plugins -eegenkt 0 -repeat 100000 -strategy 31 < data/single-ee-event.dat
+	4.21,4.21,4.17,4.22 -> average = 4.20
+
 2021-09-16 Thu  <gavin.salam@physics.ox.ac.uk>
 
-	* testsuite/TestEEDotCross.hh:
+	* testsuite/TestEEDotCross.hh: *** ADDED ***
 	* testsuite/run_tests.cc:
 	started work on tests to be able to verify genkt small-angle dmerge
-	(currently fails, because small-angle distances not yet well calculated)
 
 	Timings prior to change for (MacOS, clang 12.0.0, 2.3 GHz 8-Core Intel Core i9)
 	./fastjet_timing_plugins -eegenkt 0 -repeat 100000 < data/single-ee-event.dat

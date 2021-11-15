@@ -364,6 +364,9 @@ sub setDefaults {
      "kt"  => "1:-7:-6:-4:-3:-1:2",
      "antikt"  => "1:-7:-6:-4:-3:-1:2",
      "cam" => "1:-7:-6:-4:-3:-1:2:12",
+     "eekt" => "1:31",
+     "eegenkt:0" => "1:31",
+     "eegenkt:-1" => "1:31",
     );
 
   # the different area configurations we'll consider

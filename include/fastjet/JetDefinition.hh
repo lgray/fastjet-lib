@@ -123,6 +123,9 @@ enum Strategy {
   /// the automatic strategy choice that was being made in FJ 3.0
   /// (restricted to strategies that were present in FJ 3.0)
   BestFJ30     =  21, 
+  /// a variant of N2Plain strategy for native e+e- algorithms
+  /// that uses a more accurate calculation of the distance measure
+  N2PlainEEAccurate =  31,
   /// the plugin has been used...
   plugin_strategy = 999
 };

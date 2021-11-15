@@ -944,6 +944,11 @@ protected:
     double nx, ny, nz;  // our internal storage for fast distance calcs
   };
 
+  /// identical to EEBriefJet, but the corresponding distance
+  /// calculation (_bj_dist) is overloaded to use the more accurate
+  /// cross-product approach
+  class EEAccurateBriefJet : public EEBriefJet { };
+
   /// to help instantiation (fj 2.4.0; did not quite work on gcc 33 and os x 10.3?)
   //void _dummy_N2_cluster_instantiation();
 
@@ -952,6 +957,7 @@ protected:
   void _simple_N2_cluster_BriefJet();
   /// to avoid issues with template instantiation (OS X 10.3, gcc 3.3)
   void _simple_N2_cluster_EEBriefJet();
+  void _simple_N2_cluster_EEAccurateBriefJet();
 };
 
 

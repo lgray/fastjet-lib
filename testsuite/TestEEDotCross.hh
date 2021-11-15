@@ -16,8 +16,8 @@ class TestEEDotCross : public TestBase {
 
     // use a jet radius of pi/2 so that 1/(1-cosR) term in normalisation
     // is just one.
-    //JetDefinition jd(fastjet::ee_genkt_algorithm, pi/2, 0.0);
-    JetDefinition jd(fastjet::ee_kt_algorithm);
+    //JetDefinition jd(fastjet::ee_genkt_algorithm, pi/2, 0.0, E_scheme, N2PlainEEAccurate);
+    JetDefinition jd(fastjet::ee_kt_algorithm, E_scheme, N2PlainEEAccurate);
     double norm = 2.0;
 
     // prepare some rotation matrices for use below
