@@ -431,33 +431,39 @@ public:
   /// 
   /// (see vector _history below).
   struct history_element{
-    int parent1; /// index in _history where first parent of this jet
-                 /// was created (InexistentParent if this jet is an
-                 /// original particle)
+    /// index in _history where first parent of this jet
+    /// was created (InexistentParent if this jet is an
+    /// original particle)
+    int parent1; 
 
-    int parent2; /// index in _history where second parent of this jet
-                 /// was created (InexistentParent if this jet is an
-                 /// original particle); BeamJet if this history entry
-                 /// just labels the fact that the jet has recombined
-                 /// with the beam)
+    /// index in _history where second parent of this jet
+    /// was created (InexistentParent if this jet is an
+    /// original particle); BeamJet if this history entry
+    /// just labels the fact that the jet has recombined
+    /// with the beam)
+    int parent2; 
 
-    int child;   /// index in _history where the current jet is
-		 /// recombined with another jet to form its child. It
-		 /// is Invalid if this jet does not further
-		 /// recombine.
+    /// index in _history where the current jet is
+		/// recombined with another jet to form its child. It
+		/// is Invalid if this jet does not further
+		/// recombine.
+    int child;   
 
-    int jetp_index; /// index in the _jets vector where we will find the
-                 /// PseudoJet object corresponding to this jet
-                 /// (i.e. the jet created at this entry of the
-                 /// history). NB: if this element of the history
-                 /// corresponds to a beam recombination, then
-                 /// jetp_index=Invalid.
+    /// index in the _jets vector where we will find the
+    /// PseudoJet object corresponding to this jet
+    /// (i.e. the jet created at this entry of the
+    /// history). NB: if this element of the history
+    /// corresponds to a beam recombination, then
+    /// jetp_index=Invalid.
+    int jetp_index; 
 
-    double dij;  /// the distance corresponding to the recombination
-		 /// at this stage of the clustering.
+    /// the distance corresponding to the recombination
+    /// at this stage of the clustering.
+    double dij;  
 
-    double max_dij_so_far; /// the largest recombination distance seen
-			   /// so far in the clustering history.
+    /// the largest recombination distance seen
+    /// so far in the clustering history.
+    double max_dij_so_far; 
   };
 
   enum JetType {Invalid=-3, InexistentParent = -2, BeamJet = -1};

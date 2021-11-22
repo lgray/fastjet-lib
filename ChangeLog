@@ -1,6 +1,13 @@
 ========== CHANGELOG FILE FOR FastJet =================================
-2021-11-15 Mon  <gavin.salam@physics.ox.ac.uk>
+2021-11-21 Sun  <gavin.salam@physics.ox.ac.uk>
 
+	* include/fastjet/ClusterSequence.hh:
+
+	rearranged comments for history_element, so that doxygen output
+	comes out OK (comments were being associated with wrong variable).
+
+
+2021-11-15 Mon  <gavin.salam@physics.ox.ac.uk>
 
     * include/fastjet/JetDefinition.hh:
 	added new strategy N2PlainEEAccurate, intended to work for eekt and ee_genkt
