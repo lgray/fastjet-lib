@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2022-06-10 Fri  <gavin.salam@physics.ox.ac.uk>
+
+    * testsuite/thread_safety_tests.cc:
+	removed old unused testing code (superseded by the contents of TestThreadsbase.hh)
+
 2021-11-21 Sun  <gavin.salam@physics.ox.ac.uk>
 
 	* include/fastjet/ClusterSequence.hh:
