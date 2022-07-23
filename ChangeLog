@@ -1,7 +1,13 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2022-07-23  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+
+	* fastjet-config.in:
+	fixed issue where `fastjet-config --pythonpath` was giving incorrect
+	path for non-standard install locations.
+
 2022-06-10 Fri  <gavin.salam@physics.ox.ac.uk>
 
-    * testsuite/thread_safety_tests.cc:
+	* testsuite/thread_safety_tests.cc:
 	removed old unused testing code (superseded by the contents of TestThreadsbase.hh)
 
 2021-11-21 Sun  <gavin.salam@physics.ox.ac.uk>
@@ -14,7 +20,7 @@
 
 2021-11-15 Mon  <gavin.salam@physics.ox.ac.uk>
 
-    * include/fastjet/JetDefinition.hh:
+	* include/fastjet/JetDefinition.hh:
 	added new strategy N2PlainEEAccurate, intended to work for eekt and ee_genkt
 
 	* include/fastjet/ClusterSequence.hh:
@@ -23,7 +29,7 @@
 
 	Implemented the switch to use of more accurate code for eekt and ee_genkt
 	when the requested strategy is N2PlainEEAccurate. This involves a
-    the use of the cross product for angular-distance
+	the use of the cross product for angular-distance
 	calculations when the angle is smaller than (roughly)
 	epsilon**1/4, where epsilon is machine precision. It has a
 	timing penalty of about 15% slower than the default strategy (see
