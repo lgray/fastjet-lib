@@ -697,7 +697,7 @@ class PseudoJet {
   /// associated ClusterSequence
   virtual bool contains(const PseudoJet &constituent) const;
 
-  /// check if the current PseudoJet is contained the one passed as
+  /// check if the current PseudoJet is contained in the one passed as
   /// argument.
   ///
   /// an Error is thrown if this PseudoJet has no currently valid
