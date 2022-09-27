@@ -1,4 +1,12 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2022-09-27 Tue  <gavin.salam@physics.ox.ac.uk> + Gregory
+
+	* configure.ac:
+	replaced default auto_ptr interface from enabled to disabled,
+	reflecting trouble with modern compilers that no longer
+	have auto_ptr by default (report from Samiur Mir). 
+	Enable at configure-time with --enable-auto-ptr
+
 2022-07-23  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
 
 	* fastjet-config.in:
