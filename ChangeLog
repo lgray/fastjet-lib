@@ -1,4 +1,11 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2022-11-01  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+
+	* pyinterface/fastjet.i:
+	Accepting merge request from Chris Papageorgakis
+	<chrispap95@gmail.com>, which fixes an issue with an import
+	string
+
 2022-09-27 Tue  <gavin.salam@physics.ox.ac.uk> + Gregory
 
 	* configure.ac:
