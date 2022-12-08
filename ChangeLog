@@ -1,12 +1,18 @@
 ========== CHANGELOG FILE FOR FastJet =================================
-2022-12-08 Thu  <gavin.salam@physics.ox.ac.uk>
+2022-12-08  Gavin SALAM  <gavin.salam@cern.ch>
 
-    * src/ClusterSequenceAreaBase.cc:
-    * tools/BackgroundEstimatorBase.cc:
-    * tools/JetMedianBackgroundEstimator.cc:
+	* regression-tests/nightly-check.pl: 
+	commented out very old version of icpc in tests (default in path, 
+	was 10.1.018). Increased number of events in the v14 from 10 to 1k
+
+2022-12-08 Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+
+	* src/ClusterSequenceAreaBase.cc:
+	* tools/BackgroundEstimatorBase.cc:
+	* tools/JetMedianBackgroundEstimator.cc:
 
 	in various places, replaced sqrt(mean_area) -> sqrt(max(0.0, mean_area))
-    so that when the mean area is negative we don't get NaN for the 
+	so that when the mean area is negative we don't get NaN for the 
 	sigma result (which causes an FPE for ATLAS, as reported by PAD, 
 	and documented as our 2022-11-FPE-negative-sqrt-density-sigma issue).
 
