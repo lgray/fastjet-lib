@@ -1,4 +1,24 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2022-12-08 Thu  <gavin.salam@physics.ox.ac.uk>
+
+    * src/ClusterSequenceAreaBase.cc:
+    * tools/BackgroundEstimatorBase.cc:
+    * tools/JetMedianBackgroundEstimator.cc:
+
+	in various places, replaced sqrt(mean_area) -> sqrt(max(0.0, mean_area))
+    so that when the mean area is negative we don't get NaN for the 
+	sigma result (which causes an FPE for ATLAS, as reported by PAD, 
+	and documented as our 2022-11-FPE-negative-sqrt-density-sigma issue).
+
+	Note, this is not a proper fix for the underlying physical problem
+	in that issue, which is that in some small fraction of events, when
+	the clustering inputs are restricted to be within the area selection
+	region, Voronoi areas extend well beyond the area selection region,
+	which can lead to unphysical results for rho. One could even argue that
+	the FPE was useful, because it signalled the existence of the problem.
+
+	Also fixed typos in comments. 
+
 2022-11-01  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
 
 	* pyinterface/fastjet.i:
