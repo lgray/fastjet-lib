@@ -1090,9 +1090,30 @@ inline void PseudoJet::reset_momentum(const PseudoJet & pj) {
   _py  = pj._py ;
   _pz  = pj._pz ;
   _E   = pj._E  ;
+#ifdef FASTJET_HAVE_THREAD_SAFETY
+  // the following lines are here to address the situation where
+  // the current form of the jet has Init_Done, but the other jet does
+  // not (or is in the process of being initialized, so that copying
+  // is dangerous). 
+  // We take the approach of verifying if the pj has been initialised
+  // and if it has we take its cached phi & rapidity, otherwise
+  // we call _finish_init(), which sets Init_NotDone and puts
+  // rapidity & phi to invalid values. 
+  int expected = Init_Done;
+  if (pj._init_status.compare_exchange_weak(expected, Init_Done)) {
+    _init_status = Init_Done;
+    _phi = pj._phi;
+    _rap = pj._rap;
+    _kt2 = pj._kt2;
+  } else {
+    _finish_init();
+  }
+  _init_status.store(pj._init_status);
+#else 
   _phi = pj._phi;
   _rap = pj._rap;
   _kt2 = pj._kt2;
+#endif
 }
 
 //-------------------------------------------------------------------------------

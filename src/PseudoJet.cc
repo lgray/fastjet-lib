@@ -73,19 +73,13 @@ PseudoJet & PseudoJet::operator=(const PseudoJet & other_pj){
   _structure = other_pj._structure;
   _user_info = other_pj._user_info;
 
-  _kt2 = other_pj._kt2; 
   _cluster_hist_index = other_pj._cluster_hist_index;
   _user_index = other_pj._user_index;
 
-  _px = other_pj._px;
-  _py = other_pj._py;
-  _pz = other_pj._pz;
-  _E  = other_pj._E;
-
-  _phi = other_pj._phi; 
-  _rap = other_pj._rap;
-
-  _init_status.store(other_pj._init_status);
+  // copy the remaining information through the reset_momentum call
+  // which properly handles the thread safety, notably related
+  // to caching of the phi and rap values
+  reset_momentum(other_pj);
   
   return *this;
 }
@@ -157,7 +151,7 @@ void PseudoJet::_ensure_valid_rap_phi() const{
                                              std::memory_order_seq_cst,
                                              std::memory_order_relaxed)){
       _set_rap_phi();
-      _init_status = Init_Done; // can safely be done after all physics varlables are set
+      _init_status = Init_Done; // can safely be done after all physics variables are set
     } else {
       // wait until done
       do{
