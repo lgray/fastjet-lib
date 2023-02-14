@@ -6,8 +6,8 @@
 
 	attempted fix of a severe thread safety issue in
 	PseudoJet::reset_momentum(const PseudoJet &) and
-	PseudoJet::operator= to do with caching of rapidity and
-	phi (issue brough up by Ludovic Scyboz). Further tests
+	PseudoJet::operator=(const PseudoJet &) to do with caching of
+	rapidity and phi (issue brough up by Ludovic Scyboz). Further tests
 	still to be written.
 
 
