@@ -1,4 +1,16 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-14 Tue  <gavin.salam@physics.ox.ac.uk> with Gregory
+
+    * include/fastjet/PseudoJet.hh:
+    * src/PseudoJet.cc:
+
+	attempted fix of a severe thread safety issue in
+	PseudoJet::reset_momentum(const PseudoJet &) and
+	PseudoJet::operator= to do with caching of rapidity and
+	phi (issue brough up by Ludovic Scyboz). Further tests
+	still to be written.
+
+
 2023-02-14  Gregory Soyez  <soyez@fastjet.fr>
 
 	* include/fastjet/internal/ClusterSequence_N2.icc:
