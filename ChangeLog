@@ -1,4 +1,17 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-14  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/ClusterSequence_N2.icc:
+	* src/LazyTiling9.cc:
+	* src/LazyTiling9Alt.cc:
+	* src/LazyTiling25.cc:
+	* src/ClusterSequence_TiledN2.cc:
+
+	got rid of "history_location" (a remnant of an archaic treatment
+	of recombination histories) which was no longer used.  This fixes
+	an issue reported by Torbjorn Sjostrand (and Philip Ilten) of
+	compilation warnings with clang15.
+
 2022-12-08  Gavin SALAM  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl: 
