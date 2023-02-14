@@ -61,7 +61,10 @@ int main(int argc, char ** argv) {
       AreaDefinition(active_area_explicit_ghosts))));
   tests.emplace_back(make_unique<TestThread<ThreadedBGEBase>>(new GridMedianBackgroundEstimator(2.5, 0.6))); 
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGECommonEvent>>());
-  
+  PseudoJet j1(3,4,0,5); //< do not evaluate the phi of this PJ before the next call
+  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetResetMom>>(&j1));
+  PseudoJet j2(3,4,0,5); //< do not evaluate the phi of this PJ before the next call
+  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetCopy>>(&j2));
 
   // run over them
   bool overall_outcome = true;

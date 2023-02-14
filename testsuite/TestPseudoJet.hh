@@ -229,6 +229,24 @@ class TestPJAssignment : public TestBase {
     verify_equal(particle    == 0, false, "PJ non-zero test");
     verify_equal(0 == particle,    false, "PJ reversed non-zero test");
 
+    // tests related to the bug discovered on 2023-02-14
+    // first set up pj1 and make sure its phi is evaluated & cached
+    PseudoJet pj1(3.0, 4.0, 0.0, 5.0);
+    //double phi1 = pj1.phi();
+    // now set up pj2 with phi not yet cached
+    PseudoJet pj2(1,0,0,1);
+    double phi2 = pj2.phi();
+    // transfer momentum from pj1 to pj2
+    pj2.reset_momentum(pj1);
+    // similar test but with the assignment operator
+    PseudoJet pj3(1,0,0,1);
+    double phi3 = pj3.phi();
+    verify_equal(phi2, phi3, "dummy test to avoid compiler warnings");
+    // transfer momentum from pj1 to pj3
+    pj3 = pj1;
+    verify_equal(pj2.phi(), pj1.phi(), "phi after reset_momentum");
+    verify_equal(pj3.phi(), pj1.phi(), "phi after assignment");
+
     return _pass_test;
   }
 };

@@ -1,4 +1,15 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-14  Gregory Soyez  <soyez@fastjet.fr>
+
+	* testsuite/TestThreadsBase.hh:
+	* testsuite/thread_safety_tests.cc:
+	* testsuite/TestPseudoJet.hh:
+	added tests of thread safety for the copy and reset_momentum of
+	PseudoJet
+
+	* include/fastjet/PseudoJet.hh:
+	removed line wrongly left in during earlier tests
+
 2023-02-14 Tue  <gavin.salam@physics.ox.ac.uk> with Gregory
 
     * include/fastjet/PseudoJet.hh:

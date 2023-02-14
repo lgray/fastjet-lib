@@ -719,4 +719,66 @@ private:
   Subtractor _subtractor;
 };
 
+//-------------------------------------------------------------
+/// Test PseudoJet copies
+class ThreadedPseudoJetResetMom : public ThreadedTestBase<double> {
+public:
+
+  ThreadedPseudoJetResetMom(const PseudoJet *pj_ptr)
+    : _nthreads(10), _pj_ptr(pj_ptr){
+    set_n_threads(_nthreads);
+  }
+
+  std::string short_name()  const override {
+    return "PseudoJetResetMom";
+  }
+
+  void run_test_i(unsigned i) override {
+    if (i==_nthreads-1){
+      _result[i] = {_pj_ptr->phi()};
+      return;
+    }
+    PseudoJet j(1,0,0,1);
+    _result[i] = {j.phi()};
+    j.reset_momentum(*_pj_ptr);
+    _result[i] = {j.phi()};
+  } 
+
+protected:
+  const unsigned int _nthreads;
+  const PseudoJet *_pj_ptr;
+
+};
+
+//-------------------------------------------------------------
+/// Test PseudoJet copies
+class ThreadedPseudoJetCopy : public ThreadedTestBase<double> {
+public:
+
+  ThreadedPseudoJetCopy(const PseudoJet *pj_ptr)
+    : _nthreads(10), _pj_ptr(pj_ptr){
+    set_n_threads(_nthreads);
+  }
+
+  std::string short_name()  const override {
+    return "PseudoJetCopy";
+  }
+
+  void run_test_i(unsigned i) override {
+    if (i==0){
+      _result[0] = {_pj_ptr->phi()};
+      return;
+    }
+    PseudoJet j(1,0,0,1);
+    j = *_pj_ptr;
+    _result[i] = {j.phi()};
+  } 
+
+protected:
+  const unsigned int _nthreads;
+  const PseudoJet *_pj_ptr;
+
+};
+
+
 #endif // __TESTTHREADSBASE_HH__
