@@ -1108,7 +1108,6 @@ inline void PseudoJet::reset_momentum(const PseudoJet & pj) {
   } else {
     _finish_init();
   }
-  _init_status.store(pj._init_status);
 #else 
   _phi = pj._phi;
   _rap = pj._rap;
