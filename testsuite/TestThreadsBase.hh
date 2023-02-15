@@ -755,14 +755,15 @@ public:
     PseudoJet j(1,0,0,1);
     // force evaluation of j's phi (put into result[i] to
     // minimise change of compiler warning)
-    _result[i] = {j.phi()};
+    //_result[i] = {j.phi()};
+    if (i%2 == 0) _result[i] = {j.phi()};
     j.reset_momentum(*_pj_ptr);  //< this is the operation we want to test
     _result[i] = {j.phi()};
   } 
 
 protected:
   const unsigned int _nthreads;
-  const unsigned int _nrounds = 10;
+  const unsigned int _nrounds = 300;
   std::unique_ptr<PseudoJet> _pj_ptr;
 };
 
@@ -788,6 +789,7 @@ public:
     }
     // create a new PseudoJet 
     PseudoJet j(1,0,0,1);
+    if (i%2 == 0) _result[i] = {j.phi()};
     j = *_pj_ptr; //< this is the operation we want to test
     _result[i] = {j.phi()};
   } 
