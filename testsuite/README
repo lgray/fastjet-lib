@@ -19,7 +19,9 @@ Details of programs
 - run_tests, for running a whole bunch of tests
 
 - PJtiming, for checking timing of PJ creation and deletion (see
-  program for detailed option)
+  program for detailed options)
 
 - ./cs_delete_self < ../example/data/single-event.dat 
-  for checking consistent deletion of 
+  for checking consistent deletion of internal CS structures
+
+- ./thread-safety-tests for those specifically related to thread safety
