@@ -1,5 +1,8 @@
 ========== CHANGELOG FILE FOR FastJet =================================
-2023-02-15 Wed  <gavin.salam@physics.ox.ac.uk>
+2023-02-15 Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+
+	* testsuite/README:
+	fixed a few details
 
 	* testsuite/TestThreadsBase.hh:
 	* testsuite/thread_safety_tests.cc:

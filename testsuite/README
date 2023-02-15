@@ -1,7 +1,7 @@
 README for the testsuite directory
 ----------------------------------
 
-Run Gavin's mkcxx.pl -f to get a Makefile here and build everything
+Run Gavin's 'mkcxx.pl -f -4' to get a Makefile here and build everything
 with 
 
     make
@@ -11,6 +11,9 @@ Then run
     ./run-all.sh 
 
 to run all the available tests.
+
+This assumes that fastjet is installed and that fastjet-config is in
+your path. 
 
 ----------------------------------------------------------------------
 Details of programs
