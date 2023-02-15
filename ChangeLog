@@ -1,4 +1,15 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-15 Wed  <gavin.salam@physics.ox.ac.uk>
+
+	* testsuite/TestThreadsBase.hh:
+	* testsuite/thread_safety_tests.cc:
+	trying to get repeated tests of reset momentum and assignment,
+	to help increase likelihood of catching thread safety issues, 
+	if any remain (so far it passes).
+	
+	* testsuite/README:
+	added a note about the thread safety tests and fixed some typos.
+
 2023-02-14  Gregory Soyez  <soyez@fastjet.fr>
 
 	* testsuite/TestThreadsBase.hh:

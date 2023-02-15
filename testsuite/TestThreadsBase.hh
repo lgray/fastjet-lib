@@ -720,7 +720,12 @@ private:
 };
 
 //-------------------------------------------------------------
-/// Test PseudoJet copies
+/// Test PseudoJet reset_momentum
+///
+/// Test designed to check caching of phi in PseudoJet after
+/// reset_momentum (specifically the bug discovered on 2023-02-14 where
+/// the cached status of phi was not updated after reset_momentum when
+/// threading was enabled)
 class ThreadedPseudoJetResetMom : public ThreadedTestBase<double> {
 public:
 
@@ -739,6 +744,8 @@ public:
       return;
     }
     PseudoJet j(1,0,0,1);
+    // force evaluation of j's phi (put into result[i] to
+    // minimise change of compiler warning)
     _result[i] = {j.phi()};
     j.reset_momentum(*_pj_ptr);
     _result[i] = {j.phi()};
@@ -751,7 +758,61 @@ protected:
 };
 
 //-------------------------------------------------------------
-/// Test PseudoJet copies
+/// Test PseudoJet reset_momentum
+///
+/// Test designed to check caching of phi in PseudoJet after
+/// reset_momentum (specifically the bug discovered on 2023-02-14 where
+/// the cached status of phi was not updated after reset_momentum when
+/// threading was enabled)
+class ThreadedPseudoJetResetMomB : public ThreadedTestBase<double> {
+public:
+
+  ThreadedPseudoJetResetMomB()
+    : _nthreads(10) {
+    set_n_threads(_nthreads);
+  }
+
+  bool prepare_round(unsigned j) FASTJET_OVERRIDE {
+    if (j < _nrounds) {
+      _pj_ptr.reset(new PseudoJet(3,4,0,5));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  std::string short_name()  const override {
+    return "PseudoJetResetMomB";
+  }
+
+  void run_test_i(unsigned i) override {
+    if (i==_nthreads-1){
+      _result[i] = {_pj_ptr->phi()};
+      return;
+    }
+    PseudoJet j(1,0,0,1);
+    // force evaluation of j's phi (put into result[i] to
+    // minimise change of compiler warning)
+    _result[i] = {j.phi()};
+    j.reset_momentum(*_pj_ptr);
+    _result[i] = {j.phi()};
+  } 
+
+protected:
+  const unsigned int _nthreads;
+  const unsigned int _nrounds = 10;
+  std::unique_ptr<PseudoJet> _pj_ptr;
+
+};
+
+
+//-------------------------------------------------------------
+/// Test PseudoJet assignment
+///
+/// Test designed to check PseudoJet phi evaluation after assignment,
+/// specifically the bug discovered on 2023-02-14 where the status of
+/// the phi calculation could be copied as being in progress, which
+/// would then lead to an infinite loop in the copy's phi evaluation
 class ThreadedPseudoJetCopy : public ThreadedTestBase<double> {
 public:
 
@@ -778,6 +839,35 @@ protected:
   const unsigned int _nthreads;
   const PseudoJet *_pj_ptr;
 
+};
+
+
+//-------------------------------------------------------------
+/// Test PseudoJet assignment
+///
+/// Test designed to check PseudoJet phi evaluation after assignment,
+/// specifically the bug discovered on 2023-02-14 where the status of
+/// the phi calculation could be copied as being in progress, which
+/// would then lead to an infinite loop in the copy's phi evaluation
+class ThreadedPseudoJetAssignment : public ThreadedPseudoJetResetMomB  {
+public:
+
+  ThreadedPseudoJetAssignment() : ThreadedPseudoJetResetMomB() {}
+
+  std::string short_name()  const override {
+    return "PseudoJetAssignment";
+  }
+
+  void run_test_i(unsigned i) override {
+    if (i==0){
+      _result[0] = {_pj_ptr->phi()};
+      return;
+    }
+    // create a new PseudoJet 
+    PseudoJet j(1,0,0,1);
+    j = *_pj_ptr;
+    _result[i] = {j.phi()};
+  } 
 };
 
 

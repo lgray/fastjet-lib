@@ -46,6 +46,15 @@ int main(int argc, char ** argv) {
   tests.emplace_back(make_unique<TestThread<ThreadedError>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestPhiRap>>());
   tests.emplace_back(make_unique<TestThread<ThreadedTestRapPhi>>());
+
+  PseudoJet j1(3,4,0,5); //< do not evaluate the phi of this PJ before the next call
+  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetResetMom>>(&j1));
+  PseudoJet j2(3,4,0,5); //< do not evaluate the phi of this PJ before the next call
+  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetCopy>>(&j2));
+  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetResetMomB>>());
+  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetAssignment>>());
+
+
   tests.emplace_back(make_unique<TestThread<ThreadedClustering1EvManyR>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering1EvCommonCS>>());
   tests.emplace_back(make_unique<TestThread<ThreadedClustering10Ev>>());
@@ -61,10 +70,6 @@ int main(int argc, char ** argv) {
       AreaDefinition(active_area_explicit_ghosts))));
   tests.emplace_back(make_unique<TestThread<ThreadedBGEBase>>(new GridMedianBackgroundEstimator(2.5, 0.6))); 
   tests.emplace_back(make_unique<TestThread<ThreadedJMBGECommonEvent>>());
-  PseudoJet j1(3,4,0,5); //< do not evaluate the phi of this PJ before the next call
-  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetResetMom>>(&j1));
-  PseudoJet j2(3,4,0,5); //< do not evaluate the phi of this PJ before the next call
-  tests.emplace_back(make_unique<TestThread<ThreadedPseudoJetCopy>>(&j2));
 
   // run over them
   bool overall_outcome = true;
