@@ -719,43 +719,6 @@ private:
   Subtractor _subtractor;
 };
 
-//-------------------------------------------------------------
-/// Test PseudoJet reset_momentum
-///
-/// Test designed to check caching of phi in PseudoJet after
-/// reset_momentum (specifically the bug discovered on 2023-02-14 where
-/// the cached status of phi was not updated after reset_momentum when
-/// threading was enabled)
-class ThreadedPseudoJetResetMom : public ThreadedTestBase<double> {
-public:
-
-  ThreadedPseudoJetResetMom(const PseudoJet *pj_ptr)
-    : _nthreads(10), _pj_ptr(pj_ptr){
-    set_n_threads(_nthreads);
-  }
-
-  std::string short_name()  const override {
-    return "PseudoJetResetMom";
-  }
-
-  void run_test_i(unsigned i) override {
-    if (i==_nthreads-1){
-      _result[i] = {_pj_ptr->phi()};
-      return;
-    }
-    PseudoJet j(1,0,0,1);
-    // force evaluation of j's phi (put into result[i] to
-    // minimise change of compiler warning)
-    _result[i] = {j.phi()};
-    j.reset_momentum(*_pj_ptr);
-    _result[i] = {j.phi()};
-  } 
-
-protected:
-  const unsigned int _nthreads;
-  const PseudoJet *_pj_ptr;
-
-};
 
 //-------------------------------------------------------------
 /// Test PseudoJet reset_momentum
@@ -766,7 +729,6 @@ protected:
 /// threading was enabled)
 class ThreadedPseudoJetResetMomB : public ThreadedTestBase<double> {
 public:
-
   ThreadedPseudoJetResetMomB()
     : _nthreads(10) {
     set_n_threads(_nthreads);
@@ -794,7 +756,7 @@ public:
     // force evaluation of j's phi (put into result[i] to
     // minimise change of compiler warning)
     _result[i] = {j.phi()};
-    j.reset_momentum(*_pj_ptr);
+    j.reset_momentum(*_pj_ptr);  //< this is the operation we want to test
     _result[i] = {j.phi()};
   } 
 
@@ -802,45 +764,7 @@ protected:
   const unsigned int _nthreads;
   const unsigned int _nrounds = 10;
   std::unique_ptr<PseudoJet> _pj_ptr;
-
 };
-
-
-//-------------------------------------------------------------
-/// Test PseudoJet assignment
-///
-/// Test designed to check PseudoJet phi evaluation after assignment,
-/// specifically the bug discovered on 2023-02-14 where the status of
-/// the phi calculation could be copied as being in progress, which
-/// would then lead to an infinite loop in the copy's phi evaluation
-class ThreadedPseudoJetCopy : public ThreadedTestBase<double> {
-public:
-
-  ThreadedPseudoJetCopy(const PseudoJet *pj_ptr)
-    : _nthreads(10), _pj_ptr(pj_ptr){
-    set_n_threads(_nthreads);
-  }
-
-  std::string short_name()  const override {
-    return "PseudoJetCopy";
-  }
-
-  void run_test_i(unsigned i) override {
-    if (i==0){
-      _result[0] = {_pj_ptr->phi()};
-      return;
-    }
-    PseudoJet j(1,0,0,1);
-    j = *_pj_ptr;
-    _result[i] = {j.phi()};
-  } 
-
-protected:
-  const unsigned int _nthreads;
-  const PseudoJet *_pj_ptr;
-
-};
-
 
 //-------------------------------------------------------------
 /// Test PseudoJet assignment
@@ -851,7 +775,6 @@ protected:
 /// would then lead to an infinite loop in the copy's phi evaluation
 class ThreadedPseudoJetAssignment : public ThreadedPseudoJetResetMomB  {
 public:
-
   ThreadedPseudoJetAssignment() : ThreadedPseudoJetResetMomB() {}
 
   std::string short_name()  const override {
@@ -865,7 +788,7 @@ public:
     }
     // create a new PseudoJet 
     PseudoJet j(1,0,0,1);
-    j = *_pj_ptr;
+    j = *_pj_ptr; //< this is the operation we want to test
     _result[i] = {j.phi()};
   } 
 };
