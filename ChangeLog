@@ -1,6 +1,11 @@
 ========== CHANGELOG FILE FOR FastJet =================================
-2023-02-15 Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+2023-02-15 Gavin Salam  <gavin.salam@physics.ox.ac.uk> + Gregory
 
+
+	* src/PseudoJet.cc:
+	replaced use of _init_status = Init_Done with _init_status.store(Init_Done)
+    (though we expect it to be equivalent)
+	
 	* testsuite/README:
 	fixed a few details
 

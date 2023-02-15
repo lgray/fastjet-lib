@@ -151,7 +151,7 @@ void PseudoJet::_ensure_valid_rap_phi() const{
                                              std::memory_order_seq_cst,
                                              std::memory_order_relaxed)){
       _set_rap_phi();
-      _init_status = Init_Done; // can safely be done after all physics variables are set
+      _init_status.store(Init_Done); // can safely be done after all physics variables are set
     } else {
       // wait until done
       do{
@@ -165,9 +165,10 @@ void PseudoJet::_ensure_valid_rap_phi() const{
         // - on success the value is unchanged so I think we can use relaxed ordering
         // - expected will be reinitialised anyway so again, relaxed ordering should be fi
 
-        //} while (!_init_state.compare_exchange_strong(expected, 1));
+      //} while (!_init_status.compare_exchange_strong(expected, Init_Done));
       } while (!_init_status.compare_exchange_weak(expected, Init_Done,
                                                    std::memory_order_relaxed,
+                                                   //std::memory_order_seq_cst,
                                                    std::memory_order_relaxed));
     }
     
