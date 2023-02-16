@@ -1,4 +1,12 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-16  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+
+	* testsuite/mkcxx.pl: *ADDED*
+	* testsuite/mkmk:
+	added the mkcxx.pl script used by mkmk and adapted
+	mkmk to use the local version (intended to ease
+	testing on vanilla systems)
+
 2023-02-16  Gregory Soyez  <soyez@fastjet.fr> + Gavin
 
 	* src/PseudoJet.cc (PseudoJet::_ensure_valid_rap_phi):
