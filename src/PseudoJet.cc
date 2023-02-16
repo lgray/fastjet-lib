@@ -150,8 +150,11 @@ void PseudoJet::_ensure_valid_rap_phi() const{
     if (_init_status.compare_exchange_strong(expected, Init_InProgress,
                                              std::memory_order_seq_cst,
                                              std::memory_order_relaxed)){
-      _set_rap_phi();
-      _init_status.store(Init_Done); // can safely be done after all physics variables are set
+      // use a comma operator to make sure that the two functions
+      // are sequenced. DO NOT REPLACE THE COMMA WITH A SEMICOLON!
+      // (Because the semicolon does not force sequencing)
+      // Cf. rule 9 of https://en.cppreference.com/w/cpp/language/eval_order
+      _set_rap_phi(), _init_status.store(Init_Done); // can safely be done after all physics variables are set
     } else {
       // wait until done
       do{
