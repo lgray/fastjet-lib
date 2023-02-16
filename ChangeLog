@@ -1,11 +1,18 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-16  Gregory Soyez  <soyez@fastjet.fr> + Gavin
+
+	* src/PseudoJet.cc (PseudoJet::_ensure_valid_rap_phi):
+	Changed the part that waits until the calculation is done to a
+	simple loop. Also, set the computation/wait mechanism to use
+	memory_order_releease/memory_order_acquire
+
 2023-02-15 Gavin Salam  <gavin.salam@physics.ox.ac.uk> + Gregory
 
 
 	* src/PseudoJet.cc:
 	replaced use of _init_status = Init_Done with _init_status.store(Init_Done)
-    (though we expect it to be equivalent)
-	
+        (though we expect it to be equivalent)
+
 	* testsuite/README:
 	fixed a few details
 
@@ -14,7 +21,7 @@
 	trying to get repeated tests of reset momentum and assignment,
 	to help increase likelihood of catching thread safety issues, 
 	if any remain (so far it passes).
-	
+
 	* testsuite/README:
 	added a note about the thread safety tests and fixed some typos.
 

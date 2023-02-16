@@ -150,29 +150,20 @@ void PseudoJet::_ensure_valid_rap_phi() const{
     if (_init_status.compare_exchange_strong(expected, Init_InProgress,
                                              std::memory_order_seq_cst,
                                              std::memory_order_relaxed)){
-      // use a comma operator to make sure that the two functions
-      // are sequenced. DO NOT REPLACE THE COMMA WITH A SEMICOLON!
-      // (Because the semicolon does not force sequencing)
-      // Cf. rule 9 of https://en.cppreference.com/w/cpp/language/eval_order
-      _set_rap_phi(), _init_status.store(Init_Done); // can safely be done after all physics variables are set
+      _set_rap_phi();
+      // Now we can safely set the status flag to Init_Done (after all
+      // physics variables are set). The memory ordering guarantees
+      // synchronisation across threads.
+      _init_status.store(Init_Done, memory_order_release); 
     } else {
       // wait until done
-      do{
-        // the operation below will reset expected to whatever is in
-        // init_state if the test fails, so we need to reset it to
-        // the 1 (aka init_done) we want!
-        expected = Init_Done;
- 
-        // the next line
-        // - here we could potentially use the weak form
-        // - on success the value is unchanged so I think we can use relaxed ordering
-        // - expected will be reinitialised anyway so again, relaxed ordering should be fi
-
-      //} while (!_init_status.compare_exchange_strong(expected, Init_Done));
-      } while (!_init_status.compare_exchange_weak(expected, Init_Done,
-                                                   std::memory_order_relaxed,
-                                                   //std::memory_order_seq_cst,
-                                                   std::memory_order_relaxed));
+      //
+      // Here we use memory_order_acquire to guarantee that the
+      // rap/phi values set in the thread which actually does the
+      // calculation are synchronised.
+      // Reading https://gcc.gnu.org/wiki/Atomic/GCCMM/AtomicSync in
+      // interesting in this context.
+      while (_init_status.load(memory_order_acquire) != Init_Done);
     }
     
   }
