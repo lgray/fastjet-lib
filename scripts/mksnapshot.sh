@@ -12,13 +12,15 @@ git pull || exit -1
 # get the revision number 
 rev=$(git rev-parse --short=8 HEAD)
 # and then generate an extra label for the version number, including also the date
-extralabel=`date +"%Y%m%d"`-rev$rev
+extralabel=`date +"%Y%m%d"`-$rev
 echo "Extra label is: $extralabel"
 
 #----------------------------------------------------------------------
 # Create a new tarball (and then put things back to normal)
 #
-# update version numbers in some critical files (why not use ./scripts/set-version ???)
+# update version numbers in some critical files; the reason for now
+# using update version is to avoid having to extract the current version 
+# number from the configure.ac file
 sed 's/\(AC_INIT.*\)])/\1-'$extralabel'])/' < configure.ac > configure.ac.new
 mv configure.ac.new configure.ac
 pushd src
@@ -28,9 +30,8 @@ popd
 # now make and test the distribution 
 make -j4 distcheck 
 
-# and put the configure file back to where it was
-git restore configure.ac
-git restore include/fastjet/config_win.h
+# and put the configure file etc back to where they were
+git restore Doxyfile configure.ac doc/fastjet-doc.tex include/fastjet/config_win.h
 
 # then get things ready for the output for manual operations
 filename=`ls -rt *$extralabel*.tar.gz | tail -1`
