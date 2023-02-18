@@ -1,4 +1,10 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-02-18 Sat  <gavin.salam@physics.ox.ac.uk>
+
+	* autogen.sh:
+	switched over to bash explicitly, and addressed issues
+	with check for glibtool on Mac OS. 
+
 2023-02-16  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
 
 	* testsuite/mkcxx.pl: *ADDED*

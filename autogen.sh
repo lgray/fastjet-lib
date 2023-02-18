@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Run this to generate all the initial makefiles, etc.
 #
 
@@ -30,24 +30,25 @@ LIBTOOLIZE=libtoolize
 
 # change executable names when running on Macs
 # if test x`uname` = xDarwin; then
- if [ `uname` = "Darwin" ]; then
-   if [ x`whereis glibtool` = "xglibtool:" ]; then
-      echo ""
-      echo "On Mac OSX, the GNU libtool and libtoolize scripts, renamed"
-      echo "glibtol and glibtoolize respectively by Apple to avoid"
-      echo "conflict with Apple-provided libtool, should be used."
-      echo ""
-      echo "They should be already installed, together with Apple developer tools,"
-      echo "in /usr/bin. If you see this message, they are not."
-      echo ""
-      echo "The GNU version can be retrieved from http://ftp.gnu.org/gnu/libtool/."
-      echo "If they are (re)installed from sources in a different location,"
-      echo "autogen.sh should then be modified accordingly."
-      exit
-   fi
-   LIBTOOL=glibtool
-   LIBTOOLIZE=glibtoolize
- fi
+if [ `uname` == "Darwin" ]; then
+  echo "Detected Mac OSX"
+  if [ x$(which xglibtool) == "x" ]; then    
+    echo ""
+    echo "On Mac OSX, $0 requires the GNU libtool and libtoolize scripts,"
+    echo "renamed glibtol and glibtoolize respectively by Apple to avoid"
+    echo "conflict with Apple-provided libtool."
+    echo ""
+    echo "They should be already installed, together with Apple developer tools,"
+    echo "in /usr/bin. If you see this message, they are not."
+    echo ""
+    echo "The GNU version can be retrieved from http://ftp.gnu.org/gnu/libtool/."
+    echo "If they are (re)installed from sources in a different location,"
+    echo "autogen.sh should then be modified accordingly."
+    exit
+  fi
+  LIBTOOL=glibtool
+  LIBTOOLIZE=glibtoolize
+fi
 
 # check that all utilities needed by configure.ac are present
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
