@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # check whether all is committed
-if [[ ` git sts -uno | wc -l` -gt 0 ]] ; then
+if [[ ` git status -uno | wc -l` -gt 0 ]] ; then
  echo "ERROR: working copy has local changes"
  exit -1
 fi
@@ -28,7 +28,7 @@ pushd src
 popd
 
 # now make and test the distribution 
-make -j4 distcheck 
+make -j distcheck 
 
 # and put the configure file etc back to where they were
 git restore Doxyfile configure.ac doc/fastjet-doc.tex include/fastjet/config_win.h
@@ -39,7 +39,7 @@ filebase=`echo $filename | sed 's/.tar.gz//'`
 
 #----------------------------------------------------------------------
 # create a patch file corresponding to the edits needed for the snapshot file
-remoteSnapshotHTML='tycho.lpthe.jussieu.fr:~salam/www/fastjet3/snapshots.html'
+remoteSnapshotHTML='tycho.lpthe.jussieu.fr:/ada4/lpthe/salam/www/fastjet3/snapshots.html'
 oldSnapshotHTML='/tmp/snapshots-incoming.html'
 newSnapshotHTML='/tmp/snapshots-'$extralabel.html
 diffSnapshotHTML='/tmp/snapshots-diff-'$extralabel.html
@@ -70,7 +70,7 @@ fi
 echo "**************************************************"
 echo "Have produced the file: $filename"
 echo Now run 
-echo scp -p $filename tycho.lpthe.jussieu.fr:'~'salam/www/fastjet/repository/snapshots/
+echo scp -p $filename tycho.lpthe.jussieu.fr:/ada4/lpthe/salam/www/fastjet/repository/snapshots/
 echo git tag snapshots/$filebase -m \'tagged $filebase snapshot\'
 echo
 
@@ -78,5 +78,5 @@ echo
 # (e.g. fastjet group write access, +x flag, etc.)
 if [[ $addedLine ]]; then
     echo "scp -p $diffSnapshotHTML tycho.lpthe.jussieu.fr:$diffSnapshotHTML"
-    echo "ssh tycho.lpthe.jussieu.fr patch /ada1/lpthe/salam/www/fastjet3/snapshots.html $diffSnapshotHTML"
+    echo "ssh tycho.lpthe.jussieu.fr patch /ada4/lpthe/salam/www/fastjet3/snapshots.html $diffSnapshotHTML"
 fi
