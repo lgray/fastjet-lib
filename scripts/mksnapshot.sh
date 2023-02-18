@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # check whether all is committed
-if [[ `svn status | grep -v -e '^X' -e external | egrep -e '^[A-Z]' | wc -l` -gt 0 ]] ; then
+if [[ ` git sts -uno | wc -l` -gt 0 ]] ; then
  echo "ERROR: working copy has local changes"
  exit -1
 fi
 
 # get an up to date version
-svn update || exit -1
+git pull || exit -1
 
 # get the revision number 
-rev=`svn info | grep Revision | sed s'/[^0-9]*//'`
+rev=$(git rev-parse --short=8 HEAD)
 # and then generate an extra label for the version number, including also the date
 extralabel=`date +"%Y%m%d"`-rev$rev
 echo "Extra label is: $extralabel"
@@ -29,8 +29,8 @@ popd
 make -j4 distcheck 
 
 # and put the configure file back to where it was
-svn revert configure.ac
-svn revert include/fastjet/config_win.h
+git restore configure.ac
+git restore include/fastjet/config_win.h
 
 # then get things ready for the output for manual operations
 filename=`ls -rt *$extralabel*.tar.gz | tail -1`
@@ -70,7 +70,7 @@ echo "**************************************************"
 echo "Have produced the file: $filename"
 echo Now run 
 echo scp -p $filename tycho.lpthe.jussieu.fr:'~'salam/www/fastjet/repository/snapshots/
-echo svn cp svn+ssh://tycho.lpthe.jussieu.fr/ada1/lpthe/salam/svn/fastjet/trunk/fastjet-release svn+ssh://tycho.lpthe.jussieu.fr/ada1/lpthe/salam/svn/fastjet/tags/snapshots/$filebase -m \'tagged $filebase snapshot\'
+echo git tag snapshots/$filebase -m \'tagged $filebase snapshot\'
 echo
 
 # watch out: we apply a patch so as not to modify special permissions on the file
