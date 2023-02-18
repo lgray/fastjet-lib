@@ -32,7 +32,7 @@ LIBTOOLIZE=libtoolize
 # if test x`uname` = xDarwin; then
 if [ `uname` == "Darwin" ]; then
   echo "Detected Mac OSX"
-  if [ x$(which xglibtool) == "x" ]; then    
+  if [ x$(which glibtool) == "x" ]; then    
     echo ""
     echo "On Mac OSX, $0 requires the GNU libtool and libtoolize scripts,"
     echo "renamed glibtol and glibtoolize respectively by Apple to avoid"
