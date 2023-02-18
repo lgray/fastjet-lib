@@ -25,7 +25,7 @@
 
 	* src/PseudoJet.cc:
 	replaced use of _init_status = Init_Done with _init_status.store(Init_Done)
-        (though we expect it to be equivalent)
+	(though we expect it to be equivalent)
 
 	* testsuite/README:
 	fixed a few details
