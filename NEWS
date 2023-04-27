@@ -18,10 +18,10 @@ New features:
 
 * two new functions to make it possible for plugin algorithms to modify
   user info, as needed for modern flavoured jet-clustering algorithms:
-	PseudoJet::set_user_info_shared_ptr(...), to allow user info to easily
-	be copied from one jet to another and
-  ClusterSequence::plugin_non_const_jet(...) to get non-const access to
-  the initial jets.
+  . PseudoJet::set_user_info_shared_ptr(...), to allow user info to
+    easily be copied from one jet to another and
+  . ClusterSequence::plugin_non_const_jet(...) to get non-const access
+    to the initial jets.
 
 Bug fixes:
 
