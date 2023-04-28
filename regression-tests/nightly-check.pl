@@ -4,6 +4,7 @@
 #
 #    -mail        sends mail to all authors, otherwise output goes to screen
 #    -mailgavin   sends mail to just gavin
+#    -mailgregory sends mail to just gregory
 #    -verbose     output goes to screen even if we also ask for mail
 #    -only index  runs only the setup corresponding to the index that's 
 #                 requested (can also take a comma-separated list of indices)
@@ -168,6 +169,7 @@ $listSetups="";
 while ($arg = shift @ARGV) {
   if    ($arg eq "-mail")      {$mail = 1;}
   elsif ($arg eq "-mailgavin") {$mail = 1; $mailAddr='salam@lpthe.jussieu.fr';}
+  elsif ($arg eq "-mailgregory"){$mail = 1; $mailAddr='soyez@lpthe.jussieu.fr';}
   elsif ($arg eq "-verbose")   {$verbose = 1;}
   elsif ($arg eq "-only")      {
     $only = shift @ARGV;
