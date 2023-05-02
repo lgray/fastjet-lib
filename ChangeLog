@@ -1,4 +1,8 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-05-02  FastJet team <fastjet@projects.hepforge.org>
+
+	Release of FastJet fastjet-3.4.1
+
 2023-05-02  Gregory Soyez  <soyez@fastjet.fr>
 
 	* almost all cc and hh files:
