@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-05-05  Gavin SALAM  <gavin.salam@cern.ch>
+
+	* regression-tests/nightly-check.pl:
+	went back to old CGAL path for nightly checks
+
 2023-05-02  FastJet team <fastjet@projects.hepforge.org>
 
 	Release of FastJet fastjet-3.4.1
