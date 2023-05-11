@@ -22,7 +22,7 @@ print "End year for copyright is $endyear\n";
 
 
 # set up directories where we want to act
-@dirs=("include","tools","src","plugins","fortran_wrapper", "scripts");
+@dirs=("include","tools","src","plugins","fortran_wrapper", "scripts", "example");
 print "Directories in which to search are: ",join(" ",@dirs),"\n";
 
 print "Do you want to update the files (Y), or just do a dry run (N)?\n";
