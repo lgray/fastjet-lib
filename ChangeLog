@@ -1,4 +1,14 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-05-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* examples/*.{hh,cc}
+	updated the header (copyright dates and scientific references)
+
+2023-05-11  Gregory Soyez  <soyez@fastjet.fr>
+
+	* scripts/update-headers.pl:
+	added "example" to the list of folders to check
+
 2023-05-05  Gavin SALAM  <gavin.salam@cern.ch>
 
 	* regression-tests/nightly-check.pl:
