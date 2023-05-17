@@ -304,7 +304,7 @@ for idx in 01 02 04 05 08 09 10; do
     cat $fjdir/example/$fname | 
              sed 's/fastjet::/fjcore::/g' | \
              sed 's/namespace fastjet/namespace fjcore/g' | \
-	     sed 's/\/\/ENDHEADER/#include "fjcore.hh"/;s/^#include "fastjet\/.*$//g' > $fname
+	     sed 's/\/\/FJENDHEADER/#include "fjcore.hh"/;s/^#include "fastjet\/.*$//g' > $fname
 
     echo "  CC   [$fname]"
     g++ -c -Wall -Woverloaded-virtual -ansi -pedantic -Wextra -Wshadow -O2 -g $fname || { echo "Failed."; exit 1; }
