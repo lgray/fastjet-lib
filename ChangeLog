@@ -7,6 +7,10 @@
 	original location was causing compilation errors with Clang version
 	16, and the c++20 standard
 
+	* scripts/mksnapshot.sh:
+	fixed issue that script was incorrectly signalling local changes
+	even when there were none
+
 2023-05-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* examples/*.{hh,cc}

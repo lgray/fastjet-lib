@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # check whether all is committed
-if [[ ` git status -uno | wc -l` -gt 0 ]] ; then
+if [[ ` git status -s -uno | wc -l` -gt 0 ]] ; then
  echo "ERROR: working copy has local changes"
  exit -1
 fi
