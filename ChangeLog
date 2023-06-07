@@ -1,4 +1,12 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-06-07 Gavin Salam <gavin.salam@physics.ox.ac.uk>
+
+	* include/fastjet/internal/ClosestPair2D.hh: 	
+	moved the ClosestPair2D::Point class definition inside the
+	ClosestPair2D class, follow report from Andre Sailer that its
+	original location was causing compilation errors with Clang version
+	16, and the c++20 standard
+
 2023-05-11  Gregory Soyez  <soyez@fastjet.fr>
 
 	* examples/*.{hh,cc}
