@@ -1,4 +1,10 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-06-18  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
+
+	* plugins/SISCone/siscone:
+	updated SISCone to baeae61, which turns eliminates -ffast-math
+	option (full release to come later if it passes checks).
+
 2023-06-07 Gavin Salam <gavin.salam@physics.ox.ac.uk>
 
 	* include/fastjet/internal/ClosestPair2D.hh: 	
