@@ -4,6 +4,7 @@
     * ClusterSequenceAreaBase.cc:
 	removed unused variable (n_exclude) in 
 	ClusterSequenceAreaBase::_parabolic_pt_per_unit_area
+	and replaced tabs -> spaces
 
 2023-07-28  FastJet team <fastjet@projects.hepforge.org>
 
