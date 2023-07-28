@@ -7,7 +7,7 @@ Summary of changes from v3.4.1 -> v3.4.2: 2023-07-28
 
 Bug fixes:
 
-* small fix ClosestPair2D class for compatibility with c++20
+* small fix in ClosestPair2D class for compatibility with c++20
   (thanks to Andre Sailer for the report and fix)
 
 * SISCone updated to 3.0.6, which eliminates default -ffast-math
