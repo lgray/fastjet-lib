@@ -1,4 +1,10 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-07-28 Gregory, Matteo, Gavin
+
+    * ClusterSequenceAreaBase.cc:
+	removed unused variable (n_exclude) in 
+	ClusterSequenceAreaBase::_parabolic_pt_per_unit_area
+
 2023-07-28  FastJet team <fastjet@projects.hepforge.org>
 
 	Release of FastJet fastjet-3.4.2
