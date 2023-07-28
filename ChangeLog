@@ -1,15 +1,26 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2023-07-28 Gregory, Matteo, Gavin
+
+	* NEWS:
+	drafting news items for 3.4.2 release
+
+    * plugins/SISCone/siscone:
+	updated SISCone to siscone-3.0.6
+
 2023-06-18  Gavin Salam  <gavin.salam@physics.ox.ac.uk>
 
+	* development:
+	* meeting:
+
 	* plugins/SISCone/siscone:
-	updated SISCone to baeae61, which turns eliminates -ffast-math
+	updated SISCone to baeae61, which eliminates -ffast-math
 	option (full release to come later if it passes checks).
 
 2023-06-07 Gavin Salam <gavin.salam@physics.ox.ac.uk>
 
 	* include/fastjet/internal/ClosestPair2D.hh: 	
 	moved the ClosestPair2D::Point class definition inside the
-	ClosestPair2D class, follow report from Andre Sailer that its
+	ClosestPair2D class, following report from Andre Sailer that its
 	original location was causing compilation errors with Clang version
 	16, and the c++20 standard
 
