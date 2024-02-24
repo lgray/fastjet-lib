@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-02-24 Gavin
+
+	* configure.ac:
+	python-config search also looks for python3-config
+
 2023-07-28 Gregory, Matteo, Gavin
 
     * ClusterSequenceAreaBase.cc:
