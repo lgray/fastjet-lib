@@ -49,7 +49,7 @@
 #define FASTJET_DEPRECATED_MSG(message,func)  func
 #endif
 
-#else  // SIWG
+#else  // SWIG
 #define FASTJET_DEPRECATED(func)              func
 #define FASTJET_DEPRECATED_MSG(message,func)  func
 #endif // SWIG

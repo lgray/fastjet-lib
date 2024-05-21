@@ -1,4 +1,10 @@
+
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-05-21  Gavin Salam 
+
+	* include/fastjet/internal/deprecated.hh:
+	fixed typo in comment
+
 2024-02-24 Gavin
 
 	* configure.ac:
