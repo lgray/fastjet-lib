@@ -7,6 +7,17 @@ if test "$prefix" = "$PWD"; then
   AC_MSG_ERROR([Installation into the build directory is not supported: use a different --prefix argument])
 fi
 
+dnl make sure that the installation path does not contain a blank space
+dnl (not supported by libtool, and even if it were, certainly a source
+dnl of endless headaches)
+AC_MSG_CHECKING([whether the installation path contains a space])
+if test "x$prefix" != "x${prefix// /}"; then
+    AC_MSG_RESULT([])
+    AC_MSG_ERROR([The installation path cannot contain spaces. Please choose a valid --prefix argument without spaces.])
+else
+AC_MSG_RESULT([no])
+fi
+
 dnl (un_comment the following lines if you want to use autoheader
 dnl and also (un_comment the call to autoheader in autogen.sh
 dnl 
