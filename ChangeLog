@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-06-05  Gregory Soyez  <soyez@fastjet.fr>
+
+	* src/ClusterSequence.cc:
+	fixed typos in error message
+
 2024-05-24  Matteo Cacciari 
 
 	* configure.ac:

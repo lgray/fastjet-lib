@@ -1541,12 +1541,12 @@ void ClusterSequence::_add_step_to_history (
 
   assert(parent1 >= 0);
   if (_history[parent1].child != Invalid){
-    throw InternalError("trying to recomine an object that has previsously been recombined");
+    throw InternalError("trying to recombine an object that has previously been recombined");
   }
   _history[parent1].child = local_step;
   if (parent2 >= 0) {
     if (_history[parent2].child != Invalid){
-      throw InternalError("trying to recomine an object that has previsously been recombined");
+      throw InternalError("trying to recombine an object that has previously been recombined");
     }
     _history[parent2].child = local_step;
   }
