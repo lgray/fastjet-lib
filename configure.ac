@@ -20,9 +20,9 @@ fi
 
 dnl (un_comment the following lines if you want to use autoheader
 dnl and also (un_comment the call to autoheader in autogen.sh
-dnl 
+dnl
 dnl Notes:
-dnl  - the first macro needs to place the files in the correct 
+dnl  - the first macro needs to place the files in the correct
 dnl    dir in order to have the correct -I options for the remote build
 dnl  - see Makefile.am for distcleaning AX_PREFIX_CONFIG_H leftovers
 AC_CONFIG_HEADERS(include/fastjet/config_raw.h:config.h.in)
@@ -40,16 +40,16 @@ dnl 2013-03-30, updated and tested it works with
 dnl   autoconf-2.63 + automake 1.11 (tycho SLC6)
 dnl   autoconf-2.69 + automake 1.13 (gavin's laptop with macports)
 dnl
-dnl   NB: it is broken on lxplus (SLC5, autoconf 2.59 + automake 1.9), 
-dnl       but lxplus will soon migrate to SLC6. For now 
-dnl       autogen can be run on lxplus6, links to automake-1.11 
+dnl   NB: it is broken on lxplus (SLC5, autoconf 2.59 + automake 1.9),
+dnl       but lxplus will soon migrate to SLC6. For now
+dnl       autogen can be run on lxplus6, links to automake-1.11
 dnl       files replaced with copies and then used on lxplus5
 AC_PREREQ(2.63)
 
 dnl load our M4 macro directory
 dnl  - this is recommended by latest versions of libtoolize
 dnl  - this is equivalent to adding ACLOCAL_AMFLAGS = -I m4 in Makefile.am
-dnl  - the libtoolize manpage says that for the moment it's more 
+dnl  - the libtoolize manpage says that for the moment it's more
 dnl    portable to keep using ACLOCAL_AMFLAGS.
 dnl  - the autoconf manual mentions that since we use 'aclocal -I m4'
 dnl    we need ACLOCAL_AMFLAGS anyway
@@ -65,7 +65,7 @@ dnl-------------------------------------------------------------------
 dnl if the user has not set CXXFLAGS, then set our own default
 dnl-------------------------------------------------------------------
 USE_CUSTOM_FLAGS="yes"
-if [[ "x$CXXFLAGS" == "x" ]]; then
+if test "x$CXXFLAGS" = "x" ; then
    dnl 2014-08-11: it seems that -O3 produces timing results that vary
    dnl quite a lot between different architectures and are sometimes
    dnl worse than -O2. So we'll use -O2 as a new default
@@ -73,7 +73,7 @@ if [[ "x$CXXFLAGS" == "x" ]]; then
    USE_CUSTOM_FLAGS="no"
 fi
 
-# test "x${CXXFLAGS+yes}" == "xyes" || CXXFLAGS="-O3 -Wall"
+# test "x${CXXFLAGS+yes}" = "xyes" || CXXFLAGS="-O3 -Wall"
 
 dnl-------------------------------------------------------------------
 dnl check useful programs
@@ -84,7 +84,7 @@ dnl ensure CXX presence
 cxx_progname=$(basename $CXX)
 cxx_dirname=$(dirname $CXX)
 AC_CHECK_PROG([cxx_found],[$cxx_progname],[yes],[no],[$cxx_dirname$PATH_SEPARATOR$PATH])
-if test "x$cxx_found" == "xno"; then
+if test "x$cxx_found" = "xno"; then
    AC_MSG_ERROR([No functional C++ compiler found])
 fi
 
@@ -119,7 +119,7 @@ AC_ARG_ENABLE(debug,
 	[  --enable-debug          Turn on debug compiler information [default=yes]],
 	[ENABLE_DEBUG_FLAG="$enableval"],
 	[ENABLE_DEBUG_FLAG="yes"])
-if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
+if test "$ENABLE_DEBUG_FLAG" = "yes" ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" -g "
 
    dnl-------------------------------------------------------------------
@@ -134,7 +134,7 @@ if [[ "$ENABLE_DEBUG_FLAG" == "yes" ]] ; then
    AC_LANG_POP(C++)
    CXXFLAGS="$SAVE_CXXFLAGS"
    AC_MSG_RESULT([$ac_overloaded_virtual_ok])
-   if [[ "x${ac_overloaded_virtual_ok}" == "xyes" ]]; then
+   if test "x${ac_overloaded_virtual_ok}" = "xyes" ; then
       AM_CXXFLAGS=${AM_CXXFLAGS}" -Woverloaded-virtual "
    fi
 fi
@@ -144,7 +144,7 @@ AC_ARG_ENABLE(extra-warnings,
 	[  --enable-extra-warnings Turn on additional compiler warnings [default=no]],
 	[ENABLE_EXTRA_WARNINGS_FLAG="$enableval"],
 	[ENABLE_EXTRA_WARNINGS_FLAG="no"])
-if [[ "$ENABLE_EXTRA_WARNINGS_FLAG" == "yes" ]] ; then
+if test "$ENABLE_EXTRA_WARNINGS_FLAG" = "yes" ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" -pedantic -Wextra -Wshadow "
 fi
 
@@ -153,15 +153,15 @@ dnl-------------------------------------------------------------------
 dnl check if a few modern compiler options are availabble
 
 dnl --------- disable deprecated auto_ptr interface ------------------
-dnl This requires the --disable-auto-ptr option 
+dnl This requires the --disable-auto-ptr option
 dnl which is currently not the default but will become in a future
 dnl release (or might disappear altogether)
 AC_ARG_ENABLE(auto-ptr,
 	[  --enable-auto-ptr  compile the deprecated parts of the interface using auto-ptr [default=no]],
 	[ENABLE_AUTO_PTR_INTERFACE="$enableval"],
 	[ENABLE_AUTO_PTR_INTERFACE="no"])
-if [[ "$ENABLE_AUTO_PTR_INTERFACE" == "yes" ]] ; then
-   AC_DEFINE(HAVE_AUTO_PTR_INTERFACE, [], [compile the deprecated parts of the interface using auto-ptr])   
+if test "$ENABLE_AUTO_PTR_INTERFACE" = "yes" ; then
+   AC_DEFINE(HAVE_AUTO_PTR_INTERFACE, [], [compile the deprecated parts of the interface using auto-ptr])
 fi
 
 dnl check if one wants to enable c++11 features (required e.g. for thread-safety)
@@ -171,11 +171,11 @@ AC_ARG_ENABLE(limited-thread-safety,
 	[  --enable-limited-thread-safety   Turn on basic thread-safety features (requires C++11)  [default=no]],
 	[ENABLE_LIMITED_THREAD_SAFETY_FLAG="$enableval"],
 	[ENABLE_LIMITED_THREAD_SAFETY_FLAG="no"])
-if [[ "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" == "yes" ]] ; then
+if test "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" = "yes" ; then
    AC_DEFINE(HAVE_LIMITED_THREAD_SAFETY, [], [defined if limited thread-safety has been enabled])
    AC_MSG_WARN([Thread safety uses C++11 features and may require additional compiler arguments, these have to be specified by the user])
    # one could alternately try to see what compiler flag(s) has to be included
-   # although that can be fairly heavy so better be moved in an ac file 
+   # although that can be fairly heavy so better be moved in an ac file
    #
    # e.g. for g++ we could try
    #   AC_MSG_CHECKING([if $CXX supports -std=c++11 flag])
@@ -187,7 +187,7 @@ if [[ "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" == "yes" ]] ; then
    #   AC_LANG_POP(C++)
    #   CXXFLAGS="$SAVE_CXXFLAGS"
    #   AC_MSG_RESULT([$ac_cxx_eleven_ok])
-   #   if [[ "x${ac_cxx_eleven_ok}" == "xyes" ]]; then
+   #   if test "x${ac_cxx_eleven_ok}" = "xyes" ; then
    #      AM_CXXFLAGS=${AM_CXXFLAGS}" -std=c++11 "
    #   fi
 fi
@@ -196,7 +196,7 @@ AC_ARG_ENABLE(thread-safety,
 	[  --enable-thread-safety           Turn on thread-safety features (requires C++11)  [default=no]],
 	[ENABLE_THREAD_SAFETY_FLAG="$enableval"],
 	[ENABLE_THREAD_SAFETY_FLAG="no"])
-if [[ "$ENABLE_THREAD_SAFETY_FLAG" == "yes" ]] ; then
+if test "$ENABLE_THREAD_SAFETY_FLAG" = "yes" ; then
    AC_DEFINE(HAVE_LIMITED_THREAD_SAFETY, [], [defined if limited thread-safety has been enabled])
    AC_DEFINE(HAVE_THREAD_SAFETY,         [], [defined if thread-safety has been enabled])
    AC_MSG_WARN([Thread safety uses C++11 features and may require additional compiler arguments, these have to be specified by the user])
@@ -214,7 +214,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public:  [[deprecated]] void test() 
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_CXX14_DEPRECATED, [], [compiler supports c++14 deprecated keyword])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -228,7 +228,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: void test() __attribute__((d
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_GNUCXX_DEPRECATED, [], [compiler supports GNU c++ deprecated attribute])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -242,7 +242,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: virtual void test(){}}; clas
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_OVERRIDE, [], [compiler supports the "override" keyword])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -256,7 +256,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public:  [[deprecated]] void test() 
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_CXX14_DEPRECATED, [], [compiler supports c++14 deprecated keyword])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -270,7 +270,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: __attribute__((__deprecated_
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_GNUCXX_DEPRECATED, [], [compiler supports GNU c++ deprecated attribute])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -284,7 +284,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: virtual void test(){}}; clas
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_OVERRIDE, [], [compiler supports the "override" keyword])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -298,7 +298,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[class A{public: explicit operator bool(){ret
     [ac_compiler_has_requested_support="yes"],[ac_compiler_has_requested_support="no"])
 CXXFLAGS="$save_CXXFLAGS"
 AC_LANG_POP(C++)
-if [[ "$ac_compiler_has_requested_support" == "yes" ]] ; then
+if test "$ac_compiler_has_requested_support" = "yes" ; then
    AC_DEFINE(HAVE_EXPLICIT_FOR_OPERATORS, [], [compiler supports the "explicit" keyword for operators])
 fi
 AC_MSG_RESULT([$ac_compiler_has_requested_support])
@@ -313,7 +313,7 @@ dnl even though they're enabled by default, AM_ENABLE_SHARED has to
 dnl be called so that ${enable_shared} is set to 'yes' instead of ''
 AM_ENABLE_SHARED
 dnl
-dnl comment the previous line and uncomment this one if you want shared 
+dnl comment the previous line and uncomment this one if you want shared
 dnl libs to be disabled by default
 dnl AM_DISABLE_SHARED
 HAS_SHARED=${enable_shared}
@@ -347,14 +347,14 @@ AC_ARG_ENABLE(cgal,
        [ENABLE_CGAL_FLAG="$enableval"],
        [ENABLE_CGAL_FLAG="no"])
 dnl if asked for, check if the CGAL library can be used
-if [[ "x${ENABLE_CGAL_FLAG}" == "xyes" ]] ; then
+if test "x${ENABLE_CGAL_FLAG}" = "xyes" ; then
    dnl if the search for CGAL has been explicitly asked and not found, return an error
    dnl ACX_CHECK_CGAL([],[ENABLE_CGAL_FLAG="no"])
    ACX_CHECK_CGAL([],AC_MSG_ERROR([CGAL explicitly requested and not found or not functional]))
 fi
 
 dnl update compilation/link flags for the CGAL lib
-if [[ "x$ENABLE_CGAL_FLAG" == "xyes" ]] ; then
+if test "x$ENABLE_CGAL_FLAG" = "xyes" ; then
    AM_CXXFLAGS=${AM_CXXFLAGS}" $CGAL_CPPFLAGS "
    CONFIG_LIBS=" $CGAL_LIBS "${CONFIG_LIBS}
 else
@@ -379,7 +379,7 @@ AC_MSG_RESULT([$ac_enable_new_dtags_ok])
 HAS_RUNPATH_SUPPORT="no"
 CONFIG_RUNPATH_FLAGS=""
 dnl if test x"$ac_enable_new_dtags_ok" = x"yes"; then
-if [[ "x${ac_enable_new_dtags_ok}" == "xyes" ]]; then
+if test "x${ac_enable_new_dtags_ok}" = "xyes" ; then
    HAS_RUNPATH_SUPPORT="yes"
    CONFIG_RUNPATH_FLAGS="-Wl,--enable-new-dtags"
 fi
@@ -390,7 +390,7 @@ dnl-------------------------------------------------------------------
 dnl check if demangling using GNU C++ ABI is supported
 dnl-------------------------------------------------------------------
 dnl only do it if we have execinfo!
-if [[ "x${ac_cv_header_execinfo_h}" == "xyes" ]]; then
+if test "x${ac_cv_header_execinfo_h}" = "xyes" ; then
     dnl check if demangling is enabled
     AC_ARG_ENABLE(demangling,
         [  --enable-demangling     enables demangling in backtrace (if supported) [default=no]],
@@ -398,7 +398,7 @@ if [[ "x${ac_cv_header_execinfo_h}" == "xyes" ]]; then
         [enable_demangling_flag="no"])
 
     dnl if asked for, check if deangling is supported
-    if [[ "x${enable_demangling_flag}" == "xyes" ]] ; then
+    if test "x${enable_demangling_flag}" = "xyes" ; then
         ACX_CHECK_DEMANGLE_SUPPORT([AC_DEFINE(HAVE_DEMANGLING_SUPPORT, [], [defined if demangling is enabled at configure time and is supported through the GNU C++ ABI])],[])
     fi
 fi
@@ -443,7 +443,7 @@ AC_ARG_ENABLE(monolithic,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-monolithic) ;;
 esac],[monolithic=yes])
 AM_CONDITIONAL(MONOLITHIC_PLUGINS, test x$monolithic = xyes)
-if [[ "x$monolithic" == "xyes" ]] ; then
+if test "x$monolithic" = "xyes" ; then
    CONFIG_LIBS_PLUGINS=" -lfastjetplugins "
    CONFIG_LIBS_PLUGINS_STATIC=" \${installationdir}/lib/libfastjetplugins.a "
 fi
@@ -504,19 +504,19 @@ AC_PROG_LIBTOOL
 dnl-------------------------------------------------------------------
 dnl add Fortran flags if any plugin that needs it is enabled
 dnl-------------------------------------------------------------------
-if [[ "x$ENABLE_PXCONE" == "xyes" ]] ; then
+if test "x$ENABLE_PXCONE" = "xyes" ; then
    dnl set up the fortran compiler and libs
-   if test "x$FCFLAGS" == "x"; then
+   if test "x$FCFLAGS" = "x"; then
       FCFLAGS="-O2"
    fi
    ## Try to respect users' Fortran compiler variables
-   if test "x$FC" == "x"; then
+   if test "x$FC" = "x"; then
       if test "x$F77" != "x"; then
       	 FC="$F77"
       fi
    fi
    AC_PROG_FC
-   if test "x$FC" == "x"; then
+   if test "x$FC" = "x"; then
       AC_MSG_ERROR([Fortran compiler required to build PxCone but not found or not functional])
    fi
    AC_FC_LIBRARY_LDFLAGS
@@ -543,7 +543,7 @@ dnl          the command line, a potential -O0 would be spoiled by
 dnl          the -O3 in CXXFLAGS. By putting  CXXFLAGS in AM_CXXFLAGS
 dnl          we have a better control on the order
 dnl------------------------------------------------------------------
-if [[ "x$USE_CUSTOM_FLAGS" == "xno" ]]; then
+if test "x$USE_CUSTOM_FLAGS" = "xno" ; then
    AM_CXXFLAGS=${CXXFLAGS}" "${AM_CXXFLAGS}
    CXXFLAGS=""
 fi
@@ -552,10 +552,10 @@ fi
 dnl------------------------------------------------------------------
 dnl there is a problem with optimisation of the D0 code.
 dnl One of the solutions to this issue is to disble inlie functions
-dnl We ony do that if the compiler supports the option, otherwise, 
+dnl We ony do that if the compiler supports the option, otherwise,
 dnl we disable optimisation for that plugin
 dnl------------------------------------------------------------------
-if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
+if test "x$ENABLE_D0RUNIICONE" = "xyes" ; then
    # check if the compiler supports -fno-inline
    AC_MSG_CHECKING([if $CXX supports -fno-inline])
    SAVE_CXXFLAGS="$CXXFLAGS"
@@ -569,13 +569,13 @@ if [[ "x$ENABLE_D0RUNIICONE" == "xyes" ]] ; then
    D0_CXXFLAGS=""
 
    dnl if test x"$ac_enable_new_dtags_ok" = x"yes"; then
-   if [[ "x${ac_support_no_inline}" == "xyes" ]]; then
+   if test "x${ac_support_no_inline}" = "xyes" ; then
       D0_CXXFLAGS=${AM_CXXFLAGS}" -fno-inline"
    else
       # in case of multiple -O options, the last one prevails
       D0_CXXFLAGS=${AM_CXXFLAGS}" -O0"
    fi
-   
+
    AC_SUBST(D0_CXXFLAGS)
 fi
 
@@ -624,7 +624,7 @@ AC_ARG_ENABLE(pyext,
 	[ENABLE_PYEXT_FLAG="$enableval"],
 	[ENABLE_PYEXT_FLAG="no"])
 AC_MSG_RESULT(${ENABLE_PYEXT_FLAG})
-if [[ "$ENABLE_PYEXT_FLAG" == "yes" ]] ; then
+if test "$ENABLE_PYEXT_FLAG" = "yes" ; then
     AM_PATH_PYTHON
     AC_ARG_VAR([PYTHON_INCLUDE], [Include flags for python, bypassing python-config])
     AC_ARG_VAR([PYTHON_CONFIG], [Path to python-config])
@@ -642,7 +642,7 @@ if [[ "$ENABLE_PYEXT_FLAG" == "yes" ]] ; then
     ])
 
     # at a deeper level, one may want to be able to run swig dynamically
-    #   
+    #
     # In the end we want to ship swig_wrapper.cpp and fastjet.py together
     # with the distribution but for development purposes (and possile
     # incoherences w end-user configurations) it is good to have teh
@@ -653,7 +653,7 @@ if [[ "$ENABLE_PYEXT_FLAG" == "yes" ]] ; then
                   [ENABLE_SWIG_FLAG="$enableval"],
                   [ENABLE_SWIG_FLAG="no"])
     AC_MSG_RESULT(${ENABLE_SWIG_FLAG})
-    if [[ "$ENABLE_SWIG_FLAG" == "yes" ]] ; then
+    if test "$ENABLE_SWIG_FLAG" = "yes" ; then
         AX_PKG_SWIG([3.0.0], [], [AC_MSG_ERROR([SWIG explicitly requested but not found...]) ])
         SWIG_ENABLE_CXX
         SWIG_PYTHON
@@ -705,7 +705,7 @@ AC_DEFINE_UNQUOTED([VERSION_NUMBER], [$versionnumber], [Version of the package u
 dnl AC_DEFINE_UNQUOTED([VERSION_IS(X,Y,Z)],
 dnl  [(FASTJET_VERSION_MAJOR == (X) && FASTJET_VERSION_MINOR == (Y) && FASTJET_VERSION_PATCHLEVEL == (Z))],
 dnl  [macro to require a precise version of FastJet (only works for FJ>=3.0.1)])
-dnl 
+dnl
 dnl AC_DEFINE([VERSION_IS_AT_LEAST(X,Y,Z)],
 dnl  [(FASTJET_VERSION_MAJOR > (X) || (FASTJET_VERSION_MAJOR == (X) && (FASTJET_VERSION_MINOR > (Y) || (FASTJET_VERSION_MINOR == (Y) && (FASTJET_VERSION_PATCHLEVEL >= (Z))))))],
 dnl  [macro to require a minimal version of FastJet (only works for FJ>=3.0.1)])
@@ -730,30 +730,30 @@ dnl AC_PLUGIN_SUMMARY
 dnl echo "  Monolithic plugins lib     "$monolithic
 
 CONFIG_SUMMARY=""
-CONFIG_SUMMARY+="Configuration summary:\n"
-CONFIG_SUMMARY+="----------------------\n"
-if [[ "x${prefix}" == "xNONE" ]] ; then
-CONFIG_SUMMARY+="  Installation directory     /usr/local\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}Configuration summary:\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}----------------------\n"
+if test "x${prefix}" = "xNONE" ; then
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Installation directory     /usr/local\n"
 else
-CONFIG_SUMMARY+="  Installation directory     "${prefix}"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Installation directory     "${prefix}"\n"
 fi
-CONFIG_SUMMARY+="  Shared libraries           "${enable_shared}"\n"
-CONFIG_SUMMARY+="  Static libraries           "${enable_static}"\n"
-CONFIG_SUMMARY+="  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"
-CONFIG_SUMMARY+="  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
-if [[ "$ENABLE_THREAD_SAFETY_FLAG" == "yes" ]]; then
-CONFIG_SUMMARY+="  Thread safety              yes (requires C++11)\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Shared libraries           "${enable_shared}"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Static libraries           "${enable_static}"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Debug flag                 "$ENABLE_DEBUG_FLAG"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  CGAL support               "${ENABLE_CGAL_FLAG}"\n"
+if test "$ENABLE_THREAD_SAFETY_FLAG" = "yes" ; then
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Thread safety              yes (requires C++11)\n"
 else
-if [[ "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" == "yes" ]]; then
-CONFIG_SUMMARY+="  Thread safety              limited (requires C++11)\n"
+if test "$ENABLE_LIMITED_THREAD_SAFETY_FLAG" = "yes" ; then
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Thread safety              limited (requires C++11)\n"
 else
-CONFIG_SUMMARY+="  Thread safety              no\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Thread safety              no\n"
 fi
 fi
 AC_PLUGIN_SUMMARY([yes])
-CONFIG_SUMMARY+="  Monolithic plugins lib     "$monolithic"\n"
-CONFIG_SUMMARY+="  Python interface           "${ENABLE_PYEXT_FLAG}"\n"
-CONFIG_SUMMARY+="  Swig python generator      "${ENABLE_SWIG_FLAG}"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Monolithic plugins lib     "$monolithic"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Python interface           "${ENABLE_PYEXT_FLAG}"\n"
+CONFIG_SUMMARY="${CONFIG_SUMMARY}  Swig python generator      "${ENABLE_SWIG_FLAG}"\n"
 AC_SUBST(CONFIG_SUMMARY)
 
 
@@ -772,4 +772,3 @@ echo " When using the FastJet library, you can retrieve  "
 echo " compilation and link flags using fastjet-config.  "
 echo " Type 'fastjet-config --help' for more information "
 echo "---------------------------------------------------"
-
