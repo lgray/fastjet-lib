@@ -49,7 +49,7 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
         [  --enable-allplugins     enables all the FastJet plugins (default=no)],
        	[ENABLE_ALLPLUGINS="$enableval"],
        	[ENABLE_ALLPLUGINS="not set"])
-    if [[ "x$ENABLE_ALLPLUGINS" == "xyes" ]] ; then
+    if test "x$ENABLE_ALLPLUGINS" = "xyes" ; then
         dnl set all default plugin settings to yes
     	DEFAULT_ENABLE_SISCONE="yes"
     	DEFAULT_ENABLE_CDFCONES="yes"
@@ -59,13 +59,13 @@ AC_DEFUN([ACX_CHECK_ALLPLUGINS],
     	DEFAULT_ENABLE_TRACKJET="yes"
     	DEFAULT_ENABLE_ATLASCONE="yes"
     	DEFAULT_ENABLE_CMSITERATIVECONE="yes"
-    	DEFAULT_ENABLE_EECAMBRIDGE="yes" 
+    	DEFAULT_ENABLE_EECAMBRIDGE="yes"
     	DEFAULT_ENABLE_JADE="yes"
 	DEFAULT_ENABLE_D0RUNICONE="yes"
         DEFAULT_ENABLE_GRIDJET="yes"
 dnl end of set all default plugin settings to yes --- don't modify this line
     fi
-    if [[ "x$ENABLE_ALLPLUGINS" == "xno" ]] ; then
+    if test "x$ENABLE_ALLPLUGINS" = "xno" ; then
         dnl set all default plugin settings to no
     	DEFAULT_ENABLE_SISCONE="no"
     	DEFAULT_ENABLE_CDFCONES="no"
@@ -75,7 +75,7 @@ dnl end of set all default plugin settings to yes --- don't modify this line
     	DEFAULT_ENABLE_TRACKJET="no"
     	DEFAULT_ENABLE_ATLASCONE="no"
     	DEFAULT_ENABLE_CMSITERATIVECONE="no"
-    	DEFAULT_ENABLE_EECAMBRIDGE="no" 
+    	DEFAULT_ENABLE_EECAMBRIDGE="no"
     	DEFAULT_ENABLE_JADE="no"
 	DEFAULT_ENABLE_D0RUNICONE="no"
         DEFAULT_ENABLE_GRIDJET="no"
@@ -100,7 +100,7 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	[  --enable-allcxxplugins  enables all the CXX FastJet plugins (default=no)],
     	[ENABLE_ALLCXXPLUGINS="$enableval"],
     	[ENABLE_ALLCXXPLUGINS="not set"])
-    if [[ "x$ENABLE_ALLCXXPLUGINS" == "xyes" ]] ; then
+    if test "x$ENABLE_ALLCXXPLUGINS" = "xyes" ; then
         dnl set all default cxx plugin settings to yes
     	DEFAULT_ENABLE_SISCONE="yes"
     	DEFAULT_ENABLE_CDFCONES="yes"
@@ -109,13 +109,13 @@ AC_DEFUN([ACX_CHECK_ALLCXXPLUGINS],
     	DEFAULT_ENABLE_TRACKJET="yes"
     	DEFAULT_ENABLE_ATLASCONE="yes"
     	DEFAULT_ENABLE_CMSITERATIVECONE="yes"
-    	DEFAULT_ENABLE_EECAMBRIDGE="yes" 
+    	DEFAULT_ENABLE_EECAMBRIDGE="yes"
     	DEFAULT_ENABLE_JADE="yes"
 	DEFAULT_ENABLE_D0RUNICONE="yes"
         DEFAULT_ENABLE_GRIDJET="yes"
 dnl end of set all default cxx plugin settings to yes --- don't modify this line
     fi
-    if [[ "x$ENABLE_ALLCXXPLUGINS" == "xno" ]] ; then
+    if test "x$ENABLE_ALLCXXPLUGINS" = "xno" ; then
         dnl set all default cxx plugin settings to no
     	DEFAULT_ENABLE_SISCONE="no"
     	DEFAULT_ENABLE_CDFCONES="no"
@@ -124,7 +124,7 @@ dnl end of set all default cxx plugin settings to yes --- don't modify this line
     	DEFAULT_ENABLE_TRACKJET="no"
     	DEFAULT_ENABLE_ATLASCONE="no"
     	DEFAULT_ENABLE_CMSITERATIVECONE="no"
-    	DEFAULT_ENABLE_EECAMBRIDGE="no" 
+    	DEFAULT_ENABLE_EECAMBRIDGE="no"
     	DEFAULT_ENABLE_JADE="no"
 	DEFAULT_ENABLE_D0RUNICONE="no"
         DEFAULT_ENABLE_GRIDJET="no"
@@ -144,7 +144,7 @@ dnl   the name in upper case (e.g. SISCONE)
 dnl   commands to execute if enabled
 dnl   commands to execute if disabled
 dnl it sets the following vars
-dnl 
+dnl
 AC_DEFUN([ACX_CHECK_PLUGIN],
 [
     AC_MSG_CHECKING([whether to build plugin $1])
@@ -153,7 +153,7 @@ AC_DEFUN([ACX_CHECK_PLUGIN],
 	[  --enable-$2       enables the $1 plugin [[default=$4]]],
 	[ENABLE_$3="$enableval"],
 	[ENABLE_$3="${DEFAULT_ENABLE_$3}"])
-    if [[ "x$ENABLE_$3" == "xyes" ]] ; then
+    if test "x$ENABLE_$3" = "xyes" ; then
         AC_DEFINE(ENABLE_PLUGIN_$3, [], [The $1 plugin is enabled])
    	dnl set up the libs
 	if [[ "x$monolithic" != "xyes" ]] ; then
@@ -166,7 +166,7 @@ AC_DEFUN([ACX_CHECK_PLUGIN],
 
 	LIST_ALL_PLUGINS=${LIST_ALL_PLUGINS}" $1"
     else
-	ifelse([$6],[],[:],[$6])   
+	ifelse([$6],[],[:],[$6])
     fi
 
     AC_CONFIG_FILES( plugins/$1/Makefile plugins/$1/fastjet/Makefile )
@@ -183,31 +183,31 @@ AC_DEFUN([AC_PLUGIN_SUMMARY],
 	dnl show the plugins summary
 	dnl check if there is some provided commands to execute
    	ifelse([$1],[],[
-	echo "  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}	  
-	echo "           Jade              "${ENABLE_JADE}		  
-	echo "           NestedDefs        "${ENABLE_NESTEDDEFS}	  
-	echo "           SISCone           "${ENABLE_SISCONE}	  
-	echo "           CDFCones          "${ENABLE_CDFCONES}	  
-	echo "           D0RunICone        "${ENABLE_D0RUNICONE}	  
-	echo "           D0RunIICone       "${ENABLE_D0RUNIICONE}	  
-	echo "           ATLASCone         "${ENABLE_ATLASCONE}	  
-	echo "           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE} 
-	echo "           PxCone            "${ENABLE_PXCONE}		  
-	echo "           TrackJet          "${ENABLE_TRACKJET}         
-	echo "           GridJet           "${ENABLE_GRIDJET}         
+	echo "  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}
+	echo "           Jade              "${ENABLE_JADE}
+	echo "           NestedDefs        "${ENABLE_NESTEDDEFS}
+	echo "           SISCone           "${ENABLE_SISCONE}
+	echo "           CDFCones          "${ENABLE_CDFCONES}
+	echo "           D0RunICone        "${ENABLE_D0RUNICONE}
+	echo "           D0RunIICone       "${ENABLE_D0RUNIICONE}
+	echo "           ATLASCone         "${ENABLE_ATLASCONE}
+	echo "           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE}
+	echo "           PxCone            "${ENABLE_PXCONE}
+	echo "           TrackJet          "${ENABLE_TRACKJET}
+	echo "           GridJet           "${ENABLE_GRIDJET}
 	],[
-	CONFIG_SUMMARY+="  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}"\n"
-	CONFIG_SUMMARY+="           Jade              "${ENABLE_JADE}"\n"	  
-	CONFIG_SUMMARY+="           NestedDefs        "${ENABLE_NESTEDDEFS}"\n"  
-	CONFIG_SUMMARY+="           SISCone           "${ENABLE_SISCONE}"\n"
-	CONFIG_SUMMARY+="           CDFCones          "${ENABLE_CDFCONES}"\n"
-	CONFIG_SUMMARY+="           D0RunICone        "${ENABLE_D0RUNICONE}"\n"
-	CONFIG_SUMMARY+="           D0RunIICone       "${ENABLE_D0RUNIICONE}"\n"
-	CONFIG_SUMMARY+="           ATLASCone         "${ENABLE_ATLASCONE}"\n"
-	CONFIG_SUMMARY+="           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE}"\n"
-	CONFIG_SUMMARY+="           PxCone            "${ENABLE_PXCONE}"\n"
-	CONFIG_SUMMARY+="           TrackJet          "${ENABLE_TRACKJET}"\n"
-	CONFIG_SUMMARY+="           GridJet           "${ENABLE_GRIDJET}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}  Plugins: EECambridge       "${ENABLE_EECAMBRIDGE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           Jade              "${ENABLE_JADE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           NestedDefs        "${ENABLE_NESTEDDEFS}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           SISCone           "${ENABLE_SISCONE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           CDFCones          "${ENABLE_CDFCONES}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           D0RunICone        "${ENABLE_D0RUNICONE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           D0RunIICone       "${ENABLE_D0RUNIICONE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           ATLASCone         "${ENABLE_ATLASCONE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           CMSIterativeCone  "${ENABLE_CMSITERATIVECONE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           PxCone            "${ENABLE_PXCONE}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           TrackJet          "${ENABLE_TRACKJET}"\n"
+	CONFIG_SUMMARY="${CONFIG_SUMMARY}           GridJet           "${ENABLE_GRIDJET}"\n"
 	])
 
 	dnl end of show the plugins summary --- don't modify this line
