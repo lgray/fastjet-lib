@@ -12,7 +12,7 @@ TEST_ENVIRONMENT = $(SHELL)
 TESTS = test-compare.sh
 
 # local macros for aclocal
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I m4 --install
 
 # additional files we need in the distribution
 EXTRA_DIST = test-compare.sh makefile.static test-static.sh test-script-output-orig.txt Doxyfile BUGS
@@ -20,7 +20,7 @@ EXTRA_DIST = test-compare.sh makefile.static test-static.sh test-script-output-o
 # AX_PREFIX_CONFIG_H leaves some files undeleted after a make distclean
 #
 # we could use DISTCLEAN=... here but this would also overwrite the defaults
-# So, instead, we use the (apparently recommended) -local target to extend 
+# So, instead, we use the (apparently recommended) -local target to extend
 # the default behaviour
 distclean-local: distclean-ax-prefix-config-h
 distclean-ax-prefix-config-h:
