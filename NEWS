@@ -2,6 +2,18 @@ Release Notes for FastJet
 -------------------------
 
 ================================================================
+Summary of changes from v3.4.2 -> v3.4.3: 2024-07-03
+================================================================
+
+Bug fixes:
+
+* python interface looks also for python3-config
+
+* various build-system upgrades, including merge requests
+  !2 (compatibility with plain sh) and !3 (updated configure scripts)
+  -- thanks to Eli Schwartz.
+
+================================================================
 Summary of changes from v3.4.1 -> v3.4.2: 2023-07-28
 ================================================================
 

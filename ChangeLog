@@ -2,6 +2,9 @@
 
 2024-07-02 Matteo, Gregory & Gavin
 
+	* NEWS.md:
+	prepared NEWS for 3.4.3 release
+
 	* Makefile.am:
 	* m4/ax_pkg_swig.m4:
 	* m4/ax_prefix_config_h.m4:
