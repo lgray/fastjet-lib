@@ -11,7 +11,7 @@ dnl make sure that the installation path does not contain a blank space
 dnl (not supported by libtool, and even if it were, certainly a source
 dnl of endless headaches)
 AC_MSG_CHECKING([whether the installation path contains a space])
-if test "x$prefix" != "x${prefix// /}"; then
+if test "x$prefix" != "x$(echo "$prefix" | tr -d ' ')"; then
     AC_MSG_RESULT([])
     AC_MSG_ERROR([The installation path cannot contain spaces. Please choose a valid --prefix argument without spaces.])
 else
