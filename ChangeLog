@@ -1,4 +1,12 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-12-02 Matteo, Gregory & Gavin
+	* regression-tests/test-all-algs.pl:
+	work on this to make it available for use beyond the FJ
+	developers, including potentially for gitlab CI. This includes
+	addition of the -datadir command-line option to specify
+	where to find the data files. It also now exits with a
+	non-zero return-code if there is a failure.
+
 2024-07-05  FastJet team <fastjet@projects.hepforge.org>
 
 	Release of FastJet fastjet-3.4.3

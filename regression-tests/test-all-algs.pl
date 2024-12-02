@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
-# This script is intended to become a part of a testsuite for all the
-# clustering algorithms in FastJet.
+# This script is part of the testsuite for all the clustering algorithms
+# in FastJet.
 #
 # It works by running example/fasjet_timing_plugins for a jet
 # definition, extracting either the jets (cone algs) or the written-out
@@ -12,6 +12,10 @@
 #
 #
 # Various command-line options are available:
+#
+#  -datadir          location of the directory containing the data with the
+#                    events that will be clustered. It is available from
+#                    https://gitlab.com/fastjet/fastjet-validation/data.git
 #
 #  -nev NEV          sets the number of events to use (default = 10)
 #
@@ -122,10 +126,12 @@ use Cwd;
 
 $verbose = "";
 $depositNew = 0;
+$dataDir = "";
 
 # now allow user to play with things
 while ($arg = shift @ARGV) {
   if    ($arg eq "-nev"     ) {$nev = shift @ARGV;}
+  elsif ($arg eq "-datadir" ) {$dataDir = (shift @ARGV); print "Using data directory $dataDir\n";}
   elsif ($arg eq "-alg"     ) {@algs = (shift @ARGV);}
   elsif ($arg eq "-R"       ) {$R = shift @ARGV;}
   elsif ($arg eq "-deposit" ) {$deposit = shift @ARGV;}
@@ -140,6 +146,9 @@ while ($arg = shift @ARGV) {
   else  {die "unrecognized argument $arg";}
 }
 
+#
+&setDataFiles;
+
 # set the executable name
 &setExecutable;
 
@@ -147,156 +156,166 @@ while ($arg = shift @ARGV) {
 # other settings
 
 # now get the md5 sums
+$returnCode = 0;
 foreach $alg (@algs) {
-
-# the area configurations to support
-@areaconfigs=();
-if ($areas){
-    if (exists($areaConfigs{$alg})){
-	@areaconfigs = split(",", $areaConfigs{$alg});
-    }
-} else {
-    @areaconfigs = ("");
-}
-
-# the background estimation to support
-@bkgdconfigs=();
-if ($bkgds){
-    if (exists($bkgdConfigs{$alg})){
-	@bkgdconfigs = split(",", $bkgdConfigs{$alg});
-    }
-} else {
-    @bkgdconfigs = ("");
-}
-
-# the strategies to support
-if ($defstrat ne "") {
-  @strat = split(/[:,]/,$defstrat);
-}
-elsif (exists($strategies{$alg})) {
-  @strat = split(":",$strategies{$alg});
-} else {
-  @strat = ("")
-}
-foreach $stratAlias (@strat) {
-  # the loop variable is an alias to the member of the array;
-  # but we will need to modify it below - so to avoid modifying the 
-  # original array, we make a copy and modify that
-  $strat = $stratAlias.""; 
-  if ($strat ne "") {$stratcmd = "-strategy $strat"} else {$stratcmd=""}
-  $strat = "s$strat" ; # =~ s/.*y /s/; # we'll need this in a clean form later
-
-foreach $areaAlias (@areaconfigs) {
-  $area = $areaAlias.""; 
-  if ($area ne "") {$areacmd = "-area $area"} else {$areacmd = ""}
-  $area =~ s/area://g;
-  $area =~ s/ /,/g;
-
-foreach $bkgdAlias (@bkgdconfigs) {
-  $bkgd = $bkgdAlias."";
-  if ($bkgd ne "") {
-    $bkgdcmd = "-area -bkgd $bkgd";
-  } else {$bkgdcmd = ""}
-  $bkgd =~ s/area://g;
-  $bkgd =~ s/bkgd://g;
-  $bkgd =~ s/ /,/g;
-
-  # decide what output to use (jets for cone algs, unique_write for cam, sequence for others)
-  $out = $bkgd ? "" : $areas ? "-incl 0" : &isCone($alg) ? "-incl 0" : (($alg =~ /^cam/) ? "-unique_write" : "-write");
-
-  # decide from which file we get the events 
-  $localdataFile = &isee($alg) ? $eedataFile : $dataFile;
-
-  # get the command line
-  ($algsp = $alg) =~ s/:/ /g;
-  #$cmdline = "$execName -$algsp $stratcmd -R $R $out -nev $nev 2>\&1 < $localdataFile";
-  $cmdline = "$execName -$algsp $stratcmd -R $R $areacmd $bkgdcmd $out -nev $nev 2>\&1";
-  if ($localdataFile =~ /\.gz$/) {
-    $cmdline = "gunzip -c $localdataFile | $cmdline";
-  } else {
-    $cmdline = "$cmdline < $localdataFile ";
-  }
-  if ($verbose) {print "Running $cmdline\n";}
-  $res = `$cmdline`;
-  $error = $?;
-
-  # process the results into some decent form
-  if ($res eq "" ) {
-    $sum = "unavailable";
-  } else {
-    # remove all non-numerical lines [since these may change across versions]
-    # except the lines containing "rho = " when background estimation is requested
-    $filtered = "";
-    foreach $line (split("\n",$res)) {
-      if ($line =~ /^ *[0-9]/) {$filtered .= $line."\n";}
-      if ($bkgds && $line =~ /rho = /) {$filtered .= $line."\n";}
-    }
-    $sum = $filtered eq "" ? "unavailable" :  md5_hex($filtered)
-  }
-
-  # now generate output
-  $name = &fullName($alg,"$area$bkgd");
-  if ($error) {
-    $OK = "*** BAD (crash?) ***"
-  } elsif (exists($refResults{$name}) && $sum ne "unavailable") {
-    # we can have one or more reference results
-    if (ref($refResults{$name}) eq "ARRAY") {
-      $OK = "*** BAD ***";
-      foreach $ref (@{$refResults{$name}}) {
-	if ($sum eq $ref) {
-	  $OK = "OK";
-	  last;
-	}
+  
+  # the area configurations to support
+  @areaconfigs=();
+  if ($areas){
+      if (exists($areaConfigs{$alg})){
+          @areaconfigs = split(",", $areaConfigs{$alg});
       }
-    } else {
-      $OK = ($sum eq $refResults{$name}) ? "OK" : "*** BAD ***";
-    }
-  } else { 
-    $OK = "-";
-    if ($sum ne "unavailable") {$refResults{$name} = $sum;}
+  } else {
+      @areaconfigs = ("");
   }
-  printf ("%-60s %-4s %-32s %s\n", $name, $strat, $sum, $OK);
-
-
-  # record things for future, as perl code
-  if ($sum ne "unavailable" && !exists($done{$name}) &&
-      ($perlOut =~ /^Perl/s || 
-       ($perlOut =~ /^New Perl/s && !exists($refResultsOrig{$name})) )) {
-    $perlOut .= "  \"$name\" => \"$sum\",\n"
+  
+  # the background estimation to support
+  @bkgdconfigs=();
+  if ($bkgds){
+      if (exists($bkgdConfigs{$alg})){
+          @bkgdconfigs = split(",", $bkgdConfigs{$alg});
+      }
+  } else {
+      @bkgdconfigs = ("");
   }
-
-  # optionally record things for future, in a file
-  if ($deposit && !exists($done{$name}) && $sum ne "unavailable") {
-    $depfile = "$deposit/$name.res";
-    if (! (-e $depfile || -e "$depfile.gz")) {
-      print "          > $depfile\n";
-      if (! -e $deposit) {mkdir $deposit || die "Could not create directory $deposit";}
-      open (DEP, "> $depfile") || die "Could not open $depfile";
-      print DEP $res;
-      close DEP;
-      system("gzip -f $depfile");
-      open (SUM, "> $deposit/$name.sum") || die "Could not open $deposit/$name.sum";
-      print SUM  "date ".`date`;
-      print SUM  "machine: ".`uname -a`;
-      print SUM  "directory: ".getcwd."\n";
-      $configlog = "config.log";
-      if (! -e $configlog) {$configlog = "../".$configlog;}
-      print SUM  "configured: ".`egrep '^ +\\\$' $configlog | head -1`;
-      print SUM  "cmdline: $cmdline\n";
-      print SUM  "md5sum: ",$sum,"\n";
-      close SUM;
-    }
+  
+  # the strategies to support
+  if ($defstrat ne "") {
+    @strat = split(/[:,]/,$defstrat);
+  }
+  elsif (exists($strategies{$alg})) {
+    @strat = split(":",$strategies{$alg});
+  } else {
+    @strat = ("")
   }
 
-  $done{$name} = 1;
-} # bkgd
-} # area
-} # strat
+  foreach $stratAlias (@strat) {
+    # the loop variable is an alias to the member of the array;
+    # but we will need to modify it below - so to avoid modifying the 
+    # original array, we make a copy and modify that
+    $strat = $stratAlias.""; 
+    if ($strat ne "") {$stratcmd = "-strategy $strat"} else {$stratcmd=""}
+    $strat = "s$strat" ; # =~ s/.*y /s/; # we'll need this in a clean form later
+    
+    foreach $areaAlias (@areaconfigs) {
+      $area = $areaAlias.""; 
+      if ($area ne "") {$areacmd = "-area $area"} else {$areacmd = ""}
+      $area =~ s/area://g;
+      $area =~ s/ /,/g;
+      
+      foreach $bkgdAlias (@bkgdconfigs) {
+        $bkgd = $bkgdAlias."";
+        if ($bkgd ne "") {
+          $bkgdcmd = "-area -bkgd $bkgd";
+        } else {$bkgdcmd = ""}
+        $bkgd =~ s/area://g;
+        $bkgd =~ s/bkgd://g;
+        $bkgd =~ s/ /,/g;
+      
+        # decide what output to use (jets for cone algs, unique_write for cam, sequence for others)
+        $out = $bkgd ? "" : $areas ? "-incl 0" : &isCone($alg) ? "-incl 0" : (($alg =~ /^cam/) ? "-unique_write" : "-write");
+      
+        # decide from which file we get the events 
+        $localdataFile = &isee($alg) ? $eedataFile : $dataFile;
+      
+        # get the command line
+        ($algsp = $alg) =~ s/:/ /g;
+        #$cmdline = "$execName -$algsp $stratcmd -R $R $out -nev $nev 2>\&1 < $localdataFile";
+        $cmdline = "$execName -$algsp $stratcmd -R $R $areacmd $bkgdcmd $out -nev $nev 2>\&1";
+        if ($localdataFile =~ /\.gz$/) {
+          $cmdline = "gunzip -c $localdataFile | $cmdline";
+        } else {
+          $cmdline = "$cmdline < $localdataFile ";
+        }
+        if ($verbose) {print "Running $cmdline\n";}
+        $res = `$cmdline`;
+        $error = $?;
+      
+        # process the results into some decent form
+        if ($res eq "" ) {
+          $sum = "unavailable";
+        } else {
+          # remove all non-numerical lines [since these may change across versions]
+          # except the lines containing "rho = " when background estimation is requested
+          $filtered = "";
+          foreach $line (split("\n",$res)) {
+            if ($line =~ /^ *[0-9]/) {$filtered .= $line."\n";}
+            if ($bkgds && $line =~ /rho = /) {$filtered .= $line."\n";}
+          }
+          $sum = $filtered eq "" ? "unavailable" :  md5_hex($filtered)
+        }
+      
+        # now generate output and generate return codes
+        $name = &fullName($alg,"$area$bkgd");
+        if ($error) {
+          $OK = "*** BAD (crash?) ***"
+        } elsif (exists($refResults{$name}) && $sum ne "unavailable") {
+          # we can have one or more reference results
+          if (ref($refResults{$name}) eq "ARRAY") {
+            # the default answer is BAD, but then if the answer matches any of
+            # the availables references we label it as OK.
+            $OK = "*** BAD ***";
+            foreach $ref (@{$refResults{$name}}) {
+              if ($sum eq $ref) {
+                $OK = "OK";
+                last;
+              }
+            }
+          } else {
+            $OK = ($sum eq $refResults{$name}) ? "OK" : "*** BAD ***";
+          }
+        } else { 
+          $OK = "-";
+          if ($sum ne "unavailable") {$refResults{$name} = $sum;}
+        }
+        if ($OK ne "OK" && $OK ne "-") {
+          $returnCode = 1;
+        }
+        printf ("%-60s %-4s %-32s %s\n", $name, $strat, $sum, $OK);
+      
+      
+        # record things for future, as perl code
+        if ($sum ne "unavailable" && !exists($done{$name}) &&
+            ($perlOut =~ /^Perl/s || 
+             ($perlOut =~ /^New Perl/s && !exists($refResultsOrig{$name})) )) {
+          $perlOut .= "  \"$name\" => \"$sum\",\n"
+        }
+      
+        # optionally record things for future, in a file
+        if ($deposit && !exists($done{$name}) && $sum ne "unavailable") {
+          $depfile = "$deposit/$name.res";
+          if (! (-e $depfile || -e "$depfile.gz")) {
+            print "          > $depfile\n";
+            if (! -e $deposit) {mkdir $deposit || die "Could not create directory $deposit";}
+            open (DEP, "> $depfile") || die "Could not open $depfile";
+            print DEP $res;
+            close DEP;
+            system("gzip -f $depfile");
+            open (SUM, "> $deposit/$name.sum") || die "Could not open $deposit/$name.sum";
+            print SUM  "date ".`date`;
+            print SUM  "machine: ".`uname -a`;
+            print SUM  "directory: ".getcwd."\n";
+            $configlog = "config.log";
+            if (! -e $configlog) {$configlog = "../".$configlog;}
+            print SUM  "configured: ".`egrep '^ +\\\$' $configlog | head -1`;
+            print SUM  "cmdline: $cmdline\n";
+            print SUM  "md5sum: ",$sum,"\n";
+            close SUM;
+          }
+        }
+      
+        $done{$name} = 1;
+      } # bkgd
+    } # area
+  } # strat
 } # alg
 
 if ($perlOut) {print $perlOut;}
 
-
+# exit with the returncode
+if ($returnCode) {print "\nSome tests failed\n";}
+else             {print "\nAll available tests passed\n";}
+exit $returnCode;
 
 #======================================================================
 sub isCone {
@@ -331,29 +350,41 @@ sub fullName {
 }
 
 #======================================================================
-sub setDefaults {
+sub setDataFiles {
 
-  $username=`whoami`;
-  chomp $username;
-  if (( $username eq "greg") || ( $username eq "soyez") || ( $username eq "gsoyez")){
-      $dataDir="~/work/fastjet/data";
-  } elsif ( $username eq "gsalam"){
-      $dataDir=$ENV{HOME}."/work/fastjet/data";
-  } else {
-      $gavinHome = `echo ~salam`;
-      chomp $gavinHome;
-      $dataDir="$gavinHome/work/fastjet/data";
+  # if $dataDir was not set (command-line argument -datadir), then
+  # try some hard-coded paths
+  if (!$dataDir) {
+    $username=`whoami`;
+    chomp $username;
+    if (( $username eq "greg") || ( $username eq "soyez") || ( $username eq "gsoyez")){
+        $dataDir="~/work/fastjet/data";
+    } elsif ( $username eq "gsalam"){
+        $dataDir=$ENV{HOME}."/work/fastjet/data";
+    } else {
+        $gavinHome = `echo ~salam`;
+        chomp $gavinHome;
+        $dataDir="$gavinHome/work/fastjet/data";
+    }
   }
+  
   #$dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
   $dataFile="$dataDir/Pythia-PtMin50-LHC-10kev.dat.gz";
 
   # for the e+e- algorithms, use an e+e- event file
   $eedataFile="$dataDir/Pythia_Q1000_Zprime1000_nev1000.dat";
+  print("Using data files:\n- $dataFile\n- $eedataFile\n");
+
+}
+
+#======================================================================
+sub setDefaults {
+
 
   @algs = ("kt", "cam", "antikt", "genkt:0.5", "siscone:-f:0.75","siscone:-f:0.50",  "jetclu", "pxcone",
             "d0runiicone", #GPS removed 2010-01-19, replace 2010-02-02
-	   "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
-	   "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01", "d0runicone", "d0runipre96cone",
+           "eekt", "eegenkt:0",  "eegenkt:-1", "eecambridge:-ycut:0.08", "eecambridge:-ycut:0.01",
+           "trackjet", "atlascone", "cmsiterativecone", "jade:-excly:0.01", "d0runicone", "d0runipre96cone",
            "gridjet"
       );
 
@@ -380,14 +411,14 @@ sub setDefaults {
   %bkgdConfigs = (
       "kt" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:csab,-area:active -bkgd:csab,-area:voronoi 1.0 -bkgd:csab,-area:explicit -bkgd:jetmedian -bkgd:fj2,-area:explicit -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:active -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0 -ghost-maxrap 4.0,-area:explicit -bkgd:jetmedian -rapmax 5.0,-area:active -bkgd:jetmedian -rapmax 5.0,-area:voronoi 1.0 -bkgd:jetmedian -rapmax 5.0",
       # for the jet median subtraction tests, not the use of -bkgd:alt-ktR
-      #	This is needed because when using the same jet definition for
-      #	background estimation and subtraction, it is common for one of the
-      #	jets to coincide with the median background estimation jet, and then
-      #	the subtraction comparison of jet.pt() v. amount_to_sutract.pt()
-      #	should show something that is identically equal, but is prone to
-      #	rounding errors and the behaviour differs according to the system,
-      #	which affects whether the jet is set to zero pt or instead 4-vector
-      #	subtracted. 
+      # This is needed because when using the same jet definition for
+      # background estimation and subtraction, it is common for one of the
+      # jets to coincide with the median background estimation jet, and then
+      # the subtraction comparison of jet.pt() v. amount_to_sutract.pt()
+      # should show something that is identically equal, but is prone to
+      # rounding errors and the behaviour differs according to the system,
+      # which affects whether the jet is set to zero pt or instead 4-vector
+      # subtracted. 
       "cam" => "-area:explicit -bkgd:jetmedian,-area:active -bkgd:jetmedian,-area:voronoi 1.0 -bkgd:jetmedian,-area:explicit -bkgd:jetmedian -bkgd:alt-ktR 0.5345 -subtractor,-area:explicit -bkgd:jetmedian -bkgd:localrange -bkgd:alt-ktR 0.5345 -subtractor,-area:explicit -bkgd:jetmedian -bkgd:rescaling -bkgd:alt-ktR 0.5345 -subtractor,-area:explicit -bkgd:gridmedian -subtractor,-area:explicit -bkgd:gridmedian -bkgd:rescaling -subtractor",
       "antikt" => "-bkgd -bkgd:gridmedian"
       );
@@ -422,7 +453,7 @@ sub setExecutable {
     $execName  =~ s/regression-tests.*//;
     $execName .=  "example/fastjet_timing_plugins$fjcore";
   }
-  print "Using $execName\n\n";
+  print "Running $execName\n\n";
 }
 
 #======================================================================
