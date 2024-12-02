@@ -269,7 +269,7 @@ foreach $alg (@algs) {
           if ($sum ne "unavailable") {$refResults{$name} = $sum;}
         }
         if ($OK ne "OK" && $OK ne "-") {
-          $returnCode = 1;
+          $returnCode += 1;
         }
         printf ("%-60s %-4s %-32s %s\n", $name, $strat, $sum, $OK);
       
@@ -313,7 +313,7 @@ foreach $alg (@algs) {
 if ($perlOut) {print $perlOut;}
 
 # exit with the returncode
-if ($returnCode) {print "\nSome tests failed\n";}
+if ($returnCode) {print "\n$returnCode test(s) failed\n";}
 else             {print "\nAll available tests passed\n";}
 exit $returnCode;
 
@@ -371,9 +371,22 @@ sub setDataFiles {
   #$dataFile="$dataDir/Pythia-PtMin50-LHC-1000ev.dat";
   $dataFile="$dataDir/Pythia-PtMin50-LHC-10kev.dat.gz";
 
+
   # for the e+e- algorithms, use an e+e- event file
   $eedataFile="$dataDir/Pythia_Q1000_Zprime1000_nev1000.dat";
+
+  # if either of the data files is not there, print out an error message
+  # and exit with return code 127
+  if (! -e $dataFile) {
+    print "Error: data file $dataFile not found\n";
+    exit 127;
+  }
+  if (! -e $eedataFile) {
+    print "Error: data file $eedataFile not found\n";
+    exit 127;
+  }
   print("Using data files:\n- $dataFile\n- $eedataFile\n");
+
 
 }
 
