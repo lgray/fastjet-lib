@@ -6,6 +6,7 @@
 # - docker images
 # - docker run -it #####
 #
+#image: gcc
 image: gcc
 
 variables:
@@ -20,7 +21,12 @@ build_and_test:
     # this line sets up autotools pieces in both FJ and SISCone
     - NOCONFIGURE=true ./autogen.sh
     # and runs configure with the given flags
-    - ./configure --enable-allcxxplugins
+    # NB: CGAL has problems as of 2024
     #- ./configure --enable-allcxxplugins --enable-cgal
+    - ./configure --enable-allcxxplugins
     - make -j4
     - make check
+    # 
+    # then run some basic tests of the clustering
+    - git clone https://gitlab.com/fastjet/fastjet-validation/data
+    - ./regression-tests/test-all-algs.pl -datadir data -nev 100
