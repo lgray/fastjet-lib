@@ -1,5 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
 2024-12-02 Matteo, Gregory & Gavin
+
+	* .gitlab-ci.yml:
+	initial version of gitlab CI file
+
 	* regression-tests/test-all-algs.pl:
 	work on this to make it available for use beyond the FJ
 	developers, including potentially for gitlab CI. This includes:

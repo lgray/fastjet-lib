@@ -1,0 +1,23 @@
+# adapted from
+# https://gitlab.com/gitlab-org/gitlab-foss/-/blob/master/lib/gitlab/ci/templates/C%2B%2B.gitlab-ci.yml
+#
+# To help test config (e.g. library versions and files)
+# - docker pull gcc
+# - docker images
+# - docker run -it #####
+#
+image: gcc
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+build_and_test:
+
+  stage: build
+  before_script:
+    - apt update
+    #- apt update && apt -y install cmake libgsl-dev
+  script:
+    - ./configure --enable-allcxxplugins
+    - make -j4
+    - make check
