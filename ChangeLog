@@ -1,6 +1,7 @@
-========== CHANGELOG FILE FOR FastJet =================================
+========== CHANGELOG FILE FOR FastJet =================================2
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 
+	* configure.ac:
 	* m4/plugin.m4:
 	'made tests more independent of the shell being used
 

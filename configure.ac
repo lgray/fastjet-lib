@@ -697,7 +697,7 @@ versionnumber=`printf "%d%.2d%.2d" "$versionmajor" "$versionminor" "$versionpatc
 AC_DEFINE_UNQUOTED([VERSION_MAJOR],      [$versionmajor],      [Major version of this package])
 AC_DEFINE_UNQUOTED([VERSION_MINOR],      [$versionminor],      [Minor version of this package])
 AC_DEFINE_UNQUOTED([VERSION_PATCHLEVEL], [$versionpatchlevel], [Patch version of this package])
-if [[ "x$versionprerelease" != "x" ]]; then
+if test "x$versionprerelease" != "x"; then
    AC_DEFINE_UNQUOTED([VERSION_PRERELEASE], ["$versionprerelease"], [Pre-release version of this package])
 fi
 AC_DEFINE_UNQUOTED([VERSION_NUMBER], [$versionnumber], [Version of the package under the form XYYZZ (instead of X.Y.Z)])
