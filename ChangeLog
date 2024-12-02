@@ -1,4 +1,15 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
+
+	* m4/plugin.m4:
+	'made tests more independent of the shell being used
+
+2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
+
+	* m4/CGAL.m4 (ACX_CHECK_CGAL):
+	- removed deprecated support for including CGAL through a Makefile
+	- set "--enable-cgal-header-only" to "yes" by default
+
 2024-12-02 Matteo, Gregory & Gavin
 
 	* .gitlab-ci.yml:
