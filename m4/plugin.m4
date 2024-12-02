@@ -156,7 +156,7 @@ AC_DEFUN([ACX_CHECK_PLUGIN],
     if test "x$ENABLE_$3" = "xyes" ; then
         AC_DEFINE(ENABLE_PLUGIN_$3, [], [The $1 plugin is enabled])
    	dnl set up the libs
-	if [[ "x$monolithic" != "xyes" ]] ; then
+	if test "x$monolithic" != "xyes"  ; then
    	    CONFIG_LIBS_PLUGINS=${CONFIG_LIBS_PLUGINS}" -l$1Plugin "
    	    CONFIG_LIBS_PLUGINS_STATIC=${CONFIG_LIBS_PLUGINS_STATIC}" \${installationdir}/lib/lib$1Plugin.a "
 	fi
