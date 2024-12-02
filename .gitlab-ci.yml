@@ -15,11 +15,11 @@ build_and_test:
 
   stage: build
   before_script:
-    - apt update
+    - apt update && apt install -y libcgal-dev
     #- apt update && apt -y install cmake libgsl-dev
   script:
     # this line sets up autotools pieces in both FJ and SISCone
     # and runs configure with the given flags
-    - ./autogen.sh --enable-allcxxplugins
+    - ./autogen.sh --enable-allcxxplugins --enable-cgal
     - make -j4
     - make check
