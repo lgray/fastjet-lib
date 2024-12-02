@@ -18,6 +18,8 @@ build_and_test:
     - apt update
     #- apt update && apt -y install cmake libgsl-dev
   script:
-    - ./configure --enable-allcxxplugins
+    # this line sets up autotools pieces in both FJ and SISCone
+    # and runs configure with the given flags
+    - ./autogen.sh --enable-allcxxplugins
     - make -j4
     - make check
