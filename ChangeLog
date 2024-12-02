@@ -1,9 +1,13 @@
-========== CHANGELOG FILE FOR FastJet =================================2
+========== CHANGELOG FILE FOR FastJet =================================
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 
 	* configure.ac:
 	* m4/plugin.m4:
-	'made tests more independent of the shell being used
+	made tests more independent of the shell being used
+
+	* autogen.sh:
+	message indicating that configure was going to be run was there even
+	with NOCONFIGURE=true; fixed this.
 
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 
