@@ -17,9 +17,11 @@ build_and_test:
   before_script:
     - apt update && apt install -y libcgal-dev
     #- apt update && apt -y install cmake libgsl-dev
+    - ls -l /usr/include/CGAL/Exact_predicates_inexact_constructions_kernel.h
   script:
     # this line sets up autotools pieces in both FJ and SISCone
+    - NOCONFIGURE=true ./autogen.sh
     # and runs configure with the given flags
-    - ./autogen.sh --enable-allcxxplugins --enable-cgal
+    - ./configure --enable-allcxxplugins --enable-cgal
     - make -j4
     - make check
