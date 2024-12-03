@@ -2,11 +2,13 @@
 # https://gitlab.com/gitlab-org/gitlab-foss/-/blob/master/lib/gitlab/ci/templates/C%2B%2B.gitlab-ci.yml
 #
 # To help test config (e.g. library versions and files)
-# - docker pull gcc
-# - docker images
-# - docker run -it #####
-#
-#image: gcc
+#   > docker run --rm -ti gcc:latest
+#   # apt update && apt install -y git
+#   # git clone --recursive https://gitlab.com/fastjet/fastjet.git && cd fastjet
+#   # NOCONFIGURE=true ./autogen.sh 
+#   # ./configure [--enable-allcxxplugins]
+#   # make -j
+#   # [etc.]
 image: gcc
 
 variables:
