@@ -91,7 +91,7 @@ $CGAL_DIR='/ada1/lpthe/cacciari/lib/CGAL-4.1';
 
 # basic checks without and with CGAL (by default all 64 bit)
 push @setups, ["","", "", 10, ""]; # out of the box
-push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, ""]; # with CGAL & all plugins
+push @setups, ["","--enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, ""]; # with CGAL & all plugins
 
 # checks of the library system variants (shared/static/monolithic)
 push @setups, ["","--enable-allplugins --disable-shared", "", 10, ""]; # with static libs, and pxcone

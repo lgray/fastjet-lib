@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-12-03 Tue  <gavin.salam@physics.ox.ac.uk>
+
+	* regression-tests/nightly-check.pl:
+	updated the CGAL4.1 test to have --disable-cgal-header-only
+
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 
 	* configure.ac:
