@@ -124,7 +124,7 @@ push @setups, ["","--enable-allcxxplugins CC=/ada4/lpthe/cacciari/local/bin/gcc-
 # checks on macs 
 # push @setups, ["karnak","CC=cc CXX=c++", "", 10, ""]; # out of the box on new karnak (OS X 10.8.5) with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
 # push @setups, ["karnak","--enable-allcxxplugins CC=cc CXX=c++", "", 1000, ""]; # full monty on new karnak with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
-# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
+# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7
 
 # extra tests for areas
 push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
