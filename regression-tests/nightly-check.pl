@@ -127,11 +127,11 @@ push @setups, ["","--enable-allcxxplugins CC=/ada4/lpthe/cacciari/local/bin/gcc-
 # push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
 
 # extra tests for areas
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
 # push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
 
 # extra tests for background estimation
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
 # push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
 
 # minimal check that demangling code doesn't break compilation
