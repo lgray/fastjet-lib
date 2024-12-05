@@ -2,6 +2,7 @@
 # https://gitlab.com/gitlab-org/gitlab-foss/-/blob/master/lib/gitlab/ci/templates/C%2B%2B.gitlab-ci.yml
 #
 # To help test config (e.g. library versions and files)
+# (add "--platform linux/amd64" to force amd64 even on Apple Silicon)
 #   > docker run --rm -ti gcc:latest
 #   # apt update && apt install -y git
 #   # git clone --recursive https://gitlab.com/fastjet/fastjet.git && cd fastjet
