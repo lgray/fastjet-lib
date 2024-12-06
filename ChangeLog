@@ -4,7 +4,7 @@
 	* plugins/D0RunIICone/ProtoJet.hpp:
 	merged in merge-request !8 from Andre Sailer in a printing routine
 	to replace output of inexistant member _Et with member _pT, 
-	which broke compilation with clang 19.
+	which broke compilation with clang 19. (Raised also by Dmitri Konstantinov). 
 
 2024-12-03 Tue  <gavin.salam@physics.ox.ac.uk>
 
