@@ -1,5 +1,57 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+
+/* Name of package */
+#undef FASTJET_PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef FASTJET_PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#define FASTJET_PACKAGE_NAME "FastJet"
+
+/* Define to the full name and version of this package. */
+#undef FASTJET_PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef FASTJET_PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef FASTJET_PACKAGE_URL
+
+/* Define to the version of this package. */
+#define FASTJET_PACKAGE_VERSION "@FASTJET_VERSION@"
+
+/* Version number of package */
+#define FASTJET_VERSION "@FASTJET_VERSION@"
+
+/* Major version of this package */
+#define FASTJET_VERSION_MAJOR @FASTJET_VERSION_MAJOR@
+
+/* Minor version of this package */
+#define FASTJET_VERSION_MINOR @FASTJET_VERSION_MINOR@
+
+/* Patch version of this package */
+#define FASTJET_VERSION_PATCHLEVEL @FASTJET_VERSION_PATCHLEVEL@
+
+/* Pre-release version of this package */
+#define FASTJET_VERSION_PRERELEASE @FASTJET_VERSION_PRERELEASE@
+
+/* Version of the package under the form XYYZZ (instead of X.Y.Z) */
+#define FASTJET_VERSION_NUMBER @FASTJET_VERSION_NUMBER@
+
+/* whether debugging info is built or not */
+#cmakedefine FASTJET_ENABLE_DEBUG
+
+/* defined if demangling is enabled at configure time and is supported through
+   the GNU C++ ABI */
+#cmakedefine FASTJET_HAVE_DEMANGLING_SUPPORT
+
+
+
+//----------------------------------------------------------------------------
+// got to this point
+
 /* The ATLASCone plugin is enabled */
 #undef FASTJET_ENABLE_PLUGIN_ATLASCONE
 
@@ -37,68 +89,22 @@
 #undef FASTJET_ENABLE_PLUGIN_TRACKJET
 
 /* compile the deprecated parts of the interface using auto-ptr */
-#undef HAVE_AUTO_PTR_INTERFACE
+#undef FASTJET_HAVE_AUTO_PTR_INTERFACE
 
 /* compiler supports c++14 deprecated keyword */
-#undef HAVE_CXX14_DEPRECATED
-
-/* defined if demangling is enabled at configure time and is supported through
-   the GNU C++ ABI */
-#undef HAVE_DEMANGLING_SUPPORT
-
-/* Define to 1 if you have the <dlfcn.h> header file. */
-#undef HAVE_DLFCN_H
+#undef FASTJET_HAVE_CXX14_DEPRECATED
 
 /* Define to 1 if you have the <execinfo.h> header file. */
-#undef HAVE_EXECINFO_H
+#undef FASTJET_HAVE_EXECINFO_H
 
 /* compiler supports GNU c++ deprecated attribute */
-#undef HAVE_GNUCXX_DEPRECATED
+#undef FASTJET_HAVE_GNUCXX_DEPRECATED
 
 /* defined if limited thread-safety has been enabled */
-#undef HAVE_LIMITED_THREAD_SAFETY
+#undef FASTJET_HAVE_LIMITED_THREAD_SAFETY
 
 /* defined if thread-safety has been enabled */
-#undef HAVE_THREAD_SAFETY
+#undef FASTJET_HAVE_THREAD_SAFETY
 
 /* compiler supports the "override" keyword */
-#undef HAVE_OVERRIDE
-
-/* Name of package */
-#undef PACKAGE
-
-/* Define to the address where bug reports for this package should be sent. */
-#undef PACKAGE_BUGREPORT
-
-/* Define to the full name of this package. */
-#define FASTJET_PACKAGE_NAME "FastJet"
-
-/* Define to the full name and version of this package. */
-#undef PACKAGE_STRING
-
-/* Define to the one symbol short name of this package. */
-#undef PACKAGE_TARNAME
-
-/* Define to the home page for this package. */
-#undef PACKAGE_URL
-
-/* Define to the version of this package. */
-#define FASTJET_PACKAGE_VERSION "@FASTJET_VERSION@"
-
-/* Version number of package */
-#define FASTJET_VERSION "@FASTJET_VERSION@"
-
-/* Major version of this package */
-#undef VERSION_MAJOR
-
-/* Minor version of this package */
-#undef VERSION_MINOR
-
-/* Version of the package under the form XYYZZ (instead of X.Y.Z) */
-#undef VERSION_NUMBER
-
-/* Patch version of this package */
-#undef VERSION_PATCHLEVEL
-
-/* Pre-release version of this package */
-#undef VERSION_PRERELEASE
+#undef FASTJET_HAVE_OVERRIDE

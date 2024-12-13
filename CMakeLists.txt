@@ -7,9 +7,35 @@ project(FastJet VERSION 3.4.4)
 #set(PROJECT_VERSION_PRERELEASE "")
 set(PROJECT_VERSION_PRERELEASE "-devel")
 
+
+
+#----------------------------------------------------------------------
+# version information
 set(FASTJET_VERSION "${PROJECT_VERSION}${PROJECT_VERSION_PRERELEASE}")
+
+set(FASTJET_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(FASTJET_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(FASTJET_VERSION_PATCHLEVEL "${PROJECT_VERSION_PATCH}")
+set(FASTJET_VERSION_PRERELEASE "${PROJECT_VERSION_PRERELEASE}")
+# build a unique version number
+if (FASTJET_VERSION_MINOR LESS 10)
+  set(FASTJET_VERSION_MINOR_FOR_NUMBER "0${FASTJET_VERSION_MINOR}")
+else()
+  set(FASTJET_VERSION_MINOR_FOR_NUMBER "${FASTJET_VERSION_MINOR}")
+endif()
+if (FASTJET_VERSION_PATCHLEVEL LESS 10)
+  set(FASTJET_VERSION_PATCHLEVEL_FOR_NUMBER "0${FASTJET_VERSION_PATCHLEVEL}")
+else()
+  set(FASTJET_VERSION_PATCHLEVEL_FOR_NUMBER "${FASTJET_VERSION_PATCHLEVEL}")
+endif()
+set(FASTJET_VERSION_NUMBER "${FASTJET_VERSION_MAJOR}${FASTJET_VERSION_MINOR_FOR_NUMBER}${FASTJET_VERSION_PATCHLEVEL_FOR_NUMBER}")
+
 # print out the project name and version
-cmake_print_variables(PROJECT_NAME PANSCALES_VERSION)
+cmake_print_variables(PROJECT_NAME FASTJET_VERSION)
+
+#----------------------------------------------------------------------
+# basic C++ checks
+#----------------------------------------------------------------------
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
@@ -19,9 +45,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") # Intel compilers are used with -O3
-  set(CMAKE_CXX_FLAGS "-O3 -g -Wall -Wshadow")
+  set(CMAKE_CXX_FLAGS "-O3 -Wall -Wshadow")
 else()
-  set(CMAKE_CXX_FLAGS "-O2 -g -Wall -Wshadow")
+  set(CMAKE_CXX_FLAGS "-O2 -Wall -Wshadow")
 endif()
   message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
 
@@ -29,24 +55,15 @@ endif()
 enable_language(Fortran)
 set(CMAKE_Fortran_FLAGS "-O3")
 
-set (panscales_INCLUDE)
-set (panscales_LIBRARIES)
+set (fastjet_INCLUDE)
+set (fastjet_LIBRARIES)
 
 #-------------------------------------------------------------------------
 # a series of user-defined options
 # If you add something here, remember to add a corresponding 
 # entry in config.hh.in
 #
-#option(PSDDREAL "build the code using dd_real for floating-point operations" OFF)
-
-# # momentum class
-# option(PANSCALES_MOMENTUM4 "Use Momentum4 as the default 4-vector class instead of the default MomentumM2" OFF)
-# if (PANSCALES_MOMENTUM4)
-#   set(PANSCALES_MOMENTUM 4)
-# else()
-#   set(PANSCALES_MOMENTUM 2)
-# endif()
-
+option(FASTJET_ENABLE_DEBUG "Turn on debug compiler information [default=ON]" ON)
 
 #-------------------------------------------------------------------------
 # check compiler supports
@@ -54,13 +71,21 @@ try_compile(CXX_ABI_COMPILE_SUCCEEDED ${CMAKE_BINARY_DIR}/compiler-tests ${CMAKE
 
 if(CXX_ABI_COMPILE_SUCCEEDED)
   message("-- C++ ABI support test passed; enabling demangling")
-  option(PANSCALES_ENABLE_DEMANGLING "Enabling C++ demamgling (requires CXX ABI suport)" ON)
-  # make sure this percolates to CmdLine
-  add_compile_options(-D__CMDLINE_ABI_DEMANGLE__)
+  option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" ON)
 else()
   message("-- C++ ABI support test failed; disabling demangling")
-  option(PANSCALES_ENABLE_DEMANGLING "Enabling C++ demamgling (requires CXX ABI suport)" OFF)
+  option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" OFF)
 endif()
+
+# get into the source directory
+add_subdirectory(src)
+
+# generate the configure file
+configure_file(config-cmake.hh.in include/fastjet/config_auto.h)
+
+
+#-------------------------------------------------------------------------
+# below some stuff from the PanScales CMake
 
 #-------------------------------------------------------------------------
 # search for dependencies
@@ -85,13 +110,6 @@ endif()
 #   set(TCMALLOC_LIB "")
 #   message("-- tcmalloc disabled per user request (not recommended on MacOSX)")
 # endif()
-
-# support hoppet
-add_subdirectory(src)
-
-
-# generate the configure file
-configure_file(config-cmake.hh.in include/fastjet/config_auto.h)
 
 # #-------------------------------------------------------------------------
 # # update include directories
