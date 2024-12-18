@@ -1,21 +1,3 @@
-cmake_minimum_required(VERSION 3.7.0)
-
-# specify the C++ standard
-#set(CMAKE_CXX_STANDARD 14)
-#set(CMAKE_CXX_STANDARD_REQUIRED True)
-#set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
-# 
-# if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") # Intel compilers are used with -O3
-#   set(CMAKE_CXX_FLAGS "-O3 -g -Wall -Wshadow")
-# else()
-#   set(CMAKE_CXX_FLAGS "-O2 -g -Wall -Wshadow")
-# endif()
-#   message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
-
-
-
-# generate the configure file
-#configure_file(config-cmake.hh.in include/fastjet/config-auto.hh)
 
 list(APPEND fastjet_SOURCES
   DnnPlane.cc
@@ -60,7 +42,7 @@ list(APPEND fastjet_SOURCES
 )
 
 list(APPEND fastjet_INCLUDES
-  ../include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../include ${PROJECT_BINARY_DIR}/include
 )
 
 
@@ -70,14 +52,10 @@ add_compile_options(-DDROP_CGAL)
 
 #-------------------------------------------------------------------------
 # update include directories
-include_directories(${PROJECT_BINARY_DIR} ${fastjet_INCLUDES})
+include_directories(${fastjet_INCLUDES})
                      
 #-------------------------------------------------------------------------
 # main code 
 add_library(fastjet SHARED ${fastjet_SOURCES})
 target_link_libraries(fastjet PUBLIC ${fastjet_LIBRARIES})
-# 
-# #-------------------------------------------------------------------------
-# # add the 'example-framework' executable
-# add_executable(example-framework example-framework.cc)
-# target_link_libraries(example-framework panscales ${TCMALLOC_LIB})
+install(TARGETS fastjet DESTINATION lib)

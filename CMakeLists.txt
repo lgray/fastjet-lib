@@ -1,3 +1,11 @@
+# List of useful CMake arguments:
+#  CMAKE_INSTALL_PREFIX=...     path for the installation
+#                               (can be replaced be cmake --install . -- prefix <patth>)
+#  FASTJET_ENABLE_DEBUG=ON|OFF  switch debugging info on/off
+#
+# Note on config file:
+#
+
 cmake_minimum_required(VERSION 3.7.0)
 include(CMakePrintHelpers)
 
@@ -42,8 +50,6 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
 
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-
 if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") # Intel compilers are used with -O3
   set(CMAKE_CXX_FLAGS "-O3 -Wall -Wshadow")
 else()
@@ -55,8 +61,8 @@ endif()
 enable_language(Fortran)
 set(CMAKE_Fortran_FLAGS "-O3")
 
-set (fastjet_INCLUDE)
-set (fastjet_LIBRARIES)
+set(fastjet_INCLUDES)
+set(fastjet_LIBRARIES)
 
 #-------------------------------------------------------------------------
 # a series of user-defined options
@@ -64,6 +70,20 @@ set (fastjet_LIBRARIES)
 # entry in config.hh.in
 #
 option(FASTJET_ENABLE_DEBUG "Turn on debug compiler information [default=ON]" ON)
+
+# plugins on/off
+option(FASTJET_ENABLE_PLUGIN_ATLASCONE        "Enable the ATLASCone plugin [default=ON]"        ON)
+option(FASTJET_ENABLE_PLUGIN_CDFCONES         "Enable the CDFCones plugin [default=ON]"         ON)
+option(FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE "Enable the CMSIterativeCone plugin [default=ON]" ON)
+option(FASTJET_ENABLE_PLUGIN_D0RUNICONE       "Enable the D0RunICone plugin [default=ON]"       ON)
+option(FASTJET_ENABLE_PLUGIN_D0RUNIICONE      "Enable the D0RunIICone plugin [default=ON]"      ON)
+option(FASTJET_ENABLE_PLUGIN_EECAMBRIDGE      "Enable the EECambridge plugin [default=ON]"      ON)
+option(FASTJET_ENABLE_PLUGIN_GRIDJET          "Enable the GridJet plugin [default=ON]"          ON)
+option(FASTJET_ENABLE_PLUGIN_JADE             "Enable the Jade plugin [default=ON]"             ON)
+option(FASTJET_ENABLE_PLUGIN_NESTEDDEFS       "Enable the NestedDefs plugin [default=ON]"       ON)
+option(FASTJET_ENABLE_PLUGIN_PXCONE           "Enable the PxCone plugin [default=ON]"          OFF)
+option(FASTJET_ENABLE_PLUGIN_SISCONE          "Enable the SISCone plugin [default=ON]"          ON)
+option(FASTJET_ENABLE_PLUGIN_TRACKJET         "Enable the TrackJet plugin [default=ON]"         ON)
 
 #-------------------------------------------------------------------------
 # check compiler supports
@@ -77,39 +97,28 @@ else()
   option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" OFF)
 endif()
 
-# get into the source directory
-add_subdirectory(src)
+#-------------------------------------------------------------------------
+# libm
+find_library(LIBM_LIBRARIES m)
+list(APPEND fastjet_LIBRARIES ${LIBM_LIBRARIES})
+
+#-------------------------------------------------------------------------
+# get into directories:
+add_subdirectory(include)  # for basic FJ headers
+add_subdirectory(src)      # for the main FJ library
+add_subdirectory(tools)    # fastjet toolkit
+add_subdirectory(plugins)  # fastjet clustering plugins
+add_subdirectory(example)  # for examples (gets built after all the rest)
 
 # generate the configure file
 configure_file(config-cmake.hh.in include/fastjet/config_auto.h)
-
+#configure_file(fastjet-config-cmake.in fastjet-config)
+#install(FILES fastjet-config DESTINATION bin)
 
 #-------------------------------------------------------------------------
 # below some stuff from the PanScales CMake
 
-#-------------------------------------------------------------------------
-# search for dependencies
-#find_package(GSL REQUIRED)
-#if (PSMPFR4096)
-#  find_package(MPFR 2.3.0)  
-#endif()
 
-# if (USE_TCMALLOC)
-#   
-#   find_library(TCMALLOC_LIB NAMES tcmalloc)
-#   if (NOT TCMALLOC_LIB)
-#     message("-- tcmalloc Not Found (continuing anyway)")
-#     if (APPLE)
-#       message("----------------------------------------------------------------\n                     ***   WARNING   ***\nThe tcmalloc library has not been found on your system, this can\ncause serious timing penalties on MacOS. Please install it (e.g.\nvia the brew gperftools package) for better performance.\n----------------------------------------------------------------")
-#     endif()
-#     set(TCMALLOC_LIB "")
-#   else()
-#     message("-- Found tcmalloc as ${TCMALLOC_LIB}")
-#   endif()
-# else()
-#   set(TCMALLOC_LIB "")
-#   message("-- tcmalloc disabled per user request (not recommended on MacOSX)")
-# endif()
 
 # #-------------------------------------------------------------------------
 # # update include directories

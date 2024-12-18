@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+//----------------------------------------------------------------------------
+// basic information
+//----------------------------------------------------------------------------
 
 /* Name of package */
 #undef FASTJET_PACKAGE
@@ -18,6 +21,11 @@
 
 /* Define to the home page for this package. */
 #undef FASTJET_PACKAGE_URL
+
+
+//----------------------------------------------------------------------------
+// version information
+//----------------------------------------------------------------------------
 
 /* Define to the version of this package. */
 #define FASTJET_PACKAGE_VERSION "@FASTJET_VERSION@"
@@ -40,6 +48,51 @@
 /* Version of the package under the form XYYZZ (instead of X.Y.Z) */
 #define FASTJET_VERSION_NUMBER @FASTJET_VERSION_NUMBER@
 
+
+//----------------------------------------------------------------------------
+// available plugins
+//----------------------------------------------------------------------------
+
+/* The ATLASCone plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_ATLASCONE
+
+/* The CDFCones plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_CDFCONES
+
+/* The CMSIterativeCone plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
+
+/* The D0RunICone plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_D0RUNICONE
+
+/* The D0RunIICone plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_D0RUNIICONE
+
+/* The EECambridge plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
+
+/* The GridJet plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_GRIDJET
+
+/* The Jade plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_JADE
+
+/* The NestedDefs plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_NESTEDDEFS
+
+/* The PxCone plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_PXCONE
+
+/* The SISCone plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_SISCONE
+
+/* The TrackJet plugin is enabled */
+#cmakedefine FASTJET_ENABLE_PLUGIN_TRACKJET
+
+//----------------------------------------------------------------------------
+// compilation flags
+//----------------------------------------------------------------------------
+
 /* whether debugging info is built or not */
 #cmakedefine FASTJET_ENABLE_DEBUG
 
@@ -51,42 +104,6 @@
 
 //----------------------------------------------------------------------------
 // got to this point
-
-/* The ATLASCone plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_ATLASCONE
-
-/* The CDFCones plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_CDFCONES
-
-/* The CMSIterativeCone plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_CMSITERATIVECONE
-
-/* The D0RunICone plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_D0RUNICONE
-
-/* The D0RunIICone plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_D0RUNIICONE
-
-/* The EECambridge plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_EECAMBRIDGE
-
-/* The GridJet plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_GRIDJET
-
-/* The Jade plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_JADE
-
-/* The NestedDefs plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_NESTEDDEFS
-
-/* The PxCone plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_PXCONE
-
-/* The SISCone plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_SISCONE
-
-/* The TrackJet plugin is enabled */
-#undef FASTJET_ENABLE_PLUGIN_TRACKJET
 
 /* compile the deprecated parts of the interface using auto-ptr */
 #undef FASTJET_HAVE_AUTO_PTR_INTERFACE
