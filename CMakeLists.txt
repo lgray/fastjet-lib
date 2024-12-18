@@ -1,10 +1,26 @@
 # List of useful CMake arguments:
 #  CMAKE_INSTALL_PREFIX=...     path for the installation
 #                               (can be replaced be cmake --install . -- prefix <patth>)
-#  FASTJET_ENABLE_DEBUG=ON|OFF  switch debugging info on/off
+#  FASTJET_ENABLE_DEBUG=ON|OFF  switch debugging info on/off [default:ON]
+#  FASTJET_ENABLE_CGAL=ON|OFF   enable CGAL support [default:OFF]
+#  FASTJET_ENABLE_PLUGIN_<name>=ON|OFF
+#      with <anme> in ATLASCONE, CDFCONES, CMSITERATIVECONE, D0RUNICONE, D0RUNIICONE,
+#      EECAMBRIDGE, GRIDJET, JADE, NESTEDDEFS, PXCONE, SISCONE, TRACKJET; enable the
+#      corresponding FastJet plugin [default:ON except for PxCone]
 #
 # Note on config file:
+#  . include/fastjet/config_auto.h is generated from config-cmake.hh.in
 #
+# TODO:
+# - fastjet-config script
+# - add PxCone support
+# - Check CGAL on non-system installation
+# - Check the "Release" build
+# - add missing examples
+# - add Python support
+# - make sure we use shared libs
+# - specific compilation flags for the D0RunIICone
+# - print config summary
 
 cmake_minimum_required(VERSION 3.7.0)
 include(CMakePrintHelpers)
@@ -14,8 +30,6 @@ project(FastJet VERSION 3.4.4)
 # set a pre-release version if relevant, e.g. "-beta1"
 #set(PROJECT_VERSION_PRERELEASE "")
 set(PROJECT_VERSION_PRERELEASE "-devel")
-
-
 
 #----------------------------------------------------------------------
 # version information
@@ -55,7 +69,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") # Intel compilers are used with 
 else()
   set(CMAKE_CXX_FLAGS "-O2 -Wall -Wshadow")
 endif()
-  message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
 
 # specify that we're using fortran
 enable_language(Fortran)
@@ -66,10 +79,18 @@ set(fastjet_LIBRARIES)
 
 #-------------------------------------------------------------------------
 # a series of user-defined options
-# If you add something here, remember to add a corresponding 
-# entry in config.hh.in
+# If you add something here, check if one also needs to add a corresponding 
+# entry in config-cmake.hh.in
 #
-option(FASTJET_ENABLE_DEBUG "Turn on debug compiler information [default=ON]" ON)
+# CGAL support
+option(FASTJET_ENABLE_CGAL   "Link FastJet against the CGAL (header-only) library"  OFF)
+
+# thread safety
+option(FASTJET_HAVE_THREAD_SAFETY         "Turn on thread safety [default=ON]" ON)
+option(FASTJET_HAVE_LIMITED_THREAD_SAFETY "Turn on limited thread safety [default=ON]" ON)
+if (FASTJET_HAVE_THREAD_SAFETY)
+  set(ASTJET_HAVE_LIMITED_THREAD_SAFETY ON)
+endif()
 
 # plugins on/off
 option(FASTJET_ENABLE_PLUGIN_ATLASCONE        "Enable the ATLASCone plugin [default=ON]"        ON)
@@ -85,22 +106,88 @@ option(FASTJET_ENABLE_PLUGIN_PXCONE           "Enable the PxCone plugin [default
 option(FASTJET_ENABLE_PLUGIN_SISCONE          "Enable the SISCone plugin [default=ON]"          ON)
 option(FASTJET_ENABLE_PLUGIN_TRACKJET         "Enable the TrackJet plugin [default=ON]"         ON)
 
+# compile-time debugging info
+option(FASTJET_ENABLE_DEBUG "Turn on debug compiler information [default=ON]" ON)
+
+# disable auto-ptr by defaukt
+option(FASTJET_HAVE_AUTO_PTR_INTERFACE  "Enable the (deprecated) auto_ptr interface [default=OFF]"  OFF)
+
+# extra warnings
+option(FASTJET_ENABLE_EXTRA_WARNINGS  "Enable compile=toime extra warnings [default=OFF]"  OFF)
+
+# support for "override" comes automatically as part of C++11 (can be manually disabled)
+option(FASTJET_HAVE_OVERRIDE   "Compiler supports override"  ON)
+
+# support for "[[deprecated]]" comes automatically as part of C++14 (can be manually disabled)
+option(FASTJET_HAVE_CXX14_DEPRECATED   "Compiler supports [[deprecated]] (C++14)"  ON)
+
+# support for "__attribute__(deprecated)" off by default (use [[deprecated instead]])
+option(FASTJET_HAVE_GNUCXX_DEPRECATED "Compiler supports __attribute__(deprecated) (use [[deprecated]] instaead"  OFF)
+
+# support for "explicit operator" comes automatically as part of C++11 (can be manually disabled)
+option(FASTJET_HAVE_EXPLICIT_FOR_OPERATORS  "Compiler supports explicit operator (C++11)"  ON)
+
+
 #-------------------------------------------------------------------------
 # check compiler supports
-try_compile(CXX_ABI_COMPILE_SUCCEEDED ${CMAKE_BINARY_DIR}/compiler-tests ${CMAKE_SOURCE_DIR}/compiler-tests/cxx_abi.cc)
 
-if(CXX_ABI_COMPILE_SUCCEEDED)
-  message("-- C++ ABI support test passed; enabling demangling")
-  option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" ON)
+include(CheckCXXCompilerFlag)
+include(CheckIncludeFileCXX)
+set (FLAG_LIST "")
+
+if (FASTJET_ENABLE_DEBUG)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+  
+  # check if the compiler supports the -Woverloaded-virtual flag
+  # if yes, add if to the compiler flags
+  list(APPEND FLAG_LIST -Woverloaded-virtual)
+endif()
+
+if (FASTJET_ENABLE_EXTRA_WARNINGS)
+  list(APPEND FLAG_LIST -pedantic -Wextra -Wshadow)
+endif()
+
+foreach(flag  ${FLAG_LIST})
+  check_cxx_compiler_flag(${flag} FLAG_SUPPORTED)
+  if (FLAG_SUPPORTED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+    message("-- Checking if the compiler supports ${flag}: supported")
+  else()
+    message("-- Checking if the compiler supports ${flag}: not supported")
+  endif()
+endforeach()
+
+check_include_file_cxx(execinfo.h FASTJET_HAVE_EXECINFO_H)
+
+if (FASTJET_HAVE_EXECINFO_H)
+  try_compile(CXX_ABI_COMPILE_SUCCEEDED ${CMAKE_BINARY_DIR}/compiler-tests ${CMAKE_CURRENT_SOURCE_DIR}/compiler-tests/cxx_abi.cc)
+  if (CXX_ABI_COMPILE_SUCCEEDED)
+    message("-- C++ ABI support test passed; enabling demangling")
+    option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" ON)
+  else()
+    message("-- C++ ABI support test failed; disabling demangling")
+    option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" OFF)
+  endif()
 else()
-  message("-- C++ ABI support test failed; disabling demangling")
-  option(FASTJET_HAVE_DEMANGLING_SUPPORT "Enabling C++ demamgling (requires CXX ABI suport)" OFF)
+  set(FASTJET_HAVE_DEMANGLING_SUPPORT  OFF)
 endif()
 
 #-------------------------------------------------------------------------
 # libm
 find_library(LIBM_LIBRARIES m)
 list(APPEND fastjet_LIBRARIES ${LIBM_LIBRARIES})
+            
+#-------------------------------------------------------------------------
+# CGAL Support (off by default)
+#
+# See https://doc.cgal.org/latest/Manual/devman_create_and_use_a_cmakelist.html
+if (FASTJET_ENABLE_CGAL)
+  find_package(CGAL REQUIRED)
+  list(APPEND fastjet_LIBRARIES CGAL::CGAL)
+endif()
+
+message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
+
 
 #-------------------------------------------------------------------------
 # get into directories:
@@ -115,21 +202,27 @@ configure_file(config-cmake.hh.in include/fastjet/config_auto.h)
 #configure_file(fastjet-config-cmake.in fastjet-config)
 #install(FILES fastjet-config DESTINATION bin)
 
-#-------------------------------------------------------------------------
-# below some stuff from the PanScales CMake
 
-
-
-# #-------------------------------------------------------------------------
-# # update include directories
-# include_directories(PUBLIC ${CMAKE_SOURCE_DIR} ${PROJECT_BINARY_DIR} ${panscales_INCLUDES})
-#                     
-# #-------------------------------------------------------------------------
-# # main code 
-# add_library(panscales SHARED ${panscales_SOURCES})
-# target_link_libraries(panscales PUBLIC ${panscales_LIBRARIES})
 # 
-# #-------------------------------------------------------------------------
-# # add the 'example-framework' executable
-# add_executable(example-framework example-framework.cc)
-# target_link_libraries(example-framework panscales ${TCMALLOC_LIB})
+# dnl-------------------------------------------------------------------
+# dnl check if the linker supports --enable-new-dtags (rpath-related)
+# dnl-------------------------------------------------------------------
+# AC_MSG_CHECKING([if $CXX supports -Wl,--enable-new-dtags flag])
+# SAVE_CXXFLAGS="$CXXFLAGS"
+# CXXFLAGS="-Werror -Wl,--enable-new-dtags"
+# AC_LANG_PUSH(C++)
+# AC_LINK_IFELSE([AC_LANG_SOURCE([int main(void){ return 0;}])],
+#    [ac_enable_new_dtags_ok=yes],[ac_enable_new_dtags_ok=no])
+# AC_LANG_POP(C++)
+# CXXFLAGS="$SAVE_CXXFLAGS"
+# AC_MSG_RESULT([$ac_enable_new_dtags_ok])
+# HAS_RUNPATH_SUPPORT="no"
+# CONFIG_RUNPATH_FLAGS=""
+# dnl if test x"$ac_enable_new_dtags_ok" = x"yes"; then
+# if test "x${ac_enable_new_dtags_ok}" = "xyes" ; then
+#    HAS_RUNPATH_SUPPORT="yes"
+#    CONFIG_RUNPATH_FLAGS="-Wl,--enable-new-dtags"
+# fi
+# AC_SUBST(HAS_RUNPATH_SUPPORT)
+# AC_SUBST(CONFIG_RUNPATH_FLAGS)
+# 

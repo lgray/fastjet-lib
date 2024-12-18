@@ -51,7 +51,6 @@ endif()
 
 
 # build a local library
-cmake_print_variables(combined_objects)
 add_library(fastjetplugins SHARED  ${combined_objects})
 target_link_libraries(fastjetplugins PUBLIC ${fastjet_LIBRARIES} fastjet)
 install(TARGETS fastjetplugins DESTINATION lib)

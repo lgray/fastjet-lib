@@ -1,4 +1,50 @@
-========== CHANGELOG FILE FOR FastJet =================================2
+2024-12-18  Gregory Soyez  <soyez@fastjet.fr>
+
+        * CMakeLists.txt:
+	* example/CMakeLists.txt:
+	* plugins/CMakeLists.txt:
+	* src/CMakeLists.txt:
+	* config-cmake.hh.in:
+	various additions ti th eCMake build system:
+	. CGAL support
+	. thread-safety
+	. a series of compiler flags
+	. building missing examples
+
+	* include/fastjet/config.h:
+	included "fastjet/config_auto.h" instead of "config_auto.h".
+	This should be more correct/stable against out-of-source builds
+
+	* CMakeLists.txt:
+	* src/CMakeLists.txt:
+	* include/CMakeLists.txt:
+	* include/fastjet/CMakeLists.txt:
+	* tools/CMakeLists.txt:
+	* tools/fastjet/CMakeLists.txt:
+	* tools/fastjet/tools/CMakeLists.txt:
+	* plugins/CMakeLists.txt:
+	* plugins/ATLASCone/CMakeLists.txt:
+	* plugins/CDFCones/CMakeLists.txt:
+	* plugins/CMSIterativeCone/CMakeLists.txt:
+	* plugins/D0RunICone/CMakeLists.txt:
+	* plugins/D0RunIICone/CMakeLists.txt:
+	* plugins/EECambridge/CMakeLists.txt:
+	* plugins/GridJet/CMakeLists.txt:
+	* plugins/Jade/CMakeLists.txt:
+	* plugins/NestedDefs/CMakeLists.txt:
+	* plugins/SISCone/CMakeLists.txt:
+	* plugins/TrackJet/CMakeLists.txt:
+	* example/CMakeLists.txt:
+	* config-cmake.hh.in:
+	added a preliminary support for CMake. In principle most things are supported except:
+	- the fastjet-config script
+	- CGAL support
+	- thread-safety support
+	- the PxCone plugin
+	- make check
+	- a few examples are not yet built
+	more testing is also needed (e.g. on platform-dependence, library dependencies and installed files)
+
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 
 	* configure.ac:

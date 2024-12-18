@@ -45,11 +45,6 @@ list(APPEND fastjet_INCLUDES
   ${CMAKE_CURRENT_SOURCE_DIR}/../include ${PROJECT_BINARY_DIR}/include
 )
 
-
-#-------------------------------------------------------------------------
-# For now, disable CGAL
-add_compile_options(-DDROP_CGAL)
-
 #-------------------------------------------------------------------------
 # update include directories
 include_directories(${fastjet_INCLUDES})
