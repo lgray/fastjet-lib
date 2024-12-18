@@ -1,5 +1,8 @@
 2024-12-18  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/PxCone/CMakeLists.txt:
+	added PxCone to the CMake build system
+
         * CMakeLists.txt:
 	* example/CMakeLists.txt:
 	* plugins/CMakeLists.txt:
