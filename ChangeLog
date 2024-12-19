@@ -1,7 +1,10 @@
 2024-12-19 Thu  <gavin.salam@physics.ox.ac.uk>
 
 	* CMakeLists.txt:
-	tried to improve documatation line for the FASTJET_ENABLE_CGAL flag
+	- tried to improve documatation line for the FASTJET_ENABLE_CGAL flags
+	- added a check that the autotools include/fastjet/config_auto.h is
+	  not present (there for cmake stage; commented for build stage
+	  because it is broken)
 
 2024-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
