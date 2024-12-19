@@ -53,5 +53,11 @@ endif()
 # build a local library
 add_library(fastjetplugins SHARED  ${combined_objects})
 target_link_libraries(fastjetplugins PUBLIC ${fastjet_LIBRARIES} fastjet)
+
+# make sure the SISCone libraries are included if necessary
+if (FASTJET_ENABLE_PLUGIN_SISCONE)
+   target_link_libraries(fastjetplugins PUBLIC siscone siscone_spherical)
+endif()
+
 install(TARGETS fastjetplugins DESTINATION lib)
 

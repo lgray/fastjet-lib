@@ -1,4 +1,9 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+2024-12-19 Thu  <gavin.salam@physics.ox.ac.uk>
+
+	* plugins/CMakeLists.txt:
+	explicitly added siscone and siscone_spherical libraries (somehow not 
+	picked up with from the SISCone files themselves)
 
 2024-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
