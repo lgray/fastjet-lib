@@ -1,3 +1,8 @@
+2024-12-19 Thu  <gavin.salam@physics.ox.ac.uk>
+
+	* CMakeLists.txt:
+	tried to improve documatation line for the FASTJET_ENABLE_CGAL flag
+
 2024-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/PxCone/CMakeLists.txt:             *** ADDED ***

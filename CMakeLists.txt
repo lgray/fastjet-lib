@@ -83,7 +83,9 @@ set(fastjet_LIBRARIES)
 # entry in config-cmake.hh.in
 #
 # CGAL support
-option(FASTJET_ENABLE_CGAL   "Link FastJet against the CGAL (header-only) library"  OFF)
+option(FASTJET_ENABLE_CGAL  
+       "Enable compilation with CGAL (header-only) support, required for most of the NlnN strategies"  
+       OFF)
 
 # thread safety
 option(FASTJET_HAVE_THREAD_SAFETY         "Turn on thread safety [default=ON]" ON)
