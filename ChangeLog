@@ -1,5 +1,11 @@
 2024-12-19  Gregory Soyez  <soyez@fastjet.fr>
 
+	* plugins/PxCone/CMakeLists.txt:             *** ADDED ***
+	aded CMake support for the PxCone plugin
+
+	* include/fastjet/internal/CMakeLists.txt:   *** ADDED ***
+	added missing CMake file
+
 	* compiler-tests/cxx_abi.cc:    *** ADDED ***
 	added missing file for CMake test of ABI (used for demangling)
 
