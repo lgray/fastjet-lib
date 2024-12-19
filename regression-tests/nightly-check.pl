@@ -91,7 +91,7 @@ $CGAL_DIR='/ada1/lpthe/cacciari/lib/CGAL-4.1';
 
 # basic checks without and with CGAL (by default all 64 bit)
 push @setups, ["","", "", 10, ""]; # out of the box
-push @setups, ["","--enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, ""]; # with CGAL & all plugins
+push @setups, ["","--enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, ""]; # with CGAL & all plugins
 
 # checks of the library system variants (shared/static/monolithic)
 push @setups, ["","--enable-allplugins --disable-shared", "", 10, ""]; # with static libs, and pxcone
@@ -124,14 +124,14 @@ push @setups, ["","--enable-allcxxplugins CC=/ada4/lpthe/cacciari/local/bin/gcc-
 # checks on macs 
 # push @setups, ["karnak","CC=cc CXX=c++", "", 10, ""]; # out of the box on new karnak (OS X 10.8.5) with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
 # push @setups, ["karnak","--enable-allcxxplugins CC=cc CXX=c++", "", 1000, ""]; # full monty on new karnak with clang [Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)]
-# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7 
+# push @setups, ["karnak","--enable-allcxxplugins CC=/usr/local/bin/gcc-4.4 CXX=/usr/local/bin/g++-4.4", "", 10, ""]; # full set with gcc 4.4.7
 
 # extra tests for areas
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -areas"]; # locally
 # push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -areas"]; # remotely
 
 # extra tests for background estimation
-push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
+push @setups, ["","--disable-static --enable-allcxxplugins --enable-cgal --disable-cgal-header-only --with-cgaldir=".$CGAL_DIR, "", 1000, "-strat 1 -bkgds"]; # locally
 # push @setups, ["karnak","--disable-static --enable-allcxxplugins", "", 1000, "-strat 1 -bkgds"]; # remotely
 
 # minimal check that demangling code doesn't break compilation

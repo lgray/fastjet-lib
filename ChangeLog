@@ -1,3 +1,4 @@
+========== CHANGELOG FILE FOR FastJet =================================
 2024-12-19 Thu  <gavin.salam@physics.ox.ac.uk>
 
 	* CMakeLists.txt:
@@ -67,11 +68,27 @@
 	- a few examples are not yet built
 	more testing is also needed (e.g. on platform-dependence, library dependencies and installed files)
 
+2024-12-06 Fri  <gavin.salam@physics.ox.ac.uk>
+
+	* plugins/D0RunIICone/ProtoJet.hpp:
+	merged in merge-request !8 from Andre Sailer in a printing routine
+	to replace output of inexistant member _Et with member _pT, 
+	which broke compilation with clang 19. (Raised also by Dmitri Konstantinov). 
+
+2024-12-03 Tue  <gavin.salam@physics.ox.ac.uk>
+
+	* regression-tests/nightly-check.pl:
+	updated the CGAL4.1 test to have --disable-cgal-header-only
+
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 
 	* configure.ac:
 	* m4/plugin.m4:
-	'made tests more independent of the shell being used
+	made tests more independent of the shell being used
+
+	* autogen.sh:
+	message indicating that configure was going to be run was there even
+	with NOCONFIGURE=true; fixed this.
 
 2024-12-02  Gregory Soyez  <soyez@fastjet.fr> + Gavin and Matteo
 

@@ -2,10 +2,14 @@
 # https://gitlab.com/gitlab-org/gitlab-foss/-/blob/master/lib/gitlab/ci/templates/C%2B%2B.gitlab-ci.yml
 #
 # To help test config (e.g. library versions and files)
-# - docker pull gcc
-# - docker images
-# - docker run -it #####
-#
+# (add "--platform linux/amd64" to force amd64 even on Apple Silicon)
+#   > docker run --rm -ti gcc:latest
+#   # apt update && apt install -y git
+#   # git clone --recursive https://gitlab.com/fastjet/fastjet.git && cd fastjet
+#   # NOCONFIGURE=true ./autogen.sh 
+#   # ./configure [--enable-allcxxplugins]
+#   # make -j
+#   # [etc.]
 image: gcc
 
 variables:
@@ -15,11 +19,17 @@ build_and_test:
 
   stage: build
   before_script:
-    - apt update
-    #- apt update && apt -y install cmake libgsl-dev
+    #- apt update && apt install -y libcgal-dev
   script:
     # this line sets up autotools pieces in both FJ and SISCone
+    - NOCONFIGURE=true ./autogen.sh
     # and runs configure with the given flags
-    - ./autogen.sh --enable-allcxxplugins
+    # NB: CGAL has problems as of 2024
+    #- ./configure --enable-allcxxplugins --enable-cgal
+    - ./configure --enable-allcxxplugins
     - make -j4
     - make check
+    # 
+    # then run some basic tests of the clustering
+    - git clone https://gitlab.com/fastjet/fastjet-validation/data
+    - ./regression-tests/test-all-algs.pl -datadir data -nev 100
