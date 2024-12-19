@@ -29,6 +29,7 @@
 //FJENDHEADER
 
 
+#include "fastjet/config.h"
 #include "fastjet/Error.hh"
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"

@@ -29,6 +29,8 @@
 //FJENDHEADER
 
 
+#include "fastjet/config.h"
+
 #ifndef DROP_CGAL // in case we do not have the code for CGAL
 
 #ifndef __FASTJET_DNNPLANE_HH__

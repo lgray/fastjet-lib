@@ -1,4 +1,22 @@
 ========== CHANGELOG FILE FOR FastJet =================================
+
+2024-12-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* include/fastjet/internal/Dnn2piCylinder.hh:
+	* include/fastjet/internal/Dnn3piCylinder.hh:
+	* include/fastjet/internal/Dnn4piCylinder.hh:
+	* include/fastjet/internal/DnnPlane.hh:
+	* include/fastjet/internal/Triangulation.hh:
+	* src/ClusterSequence.cc:
+	* src/ClusterSequence_Delaunay.cc:
+	* src/Dnn2piCylinder.cc:
+	* src/Dnn3piCylinder.cc:
+	* src/Dnn4piCylinder.cc:
+	* src/DnnPlane.cc:
+	included fastjet/config.h in case DROP_CGAL is reached through the
+	config file instead of being explicitly mentioned in the
+	compilation flags
+
 2024-12-19 Thu  <gavin.salam@physics.ox.ac.uk>
 
 	* CMakeLists.txt:
