@@ -1,3 +1,8 @@
+2024-12-19  Gregory Soyez  <soyez@fastjet.fr>
+
+	* compiler-tests/cxx_abi.cc:    *** ADDED ***
+	added missing file for CMake test of ABI (used for demangling)
+
 2024-12-18  Gregory Soyez  <soyez@fastjet.fr>
 
 	* plugins/PxCone/CMakeLists.txt:
