@@ -142,6 +142,8 @@ option(FASTJET_HAVE_GNUCXX_DEPRECATED "Compiler supports __attribute__(deprecate
 # support for "explicit operator" comes automatically as part of C++11 (can be manually disabled)
 option(FASTJET_HAVE_EXPLICIT_FOR_OPERATORS  "Compiler supports explicit operator (C++11)"  ON)
 
+# support for swig-based python bindings
+option(FASTJET_ENABLE_PYTHON "Enable building of swig-based fastjet python bindings" OFF)
 
 #-------------------------------------------------------------------------
 # check compiler support
@@ -209,6 +211,13 @@ if (FASTJET_ENABLE_CGAL)
   list(APPEND fastjet_LIBRARIES CGAL::CGAL)
 endif()
 
+#-------------------------------------------------------------------------
+# python Support (off by default)
+#
+if (FASTJET_ENABLE_PYTHON)
+  find_package(SWIG 3.0 COMPONENTS python REQUIRED)
+endif()
+
 message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
 
 
@@ -218,7 +227,11 @@ add_subdirectory(include)  # for basic FJ headers
 add_subdirectory(src)      # for the main FJ library
 add_subdirectory(tools)    # fastjet toolkit
 add_subdirectory(plugins)  # fastjet clustering plugins
+if (FASTJET_ENABLE_PYTHON)
+  add_subdirectory(pyinterface) # for python interface
+endif()
 add_subdirectory(example)  # for examples (gets built after all the rest)
+
 
 # generate the configure file
 configure_file(config-cmake.hh.in include/fastjet/config_auto.h)
