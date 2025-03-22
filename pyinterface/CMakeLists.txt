@@ -1,7 +1,7 @@
 cmake_policy(VERSION 3.14)
 
 include(UseSWIG)
-find_package(Python COMPONENTS Development)
+find_package(Python COMPONENTS Interpreter Development)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../pyinterface)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
