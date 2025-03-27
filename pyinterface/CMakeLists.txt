@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14...3.31)
+cmake_minimum_required(VERSION 3.16...3.31)
 
 set(UseSWIG_MODULE_VERSION 2)
 include(UseSWIG)
