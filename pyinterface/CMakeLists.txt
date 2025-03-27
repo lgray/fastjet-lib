@@ -8,17 +8,17 @@ find_package(Python COMPONENTS Interpreter Development)
 
 set_property(SOURCE fastjet.i PROPERTY CPLUSPLUS ON)
 
-swig_add_library(_fastjet LANGUAGE python SOURCES fastjet.i OUTPUT_DIR lib)
-set_property(TARGET _fastjet PROPERTY SWIG_USE_TARGET_INCLUDE_DIRECTORIES TRUE)
+swig_add_library(fastjet_pyext LANGUAGE python SOURCES fastjet.i OUTPUT_DIR lib)
+set_property(TARGET fastjet_pyext PROPERTY SWIG_USE_TARGET_INCLUDE_DIRECTORIES TRUE)
 # Unix only, Windows is different
-set_property(TARGET _fastjet PROPERTY SUFFIX ".${Python_SOABI}${CMAKE_SHARED_MODULE_SUFFIX}")
+set_property(TARGET fastjet_pyext PROPERTY SUFFIX ".${Python_SOABI}${CMAKE_SHARED_MODULE_SUFFIX}")
 
-target_link_libraries(_fastjet PUBLIC fastjet)
-target_link_libraries(_fastjet PUBLIC fastjettools)
-target_link_libraries(_fastjet PUBLIC Python::Module)
+target_link_libraries(fastjet_pyext PUBLIC fastjet)
+target_link_libraries(fastjet_pyext PUBLIC fastjettools)
+target_link_libraries(fastjet_pyext PUBLIC Python::Module)
 
-target_include_directories(_fastjet PUBLIC ../pyinterface)
+target_include_directories(fastjet_pyext PUBLIC ../pyinterface)
 
 # Really should go to ${Python_SITEARCH} or into the wheel dir of scikit-build-core
-install(TARGETS _fastjet DESTINATION "${Python_SITEARCH}")
+install(TARGETS fastjet_pyext DESTINATION "${Python_SITEARCH}")
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib" DESTINATION "${Python_SITEARCH}")
