@@ -8,7 +8,7 @@ find_package(Python COMPONENTS Interpreter Development)
 
 set_property(SOURCE fastjet_swig.i PROPERTY CPLUSPLUS ON)
 
-swig_add_library(fastjet_swig LANGUAGE python SOURCES fastjet_swig.i OUTPUT_DIR lib)
+swig_add_library(fastjet_swig LANGUAGE python SOURCES fastjet_swig.i OUTPUT_DIR fastjet_swig)
 set_property(TARGET fastjet_swig PROPERTY SWIG_USE_TARGET_INCLUDE_DIRECTORIES TRUE)
 # Unix only, Windows is different
 set_property(TARGET fastjet_swig PROPERTY SUFFIX ".${Python_SOABI}${CMAKE_SHARED_MODULE_SUFFIX}")
@@ -20,5 +20,7 @@ target_link_libraries(fastjet_swig PUBLIC Python::Module)
 target_include_directories(fastjet_swig PUBLIC ../pyinterface)
 
 # Really should go to ${Python_SITEARCH} or into the wheel dir of scikit-build-core
-install(TARGETS fastjet_swig DESTINATION "${Python_SITEARCH}")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib" DESTINATION "${Python_SITEARCH}")
+file(RENAME "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/fastjet_swig.py" "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "${Python_SITEARCH}/fastjet_swig/")
+install(TARGETS fastjet_swig DESTINATION "${Python_SITEARCH}/fastjet_swig")
+
