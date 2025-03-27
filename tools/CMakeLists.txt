@@ -17,10 +17,6 @@ list(APPEND fastjettools_SOURCES
   TopTaggerBase.cc
 )
 
-list(APPEND fastjet_INCLUDES
-  ${CMAKE_CURRENT_SOURCE_DIR}/../include ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_BINARY_DIR}/include
-)
-
 #-------------------------------------------------------------------------
 # update include directories
 include_directories(${fastjet_INCLUDES})
@@ -29,4 +25,5 @@ include_directories(${fastjet_INCLUDES})
 # main code 
 add_library(fastjettools SHARED ${fastjettools_SOURCES})
 target_link_libraries(fastjettools PUBLIC ${fastjet_LIBRARIES} fastjet)
+target_include_directories(fastjettools PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 install(TARGETS fastjettools DESTINATION lib)

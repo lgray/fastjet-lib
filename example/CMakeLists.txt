@@ -1,11 +1,3 @@
-#-------------------------------------------------------------------------
-# update include directories
-list(APPEND fastjet_INCLUDES
-  ${CMAKE_CURRENT_SOURCE_DIR}/../include ${CMAKE_CURRENT_SOURCE_DIR}/../tools ${PROJECT_BINARY_DIR}/include
-)
-
-include_directories(${fastjet_INCLUDES})
-
 #------------------------------------------------------------------------
 # illustrative examples
 #------------------------------------------------------------------------

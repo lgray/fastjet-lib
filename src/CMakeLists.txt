@@ -44,13 +44,10 @@ list(APPEND fastjet_SOURCES
 list(APPEND fastjet_INCLUDES
   ${CMAKE_CURRENT_SOURCE_DIR}/../include ${PROJECT_BINARY_DIR}/include
 )
-
-#-------------------------------------------------------------------------
-# update include directories
-include_directories(${fastjet_INCLUDES})
-                     
+                    
 #-------------------------------------------------------------------------
 # main code 
 add_library(fastjet SHARED ${fastjet_SOURCES})
 target_link_libraries(fastjet PUBLIC ${fastjet_LIBRARIES})
+target_include_directories(fastjet PUBLIC ${fastjet_INCLUDES})
 install(TARGETS fastjet DESTINATION lib)
