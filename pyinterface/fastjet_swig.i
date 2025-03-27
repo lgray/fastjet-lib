@@ -62,7 +62,7 @@ Example
 "
 %enddef
 
-%module(docstring=DOCSTRING) fastjet
+%module(docstring=DOCSTRING) fastjet_swig
 
 %{
 #include "fastjet/config_auto.h"

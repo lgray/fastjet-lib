@@ -6,9 +6,9 @@ include(UseSWIG)
 # Really should be 3.17+ and Development.Module, otherwise you require unnecessary libs
 find_package(Python COMPONENTS Interpreter Development)
 
-set_property(SOURCE fastjet.i PROPERTY CPLUSPLUS ON)
+set_property(SOURCE fastjet_swig.i PROPERTY CPLUSPLUS ON)
 
-swig_add_library(fastjet_swig LANGUAGE python SOURCES fastjet.i OUTPUT_DIR lib)
+swig_add_library(fastjet_swig LANGUAGE python SOURCES fastjet_swig.i OUTPUT_DIR lib)
 set_property(TARGET fastjet_swig PROPERTY SWIG_USE_TARGET_INCLUDE_DIRECTORIES TRUE)
 # Unix only, Windows is different
 set_property(TARGET fastjet_swig PROPERTY SUFFIX ".${Python_SOABI}${CMAKE_SHARED_MODULE_SUFFIX}")
