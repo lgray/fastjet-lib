@@ -3,8 +3,13 @@ cmake_minimum_required(VERSION 3.16...3.31)
 set(UseSWIG_MODULE_VERSION 2)
 include(UseSWIG)
 
-# Really should be 3.17+ and Development.Module, otherwise you require unnecessary libs
-find_package(Python COMPONENTS Interpreter Development)
+if (CMAKE_VERSION VERSION_LESS 3.18)
+  set(DEV_MODULE Development)
+else()
+  set(DEV_MODULE Development.Module)
+endif()
+
+find_package(Python 3.8 COMPONENTS Interpreter ${DEV_MODULE} REQUIRED)
 
 set_property(SOURCE fastjet_swig.i PROPERTY CPLUSPLUS ON)
 set_property(SOURCE fastjet_swig.i PROPERTY SWIG_MODULE_NAME __init__)
