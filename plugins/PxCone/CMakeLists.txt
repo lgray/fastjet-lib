@@ -9,11 +9,10 @@ list(APPEND PxConePlugin_SOURCES
   PxConePlugin.cc
 )
 
-# update the list of include directories
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../include ${PROJECT_BINARY_DIR}/include)
-
 # build a local library
 add_library(PxConePlugin OBJECT ${PxConePlugin_SOURCES})
+target_link_libraries(PxConePlugin PUBLIC fastjet)
+
 set_property(TARGET PxConePlugin PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # directly install the header from here
