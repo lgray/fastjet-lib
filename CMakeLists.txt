@@ -217,6 +217,7 @@ endif()
 if (FASTJET_ENABLE_PYTHON)
   find_package(SWIG 3.0 COMPONENTS python REQUIRED)
 endif()
+set(FASTJET_PYTHON_PACKAGE_NAME "fastjet" CACHE STRING "The name of the installed fastjet python package.")
 
 message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
 
