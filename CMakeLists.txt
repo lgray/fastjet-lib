@@ -117,7 +117,7 @@ option(FASTJET_ENABLE_PLUGIN_EECAMBRIDGE      "Enable the EECambridge plugin [de
 option(FASTJET_ENABLE_PLUGIN_GRIDJET          "Enable the GridJet plugin [default=ON]"          ON)
 option(FASTJET_ENABLE_PLUGIN_JADE             "Enable the Jade plugin [default=ON]"             ON)
 option(FASTJET_ENABLE_PLUGIN_NESTEDDEFS       "Enable the NestedDefs plugin [default=ON]"       ON)
-option(FASTJET_ENABLE_PLUGIN_PXCONE           "Enable the PxCone plugin [default=ON]"          OFF)
+option(FASTJET_ENABLE_PLUGIN_PXCONE           "Enable the PxCone plugin [default=ON]"           ON)
 option(FASTJET_ENABLE_PLUGIN_SISCONE          "Enable the SISCone plugin [default=ON]"          ON)
 option(FASTJET_ENABLE_PLUGIN_TRACKJET         "Enable the TrackJet plugin [default=ON]"         ON)
 
