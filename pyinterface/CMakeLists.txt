@@ -24,14 +24,21 @@ target_link_libraries(fastjet_swig PUBLIC fastjet)
 target_link_libraries(fastjet_swig PUBLIC fastjettools)
 target_link_libraries(fastjet_swig PUBLIC Python::Module)
 
+if ("${SWIG_VERSION}" VERSION_LESS "4.2.0")
+  target_compile_definitions(fastjet_swig PUBLIC -DSWIG)
+  target_compile_definitions(fastjet_swig PUBLIC -DSWIG_TYPE_TABLE=fastjet_swig)
+endif()
+
 target_include_directories(fastjet_swig PUBLIC ../pyinterface)
 
 # Really should go to ${Python_SITEARCH} or into the wheel dir of scikit-build-core
-if (${CMAKE_INSTALL_PREFIX} STREQUAL "${FASTJET_ORIGINAL_INSTALL_PREFIX}" OR FASTJET_USE_PYTHON_SITEARCH)
-  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "${Python_SITEARCH}/${FASTJET_PYTHON_PACKAGE_NAME}/")
-  install(TARGETS fastjet_swig DESTINATION "${Python_SITEARCH}/${FASTJET_PYTHON_PACKAGE_NAME}/")
+if (FASTJET_USE_PYTHON_SITEARCH)
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "${Python_SITEARCH}/${FASTJET_PYTHON_PACKAGE_NAME}")
+  install(TARGETS fastjet_swig DESTINATION "${Python_SITEARCH}/${FASTJET_PYTHON_PACKAGE_NAME}")
+elseif(NOT "${FASTJET_CUSTOM_PYTHON_INSTALL}" STREQUAL "")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "${FASTJET_CUSTOM_PYTHON_INSTALL}")
+  install(TARGETS fastjet_swig DESTINATION "${FASTJET_CUSTOM_PYTHON_INSTALL}")
 else()
-  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}/")
-  install(TARGETS fastjet_swig DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}/")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}")
+  install(TARGETS fastjet_swig DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}")
 endif()
-
