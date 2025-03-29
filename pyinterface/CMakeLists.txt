@@ -26,12 +26,12 @@ target_link_libraries(fastjet_swig PUBLIC Python::Module)
 
 target_include_directories(fastjet_swig PUBLIC ../pyinterface)
 
-if ("${SWIG_VERSION}" VERSION_LESS "4.2.0")
-  target_compile_options(fastjet_swig PUBLIC -DSWIG)
-  target_compile_options(fastjet_swig PUBLIC -DSWIG_TYPE_TABLE=fastjet_swig)
-endif()
-
 # Really should go to ${Python_SITEARCH} or into the wheel dir of scikit-build-core
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}/")
-install(TARGETS fastjet_swig DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}/")
+if (${CMAKE_INSTALL_PREFIX} STREQUAL "${FASTJET_ORIGINAL_INSTALL_PREFIX}" OR FASTJET_USE_PYTHON_SITEARCH)
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "${Python_SITEARCH}/${FASTJET_PYTHON_PACKAGE_NAME}/")
+  install(TARGETS fastjet_swig DESTINATION "${Python_SITEARCH}/${FASTJET_PYTHON_PACKAGE_NAME}/")
+else()
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/fastjet_swig/__init__.py" DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}/")
+  install(TARGETS fastjet_swig DESTINATION "lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages/${FASTJET_PYTHON_PACKAGE_NAME}/")
+endif()
 
