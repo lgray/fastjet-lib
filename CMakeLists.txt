@@ -246,6 +246,7 @@ set(includedir "${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
 set(PACKAGE_VERSION ${FASTJET_VERSION})
 message(STATUS "Plugins that are enabled = ${LIST_ALL_PLUGINS}")
 configure_file(fastjet-config.in fastjet-config)
+
 #install(FILES fastjet-config DESTINATION bin)
 
 

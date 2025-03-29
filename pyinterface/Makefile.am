@@ -55,7 +55,7 @@ EXTRA_DIST=$(SWIGINTERFACES) FastJetPythonExtensions.hh
 if BUILD_INCLUDES_SWIG
 BUILT_SOURCES = swig_wrap.cpp fastjet.py
 swig_wrap.cpp : $(SWIGINTERFACES) $(SWIGDEPENDENCIES)
-	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -o $@ $<
+	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -o $@ -module fastjet -interface _fastjet_swig $<
 fastjet.py: swig_wrap.cpp
 	@echo "fastjet.py is built at the same time as swig_wrap.cpp"
 else
@@ -65,12 +65,12 @@ EXTRA_DIST+=swig_wrap.cpp fastjet.py
 endif
 
 python_PYTHON = fastjet.py
-pyexec_LTLIBRARIES = _fastjet.la
-_fastjet_la_LIBTOOLFLAGS = --silent
-_fastjet_la_SOURCES = swig_wrap.cpp
-_fastjet_la_CPPFLAGS = $(PYTHON_INCLUDE) $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -DSWIG -DSWIG_TYPE_TABLE=fastjet
-_fastjet_la_LDFLAGS = -module
-_fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
+pyexec_LTLIBRARIES = _fastjet_swig.la
+_fastjet_swig_la_LIBTOOLFLAGS = --silent
+_fastjet_swig_la_SOURCES = swig_wrap.cpp
+_fastjet_swig_la_CPPFLAGS = $(PYTHON_INCLUDE) $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -DSWIG -DSWIG_TYPE_TABLE=fastjet_swig
+_fastjet_swig_la_LDFLAGS = -module
+_fastjet_swig_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la $(CGAL_LIBS)
 
 # include the interface file for completeness
 pyinterfacedir=$(datadir)/fastjet/pyinterface
@@ -88,7 +88,7 @@ install-exec-hook:
 	@echo "------------------------------------------------------------"
 	@echo "The fastjet.py python module is installed in "
 	@echo "  $(DESTDIR)$(pythondir)"
-	@echo "and the _fastjet.so library is installed in" 
+	@echo "and the _fastjet_swig.so library is installed in" 
 	@echo "  $(DESTDIR)$(pyexecdir)"
 	@echo "You should make sure that these are in your PYTHONPATH"
 	@echo "------------------------------------------------------------"
@@ -101,11 +101,11 @@ install-exec-hook:
 #SWIG_SOURCES = fastjet.i
 #
 #pkgpython_PYTHON = fastjet.py
-#pkgpyexec_LTLIBRARIES = _fastjet.la
-#_fastjet_la_SOURCES = swig_wrap.cpp
-#_fastjet_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) $(PYTHON_INCLUDE) $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -DSWIG
-#_fastjet_la_LDFLAGS = -module
-#_fastjet_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la
+#pkgpyexec_LTLIBRARIES = _fastjet_swig.la
+#_fastjet_swig_la_SOURCES = swig_wrap.cpp
+#_fastjet_swig_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) $(PYTHON_INCLUDE) $(AM_CXXFLAGS) $(CGAL_CPPFLAGS) -I../include -I$(top_srcdir)/include -I$(top_srcdir)/tools -DSWIG -DSWIG_TYPE_TABLE=fastjet_swig
+#_fastjet_swig_la_LDFLAGS = -module
+#_fastjet_swig_la_LIBADD = ../src/libfastjet.la ../tools/libfastjettools.la
 #
 #$(srcdir)/swig_wrap.cpp : $(SWIG_SOURCES)
 #	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I$(top_srcdir)/include -I$(top_srcdir)/tools -o $@ $<
