@@ -54,7 +54,7 @@
 # Full (non-md5) results of a 1000 event run are to be found in the
 # following git 
 #
-#     https://gitlab.com/fastjet/internal/validation-ref
+#     https://gitlab.com/fastjet/fastjet-validation/validation-ref
 #
 # Or alternatively on tycho in
 #

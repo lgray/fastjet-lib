@@ -4,6 +4,9 @@
 	* include/fastjet/internal/ClusterSequence_N2.icc:
 	replaced tabs with spaces
 
+	* regression-tests/test-all-algs.pl:
+	updated location of reference runs to reflect new git structure
+
 2024-12-06 Fri  <gavin.salam@physics.ox.ac.uk>
 
 	* plugins/D0RunIICone/ProtoJet.hpp:
