@@ -134,25 +134,25 @@ template<class BJ> void ClusterSequence::_simple_N2_cluster() {
     for (BJ * jetI = head; jetI != tail; jetI++) {
       // see if jetI had jetA or jetB as a NN -- if so recalculate the NN
       if (jetI->NN == jetA || jetI->NN == jetB) {
-	_bj_set_NN_nocross(jetI, head, tail);
-	diJ[jetI-head] = _bj_diJ(jetI); // update diJ 
+        _bj_set_NN_nocross(jetI, head, tail);
+        diJ[jetI-head] = _bj_diJ(jetI); // update diJ 
       } 
       // check whether new jetB is closer than jetI's current NN and
       // if need be update things
       if (jetB != NULL) {
-	double dist = _bj_dist(jetI,jetB);
-	if (dist < jetI->NN_dist) {
-	  if (jetI != jetB) {
-	    jetI->NN_dist = dist;
-	    jetI->NN = jetB;
-	    diJ[jetI-head] = _bj_diJ(jetI); // update diJ...
-	  }
-	}
-	if (dist < jetB->NN_dist) {
-	  if (jetI != jetB) {
-	    jetB->NN_dist = dist;
-	    jetB->NN      = jetI;}
-	}
+        double dist = _bj_dist(jetI,jetB);
+        if (dist < jetI->NN_dist) {
+          if (jetI != jetB) {
+            jetI->NN_dist = dist;
+            jetI->NN = jetB;
+            diJ[jetI-head] = _bj_diJ(jetI); // update diJ...
+          }
+        }
+        if (dist < jetB->NN_dist) {
+          if (jetI != jetB) {
+            jetB->NN_dist = dist;
+            jetB->NN      = jetI;}
+        }
       }
       // if jetI's NN is the new tail then relabel it so that it becomes jetA
       if (jetI->NN == tail) {jetI->NN = jetA;}
