@@ -23,7 +23,7 @@
 # - [ ] add missing examples
 # - [x] add Python support
 # - [ ] make sure we use shared libs
-# - [ ] specific compilation flags for the D0RunIICone
+# - [x] specific compilation flags for the D0RunIICone
 # - [ ] print config summary
 # - [ ] ctest to reproduce what make check does
 # - [ ] basic CI also for cmake
@@ -72,6 +72,8 @@ include(GNUInstallDirs)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR})
+set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
+
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") # Intel compilers are used with -O3
   set(CMAKE_CXX_FLAGS "-O3 -Wall -Wshadow")
