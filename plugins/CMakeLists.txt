@@ -50,7 +50,7 @@ if (FASTJET_ENABLE_PLUGIN_NESTEDDEFS)
 endif()
 if (FASTJET_ENABLE_PLUGIN_PXCONE)
    enable_language(Fortran)
-   set(CMAKE_Fortran_FLAGS "-O3")
+   add_compile_options($<$<COMPILE_LANGUAGE:Fortran>:-O3>)
    add_subdirectory(PxCone)
    list(APPEND combined_objects $<TARGET_OBJECTS:PxConePlugin>)
    list(APPEND LIST_ALL_PLUGINS "PxCone")
@@ -70,9 +70,13 @@ endif()
 set(LIST_ALL_PLUGINS "${LIST_ALL_PLUGINS}" PARENT_SCOPE)
 
 # build a local library
-add_library(fastjetplugins SHARED  ${combined_objects})
-target_link_libraries(fastjetplugins PUBLIC ${fastjet_LIBRARIES} fastjet)
+add_library(fastjetplugins SHARED ${combined_objects})
+target_link_libraries(fastjetplugins PUBLIC fastjet)
 
+#ensure D0 Run I Cone include is properly accounted for
+if (FASTJET_ENABLE_PLUGIN_D0RUNICONE)
+  target_include_directories(fastjetplugins PUBLIC D0RunICone)
+endif()
 # make sure the SISCone libraries are included if necessary
 if (FASTJET_ENABLE_PLUGIN_SISCONE)
    target_link_libraries(fastjetplugins PUBLIC siscone siscone_spherical)

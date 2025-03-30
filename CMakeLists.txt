@@ -219,10 +219,7 @@ if (FASTJET_ENABLE_PYTHON)
 endif()
 set(FASTJET_PYTHON_PACKAGE_NAME "fastjet" CACHE STRING "The name of the installed fastjet python package.")
 set(FASTJET_USE_PYTHON_SITEARCH OFF CACHE BOOL "Force the usage of ${Python_SITEARCH} if CMAKE_INSTALL_PREFIX was defined.")
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(FASTJET_ORIGINAL_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE STRING "Store the original default CMAKE_INSTALL_PREFIX.")
-endif()
-
+set(FASTJET_CUSTOM_PYTHON_INSTALL "" CACHE STRING "Specify a custom python install path, can be absolute or relative to lib.")
 message("-- Compiling with the following C++ flags: ${CMAKE_CXX_FLAGS}")
 
 
