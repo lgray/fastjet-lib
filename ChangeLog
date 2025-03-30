@@ -7,6 +7,20 @@
 	* regression-tests/test-all-algs.pl:
 	updated location of reference runs to reflect new git structure
 
+	* CMakeLists.txt:
+	* fastjet-config.in:
+	start of work on getting fastjet-config to work with cmake. Some basic
+	things are up and working, but a good number of variables (e.g. plugins) 
+	are still not working. One thing to watch out for is that CMake's 
+	`configure_file(...)` replaces constructs such as ${variable}. So 
+	where `${variable}` was intended to refer to a shell variable, it
+	was necessary to replace it with `$variable`. Percent signs
+	also get interpreted by CMake so, when they were used with a shell
+	meaning, a workaround was again needed.
+	
+	Once we're done we should make sure that the autotools version of
+	fastjet-config still works normally.
+
 2024-12-19 Thu  <gavin.salam@physics.ox.ac.uk>
 
 	* plugins/CMakeLists.txt:

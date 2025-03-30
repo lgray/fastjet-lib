@@ -307,7 +307,7 @@ for arg do
 done
     
 # handle prefix guessing if needed
-if test "x${guess_prefix}" = "xyes" ; then
+if test "x"$guess_prefix = "xyes" ; then
     #echo "Guessing prefix"
     # sample code taken from
     # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
@@ -331,10 +331,13 @@ if test "x${guess_prefix}" = "xyes" ; then
     # for the directory we're in and appending the target file.
     final_dir=`pwd -P`
 
-    # strip the final "bin"
-    prefix=${final_dir%/bin}
-    includedir=${prefix}/include
-    libdir=${prefix}/lib
+	# strip the final "/bin" from the path
+	#  (this is not needed if we use --exec-prefix)
+	prefix=$(echo "$final_dir" | sed 's/\/bin$//')
+    #prefix=${final_dirPERCENT/bin}
+	echo "prefix = $prefix"
+    includedir=$prefix/include
+    libdir=$prefix/lib
 
     # go back to initial dir
     cd $current_dir
@@ -349,10 +352,10 @@ case $found_query in
 	echo @PACKAGE_VERSION@
 	;;
     prefix)
-	echo ${prefix}
+	echo $prefix
 	;;
     cxxflags)
-	echo -I${includedir} @CONFIG_CXXFLAGS@
+	echo -I$includedir @CONFIG_CXXFLAGS@
 	;;
     libs)
 	libs_string=" @CONFIG_LIBS@"
@@ -360,18 +363,18 @@ case $found_query in
 #       otherwise), we only need to worry if shared available and static
 #       explicitely asked
 	if test "x$use_shared" = "xno" && test "x@HAS_SHARED@" = "xyes" ; then
-	    libs_string="${libdir}/libfastjettools.a ${libdir}/libfastjet.a "$libs_string
+	    libs_string="$libdir/libfastjettools.a $libdir/libfastjet.a "$libs_string
 	else
-	    libs_string="-L${libdir} -lfastjettools -lfastjet "$libs_string
+	    libs_string="-L$libdir -lfastjettools -lfastjet "$libs_string
 	fi
 	if test "x$add_rpath" = "xyes" ; then
-	    libs_string="-Wl,-rpath,${libdir} "$libs_string
+	    libs_string="-Wl,-rpath,$libdir "$libs_string
         else
             # GPS 2009-05-29: remove any left over -Wl, e.g. related to CGAL.
             libs_string=`echo $libs_string | sed 's/-Wl,-rpath[^ ]*//'`
 	fi
 	if test "x$add_runpath" = "xyes" ; then
-	    libs_string="@CONFIG_RUNPATH_FLAGS@ -Wl,-rpath,${libdir} "$libs_string
+	    libs_string="@CONFIG_RUNPATH_FLAGS@ -Wl,-rpath,$libdir "$libs_string
 	fi
 	if test "x$plugins_included" = "xyes" ; then
 	    if test "x$use_shared" = "xno" && test "x@HAS_SHARED@" = "xyes" ; then
@@ -382,7 +385,7 @@ case $found_query in
 
 	fi
 	if [ "x$found_flags" = "xyes" ] ; then
-	    echo -I${includedir} @CONFIG_CXXFLAGS@ $libs_string
+	    echo -I$includedir @CONFIG_CXXFLAGS@ $libs_string
 	else
 	    echo $libs_string
 	fi

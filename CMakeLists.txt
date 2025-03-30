@@ -12,17 +12,17 @@
 #  . include/fastjet/config_auto.h is generated from config-cmake.hh.in
 #
 # TODO:
-# - fastjet-config script
-# - add PxCone support
-# - Check CGAL on non-system installation
-# - Check the "Release" build
-# - add missing examples
-# - add Python support
-# - make sure we use shared libs
-# - specific compilation flags for the D0RunIICone
-# - print config summary
-# - ctest to reproduce what make check does
-# - basic CI also for cmake
+# - [ ] fastjet-config script
+# - [x] add PxCone support
+# - [ ] Check CGAL on non-system installation
+# - [ ] Check the "Release" build
+# - [ ] add missing examples
+# - [ ] add Python support
+# - [ ] make sure we use shared libs
+# - [ ] specific compilation flags for the D0RunIICone
+# - [ ] print config summary
+# - [ ] ctest to reproduce what make check does
+# - [ ] basic CI also for cmake
 
 cmake_minimum_required(VERSION 3.7.0)
 include(CMakePrintHelpers)
@@ -56,6 +56,9 @@ set(FASTJET_VERSION_NUMBER "${FASTJET_VERSION_MAJOR}${FASTJET_VERSION_MINOR_FOR_
 
 # print out the project name and version
 cmake_print_variables(PROJECT_NAME FASTJET_VERSION)
+
+# need this to be able to set the installation prefix in fastjet-config
+include(GNUInstallDirs)
 
 #----------------------------------------------------------------------
 # basic C++ checks
@@ -214,7 +217,15 @@ add_subdirectory(example)  # for examples (gets built after all the rest)
 
 # generate the configure file
 configure_file(config-cmake.hh.in include/fastjet/config_auto.h)
+
 #configure_file(fastjet-config-cmake.in fastjet-config)
+# set up a range of variables for the fastjet-config script; one question
+# is whether, with such genertic names, they might conflict with other CMake variables
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir "${prefix}/${CMAKE_INSTALL_LIBDIR}")
+set(includedir "${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+set(PACKAGE_VERSION ${FASTJET_VERSION})
+configure_file(fastjet-config.in fastjet-config)
 #install(FILES fastjet-config DESTINATION bin)
 
 
