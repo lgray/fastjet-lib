@@ -4,7 +4,7 @@
 #  FASTJET_ENABLE_DEBUG=ON|OFF  switch debugging info on/off [default:ON]
 #  FASTJET_ENABLE_CGAL=ON|OFF   enable CGAL support [default:OFF]
 #  FASTJET_ENABLE_PLUGIN_<name>=ON|OFF
-#      with <anme> in ATLASCONE, CDFCONES, CMSITERATIVECONE, D0RUNICONE, D0RUNIICONE,
+#      with <name> in ATLASCONE, CDFCONES, CMSITERATIVECONE, D0RUNICONE, D0RUNIICONE,
 #      EECAMBRIDGE, GRIDJET, JADE, NESTEDDEFS, PXCONE, SISCONE, TRACKJET; enable the
 #      corresponding FastJet plugin [default:ON except for PxCone]
 #
@@ -13,6 +13,10 @@
 #
 # TODO:
 # - [ ] fastjet-config script
+#   - [x] support for --list-plugins
+#   - [ ] correct list of libraries when --plugins requested
+#   - [ ] --pythonpath
+#   - [ ] it is correctly installed
 # - [x] add PxCone support
 # - [ ] Check CGAL on non-system installation
 # - [ ] Check the "Release" build
@@ -99,8 +103,9 @@ option(FASTJET_ENABLE_CGAL
 option(FASTJET_HAVE_THREAD_SAFETY         "Turn on thread safety [default=ON]" ON)
 option(FASTJET_HAVE_LIMITED_THREAD_SAFETY "Turn on limited thread safety [default=ON]" ON)
 if (FASTJET_HAVE_THREAD_SAFETY)
-  set(ASTJET_HAVE_LIMITED_THREAD_SAFETY ON)
+  set(FASTJET_HAVE_LIMITED_THREAD_SAFETY ON)
 endif()
+
 
 # plugins on/off
 option(FASTJET_ENABLE_PLUGIN_ATLASCONE        "Enable the ATLASCone plugin [default=ON]"        ON)
@@ -123,7 +128,7 @@ option(FASTJET_ENABLE_DEBUG "Turn on debug compiler information [default=ON]" ON
 option(FASTJET_HAVE_AUTO_PTR_INTERFACE  "Enable the (deprecated) auto_ptr interface [default=OFF]"  OFF)
 
 # extra warnings
-option(FASTJET_ENABLE_EXTRA_WARNINGS  "Enable compile=toime extra warnings [default=OFF]"  OFF)
+option(FASTJET_ENABLE_EXTRA_WARNINGS  "Enable compile=time extra warnings [default=OFF]"  OFF)
 
 # support for "override" comes automatically as part of C++11 (can be manually disabled)
 option(FASTJET_HAVE_OVERRIDE   "Compiler supports override"  ON)
@@ -225,6 +230,7 @@ set(prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir "${prefix}/${CMAKE_INSTALL_LIBDIR}")
 set(includedir "${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
 set(PACKAGE_VERSION ${FASTJET_VERSION})
+message(STATUS "Plugins that are enabled = ${LIST_ALL_PLUGINS}")
 configure_file(fastjet-config.in fastjet-config)
 #install(FILES fastjet-config DESTINATION bin)
 
