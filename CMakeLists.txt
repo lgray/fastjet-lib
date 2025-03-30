@@ -21,6 +21,8 @@
 # - make sure we use shared libs
 # - specific compilation flags for the D0RunIICone
 # - print config summary
+# - ctest to reproduce what make check does
+# - basic CI also for cmake
 
 cmake_minimum_required(VERSION 3.7.0)
 include(CMakePrintHelpers)
@@ -69,10 +71,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM") # Intel compilers are used with 
 else()
   set(CMAKE_CXX_FLAGS "-O2 -Wall -Wshadow")
 endif()
-
-# specify that we're using fortran
-enable_language(Fortran)
-set(CMAKE_Fortran_FLAGS "-O3")
 
 set(fastjet_INCLUDES)
 set(fastjet_LIBRARIES)
@@ -138,7 +136,15 @@ option(FASTJET_HAVE_EXPLICIT_FOR_OPERATORS  "Compiler supports explicit operator
 
 
 #-------------------------------------------------------------------------
-# check compiler supports
+# check compiler support
+
+if (FASTJET_ENABLE_PLUGIN_PXCONE)
+  # specify that we need fortran
+  enable_language(Fortran)
+  set(CMAKE_Fortran_FLAGS "-O3")
+endif()
+
+
 
 include(CheckCXXCompilerFlag)
 include(CheckIncludeFileCXX)
