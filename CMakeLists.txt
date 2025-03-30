@@ -21,7 +21,7 @@
 # - [ ] Check CGAL on non-system installation
 # - [ ] Check the "Release" build
 # - [ ] add missing examples
-# - [ ] add Python support
+# - [x] add Python support
 # - [ ] make sure we use shared libs
 # - [ ] specific compilation flags for the D0RunIICone
 # - [ ] print config summary
@@ -147,14 +147,6 @@ option(FASTJET_ENABLE_PYTHON "Enable building of swig-based fastjet python bindi
 
 #-------------------------------------------------------------------------
 # check compiler support
-
-if (FASTJET_ENABLE_PLUGIN_PXCONE)
-  # specify that we need fortran
-  enable_language(Fortran)
-  set(CMAKE_Fortran_FLAGS "-O3")
-endif()
-
-
 
 include(CheckCXXCompilerFlag)
 include(CheckIncludeFileCXX)
