@@ -335,7 +335,6 @@ if test "x"$guess_prefix = "xyes" ; then
 	#  (this is not needed if we use --exec-prefix)
 	prefix=$(echo "$final_dir" | sed 's/\/bin$//')
     #prefix=${final_dirPERCENT/bin}
-	echo "prefix = $prefix"
     includedir=$prefix/include
     libdir=$prefix/lib
 
